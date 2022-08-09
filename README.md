@@ -1,13 +1,11 @@
 <p align="center"><a href="https://www.combodo.com/itop-193" target="_blank">
-    <img src="https://www.combodo.com/logos/logo-itop.svg">
+    <img src="https://www.combodo.com/logos/logo-itop-baseline.svg" width=350>
 </a></p>
 
 
-# iTop - ITSM & CMDB
- 
-iTop stands for *IT Operations Portal*.
-It is a complete open source, ITIL, web based service management tool including a fully customizable CMDB, a helpdesk system and a document management tool. 
-iTop also offers mass import tools and web services to integrate with your IT
+iTop stands for IT Operations Portal. It is a complete open source and web based IT service management platform including a fully customizable CMDB, a helpdesk system and a document management tool. It is ITIL compliant and easily customizable and extensible thanks to a high number of adds-on and web services to integrate with your IT.
+
+iTop also offers mass import tools to help you being even more efficient.
 
 ## Features
 - Fully configurable [Configuration Management (CMDB)][10]
@@ -78,18 +76,19 @@ We would like to give a special thank you 🤗 to the people from the community 
 
 - Alves, David
 - Beck, Pedro
+- Beer, Christian (a.k.a [@ChristianBeer](https://www.github.com/ChristianBeer))
 - Bilger, Jean-François
-- Bostoen, Jeffrey (a.k.a @jbostoen)
+- Bostoen, Jeffrey (a.k.a [@jbostoen](https://www.github.com/jbostoen))
 - Cardoso, Anderson
 - Cassaro, Bruno
-- Casteleyn, Thomas (a.k.a @Hipska)
+- Casteleyn, Thomas (a.k.a [@Hipska](https://www.github.com/Hipska))
 - Castro, Randall Badilla
 - Colantoni, Maria Laura
 - Couronné, Guy
 - Dvořák, Lukáš
 - Goethals, Stefan
 - Gumble, David
-- Kaltefleiter, Lars (a.k.a @larhip)
+- Kaltefleiter, Lars (a.k.a [@larhip](https://www.github.com/larhip))
 - Khamit, Shamil
 - Kincel, Martin
 - Konečný, Kamil
@@ -98,12 +97,12 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Lazcano, Federico
 - Lucas, Jonathan
 - Malik, Remie
-- Mindêllo de Andrade, Lucas (a.k.a @rokam)
+- Mindêllo de Andrade, Lucas (a.k.a [@rokam](https://www.github.com/rokam))
 - Raenker, Martin
 - Rosenke, Stephan
 - Seki, Shoji
 - Shilov, Vladimir
-- Stukalov, Ilya (a.k.a @ilya-stukalov)
+- Stukalov, Ilya (a.k.a [@ilya](https://www.github.com/ilya)-stukalov)
 - Tulio, Marco
 - Turrubiates, Miguel
 
@@ -114,6 +113,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - DudekArtur
 - Karkoff1212
 - Laura
+- nv35
 - Purple Grape
 - Schlobinux
 - theBigOne

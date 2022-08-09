@@ -695,41 +695,78 @@ class WizStepLicense extends WizardStep
 		return array('class' => 'WizStepDBParams', 'state' => '');
 	}
 
+	/**
+	 * @return bool
+	 * @throws \Exception
+	 * @since 2.7.7 3.0.2 3.1.0
+	 */
+	private function NeedsRgpdConsent()
+	{
+		$sMode = $this->oWizard->GetParameter('install_mode');
+		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
+		return $sMode == 'install' && !SetupUtils::IsProductVersion($aModules);
+	}
+
     /**
      * @param WebPage $oPage
      */
     public function Display(WebPage $oPage)
     {
-        $aLicenses = SetupUtils::GetLicenses();
-		$oPage->add_style(
-<<<CSS
+	    $aLicenses = SetupUtils::GetLicenses();
+	    $oPage->add_style(
+		    <<<CSS
 fieldset ul {
 	max-height: min(30em, 40vh); /* Allow usage of the UI up to 150% zoom */
 	overflow: auto;
 }
 CSS
-		);
+	    );
 
-		$oPage->add('<h2>Licenses agreements for the components of '.ITOP_APPLICATION.'</h2>');
-		$oPage->add_style('div a.no-arrow { background:transparent; padding-left:0;}');
-		$oPage->add_style('.toggle { cursor:pointer; text-decoration:underline; color:#1C94C4; }');
-		$oPage->add('<fieldset>');
-		$oPage->add('<legend>Components of '.ITOP_APPLICATION.'</legend>');
-		$oPage->add('<ul id="ibo-setup-licenses--components-list">');
-        $index = 0;
-        foreach ($aLicenses as $oLicense)
-		{
-			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<span class="toggle" id="toggle_'.$index.'">Details</span>)');
-			$oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:12px;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;"><pre>'.$oLicense->text.'</pre></div>');
-			$oPage->add_ready_script('$(".license_text a").attr("target", "_blank").addClass("no-arrow");');
-			$oPage->add_ready_script('$("#toggle_'.$index.'").on("click", function() { $("#license_'.$index.'").toggle(); } );');
-			$index++;
-		}
-		$oPage->add('</ul>');
-		$oPage->add('</fieldset>');
-        $sChecked = ($this->oWizard->GetParameter('accept_license', 'no') == 'yes') ? ' checked ' : '';
-        $oPage->add('<div class="setup-accept-licenses"><input type="checkbox" name="accept_license" id="accept" value="yes" '.$sChecked.'><label for="accept">I accept the terms of the licenses of the '.count($aLicenses).' components mentioned above.</label></div>');
-		$oPage->add_ready_script('$("#accept").bind("click change", function() { WizardUpdateButtons(); });');
+	    $oPage->add('<h2>Licenses agreements for the components of '.ITOP_APPLICATION.'</h2>');
+	    $oPage->add_style('div a.no-arrow { background:transparent; padding-left:0;}');
+	    $oPage->add_style('.toggle { cursor:pointer; text-decoration:underline; color:#1C94C4; }');
+	    $oPage->add('<fieldset>');
+	    $oPage->add('<legend>Components of '.ITOP_APPLICATION.'</legend>');
+	    $oPage->add('<ul id="ibo-setup-licenses--components-list">');
+	    $index = 0;
+	    foreach ($aLicenses as $oLicense) {
+		    $oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<span class="toggle" id="toggle_'.$index.'">Details</span>)');
+		    $oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:12px;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;"><pre>'.$oLicense->text.'</pre></div>');
+		    $oPage->add_ready_script('$(".license_text a").attr("target", "_blank").addClass("no-arrow");');
+		    $oPage->add_ready_script('$("#toggle_'.$index.'").on("click", function() { $("#license_'.$index.'").toggle(); } );');
+		    $index++;
+	    }
+	    $oPage->add('</ul>');
+	    $oPage->add('</fieldset>');
+	    $sChecked = ($this->oWizard->GetParameter('accept_license', 'no') == 'yes') ? ' checked ' : '';
+	    $oPage->add('<div class="setup-accept-licenses"><input class="check_select" type="checkbox" name="accept_license" id="accept" value="yes" '.$sChecked.'><label for="accept">I accept the terms of the licenses of the '.count($aLicenses).' components mentioned above.</label></div>');
+	    if ($this->NeedsRgpdConsent()) {
+		    $oPage->add('<br>');
+		    $oPage->add('<fieldset>');
+		    $oPage->add('<legend>European General Data Protection Regulation</legend>');
+		    $oPage->add('<div class="ibo-setup-licenses--components-list">iTop software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).<p></p>
+By installing iTop you agree that some information will be collected by Combodo to help you manage your instances and for statistical purposes.
+This data remains anonymous until it is associated to a user account on iTop Hub.</p>
+<p>List of collected data available in our <a target="_blank" href="https://www.itophub.io/page/data-privacy">Data privacy section.</a></p><br></div>');
+		    $oPage->add('<input type="checkbox" class="check_select" id="rgpd_consent">');
+		    $oPage->add('<label for="rgpd_consent">&nbsp;I accept the processing of my personal data</label>');
+		    $oPage->add('</fieldset>');
+	    }
+	    $oPage->add_ready_script('$(".check_select").bind("click change", function() { WizardUpdateButtons(); });');
+
+	    $oPage->add_script(
+		    <<<JS
+				function isRgpdConsentOk(){
+		            let eRgpdConsent = $("#rgpd_consent");
+		            if(eRgpdConsent.length){
+		                if(!eRgpdConsent[0].checked){
+		                    return false;
+		                }
+		            }
+                    return true;
+				}
+JS
+	    );
 	}
 
 	/**
@@ -738,7 +775,7 @@ CSS
 	 */
 	public function JSCanMoveForward()
 	{
-		return 'return ($("#accept").prop("checked"));';
+		return 'return ($("#accept").prop("checked") && isRgpdConsentOk());';
 	}
 
 
@@ -1394,7 +1431,7 @@ class WizStepModulesChoice extends WizardStep
 		}
 		catch(MissingDependencyException $e)
 		{
-			$oPage->warning($e->getMessage());
+			$oPage->warning($e->getHtmlDesc());
 		}
 
 		$this->bUpgrade = ($this->oWizard->GetParameter('install_mode') != 'install');
@@ -2138,7 +2175,7 @@ class WizStepSummary extends WizardStep
 			catch(MissingDependencyException $e)
 			{
 				$this->bDependencyCheck = false;
-				$this->sDependencyIssue = $e->getMessage();
+				$this->sDependencyIssue = $e->getHtmlDesc();
 			}
 		}
 		return $this->bDependencyCheck;
@@ -2599,79 +2636,7 @@ class WizStepDone extends WizardStep
 		$sForm .= '<input type="hidden" name="auth_pwd" value="'.htmlentities($this->oWizard->GetParameter('admin_pwd'), ENT_QUOTES, 'UTF-8').'">';
 		$sForm .= "<button id=\"enter_itop\" class=\"ibo-button ibo-is-regular ibo-is-primary\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></div>";
 		$sForm .= '</form>';
-		$sPHPVersion = phpversion();
-		$sMySQLVersion = SetupUtils::GetMySQLVersion(
-			$this->oWizard->GetParameter('db_server'),
-			$this->oWizard->GetParameter('db_user'),
-			$this->oWizard->GetParameter('db_pwd'),
-			$this->oWizard->GetParameter('db_tls_enabled'),
-			$this->oWizard->GetParameter('db_tls_ca')
-		);
-		$aParameters = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
-		$sCompactWizChoices = array();
-		foreach($aParameters as $iStep => $aChoices)
-		{
-			$aShortChoices = array();
-			foreach($aChoices as $sChoiceCode)
-			{
-				$sShortCode = str_replace('_', '', $sChoiceCode);
-				$aShortChoices[] = $sShortCode;
-			}
-			$sCompactWizChoices[] = implode(' ',$aShortChoices);
-		}
-		$sInstallMode = 'i';
-		if ($this->oWizard->GetParameter('install_mode', 'install') == 'upgrade')
-		{
-			if (!$this->oWizard->GetParameter('license'))
-			{
-				// When the version does not change we don't ask for the licence again
-				$sInstallMode = 'r';
-			}
-			else
-			{
-				// An actual upgrade
-				$sInstallMode = 'u';
-			}
 
-		}
-		$aUrlParams = array(
-			'p' => ITOP_APPLICATION,
-			'v' => ITOP_VERSION,
-			'php' => $sPHPVersion,
-			'mysql' => $sMySQLVersion,
-			'os' => PHP_OS,
-			's' => ($this->oWizard->GetParameter('sample_data', '') == 'yes') ? 1 : 0 ,
-			'l' => $this->oWizard->GetParameter('default_language'),
-			'i' => $sInstallMode,
-			'w' => json_encode($sCompactWizChoices),
-		);
-		$aSafeParams = array();
-		foreach($aUrlParams as $sCode => $sValue)
-		{
-			$aSafeParams[] = $sCode.'='.urlencode($sValue);
-		}
-		$sImgUrl = 'http://www.combodo.com/stats/?'.implode('&', $aSafeParams);
-
-		$aAdditionalModules = array();
-		foreach(json_decode($this->oWizard->GetParameter('additional_extensions_modules'), true) as $idx => $aModuleInfo)
-		{
-			if (in_array('_'.$idx, $aParameters[count($aParameters)-1])) {
-				// Extensions "choices" can now have more than one module
-				foreach ($aModuleInfo['modules'] as $sModuleName) {
-					$aAdditionalModules[] = $sModuleName;
-				}
-			}
-		}
-		$idx = 0;
-		$aReportedModules = array();
-		while ($idx < count($aAdditionalModules) && (strlen($sImgUrl.'&m='.urlencode(implode(' ', $aReportedModules))) < 2000)) // reasonable limit for the URL: 2000 chars
-		{
-			$aReportedModules[] = $aAdditionalModules[$idx];
-			$idx++;
-		}
-		$sImgUrl .= '&m='.urlencode(implode(' ', $aReportedModules));
-
-		$oPage->add('<img style="visibility: hidden;border:0" src="'.$sImgUrl.'"/>');
 		$sForm = addslashes($sForm);
 		$oPage->add_ready_script("$('#wiz_form').append('$sForm');");
 		// avoid leaving in a dirty state

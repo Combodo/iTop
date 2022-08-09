@@ -82,8 +82,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
 ));
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Menu:ProblemManagement' => 'Gestión de problemas',
-	'Menu:ProblemManagement+' => 'Gestión de problemas',
+	'Menu:ProblemManagement' => 'Administración de problemas',
+	'Menu:ProblemManagement+' => 'GestAdministraciónión de problemas',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
 	'Menu:FAQCategory' => 'Categorías de FAQ',
 	'Menu:FAQCategory+' => 'Categorías FAQ',

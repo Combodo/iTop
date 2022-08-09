@@ -16,7 +16,9 @@
             <attribute id="volume_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
           </attributes>

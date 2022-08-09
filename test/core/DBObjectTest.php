@@ -28,6 +28,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObject;
+use MetaModel;
 
 
 /**
@@ -41,7 +42,7 @@ class DBObjectTest extends ItopDataTestCase
 {
 	const CREATE_TEST_ORG = true;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'core/dbobject.class.php');
@@ -92,6 +93,39 @@ class DBObjectTest extends ItopDataTestCase
 		$oObject = $this->CreateUserRequest(190664);
 
 		static::assertNull($oObject->GetOriginal('sla_tto_passed'));
+	}
+
+	/**
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testListPreviousValuesForUpdatedAttributes()
+	{
+		$oOrg = $this->CreateOrganization('testListPreviousValuesForUpdatedAttributes');
+
+		$this->assertCount(0, $oOrg->ListChanges());
+		$oOrg->Set('code', strtoupper('testListPreviousValuesForUpdatedAttributes'));
+		$this->assertCount(1, $oOrg->ListChanges());
+		$oOrg->DBUpdate();
+		$this->assertCount(0, $oOrg->ListChanges());
+		$this->assertCount(1, $oOrg->ListPreviousValuesForUpdatedAttributes());
+
+		$oOrg->DBUpdate();
+
+		$this->assertCount(0, $oOrg->ListChanges());
+		$this->assertCount(1, $oOrg->ListPreviousValuesForUpdatedAttributes());
+
+		$oOrg->DBDelete();
+
+		$oOrg = MetaModel::NewObject('Organization');
+		$oOrg->Set('name', 'testListPreviousValuesForUpdatedAttributes');
+		$oOrg->DBInsert();
+		$oOrg->Set('code', strtoupper('testListPreviousValuesForUpdatedAttributes'));
+		$oOrg->DBUpdate();
+		$oOrg->DBUpdate();
+		$this->markTestIncomplete('This test has not been implemented yet. wait for N°4967 fix');
+		$this->debug("ERROR: N°4967 - 'Previous Values For Updated Attributes' not updated if DBUpdate is called without modifying the object");
+		//$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
 	}
 
 	/**

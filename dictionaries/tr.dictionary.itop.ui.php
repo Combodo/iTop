@@ -368,7 +368,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 <li>İşletmenin en önemli kaynağı olan dokümantasyonu yönetmesine imkan sağlar.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Açık istekler: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'İsteklerim',
 	'UI:WelcomeMenu:OpenIncidents' => 'Açık Arızalar: %1$d',
@@ -464,6 +471,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 
 	'UI:GroupBy:Count' => 'Say',
 	'UI:GroupBy:Count+' => 'Eleman sayısı',
@@ -1687,31 +1696,31 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:AuditCategories' => 'Denetleme Kategorileri',
 	'Menu:AuditCategories+' => 'Denetleme Kategorileri',
 	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
-	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',
-	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
-	'Menu:QueryMenu' => 'Query phrasebook~~',
-	'Menu:QueryMenu+' => 'Query phrasebook~~',
-	'Menu:UniversalSearchMenu' => 'Genel sorgu',
-	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',
-	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',
-	'Menu:UserManagementMenu+' => 'Kullanıcı Yönetimi',
-	'Menu:ProfilesMenu' => 'Profiller',
-	'Menu:ProfilesMenu+' => 'Profiller',
-	'Menu:ProfilesMenu:Title' => 'Profiller',
-	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
-	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
+	'Menu:RunQueriesMenu'         => 'Sorgu çalıştır',
+	'Menu:RunQueriesMenu+'        => 'Sorgu çalıştır',
+	'Menu:QueryMenu'              => 'Query phrasebook~~',
+	'Menu:QueryMenu+'             => 'Query phrasebook~~',
+	'Menu:UniversalSearchMenu'    => 'Genel sorgu',
+	'Menu:UniversalSearchMenu+'   => 'Herhangi bir arama...',
+	'Menu:UserManagementMenu'     => 'Kullanıcı Yönetimi',
+	'Menu:UserManagementMenu+'    => 'Kullanıcı Yönetimi',
+	'Menu:ProfilesMenu'           => 'Profiller',
+	'Menu:ProfilesMenu+'          => 'Profiller',
+	'Menu:ProfilesMenu:Title'     => 'Profiller',
+	'Menu:UserAccountsMenu'       => 'Kullanıcı Hesapları',
+	'Menu:UserAccountsMenu+'      => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
-	'Menu:MyShortcuts' => 'My Shortcuts~~',
-	'Menu:UserManagement' => 'User Management~~',
-	'Menu:Queries' => 'Queries~~',
-	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:MyShortcuts'            => 'My Shortcuts~~',
+	'Menu:UserManagement'         => 'User Management~~',
+	'Menu:Queries'                => 'Queries~~',
+	'Menu:ConfigurationTools'     => 'Configuration~~',
 ));
 
 // Additional language entries not present in English dict
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
- 'UI:Toggle:StandardDashboard' => 'Standard~~',
- 'UI:Toggle:CustomDashboard' => 'Custom~~',
- 'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
- 'UI:Dashboard:Edit' => 'Edit This Page...~~',
- 'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
+	'UI:Toggle:StandardDashboard' => 'Standard~~',
+	'UI:Toggle:CustomDashboard'   => 'Custom~~',
+	'UI:Display_X_ItemsPerPage'   => 'Display %1$s items per page~~',
+	'UI:Dashboard:Edit'           => 'Edit This Page...~~',
+	'UI:Dashboard:Revert'         => 'Revert To Original Version...~~',
 ));

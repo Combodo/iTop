@@ -5,9 +5,6 @@ namespace PhpParser\Node\Stmt;
 use PhpParser\Node;
 use PhpParser\Node\FunctionLike;
 
-/**
- * @property Node\Name $namespacedName Namespaced name (if using NameResolver)
- */
 class Function_ extends Node\Stmt implements FunctionLike
 {
     /** @var bool Whether function returns by reference */
@@ -16,12 +13,15 @@ class Function_ extends Node\Stmt implements FunctionLike
     public $name;
     /** @var Node\Param[] Parameters */
     public $params;
-    /** @var null|Node\Identifier|Node\Name|Node\NullableType|Node\UnionType Return type */
+    /** @var null|Node\Identifier|Node\Name|Node\ComplexType Return type */
     public $returnType;
     /** @var Node\Stmt[] Statements */
     public $stmts;
     /** @var Node\AttributeGroup[] PHP attribute groups */
     public $attrGroups;
+
+    /** @var Node\Name Namespaced name (if using NameResolver) */
+    public $namespacedName;
 
     /**
      * Constructs a function node.

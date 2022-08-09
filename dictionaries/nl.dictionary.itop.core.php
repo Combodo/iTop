@@ -29,22 +29,24 @@
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:DeletedObjectLabel' => '%1s (verwijderd)',
-	'Core:DeletedObjectTip' => 'Het object is verwijderd op %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'Het object is verwijderd op %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Object niet gevonden (klasse: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'Object kon niet worden gevonden. Het kan al eerder verwijderd zijn waardoor ook de historiek al gewist is.',
+	'Core:UnknownObjectTip'   => 'Object kon niet worden gevonden. Het kan al eerder verwijderd zijn waardoor ook de historiek al gewist is.',
 
 	'Core:UniquenessDefaultError' => 'De regel \'%1$s\' die unieke waardes afdwingt, blokkeert deze actie',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => 'Reeks van objecten',
+	'Core:AttributeLinkedSet'  => 'Reeks van objecten',
 	'Core:AttributeLinkedSet+' => 'Elke soort objecten van dezelfde klasse of subklasse',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Dubbele records in het \'%1$s\' veld : %2$s',
 
-	'Core:AttributeDashboard' => 'Dashboard',
+	'Core:AttributeDashboard'  => 'Dashboard',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Telefoonnummer',
+	'Core:AttributePhoneNumber'  => 'Telefoonnummer',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Buiten gebruik sinds',
@@ -100,7 +102,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeString+' => 'Alfanumerieke tekstregel',
 
 	'Core:AttributeClass' => 'Klasse',
-	'Core:AttributeClass+' => 'Klasse',
+	'Core:AttributeClass+' => '',
 
 	'Core:AttributeApplicationLanguage' => 'Taal van de gebruiker',
 	'Core:AttributeApplicationLanguage+' => 'Taal en land (EN US)',
@@ -123,10 +125,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeHTML+' => 'HTML-code',
 
 	'Core:AttributeEmailAddress' => 'E-mailadres',
-	'Core:AttributeEmailAddress+' => 'E-mailadres',
+	'Core:AttributeEmailAddress+' => '',
 
 	'Core:AttributeIPAddress' => 'IP-adres',
-	'Core:AttributeIPAddress+' => 'IP-adres',
+	'Core:AttributeIPAddress+' => '',
 
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Object Query Language-expressie',
@@ -180,7 +182,7 @@ Operators:<br/>
 	'Core:AttributeDeadline+' => 'Datum, relatief weergegeven ten opzichte van het huidige tijdstip',
 
 	'Core:AttributeExternalKey' => 'Externe sleutel (key)',
-	'Core:AttributeExternalKey+' => 'Externe sleutel (key)',
+	'Core:AttributeExternalKey+' => '',
 
 	'Core:AttributeHierarchicalKey' => 'Hiërarchische sleutel (key)',
 	'Core:AttributeHierarchicalKey+' => 'Externe sleutel naar het hoofdobject',
@@ -210,7 +212,7 @@ Operators:<br/>
 	'Core:FriendlyName-Description' => 'Herkenbare naam',
 
 	'Core:AttributeTag' => 'Tags',
-	'Core:AttributeTag+' => 'Tags',
+	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
@@ -255,15 +257,15 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChangeOp' => 'Aanpassingsactie',
 	'Class:CMDBChangeOp+' => 'Opvolging van uitgevoerde aanpassingen',
 	'Class:CMDBChangeOp/Attribute:change' => 'Aanpassing',
-	'Class:CMDBChangeOp/Attribute:change+' => 'Aanpassing',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'Tijdstip',
 	'Class:CMDBChangeOp/Attribute:date+' => 'Tijdstip van de aanpassing',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Info',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Info over wie/wat (bv. welke service) de aanpassing heeft doorgevoerd',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'Objectklasse',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'Objectklasse',
+	'Class:CMDBChangeOp/Attribute:objclass+' => '',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'ID Object',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'ID Object',
+	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Soort',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
@@ -391,17 +393,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventNotificationEmail' => 'Gebeurtenis - versturen van e-mail',
 	'Class:EventNotificationEmail+' => 'Historiek van de e-mail die verstuurd is',
 	'Class:EventNotificationEmail/Attribute:to' => 'Aan',
-	'Class:EventNotificationEmail/Attribute:to+' => 'Aan',
+	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'CC',
-	'Class:EventNotificationEmail/Attribute:cc+' => 'CC',
+	'Class:EventNotificationEmail/Attribute:cc+' => '',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'BCC',
-	'Class:EventNotificationEmail/Attribute:bcc+' => 'BCC',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '',
 	'Class:EventNotificationEmail/Attribute:from' => 'Van',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Afzender van het bericht',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Onderwerp',
-	'Class:EventNotificationEmail/Attribute:subject+' => 'Onderwerp',
+	'Class:EventNotificationEmail/Attribute:subject+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Inhoud',
-	'Class:EventNotificationEmail/Attribute:body+' => 'Inhoud',
+	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Bijlagen',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
 ));
@@ -424,7 +426,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventIssue/Attribute:arguments_get' => 'URL-argumenten',
 	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET-argumenten',
 	'Class:EventIssue/Attribute:callstack' => 'Call stack',
-	'Class:EventIssue/Attribute:callstack+' => 'Call stack',
+	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Data',
 	'Class:EventIssue/Attribute:data+' => 'Meer informatie',
 ));
@@ -475,11 +477,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventLoginUsage' => 'Gebeurtenis - gebruik van login',
 	'Class:EventLoginUsage+' => 'Verbinding met de applicatie',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
-	'Class:EventLoginUsage/Attribute:user_id+' => 'Login',
+	'Class:EventLoginUsage/Attribute:user_id+' => '',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Gebruikersnaam',
-	'Class:EventLoginUsage/Attribute:contact_name+' => 'Gebruikersnaam',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'E-mailadres van de gebruiker',
-	'Class:EventLoginUsage/Attribute:contact_email+' => 'E-mailadres van de gebruiker',
+	'Class:EventLoginUsage/Attribute:contact_email+' => '',
 ));
 
 //
@@ -496,11 +498,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Action/Attribute:status' => 'Status',
 	'Class:Action/Attribute:status+' => 'De status van deze actie',
 	'Class:Action/Attribute:status/Value:test' => 'Wordt getest',
-	'Class:Action/Attribute:status/Value:test+' => 'Wordt getest',
+	'Class:Action/Attribute:status/Value:test+' => '',
 	'Class:Action/Attribute:status/Value:enabled' => 'In productie',
-	'Class:Action/Attribute:status/Value:enabled+' => 'In productie',
+	'Class:Action/Attribute:status/Value:enabled+' => '',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inactief',
-	'Class:Action/Attribute:status/Value:disabled+' => 'Inactief',
+	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Gerelateerde triggers',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers gelinkt aan deze actie',
 	'Class:Action/Attribute:finalclass' => 'Type',
@@ -549,13 +551,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ActionEmail/Attribute:body' => 'Inhoud',
 	'Class:ActionEmail/Attribute:body+' => 'Inhoud van de e-mail',
 	'Class:ActionEmail/Attribute:importance' => 'Prioriteit',
-	'Class:ActionEmail/Attribute:importance+' => 'Prioriteit',
+	'Class:ActionEmail/Attribute:importance+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'Laag',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'Laag',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normaal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'Normaal',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Hoog',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'Hoog',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
 ));
 
 //
@@ -705,13 +707,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Naam',
-	'Class:SynchroDataSource/Attribute:name+' => 'Naam',
+	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Beschrijving',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Doelklasse',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Gebruiker',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Verwittig dit contact',
-	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Verwittig dit contact',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => '',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Pictogram (hyperlink)',
 	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink een pictogram die de applicatie voorstelt waarmee wordt gesynchroniseerd',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Applicatie (hyperlink)',
@@ -1004,7 +1006,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TagSetFieldData/Attribute:label' => 'Label',
 	'Class:TagSetFieldData/Attribute:label+' => 'Label dat getoond wordt',
 	'Class:TagSetFieldData/Attribute:description' => 'Beschrijving',
-	'Class:TagSetFieldData/Attribute:description+' => 'Beschrijving',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tagklasse',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Objectklasse',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Veldcode',

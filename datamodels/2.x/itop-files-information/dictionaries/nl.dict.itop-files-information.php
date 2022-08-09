@@ -26,6 +26,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => 'Ontbrekend bestand: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Corrupt bestand: %1$s',
+	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'Kan niet schrijven naar bestand %1$s',
 ));
 

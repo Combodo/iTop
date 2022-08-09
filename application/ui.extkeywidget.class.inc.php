@@ -211,14 +211,23 @@ class UIExtKeyWidget
 			$sClassAllowed = $oAllowedValues->GetClass();
 			$bAddingValue = false;
 
+			// N°4792 - load only the required fields
+			$aFieldsToLoad = [];
+
 			$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
 			$sFormatAdditionalField = $aComplementAttributeSpec[0];
 			$aAdditionalField = $aComplementAttributeSpec[1];
 
 			if (count($aAdditionalField) > 0) {
 				$bAddingValue = true;
+				$aFieldsToLoad[$sClassAllowed] = $aAdditionalField;
 			}
 			$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+			if (!empty($sObjectImageAttCode)) {
+				$aFieldsToLoad[$sClassAllowed][] = $sObjectImageAttCode;
+			}
+			$aFieldsToLoad[$sClassAllowed][] = 'friendlyname';
+			$oAllowedValues->OptimizeColumnLoad($aFieldsToLoad);
 			$bInitValue = false;
 			while ($oObj = $oAllowedValues->Fetch()) {
 				$aOption = [];
@@ -251,7 +260,7 @@ class UIExtKeyWidget
 						$aOption['picture_url'] = $oImage->GetDisplayURL($sClassAllowed, $oObj->GetKey(), $sObjectImageAttCode);
 						$aOption['initials'] = '';
 					} else {
-						$aOption['initials'] = utils::ToAcronym($oObj->Get('friendlyname'));
+						$aOption['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oObj->Get('friendlyname')));
 					}
 				}
 				array_push($aOptions, $aOption);
@@ -829,7 +838,7 @@ JS
 					}
 
 					if (array_key_exists('initials', $aValue)) {
-						$aElt['initials'] = $aValue['initials'];
+						$aElt['initials'] = utils::FormatInitialsForMedallion($aValue['initials']);
 						if (array_key_exists('picture_url', $aValue)) {
 							$aElt['picture_url'] = $aValue['picture_url'];
 						}
@@ -973,7 +982,7 @@ HTML
 		);
 
 		$oPage->add_ready_script(<<<JS
-$('#ac_create_{$this->iId}').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true});
+$('#ac_create_{$this->iId}').dialog({ width: $(window).width() * 0.6, height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true});
 $('#dcr_{$this->iId} form').removeAttr('onsubmit');
 $('#dcr_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoCreateObject);
 JS

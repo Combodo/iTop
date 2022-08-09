@@ -22,22 +22,24 @@
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
-	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'The object has been deleted on %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => '对象找不到 (class: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.',
+	'Core:UnknownObjectTip'   => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.',
 
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => '对象数组',
+	'Core:AttributeLinkedSet'  => '对象数组',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 
-	'Core:AttributeDashboard' => '仪表盘',
+	'Core:AttributeDashboard'  => '仪表盘',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => '电话号码',
+	'Core:AttributePhoneNumber'  => '电话号码',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => '报废日期',

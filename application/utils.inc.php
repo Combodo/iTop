@@ -21,6 +21,8 @@ use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\OutputStyle;
+use ScssPhp\ScssPhp\ValueConverter;
 
 
 /**
@@ -97,6 +99,11 @@ class utils
 	 * @since 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
+	/**
+	 * @var string
+	 * @since 3.0.2, 3.1.0 N°4899
+	 */
+	public const ENUM_SANITIZATION_FILTER_URL = 'url';
 
 	/**
 	 * @var string
@@ -377,6 +384,7 @@ class utils
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
 	 * @since 3.0.0 new utils::ENUM_SANITIZATION_* const
+	 * @since 2.7.7, 3.0.2, 3.1.0 N°4899 - new 'url' filter
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
@@ -452,6 +460,11 @@ class utils
 
 			case static::ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
+				break;
+
+			// For URL
+			case static::ENUM_SANITIZATION_FILTER_URL:
+				$retValue = filter_var($value, FILTER_SANITIZE_URL);
 				break;
 
 			default:
@@ -1930,19 +1943,23 @@ class utils
 	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
 	{
 		$oSass = new Compiler();
-		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Compressed');
+		$oSass->setOutputStyle(OutputStyle::COMPRESSED);
 		// Setting our variables
-		$oSass->setVariables($aVariables);
+		$aScssVariables = [];
+		foreach ($aVariables as $entry => $value) {
+			$aScssVariables[$entry] = ValueConverter::parseValue($value);
+		}
+		$oSass->addVariables($aScssVariables);
 		// Setting our imports paths
 		$oSass->setImportPaths($aImportPaths);
 		// Temporary disabling max exec time while compiling
 		$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
 		set_time_limit(0);
 		// Compiling SASS
-		$sCss = $oSass->compile($sSassContent);
+		$sCss = $oSass->compileString($sSassContent);
 		set_time_limit(intval($iCurrentMaxExecTime));
 
-		return $sCss;
+		return $sCss->getCss();
 	}
 	
 	public static function GetImageSize($sImageData)
@@ -2118,11 +2135,21 @@ class utils
 	}
 	
 	/**
-	 * Returns the relative (to MODULESROOT) path of the root directory of the module containing the file where the call to
-	 * this function is made
-	 * or an empty string if no such module is found (or not called within a module file)
-	 * @param number $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
-	 * @return string
+	 * **Warning** : returned result can be invalid as we're using backtrace to find the module dir name
+	 *
+	 * @param int $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
+	 *
+	 * @return string the relative (to MODULESROOT) path of the root directory of the module containing the file where the call to
+	 *     this function is made
+	 *     or an empty string if no such module is found (or not called within a module file)
+	 *
+	 * @uses \debug_backtrace()
+	 *
+	 * @since 3.0.0 Before writing model.*.php file, compiler will now always delete it.
+	 *      If you have symlinks enabled, base dir will be original module dir, but since this behavior change this won't be true anymore for model.*.php
+	 *      In consequence the backtrace analysis won't be possible for this file
+	 *      See N°4854
+	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Arelease%3A3_0_whats_new#compiler_always_generate_new_model_php compiler behavior change documentation
 	 */
 	public static function GetCurrentModuleDir($iCallDepth)
 	{
@@ -2147,9 +2174,14 @@ class utils
 	}
 
 	/**
+	 * **Warning** : as this method uses {@see GetCurrentModuleDir} it produces hazardous results.
+	 * You should better uses directly {@see GetAbsoluteUrlModulesRoot} and add the module dir name yourself ! See N°4573
+	 *
 	 * @return string the base URL for all files in the current module from which this method is called
 	 * or an empty string if no such module is found (or not called within a module file)
 	 * @throws \Exception
+	 *
+	 * @uses GetCurrentModuleDir
 	 */
 	public static function GetCurrentModuleUrl()
 	{
@@ -2408,7 +2440,7 @@ class utils
 	 * @throws \ApplicationException if constant value is invalid
 	 * @uses ITOP_CORE_VERSION
 	 */
-	public static function GetCoreVersionWikiSyntax($sItopVersion = ITOP_CORE_VERSION)
+	public static function GetItopVersionWikiSyntax($sItopVersion = ITOP_CORE_VERSION)
 	{
 		$aExplodedVersion = explode('.', $sItopVersion);
 
@@ -2805,6 +2837,54 @@ HTML;
 	}
 
 	//----------------------------------------------
+	// PHP function helpers
+	//----------------------------------------------
+
+	/**
+	 * Helper around the native strlen() PHP method to keep allowing usage of null value when computing the length of a string as null value is no longer allowed with PHP 8.1+
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return int Length of $sString, 0 if null
+	 * @since 3.0.2 N°5172
+	 */
+	public static function StrLen(?string $sString): int
+	{
+		return strlen($sString ?? '');
+	}
+
+	/**
+	 * Helper around the native strlen() PHP method to test a string for null or empty value
+	 *
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return bool if string null or empty
+	 * @since 3.0.2 N°5302
+	 */
+	public static function IsNullOrEmptyString(?string $sString): bool
+	{
+		return $sString === null || strlen($sString) === 0;
+	}
+
+	/**
+	 * Helper around the native strlen() PHP method to test a string not null or empty value
+	 *
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return bool if string is not null and not empty
+	 * @since 3.0.2 N°5302
+	 */
+	public static function IsNotNullOrEmptyString(?string $sString): bool
+	{
+		return !static::IsNullOrEmptyString($sString);
+	}
+
+	//----------------------------------------------
 	// Environment helpers
 	//----------------------------------------------
 
@@ -3033,6 +3113,20 @@ HTML;
 		}
 
 		return $aMentionedObjects;
+	}
+
+	/**
+	 * Note: This method is not ideal, but other solutions seemed even less ideal:
+	 *   * Add a "$sMaxLength" param. to utils::ToAcronym(): Does not work for every use cases (see corresponding ticket) as in some parts utils::ToAcronym isn't necessarly meant to be used in a medallion.
+	 *
+	 * @param string $sInitials
+	 *
+	 * @return string Truncates $sInitials so it can fit in medallions
+	 * @since 3.0.1 N°4913
+	 */
+	public static function FormatInitialsForMedallion(string $sInitials): string
+	{
+		return mb_substr($sInitials, 0, 3);
 	}
 
 	/**

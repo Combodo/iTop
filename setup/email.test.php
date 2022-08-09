@@ -20,6 +20,9 @@
 /**
  * Wizard to configure and initialize the iTop application
  */
+
+use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/core/email.class.inc.php');
@@ -107,9 +110,9 @@ function CheckEmailSetting($oP)
 			}
 		}
 		break;
-		
+
 		case 'SMTP':
-		$oP->info("iTop is configured to use the <b>SMTP</b> transport.");
+		$oP->info("iTop is configured to use the <b>$sTransport</b> transport.");
 		$sHost = MetaModel::GetConfig()->Get('email_transport_smtp.host');
 		$sPort = MetaModel::GetConfig()->Get('email_transport_smtp.port');
 		$sEncryption = MetaModel::GetConfig()->Get('email_transport_smtp.encryption');
@@ -124,7 +127,33 @@ function CheckEmailSetting($oP)
 			$oP->warning("The default settings may not be suitable for your environment. You may want to adjust these values by editing iTop's configuration file (".utils::GetConfigFilePathRelative().").");
 		}
 		break;
-		
+
+		case 'SMTP_OAuth':
+			$oP->info("iTop is configured to use the <b>$sTransport</b> transport.");
+			$sHost = MetaModel::GetConfig()->Get('email_transport_smtp.host');
+			$sPort = MetaModel::GetConfig()->Get('email_transport_smtp.port');
+			$sEncryption = MetaModel::GetConfig()->Get('email_transport_smtp.encryption');
+			$sDisplayEncryption = empty($sEncryption) ? '<em>no encryption</em> ' : $sEncryption;
+			$sUserName = MetaModel::GetConfig()->Get('email_transport_smtp.username');
+			$sDisplayUserName = empty($sUserName) ? '<em>no user</em> ' : $sUserName;
+			try {
+				$oRemoteAuthentOAuth = OAuthClientProviderFactory::GetOAuthClientForSMTP();
+				$sLink = MetaModel::GetHyperLink(get_class($oRemoteAuthentOAuth), $oRemoteAuthentOAuth->GetKey());
+				$oP->info("The connection used is: $sLink");
+				$sProvider = $oRemoteAuthentOAuth->Get('provider');
+				$sDisplayProvider = empty($sProvider) ? '<em>no Provider</em> ' : $sProvider;
+				$sClientID = $oRemoteAuthentOAuth->Get('client_id');
+				$oP->info("SMTP configuration (from config-itop.php): host: $sHost, port: $sPort, provider: $sDisplayProvider, user: $sDisplayUserName, encryption: $sDisplayEncryption.");
+				if (($sHost == 'localhost') && ($sPort == '25') && ($sUserName == '') && ($sClientID == '') && ($sProvider == '')) {
+					$oP->warning("The default settings may not be suitable for your environment. You may want to adjust these values by editing iTop's configuration file (".utils::GetConfigFilePathRelative().').');
+				}
+			} catch (CoreException $e) {
+				$bRet = false;
+				$oP->error($e->getMessage());
+			}
+			break;
+
+
 		case 'Null':
 		$oP->warning("iTop is configured to use the <b>Null</b> transport: emails sending will have no effect.");
 		$bRet = false;
@@ -175,9 +204,10 @@ function DisplayStep1(SetupPage $oP)
 			'input' => "<input id=\"to\" type=\"text\" name=\"to\" value=\"\">",
 			'help' => ' email address (e.g. john.foo@worldcompany.com)',
 		);
+		$sDefaultFrom = MetaModel::GetConfig()->Get('email_transport_smtp.username');
 		$aForm[] = array(
 			'label' => "From:",
-			'input' => "<input id=\"from\" type=\"text\" name=\"from\" value=\"\">",
+			'input' => "<input id=\"from\" type=\"text\" name=\"from\" value=\"$sDefaultFrom\">",
 			'help' => ' defaults to the configuration param "email_default_sender_address" or "To" field.',
 		);
 		$oP->form($aForm);
@@ -279,4 +309,4 @@ catch(CoreException $e)
 	$oP->error("Error: '".$e->getHtmlDesc()."'");	
 }
 $oP->output();
-?>
+

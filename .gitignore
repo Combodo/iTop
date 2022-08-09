@@ -45,9 +45,13 @@ test/vendor/*
 !/log/index.php
 !/log/web.config
 
+# PHPUnit cache file
+/test/.phpunit.result.cache
+
 
 # Jetbrains
 /.idea/**
+!/.idea/IntelliLang.xml
 
 # doc. generation
 /.doc/vendor

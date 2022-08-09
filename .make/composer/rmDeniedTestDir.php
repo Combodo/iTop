@@ -36,22 +36,38 @@ clearstatcache();
 $oiTopComposer = new iTopComposer();
 $aDeniedButStillPresent = $oiTopComposer->ListDeniedButStillPresent();
 
+echo "\n";
 foreach ($aDeniedButStillPresent as $sDir)
 {
-	if (! preg_match('#[tT]ests?/?$#', $sDir))
+	if (false === iTopComposer::IsTestDir($sDir))
 	{
-		echo "\nfound INVALID denied test dir: '$sDir'\n";
+		echo "ERROR found INVALID denied test dir: '$sDir'\n";
 		throw new \Exception("$sDir must end with /Test/ or /test/");
 	}
 
-	try
-	{
-		SetupUtils::rrmdir($sDir);
-		echo "Remove denied test dir: '$sDir'\n";
-	}
-	catch (\Exception $e)
-	{
-		echo "\nFAILED to remove denied test dir: '$sDir'\n";
+	if (false === file_exists($sDir)) {
+		echo "INFO $sDir is in denied list, but not existing on disk => skipping !\n";
+		continue;
 	}
 
+	try {
+		SetupUtils::rrmdir($sDir);
+		echo "OK Remove denied test dir: '$sDir'\n";
+	}
+	catch (\Exception $e) {
+		echo "\nFAILED to remove denied test dir: '$sDir'\n";
+	}
+}
+
+
+$aAllowedAndDeniedDirs = array_merge(
+	$oiTopComposer->ListAllowedTestDir(),
+	$oiTopComposer->ListDeniedTestDir()
+);
+$aExistingDirs = $oiTopComposer->ListAllTestDir();
+$aMissing = array_diff($aExistingDirs, $aAllowedAndDeniedDirs);
+if (false === empty($aMissing)) {
+	echo "Some new tests dirs exists !\n"
+		.'  They must be declared either in the allowed or denied list in '.iTopComposer::class." (see N°2651).\n"
+		.'  List of dirs:'."\n".var_export($aMissing, true);
 }

@@ -24,7 +24,7 @@ class MetaModelTest extends ItopDataTestCase
     protected static $sDefaultUserRequestTitle = 'Unit test title';
     protected static $sDefaultUserRequestDescription = 'Unit test description';
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once APPROOT.'/core/metamodel.class.php';

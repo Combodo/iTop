@@ -19,5 +19,5 @@
 
 // Input
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'Passwörter stimmen nicht überein',
 ));

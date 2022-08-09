@@ -14,9 +14,18 @@ $.ajax({
         var oRequirements = $("#header-requirements");
         var oCanCoreUpdate = $("#can-core-update");
         oCanCoreUpdate.html(data.sMessage);
+        if(data.sMessageDetails){
+            $("#header-requirements-details").removeClass("ibo-is-hidden");
+            $('#can-core-update-details').html(data.sMessageDetails);
+            $("#toggle-requirements-details").click( function() { $("#can-core-update-details").toggle(); } );
+        }
         oRequirements.removeClass("ibo-is-information");
         if (data.bStatus) {
             oRequirements.addClass("ibo-is-success");
+            $("#check-update").prop("disabled", false);
+            $("#file").prop("disabled", false);
+            $("#file-container").removeClass("ibo-is-hidden");
+            $("#check-in-progress").addClass("ibo-is-hidden");
         } else {
             $("#check-update").prop("disabled", true);
             $("#file").prop("disabled", true);

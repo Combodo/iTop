@@ -183,7 +183,7 @@ JS
 			'{{iAttId}}',
 			'{{sLineStyle}}',
 			'{{sDocDownloadUrl}}',
-			'{{sIconClass}}',
+		     true,
 			'{{sAttachmentThumbUrl}}',
 			'{{sFileName}}',
 			'{{sAttachmentMeta}}',
@@ -214,7 +214,7 @@ JS
 			function UpdateAttachmentsCount(iIncrement)
 			{
 				var countContainer = $("a#$sCollapseTogglerId>span.attachments-count"),
-					iCountCurrentValue = parseInt(countContainer.text());
+				iCountCurrentValue = parseInt(countContainer.text());
 				countContainer.text(iCountCurrentValue+iIncrement);
 			}
 
@@ -233,7 +233,6 @@ JS
 						var \$oAttachmentTBody = $(this).closest('.fileupload_field_content').find('.attachments_container table#$sAttachmentTableId>tbody'),
 							iAttId = data.result.att_id,
 							sDownloadLink = '{$this->oField->GetDownloadEndpoint()}'.replace(/-sAttachmentId-/, iAttId),
-							sIconClass = (data.result.preview == 'true') ? 'trigger-preview' : '',
 							sAttachmentMeta = '<input id="attachment_'+iAttId+'" type="hidden" name="attachments[]" value="'+iAttId+'"/>';
 
 						// hide "no attachment" line if present
@@ -247,23 +246,24 @@ JS
 							{search: "{{iAttId}}", replace:iAttId },
 							{search: "{{lineStyle}}", replace:'' },
 							{search: "{{sDocDownloadUrl}}", replace:sDownloadLink },
-							{search: "{{sIconClass}}", replace:sIconClass },
 							{search: "{{sAttachmentThumbUrl}}", replace:data.result.icon },
 							{search: "{{sFileName}}", replace: data.result.msg },
 							{search: "{{sAttachmentMeta}}", replace:sAttachmentMeta },
 							{search: "{{sFileSize}}", replace:data.result.file_size },
 							{search: "{{sAttachmentDate}}", replace:data.result.creation_date },
 						];
-						var sAttachmentRow = attachmentRowTemplate;
+						var sAttachmentRow = attachmentRowTemplate   ;
 						$.each(replaces, function(indexInArray, value ) {
 							var re = new RegExp(value.search, 'gi');
 							sAttachmentRow = sAttachmentRow.replace(re, value.replace);
 						});
 						
-						\$oAttachmentTBody.append(sAttachmentRow);
-						// Preview tooltip
-						if(data.result.preview){
+						var oElem = $(sAttachmentRow);
+						if(!data.result.preview){
+							oElem.find('[data-tooltip-html-enabled="true"]').removeAttr('data-tooltip-content');
+							oElem.find('[data-tooltip-html-enabled="true"]').removeAttr('data-tooltip-html-enabled');
 						}
+						\$oAttachmentTBody.append(oElem);
 						// Remove button handler
 						$('#display_attachment_'+data.result.att_id+' :button').on('click', function(oEvent){
 							oEvent.preventDefault();
@@ -303,8 +303,6 @@ JS
 				}
 			});
 
-			$('table#$sAttachmentTableId>tbody>tr>td a.trigger-preview').each(function(iIndex, oElem){
-			});
 			// Remove button handler
 			$('.attachments_container table#$sAttachmentTableId>tbody>tr>td :button').on('click', function(oEvent){
 				oEvent.preventDefault();
@@ -404,10 +402,10 @@ HTML
 				$sDocDownloadUrl = str_replace('-sAttachmentId-', $iAttId, $this->oField->GetDownloadEndpoint());
 
 				$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
-				$sIconClass = '';
+				$bHasPreview = false;
 				if ($oDoc->IsPreviewAvailable())
 				{
-					$sIconClass = 'trigger-preview';
+					$bHasPreview = true;
 					$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', AbstractAttachmentsRenderer::DEFAULT_MAX_SIZE_FOR_PREVIEW);
 					if ($oDoc->GetSize() <= $iMaxSizeForPreview)
 					{
@@ -431,7 +429,7 @@ HTML
 					$iAttId,
 					$sLineStyle,
 					$sDocDownloadUrl,
-					$sIconClass,
+					$bHasPreview,
 					$sAttachmentThumbUrl,
 					$sFileName,
 					$sAttachmentMeta,
@@ -482,7 +480,7 @@ HTML;
 	 * @param int $iAttId
 	 * @param string $sLineStyle
 	 * @param string $sDocDownloadUrl
-	 * @param string $sIconClass
+	 * @param bool $bHasPreview replace string $sIconClass since 3.0.1
 	 * @param string $sAttachmentThumbUrl
 	 * @param string $sFileName
 	 * @param string $sAttachmentMeta
@@ -496,7 +494,7 @@ HTML;
 	 * @since 2.7.0
 	 */
 	protected static function GetAttachmentTableRow(
-		$iAttId, $sLineStyle, $sDocDownloadUrl, $sIconClass, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
+		$iAttId, $sLineStyle, $sDocDownloadUrl, $bHasPreview, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
 		$iFileSizeRaw, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
 	) {
 		$sDeleteCell = '';
@@ -505,16 +503,22 @@ HTML;
 			$sDeleteBtnLabel = Dict::S('Portal:Button:Delete');
 			$sDeleteCell = '<td role="delete"><input id="btn_remove_'.$iAttId.'" type="button" class="btn btn-xs btn-primary" value="'.$sDeleteBtnLabel.'"></td>';
 		}
+		$sHtml =  "<tr id=\"display_attachment_{$iAttId}\" class=\"attachment\" $sLineStyle>";
 
-		return <<<HTML
-	<tr id="display_attachment_{$iAttId}" class="attachment" $sLineStyle>
-	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass" data-tooltip-content="<div class='attachment-tooltip'><img src='{$sDocDownloadUrl}'></div>" data-tooltip-html-enabled=true><img $sIconClass src="$sAttachmentThumbUrl" ></a></td>
-	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
+		if($bHasPreview) {
+			$sHtml .= "<td role=\"icon\"><a href=\"$sDocDownloadUrl\" target=\"_blank\" data-tooltip-content=\"<img class='attachment-tooltip' src='{$sDocDownloadUrl}'>\" data-tooltip-html-enabled=true><img src=\"$sAttachmentThumbUrl\" ></a></td>";
+		} else {
+			$sHtml .= "<td role=\"icon\"><a href=\"$sDocDownloadUrl\" target=\"_blank\"><img src=\"$sAttachmentThumbUrl\" ></a></td>";
+		}
+
+		$sHtml .=  <<<HTML
+	 <td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
 	  <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
 	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>
 	  $sDeleteCell
 	</tr>
 HTML;
+		return $sHtml;
 	}
 
 	/**

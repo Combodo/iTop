@@ -38,6 +38,8 @@ $ibo-vendors-datatables--columns-header--border-bottom: 1px solid $ibo-color-gre
 $ibo-vendors-datatables--row--background-color--is-odd: $ibo-color-white-100 !default;
 $ibo-vendors-datatables--row--background-color--is-even: $ibo-color-white-200 !default;
 
+$ibo-vendors-datatables--row-highlight--first-cell--width: 3px !default;
+
 $ibo-vendors-datatables--row-highlight--colors:(
         'red': ($ibo-color-red-100),
         'danger': ($ibo-color-red-200),
@@ -46,6 +48,20 @@ $ibo-vendors-datatables--row-highlight--colors:(
         'warning': ($ibo-color-orange-200),
         'blue': ($ibo-color-blue-200),
         'info': ($ibo-color-blue-200),
+        'green': ($ibo-color-green-100),
+        'success': ($ibo-color-green-200),
+) !default;
+
+$ibo-vendors-datatables--row-highlight--first-cell--colors:(
+        'red': ($ibo-color-red-300),
+        'danger': ($ibo-color-red-400),
+        'alert': ($ibo-color-red-400),
+        'orange': ($ibo-color-orange-300),
+        'warning': ($ibo-color-orange-400),
+        'blue': ($ibo-color-blue-400),
+        'info': ($ibo-color-blue-400),
+        'green': ($ibo-color-green-300),
+        'success': ($ibo-color-green-300),
 ) !default;
 
 .dataTables_paginate {
@@ -157,4 +173,17 @@ $ibo-vendors-datatables--row-highlight--colors:(
       background-color: $sBgColor;
     }
   }
+  @each $sColorLabel, $aAttributes in $ibo-vendors-datatables--row-highlight--first-cell--colors {
+    $sBgColor: nth($aAttributes, 1);
+    tr.ibo-is-#{$sColorLabel} td:first-child::before{
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background-color: $sBgColor;
+    }
+  }
+
 }

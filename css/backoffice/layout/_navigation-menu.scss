@@ -14,7 +14,7 @@ $ibo-navigation-menu--body--background-color: $ibo-color-blue-grey-900 !default;
 $ibo-navigation-menu--body--text-color: $ibo-color-grey-300 !default;
 
 $ibo-navigation-menu--top-part--height: 120px !default;
-$ibo-navigation-menu--top-part--padding-y: $ibo-navigation-menu--body--padding-y !default;
+$ibo-navigation-menu--top-part--padding-y: $ibo-spacing-400 !default;
 $ibo-navigation-menu--top-part--padding-x: $ibo-navigation-menu--body--padding-x !default;
 $ibo-navigation-menu--top-part--elements-spacing: 20px !default;
 
@@ -70,13 +70,13 @@ $ibo-navigation-menu--square-company-logo--width: 38px !default;
 $ibo-navigation-menu--square-company-logo--height: 38px !default;
 $ibo-navigation-menu--square-company-logo--margin-top: $ibo-spacing-0 !default;
 $ibo-navigation-menu--square-company-logo--margin-x: -5px !default;
-$ibo-navigation-menu--square-company-logo--margin-bottom: $ibo-navigation-menu--body--padding-y * 2 !default;
+$ibo-navigation-menu--square-company-logo--margin-bottom: ($ibo-navigation-menu--body--padding-y * 2) + 12px !default; /* +12px to keep burger & menu groups icons align in both expanded and collapsed mode */
 
 $ibo-navigation-menu--full-company-logo--width: $ibo-navigation-menu--body--width-expanded !default;
 $ibo-navigation-menu--full-company-logo--height: 70px !default;
 $ibo-navigation-menu--full-company-logo--margin-top: $ibo-spacing-0 !default;
 $ibo-navigation-menu--full-company-logo--margin-right: $ibo-spacing-0 !default;
-$ibo-navigation-menu--full-company-logo--margin-bottom: $ibo-spacing-0 !default;
+$ibo-navigation-menu--full-company-logo--margin-bottom: $ibo-spacing-400 !default;
 $ibo-navigation-menu--full-company-logo--margin-left: -$ibo-navigation-menu--body--padding-y !default;
 $ibo-navigation-menu--full-company-logo--image--margin-x: auto !default;
 $ibo-navigation-menu--full-company-logo--image--margin-y: $ibo-spacing-0 !default;

@@ -27,7 +27,12 @@ use RecursiveIteratorIterator;
 
 class iTopComposer
 {
+	const TEST_DIR_REGEXP = '/^tests?$/i';
 
+	/**
+	 * @return array List of all subdirs of /lib that are {@see IsTestDir}.
+	 *              Warning : each path contains slashes (meaning on Windows you'll get eg `C:/Dev/wamp64/www/itop-27/lib/goaop/framework/tests`)
+	 */
 	public function ListAllTestDir()
 	{
 		$aAllTestDirs = array();
@@ -49,15 +54,24 @@ class iTopComposer
 				continue;
 			}
 
-			$aAllTestDirs[] = $file->getRealpath();
+			$sTestPathDir = $file->getRealpath();
+			$sTestPathDir = str_replace('\\', '/', $sTestPathDir);
+			$aAllTestDirs[] = $sTestPathDir;
 		}
 
 		return $aAllTestDirs;
 	}
-	
-	private function IsTestDir($sDirName)
+
+	/**
+	 * @param $sDirName
+	 *
+	 * @return false|int as {@see \preg_match()}
+	 * @uses self::TEST_DIR_REGEXP
+	 * @uses \preg_match()
+	 */
+	public static function IsTestDir($sDirName)
 	{
-		return preg_match('/^[tT]ests?$/', $sDirName);
+		return preg_match(static::TEST_DIR_REGEXP, $sDirName);
 	}
 
 	/**
@@ -82,40 +96,50 @@ class iTopComposer
 	{
 		$APPROOT_WITH_SLASHES = $this->GetApprootWithSlashes();
 		return array(
+			$APPROOT_WITH_SLASHES.'lib/doctrine/lexer/tests',
+
+			$APPROOT_WITH_SLASHES.'lib/goaop/framework/tests',
+
 			$APPROOT_WITH_SLASHES.'lib/nikic/php-parser/test',
-			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Test',
-			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Test',
-			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Tests/Test',
-			$APPROOT_WITH_SLASHES.'lib/twig/twig/src/Test',
-			$APPROOT_WITH_SLASHES.'lib/psr/log/Psr/Log/Test',
-			$APPROOT_WITH_SLASHES.'lib/twig/twig/lib/Twig/Test',
-			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests/Fixtures/TestBundle/FooBundle/Controller/Test',
+
+			$APPROOT_WITH_SLASHES.'lib/pear/archive_tar/tests',
 			$APPROOT_WITH_SLASHES.'lib/pear/console_getopt/tests',
 			$APPROOT_WITH_SLASHES.'lib/pear/pear_exception/tests',
+
+			$APPROOT_WITH_SLASHES.'lib/psr/log/Psr/Log/Test',
+
 			$APPROOT_WITH_SLASHES.'lib/symfony/cache/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/cache/Tests/DoctrineProviderTest.php',
 			$APPROOT_WITH_SLASHES.'lib/symfony/class-loader/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/config/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/console/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/css-selector/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/debug/Resources/ext/tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/debug/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/dependency-injection/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/dotenv/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/event-dispatcher/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/filesystem/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/finder/Tests',
-			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/http-foundation/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/http-kernel/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Test',
+			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests/Fixtures/TestBundle/FooBundle/Controller/Test',
 			$APPROOT_WITH_SLASHES.'lib/symfony/routing/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/stopwatch/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/twig-bridge/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/twig-bundle/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Test',
+			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Tests/Test',
 			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/web-profiler-bundle/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/yaml/Tests',
-			$APPROOT_WITH_SLASHES.'lib/symfony/debug/Resources/ext/tests',
-			$APPROOT_WITH_SLASHES.'lib/goaop/framework/tests',
+
+			$APPROOT_WITH_SLASHES.'lib/twig/twig/src/Test',
+			$APPROOT_WITH_SLASHES.'lib/twig/twig/lib/Twig/Test',
 			$APPROOT_WITH_SLASHES.'lib/twig/twig/doc/tests',
+
+			$APPROOT_WITH_SLASHES.'lib/laminas/laminas-servicemanager/src/Test',
 		);
 	}
 

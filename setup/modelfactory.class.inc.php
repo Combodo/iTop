@@ -961,9 +961,9 @@ class ModelFactory
 		catch (Exception $e) {
 			$aLoadedModuleNames = array();
 			foreach (self::$aLoadedModules as $oLoadedModule) {
-				$aLoadedModuleNames[] = $oLoadedModule->GetName();
+				$aLoadedModuleNames[] = $oLoadedModule->GetName().':'.$oLoadedModule->GetVersion();
 			}
-			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',',
+			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(', ',
 					$aLoadedModuleNames));
 		}
 	}
@@ -2312,7 +2312,7 @@ EOF;
 	 *
 	 * @param MFElement $oNewNode The replacement
 	 *
-	 * @since 2.7.7 3.0.1 3.1.0 N°3129 rename method (from `ReplaceWith` to `MFReplaceWith`) to avoid collision with parent `\DOMElement::replaceWith` method (different method modifier and parameters :
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 rename method (from `ReplaceWith` to `ReplaceWithSingleNode`) to avoid collision with parent `\DOMElement::replaceWith` method (different method modifier and parameters :
 	 * throws fatal error in PHP 8.0)
 	 */
 	protected function ReplaceWithSingleNode($oNewNode)

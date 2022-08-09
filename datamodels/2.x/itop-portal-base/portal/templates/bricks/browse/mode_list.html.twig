@@ -79,7 +79,8 @@
 							// Building tooltip for the node
 							// We have to concatenate the HTML as we return the raw HTML of the cell. If we did a jQuery.insertAfter, the tooltip would not be returned.
 							// For the same reason, tooltip widget is created in "drawCallback" instead of here.
-							if( (data.tooltip !== undefined) && ($(data.tooltip).text() !== ''))
+                            // N°4662 - Surround tooltip with div to ensure text retrival
+							if( (data.tooltip !== undefined) && ($('<div>'+data.tooltip+'</div>').text() !== ''))
 							{
 								cellElem.html( $('<span></span>').attr('data-tooltip-content', data.tooltip).attr('data-tooltip-html-enabled', true).html(data.name).prop('outerHTML') );
 							}

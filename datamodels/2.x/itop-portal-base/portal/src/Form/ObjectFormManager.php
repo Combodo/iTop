@@ -91,8 +91,9 @@ class ObjectFormManager extends FormManager
 	 * @return array formmanager_data as a PHP array
 	 *
 	 * @since 2.7.6 3.0.0 N°4384 method creation : factorize as this is used twice now
+	 * @since 2.7.7 3.0.1 N°4867 now only used once, but we decided to keep this method anyway
 	 */
-	protected static function DecodeFormManagerData($formManagerData)
+	public static function DecodeFormManagerData($formManagerData)
 	{
 		if (is_array($formManagerData)) {
 			return $formManagerData;
@@ -106,30 +107,17 @@ class ObjectFormManager extends FormManager
 	 *       - formobject_class : The class of the object that is being edited/viewed
 	 *       - formmode : view|edit|create
 	 *       - values for parent
-	 * @param bool $bTrustContent if false then won't allow modified TWIG content
 	 *
 	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager new instance init from JSON data
 	 *
 	 * @inheritDoc
 	 * @throws \Exception
-	 * @throws \SecurityException if twig content is present and $bTrustContent is false
-	 *
 	 * @since 2.7.6 3.0.0 N°4384 new $bTrustContent parameter
+	 * @since 2.7.7 3.0.1 N°4867 remove param $bTrustContent
 	 */
-	public static function FromJSON($sJson, $bTrustContent = false)
+	public static function FromJSON($sJson)
 	{
 		$aJson = static::DecodeFormManagerData($sJson);
-
-		$oConfig = utils::GetConfig();
-		$bIsContentCheckEnabled = $oConfig->GetModuleSetting(PORTAL_ID, 'enable_formmanager_content_check', true);
-		if ($bIsContentCheckEnabled && (false === $bTrustContent)) {
-			/** @noinspection NestedPositiveIfStatementsInspection */
-			if (isset($aJson['formproperties']['layout']['type']) && ($aJson['formproperties']['layout']['type'] === 'twig')) {
-				// There will be an IssueLog above in the hierarchy due to the exception, but we are logging here so that we can output the JSON data !
-				IssueLog::Error('Portal received a query with forbidden twig content!', \LogChannels::PORTAL, ['formmanager_data' => $aJson]);
-				throw new \SecurityException('Twig content not allowed in this context!');
-			}
-		}
 
 		/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 		$oFormManager = parent::FromJSON($sJson);
@@ -181,37 +169,6 @@ class ObjectFormManager extends FormManager
 		}
 
 		return $oFormManager;
-	}
-
-	/**
-	 * @param string $sPostedFormManagerData received data from the browser
-	 * @param array $aOriginalFormProperties data generated server side
-	 *
-	 * @return bool true if the data are identical
-	 *
-	 * @since 2.7.6 3.0.0 N°4384 check formmanager_data
-	 */
-	public static function CanTrustFormLayoutContent($sPostedFormManagerData, $aOriginalFormProperties)
-	{
-		$aPostedFormManagerData = static::DecodeFormManagerData($sPostedFormManagerData);
-		$sPostedFormLayoutType = (isset($aPostedFormManagerData['formproperties']['layout']['type'])) ? $aPostedFormManagerData['formproperties']['layout']['type'] : '';
-
-		if ($sPostedFormLayoutType === 'xhtml') {
-			return true;
-		}
-
-		// we need to parse the content so that autoclose tags are returned correctly (`<div />` => `<div></div>`)
-		$oHtmlDocument = new \DOMDocument();
-
-		$sPostedFormLayoutContent = (isset($aPostedFormManagerData['formproperties']['layout']['content'])) ? $aPostedFormManagerData['formproperties']['layout']['content'] : '';
-		$oHtmlDocument->loadXML('<root>'.$sPostedFormLayoutContent.'</root>');
-		$sPostedFormLayoutRendered = $oHtmlDocument->saveHTML();
-
-		$sOriginalFormLayoutContent = (isset($aOriginalFormProperties['layout']['content'])) ? $aOriginalFormProperties['layout']['content'] : '';
-		$oHtmlDocument->loadXML('<root>'.$sOriginalFormLayoutContent.'</root>');
-		$sOriginalFormLayoutContentRendered = $oHtmlDocument->saveHTML();
-
-		return ($sPostedFormLayoutRendered === $sOriginalFormLayoutContentRendered);
 	}
 
 	/**
@@ -703,7 +660,7 @@ class ObjectFormManager extends FormManager
 
 			/** @var Field $oField */
 			$oField = null;
-			if (is_callable(get_class($oAttDef).'::MakeFormField'))
+			if (is_callable([$oAttDef, 'MakeFormField']))
 			{
 				$oField = $oAttDef->MakeFormField($this->oObject);
 			}
@@ -1185,16 +1142,18 @@ class ObjectFormManager extends FormManager
 		$sObjectClass = get_class($this->oObject);
 
 		try {
+			// modification flags
+			$bIsNew = $this->oObject->IsNew();
+			$bWasModified = $this->oObject->IsModified();
+			$bActivateTriggers = (!$bIsNew && $bWasModified);
+
 			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
-			$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
+			$bAllowWrite = $this->oContainer->get('security_helper')->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
 			if ($bAllowWrite) {
 				$this->oObject->AllowWrite(true);
 			}
 
 			// Writing object to DB
-			$bIsNew = $this->oObject->IsNew();
-			$bWasModified = $this->oObject->IsModified();
-			$bActivateTriggers = (!$bIsNew && $bWasModified);
 			try
 			{
 				$this->oObject->DBWrite();

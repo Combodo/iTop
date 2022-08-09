@@ -26,8 +26,10 @@
 
 namespace Combodo\iTop;
 
-use \DOMDocument;
-use \DOMFormatException;
+use DOMDocument;
+use DOMFormatException;
+use IssueLog;
+use LogAPI;
 
 /**
  * Class \Combodo\iTop\DesignDocument
@@ -64,9 +66,13 @@ class DesignDocument extends DOMDocument
 	 * @param $filename
 	 * @param int $options
 	 */
-	public function load($filename, $options = 0)
+	public function load($filename, $options = null)
 	{
-		parent::load($filename, LIBXML_NOBLANKS);
+		libxml_clear_errors();
+		if (parent::load($filename, LIBXML_NOBLANKS) === false) {
+			$aErrors = libxml_get_errors();
+			IssueLog::Error("Error loading $filename", LogAPI::CHANNEL_DEFAULT, $aErrors);
+		}
 	}
 
 	/**
@@ -77,10 +83,10 @@ class DesignDocument extends DOMDocument
 	 *
 	 * @return int
 	 */
-	public function save($filename, $options = 0)
+	public function save($filename, $options = null)
 	{
 		$this->documentElement->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
-		return parent::save($filename, LIBXML_NOBLANKS);
+		return parent::save($filename);
 	}
 
 	/**

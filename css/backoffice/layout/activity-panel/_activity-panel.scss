@@ -41,6 +41,12 @@ $ibo-activity-panel--tab-title-decoration--border-radius: $ibo-border-radius-300
 
 $ibo-activity-panel--tab-title-draft-indicator--margin-x: $ibo-activity-panel--tab-title-decoration--margin-right !default;
 
+$ibo-activity-panel--tab-title-messages-count--margin-left: $ibo-activity-panel--tab-title-draft-indicator--margin-x !default;
+$ibo-activity-panel--tab-title-messages-count--background-color: $ibo-color-grey-200 !default;
+$ibo-activity-panel--tab-title-messages-count--padding-x: $ibo-spacing-200 !default;
+$ibo-activity-panel--tab-title-messages-count--padding-y: $ibo-spacing-0 !default;
+$ibo-activity-panel--tab-title-messages-count--border-radius: $ibo-border-radius-300 !default;
+
 $ibo-activity-panel--tab-title-text--max-width: 100px !default;
 
 /* - Tab toolbar */
@@ -180,6 +186,9 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 		.ibo-activity-panel--tab-title{
 			background-color: $ibo-activity-panel--tab-title--is-active--background-color;
 		}
+    .ibo-activity-panel--tab-title-messages-count{
+      display: none;
+    }
 	}
   &.ibo-is-draft{
     .ibo-activity-panel--tab-title-draft-indicator{
@@ -212,6 +221,17 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 	height: $ibo-activity-panel--tab-title-decoration--height;
 	border-radius: $ibo-activity-panel--tab-title-decoration--border-radius;
 	@extend %ibo-depression-100;
+}
+.ibo-activity-panel--tab-title-messages-count{
+  display: inline-block;
+  margin-left: $ibo-activity-panel--tab-title-messages-count--margin-left;
+  background-color: $ibo-activity-panel--tab-title-messages-count--background-color;
+  padding: $ibo-activity-panel--tab-title-messages-count--padding-y $ibo-activity-panel--tab-title-messages-count--padding-x;
+  border-radius: $ibo-activity-panel--tab-title-messages-count--border-radius;
+
+  &[data-messages-count="0"]{
+    display: none;
+  }
 }
 .ibo-activity-panel--tab-title-draft-indicator{
   display: none;

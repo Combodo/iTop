@@ -23,6 +23,7 @@ use ArrayIterator;
 use Combodo\iTop\Application\Helper\Session;
 use IteratorAggregate;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Traversable;
 use utils;
 
 /**
@@ -98,9 +99,9 @@ class SessionMessageHelper implements IteratorAggregate
 	}
 
 	/**
-	 * @return \ArrayIterator|\Traversable
+	 * @return \ArrayIterator|\Traversable (\Traversable is the return type from the interface, \ArrayIterator is what we actually return)
 	 */
-	public function getIterator()
+	public function getIterator(): Traversable
 	{
 		$this->FetchMessages();
 

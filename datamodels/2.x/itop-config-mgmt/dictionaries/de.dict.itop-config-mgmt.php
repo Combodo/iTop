@@ -20,7 +20,7 @@
 
 * @copyright     Copyright (C) 2021 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
-*		
+*
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Relation:impacts/Description' => 'Elemente betroffen von',
@@ -32,6 +32,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Relation:depends on/Description' => 'Elemente, von denen dieses Element abhängt.',
 	'Relation:depends on/DownStream' => 'Hängt ab von ...',
 	'Relation:depends on/UpStream' => 'Wirkt auf ...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 
@@ -264,13 +266,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:DatacenterDevice/Attribute:nb_u+' => '',
 	'Class:DatacenterDevice/Attribute:managementip' => 'Management-IP',
 	'Class:DatacenterDevice/Attribute:managementip+' => '',
-	'Class:DatacenterDevice/Attribute:powerA_id' => 'PowerA-Quelle',
+	'Class:DatacenterDevice/Attribute:powerA_id' => 'Strom-A-Quelle',
 	'Class:DatacenterDevice/Attribute:powerA_id+' => '',
-	'Class:DatacenterDevice/Attribute:powerA_name' => 'PowerA-Quellenname',
+	'Class:DatacenterDevice/Attribute:powerA_name' => 'Strom-A-Quellenname',
 	'Class:DatacenterDevice/Attribute:powerA_name+' => '',
-	'Class:DatacenterDevice/Attribute:powerB_id' => 'PowerB-Quelle',
+	'Class:DatacenterDevice/Attribute:powerB_id' => 'Strom-B-Quelle',
 	'Class:DatacenterDevice/Attribute:powerB_id+' => '',
-	'Class:DatacenterDevice/Attribute:powerB_name' => 'PowerB-Quellenname',
+	'Class:DatacenterDevice/Attribute:powerB_name' => 'Strom-B-Quellenname',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC-Ports',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '',
@@ -313,7 +315,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Server+' => '',
 	'Class:Server/Attribute:osfamily_id' => 'OS Familie',
 	'Class:Server/Attribute:osfamily_id+' => '',
-	'Class:Server/Attribute:osfamily_name' => 'OS-Famillenname',
+	'Class:Server/Attribute:osfamily_name' => 'OS-Familienname',
 	'Class:Server/Attribute:osfamily_name+' => '',
 	'Class:Server/Attribute:osversion_id' => 'OS Version',
 	'Class:Server/Attribute:osversion_id+' => '',
@@ -1109,7 +1111,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Model/Attribute:type/Value:TapeLibrary+' => '',
 	'Class:Model/Attribute:type/Value:Phone' => 'Telefon',
 	'Class:Model/Attribute:type/Value:Phone+' => '',
-	'Class:Model/Attribute:physicaldevices_list' => 'Phyische Geräte',
+	'Class:Model/Attribute:physicaldevices_list' => 'Physische Geräte',
 	'Class:Model/Attribute:physicaldevices_list+' => '',
 	'Class:Model/UniquenessRule:name_brand+' => 'Der Modellname für eine Marke muss eindeutig sein',
 	'Class:Model/UniquenessRule:name_brand' => 'Es existiert bereits ein Modell mit diesem Namen für diese Marke',

@@ -368,7 +368,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 <li>gerenciar o ativo mais importante de sua TI: Documentação</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Solicitações abertas: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Minhas solicitações',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidentes abertos: %1$d',
@@ -464,6 +471,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Error:MaintenanceMode' => 'A aplicação está em manutenção',
 	'UI:Error:MaintenanceTitle' => 'Manutenção',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 
 	'UI:GroupBy:Count' => 'Número',
 	'UI:GroupBy:Count+' => 'Número de elementos',
@@ -1649,30 +1658,30 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:AuditCategories' => 'Categoria Auditorias',
 	'Menu:AuditCategories+' => 'Categoria Auditorias',
 	'Menu:Notifications:Title' => 'Categoria Auditorias',
-	'Menu:RunQueriesMenu' => 'Executar consultas',
-	'Menu:RunQueriesMenu+' => 'Executar qualquer consulta',
-	'Menu:QueryMenu' => 'Consulta  definida',
-	'Menu:QueryMenu+' => 'Consulta  definida',
-	'Menu:UniversalSearchMenu' => 'Pesquisa Universal',
-	'Menu:UniversalSearchMenu+' => 'Pesquisar por nada...',
-	'Menu:UserManagementMenu' => 'Gerenciamento Usuários',
-	'Menu:UserManagementMenu+' => 'Gerenciamento Usuários',
-	'Menu:ProfilesMenu' => 'Perfis',
-	'Menu:ProfilesMenu+' => 'Perfis',
-	'Menu:ProfilesMenu:Title' => 'Perfis',
-	'Menu:UserAccountsMenu' => 'Contas usuários',
-	'Menu:UserAccountsMenu+' => 'Contas usuários',
+	'Menu:RunQueriesMenu'         => 'Executar consultas',
+	'Menu:RunQueriesMenu+'        => 'Executar qualquer consulta',
+	'Menu:QueryMenu'              => 'Consulta  definida',
+	'Menu:QueryMenu+'             => 'Consulta  definida',
+	'Menu:UniversalSearchMenu'    => 'Pesquisa Universal',
+	'Menu:UniversalSearchMenu+'   => 'Pesquisar por nada...',
+	'Menu:UserManagementMenu'     => 'Gerenciamento Usuários',
+	'Menu:UserManagementMenu+'    => 'Gerenciamento Usuários',
+	'Menu:ProfilesMenu'           => 'Perfis',
+	'Menu:ProfilesMenu+'          => 'Perfis',
+	'Menu:ProfilesMenu:Title'     => 'Perfis',
+	'Menu:UserAccountsMenu'       => 'Contas usuários',
+	'Menu:UserAccountsMenu+'      => 'Contas usuários',
 	'Menu:UserAccountsMenu:Title' => 'Contas usuários',
-	'Menu:MyShortcuts' => 'Meus atalhos',
-	'Menu:UserManagement' => 'Gerenciamento de usuários',
-	'Menu:Queries' => 'Consultas',
-	'Menu:ConfigurationTools' => 'Configuração',
+	'Menu:MyShortcuts'            => 'Meus atalhos',
+	'Menu:UserManagement'         => 'Gerenciamento de usuários',
+	'Menu:Queries'                => 'Consultas',
+	'Menu:ConfigurationTools'     => 'Configuração',
 ));
 
 // Additional language entries not present in English dict
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
- 'UI:Toggle:StandardDashboard' => 'Padrão',
- 'UI:Toggle:CustomDashboard' => 'Customizado',
- 'UI:Dashboard:Edit' => 'Editar esta página...',
- 'UI:Dashboard:Revert' => 'Reverter para versão original...',
+	'UI:Toggle:StandardDashboard' => 'Padrão',
+	'UI:Toggle:CustomDashboard'   => 'Customizado',
+	'UI:Dashboard:Edit'           => 'Editar esta página...',
+	'UI:Dashboard:Revert'         => 'Reverter para versão original...',
 ));

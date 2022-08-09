@@ -24,22 +24,24 @@
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:DeletedObjectLabel' => '%1s (eliminado)',
-	'Core:DeletedObjectTip' => 'Elemento ha sido Eliminado en %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'Elemento ha sido Eliminado en %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Elemento No Encontrado (Clase: %1$s, Identificador: %2$d)',
-	'Core:UnknownObjectTip' => 'El Elemento no pudo ser encontrado.  Pudo haber sido eliminado hace tiempo y purgado de la Bitácora.',
+	'Core:UnknownObjectTip'   => 'El Elemento no pudo ser encontrado.  Pudo haber sido eliminado hace tiempo y purgado de la Bitácora.',
 
 	'Core:UniquenessDefaultError' => 'Regla de unicidad \'%1$s\' en error',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => 'Arreglo de objetos',
+	'Core:AttributeLinkedSet'  => 'Arreglo de objetos',
 	'Core:AttributeLinkedSet+' => 'Cualquier tipo de objetos [subclass] de la misma clase',
 
-	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicados en el campo \'%1$s\': %2$s',
 
-	'Core:AttributeDashboard' => 'Panel de Control',
+	'Core:AttributeDashboard'  => 'Panel de Control',
 	'Core:AttributeDashboard+' => 'Panel de control y supervisión',
 
-	'Core:AttributePhoneNumber' => 'Número telefónico',
+	'Core:AttributePhoneNumber'  => 'Número telefónico',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Fecha de Obsolescencia',
@@ -206,7 +208,7 @@ Operadores:<br/>
 
 	'Core:AttributeTag' => 'Etiquetas',
 	'Core:AttributeTag+' => '',
-	
+
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Configuración',
@@ -232,14 +234,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChange/Attribute:date+' => 'Fecha y Hora en que los Cambios fueron Registrados',
 	'Class:CMDBChange/Attribute:userinfo' => 'Información Adicional',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Información definida por el solicitante',
-	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
-	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Interacción del usuario en la GUI',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'Script para importar CSV',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'Importación de CSV en la GUI',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Procesamiento de correo electrónico',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. fuente de datos',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Por una extensión',
 ));
 
 //
@@ -309,16 +311,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Change:ObjectCreated' => 'Objeto Creado',
 	'Change:ObjectDeleted' => 'Objeto Eliminado',
 	'Change:ObjectModified' => 'Objeto Modificado',
-	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
-	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
-	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
+	'Change:TwoAttributesChanged' => '%1$s y %2$s editados',
+	'Change:ThreeAttributesChanged' => '%1$s, %2$s y otro más editados',
+	'Change:FourOrMoreAttributesChanged' => '%1$s, %2$s, %3$s y otros editados',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s cambiado en %2$s (valor anterior: %3$s)',
 	'Change:AttName_SetTo' => '%1$s cambiado en %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s agregado a %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s cambiado, valor anterior: %2$s',
 	'Change:AttName_Changed' => '%1$s cambiado',
 	'Change:AttName_EntryAdded' => '%1$s cambiado, nuevo registro agregado: %2$s',
-	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
+	'Change:State_Changed_NewValue_OldValue' => 'Cambiado de %2$s a %1$s',
 	'Change:LinkSet:Added' => 'Agregado %1$s',
 	'Change:LinkSet:Removed' => 'Removido %1$s',
 	'Change:LinkSet:Modified' => 'Modificado %1$s',
@@ -500,7 +502,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Action/Attribute:trigger_list+' => 'Disparadores Asociados a esta Acción',
 	'Class:Action/Attribute:finalclass' => 'Clase',
 	'Class:Action/Attribute:finalclass+' => 'Clase',
-	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
+	'Action:WarningNoTriggerLinked' => 'Advertencia, ningún disparador está ligado a esta acción.  No se activara hasta que tenga al menos una acción.',
 ));
 
 //
@@ -519,20 +521,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ActionEmail' => 'Notificación por Correo Electrónico',
 	'Class:ActionEmail+' => 'Notificación por Correo Electrónico',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
+	'Class:ActionEmail/Attribute:status+' => 'Este estatus determina quién será notificado: Sólo el destinatario de la prueba, todos (Para, CC y CCO) o nadie',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Sólo el destinatario de prueba está notificado',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Todos los mensajes Para, CC y BCC están notificados',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'El mensaje de notificación no será enviado',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinatario de Prueba',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Destinatario en caso que el Estatus sea "En pruebas"',
-	'Class:ActionEmail/Attribute:from' => 'Remitente~~',
-	'Class:ActionEmail/Attribute:from+' => 'Será enviando en el encabezado del Correo Electrónico~~',
-	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
-	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
-	'Class:ActionEmail/Attribute:reply_to' => 'Responder a~~',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Será enviando en el encabezado del Correo Electrónico~~',
-	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:from' => 'Remitente',
+	'Class:ActionEmail/Attribute:from+' => 'Será enviando en el encabezado del Correo Electrónico',
+	'Class:ActionEmail/Attribute:from_label' => 'De (etiqueta)',
+	'Class:ActionEmail/Attribute:from_label+' => 'Nombre para mostrar del remitente que aparecerá en encabezado del correo electrónico',
+	'Class:ActionEmail/Attribute:reply_to' => 'Responder a',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Será enviando en el encabezado del Correo Electrónico',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Responder a (etiqueta)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Nombre para mostrar de responder a, que aparecerá en encabezado del correo electrónico',
 	'Class:ActionEmail/Attribute:to' => 'Para',
 	'Class:ActionEmail/Attribute:to+' => 'Destinatario del Correo Electrónico',
 	'Class:ActionEmail/Attribute:cc' => 'CC',
@@ -580,7 +582,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Clase destino',
 	'Class:TriggerOnObject/Attribute:target_class+' => 'Clase destino',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtro',
-	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
+	'Class:TriggerOnObject/Attribute:filter+' => '',
 	'TriggerOnObject:WrongFilterQuery' => 'Filtro de consulta incorrecto: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'El filtro de consulta debe regresar un objeto de la clase \\"%1$s\\"',
 ));
@@ -657,10 +659,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
-	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
+	'Class:TriggerOnObjectMention' => 'Disparador (en mención de objeto)',
+	'Class:TriggerOnObjectMention+' => 'Disparador en mención (@xxx) de un objeto de [clase hijo de] clase dada en un registro de atributo',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filtro mencionado',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limite la lista de objetos mencionados que activarán el disparador. Si está vacío, cualquier objeto mencionado (de cualquier clase) lo activará.',
 ));
 
 //
@@ -1080,18 +1082,18 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:AsyncTask/Attribute:event_id+' => 'Evento',
 	'Class:AsyncTask/Attribute:finalclass' => 'Clase',
 	'Class:AsyncTask/Attribute:finalclass+' => 'Clase',
-	'Class:AsyncTask/Attribute:status' => 'Status~~',
-	'Class:AsyncTask/Attribute:status+' => '~~',
-	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
-	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
-	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
-	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
-	'Class:AsyncTask/Attribute:last_error+' => '~~',
-	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
-	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+	'Class:AsyncTask/Attribute:status' => 'Estatus',
+	'Class:AsyncTask/Attribute:status+' => 'Estatus',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Reintentos restantes',
+	'Class:AsyncTask/Attribute:remaining_retries+' => 'Reintentos restante',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Último código de error',
+	'Class:AsyncTask/Attribute:last_error_code+' => 'Último código de error',
+	'Class:AsyncTask/Attribute:last_error' => 'Último error',
+	'Class:AsyncTask/Attribute:last_error+' => 'Último error',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Último intento',
+	'Class:AsyncTask/Attribute:last_attempt+' => 'Último intento',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Formato no válido para la configuración de "async_taks_retries[%1$s]". Esperando una matriz con las siguientes claves: %2$s',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Formato no válido para la configuración de "async_taks_retries[%1$s]": llave inesperada "%2$s". Esperando solo las siguientes llaves: %3$s',
 ));
 
 //

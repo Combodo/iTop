@@ -66,7 +66,6 @@ register_shutdown_function(function()
 });
 $oKPI = new ExecutionKPI();
 Session::Start();
-Session::WriteClose();
 $oKPI->ComputeAndReport("Session Start");
 
 $sSwitchEnv = utils::ReadParam('switch_env', null);

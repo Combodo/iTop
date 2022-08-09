@@ -299,10 +299,10 @@ class Dict
 
 	/**
 	 * Clone a string in every language (if it exists in that language)
-	 * since 3.0.1 Not clone sSourceCode entry if sDestCode entry already exist
 	 *
 	 * @param $sSourceCode
 	 * @param $sDestCode
+	 * @since 3.0.1 Not clone sSourceCode entry if sDestCode entry already exist
 	 */
 	public static function CloneString($sSourceCode, $sDestCode)
 	{

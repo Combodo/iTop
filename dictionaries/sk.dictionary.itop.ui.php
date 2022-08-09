@@ -358,7 +358,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 <li>Manažovať najdôležitejšie aktíva Vášho IT: Dokumentáciu.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otvoriť žiadosť: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Moje žiadosti',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otvoriť incidenty: %1$d',
@@ -454,6 +461,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 
 	'UI:GroupBy:Count' => 'Počet',
 	'UI:GroupBy:Count+' => '',
@@ -1424,7 +1433,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:About:InstallationOptions' => 'Installation options~~',
 	'UI:About:ManualExtensionSource' => 'Extension~~',
 	'UI:About:Extension_Version' => 'Version: %1$s~~',
-	'UI:About:RemoteExtensionSource' => 'iTop Hub~~',
+	'UI:About:RemoteExtensionSource' => 'Data~~',
 
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.~~',
 	'UI:DisconnectedDlgTitle' => 'Warning!~~',
@@ -1641,30 +1650,30 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:AuditCategories' => 'Kategórie auditu',
 	'Menu:AuditCategories+' => '',
 	'Menu:Notifications:Title' => 'Kategórie auditu',
-	'Menu:RunQueriesMenu' => 'Spustiť dopyty',
-	'Menu:RunQueriesMenu+' => '',
-	'Menu:QueryMenu' => 'Dopyt frázy',
-	'Menu:QueryMenu+' => '',
-	'Menu:UniversalSearchMenu' => 'Univerzálne vyhľadávanie',
-	'Menu:UniversalSearchMenu+' => '',
-	'Menu:UserManagementMenu' => 'Užívateľský manažment',
-	'Menu:UserManagementMenu+' => '',
-	'Menu:ProfilesMenu' => 'Profily',
-	'Menu:ProfilesMenu+' => '',
-	'Menu:ProfilesMenu:Title' => 'Profily',
-	'Menu:UserAccountsMenu' => 'Užívateľské účty',
-	'Menu:UserAccountsMenu+' => '',
+	'Menu:RunQueriesMenu'         => 'Spustiť dopyty',
+	'Menu:RunQueriesMenu+'        => '',
+	'Menu:QueryMenu'              => 'Dopyt frázy',
+	'Menu:QueryMenu+'             => '',
+	'Menu:UniversalSearchMenu'    => 'Univerzálne vyhľadávanie',
+	'Menu:UniversalSearchMenu+'   => '',
+	'Menu:UserManagementMenu'     => 'Užívateľský manažment',
+	'Menu:UserManagementMenu+'    => '',
+	'Menu:ProfilesMenu'           => 'Profily',
+	'Menu:ProfilesMenu+'          => '',
+	'Menu:ProfilesMenu:Title'     => 'Profily',
+	'Menu:UserAccountsMenu'       => 'Užívateľské účty',
+	'Menu:UserAccountsMenu+'      => '',
 	'Menu:UserAccountsMenu:Title' => 'Užívateľské účty',
-	'Menu:MyShortcuts' => 'Moje skratky',
-	'Menu:UserManagement' => 'User Management~~',
-	'Menu:Queries' => 'Queries~~',
-	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:MyShortcuts'            => 'Moje skratky',
+	'Menu:UserManagement'         => 'User Management~~',
+	'Menu:Queries'                => 'Queries~~',
+	'Menu:ConfigurationTools'     => 'Configuration~~',
 ));
 
 // Additional language entries not present in English dict
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
- 'UI:Toggle:StandardDashboard' => 'Standard~~',
- 'UI:Toggle:CustomDashboard' => 'Custom~~',
- 'UI:Dashboard:Edit' => 'Upraviť túto stránku...',
- 'UI:Dashboard:Revert' => 'Vrátiť sa do originálnej verzie...',
+	'UI:Toggle:StandardDashboard' => 'Standard~~',
+	'UI:Toggle:CustomDashboard'   => 'Custom~~',
+	'UI:Dashboard:Edit'           => 'Upraviť túto stránku...',
+	'UI:Dashboard:Revert'         => 'Vrátiť sa do originálnej verzie...',
 ));

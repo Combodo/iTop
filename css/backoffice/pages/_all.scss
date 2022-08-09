@@ -3,6 +3,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+@import "about";
 @import "base";
 @import "preferences";
 @import "attachments";
@@ -12,4 +13,6 @@
 @import "datamodel-viewer";
 @import "csv-import";
 @import "global-search";
+@import "run-query";
 @import "welcome-popup";
+@import "oauth.wizard";

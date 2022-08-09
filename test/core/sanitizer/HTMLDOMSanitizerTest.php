@@ -2,16 +2,12 @@
 namespace Combodo\iTop\Test\UnitTest\Core\Sanitizer;
 
 use HTMLDOMSanitizer;
+use InlineImageMock;
 
 
 require_once __DIR__.'/AbstractDOMSanitizerTest.php';
 
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class HTMLDOMSanitizerTest extends AbstractDOMSanitizerTest
 {
 	/**
@@ -222,15 +218,17 @@ class HTMLDOMSanitizerTest extends AbstractDOMSanitizerTest
 
 	/**
 	 * @dataProvider CallInlineImageProcessImageTagProvider
+	 * @uses         \InlineImageMock
 	 */
 	public function testDoSanitizeCallInlineImageProcessImageTag($sHtml, $iExpectedCount)
 	{
 		require_once APPROOT.'test/core/sanitizer/InlineImageMock.php';
+		InlineImageMock::ResetCallCounter();
 
-		$oSanitizer = new HTMLDOMSanitizer();
+		$oSanitizer = new HTMLDOMSanitizer(InlineImageMock::class);
 		$oSanitizer->DoSanitize($sHtml);
 
-		$iCalledCount = \InlineImage::GetCallCounter();
+		$iCalledCount = \InlineImageMock::GetCallCounter();
 		$this->assertEquals($iExpectedCount, $iCalledCount);
 	}
 
