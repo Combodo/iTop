@@ -2026,7 +2026,11 @@ EOF
 			// Note: We can't use ModelFactory::GetField() as the current clas doesn't seem to be loaded yet.
 			$oField = $this->oFactory->GetNodes('field[@id="'.$sStateAttCode.'"]', $oFields)->item(0);
 			if ($oField == null) {
-				throw new DOMFormatException("Non existing attribute '$sStateAttCode'", null, null, $oStateAttribute);
+				// Search field in parent class
+				$oField = $this->GetFieldInParentClasses($oClass, $sStateAttCode);
+				if ($oField == null) {
+					throw new DOMFormatException("Non existing attribute '$sStateAttCode'", null, null, $oStateAttribute);
+				}
 			}
 			$oValues = $oField->GetUniqueElement('values');
 			$oValueNodes = $oValues->getElementsByTagName('value');
@@ -3798,5 +3802,20 @@ EOF;
 		}
 
 		return $sValue;
+	}
+
+	private function GetFieldInParentClasses($oClass, $sAttCode)
+	{
+		$sParentClass = $oClass->GetChildText('parent', 'DBObject');
+		if ($sParentClass != 'DBObject') {
+			$oParent = $this->oFactory->GetClass($sParentClass);
+			$oParentFields = $oParent->GetOptionalElement('fields');
+			$oField = $this->oFactory->GetNodes('field[@id="'.$sAttCode.'"]', $oParentFields)->item(0);
+			if ($oField != null) {
+				return $oField;
+			}
+			return $this->GetFieldInParentClasses($oParent, $sAttCode);
+		}
+		return null;
 	}
 }
