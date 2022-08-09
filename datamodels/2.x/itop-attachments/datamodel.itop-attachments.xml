@@ -27,7 +27,9 @@
             <attribute id="temp_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id=""/>

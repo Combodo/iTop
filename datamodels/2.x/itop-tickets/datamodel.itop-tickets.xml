@@ -27,7 +27,9 @@
 						<attribute id="ref"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="ref"/>
@@ -393,7 +395,9 @@
 						<attribute id="contact_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="ticket_id"/>

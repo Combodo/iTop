@@ -3889,7 +3889,9 @@
 						<attribute id="document_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="licence_id"/>
@@ -3968,7 +3970,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4034,7 +4038,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4081,7 +4087,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4148,7 +4156,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4306,7 +4316,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4366,7 +4378,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4434,7 +4448,9 @@
 						<attribute id="contact_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="functionalci_id"/>
@@ -4514,7 +4530,9 @@
 						<attribute id="document_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="patch_id"/>
@@ -4594,7 +4612,9 @@
 						<attribute id="softwareinstance_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="softwarepatch_id"/>
@@ -4674,7 +4694,9 @@
 						<attribute id="functionalci_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="ospatch_id"/>
@@ -4754,7 +4776,9 @@
 						<attribute id="document_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="software_id"/>
@@ -4834,7 +4858,9 @@
 						<attribute id="document_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="functionalci_id"/>
@@ -5228,7 +5254,9 @@
 						<attribute id="vlan_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="subnet_id"/>
@@ -5644,7 +5672,9 @@
 						<attribute id="vlan_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="physicalinterface_id"/>
@@ -5732,7 +5762,9 @@
 						<attribute id="connectableci_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="networkdevice_id"/>
@@ -5992,7 +6024,9 @@
 						<attribute id="functionalci_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="applicationsolution_id"/>
@@ -6072,7 +6106,9 @@
 						<attribute id="applicationsolution_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="businessprocess_id"/>
@@ -6320,7 +6356,9 @@
 						<attribute id="group_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="group_id"/>
