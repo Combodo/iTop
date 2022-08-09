@@ -4,8 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
-	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Edit displayed object~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Delete displayed object~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Create a new object (with same class as displayed object)~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Save displayed object~~',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Editar objeto mostrado',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Borrar objeto mostrado',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Crear un nuevo objeto (con la misma clase que el objeto mostrado)',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Guardar objeto mostrado',
 ]);

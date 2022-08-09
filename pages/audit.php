@@ -409,7 +409,7 @@ try
 				'percentage_ok' => array('label' => Dict::S('UI:Audit:PercentageOk'), 'description' => Dict::S('UI:Audit:PercentageOk')),
 			);
 			
-			$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
+			$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData, null, [], "", array('pageLength' => -1));
 			$oAuditCategoryPanelBlock->AddSubBlock($oAttachmentTableBlock);
 			$aAuditCategoryPanels[] = $oAuditCategoryPanelBlock;
 		}
