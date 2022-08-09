@@ -1005,11 +1005,11 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 </ol>
 </p>
 <p>
-<i><b>Acties</b></i> definieer de acties die uitgevoerd moeten worden als de triggers geactiveerd worden. Er zijn 2 soorten standaardacties:
+<i><b>Acties</b></i> definieer de acties die uitgevoerd moeten worden als de triggers geactiveerd worden. Er zijn momenteel 2 soorten standaardacties:
 <ol>
 	<li>Stuur een e-mail: Bij deze acties definieer je een sjabloon voor het bericht en ook parameters zoals ontvanger(s), prioriteit, enz.<br />
 	Een <a href="../setup/email.test.php" target="_blank">speciale testpagina (email.test.php)</a> is beschikbaar voor het testen en oplossen van eventuele problemen met jouw PHP e-mailconfiguratie.</li>
-	<li>Webhooks: Staat toe om te integreren met toepassingen van derde partijen, door gestructureerd data te sturen naar een URL.</li>
+	<li>Webhooks: Staat toe om te integreren met toepassingen van derde partijen, door gestructureerde data te sturen naar een URL.</li>
 </ol>
 </p>
 <p>Acties moeten gekoppeld zijn aan triggers.
