@@ -362,9 +362,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-        <style>
-          <icon/>
-        </style>
+		<style>
+			<icon/>
+		</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -739,9 +739,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="contact_id"/>
 					</attributes>
 				</naming>
-        <style>
-          <icon/>
-        </style>
+		<style>
+			<icon/>
+		</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="contract_id"/>
@@ -821,9 +821,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="document_id"/>
 					</attributes>
 				</naming>
-        <style>
-          <icon/>
-        </style>
+		<style>
+			<icon/>
+		</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="contract_id"/>
@@ -1213,9 +1213,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="document_id"/>
 					</attributes>
 				</naming>
-        <style>
-          <icon/>
-        </style>
+		<style>
+			<icon/>
+		</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="service_id"/>
@@ -1295,9 +1295,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="contact_id"/>
 					</attributes>
 				</naming>
-        <style>
-          <icon/>
-        </style>
+		<style>
+			<icon/>
+		</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="service_id"/>
@@ -1852,9 +1852,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="slt_id"/>
 					</attributes>
 				</naming>
-        <style>
-          <icon/>
-        </style>
+		<style>
+			<icon/>
+		</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="sla_id"/>
@@ -1974,9 +1974,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="service_id"/>
 					</attributes>
 				</naming>
-        <style>
-          <icon/>
-        </style>
+		<style>
+			<icon/>
+		</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="customercontract_id"/>
@@ -2072,9 +2072,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="providercontract_id"/>
 					</attributes>
 				</naming>
-        <style>
-          <icon/>
-        </style>
+		<style>
+			<icon/>
+		</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="service_id"/>
@@ -2259,9 +2259,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="contact_id"/>
 					</attributes>
 				</naming>
-        <style>
-          <icon/>
-        </style>
+		<style>
+			<icon/>
+		</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="deliverymodel_id"/>
