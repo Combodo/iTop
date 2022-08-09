@@ -211,14 +211,23 @@ class UIExtKeyWidget
 			$sClassAllowed = $oAllowedValues->GetClass();
 			$bAddingValue = false;
 
+			// N°4792 - load only the required fields
+			$aFieldsToLoad = [];
+
 			$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
 			$sFormatAdditionalField = $aComplementAttributeSpec[0];
 			$aAdditionalField = $aComplementAttributeSpec[1];
 
 			if (count($aAdditionalField) > 0) {
 				$bAddingValue = true;
+				$aFieldsToLoad[$sClassAllowed] = $aAdditionalField;
 			}
 			$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+			if (!empty($sObjectImageAttCode)) {
+				$aFieldsToLoad[$sClassAllowed][] = $sObjectImageAttCode;
+			}
+			$aFieldsToLoad[$sClassAllowed][] = 'friendlyname';
+			$oAllowedValues->OptimizeColumnLoad($aFieldsToLoad);
 			$bInitValue = false;
 			while ($oObj = $oAllowedValues->Fetch()) {
 				$aOption = [];
