@@ -1724,4 +1724,16 @@ abstract class DBSearch
 	{
 		$this->SetShowObsoleteData(utils::ShowObsoleteData());
 	}
+
+	/**
+	 * To ease the debug of filters
+	 * @internal
+	 *
+	 * @return string
+	 *
+	 */
+	public function __toString()
+	{
+		return $this->ToOQL();
+	}
 }
