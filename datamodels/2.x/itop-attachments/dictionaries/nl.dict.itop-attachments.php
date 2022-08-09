@@ -21,7 +21,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  * 
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2022)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
@@ -42,7 +42,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachments:Error:FileTooLarge' => 'Het bestand is te groot om geüpload te worden: %1$s',
 	'Attachments:Error:UploadedFileEmpty' => 'Het bestand is leeg en kan niet worden toegevoegd.
 Mogelijk heb je een leeg bestand geüpload,
-of vraag de iTop administrator om de opslag van de iTop server na te kijken',
+of vraag de iTop administrator om de opslagruimte van de iTop-server na te kijken',
 	'Attachments:Render:Icons' => 'Toon als pictogram',
 	'Attachments:Render:Table' => 'Toon als lijst',
 	'UI:Attachments:DropYourFileHint' => 'Sleep bestanden in dit gebied',

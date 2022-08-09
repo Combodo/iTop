@@ -5,7 +5,7 @@
  * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @author      Thomas Casteleyn <info@super-visions.com>
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2022)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:IncidentManagement' => 'Incident Management',
