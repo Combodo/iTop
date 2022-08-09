@@ -33,7 +33,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:OAuthClient' => 'Oauth Client',
+	'Class:OAuthClient' => 'OAuth Client',
 	'Class:OAuthClient/Attribute:provider' => 'Provider',
 	'Class:OAuthClient/Attribute:provider+' => '',
 	'Class:OAuthClient/Attribute:name' => 'Login',

@@ -28,7 +28,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:OAuthClient' => 'Oauth Client~~',
+	'Class:OAuthClient' => 'OAuth Client~~',
 	'Class:OAuthClient/Attribute:provider' => 'Provider~~',
 	'Class:OAuthClient/Attribute:provider+' => '~~',
 	'Class:OAuthClient/Attribute:name' => 'Login~~',
