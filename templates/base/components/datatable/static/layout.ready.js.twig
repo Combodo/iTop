@@ -79,6 +79,10 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {
             this.closest('.dataTables_wrapper').find('.dataTables_length').hide();
         }
+        
+        // Set header and body datatables status as loaded
+        this.attr('data-status', 'loaded');
+        this.closest('.dataTables_scroll').find('.dataTables_scrollHead .ibo-datatable').attr('data-status', 'loaded');
     }
 });
 
