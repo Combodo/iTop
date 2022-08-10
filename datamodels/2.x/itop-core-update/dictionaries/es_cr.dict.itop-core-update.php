@@ -77,6 +77,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'La aplicación no puede ser actualizada: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Advertencia: la actualización de la aplicación puede fallar: %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => 'Debe usar <a href="%1$s">setup</a> para actualizar la aplicación.<br />Algunos archivos modificados fueron detectados, una actualización parcial no puede ser realizada.',
+	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Listo para empezar',
