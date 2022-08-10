@@ -368,7 +368,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 <li>Het beheren van het belangrijkste middel: documentatie.</li>
 </ul>
 </p>',
-<<<<<<< HEAD
 	'UI:WelcomeMenu:Text'=>  '<div>Proficiat, je werkt nu met '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
 <div>Deze versie heeft een volledig nieuw, modern en toegankelijk uiterlijk.</div>
@@ -377,16 +376,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben genoten om het te ontwerpen.</div>
 
 <div>Wijzig je '.ITOP_APPLICATION.'-voorkeuren voor een gepersonaliseerde ervaring.</div>',
-=======
-	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
->>>>>>> upstream/support/3.0
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open aanvragen: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mijn aanvragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Open incidenten: %1$d',
