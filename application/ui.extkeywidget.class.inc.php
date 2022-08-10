@@ -823,7 +823,7 @@ JS
 		elseif (!in_array($sContains, $aValues))
 		{
 			$aValuesEquals = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'equals');
-			$aValues = array_merge($aValuesEquals, $aValues);
+			$aValues = array_replace($aValuesEquals, $aValues);
 		}
 
 		switch($sOutputFormat)
