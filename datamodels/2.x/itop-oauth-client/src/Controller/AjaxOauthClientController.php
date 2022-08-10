@@ -13,6 +13,7 @@ use Dict;
 use IssueLog;
 use MetaModel;
 use utils;
+use WebPage;
 
 class AjaxOauthClientController extends Controller
 {
@@ -52,9 +53,9 @@ class AjaxOauthClientController extends Controller
 		$aResult = [];
 		$aResult['status'] = 'error';
 		$aURL = parse_url($sRedirectUrl);
+		$aQuery = [];
 		if (isset($aURL['query'])) {
 			$sRedirectUrlQuery = $aURL['query'];
-			$aQuery = [];
 			parse_str($sRedirectUrlQuery, $aQuery);
 			if (isset($aQuery['error'])) {
 				$aResult['status'] = 'error';
@@ -84,7 +85,7 @@ class AjaxOauthClientController extends Controller
 					$sId,
 					"$sClass:$sId:TokenCreated",
 					$bIsCreation ? Dict::S('itop-oauth-client:Message:TokenCreated') : Dict::S('itop-oauth-client:Message:TokenRecreated'),
-					'ok',
+					WebPage::ENUM_SESSION_MESSAGE_SEVERITY_OK,
 					1,
 					true
 				);
@@ -101,11 +102,11 @@ class AjaxOauthClientController extends Controller
 					$sId,
 					"$sClass:$sId:TokenError",
 					$aResult['error_description'] ?? Dict::S('itop-oauth-client:Message:TokenError'),
-					'error',
+					WebPage::ENUM_SESSION_MESSAGE_SEVERITY_ERROR,
 					1,
 					true
 				);
-				IssueLog::Error("Token creation failed for $sClass:$sId", null, $aResult);
+				IssueLog::Error("Token creation failed for $sClass:$sId", null, empty($aQuery) ? $aResult : $aQuery);
 				break;
 		}
 
