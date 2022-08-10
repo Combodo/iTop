@@ -140,7 +140,8 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 
 	$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), array(), 'grey', 'ibo-favorite-organizations');
-	$oFavoriteOrganizationsBlock->AddHtml(Dict::S('UI:FavoriteOrganizations+'));
+	$oFavoriteOrganizationsBlock->SetSubTitle(Dict::S('UI:FavoriteOrganizations+'));
+	$oFavoriteOrganizationsBlock->AddCSSClass('ibo-datatable-panel');
 	$oFavoriteOrganizationsForm = new Form();
 	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsForm);
 	// Favorite organizations: the organizations listed in the drop-down menu
@@ -194,6 +195,8 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 
 	$oShortcutsBlock = new BlockShortcuts(Dict::S('Menu:MyShortcuts'), array(), 'grey', 'ibo-shortcuts');
+	$oShortcutsBlock->AddCSSClass('ibo-datatable-panel');
+
 	$oShortcutsBlock->sIdShortcuts = 'shortcut_list';
 	$oShortcutsFilter = new DBObjectSearch('Shortcut');
 	$oShortcutsFilter->AddCondition('user_id', UserRights::GetUserId(), '=');

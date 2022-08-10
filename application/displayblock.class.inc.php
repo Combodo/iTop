@@ -1207,6 +1207,7 @@ JS
 				$sTitle = Dict::Format($sFormat, $iTotalCount);
 				$oBlock = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
 				$oBlock->AddSubTitleBlock(new Html($sTitle));
+				$oBlock->AddCSSClass('ibo-datatable-panel');
 				if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
 					$oBlock->SetIcon($aExtraParams["panel_icon"]);
 				}
