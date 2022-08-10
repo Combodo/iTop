@@ -35,8 +35,7 @@ $(function()
         {
             var me = this;
             
-            this.element
-                .append('<div class="last-error"></div>')
+            this.element.append('<div class="last-error"></div>')
                 .addClass('console_form_handler');
 
             this.options.oWizardHelper = window[this.options.wizard_helper_var_name];
@@ -48,13 +47,25 @@ $(function()
         // revert other modifications here
         _destroy: function()
         {
-            this.element
-            .removeClass('console_form_handler');
+            this.element.removeClass('console_form_handler');
             this._super();
         },
+	    _updatePreviousValues: function()
+	    {
+		    let me=this;
+	    	if(this.element.find('[data-attribute-previous-value]').length>0) {
+	    		let aPreviousValues = {};
+			    $(this.element.find('[data-attribute-previous-value]')).each(function (idx, elt) {
+				    aPreviousValues[$(elt).data('field-id')] = $(elt).data('attribute-previous-value');
+			    });
+			    me.element.find('[data-field-id=previous_values]').find('input[type=hidden]').val(JSON.stringify(aPreviousValues));
+		    }
+
+	    },
         _onUpdateFields: function(event, data)
         {
             var me = this;
+	        me._updatePreviousValues();
             var sFormPath = data.form_path;
             var sUpdateUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
 
@@ -64,7 +75,6 @@ $(function()
                 {
                     operation: 'custom_fields_update',
                     attcode: this.options.custom_field_attcode,
-                    //current_values: this.getCurrentValues(),
                     requested_fields: data.requested_fields,
                     form_path: sFormPath,
                     json_obj: this.options.oWizardHelper.UpdateWizardToJSON()
@@ -85,6 +95,7 @@ $(function()
                         me.element.find('.last-error').text(data.error);
                     }
                     me._onUpdateAlways(data, sFormPath);
+	                me.element.find('[data-field-id=previous_values]').find('input[type=hidden]').val('{}');
                 });
         },
         // On initialization or update
