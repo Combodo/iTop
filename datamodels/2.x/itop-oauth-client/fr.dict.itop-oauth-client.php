@@ -21,6 +21,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'itop-oauth-client:Message:MissingToken' => 'Générez le jeton d\'accès avant d\'utiliser ce client OAuth',
 	'itop-oauth-client:Message:TokenCreated' => 'Le jeton d\'accès à été créé',
 	'itop-oauth-client:Message:TokenRecreated' => 'Le jeton d\'accès à été renouvelé',
+	'itop-oauth-client:Message:TokenError' => 'Le jeton d\'accès n\'a pas été généré à cause d`une erreur serveur',
 
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'La combinaison Login (%1$s) and Utilisé pour SMTP (%2$s) a déjà été utilisée pour OAuth Client',
 

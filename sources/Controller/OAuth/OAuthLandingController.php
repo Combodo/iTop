@@ -8,6 +8,6 @@ class OAuthLandingController extends Controller
 {
 	public function OperationLanding()
 	{
-		$this->DisplayPage([]);
+		$this->DisplayAjaxPage([]);
 	}
 }

@@ -21,6 +21,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'itop-oauth-client:Message:MissingToken' => 'Generate access token before using this OAuth client',
 	'itop-oauth-client:Message:TokenCreated' => 'Access token created',
 	'itop-oauth-client:Message:TokenRecreated' => 'Access token regenerated',
+	'itop-oauth-client:Message:TokenError' => 'Access token not generated due to server error',
 
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'The combination Login (%1$s) and Use for SMTP (%2$s) has already be used for OAuth Client',
 
