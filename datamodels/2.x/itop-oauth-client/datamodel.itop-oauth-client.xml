@@ -135,7 +135,7 @@
             $sTestURL = utils::GetAbsoluteUrlAppRoot().'setup/email.test.php';
             $sLabel = Dict::S('itop-oauth-client:UsedForSMTP')." <a href='$sTestURL' target='_blank'>$sTestLabel</a>";
             $sTitle = '';
-            $aTags['oauth-message'] = ['title' => $sTitle, 'css_classes' => 'ibo-object-details--tag--oauth-message', 'decoration_classes' => 'far fa-envelope', 'label' => $sLabel];
+            $aTags['oauth-message'] = ['title' => $sTitle, 'css_classes' => 'ibo-object-details--tag--oauth-message', 'decoration_classes' => 'fas fa-envelope', 'label' => $sLabel];
           }
         }
         foreach ($aTags as $sIconId => $aIconData) {
