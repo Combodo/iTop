@@ -1592,6 +1592,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'audit.enable_selection_landing_page' => [
+			'type'                => 'bool',
+			'description'         => 'If true audit categories must be selected before results are computed (use this setting in case of a lot of audit categories)',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 	];
 
 	public function IsProperty($sPropCode)

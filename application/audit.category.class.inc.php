@@ -20,7 +20,7 @@
 /**
  * This class manages the audit "categories". Each category defines a set of objects
  * to check and is linked to a set of rules that determine the valid or invalid objects
- * inside the set 
+ * inside the set
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -50,9 +50,10 @@ class AuditCategory extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("rules_list", array("linked_class"=>"AuditRule", "ext_key_to_me"=>"category_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array(), "edit_mode" => LINKSET_EDITMODE_INPLACE, "tracking_level" => LINKSET_TRACKING_ALL)));
 		MetaModel::Init_AddAttribute(new AttributeInteger("ok_error_tolerance", array("allowed_values"=>null, "sql"=>"ok_error_tolerance", "default_value"=>5, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("warning_error_tolerance", array("allowed_values"=>null, "sql"=>"warning_error_tolerance", "default_value"=>25, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("domains_list", array("linked_class" => "lnkAuditCategoryToAuditDomain", "ext_key_to_me" => "category_id", "ext_key_to_remote" => "domain_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'definition_set', 'ok_error_tolerance', 'warning_error_tolerance', 'rules_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'definition_set', 'ok_error_tolerance', 'warning_error_tolerance', 'rules_list', 'domains_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('description', )); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'definition_set')); // Criteria of the std search form

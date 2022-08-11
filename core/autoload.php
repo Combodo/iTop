@@ -21,6 +21,7 @@ MetaModel::IncludeModule('application/menunode.class.inc.php');
 MetaModel::IncludeModule('application/user.preferences.class.inc.php');
 MetaModel::IncludeModule('application/user.dashboard.class.inc.php');
 MetaModel::IncludeModule('application/audit.rule.class.inc.php');
+MetaModel::IncludeModule('application/audit.domain.class.inc.php');
 MetaModel::IncludeModule('application/query.class.inc.php');
 MetaModel::IncludeModule('setup/moduleinstallation.class.inc.php');
 

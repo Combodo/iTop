@@ -34,6 +34,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Allowed percentage of invalid objects at which the result is still displayed as OK (green)',
 	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error tolerance (warning)',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Allowed percentage of invalid objects at which the result is still displayed as a warning (orange)',
+	'Class:AuditCategory/Attribute:domains_list' => 'Domains',
+	'Class:AuditCategory/Attribute:domains_list+' => 'List of domains linked to this category',
 ));
 
 //
@@ -62,6 +64,40 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditRule/Attribute:category_id+' => 'The category for this rule',
 	'Class:AuditRule/Attribute:category_name' => 'Category',
 	'Class:AuditRule/Attribute:category_name+' => 'Name of the category for this rule',
+));
+
+//
+// Class: AuditDomain
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:AuditDomain' => 'Audit Domain',
+	'Class:AuditDomain+' => '',
+	'Class:AuditDomain/Attribute:name' => 'Name',
+	'Class:AuditDomain/Attribute:name+' => '',
+	'Class:AuditDomain/Attribute:description' => 'Description',
+	'Class:AuditDomain/Attribute:description+' => '',
+	'Class:AuditDomain/Attribute:icon' => 'Icon',
+	'Class:AuditDomain/Attribute:icon+' => '',
+	'Class:AuditDomain/Attribute:categories_list' => 'Categories',
+	'Class:AuditDomain/Attribute:categories_list+' => 'Linked audit categories',
+));
+
+//
+// Class: lnkAuditCategoryToAuditDomain
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain',
+	'Class:lnkAuditCategoryToAuditDomain+' => '',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+' => 'Audit Category',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name' => 'Category name',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name+' => 'Audit category name',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id' => 'Domain',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name',
 ));
 
 //
@@ -722,6 +758,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Audit',
 	'UI:Audit:InteractiveAudit' => 'Interactive Audit',
+	'UI:Audit:InteractiveAudit:Selection' => 'Audit - Domain Selection',
+	'UI:Audit:InteractiveAudit:Selection+' => 'Select a domain to get the result for selected domain',
+	'UI:Audit:InteractiveAudit:Selection:All' => 'All categories',
+	'UI:Audit:InteractiveAudit:AllCategories' => 'Audit result for all categories',
+	'UI:Audit:InteractiveAudit:SelectedCategories' => 'Audit result for %1$s categories / category',
+	'UI:Audit:InteractiveAudit:SelectedDomain' => 'Audit result for domain: %1$s',
 	'UI:Audit:HeaderAuditRule' => 'Audit Rule',
 	'UI:Audit:HeaderNbObjects' => '# Objects',
 	'UI:Audit:HeaderNbErrors' => '# Errors',
