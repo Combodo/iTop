@@ -5,6 +5,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBObject;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Exception;
 use MetaModel;
 
 /**

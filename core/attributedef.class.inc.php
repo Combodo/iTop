@@ -4589,7 +4589,8 @@ class AttributeCaseLog extends AttributeLongText
 				{
 					//N°5135 - add impersonation information in caselog
 					if (UserRights::IsImpersonated()){
-						$oCaseLog->AddLogEntry($proposedValue, '', UserRights::GetConnectedUserId());
+						$sOnBehalfOf = $sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUserFriendlyName(), UserRights::GetUserFriendlyName());
+						$oCaseLog->AddLogEntry($proposedValue, $sOnBehalfOf, UserRights::GetConnectedUserId());
 					} else {
 						$oCaseLog->AddLogEntry($proposedValue);
 					}
