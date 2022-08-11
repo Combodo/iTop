@@ -823,6 +823,8 @@ JS
 		elseif (!in_array($sContains, $aValues))
 		{
 			$aValuesEquals = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'equals');
+			// Note: Here we cannot use array_merge as it would reindex the numeric keys starting from 0 when keys are actually the objects ID.
+			// As a workaround we use array_replace as it does preserve numeric keys. It's ok if some values from $aValuesEquals are replaced with values from $aValues as they contain the same data.
 			$aValues = array_replace($aValuesEquals, $aValues);
 		}
 
