@@ -361,7 +361,8 @@ class CMDBChangeOpSetAttributeURL extends CMDBChangeOpSetAttribute
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeURL("oldvalue", array("allowed_values"=>null, "sql"=>"oldvalue", "target" => '_blank', "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		//old value can have an old validation pattern -> force it to anything
+		MetaModel::Init_AddAttribute(new AttributeURL("oldvalue", array("allowed_values"=>null, "sql"=>"oldvalue", "target" => '_blank', "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array(), "validation_pattern" => '.*')));
 		MetaModel::Init_AddAttribute(new AttributeURL("newvalue", array("allowed_values"=>null, "sql"=>"newvalue", "target" => '_blank', "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		
 		// Display lists
