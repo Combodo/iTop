@@ -14,6 +14,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AuditCategory/Attribute:definition_set+' => 'OQL-Ausdrücke, die den Umfang der zu auditierenden Objekte festlegen',
 	'Class:AuditCategory/Attribute:rules_list' => 'Audit-Regeln',
 	'Class:AuditCategory/Attribute:rules_list+' => 'Audit-Regeln für diese Kategorie',
+	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Fehlertoleranz  (OK)',
+	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Erlaubter prozentualer Anteil ungültiger Objekte, bei dem das Ergebnis noch als in Ordnung (grün) dargestellt wird',
+	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Fehlertoleranz (Warnung)',
+	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Erlaubter prozentualer Anteil ungültiger Objekte, bei dem das Ergebnis noch als Warnung (orange) dargestellt wir.',
 ));
 
 //

@@ -30,6 +30,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditCategory/Attribute:definition_set+' => 'OQL expression defining the set of objects to audit',
 	'Class:AuditCategory/Attribute:rules_list' => 'Audit Rules',
 	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category',
+	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Error tolerance (OK)',
+	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Allowed percentage of invalid objects at which the result is still displayed as OK (green)',
+	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error tolerance (warning)',
+	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Allowed percentage of invalid objects at which the result is still displayed as a warning (orange)',
 ));
 
 //

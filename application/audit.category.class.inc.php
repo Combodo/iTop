@@ -48,13 +48,38 @@ class AuditCategory extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeOQL("definition_set", array("allowed_values"=>null, "sql"=>"definition_set", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSet("rules_list", array("linked_class"=>"AuditRule", "ext_key_to_me"=>"category_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array(), "edit_mode" => LINKSET_EDITMODE_INPLACE, "tracking_level" => LINKSET_TRACKING_ALL)));
+		MetaModel::Init_AddAttribute(new AttributeInteger("ok_error_tolerance", array("allowed_values"=>null, "sql"=>"ok_error_tolerance", "default_value"=>5, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("warning_error_tolerance", array("allowed_values"=>null, "sql"=>"warning_error_tolerance", "default_value"=>25, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'definition_set', 'rules_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'definition_set', 'ok_error_tolerance', 'warning_error_tolerance', 'rules_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('description', )); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'definition_set')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('default_search', array('name', 'description')); // Criteria of the default search form
+	}
+
+	/**
+	 * @param int $iTotal
+	 * @param int $iErrors
+	 *
+	 * @return string A semantic color name (eg. red, green, orange, success, failure, ... {@see css/backoffice/utils/variables/colors/_semantic-palette.scss}) to use for this category depending on its error count and tolerance
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0
+	 */
+	public function GetReportColor($iTotal, $iErrors)
+	{
+		$sResult = 'red';
+		if ( ($iTotal == 0) || ($iErrors / $iTotal) <= ($this->Get('ok_error_tolerance') / 100) )
+		{
+			$sResult = 'green';
+		}
+		else if ( ($iErrors / $iTotal) <= ($this->Get('warning_error_tolerance') / 100) )
+		{
+			$sResult = 'orange';
+		}
+		return $sResult;
 	}
 }
 ?>
