@@ -4735,11 +4735,15 @@ EOF
 			$sCSSClass = $bResult ? HILIGHT_CLASS_NONE : HILIGHT_CLASS_CRITICAL;
 			$sChecked = $bResult ? 'checked' : '';
 			$sDisabled = $bResult ? '' : 'disabled';
+
+			$aErrorsToDisplay = array_map(function($sError) {
+				return utils::HtmlEntities($sError);
+			}, $aErrors);
 			$aRows[] = array(
 				'form::select' => "<input type=\"checkbox\" class=\"selectList\" $sChecked $sDisabled\"></input>",
 				'object' => $oObj->GetHyperlink(),
 				'status' => $sStatus,
-				'errors' => '<p>'.($bResult ? '' : utils::HtmlEntities(implode('</p><p>', $aErrors))).'</p>',
+				'errors' => '<p>'.($bResult ? '' : utils::HtmlEntities(implode('</p><p>', $aErrorsToDisplay))).'</p>',
 				'@class' => $sCSSClass,
 			);
 			if ($bResult && (!$bPreview))
