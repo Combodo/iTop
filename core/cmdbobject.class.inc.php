@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -214,7 +214,12 @@ abstract class CMDBObject extends DBObject
 		if (is_null(self::$m_sInfo)) {
 			return CMDBChange::GetCurrentUserName();
 		} else {
-			return self::$m_sInfo;
+			//N°5135 - add impersonation information in activity log/current cmdb change
+			if (UserRights::IsImpersonated()){
+				return sprintf("%s (%s)", CMDBChange::GetCurrentUserName(), self::$m_sInfo);
+			} else {
+				return self::$m_sInfo;
+			}
 		}
 	}
 
@@ -227,7 +232,10 @@ abstract class CMDBObject extends DBObject
 	 */
 	protected static function GetTrackUserId()
 	{
-		if (is_null(self::$m_sUserId))
+		if (is_null(self::$m_sUserId)
+			//N°5135 - indicate impersonation inside changelogs
+			&& (false === UserRights::IsImpersonated())
+		)
 		{
 			return CMDBChange::GetCurrentUserId();
 		}
@@ -236,10 +244,10 @@ abstract class CMDBObject extends DBObject
 			return self::$m_sUserId;
 		}
 	}
-	
+
 	/**
 	 * Get the 'origin' information (defaulting to 'interactive')
-	 */	 	
+	 */
 	protected static function GetTrackOrigin()
 	{
 		if (is_null(self::$m_sOrigin))
@@ -268,7 +276,7 @@ abstract class CMDBObject extends DBObject
 	 * @since 2.7.7 3.0.2 3.1.0 N°3717 {@see CMDBChange} **will be persisted later** in {@see \CMDBChangeOp::OnInsert} (was done previously directly here)
 	 *     This will avoid creating in DB CMDBChange lines without any corresponding CMDBChangeOp
 	 */
-	protected static function CreateChange()
+	public static function CreateChange()
 	{
 		self::$m_oCurrChange = MetaModel::NewObject("CMDBChange");
 		self::$m_oCurrChange->Set("date", time());
@@ -624,7 +632,7 @@ abstract class CMDBObject extends DBObject
 	protected function DBCloneTracked_Internal($newKey = null)
 	{
 		$newKey = parent::DBClone($newKey);
-		$oClone = MetaModel::GetObject(get_class($this), $newKey); 
+		$oClone = MetaModel::GetObject(get_class($this), $newKey);
 
 		return $newKey;
 	}
@@ -637,7 +645,7 @@ abstract class CMDBObject extends DBObject
 		{
 			return;
 		}
-		
+
 		$ret = parent::DBUpdate();
 		return $ret;
 	}
@@ -761,11 +769,11 @@ abstract class CMDBObject extends DBObject
 class CMDBObjectSet extends DBObjectSet
 {
 	// this is the public interface (?)
-	
+
 	// I have to define those constructors here... :-(
 	// just to get the right object class in return.
 	// I have to think again to those things: maybe it will work fine if a have a constructor define here (?)
-	
+
 	static public function FromScratch($sClass)
 	{
 		$oFilter = new DBObjectSearch($sClass);
@@ -774,7 +782,7 @@ class CMDBObjectSet extends DBObjectSet
 		// NOTE: THIS DOES NOT WORK IF m_bLoaded is private in the base class (and you will not get any error message)
 		$oRetSet->m_bLoaded = true; // no DB load
 		return $oRetSet;
-	} 
+	}
 
 	// create an object set ex nihilo
 	// input = array of objects
@@ -783,7 +791,7 @@ class CMDBObjectSet extends DBObjectSet
 		$oRetSet = self::FromScratch($sClass);
 		$oRetSet->AddObjectArray($aObjects, $sClass);
 		return $oRetSet;
-	} 
+	}
 
 	static public function FromArrayAssoc($aClasses, $aObjects)
 	{
