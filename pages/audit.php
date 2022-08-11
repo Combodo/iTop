@@ -139,20 +139,6 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 	return $oFilter;
 }
 
-function GetReportColor($iTotal, $iErrors)
-{
-	$sResult = 'red';
-	if ( ($iTotal == 0) || ($iErrors / $iTotal) <= 0.05 )
-	{
-		$sResult = 'green';
-	}
-	else if ( ($iErrors / $iTotal) <= 0.25 )
-	{
-		$sResult = 'orange';
-	}
-	return $sResult;
-}
-
 try
 {
 	require_once('../approot.inc.php');
@@ -306,6 +292,7 @@ try
 		$oCategoriesSet = new DBObjectSet($oAuditFilter);
 		
 		$aAuditCategoryPanels = [];
+		/** @var AuditCategory $oAuditCategory */
 		while($oAuditCategory = $oCategoriesSet->fetch())
 		{
 			$oAuditCategoryPanelBlock = new Panel($oAuditCategory->GetName());
@@ -340,7 +327,7 @@ try
 						// nothing to check, really !
 						$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>"; 
 						$aRow['percent_ok'] = '100.00';
-						$aRow['class'] = GetReportColor($iCount, 0);
+						$aRow['class'] = $oAuditCategory->GetReportColor($iCount, 0);
 					}
 					else
 					{
@@ -355,7 +342,7 @@ try
 							}
 							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\"><img src=\"../images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>"; 
 							$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
-							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);							
+							$aRow['class'] = $oAuditCategory->GetReportColor($iCount, $iErrorsCount);
 						}
 						catch(Exception $e)
 						{
@@ -373,7 +360,7 @@ try
 				}
 				$iTotalErrors = count($aObjectsWithErrors);
 				$sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
-				$sClass = GetReportColor($iCount, $iTotalErrors);
+				$sClass = $oAuditCategory->GetReportColor($iCount, $iTotalErrors);
 				
 				$oTotalBlock->SetCount((int)$oTotalBlock->GetCount() + ($iCount));
 				$oErrorBlock->SetCount((int)$oErrorBlock->GetCount() + $iTotalErrors);
