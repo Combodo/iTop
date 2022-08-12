@@ -728,7 +728,7 @@ HTML
 				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
 				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
 				$oPage->AddUiBlock($oClassIcon);
-				
+
 				$sDisplayValue = ''; // not used
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
 						$oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
@@ -5195,10 +5195,13 @@ EOF
 				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusModified') : Dict::S('UI:BulkModifyStatusSkipped');
 			}
 
+			$aErrorsToDisplay = array_map(function($sError) {
+				return utils::HtmlEntities($sError);
+			}, $aErrors);
 			$aRows[] = array(
 				'object' => $oObj->GetHyperlink(),
 				'status' => $sStatus,
-				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrors)).'</p>',
+				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrorsToDisplay)).'</p>',
 			);
 			if ($bResult && (!$bPreview)) {
 				$oObj->DBUpdate();
@@ -5207,7 +5210,7 @@ EOF
 		set_time_limit(intval($iPreviousTimeLimit));
 		$oTable = DataTableUIBlockFactory::MakeForForm('BulkModify', $aHeaders, $aRows);
 		$oTable->AddOption("bFullscreen", true);
-		
+
 		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, '');
 		$oPanel->SetIcon($sClassIcon);
 		$oPanel->SetTitle($sHeaderTitle);
@@ -5413,13 +5416,13 @@ EOF
 					$oFailAlertBlock = AlertUIBlockFactory::MakeForDanger('', Dict::S('UI:Delete:SorryDeletionNotAllowed'));
 					$oFailAlertBlock->SetIsClosable(false);
 					$oP->AddUiBlock($oFailAlertBlock);
-				} 
+				}
 				else {
 					$oWarningAlertBlock = AlertUIBlockFactory::MakeForWarning('', Dict::S('UI:Delete:PleaseDoTheManualOperations'));
 					$oWarningAlertBlock->SetIsClosable(false);
 					$oP->AddUiBlock($oWarningAlertBlock);
 				}
-				
+
 				$oForm = FormUIBlockFactory::MakeStandard('');
 				$oP->AddSubBlock($oForm);
 				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::ReadParam('transaction_id', '', false, 'transaction_id')));
