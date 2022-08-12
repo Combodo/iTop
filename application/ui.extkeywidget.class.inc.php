@@ -778,7 +778,7 @@ JS
      * @param DBObject $oObj The current object for the OQL context
      * @param string $sContains The text of the autocomplete to filter the results
      * @param string $sOutputFormat
-     * @param null $sOperation for the values @see ValueSetObjects->LoadValues()
+     * @param null $sOperation for the values @see ValueSetObjects->LoadValues() not used since 3.0.0
      *
      * @throws CoreException
      * @throws OQLException
@@ -799,9 +799,9 @@ JS
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oValuesSet->SetLimit($iMax);
-		$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
-		asort($aValuesContains);
-		$aValues = $aValuesContains;
+		$aValuesStartWith = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
+		asort($aValuesStartWith);
+		$aValues = $aValuesStartWith;
 		if (sizeof($aValues) < $iMax) {
 			$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
 			asort($aValuesContains);
