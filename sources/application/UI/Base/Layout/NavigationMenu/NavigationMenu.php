@@ -286,7 +286,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		}
 		// Otherwise use the home page
 		else {
-			$this->sAppIconLink = MetaModel::GetConfig()->Get('app_root_url');
+			$this->sAppIconLink = utils::GetAbsoluteUrlAppRoot();
 		}
 	}
 
