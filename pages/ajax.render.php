@@ -377,7 +377,7 @@ try
 					$oObj = null;
 				}
 				$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, '', $bSearchMode);
-				$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains, $sOutputFormat, '');
+				$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains, $sOutputFormat);
 			}
 			break;
 
