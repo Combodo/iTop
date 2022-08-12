@@ -262,6 +262,16 @@ $(function()
                 // Prevent anchor default behaviour
                 oEvent.preventDefault();
 
+				// Compute list position
+	            // Note: Arbitrary +6px for the position as we don't want it to be exactly against the toggler
+	            let fTopOffset = this.element.find(this.js_selectors.extra_tabs_list_toggler).offset().top + this.element.find(this.js_selectors.extra_tabs_list_toggler).outerHeight() + 6;
+				// We need to compute position from the right side of the screen because at this time the list isn't visible and we can't know its width, so we can't position it regarding the left side of the screen
+	            // Note: We use window.innerWidth instead of outerWidth as we need the width of the actual viewport, not the OS browser window
+				let fRightOffset = window.innerWidth - this.element.find(this.js_selectors.extra_tabs_list_toggler).offset().left - this.element.find(this.js_selectors.extra_tabs_list_toggler).outerWidth();
+	            this.element.find(this.js_selectors.extra_tabs_list)
+		            .css('top', fTopOffset + 'px')
+		            .css('right', fRightOffset + 'px');
+
                 // TODO 3.0.0: Should/could we use a popover menu instead here?
                 this.element.find(this.js_selectors.extra_tabs_list).toggleClass(this.css_classes.is_hidden);
             },
