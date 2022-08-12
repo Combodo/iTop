@@ -25,6 +25,7 @@ use AttributeDuration;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
@@ -111,15 +112,17 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
 
-					$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
-					$oText->AddCSSClass('ibo-input-field-wrapper ibo-input');
-					$oValue->AddSubBlock($oText);
+
 					if ($this->oField->GetReadOnly())
 					{
-						$oText->SetIsDisabled(true);
+						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue()));
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 					}
 					else
 					{
+						$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
+						$oText->AddCSSClasses(['ibo-input-field-wrapper', 'ibo-input']);
+						$oValue->AddSubBlock($oText);
 						// Some additional stuff if we are displaying it with a rich editor
 						if ($bRichEditor)
 						{
