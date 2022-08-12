@@ -83,7 +83,7 @@ $(function()
                         me.element.find('.last-error').text(data.error);
                     }
                     me._onUpdateAlways(data, sFormPath);
-	                me.element.find('[data-field-id=previous_values]').find('input[type=hidden]').val('{}');
+	                me.element.find('[data-field-id="previous_values"]').find('input[type="hidden"]').val('{}');
                 });
         },
         // On initialization or update
