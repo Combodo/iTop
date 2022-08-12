@@ -95,7 +95,7 @@ $(function()
 
 		_updatePreviousValues: function()
 		{
-			let me=this;
+			let me = this;
 			if(this.element.find('[data-attribute-previous-value]').length>0) {
 				let aPreviousValues = {};
 				$(this.element.find('[data-attribute-previous-value]')).each(function (idx, elt) {
