@@ -208,7 +208,7 @@ class LoginWebPage extends NiceWebPage
 				}
 
 				// This token allows the user to change the password without knowing the previous one
-				$sToken = substr(md5(APPROOT.uniqid()), 0, 16);
+				$sToken = bin2hex(random_bytes(32));
 				$oUser->Set('reset_pwd_token', $sToken);
 				CMDBObject::SetTrackInfo('Reset password');
 				$oUser->AllowWrite(true);
