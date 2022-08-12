@@ -778,16 +778,14 @@ JS
      * @param DBObject $oObj The current object for the OQL context
      * @param string $sContains The text of the autocomplete to filter the results
      * @param string $sOutputFormat
-     * @param null $sOperation for the values @see ValueSetObjects->LoadValues()
+     * @param null $sOperation for the values @see ValueSetObjects->LoadValues() not used since 3.0.0
      *
      * @throws CoreException
      * @throws OQLException
      *
      * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $oObj for PHP 8.0 compatibility
      */
-	public function AutoComplete(
-		WebPage $oP, $sFilter, $oObj, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null
-	)
+	public function AutoComplete(WebPage $oP, $sFilter, $oObj, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null	)
 	{
 		if (is_null($sFilter)) {
 			throw new Exception('Implementation: null value for allowed values definition');
@@ -801,13 +799,13 @@ JS
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oValuesSet->SetLimit($iMax);
-		$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
-		asort($aValuesContains);
-		$aValues = $aValuesContains;
+		$aValuesStartWith = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
+		asort($aValuesStartWith);
+		$aValues = $aValuesStartWith;
 		if (sizeof($aValues) < $iMax) {
 			$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
 			asort($aValuesContains);
-			$iSize = sizeof($aValuesContains);
+			$iSize = sizeof($aValues);
 			foreach ($aValuesContains as $sKey => $sFriendlyName)
 			{
 				if (!isset($aValues[$sKey]))
