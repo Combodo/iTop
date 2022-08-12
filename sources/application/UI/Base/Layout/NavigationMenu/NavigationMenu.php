@@ -282,7 +282,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 
 		// Try if a custom URL was set in the configuration file
 		if(MetaModel::GetConfig()->IsCustomValue($sPropCode)) {
-			$this->sAppIconLink = MetaModel::GetConfig()->Get('app_icon_url');
+			$this->sAppIconLink = MetaModel::GetConfig()->Get($sPropCode);
 		}
 		// Otherwise use the home page
 		else {
