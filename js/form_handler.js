@@ -101,7 +101,7 @@ $(function()
 				$(this.element.find('[data-attribute-previous-value]')).each(function (idx, elt) {
 					aPreviousValues[$(elt).data('field-id')] = $(elt).data('attribute-previous-value');
 				});
-				me.element.find('[data-field-id=previous_values]').find('input[type=hidden]').val(JSON.stringify(aPreviousValues));
+				me.element.find('[data-field-id="previous_values"]').find('input[type="hidden"]').val(JSON.stringify(aPreviousValues));
 			}
 		},
 		// Events callback
