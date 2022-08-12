@@ -3202,15 +3202,15 @@ abstract class DBObject implements iDisplay
 			// - TriggerOnObjectMention
 			$this->ActivateOnMentionTriggers(false);
 
-			$bHasANewExternalKeyValue = false;
+			$bNeedReload = false;
 			$aHierarchicalKeys = array();
 			$aDBChanges = array();
 			foreach ($aChanges as $sAttCode => $valuecurr)
 			{
 				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-				if ($oAttDef->IsExternalKey())
+				if ($oAttDef->IsExternalKey() || $oAttDef->IsLinkSet())
 				{
-					$bHasANewExternalKeyValue = true;
+					$bNeedReload = true;
 				}
 				if ($oAttDef->IsBasedOnDBColumns())
 				{
@@ -3368,24 +3368,10 @@ abstract class DBObject implements iDisplay
 			$this->m_aModifiedAtt = array();
 
 			try {
-				// - TriggerOnObjectUpdate
-				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
-					array(), $aParams);
-				while ($oTrigger = $oSet->Fetch()) {
-					/** @var \TriggerOnObjectUpdate $oTrigger */
-					try {
-						$oTrigger->DoActivate($this->ToArgs('this'));
-					}
-					catch (Exception $e) {
-						utils::EnrichRaisedException($oTrigger, $e);
-					}
-				}
-
 				$this->AfterUpdate();
 
 				// Reload to get the external attributes
-				if ($bHasANewExternalKeyValue) {
+				if ($bNeedReload) {
 					$this->Reload(true /* AllowAllData */);
 				} else {
 					// Reset original values although the object has not been reloaded
@@ -3396,6 +3382,20 @@ abstract class DBObject implements iDisplay
 							$value = $this->m_aCurrValues[$sAttCode];
 							$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
 						}
+					}
+				}
+
+				// - TriggerOnObjectUpdate
+				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)'),
+					array(), $aParams);
+				while ($oTrigger = $oSet->Fetch()) {
+					/** @var \TriggerOnObjectUpdate $oTrigger */
+					try {
+						$oTrigger->DoActivate($this->ToArgs('this'));
+					}
+					catch (Exception $e) {
+						utils::EnrichRaisedException($oTrigger, $e);
 					}
 				}
 			}
