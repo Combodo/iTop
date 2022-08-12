@@ -92,7 +92,7 @@ $(function()
 		{
 			return this.options.field_set.triggerHandler('get_current_values');
 		},
-
+		//since 3.0.2 3.1.0
 		_updatePreviousValues: function()
 		{
 			let me = this;
