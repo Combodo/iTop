@@ -1474,7 +1474,10 @@ EOF
 								}
 								else
 								{
-									$sError = '<p>'.implode('</p></p>',$aErrors)."</p>\n";
+									$aErrorsToDisplay = array_map(function($sError) {
+										return utils::HtmlEntities($sError);
+									}, $aErrors);
+									$sError = '<p>'.implode('</p></p>',$aErrorsToDisplay)."</p>\n";
 								}
 							}
 							else
