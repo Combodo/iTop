@@ -93,11 +93,23 @@ $(function()
 			return this.options.field_set.triggerHandler('get_current_values');
 		},
 
+		_updatePreviousValues: function()
+		{
+			let me=this;
+			if(this.element.find('[data-attribute-previous-value]').length>0) {
+				let aPreviousValues = {};
+				$(this.element.find('[data-attribute-previous-value]')).each(function (idx, elt) {
+					aPreviousValues[$(elt).data('field-id')] = $(elt).data('attribute-previous-value');
+				});
+				me.element.find('[data-field-id=previous_values]').find('input[type=hidden]').val(JSON.stringify(aPreviousValues));
+			}
+		},
 		// Events callback
 		// - Update fields depending on the update ones
 		_onUpdateFields: function(oEvent, oData)
 		{
 			var me = this;
+			me._updatePreviousValues();
 			var sFormPath = oData.form_path;
 
 			// Data checks

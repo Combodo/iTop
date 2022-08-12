@@ -50,18 +50,6 @@ $(function()
             this.element.removeClass('console_form_handler');
             this._super();
         },
-	    _updatePreviousValues: function()
-	    {
-		    let me=this;
-	    	if(this.element.find('[data-attribute-previous-value]').length>0) {
-	    		let aPreviousValues = {};
-			    $(this.element.find('[data-attribute-previous-value]')).each(function (idx, elt) {
-				    aPreviousValues[$(elt).data('field-id')] = $(elt).data('attribute-previous-value');
-			    });
-			    me.element.find('[data-field-id=previous_values]').find('input[type=hidden]').val(JSON.stringify(aPreviousValues));
-		    }
-
-	    },
         _onUpdateFields: function(event, data)
         {
             var me = this;
