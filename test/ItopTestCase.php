@@ -126,4 +126,109 @@ class ItopTestCase extends TestCase
 
 		return $method->invokeArgs($oObject, $aArgs);
 	}
+
+
+	/**
+	 * @param object $oObject
+	 * @param string $sProperty
+	 *
+	 * @return mixed property
+	 *
+	 * @throws \ReflectionException
+	 */
+	public function GetNonPublicProperty(object $oObject, string $sProperty)
+	{
+		$class = new \ReflectionClass(get_class($oObject));
+		$property = $class->getProperty($sProperty);
+		$property->setAccessible(true);
+
+		return $property->getValue($oObject);
+	}
+
+	/**
+	 * @param object $oObject
+	 * @param string $sProperty
+	 * @param $value
+	 *
+	 * @throws \ReflectionException
+	 */
+	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
+	{
+		$class = new \ReflectionClass(get_class($oObject));
+		$property = $class->getProperty($sProperty);
+		$property->setAccessible(true);
+
+		$property->setValue($oObject, $value);
+	}
+
+	public function RecurseRmdir($dir) {
+		if (is_dir($dir)) {
+			$objects = scandir($dir);
+			foreach ($objects as $object) {
+				if ($object != "." && $object != "..") {
+					if (is_dir($dir.DIRECTORY_SEPARATOR.$object))
+						$this->RecurseRmdir($dir.DIRECTORY_SEPARATOR.$object);
+					else
+						unlink($dir.DIRECTORY_SEPARATOR.$object);
+				}
+			}
+			rmdir($dir);
+		}
+	}
+
+	public function CreateTmpdir() {
+		$sTmpDir=tempnam(sys_get_temp_dir(),'');
+		if (file_exists($sTmpDir))
+		{
+			unlink($sTmpDir);
+		}
+		mkdir($sTmpDir);
+		if (is_dir($sTmpDir))
+		{
+			return $sTmpDir;
+		}
+
+		return sys_get_temp_dir();
+	}
+
+	public function RecurseMkdir($sDir){
+		if (strpos($sDir, DIRECTORY_SEPARATOR) === 0){
+			$sPath = DIRECTORY_SEPARATOR;
+		} else {
+			$sPath = "";
+		}
+
+		foreach (explode(DIRECTORY_SEPARATOR, $sDir) as $sSubDir){
+			if (($sSubDir === '..')) {
+				break;
+			}
+
+			if (( trim($sSubDir) === '' ) || ( $sSubDir === '.' )) {
+				continue;
+			}
+
+			$sPath .= $sSubDir . DIRECTORY_SEPARATOR;
+			if (!is_dir($sPath)) {
+				var_dump($sPath);
+				@mkdir($sPath);
+			}
+		}
+
+	}
+
+	public function RecurseCopy($src,$dst) {
+		$dir = opendir($src);
+		@mkdir($dst);
+		while(false !== ( $file = readdir($dir)) ) {
+			if (( $file != '.' ) && ( $file != '..' )) {
+				if ( is_dir($src . '/' . $file) ) {
+					$this->RecurseCopy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
+				}
+				else {
+					copy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
+				}
+			}
+		}
+		closedir($dir);
+	}
 }
