@@ -24,8 +24,15 @@ if ((CKEDITOR !== undefined) && (CKEDITOR.plugins.registered['disabler'] === und
 
 // Rewrite the CKEditor Mentions plugin regexp to make it suitable for all Unicode alphabets.
 if (CKEDITOR !== undefined && CKEDITOR.plugins.registered['mentions']) {
-	// from https://github.com/ckeditor/ckeditor4/blob/a3786007fb979d7d7bff3d10c34a2d422935baed/plugins/mentions/plugin.js#L147
+	// From https://github.com/ckeditor/ckeditor4/blob/a3786007fb979d7d7bff3d10c34a2d422935baed/plugins/mentions/plugin.js#L147
 	function createPattern(marker, minChars) {
+		// Escape marker if it's a regex token
+		// https://github.com/tc39/proposal-regex-escaping/blob/main/EscapedChars.md#syntaxcharacter-proposal
+		const regexTokens = ['^', '$', '\\', '.', '*', '+', '?', '(', ')', '[', ']', '{', '}', '|'];
+		if (regexTokens.indexOf(marker) >= 0) {
+			marker = '\\' + marker;
+		}
+
 		let pattern = marker + '[\\p{L}\\p{N}_-]';
 		if ( minChars ) {
 			pattern += '{' + minChars + ',}';
