@@ -2,8 +2,8 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-use Combodo\iTop\DesignDocument;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use DOMDocument;
 use MFDocument;
 use MFElement;
 use ModelFactory;
@@ -12,7 +12,23 @@ use ModelFactory;
 /**
  * Class ModelFactoryTest
  *
+ * Test XML assembly, and in particular the following verbs
+ *
+ *                      ┌─────────────────┐
+ *                      │                 │
+ *     LoadDelta ──────►│  ModelFactory   │
+ *                      │                 ├──►GetDelta
+ *   ApplyChanges ─────►│   ┌──────────┐  │
+ *                      ├───┤MFDocument├──┤
+ *      Delete ────────►│   └──────────┘  │
+ *    AddChildNode ────►│                 │
+ * RedefineChildNode ──►│    MFElement    │
+ *      Rename ────────►│                 │
+ *    SetChildNode ────►│                 │
+ *                      └─────────────────┘
  * @covers ModelFactory
+ * @covers MFElement
+ *
  */
 class ModelFactoryTest extends ItopTestCase
 {
@@ -23,10 +39,16 @@ class ModelFactoryTest extends ItopTestCase
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
 	}
 
-	protected function MakeVaniliaModelFactory($sInitialXML)
+	/**
+	 * @param $sInitialXML
+	 *
+	 * @return \ModelFactory
+	 * @throws \ReflectionException
+	 */
+	protected function MakeVanillaModelFactory($sInitialXML): ModelFactory
 	{
 		/* @var MFDocument $oFactoryRoot */
-		$oFactory = new ModelFactory(array());
+		$oFactory = new ModelFactory([]);
 
 		$oInitialDocument = new MFDocument();
 		$oInitialDocument->preserveWhiteSpace = false;
@@ -38,10 +60,15 @@ class ModelFactoryTest extends ItopTestCase
 		return $oFactory;
 	}
 
+	/**
+	 * @param $sXML
+	 *
+	 * @return false|string
+	 */
 	protected function CanonicalizeXML($sXML)
 	{
 		// Canonicalize the expected XML (to cope with indentation)
-		$oExpectedDocument = new \DOMDocument();
+		$oExpectedDocument = new DOMDocument();
 		$oExpectedDocument->preserveWhiteSpace = false;
 		$oExpectedDocument->loadXML($sXML);
 		$oExpectedDocument->formatOutput = true;
@@ -54,7 +81,7 @@ class ModelFactoryTest extends ItopTestCase
 	protected function AssertEqualModels(string $sExpectedXML, ModelFactory $oFactory)
 	{
 		// Canonicalize the expected XML (to cope with indentation)
-		$oExpectedDocument = new \DOMDocument();
+		$oExpectedDocument = new DOMDocument();
 		$oExpectedDocument->preserveWhiteSpace = false;
 		$oExpectedDocument->loadXML($sExpectedXML);
 		$oExpectedDocument->formatOutput = true;
@@ -62,28 +89,11 @@ class ModelFactoryTest extends ItopTestCase
 
 		$sExpectedXML = $this->CanonicalizeXML($sExpectedXML);
 
-		if (false) {
-			// Beurk (il conserve les espaces)
-			$sActualXML = $oFactory->Dump(null, true);
-		}
-		else {
-			$oFactoryDocument = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
-			$oFactoryDocument->preserveWhiteSpace = false;
-			//$oExpectedDocument->loadXML($sExpectedXML);
-			$oFactoryDocument->formatOutput = false;
-			$sActualXML = $oFactoryDocument->saveXML($oFactoryDocument->firstChild);
-		}
-		$sActualXML = $this->CanonicalizeXML($oFactory->Dump(null, true));
-
-
 		$sActualXML = $oFactory->Dump(null, true);
-
-		//		$sActualXML = str_replace(' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"', '', $sActualXML);
-		//		$sActualXML = preg_replace('@ version=".*"@', '', $sActualXML);
 
 		// Note: assertEquals reports the differences in a diff which is easier to interpret (in PHPStorm)
 		// as compared to the report given by assertEqualXMLStructure
-		$this->assertEquals($sExpectedXML, $sActualXML);
+		static::assertEquals($sExpectedXML, $sActualXML);
 	}
 
 	/**
@@ -93,15 +103,16 @@ class ModelFactoryTest extends ItopTestCase
 	 */
 	public function testAlterationByXMLDelta($sInitialXML, $sDeltaXML, $sExpectedXML)
 	{
-		$oFactory = $this->MakeVaniliaModelFactory($sInitialXML);
+		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
 		$oFactoryRoot = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
 
 		$oDocument = new MFDocument();
 		$oDocument->loadXML($sDeltaXML);
+		/* @var MFElement $oDeltaRoot */
 		$oDeltaRoot = $oDocument->firstChild;
 
 		if ($sExpectedXML === null) {
-			$this->expectException("Exception");
+			$this->expectException('Exception');
 		}
 		$oFactory->LoadDelta($oDeltaRoot, $oFactoryRoot);
 		$oFactory->ApplyChanges();
@@ -109,6 +120,9 @@ class ModelFactoryTest extends ItopTestCase
 		$this->AssertEqualModels($sExpectedXML, $oFactory);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function providerDeltas()
 	{
 		// Basic (structure)
@@ -620,21 +634,14 @@ XML,
 	 */
 	public function testAlterationsByAPIs($sInitialXML, $sOperation, $sExpectedXML)
 	{
-		$oFactory = $this->MakeVaniliaModelFactory($sInitialXML);
-
-//		$oFactoryRoot = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
-
-//		$oDocument = new MFDocument();
-//		$oDocument->loadXML($sInitialXML);
-//		$oDeltaRoot = $oDocument->firstChild;
-
-//		$oFactory->LoadDelta($oDeltaRoot, $oFactoryRoot);
+		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
 
 		if ($sExpectedXML === null) {
-			$this->expectException("Exception");
+			$this->expectException('Exception');
 		}
 		switch ($sOperation) {
 			case 'Delete':
+				/* @var MFElement $oTargetNode */
 				$oTargetNode = $oFactory->GetNodes('//target_tag', null, false)->item(0);
 				$oTargetNode->Delete();
 				break;
@@ -669,18 +676,20 @@ XML,
 				break;
 
 			default:
-				$this->fail("Unknown operation '$sOperation'");
+				static::fail("Unknown operation '$sOperation'");
 		}
 
-		//$oFactory->ApplyChanges();
 		if ($sExpectedXML !== null) {
 			$this->AssertEqualModels($sExpectedXML, $oFactory);
 		}
 	}
 
+	/**
+	 * @return array[]
+	 */
 	public function providerAlterationAPIs()
 	{
-		define("CASE_NO_FLAG", <<<XML
+		define('CASE_NO_FLAG', <<<XML
 <root_tag>
 	<container_tag>
 		<target_tag></target_tag>
@@ -688,7 +697,7 @@ XML,
 </root_tag>
 XML
 		);
-		define("CASE_ABOVE_A_FLAG", <<<XML
+		define('CASE_ABOVE_A_FLAG', <<<XML
 <root_tag>
 	<container_tag>
 		<target_tag>
@@ -698,7 +707,7 @@ XML
 </root_tag>
 XML
 		);
-		define("CASE_IN_A_DEFINITION", <<<XML
+		define('CASE_IN_A_DEFINITION', <<<XML
 <root_tag>
 	<container_tag _alteration="added">
 		<target_tag>
@@ -708,7 +717,7 @@ XML
 </root_tag>
 XML
 		);
-		define("CASE_FLAG_ON_TARGET_define", <<<XML
+		define('CASE_FLAG_ON_TARGET_define', <<<XML
 <root_tag>
 	<container_tag>
 		<target_tag _alteration="added"/>
@@ -716,7 +725,7 @@ XML
 </root_tag>
 XML
 		);
-		define("CASE_FLAG_ON_TARGET_redefine", <<<XML
+		define('CASE_FLAG_ON_TARGET_redefine', <<<XML
 <root_tag>
 	<container_tag>
 		<target_tag _alteration="replaced"/>
@@ -724,7 +733,7 @@ XML
 </root_tag>
 XML
 		);
-		define("CASE_FLAG_ON_TARGET_needed", <<<XML
+		define('CASE_FLAG_ON_TARGET_needed', <<<XML
 <root_tag>
 	<container_tag>
 		<target_tag _alteration="needed"/>
@@ -732,7 +741,7 @@ XML
 </root_tag>
 XML
 		);
-		define("CASE_FLAG_ON_TARGET_forced", <<<XML
+		define('CASE_FLAG_ON_TARGET_forced', <<<XML
 <root_tag>
 	<container_tag>
 		<target_tag _alteration="forced"/>
@@ -740,7 +749,7 @@ XML
 </root_tag>
 XML
 		);
-		define("CASE_FLAG_ON_TARGET_removed", <<<XML
+		define('CASE_FLAG_ON_TARGET_removed', <<<XML
 <root_tag>
 	<container_tag>
 		<target_tag _alteration="removed"/>
@@ -748,7 +757,7 @@ XML
 </root_tag>
 XML
 		);
-		define("CASE_FLAG_ON_TARGET_old_id", <<<XML
+		define('CASE_FLAG_ON_TARGET_old_id', <<<XML
 <root_tag>
 	<container_tag>
 		<target_tag id="fraise" _old_id="tagada"/>
@@ -756,7 +765,7 @@ XML
 </root_tag>
 XML
 		);
-		define("CASE_MISSING_TARGET", <<<XML
+		define('CASE_MISSING_TARGET', <<<XML
 <root_tag>
 	<container_tag/>
 </root_tag>
@@ -1039,7 +1048,7 @@ XML;
 </root_node>
 XML;
 
-		// Strange unintuitive things noticed when the test has been developped
+		// Strange unintuitive things noticed when the test has been developed
 		// * ordering : depends on the initial tree and the order of declaration for new nodes
 		// * rename => GetDelta adds a must_exist
 		// * must_exist => lost during the process
@@ -1060,19 +1069,20 @@ XML;
 
 XML;
 
-		$oFactory = $this->MakeVaniliaModelFactory($sInitialXML);
+		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
 
 		// Load the Delta
 		$oFactoryRoot = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
 		$oDocument = new MFDocument();
 		$oDocument->loadXML($sOriginalDeltaXML);
+		/* @var MFElement $oDeltaRoot */
 		$oDeltaRoot = $oDocument->firstChild;
 		$oFactory->LoadDelta($oDeltaRoot, $oFactoryRoot);
 
 		// Get the delta back
 		$sNewDeltaXML = $oFactory->GetDelta();
 
-		$this->assertEquals($sExpectedDeltaXML, $sNewDeltaXML);
+		static::assertEquals($sExpectedDeltaXML, $sNewDeltaXML);
 	}
 }
 
