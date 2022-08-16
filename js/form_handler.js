@@ -92,14 +92,17 @@ $(function()
 		{
 			return this.options.field_set.triggerHandler('get_current_values');
 		},
-		//since 3.0.2 3.1.0
+		/**
+		 * @private
+		 * @since 3.0.2 3.1.0
+		 */
 		_updatePreviousValues: function()
 		{
 			let me = this;
-			if(this.element.find('[data-attribute-previous-value]').length>0) {
+			if(this.element.find('[data-attribute-previous-value]').length > 0) {
 				let aPreviousValues = {};
-				$(this.element.find('[data-attribute-previous-value]')).each(function (idx, elt) {
-					aPreviousValues[$(elt).data('field-id')] = $(elt).data('attribute-previous-value');
+				$(this.element.find('[data-attribute-previous-value]')).each(function (iIdx, oElem) {
+					aPreviousValues[$(oElem).data('field-id')] = $(oElem).data('attribute-previous-value');
 				});
 				me.element.find('[data-field-id="previous_values"]').find('input[type="hidden"]').val(JSON.stringify(aPreviousValues));
 			}
