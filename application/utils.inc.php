@@ -2718,9 +2718,23 @@ HTML;
 			$aAutoloadClassMaps = array_merge($aAutoloadClassMaps, glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php'));
 
 			$aClassMap = [];
+			$aAutoloaderErrors = [];
 			foreach ($aAutoloadClassMaps as $sAutoloadFile) {
+				if (false === static::RealPath($sAutoloadFile, APPROOT)) {
+					// can happen when we still have the autoloader symlink in env-*, but it points to a file that no longer exists
+					$aAutoloaderErrors[] = $sAutoloadFile;
+					continue;
+				}
 				$aTmpClassMap = include $sAutoloadFile;
+				/** @noinspection SlowArrayOperationsInLoopInspection we are getting an associative array so the documented workarounds cannot be used */
 				$aClassMap = array_merge($aClassMap, $aTmpClassMap);
+			}
+			if (count($aAutoloaderErrors) > 0) {
+				IssueLog::Debug(
+					"\utils::GetClassesForInterface cannot load some of the autoloader files",
+					LogChannels::CORE,
+					['autoloader_errors' => $aAutoloaderErrors]
+				);
 			}
 
 			// Add already loaded classes
@@ -2729,7 +2743,7 @@ HTML;
 
 			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
 				$bSkipped = false;
-				
+
 				// Check if our class matches name filter, or is in an excluded path
 				if ($sClassNameFilter !== '' && strpos($sPHPClass, $sClassNameFilter) === false) {
 					$bSkipped = true;
