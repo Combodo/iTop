@@ -14,7 +14,7 @@ define('APPCONF', APPROOT.'conf/');
  * @used-by utils::GetItopVersionWikiSyntax()
  * @used-by iTopModulesPhpVersionIntegrationTest
  */
-define('ITOP_CORE_VERSION', '2.7.7');
+define('ITOP_CORE_VERSION', '2.7.8');
 
 
 require_once APPROOT.'bootstrap.inc.php';
