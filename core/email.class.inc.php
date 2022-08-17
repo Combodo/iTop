@@ -34,6 +34,7 @@ define ('EMAIL_SEND_ERROR', 2);
 
 class EMail implements iEMail
 {
+	protected static $m_oConfig = null;
 	protected $oMailer;
 
 	// Serialization formats
@@ -44,6 +45,35 @@ class EMail implements iEMail
 	public function __construct()
 	{
 		$this->oMailer = EmailFactory::GetMailer();
+	}
+
+	/**
+	 * Sets {@see m_oConfig} if current attribute is null
+	 *
+	 * @returns \Config the current {@see m_oConfig} value
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 *
+	 * @uses utils::GetConfig()
+	 *
+	 * @since 2.7.8 3.0.2 3.1.0 N°4947
+	 */
+	public function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
+	{
+		if (is_null(static::$m_oConfig)) {
+			static::$m_oConfig = utils::GetConfig();
+		}
+
+		return static::$m_oConfig;
+	}
+
+	protected function InitRecipientFrom()
+	{
+		$oConfig = $this->LoadConfig();
+		$this->SetRecipientFrom(
+			$oConfig->Get('email_default_sender_address'),
+			$oConfig->Get('email_default_sender_label')
+		);
 	}
 
 	/**
@@ -146,5 +176,4 @@ class EMail implements iEMail
 	{
 		$this->oMailer->SetRecipientReplyTo($sAddress);
 	}
-
 }

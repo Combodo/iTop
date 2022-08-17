@@ -45,25 +45,21 @@ class EMailLaminas extends Email
 	// Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
 	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
 
-	protected static $m_oConfig = null;
 	protected $m_aData; // For storing data to serialize
-
-	public static function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
-	{
-		if (is_null(self::$m_oConfig)) {
-			self::$m_oConfig = new Config($sConfigFile);
-		}
-	}
 
 	protected $m_oMessage;
 
-	/** @noinspection PhpMissingParentConstructorInspection */
+	/**
+	 * @noinspection PhpMissingParentConstructorInspection
+	 * @noinspection MagicMethodsValidityInspection
+	 */
 	public function __construct()
 	{
 		$this->m_aData = array();
 		$this->m_oMessage = new Message();
 		$this->m_oMessage->setEncoding('UTF-8');
-		$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
+
+		$this->InitRecipientFrom();
 	}
 
 	/**
