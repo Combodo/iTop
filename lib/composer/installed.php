@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-develop',
-        'version' => 'dev-develop',
+        'pretty_version' => '3.0.2-rc1',
+        'version' => '3.0.2.0-RC1',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'e4343ded01403f5b8b0499190ab60b004175bb19',
+        'reference' => 'c5d5379c492059a80eb72cc1dab148dd6e82705f',
         'name' => 'combodo/itop',
         'dev' => true,
     ),
     'versions' => array(
         'combodo/itop' => array(
-            'pretty_version' => 'dev-develop',
-            'version' => 'dev-develop',
+            'pretty_version' => '3.0.2-rc1',
+            'version' => '3.0.2.0-RC1',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'e4343ded01403f5b8b0499190ab60b004175bb19',
+            'reference' => 'c5d5379c492059a80eb72cc1dab148dd6e82705f',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -654,12 +654,12 @@
             'dev_requirement' => false,
         ),
         'twig/twig' => array(
-            'pretty_version' => 'v1.42.5',
-            'version' => '1.42.5.0',
+            'pretty_version' => 'v1.43.1',
+            'version' => '1.43.1.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twig/twig',
             'aliases' => array(),
-            'reference' => '87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e',
+            'reference' => '2311602f6a208715252febe682fa7c38e56a3373',
             'dev_requirement' => false,
         ),
         'zendframework/zend-loader' => array(
