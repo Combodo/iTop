@@ -5121,7 +5121,7 @@ HTML
 							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass)) {
 								$sValueCheckbox = '<input type="checkbox" class="ibo-field--enable-bulk--checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
-							$aComments[$sAttCode] .= '<div class="multi_values ibo-field--enable-bulk ibo-pill ibo-is-failure" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.$iCount.$sValueCheckbox.'</div>';
+							$aComments[$sAttCode] .= '<div class="multi_values ibo-field--enable-bulk ibo-pill ibo-is-failure" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true" data-tooltip-append-to="body">'.$iCount.$sValueCheckbox.'</div>';
 						}
 						$sReadyScript .= 'ToggleField('.(($iCount == 1) ? 'true' : 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					}
