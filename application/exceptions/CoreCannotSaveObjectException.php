@@ -44,15 +44,15 @@ class CoreCannotSaveObjectException extends CoreException
 	public function getHtmlMessage()
 	{
 		$sTitle = Dict::S('UI:Error:SaveFailed');
-		$sContent = "<span><strong>{$sTitle}</strong></span>";
+		$sContent = "<span><strong>".utils::HtmlEntities($sTitle)."</strong></span>";
 
 		if (count($this->aIssues) == 1) {
 			$sIssue = reset($this->aIssues);
-			$sContent .= " <span>{$sIssue}</span>";
+			$sContent .= " <span>".utils::HtmlEntities($sIssue)."</span>";
 		} else {
 			$sContent .= '<ul>';
 			foreach ($this->aIssues as $sError) {
-				$sContent .= "<li>$sError</li>";
+				$sContent .= "<li>".utils::HtmlEntities($sError)."</li>";
 			}
 			$sContent .= '</ul>';
 		}
