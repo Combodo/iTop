@@ -28,7 +28,7 @@
     "symfony/twig-bundle": "~3.4.47",
     "symfony/yaml": "~3.4.47",
     "thenetworg/oauth2-azure": "^2.0",
-    "twig/twig": "~1.42.5"
+    "twig/twig": "~1.43.1"
   },
   "require-dev": {
     "symfony/stopwatch": "~3.4.47",
