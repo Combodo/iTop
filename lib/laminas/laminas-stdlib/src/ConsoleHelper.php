@@ -44,23 +44,19 @@ class ConsoleHelper
     public const HIGHLIGHT_INFO  = 'info';
     public const HIGHLIGHT_ERROR = 'error';
 
-    /**
-     * @var array
-     * @psalm-var array<ConsoleHelper::HIGHLIGHT_*, ConsoleHelper::COLOR_GREEN|ConsoleHelper::COLOR_RED>
-     */
-    private $highlightMap = [
+    /** @psalm-var array<ConsoleHelper::HIGHLIGHT_*, ConsoleHelper::COLOR_GREEN|ConsoleHelper::COLOR_RED> */
+    private array $highlightMap = [
         self::HIGHLIGHT_INFO  => self::COLOR_GREEN,
         self::HIGHLIGHT_ERROR => self::COLOR_RED,
     ];
 
     /** @var string Exists only for testing. */
-    private $eol = PHP_EOL;
+    private string $eol = PHP_EOL;
 
     /** @var resource Exists only for testing. */
     private $stderr = STDERR;
 
-    /** @var bool */
-    private $supportsColor;
+    private bool $supportsColor;
 
     /**
      * @param resource $resource

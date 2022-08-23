@@ -84,7 +84,7 @@ abstract class AbstractOptions implements ParameterObjectInterface
         $array = [];
 
         /** @param string[] $letters */
-        $transform = function (array $letters): string {
+        $transform = static function (array $letters): string {
             $letter = array_shift($letters);
             return '_' . strtolower($letter);
         };

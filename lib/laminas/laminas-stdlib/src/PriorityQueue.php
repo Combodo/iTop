@@ -290,14 +290,10 @@ class PriorityQueue implements Countable, IteratorAggregate, Serializable
             case self::EXTR_BOTH:
                 return $this->items;
             case self::EXTR_PRIORITY:
-                return array_map(function ($item) {
-                    return $item['priority'];
-                }, $this->items);
+                return array_map(static fn($item) => $item['priority'], $this->items);
             case self::EXTR_DATA:
             default:
-                return array_map(function ($item) {
-                    return $item['data'];
-                }, $this->items);
+                return array_map(static fn($item) => $item['data'], $this->items);
         }
     }
 
