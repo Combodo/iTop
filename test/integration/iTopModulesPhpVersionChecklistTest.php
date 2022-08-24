@@ -22,8 +22,6 @@ use utils;
 
 
 /**
- * @group itop-community
- *
  * @covers iTopDesignFormat
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
@@ -31,9 +29,12 @@ use utils;
 class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 {
 	/**
-	 * Verify if the datamodel.*.xml files refer to the current itop version
+	 * Verify if `module.*.php` files contained in `datamodels/1.x` or `datamodels/2.x` refers to the current itop version
 	 * This is an integration test
 	 *
+	 * As ess and pro targets are copying modules into datamodels/2.x this test can only be run on a community target !
+	 *
+	 * @group itop-community
 	 * @group skipPostBuild
 	 *
 	 * @dataProvider iTopModulesPhpVersionProvider
