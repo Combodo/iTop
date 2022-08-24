@@ -528,6 +528,7 @@ class DBSearchTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider GetFirstResultProvider
+	 * @group specificOrgInSampleData
 	 *
 	 * @param string $sOql query to test
 	 * @param bool $bMustHaveOneResultMax arg passed to the tested function
