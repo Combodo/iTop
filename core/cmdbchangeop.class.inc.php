@@ -78,7 +78,7 @@ class CMDBChangeOp extends DBObject implements iCMDBChangeOp
 	}
 
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
+	 * @inheritDoc
 	 */
 	public function GetDescription()
 	{
