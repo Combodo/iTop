@@ -30,6 +30,7 @@ use utils;
  *
  * @package Combodo\iTop\Test\UnitTest\Synchro
  * @group dataSynchro
+ * @group defaultProfiles
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled

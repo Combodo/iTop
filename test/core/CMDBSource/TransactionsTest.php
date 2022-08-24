@@ -18,6 +18,7 @@ use MetaModel;
  * @backupGlobals disabled
  *
  * @group itopRequestMgmt
+ * @group specificOrgInSampleData
  * Class TransactionsTest
  *
  * @package Combodo\iTop\Test\UnitTest\Core
