@@ -52,3 +52,16 @@ function ExecuteStep(sStep)
 		WizardUpdateButtons();
 	} );
 }
+
+function CheckDirectoryConfFilesPermissions(sWikiVersion){
+	$.ajax('permissions-test-folder/permissions-test-subfolder/permissions-test-file',
+		{
+		statusCode: {
+			200: function() {
+				$('#details').prepend('<div class="message message-warning"><span class="message-title">Security issue:</span> iTop is bundled with directory-level configuration files. You must check that those files will be read by your web server (eg.' +
+					'AllowOverride directive should be set to <code>All</code> for Apache HTTP Server) <a href="https://www.itophub.io/wiki/page?id='+sWikiVersion+'%3Ainstall%3Asecurity#secure_critical_directories_access" target="_blank">see documentation</a>.</div>');
+				$('<span class="text-warning"> and 1 Security issue</span>').insertBefore('h2.message button:first');
+			}
+		}
+	});
+}
