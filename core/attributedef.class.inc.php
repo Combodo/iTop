@@ -4231,8 +4231,9 @@ class AttributeText extends AttributeString
 	{
 		$sValue = $proposedValue;
 
+		// N°4517 - PHP 8.1 compatibility: str_replace call with null cause deprecated message
 		if ($sValue == null) {
-			return null;
+			return '';
 		}
 
 		switch ($this->GetFormat()) {
