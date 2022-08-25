@@ -20,7 +20,7 @@
 
 * @copyright     Copyright (C) 2021 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
-*		
+*
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ServiceManagement' => 'Service-Management',
@@ -39,7 +39,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ServiceSubcategory+' => '',
 	'Menu:Service' => 'Services',
 	'Menu:Service+' => '',
-	'Menu:ServiceElement' => 'Sevice-Elemente',
+	'Menu:ServiceElement' => 'Service-Elemente',
 	'Menu:ServiceElement+' => '',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => '',

@@ -15,6 +15,10 @@
                     {{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}
                     {% UISpinner Standard {} %}
                 {% EndUIContentBlock %}
+                {%UICollapsibleSection Standard {'sId':'header-requirements-details','sTitle':'UI:Details+'|dict_s, 'IsCollapsible':true, 'IsClosable':false,'AddCSSClass':'ibo-is-hidden'} %}
+                    {% UIContentBlock Standard {'aContainerClasses':['ibo-update-core-header-requirements'], 'sId':'can-core-update-details'} %}
+                    {% EndUIContentBlock %}
+                {% EndUICollapsibleSection %}
             {% EndUIAlert %}
 
             {% UIField Standard {'sLabel':'iTopUpdate:UI:CurrentVersion'|dict_s} %}
@@ -56,7 +60,11 @@
                     {% EndUIContentBlock %}
                 {% EndUIAlert %}
 
-                {% UIFileSelect Standard {sName: 'file', sId: 'file'} %}
+            {% UIAlert ForInformation {'sId':'check-in-progress', 'IsHidden':false} %}
+                {{ 'iTopUpdate:UI:CheckInProgress'|dict_s }}
+            {% EndUIAlert %}
+
+                {% UIFileSelect Standard {sName: 'file', sId: 'file','AddCSSClass':'ibo-is-hidden'} %}
 
                 {% UIAlert ForWarning {'sId':'dobackup-warning', 'IsHidden':true} %}
                     {{ 'iTopUpdate:UI:DoBackup:Warning'|dict_s }}
@@ -78,6 +86,14 @@
             {% EndUIForm %}
 
         {% EndUIFieldSet %}
+
+    {% if bIsSetupLaunchButtonEnabled %}
+        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Setup'|dict_s} %}
+            {% UIForm Standard {'sId':'launch-setup-form', Action:sLaunchSetupUrl} %}
+                {% UIButton ForDestructiveAction {'sLabel':'iTopUpdate:UI:SetupLaunch'|dict_s, 'sName':'launch-setup', 'sValue':'launch-setup', 'bIsSubmit':true, 'sId':'launch-setup'} %}
+            {% EndUIForm %}
+        {% EndUIFieldSet %}
+    {% endif %}
 
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:History'|dict_s} %}
             {% UIDataTable ForRendering {'sListId':'iboupdatehistory', 'oSet':oSet} %}{% EndUIDataTable %}

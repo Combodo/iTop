@@ -368,7 +368,14 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 <li>Gestire la risorsa più importante della tua IT: Documentazione.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Apri le richieste: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Le mie richieste',
 	'UI:WelcomeMenu:OpenIncidents' => 'Apri gli incidenti: %1$d',
@@ -464,6 +471,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Error:MaintenanceMode' => 'L\'applicazione è attualmente in manutenzione',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 
 	'UI:GroupBy:Count' => 'Conteggio',
 	'UI:GroupBy:Count+' => '',
@@ -1649,31 +1658,31 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:AuditCategories' => 'Categorie di Audit',
 	'Menu:AuditCategories+' => '',
 	'Menu:Notifications:Title' => 'Categorie di Audit',
-	'Menu:RunQueriesMenu' => 'Esegui query',
-	'Menu:RunQueriesMenu+' => '',
-	'Menu:QueryMenu' => 'Rubbrica delle Query',
-	'Menu:QueryMenu+' => 'Rubbrica delle Query',
-	'Menu:UniversalSearchMenu' => 'Ricerca universale',
-	'Menu:UniversalSearchMenu+' => '',
-	'Menu:UserManagementMenu' => 'Gestione degli utenti',
-	'Menu:UserManagementMenu+' => '',
-	'Menu:ProfilesMenu' => 'Profili',
-	'Menu:ProfilesMenu+' => '',
-	'Menu:ProfilesMenu:Title' => 'Profili',
-	'Menu:UserAccountsMenu' => 'Account utente',
-	'Menu:UserAccountsMenu+' => '',
+	'Menu:RunQueriesMenu'         => 'Esegui query',
+	'Menu:RunQueriesMenu+'        => '',
+	'Menu:QueryMenu'              => 'Rubbrica delle Query',
+	'Menu:QueryMenu+'             => 'Rubbrica delle Query',
+	'Menu:UniversalSearchMenu'    => 'Ricerca universale',
+	'Menu:UniversalSearchMenu+'   => '',
+	'Menu:UserManagementMenu'     => 'Gestione degli utenti',
+	'Menu:UserManagementMenu+'    => '',
+	'Menu:ProfilesMenu'           => 'Profili',
+	'Menu:ProfilesMenu+'          => '',
+	'Menu:ProfilesMenu:Title'     => 'Profili',
+	'Menu:UserAccountsMenu'       => 'Account utente',
+	'Menu:UserAccountsMenu+'      => '',
 	'Menu:UserAccountsMenu:Title' => 'Account utente',
-	'Menu:MyShortcuts' => 'Le mie scorciatoie',
-	'Menu:UserManagement' => 'Gestione utenti',
-	'Menu:Queries' => 'Interrogazioni',
-	'Menu:ConfigurationTools' => 'configurazione',
+	'Menu:MyShortcuts'            => 'Le mie scorciatoie',
+	'Menu:UserManagement'         => 'Gestione utenti',
+	'Menu:Queries'                => 'Interrogazioni',
+	'Menu:ConfigurationTools'     => 'configurazione',
 ));
 
 // Additional language entries not present in English dict
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
- 'UI:Toggle:StandardDashboard' => 'Standard~~',
- 'UI:Toggle:CustomDashboard' => 'Custom~~',
- 'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
- 'UI:Dashboard:Edit' => 'Edit This Page...~~',
- 'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
+	'UI:Toggle:StandardDashboard' => 'Standard~~',
+	'UI:Toggle:CustomDashboard'   => 'Custom~~',
+	'UI:Display_X_ItemsPerPage'   => 'Display %1$s items per page~~',
+	'UI:Dashboard:Edit'           => 'Edit This Page...~~',
+	'UI:Dashboard:Revert'         => 'Revert To Original Version...~~',
 ));

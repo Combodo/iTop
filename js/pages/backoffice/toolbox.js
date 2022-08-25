@@ -17,10 +17,17 @@
  */
 
 // Helpers
-function ShowAboutBox()
+function ShowAboutBox(sTitle)
 {
+	var loadingDialog = $('<div id="ibo-about-box--loader"></div>');
+	loadingDialog.dialog( {title:sTitle,autoOpen: true, modal: true, width: 700, height:350});
+	$('#ibo-about-box--loader').block();
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'about_box'}, function(data){
+		$('#ibo-about-box--loader').unblock();
 		$('body').append(data);
+	}).always(function() {
+		loadingDialog.empty();
+		loadingDialog.remove();
 	});
 	return false;
 }

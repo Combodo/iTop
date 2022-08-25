@@ -20,7 +20,7 @@
 namespace Combodo\iTop\Portal\EventListener;
 
 use ApplicationContext;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Class ApplicationContextSetUrlMakerClass
@@ -43,13 +43,12 @@ class ApplicationContextSetUrlMakerClass
     }
 
 	/**
-	 * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $oGetResponseEvent
+	 * @param RequestEvent $oRequestEvent
 	 */
-    public function onKernelRequest(GetResponseEvent $oGetResponseEvent)
-    {
-        if ($this->aCombodoPortalInstanceConf['properties']['urlmaker_class'] !== null)
-        {
-            ApplicationContext::SetUrlMakerClass($this->aCombodoPortalInstanceConf['properties']['urlmaker_class']);
-        }
-    }
+	public function onKernelRequest(RequestEvent $oRequestEvent)
+	{
+		if ($this->aCombodoPortalInstanceConf['properties']['urlmaker_class'] !== null) {
+			ApplicationContext::SetUrlMakerClass($this->aCombodoPortalInstanceConf['properties']['urlmaker_class']);
+		}
+	}
 }

@@ -125,8 +125,8 @@ class CSVBulkExport extends TabularBulkExport
 				$sRawSeparator = utils::ReadParam('separator', ',', true, 'raw_data');
 				$sCustomDateTimeFormat = utils::ReadParam('', ',', true, 'raw_data');
 				$aSep = array(
-					';' => Dict::S('UI:CSVImport:SeparatorSemicolon+'),
-					',' => Dict::S('UI:CSVImport:SeparatorComma+'),
+					';'   => Dict::S('UI:CSVImport:SeparatorSemicolon+'),
+					','   => Dict::S('UI:CSVImport:SeparatorComma+'),
 					'tab' => Dict::S('UI:CSVImport:SeparatorTab+'),
 				);
 				$sOtherSeparator = '';
@@ -134,10 +134,10 @@ class CSVBulkExport extends TabularBulkExport
 					$sOtherSeparator = $sRawSeparator;
 					$sRawSeparator = 'other';
 				}
-				$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" name="other-separator" value="'.htmlentities($sOtherSeparator, ENT_QUOTES, 'UTF-8').'"/>';
+				$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" name="other-separator" value="'.utils::EscapeHtml($sOtherSeparator).'"/>';
 
 				foreach ($aSep as $sVal => $sLabel) {
-					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
+					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", utils::EscapeHtml($sVal), $sLabel, "radio");
 					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
 					$oRadio->SetBeforeInput(false);
 					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
@@ -152,7 +152,7 @@ class CSVBulkExport extends TabularBulkExport
 
 				$sRawQualifier = utils::ReadParam('text-qualifier', '"', true, 'raw_data');
 				$aQualifiers = array(
-					'"' => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
+					'"'  => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
 					'\'' => Dict::S('UI:CSVImport:QualifierSimpleQuote+'),
 				);
 				$sOtherQualifier = '';
@@ -160,10 +160,10 @@ class CSVBulkExport extends TabularBulkExport
 					$sOtherQualifier = $sRawQualifier;
 					$sRawQualifier = 'other';
 				}
-				$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" name="other-text-qualifier" value="'.htmlentities($sOtherQualifier, ENT_QUOTES, 'UTF-8').'"/>';
+				$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" name="other-text-qualifier" value="'.utils::EscapeHtml($sOtherQualifier).'"/>';
 
 				foreach ($aQualifiers as $sVal => $sLabel) {
-					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text-qualifier", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
+					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text-qualifier", utils::EscapeHtml($sVal), $sLabel, "radio");
 					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
 					$oRadio->SetBeforeInput(false);
 					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
@@ -209,8 +209,8 @@ class CSVBulkExport extends TabularBulkExport
 
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 
-				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
-				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+				$sDefaultFormat = utils::EscapeHtml((string)AttributeDateTime::GetFormat());
+				$sExample = utils::EscapeHtml(date((string)AttributeDateTime::GetFormat()));
 				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "csv_date_format_radio", "default", "csv_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 				$oRadioDefault->SetBeforeInput(false);
@@ -218,7 +218,7 @@ class CSVBulkExport extends TabularBulkExport
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-				$sFormatInput = '<input type="text" size="15" name="date_format" id="csv_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="csv_custom_date_time_format" title="" value="'.utils::EscapeHtml($sDateTimeFormat).'"/>';
 				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "csv_date_format_radio", "custom", "csv_date_time_format_custom", "radio");
 				$oRadioCustom->SetDescription(Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip'));
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
@@ -246,17 +246,18 @@ EOF
 	}
 
 	protected function GetSampleData($oObj, $sAttCode)
-	{	
-		if ($sAttCode != 'id')
-		{
+	{
+		if ($sAttCode != 'id') {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 			{
 				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
-				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.htmlentities($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj), ENT_QUOTES, 'UTF-8').'</div>';
+
+				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.utils::EscapeHtml($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj)).'</div>';
 			}
 		}
-		return '<div class="text-preview">'.htmlentities($this->GetValue($oObj, $sAttCode), ENT_QUOTES, 'UTF-8').'</div>';
+
+		return '<div class="text-preview">'.utils::EscapeHtml($this->GetValue($oObj, $sAttCode)).'</div>';
 	}
 
 	protected function GetValue($oObj, $sAttCode)

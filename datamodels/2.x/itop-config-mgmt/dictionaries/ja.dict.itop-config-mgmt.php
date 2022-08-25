@@ -29,6 +29,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Relation:depends on/Description' => 'この要素が依存している要素',
 	'Relation:depends on/DownStream' => '依存...',
 	'Relation:depends on/UpStream' => 'インパクト...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 

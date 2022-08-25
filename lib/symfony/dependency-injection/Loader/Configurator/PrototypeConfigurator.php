@@ -19,8 +19,6 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
  */
 class PrototypeConfigurator extends AbstractServiceConfigurator
 {
-    const FACTORY = 'load';
-
     use Traits\AbstractTrait;
     use Traits\ArgumentTrait;
     use Traits\AutoconfigureTrait;
@@ -37,18 +35,23 @@ class PrototypeConfigurator extends AbstractServiceConfigurator
     use Traits\ShareTrait;
     use Traits\TagTrait;
 
+    public const FACTORY = 'load';
+
     private $loader;
     private $resource;
-    private $exclude;
+    private $excludes;
     private $allowParent;
 
-    public function __construct(ServicesConfigurator $parent, PhpFileLoader $loader, Definition $defaults, $namespace, $resource, $allowParent)
+    public function __construct(ServicesConfigurator $parent, PhpFileLoader $loader, Definition $defaults, string $namespace, string $resource, bool $allowParent)
     {
         $definition = new Definition();
-        $definition->setPublic($defaults->isPublic());
+        if (!$defaults->isPublic() || !$defaults->isPrivate()) {
+            $definition->setPublic($defaults->isPublic());
+        }
         $definition->setAutowired($defaults->isAutowired());
         $definition->setAutoconfigured($defaults->isAutoconfigured());
-        $definition->setBindings($defaults->getBindings());
+        // deep clone, to avoid multiple process of the same instance in the passes
+        $definition->setBindings(unserialize(serialize($defaults->getBindings())));
         $definition->setChanges([]);
 
         $this->loader = $loader;
@@ -63,21 +66,21 @@ class PrototypeConfigurator extends AbstractServiceConfigurator
         parent::__destruct();
 
         if ($this->loader) {
-            $this->loader->registerClasses($this->definition, $this->id, $this->resource, $this->exclude);
+            $this->loader->registerClasses($this->definition, $this->id, $this->resource, $this->excludes);
         }
         $this->loader = null;
     }
 
     /**
-     * Excludes files from registration using a glob pattern.
+     * Excludes files from registration using glob patterns.
      *
-     * @param string $exclude
+     * @param string[]|string $excludes
      *
      * @return $this
      */
-    final public function exclude($exclude)
+    final public function exclude($excludes): self
     {
-        $this->exclude = $exclude;
+        $this->excludes = (array) $excludes;
 
         return $this;
     }

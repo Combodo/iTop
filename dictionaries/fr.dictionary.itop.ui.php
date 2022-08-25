@@ -348,7 +348,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 </ul>
 <p>Tous ces modules peuvent être installés séparément, à votre rythme.</p>',
 
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' a été conçu pour les fournisseurs de service, il permet à vos équipes IT de gérer facilement de multiples clients et organisations.
+	'UI:WelcomeMenu:RightBlock' => '<p>ITOP_APPLICATION_SHORT a été conçu pour les fournisseurs de service, il permet à vos équipes IT de gérer facilement de multiples clients et organisations.
 <ul>iTop fournit un riche ensemble de processus métier&nbsp;pour:
 <li>Augmenter l\'efficacité de la gestion de votre SI</li> 
 <li>Accroitre la performance de vos équipes d\'exploitation</li> 
@@ -466,6 +466,8 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Error:MaintenanceMode' => 'L\'application est en maintenance',
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
 	'UI:Error:InvalidToken' => 'Erreur: l\'opération a déjà été effectuée (CSRF token not found)',
+
+	'UI:Error:SMTP:UnknownVendor' => 'Le provider SMTP OAuth 2.0 %1$s n\'existe pas',
 
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
@@ -1434,7 +1436,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:About:InstallationOptions' => 'Options d\'installation',
 	'UI:About:ManualExtensionSource' => 'Extension',
 	'UI:About:Extension_Version' => 'Version: %1$s',
-	'UI:About:RemoteExtensionSource' => 'iTop Hub',
+	'UI:About:RemoteExtensionSource' => 'Data',
 
 	'UI:DisconnectedDlgMessage' => 'Vous êtes déconnecté(e). Vous devez vous identifier pour pouvoir continuer à utiliser l\'application.',
 	'UI:DisconnectedDlgTitle' => 'Attention !',
@@ -1631,7 +1633,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Afficher au plus %1$s messages dans le menu %2$s.',
 ));
 
-
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:DataSources' => 'Synchronisation',
 	'Menu:DataSources+' => '',
@@ -1651,22 +1652,22 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:AuditCategories' => 'Catégories d\'audit',
 	'Menu:AuditCategories+' => 'Catégories d\'audit',
 	'Menu:Notifications:Title' => 'Catégories d\'audit',
-	'Menu:RunQueriesMenu' => 'Requêtes OQL',
-	'Menu:RunQueriesMenu+' => 'Executer une requête OQL',
-	'Menu:QueryMenu' => 'Livre des requêtes',
-	'Menu:QueryMenu+' => 'Livre des requêtes',
-	'Menu:UniversalSearchMenu' => 'Recherche Universelle',
-	'Menu:UniversalSearchMenu+' => 'Rechercher n\'importe quel objet...',
-	'Menu:UserManagementMenu' => 'Gestion des Utilisateurs',
-	'Menu:UserManagementMenu+' => 'Gestion des Utilisateurs',
-	'Menu:ProfilesMenu' => 'Profils',
-	'Menu:ProfilesMenu+' => 'Profils',
-	'Menu:ProfilesMenu:Title' => 'Profils',
-	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs',
-	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs',
+	'Menu:RunQueriesMenu'         => 'Requêtes OQL',
+	'Menu:RunQueriesMenu+'        => 'Executer une requête OQL',
+	'Menu:QueryMenu'              => 'Livre des requêtes',
+	'Menu:QueryMenu+'             => 'Livre des requêtes',
+	'Menu:UniversalSearchMenu'    => 'Recherche Universelle',
+	'Menu:UniversalSearchMenu+'   => 'Rechercher n\'importe quel objet...',
+	'Menu:UserManagementMenu'     => 'Gestion des Utilisateurs',
+	'Menu:UserManagementMenu+'    => 'Gestion des Utilisateurs',
+	'Menu:ProfilesMenu'           => 'Profils',
+	'Menu:ProfilesMenu+'          => 'Profils',
+	'Menu:ProfilesMenu:Title'     => 'Profils',
+	'Menu:UserAccountsMenu'       => 'Comptes Utilisateurs',
+	'Menu:UserAccountsMenu+'      => 'Comptes Utilisateurs',
 	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs',
-	'Menu:MyShortcuts' => 'Mes raccourcis',
-	'Menu:UserManagement' => 'Utilisateurs',
-	'Menu:Queries' => 'Requêtes',
-	'Menu:ConfigurationTools' => 'Configuration',
+	'Menu:MyShortcuts'            => 'Mes raccourcis',
+	'Menu:UserManagement'         => 'Utilisateurs',
+	'Menu:Queries'                => 'Requêtes',
+	'Menu:ConfigurationTools'     => 'Configuration',
 ));

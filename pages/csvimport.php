@@ -33,7 +33,6 @@ use Combodo\iTop\Renderer\BlockRenderer;
 try {
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
@@ -52,7 +51,7 @@ try {
 	/**
 	 * Helper function to build a select from the list of valid classes for a given action
 	 *
-	 * @deprecated since 3.0.0 use GetClassesSelectUIBlock
+	 * @deprecated 3.0.0 use GetClassesSelectUIBlock
 	 *
 	 * @param $sDefaultValue
 	 * @param integer $iWidthPx The width (in pixels) of the drop-down list
@@ -237,6 +236,11 @@ try {
 			throw new CoreException(Dict::S('UI:ActionNotAllowed'));
 		}
 
+		// CSRF transaction id verification
+		if(!$bSimulate && !utils::IsTransactionValid(utils::ReadPostedParam('transaction_id', '', 'raw_data'))){
+			throw new CoreException(Dict::S('UI:Error:InvalidToken'));
+		}
+
 		$aResult = array();
 		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
 		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '', false, 'raw_data');
@@ -353,11 +357,9 @@ try {
 		{
 			// We're doing it for real, let's create a change
 			$sUserString = CMDBChange::GetCurrentUserName().' (CSV)';
-			CMDBObject::SetTrackInfo($sUserString);
-			CMDBObject::SetTrackOrigin(CMDBChangeOrigin::CSV_INTERACTIVE);
+			CMDBObject::SetCurrentChangeFromParams($sUserString, CMDBChangeOrigin::CSV_INTERACTIVE);
 			$oMyChange = CMDBObject::GetCurrentChange();
 		}
-		CMDBObject::SetTrackOrigin('csv-interactive');
 	
 		$oBulk = new BulkChange(
 			$sClassName,
@@ -372,7 +374,7 @@ try {
 		);
 		$oBulk->SetReportHtml();
 
-		$oPage->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8'), "csvdata_truncated"));
+		$oPage->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", utils::EscapeHtml($sCSVDataTruncated), "csvdata_truncated"));
 		$aRes = $oBulk->Process($oMyChange);
 
 		$aColumns = [];
@@ -523,20 +525,21 @@ try {
 		$oForm = FormUIBlockFactory::MakeStandard('wizForm');
 		$oContainer->AddSubBlock($oForm);
 
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("transaction_id", utils::GetNewTransactionId()));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("step", ($iCurrentStep + 1)));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", htmlentities($sSeparator, ENT_QUOTES, 'UTF-8')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", utils::EscapeHtml($sSeparator)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", utils::EscapeHtml($sTextQualifier)));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("header_line", $bHeaderLine));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("nb_skipped_lines", utils::ReadParam('nb_skipped_lines', '0')));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("box_skiplines", utils::ReadParam('box_skiplines', '0')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8'), "csvdata_truncated"));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", htmlentities($sCSVData, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", utils::EscapeHtml($sCSVDataTruncated), "csvdata_truncated"));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", utils::EscapeHtml($sCSVData)));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("encoding", $sEncoding));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("synchro_scope", $sSynchroScope));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("class_name", $sClassName));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("advanced", $bAdvanced));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", utils::EscapeHtml($sDateTimeFormat)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", utils::EscapeHtml($sCustomDateTimeFormat)));
 
 		if (!empty($sSynchroScope)) {
 			foreach ($aSynchroUpdate as $sKey => $value) {
@@ -641,7 +644,7 @@ try {
 			$oDlg = UIContentBlockUIBlockFactory::MakeStandard("dlg_confirmation")->SetHasForcedDiv(true);
 			$oPage->AddSubBlock($oDlg);
 			$oDlg->AddSubBlock(new Html($sMessage));
-			$oDlg->AddSubBlock(new Html(htmlentities(Dict::S('UI:CSVImportConfirmMessage'), ENT_QUOTES, 'UTF-8')));
+			$oDlg->AddSubBlock(new Html(utils::EscapeHtml(Dict::S('UI:CSVImportConfirmMessage'))));
 
 			$oDlgConfirm = UIContentBlockUIBlockFactory::MakeStandard("confirmation_chart")->SetHasForcedDiv(true);
 			$oDlg->AddSubBlock($oDlgConfirm);
@@ -682,7 +685,7 @@ EOF
 		// Add graphs dependencies
 		WebResourcesHelper::EnableC3JSToWebPage($oPage);
 
-		$oPage->add_script(		
+		$oPage->add_script(
 <<< EOF
 function CSVGoBack()
 {
@@ -788,7 +791,7 @@ EOF
 			$oField = FieldUIBlockFactory::MakeLarge(Dict::S('UI:CSVImport:LinesNotImported+'));
 			$oCollapsibleSection->AddSubBlock($oField);
 
-			$oText = new TextArea("", htmlentities(implode("\n", $aResult), ENT_QUOTES, 'UTF-8'), "", 150, 50);
+			$oText = new TextArea("", utils::EscapeHtml(implode("\n", $aResult)), "", 150, 50);
 			$oField->AddSubBlock($oText);
 		}
 	}
@@ -879,17 +882,17 @@ EOF
 		$oForm->AddSubBlock($oDivMapping);
 
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("step", "4"));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", htmlentities($sSeparator, ENT_QUOTES, 'UTF-8')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", utils::EscapeHtml($sSeparator)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", utils::EscapeHtml($sTextQualifier)));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("header_line", $bHeaderLine));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("nb_skipped_lines", utils::ReadParam('nb_skipped_lines', '0')));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("box_skiplines", utils::ReadParam('box_skiplines', '0')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8'), "csvdata_truncated"));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", htmlentities($sCSVData, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", utils::EscapeHtml($sCSVDataTruncated), "csvdata_truncated"));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", utils::EscapeHtml($sCSVData)));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("encoding", $sEncoding));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("synchro_scope", $sSynchroScope));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", utils::EscapeHtml($sDateTimeFormat)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", utils::EscapeHtml($sCustomDateTimeFormat)));
 
 		if (!empty($sSynchroScope)) {
 			foreach ($aSynchroUpdate as $sKey => $value) {
@@ -1179,7 +1182,7 @@ EOF
 		}
 	
 		$aGuesses = GuessParameters($sUTF8Data); // Try to predict the parameters, based on the input data
-		
+
 		$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
 		$bBoxSkipLines = utils::ReadParam('box_skiplines', 0);
 		$sTextQualifier = utils::ReadParam('text_qualifier', '', false, 'raw_data');
@@ -1256,10 +1259,10 @@ EOF
 			$sSeparator = "tab";
 		}
 		$sOtherSeparator = in_array($sSeparator, array(',', ';', "\t")) ? '' : $sSeparator;
-		$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator"  id="other_separator" value="'.htmlentities($sOtherSeparator, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>';
+		$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator"  id="other_separator" value="'.utils::EscapeHtml($sOtherSeparator).'" onChange="DoPreview()"/>';
 
 		foreach ($aSep as $sVal => $sLabel) {
-			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
+			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", utils::EscapeHtml($sVal), $sLabel, "radio");
 			$oRadio->GetInput()->SetIsChecked(($sVal == $sSeparator));
 			$oRadio->SetBeforeInput(false);
 			$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
@@ -1274,13 +1277,12 @@ EOF
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetTextQualifier));
 
 		$aQualifiers = array(
-			'"' => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
+			'"'  => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
 			'\'' => Dict::S('UI:CSVImport:QualifierSimpleQuote+'),
 		);
-		$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier" value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()/>';
-		//	<input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>
+		$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier" value="'.utils::EscapeHtml($sOtherTextQualifier).'" onChange="DoPreview()/>';
 		foreach ($aQualifiers as $sVal => $sLabel) {
-			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text_qualifier", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
+			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text_qualifier", utils::EscapeHtml($sVal), $sLabel, "radio");
 			$oRadio->GetInput()->SetIsChecked(($sVal == $sTextQualifier));
 			$oRadio->SetBeforeInput(false);
 			$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -1317,8 +1319,8 @@ EOF
 		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
 		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', (string)AttributeDateTime::GetFormat(), false, 'raw_data');
 
-		$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
-		$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+		$sDefaultFormat = utils::EscapeHtml((string)AttributeDateTime::GetFormat());
+		$sExample = utils::EscapeHtml(date((string)AttributeDateTime::GetFormat()));
 		$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('UI:CSVImport:DefaultDateTimeFormat_Format_Example', $sDefaultFormat, $sExample), "date_time_format", "default", "radio_date_time_std", "radio");
 		$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 		$oRadioDefault->SetBeforeInput(false);
@@ -1326,7 +1328,7 @@ EOF
 		$oFieldSetDate->AddSubBlock($oRadioDefault);
 		$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-		$sFormatInput = '<input type="text" size="15" name="custom_date_time_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+		$sFormatInput = '<input type="text" size="15" name="custom_date_time_format" id="excel_custom_date_time_format" title="" value="'.utils::EscapeHtml($sCustomDateTimeFormat).'"/>';
 		$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('UI:CSVImport:CustomDateTimeFormat', $sFormatInput), "date_time_format", "custom", "radio_date_time_custom", "radio");
 		$oRadioCustom->SetDescription(Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip'));
 		$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
@@ -1337,8 +1339,8 @@ EOF
 		$oPage->add_ready_script("$('#custom_date_time_format').on('click', function() { DoPreview(); });");
 		$oPage->add_ready_script("$('#radio_date_time_std').on('click', function() { DoPreview(); });");
 
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8'), "csvdata_truncated"));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", htmlentities($sUTF8Data, ENT_QUOTES, 'UTF-8'), 'csvdata'));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", utils::EscapeHtml($sCSVDataTruncated), "csvdata_truncated"));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", utils::EscapeHtml($sUTF8Data), 'csvdata'));
 		// The encoding has changed, keep that information within the wizard
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("encoding", "UTF-8"));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("class_name", $sClassName));
@@ -1527,10 +1529,10 @@ EOF
 
 		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("encoding", 'UTF-8'));
 		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("step", '2'));
-		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", htmlentities($sSeparator, ENT_QUOTES, 'UTF-8')));
-		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8')));
-		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8')));
-		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8')));
+		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", utils::EscapeHtml($sSeparator)));
+		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", utils::EscapeHtml($sTextQualifier)));
+		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", utils::EscapeHtml($sDateTimeFormat)));
+		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", utils::EscapeHtml($sCustomDateTimeFormat)));
 		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("header_line", $bHeaderLine));
 		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("nb_skipped_lines", utils::ReadParam('nb_skipped_lines', '0')));
 		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("box_skiplines", utils::ReadParam('box_skiplines', '0')));

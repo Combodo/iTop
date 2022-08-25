@@ -13,7 +13,8 @@
   }
 
   &[disabled],
-  fieldset[disabled] & {
+  fieldset[disabled] &,
+  input[disabled] {
     color: $input-disabled-color;
     cursor: not-allowed;
   }

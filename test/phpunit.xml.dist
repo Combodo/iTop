@@ -1,44 +1,29 @@
-<!-- Copyright (c) 2010-2021 Combodo SARL -->
-<!-- -->
-<!--   This file is part of iTop. -->
-<!-- -->
-<!--   iTop is free software; you can redistribute it and/or modify	 -->
-<!--   it under the terms of the GNU Affero General Public License as published by -->
-<!--   the Free Software Foundation, either version 3 of the License, or -->
-<!--   (at your option) any later version. -->
-<!-- -->
-<!--   iTop is distributed in the hope that it will be useful, -->
-<!--   but WITHOUT ANY WARRANTY; without even the implied warranty of -->
-<!--   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the -->
-<!--   GNU Affero General Public License for more details. -->
-<!-- -->
-<!--   You should have received a copy of the GNU Affero General Public License -->
-<!--   along with iTop. If not, see <http://www.gnu.org/licenses/> -->
-<!-- -->
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
+        bootstrap="unittestautoload.php"
+        backupGlobals="true"
+        colors="true"
+        columns="120"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        processIsolation="false"
+        stopOnError="false"
+        stopOnFailure="false"
+        stopOnIncomplete="false"
+        stopOnRisky="false"
+        stopOnSkipped="false"
+        verbose="true"
+>
 
-<phpunit bootstrap="unittestautoload.php"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
-         backupGlobals="true"
-         backupStaticAttributes="false"
-         cacheTokens="false"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         forceCoversAnnotation="false"
-         mapTestClassNameToCoveredClassName="false"
-         printerClass="\PHPUnit\TextUI\ResultPrinter"
-         processIsolation="false"
-         stopOnError="false"
-         stopOnFailure="false"
-         stopOnIncomplete="false"
-         stopOnSkipped="false"
-         stopOnRisky="false"
-         timeoutForSmallTests="1"
-         timeoutForMediumTests="10"
-         timeoutForLargeTests="60"
-         verbose="false">
+  <php>
+    <ini name="error_reporting" value="E_ALL"/>
+    <ini name="display_errors" value="On"/>
+    <ini name="log_errors" value="On"/>
+    <ini name="html_errors" value="Off"/>
+  </php>
 
   <testsuites>
     <testsuite name="Extensions">
@@ -59,12 +44,8 @@
     <testsuite name="Application">
       <directory>application</directory>
     </testsuite>
-    <!-- OQL : taking too long (20min+)... we should move this to nightlies ! See N°4655 -->
-    <!--testsuite name="OQL">
-        <directory>OQL</directory>
-    </testsuite-->
-    <testsuite name="Sources">
-      <directory>sources</directory>
+    <testsuite name="Setup">
+      <directory>setup</directory>
     </testsuite>
     <testsuite name="Status">
       <directory>status</directory>

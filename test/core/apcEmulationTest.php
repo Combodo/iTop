@@ -27,7 +27,6 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use PHPUnit\Framework\TestCase;
 
 define('UNIT_MAX_CACHE_FILES', 10);
 
@@ -40,7 +39,7 @@ define('UNIT_MAX_CACHE_FILES', 10);
 class apcEmulationTest extends ItopTestCase
 {
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'core/apc-emulation.php');
@@ -48,7 +47,7 @@ class apcEmulationTest extends ItopTestCase
 		apc_clear_cache();
 	}
 
-	public function tearDown()
+	public function tearDown(): void
 	{
 		apc_clear_cache();
 	}

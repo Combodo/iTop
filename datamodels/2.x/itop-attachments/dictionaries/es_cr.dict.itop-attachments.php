@@ -20,7 +20,7 @@
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Attachments:TabTitle_Count' => 'Anexos (%1$d)',
@@ -42,7 +42,7 @@ Puede ser que haya enviado un archivo vació,
 o pregunte al administador de iTop si el servidor que ha quedado sin espacio en disco.',
 	'Attachments:Render:Icons' => 'Desplegar como icono',
 	'Attachments:Render:Table' => 'Desplegar como lista',
-	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
+	'UI:Attachments:DropYourFileHint' => 'Arrastre los archivos en cualquier lugar de esta área',
 ));
 
 //

@@ -789,6 +789,7 @@ class RuntimeDashboard extends Dashboard
 
 	/**
 	 * @inheritDoc
+	 * @return bool $bIsNew
 	 * @throws \Exception
 	 */
 	public function Save()
@@ -798,6 +799,7 @@ class RuntimeDashboard extends Dashboard
 		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 		$oUDSearch->AddCondition('menu_code', $this->sId, '=');
 		$oUDSet = new DBObjectSet($oUDSearch);
+		$bIsNew = false;
 		if ($oUDSet->Count() > 0)
 		{
 			// Assuming there is at most one couple {user, menu}!
@@ -811,10 +813,12 @@ class RuntimeDashboard extends Dashboard
 			$oUserDashboard->Set('user_id', UserRights::GetUserId());
 			$oUserDashboard->Set('menu_code', $this->sId);
 			$oUserDashboard->Set('contents', $sXml);
+			$bIsNew = true;
 		}
 		utils::PushArchiveMode(false);
 		$oUserDashboard->DBWrite();
 		utils::PopArchiveMode();
+		return $bIsNew;
 	}
 
 	/**

@@ -53,7 +53,7 @@ class Branding
 			'default' => 'images/logo-itop-dark-bg.svg',
 		],
 		self::ENUM_LOGO_TYPE_LOGIN_LOGO => [
-			'default' => 'images/itop-logo.png',
+			'default' => 'images/itop-logo-external.png',
 		],
 	];
 

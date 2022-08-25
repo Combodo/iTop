@@ -6,4 +6,4 @@
  */
 
 // cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
-//DeprecatedCallsLog::NotifyDeprecatedFile('moved to sources/Application/WebPage/iTopWebPage.php, now loadable using autoloader');
+DeprecatedCallsLog::NotifyDeprecatedFile('moved to sources/Application/WebPage/iTopWebPage.php, now loadable using autoloader');

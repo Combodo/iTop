@@ -26,9 +26,16 @@ class AjaxPage extends WebPage implements iTabbedPage
 	private $sPromiseId;
 
 	/**
+	 * @var bool if false will also output extra JS & CSS
+	 * @since 3.0.1 3.1.0 N°4836 Introduce this new option to AjaxPage, as sometimes we only need to return a simple string
+	 */
+	protected $bOutputDataOnly = false;
+
+	/**
 	 * constructor for the web page
 	 *
 	 * @param string $s_title Not used
+	 * @param bool $bOutputExtraResources if true will output also JS & CSS resources
 	 */
 	function __construct($s_title)
 	{
@@ -48,6 +55,21 @@ class AjaxPage extends WebPage implements iTabbedPage
 
 		utils::InitArchiveMode();
 		$oKpi->ComputeStats(get_class($this).' creation', 'AjaxPage');
+	}
+
+	/**
+	 * @see static::$bOutputDataOnly
+	 * @param bool $bFlag
+	 *
+	 * @return $this
+	 *
+	 * @since 3.0.1 3.1.0 N°4836 Method creation : sometimes we only want to output a simple string
+	 */
+	public function SetOutputDataOnly(bool $bFlag)
+	{
+		$this->bOutputDataOnly = $bFlag;
+
+		return $this;
 	}
 
 	/**
@@ -162,18 +184,19 @@ class AjaxPage extends WebPage implements iTabbedPage
 			header($s_header);
 		}
 
-		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
-		// - Generate necessary dict. files
-		if ($this->bAddJSDict) {
-			$this->output_dict_entries();
+		if (false === $this->bOutputDataOnly) {
+			// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
+			// - Generate necessary dict. files
+			if ($this->bAddJSDict) {
+				$this->output_dict_entries();
+			}
+
+			ConsoleBlockRenderer::AddCssJsToPage($this, $this->oContentLayout);
+
+			$this->outputCollapsibleSectionInit();
 		}
 
-		ConsoleBlockRenderer::AddCssJsToPage($this, $this->oContentLayout);
-
 		// Render the blocks
-
-		$this->outputCollapsibleSectionInit();
-
 		$aData = [];
 		$aData['oLayout'] = $this->oContentLayout;
 		$aData['aDeferredBlocks'] = $this->GetDeferredBlocks($this->oContentLayout);

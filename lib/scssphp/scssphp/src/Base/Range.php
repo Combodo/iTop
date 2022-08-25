@@ -1,8 +1,9 @@
 <?php
+
 /**
  * SCSSPHP
  *
- * @copyright 2015-2019 Leaf Corcoran
+ * @copyright 2015-2020 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -15,17 +16,26 @@ namespace ScssPhp\ScssPhp\Base;
  * Range
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
+ *
+ * @internal
  */
 class Range
 {
+    /**
+     * @var float|int
+     */
     public $first;
+
+    /**
+     * @var float|int
+     */
     public $last;
 
     /**
      * Initialize range
      *
-     * @param integer|float $first
-     * @param integer|float $last
+     * @param int|float $first
+     * @param int|float $last
      */
     public function __construct($first, $last)
     {
@@ -36,9 +46,9 @@ class Range
     /**
      * Test for inclusion in range
      *
-     * @param integer|float $value
+     * @param int|float $value
      *
-     * @return boolean
+     * @return bool
      */
     public function includes($value)
     {

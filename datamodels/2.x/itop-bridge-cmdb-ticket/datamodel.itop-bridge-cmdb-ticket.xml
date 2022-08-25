@@ -18,7 +18,9 @@
             <attribute id="functionalci_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="ticket_id"/>
@@ -133,7 +135,9 @@
             <attribute id="functionalci_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="providercontract_id"/>
@@ -213,7 +217,9 @@
             <attribute id="functionalci_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="service_id"/>

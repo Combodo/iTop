@@ -259,7 +259,6 @@ function MakeDataToPost($sTargetRoute)
 
 try {
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 	require_once(APPROOT.'/setup/extensionsmap.class.inc.php');
 	require_once('hubconnectorpage.class.inc.php');
 
@@ -280,11 +279,10 @@ try {
 	switch ($sTargetRoute) {
 		case 'inform_after_setup':
 			// Hidden IFRAME at the end of the setup
-			require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 			$oPage = new NiceWebPage('');
 			$aDataToPost = MakeDataToPost($sTargetRoute);
 			$oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');
-			$oPage->add('<input type="hidden" name="json" value="'.htmlentities(json_encode($aDataToPost), ENT_QUOTES, 'UTF-8').'">');
+			$oPage->add('<input type="hidden" name="json" value="'.utils::EscapeHtml(json_encode($aDataToPost)).'">');
 			$oPage->add_ready_script('$("#hub_launch_form").submit();');
 			break;
 
@@ -324,17 +322,18 @@ try {
 			$oPage->add($sText);
 			$sButtonLabelClose = Dict::S('iTopHub:CloseBtn');
 			$sButtonLabelGo = Dict::S('iTopHub:GoBtn');
+			$sButtonLabelTooltip = Dict::S('iTopHub:GoBtn:Tooltip');
 			$oPage->add(<<<HTML
 <p>
 <button type="button" class="ibo-button" id="CancelBtn" title="Go back to iTop"><img src="$sCloseUrl"><span class="ibo-button--label">$sButtonLabelClose</span></button>
 <span class="horiz-spacer"></span>
-<button type="button" class="ibo-button positive" id="GoToHubBtn" title="Dict::S('iTopHub:GoBtn:Tooltip')"><span class="ibo-button--label">$sButtonLabelGo</span><img src="$sArrowUrl"></button>
+<button type="button" class="ibo-button positive" id="GoToHubBtn" title="$sButtonLabelTooltip"><span class="ibo-button--label">$sButtonLabelGo</span><img src="$sArrowUrl"></button>
 </p>
 HTML
 			);
 			$sFormTarget = appUserPreferences::GetPref('itophub_open_in_new_window', 1) ? 'target="_blank"' : '';
 			$oPage->add('<form '.$sFormTarget.' id="hub_launch_form" action="'.$sHubUrl.'" method="post">');
-			$oPage->add('<input type="hidden" name="json" value="'.htmlentities(json_encode($aDataToPost), ENT_QUOTES, 'UTF-8').'">');
+			$oPage->add('<input type="hidden" name="json" value="'.utils::EscapeHtml(json_encode($aDataToPost)).'">');
 
 			// $sNewWindowChecked = appUserPreferences::GetPref('itophub_open_in_new_window', 1) == 1 ? 'checked' : '';
 			// $oPage->add('<p><input type="checkbox" class="userpref" id="itophub_open_in_new_window" '.$sNewWindowChecked.'><label for="itophub_open_in_new_window">'.Dict::S('iTopHub:OpenInNewWindow').'</label><br/>');

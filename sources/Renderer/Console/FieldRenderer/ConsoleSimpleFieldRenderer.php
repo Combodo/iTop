@@ -25,6 +25,7 @@ use AttributeDuration;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
@@ -53,7 +54,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 		if ($sFieldClass == 'Combodo\\iTop\\Form\\Field\\HiddenField')
 		{
-			$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
+			$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="'.utils::EscapeHtml($this->oField->GetCurrentValue()).'"/>');
 		}
 		else
 		{
@@ -73,11 +74,10 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
 						$oValue->AddSubBlock(new Html($this->oField->GetCurrentValue()));
 					}
-					else
-					{
-						$oField = UIContentBlockUIBlockFactory::MakeStandard("",["field_input_zone", "field_input_datetime", "ibo-input-field-wrapper", "ibo-input-datetime-wrapper"]);
+					else {
+						$oField = UIContentBlockUIBlockFactory::MakeStandard("", ["field_input_zone", "field_input_datetime", "ibo-input-field-wrapper", "ibo-input-datetime-wrapper"]);
 						$oValue->AddSubBlock($oField);
-						$oField->AddSubBlock(new Html('<input class="date-pick ibo-input ibo-input-date" type="text" placeholder="'.htmlentities($sPlaceHolder, ENT_QUOTES, 'UTF-8').'" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" autocomplete="off"/>'));
+						$oField->AddSubBlock(new Html('<input class="date-pick ibo-input ibo-input-date" type="text" placeholder="'.utils::EscapeHtml($sPlaceHolder).'" id="'.$this->oField->GetGlobalId().'" value="'.utils::EscapeHtml($this->oField->GetCurrentValue()).'" autocomplete="off"/>'));
 						$oField->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
 					$oBlock->AddSubBlock($oValue);
@@ -111,15 +111,17 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
 
-					$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
-					$oText->AddCSSClass('ibo-input-field-wrapper ibo-input');
-					$oValue->AddSubBlock($oText);
+
 					if ($this->oField->GetReadOnly())
 					{
-						$oText->SetIsDisabled(true);
+						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue()));
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 					}
 					else
 					{
+						$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
+						$oText->AddCSSClasses(['ibo-input-field-wrapper', 'ibo-input']);
+						$oValue->AddSubBlock($oText);
 						// Some additional stuff if we are displaying it with a rich editor
 						if ($bRichEditor)
 						{

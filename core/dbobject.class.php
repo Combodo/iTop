@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1088,9 +1088,10 @@ abstract class DBObject implements iDisplay
 			}
 			else
 			{
-				$sHtmlLabel = htmlentities($this->Get($sAttCode.'_friendlyname'), ENT_QUOTES, 'UTF-8');
+				$sHtmlLabel = utils::EscapeHtml($this->Get($sAttCode.'_friendlyname'));
 				$bArchived = $this->IsArchived($sAttCode);
 				$bObsolete = $this->IsObsolete($sAttCode);
+
 				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel, null, true, $bArchived, $bObsolete);
 			}
 		}
@@ -1471,7 +1472,7 @@ abstract class DBObject implements iDisplay
 	public function GetIcon($bImgTag = true)
 	{
 		$sClass = get_class($this);
-		
+
 		if($this->HasHighlightIcon()) {
 			$sIconUrl = MetaModel::GetHighlightScale($sClass)[$this->ComputeHighlightCode()]['icon'];
 			if($bImgTag) {
@@ -1506,7 +1507,7 @@ abstract class DBObject implements iDisplay
 	{
 		$bHasInstanceIcon = false;
 		$sClass = get_class($this);
-		
+
 		if (!$this->IsNew() && MetaModel::HasImageAttributeCode($sClass)) {
 			$sImageAttCode = MetaModel::GetImageAttributeCode($sClass);
 			if (!empty($sImageAttCode)) {
@@ -1515,7 +1516,7 @@ abstract class DBObject implements iDisplay
 				$bHasInstanceIcon = !$oImage->IsEmpty();
 			}
 		}
-		
+
 		return $bHasInstanceIcon;
 	}
 
@@ -1540,7 +1541,7 @@ abstract class DBObject implements iDisplay
 				$bHasHighlightIcon = true;
 			}
 		}
-		
+
 		return $bHasHighlightIcon;
 	}
 
@@ -1588,7 +1589,7 @@ abstract class DBObject implements iDisplay
 	 */
 	public function GetName($sType = FriendlyNameType::SHORT)
 	{
-		return htmlentities($this->GetRawName($sType), ENT_QUOTES, 'UTF-8');
+		return utils::EscapeHtml($this->GetRawName($sType));
 	}
 
 	/**
@@ -1929,7 +1930,7 @@ abstract class DBObject implements iDisplay
 				/** @var \AttributeExternalKey $oAtt */
 				$sTargetClass = $oAtt->GetTargetClass();
 				if (false === MetaModel::IsObjectInDB($sTargetClass, $toCheck)) {
-					return "Target object not found ($sTargetClass::$toCheck)";
+					return "Target object not found (".$sTargetClass.".::".$toCheck.")";
 				}
 			}
 			if ($oAtt->IsHierarchicalKey())
@@ -2026,9 +2027,9 @@ abstract class DBObject implements iDisplay
 	/**
 	 * check attributes together
 	 *
-     * @overwritable-hook You can extend this method in order to provide your own logic.
-     * 
-	 * @return bool 
+	 * @overwritable-hook You can extend this method in order to provide your own logic.
+	 *
+	 * @return true|string true if successful, the error description otherwise
 	 */
 	public function CheckConsistency()
 	{
@@ -2249,8 +2250,9 @@ abstract class DBObject implements iDisplay
 		foreach($aChanges as $sAttCode => $value) {
 			$res = $this->CheckValue($sAttCode);
 			if ($res !== true) {
+				$sAttLabel = $this->GetLabel($sAttCode);
 				// $res contains the error description
-				$this->m_aCheckIssues[] = "Unexpected value for attribute '$sAttCode': $res";
+				$this->m_aCheckIssues[] = Dict::Format('Core:CheckValueError', $sAttLabel, $sAttCode, $res);
 			}
 
 			$this->DoCheckLinkedSetDuplicates($sAttCode, $value);
@@ -2265,7 +2267,7 @@ abstract class DBObject implements iDisplay
 		if ($res !== true)
 		{
 			// $res contains the error description
-			$this->m_aCheckIssues[] = "Consistency rules not followed: $res";
+			$this->m_aCheckIssues[] = Dict::Format('Core:CheckConsistencyError', $res);
 		}
 
 		// Synchronization: are we attempting to modify an attribute for which an external source is master?
@@ -2278,12 +2280,10 @@ abstract class DBObject implements iDisplay
 				if ($iFlags & OPT_ATT_SLAVE)
 				{
 					// Note: $aReasonInfo['name'] could be reported (the task owning the attribute)
-					$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-					$sAttLabel = $oAttDef->GetLabel();
 					if (!empty($aReasons))
 					{
-						// Todo: associate the attribute code with the error
-						$this->m_aCheckIssues[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $sAttLabel);
+						$sAttLabel = $this->GetLabel($sAttCode);
+						$this->m_aCheckIssues[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $sAttLabel, $sAttCode);
 					}
 				}
 			}
@@ -2935,6 +2935,9 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
+		// - TriggerOnObjectMention
+		$this->ActivateOnMentionTriggers(true);
+
 		return $this->m_iKey;
 	}
 
@@ -3197,60 +3200,17 @@ abstract class DBObject implements iDisplay
 			// Activate any existing trigger
 			$sClass = get_class($this);
 			// - TriggerOnObjectMention
-			//   1 - Check if any caselog updated
-			$aUpdatedLogAttCodes = array();
-			foreach($aChanges as $sAttCode => $value)
-			{
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if($oAttDef instanceof AttributeCaseLog)
-				{
-					$aUpdatedLogAttCodes[] = $sAttCode;
-				}
-			}
-			//   2 - Find mentioned objects
-			$aMentionedObjects = array();
-			foreach ($aUpdatedLogAttCodes as $sAttCode) {
-				/** @var \ormCaseLog $oUpdatedCaseLog */
-				$oUpdatedCaseLog = $this->Get($sAttCode);
-				$aMentionedObjects = array_merge_recursive($aMentionedObjects, utils::GetMentionedObjectsFromText($oUpdatedCaseLog->GetModifiedEntry()));
-			}
-			//   3 - Trigger for those objects
-			// TODO: This should be refactored and moved into the caselogs loop, otherwise, we won't be able to know which case log triggered the action.
-			foreach ($aMentionedObjects as $sMentionedClass => $aMentionedIds) {
-				foreach ($aMentionedIds as $sMentionedId) {
-					/** @var \DBObject $oMentionedObject */
-					$oMentionedObject = MetaModel::GetObject($sMentionedClass, $sMentionedId);
-					$aTriggerArgs = $this->ToArgs('this') + array('mentioned->object()' => $oMentionedObject);
+			$this->ActivateOnMentionTriggers(false);
 
-					$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
-					while ($oTrigger = $oSet->Fetch())
-					{
-						/** @var \TriggerOnObjectMention $oTrigger */
-						try {
-							// Ensure to handle only mentioned object in the trigger's scope
-							if ($oTrigger->IsMentionedObjectInScope($oMentionedObject) === false) {
-								continue;
-							}
-
-							$oTrigger->DoActivate($aTriggerArgs);
-						}
-						catch (Exception $e) {
-							utils::EnrichRaisedException($oTrigger, $e);
-						}
-					}
-				}
-			}
-
-			$bHasANewExternalKeyValue = false;
+			$bNeedReload = false;
 			$aHierarchicalKeys = array();
 			$aDBChanges = array();
 			foreach ($aChanges as $sAttCode => $valuecurr)
 			{
 				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-				if ($oAttDef->IsExternalKey())
+				if ($oAttDef->IsExternalKey() || $oAttDef->IsLinkSet())
 				{
-					$bHasANewExternalKeyValue = true;
+					$bNeedReload = true;
 				}
 				if ($oAttDef->IsBasedOnDBColumns())
 				{
@@ -3408,24 +3368,10 @@ abstract class DBObject implements iDisplay
 			$this->m_aModifiedAtt = array();
 
 			try {
-				// - TriggerOnObjectUpdate
-				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
-					array(), $aParams);
-				while ($oTrigger = $oSet->Fetch()) {
-					/** @var \TriggerOnObjectUpdate $oTrigger */
-					try {
-						$oTrigger->DoActivate($this->ToArgs('this'));
-					}
-					catch (Exception $e) {
-						utils::EnrichRaisedException($oTrigger, $e);
-					}
-				}
-				
 				$this->AfterUpdate();
 
 				// Reload to get the external attributes
-				if ($bHasANewExternalKeyValue) {
+				if ($bNeedReload) {
 					$this->Reload(true /* AllowAllData */);
 				} else {
 					// Reset original values although the object has not been reloaded
@@ -3436,6 +3382,20 @@ abstract class DBObject implements iDisplay
 							$value = $this->m_aCurrValues[$sAttCode];
 							$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
 						}
+					}
+				}
+
+				// - TriggerOnObjectUpdate
+				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)'),
+					array(), $aParams);
+				while ($oTrigger = $oSet->Fetch()) {
+					/** @var \TriggerOnObjectUpdate $oTrigger */
+					try {
+						$oTrigger->DoActivate($this->ToArgs('this'));
+					}
+					catch (Exception $e) {
+						utils::EnrichRaisedException($oTrigger, $e);
 					}
 				}
 			}
@@ -3499,6 +3459,74 @@ abstract class DBObject implements iDisplay
 		$this->Reload();
 
 		return $this->Get($sAttCode);
+	}
+
+	/**
+	 * Activate TriggerOnObjectMention triggers for the current object
+	 *
+	 * @param bool $bNewlyCreatedObject
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @since 3.0.1 N°4741
+	 */
+	private function ActivateOnMentionTriggers(bool $bNewlyCreatedObject): void
+	{
+		$sClass = get_class($this);
+		$aChanges = $bNewlyCreatedObject ? $this->m_aOrigValues : $this->ListChanges();
+
+		// 1 - Check if any caselog updated
+		$aUpdatedLogAttCodes = [];
+		foreach ($aChanges as $sAttCode => $value) {
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef instanceof AttributeCaseLog) {
+				// Skip empty log on creation
+				if ($bNewlyCreatedObject && $value->GetModifiedEntry() === '') {
+					continue;
+				}
+
+				$aUpdatedLogAttCodes[] = $sAttCode;
+			}
+		}
+
+		// 2 - Find mentioned objects
+		$aMentionedObjects = [];
+		foreach ($aUpdatedLogAttCodes as $sAttCode) {
+			/** @var \ormCaseLog $oUpdatedCaseLog */
+			$oUpdatedCaseLog = $this->Get($sAttCode);
+			$aMentionedObjects = array_merge_recursive($aMentionedObjects, utils::GetMentionedObjectsFromText($oUpdatedCaseLog->GetModifiedEntry()));
+		}
+
+		// 3 - Trigger for those objects
+		// TODO: This should be refactored and moved into the caselogs loop, otherwise, we won't be able to know which case log triggered the action.
+		foreach ($aMentionedObjects as $sMentionedClass => $aMentionedIds) {
+			foreach ($aMentionedIds as $sMentionedId) {
+				/** @var \DBObject $oMentionedObject */
+				$oMentionedObject = MetaModel::GetObject($sMentionedClass, $sMentionedId);
+				$aTriggerArgs = $this->ToArgs('this') + ['mentioned->object()' => $oMentionedObject];
+
+				$aParams = ['class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL)];
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), [], $aParams);
+				while ($oTrigger = $oSet->Fetch())
+				{
+					/** @var \TriggerOnObjectMention $oTrigger */
+					try {
+						// Ensure to handle only mentioned object in the trigger's scope
+						if ($oTrigger->IsMentionedObjectInScope($oMentionedObject) === false) {
+							continue;
+						}
+
+						$oTrigger->DoActivate($aTriggerArgs);
+					}
+					catch (Exception $e) {
+						utils::EnrichRaisedException($oTrigger, $e);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -3789,7 +3817,7 @@ abstract class DBObject implements iDisplay
 	}
 
      /**
-     * @internal
+     * @overwritable-hook You can extend this method in order to provide your own logic.
      *
      * @return array
      *
@@ -4406,14 +4434,22 @@ abstract class DBObject implements iDisplay
 					$sAttCode = $sPlaceholderAttCode;
 				}
 
-				if ($sVerb == 'hyperlink')
+				if (in_array($sVerb, ['hyperlink', 'url']))
 				{
 					$sPortalId = ($sAttCode === '') ? 'console' : $sAttCode;
 					if (!array_key_exists($sPortalId, self::$aPortalToURLMaker))
 					{
 						throw new Exception("Unknown portal id '$sPortalId' in placeholder '$sPlaceholderAttCode''");
 					}
-					$ret = $this->GetHyperlink(self::$aPortalToURLMaker[$sPortalId], false);
+
+					if($sVerb == 'hyperlink')
+					{
+						$ret = $this->GetHyperlink(self::$aPortalToURLMaker[$sPortalId], false);
+					}
+					else
+					{
+						$ret = ApplicationContext::MakeObjectUrl(get_class($this), $this->GetKey(), self::$aPortalToURLMaker[$sPortalId], false);
+					}
 				}
 				else
 				{
@@ -5173,45 +5209,34 @@ abstract class DBObject implements iDisplay
 		if ($sSourceAttCode == 'id')
 		{
 			$oSourceAttDef = null;
-		}
-		else
-		{
-			if (!MetaModel::IsValidAttCode(get_class($this), $sDestAttCode))
-			{
+		} else {
+			if (!MetaModel::IsValidAttCode(get_class($this), $sDestAttCode)) {
 				throw new Exception("Unknown attribute ".get_class($this)."::".$sDestAttCode);
 			}
-			if (!MetaModel::IsValidAttCode(get_class($oSourceObject), $sSourceAttCode))
-			{
+			if (!MetaModel::IsValidAttCode(get_class($oSourceObject), $sSourceAttCode)) {
 				throw new Exception("Unknown attribute ".get_class($oSourceObject)."::".$sSourceAttCode);
 			}
 
 			$oSourceAttDef = MetaModel::GetAttributeDef(get_class($oSourceObject), $sSourceAttCode);
 		}
-		if (is_object($oSourceAttDef) && $oSourceAttDef->IsLinkSet())
-		{
+		if (is_object($oSourceAttDef) && $oSourceAttDef->IsLinkSet()) {
 			// The copy requires that we create a new object set (the semantic of DBObject::Set is unclear about link sets)
 			/** @var \AttributeLinkedSet $oSourceAttDef */
-			$oDestSet = DBObjectSet::FromScratch($oSourceAttDef->GetLinkedClass());
+			$oDestSet = $this->Get($sDestAttCode);
 			$oSourceSet = $oSourceObject->Get($sSourceAttCode);
 			$oSourceSet->Rewind();
 			/** @var \DBObject $oSourceLink */
-			while ($oSourceLink = $oSourceSet->Fetch())
-			{
+			while ($oSourceLink = $oSourceSet->Fetch()) {
 				// Clone the link
 				$sLinkClass = get_class($oSourceLink);
 				$oLinkClone = MetaModel::NewObject($sLinkClass);
-				foreach(MetaModel::ListAttributeDefs($sLinkClass) as $sAttCode => $oAttDef)
-				{
+				foreach (MetaModel::ListAttributeDefs($sLinkClass) as $sAttCode => $oAttDef) {
 					// As of now, ignore other attribute (do not attempt to recurse!)
-					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
-					{
+					if ($oAttDef->IsScalar() && $oAttDef->IsWritable()) {
 						$oLinkClone->Set($sAttCode, $oSourceLink->Get($sAttCode));
 					}
 				}
-
-				// Not necessary - this will be handled by DBObject
-				// $oLinkClone->Set($oSourceAttDef->GetExtKeyToMe(), 0);
-				$oDestSet->AddObject($oLinkClone);
+				$oDestSet->AddItem($oLinkClone);
 			}
 			$this->Set($sDestAttCode, $oDestSet);
 		}

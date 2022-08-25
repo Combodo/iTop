@@ -24,6 +24,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => 'Fehlende Datei: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Datei %1$s ist beschädigt',
+	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'Datei %1$s kann nicht geschrieben werden',
 ));
 

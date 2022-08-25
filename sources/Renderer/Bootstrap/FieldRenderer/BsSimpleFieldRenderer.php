@@ -648,7 +648,7 @@ HTML
 					// Open medallion from profile picture or first name letter
 					$bEntryHasMedallionPicture = (empty($aContactPicturesCache[$iEntryUserId]) === false);
 					$sEntryMedallionStyle = $bEntryHasMedallionPicture ? ' background-image: url(\''.$aContactPicturesCache[$iEntryUserId].'\');' : '';
-					$sEntryMedallionContent = $bEntryHasMedallionPicture ? '' : UserRights::GetUserInitials($sEntryUserLogin);
+					$sEntryMedallionContent = $bEntryHasMedallionPicture ? '' : utils::FormatInitialsForMedallion(UserRights::GetUserInitials($sEntryUserLogin));
 					// - Entry tooltip
 					$sEntryMedallionTooltip = utils::HtmlEntities($sEntryUserLogin);
 					$sEntryMedallionTooltipPlacement = ($iEntryUserId === $iCurrentUserId) ? 'left' : 'right';

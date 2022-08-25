@@ -155,7 +155,7 @@ class ormCaseLog {
 					break;
 
 				case static::ENUM_FORMAT_HTML:
-					$sHtmlEntry = $sTextEntry;
+					$sHtmlEntry = InlineImage::FixUrls($sTextEntry);
 					$sTextEntry = utils::HtmlToText($sHtmlEntry);
 					break;
 			}
@@ -252,7 +252,7 @@ class ormCaseLog {
 			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT))
 			{
 				$sCSSClass = 'caselog_entry';
-				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
 			}
 			else
 			{
@@ -292,19 +292,15 @@ class ormCaseLog {
 		}
 
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
-		if ($iPos < (strlen($this->m_sLog) - 1))
-		{
+		if ($iPos < (strlen($this->m_sLog) - 1)) {
 			$sTextEntry = substr($this->m_sLog, $iPos);
-			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
 
-			if (count($this->m_aIndex) == 0)
-			{
+			if (count($this->m_aIndex) == 0) {
 				$sHtml .= '<div class="caselog_entry" style="'.$sStyleCaseLogEntry.'"">';
 				$sHtml .= $sTextEntry;
 				$sHtml .= '</div>';
-			}
-			else
-			{
+			} else {
 				$sHtml .= '<div class="caselog_header" style="'.$sStyleCaseLogHeader.'">';
 				$sHtml .= Dict::S('UI:CaseLog:InitialValue');
 				$sHtml .= '</div>';
@@ -327,24 +323,18 @@ class ormCaseLog {
 		$sHtml = '<ul class="case_log_simple_html">';
 		$iPos = 0;
 		$aIndex = $this->m_aIndex;
-		for($index=count($aIndex)-1 ; $index >= 0 ; $index--)
-		{
+		for($index=count($aIndex)-1 ; $index >= 0 ; $index--) {
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
 			$sCSSClass = 'case_log_simple_html_entry_html';
-			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT))
-			{
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT)) {
 				$sCSSClass = 'case_log_simple_html_entry';
-				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
-				if (!is_null($aTransfoHandler))
-				{
+				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
+				if (!is_null($aTransfoHandler)) {
 					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
 				}
-			}
-			else
-			{
-				if (!is_null($aTransfoHandler))
-				{
+			} else {
+				if (!is_null($aTransfoHandler)) {
 					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry, true /* wiki "links" only */);
 				}
 				$sTextEntry = InlineImage::FixUrls($sTextEntry);
@@ -383,19 +373,15 @@ class ormCaseLog {
 		}
 
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
-		if ($iPos < (strlen($this->m_sLog) - 1))
-		{
+		if ($iPos < (strlen($this->m_sLog) - 1)) {
 			$sTextEntry = substr($this->m_sLog, $iPos);
-			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
 
-			if (count($this->m_aIndex) == 0)
-			{
+			if (count($this->m_aIndex) == 0) {
 				$sHtml .= '<li>';
 				$sHtml .= $sTextEntry;
 				$sHtml .= '</li>';
-			}
-			else
-			{
+			} else {
 				$sHtml .= '<li>';
 				$sHtml .= Dict::S('UI:CaseLog:InitialValue');
 				$sHtml .= '<div class="case_log_simple_html_entry" style="'.$sStyleCaseLogEntry.'">';
@@ -437,11 +423,9 @@ class ormCaseLog {
 			}
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
-			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT))
-			{
-				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
-				if (!is_null($aTransfoHandler))
-				{
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT)) {
+				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
+				if (!is_null($aTransfoHandler)) {
 					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
 				}
 			}
@@ -483,19 +467,16 @@ class ormCaseLog {
 			$oBlock->AddSubBlock($oCollapsibleBlock);
 		}
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
-		if ($iPos < (strlen($this->m_sLog) - 1))
-		{
+		if ($iPos < (strlen($this->m_sLog) - 1)) {
 			// In this case the format is always "text"
 			$sTextEntry = substr($this->m_sLog, $iPos);
-			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
-			if (!is_null($aTransfoHandler))
-			{
+			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
+			if (!is_null($aTransfoHandler)) {
 				$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
 			}
 
-			if (count($this->m_aIndex) == 0)
-			{
-				$oCollapsibleBlock = CollapsibleSectionUIBlockFactory::MakeStandard(  '');
+			if (count($this->m_aIndex) == 0) {
+				$oCollapsibleBlock = CollapsibleSectionUIBlockFactory::MakeStandard('');
 				$oCollapsibleBlock->AddSubBlock(new Html($sTextEntry));
 				$oCollapsibleBlock->SetOpenedByDefault(true);
 				$oBlock->AddSubBlock($oCollapsibleBlock);
@@ -723,7 +704,7 @@ class ormCaseLog {
 			}
 			else
 			{
-				$sRes = $sRaw;
+				$sRes = InlineImage::FixUrls($sRaw);
 			}
 			break;
 		}
@@ -758,6 +739,6 @@ class ormCaseLog {
 		}
 		$iPos += $this->m_aIndex[$index]['separator_length'];
 		$sText = substr($this->m_sLog, $iPos, $this->m_aIndex[$index]['text_length']);
-		return $sText;
+		return InlineImage::FixUrls($sText);
 	}
 }

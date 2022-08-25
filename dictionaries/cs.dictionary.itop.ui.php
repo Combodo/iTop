@@ -368,7 +368,14 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 <li>Spravovat Vaše nejdůležitější IT aktivum - Dokumentaci.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otevřené požadavky: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mé požadavky',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otevřené incidenty: %1$d',
@@ -464,6 +471,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 
 	'UI:GroupBy:Count' => 'Množství',
 	'UI:GroupBy:Count+' => 'Množství prvků',
@@ -1647,30 +1656,30 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:AuditCategories' => 'Kategorie auditu',
 	'Menu:AuditCategories+' => 'Kategorie auditu',
 	'Menu:Notifications:Title' => 'Kategorie auditu',
-	'Menu:RunQueriesMenu' => 'Provést dotaz',
-	'Menu:RunQueriesMenu+' => 'Provést dotaz',
-	'Menu:QueryMenu' => 'Knihovna dotazů',
-	'Menu:QueryMenu+' => 'Knihovna dotazů',
-	'Menu:UniversalSearchMenu' => 'Univerzální hledání',
-	'Menu:UniversalSearchMenu+' => 'Hledejte cokoli...',
-	'Menu:UserManagementMenu' => 'Správa uživatelů',
-	'Menu:UserManagementMenu+' => 'Správa uživatelů',
-	'Menu:ProfilesMenu' => 'Profily (Role)',
-	'Menu:ProfilesMenu+' => 'Profily (Role)',
-	'Menu:ProfilesMenu:Title' => 'Profily (Role)',
-	'Menu:UserAccountsMenu' => 'Uživatelské účty',
-	'Menu:UserAccountsMenu+' => 'Uživatelské účty',
+	'Menu:RunQueriesMenu'         => 'Provést dotaz',
+	'Menu:RunQueriesMenu+'        => 'Provést dotaz',
+	'Menu:QueryMenu'              => 'Knihovna dotazů',
+	'Menu:QueryMenu+'             => 'Knihovna dotazů',
+	'Menu:UniversalSearchMenu'    => 'Univerzální hledání',
+	'Menu:UniversalSearchMenu+'   => 'Hledejte cokoli...',
+	'Menu:UserManagementMenu'     => 'Správa uživatelů',
+	'Menu:UserManagementMenu+'    => 'Správa uživatelů',
+	'Menu:ProfilesMenu'           => 'Profily (Role)',
+	'Menu:ProfilesMenu+'          => 'Profily (Role)',
+	'Menu:ProfilesMenu:Title'     => 'Profily (Role)',
+	'Menu:UserAccountsMenu'       => 'Uživatelské účty',
+	'Menu:UserAccountsMenu+'      => 'Uživatelské účty',
 	'Menu:UserAccountsMenu:Title' => 'Uživatelské účty',
-	'Menu:MyShortcuts' => 'Mé odkazy',
-	'Menu:UserManagement' => 'User Management~~',
-	'Menu:Queries' => 'Queries~~',
-	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:MyShortcuts'            => 'Mé odkazy',
+	'Menu:UserManagement'         => 'User Management~~',
+	'Menu:Queries'                => 'Queries~~',
+	'Menu:ConfigurationTools'     => 'Configuration~~',
 ));
 
 // Additional language entries not present in English dict
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
- 'UI:Toggle:StandardDashboard' => 'Standard~~',
- 'UI:Toggle:CustomDashboard' => 'Custom~~',
- 'UI:Dashboard:Edit' => 'Upravit tuto stránku...',
- 'UI:Dashboard:Revert' => 'Vrátit se k původní verzi...',
+	'UI:Toggle:StandardDashboard' => 'Standard~~',
+	'UI:Toggle:CustomDashboard'   => 'Custom~~',
+	'UI:Dashboard:Edit'           => 'Upravit tuto stránku...',
+	'UI:Dashboard:Revert'         => 'Vrátit se k původní verzi...',
 ));

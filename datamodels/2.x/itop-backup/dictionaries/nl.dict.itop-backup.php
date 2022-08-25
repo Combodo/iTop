@@ -6,7 +6,7 @@
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * @author Hipska (2019)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  * This file is part of iTop.
  *

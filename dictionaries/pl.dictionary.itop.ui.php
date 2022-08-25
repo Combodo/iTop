@@ -369,7 +369,14 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 <li>Zarządzaj najważniejszym zasobem swojego IT: dokumentacją.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otwarte zgłoszenia: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Moje zgłoszenia',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otwarte incydenty: %1$d',
@@ -1650,30 +1657,46 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:AuditCategories' => 'Kategorie audytu',
 	'Menu:AuditCategories+' => 'Kategorie audytu',
 	'Menu:Notifications:Title' => 'Kategorie audytu',
-	'Menu:RunQueriesMenu' => 'Zapytania',
-	'Menu:RunQueriesMenu+' => 'Uruchom dowolne zapytanie',
-	'Menu:QueryMenu' => 'Słownik zapytań',
-	'Menu:QueryMenu+' => 'Słownik zapytań',
-	'Menu:UniversalSearchMenu' => 'Wyszukiwanie uniwersalne',
-	'Menu:UniversalSearchMenu+' => 'Wyszukiwanie wszystkiego...',
-	'Menu:UserManagementMenu' => 'Zarządzanie użytkownikami',
-	'Menu:UserManagementMenu+' => 'UZarządzanie użytkownikami',
-	'Menu:ProfilesMenu' => 'Profile',
-	'Menu:ProfilesMenu+' => 'Profile',
-	'Menu:ProfilesMenu:Title' => 'Profile',
-	'Menu:UserAccountsMenu' => 'Konta użytkowników',
-	'Menu:UserAccountsMenu+' => 'Konta użytkowników',
+	'Menu:RunQueriesMenu'         => 'Zapytania',
+	'Menu:RunQueriesMenu+'        => 'Uruchom dowolne zapytanie',
+	'Menu:QueryMenu'              => 'Słownik zapytań',
+	'Menu:QueryMenu+'             => 'Słownik zapytań',
+	'Menu:UniversalSearchMenu'    => 'Wyszukiwanie uniwersalne',
+	'Menu:UniversalSearchMenu+'   => 'Wyszukiwanie wszystkiego...',
+	'Menu:UserManagementMenu'     => 'Zarządzanie użytkownikami',
+	'Menu:UserManagementMenu+'    => 'UZarządzanie użytkownikami',
+	'Menu:ProfilesMenu'           => 'Profile',
+	'Menu:ProfilesMenu+'          => 'Profile',
+	'Menu:ProfilesMenu:Title'     => 'Profile',
+	'Menu:UserAccountsMenu'       => 'Konta użytkowników',
+	'Menu:UserAccountsMenu+'      => 'Konta użytkowników',
 	'Menu:UserAccountsMenu:Title' => 'Konta użytkowników',
-	'Menu:MyShortcuts' => 'Moje skróty',
-	'Menu:UserManagement' => 'Zarządzanie użytkownikami',
-	'Menu:Queries' => 'Zapytania',
-	'Menu:ConfigurationTools' => 'Konfiguracja',
+	'Menu:MyShortcuts'            => 'Moje skróty',
+	'Menu:UserManagement'         => 'Zarządzanie użytkownikami',
+	'Menu:Queries'                => 'Zapytania',
+	'Menu:ConfigurationTools'     => 'Konfiguracja',
+));
+
+// OAuth
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Menu:OAuthWizardMenu'                          => 'OAuth 2.0~~',
+	'core/Operation:Wizard/Title'                   => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Page:Title'                    => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Form:Panel:Title'              => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Form:Input:ClientId:Label'     => 'Client Id~~',
+	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
+	'UI:OAuth:Wizard:Form:Input:Scope:Label'        => 'Scope~~',
+	'UI:OAuth:Wizard:Form:Input:Additional:Label'   => 'Additional parameters~~',
+	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label'  => 'Redirect Uri~~',
+	'UI:OAuth:Wizard:Form:Button:Submit:Label'      => 'Authentication~~',
+	'UI:OAuth:Wizard:ResultConf:Panel:Title'        => 'Configuration for SMTP~~',
+	'UI:OAuth:Wizard:ResultConf:Panel:Description'  => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
 ));
 
 // Additional language entries not present in English dict
 Dict::Add('PL PL', 'Polish', 'Polski', array(
- 'UI:Button:SearchInHIerarchy' => ' Szukaj w hierarchii ',
- 'UI:Error:TemplateRendering' => 'Błąd renderowania szablonu',
- 'UI:Toggle:StandardDashboard' => 'Standard',
- 'UI:Toggle:CustomDashboard' => 'Własny',
+	'UI:Button:SearchInHIerarchy' => ' Szukaj w hierarchii ',
+	'UI:Error:TemplateRendering'  => 'Błąd renderowania szablonu',
+	'UI:Toggle:StandardDashboard' => 'Standard',
+	'UI:Toggle:CustomDashboard'   => 'Własny',
 ));

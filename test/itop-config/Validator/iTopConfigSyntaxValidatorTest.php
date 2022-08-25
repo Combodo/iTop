@@ -16,7 +16,7 @@ use PhpParser\PrettyPrinter\Standard;
 class iTopConfigSyntaxValidatorTest extends ItopTestCase
 {
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 
@@ -42,9 +42,12 @@ class iTopConfigSyntaxValidatorTest extends ItopTestCase
 		$this->expectException(\Exception::class);
 		try{
 			$oiTopConfigValidator->Validate("<?php \n zef;zefzef \n zdadz = azdazd \n zerfgzaezerfgzef>");
-		}catch (\Exception $e)
-		{
-			$this->assertStringStartsWith('Error in configuration: syntax error, unexpected \'zdadz\' (T_STRING)', $e->getMessage());
+		} catch (\Exception $e) {
+			if (version_compare(phpversion(), '8.0.0', '<')) {
+				$this->assertStringStartsWith('Error in configuration: syntax error, unexpected \'zdadz\' (T_STRING)', $e->getMessage());
+			} else {
+				$this->assertStringStartsWith('Error in configuration: syntax error, unexpected identifier "zdadz" at line 2', $e->getMessage());
+			}
 			throw $e;
 		}
 	}

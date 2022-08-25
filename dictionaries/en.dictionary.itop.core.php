@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2022 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -29,6 +29,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.',
 
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error',
+	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s',
+	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s',
 
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
@@ -67,7 +69,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeDecimal+' => 'Decimal value (could be negative)',
 
 	'Core:AttributeBoolean' => 'Boolean',
-	'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Yes',
 	'Core:AttributeBoolean/Value:no' => 'No',
@@ -94,7 +96,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeString+' => 'Alphanumeric string',
 
 	'Core:AttributeClass' => 'Class',
-	'Core:AttributeClass+' => 'Class',
+	'Core:AttributeClass+' => '',
 
 	'Core:AttributeApplicationLanguage' => 'User language',
 	'Core:AttributeApplicationLanguage+' => 'Language and country (EN US)',
@@ -204,7 +206,7 @@ Operators:<br/>
 	'Core:FriendlyName-Description' => 'Full name',
 
 	'Core:AttributeTag' => 'Tags',
-	'Core:AttributeTag+' => 'Tags',
+	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
@@ -249,7 +251,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CMDBChangeOp' => 'Change Operation',
 	'Class:CMDBChangeOp+' => 'Change made by one person, at a single time, on a single object',
 	'Class:CMDBChangeOp/Attribute:change' => 'change',
-	'Class:CMDBChangeOp/Attribute:change+' => 'change',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'date',
 	'Class:CMDBChangeOp/Attribute:date+' => 'date and time of the change',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'user',
@@ -370,9 +372,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventNotification' => 'Notification event',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
-	'Class:EventNotification/Attribute:trigger_id+' => 'user account',
-	'Class:EventNotification/Attribute:action_id' => 'user',
-	'Class:EventNotification/Attribute:action_id+' => 'user account',
+	'Class:EventNotification/Attribute:trigger_id+' => '',
+	'Class:EventNotification/Attribute:action_id' => 'Action',
+	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => 'Object id',
 	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)',
 ));
@@ -385,17 +387,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventNotificationEmail' => 'Email emission event',
 	'Class:EventNotificationEmail+' => 'Trace of an email that has been sent',
 	'Class:EventNotificationEmail/Attribute:to' => 'TO',
-	'Class:EventNotificationEmail/Attribute:to+' => 'TO',
+	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'CC',
-	'Class:EventNotificationEmail/Attribute:cc+' => 'CC',
+	'Class:EventNotificationEmail/Attribute:cc+' => '',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'BCC',
-	'Class:EventNotificationEmail/Attribute:bcc+' => 'BCC',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '',
 	'Class:EventNotificationEmail/Attribute:from' => 'From',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Sender of the message',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Subject',
-	'Class:EventNotificationEmail/Attribute:subject+' => 'Subject',
+	'Class:EventNotificationEmail/Attribute:subject+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Body',
-	'Class:EventNotificationEmail/Attribute:body+' => 'Body',
+	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
 ));
@@ -418,7 +420,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventIssue/Attribute:arguments_get' => 'URL arguments',
 	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET arguments',
 	'Class:EventIssue/Attribute:callstack' => 'Callstack',
-	'Class:EventIssue/Attribute:callstack+' => 'Call stack',
+	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Data',
 	'Class:EventIssue/Attribute:data+' => 'More information',
 ));
@@ -469,9 +471,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventLoginUsage' => 'Login Usage',
 	'Class:EventLoginUsage+' => 'Connection to the application',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
-	'Class:EventLoginUsage/Attribute:user_id+' => 'Login',
+	'Class:EventLoginUsage/Attribute:user_id+' => '',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'User Name',
-	'Class:EventLoginUsage/Attribute:contact_name+' => 'User Name',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'User Email',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Email Address of the User',
 ));
@@ -490,11 +492,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:status' => 'Status',
 	'Class:Action/Attribute:status+' => 'This status drives the action behavior',
 	'Class:Action/Attribute:status/Value:test' => 'Being tested',
-	'Class:Action/Attribute:status/Value:test+' => 'Being tested',
+	'Class:Action/Attribute:status/Value:test+' => '',
 	'Class:Action/Attribute:status/Value:enabled' => 'In production',
-	'Class:Action/Attribute:status/Value:enabled+' => 'In production',
+	'Class:Action/Attribute:status/Value:enabled+' => '',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inactive',
-	'Class:Action/Attribute:status/Value:disabled+' => 'Inactive',
+	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Related Triggers',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers linked to this action',
 	'Class:Action/Attribute:finalclass' => 'Action sub-class',
@@ -545,11 +547,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ActionEmail/Attribute:importance' => 'importance',
 	'Class:ActionEmail/Attribute:importance+' => 'Importance flag',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'low',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'low',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normal',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'high',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'high',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
 ));
 
 //
@@ -699,7 +701,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Name',
-	'Class:SynchroDataSource/Attribute:name+' => 'Name',
+	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Description',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Target class',
@@ -998,7 +1000,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TagSetFieldData/Attribute:label' => 'Label',
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label',
 	'Class:TagSetFieldData/Attribute:description' => 'Description',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',

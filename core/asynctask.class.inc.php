@@ -293,7 +293,7 @@ abstract class AsyncTask extends DBObject
 			$this->Set('remaining_retries', $this->GetMaxRetries($iErrorCode));
 		}
 
-		$this->Set('last_error', $sErrorMessage);
+		$this->SetTrim('last_error', $sErrorMessage);
 		$this->Set('last_error_code', $iErrorCode); // Note: can be ZERO !!!
 		$this->Set('last_attempt', time());
 
@@ -409,8 +409,6 @@ class AsyncSendEmail extends AsyncTask
 		$oNew->Set('to', $oEMail->GetRecipientTO(true /* string */));
 		$oNew->Set('subject', $oEMail->GetSubject());
 
-//		$oNew->Set('version', 1);
-//		$sMessage = serialize($oEMail);
 		$oNew->Set('version', 2);
 		$sMessage = $oEMail->SerializeV2();
 		$oNew->Set('message', $sMessage);

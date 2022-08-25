@@ -79,7 +79,7 @@ class ItopDataTestCase extends ItopTestCase
 	/**
 	 * @throws Exception
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/utils.inc.php');
@@ -101,15 +101,12 @@ class ItopDataTestCase extends ItopTestCase
 	/**
 	 * @throws Exception
 	 */
-	protected function tearDown()
+	protected function tearDown(): void
 	{
-		if (static::USE_TRANSACTION)
-		{
+		if (static::USE_TRANSACTION) {
 			$this->debug("ROLLBACK !!!");
 			CMDBSource::Query('ROLLBACK');
-		}
-		else
-		{
+		} else {
 			$this->debug("");
 			$this->aCreatedObjects = array_reverse($this->aCreatedObjects);
 			foreach ($this->aCreatedObjects as $oObject)
@@ -415,7 +412,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @return \DBObject
 	 * @throws Exception
 	 */
-	protected function CreateUser($sLogin, $iProfileId, $sPassword=null)
+	protected function CreateUser($sLogin, $iProfileId, $sPassword=null, $iContactid=2)
 	{
 		if (empty($sPassword)){
 			$sPassword = $sLogin;
@@ -426,7 +423,7 @@ class ItopDataTestCase extends ItopTestCase
 		$oUserProfile->Set('reason', 'UNIT Tests');
 		$oSet = DBObjectSet::FromObject($oUserProfile);
 		$oUser = $this->createObject('UserLocal', array(
-			'contactid' => 2,
+			'contactid' => $iContactid,
 			'login' => $sLogin,
 			'password' => $sPassword,
 			'language' => 'EN US',
@@ -788,6 +785,7 @@ class ItopDataTestCase extends ItopTestCase
 		// Create a specific organization for the tests
 		$oOrg = $this->CreateOrganization('UnitTestOrganization');
 		$this->iTestOrgId = $oOrg->GetKey();
+		return $oOrg;
 	}
 
 	/**

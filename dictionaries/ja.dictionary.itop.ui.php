@@ -357,7 +357,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 <li>ITの中でもっとも重要な財産である「文書化」の管理。</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => '要求を開く: %1$d',
 	'UI:WelcomeMenu:MyCalls' => '担当中の要求',
 	'UI:WelcomeMenu:OpenIncidents' => 'インシデントを開く: %1$d',
@@ -453,6 +460,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 
 	'UI:GroupBy:Count' => 'カウント',
 	'UI:GroupBy:Count+' => '要素数',
@@ -1638,30 +1647,30 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:AuditCategories' => '監査カテゴリ',
 	'Menu:AuditCategories+' => '監査カテゴリ',
 	'Menu:Notifications:Title' => '監査カテゴリ',
-	'Menu:RunQueriesMenu' => 'クエリ実行',
-	'Menu:RunQueriesMenu+' => '任意のクエリを実行',
-	'Menu:QueryMenu' => 'クエリのフレーズブック',
-	'Menu:QueryMenu+' => 'クエリのフレーズブック',
-	'Menu:UniversalSearchMenu' => '全検索',
-	'Menu:UniversalSearchMenu+' => '何か...検索',
-	'Menu:UserManagementMenu' => 'ユーザ管理',
-	'Menu:UserManagementMenu+' => 'ユーザ管理',
-	'Menu:ProfilesMenu' => 'プロフィール',
-	'Menu:ProfilesMenu+' => 'プロフィール',
-	'Menu:ProfilesMenu:Title' => 'プロフィール',
-	'Menu:UserAccountsMenu' => 'ユーザアカウント',
-	'Menu:UserAccountsMenu+' => 'ユーザアカウント',
+	'Menu:RunQueriesMenu'         => 'クエリ実行',
+	'Menu:RunQueriesMenu+'        => '任意のクエリを実行',
+	'Menu:QueryMenu'              => 'クエリのフレーズブック',
+	'Menu:QueryMenu+'             => 'クエリのフレーズブック',
+	'Menu:UniversalSearchMenu'    => '全検索',
+	'Menu:UniversalSearchMenu+'   => '何か...検索',
+	'Menu:UserManagementMenu'     => 'ユーザ管理',
+	'Menu:UserManagementMenu+'    => 'ユーザ管理',
+	'Menu:ProfilesMenu'           => 'プロフィール',
+	'Menu:ProfilesMenu+'          => 'プロフィール',
+	'Menu:ProfilesMenu:Title'     => 'プロフィール',
+	'Menu:UserAccountsMenu'       => 'ユーザアカウント',
+	'Menu:UserAccountsMenu+'      => 'ユーザアカウント',
 	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
-	'Menu:MyShortcuts' => '私のショートカット',
-	'Menu:UserManagement' => 'User Management~~',
-	'Menu:Queries' => 'Queries~~',
-	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:MyShortcuts'            => '私のショートカット',
+	'Menu:UserManagement'         => 'User Management~~',
+	'Menu:Queries'                => 'Queries~~',
+	'Menu:ConfigurationTools'     => 'Configuration~~',
 ));
 
 // Additional language entries not present in English dict
 Dict::Add('JA JP', 'Japanese', '日本語', array(
- 'UI:Toggle:StandardDashboard' => 'Standard~~',
- 'UI:Toggle:CustomDashboard' => 'Custom~~',
- 'UI:Dashboard:Edit' => 'このページを編集...',
- 'UI:Dashboard:Revert' => '元のバージョンに戻す...',
+	'UI:Toggle:StandardDashboard' => 'Standard~~',
+	'UI:Toggle:CustomDashboard'   => 'Custom~~',
+	'UI:Dashboard:Edit'           => 'このページを編集...',
+	'UI:Dashboard:Revert'         => '元のバージョンに戻す...',
 ));

@@ -489,12 +489,20 @@ class Config
 			'show_in_conf_sample' => true,
 		],
 		'cron_max_execution_time' => [
-			'type' => 'integer',
-			'description' => 'Duration (seconds) of the page cron.php, must be shorter than php setting max_execution_time and shorter than the web server response timeout',
-			'default' => 600,
-			'value' => 600,
-			'source_of_value' => '',
+			'type'                => 'integer',
+			'description'         => 'Duration (seconds) of the cron.php script : if exceeded the script will exit even if there are remaining tasks to process. Must be shorter than php max_execution_time setting (note than when using CLI, this is set to 0 by default which means unlimited). If cron.php is ran via web, it must be shorter than the web server response timeout.',
+			'default'             => 600,
+			'value'               => 600,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
+		],
+		'cron_task_max_execution_time' => [
+			'type' => 'integer',
+			'description' => 'Background tasks will use this value (integer) multiplicated by its periodicity (in seconds) as max duration per cron execution. 0 is unlimited time',
+			'default' => 0,
+			'value' => 0,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
 		],
 		'cron_sleep' => [
 			'type' => 'integer',
@@ -522,7 +530,7 @@ class Config
 		],
 		'email_transport' => [
 			'type' => 'string',
-			'description' => 'Mean to send emails: PHPMail (uses the function mail()) or SMTP (implements the client protocol)',
+			'description' => 'Mean to send emails: PHPMail (uses the function mail()), SMTP (implements the client protocol) or SMTP_OAuth (connect to the server using OAuth 2.0)',
 			'default' => "PHPMail",
 			'value' => "PHPMail",
 			'source_of_value' => '',
@@ -544,7 +552,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.encryption' => [
+		'email_transport_smtp.encryption'          => [
 			'type' => 'string',
 			'description' => 'tls or ssl (optional)',
 			'default' => "",
@@ -552,28 +560,28 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.username' => [
-			'type' => 'string',
-			'description' => 'Authentication user (optional)',
-			'default' => "",
-			'value' => "",
-			'source_of_value' => '',
+		'email_transport_smtp.username'            => [
+			'type'                => 'string',
+			'description'         => 'Authentication user (optional)',
+			'default'             => "",
+			'value'               => "",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.password' => [
-			'type' => 'string',
-			'description' => 'Authentication password (optional)',
-			'default' => "",
-			'value' => "",
-			'source_of_value' => '',
+		'email_transport_smtp.password'            => [
+			'type'                => 'string',
+			'description'         => 'Authentication password (optional)',
+			'default'             => "",
+			'value'               => "",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_css' => [
-			'type' => 'string',
-			'description' => 'CSS that will override the standard stylesheet used for the notifications',
-			'default' => "",
-			'value' => "",
-			'source_of_value' => '',
+		'email_css'                                => [
+			'type'                => 'string',
+			'description'         => 'CSS that will override the standard stylesheet used for the notifications',
+			'default'             => "",
+			'value'               => "",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'email_default_sender_address' => [
@@ -878,7 +886,7 @@ class Config
 			'type' => 'string',
 			'description' => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
 			'default' => /** @lang RegExp */
-			'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z_.-][a-zA-Z0-9+\$_.-]*)?',
+			'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z0-9_.-][a-zA-Z0-9+\$_.-]*)?',
 			// SCHEME....... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH......................... GET............................................ ANCHOR..........................
 			// Example: http://User:passWord@127.0.0.1:8888/patH/Page.php?arrayArgument[2]=something:blah20#myAnchor
 			// RegExp source: http://www.php.net/manual/fr/function.preg-match.php#93824
@@ -1000,8 +1008,8 @@ class Config
 			'type' => 'integer',
 			'description' => 'Maximum length of the history table (in the "History" tab on each object) before it gets truncated. Latest modifications are displayed first.',
 			// examples... not used
-			'default' => 50,
-			'value' => 50,
+			'default' => 200,
+			'value' => 200,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
@@ -1200,7 +1208,7 @@ class Config
 		],
 		'compatibility.include_deprecated_js_files' => [
 			'type' => 'bool',
-			'description' => 'Include the deprecated JS files to ease usage of not migrated extensions',
+			'description' => 'Include the deprecated JS files (in iTop previous version) to ease usage of not migrated extensions',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -1216,7 +1224,7 @@ class Config
 		],
 		'compatibility.include_deprecated_css_files' => [
 			'type' => 'bool',
-			'description' => 'Include the deprecated CSS files to ease usage of not migrated extensions',
+			'description' => 'Include the deprecated CSS files (in iTop previous version) to ease usage of not migrated extensions',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -1448,14 +1456,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'use_legacy_dbsearch' => [
-			'type' => 'bool',
-			'description' => 'If set, DBSearch will use legacy SQL query generation',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
 		'query_cache_enabled' => [
 			'type' => 'bool',
 			'description' => 'If set, DBSearch will use cache for query generation',
@@ -1542,6 +1542,14 @@ class Config
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'setup.launch_button.enabled' => [
+			'type'                => 'bool',
+			'description'         => 'If true displays in the Application Upgrade screen a button allowing to launch the setup in a single click (no more manual config file permission change needed)',
+			'default'             => null,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 	];
@@ -1863,7 +1871,7 @@ class Config
 		{
 			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack) 
 			throw new ConfigException('Syntax error in configuration file',
-				array('file' => $sConfigFile, 'error' => '<tt>'.htmlentities($sNoise, ENT_QUOTES, 'UTF-8').'</tt>'));
+				array('file' => $sConfigFile, 'error' => '<tt>'.utils::EscapeHtml($sNoise, ENT_QUOTES).'</tt>'));
 		}
 
 		if (!isset($MySettings) || !is_array($MySettings))

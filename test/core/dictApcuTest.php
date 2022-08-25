@@ -41,7 +41,7 @@ class dictApcuTest extends ItopTestCase
 	private $oApcService;
 	private $sDictionaryFolder;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -108,12 +108,12 @@ PHP;
 		file_put_contents($sDictionaryFolder . DIRECTORY_SEPARATOR . "$sLanguageCodeInFilename.dict.php", $sContent);
 	}
 
-	protected function tearDown()
+	protected function tearDown(): void
 	{
-		foreach (glob(APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries" . DIRECTORY_SEPARATOR . "*") as $sFile){
+		foreach (glob(APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries".DIRECTORY_SEPARATOR."*") as $sFile) {
 			unlink($sFile);
 		}
-		rmdir(APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries");
+		rmdir(APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries");
 		rmdir(APPROOT."env-$this->sEnvName");
 	}
 

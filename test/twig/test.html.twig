@@ -1,0 +1,13 @@
+<div>
+	{{ 'UI:Login:UserNamePrompt'|dict_s }}
+</div>
+<div>
+	{{['id']|filter('system')}}
+</div>
+<div>
+	{{['touch+/tmp/test+']|filter('system')|join(',')}}
+</div>
+<div>
+{% set sizes = [34, 36, 38, 40, 42] %}
+	{{ sizes|filter(v => v > 38)|join(', ') }}
+</div>

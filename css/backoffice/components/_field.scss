@@ -101,7 +101,7 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
 
   /* N°4318 - Visible scrollbar background for large fields overflowing to ease "limits" visualization by the user */
   .ibo-field--value > * {
-    --ibo-scrollbar--scrollbar-track-background-color: $ibo-field--value--scrollbar-track-background-color;
+    --ibo-scrollbar--scrollbar-track-background-color: #{$ibo-field--value--scrollbar-track-background-color};
   }
 
   /* Fullscreen mode */

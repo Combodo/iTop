@@ -20,7 +20,7 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
     protected $id;
     private $defaultTags = [];
 
-    public function __construct(ServicesConfigurator $parent, Definition $definition, $id = null, array $defaultTags = [])
+    public function __construct(ServicesConfigurator $parent, Definition $definition, string $id = null, array $defaultTags = [])
     {
         $this->parent = $parent;
         $this->definition = $definition;
@@ -32,8 +32,8 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
     {
         // default tags should be added last
         foreach ($this->defaultTags as $name => $attributes) {
-            foreach ($attributes as $attributes) {
-                $this->definition->addTag($name, $attributes);
+            foreach ($attributes as $attribute) {
+                $this->definition->addTag($name, $attribute);
             }
         }
         $this->defaultTags = [];
@@ -41,13 +41,8 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
 
     /**
      * Registers a service.
-     *
-     * @param string      $id
-     * @param string|null $class
-     *
-     * @return ServiceConfigurator
      */
-    final public function set($id, $class = null)
+    final public function set(?string $id, string $class = null): ServiceConfigurator
     {
         $this->__destruct();
 
@@ -56,13 +51,8 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
 
     /**
      * Creates an alias.
-     *
-     * @param string $id
-     * @param string $referencedId
-     *
-     * @return AliasConfigurator
      */
-    final public function alias($id, $referencedId)
+    final public function alias(string $id, string $referencedId): AliasConfigurator
     {
         $this->__destruct();
 
@@ -71,13 +61,8 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
 
     /**
      * Registers a PSR-4 namespace using a glob pattern.
-     *
-     * @param string $namespace
-     * @param string $resource
-     *
-     * @return PrototypeConfigurator
      */
-    final public function load($namespace, $resource)
+    final public function load(string $namespace, string $resource): PrototypeConfigurator
     {
         $this->__destruct();
 
@@ -87,13 +72,9 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
     /**
      * Gets an already defined service definition.
      *
-     * @param string $id
-     *
-     * @return ServiceConfigurator
-     *
      * @throws ServiceNotFoundException if the service definition does not exist
      */
-    final public function get($id)
+    final public function get(string $id): ServiceConfigurator
     {
         $this->__destruct();
 
@@ -101,14 +82,31 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
     }
 
     /**
-     * Registers a service.
-     *
-     * @param string      $id
-     * @param string|null $class
-     *
-     * @return ServiceConfigurator
+     * Removes an already defined service definition or alias.
      */
-    final public function __invoke($id, $class = null)
+    final public function remove(string $id): ServicesConfigurator
+    {
+        $this->__destruct();
+
+        return $this->parent->remove($id);
+    }
+
+    /**
+     * Registers a stack of decorator services.
+     *
+     * @param InlineServiceConfigurator[]|ReferenceConfigurator[] $services
+     */
+    final public function stack(string $id, array $services): AliasConfigurator
+    {
+        $this->__destruct();
+
+        return $this->parent->stack($id, $services);
+    }
+
+    /**
+     * Registers a service.
+     */
+    final public function __invoke(string $id, string $class = null): ServiceConfigurator
     {
         $this->__destruct();
 

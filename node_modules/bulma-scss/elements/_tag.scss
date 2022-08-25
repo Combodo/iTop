@@ -1,7 +1,11 @@
+@import "../utilities/mixins";
+
 $tag-background-color: $background !default;
 $tag-color: $text !default;
 $tag-radius: $radius !default;
 $tag-delete-margin: 1px !default;
+
+$tag-colors: $colors !default;
 
 .tags {
   align-items: center;
@@ -115,7 +119,7 @@ $tag-delete-margin: 1px !default;
   }
 
   // Colors
-  @each $name, $pair in $colors {
+  @each $name, $pair in $tag-colors {
     $color: nth($pair, 1);
     $color-invert: nth($pair, 2);
 

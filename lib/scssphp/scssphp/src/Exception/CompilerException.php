@@ -1,8 +1,9 @@
 <?php
+
 /**
  * SCSSPHP
  *
- * @copyright 2012-2019 Leaf Corcoran
+ * @copyright 2012-2020 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -15,7 +16,9 @@ namespace ScssPhp\ScssPhp\Exception;
  * Compiler exception
  *
  * @author Oleksandr Savchenko <traveltino@gmail.com>
+ *
+ * @internal
  */
-class CompilerException extends \Exception
+class CompilerException extends \Exception implements SassException
 {
 }

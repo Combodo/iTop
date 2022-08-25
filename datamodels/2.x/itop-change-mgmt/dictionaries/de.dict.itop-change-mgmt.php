@@ -20,7 +20,7 @@
 
 * @copyright     Copyright (C) 2021 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
-*		
+*
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ChangeManagement' => 'Change Management',
@@ -98,7 +98,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:reject_reason+' => '',
 	'Class:Change/Attribute:changemanager_id' => 'Change Manager',
 	'Class:Change/Attribute:changemanager_id+' => '',
-	'Class:Change/Attribute:changemanager_email' => 'Change Manager Email',
+	'Class:Change/Attribute:changemanager_email' => 'Change Manager E-Mail',
 	'Class:Change/Attribute:changemanager_email+' => '',
 	'Class:Change/Attribute:parent_id' => 'Parent Change',
 	'Class:Change/Attribute:parent_id+' => '',

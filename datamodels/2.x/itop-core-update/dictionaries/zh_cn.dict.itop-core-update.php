@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2022 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -25,7 +25,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'itop-core-update:UI:SelectUpdateFile' => '应用升级',
     'itop-core-update:UI:ConfirmUpdate' => ' 升级',
     'itop-core-update:UI:UpdateCoreFiles' => '应用升级',
-	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance, no user can access the application. You have to run a setup or restore the application archive to return in normal mode.~~',
+	'iTopUpdate:UI:MaintenanceModeActive' => '此应用当前维护中,不允许任何用户访问.必须运行安装或恢复归档来使其处于正常模式.',
 	'itop-core-update:UI:UpdateDone' => '应用升级',
 
 	'itop-core-update/Operation:SelectUpdateFile/Title' => '应用升级',
@@ -75,7 +75,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => '应用无法升级',
 	'iTopUpdate:UI:CanCoreUpdate:No' => '应用无法升级: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => '警告: 应用升级可能失败: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '您必须使用 <a href="%1$s">安装向导</a> 来升级应用.<br />已检测到部分文件被修改, 无法执行部分升级.',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a target="_blank" href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
+	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => '准备开始',
@@ -93,15 +94,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopUpdate:Error:MissingFunction' => '无法开始升级, 功能缺失',
 	'iTopUpdate:Error:MissingFile' => '缺少文件: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => '文件 %1$s 已损坏',
-    'iTopUpdate:Error:BadFileFormat' => '上传的不是zip 文件',
+    'iTopUpdate:Error:BadFileFormat' => '上传的不是zip格式的文件',
     'iTopUpdate:Error:BadFileContent' => '升级文件不是程序升级包',
     'iTopUpdate:Error:BadItopProduct' => '升级文件与您的系统不兼容',
 	'iTopUpdate:Error:Copy' => '错误, 无法复制 \'%1$s\' 到 \'%2$s\'',
     'iTopUpdate:Error:FileNotFound' => '文件找不到',
     'iTopUpdate:Error:NoFile' => '没有提供文件',
-	'iTopUpdate:Error:InvalidToken' => '无效的 token',
+	'iTopUpdate:Error:InvalidToken' => '无效的token',
 	'iTopUpdate:Error:UpdateFailed' => '升级失败',
-	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => '上传上限太小. 请调整 PHP 配置.',
+	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => '上传上限太小. 请调整PHP配置.',
 
 	'iTopUpdate:UI:RestoreArchive' => '您可以从归档文件 \'%1$s\' 还原应用程序',
 	'iTopUpdate:UI:RestoreBackup' => '您可以从 \'%1$s\' 还原数据库',

@@ -24,8 +24,6 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-  # Replace default url generator service
-  router.options.generator_base_class: Combodo\iTop\Portal\Routing\UrlGenerator
 
   # Used in templates
   combodo.current_environment:        '%env(string:COMBODO_CURRENT_ENVIRONMENT)%'
@@ -100,17 +98,19 @@ services:
       - '@Combodo\iTop\Portal\Twig\AppVariable.inner'
       - '@service_container'
 
+  Combodo\iTop\Portal\Routing\UrlGenerator:
+    decorates: 'router'
+    arguments: ['@Combodo\iTop\Portal\Routing\UrlGenerator.inner']
+
   # Standard services
   combodo.current_contact.photo_url:
     public: true
     class: Combodo\iTop\Portal\VariableAccessor\CombodoCurrentContactPhotoUrl
-    arguments: ['@combodo.current_user', '@service_container']
-  # Note: This service is initialized with a UserLocal object as it needs a class that can be instantiated.
-  # Anyway, it will be replaced with the real class by UserProvider in onKernelRequestEvent.
-  # Note: Services relying on this one should use \User in their signature and not \UserLocal.
+    arguments: ['@Combodo\iTop\Portal\EventListener\UserProvider', '@service_container']
+
   combodo.current_user:
+    alias: Combodo\iTop\Portal\Twig\CurrentUserAccessor
     public: true
-    class: UserLocal
 
   # Aliases
   brick_collection:

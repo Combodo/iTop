@@ -451,7 +451,12 @@ class MFCompiler
 					}
 					catch (DOMFormatException $e)
 					{
-						throw new Exception("Failed to process class '$sClass', from '$sModuleRootDir': ".$e->getMessage());
+						$sMessage = "Failed to process class '$sClass', ";
+						if (!empty($sModuleRootDir)) {
+							$sMessage .= "from '$sModuleRootDir': ";
+						}
+						$sMessage .= $e->getMessage();
+						throw new Exception($sMessage);
 					}
 				}
 			}
@@ -587,15 +592,18 @@ EOF;
 				{
 					// Write the code into the given module as model.<module>.php
 					//
-					$sResultFile = $sTempTargetDir.'/'.$sRelativeDir.'/model.'.$sModuleName.'.php';
+					$sModelFileName = 'model.'.$sModuleName.'.php';
+					$sResultFile = $sTempTargetDir.'/'.$sRelativeDir.'/'.$sModelFileName;
 					$this->WritePHPFile($sResultFile, $sModuleName, $sModuleVersion, $sCompiledCode);
+					// In case the model file wasn't present in the module file, we're adding it ! (N°4875)
+					$oModule->AddFileToInclude('business', $sModelFileName);
 				}
 				else
 				{
 					// Write the code into core/main.php
 					//
 					$this->sMainPHPCode .=
-					<<<EOF
+						<<<EOF
 /**
  * Data model from the delta file
  */
@@ -603,20 +611,31 @@ EOF;
 EOF;
 					$this->sMainPHPCode .= $sCompiledCode;
 				}
-			}
-			else
-			{
-					$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
+			} else {
+				$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
 			}
 
 			// files to include (PHP datamodels)
 			foreach($oModule->GetFilesToInclude('business') as $sRelFileName)
 			{
-				$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+				if (file_exists("{$sTempTargetDir}/{$sRelativeDir}/{$sRelFileName}")) {
+					$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+				} else {
+					/** @noinspection NestedPositiveIfStatementsInspection */
+					if (utils::IsDevelopmentEnvironment()) {
+						$sMissingBusinessFileMessage = 'A module embeds a non existing file: Check the module.php "datamodel" key!';
+						$aContext = [
+							'moduleId'       => $oModule->GetId(),
+							'moduleLocation' => $oModule->GetRootDir(),
+							'includedFile'   => $sRelFileName,
+						];
+						SetupLog::Error($sMissingBusinessFileMessage, null, $aContext);
+						throw new CoreException($sMissingBusinessFileMessage, $aContext);
+					}
+				}
 			}
 			// files to include (PHP webservices providers)
-			foreach($oModule->GetFilesToInclude('webservices') as $sRelFileName)
-			{
+			foreach ($oModule->GetFilesToInclude('webservices') as $sRelFileName) {
 				$aWebservicesFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
 			}
 		} // foreach module
@@ -2006,10 +2025,16 @@ EOF
 
 			// Note: We can't use ModelFactory::GetField() as the current clas doesn't seem to be loaded yet.
 			$oField = $this->oFactory->GetNodes('field[@id="'.$sStateAttCode.'"]', $oFields)->item(0);
+			if ($oField == null) {
+				// Search field in parent class
+				$oField = $this->GetFieldInParentClasses($oClass, $sStateAttCode);
+				if ($oField == null) {
+					throw new DOMFormatException("Non existing attribute '$sStateAttCode'", null, null, $oStateAttribute);
+				}
+			}
 			$oValues = $oField->GetUniqueElement('values');
 			$oValueNodes = $oValues->getElementsByTagName('value');
-			foreach($oValueNodes as $oValue)
-			{
+			foreach ($oValueNodes as $oValue) {
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$oValue->GetText()."\",\n";
 				$sLifecycle .= "			array(\n";
@@ -2257,6 +2282,8 @@ EOF
 		}
 
 		// Retrieve colors (mandatory/optional depending on the element type)
+		// Note: For now we can't use CSS variables (only SCSS variables) in the style XML definition as the ibo-adjust-alpha() / ibo-adjust-lightness() used a few steps below do not support them,
+		//       if this ever should be considered, the following article might help: https://codyhouse.co/blog/post/how-to-combine-sass-color-functions-and-css-variables#other-color-functions
 		if ($sElementType === self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS) {
 			$sMainColorForCss = $this->GetPropString($oNode, 'main_color', null, false);
 			$sMainColorForOrm = $this->GetPropString($oNode, 'main_color', null);
@@ -2313,12 +2340,12 @@ EOF
 				$sMainColorScssVariableDeclaration = "$sMainColorScssVariableName: $sMainColorForCss !default;";
 				$sMainColorCssVariableDeclaration = "$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};";
 
-				$sCssRegularClassMainColorDeclaration = "--ibo-main-color: $sMainColorScssVariableName;";
-				// Note: We have to manually force the alpha chanel in case the given color is transparent
-				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100);";
-				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900);";
+				$sCssRegularClassMainColorDeclaration = "--ibo-main-color:  #{{$sMainColorScssVariableName}};";
+				// Note: We have to manually force the alpha channel in case the given color is transparent
+				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100)};";
+				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900)};";
 
-				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: $sMainColorScssVariableName;";
+				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: #{{$sMainColorScssVariableName}};";
 			} else {
 				$sMainColorScssVariableDeclaration = null;
 
@@ -2335,9 +2362,9 @@ EOF
 				$sComplementaryScssVariableDeclaration = "$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;";
 				$sComplementaryCssVariableDeclaration = "$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};";
 
-				$sCssRegularClassComplementaryColorDeclaration = "--ibo-complementary-color: $sComplementaryColorScssVariableName;";
+				$sCssRegularClassComplementaryColorDeclaration = "--ibo-complementary-color:  #{{$sComplementaryColorScssVariableName}};";
 
-				$sCssAlternativeClassMainColorDeclaration = "--ibo-main-color: $sComplementaryColorScssVariableName;";
+				$sCssAlternativeClassMainColorDeclaration = "--ibo-main-color:  #{{$sComplementaryColorScssVariableName}};";
 			} else {
 				$sComplementaryScssVariableDeclaration = null;
 				$sComplementaryCssVariableDeclaration = null;
@@ -2977,8 +3004,8 @@ EOF;
 	 */
 	protected function CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $sNodeName, $sTargetFile)
 	{
-		if (($sIcon = $oBrandingNode->GetChildText($sNodeName)) && (strlen($sIcon) > 0))
-		{
+		$sIcon = trim($oBrandingNode->GetChildText($sNodeName) ?? '');
+		if (strlen($sIcon) > 0) {
 			$sSourceFile = $sTempTargetDir.'/'.$sIcon;
 			$aIconName=explode(".", $sIcon);
 			$sIconExtension=$aIconName[count($aIconName)-1];
@@ -3030,6 +3057,48 @@ EOF;
 		$sDmStylesheetId = 'datamodel-compiled-scss-rules';
 		$this->WriteFile($sThemesAbsDirPath.$sDmStylesheetFilename, $sDmStylesheetContent);
 
+		// Parsing theme from common theme node
+		/** @var \MFElement $oThemesCommonNodes */
+		$oThemesCommonNodes = $oBrandingNode->GetUniqueElement('themes_common', false);
+		$aThemesCommonParameters = array(
+			'variables' => array(),
+			'variable_imports' => array(),
+			'utility_imports' => array(),
+			'stylesheets' => array(),
+		);
+		
+		if($oThemesCommonNodes !== null) {
+			/** @var \DOMNodeList $oThemesCommonVariables */
+			$oThemesCommonVariables = $oThemesCommonNodes->GetNodes('variables/variable');
+			foreach ($oThemesCommonVariables as $oVariable) {
+				$sVariableId = $oVariable->getAttribute('id');
+				$aThemesCommonParameters['variables'][$sVariableId] = $oVariable->GetText();
+			}
+	
+			/** @var \DOMNodeList $oThemesCommonImports */
+			$oThemesCommonImports = $oThemesCommonNodes->GetNodes('imports/import');
+			foreach ($oThemesCommonImports as $oImport) {
+				$sImportId = $oImport->getAttribute('id');
+				$sImportType = $oImport->getAttribute('xsi:type');
+				if ($sImportType === 'variables') {
+					$aThemesCommonParameters['variable_imports'][$sImportId] = $oImport->GetText();
+				} elseif ($sImportType === 'utilities') {
+					$aThemesCommonParameters['utility_imports'][$sImportId] = $oImport->GetText();
+				} else {
+					SetupLog::Warning('CompileThemes: Theme common has an import (#'.$sImportId.') without explicit xsi:type, it will be ignored. Check Datamodel XML Reference to fix it.');
+				}
+			}
+	
+			// Stylesheets
+			// - Manually added in the XML
+			/** @var \DOMNodeList $oThemesCommonStylesheets */
+			$oThemesCommonStylesheets = $oThemesCommonNodes->GetNodes('stylesheets/stylesheet');
+			foreach ($oThemesCommonStylesheets as $oStylesheet) {
+				$sStylesheetId = $oStylesheet->getAttribute('id');
+				$aThemesCommonParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
+			}
+		}
+
 		// Parsing themes from DM
 		$aThemes = array();
 		/** @var \DOMNodeList $oThemeNodes */
@@ -3078,6 +3147,13 @@ EOF;
 			// - Computed from the DM
 			$aThemeParameters['stylesheets'][$sDmStylesheetId] = $sThemesRelDirPath.$sDmStylesheetFilename;
 
+			// - Overload default values with module ones
+			foreach ($aThemeParameters as $sThemeParameterName => $aThemeParameter) {
+				if(array_key_exists($sThemeParameterName, $aThemesCommonParameters)){
+					$aThemeParameters[$sThemeParameterName] = array_merge($aThemeParameter, $aThemesCommonParameters[$sThemeParameterName]);
+				}
+			}
+			
 			$aThemes[$sThemeId] = [
 				'theme_parameters' => $aThemeParameters,
 				'precompiled_stylesheet' => $oTheme->GetChildText('precompiled_stylesheet', '')
@@ -3127,7 +3203,7 @@ EOF;
 
 			if ($bHasCompiled) {
 				if (utils::GetConfig()->Get('theme.enable_precompilation')){
-					if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))
+					/*if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))  //N°4438 - Disable (temporary) copy of precompiled stylesheets after setup
 					{ //help developers to detect & push theme precompilation changes
 						$sInitialPrecompiledFilePath = null;
 						$aRootDirs = $this->oFactory->GetRootDirs();
@@ -3145,7 +3221,7 @@ EOF;
 							SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sInitialPrecompiledFilePath for next setup.");
 							copy($sThemeDir.'/main.css', $sInitialPrecompiledFilePath);
 						}
-					}
+					}*/
 
 					SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sPostCompilationLatestPrecompiledFile for next setup.");
 					copy($sThemeDir.'/main.css', $sPostCompilationLatestPrecompiledFile);
@@ -3540,12 +3616,22 @@ EOF;
 
 	/**
 	 * Write a file only if not exists
-	 * Also add some informations in case of a write failleure
-	 * @param $sFilename
-	 * @param $sContent
+	 * Also add some informations when write failure occurs
+	 *
+	 * @param string $sFilename
+	 * @param string $sContent
+	 * @param int $flags
 	 *
 	 * @return bool|int
 	 * @throws \Exception
+	 *
+	 * @uses \unlink()
+	 * @uses \file_put_contents()
+	 *
+	 * @since 3.0.0 The file is removed before writing (commit c5d265f6)
+	 *      For now this causes model.*.php files to always be located in env-* dir, even if symlinks are enabled
+	 *      See N°4854
+	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Arelease%3A3_0_whats_new#compiler_always_generate_new_model_php compiler behavior change documentation
 	 */
 	protected function WriteFile($sFilename, $sContent, $flags = null)
 	{
@@ -3553,7 +3639,7 @@ EOF;
 		{
 			@unlink($sFilename);
 		}
-		$ret = file_put_contents($sFilename, $sContent, $flags);
+		$ret = file_put_contents($sFilename, $sContent, $flags ?? 0);
 		if ($ret === false)
 		{
 			$iLen = strlen($sContent);
@@ -3573,6 +3659,8 @@ EOF;
 	 * @param $sRelativeDir
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 2.7.0 N°2498
 	 */
 	protected function WriteStaticOnlyHtaccess($sTempTargetDir)
 	{
@@ -3614,6 +3702,8 @@ EOF;
 	 * @param $sModuleVersion
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 2.7.0 N°2498
 	 */
 	protected function WriteStaticOnlyWebConfig($sTempTargetDir)
 	{
@@ -3712,5 +3802,20 @@ EOF;
 		}
 
 		return $sValue;
+	}
+
+	private function GetFieldInParentClasses($oClass, $sAttCode)
+	{
+		$sParentClass = $oClass->GetChildText('parent', 'DBObject');
+		if ($sParentClass != 'DBObject') {
+			$oParent = $this->oFactory->GetClass($sParentClass);
+			$oParentFields = $oParent->GetOptionalElement('fields');
+			$oField = $this->oFactory->GetNodes('field[@id="'.$sAttCode.'"]', $oParentFields)->item(0);
+			if ($oField != null) {
+				return $oField;
+			}
+			return $this->GetFieldInParentClasses($oParent, $sAttCode);
+		}
+		return null;
 	}
 }

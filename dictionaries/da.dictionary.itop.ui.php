@@ -357,7 +357,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 <li>Manage the most important asset of your IT: Documentation.</li>
 </ul>
 </p>~~',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Åbne anmodninger: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mine brugerhenvendelser',
 	'UI:WelcomeMenu:OpenIncidents' => 'Åbne Incidents: %1$d',
@@ -453,6 +460,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 
 	'UI:GroupBy:Count' => 'Antal',
 	'UI:GroupBy:Count+' => 'Antal af elementer',
@@ -1638,30 +1647,30 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:AuditCategories' => 'Audit Kategorier',
 	'Menu:AuditCategories+' => 'Audit Categories~~',
 	'Menu:Notifications:Title' => 'Audit Kategorier',
-	'Menu:RunQueriesMenu' => 'Kør forespørgsler',
-	'Menu:RunQueriesMenu+' => 'Run any query~~',
-	'Menu:QueryMenu' => 'Query parlør',
-	'Menu:QueryMenu+' => 'Query phrasebook~~',
-	'Menu:UniversalSearchMenu' => 'Universal Søgning',
-	'Menu:UniversalSearchMenu+' => 'Search for anything...~~',
-	'Menu:UserManagementMenu' => 'Bruger styring',
-	'Menu:UserManagementMenu+' => 'User management~~',
-	'Menu:ProfilesMenu' => 'Profiler',
-	'Menu:ProfilesMenu+' => 'Profiles~~',
-	'Menu:ProfilesMenu:Title' => 'Profiler',
-	'Menu:UserAccountsMenu' => 'Bruger konti',
-	'Menu:UserAccountsMenu+' => 'User Accounts~~',
+	'Menu:RunQueriesMenu'         => 'Kør forespørgsler',
+	'Menu:RunQueriesMenu+'        => 'Run any query~~',
+	'Menu:QueryMenu'              => 'Query parlør',
+	'Menu:QueryMenu+'             => 'Query phrasebook~~',
+	'Menu:UniversalSearchMenu'    => 'Universal Søgning',
+	'Menu:UniversalSearchMenu+'   => 'Search for anything...~~',
+	'Menu:UserManagementMenu'     => 'Bruger styring',
+	'Menu:UserManagementMenu+'    => 'User management~~',
+	'Menu:ProfilesMenu'           => 'Profiler',
+	'Menu:ProfilesMenu+'          => 'Profiles~~',
+	'Menu:ProfilesMenu:Title'     => 'Profiler',
+	'Menu:UserAccountsMenu'       => 'Bruger konti',
+	'Menu:UserAccountsMenu+'      => 'User Accounts~~',
 	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
-	'Menu:MyShortcuts' => 'Mine Genveje',
-	'Menu:UserManagement' => 'User Management~~',
-	'Menu:Queries' => 'Queries~~',
-	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:MyShortcuts'            => 'Mine Genveje',
+	'Menu:UserManagement'         => 'User Management~~',
+	'Menu:Queries'                => 'Queries~~',
+	'Menu:ConfigurationTools'     => 'Configuration~~',
 ));
 
 // Additional language entries not present in English dict
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
- 'UI:Toggle:StandardDashboard' => 'Standard~~',
- 'UI:Toggle:CustomDashboard' => 'Custom~~',
- 'UI:Dashboard:Edit' => 'Rediger denne side...',
- 'UI:Dashboard:Revert' => 'Tilbage til original version...',
+	'UI:Toggle:StandardDashboard' => 'Standard~~',
+	'UI:Toggle:CustomDashboard'   => 'Custom~~',
+	'UI:Dashboard:Edit'           => 'Rediger denne side...',
+	'UI:Dashboard:Revert'         => 'Tilbage til original version...',
 ));

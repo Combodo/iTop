@@ -19,7 +19,7 @@
 // Navigation menu
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Unternehmenslogo',
-	'UI:Layout:NavigationMenu:Silo:Label' => 'Select organization to filter on~~',
+	'UI:Layout:NavigationMenu:Silo:Label' => 'Organisation zum filtern auswählen',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Ausklappen/Einklappen',
 	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Ausklappen/Einklappen (Gefiltert nach %1$s)',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...',
@@ -28,7 +28,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Kein Ergebnis für diesen Menü-Filter',
 	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!',
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s Profilbild',
-	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open user menu~~',
+	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Benutzermenü öffnen',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtere Menüeinträge',
 
 ));

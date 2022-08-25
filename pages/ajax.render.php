@@ -364,7 +364,6 @@ try
 			$sContains = utils::ReadParam('q', '', false, 'raw_data');
 			$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
 			$sOutputFormat = utils::ReadParam('sOutputFormat', UIExtKeyWidget::ENUM_OUTPUT_FORMAT_CSV, false, 'raw_data');
-            $sAutocompleteOperation = utils::ReadParam('sAutocompleteOperation', null, false, 'raw_data');
 			if ($sContains != '')
 			{
 				if (!empty($sJson))
@@ -378,7 +377,7 @@ try
 					$oObj = null;
 				}
 				$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, '', $bSearchMode);
-				$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains, $sOutputFormat, $sAutocompleteOperation);
+				$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains, $sOutputFormat);
 			}
 			break;
 
@@ -562,7 +561,7 @@ try
 						if (!$oAttDef->IsWritable() || ($oWizardHelper->GetReturnNotEditableFields()))
 						{
 							// Even non-writable fields (like AttributeExternal) can be refreshed
-							$sHTMLValue = $oObj->GetAsHTML($sAttCode);
+							$sHTMLValue =  "<div id=\"field_{$sId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">".$oObj->GetAsHTML($sAttCode)."</div></div>";
 						}
 						else
 						{
@@ -687,7 +686,7 @@ try
 				if ($sFilter != '') {
 					$oFilter = DBObjectSearch::FromOQL($sFilter);
 					$oDisplayBlock = new DisplayBlock($oFilter, 'chart_ajax', false);
-					$oBlock = $oDisplayBlock->GetRenderContent($oPage, $aParams);
+					$oBlock = $oDisplayBlock->GetRenderContent($oPage, $aParams, $aParams['currentId']);
 					$sChartType = isset($aParams['chart_type']) ? $aParams['chart_type'] : 'pie';
 					switch ($sChartType) {
 						case 'bars':
@@ -888,6 +887,9 @@ try
 			break;
 
 		case 'import_dashboard':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
+
 			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId, true))
 			{
@@ -916,7 +918,7 @@ try
 			{
 				$aResult['error'] = 'Dashboard id="'.$sDashboardId.'" not found.';
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		case 'toggle_dashboard':
@@ -929,7 +931,7 @@ try
 
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			$aResult = array('error' => '');
 			if (!is_null($oDashboard))
@@ -940,8 +942,6 @@ try
 				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
-			//$oPage->add_ready_script("$('.ibo-dashboard table.listResults').tableHover(); $('.ibo-dashboard table.listResults')
-			//.tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'reload_dashboard':
@@ -949,7 +949,7 @@ try
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			$aResult = array('error' => '');
 			if (!is_null($oDashboard))
@@ -960,14 +960,13 @@ try
 				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
-			//$oPage->add_ready_script("$('.ibo-dashboard table.listResults').tableHover(); $('.ibo-dashboard table.listResults')
-			//.tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'save_dashboard':
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'context_param');
+
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			appUserPreferences::SetPref('display_original_dashboard_'.$sDashboardId, false);
 			$sJSExtraParams = json_encode($aExtraParams);
 			$aParams = array();
@@ -979,14 +978,21 @@ try
 
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
-			$oDashboard->Save();
+			$bIsNew = $oDashboard->Save();
 
 			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'string'));
 			$sDashboardDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
-
-			// trigger a reload of the current page since the dashboard just changed
-			$oPage->add_script(
-				<<<JS
+			$sOperation = 'reload_dashboard';
+			if ($bIsNew) {
+				// Trigger a reload of the current page since the dashboard just changed
+				$oPage->add_script(
+					<<<JS
+			window.location.reload();
+JS
+				);
+			} else {
+				$oPage->add_script(
+					<<<JS
 			$('.ibo-dashboard#{$sDashboardDivId}').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardId}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURL}'},
@@ -996,12 +1002,13 @@ try
 				}
 			 );
 JS
-			);
+				);
+			}
 			break;
 
 		case 'revert_dashboard':
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			appUserPreferences::UnsetPref('display_original_dashboard_'.$sDashboardId);
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->Revert();
@@ -1031,7 +1038,7 @@ EOF
 			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
 			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
 			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
 			$oDashboard->SetReloadURL($sReloadURL);
@@ -1043,7 +1050,7 @@ EOF
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($sId, '', 'element_identifier');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'string');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			$oDashboard = RuntimeDashboard::GetDashboardToEdit($sDashboardFile, $sId);
 			if (!is_null($oDashboard)) {
 				if (!empty($sReloadURL)) {
@@ -1061,6 +1068,7 @@ EOF
 			$sDashletIdOrig = utils::ReadParam("dashletid");
 			$sFinalDashletId = Dashboard::GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
 			$oPage = new AjaxPage('');
+			$oPage->SetOutputDataOnly(true);
 			$oPage->add($sFinalDashletId);
 			break;
 
@@ -1109,7 +1117,16 @@ EOF
 				$aUpdatedDecoded = array();
 				foreach ($aUpdatedProperties as $sProp) {
 					$sDecodedProp = str_replace('attr_', '', $sProp); // Remove the attr_ prefix
-					$aCurrentValues[$sDecodedProp] = (isset($aPreviousValues[$sProp]) ? $aPreviousValues[$sProp] : ''); // Set the previous value
+					// Set the previous value
+					if  ( isset($aPreviousValues[$sProp]) && $aPreviousValues[$sProp] != '' ){
+						$aCurrentValues[$sDecodedProp] = $aPreviousValues[$sProp];
+					} else {
+						if(gettype($aCurrentValues[$sDecodedProp]) == "array") {
+							$aCurrentValues[$sDecodedProp] = [];
+						} else {
+							$aCurrentValues[$sDecodedProp] = '';
+						}
+					}
 					$aUpdatedDecoded[] = $sDecodedProp;
 				}
 
@@ -1421,7 +1438,7 @@ EOF;
 				$sEnlargeButton = '';
 				if ($bEnableEnlarge)
 				{
-					$sEnlargeButton = "&nbsp;<button onclick=\"".htmlentities($sEnlargeTheSearch, ENT_QUOTES, 'UTF-8')."\">".Dict::S('UI:Search:Enlarge')."</button>";
+					$sEnlargeButton = "&nbsp;<button onclick=\"".utils::EscapeHtml($sEnlargeTheSearch)."\">".Dict::S('UI:Search:Enlarge')."</button>";
 				}
 				if ($oSet->Count() > 0)
 				{
@@ -1850,7 +1867,8 @@ EOF
 
 				// Save the generated PDF as an attachment
 				$sPDF = $oPage->get_pdf();
-				$oPage = new AjaxPage('');
+				$oPage = new JsonPage();
+				$oPage->SetOutputDataOnly(true);
 				$oAttachment = MetaModel::NewObject('Attachment');
 				$oAttachment->Set('item_class', $sObjClass);
 				$oAttachment->Set('item_id', $iObjKey);
@@ -1861,7 +1879,7 @@ EOF
 					'status' => 'ok',
 					'att_id' => $iAttachmentId,
 				);
-				$oPage->add(json_encode($aRet));
+				$oPage->SetData($aRet);
 			}
 			break;
 
@@ -2039,10 +2057,14 @@ EOF
 			break;
 
 		case 'export_build':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
 			$oAjaxRenderController->ExportBuild($oPage, false);
 			break;
 
 		case 'export_build_portal':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
 			$oAjaxRenderController->ExportBuild($oPage, true);
 			break;
 
@@ -2162,6 +2184,9 @@ EOF
 			break;
 
 		case 'cke_img_upload':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
+
 			// Image uploaded via CKEditor
 			$aResult = array(
 				'uploaded' => 0,
@@ -2203,17 +2228,16 @@ EOF
 						$iAttId = $oAttachment->DBInsert();
 
 						$aResult['uploaded'] = 1;
-						$aResult['msg'] = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
+						$aResult['msg'] = utils::EscapeHtml($oDoc->GetFileName());
 						$aResult['fileName'] = $oDoc->GetFileName();
 						$aResult['url'] = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL.$iAttId.'&s='.$oAttachment->Get('secret');
-						if (is_array($aDimensions))
-						{
+						if (is_array($aDimensions)) {
 							$aResult['width'] = $aDimensions['width'];
 							$aResult['height'] = $aDimensions['height'];
 						}
 
-                        IssueLog::Trace('InlineImage created', LogChannels::INLINE_IMAGE, array(
-	                        '$operation' => $operation,
+						IssueLog::Trace('InlineImage created', LogChannels::INLINE_IMAGE, array(
+							'$operation'   => $operation,
 	                        '$aResult' => $aResult,
 	                        'secret' => $oAttachment->Get('secret'),
 	                        'temp_id' => $sTempId,
@@ -2232,7 +2256,7 @@ EOF
 					$aResult['error'] = $e->GetMessage();
 				}
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		/** @noinspection PhpMissingBreakStatementInspection cke_upload_and_browse and cke_browse are chained */
@@ -2406,9 +2430,8 @@ EOF
 				while ($oAttachment = $oSet->Fetch())
 				{
 					$oDoc = $oAttachment->Get('contents');
-					if ($oDoc->GetMainMimeType() == 'image')
-					{
-						$sDocName = addslashes(htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8'));
+					if ($oDoc->GetMainMimeType() == 'image') {
+						$sDocName = addslashes(utils::EscapeHtml($oDoc->GetFileName()));
 						$iAttId = $oAttachment->GetKey();
 						$sSecret = $oAttachment->Get('secret');
 						$oPage->add("<div style=\"float:left;margin:1em;text-align:center;\"><img class=\"img-picker\" style=\"max-width:300px;cursor:zoom-in\" href=\"{$sImgUrl}{$iAttId}&s={$sSecret}\" alt=\"$sDocName\" title=\"$sDocName\" src=\"{$sImgUrl}{$iAttId}&s={$sSecret}\"><br/><button onclick=\"returnFileUrl($iAttId, '$sDocName', '$sSecret')\">$sInsertBtnLabel</button></div>");
@@ -2494,7 +2517,12 @@ EOF
 				);
 
 				$oSet = new DBObjectSet($oSearch, [], $aSearchParams);
-				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
+				// Optimize fields to load
+				$aObjectAttCodesToLoad = [];
+				if (MetaModel::IsValidAttCode($sSearchMainClassName, $sObjectImageAttCode)) {
+					$aObjectAttCodesToLoad[] = $sObjectImageAttCode;
+				}
+				$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => $aObjectAttCodesToLoad]);
 				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
 				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
@@ -2519,7 +2547,7 @@ EOF
 						} else {
 							// If no image found, fallback on initials
 							$aMatch['picture_style'] = '';
-							$aMatch['initials'] = utils::ToAcronym($oObject->Get('friendlyname'));
+							$aMatch['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oObject->Get('friendlyname')));
 						}
 					}
 
@@ -2631,7 +2659,8 @@ EOF
 		// Navigation menu
 		//--------------------------------
 		case 'get_menus_count':
-
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
 			$oAjaxRenderController->GetMenusCount($oPage);
 			break;
 
@@ -2640,9 +2669,8 @@ EOF
 	}
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
-} catch (Exception $e)
-{
+} catch (Exception $e) {
 	// note: transform to cope with XSS attacks
-	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
+	echo utils::EscapeHtml($e->GetMessage());
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }

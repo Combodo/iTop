@@ -19,7 +19,7 @@ use DBSearch;
 class DBSearchIntersectTest extends ItopTestCase
 {
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/startup.inc.php');
@@ -337,7 +337,6 @@ class DBSearchIntersectTest extends ItopTestCase
 
 	/**
 	 * @dataProvider IntersectOptimizationProvider
-	 * @doesNotPerformAssertions
 	 *
 	 * @param string $sOQL
 	 * @param string $sResult

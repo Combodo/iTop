@@ -23,12 +23,14 @@
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:DeletedObjectLabel' => '%1s (excluído)',
-	'Core:DeletedObjectTip' => 'O objeto foi excluído em %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'O objeto foi excluído em %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Objeto não encontrado (classe: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'O objeto não pode ser encontrado. Ele pode ter sido eliminado há algum tempo e o log foi removido desde então',
 
 	'Core:UniquenessDefaultError' => 'Regra de exclusividade \'%1$s\' com erro',
+	'Core:CheckConsistencyError'  => 'Regras de consistência não seguidas: %1$s',
+	'Core:CheckValueError'        => 'Valor inesperado para o atributo \'%1$s\' (%2$s) : %3$s~~',
 
 	'Core:AttributeLinkedSet' => 'Array de objetos',
 	'Core:AttributeLinkedSet+' => 'Quaisquer tipos de objetos da mesma classe ou subclasses',
@@ -38,7 +40,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeDashboard' => 'Painel do '.ITOP_APPLICATION_SHORT,
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Número de telefone',
+	'Core:AttributePhoneNumber'  => 'Número de telefone',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Data de obsolescência',
@@ -203,7 +205,7 @@ Operadores:<br/>
 	'Core:FriendlyName-Label' => 'Nome amigável',
 	'Core:FriendlyName-Description' => '',
 
-	'Core:AttributeTag' => 'Tags',
+	'Core:AttributeTag' => 'Etiquetas',
 	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST',
@@ -247,7 +249,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChangeOp' => 'Operações de alteração',
-	'Class:CMDBChangeOp+' => 'Controle de operações de alteração',
+	'Class:CMDBChangeOp+' => 'Operações de controle de alteração',
 	'Class:CMDBChangeOp/Attribute:change' => 'Alteração',
 	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'Data',
@@ -999,7 +1001,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Rótulo exibido',
 	'Class:TagSetFieldData/Attribute:description' => 'Descrição',
 	'Class:TagSetFieldData/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Classe de tag',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Classe da etiqueta',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe de objeto',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Código de atributo',
 
@@ -1125,7 +1127,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ResourceSystemMenu' => 'Recurso Menu do Sistema',
+	'Class:ResourceSystemMenu' => 'Menu de Recursos do Sistema',
 	'Class:ResourceSystemMenu+' => '',
 ));
 

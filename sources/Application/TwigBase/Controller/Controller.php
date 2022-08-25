@@ -74,6 +74,10 @@ abstract class Controller
 	private $m_aBlockParams;
 	/** @var string */
 	private $m_sAccessTokenConfigParamId = null;
+	/** @var boolean false to disable breadcrumb */
+	private $m_bIsBreadCrumbEnabled = true;
+	/** @var array contains same parameters as {@see iTopWebPage::SetBreadCrumbEntry()} */
+	private $m_aBreadCrumbEntry = [];
 
 	/**
 	 * Controller constructor.
@@ -81,7 +85,7 @@ abstract class Controller
 	 * @param string $sViewPath Path of the twig files
 	 * @param string $sModuleName name of the module (or 'core' if not a module)
 	 */
-	public function __construct($sViewPath, $sModuleName = 'core')
+	public function __construct($sViewPath, $sModuleName = 'core', $aAdditionalPaths = [])
 	{
 		$this->m_aLinkedScripts = [];
 		$this->m_aLinkedStylesheets = [];
@@ -89,7 +93,7 @@ abstract class Controller
 		$this->m_aAjaxTabs = [];
 		$this->m_aDefaultParams = [];
 		$this->m_aBlockParams = [];
-		$this->SetViewPath($sViewPath);
+		$this->SetViewPath($sViewPath, $aAdditionalPaths);
 		$this->SetModuleName($sModuleName);
 		if ($sModuleName != 'core') {
 			try {
@@ -124,9 +128,9 @@ abstract class Controller
 	 *
 	 * @param string $sViewPath
 	 */
-	public function SetViewPath($sViewPath)
+	public function SetViewPath($sViewPath, $aAdditionalPaths = [])
 	{
-		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath);
+		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath, $aAdditionalPaths);
 		$this->m_oTwig = $oTwig;
 	}
 
@@ -178,7 +182,7 @@ abstract class Controller
 			http_response_code(500);
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
-			$oP->add(get_class($e).' : '.htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8'));
+			$oP->add(get_class($e).' : '.utils::EscapeHtml($e->GetMessage()));
 			$oP->output();
 
 			IssueLog::Error($e->getMessage());
@@ -455,6 +459,8 @@ abstract class Controller
 	 * @param string $sReportFileName Root name of the report file
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 3.0.1 3.1.0 Add $sReportFileName parameter
 	 */
 	public function DownloadZippedPage($aParams = array(), $sTemplateName = null, $sReportFileName = 'itop-system-information-report')
 	{
@@ -597,6 +603,22 @@ abstract class Controller
 	}
 
 	/**
+	 * @since 2.7.7 3.0.1 3.1.0 N°4760 method creation
+	 * @see Controller::SetBreadCrumbEntry() to set breadcrumb content (by default will be title)
+	 */
+	public function DisableBreadCrumb() {
+		$this->m_bIsBreadCrumbEnabled = false;
+	}
+
+	/**
+	 * @since 2.7.7 3.0.1 3.1.0 N°4760 method creation
+	 * @see iTopWebPage::SetBreadCrumbEntry()
+	 */
+	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '') {
+		$this->m_aBreadCrumbEntry = [$sId, $sLabel, $sDescription, $sUrl, $sIcon];
+	}
+
+	/**
 	 * @param $aParams
 	 * @param $sName
 	 * @param $sTemplateFileExtension
@@ -636,6 +658,16 @@ abstract class Controller
 			case self::ENUM_PAGE_TYPE_HTML:
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle(), false);
 				$this->m_oPage->add_xframe_options();
+
+				if ($this->m_bIsBreadCrumbEnabled) {
+					if (count($this->m_aBreadCrumbEntry) > 0) {
+						list($sId, $sTitle, $sDescription, $sUrl, $sIcon) = $this->m_aBreadCrumbEntry;
+						$this->m_oPage->SetBreadCrumbEntry($sId, $sTitle, $sDescription, $sUrl, $sIcon);
+					}
+				} else {
+					$this->m_oPage->DisableBreadCrumb();
+				}
+
 				break;
 
 			case self::ENUM_PAGE_TYPE_BASIC_HTML:

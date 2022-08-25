@@ -132,6 +132,7 @@ $(function()
 					this._InitializeLockWatcher();
 				}
 
+				this._InitializeCurrentTab();
 				this._ApplyEntriesFilters();
 				this._UpdateMessagesCounters();
 				this._UpdateFiltersCheckboxesFromOptions();
@@ -279,6 +280,8 @@ $(function()
 			_onTabTitleClick: function (oEvent, oTabTitleElem) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
+				let oState = {};
+				const sId = this.element.attr('id');
 
 				const oTabTogglerElem = oTabTitleElem.closest(this.js_selectors.tab_toggler);
 				const sTabType = oTabTogglerElem.attr('data-tab-type');
@@ -293,12 +296,17 @@ $(function()
 				{
 					const sCaselogAttCode = oTabTogglerElem.attr('data-caselog-attribute-code');
 					this._ShowCaseLogTab(sCaselogAttCode);
+					oState[sId] = "caselog-"+sCaselogAttCode;
 				}
 				else
 				{
 					this.element.find(this.js_selectors.tab_toolbar + '[data-tab-type="activity"]').addClass(this.css_classes.is_active);
 					this._ShowActivityTab();
+					oState[sId] = "activity";
 				}
+
+				// Add current activity tab to url hash
+				$.bbq.pushState(oState);
 			},
 			/**
 			 * @param oInputElem {Object} jQuery object representing the filter's input
@@ -589,6 +597,22 @@ $(function()
 				}
 
 				return oTabData;
+			},
+			/**
+			 * Set a tab active if it's specified in the url
+			 * @returns {void}
+			 * @private
+			 */
+			_InitializeCurrentTab : function(){
+				const sTabId = $.bbq.getState(this.element.attr('id'), true);
+				if(sTabId !== undefined){
+					if(sTabId.startsWith("caselog-")){
+						this._GetTabTogglerFromCaseLogAttCode(sTabId.replace("caselog-", "")).find(this.js_selectors.tab_title).trigger('click')
+					}
+					else if(sTabId === "activity"){
+						this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="activity"]').find(this.js_selectors.tab_title).trigger('click')
+					}
+				}
 			},
 			/**
 			 * @returns {Object} Active tab toolbar jQuery element
@@ -922,9 +946,10 @@ $(function()
 							return false;
 						}
 
-						// Update the feed
+						// Update the feed and tab toggler message counter
 						for (let sCaseLogAttCode in oData.data.entries) {
 							me._AddEntry(oData.data.entries[sCaseLogAttCode], 'start');
+							me._IncreaseTabTogglerMessagesCounter(sCaseLogAttCode);
 						}
 						me._ApplyEntriesFilters();
 
@@ -946,7 +971,30 @@ $(function()
 						me._UnfreezeCaseLogsEntryForms();
 					});
 			},
-
+			/**
+			 * Increase a tab toggler number of messages indicator given a caselog attribute code
+			 *
+			 * @param sCaseLogAttCode {string} A caselog attribute code
+			 * @return {void}
+			 * @private
+			 */
+			_IncreaseTabTogglerMessagesCounter: function(sCaseLogAttCode){
+				let oTabTogglerCounter = this._GetTabTogglerFromCaseLogAttCode(sCaseLogAttCode).find('[data-role="ibo-activity-panel--tab-title-messages-count"]');
+				let iNewCounterValue = parseInt(oTabTogglerCounter.attr('data-messages-count')) + 1;
+				
+				oTabTogglerCounter.attr('data-messages-count', iNewCounterValue).text(iNewCounterValue);
+			},
+			/**
+			 * Return tab toggler given a caselog attribute code
+			 *
+			 * @param sCaseLogAttCode {string} A caselog attribute code
+			 * @return {Object}
+			 * @private
+			 */
+			_GetTabTogglerFromCaseLogAttCode: function(sCaseLogAttCode)
+			{
+				return this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]')
+			},
 			// - Helpers on object lock
 			/**
 			 * Initialize the lock watcher on a regular basis
@@ -1214,7 +1262,6 @@ $(function()
 				});
 
 				this._UpdateEntryGroupsVisibility();
-				this._UpdateLoadMoreEntriesButtonVisibility();
 				this._UpdateMessagesCounters();
 			},
 			_ShowAllEntries: function()
@@ -1288,30 +1335,6 @@ $(function()
 						$(this).removeClass(me.css_classes.is_hidden);
 					}
 				});
-			},
-			/**
-			 * Update the "load more entries" button visibility regarding the current filters
-			 *
-			 * @private
-			 * @return {void}
-			 */
-			_UpdateLoadMoreEntriesButtonVisibility: function () {
-				const oMoreButtonElem = this.element.find(this.js_selectors.load_more_entries);
-				const oAllButtonElem = this.element.find(this.js_selectors.load_all_entries);
-
-				// Check if button exists (if all entries have been loaded, we might have remove it
-				if (oMoreButtonElem.length === 0) {
-					return;
-				}
-
-				// Show button only if the states / edits filters are selected as log entries are always fully loaded
-				if (this._GetActiveTabToolbarElement().find(this.js_selectors.activity_filter + '[data-target-entry-types!="'+this.enums.entry_types.caselog+'"]:checked').length > 0) {
-					oMoreButtonElem.removeClass(this.css_classes.is_hidden);
-					oAllButtonElem.removeClass(this.css_classes.is_hidden);
-				} else {
-					oMoreButtonElem.addClass(this.css_classes.is_hidden);
-					oAllButtonElem.addClass(this.css_classes.is_hidden);
-				}
 			},
 			/**
 			 * Load the next entries and append them to the current ones

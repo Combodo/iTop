@@ -21,22 +21,24 @@
  */
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:DeletedObjectLabel' => '%1s (effacé)',
-	'Core:DeletedObjectTip' => 'L\'objet a été effacé le %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'L\'objet a été effacé le %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Classe: %1$s, Identifiant: %2$d',
-	'Core:UnknownObjectTip' => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
+	'Core:UnknownObjectTip'   => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
 
 	'Core:UniquenessDefaultError' => 'La règle d\'unicité \'%1$s\' renvoie une erreur',
+	'Core:CheckConsistencyError'  => 'La règle d\'intégrité %1$s n\'est pas respectée',
+	'Core:CheckValueError'        => 'Valeur de l\'attribut incorrecte \'%1$s\' (%2$s) : %3$s',
 
-	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
+	'Core:AttributeLinkedSet'  => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Des doublons sont présents dans le champ \'%1$s\' : %2$s',
 
-	'Core:AttributeDashboard' => 'Tableau de bord',
+	'Core:AttributeDashboard'  => 'Tableau de bord',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Numéro de téléphone',
+	'Core:AttributePhoneNumber'  => 'Numéro de téléphone',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Date d\'obsolescence',
@@ -65,7 +67,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeDecimal+' => 'Valeur numérique décimale',
 
 	'Core:AttributeBoolean' => 'Booléen',
-	'Core:AttributeBoolean+' => 'Booléen',
+	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Oui',
 	'Core:AttributeBoolean/Value:no' => 'Non',
@@ -118,7 +120,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeEmailAddress+' => 'Adresse électronique (xxxx@yyy.zzz)',
 
 	'Core:AttributeIPAddress' => 'Adresse IP',
-	'Core:AttributeIPAddress+' => 'Adresse IP',
+	'Core:AttributeIPAddress+' => '',
 
 	'Core:AttributeOQL' => 'Expression OQL',
 	'Core:AttributeOQL+' => 'Expression formattée en "Object Query Language"',
@@ -172,7 +174,7 @@ Opérateurs :<br/>
 	'Core:AttributeDeadline+' => 'Date/heure exprimée relativement à l\'heure courante',
 
 	'Core:AttributeExternalKey' => 'Clé externe',
-	'Core:AttributeExternalKey+' => 'Clé externe',
+	'Core:AttributeExternalKey+' => '',
 
 	'Core:AttributeHierarchicalKey' => 'Clé externe (hiérarchie)',
 	'Core:AttributeHierarchicalKey+' => 'Clé externe vers le parent',
@@ -202,7 +204,7 @@ Opérateurs :<br/>
 	'Core:FriendlyName-Description' => 'Nom complet',
 
 	'Core:AttributeTag' => 'Taxon',
-	'Core:AttributeTag+' => 'Taxon',
+	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
@@ -994,9 +996,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TagSetFieldData/Attribute:code' => 'Code',
 	'Class:TagSetFieldData/Attribute:code+' => 'Code interne. Doit contenir au moins 3 caractères alphanumériques',
 	'Class:TagSetFieldData/Attribute:label' => 'Label',
-	'Class:TagSetFieldData/Attribute:label+' => 'Label',
+	'Class:TagSetFieldData/Attribute:label+' => '',
 	'Class:TagSetFieldData/Attribute:description' => 'Description',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Type d\'étiquette',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Type d\'objet',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Code du champ',

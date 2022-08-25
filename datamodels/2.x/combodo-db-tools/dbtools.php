@@ -359,9 +359,7 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 					$sHistoryEntry = Dict::Format('DBTools:LostAttachments:History', $oOrmDocument->GetFileName());
 					CMDBObject::SetTrackInfo(UserRights::GetUserFriendlyName());
 					$oChangeOp = MetaModel::NewObject('CMDBChangeOpPlugin');
-					/** @var \Change $oChange */
-					$oChange = CMDBObject::GetCurrentChange();
-					$oChangeOp->Set('change', $oChange->GetKey());
+					// CMDBChangeOp.change will be automatically filled
 					$oChangeOp->Set('objclass', $sTargetClass);
 					$oChangeOp->Set('objkey', $sTargetId);
 					$oChangeOp->Set('description', $sHistoryEntry);

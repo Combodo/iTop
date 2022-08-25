@@ -472,6 +472,8 @@ Esperamos que você goste desta versão tanto quanto gostamos de imaginá-la e c
 	'UI:Error:MaintenanceTitle' => 'Manutenção',
 	'UI:Error:InvalidToken' => 'Erro: A operação solicitada já foi executada (token CSRF não encontrado)',
 
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+
 	'UI:GroupBy:Count' => 'Número',
 	'UI:GroupBy:Count+' => 'Número de elementos',
 	'UI:CountOfObjects' => '%1$d objeto(s) correspondem aos critérios',
@@ -1678,8 +1680,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 // Additional language entries not present in English dict
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
- 'UI:Toggle:StandardDashboard' => 'Padrão',
- 'UI:Toggle:CustomDashboard' => 'Customizado',
- 'UI:Dashboard:Edit' => 'Editar esta página...',
- 'UI:Dashboard:Revert' => 'Reverter para versão original...',
+	'UI:Toggle:StandardDashboard' => 'Padrão',
+	'UI:Toggle:CustomDashboard'   => 'Customizado',
+	'UI:Dashboard:Edit'           => 'Editar esta página...',
+	'UI:Dashboard:Revert'         => 'Reverter para versão original...',
 ));

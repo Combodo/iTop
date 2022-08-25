@@ -157,9 +157,7 @@ try
 {
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
-	
 	require_once(APPROOT.'/application/startup.inc.php');
 	$operation = utils::ReadParam('operation', '');
 	$oAppContext = new ApplicationContext();
@@ -411,7 +409,7 @@ try
 				'percentage_ok' => array('label' => Dict::S('UI:Audit:PercentageOk'), 'description' => Dict::S('UI:Audit:PercentageOk')),
 			);
 			
-			$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
+			$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData, null, [], "", array('pageLength' => -1));
 			$oAuditCategoryPanelBlock->AddSubBlock($oAttachmentTableBlock);
 			$aAuditCategoryPanels[] = $oAuditCategoryPanelBlock;
 		}

@@ -33,7 +33,7 @@ SetupWebPage::AddModule(
 		
 		// Documentation
 		//
-		'doc.manual_setup'     => 'https://www.itophub.io/wiki/page?id='.utils::GetCoreVersionWikiSyntax().':admin:cron',
+		'doc.manual_setup'     => 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().':admin:cron',
 		'doc.more_information' => '',
 
 		// Default settings
@@ -76,7 +76,7 @@ class TicketsInstaller extends ModuleInstallerAPI
 				&& version_compare($sPreviousVersion, '3.0.0', '<'))) {
 			$oDataLoader = new XMLDataLoader();
 
-			CMDBObject::SetTrackInfo("Initialization");
+			CMDBObject::SetTrackInfo("Initialization TicketsInstaller");
 			$oMyChange = CMDBObject::GetCurrentChange();
 
 			$sLang = null;

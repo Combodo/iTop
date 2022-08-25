@@ -1012,7 +1012,9 @@
             <attribute id="person_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="team_id"/>
@@ -1109,7 +1111,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1633,7 +1637,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1680,7 +1686,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1873,6 +1881,14 @@
         <precompiled_stylesheet>itop-structure/precompiled-themes/test-red/main.css</precompiled_stylesheet>
       </theme>
     </themes>
+    <themes_common>
+        <variables>
+        </variables>
+        <imports>
+        </imports>
+        <stylesheets>
+        </stylesheets>
+    </themes_common>
   </branding>
   <user_rights>
     <groups>

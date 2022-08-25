@@ -220,7 +220,7 @@ class PopoverMenuFactory
 			new JSPopupMenuItem(
 				'UI:AboutBox',
 				Dict::S('UI:AboutBox'),
-				'return ShowAboutBox();'
+				'return ShowAboutBox("'.Dict::S('UI:AboutBox').'");'
 			)
 		);
 

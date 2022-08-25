@@ -15,43 +15,38 @@ namespace Twig;
 use Twig\Error\SyntaxError;
 
 /**
- * Lexes a template string.
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Lexer implements \Twig_LexerInterface
+class Lexer
 {
-    protected $tokens;
-    protected $code;
-    protected $cursor;
-    protected $lineno;
-    protected $end;
-    protected $state;
-    protected $states;
-    protected $brackets;
-    protected $env;
-    // to be renamed to $name in 2.0 (where it is private)
-    protected $filename;
-    protected $options;
-    protected $regexes;
-    protected $position;
-    protected $positions;
-    protected $currentVarBlockLine;
-
+    private $tokens;
+    private $code;
+    private $cursor;
+    private $lineno;
+    private $end;
+    private $state;
+    private $states;
+    private $brackets;
+    private $env;
     private $source;
+    private $options;
+    private $regexes;
+    private $position;
+    private $positions;
+    private $currentVarBlockLine;
 
-    const STATE_DATA = 0;
-    const STATE_BLOCK = 1;
-    const STATE_VAR = 2;
-    const STATE_STRING = 3;
-    const STATE_INTERPOLATION = 4;
+    public const STATE_DATA = 0;
+    public const STATE_BLOCK = 1;
+    public const STATE_VAR = 2;
+    public const STATE_STRING = 3;
+    public const STATE_INTERPOLATION = 4;
 
-    const REGEX_NAME = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
-    const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?([Ee][\+\-][0-9]+)?/A';
-    const REGEX_STRING = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
-    const REGEX_DQ_STRING_DELIM = '/"/A';
-    const REGEX_DQ_STRING_PART = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
-    const PUNCTUATION = '()[]{}?:.,|';
+    public const REGEX_NAME = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
+    public const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?([Ee][\+\-][0-9]+)?/A';
+    public const REGEX_STRING = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
+    public const REGEX_DQ_STRING_DELIM = '/"/A';
+    public const REGEX_DQ_STRING_PART = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
+    public const PUNCTUATION = '()[]{}?:.,|';
 
     public function __construct(Environment $env, array $options = [])
     {
@@ -100,9 +95,7 @@ class Lexer implements \Twig_LexerInterface
                     $this->options['whitespace_trim']. // -
                     '|'.
                     $this->options['whitespace_line_trim']. // ~
-                ')?\s*'.
-                '(?:end%s)'. // endraw or endverbatim
-                '\s*'.
+                ')?\s*endverbatim\s*'.
                 '(?:'.
                     preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1], '#').'\s*'. // -%}
                     '|'.
@@ -117,7 +110,7 @@ class Lexer implements \Twig_LexerInterface
             // #}
             'lex_comment' => '{
                 (?:'.
-                    preg_quote($this->options['whitespace_trim']).preg_quote($this->options['tag_comment'][1], '#').'\s*\n?'. // -#}\s*\n?
+                    preg_quote($this->options['whitespace_trim'].$this->options['tag_comment'][1], '#').'\s*\n?'. // -#}\s*\n?
                     '|'.
                     preg_quote($this->options['whitespace_line_trim'].$this->options['tag_comment'][1], '#').'['.$this->options['whitespace_line_chars'].']*'. // ~#}[ \t\0\x0B]*
                     '|'.
@@ -127,9 +120,7 @@ class Lexer implements \Twig_LexerInterface
 
             // verbatim %}
             'lex_block_raw' => '{
-                \s*
-                (raw|verbatim)
-                \s*
+                \s*verbatim\s*
                 (?:'.
                     preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1], '#').'\s*'. // -%}\s*
                     '|'.
@@ -160,28 +151,10 @@ class Lexer implements \Twig_LexerInterface
         ];
     }
 
-    public function tokenize($code, $name = null)
+    public function tokenize(Source $source): TokenStream
     {
-        if (!$code instanceof Source) {
-            @trigger_error(sprintf('Passing a string as the $code argument of %s() is deprecated since version 1.27 and will be removed in 2.0. Pass a \Twig\Source instance instead.', __METHOD__), E_USER_DEPRECATED);
-            $this->source = new Source($code, $name);
-        } else {
-            $this->source = $code;
-        }
-
-        if (((int) ini_get('mbstring.func_overload')) & 2) {
-            @trigger_error('Support for having "mbstring.func_overload" different from 0 is deprecated version 1.29 and will be removed in 2.0.', E_USER_DEPRECATED);
-        }
-
-        if (\function_exists('mb_internal_encoding') && ((int) ini_get('mbstring.func_overload')) & 2) {
-            $mbEncoding = mb_internal_encoding();
-            mb_internal_encoding('ASCII');
-        } else {
-            $mbEncoding = null;
-        }
-
-        $this->code = str_replace(["\r\n", "\r"], "\n", $this->source->getCode());
-        $this->filename = $this->source->getName();
+        $this->source = $source;
+        $this->code = str_replace(["\r\n", "\r"], "\n", $source->getCode());
         $this->cursor = 0;
         $this->lineno = 1;
         $this->end = \strlen($this->code);
@@ -192,7 +165,7 @@ class Lexer implements \Twig_LexerInterface
         $this->position = -1;
 
         // find all token starts in one go
-        preg_match_all($this->regexes['lex_tokens_start'], $this->code, $matches, PREG_OFFSET_CAPTURE);
+        preg_match_all($this->regexes['lex_tokens_start'], $this->code, $matches, \PREG_OFFSET_CAPTURE);
         $this->positions = $matches;
 
         while ($this->cursor < $this->end) {
@@ -221,25 +194,21 @@ class Lexer implements \Twig_LexerInterface
             }
         }
 
-        $this->pushToken(Token::EOF_TYPE);
+        $this->pushToken(/* Token::EOF_TYPE */ -1);
 
         if (!empty($this->brackets)) {
             list($expect, $lineno) = array_pop($this->brackets);
             throw new SyntaxError(sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
         }
 
-        if ($mbEncoding) {
-            mb_internal_encoding($mbEncoding);
-        }
-
         return new TokenStream($this->tokens, $this->source);
     }
 
-    protected function lexData()
+    private function lexData(): void
     {
         // if no matches are left we return the rest of the template as simple text token
         if ($this->position == \count($this->positions[0]) - 1) {
-            $this->pushToken(Token::TEXT_TYPE, substr($this->code, $this->cursor));
+            $this->pushToken(/* Token::TEXT_TYPE */ 0, substr($this->code, $this->cursor));
             $this->cursor = $this->end;
 
             return;
@@ -268,7 +237,7 @@ class Lexer implements \Twig_LexerInterface
                 $text = rtrim($text, " \t\0\x0B");
             }
         }
-        $this->pushToken(Token::TEXT_TYPE, $text);
+        $this->pushToken(/* Token::TEXT_TYPE */ 0, $text);
         $this->moveCursor($textContent.$position[0]);
 
         switch ($this->positions[1][$this->position][0]) {
@@ -280,30 +249,30 @@ class Lexer implements \Twig_LexerInterface
                 // raw data?
                 if (preg_match($this->regexes['lex_block_raw'], $this->code, $match, 0, $this->cursor)) {
                     $this->moveCursor($match[0]);
-                    $this->lexRawData($match[1]);
+                    $this->lexRawData();
                 // {% line \d+ %}
                 } elseif (preg_match($this->regexes['lex_block_line'], $this->code, $match, 0, $this->cursor)) {
                     $this->moveCursor($match[0]);
                     $this->lineno = (int) $match[1];
                 } else {
-                    $this->pushToken(Token::BLOCK_START_TYPE);
+                    $this->pushToken(/* Token::BLOCK_START_TYPE */ 1);
                     $this->pushState(self::STATE_BLOCK);
                     $this->currentVarBlockLine = $this->lineno;
                 }
                 break;
 
             case $this->options['tag_variable'][0]:
-                $this->pushToken(Token::VAR_START_TYPE);
+                $this->pushToken(/* Token::VAR_START_TYPE */ 2);
                 $this->pushState(self::STATE_VAR);
                 $this->currentVarBlockLine = $this->lineno;
                 break;
         }
     }
 
-    protected function lexBlock()
+    private function lexBlock(): void
     {
         if (empty($this->brackets) && preg_match($this->regexes['lex_block'], $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(Token::BLOCK_END_TYPE);
+            $this->pushToken(/* Token::BLOCK_END_TYPE */ 3);
             $this->moveCursor($match[0]);
             $this->popState();
         } else {
@@ -311,10 +280,10 @@ class Lexer implements \Twig_LexerInterface
         }
     }
 
-    protected function lexVar()
+    private function lexVar(): void
     {
         if (empty($this->brackets) && preg_match($this->regexes['lex_var'], $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(Token::VAR_END_TYPE);
+            $this->pushToken(/* Token::VAR_END_TYPE */ 4);
             $this->moveCursor($match[0]);
             $this->popState();
         } else {
@@ -322,7 +291,7 @@ class Lexer implements \Twig_LexerInterface
         }
     }
 
-    protected function lexExpression()
+    private function lexExpression(): void
     {
         // whitespace
         if (preg_match('/\s+/A', $this->code, $match, 0, $this->cursor)) {
@@ -340,21 +309,21 @@ class Lexer implements \Twig_LexerInterface
         }
         // operators
         elseif (preg_match($this->regexes['operator'], $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(Token::OPERATOR_TYPE, preg_replace('/\s+/', ' ', $match[0]));
+            $this->pushToken(/* Token::OPERATOR_TYPE */ 8, preg_replace('/\s+/', ' ', $match[0]));
             $this->moveCursor($match[0]);
         }
         // names
         elseif (preg_match(self::REGEX_NAME, $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(Token::NAME_TYPE, $match[0]);
+            $this->pushToken(/* Token::NAME_TYPE */ 5, $match[0]);
             $this->moveCursor($match[0]);
         }
         // numbers
         elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor)) {
             $number = (float) $match[0];  // floats
-            if (ctype_digit($match[0]) && $number <= PHP_INT_MAX) {
+            if (ctype_digit($match[0]) && $number <= \PHP_INT_MAX) {
                 $number = (int) $match[0]; // integers lower than the maximum
             }
-            $this->pushToken(Token::NUMBER_TYPE, $number);
+            $this->pushToken(/* Token::NUMBER_TYPE */ 6, $number);
             $this->moveCursor($match[0]);
         }
         // punctuation
@@ -375,12 +344,12 @@ class Lexer implements \Twig_LexerInterface
                 }
             }
 
-            $this->pushToken(Token::PUNCTUATION_TYPE, $this->code[$this->cursor]);
+            $this->pushToken(/* Token::PUNCTUATION_TYPE */ 9, $this->code[$this->cursor]);
             ++$this->cursor;
         }
         // strings
         elseif (preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(Token::STRING_TYPE, stripcslashes(substr($match[0], 1, -1)));
+            $this->pushToken(/* Token::STRING_TYPE */ 7, stripcslashes(substr($match[0], 1, -1)));
             $this->moveCursor($match[0]);
         }
         // opening double quoted string
@@ -395,14 +364,10 @@ class Lexer implements \Twig_LexerInterface
         }
     }
 
-    protected function lexRawData($tag)
+    private function lexRawData(): void
     {
-        if ('raw' === $tag) {
-            @trigger_error(sprintf('Twig Tag "raw" is deprecated since version 1.21. Use "verbatim" instead in %s at line %d.', $this->filename, $this->lineno), E_USER_DEPRECATED);
-        }
-
-        if (!preg_match(str_replace('%s', $tag, $this->regexes['lex_raw_data']), $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
-            throw new SyntaxError(sprintf('Unexpected end of file: Unclosed "%s" block.', $tag), $this->lineno, $this->source);
+        if (!preg_match($this->regexes['lex_raw_data'], $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor)) {
+            throw new SyntaxError('Unexpected end of file: Unclosed "verbatim" block.', $this->lineno, $this->source);
         }
 
         $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
@@ -420,27 +385,27 @@ class Lexer implements \Twig_LexerInterface
             }
         }
 
-        $this->pushToken(Token::TEXT_TYPE, $text);
+        $this->pushToken(/* Token::TEXT_TYPE */ 0, $text);
     }
 
-    protected function lexComment()
+    private function lexComment(): void
     {
-        if (!preg_match($this->regexes['lex_comment'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
+        if (!preg_match($this->regexes['lex_comment'], $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor)) {
             throw new SyntaxError('Unclosed comment.', $this->lineno, $this->source);
         }
 
         $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);
     }
 
-    protected function lexString()
+    private function lexString(): void
     {
         if (preg_match($this->regexes['interpolation_start'], $this->code, $match, 0, $this->cursor)) {
             $this->brackets[] = [$this->options['interpolation'][0], $this->lineno];
-            $this->pushToken(Token::INTERPOLATION_START_TYPE);
+            $this->pushToken(/* Token::INTERPOLATION_START_TYPE */ 10);
             $this->moveCursor($match[0]);
             $this->pushState(self::STATE_INTERPOLATION);
         } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor) && \strlen($match[0]) > 0) {
-            $this->pushToken(Token::STRING_TYPE, stripcslashes($match[0]));
+            $this->pushToken(/* Token::STRING_TYPE */ 7, stripcslashes($match[0]));
             $this->moveCursor($match[0]);
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             list($expect, $lineno) = array_pop($this->brackets);
@@ -456,12 +421,12 @@ class Lexer implements \Twig_LexerInterface
         }
     }
 
-    protected function lexInterpolation()
+    private function lexInterpolation(): void
     {
         $bracket = end($this->brackets);
         if ($this->options['interpolation'][0] === $bracket[0] && preg_match($this->regexes['interpolation_end'], $this->code, $match, 0, $this->cursor)) {
             array_pop($this->brackets);
-            $this->pushToken(Token::INTERPOLATION_END_TYPE);
+            $this->pushToken(/* Token::INTERPOLATION_END_TYPE */ 11);
             $this->moveCursor($match[0]);
             $this->popState();
         } else {
@@ -469,23 +434,23 @@ class Lexer implements \Twig_LexerInterface
         }
     }
 
-    protected function pushToken($type, $value = '')
+    private function pushToken($type, $value = ''): void
     {
         // do not push empty text tokens
-        if (Token::TEXT_TYPE === $type && '' === $value) {
+        if (/* Token::TEXT_TYPE */ 0 === $type && '' === $value) {
             return;
         }
 
         $this->tokens[] = new Token($type, $value, $this->lineno);
     }
 
-    protected function moveCursor($text)
+    private function moveCursor($text): void
     {
         $this->cursor += \strlen($text);
         $this->lineno += substr_count($text, "\n");
     }
 
-    protected function getOperatorRegex()
+    private function getOperatorRegex(): string
     {
         $operators = array_merge(
             ['='],
@@ -499,11 +464,15 @@ class Lexer implements \Twig_LexerInterface
         $regex = [];
         foreach ($operators as $operator => $length) {
             // an operator that ends with a character must be followed by
-            // a whitespace or a parenthesis
+            // a whitespace, a parenthesis, an opening map [ or sequence {
+            $r = preg_quote($operator, '/');
             if (ctype_alpha($operator[$length - 1])) {
-                $r = preg_quote($operator, '/').'(?=[\s()])';
-            } else {
-                $r = preg_quote($operator, '/');
+                $r .= '(?=[\s()\[{])';
+            }
+
+            // an operator that begins with a character must not have a dot or pipe before
+            if (ctype_alpha($operator[0])) {
+                $r = '(?<![\.\|])'.$r;
             }
 
             // an operator with a space can be any amount of whitespaces
@@ -515,13 +484,13 @@ class Lexer implements \Twig_LexerInterface
         return '/'.implode('|', $regex).'/A';
     }
 
-    protected function pushState($state)
+    private function pushState($state): void
     {
         $this->states[] = $this->state;
         $this->state = $state;
     }
 
-    protected function popState()
+    private function popState(): void
     {
         if (0 === \count($this->states)) {
             throw new \LogicException('Cannot pop state without a previous state.');
@@ -530,5 +499,3 @@ class Lexer implements \Twig_LexerInterface
         $this->state = array_pop($this->states);
     }
 }
-
-class_alias('Twig\Lexer', 'Twig_Lexer');

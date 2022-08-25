@@ -28,11 +28,11 @@ class RedisProxy
         $this->initializer = $initializer;
     }
 
-    public function __call($method, array $args)
+    public function __call(string $method, array $args)
     {
         $this->ready ?: $this->ready = $this->initializer->__invoke($this->redis);
 
-        return \call_user_func_array([$this->redis, $method], $args);
+        return $this->redis->{$method}(...$args);
     }
 
     public function hscan($strKey, &$iIterator, $strPattern = null, $iCount = null)

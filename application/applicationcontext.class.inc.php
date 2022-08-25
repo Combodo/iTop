@@ -224,7 +224,7 @@ class ApplicationContext
 	{
 		$sContext = "";
 		foreach ($this->aValues as $sName => $sValue) {
-			$sContext .= "<input type=\"hidden\" name=\"c[$sName]\" value=\"".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."\" />\n";
+			$sContext .= "<input type=\"hidden\" name=\"c[$sName]\" value=\"".utils::EscapeHtml($sValue)."\" />\n";
 		}
 		return $sContext;
 	}
@@ -238,7 +238,7 @@ class ApplicationContext
 	{
 		$aContextInputBlocks = [];
 		foreach ($this->aValues as $sName => $sValue) {
-			$aContextInputBlocks[] = InputUIBlockFactory::MakeForHidden("c[$sName]", htmlentities($sValue, ENT_QUOTES, 'UTF-8'));
+			$aContextInputBlocks[] = InputUIBlockFactory::MakeForHidden("c[$sName]", utils::EscapeHtml($sValue));
 		}
 		return $aContextInputBlocks;
 	}

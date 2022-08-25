@@ -854,6 +854,11 @@ abstract class AttributeDefinition
 	//abstract protected GetBasicFilterHTMLInput();
 	abstract public function GetBasicFilterSQLExpr($sOpCode, $value);
 
+	/**
+	 *  since 3.1.0 return has changed (N°4690 - Deprecate "FilterCodes")
+	 *
+	 * @return array filtercode => attributecode
+	 */
 	public function GetFilterDefinitions()
 	{
 		return array();
@@ -1685,7 +1690,7 @@ class AttributeLinkedSet extends AttributeDefinition
 					{
 						if ($sObjClass == $this->GetLinkedClass())
 						{
-							// Simplify the output if the exact class could be determined implicitely 
+							// Simplify the output if the exact class could be determined implicitely
 							continue;
 						}
 					}
@@ -2007,7 +2012,7 @@ class AttributeLinkedSet extends AttributeDefinition
 					{
 						if ($sObjClass == $this->GetLinkedClass())
 						{
-							// Simplify the output if the exact class could be determined implicitely 
+							// Simplify the output if the exact class could be determined implicitely
 							continue;
 						}
 					}
@@ -2412,7 +2417,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return false;
 	}
 
-	// 
+	//
 	protected function ScalarToSQL($value)
 	{
 		return $value;
@@ -2452,7 +2457,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => new FilterFromAttribute($this));
+		return array($this->GetCode() => $this->GetCode());
 	}
 
 	public function GetBasicFilterOperators()
@@ -4174,20 +4179,21 @@ class AttributeText extends AttributeString
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		if ($this->GetFormat() == 'text')
-		{
-			if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
-			{
-				foreach($aAllMatches as $iPos => $aMatches)
-				{
+		// N°4517 - PHP 8.1 compatibility: str_replace call with null cause deprecated message
+		if ($sValue == null) {
+			return '';
+		}
+
+		if ($this->GetFormat() == 'text') {
+			if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER)) {
+				foreach ($aAllMatches as $iPos => $aMatches) {
 					$sClass = trim($aMatches[1]);
 					$sName = trim($aMatches[2]);
 					$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
-					if (MetaModel::IsValidClass($sClass))
-					{
+					if (MetaModel::IsValidClass($sClass)) {
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sReplacement = "[[$sClassLabel:$sName" . (!empty($sLabel) ? " | $sLabel" : "") . "]]";
+						$sReplacement = "[[$sClassLabel:$sName".(!empty($sLabel) ? " | $sLabel" : "")."]]";
 						$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 					}
 				}
@@ -4224,31 +4230,31 @@ class AttributeText extends AttributeString
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$sValue = $proposedValue;
-		switch ($this->GetFormat())
-		{
+
+		// N°4517 - PHP 8.1 compatibility: str_replace call with null cause deprecated message
+		if ($sValue == null) {
+			return '';
+		}
+
+		switch ($this->GetFormat()) {
 			case 'html':
-				if (($sValue !== null) && ($sValue !== ''))
-				{
+				if (($sValue !== null) && ($sValue !== '')) {
 					$sValue = HTMLSanitizer::Sanitize($sValue);
 				}
 				break;
 
 			case 'text':
 			default:
-				if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
-				{
-					foreach($aAllMatches as $iPos => $aMatches)
-					{
+				if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER)) {
+					foreach ($aAllMatches as $iPos => $aMatches) {
 						$sClassLabel = trim($aMatches[1]);
 						$sName = trim($aMatches[2]);
-                        $sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
+						$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
-						if (!MetaModel::IsValidClass($sClassLabel))
-						{
+						if (!MetaModel::IsValidClass($sClassLabel)) {
 							$sClass = MetaModel::GetClassFromLabel($sClassLabel);
-							if ($sClass)
-							{
-                                $sReplacement = "[[$sClassLabel:$sName" . (!empty($sLabel) ? " | $sLabel" : "") . "]]";
+							if ($sClass) {
+								$sReplacement = "[[$sClassLabel:$sName".(!empty($sLabel) ? " | $sLabel" : "")."]]";
 								$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 							}
 						}
@@ -4587,7 +4593,13 @@ class AttributeCaseLog extends AttributeLongText
 			{
 				if (strlen($proposedValue) > 0)
 				{
-					$oCaseLog->AddLogEntry($proposedValue);
+					//N°5135 - add impersonation information in caselog
+					if (UserRights::IsImpersonated()){
+						$sOnBehalfOf = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUserFriendlyName(), UserRights::GetUserFriendlyName());
+						$oCaseLog->AddLogEntry($proposedValue, $sOnBehalfOf, UserRights::GetConnectedUserId());
+					} else {
+						$oCaseLog->AddLogEntry($proposedValue);
+					}
 				}
 			}
 			$ret = $oCaseLog;
@@ -5394,7 +5406,7 @@ class AttributeEnum extends AttributeString
 	{
 		if (is_null($sValue))
 		{
-			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label		
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
 			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
 				Dict::S('Enum:Undefined'));
 		}
@@ -5416,7 +5428,7 @@ class AttributeEnum extends AttributeString
 	{
 		if (is_null($sValue))
 		{
-			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label		
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
 			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
 				Dict::S('Enum:Undefined'));
 		}
@@ -7213,7 +7225,7 @@ class AttributeExternalField extends AttributeDefinition
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
-		// throw new CoreException("external attribute: does it make any sense to request its type ?");  
+		// throw new CoreException("external attribute: does it make any sense to request its type ?");
 		$oExtAttDef = $this->GetExtAttDef();
 
 		return $oExtAttDef->GetSQLCol($bFullSpec);
@@ -7486,7 +7498,7 @@ class AttributeExternalField extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => new FilterFromAttribute($this));
+		return array($this->GetCode() => $this->GetCode());
 	}
 
 	public function GetBasicFilterOperators()
@@ -8523,18 +8535,17 @@ class AttributeStopWatch extends AttributeDefinition
 	public function GetFilterDefinitions()
 	{
 		$aRes = array(
-			$this->GetCode() => new FilterFromAttribute($this),
-			$this->GetCode().'_started' => new FilterFromAttribute($this, '_started'),
-			$this->GetCode().'_laststart' => new FilterFromAttribute($this, '_laststart'),
-			$this->GetCode().'_stopped' => new FilterFromAttribute($this, '_stopped')
+			$this->GetCode()              => $this->GetCode(),
+			$this->GetCode().'_started'   => $this->GetCode(),
+			$this->GetCode().'_laststart' => $this->GetCode(),
+			$this->GetCode().'_stopped'   => $this->GetCode(),
 		);
-		foreach($this->ListThresholds() as $iThreshold => $aFoo)
-		{
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$sPrefix = $this->GetCode().'_'.$iThreshold;
-			$aRes[$sPrefix.'_deadline'] = new FilterFromAttribute($this, '_deadline');
-			$aRes[$sPrefix.'_passed'] = new FilterFromAttribute($this, '_passed');
-			$aRes[$sPrefix.'_triggered'] = new FilterFromAttribute($this, '_triggered');
-			$aRes[$sPrefix.'_overrun'] = new FilterFromAttribute($this, '_overrun');
+			$aRes[$sPrefix.'_deadline'] = $this->GetCode();
+			$aRes[$sPrefix.'_passed'] = $this->GetCode();
+			$aRes[$sPrefix.'_triggered'] = $this->GetCode();
+			$aRes[$sPrefix.'_overrun'] = $this->GetCode();
 		}
 
 		return $aRes;
@@ -9262,7 +9273,7 @@ class AttributeSubItem extends AttributeDefinition
 		return $res;
 	}
 
-	// 
+	//
 //	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
@@ -9276,7 +9287,7 @@ class AttributeSubItem extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => new FilterFromAttribute($this));
+		return array($this->GetCode() => $this->GetCode());
 	}
 
 	public function GetBasicFilterOperators()
@@ -11935,7 +11946,7 @@ class AttributeFriendlyName extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => new FilterFromAttribute($this));
+		return array($this->GetCode() => $this->GetCode());
 	}
 
 	public function GetBasicFilterOperators()
@@ -12772,7 +12783,7 @@ class AttributeCustomFields extends AttributeDefinition
 			$sRet = $value->GetAsHTML($bLocalize);
 		} catch (Exception $e)
 		{
-			$sRet = 'Custom field error: '.htmlentities($e->getMessage(), ENT_QUOTES, 'UTF-8');
+			$sRet = 'Custom field error: '.utils::EscapeHtml($e->getMessage());
 		}
 
 		return $sRet;

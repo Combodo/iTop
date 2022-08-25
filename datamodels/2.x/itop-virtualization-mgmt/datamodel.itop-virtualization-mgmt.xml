@@ -18,7 +18,9 @@
         <fields_semantic>
             <state_attribute>status</state_attribute>
         </fields_semantic>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -151,7 +153,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>

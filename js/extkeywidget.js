@@ -25,8 +25,10 @@ Selectize.define('custom_itop', function(aOptions) {
 					if (this.$control_input.val() === '' && !this.$activeItems.length) {
 						iIndex = this.caretPos-1;
 						if (iIndex >= 0 && iIndex < this.items.length) {
+							let sPreviousValue = this.options[this.items[iIndex]].search_label;
 							this.clear(true);
 							e.preventDefault();
+							this.setTextboxValue(sPreviousValue.slice(0, -1));
 							return;
 						}
 					}
@@ -562,6 +564,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				var oTemp = $('<div>'+data.name+'</div>');
 				var txt = oTemp.text(); // this causes HTML entities to be interpreted
 
+				var prevValue = $('#'+me.id).val();
 				var newValue;
 				if ($('#label_'+me.id).length) {
 					newValue = iObjectId;
@@ -574,7 +577,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					newValue = txt;
 				}
 
-				var prevValue = $('#'+me.id).val();
 				$('#'+me.id).val(newValue);
 				if (prevValue != newValue) {
 					// dependent fields will be updated using the WizardHelper JS object
@@ -734,7 +736,10 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 							var sId = $(this).attr('id');
 							var editorInst = CKEDITOR.instances[sId];
 							if (editorInst) {
-								editorInst.updateElement();
+								editorInst.destroy();
+							}
+							if ($('#'+sId).data('timeout_validate') != undefined) {
+								clearInterval($('#'+sId).data('timeout_validate'));
 							}
 						}
 
@@ -899,6 +904,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 
 					$('#label_'+me.id).val(txt);
 					$('#label_'+me.id).removeClass('ac_dlg_loading');
+					$('#label_'+me.id).data('selected_value',txt);
 
 					var prevValue = $('#'+me.id).val();
 					$('#'+me.id).val(iObjectId);

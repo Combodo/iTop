@@ -75,7 +75,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Aplicação pode ser atualizada',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Aplicação não pode ser atualizada: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Atenção: a atualização da aplicação pode falhar: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => 'Você deve usar o <a href="%1$s">Setup</a> para atualizar a aplicação.<br />Alguns arquivos modificados foram detectados, uma atualização parcial não pode ser executada',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Alguns arquivos modificados foram detectados</b>, uma atualização parcial não pode ser executada.</br>Siga o <a target="_blank" href="%2$s"> procedimento</a> para atualizar manualmente seu iTop. Você deve usar o <a href="%1$s">Setup</a> para atualizar a aplicação.',
+	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Alguns módulos novos foram detectados</b>, uma atualização parcial não pode ser executada.</br>Siga o <a target="_blank" href="%2$s"> procedimento</a> para atualizar manualmente seu iTop. Você deve usar o <a href="%1$s">Setup</a> para atualizar a aplicação.',
+	'iTopUpdate:UI:CheckInProgress' => 'Aguarde a verificação de integridade',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Pronto para começar',

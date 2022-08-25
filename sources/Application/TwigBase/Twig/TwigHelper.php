@@ -16,8 +16,7 @@ use ExecutionKPI;
 use IssueLog;
 use Twig\Environment;
 use Twig\Error\Error;
-use Twig_Environment;
-use Twig_Loader_Filesystem;
+use Twig\Loader\FilesystemLoader;
 use utils;
 use WebPage;
 
@@ -71,17 +70,17 @@ class TwigHelper
 	 * @param string $sViewPath
 	 * @param array $aAdditionalPaths
 	 *
-	 * @return \Twig_Environment
+	 * @return Environment
 	 * @throws \Twig\Error\LoaderError
 	 */
 	public static function GetTwigEnvironment($sViewPath, $aAdditionalPaths = array())
 	{
-		$oLoader = new Twig_Loader_Filesystem($sViewPath);
+		$oLoader = new FilesystemLoader($sViewPath);
 		foreach ($aAdditionalPaths as $sAdditionalPath) {
 			$oLoader->addPath($sAdditionalPath);
 		}
 
-		$oTwig = new Twig_Environment($oLoader);
+		$oTwig = new Environment($oLoader);
 		Extension::RegisterTwigExtensions($oTwig);
 		if (!utils::IsDevelopmentEnvironment()) {
 			// Disable the cache in development environment

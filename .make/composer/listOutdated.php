@@ -19,16 +19,23 @@
  *
  */
 
-$iTopFolder = __DIR__ . "/../../" ;
+/**
+ * Alias for `composer show -loD`
+ * You can also use `composer outdated -D`
+ *
+ * @link https://getcomposer.org/doc/03-cli.md#show
+ */
 
-require_once ("$iTopFolder/approot.inc.php");
+$iTopFolder = __DIR__."/../../";
+
+require_once("$iTopFolder/approot.inc.php");
 $sApproot = APPROOT;
 $aTrace = array();
 
 $aParamsConfig = array(
 	'composer-path' => array(
-		'default' => 'composer.phar',
-	)
+		'default' => 'composer',
+	),
 );
 $aParamsConfigNotFound = array_flip(array_keys($aParamsConfig));
 $aGivenArgs = $argv;

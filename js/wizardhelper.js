@@ -176,6 +176,9 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 			var sString = "$('#"+aRefreshed[i]+"').trigger('change').trigger('update');";
 			window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
 		}
+		if($('.blockUI').length == 0) {
+			$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');
+		}
 	};
 
 	this.UpdateWizard = function () {
@@ -201,6 +204,10 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 			function (html) {
 				$('#ajax_content').html(html);
 				$('.blockUI').parent().unblock();
+
+				if($('.blockUI').length == 0) {
+					$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');
+				}
 			}
 		);
 	};
@@ -235,7 +242,8 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 
 		this.ResetQuery();
 		this.UpdateWizard();
-		while (index < aFieldNames.length)
+		var fieldForm = null;
+		while (index < aFieldNames.length )
 		{
 			sAttCode = aFieldNames[index];
 			sFieldId = this.GetFieldId(sAttCode);
@@ -247,9 +255,14 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 					message: '',
 					overlayCSS: {backgroundColor: '#f1f1f1', opacity: 0.3}
 				});
+				fieldForm = $('#field_' + sFieldId).closest('form');
 				this.RequestAllowedValues(sAttCode);
 			}
 			index++;
+		}
+
+		if ((fieldForm !== null) && ($('.blockUI').length > 0)) {
+			fieldForm.find('button[type=submit]:not(:disabled)').prop("disabled", true).addClass('disabledDuringFieldLoading');
 		}
 
 		if (nbOfFieldsToUpdate > 0)

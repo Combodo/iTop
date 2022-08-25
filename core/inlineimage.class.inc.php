@@ -295,13 +295,12 @@ class InlineImage extends DBObject
 			{
 				$sImgTag = $aImgInfo[0][0];
 				$sSecret = '';
-				if (preg_match('/data-img-secret="([0-9a-f]+)"/', $sImgTag, $aSecretMatches))
-				{
+				if (preg_match('/data-img-secret="([0-9a-f]+)"/', $sImgTag, $aSecretMatches)) {
 					$sSecret = '&s='.$aSecretMatches[1];
 				}
 				$sAttId = $aImgInfo[2][0];
-	
-				$sNewImgTag = preg_replace('/src="[^"]+"/', 'src="'.htmlentities($sUrl.$sAttId.$sSecret, ENT_QUOTES, 'UTF-8').'"', $sImgTag); // preserve other attributes, must convert & to &amp; to be idempotent with CKEditor
+
+				$sNewImgTag = preg_replace('/src="[^"]+"/', 'src="'.utils::EscapeHtml($sUrl.$sAttId.$sSecret).'"', $sImgTag); // preserve other attributes, must convert & to &amp; to be idempotent with CKEditor
 				$aNeedles[] = $sImgTag;
 				$aReplacements[] = $sNewImgTag;
 			}
@@ -536,8 +535,8 @@ JS
 		$iObjKey = $oObject->GetKey();
 
 		$sAbsoluteUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
-		$sToggleFullScreen = htmlentities(Dict::S('UI:ToggleFullScreen'), ENT_QUOTES, 'UTF-8');
-		
+		$sToggleFullScreen = utils::EscapeHtml(Dict::S('UI:ToggleFullScreen'));
+
 		return
 			<<<JS
 		// Hook the file upload of all CKEditor instances
