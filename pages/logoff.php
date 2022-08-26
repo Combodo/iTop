@@ -37,6 +37,7 @@ if ($operation == 'do_logoff')
 	// Note the redirection MUST NOT be made via an HTTP "header" since onunload is called only when the actual content of the DOM
 	// is replaced by some other content. So the "bouncing" page must provide some content (in our case a script making the redirection).
 	$oPage = new AjaxPage('');
+	$oPage->add_script("sessionStorage.clear();");
 	$oPage->add_script("window.location.href='{$sUrl}pages/logoff.php?portal=$bPortal'");
 	$oPage->output();
 	exit;
