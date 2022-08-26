@@ -22,14 +22,14 @@ class ImportTest extends ItopDataTestCase {
 	private $sTmpFile = "";
 	private $oOrg;
 
-	protected function tearDown() {
+	protected function tearDown() : void{
 		parent::tearDown();
 		if (!empty($this->sTmpFile) && is_file($this->sTmpFile)){
 			unlink($this->sTmpFile);
 		}
 	}
 
-	protected function setUp() {
+	protected function setUp() : void{
 		parent::setUp();
 
 		$this->sTmpFile = tempnam(sys_get_temp_dir(), 'import_csv_');
@@ -74,13 +74,13 @@ class ImportTest extends ItopDataTestCase {
 		$aTestFailedExtKeys = [
 			'sCsvHeaders' => '"first_name","name", "email", "org_id->name"',
 			'sCsvFirstLineValues' => sprintf('"%s", "%s", "%s", gabuzomeu', $sFirstName, $sLastName, $sEmail),
-			'sExpectedLastLineNeedle' => 'Issue: Unexpected attribute value(s);n/a;n/a;No match for value \'gabuzomeu\'. Possible \'Organization\' value(s): ',
+			'sExpectedLastLineNeedle' => 'Issue: Unexpected attribute value(s);n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): ',
 		];
 
 		$aTestFailedExtKeysWithReconciliationKeys = array_merge($aTestFailedExtKeys,
 			[
 				'sReconciliationKeys' => "name,first_name,org_id->name",
-				'sExpectedLastLineNeedle' => 'Issue: failed to reconcile;n/a;n/a;No match for value \'gabuzomeu\'. Possible \'Organization\' value(s): ',
+				'sExpectedLastLineNeedle' => 'Issue: failed to reconcile;n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): ',
 			]
 		);
 

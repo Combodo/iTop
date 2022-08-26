@@ -255,7 +255,7 @@ class BulkChangeTest extends ItopDataTestCase {
 					4 => "",
 					"id" => 1,
 					"__STATUS__" => "Issue: Unexpected attribute value(s)",
-					"__ERRORS__" => "Allowed values: implementation,obsolete,production,stock",
+					"__ERRORS__" => "Allowed 'status' value(s): implementation,obsolete,production,stock",
 				],
 			],
 			"Case 6 - 2 : Unexpected value (update)" => [
@@ -273,7 +273,7 @@ class BulkChangeTest extends ItopDataTestCase {
 					4 => "",
 					"id" => 1,
 					"__STATUS__" => "Issue: Unexpected attribute value(s)",
-					"__ERRORS__" => "Allowed values: implementation,obsolete,production,stock",
+					"__ERRORS__" => "Allowed 'status' value(s): implementation,obsolete,production,stock",
 				],
 			],
 			"Case 6 - 3 : Unexpected value (creation)" => [
@@ -290,7 +290,7 @@ class BulkChangeTest extends ItopDataTestCase {
 					3 => "",
 					"id" => 1,
 					"__STATUS__" => "Issue: Unexpected attribute value(s)",
-					"__ERRORS__" => "Allowed values: implementation,obsolete,production,stock",
+					"__ERRORS__" => "Allowed 'status' value(s): implementation,obsolete,production,stock",
 				],
 			],
 			"Case 8  : unchanged name" => [

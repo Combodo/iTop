@@ -362,8 +362,6 @@ try {
 			CMDBObject::SetTrackOrigin(CMDBChangeOrigin::CSV_INTERACTIVE);
 			$oMyChange = CMDBObject::GetCurrentChange();
 		}
-		CMDBObject::SetTrackOrigin('csv-interactive');
-
 		$oBulk = new BulkChange(
 			$sClassName,
 			$aData,
@@ -482,6 +480,7 @@ try {
 					$sHtmlValue = $oCellStatus->GetDisplayableValue();
 					switch (get_class($oCellStatus)) {
 						case 'CellStatus_Issue':
+						case 'CellStatus_NullIssue':
 							$sCellMessage .= GetDivAlert($oCellStatus->GetDescription());
 							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-error">'.Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue).$sCellMessage.'</div>';
 							break;

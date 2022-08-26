@@ -239,6 +239,8 @@ class RowStatus_Issue extends RowStatus
 	}
 }
 
+//class dedicated to testability
+//not used/ignored in csv imports UI/CLI
 class RowStatus_Error extends RowStatus
 {
 	protected $m_sError;
@@ -662,6 +664,7 @@ class BulkChange
 		}
 
 		try{
+			$aDisplayedAllowedValues=[];
 			$allowedValues="";
 			$oExtObjectSetWithCurrentUserPermissions->SetLimit(4);
 			for($i=0; $i<3; $i++){
@@ -671,12 +674,11 @@ class BulkChange
 					break;
 				}
 
-				if ('' === $allowedValues){
-					$allowedValues = $oVisibleObject->Get($sForeignAttCode);
-				}
-				else {
-					$allowedValues .= ', ' . $oVisibleObject->Get($sForeignAttCode);
-				}
+				$aDisplayedAllowedValues[] = $oVisibleObject->Get($sForeignAttCode);
+			}
+			$allowedValues = implode(", ", $aDisplayedAllowedValues);
+			if ($oExtObjectSetWithCurrentUserPermissions->Count()>3){
+				$allowedValues .= "...";
 			}
 		} catch(Exception $e) {
 			IssueLog::Error("failure when fetching few visible objects: " . $e->getMessage());
@@ -811,6 +813,7 @@ class BulkChange
 		{
 			$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
+			//__ERRORS__ used by tests only
 			$aResult[$iRow]["__ERRORS__"] = new RowStatus_Error($sErrors);
 			return $oTargetObj;
 		}
@@ -878,6 +881,7 @@ class BulkChange
 		{
 			$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
+			//__ERRORS__ used by tests only
 			$aResult[$iRow]["__ERRORS__"] = new RowStatus_Error($sErrors);
 			return;
 		}
@@ -928,6 +932,7 @@ class BulkChange
 		{
 			$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
+			//__ERRORS__ used by tests only
 			$aResult[$iRow]["__ERRORS__"] = new RowStatus_Error($sErrors);
 			return;
 		}

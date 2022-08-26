@@ -866,6 +866,7 @@ try
 				$sKey = (string) $key;
 
 				if ($sKey == '__STATUS__') continue;
+				//__ERRORS__ used by tests only
 				if ($sKey == '__ERRORS__') continue;
 				if ($sKey == 'finalclass') continue;
 				if ($sKey == 'id') continue;

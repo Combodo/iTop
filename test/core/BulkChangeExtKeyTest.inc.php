@@ -19,12 +19,12 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;
 	private $sUid;
 
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 		require_once(APPROOT.'core/bulkchange.class.inc.php');
 	}
 
-	protected function tearDown() {
+	protected function tearDown() : void{
 		parent::tearDown();
 	}
 
@@ -137,7 +137,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 
 		$this->performBulkChangeTest(
 			"There are some 'Rack' objects not visible with your current profile",
-			"Possible 'Rack' value(s): RackTest3, RackTest4",
+			"Some possible 'Rack' value(s): RackTest3, RackTest4",
 			$oOrg2,
 			$bIsRackReconKey
 		);
@@ -156,7 +156,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 
 		$this->performBulkChangeTest(
 			"No match for value 'UnexistingRack'",
-			"Possible 'Rack' value(s): RackTest1, RackTest2, RackTest3",
+			"Some possible 'Rack' value(s): RackTest1, RackTest2, RackTest3...",
 			null,
 			$bIsRackReconKey
 		);
