@@ -9,6 +9,7 @@ use Exception;
 /**
  * @group itopRequestMgmt
  * @group restApi
+ * @group defaultProfiles
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled

@@ -7308,7 +7308,7 @@ abstract class MetaModel
 									}
 									IssueLog::Debug(
 										'Invalid placeholder in notification, no replacement will occur!',
-										LogChannels::NOTIFICATION,
+										LogChannels::NOTIFICATIONS,
 										$aContext
 									);
 								}
@@ -7333,7 +7333,7 @@ abstract class MetaModel
 							catch (Exception $e) {
 								IssueLog::Debug(
 									'Invalid placeholder in notification, no replacement will occur !',
-									LogChannels::NOTIFICATION,
+									LogChannels::NOTIFICATIONS,
 									[
 										'placeholder' => $sPlaceholderAttCode,
 										'replace'     => $replace,
