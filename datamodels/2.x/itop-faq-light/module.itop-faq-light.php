@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-faq-light/3.0.1',
+	'itop-faq-light/3.0.2',
 	array(
 		// Identification
 		//
