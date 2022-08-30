@@ -162,7 +162,7 @@ class SessionMessageHelper implements IteratorAggregate
 					}
 
 					$sMsgMetadata = '';
-					// Protection for missing metadata entry when session messages are created from cmdbAbstractObject
+					// Protection for missing metadata entry when session messages are not created from the portal
 					if (isset($aMessageData['metadata'])) {
 						foreach ($aMessageData['metadata'] as $sMetadatumName => $sMetadatumValue) {
 							$sMsgMetadata .= 'data-'.str_replace('_', '-', $sMetadatumName).'="'.utils::HtmlEntities($sMetadatumValue).'" ';
