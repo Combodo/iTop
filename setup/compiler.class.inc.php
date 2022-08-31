@@ -487,11 +487,14 @@ EOF;
 				foreach($aMenusByModule[$sModuleName] as $sMenuId)
 				{
 					$oMenuNode = $aMenuNodes[$sMenuId];
-					if ($sParent = $oMenuNode->GetChildText('parent', null))
-					{
-						$aMenusToLoad[] = $sParent;
-						$aParentMenus[] = $sParent;
+					// compute parent hierarchy
+					$aParentIdHierarchy = [];
+					while ($sParent = $oMenuNode->GetChildText('parent', null)) {
+						array_unshift($aParentIdHierarchy, $sParent);
+						$oMenuNode = $aMenuNodes[$sParent];
 					}
+					$aMenusToLoad = array_merge($aMenusToLoad, $aParentIdHierarchy);
+					$aParentMenus = array_merge($aParentMenus, $aParentIdHierarchy);
 					// Note: the order matters: the parents must be defined BEFORE
 					$aMenusToLoad[] = $sMenuId;
 				}
