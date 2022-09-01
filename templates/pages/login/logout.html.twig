@@ -13,6 +13,8 @@
 {% endblock %}
 
 {% block script %}
+    {{ parent() }}
+    
 	sessionStorage.clear();
 {% endblock %}
 
