@@ -1230,6 +1230,19 @@ XML,
 </root_node>
 XML
 			],
+			'_old_id' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond id="Sean" _old_id="Roger"/>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+	<james_bond  id="Sean" _rename_from="Roger" _delta="must_exist"/>
+</root_node>
+XML
+			],
 		];
 	}
 }
