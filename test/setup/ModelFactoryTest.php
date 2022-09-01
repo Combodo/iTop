@@ -76,24 +76,22 @@ class ModelFactoryTest extends ItopTestCase
 	}
 
 	/**
+	 * @param $sExpected
+	 * @param $sActual
+	 */
+	protected function AssertEqualiTopXML($sExpected, $sActual)
+	{
+		// Note: assertEquals reports the differences in a diff which is easier to interpret (in PHPStorm)
+		// as compared to the report given by assertEqualXMLStructure
+		static::assertEquals($this->CanonicalizeXML($sExpected), $this->CanonicalizeXML($sActual));
+	}
+
+	/**
 	 * Assertion ignoring some of the unexpected decoration brought by DOM Elements.
 	 */
 	protected function AssertEqualModels(string $sExpectedXML, ModelFactory $oFactory)
 	{
-		// Canonicalize the expected XML (to cope with indentation)
-		$oExpectedDocument = new DOMDocument();
-		$oExpectedDocument->preserveWhiteSpace = false;
-		$oExpectedDocument->loadXML($sExpectedXML);
-		$oExpectedDocument->formatOutput = true;
-		$sExpectedXML = $oExpectedDocument->saveXML($oExpectedDocument->firstChild);
-
-		$sExpectedXML = $this->CanonicalizeXML($sExpectedXML);
-
-		$sActualXML = $oFactory->Dump(null, true);
-
-		// Note: assertEquals reports the differences in a diff which is easier to interpret (in PHPStorm)
-		// as compared to the report given by assertEqualXMLStructure
-		static::assertEquals($sExpectedXML, $sActualXML);
+		return $this->AssertEqualiTopXML($sExpectedXML, $oFactory->Dump(null, true));
 	}
 
 	/**
@@ -1020,69 +1018,218 @@ XML
 	 * @covers \ModelFactory::LoadDelta
 	 * @covers \ModelFactory::GetDelta
 	 * @covers \ModelFactory::GetDeltaDocument
+	 * @dataProvider providerGetDelta
 	 */
-	public function testGetDelta()
+	public function testGetDelta($sInitialXMLInternal, $sExpectedXMLDelta)
 	{
-		$sInitialXML = <<<XML
-<root_node>
-	<james_bond>Roger Moore</james_bond>
-	<jeanne_dark>orleans</jeanne_dark>
-	<stairway_to_heaven/>
-	<robot id="r2d2"/>
-</root_node>
-XML;
-
-		$sOriginalDeltaXML = <<<XML
-<root_node>
-	<node_to_merge>... this node and text will be lost ...</node_to_merge>
-	<path1>
-		<subnode _delta="force">Hulk Hogan</subnode>
-	</path1>
-	<stairway_to_heaven _delta="must_exist">
-		<subnode _delta="define_if_not_exists">Bruce Banner</subnode>
-	</stairway_to_heaven>
-	<node_to_add _delta="define">blah</node_to_add>
-	<james_bond _delta="redefine">Sean Connery</james_bond>
-	<robot id="c3po" _rename_from="r2d2"/>
-	<jeanne_dark _delta="delete"/>
-</root_node>
-XML;
-
-		// Strange unintuitive things noticed when the test has been developed
-		// * ordering : depends on the initial tree and the order of declaration for new nodes
-		// * rename => GetDelta adds a must_exist
-		// * must_exist => lost during the process
-		$sExpectedDeltaXML = <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<root_node>
-  <james_bond _delta="redefine">Sean Connery</james_bond>
-  <jeanne_dark _delta="delete"/>
-  <stairway_to_heaven>
-    <subnode _delta="define_if_not_exists">Bruce Banner</subnode>
-  </stairway_to_heaven>
-  <robot id="c3po" _rename_from="r2d2" _delta="must_exist"/>
-  <path1>
-    <subnode _delta="force">Hulk Hogan</subnode>
-  </path1>
-  <node_to_add _delta="define">blah</node_to_add>
-</root_node>
-
-XML;
-
-		$oFactory = $this->MakeVanillaModelFactory($sInitialXML);
-
-		// Load the Delta
-		$oFactoryRoot = $this->GetNonPublicProperty($oFactory, 'oDOMDocument');
-		$oDocument = new MFDocument();
-		$oDocument->loadXML($sOriginalDeltaXML);
-		/* @var MFElement $oDeltaRoot */
-		$oDeltaRoot = $oDocument->firstChild;
-		$oFactory->LoadDelta($oDeltaRoot, $oFactoryRoot);
+		$oFactory = $this->MakeVanillaModelFactory($sInitialXMLInternal);
 
 		// Get the delta back
 		$sNewDeltaXML = $oFactory->GetDelta();
 
-		static::assertEquals($sExpectedDeltaXML, $sNewDeltaXML);
+		static::AssertEqualiTopXML($sExpectedXMLDelta, $sNewDeltaXML);
+	}
+
+	/**
+	 * @return array[]
+	 */
+	public function providerGetDelta()
+	{
+		return [
+			'no alteration' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond>Roger Moore</james_bond>
+	<stairway_to_heaven/>
+	<robot id="r2d2"/>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1"/>
+XML
+			],
+			'_alteration="added" singleton' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="added"/>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="define"/>
+</root_node>
+
+XML
+			],
+			'_alteration="added" with value' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="added">Roger Moore</james_bond>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="define">Roger Moore</james_bond>
+</root_node>
+XML
+			],
+			'_alteration="added" with subtree' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="added">
+		<name>Moore</name>
+		<last_name>Roger</last_name>
+	</james_bond>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="define">
+    <name>Moore</name>
+    <last_name>Roger</last_name>
+  </james_bond>
+</root_node>
+XML
+			],
+			'_alteration="forced" singleton' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="forced"/>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="force"/>
+</root_node>
+XML
+			],
+			'_alteration="forced" with value' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="forced">Roger Moore</james_bond>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="force">Roger Moore</james_bond>
+</root_node>
+XML
+			],
+			'_alteration="forced" with subtree' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="forced">
+		<name>Moore</name>
+		<last_name>Roger</last_name>
+	</james_bond>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="force">
+    <name>Moore</name>
+    <last_name>Roger</last_name>
+  </james_bond>
+</root_node>
+XML
+			],
+			'_alteration="needed" singleton' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="needed"/>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="define_if_not_exists"/>
+</root_node>
+XML
+			],
+			'_alteration="needed" with value' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="needed">Roger Moore</james_bond>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="define_if_not_exists">Roger Moore</james_bond>
+</root_node>
+XML
+			],
+			'_alteration="needed" with subtree' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="needed">
+		<name>Moore</name>
+		<last_name>Roger</last_name>
+	</james_bond>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="define_if_not_exists">
+    <name>Moore</name>
+    <last_name>Roger</last_name>
+  </james_bond>
+</root_node>
+XML
+			],
+			'_alteration="replaced" with value' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="replaced">Sean Connery</james_bond>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="redefine">Sean Connery</james_bond>
+</root_node>
+XML
+			],
+			'_alteration="replaced" with subtree' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="added">
+		<name>Sean</name>
+		<last_name>Connery</last_name>
+	</james_bond>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+  <james_bond _delta="define">
+    <name>Sean</name>
+    <last_name>Connery</last_name>
+  </james_bond>
+</root_node>
+XML
+			],
+			'_alteration="removed"' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond _alteration="removed"/>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+	<james_bond _delta="delete"/>
+</root_node>
+XML
+			],
+		];
 	}
 }
-
