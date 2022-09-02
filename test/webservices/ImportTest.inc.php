@@ -54,62 +54,97 @@ class ImportTest extends ItopDataTestCase {
 		}
 	}
 
-	public function ImportProvider(){
+	public function ImportOkProvider(){
+		return [
+			'with reconciliation key' => [ "sReconciliationKeys" => "name,first_name,org_id->name" ],
+			'without reconciliation key' => [ "sReconciliationKeys" => null ],
+		];
+	}
+	/**
+	 * @dataProvider ImportOkProvider
+	 */
+	public function testImportOk($sReconciliationKeys){
 		$sFirstName = "firstname_UID";
 		$sLastName = "lastname_UID";
 		$sEmail = "email_UID@toto.fr";
 
-		$aTestOkParams = [
-			'sCsvHeaders' => '"first_name","name", "email", "org_id->name"',
-			'sCsvFirstLineValues' => sprintf('"%s", "%s", "%s", UID', $sFirstName, $sLastName, $sEmail),
-			'sExpectedLastLineNeedle' => sprintf('ORGID;"%s";"%s";"%s"', $sFirstName, $sLastName, $sEmail),
-			'sReconciliationKeys' => null,
-			'iExpectedIssue' => '0',
-			'iExpectedCreated' => '1',
-		];
-
-		$aTestOkParamsWithReconciliationKeys = array_merge($aTestOkParams,
-			['sReconciliationKeys' => "name,first_name,org_id->name"]);
-
-		$aTestFailedExtKeys = [
-			'sCsvHeaders' => '"first_name","name", "email", "org_id->name"',
-			'sCsvFirstLineValues' => sprintf('"%s", "%s", "%s", gabuzomeu', $sFirstName, $sLastName, $sEmail),
-			'sExpectedLastLineNeedle' => 'Issue: Unexpected attribute value(s);n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): ',
-		];
-
-		$aTestFailedExtKeysWithReconciliationKeys = array_merge($aTestFailedExtKeys,
-			[
-				'sReconciliationKeys' => "name,first_name,org_id->name",
-				'sExpectedLastLineNeedle' => 'Issue: failed to reconcile;n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): ',
-			]
+		$this->performImportTesting(
+			'"first_name","name", "email", "org_id->name"',
+			sprintf('"%s", "%s", "%s", UID', $sFirstName, $sLastName, $sEmail),
+			sprintf('ORGID;"%s";"%s";"%s"', $sFirstName, $sLastName, $sEmail),
+			$sReconciliationKeys,
+			0,
+			1
 		);
-
-		return [
-			'import OK' => $aTestOkParams,
-			'import OK / with reconciliation keys' => $aTestOkParamsWithReconciliationKeys,
-			'import ERROR : invalid enum value' => [
-				'sCsvHeaders' => '"first_name","name", "email", "org_id->name", status',
-				'sCsvFirstLineValues' => sprintf('"%s", "%s", "%s", UID, toto', $sFirstName, $sLastName, $sEmail),
-				'sExpectedLastLineNeedle' => sprintf(
-						'Issue: Unexpected attribute value(s);n/a;n/a;ORGID;"%s";"%s";"%s";\'toto\' is an invalid value. Unexpected value for attribute \'status\': Value not allowed [toto]', $sFirstName, $sLastName, $sEmail
-				),
-			],
-			'import ERROR : invalid date value' => [
-				'sCsvHeaders' => '"first_name","name", "email", "org_id->name", obsolescence_date',
-				'sCsvFirstLineValues' => sprintf('"%s", "%s", "%s", UID, toto', $sFirstName, $sLastName, $sEmail),
-				'sExpectedLastLineNeedle' => sprintf(
-					'Issue: Internal error: Exception, Wrong format for date attribute obsolescence_date, expecting "Y-m-d" and got "toto";n/a;n/a;n/a;%s;%s;%s;toto', $sFirstName, $sLastName, $sEmail
-				),
-			],
-			'import ERROR : invalid ext field value' => $aTestFailedExtKeys,
-			'import ERROR : invalid ext field value / reconciliation keys' => $aTestFailedExtKeysWithReconciliationKeys,
-		];
 	}
 
+	public function ImportFailProvider(){
+		return [
+			'without reconciliation key' => [
+				"sReconciliationKeys" => null,
+				"sExpectedLastLineNeedle" => 'Issue: Unexpected attribute value(s);n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): '
+			],
+			'with reconciliation key' => [
+				"sReconciliationKeys" => "name,first_name,org_id->name",
+				"sExpectedLastLineNeedle" => 'Issue: failed to reconcile;n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): '
+
+			],
+		];
+	}
 	/**
-	 * @dataProvider ImportProvider
+	 * @dataProvider ImportFailProvider
 	 */
-	public function testImport($sCsvHeaders, $sCsvFirstLineValues, $sExpectedLastLineNeedle, $sReconciliationKeys=null, $iExpectedIssue=1, $iExpectedCreated=0) {
+
+	public function testImportFail_ExternalKey($sReconciliationKeys, $sExpectedLastLineNeedle){
+		$sFirstName = "firstname_UID";
+		$sLastName = "lastname_UID";
+		$sEmail = "email_UID@toto.fr";
+
+		$this->performImportTesting(
+			'"first_name","name", "email", "org_id->name"',
+			sprintf('"%s", "%s", "%s", gabuzomeu', $sFirstName, $sLastName, $sEmail),
+			$sExpectedLastLineNeedle,
+			$sReconciliationKeys,
+			1,
+			0
+		);
+	}
+
+	public function testImportFail_Enum(){
+		$sFirstName = "firstname_UID";
+		$sLastName = "lastname_UID";
+		$sEmail = "email_UID@toto.fr";
+
+		$this->performImportTesting(
+			'"first_name","name", "email", "org_id->name", status',
+			sprintf('"%s", "%s", "%s", UID, toto', $sFirstName, $sLastName, $sEmail),
+			sprintf(
+				'Issue: Unexpected attribute value(s);n/a;n/a;ORGID;"%s";"%s";"%s";\'toto\' is an invalid value. Unexpected value for attribute \'status\': Value not allowed [toto]', $sFirstName, $sLastName, $sEmail
+			),
+			null,
+			1,
+			0
+		);
+	}
+
+	public function testImportFail_Date(){
+		$sFirstName = "firstname_UID";
+		$sLastName = "lastname_UID";
+		$sEmail = "email_UID@toto.fr";
+
+		$this->performImportTesting(
+			'"first_name","name", "email", "org_id->name", obsolescence_date',
+			sprintf('"%s", "%s", "%s", UID, toto', $sFirstName, $sLastName, $sEmail),
+			sprintf(
+				'Issue: Internal error: Exception, Wrong format for date attribute obsolescence_date, expecting "Y-m-d" and got "toto";n/a;n/a;n/a;%s;%s;%s;toto', $sFirstName, $sLastName, $sEmail
+			),
+			null,
+			1,
+			0
+		);
+	}
+
+	private function performImportTesting($sCsvHeaders, $sCsvFirstLineValues, $sExpectedLastLineNeedle, $sReconciliationKeys=null, $iExpectedIssue=1, $iExpectedCreated=0) {
 		$sContent = <<<CSVFILE
 $sCsvHeaders
 $sCsvFirstLineValues

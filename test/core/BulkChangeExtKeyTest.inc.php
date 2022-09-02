@@ -6,26 +6,29 @@ use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
+
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
+ *
+ * created a dedicated test for external keys imports.
+ * this test may delete Person objects to cover all usecases
+ * DO NOT CHANGE USE_TRANSACTION value to avoid any DB loss!
+ *
+ * Class BulkChangeExtKeyTest
+ *
+ * @package Combodo\iTop\Test\UnitTest\Core
  */
-
-//created a dedicated test for external keys imports.
-// this test may delete Person objects to cover all usecases
-//DO NOT CHANGE USE_TRANSACTION value to avoid any DB loss!
 class BulkChangeExtKeyTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;
+	const USE_TRANSACTION = true;
+
 	private $sUid;
 
 	protected function setUp() : void {
 		parent::setUp();
 		require_once(APPROOT.'core/bulkchange.class.inc.php');
-	}
-
-	protected function tearDown() : void{
-		parent::tearDown();
 	}
 
 	private function deleteAllRacks(){
@@ -105,7 +108,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		$this->deleteAllRacks();
 		$this->createRackObjects(
 			[
-				$this->iTestOrgId => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4']
+				$this->getTestOrgId() => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4']
 			]
 		);
 
@@ -128,7 +131,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		list($oOrg2, $oUser) = $this->createAnotherUserInAnotherOrg();
 		$this->createRackObjects(
 			[
-				$this->iTestOrgId => ['RackTest1', 'RackTest2'],
+				$this->getTestOrgId() => ['RackTest1', 'RackTest2'],
 				$oOrg2->GetKey() => ['RackTest3', 'RackTest4'],
 			]
 		);
@@ -150,7 +153,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		$this->deleteAllRacks();
 		$this->createRackObjects(
 			[
-				$this->iTestOrgId => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4']
+				$this->getTestOrgId() => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4']
 			]
 		);
 
@@ -179,7 +182,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	 */
 	public function performBulkChangeTest($sExpectedDisplayableValue, $sExpectedDescription, $oOrg=null, $bIsRackReconKey=false) {
 		if (is_null($oOrg)){
-			$iOrgId = $this->iTestOrgId;
+			$iOrgId = $this->getTestOrgId();
 			$sOrgName = "UnitTestOrganization";
 		}else{
 			$iOrgId = $oOrg->GetKey();

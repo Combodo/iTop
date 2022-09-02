@@ -151,7 +151,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider ImportCsvMessageStillOkProvider
+	 * @dataProvider ImBulChanportCsvMessageStillOkProvider
 	 * make sure N°5305 dictionary changes are still here and UI remains unbroken for any lang
 	 */
 	public function testImportCsvMessageStillOk($sLangCode, $sDictFile)

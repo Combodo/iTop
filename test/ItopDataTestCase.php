@@ -69,7 +69,8 @@ define('TAG_ATTCODE', 'domains');
  */
 class ItopDataTestCase extends ItopTestCase
 {
-	protected $iTestOrgId;
+	private $iTestOrgId;
+
 	// For cleanup
 	private $aCreatedObjects = array();
 

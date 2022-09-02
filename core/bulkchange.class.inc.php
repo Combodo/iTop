@@ -104,7 +104,7 @@ class CellStatus_Issue extends CellStatus_Modify
 class CellStatus_SearchIssue extends CellStatus_Issue
 {
 	private $m_sAllowedValues;
-	private $m_sTargetClass;
+	private ?string $m_sTargetClass;
 
 	//message principal
 	//message secondaire
@@ -119,7 +119,7 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 
 	public function GetDisplayableValue()
 	{
-		if (null == $this->m_sReason) {
+		if (null === $this->m_sReason) {
 			return Dict::Format('UI:CSVReport-Value-NoMatch', '');
 		}
 
@@ -128,8 +128,9 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 
 	public function GetDescription()
 	{
-		if (null === $this->m_sAllowedValues
-				|| '' === $this->m_sAllowedValues ) {
+		if ((\utils::IsNullOrEmptyString($this->m_sAllowedValues))
+				||
+			(is_array($this->m_sAllowedValues) && count($this->m_sAllowedValues) === 0) ) {
 			return '';
 		}
 
