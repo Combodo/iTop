@@ -1044,6 +1044,7 @@ XML
 	<robot id="r2d2"/>
 </root_node>
 XML,
+				// Weird, but seems ok as of now
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1"/>
@@ -1240,6 +1241,23 @@ XML,
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
 	<james_bond  id="Sean" _rename_from="Roger" _delta="must_exist"/>
+</root_node>
+XML
+			],
+			'_old_id with subtree' => [
+				'sInitialXMLInternal' => <<<XML
+<root_node>
+	<james_bond id="Sean" _old_id="Roger">
+		<subtree _alteration="added">etc.</subtree>
+	</james_bond>
+</root_node>
+XML,
+				'sExpectedXMLDelta' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<root_node>
+	<james_bond  id="Sean" _rename_from="Roger" _delta="must_exist">
+    <subtree _delta="define">etc.</subtree>	
+</james_bond>
 </root_node>
 XML
 			],
