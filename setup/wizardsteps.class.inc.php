@@ -715,7 +715,7 @@ class WizStepLicense extends WizardStep
 	{
 		$sMode = $this->oWizard->GetParameter('install_mode');
 		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
-		return $sMode == 'install' && !SetupUtils::IsProductVersion($aModules);
+		return $sMode == 'install' && array_key_exists('itop-hub-connector', $aModules);
 	}
 
     /**
