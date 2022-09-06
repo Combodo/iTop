@@ -13,8 +13,6 @@ use MetaModel;
  * @backupGlobals disabled
  *
  * created a dedicated test for external keys imports.
- * this test may delete Person objects to cover all usecases
- * DO NOT CHANGE USE_TRANSACTION value to avoid any DB loss!
  *
  * Class BulkChangeExtKeyTest
  *
@@ -22,6 +20,11 @@ use MetaModel;
  */
 class BulkChangeExtKeyTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;
+
+	/**
+	 * this test may delete Person objects to cover all usecases
+	 * DO NOT CHANGE USE_TRANSACTION value to avoid any DB loss!
+	 */
 	const USE_TRANSACTION = true;
 
 	private $sUid;

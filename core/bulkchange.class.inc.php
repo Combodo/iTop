@@ -42,6 +42,14 @@ abstract class CellChangeSpec
 		return $this->m_sOql;
 	}
 
+	public function GetDisplayableValueAndDescription() : string
+	{
+		return sprintf("%s%s",
+			$this->GetDisplayableValue(),
+			$this->GetDescription()
+		);
+	}
+
 	abstract public function GetDescription();
 }
 
@@ -99,17 +107,31 @@ class CellStatus_Issue extends CellStatus_Modify
 	{
 		return $this->m_sReason;
 	}
+
+	public function GetDisplayableValueAndDescription() : string
+	{
+		return sprintf("%s. %s",
+			$this->GetDisplayableValue(),
+			$this->GetDescription()
+		);
+	}
 }
 
 class CellStatus_SearchIssue extends CellStatus_Issue
 {
+	/** @var string|null $m_sAllowedValues */
 	private $m_sAllowedValues;
-	private ?string $m_sTargetClass;
 
-	//message principal
-	//message secondaire
-	//possible values
-	//link
+	/** @var string|null $m_sTargetClass */
+	private $m_sTargetClass;
+
+	/**
+	 * CellStatus_SearchIssue constructor.
+	 *
+	 * @param $sReason : main message
+	 * @param null $sClass : used for additional message that provides allowed values for current class $sClass
+	 * @param null $sAllowedValues : used for additional message that provides allowed values $sAllowedValues for current class
+	 */
 	public function __construct($sReason, $sClass=null, $sAllowedValues=null)
 	{
 		parent::__construct(null, null, $sReason);
@@ -128,9 +150,7 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 
 	public function GetDescription()
 	{
-		if ((\utils::IsNullOrEmptyString($this->m_sAllowedValues))
-				||
-			(is_array($this->m_sAllowedValues) && count($this->m_sAllowedValues) === 0) ) {
+		if (\utils::IsNullOrEmptyString($this->m_sAllowedValues)) {
 			return '';
 		}
 
