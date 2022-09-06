@@ -56,9 +56,9 @@ class EMail implements iEMail
 	 *
 	 * @uses utils::GetConfig()
 	 *
-	 * @since 2.7.8 3.0.2 3.1.0 N°4947
+	 * @since 2.7.8 3.0.3 3.1.0 N°4947
 	 */
-	public function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
+	public function LoadConfig()
 	{
 		if (is_null(static::$m_oConfig)) {
 			static::$m_oConfig = utils::GetConfig();
