@@ -683,30 +683,25 @@ class ormCaseLog {
 	{
 		$sRes = '';
 		$aLastEntry = end($this->m_aIndex);
-		$sRaw = substr($this->m_sLog, $aLastEntry['separator_length'], $aLastEntry['text_length']);
-		switch($sFormat)
-		{
-			case static::ENUM_FORMAT_TEXT:
-			if ($aLastEntry['format'] == static::ENUM_FORMAT_TEXT)
-			{
-				$sRes = $sRaw;
+		if ($aLastEntry !== false) {
+			$sRaw = substr($this->m_sLog, $aLastEntry['separator_length'], $aLastEntry['text_length']);
+			switch ($sFormat) {
+				case static::ENUM_FORMAT_TEXT:
+					if ($aLastEntry['format'] == static::ENUM_FORMAT_TEXT) {
+						$sRes = $sRaw;
+					} else {
+						$sRes = utils::HtmlToText($sRaw);
+					}
+					break;
+
+				case static::ENUM_FORMAT_HTML:
+					if ($aLastEntry['format'] == static::ENUM_FORMAT_TEXT) {
+						$sRes = utils::TextToHtml($sRaw);
+					} else {
+						$sRes = InlineImage::FixUrls($sRaw);
+					}
+					break;
 			}
-			else
-			{
-				$sRes = utils::HtmlToText($sRaw);
-			}
-			break;
-			
-			case static::ENUM_FORMAT_HTML:
-			if ($aLastEntry['format'] == static::ENUM_FORMAT_TEXT)
-			{
-				$sRes = utils::TextToHtml($sRaw);
-			}
-			else
-			{
-				$sRes = InlineImage::FixUrls($sRaw);
-			}
-			break;
 		}
 		return $sRes;
 	}
