@@ -1819,7 +1819,6 @@ JS
 	 *
 	 * @return array<string, \CheckResult> full path as key, CheckResult error as value
 	 *
-	 * @uses \CheckResult
 	 * @uses \is_dir()
 	 * @uses \is_writable()
 	 * @uses \file_exists()
