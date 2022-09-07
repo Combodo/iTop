@@ -1022,6 +1022,9 @@ XML
 	 */
 	public function testGetDelta($sInitialXMLInternal, $sExpectedXMLDelta)
 	{
+		// constants aren't accessible in the data provider :(
+		$sExpectedXMLDelta = str_replace('##ITOP_DESIGN_LATEST_VERSION##', ITOP_DESIGN_LATEST_VERSION, $sExpectedXMLDelta);
+
 		$oFactory = $this->MakeVanillaModelFactory($sInitialXMLInternal);
 
 		// Get the delta back
@@ -1047,8 +1050,9 @@ XML,
 				// Weird, but seems ok as of now
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1"/>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="##ITOP_DESIGN_LATEST_VERSION##"/>
 XML
+				,
 			],
 			'_alteration="added" singleton' => [
 				'sInitialXMLInternal' => <<<XML
