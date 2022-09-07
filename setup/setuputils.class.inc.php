@@ -1817,7 +1817,7 @@ JS
 	 *
 	 * @param string[] $aWritableDirs list of dirs to check, relative to APPROOT (for example : `['log','conf','data']`)
 	 *
-	 * @return array full path as key, CheckResult error as value
+	 * @return array<string, \CheckResult> full path as key, CheckResult error as value
 	 *
 	 * @uses \CheckResult
 	 * @uses \is_dir()
