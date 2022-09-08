@@ -112,7 +112,7 @@ class LoginWebPage extends NiceWebPage
 	 */
 	public static function SynchronizeProfiles(&$oUser, array $aProfiles, $sOrigin)
 	{
-		$oProfilesSet = $oUser->Get(‘profile_list’);
+		$oProfilesSet = $oUser->Get('profile_list');
 		//delete old profiles
 		$aExistingProfiles = [];
 		while ($oProfile = $oProfilesSet->Fetch())
