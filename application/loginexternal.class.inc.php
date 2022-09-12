@@ -45,6 +45,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
+			Session::Set('auth_user', $sAuthUser);
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
@@ -53,8 +54,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 	{
 		if (Session::Get('login_mode') == 'external')
 		{
-			$sAuthUser = $this->GetAuthUser();
-			LoginWebPage::OnLoginSuccess($sAuthUser, 'external', $_SESSION['login_mode']);
+			LoginWebPage::OnLoginSuccess(Session::Get('auth_user'), 'external', Session::Get('login_mode'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
