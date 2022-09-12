@@ -7174,7 +7174,8 @@ abstract class MetaModel
 		$bExecuteQuery = true;
 
 		while ($bExecuteQuery) {
-			$oSet = new DBObjectSet($oFilter, array(), array(), null, $iMaxChunkSize);
+			$oSet = new DBObjectSet($oFilter);
+			$oSet->SetLimit($iMaxChunkSize);
 			$oSet->OptimizeColumnLoad(array($sTargetClass => array('finalclass')));
 			$aIdToClass = $oSet->GetColumnAsArray('finalclass', true);
 
