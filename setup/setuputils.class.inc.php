@@ -1595,6 +1595,16 @@ JS
 	}
 
 	/**
+	 * @param array $aModules List of available module codes
+	 *
+	 * @return bool true if the Hub connector is installed
+	 */
+	public static function IsItopHubInstance($aModules)
+	{
+		return array_key_exists('itop-hub-connector', $aModules);
+	}
+
+	/**
 	 * @param array $aModules Available modules with code as key and metadata array as values
 	 *    Same structure as the one returned by {@link \RunTimeEnvironment::AnalyzeInstallation}
 	 * @param string $sExtensionsDir In the setup, get value with the 'extensions_dir' parameter
