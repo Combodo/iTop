@@ -71,8 +71,6 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
-			// Save the checked user
-			$_SESSION['auth_user'] = $sAuthUser;
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
@@ -84,7 +82,15 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	{
 		if (Session::Get('login_mode') == 'form')
 		{
-			$sAuthUser = $_SESSION['auth_user'];
+			if (isset($_SESSION['auth_user']))
+			{
+				// If FSM reenter this state (example 2FA) then the auth_user is not resubmitted
+				$sAuthUser = $_SESSION['auth_user'];
+			}
+			else
+			{
+				$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
+			}
 			// Store 'auth_user' in session for further use
 			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', Session::Get('login_mode'));
 		}
