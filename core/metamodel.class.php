@@ -7168,13 +7168,13 @@ abstract class MetaModel
 	 */
 	public static function PurgeData($oFilter)
 	{
-		$iMaxBufferSize = MetaModel::GetConfig()->GetMaxBufferSize();
+		$iMaxChunkSize = MetaModel::GetConfig()->Get('purge_data.max_chunk_size');
 		$sTargetClass = $oFilter->GetClass();
 		$iNbIdsDeleted = 0;
 		$bExecuteQuery = true;
 
 		while ($bExecuteQuery) {
-			$oSet = new DBObjectSet($oFilter, array(), array(), null, $iMaxBufferSize);
+			$oSet = new DBObjectSet($oFilter, array(), array(), null, $iMaxChunkSize);
 			$oSet->OptimizeColumnLoad(array($sTargetClass => array('finalclass')));
 			$aIdToClass = $oSet->GetColumnAsArray('finalclass', true);
 
@@ -7196,7 +7196,7 @@ abstract class MetaModel
 				}
 				$iNbIdsDeleted += $iNbIds;
 			}
-			if ($iNbIds == 0 || $iNbIds < $iMaxBufferSize) {
+			if ($iNbIds == 0 || $iNbIds < $iMaxChunkSize) {
 				$bExecuteQuery = false;
 			}
 		}

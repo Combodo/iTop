@@ -70,7 +70,6 @@ define('DEFAULT_MIN_DISPLAY_LIMIT', 20);
 define('DEFAULT_MAX_DISPLAY_LIMIT', 30);
 define('DEFAULT_STANDARD_RELOAD_INTERVAL', 5 * 60);
 define('DEFAULT_FAST_RELOAD_INTERVAL', 1 * 60);
-define('DEFAULT_MAX_BUFFER_SIZE', 1000);
 define('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
 define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|external|basic');
 define('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
@@ -1120,6 +1119,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'purge_data.max_chunk_size' => [
+			'type' => 'integer',
+			'description' => 'Maximum item deleted per loop. Used in function MetaModel::purgeData',
+			// examples... not used
+			'default' => 1000,
+			'value' => 1000,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'max_history_length' => [
 			'type' => 'integer',
 			'description' => 'Maximum length of the history table (in the "History" tab on each object) before it gets truncated. Latest modifications are displayed first.',
@@ -1885,11 +1893,6 @@ class Config
 	protected $m_iStandardReloadInterval;
 
 	/**
-	 * @var integer Number of objects treated in a lot for bulk action (as anonymize, archival..)
-	 */
-	protected $m_iMaxBufferSize;
-
-	/**
 	 * @var integer Number of seconds between two reloads of the display (fast)
 	 */
 	protected $m_iFastReloadInterval;
@@ -1986,7 +1989,6 @@ class Config
 		$this->m_iMinDisplayLimit = DEFAULT_MIN_DISPLAY_LIMIT;
 		$this->m_iMaxDisplayLimit = DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = DEFAULT_STANDARD_RELOAD_INTERVAL;
-		$this->m_iMaxBufferSize = DEFAULT_MAX_BUFFER_SIZE;
 		$this->m_iFastReloadInterval = DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = DEFAULT_SECURE_CONNECTION_REQUIRED;
 		$this->m_sDefaultLanguage = 'EN US';
@@ -2145,7 +2147,6 @@ class Config
 		$this->m_iMaxDisplayLimit = isset($MySettings['max_display_limit']) ? trim($MySettings['max_display_limit']) : DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = isset($MySettings['standard_reload_interval']) ? trim($MySettings['standard_reload_interval']) : DEFAULT_STANDARD_RELOAD_INTERVAL;
 		$this->m_iFastReloadInterval = isset($MySettings['fast_reload_interval']) ? trim($MySettings['fast_reload_interval']) : DEFAULT_FAST_RELOAD_INTERVAL;
-		$this->m_iMaxBufferSize = isset($MySettings['max_buffer_size']) ? trim($MySettings['max_buffer_size']) : DEFAULT_MAX_BUFFER_SIZE;
 		$this->m_bSecureConnectionRequired = isset($MySettings['secure_connection_required']) ? (bool)trim($MySettings['secure_connection_required']) : DEFAULT_SECURE_CONNECTION_REQUIRED;
 
 		$this->m_aModuleSettings = isset($MyModuleSettings) ? $MyModuleSettings : array();
@@ -2273,11 +2274,6 @@ class Config
 		return $this->m_iStandardReloadInterval;
 	}
 
-	public function GetMaxBufferSize()
-	{
-		return $this->m_iMaxBufferSize;
-	}
-
 	public function GetFastReloadInterval()
 	{
 		return $this->m_iFastReloadInterval;
@@ -2369,11 +2365,6 @@ class Config
 	public function SetStandardReloadInterval($iStandardReloadInterval)
 	{
 		$this->m_iStandardReloadInterval = $iStandardReloadInterval;
-	}
-
-	public function SetMaxBufferSize($iMaxBufferSize)
-	{
-		$this->m_iMaxBufferSize = $iMaxBufferSize;
 	}
 
 	public function SetFastReloadInterval($iFastReloadInterval)
@@ -2472,7 +2463,6 @@ class Config
 		$aSettings['min_display_limit'] = $this->m_iMinDisplayLimit;
 		$aSettings['max_display_limit'] = $this->m_iMaxDisplayLimit;
 		$aSettings['standard_reload_interval'] = $this->m_iStandardReloadInterval;
-		$aSettings['max_buffer_size'] = $this->m_iMaxBufferSize;
 		$aSettings['fast_reload_interval'] = $this->m_iFastReloadInterval;
 		$aSettings['secure_connection_required'] = $this->m_bSecureConnectionRequired;
 		$aSettings['default_language'] = $this->m_sDefaultLanguage;
@@ -2577,7 +2567,6 @@ class Config
 				'max_display_limit'        => $this->m_iMaxDisplayLimit,
 				'min_display_limit'        => $this->m_iMinDisplayLimit,
 				'standard_reload_interval' => $this->m_iStandardReloadInterval,
-				'max_buffer_size'          => $this->m_iMaxBufferSize,
 			);
 			foreach ($aIntValues as $sKey => $iValue)
 			{
