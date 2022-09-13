@@ -19,5 +19,5 @@
 
 // Input
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'Senhas não correspondem',
 ));
