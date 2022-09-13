@@ -110,8 +110,10 @@ class CellStatus_Issue extends CellStatus_Modify
 	{
 		return $this->m_sReason;
 	}
-
-	public function GetDisplayableValueAndDescription() : string
+	/*
+	 * @since 3.1.0
+	 */
+	public function GetDisplayableValueAndDescription(): string
 	{
 		return sprintf("%s. %s",
 			$this->GetDisplayableValue(),
