@@ -650,7 +650,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Select the class to search: ',
 
 	'UI:CSVReport-Value-Modified' => 'Modified',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s',
