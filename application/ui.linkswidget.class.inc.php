@@ -377,10 +377,10 @@ JS
 		$aForm = array();
 		$iMaxAddedId = 0;
 		$iAddedId = -1; // Unique id for new links
-		$oBlock->aRemoved = utils::ReadPostedParam("attr_{$sFormPrefix}{$this->m_sAttCode}_tbd", '[]', 'raw_data');
+		$oBlock->aRemoved = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->m_sAttCode}_tbd", '[]', 'raw_data'));
 		while ($oCurrentLink = $oValue->Fetch()) {
 			// We try to retrieve the remote object as usual
-			if (!in_array($oCurrentLink->GetKey(), json_decode($oBlock->aRemoved))) {
+			if (!in_array($oCurrentLink->GetKey(), $oBlock->aRemoved)) {
 				$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */);
 				// If successful, it means that we can edit its link
 				if ($oLinkedObj !== null) {

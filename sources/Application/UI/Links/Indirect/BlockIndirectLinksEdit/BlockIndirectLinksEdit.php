@@ -45,8 +45,8 @@ class BlockIndirectLinksEdit extends UIContentBlock
 	public $bJSDoSearch;
 	/** @var int */
 	public $iMaxAddedId = 0;
-	/** @var string */
-	public $aRemoved = '[]';
+	/** @var array */
+	public $aRemoved = [];
 
 	/** @var string */
 	public $sFormPrefix;

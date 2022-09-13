@@ -12,7 +12,7 @@ oWidget{{ oUIBlock.iInputId }} = new LinksWidget(
         '{{ oUIBlock.sExtKeyToRemote }}',
         {{ oUIBlock.bJSDoSearch }},
         {{ oUIBlock.iMaxAddedId }},
-        {{ oUIBlock.aRemoved | raw }}
+        {{ oUIBlock.aRemoved | json_encode | raw }}
 );
 oWidget{{ oUIBlock.iInputId }}.Init();
 {% endapply %}
