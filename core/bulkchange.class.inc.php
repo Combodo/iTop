@@ -701,7 +701,7 @@ class BulkChange
 				$aDisplayedAllowedValues[] = $oVisibleObject->Get($sForeignAttCode);
 			}
 			$allowedValues = implode(", ", $aDisplayedAllowedValues);
-			if ($oExtObjectSetWithCurrentUserPermissions->Count()>3){
+			if ($oExtObjectSetWithCurrentUserPermissions->Count() > 3){
 				$allowedValues .= "...";
 			}
 		} catch(Exception $e) {
