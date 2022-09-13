@@ -100,6 +100,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Lucas, Jonathan
 - Malik, Remie
 - Mindêllo de Andrade, Lucas (a.k.a [@rokam](https://www.github.com/rokam))
+- Mozart de Oliveira, Eduardo (a.k.a [@eduardomozart](https://github.com/eduardomozart))
 - Raenker, Martin
 - Rudner, Björn (a.k.a [@rudnerbjoern](https://github.com/rudnerbjoern))
 - Rosenke, Stephan
