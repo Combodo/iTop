@@ -715,8 +715,8 @@ class BulkChange
 			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser', $sTargetClass);
 			return new CellStatus_SearchIssue($sReason, $sTargetClass, $allowedValues);
 
-			//possible values: DD,DD
-			//search link for exhaustive values
+			// Possible values: DD,DD
+			// Search link for exhaustive values
 		}
 
 		// No match. This is not linked to any right issue
