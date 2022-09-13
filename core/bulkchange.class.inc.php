@@ -711,7 +711,7 @@ class BulkChange
 		}
 
 		if ($iAllowAllDataObjectCount != $iCurrentUserRightsObjectCount) {
-			//no match and some objects NOT visible by current user. including current search maybe...
+			// No match and some objects NOT visible by current user. including current search maybe...
 			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser', $sTargetClass);
 			return new CellStatus_SearchIssue($sReason, $sTargetClass, $allowedValues);
 
