@@ -658,11 +658,7 @@ EOF
 			);
 			if ($oMutex->IsLocked())
 			{
-                $sCronMessage = '<div class="message">An '.ITOP_APPLICATION.' cron process is being executed on the target database. '.ITOP_APPLICATION.' cron process will be stopped during the setup execution.</div>';
-				$oPage->add(<<<HTML
-$sCronMessage
-HTML
-				);
+				$oPage->add('<div class="message">An '.ITOP_APPLICATION.' cron process is being executed on the target database. '.ITOP_APPLICATION.' cron process will be stopped during the setup execution.</div>');
 			}
 		}
 	}
