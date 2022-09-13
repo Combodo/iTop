@@ -42,7 +42,10 @@ abstract class CellChangeSpec
 		return $this->m_sOql;
 	}
 
-	public function GetDisplayableValueAndDescription() : string
+	/**
+	 * @since 3.1.0
+	 */
+	public function GetDisplayableValueAndDescription(): string
 	{
 		return sprintf("%s%s",
 			$this->GetDisplayableValue(),
