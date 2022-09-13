@@ -719,8 +719,8 @@ class BulkChange
 			//search link for exhaustive values
 		}
 
-		//no match. this is not linked to any right issue
-		//possible values: DD,DD
+		// No match. This is not linked to any right issue
+		// Possible values: DD,DD
 		$sReason = Dict::Format('UI:CSVReport-Value-NoMatch', $value);
 		return new CellStatus_SearchIssue($sReason, $sTargetClass, $allowedValues);
 
