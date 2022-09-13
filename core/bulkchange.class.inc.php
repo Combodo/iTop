@@ -691,7 +691,7 @@ class BulkChange
 			$aDisplayedAllowedValues=[];
 			$allowedValues="";
 			$oExtObjectSetWithCurrentUserPermissions->SetLimit(4);
-			for($i=0; $i<3; $i++){
+			for($i = 0; $i < 3; $i++){
 				/** @var \DBObject $oVisibleObject */
 				$oVisibleObject = $oExtObjectSetWithCurrentUserPermissions->Fetch();
 				if (is_null($oVisibleObject)){
