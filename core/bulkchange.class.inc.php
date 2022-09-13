@@ -265,8 +265,11 @@ class RowStatus_Issue extends RowStatus
 	}
 }
 
-//class dedicated to testability
-//not used/ignored in csv imports UI/CLI
+/**
+ * class dedicated to testability
+ * not used/ignored in csv imports UI/CLI
+ * @since 3.1.0
+ */
 class RowStatus_Error extends RowStatus
 {
 	protected $m_sError;
@@ -647,15 +650,17 @@ class BulkChange
 	}
 
 	/**
-	 * @param $sTargetClass: target class of the failed search
-	 * @param $sForeignAttCode : foreign attribute code of the foreign search
-	 * @param $value : unfound value
+	 * @param string $sTargetClass target class of the failed search
+	 * @param string $sForeignAttCode foreign attribute code of the foreign search
+	 * @param string $value unfound value
 	 *
 	 * @return \CellStatus_SearchIssue
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 3.1.0
 	 */
 	protected function GetCellSearchIssue($sTargetClass, $sForeignAttCode, $value) : CellStatus_SearchIssue {
 		//current search with current permissions did not match
@@ -677,7 +682,7 @@ class BulkChange
 			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject', $sTargetClass);
 			return new CellStatus_SearchIssue($sReason);
 
-			//search link for exhaustive values
+			//TODO : Could be nice to add search link on external key object later on.
 		}
 
 		if ($iCurrentUserRightsObjectCount === 0){
@@ -686,7 +691,7 @@ class BulkChange
 				$sTargetClass);
 			return  new CellStatus_SearchIssue($sReason);
 
-			//search link for exhaustive values
+			//TODO : Could be nice to add search link on external key object later on.
 		}
 
 		try{
@@ -716,7 +721,7 @@ class BulkChange
 			return new CellStatus_SearchIssue($sReason, $sTargetClass, $allowedValues);
 
 			// Possible values: DD,DD
-			// Search link for exhaustive values
+			//TODO : Could be nice to add search link on external key object later on.
 		}
 
 		// No match. This is not linked to any right issue
@@ -724,7 +729,7 @@ class BulkChange
 		$sReason = Dict::Format('UI:CSVReport-Value-NoMatch', $value);
 		return new CellStatus_SearchIssue($sReason, $sTargetClass, $allowedValues);
 
-		//search link for exhaustive values
+		//TODO : Could be nice to add search link on external key object later on.
 	}
 
 	protected function PrepareMissingObject(&$oTargetObj, &$aErrors)

@@ -12,8 +12,6 @@ use MetaModel;
  * @backupGlobals disabled
  */
 class ImportTest extends ItopDataTestCase {
-	const CREATE_TEST_ORG = true;
-	const USE_TRANSACTION = false;
 
 	private $sUrl;
 	private $sUid;
