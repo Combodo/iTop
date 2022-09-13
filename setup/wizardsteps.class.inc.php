@@ -707,15 +707,16 @@ class WizStepLicense extends WizardStep
 	}
 
 	/**
-	 * @return bool
+	 * @return bool true if we need to display a GDPR confirmation
 	 * @throws \Exception
-	 * @since 2.7.7 3.0.2 3.1.0
+	 * @since 2.7.7 3.0.2 3.1.0 N°5037
 	 */
-	private function NeedsRgpdConsent()
+	private function NeedsGdprConsent()
 	{
 		$sMode = $this->oWizard->GetParameter('install_mode');
 		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
-		return $sMode == 'install' && SetupUtils::IsItopHubInstance($aModules);
+
+		return (($sMode === 'install') && SetupUtils::IsItopHubInstance($aModules));
 	}
 
     /**
@@ -752,7 +753,7 @@ EOF
 		$oPage->add('</fieldset>');
         $sChecked = ($this->oWizard->GetParameter('accept_license', 'no') == 'yes') ? ' checked ' : '';
         $oPage->p('<input type="checkbox" class="check_select" name="accept_license" id="accept" value="yes" '.$sChecked.'><label for="accept">&nbsp;I accept the terms of the licenses of the '.count($aLicenses).' components mentioned above.</label>');
-	    if ($this->NeedsRgpdConsent()) {
+	    if ($this->NeedsGdprConsent()) {
 		    $oPage->add('<div id="rgpd_message" class="message message-info">'.ITOP_APPLICATION.' software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).<p></p>
 By installing '.ITOP_APPLICATION.' you agree that some information will be collected by Combodo to help you manage your instances and for statistical purposes.
 This data remains anonymous until it is associated to a user account on iTop Hub.</p>
