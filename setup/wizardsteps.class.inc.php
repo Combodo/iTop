@@ -658,10 +658,7 @@ EOF
 			);
 			if ($oMutex->IsLocked())
 			{
-				$oPage->add(<<<HTML
-<div class="message">An iTop cron process is being executed on the target database. iTop cron process will be stopped during the setup execution.</div>
-HTML
-				);
+				$oPage->add('<div class="message">'.ITOP_APPLICATION.' cron process is being executed on the target database. '.ITOP_APPLICATION.' cron process will be stopped during the setup execution.</div>');
 			}
 		}
 	}
@@ -756,8 +753,8 @@ EOF
         $sChecked = ($this->oWizard->GetParameter('accept_license', 'no') == 'yes') ? ' checked ' : '';
         $oPage->p('<input type="checkbox" class="check_select" name="accept_license" id="accept" value="yes" '.$sChecked.'><label for="accept">&nbsp;I accept the terms of the licenses of the '.count($aLicenses).' components mentioned above.</label>');
 	    if ($this->NeedsRgpdConsent()) {
-		    $oPage->add('<div id="rgpd_message" class="message message-info">iTop software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).<p></p>
-By installing iTop you agree that some information will be collected by Combodo to help you manage your instances and for statistical purposes.
+		    $oPage->add('<div id="rgpd_message" class="message message-info">'.ITOP_APPLICATION.' software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).<p></p>
+By installing '.ITOP_APPLICATION.' you agree that some information will be collected by Combodo to help you manage your instances and for statistical purposes.
 This data remains anonymous until it is associated to a user account on iTop Hub.</p>
 <p>List of collected data available in our <a target="_blank" href="https://www.itophub.io/page/data-privacy">Data privacy section.</p></a>');
 		    $oPage->add('<input type="checkbox" class="check_select" id="rgpd_consent">');
