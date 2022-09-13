@@ -155,7 +155,8 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 
 	public function GetDescription()
 	{
-		if (\utils::IsNullOrEmptyString($this->m_sAllowedValues)) {
+		if (\utils::IsNullOrEmptyString($this->m_sAllowedValues) ||
+			\utils::IsNullOrEmptyString($this->m_sTargetClass)) {
 			return '';
 		}
 
@@ -272,6 +273,7 @@ class RowStatus_Issue extends RowStatus
  */
 class RowStatus_Error extends RowStatus
 {
+	/** @var string */
 	protected $m_sError;
 
 	public function __construct($sError)
@@ -452,7 +454,7 @@ class BulkChange
 				if (array_key_exists($sCacheKey, $this->m_aExtKeysMappingCache[$sAttCode]))
 				{
 					// Cache hit
-					$iCount = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['c'];
+					$iObjectFoundCount = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['c'];
 					$iForeignKey = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['k'];
 					$sOQL = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['oql'];
 					// Record the hit
@@ -462,20 +464,20 @@ class BulkChange
 				{
 					// Cache miss, let's initialize it
 					$oExtObjects = new CMDBObjectSet($oReconFilter);
-					$iCount = $oExtObjects->Count();
-					if ($iCount == 1)
+					$iObjectFoundCount = $oExtObjects->Count();
+					if ($iObjectFoundCount == 1)
 					{
 						$oForeignObj = $oExtObjects->Fetch();
 						$iForeignKey = $oForeignObj->GetKey();
 					}
 					$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey] = array(
-						'c' => $iCount,
+						'c' => $iObjectFoundCount,
 						'k' => $iForeignKey,
 						'oql' => $oReconFilter->ToOql(),
 						'h' => 0, // number of hits on this cache entry
 					);
 				}
-				switch($iCount)
+				switch($iObjectFoundCount)
 				{
 					case 0:
 						$oCellStatus_SearchIssue = $this->GetCellSearchIssue($oExtKey->GetTargetClass(), $sForeignAttCode, $value);
@@ -489,8 +491,8 @@ class BulkChange
 					break;
 
 					default:
-					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-FoundMany', $iCount);
-					$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $iCount, $sOQL);
+					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-FoundMany', $iObjectFoundCount);
+					$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $iObjectFoundCount, $sOQL);
 				}
 			}
 
@@ -561,7 +563,6 @@ class BulkChange
 				$value = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 				if (is_null($value) && (strlen($aRowData[$iCol]) > 0))
 				{
-					//N°595 - display allowed valued for UI ergonomy
 					if ($oAttDef instanceof AttributeEnum || $oAttDef instanceof AttributeTagSet){
 						/** @var AttributeDefinition $oAttributeDefinition */
 						$oAttributeDefinition = $oAttDef;
@@ -650,6 +651,8 @@ class BulkChange
 	}
 
 	/**
+	 * search with current permissions did not match
+	 * let's search why and give some more feedbacks to the user through proper labels
 	 * @param string $sTargetClass target class of the failed search
 	 * @param string $sForeignAttCode foreign attribute code of the foreign search
 	 * @param string $value unfound value
@@ -678,7 +681,6 @@ class BulkChange
 		$iCurrentUserRightsObjectCount = $oExtObjectSetWithCurrentUserPermissions->Count();
 
 		if ($iAllowAllDataObjectCount === 0) {
-			//no objects at all
 			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject', $sTargetClass);
 			return new CellStatus_SearchIssue($sReason);
 
