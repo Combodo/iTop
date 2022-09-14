@@ -272,6 +272,8 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\QuickCreate\\QuickCreateHelper' => $baseDir . '/sources/Application/UI/Base/Component/QuickCreate/QuickCreateHelper.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Spinner\\Spinner' => $baseDir . '/sources/Application/UI/Base/Component/Spinner/Spinner.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Spinner\\SpinnerUIBlockFactory' => $baseDir . '/sources/Application/UI/Base/Component/Spinner/SpinnerUIBlockFactory.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Template\\Template' => $baseDir . '/sources/Application/UI/Base/Component/Template/Template.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Template\\TemplateUIBlockFactory' => $baseDir . '/sources/Application/UI/Base/Component/Template/TemplateUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Text\\Text' => $baseDir . '/sources/Application/UI/Base/Component/Text/Text.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\Title' => $baseDir . '/sources/Application/UI/Base/Component/Title/Title.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\TitleUIBlockFactory' => $baseDir . '/sources/Application/UI/Base/Component/Title/TitleUIBlockFactory.php',

@@ -19,6 +19,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Template\TemplateUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -175,6 +176,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oToolbar->AddSubBlock($oBlockMenu);
 			$oContainer->AddSubBlock($oToolbar);
 			$oContainer->AddSubBlock($oDataTable);
+		}
+
+		// row actions toolbar template
+		if ($oDataTable->HasRowActions()) {
+			$oContainer->AddSubBlock(DataTableUIBlockFactory::MakeActionRowToolbarTemplate($oDataTable));
 		}
 
 		return $oContainer;
@@ -457,9 +463,13 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		} else {
 			$aOptions['sSelectedRows'] = '[]';
 		}
-		$aExtraParams['table_id']=$sTableId;
-		$aExtraParams['list_id']=$sListId;
+		$aExtraParams['table_id'] = $sTableId;
+		$aExtraParams['list_id'] = $sListId;
 
+		/* row actions  */
+		if (isset($aExtraParams['row_actions'])) {
+			$aOptions['row_actions'] = $aExtraParams['row_actions'];
+		}
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
@@ -474,6 +484,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
 		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
+
+		// row actions
+		if (isset($aExtraParams['row_actions'])) {
+			$oDataTable->SetRowActions($aExtraParams['row_actions']);
+		}
+
 
 		return $oDataTable;
 	}
@@ -712,6 +728,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
 		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
+
+		// row actions
+		if (isset($aExtraParams['row_actions'])) {
+			$oDataTable->SetRowActions($aExtraParams['row_actions']);
+		}
 
 		return $oDataTable;
 	}
@@ -970,24 +991,44 @@ JS;
 	public static function GetAllowedParams(): array
 	{
 		return [
-			'surround_with_panel',  /** bool embed table into a Panel */
-			'menu',                 /** bool display table menu */
-			'view_link',            /** bool display the friendlyname column with links to the objects details */
-			'link_attr',            /** string link att code */
-			'object_id',            /** int Id of the object linked */
-			'target_attr',          /** string target att code of the link */
-			'selection_mode',       /** bool activate selection */
-			'selection_type',       /** string 'multiple' or 'single' */
-			'extra_fields',         /** string comma separated list of link att code to display ('alias.attcode')*/
-			'zlist',                /** string name of the zlist to display when 'extra_fields' is not set */
-			'display_limit',        /** bool if true pagination is used (default = true)  */
-			'table_id',             /** string datatable id */
-			'cssCount',             /** string external counter (input hidden) js selector */
-			'selected_rows',        /** array list of Ids already selected when displaying the datatable */
-			'display_aliases',      /** string comma separated list of class aliases to display */
-			'list_id',              /** string list outer id */
-			'selection_enabled',    	/** list of id in witch select is allowed, if not exists all lines are selectable */
-			'id_for_select', /**give definition of id for select checkbox*/
+			'surround_with_panel',
+			/** bool embed table into a Panel */
+			'menu',
+			/** bool display table menu */
+			'view_link',
+			/** bool display the friendlyname column with links to the objects details */
+			'link_attr',
+			/** string link att code */
+			'object_id',
+			/** int Id of the object linked */
+			'target_attr',
+			/** string target att code of the link */
+			'selection_mode',
+			/** bool activate selection */
+			'selection_type',
+			/** string 'multiple' or 'single' */
+			'extra_fields',
+			/** string comma separated list of link att code to display ('alias.attcode')*/
+			'zlist',
+			/** string name of the zlist to display when 'extra_fields' is not set */
+			'display_limit',
+			/** bool if true pagination is used (default = true)  */
+			'table_id',
+			/** string datatable id */
+			'cssCount',
+			/** string external counter (input hidden) js selector */
+			'selected_rows',
+			/** array list of Ids already selected when displaying the datatable */
+			'display_aliases',
+			/** string comma separated list of class aliases to display */
+			'list_id',
+			/** string list outer id */
+			'selection_enabled',
+			/** list of id in witch select is allowed, if not exists all lines are selectable */
+			'id_for_select',
+			/**give definition of id for select checkbox*/
+			'row_actions',
+			/** array of blocks displayed on every row */
 		];
 	}
 }

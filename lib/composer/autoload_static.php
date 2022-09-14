@@ -637,6 +637,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\QuickCreate\\QuickCreateHelper' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/QuickCreate/QuickCreateHelper.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Spinner\\Spinner' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Spinner/Spinner.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Spinner\\SpinnerUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Spinner/SpinnerUIBlockFactory.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\Template\\Template' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Template/Template.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\Template\\TemplateUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Template/TemplateUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Text\\Text' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Text/Text.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\Title' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Title/Title.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\TitleUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Title/TitleUIBlockFactory.php',

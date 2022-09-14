@@ -208,6 +208,15 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             }
         },
         {% endfor %}
+        {% if oUIBlock.HasRowActions() %}
+        {
+            type: "html",
+            orderable: false,
+            render: function ( data, type, row, meta ) {
+                return $('#{{ oUIBlock.GetId() }}_actions_buttons_template').html();
+            }
+        },
+        {% endif %}
     ],
     ajax: $.fn.dataTable.pipeline({
                 url: "{{ oUIBlock.GetAjaxUrl() }}",
@@ -416,3 +425,14 @@ if(window.ResizeObserver){
         });
         oTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
 }
+
+// for each row action
+{% for aAction in oUIBlock.GetRowActions() %}
+    $('#{{ oUIBlock.GetId() }} tbody').on('click', 'button[data-action-id="{{ loop.index0 }}"]', function() {
+        let iActionId = $(this).data('action-id');
+        let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
+        let oTrElement = $(this).closest('tr');
+        let aData = $('#{{ oUIBlock.GetId() }}').DataTable().row(oTrElement).data();
+        {{ aAction.js_row_action|raw }};
+    });
+{% endfor %}

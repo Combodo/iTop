@@ -1,0 +1,9 @@
+{# @copyright   Copyright (C) 2010-2022 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+    <template id="{{ oUIBlock.GetId() }}">
+        {% for oMainBlock in oUIBlock.GetMainBlocks() %}
+            {{ render_block(oMainBlock, {aPage: aPage}) }}
+        {% endfor %}
+    </template>
+{% endapply %}
