@@ -505,11 +505,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aExtraParams['table_id'] = $sTableId;
 		$aExtraParams['list_id'] = $sListId;
 
-		/* row actions  */
-		if (isset($aExtraParams['row_actions'])) {
-			$aOptions['row_actions'] = $aExtraParams['row_actions'];
-		}
-
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
 		$oDataTable->SetAjaxData([
@@ -528,7 +523,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		if (isset($aExtraParams['row_actions'])) {
 			$oDataTable->SetRowActions($aExtraParams['row_actions']);
 		}
-
 
 		return $oDataTable;
 	}
