@@ -295,17 +295,35 @@ class RowStatus_Error extends RowStatus
  */
 class BulkChange
 {
+	/** @var string */
 	protected $m_sClass;
 	protected $m_aData; // Note: hereafter, iCol maybe actually be any acceptable key (string)
 	// #@# todo: rename the variables to sColIndex
-	protected $m_aAttList; // attcode => iCol
-	protected $m_aExtKeys; // aExtKeys[sExtKeyAttCode][sExtReconcKeyAttCode] = iCol;
-	protected $m_aReconcilKeys; // attcode (attcode = 'id' for the pkey)
-	protected $m_sSynchroScope; // OQL - if specified, then the missing items will be reported
-	protected $m_aOnDisappear; // array of attcode => value, values to be set when an object gets out of scope (ignored if no scope has been defined)
-	protected $m_sDateFormat; // Date format specification, see DateTime::createFromFormat
-	protected $m_bLocalizedValues; // Values in the data set are localized (see AttributeEnum)
-	protected $m_aExtKeysMappingCache; // Cache for resolving external keys based on the given search criterias
+	/** @var array<string, string> attcode as key, iCol as value */
+	protected $m_aAttList;
+	/** @var array<string, array<string, string>> sExtKeyAttCode as key, array of sExtReconcKeyAttCode/iCol as value */
+	protected $m_aExtKeys;
+	/** @var string[] list of attcode (attcode = 'id' for the pkey) */
+	protected $m_aReconcilKeys;
+	/** @var string OQL - if specified, then the missing items will be reported */
+	protected $m_sSynchroScope;
+	/**
+	 * @var array<string, mixed> attcode as key, attvalue as value. Values to be set when an object gets out of scope
+	 *                          (ignored if no scope has been defined)
+	 */
+	protected $m_aOnDisappear;
+	/**
+	 * @see DateTime::createFromFormat
+	 * @var string Date format specification
+	 */
+	protected $m_sDateFormat;
+	/**
+	 * @see AttributeEnum
+	 * @var boolean true if Values in the data set are localized
+	 */
+	protected $m_bLocalizedValues;
+	/** @var array Cache for resolving external keys based on the given search criterias */
+	protected $m_aExtKeysMappingCache;
 
 	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys, $sSynchroScope = null, $aOnDisappear = null, $sDateFormat = null, $bLocalize = false)
 	{
