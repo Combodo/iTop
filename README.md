@@ -102,8 +102,9 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Mindêllo de Andrade, Lucas (a.k.a [@rokam](https://www.github.com/rokam))
 - Mozart de Oliveira, Eduardo (a.k.a [@eduardomozart](https://github.com/eduardomozart))
 - Raenker, Martin
-- Rudner, Björn (a.k.a [@rudnerbjoern](https://github.com/rudnerbjoern))
+- Roháč, Richard (a.k.a [@RohacRichard](https://github.com/RohacRichard))
 - Rosenke, Stephan
+- Rudner, Björn (a.k.a [@rudnerbjoern](https://github.com/rudnerbjoern))
 - Seki, Shoji
 - Shilov, Vladimir
 - Stukalov, Ilya (a.k.a [@ilya](https://www.github.com/ilya)-stukalov)
