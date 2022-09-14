@@ -32,25 +32,20 @@ Swift_Preferences::getInstance()->setCharset('UTF-8');
 
 class EmailSwiftMailer extends EMail
 {
-	protected static $m_oConfig = null;
 	protected $m_aData; // For storing data to serialize
-
-	public function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
-	{
-		if (is_null(self::$m_oConfig))
-		{
-			self::$m_oConfig = new Config($sConfigFile);
-		}
-	}
 
 	protected $m_oMessage;
 
-	/** @noinspection PhpMissingParentConstructorInspection */
+	/**
+	 * @noinspection PhpMissingParentConstructorInspection
+	 * @noinspection MagicMethodsValidityInspection
+	 */
 	public function __construct()
 	{
 		$this->m_aData = array();
 		$this->m_oMessage = new Swift_Message();
-		$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
+
+		$this->InitRecipientFrom();
 	}
 
 	/**
@@ -63,7 +58,7 @@ class EmailSwiftMailer extends EMail
 	{
 		return serialize($this->m_aData);
 	}
-	
+
 	/**
 	 * Custom de-serialization method
 	 * @param string $sSerializedMessage The serialized representation of the message
@@ -155,39 +150,35 @@ class EmailSwiftMailer extends EMail
 	{
 		// If the body of the message is in HTML, embed all images based on attachments
 		$this->EmbedInlineImages();
-		
-		$this->LoadConfig();
 
-		$sTransport = self::$m_oConfig->Get('email_transport');
-		switch ($sTransport)
-		{
-		case 'SMTP':
-			$sHost = self::$m_oConfig->Get('email_transport_smtp.host');
-			$sPort = self::$m_oConfig->Get('email_transport_smtp.port');
-			$sEncryption = self::$m_oConfig->Get('email_transport_smtp.encryption');
-			$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
-			$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
+		$sTransport = static::$m_oConfig->Get('email_transport');
+		switch ($sTransport) {
+			case 'SMTP':
+				$sHost = static::$m_oConfig->Get('email_transport_smtp.host');
+				$sPort = static::$m_oConfig->Get('email_transport_smtp.port');
+				$sEncryption = static::$m_oConfig->Get('email_transport_smtp.encryption');
+				$sUserName = static::$m_oConfig->Get('email_transport_smtp.username');
+				$sPassword = static::$m_oConfig->Get('email_transport_smtp.password');
 
-			$oTransport = new Swift_SmtpTransport($sHost, $sPort, $sEncryption);
-			if (strlen($sUserName) > 0)
-			{
-				$oTransport->setUsername($sUserName);
-				$oTransport->setPassword($sPassword);
-			}
-			break;
+				$oTransport = new Swift_SmtpTransport($sHost, $sPort, $sEncryption);
+				if (strlen($sUserName) > 0) {
+					$oTransport->setUsername($sUserName);
+					$oTransport->setPassword($sPassword);
+				}
+				break;
 
-		case 'Null':
-			$oTransport = new Swift_NullTransport();
-			break;
-		
-		case 'LogFile':
-			$oTransport = new Swift_LogFileTransport(new Swift_Events_SimpleEventDispatcher());
-			$oTransport->setLogFile(APPROOT.'log/mail.log');
-			break;
-			
-		case 'PHPMail':
-		default:
-			$oTransport = new Swift_SendmailTransport();
+			case 'Null':
+				$oTransport = new Swift_NullTransport();
+				break;
+
+			case 'LogFile':
+				$oTransport = new Swift_LogFileTransport(new Swift_Events_SimpleEventDispatcher());
+				$oTransport->setLogFile(APPROOT.'log/mail.log');
+				break;
+
+			case 'PHPMail':
+			default:
+				$oTransport = new Swift_SendmailTransport();
 		}
 
 		$oMailer = new Swift_Mailer($oTransport);
