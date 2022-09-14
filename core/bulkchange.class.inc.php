@@ -103,7 +103,7 @@ class CellStatus_Issue extends CellStatus_Modify
 		{
 			return Dict::Format('UI:CSVReport-Value-SetIssue');
 		}
-		return Dict::Format('UI:CSVReport-Value-ChangeIssue', $this->m_proposedValue);
+		return Dict::Format('UI:CSVReport-Value-ChangeIssue', \utils::EscapeHtml($this->m_proposedValue));
 	}
 
 	public function GetDescription()
@@ -667,7 +667,7 @@ class BulkChange
 	 */
 	protected function GetCellSearchIssue($sTargetClass, $sForeignAttCode, $value) : CellStatus_SearchIssue {
 		//current search with current permissions did not match
-		//let's search why and give some more feedbackst to the user
+		//let's search why and give some more feedback to the user
 
 		//count all objects with all permissions
 		$oReconFilter2 = new DBObjectSearch($sTargetClass);
@@ -691,7 +691,7 @@ class BulkChange
 			//no objects visible by current user
 			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser',
 				$sTargetClass);
-			return  new CellStatus_SearchIssue($sReason);
+			return new CellStatus_SearchIssue($sReason);
 
 			//TODO : Could be nice to add search link on external key object later on.
 		}
@@ -699,6 +699,7 @@ class BulkChange
 		try{
 			$aDisplayedAllowedValues=[];
 			$allowedValues="";
+			// possibles values are displayed to UI user. we have to limit the amount of displayed values
 			$oExtObjectSetWithCurrentUserPermissions->SetLimit(4);
 			for($i = 0; $i < 3; $i++){
 				/** @var \DBObject $oVisibleObject */
@@ -714,7 +715,11 @@ class BulkChange
 				$allowedValues .= "...";
 			}
 		} catch(Exception $e) {
-			IssueLog::Error("failure when fetching few visible objects: " . $e->getMessage());
+			IssueLog::Error("failure during CSV import when fetching few visible objects: ", null,
+				[ 'target_class' => $sTargetClass, 'foreign_att_code' => $sForeignAttCode, 'value' => $value, 'message' => $e->getMessage()]
+			);
+			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser', $sTargetClass);
+			return new CellStatus_SearchIssue($sReason);
 		}
 
 		if ($iAllowAllDataObjectCount != $iCurrentUserRightsObjectCount) {
@@ -1053,7 +1058,7 @@ class BulkChange
 								$sFormat = $sDateFormat;
 							}
 							$oFormat = new DateTimeFormat($sFormat);
-							$sDateExample = $oFormat->Format(new DateTime('2022-10-23 16:17:33'));
+							$sDateExample = $oFormat->Format(new DateTime('2022-10-23 16:25:33'));
 							$sRegExp = $oFormat->ToRegExpr('/');
 							$sErrorMsg = Dict::Format('UI:CSVReport-Row-Issue-ExpectedDateFormat', $sDateExample);
 							if (!preg_match($sRegExp, $sValue))
@@ -1074,7 +1079,7 @@ class BulkChange
 								{
 									// Leave the cell unchanged
 									$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
-									$aResult[$iRow][$iCol] = new CellStatus_Issue(utils::HtmlEntities($sValue), null, $sErrorMsg);
+									$aResult[$iRow][$iCol] = new CellStatus_Issue($sValue, null, $sErrorMsg);
 								}
 							}
 						}

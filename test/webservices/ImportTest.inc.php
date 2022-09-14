@@ -49,6 +49,8 @@ class ImportTest extends ItopDataTestCase {
 		{
 			$oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
 			$this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
+		} else {
+			throw new \Exception("setup failed. test cannot work as usual");
 		}
 	}
 
@@ -85,7 +87,6 @@ class ImportTest extends ItopDataTestCase {
 			'with reconciliation key' => [
 				"sReconciliationKeys" => "name,first_name,org_id->name",
 				"sExpectedLastLineNeedle" => 'Issue: failed to reconcile;n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): '
-
 			],
 		];
 	}
