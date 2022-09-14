@@ -270,13 +270,11 @@ class EmailSwiftMailer extends EMail
 		}
 		else
 		{
-			$bConfigASYNC = MetaModel::GetConfig()->Get('email_asynchronous');
-			if ($bConfigASYNC)
-			{
+			$oConfig = $this->LoadConfig();
+			$bConfigASYNC = $oConfig->Get('email_asynchronous');
+			if ($bConfigASYNC) {
 				return $this->SendAsynchronous($aIssues, $oLog);
-			}
-			else
-			{
+			} else {
 				return $this->SendSynchronous($aIssues, $oLog);
 			}
 		}
