@@ -119,6 +119,10 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
     &.selected {
       background-color: $ibo-datatable--row--background-color--is-selected;
     }
+
+    .ibo-row-actions-toolbar{
+      justify-content: end;
+    }
   }
 }
 

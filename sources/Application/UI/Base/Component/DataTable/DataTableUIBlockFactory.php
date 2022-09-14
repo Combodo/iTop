@@ -202,6 +202,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 
 		// row actions toolbar container
 		$oToolbar = ToolbarUIBlockFactory::MakeStandard();
+		$oToolbar->AddCSSClass('ibo-row-actions-toolbar');
 
 		// for each actions...
 		$aActions = $oDatatable->GetRowActions();
