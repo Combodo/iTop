@@ -427,12 +427,14 @@ if(window.ResizeObserver){
 }
 
 // for each row action
-{% for aAction in oUIBlock.GetRowActions() %}
-    $('#{{ oUIBlock.GetId() }} tbody').on('click', 'button[data-action-id="{{ loop.index0 }}"]', function() {
-        let iActionId = $(this).data('action-id');
-        let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
-        let oTrElement = $(this).closest('tr');
-        let aData = $('#{{ oUIBlock.GetId() }}').DataTable().row(oTrElement).data();
-        {{ aAction.js_row_action|raw }};
-    });
-{% endfor %}
+{% if oUIBlock.HasRowActions() %}
+    {% for aAction in oUIBlock.GetRowActions() %}
+        $('#{{ oUIBlock.GetId() }} tbody').on('click', 'button[data-action-id="{{ loop.index0 }}"]', function() {
+            let iActionId = $(this).data('action-id');
+            let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
+            let oTrElement = $(this).closest('tr');
+            let aData = $('#{{ oUIBlock.GetId() }}').DataTable().row(oTrElement).data();
+            {{ aAction.js_row_action|raw }};
+        });
+    {% endfor %}
+{% endif %}

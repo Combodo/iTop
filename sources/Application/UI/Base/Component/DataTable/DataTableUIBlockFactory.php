@@ -12,6 +12,7 @@ use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
@@ -184,6 +185,44 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		return $oContainer;
+	}
+
+	/**
+	 * Make a row actions toolbar template.
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable $oDatatable
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Template\Template
+	 * @since 3.1.0
+	 */
+	private static function MakeActionRowToolbarTemplate(DataTable $oDatatable)
+	{
+		// row actions template
+		$oTemplate = TemplateUIBlockFactory::Make($oDatatable->GetId().'_actions_buttons_template');
+
+		// row actions toolbar container
+		$oToolbar = ToolbarUIBlockFactory::MakeStandard();
+
+		// for each actions...
+		$aActions = $oDatatable->GetRowActions();
+		for ($i = 0; $i < count($aActions); $i++) {
+
+			// actions
+			$aAction = $aActions[$i];
+
+			// create an icon button
+			$oButton = ButtonUIBlockFactory::MakeIconAction(
+				array_key_exists('icon_classes', $aAction) ? $aAction['icon_classes'] : 'fas fa-question',
+				array_key_exists('tooltip', $aAction) ? $aAction['tooltip'] : '',
+				array_key_exists('name', $aAction) ? $aAction['name'] : 'undefined'
+			);
+			$oButton->SetDataAttributes(['action-id' => $i]);
+			$oToolbar->AddSubBlock($oButton);
+		}
+
+		$oTemplate->AddSubBlock($oToolbar);
+
+		return $oTemplate;
 	}
 
 	/**
