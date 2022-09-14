@@ -34,6 +34,12 @@ define ('EMAIL_SEND_ERROR', 2);
 
 class EMail implements iEMail
 {
+	/**
+	 * @see self::LoadConfig()
+	 * @var Config
+	 * @since 2.7.7 3.0.2 3.1.0 N°3169 N°5102 Move attribute to children classes
+	 * @since 2.7.8 3.0.3 3.1.0 N°4947 pull up the attribute back to the Email class as config init is done here
+	 */
 	protected static $m_oConfig = null;
 	protected $oMailer;
 
@@ -56,7 +62,8 @@ class EMail implements iEMail
 	 *
 	 * @uses utils::GetConfig()
 	 *
-	 * @since 2.7.8 3.0.3 3.1.0 N°4947
+	 * @since 2.7.7 3.0.2 3.1.0 N°3169 N°5102 Move method to children classes
+	 * @since 2.7.8 3.0.3 3.1.0 N°4947 Pull up to the parent class, and remove `$sConfigFile` param
 	 */
 	public function LoadConfig()
 	{
@@ -67,6 +74,12 @@ class EMail implements iEMail
 		return static::$m_oConfig;
 	}
 
+	/**
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @since 2.7.>8 3.0.3 3.1.0 N°4947 Method creation, to factorize same code in children classes
+	 */
 	protected function InitRecipientFrom()
 	{
 		$oConfig = $this->LoadConfig();
