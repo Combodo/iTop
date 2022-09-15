@@ -43,7 +43,7 @@ class TemplateUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Template\Template
 	 */
-	public static function Make(string $sId)
+	public static function MakeStandard(string $sId)
 	{
 		return new Template($sId);
 	}

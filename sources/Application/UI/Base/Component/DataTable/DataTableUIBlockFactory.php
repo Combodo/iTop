@@ -198,7 +198,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	private static function MakeActionRowToolbarTemplate(DataTable $oDatatable)
 	{
 		// row actions template
-		$oTemplate = TemplateUIBlockFactory::Make($oDatatable->GetId().'_actions_buttons_template');
+		$oTemplate = TemplateUIBlockFactory::MakeStandard($oDatatable->GetId().'_actions_buttons_template');
 
 		// row actions toolbar container
 		$oToolbar = ToolbarUIBlockFactory::MakeStandard();
