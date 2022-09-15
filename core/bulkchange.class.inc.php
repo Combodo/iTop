@@ -43,7 +43,7 @@ abstract class CellChangeSpec
 	}
 
 	/**
-	 * @since 3.1.0
+	 * @since 3.1.0 N°5305
 	 */
 	public function GetDisplayableValueAndDescription(): string
 	{
@@ -111,7 +111,7 @@ class CellStatus_Issue extends CellStatus_Modify
 		return $this->m_sReason;
 	}
 	/*
-	 * @since 3.1.0
+	 * @since 3.1.0 N°5305
 	 */
 	public function GetDisplayableValueAndDescription(): string
 	{
@@ -289,7 +289,7 @@ class RowStatus_Issue extends RowStatus
 /**
  * class dedicated to testability
  * not used/ignored in csv imports UI/CLI
- * @since 3.1.0
+ * @since 3.1.0 N°5305
  */
 class RowStatus_Error extends RowStatus
 {
