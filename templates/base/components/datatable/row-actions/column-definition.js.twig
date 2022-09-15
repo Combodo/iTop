@@ -1,0 +1,10 @@
+{# @copyright   Copyright (C) 2010-2022 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+let aRowActionsColumn = {
+    type: "html",
+    orderable: false,
+    render: function ( data, type, row, meta ) {
+        return $('#{{ oUIBlock.GetId() }}_actions_buttons_template').html();
+    }
+};

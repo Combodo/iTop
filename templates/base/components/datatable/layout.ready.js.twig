@@ -8,6 +8,8 @@
     {% set iPageSize = 10 %}
 {% endif %}
 
+{% include 'base/components/datatable/row-actions/column-definition.js.twig' %}
+
 $('#{{ oUIBlock.GetId() }}').closest("[role=dialog]").on("dialogbeforeclose", function () {
     $('#{{ oUIBlock.GetId() }}').DataTable().clear();
 });
@@ -209,13 +211,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         },
         {% endfor %}
         {% if oUIBlock.HasRowActions() %}
-        {
-            type: "html",
-            orderable: false,
-            render: function ( data, type, row, meta ) {
-                return $('#{{ oUIBlock.GetId() }}_actions_buttons_template').html();
-            }
-        },
+            aRowActionsColumn,
         {% endif %}
     ],
     ajax: $.fn.dataTable.pipeline({
@@ -426,15 +422,4 @@ if(window.ResizeObserver){
         oTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
 }
 
-// for each row action
-{% if oUIBlock.HasRowActions() %}
-    {% for aAction in oUIBlock.GetRowActions() %}
-        $('#{{ oUIBlock.GetId() }} tbody').on('click', 'button[data-action-id="{{ loop.index0 }}"]', function() {
-            let iActionId = $(this).data('action-id');
-            let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
-            let oTrElement = $(this).closest('tr');
-            let aData = $('#{{ oUIBlock.GetId() }}').DataTable().row(oTrElement).data();
-            {{ aAction.js_row_action|raw }};
-        });
-    {% endfor %}
-{% endif %}
+{% include 'base/components/datatable/row-actions/handler.js.twig' %}

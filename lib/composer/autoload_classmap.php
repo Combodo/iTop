@@ -227,6 +227,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\StaticTable\\FormTableRow\\FormTableRow' => $baseDir . '/sources/Application/UI/Base/Component/DataTable/StaticTable/FormTableRow/FormTableRow.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\StaticTable\\FormTable\\FormTable' => $baseDir . '/sources/Application/UI/Base/Component/DataTable/StaticTable/FormTable/FormTable.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\StaticTable\\StaticTable' => $baseDir . '/sources/Application/UI/Base/Component/DataTable/StaticTable/StaticTable.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\tTableRowActions' => $baseDir . '/sources/Application/UI/Base/Component/DataTable/tTableRowActions.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\FieldBadge\\FieldBadge' => $baseDir . '/sources/Application/UI/Base/Component/FieldBadge/FieldBadge.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\FieldBadge\\FieldBadgeUIBlockFactory' => $baseDir . '/sources/Application/UI/Base/Component/FieldBadge/FieldBadgeUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\FieldSet\\FieldSet' => $baseDir . '/sources/Application/UI/Base/Component/FieldSet/FieldSet.php',
