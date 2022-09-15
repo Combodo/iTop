@@ -62,7 +62,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	public function createRackObjects($aRackDict) {
 		foreach ($aRackDict as $iOrgId => $aRackNames) {
 			foreach ($aRackNames as $sRackName) {
-				$this->createObject('Rack', ['name' => $sRackName, 'org_id' => $iOrgId]);
+				$this->createObject('Rack', ['name' => $sRackName, 'description' => "${sRackName}Desc", 'org_id' => $iOrgId]);
 			}
 		}
 	}
@@ -168,6 +168,31 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		);
 	}
 
+	/**
+	 * @dataProvider ReconciliationKeyProvider
+	 */
+	public function testExternalFieldIssueImportFail_AllObjectsVisibleByCurrentUser_FurtherExtKeyForRack($bIsRackReconKey){
+		$this->deleteAllRacks();
+		$this->createRackObjects(
+			[
+				$this->getTestOrgId() => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4']
+			]
+		);
+
+		$aCsvData = [["UnexistingRackDescription"]];
+		$aExtKeys = ["org_id" => ["name" => 0], "rack_id" => ["name" => 1, "description" => 3]];
+
+		$this->performBulkChangeTest(
+			"No match for value 'UnexistingRack UnexistingRackDescription'",
+			"Some possible 'Rack' value(s): RackTest1 RackTest1Desc, RackTest2 RackTest2Desc, RackTest3 RackTest3Desc...",
+			null,
+			$bIsRackReconKey,
+			$aCsvData,
+			$aExtKeys
+		);
+	}
+
+
 	private function GetUid(){
 		if (is_null($this->sUid)){
 			$this->sUid = date('dmYHis');
@@ -183,7 +208,8 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	 * @param $aExtKeys
 	 * @param $aReconcilKeys
 	 */
-	public function performBulkChangeTest($sExpectedDisplayableValue, $sExpectedDescription, $oOrg=null, $bIsRackReconKey=false) {
+	public function performBulkChangeTest($sExpectedDisplayableValue, $sExpectedDescription, $oOrg, $bIsRackReconKey,
+		$aAdditionalCsvData=null, $aExtKeys=null) {
 		if (is_null($oOrg)){
 			$iOrgId = $this->getTestOrgId();
 			$sOrgName = "UnitTestOrganization";
@@ -195,8 +221,17 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		$sUid = $this->GetUid();
 
 		$aCsvData = [[$sOrgName, "UnexistingRack", "$sUid"]];
+		if ($aAdditionalCsvData !== null){
+			foreach ($aAdditionalCsvData as $i => $aData){
+				foreach ($aData as $sData){
+					$aCsvData[$i][] = $sData;
+				}
+			}
+		}
 		$aAttributes = ["name" => 2];
-		$aExtKeys = ["org_id" => ["name" => 0], "rack_id" => ["name" => 1]];
+		if ($aExtKeys == null){
+			$aExtKeys = ["org_id" => ["name" => 0], "rack_id" => ["name" => 1]];
+		}
 		$aReconcilKeys = [ "name" ];
 
 		$aResult = [
@@ -254,10 +289,16 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 					if ($i != "finalclass" && $i != "__STATUS__" && $i != "__ERRORS__") {
 						$this->debug("i:".$i);
 						$this->debug('GetDisplayableValue:'.$oCell->GetDisplayableValue());
-						$this->debug("aResult:".var_export($aResult[$i]));
-						if ($oCell instanceof \CellStatus_SearchIssue){
-							$this->assertEquals( $aResult[$i][0], $oCell->GetDisplayableValue(), "failure on " . get_class($oCell) . ' cell type');
-							$this->assertEquals( $aResult[$i][1], $oCell->GetDescription(), "failure on " . get_class($oCell) . ' cell type');
+						if (array_key_exists($i,$aResult)) {
+							$this->debug("aResult:".var_export($aResult[$i]));
+							if ($oCell instanceof \CellStatus_SearchIssue) {
+								$this->assertEquals($aResult[$i][0], $oCell->GetDisplayableValue(),
+									"failure on ".get_class($oCell).' cell type');
+								/*$this->assertEquals($aResult[$i][0], $oCell->GetSearchLinkUrl(),
+									"failure on ".get_class($oCell).' cell type');*/
+								$this->assertEquals($aResult[$i][1], $oCell->GetDescription(),
+									"failure on ".get_class($oCell).' cell type');
+							}
 						}
 					} else if ($i === "__ERRORS__") {
 						$sErrors = array_key_exists("__ERRORS__", $aResult) ? $aResult["__ERRORS__"] : "";

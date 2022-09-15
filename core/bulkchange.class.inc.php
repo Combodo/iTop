@@ -127,19 +127,28 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	/** @var string|null $m_sAllowedValues */
 	private $m_sAllowedValues;
 
+	/**
+	 * @since 3.1.0 N°5305
+	 * @var string $sSerializedSearch
+	 */
+	private $sSerializedSearch;
+
 	/** @var string|null $m_sTargetClass */
 	private $m_sTargetClass;
 
 	/**
 	 * CellStatus_SearchIssue constructor.
+	 * @since 3.1.0 N°5305
 	 *
-	 * @param $sReason : main message
+	 * @param string $sOql : main message
+	 * @param string $sReason : main message
 	 * @param null $sClass : used for additional message that provides allowed values for current class $sClass
 	 * @param null $sAllowedValues : used for additional message that provides allowed values $sAllowedValues for current class
 	 */
-	public function __construct($sReason, $sClass=null, $sAllowedValues=null)
+	public function __construct($sSerializedSearch, $sReason, $sClass=null, $sAllowedValues=null)
 	{
 		parent::__construct(null, null, $sReason);
+		$this->sSerializedSearch = $sSerializedSearch;
 		$this->m_sAllowedValues = $sAllowedValues;
 		$this->m_sTargetClass = $sClass;
 	}
@@ -161,6 +170,17 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 		}
 
 		return Dict::Format('UI:CSVReport-Value-NoMatch-PossibleValues', $this->m_sTargetClass, $this->m_sAllowedValues);
+	}
+
+	/**
+	 * @since 3.1.0 N°5305
+	 * @return string
+	 */
+	public function GetSearchLinkUrl()
+	{
+		return sprintf("UI.php?operation=search&filter=%s",
+			$this->sSerializedSearch
+		);
 	}
 }
 
@@ -377,7 +397,7 @@ class BulkChange
 
 		$oExtObjects = new CMDBObjectSet($oReconFilter);
 		$aKeys = $oExtObjects->ToArray();
-		return array($oReconFilter->ToOql(), $aKeys, $oExtKey->GetTargetClass(), $sForeignAttCode, $value);
+		return array($oReconFilter, $aKeys);
 	}
 
 	// Returns true if the CSV data specifies that the external key must be left undefined
@@ -498,19 +518,19 @@ class BulkChange
 				switch($iObjectFoundCount)
 				{
 					case 0:
-						$oCellStatus_SearchIssue = $this->GetCellSearchIssue($oExtKey->GetTargetClass(), $sForeignAttCode, $value);
+						$oCellStatus_SearchIssue = $this->GetCellSearchIssue($oReconFilter);
 						$aResults[$sAttCode] = $oCellStatus_SearchIssue;
 						$aErrors[$sAttCode] = Dict::S('UI:CSVReport-Value-Issue-NotFound');
 						break;
 
 					case 1:
-					// Do change the external key attribute
-					$oTargetObj->Set($sAttCode, $iForeignKey);
-					break;
+						// Do change the external key attribute
+						$oTargetObj->Set($sAttCode, $iForeignKey);
+						break;
 
 					default:
-					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-FoundMany', $iObjectFoundCount);
-					$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $iObjectFoundCount, $sOQL);
+						$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-FoundMany', $iObjectFoundCount);
+						$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $iObjectFoundCount, $sOQL);
 				}
 			}
 
@@ -671,9 +691,8 @@ class BulkChange
 	/**
 	 * search with current permissions did not match
 	 * let's search why and give some more feedbacks to the user through proper labels
-	 * @param string $sTargetClass target class of the failed search
-	 * @param string $sForeignAttCode foreign attribute code of the foreign search
-	 * @param string $value unfound value
+	 *
+	 * @param DBObjectSearch $oDbSearchWithConditions search used to find external key
 	 *
 	 * @return \CellStatus_SearchIssue
 	 * @throws \CoreException
@@ -681,42 +700,39 @@ class BulkChange
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 *
-	 * @since 3.1.0
+	 * @since 3.1.0 N°5305
 	 */
-	protected function GetCellSearchIssue($sTargetClass, $sForeignAttCode, $value) : CellStatus_SearchIssue {
+	protected function GetCellSearchIssue($oDbSearchWithConditions) : CellStatus_SearchIssue {
 		//current search with current permissions did not match
 		//let's search why and give some more feedback to the user
 
-		//count all objects with all permissions
-		$oReconFilter2 = new DBObjectSearch($sTargetClass);
-		$oReconFilter2->AllowAllData(true);
-		$oExtObjectSet = new CMDBObjectSet($oReconFilter2);
+		$sSerializedSearch = $oDbSearchWithConditions->serialize();
+
+		//count all objects with all permissions without any condition
+		$oDbSearchWithoutAnyCondition = new DBObjectSearch($oDbSearchWithConditions->GetClass());
+		$oDbSearchWithoutAnyCondition->AllowAllData(true);
+		$oExtObjectSet = new CMDBObjectSet($oDbSearchWithoutAnyCondition);
 		$iAllowAllDataObjectCount = $oExtObjectSet->Count();
 
 		//count all objects with current user permissions
-		$oReconFilter2->AllowAllData(false);
-		$oExtObjectSetWithCurrentUserPermissions = new CMDBObjectSet($oReconFilter2);
+		$oDbSearchWithoutAnyCondition->AllowAllData(false);
+		$oExtObjectSetWithCurrentUserPermissions = new CMDBObjectSet($oDbSearchWithoutAnyCondition);
 		$iCurrentUserRightsObjectCount = $oExtObjectSetWithCurrentUserPermissions->Count();
 
 		if ($iAllowAllDataObjectCount === 0) {
-			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject', $sTargetClass);
-			return new CellStatus_SearchIssue($sReason);
-
-			//TODO : Could be nice to add search link on external key object later on.
+			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject', $oDbSearchWithConditions->GetClass());
+			return new CellStatus_SearchIssue($sSerializedSearch, $sReason);
 		}
 
 		if ($iCurrentUserRightsObjectCount === 0){
 			//no objects visible by current user
 			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser',
-				$sTargetClass);
-			return new CellStatus_SearchIssue($sReason);
-
-			//TODO : Could be nice to add search link on external key object later on.
+				$oDbSearchWithConditions->GetClass());
+			return new CellStatus_SearchIssue($sSerializedSearch, $sReason);
 		}
 
 		try{
 			$aDisplayedAllowedValues=[];
-			$allowedValues="";
 			// possibles values are displayed to UI user. we have to limit the amount of displayed values
 			$oExtObjectSetWithCurrentUserPermissions->SetLimit(4);
 			for($i = 0; $i < 3; $i++){
@@ -726,7 +742,12 @@ class BulkChange
 					break;
 				}
 
-				$aDisplayedAllowedValues[] = $oVisibleObject->Get($sForeignAttCode);
+				$aCurrentAllowedValueFields = [];
+				foreach ($oDbSearchWithConditions->GetInternalParams() as $sForeignAttCode => $sValue){
+					$aCurrentAllowedValueFields[] = $oVisibleObject->Get($sForeignAttCode);
+				}
+				$aDisplayedAllowedValues[] = implode(" ", $aCurrentAllowedValueFields);
+
 			}
 			$allowedValues = implode(", ", $aDisplayedAllowedValues);
 			if ($oExtObjectSetWithCurrentUserPermissions->Count() > 3){
@@ -734,27 +755,27 @@ class BulkChange
 			}
 		} catch(Exception $e) {
 			IssueLog::Error("failure during CSV import when fetching few visible objects: ", null,
-				[ 'target_class' => $sTargetClass, 'foreign_att_code' => $sForeignAttCode, 'value' => $value, 'message' => $e->getMessage()]
+				[ 'target_class' => $oDbSearchWithConditions->GetClass(), 'criteria' => $oDbSearchWithConditions->GetCriteria(), 'message' => $e->getMessage()]
 			);
-			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser', $sTargetClass);
-			return new CellStatus_SearchIssue($sReason);
+			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser', $oDbSearchWithConditions->GetClass());
+			return new CellStatus_SearchIssue($sSerializedSearch, $sReason);
 		}
 
 		if ($iAllowAllDataObjectCount != $iCurrentUserRightsObjectCount) {
 			// No match and some objects NOT visible by current user. including current search maybe...
-			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser', $sTargetClass);
-			return new CellStatus_SearchIssue($sReason, $sTargetClass, $allowedValues);
-
-			// Possible values: DD,DD
-			//TODO : Could be nice to add search link on external key object later on.
+			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser', $oDbSearchWithConditions->GetClass());
+			return new CellStatus_SearchIssue($sSerializedSearch, $sReason, $oDbSearchWithConditions->GetClass(), $allowedValues);
 		}
 
 		// No match. This is not linked to any right issue
 		// Possible values: DD,DD
+		$aCurrentValueFields = [];
+		foreach ($oDbSearchWithConditions->GetInternalParams() as $sValue){
+			$aCurrentValueFields[] = $sValue;
+		}
+		$value =implode(" ", $aCurrentValueFields);
 		$sReason = Dict::Format('UI:CSVReport-Value-NoMatch', $value);
-		return new CellStatus_SearchIssue($sReason, $sTargetClass, $allowedValues);
-
-		//TODO : Could be nice to add search link on external key object later on.
+		return new CellStatus_SearchIssue($sSerializedSearch, $sReason, $oDbSearchWithConditions->GetClass(), $allowedValues);
 	}
 
 	protected function PrepareMissingObject(&$oTargetObj, &$aErrors)
@@ -1151,7 +1172,9 @@ class BulkChange
 						else
 						{
 							// The value has to be found or verified
-							list($sQuery, $aMatches, $sTargetClass, $sForeignAttCode, $value) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
+
+							/** var DBObjectSearch $oReconFilter */
+							list($oReconFilter, $aMatches) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
 
 							if (count($aMatches) == 1)
 							{
@@ -1161,12 +1184,12 @@ class BulkChange
 							}
 							elseif (count($aMatches) == 0)
 							{
-								$oCellStatus_SearchIssue = $this->GetCellSearchIssue($sTargetClass, $sForeignAttCode, $value);
+								$oCellStatus_SearchIssue = $this->GetCellSearchIssue($oReconFilter);
 								$aResult[$iRow][$sAttCode] = $oCellStatus_SearchIssue;
 							}
 							else
 							{
-								$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $sQuery);
+								$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $oReconFilter->ToOql());
 							}
 						}
 					}

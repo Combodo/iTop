@@ -213,14 +213,21 @@ try {
 	 }
 
 	/**
+	 * @since 3.1.0 N°5305
 	 * Add a paragraph to the body of the page
 	 *
 	 * @param string $s_html
+	 * @param ?string $sLinkUrl
 	 *
 	 * @return string
 	 */
-	function GetDivAlert($s_html)
+	function GetDivAlert($s_html, $sLinkUrl=null)
 	{
+		//<a href="'. $oCellStatus->GetSearchLinkUrl().'">'.
+		if (! is_null($sLinkUrl)){
+			return "<div class=\"ibo-csv-import--cell-error ibo-csv-import--cell-message\"><a href=\"$sLinkUrl\">$s_html</a></div>\n";
+		}
+
 		return "<div class=\"ibo-csv-import--cell-error ibo-csv-import--cell-message\">$s_html</div>\n";
 	}
 	/**
@@ -486,8 +493,8 @@ try {
 							break;
 
 						case 'CellStatus_SearchIssue':
-							$sCellMessage .= GetDivAlert($oCellStatus->GetDescription());
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-error">'.Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue).$sCellMessage.'</div>';
+							$sCellMessage .= GetDivAlert($oCellStatus->GetDescription(), $oCellStatus->GetSearchLinkUrl());
+							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-error"><a href="'. $oCellStatus->GetSearchLinkUrl().'">'. Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue).$sCellMessage.'<a/></div>';
 							break;
 
 						case 'CellStatus_Ambiguous':
