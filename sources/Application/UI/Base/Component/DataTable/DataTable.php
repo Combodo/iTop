@@ -21,6 +21,7 @@ use DataTableConfig;
 class DataTable extends UIContentBlock
 {
 	use tJSRefreshCallback;
+	use tTableRowActions;
 
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-datatable';
@@ -51,16 +52,6 @@ class DataTable extends UIContentBlock
 	 */
 	protected $aInitDisplayData;
 
-	/**
-	 * @var $aRowActions array array of row actions
-	 * action => {
-	 *      tooltip: string,
-	 *      icon_classes: string,
-	 *      js_row_action: string
-	 * }
-	 * @since 3.1.0
-	 */
-	protected $aRowActions;
 
 	/**
 	 * Panel constructor.
@@ -262,40 +253,4 @@ class DataTable extends UIContentBlock
 		return [];
 	}
 
-	/**
-	 * Set row actions.
-	 *
-	 * @param array $aRowActions
-	 *
-	 * @return DataTable
-	 * @since 3.1.0
-	 */
-	public function SetRowActions(array $aRowActions): DataTable
-	{
-		$this->aRowActions = $aRowActions;
-
-		return $this;
-	}
-
-	/**
-	 * Get row actions.
-	 *
-	 * @return array
-	 * @since 3.1.0
-	 */
-	public function GetRowActions(): array
-	{
-		return $this->aRowActions;
-	}
-
-	/**
-	 * Return true if row actions is set and not empty.
-	 *
-	 * @return bool
-	 * @since 3.1.0
-	 */
-	public function HasRowActions(): bool
-	{
-		return isset($this->aRowActions) && count($this->aRowActions);
-	}
 }
