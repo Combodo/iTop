@@ -79,3 +79,20 @@ function getMultipleSelectionParams(listId)
 
 	return oRes;
 }
+
+/**
+ * Return column definition for row actions.
+ *
+ * @param tableId
+ * @returns {{orderable: boolean, type: string, render: (function(*, *, *, *): *)}}
+ */
+function getRowActionsColumnDefinition(tableId)
+{
+	return {
+		type: "html",
+		orderable: false,
+		render: function ( data, type, row, meta ) {
+			return $(`#${tableId}_actions_buttons_template`).html();
+		}
+	};
+}

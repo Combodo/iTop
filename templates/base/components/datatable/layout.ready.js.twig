@@ -8,8 +8,6 @@
     {% set iPageSize = 10 %}
 {% endif %}
 
-{% include 'base/components/datatable/row-actions/column-definition.js.twig' %}
-
 $('#{{ oUIBlock.GetId() }}').closest("[role=dialog]").on("dialogbeforeclose", function () {
     $('#{{ oUIBlock.GetId() }}').DataTable().clear();
 });
@@ -211,7 +209,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         },
         {% endfor %}
         {% if oUIBlock.HasRowActions() %}
-            aRowActionsColumn,
+            getRowActionsColumnDefinition('{{ oUIBlock.GetId() }}'),
         {% endif %}
     ],
     ajax: $.fn.dataTable.pipeline({
