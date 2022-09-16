@@ -213,7 +213,6 @@ try {
 	 }
 
 	/**
-	 * @since 3.1.0 N°5305
 	 * Add a paragraph to the body of the page
 	 *
 	 * @param string $s_html
@@ -221,13 +220,8 @@ try {
 	 *
 	 * @return string
 	 */
-	function GetDivAlert($s_html, $sLinkUrl=null)
+	function GetDivAlert($s_html)
 	{
-		//<a href="'. $oCellStatus->GetSearchLinkUrl().'">'.
-		if (! is_null($sLinkUrl)){
-			return "<div class=\"ibo-csv-import--cell-error ibo-csv-import--cell-message\"><a href=\"$sLinkUrl\">$s_html</a></div>\n";
-		}
-
 		return "<div class=\"ibo-csv-import--cell-error ibo-csv-import--cell-message\">$s_html</div>\n";
 	}
 	/**
@@ -445,7 +439,6 @@ try {
 
 				case 'RowStatus_NewObj':
 					$iCreated++;
-					$sFinalClass = $aResRow['finalclass'];
 					$sStatus = '<img src="../images/added.png" title="'.Dict::S('UI:CSVReport-Icon-Created').'">';
 					$sCSSRowClass = 'ibo-csv-import--row-added';
 					if ($bSimulate) {
@@ -461,7 +454,7 @@ try {
 				case 'RowStatus_Issue':
 					$iErrors++;
 					$sMessage .= GetDivAlert($oStatus->GetDescription());
-					$sStatus = '<img src="../images/error.png" title="'.Dict::S('UI:CSVReport-Icon-Error').'">';//translate
+					$sStatus = '<div class="ibo-csv-import--cell-error"><i class="fas fa-exclamation-triangle" title="'.Dict::S('UI:CSVReport-Icon-Error').'" /></div>';//translate
 					$sCSSMessageClass = 'ibo-csv-import--cell-error';
 					$sCSSRowClass = 'ibo-csv-import--row-error';
 					if (array_key_exists($iLine, $aData)) {
@@ -493,13 +486,25 @@ try {
 							break;
 
 						case 'CellStatus_SearchIssue':
-							$sCellMessage .= GetDivAlert($oCellStatus->GetDescription(), $oCellStatus->GetSearchLinkUrl());
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-error"><a href="'. $oCellStatus->GetSearchLinkUrl().'">'.Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue).$sCellMessage.'<a/></div>';
+							$aTableRow[$sClassName.'/'.$sAttCode] = sprintf("%s%s%s%s%s%s",
+								'<a href="',
+								$oCellStatus->GetSearchLinkUrl(),
+								'"><div class="ibo-csv-import--cell-error">',
+								Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue),
+								GetDivAlert($oCellStatus->GetDescription()),
+								'<i class="fas fa-search"></i></div><a/>'
+							);
 							break;
 
 						case 'CellStatus_Ambiguous':
-							$sCellMessage .= GetDivAlert($oCellStatus->GetDescription(), $oCellStatus->GetSearchLinkUrl());
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-error" ><a href="'. $oCellStatus->GetSearchLinkUrl().'">'.Dict::Format('UI:CSVReport-Object-Ambiguous', $sHtmlValue).$sCellMessage.'<a/></div>';
+							$aTableRow[$sClassName.'/'.$sAttCode] = sprintf("%s%s%s%s%s%s",
+								'<a href="',
+								$oCellStatus->GetSearchLinkUrl(),
+								'"><i class="fas fa-search"/><div class="ibo-csv-import--cell-error">',
+								Dict::Format('UI:CSVReport-Object-Ambiguous', $sHtmlValue),
+								GetDivAlert($oCellStatus->GetDescription()),
+								'<i class="fas fa-search"></i></div><a/>'
+							);
 							break;
 
 						case 'CellStatus_Modify':
@@ -588,7 +593,7 @@ try {
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_created').on('click', function(){ToggleRows('ibo-csv-import--row-added')})");
 
-		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/error.png">&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors), '', "1", "show_errors", "checkbox");
+		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<i class="fas fa-exclamation-triangle" style="color:#A33; background-color: #FFF0F0;">&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors).'</i></i>', '', "1", "show_errors", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
