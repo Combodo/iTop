@@ -32,9 +32,9 @@ trait tTableRowActions
 	 *
 	 * @param array $aRowActions
 	 *
-	 * @return DataTable
+	 * @return table
 	 */
-	public function SetRowActions(array $aRowActions): DataTable
+	public function SetRowActions(array $aRowActions)
 	{
 		$this->aRowActions = $aRowActions;
 
