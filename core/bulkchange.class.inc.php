@@ -201,11 +201,24 @@ class CellStatus_NullIssue extends CellStatus_Issue
 class CellStatus_Ambiguous extends CellStatus_Issue
 {
 	protected $m_iCount;
+	/**
+	 * @since 3.1.0 N°5305
+	 * @var string
+	 */
+	protected $sSerializedSearch;
 
-	public function __construct($previousValue, $iCount, $sOql)
+	/**
+	 * @since 3.1.0 N°5305
+	 *
+	 * @param $previousValue
+	 * @param int $iCount
+	 * @param string $sSerializedSearch
+	 *
+	 */
+	public function __construct($previousValue, $iCount, $sSerializedSearch)
 	{
 		$this->m_iCount = $iCount;
-		$this->m_sQuery = $sOql;
+		$this->sSerializedSearch = $sSerializedSearch;
 		parent::__construct(null, $previousValue, '');
 	}
 
@@ -213,6 +226,17 @@ class CellStatus_Ambiguous extends CellStatus_Issue
 	{
 		$sCount = $this->m_iCount;
 		return Dict::Format('UI:CSVReport-Value-Ambiguous', $sCount);
+	}
+
+	/**
+	 * @since 3.1.0 N°5305
+	 * @return string
+	 */
+	public function GetSearchLinkUrl()
+	{
+		return sprintf("UI.php?operation=search&filter=%s",
+			$this->sSerializedSearch
+		);
 	}
 }
 
@@ -483,7 +507,6 @@ class BulkChange
 				}
 				$sCacheKey = implode('_|_', $aCacheKeys); // Unique key for this query...
 				$iForeignKey = null;
-				$sOQL = '';
 				// TODO: check if *too long* keys can lead to collisions... and skip the cache in such a case...
 				if (!array_key_exists($sAttCode, $this->m_aExtKeysMappingCache))
 				{
@@ -494,7 +517,6 @@ class BulkChange
 					// Cache hit
 					$iObjectFoundCount = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['c'];
 					$iForeignKey = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['k'];
-					$sOQL = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['oql'];
 					// Record the hit
 					$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['h']++;
 				}
@@ -530,7 +552,7 @@ class BulkChange
 
 					default:
 						$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-FoundMany', $iObjectFoundCount);
-						$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $iObjectFoundCount, $sOQL);
+						$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $iObjectFoundCount, $oReconFilter->serialize());
 				}
 			}
 
@@ -1189,7 +1211,7 @@ class BulkChange
 							}
 							else
 							{
-								$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $oReconFilter->ToOql());
+								$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $oReconFilter->serialize());
 							}
 						}
 					}
@@ -1242,7 +1264,7 @@ class BulkChange
 					default:
 						// Found several matches, ambiguous
 						$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Ambiguous'));
-						$aResult[$iRow]["id"]= new CellStatus_Ambiguous(0, $oReconciliationSet->Count(), $oReconciliationFilter->ToOql());
+						$aResult[$iRow]["id"]= new CellStatus_Ambiguous(0, $oReconciliationSet->Count(), $oReconciliationFilter->serialize());
 						$aResult[$iRow]["finalclass"]= 'n/a';
 					}
 				}
