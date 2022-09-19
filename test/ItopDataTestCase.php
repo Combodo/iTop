@@ -453,9 +453,9 @@ class ItopDataTestCase extends ItopTestCase
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('profileid', $iProfileId);
 		$oUserProfile->Set('reason', 'UNIT Tests');
-		/** @var DBObjectSet $oSet */
+		/** @var \ormLinkSet $oSet */
 		$oSet = $oUser->Get('profile_list');
-		$oSet->AddObject($oUserProfile);
+		$oSet->AddItem($oUserProfile);
 		$oUser = $this->updateObject('UserLocal', $oUser->GetKey(), array(
 			'profile_list' => $oSet,
 		));

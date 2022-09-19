@@ -22,11 +22,11 @@ class RestTest extends ItopDataTestCase
 	const MODE = [ 'JSONDATA_AS_STRING' => 0, 'JSONDATA_AS_FILE' => 1 , 'NO_JSONDATA' => 2 ];
 
 	private $sTmpFile = "";
-	/** @var int $iJsonDataMode */
-	private $sJsonDataMode;
 	private $sUrl;
 	private $sLogin;
 	private $sPassword = "Iuytrez9876543ç_è-(";
+	/** @var int $iJsonDataMode */
+	private int $iJsonDataMode;
 
 	/**
      * @throws Exception
@@ -67,26 +67,27 @@ class RestTest extends ItopDataTestCase
 
 		//create ticket
 		$description = date('dmY H:i:s');
-		$sOuputJson = $this->CreateTicketViaApi($description);
-		$aJson = json_decode($sOuputJson, true);
+		$sOutputJson = $this->CreateTicketViaApi($description);
+		$this->debug("Output: '$sOutputJson'");
+		$aJson = json_decode($sOutputJson, true);
 
 		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
-			$this->assertContains("3", "".$aJson['code'], $sOuputJson);
-			$this->assertContains("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
+			$this->assertContains("3", "".$aJson['code'], $sOutputJson);
+			$this->assertContains("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOutputJson);
 			return;
 		}
 
-		$this->assertContains("0", "".$aJson['code'], $sOuputJson);
+		$this->assertContains("0", "".$aJson['code'], $sOutputJson);
 		$sUserRequestKey = $this->array_key_first($aJson['objects']);
 		$this->assertContains('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
 		$sExpectedJsonOuput=<<<JSON
-{"objects":{"UserRequest::$iId":{"code":0,"message":"created","class":"UserRequest","key":"$iId","fields":{"id":"$iId"}}},"code":0,"message":null}
+{"objects":{"UserRequest::$iId":{"code":0,"message":"created","class":"UserRequest","key":$iId,"fields":{"id":$iId}}},"code":0,"message":null}
 JSON;
-		$this->assertEquals($sExpectedJsonOuput, $sOuputJson);
+		$this->assertEquals($sExpectedJsonOuput, $sOutputJson);
 
 		$sExpectedJsonOuput=<<<JSON
-{"objects":{"UserRequest::$iId":{"code":0,"message":"","class":"UserRequest","key":"$iId","fields":{"id":"$iId","description":"<p>$description<\/p>"}}},"code":0,"message":"Found: 1"}
+{"objects":{"UserRequest::$iId":{"code":0,"message":"","class":"UserRequest","key":$iId,"fields":{"id":$iId,"description":"<p>$description<\/p>"}}},"code":0,"message":"Found: 1"}
 JSON;
 		$this->assertEquals($sExpectedJsonOuput, $this->GetTicketViaRest($iId));
 
