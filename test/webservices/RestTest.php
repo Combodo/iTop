@@ -82,7 +82,7 @@ class RestTest extends ItopDataTestCase
 		$this->assertContains('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
 		$sExpectedJsonOuput=<<<JSON
-{"objects":{"UserRequest::$iId":{"code":0,"message":"created","class":"UserRequest","key":"$iId","fields":{"id":"$iId"}}},"code":0,"message":null}
+{"objects":{"UserRequest::$iId":{"code":0,"message":"created","class":"UserRequest","key":$iId,"fields":{"id":$iId}}},"code":0,"message":null}
 JSON;
 		$this->assertEquals($sExpectedJsonOuput, $sOutputJson);
 

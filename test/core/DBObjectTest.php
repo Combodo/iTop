@@ -326,7 +326,7 @@ class DBObjectTest extends ItopDataTestCase
 //		$fItopStarted = microtime(true);
 //		ExecutionKPI::EnableDuration(2);
 //		$oKPI = new ExecutionKPI();
-		static::assertDBQueryCount(89, function() use (&$oTeam) {
+		static::assertDBQueryCount(67, function() use (&$oTeam) {
 			$oTeam->DBInsertNoReload();
 		});
 //		$oKPI->ComputeAndReport('Team DBInsertNoReload');
