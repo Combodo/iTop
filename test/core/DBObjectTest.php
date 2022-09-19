@@ -254,7 +254,7 @@ class DBObjectTest extends ItopDataTestCase
 		static::assertDBQueryCount(0, function() use (&$oObject){
 			$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 		});
-		static::assertDBQueryCount(26, function() use (&$oObject) {
+		static::assertDBQueryCount(18, function() use (&$oObject) {
 			$oObject->DBInsertNoReload();
 		});
 		$sClass = get_class($oObject);
@@ -304,7 +304,7 @@ class DBObjectTest extends ItopDataTestCase
 		static::assertDBQueryCount(0, function() use (&$oPerson){
 			$oPerson = MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 		});
-		static::assertDBQueryCount(26, function() use (&$oPerson) {
+		static::assertDBQueryCount(18, function() use (&$oPerson) {
 			$oPerson->DBInsertNoReload();
 		});
 		$sPersonClass = get_class($oPerson);
