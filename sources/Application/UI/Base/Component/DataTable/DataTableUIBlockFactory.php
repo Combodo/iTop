@@ -959,6 +959,7 @@ JS;
 	 * @param array $aExtraParams
 	 * @param string $sFilter
 	 * @param array $aOptions
+	 * @param array $aRowActions @since 3.1.0
 	 * *
 	 * $aColumns =[
 	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],

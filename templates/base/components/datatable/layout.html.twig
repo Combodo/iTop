@@ -25,3 +25,7 @@
     {% endif %}
     </thead>
 </table>
+
+{% if oUIBlock.HasRowActions() %}
+    {{ render_block(oUIBlock.GetRowActionsTemplate()) }}
+{% endif %}

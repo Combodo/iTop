@@ -60,4 +60,14 @@ trait tTableRowActions
 	{
 		return isset($this->aRowActions) && count($this->aRowActions);
 	}
+
+	/**
+	 * Return row actions template.
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Template\Template
+	 */
+	public function GetRowActionsTemplate()
+	{
+		return DataTableUIBlockFactory::MakeActionRowToolbarTemplate($this);
+	}
 }
