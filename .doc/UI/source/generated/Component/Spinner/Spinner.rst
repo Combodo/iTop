@@ -1,4 +1,4 @@
-.. Copyright (C) 2010-2021 Combodo SARL
+.. Copyright (C) 2010-2022 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
 .. _Spinner:
