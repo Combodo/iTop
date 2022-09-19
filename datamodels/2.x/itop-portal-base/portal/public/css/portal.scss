@@ -726,17 +726,6 @@ footer{
 	cursor: pointer;
 }
 
-#brick_content_tree .list-group-item > .tree-item-wrapper > .tree-item {
-  color: $link-color;
-  text-decoration: none;
-}
-
-#brick_content_tree .list-group-item > .tree-item-wrapper > .tree-item:hover,
-#brick_content_tree .list-group-item > .tree-item-wrapper > .tree-item:focus {
-  color: $link-hover-color;
-  text-decoration: $link-hover-decoration
-}
-
 .list-group-item > .list-group-item-actions{
 	/*display: none; Displaying actions only when hovering was not unanimous in the team */
 	position: absolute;
