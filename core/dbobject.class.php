@@ -3201,19 +3201,14 @@ abstract class DBObject implements iDisplay
 			// - TriggerOnObjectMention
 			$this->ActivateOnMentionTriggers(false);
 
-			$bNeedReload = false;
 			$aHierarchicalKeys = array();
 			$aDBChanges = array();
-			foreach ($aChanges as $sAttCode => $valuecurr)
+			foreach ($aChanges as $sAttCode => $currentValue)
 			{
 				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-				if ($oAttDef->IsExternalKey() || $oAttDef->IsLinkSet())
-				{
-					$bNeedReload = true;
-				}
 				if ($oAttDef->IsBasedOnDBColumns())
 				{
-					$aDBChanges[$sAttCode] = $aChanges[$sAttCode];
+					$aDBChanges[$sAttCode] = $currentValue;
 				}
 				if ($oAttDef->IsHierarchicalKey())
 				{
@@ -3366,18 +3361,11 @@ abstract class DBObject implements iDisplay
 				$this->EventUpdateAfter(['changes' => $aChanges]);
 				$this->AfterUpdate();
 
-				// Reload to get the external attributes
-				if ($bNeedReload) {
-					$this->Reload(true /* AllowAllData */);
-				} else {
-					// Reset original values although the object has not been reloaded
-					foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
-					{
-						if ($bLoaded)
-						{
-							$value = $this->m_aCurrValues[$sAttCode];
-							$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
-						}
+				// Reset original values although the object has not been reloaded
+				foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded) {
+					if ($bLoaded) {
+						$value = $this->m_aCurrValues[$sAttCode];
+						$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
 					}
 				}
 
@@ -3388,7 +3376,7 @@ abstract class DBObject implements iDisplay
 				while ($oTrigger = $oSet->Fetch()) {
 					/** @var \TriggerOnObjectUpdate $oTrigger */
 					try {
-						$oTrigger->DoActivate($this->ToArgs('this'));
+						$oTrigger->DoActivate($this->ToArgs());
 					}
 					catch (Exception $e) {
 						utils::EnrichRaisedException($oTrigger, $e);
