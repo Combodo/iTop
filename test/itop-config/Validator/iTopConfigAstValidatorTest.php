@@ -15,7 +15,7 @@ use PhpParser\PrettyPrinter\Standard;
 class iTopConfigAstValidatorTest extends ItopTestCase
 {
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 

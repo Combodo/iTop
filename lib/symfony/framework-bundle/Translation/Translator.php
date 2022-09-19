@@ -12,15 +12,14 @@
 namespace Symfony\Bundle\FrameworkBundle\Translation;
 
 use Psr\Container\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface as SymfonyContainerInterface;
+use Symfony\Component\Config\Resource\DirectoryResource;
+use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\Translator as BaseTranslator;
 
 /**
- * Translator.
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Translator extends BaseTranslator implements WarmableInterface
@@ -32,10 +31,12 @@ class Translator extends BaseTranslator implements WarmableInterface
         'cache_dir' => null,
         'debug' => false,
         'resource_files' => [],
+        'scanned_directories' => [],
+        'cache_vary' => [],
     ];
 
     /**
-     * @var array
+     * @var list<string>
      */
     private $resourceLocales;
 
@@ -43,43 +44,42 @@ class Translator extends BaseTranslator implements WarmableInterface
      * Holds parameters from addResource() calls so we can defer the actual
      * parent::addResource() calls until initialize() is executed.
      *
-     * @var array
+     * @var array[]
      */
     private $resources = [];
+
+    /**
+     * @var string[][]
+     */
+    private $resourceFiles;
+
+    /**
+     * @var string[]
+     */
+    private $scannedDirectories;
+
+    /**
+     * @var string[]
+     */
+    private $enabledLocales;
 
     /**
      * Constructor.
      *
      * Available options:
      *
-     *   * cache_dir: The cache directory (or null to disable caching)
-     *   * debug:     Whether to enable debugging or not (false by default)
+     *   * cache_dir:      The cache directory (or null to disable caching)
+     *   * debug:          Whether to enable debugging or not (false by default)
      *   * resource_files: List of translation resources available grouped by locale.
-     *
-     * @param ContainerInterface        $container     A ContainerInterface instance
-     * @param MessageFormatterInterface $formatter     The message formatter
-     * @param string                    $defaultLocale
-     * @param array                     $loaderIds     An array of loader Ids
-     * @param array                     $options       An array of options
+     *   * cache_vary:     An array of data that is serialized to generate the cached catalogue name.
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(ContainerInterface $container, $formatter, $defaultLocale = null, array $loaderIds = [], array $options = [])
+    public function __construct(ContainerInterface $container, MessageFormatterInterface $formatter, string $defaultLocale, array $loaderIds = [], array $options = [], array $enabledLocales = [])
     {
-        // BC 3.x, to be removed in 4.0 along with the $defaultLocale default value
-        if (\is_array($defaultLocale) || 3 > \func_num_args()) {
-            if (!$container instanceof SymfonyContainerInterface) {
-                throw new \InvalidArgumentException('Missing third $defaultLocale argument.');
-            }
-
-            $options = $loaderIds;
-            $loaderIds = $defaultLocale;
-            $defaultLocale = $container->getParameter('kernel.default_locale');
-            @trigger_error(sprintf('The "%s()" method takes the default locale as the 3rd argument since Symfony 3.3. Not passing it is deprecated and will trigger an error in 4.0.', __METHOD__), \E_USER_DEPRECATED);
-        }
-
         $this->container = $container;
         $this->loaderIds = $loaderIds;
+        $this->enabledLocales = $enabledLocales;
 
         // check option names
         if ($diff = array_diff(array_keys($options), array_keys($this->options))) {
@@ -88,23 +88,27 @@ class Translator extends BaseTranslator implements WarmableInterface
 
         $this->options = array_merge($this->options, $options);
         $this->resourceLocales = array_keys($this->options['resource_files']);
-        $this->addResourceFiles($this->options['resource_files']);
+        $this->resourceFiles = $this->options['resource_files'];
+        $this->scannedDirectories = $this->options['scanned_directories'];
 
-        parent::__construct($defaultLocale, $formatter, $this->options['cache_dir'], $this->options['debug']);
+        parent::__construct($defaultLocale, $formatter, $this->options['cache_dir'], $this->options['debug'], $this->options['cache_vary']);
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return string[]
      */
-    public function warmUp($cacheDir)
+    public function warmUp(string $cacheDir)
     {
         // skip warmUp when translator doesn't use cache
         if (null === $this->options['cache_dir']) {
-            return;
+            return [];
         }
 
-        $locales = array_merge($this->getFallbackLocales(), [$this->getLocale()], $this->resourceLocales);
-        foreach (array_unique($locales) as $locale) {
+        $localesToWarmUp = $this->enabledLocales ?: array_merge($this->getFallbackLocales(), [$this->getLocale()], $this->resourceLocales);
+
+        foreach (array_unique($localesToWarmUp) as $locale) {
             // reset catalogue in case it's already loaded during the dump of the other locales.
             if (isset($this->catalogues[$locale])) {
                 unset($this->catalogues[$locale]);
@@ -112,26 +116,47 @@ class Translator extends BaseTranslator implements WarmableInterface
 
             $this->loadCatalogue($locale);
         }
+
+        return [];
     }
 
-    public function addResource($format, $resource, $locale, $domain = null)
+    public function addResource(string $format, $resource, string $locale, string $domain = null)
     {
+        if ($this->resourceFiles) {
+            $this->addResourceFiles();
+        }
         $this->resources[] = [$format, $resource, $locale, $domain];
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function initializeCatalogue($locale)
+    protected function initializeCatalogue(string $locale)
     {
         $this->initialize();
         parent::initializeCatalogue($locale);
     }
 
+    /**
+     * @internal
+     */
+    protected function doLoadCatalogue(string $locale): void
+    {
+        parent::doLoadCatalogue($locale);
+
+        foreach ($this->scannedDirectories as $directory) {
+            $resourceClass = file_exists($directory) ? DirectoryResource::class : FileExistenceResource::class;
+            $this->catalogues[$locale]->addResource(new $resourceClass($directory));
+        }
+    }
+
     protected function initialize()
     {
-        foreach ($this->resources as $key => $params) {
-            list($format, $resource, $locale, $domain) = $params;
+        if ($this->resourceFiles) {
+            $this->addResourceFiles();
+        }
+        foreach ($this->resources as $params) {
+            [$format, $resource, $locale, $domain] = $params;
             parent::addResource($format, $resource, $locale, $domain);
         }
         $this->resources = [];
@@ -143,12 +168,18 @@ class Translator extends BaseTranslator implements WarmableInterface
         }
     }
 
-    private function addResourceFiles($filesByLocale)
+    private function addResourceFiles(): void
     {
-        foreach ($filesByLocale as $locale => $files) {
-            foreach ($files as $key => $file) {
+        $filesByLocale = $this->resourceFiles;
+        $this->resourceFiles = [];
+
+        foreach ($filesByLocale as $files) {
+            foreach ($files as $file) {
                 // filename is domain.locale.format
-                list($domain, $locale, $format) = explode('.', basename($file), 3);
+                $fileNameParts = explode('.', basename($file));
+                $format = array_pop($fileNameParts);
+                $locale = array_pop($fileNameParts);
+                $domain = implode('.', $fileNameParts);
                 $this->addResource($format, $file, $locale, $domain);
             }
         }

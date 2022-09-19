@@ -32,7 +32,7 @@ class RedirectResponse extends Response
      *
      * @see https://tools.ietf.org/html/rfc2616#section-10.3
      */
-    public function __construct($url, $status = 302, $headers = [])
+    public function __construct(string $url, int $status = 302, array $headers = [])
     {
         parent::__construct('', $status, $headers);
 
@@ -50,21 +50,23 @@ class RedirectResponse extends Response
     /**
      * Factory method for chainability.
      *
-     * @param string $url     The url to redirect to
-     * @param int    $status  The response status code
-     * @param array  $headers An array of response headers
+     * @param string $url The URL to redirect to
      *
      * @return static
+     *
+     * @deprecated since Symfony 5.1, use __construct() instead.
      */
-    public static function create($url = '', $status = 302, $headers = [])
+    public static function create($url = '', int $status = 302, array $headers = [])
     {
+        trigger_deprecation('symfony/http-foundation', '5.1', 'The "%s()" method is deprecated, use "new %s()" instead.', __METHOD__, static::class);
+
         return new static($url, $status, $headers);
     }
 
     /**
      * Returns the target URL.
      *
-     * @return string target URL
+     * @return string
      */
     public function getTargetUrl()
     {
@@ -74,15 +76,13 @@ class RedirectResponse extends Response
     /**
      * Sets the redirect target of this response.
      *
-     * @param string $url The URL to redirect to
-     *
      * @return $this
      *
      * @throws \InvalidArgumentException
      */
-    public function setTargetUrl($url)
+    public function setTargetUrl(string $url)
     {
-        if (empty($url)) {
+        if ('' === $url) {
             throw new \InvalidArgumentException('Cannot redirect to an empty URL.');
         }
 

@@ -13,8 +13,6 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
-use MetaModel;
-use utils;
 
 class FilesIntegrity
 {
@@ -81,12 +79,12 @@ class FilesIntegrity
 	 * Check that files present in iTop folder corresponds to the manifest
 	 *
 	 * @param string $sRootPath
-	 * @param bool $bCheckNewModule
+	 * @param bool $bExitAtFirstError
 	 *
 	 * @throws \Combodo\iTop\FilesInformation\Service\FileIntegrityException
-	 * @since 3.0.1 Add $bCheckNewModule parameter
+	 * @since 2.7.7 3.0.1 Add $bExitAtFirstError parameter
 	 */
-	public static function CheckInstallationIntegrity($sRootPath = APPROOT, $bCheckNewModule = false)
+	public static function CheckInstallationIntegrity($sRootPath = APPROOT, $bExitAtFirstError = true)
 	{
 		$aFilesInfo = FilesIntegrity::GetInstalledFiles($sRootPath.'manifest.xml');
 
@@ -95,8 +93,10 @@ class FilesIntegrity
 			throw new FileIntegrityException(Dict::Format('FilesInformation:Error:MissingFile', 'manifest.xml'));
 		}
 
+		$bHasErrors = false;
+		$sErrorFiles ="";
+
 		@clearstatcache();
-		$sSourceDir = MetaModel::GetConfig()->Get('source_dir');
 		foreach ($aFilesInfo as $aFileInfo)
 		{
 			$sFile = $sRootPath.$aFileInfo['path'];
@@ -108,19 +108,18 @@ class FilesIntegrity
 				$sChecksum = md5($sContent);
 				if (($iSize != $aFileInfo['size']) || ($sChecksum != $aFileInfo['md5']))
 				{
-					throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CorruptedFile', $sFile));
-				}
-			}
-			if($bCheckNewModule && strpos($aFileInfo['path'],$sSourceDir) === 0){
-				$aFilePath = explode('/',$aFileInfo['path']);
-				$sFolderPath = $aFilePath[0].'/'.$aFilePath[1].'/'.$aFilePath[2];
-				if (is_dir(APPROOT.'/'.$sFolderPath) && !is_file($sRootPath.$sFolderPath)){
-					$sLink = utils::GetAbsoluteUrlAppRoot().'setup/';
-					$sLinkManualUpdate = 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Ainstall%3Aupgrading_itop#manually';
-					throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CannotUpdateNewModules', $sLink, $sLinkManualUpdate));
+					if($bExitAtFirstError) {
+						throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CorruptedFile', $sFile));
+					} else {
+						$bHasErrors = true;
+						$sErrorFiles .='<li> '.$aFileInfo['path'].'</li>';
+					}
 				}
 			}
 			// Packed with missing files...
+		}
+		if($bHasErrors){
+			throw new FileIntegrityException(Dict::Format('FilesInformation:Error:ListCorruptedFile','<ul> '.$sErrorFiles.'</ul>'));
 		}
 	}
 

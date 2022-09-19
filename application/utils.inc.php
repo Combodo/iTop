@@ -21,6 +21,8 @@ use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\OutputStyle;
+use ScssPhp\ScssPhp\ValueConverter;
 
 
 /**
@@ -97,6 +99,11 @@ class utils
 	 * @since 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
+	/**
+	 * @var string
+	 * @since 3.0.2, 3.1.0 N°4899
+	 */
+	public const ENUM_SANITIZATION_FILTER_URL = 'url';
 
 	/**
 	 * @var string
@@ -377,6 +384,7 @@ class utils
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
 	 * @since 3.0.0 new utils::ENUM_SANITIZATION_* const
+	 * @since 2.7.7, 3.0.2, 3.1.0 N°4899 - new 'url' filter
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
@@ -452,6 +460,11 @@ class utils
 
 			case static::ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
+				break;
+
+			// For URL
+			case static::ENUM_SANITIZATION_FILTER_URL:
+				$retValue = filter_var($value, FILTER_SANITIZE_URL);
 				break;
 
 			default:
@@ -800,21 +813,20 @@ class utils
 	 */
 	public static function StringToTime($sDate, $sFormat)
 	{
-	   // Source: http://php.net/manual/fr/function.strftime.php
+		// Source: http://php.net/manual/fr/function.strftime.php
 		// (alternative: http://www.php.net/manual/fr/datetime.formats.date.php)
 		static $aDateTokens = null;
 		static $aDateRegexps = null;
-		if (is_null($aDateTokens))
-		{
-		   $aSpec = array(
-				'%d' =>'(?<day>[0-9]{2})',
+		if (is_null($aDateTokens)) {
+			$aSpec = array(
+				'%d' => '(?<day>[0-9]{2})',
 				'%m' => '(?<month>[0-9]{2})',
 				'%y' => '(?<year>[0-9]{2})',
 				'%Y' => '(?<year>[0-9]{4})',
 				'%H' => '(?<hour>[0-2][0-9])',
 				'%i' => '(?<minute>[0-5][0-9])',
 				'%s' => '(?<second>[0-5][0-9])',
-				);
+			);
 			$aDateTokens = array_keys($aSpec);
 			$aDateRegexps = array_values($aSpec);
 		}
@@ -1814,7 +1826,7 @@ class utils
 	 */
 	public static function HtmlEntities($sValue)
 	{
-		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+		return htmlentities($sValue ?? '', ENT_QUOTES, 'UTF-8');
 	}
 
 	/**
@@ -1830,7 +1842,7 @@ class utils
 	public static function EscapeHtml($sValue)
 	{
 		return htmlspecialchars(
-			$sValue,
+			$sValue ?? '',
 			ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5,
 			WebPage::PAGES_CHARSET,
 			false
@@ -1879,7 +1891,8 @@ class utils
 	{
 		$sText = str_replace("\r\n", "\n", $sText);
 		$sText = str_replace("\r", "\n", $sText);
-		return str_replace("\n", '<br/>', htmlentities($sText, ENT_QUOTES, 'UTF-8'));
+
+		return str_replace("\n", '<br/>', utils::EscapeHtml($sText));
 	}
 	
 	/**
@@ -1930,19 +1943,23 @@ class utils
 	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
 	{
 		$oSass = new Compiler();
-		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Compressed');
+		$oSass->setOutputStyle(OutputStyle::COMPRESSED);
 		// Setting our variables
-		$oSass->setVariables($aVariables);
+		$aScssVariables = [];
+		foreach ($aVariables as $entry => $value) {
+			$aScssVariables[$entry] = ValueConverter::parseValue($value);
+		}
+		$oSass->addVariables($aScssVariables);
 		// Setting our imports paths
 		$oSass->setImportPaths($aImportPaths);
 		// Temporary disabling max exec time while compiling
 		$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
 		set_time_limit(0);
 		// Compiling SASS
-		$sCss = $oSass->compile($sSassContent);
+		$oCompilationRes = $oSass->compileString($sSassContent);
 		set_time_limit(intval($iCurrentMaxExecTime));
 
-		return $sCss;
+		return $oCompilationRes->getCss();
 	}
 
 	/**
@@ -2701,9 +2718,23 @@ HTML;
 			$aAutoloadClassMaps = array_merge($aAutoloadClassMaps, glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php'));
 
 			$aClassMap = [];
+			$aAutoloaderErrors = [];
 			foreach ($aAutoloadClassMaps as $sAutoloadFile) {
+				if (false === static::RealPath($sAutoloadFile, APPROOT)) {
+					// can happen when we still have the autoloader symlink in env-*, but it points to a file that no longer exists
+					$aAutoloaderErrors[] = $sAutoloadFile;
+					continue;
+				}
 				$aTmpClassMap = include $sAutoloadFile;
+				/** @noinspection SlowArrayOperationsInLoopInspection we are getting an associative array so the documented workarounds cannot be used */
 				$aClassMap = array_merge($aClassMap, $aTmpClassMap);
+			}
+			if (count($aAutoloaderErrors) > 0) {
+				IssueLog::Debug(
+					"\utils::GetClassesForInterface cannot load some of the autoloader files",
+					LogChannels::CORE,
+					['autoloader_errors' => $aAutoloaderErrors]
+				);
 			}
 
 			// Add already loaded classes
@@ -2712,7 +2743,7 @@ HTML;
 
 			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
 				$bSkipped = false;
-				
+
 				// Check if our class matches name filter, or is in an excluded path
 				if ($sClassNameFilter !== '' && strpos($sPHPClass, $sClassNameFilter) === false) {
 					$bSkipped = true;
@@ -2807,6 +2838,54 @@ HTML;
 		}
 
 		return $aPrefs[$sShortcutId];
+	}
+
+	//----------------------------------------------
+	// PHP function helpers
+	//----------------------------------------------
+
+	/**
+	 * Helper around the native strlen() PHP method to keep allowing usage of null value when computing the length of a string as null value is no longer allowed with PHP 8.1+
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return int Length of $sString, 0 if null
+	 * @since 3.0.2 N°5172
+	 */
+	public static function StrLen(?string $sString): int
+	{
+		return strlen($sString ?? '');
+	}
+
+	/**
+	 * Helper around the native strlen() PHP method to test a string for null or empty value
+	 *
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return bool if string null or empty
+	 * @since 3.0.2 N°5302
+	 */
+	public static function IsNullOrEmptyString(?string $sString): bool
+	{
+		return $sString === null || strlen($sString) === 0;
+	}
+
+	/**
+	 * Helper around the native strlen() PHP method to test a string not null or empty value
+	 *
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return bool if string is not null and not empty
+	 * @since 3.0.2 N°5302
+	 */
+	public static function IsNotNullOrEmptyString(?string $sString): bool
+	{
+		return !static::IsNullOrEmptyString($sString);
 	}
 
 	//----------------------------------------------

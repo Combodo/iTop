@@ -118,13 +118,14 @@ $ibo-tab-container--tab-container--last--min-height: 60vh !default;
 }
 
 .ibo-tab-container--extra-tabs-list {
-  position: absolute;
-  z-index: 1;
-  top: calc(100% + 6px);
-  right: 12px;
+  position: fixed;
+  z-index: 10; /* To be above linkedset datatables */
+  /* top: Must be computed on menu opening, if set back to absolute, value must be calc(100% + 6px); */
+  /* right: Must be computed on menu opening, if set back to absolute, value must be 12px; */
   max-height: $ibo-tab-container--extra-tabs-list--max-height;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 
   background-color: $ibo-tab-container--extra-tabs-list--background-color;
   border-radius: $ibo-tab-container--extra-tabs-list--border-radius;
@@ -136,7 +137,9 @@ $ibo-tab-container--tab-container--last--min-height: 60vh !default;
   max-width: $ibo-tab-container--extra-tab-toggler--max-width;
 
   color: $ibo-tab-container--extra-tab-toggler--text-color;
+
   @extend %ibo-text-truncated-with-ellipsis;
+  overflow-x: clip; /* For unknown reason yet, this is necessary otherwise the element will have almost no height */
 
   &:hover,
   &:active {

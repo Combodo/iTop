@@ -61,9 +61,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
     'iTopUpdate:UI:DoBackup:Label' => 'Respaldo de archivos y base de datos',
     'iTopUpdate:UI:DoBackup:Warning' => 'El respaldo no está recomendado por el limitado espacio en el dispositivo',
 
-    'iTopUpdate:UI:DiskFreeSpace' => 'Espaciolibre en el dispositivo',
-    'iTopUpdate:UI:ItopDiskSpace' => 'Espacio en diso de '.ITOP_APPLICATION_SHORT,
-    'iTopUpdate:UI:DBDiskSpace' => 'Espacio en diso de base de datos',
+	'iTopUpdate:UI:DiskFreeSpace' => 'Espacio libre en el dispositivo',
+	'iTopUpdate:UI:ItopDiskSpace' => 'Espacio en disco de '.ITOP_APPLICATION_SHORT,
+	'iTopUpdate:UI:DBDiskSpace' => 'Espacio en disco de base de datos',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'Máximo tamaño de carga de archivos',
 
 	'iTopUpdate:UI:PostMaxSize' => 'Valor post_max_size en PHP ini: %1$s',
@@ -76,7 +76,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'La aplicación puede ser actualizada',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'La aplicación no puede ser actualizada: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Advertencia: la actualización de la aplicación puede fallar: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => 'Debe usar <a href="%1$s">setup</a> para actualizar la aplicación.<br />Algunos archivos modificados fueron detectados, una actualización parcial no puede ser realizada.',
 	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
 
 	// Setup Messages

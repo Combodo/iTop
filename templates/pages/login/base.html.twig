@@ -3,9 +3,9 @@
 
 
 {% block body %}
-	{% import "macros.twig" as Macro %}
 	<div id="login-body">
 		{% block login_header %}
+            {% import "macros.twig" as Macro %}
 			<div id="login-header">
 				{{ Macro.BlockExtension(aPluginFormData, 'login_header') }}
 			</div>
@@ -21,12 +21,14 @@
 			{% block login_content %}
 			{% endblock login_content %}
 			{% block login_additional_content %}
+                {% import "macros.twig" as Macro %}
 				<div id="login-additional-content">
 					{{ Macro.BlockExtension(aPluginFormData, 'login_additional_content') }}
 				</div>
 			{% endblock login_additional_content %}
 		{% endblock login_content_outer %}
 		{% block login_footer %}
+            {% import "macros.twig" as Macro %}
 			<div id="login-footer">
 				{{ Macro.BlockExtension(aPluginFormData, 'login_footer') }}
 			</div>

@@ -110,8 +110,8 @@ class URP_Profiles extends UserRightsBaseClass
 			{
 				$oGrant = $oUserRights->GetClassStimulusGrant($this->GetKey(), $sClass, $sStimulusCode);
 				if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes'))
-				{ 
-					$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->GetDescription(), ENT_QUOTES, 'UTF-8').'">'.htmlentities($oStimulus->GetLabel(), ENT_QUOTES, 'UTF-8').'</span>';
+				{
+					$aStimuli[] = '<span title="'.$sStimulusCode.': '.utils::EscapeHtml($oStimulus->GetDescription()).'">'.utils::EscapeHtml($oStimulus->GetLabel()).'</span>';
 				}
 			}
 			$sStimuli = implode(', ', $aStimuli);
@@ -568,14 +568,11 @@ class UserRightsProjection extends UserRightsAddOnAPI
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
 		// Create a change to record the history of the User object
-		$oChange = MetaModel::NewObject("CMDBChange");
-		$oChange->Set("date", time());
-		$oChange->Set("userinfo", "Initialization");
+		CMDBObject::SetCurrentChangeFromParams('Initialization : create first user admin');
 
 		$oOrg = new Organization();
 		$oOrg->Set('name', 'My Company/Department');
 		$oOrg->Set('code', 'SOMECODE');
-		$oOrg::SetCurrentChange($oChange);
 		$iOrgId = $oOrg->DBInsertNoReload();
 
 		$oContact = new Person();
@@ -584,7 +581,6 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		//$oContact->Set('status', 'available');
 		$oContact->Set('org_id', $iOrgId);
 		$oContact->Set('email', 'my.email@foo.org');
-		$oContact::SetCurrentChange($oChange);
 		$iContactId = $oContact->DBInsertNoReload();
 		
 		$oUser = new UserLocal();
@@ -592,7 +588,6 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('contactid', $iContactId);
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
-		$oUser::SetCurrentChange($oChange);
 		$iUserId = $oUser->DBInsertNoReload();
 		
 		// Add this user to the very specific 'admin' profile
@@ -600,7 +595,6 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		$oUserProfile->Set('userid', $iUserId);
 		$oUserProfile->Set('profileid', ADMIN_PROFILE_ID);
 		$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-		$oUserProfile::SetCurrentChange($oChange);
 		$oUserProfile->DBInsertNoReload();
 		return true;
 	}

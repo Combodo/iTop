@@ -359,6 +359,10 @@ class WizardHelper
 JS;
 	}
 
+	/*
+	 * Function with an old pattern of code
+	 * @deprecated 3.1.0
+	*/
 	static function ParseJsonSet($oMe, $sLinkClass, $sExtKeyToMe, $sJsonSet)
 	{
 		$aSet = json_decode($sJsonSet, true); // true means hash array instead of object

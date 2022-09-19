@@ -10,6 +10,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\FieldBadge;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use ormStyle;
+use utils;
 
 /**
  * Class FieldBadgeUIBlockFactory
@@ -36,6 +37,10 @@ class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 	{
 		$oBadge = null;
 		$sHtml = '';
+
+		// N°5318 - Sanitize value manually as this UIBlock is not using a proper TWIG template 😥
+		$sValueForHtml = utils::EscapeHtml($sValue);
+
 		if ($oStyle) {
 			$sStyleClass = $oStyle->GetStyleClass();
 			$sPrimaryColor = $oStyle->GetMainColor();
@@ -47,12 +52,12 @@ class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 				if (!is_null($sDecorationClasses) && !empty($sDecorationClasses)) {
 					$sHtml .= "<span class=\"ibo-field-badge--decoration\"><i class=\"$sDecorationClasses\"></i></span>";
 				}
-				$sHtml .= "<span class=\"ibo-field-badge--label\">$sValue</span>";
+				$sHtml .= "<span class=\"ibo-field-badge--label\">$sValueForHtml</span>";
 			}
 		}
 		if (!$oBadge) {
 			$oBadge = new FieldBadge();
-			$sHtml .= "<span>$sValue</span>";
+			$sHtml .= "<span>$sValueForHtml</span>";
 		}
 		$oBadge->AddHtml($sHtml);
 		return $oBadge;

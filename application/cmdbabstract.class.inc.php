@@ -341,13 +341,17 @@ JS
 	}
 
 	/**
-	 * Important: For compatibility reasons, this function still allows to manipulate the $oPage. In that case, markup will be put above the real header of the panel.
-	 * To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
+	 * @param \WebPage $oPage Warning, since 3.0.0 this parameter was kept for compatibility reason. You shouldn't write directly on the page!
+	 *   When writing to the page, markup will be put above the real header of the panel.
+	 *   To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
+	 * @param bool $bEditMode Deprecated parameter in iTop 3.0.0, use {@see GetDisplayMode()} and ENUM_DISPLAY_MODE_* constants instead
 	 *
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
-	 *
-	 * @return array UIBlocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block. eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
+	 * @return array{
+	 *       subtitle: \Combodo\iTop\Application\UI\Base\UIBlock[],
+	 *       toolbar: \Combodo\iTop\Application\UI\Base\UIBlock[]
+	 *    }
+	 *    blocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block.
+	 *    eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -356,7 +360,10 @@ JS
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 *
-	 * @since 3.0.0 $bEditMode is deprecated and no longer used
+	 * @since 3.0.0 $bEditMode is deprecated, see param documentation above
+	 * @since 3.0.0 Changed signature: Method must return header content in an array (no more writing directly to the $oPage)
+	 *
+	 * @noinspection PhpUnusedParameterInspection
 	 */
 	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
@@ -721,7 +728,7 @@ HTML
 				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
 				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
 				$oPage->AddUiBlock($oClassIcon);
-				
+
 				$sDisplayValue = ''; // not used
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
 						$oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
@@ -980,10 +987,8 @@ HTML
 												$this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 												$sTip = '';
 												foreach ($aReasons as $aRow) {
-													$sDescription = htmlentities($aRow['description'], ENT_QUOTES,
-														'UTF-8');
-													$sDescription = str_replace(array("\r\n", "\n"), "<br/>",
-														$sDescription);
+													$sDescription = utils::EscapeHtml($aRow['description']);
+													$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
 													$sTip .= "<div class='synchro-source'>";
 													$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
 													$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
@@ -1396,7 +1401,7 @@ HTML
 						} else {
 							if ($oAttDef instanceof AttributeCaseLog) {
 								$rawValue = $oObj->Get($sAttCodeEx);
-								$outputValue = str_replace("\n", "<br/>", htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
+								$outputValue = str_replace("\n", "<br/>", utils::EscapeHtml($rawValue->__toString()));
 								// Trick for Excel: treat the content as text even if it begins with an equal sign
 								$aRow[$oAttDef->GetCode()] = $outputValue;
 							} else {
@@ -1410,9 +1415,9 @@ HTML
 									}
 								}
 								if ($bLocalize) {
-									$outputValue = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES, 'UTF-8');
+									$outputValue = utils::EscapeHtml($oFinalAttDef->GetEditValue($rawValue));
 								} else {
-									$outputValue = htmlentities($rawValue, ENT_QUOTES, 'UTF-8');
+									$outputValue = utils::EscapeHtml($rawValue);
 								}
 								$aRow[$oAttDef->GetCode()] = $outputValue;
 							}
@@ -1448,7 +1453,7 @@ HTML
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
-	 * @deprecated since 3.0.0
+	 * @deprecated 3.0.0
 	 */
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
@@ -1888,7 +1893,7 @@ HTML
 							{
 								$rawValue = $oObj->Get($sAttCodeEx);
 								$outputValue = str_replace("\n", "<br/>",
-									htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
+									utils::EscapeHtml($rawValue->__toString()));
 								// Trick for Excel: treat the content as text even if it begins with an equal sign
 								$aRow[] = '<td x:str>'.$outputValue.'</td>';
 							}
@@ -1905,14 +1910,11 @@ HTML
 										$rawValue = '';
 									}
 								}
-								if ($bLocalize)
-								{
-									$outputValue = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES,
-										'UTF-8');
+								if ($bLocalize) {
+									$outputValue = utils::EscapeHtml($oFinalAttDef->GetEditValue($rawValue));
 								}
-								else
-								{
-									$outputValue = htmlentities($rawValue, ENT_QUOTES, 'UTF-8');
+								else {
+									$outputValue = utils::EscapeHtml($rawValue);
 								}
 								$aRow[] = '<td>'.$outputValue.'</td>';
 							}
@@ -2131,7 +2133,7 @@ HTML;
 					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
 					$sHTMLValue = <<<HTML
 <div class="field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper" data-validation="untouched">
-	<input title="{$sHelpText}" class="datetime-pick ibo-input ibo-input-datetime" type="text" size="19" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autoomplete="off" />
+	<input title="{$sHelpText}" class="datetime-pick ibo-input ibo-input-datetime" type="text" size="19" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autocomplete="off" />
 </div>{$sValidationSpan}{$sReloadSpan}
 HTML;
 					break;
@@ -2149,7 +2151,7 @@ HTML;
 					$sHours = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
 					$sMinutes = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
 					$sSeconds = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
-					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\"/>";
+					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".utils::EscapeHtml($value)."\"/>";
 					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
 					$oPage->add_ready_script("$('#{$iId}').on('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");
 					break;
@@ -2159,8 +2161,7 @@ HTML;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_password ibo-input-wrapper ibo-input-password-wrapper\" data-validation=\"untouched\"><input class=\"ibo-input ibo-input-password\" title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value,
-							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_password ibo-input-wrapper ibo-input-password-wrapper\" data-validation=\"untouched\"><input class=\"ibo-input ibo-input-password\" title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".utils::EscapeHtml($value)."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 					break;
 
 				case 'OQLExpression':
@@ -2312,13 +2313,13 @@ EOF
 
 					$sHeader = '<div class="ibo-caselog-entry-form--actions"><div class="""ibo-caselog-entry-form--actions" data-role="ibo-caselog-entry-form--action-buttons--extra-actions"></div></div>'; // will be hidden in CSS (via :empty) if it remains empty
 					$sEditValue = is_object($value) ? $value->GetModifiedEntry('html') : '';
-					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */,  array('AttributeText', 'RenderWikiHtml')) : '';
+					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
 					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
 
 					$sHTMLValue = "$sHeader<div class=\"ibo-caselog-entry-form--text-input\" $sStyle data-role=\"ibo-caselog-entry-form--text-input\">";
-					$sHTMLValue .=	"<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue,ENT_QUOTES,'UTF-8')."</textarea>";
-					$sHTMLValue .=	"$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
+					$sHTMLValue .= "<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".utils::EscapeHtml($sEditValue)."</textarea>";
+					$sHTMLValue .= "$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
 
 					// Note: This should be refactored for all types of attribute (see at the end of this function) but as we are doing this for a maintenance release, we are scheduling it for the next main release in to order to avoid regressions as much as possible.
 					$sNullValue = $oAttDef->GetNullValue();
@@ -2563,16 +2564,16 @@ JS
 
 				case 'Set':
 				case 'TagSet':
-					$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
-					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
+				$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
+				$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
+				$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
+				$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
 
-					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
+				$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
-					/** @var \ormSet $value */
+				/** @var \ormSet $value */
 				$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
-				$sEscapedJson = htmlentities($sJson, ENT_QUOTES, 'UTF-8');
+				$sEscapedJson = utils::EscapeHtml($sJson);
 				$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
 
 				// handle form validation
@@ -3685,8 +3686,7 @@ HTML;
 						break;
 
 					default:
-						$oPage->add("<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true), ENT_QUOTES,
-								'UTF-8')."</pre>\n");
+						$oPage->add("<pre>".utils::EscapeHtml(MyHelpers::beautifulstr($data, 1000, true))."</pre>\n");
 				}
 				break;
 
@@ -3929,7 +3929,7 @@ HTML;
 				}
 				elseif ($iFlags & OPT_ATT_SLAVE)
 				{
-					$aErrors[$sAttCode] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
+					$aErrors[$sAttCode] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel(), $sAttCode);
 				}
 				else
 				{
@@ -4515,22 +4515,14 @@ HTML;
 	 */
 	protected function SetWarningsAsSessionMessages($sMessageIdPrefix)
 	{
-		if (!empty($this->m_aCheckWarnings) && is_array($this->m_aCheckWarnings))
-		{
+		if (!empty($this->m_aCheckWarnings) && is_array($this->m_aCheckWarnings)) {
 			$iMsgNb = 0;
-			foreach ($this->m_aCheckWarnings as $sWarningMessage)
-			{
+			foreach ($this->m_aCheckWarnings as $sWarningMessage) {
 				$iMsgNb++;
 				$sMessageId = "$sMessageIdPrefix-$iMsgNb"; // each message must have its own messageId !
 				$this->SetSessionMessageFromInstance($sMessageId, $sWarningMessage, 'warning', 0);
 			}
 		}
-	}
-
-	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
-	{
-		// Todo - invoke the extension
-		return parent::BulkUpdateTracked_Internal($oFilter, $aValues);
 	}
 
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
@@ -4735,9 +4727,8 @@ HTML;
 				{
 					$aReasons = array();
 					$sTip = '';
-					foreach($aReasons as $aRow)
-					{
-						$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
+					foreach($aReasons as $aRow) {
+						$sDescription = utils::EscapeHtml($aRow['description']);
 						$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
 						$sTip .= "<div class=\"synchro-source\">";
 						$sTip .= "<div class=\"synchro-source-title\">Synchronized with {$aRow['name']}</div>";
@@ -4749,8 +4740,7 @@ HTML;
 
 				// Attribute is read-only
 				$sHTMLValue = $this->GetAsHTML($sAttCode);
-				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->GetEditValue($sAttCode),
-						ENT_QUOTES, 'UTF-8').'"/>';
+				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.utils::EscapeHtml($this->GetEditValue($sAttCode)).'"/>';
 				$aFieldsMap[$sAttCode] = $sInputId;
 			}
 			else
@@ -5086,7 +5076,7 @@ HTML
 							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass)) {
 								$sValueCheckbox = '<input type="checkbox" class="ibo-field--enable-bulk--checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
-							$aComments[$sAttCode] .= '<div class="multi_values ibo-field--enable-bulk ibo-pill ibo-is-failure" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.$iCount.$sValueCheckbox.'</div>';
+							$aComments[$sAttCode] .= '<div class="multi_values ibo-field--enable-bulk ibo-pill ibo-is-failure" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true" data-tooltip-append-to="body">'.$iCount.$sValueCheckbox.'</div>';
 						}
 						$sReadyScript .= 'ToggleField('.(($iCount == 1) ? 'true' : 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					}
@@ -5204,11 +5194,14 @@ EOF
 			} else {
 				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusModified') : Dict::S('UI:BulkModifyStatusSkipped');
 			}
-			$sChecked = $bResult ? 'checked' : '';
+
+			$aErrorsToDisplay = array_map(function($sError) {
+				return utils::HtmlEntities($sError);
+			}, $aErrors);
 			$aRows[] = array(
 				'object' => $oObj->GetHyperlink(),
 				'status' => $sStatus,
-				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrors)).'</p>',
+				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrorsToDisplay)).'</p>',
 			);
 			if ($bResult && (!$bPreview)) {
 				$oObj->DBUpdate();
@@ -5217,7 +5210,7 @@ EOF
 		set_time_limit(intval($iPreviousTimeLimit));
 		$oTable = DataTableUIBlockFactory::MakeForForm('BulkModify', $aHeaders, $aRows);
 		$oTable->AddOption("bFullscreen", true);
-		
+
 		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, '');
 		$oPanel->SetIcon($sClassIcon);
 		$oPanel->SetTitle($sHeaderTitle);
@@ -5423,13 +5416,13 @@ EOF
 					$oFailAlertBlock = AlertUIBlockFactory::MakeForDanger('', Dict::S('UI:Delete:SorryDeletionNotAllowed'));
 					$oFailAlertBlock->SetIsClosable(false);
 					$oP->AddUiBlock($oFailAlertBlock);
-				} 
+				}
 				else {
 					$oWarningAlertBlock = AlertUIBlockFactory::MakeForWarning('', Dict::S('UI:Delete:PleaseDoTheManualOperations'));
 					$oWarningAlertBlock->SetIsClosable(false);
 					$oP->AddUiBlock($oWarningAlertBlock);
 				}
-				
+
 				$oForm = FormUIBlockFactory::MakeStandard('');
 				$oP->AddSubBlock($oForm);
 				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::ReadParam('transaction_id', '', false, 'transaction_id')));

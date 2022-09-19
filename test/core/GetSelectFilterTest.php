@@ -12,8 +12,9 @@ use utils;
 
 
 /**
- * @group getSelectFilterTest 
+ * @group getSelectFilterTest
  * @group sampleDataNeeded
+ * @group specificOrgInSampleData
  * Class GetSelectFilterTest
  *
  * @runTestsInSeparateProcesses
@@ -28,16 +29,16 @@ class GetSelectFilterTest extends ItopDataTestCase
 	private $sPassword = "IAAuytrez9876[}543ç_è-(";
 	private $oUser;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/startup.inc.php');
 
 		$oRestProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
 		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
-		
+
 		$this->sLogin = "getselectfilter-user-" . date('dmYHis');
-		
+
 		// Ensure that we have at least one administrator account
 		if (is_object($oRestProfile) && is_object($oAdminProfile))
 		{
@@ -45,7 +46,7 @@ class GetSelectFilterTest extends ItopDataTestCase
 			$this->AddProfileToUser($this->oUser, $oAdminProfile->GetKey());
 		}
 	}
-	
+
 	public function testGetSelectFilter()
 	{
 		$oUserRights = new UserRightsProfile();
@@ -64,9 +65,9 @@ class GetSelectFilterTest extends ItopDataTestCase
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Default behavior: Administrators, Administrator profile and URP_UserProfile related to administrators are visible
 		// via GetSelectFilter
-		
+
 		$oConfig->Set('security.hide_administrators', false);
-		
+
 		$oFilterProfiles = $oUserRights->GetSelectFilter($this->oUser, 'URP_Profiles');
 		if ($oFilterProfiles === true)
 		{
@@ -83,7 +84,7 @@ class GetSelectFilterTest extends ItopDataTestCase
 			}
 		}
 		$this->assertEquals($bAdminProfileFound, true);
-		
+
 		foreach($aUserLocalAncestors as $sUserClass)
 		{
 			$bAdminUserFound = false;
@@ -103,7 +104,7 @@ class GetSelectFilterTest extends ItopDataTestCase
 			}
 			$this->assertEquals($bAdminUserFound, true);
 		}
-		
+
 		$oFilterLnkProfiles = $oUserRights->GetSelectFilter($this->oUser, 'URP_UserProfile');
 		if ($oFilterLnkProfiles === true)
 		{
@@ -160,6 +161,6 @@ class GetSelectFilterTest extends ItopDataTestCase
 			$this->assertNotEquals($oLnk->Get('userid'), $this->oUser->GetKey());
 			$this->assertNotEquals($oLnk->Get('profileid'), 1);
 		}
-		
+
 	}
 }

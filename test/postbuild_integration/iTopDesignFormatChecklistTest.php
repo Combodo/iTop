@@ -17,7 +17,7 @@ use PHPUnit\Exception;
  */
 class TestForITopDesignFormatClass extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -148,6 +148,7 @@ class TestForITopDesignFormatClass extends ItopTestCase
 			{
 				if (is_dir($sPath))
 				{
+					/** @noinspection SlowArrayOperationsInLoopInspection */
 					$aDataModelFiles = array_merge($aDataModelFiles, $this->GetDataModelFiles($sPath));
 				}
 				else if (preg_match("/datamodel\..*\.xml/", basename($sPath)))

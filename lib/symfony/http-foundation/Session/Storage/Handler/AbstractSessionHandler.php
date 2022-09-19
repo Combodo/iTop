@@ -31,41 +31,36 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function open($savePath, $sessionName)
     {
         $this->sessionName = $sessionName;
-        if (!headers_sent() && !ini_get('session.cache_limiter') && '0' !== ini_get('session.cache_limiter')) {
-            header(sprintf('Cache-Control: max-age=%d, private, must-revalidate', 60 * (int) ini_get('session.cache_expire')));
+        if (!headers_sent() && !\ini_get('session.cache_limiter') && '0' !== \ini_get('session.cache_limiter')) {
+            header(sprintf('Cache-Control: max-age=%d, private, must-revalidate', 60 * (int) \ini_get('session.cache_expire')));
         }
 
         return true;
     }
 
     /**
-     * @param string $sessionId
-     *
      * @return string
      */
-    abstract protected function doRead($sessionId);
-
-    /**
-     * @param string $sessionId
-     * @param string $data
-     *
-     * @return bool
-     */
-    abstract protected function doWrite($sessionId, $data);
-
-    /**
-     * @param string $sessionId
-     *
-     * @return bool
-     */
-    abstract protected function doDestroy($sessionId);
+    abstract protected function doRead(string $sessionId);
 
     /**
      * @return bool
      */
+    abstract protected function doWrite(string $sessionId, string $data);
+
+    /**
+     * @return bool
+     */
+    abstract protected function doDestroy(string $sessionId);
+
+    /**
+     * @return bool
+     */
+    #[\ReturnTypeWillChange]
     public function validateId($sessionId)
     {
         $this->prefetchData = $this->read($sessionId);
@@ -86,6 +81,7 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function read($sessionId)
     {
         if (null !== $this->prefetchId) {
@@ -102,9 +98,6 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
 
         $data = $this->doRead($sessionId);
         $this->newSessionId = '' === $data ? $sessionId : null;
-        if (\PHP_VERSION_ID < 70000) {
-            $this->prefetchData = $data;
-        }
 
         return $data;
     }
@@ -112,16 +105,9 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function write($sessionId, $data)
     {
-        if (\PHP_VERSION_ID < 70000 && $this->prefetchData) {
-            $readData = $this->prefetchData;
-            $this->prefetchData = null;
-
-            if ($readData === $data) {
-                return $this->updateTimestamp($sessionId, $data);
-            }
-        }
         if (null === $this->igbinaryEmptyData) {
             // see https://github.com/igbinary/igbinary/issues/146
             $this->igbinaryEmptyData = \function_exists('igbinary_serialize') ? igbinary_serialize([]) : '';
@@ -137,12 +123,10 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function destroy($sessionId)
     {
-        if (\PHP_VERSION_ID < 70000) {
-            $this->prefetchData = null;
-        }
-        if (!headers_sent() && filter_var(ini_get('session.use_cookies'), \FILTER_VALIDATE_BOOLEAN)) {
+        if (!headers_sent() && filter_var(\ini_get('session.use_cookies'), \FILTER_VALIDATE_BOOLEAN)) {
             if (!$this->sessionName) {
                 throw new \LogicException(sprintf('Session name cannot be empty, did you forget to call "parent::open()" in "%s"?.', static::class));
             }
@@ -157,7 +141,7 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
              */
             if (null === $cookie || isset($_COOKIE[$this->sessionName])) {
                 if (\PHP_VERSION_ID < 70300) {
-                    setcookie($this->sessionName, '', 0, ini_get('session.cookie_path'), ini_get('session.cookie_domain'), filter_var(ini_get('session.cookie_secure'), \FILTER_VALIDATE_BOOLEAN), filter_var(ini_get('session.cookie_httponly'), \FILTER_VALIDATE_BOOLEAN));
+                    setcookie($this->sessionName, '', 0, \ini_get('session.cookie_path'), \ini_get('session.cookie_domain'), filter_var(\ini_get('session.cookie_secure'), \FILTER_VALIDATE_BOOLEAN), filter_var(\ini_get('session.cookie_httponly'), \FILTER_VALIDATE_BOOLEAN));
                 } else {
                     $params = session_get_cookie_params();
                     unset($params['lifetime']);

@@ -26,6 +26,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
  *
  * @covers utils
  * @group sampleDataNeeded
+ * @group defaultProfiles
  */
 class privUITransactionFileTest extends ItopDataTestCase
 {
@@ -33,13 +34,6 @@ class privUITransactionFileTest extends ItopDataTestCase
 	const SAMPLE_DATA_SUPPORT_PROFILE_ID = 5;
 	const USER1_TEST_LOGIN = 'user1_support_test_privUITransaction';
 	const USER2_TEST_LOGIN = 'user2_support_test_privUITransaction';
-
-	public function setUp()
-	{
-		parent::setUp();
-		require_once(APPROOT.'/application/startup.inc.php');
-//		require_once(APPROOT.'application/utils.inc.php');
-	}
 
 	/**
 	 * @dataProvider cleanupOldTransactionsProvider

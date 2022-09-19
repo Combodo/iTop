@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2022 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -29,6 +29,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.',
 
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error',
+	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s',
+	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s',
 
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
@@ -370,9 +372,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventNotification' => 'Notification event',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
-	'Class:EventNotification/Attribute:trigger_id+' => 'user account',
-	'Class:EventNotification/Attribute:action_id' => 'user',
-	'Class:EventNotification/Attribute:action_id+' => 'user account',
+	'Class:EventNotification/Attribute:trigger_id+' => '',
+	'Class:EventNotification/Attribute:action_id' => 'Action',
+	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => 'Object id',
 	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)',
 ));
@@ -519,9 +521,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ActionEmail' => 'Email notification',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent',
+	'Class:ActionEmail/Attribute:status/Value:test' => 'Only the Test recipient is notified',
+	'Class:ActionEmail/Attribute:status/Value:enabled' => 'All To, Cc and Bcc emails are notified',
+	'Class:ActionEmail/Attribute:status/Value:disabled' => 'The email notification will not be sent',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test recipient',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Destination email used when notification is being tested',
 	'Class:ActionEmail/Attribute:from' => 'From (email)',

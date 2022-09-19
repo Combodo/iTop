@@ -19,7 +19,7 @@
 
 namespace Combodo\iTop\Portal\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use utils;
 
 /**
@@ -47,19 +47,17 @@ class CssFromSassCompiler
 	}
 
 	/**
-	 * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $oGetResponseEvent
+	 * @param RequestEvent $oRequestEvent
 	 */
-	public function onKernelRequest(GetResponseEvent $oGetResponseEvent)
+	public function onKernelRequest(RequestEvent $oRequestEvent)
 	{
 		// Force compilation need only when by-passing cache to limit server load.
-		if (isset($_SERVER['HTTP_CACHE_CONTROL']) && ($_SERVER['HTTP_CACHE_CONTROL'] !== 'no-cache'))
-		{
+		if (isset($_SERVER['HTTP_CACHE_CONTROL']) && ($_SERVER['HTTP_CACHE_CONTROL'] !== 'no-cache')) {
 			return;
 		}
 
 		$aImportPaths = array($_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/');
-		foreach ($this->aCombodoPortalInstanceConf['properties']['themes'] as $sKey => $value)
-		{
+		foreach ($this->aCombodoPortalInstanceConf['properties']['themes'] as $sKey => $value) {
 			if (!is_array($value))
 			{
 				utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$value, $aImportPaths);

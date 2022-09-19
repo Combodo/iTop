@@ -74,9 +74,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Dateisystemprüfung fehlgeschlagen',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Anwendungsupgrade kann durchgeführt werden',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Anwendungsupgrade nicht möglich: %1$s',
-	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Vorsicht: App-Upgrade kann fehlerschlagen: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Einige angepasste Dateien wurden erkannt</b>, eine Teil-Update kann nicht ausgeführt werden.<br/>Befolgen Sie das  <a href="%2$s">Verfahren</a>, um Ihr iTop manuell zu aktualisieren. Sie müssen das <a href="%1$s">Setup</a> benutzen, um Ihre Applikation zu aktualisieren.<br />',
-	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Vorsicht: App-Upgrade kann fehlschlagen: %1$s',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Einige angepasste Dateien wurden erkannt</b>, eine Teil-Update kann nicht ausgeführt werden.<br/>Befolgen Sie das  <a target="_blank" href="%2$s">Verfahren</a>, um Ihr iTop manuell zu aktualisieren. Sie müssen das <a href="%1$s">Setup</a> benutzen, um Ihre Applikation zu aktualisieren.<br />',
+	'iTopUpdate:UI:CheckInProgress'=>'Please wait during integrity check~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Bereit zum Upgrade',
@@ -87,7 +87,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Prüfung des Anwendungsupgrades',
 	'iTopUpdate:UI:SetupMessage:Compile' => 'Upgrade von Anwendung und Datenbank',
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgrade Datenbank',
-	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Wartungsmodus deaktivert',
+	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Wartungsmodus deaktiviert',
     'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Upgrade abgeschlossen',
 
 	// Errors
@@ -116,5 +116,3 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
     'Class:ModuleInstallation/Attribute:version' => 'Version',
     'Class:ModuleInstallation/Attribute:comment' => 'Kommentar',
 ));
-
-

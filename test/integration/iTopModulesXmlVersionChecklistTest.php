@@ -21,15 +21,13 @@ use iTopDesignFormat;
 
 
 /**
- * @group itop-community
- *
  * @covers iTopDesignFormat
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -38,12 +36,17 @@ class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 
 
 	/**
-	 * Verify if the datamodel.*.xml files refer to the latest version of the design
+	 * Verify if the `datamodels/2.x/datamodel.*.xml` files refer to the latest version of the design
 	 * This is an integration test
 	 *
+	 * As ess and pro targets are copying modules into datamodels/2.x this test can only be run on a community target !
+	 *
+	 * @group itop-community
 	 * @group skipPostBuild
 	 *
 	 * @dataProvider DatamodelItopXmlVersionProvider
+	 *
+	 * @since 3.0.3 3.1.0 move itop-community group in this method
 	 */
 	public function testDatamodelItopXmlVersion($sXmlFile)
 	{

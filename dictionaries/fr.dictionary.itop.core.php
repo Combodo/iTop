@@ -21,22 +21,24 @@
  */
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:DeletedObjectLabel' => '%1s (effacé)',
-	'Core:DeletedObjectTip' => 'L\'objet a été effacé le %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'L\'objet a été effacé le %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Classe: %1$s, Identifiant: %2$d',
-	'Core:UnknownObjectTip' => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
+	'Core:UnknownObjectTip'   => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
 
 	'Core:UniquenessDefaultError' => 'La règle d\'unicité \'%1$s\' renvoie une erreur',
+	'Core:CheckConsistencyError'  => 'La règle d\'intégrité %1$s n\'est pas respectée',
+	'Core:CheckValueError'        => 'Valeur de l\'attribut incorrecte \'%1$s\' (%2$s) : %3$s',
 
-	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
+	'Core:AttributeLinkedSet'  => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Des doublons sont présents dans le champ \'%1$s\' : %2$s',
 
-	'Core:AttributeDashboard' => 'Tableau de bord',
+	'Core:AttributeDashboard'  => 'Tableau de bord',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Numéro de téléphone',
+	'Core:AttributePhoneNumber'  => 'Numéro de téléphone',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Date d\'obsolescence',
@@ -517,9 +519,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionEmail' => 'Notification par mél',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Cet état définit qui va être notifié: le \'Destinataire de test\', tous les destinataires (A, Copie and Copie Cachée) ou personne',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Seul le destinataire de test est notifié ',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Tous les destinataires (A, Copie and Copie Cachée) sont notifiés',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'La notification n\'est pas envoyée',
+	'Class:ActionEmail/Attribute:status/Value:test' => 'Seul le destinataire de test est notifié ',
+	'Class:ActionEmail/Attribute:status/Value:enabled' => 'Tous les destinataires (A, Copie and Copie Cachée) sont notifiés',
+	'Class:ActionEmail/Attribute:status/Value:disabled' => 'La notification n\'est pas envoyée',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinataire de test',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
 	'Class:ActionEmail/Attribute:from' => 'De (mél)',

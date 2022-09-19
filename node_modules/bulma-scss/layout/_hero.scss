@@ -1,7 +1,12 @@
+@import "../utilities/mixins";
+
 $hero-body-padding: 3rem 1.5rem !default;
+$hero-body-padding-tablet: 3rem 3rem !default;
 $hero-body-padding-small: 1.5rem !default;
-$hero-body-padding-medium: 9rem 1.5rem !default;
-$hero-body-padding-large: 18rem 1.5rem !default;
+$hero-body-padding-medium: 9rem 4.5rem !default;
+$hero-body-padding-large: 18rem 6rem !default;
+
+$hero-colors: $colors !default;
 
 // Main container
 .hero {
@@ -21,7 +26,7 @@ $hero-body-padding-large: 18rem 1.5rem !default;
   }
 
   // Colors
-  @each $name, $pair in $colors {
+  @each $name, $pair in $hero-colors {
     $color: nth($pair, 1);
     $color-invert: nth($pair, 2);
 
@@ -79,6 +84,7 @@ $hero-body-padding-large: 18rem 1.5rem !default;
 
         li {
           &.is-active a {
+            color: $color !important;
             opacity: 1;
           }
         }
@@ -232,4 +238,8 @@ $hero-body-padding-large: 18rem 1.5rem !default;
   flex-grow: 1;
   flex-shrink: 0;
   padding: $hero-body-padding;
+
+  @include tablet {
+    padding: $hero-body-padding-tablet;
+  }
 }

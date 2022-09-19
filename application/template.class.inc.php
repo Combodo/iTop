@@ -229,7 +229,6 @@ class DisplayTemplate
 	static public function UnitTest()
 	{
 		require_once(APPROOT.'/application/startup.inc.php');
-		require_once(APPROOT."/application/itopwebpage.class.inc.php");
 		
 		$sTemplate = '<div class="page_header">
 		<div class="actions_details"><a href="#"><span>Actions</span></a></div>
@@ -352,7 +351,7 @@ class ObjectDetailsTemplate extends DisplayTemplate
 							$sTip = '';
 							foreach($aReasons as $aRow)
 							{
-								$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
+								$sDescription = utils::EscapeHtml($aRow['description']);
 								$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
 								$sTip .= "<div class='synchro-source'>";
 								$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
@@ -360,10 +359,10 @@ class ObjectDetailsTemplate extends DisplayTemplate
 							}
 							$oPage->add_ready_script("$('#synchro_$iInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
 						}
-	
+
 						// Attribute is read-only
 						$sHTMLValue = "<span id=\"field_{$iInputId}\">".$this->m_oObj->GetAsHTML($sAttCode);
-						$sHTMLValue .= '<input type="hidden" id="'.$iInputId.'" name="attr_'.$sAttCode.'" value="'.htmlentities($this->m_oObj->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/></span>';
+						$sHTMLValue .= '<input type="hidden" id="'.$iInputId.'" name="attr_'.$sAttCode.'" value="'.utils::EscapeHtml($this->m_oObj->Get($sAttCode)).'"/></span>';
 						$aFieldsMap[$sAttCode] = $iInputId;
 						$aParams['this->comments('.$sAttCode.')'] = $sSynchroIcon;
 					}

@@ -123,12 +123,12 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param \AjaxPage $oPage
+	 * @param \JsonPage $oPage
 	 * @param bool $bTokenOnly
 	 *
 	 * @throws \Exception
 	 */
-	public static function ExportBuild(AjaxPage $oPage, $bTokenOnly)
+	public static function ExportBuild(JsonPage $oPage, $bTokenOnly)
 	{
 		register_shutdown_function(function () {
 			$aErr = error_get_last();
@@ -208,13 +208,13 @@ class AjaxRenderController
 					$aResult['message'] = Dict::Format('Core:BulkExport:ClickHereToDownload_FileName', $oExporter->GetDownloadFileName());
 				}
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 		} catch (BulkExportException $e) {
 			$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->GetLocalizedMessage()));
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 		} catch (Exception $e) {
 			$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->getMessage()));
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 		}
 	}
 
@@ -224,13 +224,13 @@ class AjaxRenderController
 	 * The resulting JSON is added to the page with the format:
 	 * {"code": "done or error", "counts": {"menu_id_1": count1, "menu_id_2": count2...}}
 	 *
-	 * @param \AjaxPage $oPage
+	 * @param \JsonPage $oPage
 	 */
-	public function GetMenusCount(AjaxPage $oPage)
+	public function GetMenusCount(JsonPage $oPage)
 	{
 		$aCounts = ApplicationMenu::GetMenusCount();
 		$aResult = ['code' => 'done', 'counts' => $aCounts];
-		$oPage->add(json_encode($aResult));
+		$oPage->SetData($aResult);
 	}
 
 	/**
@@ -826,9 +826,8 @@ $('#about_box').dialog({
 EOF
 		);
 		$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
-		$oPage->add("<div id=\"about_box\">");
-		$oPage->add('<div style="text-align: center;">');
-		$oPage->add('<a href="http://www.combodo.com" title="www.combodo.com" target="_blank" style="background: none;"><img src="../images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'"/></a>');
+		$oPage->add('<div id="about_box"><div class="ibo-about-box--top-part">');
+		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
 		$oPage->add('<div>'.$sVersionString.'</div>');
 		$oPage->add("</div>");
 		self::DisplayAboutLicenses($oPage);
@@ -909,18 +908,9 @@ EOF
 
 		// Display
 		//
-		$oPage->add("<div id=\"about_box\">");
-		$oPage->add('<div style="margin-left: 120px;">');
-		$oPage->add('<table>');
-		$oPage->add('<tr>');
-		$oPage->add('<td><a href="http://www.combodo.com" title="www.combodo.com" target="_blank" style="background: none;"><img src="../images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'" style="float: right;"/></a></td>');
-		$oPage->add('<td style="padding-left: 20px;">');
-		$oPage->add($sVersionString.'<br/>');
-		$oPage->add('MySQL: '.$sMySQLVersion.'<br/>');
-		$oPage->add('PHP: '.$sPHPVersion.'<br/>');
-		$oPage->add('</td>');
-		$oPage->add('</tr>');
-		$oPage->add('</table>');
+		$oPage->add('<div id="about_box"><div class="ibo-about-box--top-part">');
+		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
+		$oPage->add('<div>'.$sVersionString.'<br/>'.'MySQL: '.$sMySQLVersion.'<br/>'.'PHP: '.$sPHPVersion.'<br/></div>');
 		$oPage->add("</div>");
 
 		self::DisplayAboutLicenses($oPage);

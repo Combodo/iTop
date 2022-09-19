@@ -476,7 +476,7 @@ class DisplayBlock
 					$oExceptionAlert = AlertUIBlockFactory::MakeForFailure('Cannot display results', $sExceptionContent);
 					$oHtml->AddSubBlock($oExceptionAlert);
 				}
-				IssueLog::Error('Exception during GetDisplay: '.$e->getMessage());
+				ExceptionLog::LogException($e);
 			}
 		} else {
 			// render it as an Ajax (asynchronous) call
@@ -566,7 +566,7 @@ class DisplayBlock
 			if (($this->m_sStyle != 'links') && ($this->m_sStyle != 'search') && ($this->m_sStyle != 'list_search')) {
 				$oAppContext = new ApplicationContext();
 				$sClass = $this->m_oFilter->GetClass();
-				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($sClass));
+				$aFilterCodes = MetaModel::GetFiltersList($sClass);
 				$aCallSpec = array($sClass, 'MapContextParam');
 				if (is_callable($aCallSpec)) {
 					foreach ($oAppContext->GetNames() as $sContextParam) {
@@ -1054,6 +1054,11 @@ JS
 			$oBlock->AddSubBlock($oPill);
 		}
 		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
+		if(isset($aExtraParams['query_params']['this->object()'])){
+			$aExtraParams['query_params']['this->class'] = get_class($aExtraParams['query_params']['this->object()']);
+			$aExtraParams['query_params']['this->id'] = 	$aExtraParams['query_params']['this->object()']->GetKey();
+			unset($aExtraParams['query_params']['this->object()']);
+		}
 		$aRefreshParams = ['filter' => $this->m_oFilter->ToOQL(), "extra_params" => json_encode($aExtraParams)];
 		$oBlock->SetJSRefresh(
 			"$('#".$oBlock->GetId()."').block();
@@ -1202,6 +1207,7 @@ JS
 				$sTitle = Dict::Format($sFormat, $iTotalCount);
 				$oBlock = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
 				$oBlock->AddSubTitleBlock(new Html($sTitle));
+				$oBlock->AddCSSClass('ibo-datatable-panel');
 				if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
 					$oBlock->SetIcon($aExtraParams["panel_icon"]);
 				}

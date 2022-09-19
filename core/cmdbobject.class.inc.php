@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -113,6 +113,26 @@ abstract class CMDBObject extends DBObject
 		self::$m_oCurrChange = $oChange;
 	}
 
+	/**
+	 * @param string $sUserInfo
+	 * @param string $sOrigin
+	 * @param \DateTime $oDate
+	 *
+	 * @throws \CoreException
+	 *
+	 * @since 2.7.7 3.0.2 3.1.0 N°3717 new method to reset current change
+	 */
+	public static function SetCurrentChangeFromParams($sUserInfo, $sOrigin = null, $oDate = null)
+	{
+		static::SetTrackInfo($sUserInfo);
+		static::SetTrackOrigin($sOrigin);
+		static::CreateChange();
+
+		if (!is_null($oDate)) {
+			static::$m_oCurrChange->Set("date", $oDate);
+		}
+	}
+
 	//
 	// Todo: simplify the APIs and do not pass the current change as an argument anymore
 	//       SetTrackInfo to be invoked in very few cases (UI.php, CSV import, Data synchro)
@@ -144,6 +164,8 @@ abstract class CMDBObject extends DBObject
 	 *    $oMyChange->Set("userinfo", 'this is done by ... for ...');
 	 *    $iChangeId = $oMyChange->DBInsert();
 	 *
+	 * **warning** : this will do nothing if current change already exists !
+	 *
 	 * @see SetCurrentChange to specify a CMDBObject instance instead
 	 *
 	 * @param string $sInfo
@@ -171,6 +193,8 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Provides information about the origin of the change
 	 *
+	 * **warning** : this will do nothing if current change already exists !
+	 *
 	 * @see SetTrackInfo
 	 * @see SetCurrentChange to specify a CMDBObject instance instead
 	 *
@@ -181,19 +205,21 @@ abstract class CMDBObject extends DBObject
 	{
 		self::$m_sOrigin = $sOrigin;
 	}
-	
+
 	/**
 	 * Get the additional information (defaulting to user name)
-	 */	 	
-	protected static function GetTrackInfo()
+	 */
+	public static function GetTrackInfo()
 	{
-		if (is_null(self::$m_sInfo))
-		{
+		if (is_null(self::$m_sInfo)) {
 			return CMDBChange::GetCurrentUserName();
-		}
-		else
-		{
-			return self::$m_sInfo;
+		} else {
+			//N°5135 - add impersonation information in activity log/current cmdb change
+			if (UserRights::IsImpersonated()){
+				return sprintf("%s (%s)", CMDBChange::GetCurrentUserName(), self::$m_sInfo);
+			} else {
+				return self::$m_sInfo;
+			}
 		}
 	}
 
@@ -206,7 +232,10 @@ abstract class CMDBObject extends DBObject
 	 */
 	protected static function GetTrackUserId()
 	{
-		if (is_null(self::$m_sUserId))
+		if (is_null(self::$m_sUserId)
+			//N°5135 - indicate impersonation inside changelogs
+			&& (false === UserRights::IsImpersonated())
+		)
 		{
 			return CMDBChange::GetCurrentUserId();
 		}
@@ -215,10 +244,10 @@ abstract class CMDBObject extends DBObject
 			return self::$m_sUserId;
 		}
 	}
-	
+
 	/**
 	 * Get the 'origin' information (defaulting to 'interactive')
-	 */	 	
+	 */
 	protected static function GetTrackOrigin()
 	{
 		if (is_null(self::$m_sOrigin))
@@ -243,15 +272,17 @@ abstract class CMDBObject extends DBObject
 	 * @throws \CoreWarning
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 *
+	 * @since 2.7.7 3.0.2 3.1.0 N°3717 {@see CMDBChange} **will be persisted later** in {@see \CMDBChangeOp::OnInsert} (was done previously directly here)
+	 *     This will avoid creating in DB CMDBChange lines without any corresponding CMDBChangeOp
 	 */
-	protected static function CreateChange()
+	public static function CreateChange()
 	{
 		self::$m_oCurrChange = MetaModel::NewObject("CMDBChange");
 		self::$m_oCurrChange->Set("date", time());
 		self::$m_oCurrChange->Set("userinfo", self::GetTrackInfo());
 		self::$m_oCurrChange->Set("user_id", self::GetTrackUserId());
 		self::$m_oCurrChange->Set("origin", self::GetTrackOrigin());
-		self::$m_oCurrChange->DBInsert();
 	}
 
 	/**
@@ -592,6 +623,9 @@ abstract class CMDBObject extends DBObject
 		return $this->DBCloneTracked_Internal();
 	}
 
+	/**
+	 * @deprecated 3.1.0 N°5232 not used
+	 */
 	public function DBCloneTracked(CMDBChange $oChange, $newKey = null)
 	{
 		self::SetCurrentChange($oChange);
@@ -601,7 +635,7 @@ abstract class CMDBObject extends DBObject
 	protected function DBCloneTracked_Internal($newKey = null)
 	{
 		$newKey = parent::DBClone($newKey);
-		$oClone = MetaModel::GetObject(get_class($this), $newKey); 
+		$oClone = MetaModel::GetObject(get_class($this), $newKey);
 
 		return $newKey;
 	}
@@ -614,7 +648,7 @@ abstract class CMDBObject extends DBObject
 		{
 			return;
 		}
-		
+
 		$ret = parent::DBUpdate();
 		return $ret;
 	}
@@ -654,46 +688,7 @@ abstract class CMDBObject extends DBObject
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		$ret = parent::DBDelete($oDeletionPlan);
-		return $ret;
-	}
 
-	public static function BulkUpdate(DBSearch $oFilter, array $aValues)
-	{
-		return static::BulkUpdateTracked_Internal($oFilter, $aValues);
-	}
-
-	public static function BulkUpdateTracked(CMDBChange $oChange, DBSearch $oFilter, array $aValues)
-	{
-		self::SetCurrentChange($oChange);
-		static::BulkUpdateTracked_Internal($oFilter, $aValues);
-	}
-
-	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
-	{
-		// $aValues is an array of $sAttCode => $value
-
-		// Get the list of objects to update (and load it before doing the change)
-		$oObjSet = new CMDBObjectSet($oFilter);
-		$oObjSet->Load();
-
-		// Keep track of the previous values (will be overwritten when the objects are synchronized with the DB)
-		$aOriginalValues = array();
-		$oObjSet->Rewind();
-		while ($oItem = $oObjSet->Fetch())
-		{
-			$aOriginalValues[$oItem->GetKey()] = $oItem->m_aOrigValues;
-		}
-
-		// Update in one single efficient query
-		$ret = parent::BulkUpdate($oFilter, $aValues);
-
-		// Record... in many queries !!!
-		$oObjSet->Rewind();
-		while ($oItem = $oObjSet->Fetch())
-		{
-			$aChangedValues = $oItem->ListChangedValues($aValues);
-			$oItem->RecordAttChanges($aChangedValues, $aOriginalValues[$oItem->GetKey()]);
-		}
 		return $ret;
 	}
 
@@ -738,11 +733,11 @@ abstract class CMDBObject extends DBObject
 class CMDBObjectSet extends DBObjectSet
 {
 	// this is the public interface (?)
-	
+
 	// I have to define those constructors here... :-(
 	// just to get the right object class in return.
 	// I have to think again to those things: maybe it will work fine if a have a constructor define here (?)
-	
+
 	static public function FromScratch($sClass)
 	{
 		$oFilter = new DBObjectSearch($sClass);
@@ -751,7 +746,7 @@ class CMDBObjectSet extends DBObjectSet
 		// NOTE: THIS DOES NOT WORK IF m_bLoaded is private in the base class (and you will not get any error message)
 		$oRetSet->m_bLoaded = true; // no DB load
 		return $oRetSet;
-	} 
+	}
 
 	// create an object set ex nihilo
 	// input = array of objects
@@ -760,7 +755,7 @@ class CMDBObjectSet extends DBObjectSet
 		$oRetSet = self::FromScratch($sClass);
 		$oRetSet->AddObjectArray($aObjects, $sClass);
 		return $oRetSet;
-	} 
+	}
 
 	static public function FromArrayAssoc($aClasses, $aObjects)
 	{

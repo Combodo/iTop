@@ -85,7 +85,7 @@ abstract class Controller
 	 * @param string $sViewPath Path of the twig files
 	 * @param string $sModuleName name of the module (or 'core' if not a module)
 	 */
-	public function __construct($sViewPath, $sModuleName = 'core')
+	public function __construct($sViewPath, $sModuleName = 'core', $aAdditionalPaths = [])
 	{
 		$this->m_aLinkedScripts = [];
 		$this->m_aLinkedStylesheets = [];
@@ -93,7 +93,7 @@ abstract class Controller
 		$this->m_aAjaxTabs = [];
 		$this->m_aDefaultParams = [];
 		$this->m_aBlockParams = [];
-		$this->SetViewPath($sViewPath);
+		$this->SetViewPath($sViewPath, $aAdditionalPaths);
 		$this->SetModuleName($sModuleName);
 		if ($sModuleName != 'core') {
 			try {
@@ -128,9 +128,9 @@ abstract class Controller
 	 *
 	 * @param string $sViewPath
 	 */
-	public function SetViewPath($sViewPath)
+	public function SetViewPath($sViewPath, $aAdditionalPaths = [])
 	{
-		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath);
+		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath, $aAdditionalPaths);
 		$this->m_oTwig = $oTwig;
 	}
 
@@ -182,7 +182,7 @@ abstract class Controller
 			http_response_code(500);
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
-			$oP->add(get_class($e).' : '.htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8'));
+			$oP->add(get_class($e).' : '.utils::EscapeHtml($e->GetMessage()));
 			$oP->output();
 
 			IssueLog::Error($e->getMessage());

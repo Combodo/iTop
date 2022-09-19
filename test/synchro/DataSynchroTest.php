@@ -30,6 +30,7 @@ use utils;
  *
  * @package Combodo\iTop\Test\UnitTest\Synchro
  * @group dataSynchro
+ * @group defaultProfiles
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -43,7 +44,7 @@ class DataSynchroTest extends ItopDataTestCase
 	private $oOrg1;
 	private $oOrg2;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 

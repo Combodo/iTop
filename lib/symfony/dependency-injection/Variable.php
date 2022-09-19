@@ -28,14 +28,14 @@ class Variable
 {
     private $name;
 
-    /**
-     * @param string $name
-     */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->name;

@@ -22,9 +22,11 @@ namespace Combodo\iTop\Portal\Controller;
 
 use Combodo\iTop\Portal\Brick\BrickNotFoundException;
 use IssueLog;
+use LogChannels;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use UserRights;
 
 
 /**
@@ -40,11 +42,11 @@ class AggregatePageBrickController extends BrickController
 {
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param string                                    $sBrickId
+	 * @param string $sBrickId
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 *
-	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 * @throws BrickNotFoundException
 	 * @throws \Exception
 	 */
 	public function DisplayAction(Request $oRequest, $sBrickId)
@@ -91,10 +93,10 @@ class AggregatePageBrickController extends BrickController
 			}
 			catch (BrickNotFoundException $oException)
 			{
-				if ($this->get('kernel')->isDebug())
-				{
-					IssueLog::Warning('AggregatePageBrick: Could not display "'.$sBrickId.'", either wrong id or user profile not allowed');
-				}
+				IssueLog::Debug('AggregatePageBrick: Could not display brick, either wrong id or user profile not allowed', LogChannels::PORTAL, [
+					'brick_id' => $sBrickId,
+					'user_profiles' => UserRights::ListProfiles(),
+				]);
 				continue;
 			}
 

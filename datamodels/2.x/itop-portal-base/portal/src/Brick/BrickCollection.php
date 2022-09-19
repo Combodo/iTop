@@ -162,12 +162,20 @@ class BrickCollection
 		//   - Home
 		$this->aHomeOrdering = $this->aAllowedBricks;
 		usort($this->aHomeOrdering, function (PortalBrick $a, PortalBrick $b) {
-			return $a->GetRankHome() > $b->GetRankHome();
+			if ($a->GetRankHome() === $b->GetRankHome()) {
+				return 0;
+			}
+
+			return $a->GetRankHome() > $b->GetRankHome() ? 1 : -1;
 		});
 		//    - Navigation menu
 		$this->aNavigationMenuOrdering = $this->aAllowedBricks;
 		usort($this->aNavigationMenuOrdering, function (PortalBrick $a, PortalBrick $b) {
-			return $a->GetRankNavigationMenu() > $b->GetRankNavigationMenu();
+			if ($a->GetRankNavigationMenu() === $b->GetRankNavigationMenu()) {
+				return 0;
+			}
+
+			return $a->GetRankNavigationMenu() > $b->GetRankNavigationMenu() ? 1 : -1;
 		});
 	}
 

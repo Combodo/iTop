@@ -9,6 +9,7 @@ use Exception;
 /**
  * @group itopRequestMgmt
  * @group restApi
+ * @group defaultProfiles
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -30,16 +31,16 @@ class RestTest extends ItopDataTestCase
 	/**
      * @throws Exception
      */
-    protected function setUp()
-	{
-		parent::setUp();
-		require_once(APPROOT.'application/startup.inc.php');
-		$this->sLogin = "rest-user-" . date('dmYHis');
-		$this->CreateTestOrganization();
+    protected function setUp(): void
+    {
+	    parent::setUp();
 
-		if (!empty($this->sTmpFile)){
-			unlink($this->sTmpFile);
-		}
+	    $this->sLogin = "rest-user-".date('dmYHis');
+	    $this->CreateTestOrganization();
+
+	    if (!empty($this->sTmpFile)) {
+		    unlink($this->sTmpFile);
+	    }
 
 		$sConfigFile = \utils::GetConfig()->GetLoadedFile();
 		@chmod($sConfigFile, 0770);

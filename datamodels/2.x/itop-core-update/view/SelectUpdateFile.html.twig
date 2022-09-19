@@ -87,6 +87,14 @@
 
         {% EndUIFieldSet %}
 
+    {% if bIsSetupLaunchButtonEnabled %}
+        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Setup'|dict_s} %}
+            {% UIForm Standard {'sId':'launch-setup-form', Action:sLaunchSetupUrl} %}
+                {% UIButton ForDestructiveAction {'sLabel':'iTopUpdate:UI:SetupLaunch'|dict_s, 'sName':'launch-setup', 'sValue':'launch-setup', 'bIsSubmit':true, 'sId':'launch-setup'} %}
+            {% EndUIForm %}
+        {% EndUIFieldSet %}
+    {% endif %}
+
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:History'|dict_s} %}
             {% UIDataTable ForRendering {'sListId':'iboupdatehistory', 'oSet':oSet} %}{% EndUIDataTable %}
         {% EndUIFieldSet %}

@@ -3,12 +3,14 @@
 
 {% macro BlockExtension(aPluginFormData, sBlockName, sText = '') %}
 	{% set bHaveBlock = 'false' %}
-	{% for oLoginData in aPluginFormData if (oLoginData is defined and oLoginData.GetBlockExtension(sBlockName)) %}
+	{% for oLoginData in aPluginFormData %}
+        {% if (oLoginData is defined and oLoginData.GetBlockExtension(sBlockName)) %}
 		{% set bHaveBlock = 'true' %}
 		{% set oBlockExtension = oLoginData.GetBlockExtension(sBlockName) %}
 		{% set sTwig = oBlockExtension.GetTwig() %}
 		{% set aData = oBlockExtension.GetData() %}
 		{% include sTwig ignore missing %}
+        {% endif %}
 	{% endfor %}
 	{% if bHaveBlock == 'true' %}
 		{{ sText|raw }}

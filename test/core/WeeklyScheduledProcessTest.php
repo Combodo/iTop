@@ -7,7 +7,7 @@ use DateTime;
 
 class WeeklyScheduledProcessTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'core/backgroundprocess.inc.php');

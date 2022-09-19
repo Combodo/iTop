@@ -377,33 +377,34 @@ JS
 		$aForm = array();
 		$iMaxAddedId = 0;
 		$iAddedId = -1; // Unique id for new links
-		while ($oCurrentLink = $oValue->Fetch())
-		{
+		$oBlock->aRemoved = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->m_sAttCode}_tbd", '[]', 'raw_data'));
+		while ($oCurrentLink = $oValue->Fetch()) {
 			// We try to retrieve the remote object as usual
-			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote),
-				false /* Must not be found */);
-			// If successful, it means that we can edit its link
-			if ($oLinkedObj !== null) {
-				$bReadOnly = false;
-			} // Else we retrieve it without restrictions (silos) and will display its link as readonly
-			else {
-				$bReadOnly = true;
-				$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */, true);
-			}
+			if (!in_array($oCurrentLink->GetKey(), $oBlock->aRemoved)) {
+				$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */);
+				// If successful, it means that we can edit its link
+				if ($oLinkedObj !== null) {
+					$bReadOnly = false;
+				} // Else we retrieve it without restrictions (silos) and will display its link as readonly
+				else {
+					$bReadOnly = true;
+					$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */, true);
+				}
 
-			if ($oCurrentLink->IsNew()) {
-				$key = $iAddedId--;
-			} else {
-				$key = $oCurrentLink->GetKey();
-			}
+				if ($oCurrentLink->IsNew()) {
+					$key = $iAddedId--;
+				} else {
+					$key = $oCurrentLink->GetKey();
+				}
 
-			$iMaxAddedId = max($iMaxAddedId, $key);
-			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
+				$iMaxAddedId = max($iMaxAddedId, $key);
+				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
+			}
 		}
-		$oBlock->iMaxAddedId = (int) $iMaxAddedId;
+		$oBlock->iMaxAddedId = (int)$iMaxAddedId;
 
 		$oDataTable = DataTableUIBlockFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aForm);
-		$oDataTable->SetOptions(['select_mode' => 'custom']);
+		$oDataTable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
 		$oBlock->AddSubBlock($oDataTable);
 
 		$oBlock->AddControls();

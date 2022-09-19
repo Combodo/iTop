@@ -402,11 +402,29 @@ $oPage->AddUiBlock(DataTableUIBlockFactory::MakeForStaticData('Static datatable'
 	array(
 		array(
 	'a' => 'A1', 'b' => 'B1', 'c' => 'C1', 'd' => 'D1'
-),array(
+	), array(
 	'a' => 'A2', 'b' => 'B2', 'c' => 'C2', 'd' => 'D2'
-),
- array(
-     'a' => 'A3', 'b' => 'B3', 'c' => 'C3', 'd' => 'D3'
- ))));
+	), array(
+    'a' => 'A3', 'b' => 'B3', 'c' => 'C3', 'd' => 'D3'
+	), array(
+	'a' => 'A4', 'b' => 'B4', 'c' => 'C4', 'd' => 'D4'
+	),array(
+		'@class' => 'ibo-is-red','a' => 'A5 (Red highlighting)', 'b' => 'B5', 'c' => 'C5', 'd' => 'D5'
+	),array(
+		'@class' => 'ibo-is-danger','a' => 'A6 (Danger highlighting)', 'b' => 'B6', 'c' => 'C6', 'd' => 'D6'
+	),array(
+		'@class' => 'ibo-is-orange','a' => 'A7 (Orange highlighting)', 'b' => 'B7', 'c' => 'C7', 'd' => 'D7'
+	),array(
+		'@class' => 'ibo-is-warning','a' => 'A8 (Warning highlighting)', 'b' => 'B8', 'c' => 'C8', 'd' => 'D8'
+	),array(
+		'@class' => 'ibo-is-blue','a' => 'A9 (Blue highlighting)', 'b' => 'B9', 'c' => 'C9', 'd' => 'D9'
+	),array(
+		'@class' => 'ibo-is-info','a' => 'A10 (Info highlighting)', 'b' => 'B10', 'c' => 'C10', 'd' => 'D10'
+	),array(
+		'@class' => 'ibo-is-green','a' => 'A11 (Green highlighting)', 'b' => 'B11', 'c' => 'C11', 'd' => 'D11'
+	),array(
+		'@class' => 'ibo-is-success','a' => 'A12 (Success highlighting)', 'b' => 'B12', 'c' => 'C12', 'd' => 'D12'
+	),
+)));
 
 $oPage->output();

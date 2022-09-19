@@ -44,5 +44,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Preferences:Tabs:Scrollable:Classic'                           => '经典',
 	'UI:Preferences:Tabs:Scrollable:Scrollable'                        => '可滚动',
 	'UI:Preferences:ChooseAPlaceholder'                                => '用户的默认头像',
-	'UI:Preferences:ChooseAPlaceholder+'                               => 'Choose a placeholder image that will be displayed if the contact linked to your user doesn\'t have one~~',
+	'UI:Preferences:ChooseAPlaceholder+'                               => '选择一个占位图片,将在用户联系人没有设定头像图片时显示',
 ));

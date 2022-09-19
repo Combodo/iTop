@@ -73,12 +73,23 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {
             $(this).closest('.dataTables_wrapper').find('.checkAll')[0].checked = true;
         }
+        
+        // Disable hyperlinks if necessary
+        {% if oUIBlock.GetOption("disable_hyperlinks") is same as true or (oUIBlock.GetOption("select_mode") is not empty and oUIBlock.GetOption("disable_hyperlinks") is not same as false) %}
+        $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
+            e.preventDefault();
+        });
+        {% endif %}
     },
     initComplete: function () {
         if (this.api().page.info().pages < 2)
         {
             this.closest('.dataTables_wrapper').find('.dataTables_length').hide();
         }
+        
+        // Set header and body datatables status as loaded
+        this.attr('data-status', 'loaded');
+        this.closest('.dataTables_scroll').find('.dataTables_scrollHead .ibo-datatable').attr('data-status', 'loaded');
     }
 });
 

@@ -14,7 +14,6 @@ use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -346,22 +345,30 @@ try
 		
 		case 'details': // Details of an object
 			$sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
-			if ( empty($sClass) || empty($id))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
+
+			if (empty($sClass)) {
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
 
-			if (is_numeric($id))
-			{
-				$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+			$id = utils::ReadParam('id', null);
+			if (false === is_null($id)) {
+				if (is_numeric($id)) {
+					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+				} else {
+					$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
+				}
+			} else {
+				$sAttCode = utils::ReadParam('attcode', '', false, utils::ENUM_SANITIZATION_FILTER_FIELD_NAME);
+				$sAttValue = utils::ReadParam('attvalue', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+
+				if ((strlen($sAttCode) === 0) || (strlen($sAttValue) === 0)) {
+					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
+				}
+
+				$oObj = MetaModel::GetObjectByColumn($sClass, $sAttCode, $sAttValue, true);
 			}
-			else
-			{
-				$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
-			}
-			if (is_null($oObj))
-			{
+
+			if (is_null($oObj)) {
 				// Check anyhow if there is a message for this object (like you've just created it)
 				$sMessageKey = $sClass.'::'.$id;
 				DisplayMessages($sMessageKey, $oP);
@@ -369,8 +376,7 @@ try
 
 				// Attempt to load the object in archive mode
 				utils::PushArchiveMode(true);
-				if (is_numeric($id))
-				{
+				if (is_numeric($id)) {
 					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
 				}
 				else
@@ -626,17 +632,17 @@ try
 					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 					$oP->add("<div style=\"padding: 10px;\">\n");
 					$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
-					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', htmlentities($sFullText, ENT_QUOTES, 'UTF-8')).'</span>');
+					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', utils::EscapeHtml($sFullText)).'</span>');
 					$oP->add("</div>\n");
 					$oP->add("<div id=\"full_text_results\">\n");
 					$oP->add("<div id=\"full_text_progress_placeholder\" style=\"padding: 1.5em;\">&nbsp;</div>\n");
-					$oP->add("<h2>".Dict::Format('UI:FullTextSearchTitle_Text', htmlentities($sFullText, ENT_QUOTES, 'UTF-8'))."</h2>");
+					$oP->add("<h2>".Dict::Format('UI:FullTextSearchTitle_Text', utils::EscapeHtml($sFullText))."</h2>");
 					$oP->add("</div>\n");
 					$oP->add("</div>\n");
 					$sJSClass = addslashes($sClassName);
 					$sJSNeedles = json_encode($aFullTextNeedles);
 					$oP->add_ready_script(
-<<<EOF
+						<<<EOF
 						var oParams = {operation: 'full_text_search', position: 0, 'classname': '$sJSClass', needles: $sJSNeedles, tune: $iTune};
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
 							$('#full_text_results').append(data);
@@ -1163,7 +1169,7 @@ EOF
 					$sWarnings = implode(', ', $aWarnings);
 					$oP->AddHeaderMessage($sWarnings, 'message_warning');
 				}
-				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
+				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj, [], ['transaction_id' => $sTransactionId]);
 			}
 		}
 		break;
@@ -1455,7 +1461,7 @@ EOF
 								if ( ($iFlags & OPT_ATT_SLAVE) && ($paramValue != $oObj->Get($sAttCode)) )
 								{
 									$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-									$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
+									$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel(), $sAttCode);
 									unset($aExpectedAttributes[$sAttCode]);
 								}
 							}
@@ -1475,7 +1481,10 @@ EOF
 								}
 								else
 								{
-									$sError = '<p>'.implode('</p></p>',$aErrors)."</p>\n";
+									$aErrorsToDisplay = array_map(function($sError) {
+										return utils::HtmlEntities($sError);
+									}, $aErrors);
+									$sError = '<p>'.implode('</p></p>',$aErrorsToDisplay)."</p>\n";
 								}
 							}
 							else
@@ -1779,7 +1788,7 @@ EOF
 			$oP->SetCurrentTabContainer('Navigator');
 
 			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
-			$sLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
+			$bLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
 			$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
 
 			// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
@@ -1800,13 +1809,13 @@ EOF
 			{
 				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 				$oP->SetCurrentTab('UI:RelationshipGraph');
-				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$sLazyLoading);
+				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$bLazyLoading);
 				DisplayNavigatorGroupTab($oP);
 			}
 			else
 			{
 				$oP->SetCurrentTab('UI:RelationshipGraph');
-				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$sLazyLoading);
+				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$bLazyLoading);
 				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 				DisplayNavigatorGroupTab($oP);
 			}
@@ -1945,7 +1954,7 @@ class UI
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array('filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
+		$aContext = array('filter' => utils::EscapeHtml($sFilter));
 		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
 	}
 
@@ -1980,7 +1989,7 @@ class UI
 		$aSelectedObj = explode(',', $sSelectedObj);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 		$aContext = array(
-			'filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'),
+			'filter'    => utils::EscapeHtml($sFilter),
 			'selectObj' => $sSelectedObj,
 		);
 		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);

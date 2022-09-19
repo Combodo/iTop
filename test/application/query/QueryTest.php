@@ -48,7 +48,7 @@ class QueryTest extends ItopDataTestCase
 	private $oUser;
 
 	/** @inheritDoc */
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 
@@ -191,7 +191,7 @@ class QueryTest extends ItopDataTestCase
 	}
 
 	/** @inheritDoc */
-	protected function tearDown()
+	protected function tearDown(): void
 	{
 		$this->oUser->DBDelete();
 	}

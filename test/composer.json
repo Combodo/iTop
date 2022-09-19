@@ -1,10 +1,6 @@
 {
-    "require": {
-        "phpunit/phpunit": "^6"
-    },
-
-    "autoload": {
-        "psr-4": { "": "src/" }
-    }
-
+  "require-dev": {
+    "phpunit/phpunit": "^8.5.23",
+    "sempro/phpunit-pretty-print": "^1.4"
+  }
 }

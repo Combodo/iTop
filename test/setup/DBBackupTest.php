@@ -19,12 +19,10 @@ class DBBackupTest extends ItopTestCase
 	 * @throws \MySQLException
 	 * @throws \ConfigException
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'core/config.class.inc.php');
 		require_once(APPROOT.'setup/backup.class.inc.php');
-		require_once(APPROOT.'core/cmdbsource.class.inc.php'); // DBBackup dependency
 
 		// We need a connection to the DB, so let's open it !
 		// We are using the default config file... as the server might not be configured for all the combination we are testing

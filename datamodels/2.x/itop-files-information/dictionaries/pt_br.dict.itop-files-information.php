@@ -22,10 +22,10 @@
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	// Errors
-	'FilesInformation:Error:MissingFile' => 'Faltando arquivo: %1$s',
+	'FilesInformation:Error:MissingFile' => 'Arquivo ausente: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Arquivo %1$s está corrompido',
+	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'Sem permissão de escrita no arquivo %1$s',
-	'FilesInformation:Error:CannotUpdateNewModules' => '<b>Some new modules were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
 ));
 
 

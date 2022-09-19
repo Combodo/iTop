@@ -14,10 +14,11 @@ class iTopConfigParserTest extends ItopTestCase
 	private $tmpSavePath;
 	private $sConfigPath;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 		require_once APPROOT.'/core/iTopConfigParser.php';
+		require_once APPROOT.'/setup/runtimeenv.class.inc.php';
 
 		clearstatcache();
 		$this->sConfigPath = utils::GetConfigFilePath();
@@ -32,7 +33,7 @@ class iTopConfigParserTest extends ItopTestCase
 		clearstatcache();
 	}
 
-	public function tearDown()
+	public function tearDown(): void
 	{
 		parent::tearDown();
 		if ($this->conf_exists) {
@@ -150,8 +151,6 @@ class iTopConfigParserTest extends ItopTestCase
 	}
 
 	/**
-	 * @doesNotPerformAssertions
-	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
@@ -202,21 +201,15 @@ CONF;
 	}
 
 	/**
-	 * @doesNotPerformAssertions
-	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
 	public function testConfigWriteToFile_FromScratchInstallation()
 	{
-		$sConfigPath = utils::GetConfigFilePath();
-		$oConfig = new Config($sConfigPath, false);
-		try{
-			clearstatcache();
-			$oConfig->WriteToFile();
-		}catch(\Exception $e)
-		{
-			$this->assertTrue(false, "failed writetofile with no initial file: " . $e->getMessage());
-		}
+		$oConfig = new Config();
+		clearstatcache();
+		$oTestEnv = new RunTimeEnvironment('test-phpunit');
+		$oTestEnv->WriteConfigFileSafe($oConfig);
+		$this->assertTrue(true, "Config file was written");
 	}
 }

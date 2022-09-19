@@ -21,22 +21,24 @@
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:DeletedObjectLabel' => '%1s (deleted)~~',
-	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)~~',
+	'Core:DeletedObjectTip'   => 'The object has been deleted on %1$s (%2$s)~~',
 
 	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)~~',
-	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
+	'Core:UnknownObjectTip'   => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
 
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => 'Objektum tömbök',
+	'Core:AttributeLinkedSet'  => 'Objektum tömbök',
 	'Core:AttributeLinkedSet+' => '',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 
-	'Core:AttributeDashboard' => 'Dashboard~~',
+	'Core:AttributeDashboard'  => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber'  => 'Phone number~~',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
@@ -517,9 +519,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ActionEmail' => 'E-mail értesítés',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
+	'Class:ActionEmail/Attribute:status/Value:test' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Teszt címzett',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
 	'Class:ActionEmail/Attribute:from' => 'Feladó~~',

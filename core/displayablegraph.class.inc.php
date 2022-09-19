@@ -459,11 +459,10 @@ class DisplayableNode extends GraphNode
 			{
 				$aContext = $aContextDefs[$key];
 				$aRootCauses = array();
-				foreach($aObjects as $oRootCause)
-				{
+				foreach ($aObjects as $oRootCause) {
 					$aRootCauses[] = $oRootCause->GetHyperlink();
 				}
-				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" class="ibo-class-icon ibo-is-small" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.htmlentities(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
+				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" class="ibo-class-icon ibo-is-small" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.utils::EscapeHtml(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
 			}
 			$sHtml .= '<hr/>';
 		}
@@ -1195,8 +1194,10 @@ class DisplayableGraph extends SimpleGraph
 	 * @param float $xMax Right coordinate of the bounding box to display the graph
 	 * @param float $yMin Top coordinate of the bounding box to display the graph
 	 * @param float $yMax Bottom coordinate of the bounding box to display the graph
+	 *
+	 * @since 2.7.7 3.0.2 3.1.0 N°4985 $sComments param is no longer optional
 	 */
-	function RenderAsPDF(PDFPage $oPage, $sComments = '', $sContextKey, $xMin = -1, $xMax = -1, $yMin = -1, $yMax = -1)
+	function RenderAsPDF(PDFPage $oPage, $sComments, $sContextKey, $xMin = -1, $xMax = -1, $yMin = -1, $yMax = -1)
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, false); // No need to develop the parameters
 		$oPdf = $oPage->get_tcpdf();
@@ -1333,18 +1334,17 @@ class DisplayableGraph extends SimpleGraph
 		}
 		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3*$fPadding, $yMax - $yMin, 'D');
 
-		if ($sComments != '')
-		{
+		if ($sComments != '') {
 			// Draw the comment text (surrounded by a rectangle)
-			$xPos = $xMin + $fMaxWidth + $fIconSize + 4*$fPadding;
-			$w = $xMax - $xPos - 2*$fPadding;
+			$xPos = $xMin + $fMaxWidth + $fIconSize + 4 * $fPadding;
+			$w = $xMax - $xPos - 2 * $fPadding;
 			$iNbLines = 1;
-			$sText = '<p>'.str_replace("\n", '<br/>', htmlentities($sComments, ENT_QUOTES, 'UTF-8'), $iNbLines).'</p>';
+			$sText = '<p>'.str_replace("\n", '<br/>', utils::EscapeHtml($sComments), $iNbLines).'</p>';
 			$fLineHeight = $oPdf->getStringHeight($w, $sText);
-			$h = (1+$iNbLines) * $fLineHeight;
-			$yPos = $yMax - 2*$fPadding - $h;
+			$h = (1 + $iNbLines) * $fLineHeight;
+			$yPos = $yMax - 2 * $fPadding - $h;
 			$oPdf->writeHTMLCell($w, $h, $xPos + $fPadding, $yPos + $fPadding, $sText, 0 /* border */, 1 /* ln */);
-			$oPdf->Rect($xPos, $yPos, $w + 2*$fPadding, $h + 2*$fPadding, 'D');
+			$oPdf->Rect($xPos, $yPos, $w + 2 * $fPadding, $h + 2 * $fPadding, 'D');
 			$yMax = $yPos - $fPadding;
 		}
 
@@ -1421,13 +1421,14 @@ class DisplayableGraph extends SimpleGraph
 	 * @param int $iObjKey
 	 * @param string $sContextKey
 	 * @param array $aContextParams
+	 * @param bool $bLazyLoading since 2.7.7 3.0.1
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $sLazyLoading = false)
+	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
 	{
-		list($aExcludedByClass, $aAdditionalContexts) = $this->DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $sLazyLoading);
+		list($aExcludedByClass, $aAdditionalContexts) = $this->DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $bLazyLoading);
 
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 
@@ -1508,10 +1509,12 @@ class DisplayableGraph extends SimpleGraph
 				// Export as Attachment requires GD (for building the PDF) AND a valid objclass/objkey couple
 				unset($aParams['export_as_attachment']);
 			}
-			if ($oP->IsPrintableVersion() || !$sLazyLoading) {
+			if ($oP->IsPrintableVersion() || !$bLazyLoading) {
 				$oP->add_ready_script(" $('#$sId').simple_graph(".json_encode($aParams).");");
 			} else {
 				$oP->add_script("function Load(){var aExcluded = [];	$('input[name^=excluded]').each( function() {if (!$(this).prop('checked'))	{	aExcluded.push($(this).val());		}} ); var params= $.extend(".json_encode($aParams).",  {excluded_classes: aExcluded}); $('#$sId').simple_graph(params);}");
+				$oP->add_ready_script("$('#impacted_objects_lists').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_groups').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');");
+
 			}
 		}
 		catch(Exception $e)
@@ -1551,6 +1554,7 @@ EOF
 	 * @param array $aExcludedObjects
 	 * @param \WebPage $oP
 	 * @param array $aResults
+	 * @param bool $bLazyLoading
 	 *
 	 * @return array
 	 * @throws \CoreException
@@ -1560,7 +1564,7 @@ EOF
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public function DisplayFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects, WebPage $oP, array $aResults, bool $sLazyLoading = false): array
+	public function DisplayFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects, WebPage $oP, array $aResults, bool $bLazyLoading = false): array
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
 		$aExcludedByClass = array();
@@ -1590,7 +1594,7 @@ EOF
 	$("#ReloadMovieBtn").button().button("disable");
 EOF
 		);
-		if ($sLazyLoading) {
+		if ($bLazyLoading) {
 			$oP->add_ready_script("$('#ReloadMovieBtn').button('enable');");
 		} else {
 			$oP->add_ready_script("$('#dh_flash').addClass('closed');");
@@ -1614,7 +1618,7 @@ EOF
 			$idx++;
 		}
 		$oUiHtmlBlock->AddHtml("</div>");
-		if ($sLazyLoading) {
+		if ($bLazyLoading) {
 			$sOnCLick = "Load(); $('#ReloadMovieBtn').attr('onclick','DoReload()');$('#ReloadMovieBtn').html('".Dict::S('UI:Button:Refresh')."');";
 			$oUiHtmlBlock->AddHtml("<button type=\"button\" id=\"ReloadMovieBtn\" class=\"ibo-button ibo-is-neutral ibo-is-regular\" onClick=\"$sOnCLick\">".Dict::S('Relation:impacts/LoadData')."</button></div></form>");
 		} else {

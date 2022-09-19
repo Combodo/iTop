@@ -23,10 +23,10 @@ class IntegerNodeDefinition extends NumericNodeDefinition
     /**
      * Instantiates a Node.
      *
-     * @return IntegerNode The node
+     * @return IntegerNode
      */
     protected function instantiateNode()
     {
-        return new IntegerNode($this->name, $this->parent, $this->min, $this->max);
+        return new IntegerNode($this->name, $this->parent, $this->min, $this->max, $this->pathSeparator);
     }
 }

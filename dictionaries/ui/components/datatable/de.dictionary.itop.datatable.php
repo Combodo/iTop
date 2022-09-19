@@ -24,7 +24,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Datatables:Language:Info'              => '_TOTAL_ Objekte',
 	'UI:Datatables:Language:InfoEmpty'         => 'Keine Information',
 	'UI:Datatables:Language:EmptyTable'        => 'Keine Daten in dieser Tabelle verfügbar',
-	'UI:Datatables:Language:Error'             => 'An error occured while running the query~~',
+	'UI:Datatables:Language:Error'             => 'Bei der Ausführung des Query ist ein Fehler aufgetreten',
 	'UI:Datatables:Language:DisplayLength:All' => 'Alle',
 	'UI:Datatables:Language:Sort:Ascending'    => 'Aktivieren für aufsteigende Sortierung',
 	'UI:Datatables:Language:Sort:Descending'   => 'Aktivieren für absteigende Sortierung',

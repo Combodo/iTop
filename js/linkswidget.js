@@ -19,7 +19,7 @@
  *
  * @since 3.0.0 Add iMaxAddedId parameter
  */
-function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote, bDoSearch, iMaxAddedId = 0) {
+function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote, bDoSearch, iMaxAddedId = 0, aRemoved = []) {
 	this.id = id;
 	this.iInputId = iInputId;
 	this.sClass = sClass;
@@ -30,7 +30,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.sExtKeyToRemote = sExtKeyToRemote;
 	this.iMaxAddedId = iMaxAddedId;
 	this.aAdded = [];
-	this.aRemoved = [];
+	this.aRemoved = aRemoved;
 	this.aModified = {};
 	this.bDoSearch = bDoSearch; // false if the search is not launched
 	let me = this;

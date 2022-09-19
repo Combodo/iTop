@@ -20,12 +20,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 //////////////////////////////////////////////////////////////////////
 // Relations
 //////////////////////////////////////////////////////////////////////
 //
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Relation:impacts/Description' => 'Elementy, na które ma wpływ',
 	'Relation:impacts/DownStream' => 'Wpływa na...',
@@ -36,6 +34,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Relation:depends on/Description' => 'Elementy wpływające',
 	'Relation:depends on/DownStream' => 'Zależy od...',
 	'Relation:depends on/UpStream' => 'Wpływa na...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 

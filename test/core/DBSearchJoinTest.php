@@ -20,7 +20,7 @@ class DBSearchJoinTest extends ItopDataTestCase {
 	
 	const USE_TRANSACTION = false;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/startup.inc.php');

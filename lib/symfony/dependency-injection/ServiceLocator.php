@@ -11,71 +11,68 @@
 
 namespace Symfony\Component\DependencyInjection;
 
-use Psr\Container\ContainerInterface as PsrContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Contracts\Service\ServiceLocatorTrait;
+use Symfony\Contracts\Service\ServiceProviderInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * @author Robin Chalas <robin.chalas@gmail.com>
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class ServiceLocator implements PsrContainerInterface
+class ServiceLocator implements ServiceProviderInterface
 {
-    private $factories;
-    private $loading = [];
+    use ServiceLocatorTrait {
+        get as private doGet;
+    }
+
     private $externalId;
     private $container;
 
     /**
-     * @param callable[] $factories
-     */
-    public function __construct(array $factories)
-    {
-        $this->factories = $factories;
-    }
-
-    /**
      * {@inheritdoc}
+     *
+     * @return mixed
      */
-    public function has($id)
+    public function get(string $id)
     {
-        return isset($this->factories[$id]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get($id)
-    {
-        if (!isset($this->factories[$id])) {
-            throw new ServiceNotFoundException($id, end($this->loading) ?: null, null, [], $this->createServiceNotFoundMessage($id));
+        if (!$this->externalId) {
+            return $this->doGet($id);
         }
 
-        if (isset($this->loading[$id])) {
-            $ids = array_values($this->loading);
-            $ids = \array_slice($this->loading, array_search($id, $ids));
-            $ids[] = $id;
-
-            throw new ServiceCircularReferenceException($id, $ids);
-        }
-
-        $this->loading[$id] = $id;
         try {
-            return $this->factories[$id]();
-        } finally {
-            unset($this->loading[$id]);
+            return $this->doGet($id);
+        } catch (RuntimeException $e) {
+            $what = sprintf('service "%s" required by "%s"', $id, $this->externalId);
+            $message = preg_replace('/service "\.service_locator\.[^"]++"/', $what, $e->getMessage());
+
+            if ($e->getMessage() === $message) {
+                $message = sprintf('Cannot resolve %s: %s', $what, $message);
+            }
+
+            $r = new \ReflectionProperty($e, 'message');
+            $r->setAccessible(true);
+            $r->setValue($e, $message);
+
+            throw $e;
         }
     }
 
-    public function __invoke($id)
+    public function __invoke(string $id)
     {
         return isset($this->factories[$id]) ? $this->get($id) : null;
     }
 
     /**
      * @internal
+     *
+     * @return static
      */
-    public function withContext($externalId, Container $container)
+    public function withContext(string $externalId, Container $container): self
     {
         $locator = clone $this;
         $locator->externalId = $externalId;
@@ -84,14 +81,16 @@ class ServiceLocator implements PsrContainerInterface
         return $locator;
     }
 
-    private function createServiceNotFoundMessage($id)
+    private function createNotFoundException(string $id): NotFoundExceptionInterface
     {
         if ($this->loading) {
-            return sprintf('The service "%s" has a dependency on a non-existent service "%s". This locator %s', end($this->loading), $id, $this->formatAlternatives());
+            $msg = sprintf('The service "%s" has a dependency on a non-existent service "%s". This locator %s', end($this->loading), $id, $this->formatAlternatives());
+
+            return new ServiceNotFoundException($id, end($this->loading) ?: null, null, [], $msg);
         }
 
-        $class = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT | \DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-        $class = isset($class[2]['object']) ? \get_class($class[2]['object']) : null;
+        $class = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT | \DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+        $class = isset($class[3]['object']) ? \get_class($class[3]['object']) : null;
         $externalId = $this->externalId ?: $class;
 
         $msg = [];
@@ -127,10 +126,15 @@ class ServiceLocator implements PsrContainerInterface
             $msg[] = 'Try using dependency injection instead.';
         }
 
-        return implode(' ', $msg);
+        return new ServiceNotFoundException($id, end($this->loading) ?: null, null, [], implode(' ', $msg));
     }
 
-    private function formatAlternatives(array $alternatives = null, $separator = 'and')
+    private function createCircularReferenceException(string $id, array $path): ContainerExceptionInterface
+    {
+        return new ServiceCircularReferenceException($id, $path);
+    }
+
+    private function formatAlternatives(array $alternatives = null, string $separator = 'and'): string
     {
         $format = '"%s"%s';
         if (null === $alternatives) {

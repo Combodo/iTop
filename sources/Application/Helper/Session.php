@@ -25,16 +25,18 @@ class Session
 
 	public static function Start()
 	{
+		if (!self::$bIsInitialized) {
+			session_name('itop-'.md5(APPROOT));
+		}
 		self::$bIsInitialized = true;
 		if (!self::$bSessionStarted) {
-			session_name('itop-'.md5(APPROOT));
 			if (!is_null(self::$iSessionId)) {
-				session_id(self::$iSessionId);
-				self::$bSessionStarted = session_start();
-			} else {
-				self::$bSessionStarted = session_start();
-				self::$iSessionId = session_id();
+				if (session_id(self::$iSessionId) === false) {
+					session_regenerate_id();
+				}
 			}
+			self::$bSessionStarted = session_start();
+			self::$iSessionId = session_id();
 		}
 	}
 

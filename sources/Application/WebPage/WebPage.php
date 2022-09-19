@@ -216,7 +216,7 @@ class WebPage implements Page
 		$this->bHasCollapsibleSection = false;
 		$this->bPrintable = $bPrintable;
 		// Note: JS dict. entries cannot be added to a page if current environment and config file aren't available yet.
-		$this->bAddJSDict = class_exists('\Dict') && is_dir(utils::GetCompiledEnvironmentPath()) && file_exists(utils::GetConfigFilePath());
+		$this->bAddJSDict = class_exists('\Dict') && is_dir(utils::GetCompiledEnvironmentPath().'dictionaries/') && file_exists(utils::GetConfigFilePath());
 		$this->oContentLayout = new UIContentBlock();
 		$this->SetTemplateRelPath(static::DEFAULT_PAGE_TEMPLATE_REL_PATH);
 
@@ -1368,7 +1368,7 @@ JS;
 	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
 	 *
 	 * @return int The unique ID (in this page)
-	 * @deprecated since 3.0.0 use utils::GetUniqueId() instead
+	 * @deprecated 3.0.0 use utils::GetUniqueId() instead
 	 */
 	public function GetUniqueId()
 	{

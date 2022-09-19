@@ -119,7 +119,7 @@ class SearchForm
 		}
 
 		$sContext = $oAppContext->GetForLink();
-		$sJsonExtraParams = htmlentities(json_encode($aListParams), ENT_QUOTES);
+		$sJsonExtraParams = utils::EscapeHtml(json_encode($aListParams));
 		$sOuterSelector = $aExtraParams['result_list_outer_selector'];
 
 		if (isset($aExtraParams['search_header_force_dropdown'])) {
@@ -493,7 +493,7 @@ class SearchForm
 				$aAllowedValues = array();
 				while ($oObject = $oSet->Fetch())
 				{
-					$aAllowedValues[] = ["value"=>$oObject->GetKey(), "label" => $oObject->GetName()];
+					$aAllowedValues[$oObject->GetKey()] = $oObject->GetName();
 				}
 				return array('values' => $aAllowedValues);
 			}

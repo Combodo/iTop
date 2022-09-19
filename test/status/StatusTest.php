@@ -11,7 +11,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 class StatusTest extends ItopTestCase
 {
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 		require_once APPROOT.'core/config.class.inc.php'; // for constants

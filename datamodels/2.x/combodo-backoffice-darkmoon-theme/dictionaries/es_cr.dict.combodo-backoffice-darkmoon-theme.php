@@ -22,5 +22,5 @@
  */
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'theme:darkmoon' => 'Dark moon~~',
+	'theme:darkmoon' => 'Luna Obscura',
 ));

@@ -94,17 +94,17 @@ class CheckResult {
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
-	const PHP_MIN_VERSION = '7.1.3'; // 7 will be supported until the end of 2019 (see http://php.net/supported-versions.php)
-	const MYSQL_MIN_VERSION = '5.7.0'; // 5.6 is no longer supported
+	const PHP_MIN_VERSION             = '7.4.0';
+	const MYSQL_MIN_VERSION           = '5.7.0'; // 5.6 is no longer supported
 	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
 
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
-	const PHP_NEXT_MIN_VERSION = ''; //
-	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for next iTop version
+	const PHP_NEXT_MIN_VERSION   = ''; // No new PHP requirement for next iTop version yet
+	const MYSQL_NEXT_MIN_VERSION = ''; // No new MySQL requirement for next iTop version yet
 	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '8.0.0';
+	const PHP_NOT_VALIDATED_VERSION = '8.2.0';
 
-	const MIN_MEMORY_LIMIT = '32M';
+	const MIN_MEMORY_LIMIT             = '32M';
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
 
 	/**
@@ -151,6 +151,14 @@ class SetupUtils
 		}
 		$aWritableDirsErrors = self::CheckWritableDirs($aWritableDirs);
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
+		// Check temp dir (N°5235) : as this path isn't under APPROOT we are doing a custom check and not using \SetupUtils::CheckWritableDirs
+		$sTmpDir = static::GetTmpDir();
+		clearstatcache(true, $sTmpDir);
+		if (is_writable($sTmpDir)) {
+			$aResult[] = new CheckResult(CheckResult::INFO, "The temp directory is writable by the application.");
+		} else {
+			$aResult[] = new CheckResult(CheckResult::WARNING, "The temp directory <b>'".$sTmpDir."'</b> is not writable by the application. Change its permission or use another dir (sys_temp_dir option in php.ini).");
+		}
 
 		$aMandatoryExtensions = self::GetPHPMandatoryExtensions();
 		$aOptionalExtensions = self::GetPHPOptionalExtensions();
@@ -454,12 +462,12 @@ class SetupUtils
 			if (!empty($sPhpNextMinVersion)) {
 				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>=')) {
 					$aResult[] = new CheckResult(CheckResult::INFO,
-						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")");
 				}
 				else
 				{
 					$aResult[] = new CheckResult(CheckResult::WARNING,
-						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")");
 				}
 			}
 
@@ -684,6 +692,7 @@ class SetupUtils
 	 * Emulates sys_get_temp_dir if needed (PHP < 5.2.1)
 	 *
 	 * @return string Path to the system's temp directory
+	 * @uses \sys_get_temp_dir()
 	 */
 	public static function GetTmpDir() {
 		return realpath(sys_get_temp_dir());
@@ -1020,23 +1029,21 @@ class SetupUtils
 
 		//-- DB connection params
 		$oPage->add('<tbody>');
-		$oPage->add('<tr><td>Server Name:</td><td><input id="db_server" class="ibo-input" type="text" name="db_server" value="'.htmlentities($sDBServer, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td><i class="fas fa-question-circle setup-input--hint--icon" data-tooltip-content="E.g. \'localhost\', \'dbserver.mycompany.com\' or \'192.142.10.23\'"></i></td></tr>');
-		$oPage->add('<tr><td>Login:</td><td><input id="db_user" class="ibo-input" type="text" name="db_user" value="'
-			.htmlentities($sDBUser, ENT_QUOTES, 'UTF-8')
+		$oPage->add('<tr><td>Server Name:</td><td><input id="db_server" class="ibo-input" type="text" name="db_server" value="'.utils::EscapeHtml($sDBServer).'" size="15"/></td><td><i class="fas fa-question-circle setup-input--hint--icon" data-tooltip-content="E.g. \'localhost\', \'dbserver.mycompany.com\' or \'192.142.10.23\'"></i></td></tr>');
+		$oPage->add('<tr><td>Login:</td><td><input id="db_user" class="ibo-input" type="text" name="db_user" value="'.utils::EscapeHtml($sDBUser)
 			.'" size="15"/></td><td><i class="fas fa-question-circle setup-input--hint--icon" data-tooltip-content="The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, CREATE VIEW, SHOW VIEW, LOCK TABLE, SUPER, TRIGGER"></i></td></tr>');
-		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" class="ibo-input" autocomplete="off" type="password" name="db_pwd" value="'.htmlentities($sDBPwd, ENT_QUOTES, 'UTF-8').'" size="15"/></td></tr>');
+		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" class="ibo-input" autocomplete="off" type="password" name="db_pwd" value="'.utils::EscapeHtml($sDBPwd).'" size="15"/></td></tr>');
 		$oPage->add('</tbody></table>');
 
 		//-- TLS params (N°1260)
 		$sTlsEnabledChecked = $bTlsEnabled ? ' checked' : '';
-		$sTlsCaDisabled     = $bTlsEnabled ? '' : ' disabled';
+		$sTlsCaDisabled = $bTlsEnabled ? '' : ' disabled';
 		$oPage->add('<div id="tls_options" class="collapsable-options">');
 		$oPage->add('<span data-role="setup-collapsable-options--toggler"><img id="db_tls_img"><label>Use TLS encrypted connection</label></span>');
 		$oPage->add('<div class="message message-error" style="display:none;">Before configuring MySQL with TLS encryption, read the documentation <a href="'.$sMysqlTlsWikiPageUrl.'" target="_blank">on Combodo\'s Wiki</a></div>');
 		$oPage->add('<label style="display:none;"><input id="db_tls_enabled" type="checkbox" '.$sTlsEnabledChecked.' name="db_tls_enabled" value="1"> Encrypted connection enabled</label>');
 		$oPage->add('<div class="setup-tls--input--container" style="display:none">SSL CA:');
-		$oPage->add('<input id="db_tls_ca" class="ibo-input" autocomplete="off" type="text" name="db_tls_ca" value="'.htmlentities($sTlsCA,
-				ENT_QUOTES, 'UTF-8').'" size="15"'.$sTlsCaDisabled.'>');
+		$oPage->add('<input id="db_tls_ca" class="ibo-input" autocomplete="off" type="text" name="db_tls_ca" value="'.utils::EscapeHtml($sTlsCA).'" size="15"'.$sTlsCaDisabled.'>');
 		$oPage->add('Path to certificate authority file for SSL</div>');
 		$oPage->add('</div>');
 
@@ -1047,22 +1054,18 @@ class SetupUtils
 		$oPage->add('');
 		$oPage->add('<fieldset><legend>Database</legend>');
 		$oPage->add('<table>');
-		if ($bIsItopInstall)
-		{
+		if ($bIsItopInstall) {
 			$oPage->add('<tr><td><input type="radio" id="create_db" name="create_db" value="yes"/><label for="create_db">&nbsp;Create a new database:</label></td>');
-			$oPage->add('<td><input id="db_new_name" class="ibo-input" type="text" name="db_new_name" value="'.htmlentities($sNewDBName, ENT_QUOTES, 'UTF-8').'" size="15" maxlength="32"/><span style="width:20px;" id="v_db_new_name"></span></td></tr>');
+			$oPage->add('<td><input id="db_new_name" class="ibo-input" type="text" name="db_new_name" value="'.utils::EscapeHtml($sNewDBName).'" size="15" maxlength="32"/><span style="width:20px;" id="v_db_new_name"></span></td></tr>');
 			$oPage->add('<tr><td><input type="radio" id="existing_db" name="create_db" value="no"/><label for="existing_db">&nbsp;Use the existing database:</label></td>');
-			$oPage->add('<td id="db_name_container" class="ibo-input-select-wrapper"><input id="db_name" class="ibo-input ibo-input-select" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
-		}
-		else
-		{
-			$oPage->add('<tr><td>Database Name:</td><td id="db_name_container" class="ibo-input-select-wrapper"><input id="db_name" class="ibo-input ibo-input-select" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
+			$oPage->add('<td id="db_name_container" class="ibo-input-select-wrapper"><input id="db_name" class="ibo-input ibo-input-select" name="db_name" size="15" maxlen="32" value="'.utils::EscapeHtml($sDBName).'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
+		} else {
+			$oPage->add('<tr><td>Database Name:</td><td id="db_name_container" class="ibo-input-select-wrapper"><input id="db_name" class="ibo-input ibo-input-select" name="db_name" size="15" maxlen="32" value="'.utils::EscapeHtml($sDBName).'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
 		}
 		$oPage->add('</table>');
 		$oPage->add('<div id="prefix_option" class="collapsable-options">');
 		$oPage->add('<span data-role="setup-collapsable-options--toggler"><label style="font-weight: normal;"><img>Use shared database</label></span>');
-		$oPage->add('<div class="setup-prefix-toggler--input--container" style="display:none">Use a prefix for the tables:<input id="db_prefix" class="ibo-input" type="text" name="db_prefix" value="'.htmlentities($sDBPrefix,
-				ENT_QUOTES, 'UTF-8').'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></div>');
+		$oPage->add('<div class="setup-prefix-toggler--input--container" style="display:none">Use a prefix for the tables:<input id="db_prefix" class="ibo-input" type="text" name="db_prefix" value="'.utils::EscapeHtml($sDBPrefix).'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></div>');
 		$oPage->add('</div>');
 		$oPage->add('</fieldset>');
 		$oPage->add('<span id="table_info"></span>');
@@ -1476,23 +1479,18 @@ JS
 					}
 				}
 
-				if ($checks['databases'] == null)
-				{
-					$sDBNameInput = '<input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span>';
+				if ($checks['databases'] == null) {
+					$sDBNameInput = '<input id="db_name" name="db_name" size="15" maxlen="32" value="'.utils::EscapeHtml($sDBName).'"/><span style="width:20px;" id="v_db_name"></span>';
 					$oPage->add_ready_script(
-<<<JS
+						<<<JS
 $("#table_info").html('<div class="message message-error"><span class="message-title">Error:</span>Not enough rights to enumerate the databases</div>');
 JS
 					);
-				}
-				else
-				{
+				} else {
 					$sDBNameInput = '<select id="db_name" class="ibo-input ibo-input-select" name="db_name">';
-					foreach ($checks['databases'] as $sDatabaseName)
-					{
-						if ($sDatabaseName != 'information_schema')
-						{
-							$sEncodedName = htmlentities($sDatabaseName, ENT_QUOTES, 'UTF-8');
+					foreach ($checks['databases'] as $sDatabaseName) {
+						if ($sDatabaseName != 'information_schema') {
+							$sEncodedName = utils::EscapeHtml($sDatabaseName);
 							$sSelected = ($sDatabaseName == $sDBName) ? ' selected ' : '';
 							$sDBNameInput .= '<option value="'.$sEncodedName.'" '.$sSelected.'>'.$sEncodedName.'</option>';
 						}
@@ -1541,8 +1539,7 @@ JS
 		$aLanguages = SetupUtils::GetAvailableLanguages($sSourceDir);
 		foreach ($aLanguages as $sCode => $aInfo) {
 			$sSelected = ($sCode == $sDefaultLanguageCode) ? 'selected ' : '';
-			$sHtml .= '<option value="'.$sCode.'" '.$sSelected.'>'.htmlentities($aInfo['description'], ENT_QUOTES,
-					'UTF-8').' ('.htmlentities($aInfo['localized_description'], ENT_QUOTES, 'UTF-8').')</option>';
+			$sHtml .= '<option value="'.$sCode.'" '.$sSelected.'>'.utils::EscapeHtml($aInfo['description']).' ('.utils::EscapeHtml($aInfo['localized_description']).')</option>';
 		}
 		$sHtml .= '</select></div>';
 
@@ -1868,21 +1865,30 @@ JS
 
 	public static function GetVersionManifest($sInstalledVersion)
 	{
-		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches))
-		{
+		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches)) {
 			return APPROOT.'datamodels/'.$aMatches[1].'.x/manifest-'.$sInstalledVersion.'.xml';
 		}
+
 		return false;
 	}
 
+	/**
+	 * Check paths relative to APPROOT : is existing, is dir, is writable
+	 *
+	 * @param string[] $aWritableDirs list of dirs to check, relative to APPROOT (for example : `['log','conf','data']`)
+	 *
+	 * @return array<string, \CheckResult> full path as key, CheckResult error as value
+	 *
+	 * @uses \is_dir()
+	 * @uses \is_writable()
+	 * @uses \file_exists()
+	 */
 	public static function CheckWritableDirs($aWritableDirs)
 	{
 		$aNonWritableDirs = array();
-		foreach($aWritableDirs as $sDir)
-		{
+		foreach ($aWritableDirs as $sDir) {
 			$sFullPath = APPROOT.$sDir;
-			if (is_dir($sFullPath) && !is_writable($sFullPath))
-			{
+			if (is_dir($sFullPath) && !is_writable($sFullPath)) {
 				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, "The directory <b>'".APPROOT.$sDir."'</b> exists but is not writable for the application.");
 			}
 			else if (file_exists($sFullPath) && !is_dir($sFullPath))
@@ -1965,7 +1971,7 @@ JS
 	 */
 	public static function GetSetupQueriesFilePath()
 	{
-		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
+		return APPROOT.'log/setup-queries-'.date('Y-m-d_H_i').'.sql';
 	}
 
 	/**
