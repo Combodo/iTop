@@ -84,15 +84,22 @@ function getMultipleSelectionParams(listId)
  * Return column definition for row actions.
  *
  * @param tableId
+ * @param columnTargetIndex (for columnDefs declaration)
  * @returns {{orderable: boolean, type: string, render: (function(*, *, *, *): *)}}
  */
-function getRowActionsColumnDefinition(tableId)
+function getRowActionsColumnDefinition(tableId, columnTargetIndex = -1)
 {
-	return {
+	$aColumn = {
 		type: "html",
 		orderable: false,
 		render: function ( data, type, row, meta ) {
 			return $(`#${tableId}_actions_buttons_template`).html();
 		}
 	};
+
+	if(columnTargetIndex != -1){
+		$aColumn['targets'] = columnTargetIndex;
+	}
+
+	return $aColumn;
 }

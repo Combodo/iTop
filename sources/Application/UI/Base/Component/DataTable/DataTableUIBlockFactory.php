@@ -179,33 +179,28 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oContainer->AddSubBlock($oDataTable);
 		}
 
-		// row actions toolbar template
-		if ($oDataTable->HasRowActions()) {
-			$oContainer->AddSubBlock(DataTableUIBlockFactory::MakeActionRowToolbarTemplate($oDataTable));
-		}
-
 		return $oContainer;
 	}
 
 	/**
 	 * Make a row actions toolbar template.
 	 *
-	 * @param \Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable $oDatatable
+	 * @param $oTable
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Template\Template
 	 * @since 3.1.0
 	 */
-	private static function MakeActionRowToolbarTemplate(DataTable $oDatatable)
+	public static function MakeActionRowToolbarTemplate($oTable)
 	{
 		// row actions template
-		$oTemplate = TemplateUIBlockFactory::MakeStandard($oDatatable->GetId().'_actions_buttons_template');
+		$oTemplate = TemplateUIBlockFactory::MakeStandard($oTable->GetId().'_actions_buttons_template');
 
 		// row actions toolbar container
 		$oToolbar = ToolbarUIBlockFactory::MakeStandard();
 		$oToolbar->AddCSSClass('ibo-row-actions-toolbar');
 
 		// for each actions...
-		$aActions = $oDatatable->GetRowActions();
+		$aActions = $oTable->GetRowActions();
 		for ($i = 0; $i < count($aActions); $i++) {
 
 			// actions
@@ -524,6 +519,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		if (isset($aExtraParams['row_actions'])) {
 			$oDataTable->SetRowActions($aExtraParams['row_actions']);
 		}
+
 
 		return $oDataTable;
 	}
@@ -972,7 +968,7 @@ JS;
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
-	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [])
+	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [], array $aRowActions = null)
 	{
 		$oBlock = new UIContentBlock();
 		if ($sTitle != "") {
@@ -980,6 +976,13 @@ JS;
 			$oBlock->AddSubBlock($oTitle);
 		}
 		$oTable = new StaticTable($sId, [], $aExtraParams);
+		if ($aRowActions != null) {
+			$oTable->SetRowActions($aRowActions);
+			$aColumns['actions'] = [
+				'label'       => '',
+				'description' => '',
+			];
+		}
 		$oTable->SetColumns($aColumns);
 		$oTable->SetData($aData);
 		$oTable->SetFilter($sFilter);
@@ -995,6 +998,7 @@ JS;
 	 * @param array $aColumns
 	 * @param array $aData
 	 * @param string $sFilter
+	 * @param array $aRowActions @since 3.1.0
 	 *
 	 * $aColumns =[
 	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],
@@ -1004,10 +1008,17 @@ JS;
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable
 	 */
-	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = '')
+	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = '', array $aRowActions = null)
 	{
 		$oTable = new FormTable("datatable_".$sRef);
 		$oTable->SetRef($sRef);
+		if ($aRowActions != null) {
+			$oTable->SetRowActions($aRowActions);
+			$aColumns['actions'] = [
+				'label'       => '',
+				'description' => '',
+			];
+		}
 		$oTable->SetColumns($aColumns);
 		$oTable->SetFilter($sFilter);
 
