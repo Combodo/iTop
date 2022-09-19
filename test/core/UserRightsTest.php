@@ -40,6 +40,7 @@ use utils;
 /**
  * @group itopRequestMgmt
  * @group userRights
+ * @group defaultProfiles
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -486,7 +487,7 @@ class UserRightsTest extends ItopDataTestCase
 		// logout
 		$_SESSION = [];
 	}
-	
+
 	public function NonAdminCanListOwnProfilesProvider(): array
 	{
 		return [
@@ -495,7 +496,7 @@ class UserRightsTest extends ItopDataTestCase
 		];
 	}
 	/**
-	 *@dataProvider NonAdminCannotListAdminProfilesProvider 
+	 *@dataProvider NonAdminCannotListAdminProfilesProvider
 	 */
 	public function testNonAdminCannotListAdminProfiles($bHideAdministrators, $iExpectedCount)
 	{
@@ -518,7 +519,7 @@ class UserRightsTest extends ItopDataTestCase
 		// logout
 		$_SESSION = [];
 	}
-	
+
 	public function NonAdminCannotListAdminProfilesProvider(): array
 	{
 		return [

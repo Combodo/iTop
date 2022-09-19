@@ -28,6 +28,8 @@ namespace Combodo\iTop;
 
 use DOMDocument;
 use DOMFormatException;
+use IssueLog;
+use LogAPI;
 
 /**
  * Class \Combodo\iTop\DesignDocument
@@ -64,9 +66,13 @@ class DesignDocument extends DOMDocument
 	 * @param $filename
 	 * @param int $options
 	 */
-	public function load($filename, $options = 0)
+	public function load($filename, $options = null)
 	{
-		parent::load($filename, LIBXML_NOBLANKS);
+		libxml_clear_errors();
+		if (parent::load($filename, LIBXML_NOBLANKS) === false) {
+			$aErrors = libxml_get_errors();
+			IssueLog::Error("Error loading $filename", LogAPI::CHANNEL_DEFAULT, $aErrors);
+		}
 	}
 
 	/**
@@ -77,10 +83,12 @@ class DesignDocument extends DOMDocument
 	 *
 	 * @return int
 	 */
-	public function save($filename, $options = 0)
+	// Return type union is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
+	public function save($filename, $options = null)
 	{
 		$this->documentElement->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
-		return parent::save($filename, LIBXML_NOBLANKS);
+		return parent::save($filename);
 	}
 
 	/**
@@ -91,13 +99,12 @@ class DesignDocument extends DOMDocument
 	public function Dump($bReturnRes = false)
 	{
 		$sXml = $this->saveXML();
-		if ($bReturnRes)
-		{
+		if ($bReturnRes) {
 			return $sXml;
 		}
 
 		echo "<pre>\n";
-		echo htmlentities($sXml);
+		echo utils::EscapeHtml($sXml);
 		echo "</pre>\n";
 
 		return '';
@@ -210,13 +217,13 @@ class DesignElement extends \DOMElement
 		$oDoc->appendChild($oClone);
 
 		$sXml = $oDoc->saveXML($oClone);
-		if ($bReturnRes)
-		{
+		if ($bReturnRes) {
 			return $sXml;
 		}
 		echo "<pre>\n";
-		echo htmlentities($sXml);
+		echo utils::EscapeHtml($sXml);
 		echo "</pre>\n";
+
 		return '';
 	}
 	/**

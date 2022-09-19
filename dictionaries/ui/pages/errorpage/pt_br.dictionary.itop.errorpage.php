@@ -18,8 +18,8 @@
  */
 // Navigation menu
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'UI:ErrorPage:UnstableVersion' => 'You are using an unstable version that may include bugs. If you think this error occurred because of this please send us your feedback!~~',
-	'UI:ErrorPage:KittyDisclaimer' => 'No kitty were injured during the making of this GIF and release.
+	'UI:ErrorPage:UnstableVersion' => 'Você está usando uma versão instável que pode incluir bugs. Se você acha que esse erro ocorreu por causa disso, envie-nos o seu feedback!',
+	'UI:ErrorPage:KittyDisclaimer' => 'Nenhum gatinho foi ferido durante a confecção deste GIF e lançamento de versão do '.ITOP_APPLICATION_SHORT.'.
 
-- The R&amp;D Team~~',
+- The R&amp;D Team',
 ));

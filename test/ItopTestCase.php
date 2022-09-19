@@ -46,8 +46,6 @@ class ItopTestCase extends TestCase
 		@include_once '../../../../../../../approot.inc.php';
 		@include_once '../../../../../../../../approot.inc.php';
 		@include_once getcwd().'/approot.inc.php'; // this is when launching phpunit from within the IDE
-
-		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
 	}
 
 	protected function debug($sMsg)

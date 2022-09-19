@@ -611,8 +611,7 @@ EOF
 		$aData['nb_obj_total'] = $iNew + $iExisting + $iDisappeared;
 		$aData['nb_replica_total'] = $aData['nb_obj_total'] + $iIgnored;
 		if (strlen($oLastLog->Get('traces')) > 0) {
-			$aData['traces'] = '<fieldset class="ibo-fieldset"><legend class="ibo-fieldset-legend">Debug traces</legend><pre>'.htmlentities($oLastLog->Get('traces'), ENT_QUOTES,
-					'UTF-8').'</pre></fieldset>';
+			$aData['traces'] = '<fieldset class="ibo-fieldset"><legend class="ibo-fieldset-legend">Debug traces</legend><pre>'.utils::EscapeHtml($oLastLog->Get('traces')).'</pre></fieldset>';
 		} else {
 			$aData['traces'] = '';
 		}

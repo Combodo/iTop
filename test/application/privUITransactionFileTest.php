@@ -26,6 +26,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
  *
  * @covers utils
  * @group sampleDataNeeded
+ * @group defaultProfiles
  */
 class privUITransactionFileTest extends ItopDataTestCase
 {

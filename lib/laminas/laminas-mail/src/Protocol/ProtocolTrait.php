@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Protocol;
 
 use Laminas\Stdlib\ErrorHandler;
@@ -20,7 +14,6 @@ trait ProtocolTrait
      * @var null|bool
      */
     protected $novalidatecert;
-
 
     public function getCryptoMethod(): int
     {
@@ -72,7 +65,7 @@ trait ProtocolTrait
                 'ssl' => [
                     'verify_peer_name' => false,
                     'verify_peer'      => false,
-                ]
+                ],
             ]
             : [];
     }

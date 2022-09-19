@@ -4,5 +4,5 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'UIBlock:Error:CannotGetBlocks' => 'Could not retrieve blocks from content area "%1$s" as it does seem to exists for page content "%2$s"~~',
+	'UIBlock:Error:CannotGetBlocks' => 'Não é possível recuperar blocos da área de conteúdo "%1$s" porque ele parece existir para o conteúdo da página "%2$s"',
 ]);

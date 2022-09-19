@@ -348,7 +348,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 </ul>
 <p>Tous ces modules peuvent être installés séparément, à votre rythme.</p>',
 
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' a été conçu pour les fournisseurs de service, il permet à vos équipes IT de gérer facilement de multiples clients et organisations.
+	'UI:WelcomeMenu:RightBlock' => '<p>ITOP_APPLICATION_SHORT a été conçu pour les fournisseurs de service, il permet à vos équipes IT de gérer facilement de multiples clients et organisations.
 <ul>iTop fournit un riche ensemble de processus métier&nbsp;pour:
 <li>Augmenter l\'efficacité de la gestion de votre SI</li> 
 <li>Accroitre la performance de vos équipes d\'exploitation</li> 
@@ -467,7 +467,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
 	'UI:Error:InvalidToken' => 'Erreur: l\'opération a déjà été effectuée (CSRF token not found)',
 
-	'UI:Error:SMTP:UnknownVendor' => 'Le provider SMTP Oauth 2.0 %1$s n\'existe pas',
+	'UI:Error:SMTP:UnknownVendor' => 'Le provider SMTP OAuth 2.0 %1$s n\'existe pas',
 
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',

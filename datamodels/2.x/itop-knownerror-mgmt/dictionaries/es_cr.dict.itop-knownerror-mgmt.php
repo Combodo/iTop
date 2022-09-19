@@ -131,8 +131,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Menu:ProblemManagement' => 'Gestión de problemas',
-	'Menu:ProblemManagement+' => 'Gestión de problemas',
+	'Menu:ProblemManagement' => 'Administración de problemas',
+	'Menu:ProblemManagement+' => 'GestAdministraciónión de problemas',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
 	'Menu:NewError' => 'Nuevo Error Conocido',
 	'Menu:NewError+' => 'Nuevo Error Conocido',

@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  *
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopUpdate:UI:PageTitle' => 'Upgraden toepassing',
@@ -76,9 +76,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Controle van het bestandssysteem is mislukt',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Updaten van toepassing is mogelijk',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Updaten van de toepassing is niet mogelijk: %1$s',
-	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a target="_blank" href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
-	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
+	'iTopUpdate:UI:CheckInProgress' => 'Even geduld terwijl de integriteitscontrole loopt',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Klaar om verder te gaan',

@@ -19,5 +19,5 @@
 
 // Input
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'Wachtwoorden komen niet overeen',
 ));

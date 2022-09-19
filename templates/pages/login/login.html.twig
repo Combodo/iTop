@@ -70,6 +70,7 @@
 
 {% block login_footer %}
 	<div id="login-footer">
+        {% import "macros.twig" as Macro %}
 		{{ Macro.BlockExtension(aPluginFormData, 'login_footer') }}
 	</div>
 {% endblock login_footer %}

@@ -745,26 +745,30 @@ class RelationTypeIterator implements Iterator
 		}
 	}
 	
-	public function rewind()
+	public function rewind(): void
 	{
 		$this->iCurrentIdx = 0;
 	}
 	
-	public function valid()
+	public function valid(): bool
 	{
 		return array_key_exists($this->iCurrentIdx, $this->aList);
 	}
 	
-	public function next()
+	public function next(): void
 	{
 		$this->iCurrentIdx++;
 	}
 	
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
 	public function current()
 	{
 		return $this->aList[$this->iCurrentIdx];
 	}
 	
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
 	public function key()
 	{
 		return $this->iCurrentIdx;

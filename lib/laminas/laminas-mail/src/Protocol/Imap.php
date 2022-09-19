@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Protocol;
 
 class Imap
@@ -15,7 +9,7 @@ class Imap
     /**
      * Default timeout in seconds for initiating session
      */
-    const TIMEOUT_CONNECTION = 30;
+    public const TIMEOUT_CONNECTION = 30;
 
     /**
      * @var null|resource
@@ -290,13 +284,13 @@ class Imap
             // last to chars are still needed for response code
             $tokens = [substr($tokens, 0, 2)];
         }
+
         // last line has response code
         if ($tokens[0] == 'OK') {
             return $lines ? $lines : true;
         } elseif ($tokens[0] == 'NO') {
             return false;
         }
-        return;
     }
 
     /**
@@ -364,10 +358,11 @@ class Imap
         if (func_num_args() < 2) {
             if (strpos($string, "\n") !== false) {
                 return ['{' . strlen($string) . '}', $string];
-            } else {
-                return '"' . str_replace(['\\', '"'], ['\\\\', '\\"'], $string) . '"';
             }
+
+            return '"' . str_replace(['\\', '"'], ['\\\\', '\\"'], $string) . '"';
         }
+
         $result = [];
         foreach (func_get_args() as $string) {
             $result[] = $this->escapeString($string);

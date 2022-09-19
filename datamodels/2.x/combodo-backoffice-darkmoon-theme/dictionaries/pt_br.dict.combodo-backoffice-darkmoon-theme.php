@@ -22,5 +22,5 @@
  */
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'theme:darkmoon' => 'Dark moon~~',
+	'theme:darkmoon' => 'Dark moon',
 ));

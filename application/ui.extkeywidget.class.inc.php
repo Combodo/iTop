@@ -211,14 +211,23 @@ class UIExtKeyWidget
 			$sClassAllowed = $oAllowedValues->GetClass();
 			$bAddingValue = false;
 
+			// N°4792 - load only the required fields
+			$aFieldsToLoad = [];
+
 			$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
 			$sFormatAdditionalField = $aComplementAttributeSpec[0];
 			$aAdditionalField = $aComplementAttributeSpec[1];
 
 			if (count($aAdditionalField) > 0) {
 				$bAddingValue = true;
+				$aFieldsToLoad[$sClassAllowed] = $aAdditionalField;
 			}
 			$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+			if (!empty($sObjectImageAttCode)) {
+				$aFieldsToLoad[$sClassAllowed][] = $sObjectImageAttCode;
+			}
+			$aFieldsToLoad[$sClassAllowed][] = 'friendlyname';
+			$oAllowedValues->OptimizeColumnLoad($aFieldsToLoad);
 			$bInitValue = false;
 			while ($oObj = $oAllowedValues->Fetch()) {
 				$aOption = [];
@@ -298,7 +307,7 @@ EOF
 			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\" placeholder='...'/>";
 
 			// another hidden input to store & pass the object's Id
-			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
+			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".utils::HtmlEntities($value)."\" />\n";
 
 			$JSSearchMode = $this->bSearchMode ? 'true' : 'false';
 			// Scripts to start the autocomplete and bind some events to it
@@ -610,7 +619,7 @@ EOF
 			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\"><span class=\"field_input_btn\"><div class=\"mini_button ibo-input-select--action-button\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div></span></div>";
 
 			// another hidden input to store & pass the object's Id
-			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
+			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".utils::EscapeHtml($value)."\" />\n";
 
 			$JSSearchMode = $this->bSearchMode ? 'true' : 'false';
 			// Scripts to start the autocomplete and bind some events to it
@@ -769,16 +778,14 @@ JS
      * @param DBObject $oObj The current object for the OQL context
      * @param string $sContains The text of the autocomplete to filter the results
      * @param string $sOutputFormat
-     * @param null $sOperation for the values @see ValueSetObjects->LoadValues()
+     * @param null $sOperation for the values @see ValueSetObjects->LoadValues() not used since 3.0.0
      *
      * @throws CoreException
      * @throws OQLException
      *
      * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $oObj for PHP 8.0 compatibility
      */
-	public function AutoComplete(
-		WebPage $oP, $sFilter, $oObj, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null
-	)
+	public function AutoComplete(WebPage $oP, $sFilter, $oObj, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null	)
 	{
 		if (is_null($sFilter)) {
 			throw new Exception('Implementation: null value for allowed values definition');
@@ -792,13 +799,13 @@ JS
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oValuesSet->SetLimit($iMax);
-		$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
-		asort($aValuesContains);
-		$aValues = $aValuesContains;
+		$aValuesStartWith = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
+		asort($aValuesStartWith);
+		$aValues = $aValuesStartWith;
 		if (sizeof($aValues) < $iMax) {
 			$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
 			asort($aValuesContains);
-			$iSize = sizeof($aValuesContains);
+			$iSize = sizeof($aValues);
 			foreach ($aValuesContains as $sKey => $sFriendlyName)
 			{
 				if (!isset($aValues[$sKey]))
@@ -814,7 +821,9 @@ JS
 		elseif (!in_array($sContains, $aValues))
 		{
 			$aValuesEquals = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'equals');
-			$aValues = array_merge($aValuesEquals, $aValues);
+			// Note: Here we cannot use array_merge as it would reindex the numeric keys starting from 0 when keys are actually the objects ID.
+			// As a workaround we use array_replace as it does preserve numeric keys. It's ok if some values from $aValuesEquals are replaced with values from $aValues as they contain the same data.
+			$aValues = array_replace($aValuesEquals, $aValues);
 		}
 
 		switch($sOutputFormat)
@@ -962,7 +971,7 @@ HTML
 		foreach (MetaModel::ListAttributeDefs($this->sTargetClass) as $sAttCode => $oAttDef) {
 			if (($oAttDef instanceof AttributeBlob) || (false)) {
 				$aFieldsFlags[$sAttCode] = OPT_ATT_READONLY;
-				$aFieldsComments[$sAttCode] = '&nbsp;<img src="../images/transp-lock.png" style="vertical-align:middle" title="'.htmlentities(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
+				$aFieldsComments[$sAttCode] = '&nbsp;<img src="../images/transp-lock.png" style="vertical-align:middle" title="'.utils::EscapeHtml(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
 			}
 		}
 		cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));
@@ -973,7 +982,7 @@ HTML
 		);
 
 		$oPage->add_ready_script(<<<JS
-$('#ac_create_{$this->iId}').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true});
+$('#ac_create_{$this->iId}').dialog({ width: $(window).width() * 0.6, height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true});
 $('#dcr_{$this->iId} form').removeAttr('onsubmit');
 $('#dcr_{$this->iId} form').find('button[type="submit"]').on('click', oACWidget_{$this->iId}.DoCreateObject);
 JS

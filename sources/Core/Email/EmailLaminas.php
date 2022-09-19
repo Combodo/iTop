@@ -28,8 +28,10 @@
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use Laminas\Mail\Header\ContentType;
 use Laminas\Mail\Message;
+use Laminas\Mail\Protocol\Smtp\Auth\Oauth;
 use Laminas\Mail\Transport\File;
 use Laminas\Mail\Transport\FileOptions;
+use Laminas\Mail\Transport\Sendmail;
 use Laminas\Mail\Transport\Smtp;
 use Laminas\Mail\Transport\SmtpOptions;
 use Laminas\Mime\Mime;
@@ -45,25 +47,21 @@ class EMailLaminas extends Email
 	// Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
 	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
 
-	protected static $m_oConfig = null;
 	protected $m_aData; // For storing data to serialize
-
-	public static function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
-	{
-		if (is_null(self::$m_oConfig)) {
-			self::$m_oConfig = new Config($sConfigFile);
-		}
-	}
 
 	protected $m_oMessage;
 
-	/** @noinspection PhpMissingParentConstructorInspection */
+	/**
+	 * @noinspection PhpMissingParentConstructorInspection
+	 * @noinspection MagicMethodsValidityInspection
+	 */
 	public function __construct()
 	{
 		$this->m_aData = array();
 		$this->m_oMessage = new Message();
 		$this->m_oMessage->setEncoding('UTF-8');
-		$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
+
+		$this->InitRecipientFrom();
 	}
 
 	/**
@@ -211,7 +209,7 @@ class EMailLaminas extends Email
 				$oOptions = new SmtpOptions($aOptions);
 				$oTransport->setOptions($oOptions);
 
-				\Laminas\Mail\Protocol\Smtp\Auth\Oauth::setProvider(OAuthClientProviderFactory::GetProviderForSMTP());
+				Oauth::setProvider(OAuthClientProviderFactory::GetProviderForSMTP());
 				break;
 
 			case 'Null':
@@ -228,7 +226,7 @@ class EMailLaminas extends Email
 
 			case 'PHPMail':
 			default:
-				$oTransport = new Smtp();
+				$oTransport = new Sendmail();
 		}
 
 		$oKPI = new ExecutionKPI();
@@ -240,8 +238,8 @@ class EMailLaminas extends Email
 			return EMAIL_SEND_OK;
 		}
 		catch (Laminas\Mail\Transport\Exception\RuntimeException $e) {
-			IssueLog::Warning('Email sending failed: Some recipients were invalid');
-			$aIssues = array('Some recipients were invalid.');
+			IssueLog::Warning('Email sending failed: '.$e->getMessage());
+			$aIssues = array($e->getMessage());
 			$oKPI->ComputeStats('Email Sent', 'Error received');
 
 			return EMAIL_SEND_ERROR;

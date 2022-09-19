@@ -364,7 +364,6 @@ try
 			$sContains = utils::ReadParam('q', '', false, 'raw_data');
 			$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
 			$sOutputFormat = utils::ReadParam('sOutputFormat', UIExtKeyWidget::ENUM_OUTPUT_FORMAT_CSV, false, 'raw_data');
-            $sAutocompleteOperation = utils::ReadParam('sAutocompleteOperation', null, false, 'raw_data');
 			if ($sContains != '')
 			{
 				if (!empty($sJson))
@@ -378,7 +377,7 @@ try
 					$oObj = null;
 				}
 				$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, '', $bSearchMode);
-				$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains, $sOutputFormat, $sAutocompleteOperation);
+				$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains, $sOutputFormat);
 			}
 			break;
 
@@ -1439,7 +1438,7 @@ EOF;
 				$sEnlargeButton = '';
 				if ($bEnableEnlarge)
 				{
-					$sEnlargeButton = "&nbsp;<button onclick=\"".htmlentities($sEnlargeTheSearch, ENT_QUOTES, 'UTF-8')."\">".Dict::S('UI:Search:Enlarge')."</button>";
+					$sEnlargeButton = "&nbsp;<button onclick=\"".utils::EscapeHtml($sEnlargeTheSearch)."\">".Dict::S('UI:Search:Enlarge')."</button>";
 				}
 				if ($oSet->Count() > 0)
 				{
@@ -2229,17 +2228,16 @@ EOF
 						$iAttId = $oAttachment->DBInsert();
 
 						$aResult['uploaded'] = 1;
-						$aResult['msg'] = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
+						$aResult['msg'] = utils::EscapeHtml($oDoc->GetFileName());
 						$aResult['fileName'] = $oDoc->GetFileName();
 						$aResult['url'] = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL.$iAttId.'&s='.$oAttachment->Get('secret');
-						if (is_array($aDimensions))
-						{
+						if (is_array($aDimensions)) {
 							$aResult['width'] = $aDimensions['width'];
 							$aResult['height'] = $aDimensions['height'];
 						}
 
-                        IssueLog::Trace('InlineImage created', LogChannels::INLINE_IMAGE, array(
-	                        '$operation' => $operation,
+						IssueLog::Trace('InlineImage created', LogChannels::INLINE_IMAGE, array(
+							'$operation'   => $operation,
 	                        '$aResult' => $aResult,
 	                        'secret' => $oAttachment->Get('secret'),
 	                        'temp_id' => $sTempId,
@@ -2432,9 +2430,8 @@ EOF
 				while ($oAttachment = $oSet->Fetch())
 				{
 					$oDoc = $oAttachment->Get('contents');
-					if ($oDoc->GetMainMimeType() == 'image')
-					{
-						$sDocName = addslashes(htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8'));
+					if ($oDoc->GetMainMimeType() == 'image') {
+						$sDocName = addslashes(utils::EscapeHtml($oDoc->GetFileName()));
 						$iAttId = $oAttachment->GetKey();
 						$sSecret = $oAttachment->Get('secret');
 						$oPage->add("<div style=\"float:left;margin:1em;text-align:center;\"><img class=\"img-picker\" style=\"max-width:300px;cursor:zoom-in\" href=\"{$sImgUrl}{$iAttId}&s={$sSecret}\" alt=\"$sDocName\" title=\"$sDocName\" src=\"{$sImgUrl}{$iAttId}&s={$sSecret}\"><br/><button onclick=\"returnFileUrl($iAttId, '$sDocName', '$sSecret')\">$sInsertBtnLabel</button></div>");
@@ -2520,7 +2517,12 @@ EOF
 				);
 
 				$oSet = new DBObjectSet($oSearch, [], $aSearchParams);
-				$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => [$sObjectImageAttCode]]);
+				// Optimize fields to load
+				$aObjectAttCodesToLoad = [];
+				if (MetaModel::IsValidAttCode($sSearchMainClassName, $sObjectImageAttCode)) {
+					$aObjectAttCodesToLoad[] = $sObjectImageAttCode;
+				}
+				$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => $aObjectAttCodesToLoad]);
 				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
 				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
@@ -2667,9 +2669,8 @@ EOF
 	}
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
-} catch (Exception $e)
-{
+} catch (Exception $e) {
 	// note: transform to cope with XSS attacks
-	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
+	echo utils::EscapeHtml($e->GetMessage());
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }

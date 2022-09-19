@@ -114,7 +114,7 @@ class LoginWebPage extends NiceWebPage
 	 */
 	public static function SynchronizeProfiles(&$oUser, array $aProfiles, $sOrigin)
 	{
-		$oProfilesSet = $oUser->Get(‘profile_list’);
+		$oProfilesSet = $oUser->Get('profile_list');
 		//delete old profiles
 		$aExistingProfiles = [];
 		while ($oProfile = $oProfilesSet->Fetch())
@@ -239,7 +239,7 @@ class LoginWebPage extends NiceWebPage
 				}
 
 				// This token allows the user to change the password without knowing the previous one
-				$sToken = substr(md5(APPROOT.uniqid()), 0, 16);
+				$sToken = bin2hex(random_bytes(32));
 				$oUser->Set('reset_pwd_token', $sToken);
 				CMDBObject::SetTrackInfo('Reset password');
 				$oUser->AllowWrite(true);

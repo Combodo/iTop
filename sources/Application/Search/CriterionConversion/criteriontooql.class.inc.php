@@ -35,6 +35,7 @@ use DBObjectSearch;
 use Exception;
 use Expression;
 use MetaModel;
+use utils;
 
 class CriterionToOQL extends CriterionConversionAbstract
 {
@@ -119,8 +120,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (!strlen($sValue))
-		{
+		if (!utils::StrLen($sValue)) {
 			return "1";
 		}
 
@@ -132,8 +132,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (!strlen($sValue))
-		{
+		if (!utils::StrLen($sValue)) {
 			return "1";
 		}
 
@@ -145,8 +144,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (!strlen($sValue))
-		{
+		if (!utils::StrLen($sValue)) {
 			return "1";
 		}
 
@@ -162,8 +160,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 			return "({$sRef} = '0')";
 		}
 
-		if (!strlen($sValue) && (!(isset($aCriteria['has_undefined'])) || !($aCriteria['has_undefined'])))
-		{
+		if (!utils::StrLen($sValue) && (!(isset($aCriteria['has_undefined'])) || !($aCriteria['has_undefined']))) {
 			return "1";
 		}
 
@@ -175,8 +172,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (!strlen($sValue))
-		{
+		if (!utils::StrLen($sValue)) {
 			return "1";
 		}
 
@@ -191,12 +187,9 @@ class CriterionToOQL extends CriterionConversionAbstract
 		for($i = 0; $i < count($aValues); $i++)
 		{
 			$sRawValue = self::GetValue($aValues, $i);
-			if (strlen($sRawValue) == 0)
-			{
+			if (!utils::StrLen($sRawValue)) {
 				$bHasUnDefined = true;
-			}
-			else
-			{
+			} else {
 				$aRawValues[] = $sRawValue;
 			}
 		}

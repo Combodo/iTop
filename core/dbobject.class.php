@@ -1120,9 +1120,10 @@ abstract class DBObject implements iDisplay
 			}
 			else
 			{
-				$sHtmlLabel = htmlentities($this->Get($sAttCode.'_friendlyname'), ENT_QUOTES, 'UTF-8');
+				$sHtmlLabel = utils::EscapeHtml($this->Get($sAttCode.'_friendlyname'));
 				$bArchived = $this->IsArchived($sAttCode);
 				$bObsolete = $this->IsObsolete($sAttCode);
+
 				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel, null, true, $bArchived, $bObsolete);
 			}
 		}
@@ -1620,7 +1621,7 @@ abstract class DBObject implements iDisplay
 	 */
 	public function GetName($sType = FriendlyNameType::SHORT)
 	{
-		return htmlentities($this->GetRawName($sType), ENT_QUOTES, 'UTF-8');
+		return utils::EscapeHtml($this->GetRawName($sType));
 	}
 
 	/**
@@ -1961,7 +1962,7 @@ abstract class DBObject implements iDisplay
 				/** @var \AttributeExternalKey $oAtt */
 				$sTargetClass = $oAtt->GetTargetClass();
 				if (false === MetaModel::IsObjectInDB($sTargetClass, $toCheck)) {
-					return "Target object not found (".utils::HtmlEntities($sTargetClass).".::".utils::HtmlEntities($toCheck).")";
+					return "Target object not found (".$sTargetClass.".::".$toCheck.")";
 				}
 			}
 			if ($oAtt->IsHierarchicalKey())
@@ -1970,7 +1971,7 @@ abstract class DBObject implements iDisplay
 				$aValues = $oAtt->GetAllowedValues(array('this' => $this));
 				if (!array_key_exists($toCheck, $aValues))
 				{
-					return "Value not allowed [". utils::HtmlEntities($toCheck)."]";
+					return "Value not allowed [$toCheck]";
 				}
 			}
 		}
@@ -1984,7 +1985,7 @@ abstract class DBObject implements iDisplay
 					$oTag->SetValues(explode(' ', $toCheck));
 				} catch (Exception $e)
 				{
-					return "Tag value [". utils::HtmlEntities($toCheck)."] is not a valid tag list";
+					return "Tag value '$toCheck' is not a valid tag list";
 				}
 
 				return true;
@@ -2012,7 +2013,7 @@ abstract class DBObject implements iDisplay
 					$oTag->SetValues($aValues);
 				} catch (Exception $e)
 				{
-					return "Set value[". utils::HtmlEntities($toCheck)."] is not a valid set";
+					return "Set value '$toCheck' is not a valid set";
 				}
 
 				return true;
@@ -2032,7 +2033,7 @@ abstract class DBObject implements iDisplay
 			{
 				if (!array_key_exists($toCheck, $aValues))
 				{
-					return "Value not allowed [". utils::HtmlEntities($toCheck)."]";
+					return "Value not allowed [$toCheck]";
 				}
 			}
 			if (!is_null($iMaxSize = $oAtt->GetMaxSize()))
@@ -2045,7 +2046,7 @@ abstract class DBObject implements iDisplay
 			}
 			if (!$oAtt->CheckFormat($toCheck))
 			{
-				return "Wrong format [". utils::HtmlEntities($toCheck)."]";
+				return "Wrong format [$toCheck]";
 			}
 		}
 		else
@@ -3195,11 +3196,21 @@ abstract class DBObject implements iDisplay
 			// Save the original values (will be reset to the new values when the object get written to the DB)
 			$aOriginalValues = $this->m_aOrigValues;
 
-			$aHierarchicalKeys = [];
-			$aDBChanges = [];
+			// Activate any existing trigger
+			$sClass = get_class($this);
+			// - TriggerOnObjectMention
+			$this->ActivateOnMentionTriggers(false);
+
+			$bNeedReload = false;
+			$aHierarchicalKeys = array();
+			$aDBChanges = array();
 			foreach ($aChanges as $sAttCode => $valuecurr)
 			{
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+				if ($oAttDef->IsExternalKey() || $oAttDef->IsLinkSet())
+				{
+					$bNeedReload = true;
+				}
 				if ($oAttDef->IsBasedOnDBColumns())
 				{
 					$aDBChanges[$sAttCode] = $aChanges[$sAttCode];
@@ -3352,22 +3363,27 @@ abstract class DBObject implements iDisplay
 			$this->m_aModifiedAtt = array();
 
 			try {
-				// Reset original values although the object has not been reloaded
-				foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
-				{
-					if ($bLoaded)
-					{
-						$value = $this->m_aCurrValues[$sAttCode];
-						$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
-					}
-				}
-
 				$this->EventUpdateAfter(['changes' => $aChanges]);
 				$this->AfterUpdate();
 
+				// Reload to get the external attributes
+				if ($bNeedReload) {
+					$this->Reload(true /* AllowAllData */);
+				} else {
+					// Reset original values although the object has not been reloaded
+					foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
+					{
+						if ($bLoaded)
+						{
+							$value = $this->m_aCurrValues[$sAttCode];
+							$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
+						}
+					}
+				}
+
 				// - TriggerOnObjectUpdate
 				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)'),
 					array(), $aParams);
 				while ($oTrigger = $oSet->Fetch()) {
 					/** @var \TriggerOnObjectUpdate $oTrigger */
@@ -3810,7 +3826,7 @@ abstract class DBObject implements iDisplay
 	}
 
      /**
-     * @internal
+     * @overwritable-hook You can extend this method in order to provide your own logic.
      *
      * @return array
      *
@@ -5878,7 +5894,7 @@ abstract class DBObject implements iDisplay
 
 	protected function EventArchive()
 	{
-		
+
 	}
 
 	protected function EventUnarchive()

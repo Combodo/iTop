@@ -18,5 +18,5 @@
  */
 // Global search
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',
+	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Valores desconhecidos',
 ));

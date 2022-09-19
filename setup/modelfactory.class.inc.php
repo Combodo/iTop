@@ -1845,7 +1845,7 @@ EOF;
 		echo " <tr>\n";
 		echo "  <td width=\"50%\">\n";
 		echo "   <h4>DOM - Original values</h4>\n";
-		echo "   <pre>".htmlentities($sDOMOriginal)."</pre>\n";
+		echo "   <pre>".utils::EscapeHtml($sDOMOriginal)."</pre>\n";
 		echo "  </td>\n";
 		echo "  <td width=\"50%\" align=\"left\" valign=\"center\"><span style=\"$sArrStyle\">&rArr; &rArr; &rArr;</span></td>\n";
 		echo " </tr>\n";
@@ -1853,17 +1853,17 @@ EOF;
 		echo " <tr>\n";
 		echo "  <td width=\"50%\">\n";
 		echo "   <h4>DOM - Altered with various changes</h4>\n";
-		echo "   <pre>".htmlentities($sDOMModified)."</pre>\n";
+		echo "   <pre>".utils::EscapeHtml($sDOMModified)."</pre>\n";
 		echo "  </td>\n";
 		echo "  <td width=\"50%\">\n";
 		echo "   <h4>DOM - Rebuilt from the Delta</h4>\n";
-		echo "   <pre>".htmlentities($sDOMRebuilt)."</pre>\n";
+		echo "   <pre>".utils::EscapeHtml($sDOMRebuilt)."</pre>\n";
 		echo "  </td>\n";
 		echo " </tr>\n";
 		echo " <tr><td align=\"center\"><span style=\"$sArrStyle\">&dArr;</div></td><td align=\"center\"><span style=\"$sArrStyle\">&uArr;</div></td></tr>\n";
 		echo "  <td width=\"50%\">\n";
 		echo "   <h4>Delta (Computed by ModelFactory)</h4>\n";
-		echo "   <pre>".htmlentities($sDeltaXML)."</pre>\n";
+		echo "   <pre>".utils::EscapeHtml($sDeltaXML)."</pre>\n";
 		echo "  </td>\n";
 		echo "  <td width=\"50%\" align=\"left\" valign=\"center\"><span style=\"$sArrStyle\">&rArr; &rArr; &rArr;</span></td>\n";
 		echo " </tr>\n";
@@ -2561,6 +2561,8 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 * @return string
 	 * @throws \Exception
 	 */
+	// Return type union is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
 	public function saveXML(DOMNode $node = null, $options = 0)
 	{
 		$oRootNode = $this->firstChild;
@@ -2584,12 +2586,14 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 *
 	 * @param string $sName
 	 * @param null $value
-	 * @param null $namespaceURI
+	 * @param string $namespaceURI
 	 *
 	 * @return \MFElement
 	 * @throws \Exception
+	 *
+	 * @since 3.1.0 N°4517 $namespaceURI parameter must be empty string by default so
 	 */
-	function createElement($sName, $value = null, $namespaceURI = null)
+	function createElement($sName, $value = null, $namespaceURI = '')
 	{
 		/** @var \MFElement $oElement */
 		$oElement = $this->importNode(new MFElement($sName, null, $namespaceURI));

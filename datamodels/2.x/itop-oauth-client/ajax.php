@@ -17,8 +17,7 @@ if (version_compare(ITOP_DESIGN_LATEST_VERSION , '3.0') >= 0) {
 }
 
 $oUpdateController = new AjaxOauthClientController($sTemplates, 'itop-oauth-client');
-$oUpdateController->AllowOnlyAdmin();
-$oUpdateController->SetDefaultOperation('CreateMailbox');
+$oUpdateController->SetMenuId('OAuthClient');
 $oUpdateController->HandleOperation();
 
 

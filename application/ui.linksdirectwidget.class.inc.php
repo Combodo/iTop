@@ -255,7 +255,7 @@ class UILinksWidgetDirect
 		$oDiv = UIContentBlockUIBlockFactory::MakeStandard($this->sInputid, ['listContainer']);
 		$oPage->AddSubBlock($oDiv);
 		$oDatatable = DataTableUIBlockFactory::MakeForForm($this->sInputid, $aAttribs, $aData);
-		$oDatatable->SetOptions(['select_mode' => 'custom']);
+		$oDatatable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
 		$oDiv->AddSubBlock($oDatatable);
 		$sInputName = $sFormPrefix.'attr_'.$this->sAttCode;
 		$aLabels = array(

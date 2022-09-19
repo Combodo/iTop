@@ -22,7 +22,7 @@
  * http://www.linprofs.com
  *
  * @author Hipska (2018, 2019)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
@@ -361,6 +361,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 // Themes
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'theme:fullmoon' => 'Full moon~~',
-	'theme:test-red' => 'Test instance (Red)~~',
+	'theme:fullmoon' => 'Full moon',
+	'theme:test-red' => 'Test instance (Red)',
 ));

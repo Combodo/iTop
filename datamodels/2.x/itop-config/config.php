@@ -168,7 +168,8 @@ try {
 							$iEditorTopMargin += 5*$iWarnings;
 
 							$sOriginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
-						} catch (Exception $e) {
+						}
+						catch (Exception $e) {
 							$oAlert = AlertUIBlockFactory::MakeForDanger('', $e->getMessage());
 							$iEditorTopMargin += 5;
 							$oP->AddUiBlock($oAlert);
@@ -178,8 +179,8 @@ try {
 			}
 
 
-			$sConfigEscaped = htmlentities($sConfig, ENT_QUOTES, 'UTF-8');
-			$sOriginalConfigEscaped = htmlentities($sOriginalConfig, ENT_QUOTES, 'UTF-8');
+			$sConfigEscaped = utils::EscapeHtml($sConfig);
+			$sOriginalConfigEscaped = utils::EscapeHtml($sOriginalConfig);
 			$oP->AddUiBlock(new Html('<p>'.Dict::S('config-edit-intro').'</p>'));
 
 			$oForm = new Form();

@@ -56,7 +56,7 @@ if (file_exists(dirname(__DIR__).'/.env.local.php')) {
 
 	// load all the .env files
 	if (method_exists($oDotenv, 'loadEnv')) {
-		$oDotenv->loadEnv($sPath);
+		$oDotenv->loadEnv($sPath, null, 'prod');
 	} else {
 		// fallback code in case your Dotenv component is not 4.2 or higher (when loadEnv() was added)
 
@@ -83,12 +83,6 @@ if (file_exists(dirname(__DIR__).'/.env.local.php')) {
 			$oDotenv->load($sPathDist);
 		}
 	}
-}
-
-// Set debug mode only when necessary
-if (utils::ReadParam('debug', 'false') === 'true')
-{
-	$_SERVER['APP_DEBUG'] = true;
 }
 
 $_SERVER += $_ENV;

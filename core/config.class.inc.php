@@ -546,7 +546,7 @@ class Config
 		],
 		'email_transport' => [
 			'type' => 'string',
-			'description' => 'Mean to send emails: PHPMail (uses the function mail()) or SMTP (implements the client protocol)',
+			'description' => 'Mean to send emails: PHPMail (uses the function mail()), SMTP (implements the client protocol) or SMTP_OAuth (connect to the server using OAuth 2.0)',
 			'default' => "PHPMail",
 			'value' => "PHPMail",
 			'source_of_value' => '',
@@ -1472,14 +1472,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'use_legacy_dbsearch' => [
-			'type'                => 'bool',
-			'description'         => 'Deprecated since 3.1.0, there is now only one dbsearch method.',
-			'default'             => false,
-			'value'               => false,
-			'source_of_value'     => '',
-			'show_in_conf_sample' => false,
-		],
 		'query_cache_enabled' => [
 			'type' => 'bool',
 			'description' => 'If set, DBSearch will use cache for query generation',
@@ -1895,7 +1887,7 @@ class Config
 		{
 			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack) 
 			throw new ConfigException('Syntax error in configuration file',
-				array('file' => $sConfigFile, 'error' => '<tt>'.htmlentities($sNoise, ENT_QUOTES, 'UTF-8').'</tt>'));
+				array('file' => $sConfigFile, 'error' => '<tt>'.utils::EscapeHtml($sNoise, ENT_QUOTES).'</tt>'));
 		}
 
 		if (!isset($MySettings) || !is_array($MySettings))

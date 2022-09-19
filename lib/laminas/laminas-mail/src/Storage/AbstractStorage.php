@@ -1,15 +1,10 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Storage;
 
 use ArrayAccess;
 use Countable;
+use ReturnTypeWillChange;
 use SeekableIterator;
 
 abstract class AbstractStorage implements
@@ -188,6 +183,7 @@ abstract class AbstractStorage implements
      *
      * @return   int
      */
+    #[ReturnTypeWillChange]
     public function count()
     {
         return $this->countMessages();
@@ -199,6 +195,7 @@ abstract class AbstractStorage implements
      * @param  int  $id
      * @return bool
      */
+    #[ReturnTypeWillChange]
     public function offsetExists($id)
     {
         try {
@@ -217,6 +214,7 @@ abstract class AbstractStorage implements
      * @param    int $id
      * @return   \Laminas\Mail\Storage\Message message object
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($id)
     {
         return $this->getMessage($id);
@@ -229,6 +227,7 @@ abstract class AbstractStorage implements
      * @param mixed $value
      * @throws Exception\RuntimeException
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($id, $value)
     {
         throw new Exception\RuntimeException('cannot write mail messages via array access');
@@ -240,6 +239,7 @@ abstract class AbstractStorage implements
      * @param    int   $id
      * @return   bool success
      */
+    #[ReturnTypeWillChange]
     public function offsetUnset($id)
     {
         return $this->removeMessage($id);
@@ -252,6 +252,7 @@ abstract class AbstractStorage implements
      * the interfaces and your scripts take long you should use reset()
      * from time to time.
      */
+    #[ReturnTypeWillChange]
     public function rewind()
     {
         $this->iterationMax = $this->countMessages();
@@ -263,6 +264,7 @@ abstract class AbstractStorage implements
      *
      * @return Message current message
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         return $this->getMessage($this->iterationPos);
@@ -273,6 +275,7 @@ abstract class AbstractStorage implements
      *
      * @return   int id of current position
      */
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->iterationPos;
@@ -281,6 +284,7 @@ abstract class AbstractStorage implements
     /**
      * Iterator::next()
      */
+    #[ReturnTypeWillChange]
     public function next()
     {
         ++$this->iterationPos;
@@ -291,6 +295,7 @@ abstract class AbstractStorage implements
      *
      * @return bool
      */
+    #[ReturnTypeWillChange]
     public function valid()
     {
         if ($this->iterationMax === null) {
@@ -305,6 +310,7 @@ abstract class AbstractStorage implements
      * @param  int $pos
      * @throws Exception\OutOfBoundsException
      */
+    #[ReturnTypeWillChange]
     public function seek($pos)
     {
         if ($this->iterationMax === null) {

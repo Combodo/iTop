@@ -497,11 +497,14 @@ EOF;
 				foreach($aMenusByModule[$sModuleName] as $sMenuId)
 				{
 					$oMenuNode = $aMenuNodes[$sMenuId];
-					if ($sParent = $oMenuNode->GetChildText('parent', null))
-					{
-						$aMenusToLoad[] = $sParent;
-						$aParentMenus[] = $sParent;
+					// compute parent hierarchy
+					$aParentIdHierarchy = [];
+					while ($sParent = $oMenuNode->GetChildText('parent', null)) {
+						array_unshift($aParentIdHierarchy, $sParent);
+						$oMenuNode = $aMenuNodes[$sParent];
 					}
+					$aMenusToLoad = array_merge($aMenusToLoad, $aParentIdHierarchy);
+					$aParentMenus = array_merge($aParentMenus, $aParentIdHierarchy);
 					// Note: the order matters: the parents must be defined BEFORE
 					$aMenusToLoad[] = $sMenuId;
 				}
@@ -633,7 +636,7 @@ EOF;
 				} else {
 					/** @noinspection NestedPositiveIfStatementsInspection */
 					if (utils::IsDevelopmentEnvironment()) {
-						$sMissingBusinessFileMessage = 'A module embeds a non existing file : check the module.php "datamodel" key !';
+						$sMissingBusinessFileMessage = 'A module embeds a non existing file: Check the module.php "datamodel" key!';
 						$aContext = [
 							'moduleId'       => $oModule->GetId(),
 							'moduleLocation' => $oModule->GetRootDir(),
@@ -2097,7 +2100,11 @@ EOF;
 			// Note: We can't use ModelFactory::GetField() as the current clas doesn't seem to be loaded yet.
 			$oField = $this->oFactory->GetNodes('field[@id="'.$sStateAttCode.'"]', $oFields)->item(0);
 			if ($oField == null) {
-				throw new DOMFormatException("Non existing attribute '$sStateAttCode'", null, null, $oStateAttribute);
+				// Search field in parent class
+				$oField = $this->GetFieldInParentClasses($oClass, $sStateAttCode);
+				if ($oField == null) {
+					throw new DOMFormatException("Non existing attribute '$sStateAttCode'", null, null, $oStateAttribute);
+				}
 			}
 			$oValues = $oField->GetUniqueElement('values');
 			$oValueNodes = $oValues->getElementsByTagName('value');
@@ -3071,7 +3078,7 @@ EOF;
 	 */
 	protected function CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $sNodeName, $sTargetFile)
 	{
-		$sIcon = trim($oBrandingNode->GetChildText($sNodeName));
+		$sIcon = trim($oBrandingNode->GetChildText($sNodeName) ?? '');
 		if (strlen($sIcon) > 0) {
 			$sSourceFile = $sTempTargetDir.'/'.$sIcon;
 			$aIconName=explode(".", $sIcon);
@@ -3830,7 +3837,7 @@ EOF;
 		{
 			@unlink($sFilename);
 		}
-		$ret = file_put_contents($sFilename, $sContent, $flags);
+		$ret = file_put_contents($sFilename, $sContent, $flags ?? 0);
 		if ($ret === false)
 		{
 			$iLen = strlen($sContent);
@@ -3993,5 +4000,20 @@ EOF;
 		}
 
 		return $sValue;
+	}
+
+	private function GetFieldInParentClasses($oClass, $sAttCode)
+	{
+		$sParentClass = $oClass->GetChildText('parent', 'DBObject');
+		if ($sParentClass != 'DBObject') {
+			$oParent = $this->oFactory->GetClass($sParentClass);
+			$oParentFields = $oParent->GetOptionalElement('fields');
+			$oField = $this->oFactory->GetNodes('field[@id="'.$sAttCode.'"]', $oParentFields)->item(0);
+			if ($oField != null) {
+				return $oField;
+			}
+			return $this->GetFieldInParentClasses($oParent, $sAttCode);
+		}
+		return null;
 	}
 }
