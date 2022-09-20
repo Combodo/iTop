@@ -730,7 +730,7 @@ class BulkChange
 
 		$sSerializedSearch = $oDbSearchWithConditions->serialize();
 
-		//count all objects with all permissions without any condition
+		// Count all objects with all permissions without any condition
 		$oDbSearchWithoutAnyCondition = new DBObjectSearch($oDbSearchWithConditions->GetClass());
 		$oDbSearchWithoutAnyCondition->AllowAllData(true);
 		$oExtObjectSet = new CMDBObjectSet($oDbSearchWithoutAnyCondition);
@@ -741,21 +741,20 @@ class BulkChange
 			return new CellStatus_SearchIssue($sSerializedSearch, $sReason);
 		}
 
-		//count all objects with current user permissions
+		// Count all objects with current user permissions
 		$oDbSearchWithoutAnyCondition->AllowAllData(false);
 		$oExtObjectSetWithCurrentUserPermissions = new CMDBObjectSet($oDbSearchWithoutAnyCondition);
 		$iCurrentUserRightsObjectCount = $oExtObjectSetWithCurrentUserPermissions->Count();
 
 		if ($iCurrentUserRightsObjectCount === 0){
-			//no objects visible by current user
-			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser',
-				$oDbSearchWithConditions->GetClass());
+			// No objects visible by current user
+			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser', $oDbSearchWithConditions->GetClass());
 			return new CellStatus_SearchIssue($sSerializedSearch, $sReason);
 		}
 
 		try{
-			$aDisplayedAllowedValues=[];
-			// possibles values are displayed to UI user. we have to limit the amount of displayed values
+			$aDisplayedAllowedValues = [];
+			// Possibles values are displayed to UI user. we have to limit the amount of displayed values
 			$oExtObjectSetWithCurrentUserPermissions->SetLimit(4);
 			for($i = 0; $i < 3; $i++){
 				/** @var \DBObject $oVisibleObject */
