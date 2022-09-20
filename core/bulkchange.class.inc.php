@@ -179,7 +179,7 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	public function GetSearchLinkUrl()
 	{
 		return sprintf("UI.php?operation=search&filter=%s",
-			$this->sSerializedSearch
+			rawurlencode($this->sSerializedSearch)
 		);
 	}
 }
@@ -235,7 +235,7 @@ class CellStatus_Ambiguous extends CellStatus_Issue
 	public function GetSearchLinkUrl()
 	{
 		return sprintf("UI.php?operation=search&filter=%s",
-			$this->sSerializedSearch
+			rawurlencode($this->sSerializedSearch)
 		);
 	}
 }
@@ -403,19 +403,19 @@ class BulkChange
 	{
 		$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 		$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
-		foreach ($this->m_aExtKeys[$sAttCode] as $sForeignAttCode => $iCol)
+		foreach ($this->m_aExtKeys[$sAttCode] as $sReconKeyAttCode => $iCol)
 		{
-			if ($sForeignAttCode == 'id')
+			if ($sReconKeyAttCode == 'id')
 			{
 				$value = (int) $aRowData[$iCol];
 			}
 			else
 			{
 				// The foreign attribute is one of our reconciliation key
-				$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sForeignAttCode);
+				$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sReconKeyAttCode);
 				$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 			}
-			$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
+			$oReconFilter->AddCondition($sReconKeyAttCode, $value, '=');
 			$aResults[$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 		}
 
@@ -458,7 +458,7 @@ class BulkChange
 
 		// External keys reconciliation
 		//
-		foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
+		foreach($this->m_aExtKeys as $sAttCode => $aReconKeys)
 		{
 			// Skip external keys used for the reconciliation process
 			// if (!array_key_exists($sAttCode, $this->m_aAttList)) continue;
@@ -467,7 +467,7 @@ class BulkChange
 
 			if ($this->IsNullExternalKeySpec($aRowData, $sAttCode))
 			{
-				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+				foreach ($aReconKeys as $sReconKeyAttCode => $iCol)
 				{
 					// Default reporting
 					// $aRowData[$iCol] is always null
@@ -489,20 +489,20 @@ class BulkChange
 				$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
 
 				$aCacheKeys = array();
-				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+				foreach ($aReconKeys as $sReconKeyAttCode => $iCol)
 				{
 					// The foreign attribute is one of our reconciliation key
-					if ($sForeignAttCode == 'id')
+					if ($sReconKeyAttCode == 'id')
 					{
 						$value = $aRowData[$iCol];
 					}
 					else
 					{
-						$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sForeignAttCode);
+						$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sReconKeyAttCode);
 						$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 					}
 					$aCacheKeys[] = $value;
-					$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
+					$oReconFilter->AddCondition($sReconKeyAttCode, $value, '=');
 					$aResults[$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 				}
 				$sCacheKey = implode('_|_', $aCacheKeys); // Unique key for this query...
@@ -569,7 +569,7 @@ class BulkChange
 					else
 					{
 						$aResults[$sAttCode]= new CellStatus_Modify($iForeignObj, $oTargetObj->GetOriginal($sAttCode));
-						foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+						foreach ($aReconKeys as $sReconKeyAttCode => $iCol)
 						{
 							// Report the change on reconciliation values as well
 							$aResults[$iCol] = new CellStatus_Modify(utils::HtmlEntities($aRowData[$iCol]));
@@ -736,15 +736,15 @@ class BulkChange
 		$oExtObjectSet = new CMDBObjectSet($oDbSearchWithoutAnyCondition);
 		$iAllowAllDataObjectCount = $oExtObjectSet->Count();
 
-		//count all objects with current user permissions
-		$oDbSearchWithoutAnyCondition->AllowAllData(false);
-		$oExtObjectSetWithCurrentUserPermissions = new CMDBObjectSet($oDbSearchWithoutAnyCondition);
-		$iCurrentUserRightsObjectCount = $oExtObjectSetWithCurrentUserPermissions->Count();
-
 		if ($iAllowAllDataObjectCount === 0) {
 			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject', $oDbSearchWithConditions->GetClass());
 			return new CellStatus_SearchIssue($sSerializedSearch, $sReason);
 		}
+
+		//count all objects with current user permissions
+		$oDbSearchWithoutAnyCondition->AllowAllData(false);
+		$oExtObjectSetWithCurrentUserPermissions = new CMDBObjectSet($oDbSearchWithoutAnyCondition);
+		$iCurrentUserRightsObjectCount = $oExtObjectSetWithCurrentUserPermissions->Count();
 
 		if ($iCurrentUserRightsObjectCount === 0){
 			//no objects visible by current user
