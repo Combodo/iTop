@@ -32,7 +32,7 @@ trait tTableRowActions
 	 *
 	 * @param array $aRowActions
 	 *
-	 * @return table
+	 * @return $this
 	 */
 	public function SetRowActions(array $aRowActions)
 	{

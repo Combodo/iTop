@@ -197,22 +197,16 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 
 		// row actions toolbar container
 		$oToolbar = ToolbarUIBlockFactory::MakeStandard();
-		$oToolbar->AddCSSClass('ibo-row-actions-toolbar');
+		$oToolbar->AddCSSClass('ibo-datatable--row-actions-toolbar');
 
-		// for each actions...
-		$aActions = $oTable->GetRowActions();
-		for ($i = 0; $i < count($aActions); $i++) {
-
-			// actions
-			$aAction = $aActions[$i];
-
-			// create an icon button
+		// for each action...create an icon button
+		foreach ($oTable->GetRowActions() as $key => $aAction) {
 			$oButton = ButtonUIBlockFactory::MakeIconAction(
 				array_key_exists('icon_classes', $aAction) ? $aAction['icon_classes'] : 'fas fa-question',
 				array_key_exists('tooltip', $aAction) ? $aAction['tooltip'] : '',
 				array_key_exists('name', $aAction) ? $aAction['name'] : 'undefined'
 			);
-			$oButton->SetDataAttributes(['action-id' => $i]);
+			$oButton->SetDataAttributes(['action-id' => $key]);
 			$oToolbar->AddSubBlock($oButton);
 		}
 
@@ -980,8 +974,8 @@ JS;
 		if ($aRowActions != null) {
 			$oTable->SetRowActions($aRowActions);
 			$aColumns['actions'] = [
-				'label'       => '',
-				'description' => '',
+				'label'       => Dict::S('UI:Datatables:Column:RowActions:Label'),
+				'description' => Dict::S('UI:Datatables:Column:RowActions:Description'),
 			];
 		}
 		$oTable->SetColumns($aColumns);
@@ -1016,8 +1010,8 @@ JS;
 		if ($aRowActions != null) {
 			$oTable->SetRowActions($aRowActions);
 			$aColumns['actions'] = [
-				'label'       => '',
-				'description' => '',
+				'label'       => Dict::S('UI:Datatables:Column:RowActions:Label'),
+				'description' => Dict::S('UI:Datatables:Column:RowActions:Description'),
 			];
 		}
 		$oTable->SetColumns($aColumns);

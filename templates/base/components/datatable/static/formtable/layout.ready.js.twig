@@ -22,7 +22,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     columnDefs: [
         {orderable: false, targets: 0},
         {% if oUIBlock.HasRowActions() %}
-            getRowActionsColumnDefinition('{{ oUIBlock.GetId() }}', {{ oUIBlock.GetColumnsCount()-1 }}),
+            getRowActionsColumnDefinition('{{ oUIBlock.GetId() }}', {{ oUIBlock.GetColumnsCount() - 1 }}),
         {% endif %}
     ],
     {% endif %}
@@ -127,3 +127,5 @@ if (window.ResizeObserver)
     {% endif %}
 
 }
+
+{% include 'base/components/datatable/row-actions/handler.js.twig' %}

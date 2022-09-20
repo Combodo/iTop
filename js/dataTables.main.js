@@ -84,24 +84,24 @@ function getMultipleSelectionParams(listId)
  * Return column JSON declaration for row actions.
  * Could be part of column or columnDefs declaration of datatable.js.
  *
- * @param tableId
- * @param columnTargetIndex (for columnDefs declaration)
- * @returns {{orderable: boolean, type: string, render: (function(*, *, *, *): *)}}
+ * @param sTableId
+ * @param iColumnTargetIndex
+ * @returns {*}
  */
-function getRowActionsColumnDefinition(tableId, columnTargetIndex = -1)
+function getRowActionsColumnDefinition(sTableId, iColumnTargetIndex = -1)
 {
-	$aColumn = {
+	let aColumn = {
 		type: "html",
 		orderable: false,
 		title: 'data actions',
 		render: function ( data, type, row, meta ) {
-			return $(`#${tableId}_actions_buttons_template`).html();
+			return $(`#${sTableId}_actions_buttons_template`).html();
 		}
 	};
 
-	if(columnTargetIndex != -1){
-		$aColumn['targets'] = columnTargetIndex;
+	if(iColumnTargetIndex != -1){
+		aColumn['targets'] = iColumnTargetIndex;
 	}
 
-	return $aColumn;
+	return aColumn;
 }
