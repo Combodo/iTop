@@ -645,9 +645,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Выбор класса для поиска: ',
 
 	'UI:CSVReport-Value-Modified' => 'Изменен',
-	'UI:CSVReport-Value-SetIssue' => 'Не может быть изменен - причина: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Не может быть изменен %1$s - причина: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Нет совпадений',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Отсутствует обязательное значение',
 	'UI:CSVReport-Value-Ambiguous' => 'Неоднозначное сопоставление: найдено %1$s объектов',
 	'UI:CSVReport-Row-Unchanged' => 'без изменений',

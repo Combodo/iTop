@@ -633,9 +633,14 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Sélectionnez le type d\'objets à rechercher : ',
 
 	'UI:CSVReport-Value-Modified' => 'Modifié',
-	'UI:CSVReport-Value-SetIssue' => 'Modification impossible - cause : %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Ne peut pas prendre la valeur \'%1$s\' - cause : %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Pas de correspondance',
+	'UI:CSVReport-Value-SetIssue' => 'Valeur invalide',
+	'UI:CSVReport-Value-ChangeIssue' => 'Ne peut pas prendre la valeur \'%1$s\'',
+	'UI:CSVReport-Value-NoMatch' => 'Pas de correspondance avec \'%1$s\'',
+	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Valeur(s) possible(s) pour l\'objet \'%1$s\' : %2$s',
+	'UI:CSVReport-Value-NoMatch-NoObject' => 'Il n\'y a aucun objet \'%1$s\'',
+	'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => 'Il n\'y a aucun objet \'%1$s\' visible par votre utilisateur',
+	'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => 'Il existe des objet(s) \'%1$s\' non visible(s) par votre utilisateur',
+
 	'UI:CSVReport-Value-Missing' => 'Absence de valeur obligatoire',
 	'UI:CSVReport-Value-Ambiguous' => 'Ambigüité: %1$d objets trouvés',
 	'UI:CSVReport-Row-Unchanged' => 'inchangé',
