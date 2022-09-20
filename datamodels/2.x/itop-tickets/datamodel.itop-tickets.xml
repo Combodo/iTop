@@ -216,24 +216,19 @@
 					<count_max>0</count_max>
 				</field>
 			</fields>
-      <event_listeners>
-        <listener id="OnTicketInsertRequested">
-          <event>EVENT_SERVICE_DB_INSERT_REQUESTED</event>
-          <callback>OnTicketInsertRequested</callback>
-          <priority>-10</priority>
-        </listener>
-      </event_listeners>
       <methods>
-				<method id="OnTicketInsertRequested">
+				<method id="DBInsertNoReload">
 					<static>false</static>
 					<access>public</access>
-					<type>Overload-ExNihilo</type>
+					<type>Overload-DBObject</type>
 					<code><![CDATA[
-    public function OnTicketInsertRequested(Combodo\iTop\Service\EventData $oEventData)
+    public function DBInsertNoReload()
     {
           $iNextId = ItopCounter::IncClass(get_class($this));
           $sRef = $this->MakeTicketRef($iNextId);
           $this->SetIfNull('ref', $sRef);
+          $iKey = parent::DBInsertNoReload();
+          return $iKey;
     }
         ]]></code>
 				</method>

@@ -423,23 +423,6 @@
                     </state>
                 </states>
             </lifecycle>
-          <event_listeners>
-            <listener id="OnProblemInsertRequested">
-              <event>EVENT_SERVICE_DB_INSERT_REQUESTED</event>
-              <callback>OnProblemInsertRequested</callback>
-              <priority>0</priority>
-            </listener>
-            <listener id="OnProblemUpdateRequested">
-              <event>EVENT_SERVICE_DB_UPDATE_REQUESTED</event>
-              <callback>OnProblemUpdateRequested</callback>
-              <priority>0</priority>
-            </listener>
-            <listener id="OnProblemComputeValues">
-              <event>EVENT_SERVICE_DB_COMPUTE_VALUES</event>
-              <callback>OnProblemComputeValues</callback>
-              <priority>0</priority>
-            </listener>
-          </event_listeners>
             <methods>
 				<method id="GetTicketRefFormat">
 					<static>true</static>
@@ -537,31 +520,31 @@
 		return $iPriority;
 	}]]></code>
                 </method>
-                <method id="OnProblemComputeValues">
+                <method id="ComputeValues">
                     <static>false</static>
                     <access>public</access>
-                    <type>Overload-ExNihilo</type>
-                    <code><![CDATA[	public function OnProblemComputeValues(Combodo\iTop\Service\EventData $oEventData)
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[	public function ComputeValues()
 	{
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
 	}]]></code>
                 </method>
-                <method id="OnProblemInsertRequested">
+                <method id="OnInsert">
                     <static>false</static>
-                    <access>public</access>
-                    <type>Overload-ExNihilo</type>
-                    <code><![CDATA[	public function OnProblemInsertRequested(Combodo\iTop\Service\EventData $oEventData)
+                    <access>protected</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[	protected function OnInsert()
 	{
 		$this->SetIfNull('start_date', time());
 		$this->SetIfNull('last_update', time());
 	}]]></code>
                 </method>
-                <method id="OnProblemUpdateRequested">
+                <method id="OnUpdate">
                     <static>false</static>
-                    <access>public</access>
-                    <type>Overload-ExNihilo</type>
-                    <code><![CDATA[	public function OnProblemUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
+                    <access>protected</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[	protected function OnUpdate()
 	{
 		$this->Set('last_update', time());
 	}]]></code>

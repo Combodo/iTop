@@ -975,18 +975,6 @@
           </state>
         </states>
       </lifecycle>
-      <event_listeners>
-        <listener id="OnChangeInsertRequested">
-          <event>EVENT_SERVICE_DB_INSERT_REQUESTED</event>
-          <callback>OnChangeInsertRequested</callback>
-          <priority>0</priority>
-        </listener>
-        <listener id="OnChangeUpdateRequested">
-          <event>EVENT_SERVICE_DB_UPDATE_REQUESTED</event>
-          <callback>OnChangeUpdateRequested</callback>
-          <priority>0</priority>
-        </listener>
-      </event_listeners>
       <methods>
 				<method id="GetTicketRefFormat">
 					<static>true</static>
@@ -1027,26 +1015,28 @@
 		return true;
 	}]]></code>
         </method>
-        <method id="OnChangeInsertRequested">
+        <method id="OnInsert">
           <static>false</static>
-          <access>public</access>
-          <type>Overload-ExNihilo</type>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
           <code><![CDATA[
-    public function OnChangeInsertRequested(Combodo\iTop\Service\EventData $oEventData)
+    protected function OnInsert()
 	{
+        parent::OnInsert();
         $this->UpdateImpactedItems();
 		$this->SetIfNull('creation_date', time());
 		$this->SetIfNull('last_update', time());
 	}]]>
           </code>
         </method>
-        <method id="OnChangeUpdateRequested">
+        <method id="OnUpdate">
           <static>false</static>
-          <access>public</access>
-          <type>Overload-ExNihilo</type>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
           <code><![CDATA[
-    public function OnChangeUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
+    protected function OnUpdate()
   	{
+        parent::OnUpdate();
         $aChanges = $this->ListChanges();
         if (array_key_exists('functionalcis_list', $aChanges))
         {

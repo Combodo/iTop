@@ -1198,28 +1198,6 @@
 					</state>
 				</states>
 			</lifecycle>
-      <event_listeners>
-        <listener id="OnUserRequestInsertRequested">
-          <event>EVENT_SERVICE_DB_INSERT_REQUESTED</event>
-          <callback>OnUserRequestInsertRequested</callback>
-          <priority>0</priority>
-        </listener>
-        <listener id="OnUserRequestUpdateRequested">
-          <event>EVENT_SERVICE_DB_UPDATE_REQUESTED</event>
-          <callback>OnUserRequestUpdateRequested</callback>
-          <priority>0</priority>
-        </listener>
-        <listener id="OnUserRequestComputeValues">
-          <event>EVENT_SERVICE_DB_COMPUTE_VALUES</event>
-          <callback>OnUserRequestComputeValues</callback>
-          <priority>0</priority>
-        </listener>
-        <listener id="OnUserRequestCheckToWrite">
-          <event>EVENT_SERVICE_DB_CHECK_TO_WRITE</event>
-          <callback>OnUserRequestCheckToWrite</callback>
-          <priority>0</priority>
-        </listener>
-      </event_listeners>
       <methods>
 				<method id="GetTicketRefFormat">
 					<static>true</static>
@@ -1304,12 +1282,13 @@
 		return true;
 	}]]></code>
 				</method>
-				<method id="OnUserRequestCheckToWrite">
+				<method id="DoCheckToWrite">
 					<static>false</static>
 					<access>public</access>
-					<type>Overload-ExNihilo</type>
-					<code><![CDATA[public function OnUserRequestCheckToWrite(Combodo\iTop\Service\EventData $oEventData)
+					<type>Overload-DBObject</type>
+					<code><![CDATA[public function DoCheckToWrite()
   {
+    parent::DoCheckToWrite();
     if (!$this->IsNew() && ($this->Get('parent_request_id') == $this->GetKey()))
     {
       $this->m_aCheckIssues[] = Dict::Format('Class:UserRequest/Error:CannotAssignParentRequestIdToSelf');
@@ -1358,14 +1337,16 @@
 		return $iPriority;
 	}]]></code>
 				</method>
-				<method id="OnUserRequestComputeValues">
+				<method id="ComputeValues">
 					<static>false</static>
 					<access>public</access>
-					<type>Overload-ExNihilo</type>
-					<code><![CDATA[	public function OnUserRequestComputeValues(Combodo\iTop\Service\EventData $oEventData)
+					<type>Overload-DBObject</type>
+					<code><![CDATA[	public function ComputeValues()
 	{
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
+
+		return parent::ComputeValues();
 	}]]></code>
 				</method>
 				<method id="DisplayBareRelations">
@@ -1555,25 +1536,27 @@
 		$this->UpdateImpactedItems();
 	}]]></code>
 				</method>
-				<method id="OnUserRequestInsertRequested">
+				<method id="OnInsert">
 					<static>false</static>
-					<access>public</access>
-					<type>Overload-ExNihilo</type>
+					<access>protected</access>
+					<type>Overload-DBObject</type>
 					<code><![CDATA[
-    public function OnUserRequestInsertRequested(Combodo\iTop\Service\EventData $oEventData)
+    protected function OnInsert()
 	{
+	  parent::OnInsert();
 		$this->ComputeImpactedItems();
 		$this->SetIfNull('last_update', time());
 		$this->SetIfNull('start_date', time());
 	}]]></code>
 				</method>
-				<method id="OnUserRequestUpdateRequested">
+				<method id="OnUpdate">
 					<static>false</static>
-					<access>public</access>
-					<type>Overload-ExNihilo</type>
+					<access>protected</access>
+					<type>Overload-DBObject</type>
 					<code><![CDATA[
-    public function OnUserRequestUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
+    protected function OnUpdate()
 	{
+        parent::OnUpdate();
         $aChanges = $this->ListChanges();
         if (array_key_exists('functionalcis_list', $aChanges))
         {
