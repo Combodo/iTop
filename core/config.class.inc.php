@@ -29,7 +29,7 @@ define('ITOP_APPLICATION_SHORT', 'iTop');
  *
  * @see ITOP_CORE_VERSION to get iTop core version
  */
-define('ITOP_VERSION', '3.0.1-dev');
+define('ITOP_VERSION', '3.0.3-dev');
 
 define('ITOP_VERSION_NAME', 'Fullmoon');
 define('ITOP_REVISION', 'svn');
