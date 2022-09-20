@@ -215,26 +215,26 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testAttributeRefresh_ExternalKeysAndFields()
 	{
-		static::assertDBQueryCount(0, function() use (&$oObject){
+		$this->assertDBQueryCount(0, function() use (&$oObject){
 			$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
 		});
-		static::assertDBQueryCount(2, function() use (&$oObject){
+		$this->assertDBQueryCount(2, function() use (&$oObject){
 			static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
 			static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
 		});
 
 		// External key given as an id
-		static::assertDBQueryCount(1, function() use (&$oObject){
+		$this->assertDBQueryCount(1, function() use (&$oObject){
 			$oObject->Set('org_id', 2);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 		});
 
 		// External key given as an object
-		static::assertDBQueryCount(1, function() use (&$oBordeaux){
+		$this->assertDBQueryCount(1, function() use (&$oBordeaux){
 			$oBordeaux = \MetaModel::GetObject('Location', 1);
 		});
 
-		static::assertDBQueryCount(0, function() use (&$oBordeaux, &$oObject){
+		$this->assertDBQueryCount(0, function() use (&$oBordeaux, &$oObject){
 			$oObject->Set('location_id', $oBordeaux);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 			static::assertEquals('IT Department', $oObject->Get('org_name'));
@@ -251,25 +251,24 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		$this->ResetReloadCount();
 
-		static::assertDBQueryCount(0, function() use (&$oObject){
+		$this->assertDBQueryCount(0, function() use (&$oObject){
 			$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 		});
-		static::assertDBQueryCount(18, function() use (&$oObject) {
-			$oObject->DBInsertNoReload();
-		});
+		// The number of queries depends on the installed modules so it varies on CI
+		$oObject->DBInsertNoReload();
 		$sClass = get_class($oObject);
 		$sKey = $oObject->GetKey();
 		$this->debug("Created $sClass::$sKey");
 		$this->DebugReloadCount("Person::DBInsertNoReload()");
 
-		static::assertDBQueryCount(0, function() use (&$oObject){
+		$this->assertDBQueryCount(0, function() use (&$oObject){
 			static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
 			static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
 		});
 		$this->DebugReloadCount("Get('org_id_friendlyname') and Get('location_id_friendlyname')");
 
 		// External key given as an id
-		static::assertDBQueryCount(2, function() use (&$oObject){
+		$this->assertDBQueryCount(2, function() use (&$oObject){
 			$oObject->Set('org_id', 2);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 		});
@@ -277,12 +276,12 @@ class DBObjectTest extends ItopDataTestCase
 		$this->DebugReloadCount("Set('org_id', 2) and Get('org_id_friendlyname')");
 
 		// External key given as an object
-		static::assertDBQueryCount(1, function() use (&$oBordeaux){
+		$this->assertDBQueryCount(1, function() use (&$oBordeaux){
 			$oBordeaux = MetaModel::GetObject('Location', 1);
 		});
 		$this->DebugReloadCount("GetObject('Location', 1)");
 
-		static::assertDBQueryCount(0, function() use (&$oBordeaux, &$oObject){
+		$this->assertDBQueryCount(0, function() use (&$oBordeaux, &$oObject){
 			$oObject->Set('location_id', $oBordeaux);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 			static::assertEquals('IT Department', $oObject->Get('org_name'));
@@ -301,18 +300,17 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		$this->ResetReloadCount();
 
-		static::assertDBQueryCount(0, function() use (&$oPerson){
+		$this->assertDBQueryCount(0, function() use (&$oPerson){
 			$oPerson = MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 		});
-		static::assertDBQueryCount(18, function() use (&$oPerson) {
-			$oPerson->DBInsertNoReload();
-		});
+		// The number of queries depends on the installed modules so it varies on CI
+		$oPerson->DBInsertNoReload();
 		$sPersonClass = get_class($oPerson);
 		$sPersonKey = $oPerson->GetKey();
 		$this->debug("Created $sPersonClass::$sPersonKey");
 		$this->DebugReloadCount("Person::DBInsertNoReload()");
 
-		static::assertDBQueryCount(1, function() use (&$oTeam, &$oPerson){
+		$this->assertDBQueryCount(1, function() use (&$oTeam, &$oPerson){
 			$oTeam = MetaModel::NewObject('Team', ['name' => 'Team Foo', 'org_id' => 3]);
 			// Add person to team
 			$oNewLink = new lnkPersonToTeam();
@@ -322,17 +320,8 @@ class DBObjectTest extends ItopDataTestCase
 			$oTeam->Set('persons_list', $oPersons);
 		});
 
-//		global $fItopStarted;
-//		$fItopStarted = microtime(true);
-//		ExecutionKPI::EnableDuration(2);
-//		$oKPI = new ExecutionKPI();
-		static::assertDBQueryCount(67, function() use (&$oTeam) {
-			$oTeam->DBInsertNoReload();
-		});
-//		$oKPI->ComputeAndReport('Team DBInsertNoReload');
-//		$_SERVER['REQUEST_URI'] = $this->GetTestId();
-//		$_SERVER['REQUEST_METHOD'] = '';
-//		ExecutionKPI::ReportStats();
+		// The number of queries depends on the installed modules so it varies on CI
+		$oTeam->DBInsertNoReload();
 		$this->assertCount(0, $oTeam->ListChanges());
 
 		$oTeam->DBUpdate();
@@ -347,7 +336,7 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertCount(0, $oTeam->ListChanges());
 
 		// External key given as an id
-		static::assertDBQueryCount(2, function() use (&$oTeam){
+		$this->assertDBQueryCount(2, function() use (&$oTeam){
 			$oTeam->Set('org_id', 2);
 			static::assertEquals('IT Department', $oTeam->Get('org_id_friendlyname'));
 		});
@@ -366,13 +355,13 @@ class DBObjectTest extends ItopDataTestCase
 		static::assertEquals(2, $oObject->Get('location_id'));
 
 		// Dependent external field is updated because the Set('org_id') is done with an object
-		static::assertDBQueryCount(0, function() use (&$oObject){
+		$this->assertDBQueryCount(0, function() use (&$oObject){
 			static::assertNotEmpty($oObject->Get('org_name'));
 		});
 
 		// Dependent external field is reset and reloaded from DB
 		$oObject->Set('org_id', 3);
-		static::assertDBQueryCount(1, function() use (&$oObject){
+		$this->assertDBQueryCount(1, function() use (&$oObject){
 			static::assertNotEmpty($oObject->Get('org_name'));
 		});	}
 
@@ -391,7 +380,7 @@ class DBObjectTest extends ItopDataTestCase
 				if ($oAttDef->IsBasedOnOQLExpression())
 				{
 					$this->debug("$sClass::$sAttCode");
-					static::assertDBQueryCount(0, function() use (&$oObject, &$oAttDef){
+					$this->assertDBQueryCount(0, function() use (&$oObject, &$oAttDef){
 						$oObject->EvaluateExpression($oAttDef->GetOQLExpression());
 					});
 				}
@@ -510,7 +499,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oQueryOQL->DBInsert();
 
 		// assert query count
-		static::assertDBQueryCount(2, function() use (&$oQueryOQL) {
+		$this->assertDBQueryCount(2, function() use (&$oQueryOQL) {
 			$oQueryOQL->DBIncrement('export_count', 1);
 		});
 	}

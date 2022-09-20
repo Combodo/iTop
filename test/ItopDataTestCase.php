@@ -847,7 +847,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @throws \MySQLException
 	 * @throws \MySQLQueryHasNoResultException
 	 */
-	protected static function assertDBQueryCount($iExpectedCount, callable $oFunction)
+	protected function assertDBQueryCount($iExpectedCount, callable $oFunction)
 	{
 		$iInitialCount = (int) CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
 		$oFunction();
@@ -855,12 +855,12 @@ class ItopDataTestCase extends ItopTestCase
 		$iCount = $iFinalCount - 1 - $iInitialCount;
 		if ($iCount != $iExpectedCount)
 		{
-			static::fail("Expected $iExpectedCount queries. $iCount have been executed.");
+			$this->fail("Expected $iExpectedCount queries. $iCount have been executed.");
 		}
 		else
 		{
 			// Otherwise, PHP Unit will consider that no assertion has been made
-			static::assertTrue(true);
+			$this->assertTrue(true);
 		}
 	}
 
