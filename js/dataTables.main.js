@@ -93,7 +93,6 @@ function getRowActionsColumnDefinition(sTableId, iColumnTargetIndex = -1)
 	let aColumn = {
 		type: "html",
 		orderable: false,
-		title: 'data actions',
 		render: function ( data, type, row, meta ) {
 			return $(`#${sTableId}_actions_buttons_template`).html();
 		}
