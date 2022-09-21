@@ -25,6 +25,8 @@ namespace Combodo\iTop\Test\UnitTest;
  * Time: 11:21
  */
 
+use CMDBSource;
+use MySQLTransactionNotClosedException;
 use PHPUnit\Framework\TestCase;
 use SetupUtils;
 
@@ -47,15 +49,26 @@ class ItopTestCase extends TestCase
 		@include_once '../../../../../../../../approot.inc.php';
 	}
 
+	/**
+	 * @throws \MySQLTransactionNotClosedException see N°5538
+	 * @since 2.7.8 3.0.3 3.1.0 N°5538
+	 */
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+
+		if (CMDBSource::IsInsideTransaction()) {
+			// Nested transactions were opened but not finished !
+			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
+		}
+	}
+
 	protected function debug($sMsg)
-    {
-        if (DEBUG_UNIT_TEST)
-        {
-        	if (is_string($sMsg))
-	        {
-	        	echo "$sMsg\n";
-	        }
-	        else {
+	{
+		if (DEBUG_UNIT_TEST) {
+			if (is_string($sMsg)) {
+				echo "$sMsg\n";
+			} else {
 		        /** @noinspection ForgottenDebugOutputInspection */
 		        print_r($sMsg);
 	        }

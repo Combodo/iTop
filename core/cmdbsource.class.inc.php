@@ -113,10 +113,18 @@ class MySQLNoTransactionException extends MySQLException
 
 }
 
+/**
+ * @since 2.7.8 3.0.3 3.1.0 N°5538
+ */
+class MySQLTransactionNotClosedException extends MySQLException
+{
+
+}
+
 
 /**
  * CMDBSource
- * database access wrapper 
+ * database access wrapper
  *
  * @package     iTopORM
  */

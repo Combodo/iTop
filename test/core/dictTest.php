@@ -81,6 +81,8 @@ PHP;
 		}
 		rmdir(APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries");
 		rmdir(APPROOT."env-$this->sEnvName");
+
+		parent::tearDown();
 	}
 
     /**
