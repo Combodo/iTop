@@ -78,7 +78,7 @@ class EMail implements iEMail
 	 * @return void
 	 * @throws \ConfigException
 	 * @throws \CoreException
-	 * @since 2.7.>8 3.0.3 3.1.0 N°4947 Method creation, to factorize same code in children classes
+	 * @since 2.7.8 3.0.3 3.1.0 N°4947 Method creation, to factorize same code in children classes
 	 */
 	protected function InitRecipientFrom()
 	{
