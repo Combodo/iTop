@@ -50,6 +50,7 @@ class apcEmulationTest extends ItopTestCase
 	public function tearDown(): void
 	{
 		apc_clear_cache();
+		parent::tearDown();
 	}
 
 	public function testBasic()
