@@ -102,16 +102,17 @@
         </field>
       </fields>
       <methods>
-        <method id="__construct">
-          <comment></comment>
+        <method id="DBInsertNoReload">
           <static>false</static>
           <access>public</access>
-          <type>Overload-ExNihilo</type>
-          <code><![CDATA[	public function __construct()
-	{
-	  parent::__construct();
-		$this->Set('creation_date', new Date());
-	}]]></code>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+    public function DBInsertNoReload()
+    {
+        $this->SetIfNull('creation_date', time());
+        $iKey = parent::DBInsertNoReload();
+    }
+        ]]></code>
         </method>
         <method id="MapContextParam">
           <comment><![CDATA[/**
