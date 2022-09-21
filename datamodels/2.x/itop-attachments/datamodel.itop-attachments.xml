@@ -102,6 +102,17 @@
         </field>
       </fields>
       <methods>
+        <method id="__construct">
+          <comment></comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-ExNihilo</type>
+          <code><![CDATA[	public function __construct()
+	{
+	  parent::__construct();
+		$this->Set('creation_date', new Date());
+	}]]></code>
+        </method>
         <method id="MapContextParam">
           <comment><![CDATA[/**
 	 * Maps the given context parameter name to the appropriate filter/search code for this class
