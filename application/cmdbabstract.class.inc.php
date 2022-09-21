@@ -4435,15 +4435,7 @@ HTML;
 	 */
 	public function DBInsertNoReload()
 	{
-		return $this->DBInsert();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function DBInsert()
-	{
-		$res = parent::DBInsert();
+		$res = parent::DBInsertNoReload();
 
 		$this->SetWarningsAsSessionMessages('create');
 

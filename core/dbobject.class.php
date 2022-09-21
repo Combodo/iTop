@@ -2815,9 +2815,9 @@ abstract class DBObject implements iDisplay
 	 * @internal
 	 *
 	 */
-	public function DBInsertNoReload()
+	public function DBInsert()
 	{
-		return $this->DBInsert();
+		return $this->DBInsertNoReload();
 	}
 
     /**
@@ -2943,7 +2943,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DBInsert()
+	public function DBInsertNoReload()
 	{
 		$sClass = get_class($this);
         if (MetaModel::DBIsReadOnly())

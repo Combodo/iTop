@@ -261,6 +261,7 @@
       <replaces>Attachment::AfterUpdate</replaces>
       <sources>
         <source id="Attachment">Attachment</source>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
       <event_data>
         <event_datum id="object">
@@ -282,6 +283,7 @@
       <replaces>Attachment::AfterUpdate</replaces>
       <sources>
         <source id="Attachment">Attachment</source>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
       <event_data>
         <event_datum id="object">
