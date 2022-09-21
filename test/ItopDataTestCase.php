@@ -128,7 +128,7 @@ class ItopDataTestCase extends ItopTestCase
 					$oObject->DBDelete();
 				}
 				catch (Exception $e) {
-					$this->debug("Error when removing created objects : $sClass::$iKey. Exception message: ".$e->getMessage());
+					$this->debug("Error when removing created objects: $sClass::$iKey. Exception message: ".$e->getMessage());
 				}
 			}
 		}
