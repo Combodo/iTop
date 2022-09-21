@@ -110,7 +110,7 @@
     public function DBInsertNoReload()
     {
         $this->SetIfNull('creation_date', time());
-        $iKey = parent::DBInsertNoReload();
+        return parent::DBInsertNoReload();
     }
         ]]></code>
         </method>
