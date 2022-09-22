@@ -200,13 +200,13 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oToolbar->AddCSSClass('ibo-datatable--row-actions-toolbar');
 
 		// for each action...create an icon button
-		foreach ($oTable->GetRowActions() as $key => $aAction) {
+		foreach ($oTable->GetRowActions() as $iKey => $aAction) {
 			$oButton = ButtonUIBlockFactory::MakeIconAction(
 				array_key_exists('icon_classes', $aAction) ? $aAction['icon_classes'] : 'fas fa-question',
 				array_key_exists('tooltip', $aAction) ? $aAction['tooltip'] : '',
 				array_key_exists('name', $aAction) ? $aAction['name'] : 'undefined'
 			);
-			$oButton->SetDataAttributes(['action-id' => $key]);
+			$oButton->SetDataAttributes(['action-id' => $iKey]);
 			$oToolbar->AddSubBlock($oButton);
 		}
 
