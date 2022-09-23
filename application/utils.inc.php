@@ -3157,37 +3157,37 @@ HTML;
 	 *
 	 * @see https://www.php.net/manual/en/function.class-uses.php#110752
 	 *
-	 * @param string $class class to scan
-	 * @param bool $autoload autoload flag
+	 * @param string $sClass Class to scan
+	 * @param bool $bAutoload Autoload flag
 	 *
 	 * @return array traits used
 	 * @since 3.1.0
 	 */
-	public static function ClassUsesDeep(string $class, bool $autoload = true): array
+	public static function ClassUsesDeep(string $sClass, bool $bAutoload = true): array
 	{
-		$traits = [];
+		$aTraits = [];
 		do {
-			$traits = array_merge(class_uses($class, $autoload), $traits);
-		} while ($class = get_parent_class($class));
-		foreach ($traits as $trait => $same) {
-			$traits = array_merge(class_uses($trait, $autoload), $traits);
+			$aTraits = array_merge(class_uses($sClass, $bAutoload), $aTraits);
+		} while ($sClass = get_parent_class($sClass));
+		foreach ($aTraits as $sTrait => $same) {
+			$aTraits = array_merge(class_uses($sTrait, $bAutoload), $aTraits);
 		}
 
-		return array_unique($traits);
+		return array_unique($aTraits);
 	}
 
 	/**
 	 * Test trait usage by a class or by parent classes hierarchy.
 	 *
-	 * @param string $class class to check
-	 * @param string $trait trait to search for
+	 * @param string $sClass Class to check
+	 * @param string $sTrait Trait to search for
 	 *
 	 * @return bool
 	 * @since 3.1.0
 	 */
-	public static function IsClassUsesDeepTrait(string $class, string $trait): bool
+	public static function IsClassUsesDeepTrait(string $sClass, string $sTrait): bool
 	{
-		return in_array($trait, self::ClassUsesDeep($class, true));
+		return in_array($sTrait, self::ClassUsesDeep($sClass, true));
   }
   
 	public static function GetUniqId()
