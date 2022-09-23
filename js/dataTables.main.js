@@ -88,9 +88,6 @@ function getMultipleSelectionParams(listId)
  * @param iColumnTargetIndex
  * @returns {*}
  * @since 3.1.0
- * @since 3.1.0
- * @since 3.1.0
- * @since 3.1.0
  */
 function getRowActionsColumnDefinition(sTableId, iColumnTargetIndex = -1)
 {
