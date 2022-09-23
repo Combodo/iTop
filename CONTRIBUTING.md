@@ -160,4 +160,4 @@ We have one sticker per contribution type. You might get multiple stickers with 
 
 Here is the design of each stickers for year 2022:
 
-![iTop stickers 2022](.doc/contributing-guide/contributing-stickers-side-by-side.png)
+![iTop stickers 2022](.doc/contributing-guide/2022.contributing-stickers-side-by-side.png)

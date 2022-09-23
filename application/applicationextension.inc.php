@@ -299,6 +299,7 @@ abstract class AbstractPreferencesExtension implements iPreferencesExtension
  *
  * @api
  * @package     Extensibility
+ * @deprecated
  */
 interface iApplicationUIExtension
 {
@@ -441,6 +442,7 @@ interface iApplicationUIExtension
  * @api
  * @package     Extensibility
  * @since       2.7.0
+ * @deprecated
  */
 abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
 {

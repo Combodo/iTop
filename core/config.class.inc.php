@@ -129,6 +129,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'event_service.debug.filter_events' => [
+			'type' => 'array',
+			'description' => 'Filter Event Service debug by events',
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'event_service.debug.filter_sources' => [
+			'type' => 'array',
+			'description' => 'Filter Event Service debug by event sources',
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'app_env_label' => [
 			'type' => 'string',
 			'description' => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',

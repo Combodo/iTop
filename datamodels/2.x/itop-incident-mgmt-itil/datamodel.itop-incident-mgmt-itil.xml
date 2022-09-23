@@ -1472,7 +1472,7 @@
 					<code><![CDATA[	protected function OnInsert()
 
 	{
-        parent::OnInsert();    
+        parent::OnInsert();
 		$this->ComputeImpactedItems();
 		$this->SetIfNull('last_update', time());
 		$this->SetIfNull('start_date', time());
@@ -1484,7 +1484,7 @@
 					<type>Overload-DBObject</type>
 					<code><![CDATA[	protected function OnUpdate()
 	{
-        parent::OnUpdate(); 
+        parent::OnUpdate();
         $aChanges = $this->ListChanges();
         if (array_key_exists('functionalcis_list', $aChanges))
         {

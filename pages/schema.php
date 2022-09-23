@@ -12,6 +12,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent;
+use Combodo\iTop\Service\EventService;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -264,7 +265,92 @@ function DisplayTriggers($oPage, $sClass)
 	cmdbAbstractObject::DisplaySet($oPage, $oSet, array('block_id' => 'triggers'));
 }
 
+function DisplayEvents(WebPage $oPage, $sClass)
+{
+	$aEvents = EventService::GetEventsByClass($sClass);
+	$aColumns = [
+		'event'       => ['label' => 'Event'],
+		'description' => ['label' => 'Description'],
+	];
+	$aRows = [];
+	foreach ($aEvents as $sEvent => $aEventInfo) {
+		$aDesc = $aEventInfo['description'];
+		$aRows[] = [
+			'event'       => $sEvent,
+			'description' => $aDesc['description'] ?? '',
+		];
+	}
+	$oTable = DataTableUIBlockFactory::MakeForStaticData(Dict::S('UI:Schema:Events:Defined'), $aColumns, $aRows);
+	$oPage->AddSubBlock($oTable);
 
+	$aSources = [];
+	if (MetaModel::IsAbstract($sClass)) {
+		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
+			if (!MetaModel::IsAbstract($sChildClass)) {
+				$oObject = MetaModel::NewObject($sChildClass);
+				$aSources[] = $oObject->GetObjectUniqId();
+				break;
+			}
+		}
+		foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
+			$aSources[] = $sParentClass;
+		}
+	} else {
+		$oObject = MetaModel::NewObject($sClass);
+		$aSources[] = $oObject->GetObjectUniqId();
+		foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
+				$aSources[] = $sParentClass;
+		}
+	}
+	$aListeners = [];
+	foreach (array_keys($aEvents) as $sEvent) {
+		$aListeners = array_merge($aListeners, EventService::GetListeners($sEvent, $aSources));
+	}
+	usort($aListeners, function ($a, $b) {
+		if ($a['event'] == $b['event']) {
+			if ($a['priority'] == $b['priority']) {
+				return 0;
+			}
+
+			return ($a['priority'] > $b['priority']) ? 1 : -1;
+		}
+		return ($a['event'] > $b['event']) ? 1 : -1;
+	});
+	$aColumns = [
+		'event'    => ['label' => 'Event'],
+		'listener' => ['label' => 'Listener'],
+		'priority' => ['label' => 'Priority'],
+		'module'   => ['label' => 'Module'],
+	];
+	$aRows = [];
+	$oReflectionClass = new ReflectionClass($sClass);
+	foreach ($aListeners as $aListener) {
+		if (is_object($aListener['callback'][0])) {
+			$sListenerClass = $sClass;
+			if ($aListener['callback'][0] != $sClass) {
+				$oListenerReflectionClass = new ReflectionClass(get_class($aListener['callback'][0]));
+				if (!$oListenerReflectionClass->isSubclassOf($sClass)) {
+					$sListenerClass = get_class($aListener['callback'][0]);
+				} elseif (!$oReflectionClass->hasMethod($aListener['callback'][1])) {
+					continue;
+				}
+			}
+			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\EventData $oEventData)';
+		} else {
+			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1].'(\Combodo\iTop\Service\EventData $oEventData)';
+		}
+		$aRows[] = [
+			'event'    => $aListener['event'],
+			'listener' => $sListener,
+			'priority' => $aListener['priority'],
+			'module'   => $aListener['module'],
+		];
+	}
+
+	$oTable = DataTableUIBlockFactory::MakeForStaticData(Dict::S('UI:Schema:Events:Listeners'), $aColumns, $aRows);
+	$oPage->AddSubBlock($oTable);
+
+}
 /**
  * Display the list of classes from the business model
  */
@@ -1060,6 +1146,9 @@ EOF
 
 	$oPage->SetCurrentTab('UI:Schema:Triggers');
 	DisplayTriggers($oPage, $sClass);
+
+	$oPage->SetCurrentTab('UI:Schema:Events');
+	DisplayEvents($oPage, $sClass);
 
 	$oPage->SetCurrentTab();
 	$oPage->SetCurrentTabContainer();

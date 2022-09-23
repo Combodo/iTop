@@ -174,6 +174,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 		$oKpi->ComputeAndReport(get_class($this).' output');
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+		ExecutionKPI::ReportStats();
 	}
 	
 	/**

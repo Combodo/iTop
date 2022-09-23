@@ -55,5 +55,7 @@ gitGraph
     commit id: "2022-04-08" tag: "3.0.1"
     checkout support/2.7
     commit id: "2022-07-11" tag: "2.7.7"
+    checkout support/3.0
+    commit id: "2022-09-12" tag: "3.0.2-1"
     checkout develop
 ```

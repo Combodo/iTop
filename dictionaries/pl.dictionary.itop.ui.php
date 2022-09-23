@@ -643,9 +643,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Wybierz klasę do przeszukania: ',
 
 	'UI:CSVReport-Value-Modified' => 'Zmodyfikowano',
-	'UI:CSVReport-Value-SetIssue' => 'Nie można było zmienić - powód: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Nie można zmienić na %1$s - powód: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Nie pasuje',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Brak wymaganej wartości',
 	'UI:CSVReport-Value-Ambiguous' => 'Uwaga: znaleziono %1$s obiektów',
 	'UI:CSVReport-Row-Unchanged' => 'niezmieniony',

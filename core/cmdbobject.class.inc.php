@@ -499,7 +499,7 @@ abstract class CMDBObject extends DBObject
 			$oMyChangeOp->Set("objkey", $this->GetKey());
 			$oMyChangeOp->Set("attcode", $sAttCode);
 			$oMyChangeOp->Set("oldvalue", $original);
-			$oMyChangeOp->Set("newvalue", $value[$sAttCode]);
+			$oMyChangeOp->Set("newvalue", $value);
 			$iId = $oMyChangeOp->DBInsertNoReload();
 		}
 		elseif ($oAttDef instanceOf AttributeCustomFields)
@@ -639,20 +639,6 @@ abstract class CMDBObject extends DBObject
 
 		return $newKey;
 	}
-
-	public function DBUpdate()
-	{
-		// Copy the changes list before the update (the list should be reset afterwards)
-		$aChanges = $this->ListChanges();
-		if (count($aChanges) == 0)
-		{
-			return;
-		}
-
-		$ret = parent::DBUpdate();
-		return $ret;
-	}
-
 
 	/**
 	 * @param null $oDeletionPlan

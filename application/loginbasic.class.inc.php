@@ -59,6 +59,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 			list($sAuthUser, $sAuthPwd) = $this->GetAuthUserAndPassword();
 			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
 			{
+				$_SESSION['auth_user'] = $sAuthUser;
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}

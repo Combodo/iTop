@@ -26,6 +26,8 @@
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Service\EventData;
+use Combodo\iTop\Service\EventService;
 
 /**
  * Web page used for displaying the login form
@@ -479,11 +481,13 @@ class LoginWebPage extends NiceWebPage
 					$iResponse = $oLoginFSMExtensionInstance->LoginAction($sLoginState, $iErrorCode);
 					if ($iResponse == self::LOGIN_FSM_RETURN)
 					{
+						EventService::FireEvent(new EventData(EVENT_SERVICE_LOGIN, null, ['code' => $iErrorCode, 'state' => $sLoginState]));
 						Session::WriteClose();
 						return $iErrorCode; // Asked to exit FSM, generally login OK
 					}
 					if ($iResponse == self::LOGIN_FSM_ERROR)
 					{
+						EventService::FireEvent(new EventData(EVENT_SERVICE_LOGIN, null, ['code' => $iErrorCode, 'state' => $sLoginState]));
 						$sLoginState = self::LOGIN_STATE_SET_ERROR; // Next state will be error
 						// An error was detected, skip the other plugins turn
 						break;
@@ -497,6 +501,7 @@ class LoginWebPage extends NiceWebPage
 			}
 			catch (Exception $e)
 			{
+				EventService::FireEvent(new EventData(EVENT_SERVICE_LOGIN, null, ['state' => $_SESSION['login_state']]));
 				IssueLog::Error($e->getTraceAsString());
 				static::ResetSession();
 				die($e->getMessage());

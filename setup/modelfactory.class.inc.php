@@ -580,6 +580,8 @@ class ModelFactory
 
 		$this->oMeta = $this->oDOMDocument->CreateElement('meta');
 		$this->oRoot->AppendChild($this->oMeta);
+		$this->oMeta = $this->oDOMDocument->CreateElement('events');
+		$this->oRoot->AppendChild($this->oMeta);
 
 		foreach ($aRootNodeExtensions as $sElementName)
 		{
@@ -853,6 +855,14 @@ class ModelFactory
 					}
 				}
 				$oNodeList = $oXPath->query('/itop_design/constants/constant');
+				foreach ($oNodeList as $oNode)
+				{
+					if ($oNode->getAttribute('_created_in') == '')
+					{
+						$oNode->SetAttribute('_created_in', $sModuleName);
+					}
+				}
+				$oNodeList = $oXPath->query('/itop_design/events/event');
 				foreach ($oNodeList as $oNode)
 				{
 					if ($oNode->getAttribute('_created_in') == '')
@@ -1250,6 +1260,19 @@ EOF
 	public function ListConstants($sModuleName)
 	{
 		return $this->GetNodes("/itop_design/constants/constant[@_created_in='$sModuleName']");
+	}
+
+	/**
+	 * List all events from the DOM, for a given module
+	 *
+	 * @param string $sModuleName
+	 *
+	 * @return \DOMNodeList
+	 * @throws Exception
+	 */
+	public function ListEvents($sModuleName)
+	{
+		return $this->GetNodes("/itop_design/events/event[@_created_in='$sModuleName']");
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -41,6 +41,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
+
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
 
@@ -4479,13 +4480,13 @@ HTML;
 
 		// Protection against reentrance (e.g. cascading the update of ticket logs)
 		// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
-		static $aUpdateReentrance = array();
-		$sKey = get_class($this).'::'.$this->GetKey();
-		if (array_key_exists($sKey, $aUpdateReentrance))
-		{
+		if (!MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this)) {
+			$sClass = get_class($this);
+			$sKey = $this->GetKey();
+			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
+
 			return $res;
 		}
-		$aUpdateReentrance[$sKey] = true;
 
 		try
 		{
@@ -4496,13 +4497,13 @@ HTML;
 				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
 			}
 		}
-		catch (Exception $e)
-		{
-			throw $e;
-		}
 		finally
 		{
-			unset($aUpdateReentrance[$sKey]);
+			MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
+		}
+
+		if ($this->IsModified()) {
+			return $this->DBUpdate();
 		}
 
 		return $res;
@@ -5708,4 +5709,117 @@ JS
 			'AttributeOneWayPassword',
 		);
 	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventInsertRequested()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_INSERT_REQUESTED);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventInsertBefore()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_INSERT);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventInsertAfter()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_INSERT_DONE);
+	}
+
+	final protected function EventComputeValues()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_COMPUTE_VALUES);
+	}
+
+	/**
+	 * @param array $aEventData
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventCheckToWrite(array $aEventData)
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_WRITE, $aEventData);
+	}
+
+	/**
+	 * @param array $aEventData
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventCheckToDelete(array $aEventData)
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_DELETE, $aEventData);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventUpdateRequested()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_REQUESTED);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventUpdateBefore()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_UPDATE);
+	}
+
+	/**
+	 * @param array $aEventData
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventUpdateAfter(array $aEventData)
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_DONE, $aEventData);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventDeleteBefore()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_DELETE);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventDeleteAfter()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_DELETE_DONE);
+	}
+
+
+	final protected function EventArchive()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_ARCHIVE);
+	}
+
+	final protected function EventUnarchive()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_UNARCHIVE);
+	}
+
 }

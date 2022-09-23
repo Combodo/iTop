@@ -644,9 +644,9 @@ We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben ge
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Selecteer de klasse om te zoeken: ',
 
 	'UI:CSVReport-Value-Modified' => 'Aangepast',
-	'UI:CSVReport-Value-SetIssue' => 'Kon niet worden aangepast - reden: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Kon niet worden aangepast naar %1$s - reden: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Geen match',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Ontbrekende verplichte waarde',
 	'UI:CSVReport-Value-Ambiguous' => 'Onduidelijk: gevonden %1$s objecten',
 	'UI:CSVReport-Row-Unchanged' => 'onveranderd',

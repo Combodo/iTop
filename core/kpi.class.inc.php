@@ -299,7 +299,7 @@ class ExecutionKPI
 	 */
 	private static function Push(ExecutionKPI $oExecutionKPI)
 	{
-		array_push(self::$m_aExecutionStack, $oExecutionKPI);
+		self::$m_aExecutionStack[] = $oExecutionKPI;
 	}
 
 	/**
@@ -449,4 +449,3 @@ class ExecutionKPI
 		return 0;
 	}
 }
-

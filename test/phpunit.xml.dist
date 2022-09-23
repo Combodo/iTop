@@ -64,6 +64,9 @@
     <testsuite name="CoreExtensions">
       <directory>coreExtensions</directory>
     </testsuite>
+    <testsuite name="Service">
+      <directory>service</directory>
+    </testsuite>
   </testsuites>
 
   <!-- Code coverage white list -->

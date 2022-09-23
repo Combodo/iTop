@@ -27,8 +27,10 @@ namespace Combodo\iTop\Test\UnitTest;
  */
 
 use ArchivedObjectException;
-use CMDBSource;
 use CMDBObject;
+use CMDBSource;
+use Combodo\iTop\Service\EventData;
+use Combodo\iTop\Service\EventService;
 use Contact;
 use DBObject;
 use DBObjectSet;
@@ -70,8 +72,12 @@ define('TAG_ATTCODE', 'domains');
 class ItopDataTestCase extends ItopTestCase
 {
 	private $iTestOrgId;
+
 	// For cleanup
 	private $aCreatedObjects = array();
+
+	// Counts
+	public $aReloadCount = [];
 
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = false;
@@ -96,6 +102,8 @@ class ItopDataTestCase extends ItopTestCase
 		{
 			$this->CreateTestOrganization();
 		}
+
+		EventService::RegisterListener(EVENT_SERVICE_DB_OBJECT_RELOAD, [$this, 'CountObjectReload']);
 	}
 
 	/**
@@ -119,12 +127,13 @@ class ItopDataTestCase extends ItopTestCase
 					$this->debug("Removing $sClass::$iKey");
 					$oObject->DBDelete();
 				}
-				catch (Exception $e)
-				{
-					$this->debug($e->getMessage());
+				catch (Exception $e) {
+					$this->debug("Error when removing created objects: $sClass::$iKey. Exception message: ".$e->getMessage());
 				}
 			}
 		}
+
+		parent::tearDown();
 	}
 
 	/**
@@ -446,9 +455,9 @@ class ItopDataTestCase extends ItopTestCase
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('profileid', $iProfileId);
 		$oUserProfile->Set('reason', 'UNIT Tests');
-		/** @var DBObjectSet $oSet */
+		/** @var \ormLinkSet $oSet */
 		$oSet = $oUser->Get('profile_list');
-		$oSet->AddObject($oUserProfile);
+		$oSet->AddItem($oUserProfile);
 		$oUser = $this->updateObject('UserLocal', $oUser->GetKey(), array(
 			'profile_list' => $oSet,
 		));
@@ -788,6 +797,49 @@ class ItopDataTestCase extends ItopTestCase
 		return $oOrg;
 	}
 
+	public function ResetReloadCount()
+	{
+		$this->aReloadCount = [];
+	}
+
+	public function DebugReloadCount($sMsg, $bResetCount = true)
+	{
+		$iTotalCount = 0;
+		$aTotalPerClass = [];
+		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
+			$iClassCount = 0;
+			foreach ($aCountByKeys as $iCount) {
+				$iClassCount += $iCount;
+			}
+			$iTotalCount += $iClassCount;
+			$aTotalPerClass[$sClass] = $iClassCount;
+		}
+		$this->debug("$sMsg - $iTotalCount reload(s)");
+		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
+			$this->debug("    $sClass => $aTotalPerClass[$sClass] reload(s)");
+			foreach ($aCountByKeys as $sKey => $iCount) {
+				$this->debug("        $sClass::$sKey => $iCount");
+			}
+		}
+		if ($bResetCount) {
+			$this->ResetReloadCount();
+		}
+	}
+
+	public function CountObjectReload(EventData $oData)
+	{
+		$oObject = $oData->Get('object');
+		$sClass = get_class($oObject);
+		$sKey = $oObject->GetKey();
+		$iCount = $this->GetObjectReloadCount($sClass, $sKey);
+		$this->aReloadCount[$sClass][$sKey] = 1 + $iCount;
+	}
+
+	public function GetObjectReloadCount($sClass, $sKey)
+	{
+		return $this->aReloadCount[$sClass][$sKey] ?? 0;
+	}
+
 	/**
 	 *  Assert that a series of operations will trigger a given number of MySL queries
 	 *
@@ -797,7 +849,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @throws \MySQLException
 	 * @throws \MySQLQueryHasNoResultException
 	 */
-	protected static function assertDBQueryCount($iExpectedCount, callable $oFunction)
+	protected function assertDBQueryCount($iExpectedCount, callable $oFunction)
 	{
 		$iInitialCount = (int) CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
 		$oFunction();
@@ -805,12 +857,12 @@ class ItopDataTestCase extends ItopTestCase
 		$iCount = $iFinalCount - 1 - $iInitialCount;
 		if ($iCount != $iExpectedCount)
 		{
-			static::fail("Expected $iExpectedCount queries. $iCount have been executed.");
+			$this->fail("Expected $iExpectedCount queries. $iCount have been executed.");
 		}
 		else
 		{
-			// Otherwise PHP Unit will consider that no assertion has been made
-			static::assertTrue(true);
+			// Otherwise, PHP Unit will consider that no assertion has been made
+			$this->assertTrue(true);
 		}
 	}
 
@@ -835,7 +887,7 @@ class ItopDataTestCase extends ItopTestCase
 	}
 
 	/**
-	 * Import a consistent set of iTop objects from the specified XML text string 
+	 * Import a consistent set of iTop objects from the specified XML text string
 	 * @param string $sXmlDataset
 	 * @param boolean $bSearch If true, a search will be performed on each object (based on its reconciliation keys)
 	 *                         before trying to import it (existing objects will be updated)

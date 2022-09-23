@@ -383,9 +383,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$iPreservedCount = count($this->aPreserved);
 		if ($this->iCursor < $iPreservedCount)
 		{
-			$iRet = current($this->aPreserved);
-			$this->oOriginalSet->Seek($iRet);
-			$oRet = $this->oOriginalSet->Fetch();
+			$sId = key($this->aPreserved);
+			$oRet = MetaModel::GetObject($this->sClass, $sId);
 		}
 		else
 		{
@@ -736,6 +735,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 					$oLink->DBClone();
 				}
 			}
+			$oLink->SetLinkHostObject($oHostObject);
 			$oLink->DBWrite();
 
 			$this->aPreserved[$oLink->GetKey()] = $oLink;

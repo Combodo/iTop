@@ -3188,5 +3188,10 @@ HTML;
 	public static function IsClassUsesDeepTrait(string $class, string $trait): bool
 	{
 		return in_array($trait, self::ClassUsesDeep($class, true));
+  }
+  
+	public static function GetUniqId()
+	{
+		return hash('sha256', uniqid(sprintf('%x', rand()), true).sprintf('%x', rand()));
 	}
 }

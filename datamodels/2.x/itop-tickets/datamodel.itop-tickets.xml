@@ -216,7 +216,7 @@
 					<count_max>0</count_max>
 				</field>
 			</fields>
-			<methods>
+      <methods>
 				<method id="DBInsertNoReload">
 					<static>false</static>
 					<access>public</access>

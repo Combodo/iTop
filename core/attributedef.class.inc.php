@@ -6022,7 +6022,9 @@ class AttributeDateTime extends AttributeDBField
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		// null value will be replaced by the current date, if not already set, in DoComputeValues
+		if (!$this->IsNullAllowed()) {
+			return date($this->GetInternalFormat());
+		}
 		return $this->GetNullValue();
 	}
 
@@ -7812,7 +7814,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		return "";
+		return new ormDocument('', '', '');
 	}
 
 	public function IsNullAllowed(DBObject $oHostObject = null)
@@ -8159,6 +8161,11 @@ class AttributeImage extends AttributeBlob
 
 		// The validation of the MIME Type is done by CheckFormat below
 		return $oDoc;
+	}
+
+	public function GetDefaultValue(DBObject $oHostObject = null)
+	{
+		return new ormDocument('', '', '');
 	}
 
 	/**
@@ -11352,6 +11359,13 @@ class AttributeTagSet extends AttributeSet
 		return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 	}
 
+	public function GetDefaultValue(DBObject $oHostObject = null)
+	{
+		$oTagSet =  new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		$oTagSet->SetValues([]);
+		return $oTagSet;
+	}
+
 	public function IsNull($proposedValue)
 	{
 		if (is_null($proposedValue))
@@ -13083,7 +13097,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		return $this->MakeRealValue("", $oHostObject);
+		return $this->MakeRealValue(false, $oHostObject);
 	}
 
 	public function IsNullAllowed()
