@@ -3163,7 +3163,7 @@ HTML;
 	 * @return array traits used
 	 * @since 3.1.0
 	 */
-	public static function ClassUsesDeep(string $sClass, bool $bAutoload = true): array
+	public static function TraitsUsedByClass(string $sClass, bool $bAutoload = true): array
 	{
 		$aTraits = [];
 		do {
@@ -3179,16 +3179,16 @@ HTML;
 	/**
 	 * Test trait usage by a class or by parent classes hierarchy.
 	 *
-	 * @param string $sClass Class to check
 	 * @param string $sTrait Trait to search for
+	 * @param string $sClass Class to check
 	 *
 	 * @return bool
 	 * @since 3.1.0
 	 */
-	public static function IsClassUsesDeepTrait(string $sClass, string $sTrait): bool
+	public static function IsTraitUsedByClass(string $sTrait, string $sClass): bool
 	{
-		return in_array($sTrait, self::ClassUsesDeep($sClass, true));
-  }
+		return in_array($sTrait, self::TraitsUsedByClass($sClass, true));
+	}
   
 	public static function GetUniqId()
 	{
