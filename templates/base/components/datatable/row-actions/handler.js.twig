@@ -8,7 +8,7 @@
             let iActionId = $(this).data('action-id');
             let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
             let oTrElement = $(this).closest('tr');
-            let aData = $('#{{ oUIBlock.GetId() }}').DataTable().row(oTrElement).data();
+            let aData = oDatatable.row(oTrElement).data();
             {{ aAction.js_row_action|raw }};
         });
     {% endfor %}
