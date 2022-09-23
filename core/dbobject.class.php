@@ -2353,8 +2353,9 @@ abstract class DBObject implements iDisplay
 			if ($bDoComputeValues) {
 				$this->DoComputeValues();
 			}
-			$this->DoCheckToWrite();
+			// Event before the legacy callback
 			$this->EventCheckToWrite(['error_messages' => &$this->m_aCheckIssues]);
+			$this->DoCheckToWrite();
 			$oKPI->ComputeStats('CheckToWrite', get_class($this));
 			if (count($this->m_aCheckIssues) == 0)
 			{
@@ -3198,8 +3199,6 @@ abstract class DBObject implements iDisplay
 
 			// Activate any existing trigger
 			$sClass = get_class($this);
-			// - TriggerOnObjectMention
-			$this->ActivateOnMentionTriggers(false);
 
 			$aHierarchicalKeys = array();
 			$aDBChanges = array();
