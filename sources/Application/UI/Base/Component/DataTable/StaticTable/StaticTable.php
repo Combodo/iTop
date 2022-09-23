@@ -88,6 +88,7 @@ class StaticTable extends UIContentBlock
 	 *
 	 * @return int
 	 * @since 3.1.0
+	 * @since 3.1.0
 	 */
 	public function GetColumnsCount(): int
 	{
