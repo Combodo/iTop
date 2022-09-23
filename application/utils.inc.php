@@ -3143,15 +3143,50 @@ HTML;
 	 */
 	public static function AddParameterToUrl(string $sUrl, string $sParamName, string $sParamValue): string
 	{
-		if (strpos($sUrl, '?') === false)
-		{
+		if (strpos($sUrl, '?') === false) {
 			$sUrl = $sUrl.'?'.urlencode($sParamName).'='.urlencode($sParamValue);
-		}
-		else
-		{
+		} else {
 			$sUrl = $sUrl.'&'.urlencode($sParamName).'='.urlencode($sParamValue);
 		}
 
 		return $sUrl;
+	}
+
+	/**
+	 * Return traits array used by a class and by parent classes hierarchy.
+	 *
+	 * @see https://www.php.net/manual/en/function.class-uses.php#110752
+	 *
+	 * @param string $class class to scan
+	 * @param bool $autoload autoload flag
+	 *
+	 * @return array traits used
+	 * @since 3.1.0
+	 */
+	public static function ClassUsesDeep(string $class, bool $autoload = true): array
+	{
+		$traits = [];
+		do {
+			$traits = array_merge(class_uses($class, $autoload), $traits);
+		} while ($class = get_parent_class($class));
+		foreach ($traits as $trait => $same) {
+			$traits = array_merge(class_uses($trait, $autoload), $traits);
+		}
+
+		return array_unique($traits);
+	}
+
+	/**
+	 * Test trait usage by a class or by parent classes hierarchy.
+	 *
+	 * @param string $class class to check
+	 * @param string $trait trait to search for
+	 *
+	 * @return bool
+	 * @since 3.1.0
+	 */
+	public static function IsClassUsesDeepTrait(string $class, string $trait): bool
+	{
+		return in_array($trait, self::ClassUsesDeep($class, true));
 	}
 }

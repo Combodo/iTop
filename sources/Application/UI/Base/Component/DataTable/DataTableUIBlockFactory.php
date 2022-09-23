@@ -23,6 +23,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Template\TemplateUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Controller\AjaxRenderController;
 use DBObjectSet;
@@ -185,13 +186,20 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a row actions toolbar template.
 	 *
-	 * @param $oTable
+	 * @param iUIBlock $oTable datatable object that needs to use tTableRowActions trait
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Template\Template
+	 * @throws \Exception
 	 * @since 3.1.0
 	 */
-	public static function MakeActionRowToolbarTemplate($oTable)
+	public static function MakeActionRowToolbarTemplate(iUIBlock $oTable)
 	{
+		// test trait
+		$sTableClass = get_class($oTable);
+		if (!Utils::IsClassUsesDeepTrait($sTableClass, tTableRowActions::class)) {
+			throw new \Exception("DataTableUIBlockFactory::MakeActionRowToolbarTemplate: {$sTableClass} iUIBlock needs tTableRowActions trait");
+		}
+
 		// row actions template
 		$oTemplate = TemplateUIBlockFactory::MakeStandard($oTable->GetId().'_actions_buttons_template');
 

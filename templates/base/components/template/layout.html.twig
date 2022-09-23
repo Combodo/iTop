@@ -2,8 +2,8 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
     <template id="{{ oUIBlock.GetId() }}" data-role="ibo-template">
-        {% for oMainBlock in oUIBlock.GetMainBlocks() %}
-            {{ render_block(oMainBlock, {aPage: aPage}) }}
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
         {% endfor %}
     </template>
 {% endapply %}

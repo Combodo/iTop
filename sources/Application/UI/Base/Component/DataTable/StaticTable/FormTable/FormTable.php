@@ -19,8 +19,6 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
  */
 class FormTable extends StaticTable
 {
-	use tTableRowActions;
-
 	// Overloaded constants
 	public const BLOCK_CODE                            = 'ibo-formtable';
 	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES   = true;
