@@ -98,7 +98,7 @@ function getRowActionsColumnDefinition(sTableId, iColumnTargetIndex = -1)
 		}
 	};
 
-	if(iColumnTargetIndex != -1){
+	if (iColumnTargetIndex !== -1) {
 		aColumn['targets'] = iColumnTargetIndex;
 	}
 
