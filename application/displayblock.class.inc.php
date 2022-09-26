@@ -1310,6 +1310,13 @@ JS
 					} else {
 						$iListId = $aExtraParams['currentId'];
 					}
+					$aExtraParams['row_actions'] = [
+						[
+							'tooltip'       => 'displayblock.class.inc.php :: RenderList()',
+							'icon_classes'  => 'fas fa-plus',
+							'js_row_action' => 'console.log("Action ID:");console.log(iActionId);',
+						],
+					];
 					$oBlock->AddSubBlock(DataTableUIBlockFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams));
 				} else {
 					// Empty set
@@ -1471,6 +1478,15 @@ JS
 						} else {
 							$iListId = $aExtraParams['currentId'];
 						}
+
+						$aExtraParams['row_actions'] = [
+							[
+								'tooltip'       => 'displayblock.class.inc.php :: RenderJoin()',
+								'icon_classes'  => 'fas fa-plus',
+								'js_row_action' => 'console.log("Action ID:");console.log(iActionId);',
+							],
+						];
+
 						$oBlock = DataTableUIBlockFactory::MakeForRendering($iListId, $oSet, $aExtraParams);
 						$oHtml->AddHtml("<tr><td>");
 						$oContentBlock->AddSubBlock($oBlock);

@@ -149,3 +149,46 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
     border-bottom: $ibo-vendors-datatables--columns-header--border-bottom;
    }
 }
+
+
+.ibo-table--alert-selection{
+  margin-bottom: 20px;
+}
+.ibo-table--alert-selection button{
+  float: right;
+}
+.ibo-table--alert-selection--hidden{
+  display: none;
+}
+
+.ibo-datatable--selection-panel{
+  padding: 8px 5px;
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px $ibo-color-information-950 solid;
+
+  .ibo-block-datatable-selection-panel--add-button{
+    display: unset;
+  }
+  .ibo-block-datatable-selection-panel--remove-button{
+    display: none;
+  }
+}
+
+.ibo-datatable--selection-panel.active{
+  border: 1px $ibo-datatable--row--background-color--is-selected solid;
+  background-color: $ibo-datatable--row--background-color--is-selected;
+
+  .ibo-block-datatable-selection-panel--add-button{
+    display: none;
+  }
+  .ibo-block-datatable-selection-panel--remove-button{
+    display: unset;
+  }
+}
+
+.ibo-block-datatable-selection-panel--label{
+  margin-right: 15px;
+}

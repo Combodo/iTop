@@ -56,13 +56,52 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		oInput.closest('form').on('submit', function () {
 			return me.OnFormSubmit();
 		});
+
+		this.UpdateCount();
+
 	};
+
+	this.UpdateCount = function(){
+		let count = $('#linkedset_'+this.id+' tbody tr').length;
+		// $('#linkedset_'+this.id+' div[data-role="ibo-panel--subtitle"]').text(count + ' éléments');
+	}
+
+	this.UpdateSelection = function(){
+
+		let nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
+		if (nbChecked > 0)
+		{
+			$('#'+me.id+'_btnRemove').prop('disabled', false);
+		}
+		else
+		{
+			$('#'+me.id+'_btnRemove').prop('disabled', true);
+		}
+
+		$('#linkedset_'+me.iInputId+'_alert_selection').toggleClass('ibo-table--alert-selection--hidden', nbChecked == 0);
+		$('#linkedset_'+me.iInputId+'_alert_selection span[data-role="ibo-datatable-selection-value"]').text(nbChecked + ' éléments sélectionnés');
+	}
 
 	this.RemoveSelected = function () {
 		let my_id = '#'+me.id;
 		$('#linkedset_'+me.id+' .selection:checked').closest('tr').each(function () {
-			$('#datatable_'+me.id).DataTable().row($(this)).remove().draw();
-			var oCheckbox = $(this).find('.selection');
+			me.Remove($(this));
+		});
+		// Disable the button since all the selected items have been removed
+		$(my_id+'_btnRemove').prop('disabled', true);
+
+		if ($('#linkedset_'+this.id+' .selection').length == 0)
+		{
+			// All items were removed: add a dummy hidden input to make sure that the linkset will be updated (emptied) when posted
+			$('#'+me.id+'_empty_row').show();
+		}
+
+		this.UpdateSelection();
+	};
+
+	this.Remove = function(oRowElement){
+		$('#datatable_'+me.id).DataTable().row($(oRowElement)).remove().draw();
+		var oCheckbox = $(oRowElement).find('.selection');
 			let iLink = $(oCheckbox).attr('data-link-id');
 			if (iLink > 0) {
 				me.aRemoved.push(iLink);
@@ -79,27 +118,12 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				}
 				me.aAdded[iUniqueId] = null;
 			}
-		});
-		// Disable the button since all the selected items have been removed
-		$(my_id+'_btnRemove').prop('disabled', true);
 
-		if ($('#linkedset_'+this.id+' .selection').length == 0)
-		{
-			// All items were removed: add a dummy hidden input to make sure that the linkset will be updated (emptied) when posted
-			$('#'+me.id+'_empty_row').show();
+		this.UpdateCount();
 		}
-	};
 
 	this.OnSelectChange = function () {
-		let nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
-		if (nbChecked > 0)
-		{
-			$('#'+me.id+'_btnRemove').prop('disabled', false);
-		}
-		else
-		{
-			$('#'+me.id+'_btnRemove').prop('disabled', true);
-		}
+		this.UpdateSelection();
 	};
 
 	this.AddObjects = function () {
@@ -133,6 +157,8 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				"dataType": "html"
 			})
 			.done(function (data) {
+				console.log('#dlg_'+me.id);
+				console.log($('#dlg_'+me.id));
 				$('#dlg_'+me.id).html(data);
 				window[sPromiseId].then(function () {
 					$('#dlg_'+me.id).dialog('open');

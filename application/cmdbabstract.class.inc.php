@@ -716,19 +716,16 @@ HTML
 			{
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 
-				if ($oAttDef->IsIndirect())
-				{
+				if ($oAttDef->IsIndirect()) {
 					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-				}
-				else
-				{
+				} else {
 					$sTargetClass = $sLinkedClass;
 				}
 
-				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
-				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
-				$oPage->AddUiBlock($oClassIcon);
+//				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
+//				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
+//				$oPage->AddUiBlock($oClassIcon);
 
 				$sDisplayValue = ''; // not used
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
@@ -1293,6 +1290,24 @@ HTML
 		} else {
 			$iListId = $aExtraParams['currentId'];
 		}
+
+		$aExtraParams['row_actions'] = [
+			[
+				'tooltip'       => 'remove an element',
+				'icon_classes'  => 'fas fa-minus',
+				'js_row_action' => 'console.log("Action row:");console.log(oTrElement);',
+			],
+			[
+				'tooltip'       => 'open in new tab',
+				'icon_classes'  => 'fas fa-external-link-square-alt',
+				'js_row_action' => 'console.log("Action table:");console.log(oDatatable);',
+			],
+			[
+				'icon_classes'  => 'fas fa-ellipsis-v',
+				'js_row_action' => 'console.log("Action data:");console.log(aData);',
+			],
+		];
+
 
 		return DataTableUIBlockFactory::MakeForResult($oPage, $iListId, $oSet, $aExtraParams);
 	}

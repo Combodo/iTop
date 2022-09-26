@@ -47,6 +47,7 @@ $(function()
 		// the constructor
 		_create: function()
 		{
+			alert();
 			var me = this;
 			this.id = this.element.attr('id');
 
@@ -60,6 +61,7 @@ $(function()
 			this.oButtons = {};
 			for(k in aButtonsTypes)
 			{
+				alert(k);
 				this.oButtons[aButtonsTypes[k]] =  $('<button class="ibo-button ibo-is-regular ibo-is-neutral" type="button">' + this.options.labels[aButtonsTypes[k]] + '</button>');
 			}
 			this.indicator = $('<span></span>');
