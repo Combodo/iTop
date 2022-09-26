@@ -12,6 +12,7 @@ use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
@@ -19,8 +20,10 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Template\TemplateUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Controller\AjaxRenderController;
 use DBObjectSet;
@@ -178,6 +181,46 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		return $oContainer;
+	}
+
+	/**
+	 * Make a row actions toolbar template.
+	 *
+	 * @param iUIBlock $oTable datatable object that needs to use tTableRowActions trait
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Template\Template
+	 * @throws \Exception
+	 * @since 3.1.0
+	 */
+	public static function MakeActionRowToolbarTemplate(iUIBlock $oTable)
+	{
+		// test trait
+		$sTableClass = get_class($oTable);
+		if (!utils::IsTraitUsedByClass(tTableRowActions::class, $sTableClass)) {
+			throw new \Exception("DataTableUIBlockFactory::MakeActionRowToolbarTemplate: {$sTableClass} iUIBlock needs tTableRowActions trait");
+		}
+
+		// row actions template
+		$oTemplate = TemplateUIBlockFactory::MakeStandard($oTable->GetId().'_actions_buttons_template');
+
+		// row actions toolbar container
+		$oToolbar = ToolbarUIBlockFactory::MakeStandard();
+		$oToolbar->AddCSSClass('ibo-datatable--row-actions-toolbar');
+
+		// for each action...create an icon button
+		foreach ($oTable->GetRowActions() as $iKey => $aAction) {
+			$oButton = ButtonUIBlockFactory::MakeIconAction(
+				array_key_exists('icon_classes', $aAction) ? $aAction['icon_classes'] : 'fas fa-question',
+				array_key_exists('tooltip', $aAction) ? $aAction['tooltip'] : '',
+				array_key_exists('name', $aAction) ? $aAction['name'] : 'undefined'
+			);
+			$oButton->SetDataAttributes(['action-id' => $iKey]);
+			$oToolbar->AddSubBlock($oButton);
+		}
+
+		$oTemplate->AddSubBlock($oToolbar);
+
+		return $oTemplate;
 	}
 
 	/**
@@ -457,9 +500,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		} else {
 			$aOptions['sSelectedRows'] = '[]';
 		}
-		$aExtraParams['table_id']=$sTableId;
-		$aExtraParams['list_id']=$sListId;
-
+		$aExtraParams['table_id'] = $sTableId;
+		$aExtraParams['list_id'] = $sListId;
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
@@ -474,6 +516,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
 		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
+
+		// row actions
+		if (isset($aExtraParams['row_actions'])) {
+			$oDataTable->SetRowActions($aExtraParams['row_actions']);
+		}
+
 
 		return $oDataTable;
 	}
@@ -713,6 +761,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
 		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
 
+		// row actions
+		if (isset($aExtraParams['row_actions'])) {
+			$oDataTable->SetRowActions($aExtraParams['row_actions']);
+		}
+
 		return $oDataTable;
 	}
 
@@ -908,6 +961,7 @@ JS;
 	 * @param array $aExtraParams
 	 * @param string $sFilter
 	 * @param array $aOptions
+	 * @param array $aRowActions @since 3.1.0
 	 * *
 	 * $aColumns =[
 	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],
@@ -917,7 +971,7 @@ JS;
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
-	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [])
+	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [], array $aRowActions = null)
 	{
 		$oBlock = new UIContentBlock();
 		if ($sTitle != "") {
@@ -925,6 +979,13 @@ JS;
 			$oBlock->AddSubBlock($oTitle);
 		}
 		$oTable = new StaticTable($sId, [], $aExtraParams);
+		if ($aRowActions != null) {
+			$oTable->SetRowActions($aRowActions);
+			$aColumns['actions'] = [
+				'label'       => Dict::S('UI:Datatables:Column:RowActions:Label'),
+				'description' => Dict::S('UI:Datatables:Column:RowActions:Description'),
+			];
+		}
 		$oTable->SetColumns($aColumns);
 		$oTable->SetData($aData);
 		$oTable->SetFilter($sFilter);
@@ -940,6 +1001,7 @@ JS;
 	 * @param array $aColumns
 	 * @param array $aData
 	 * @param string $sFilter
+	 * @param array $aRowActions @since 3.1.0
 	 *
 	 * $aColumns =[
 	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],
@@ -949,10 +1011,17 @@ JS;
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable
 	 */
-	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = '')
+	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = '', array $aRowActions = null)
 	{
 		$oTable = new FormTable("datatable_".$sRef);
 		$oTable->SetRef($sRef);
+		if ($aRowActions != null) {
+			$oTable->SetRowActions($aRowActions);
+			$aColumns['actions'] = [
+				'label'       => Dict::S('UI:Datatables:Column:RowActions:Label'),
+				'description' => Dict::S('UI:Datatables:Column:RowActions:Description'),
+			];
+		}
 		$oTable->SetColumns($aColumns);
 		$oTable->SetFilter($sFilter);
 
@@ -970,24 +1039,44 @@ JS;
 	public static function GetAllowedParams(): array
 	{
 		return [
-			'surround_with_panel',  /** bool embed table into a Panel */
-			'menu',                 /** bool display table menu */
-			'view_link',            /** bool display the friendlyname column with links to the objects details */
-			'link_attr',            /** string link att code */
-			'object_id',            /** int Id of the object linked */
-			'target_attr',          /** string target att code of the link */
-			'selection_mode',       /** bool activate selection */
-			'selection_type',       /** string 'multiple' or 'single' */
-			'extra_fields',         /** string comma separated list of link att code to display ('alias.attcode')*/
-			'zlist',                /** string name of the zlist to display when 'extra_fields' is not set */
-			'display_limit',        /** bool if true pagination is used (default = true)  */
-			'table_id',             /** string datatable id */
-			'cssCount',             /** string external counter (input hidden) js selector */
-			'selected_rows',        /** array list of Ids already selected when displaying the datatable */
-			'display_aliases',      /** string comma separated list of class aliases to display */
-			'list_id',              /** string list outer id */
-			'selection_enabled',    	/** list of id in witch select is allowed, if not exists all lines are selectable */
-			'id_for_select', /**give definition of id for select checkbox*/
+			'surround_with_panel',
+			/** bool embed table into a Panel */
+			'menu',
+			/** bool display table menu */
+			'view_link',
+			/** bool display the friendlyname column with links to the objects details */
+			'link_attr',
+			/** string link att code */
+			'object_id',
+			/** int Id of the object linked */
+			'target_attr',
+			/** string target att code of the link */
+			'selection_mode',
+			/** bool activate selection */
+			'selection_type',
+			/** string 'multiple' or 'single' */
+			'extra_fields',
+			/** string comma separated list of link att code to display ('alias.attcode')*/
+			'zlist',
+			/** string name of the zlist to display when 'extra_fields' is not set */
+			'display_limit',
+			/** bool if true pagination is used (default = true)  */
+			'table_id',
+			/** string datatable id */
+			'cssCount',
+			/** string external counter (input hidden) js selector */
+			'selected_rows',
+			/** array list of Ids already selected when displaying the datatable */
+			'display_aliases',
+			/** string comma separated list of class aliases to display */
+			'list_id',
+			/** string list outer id */
+			'selection_enabled',
+			/** list of id in witch select is allowed, if not exists all lines are selectable */
+			'id_for_select',
+			/**give definition of id for select checkbox*/
+			'row_actions',
+			/** array of blocks displayed on every row */
 		];
 	}
 }

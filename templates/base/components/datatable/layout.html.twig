@@ -20,5 +20,12 @@
     {% for aColumn in oUIBlock.GetDisplayColumns() %}
         <th class="ibo-datatable-header" {% if aColumn["description"] is not empty %}title="{{ aColumn["description"] }}"{% endif %}>{{ aColumn["attribute_label"] }} </th>
     {% endfor %}
+    {% if oUIBlock.HasRowActions() %}
+        <th class="ibo-datatable-header">{{ 'UI:Datatables:Column:RowActions:Label'|dict_s }} </th>
+    {% endif %}
     </thead>
 </table>
+
+{% if oUIBlock.HasRowActions() %}
+    {{ render_block(oUIBlock.GetRowActionsTemplate()) }}
+{% endif %}

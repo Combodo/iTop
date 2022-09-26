@@ -3143,18 +3143,53 @@ HTML;
 	 */
 	public static function AddParameterToUrl(string $sUrl, string $sParamName, string $sParamValue): string
 	{
-		if (strpos($sUrl, '?') === false)
-		{
+		if (strpos($sUrl, '?') === false) {
 			$sUrl = $sUrl.'?'.urlencode($sParamName).'='.urlencode($sParamValue);
-		}
-		else
-		{
+		} else {
 			$sUrl = $sUrl.'&'.urlencode($sParamName).'='.urlencode($sParamValue);
 		}
 
 		return $sUrl;
 	}
 
+	/**
+	 * Return traits array used by a class and by parent classes hierarchy.
+	 *
+	 * @see https://www.php.net/manual/en/function.class-uses.php#110752
+	 *
+	 * @param string $sClass Class to scan
+	 * @param bool $bAutoload Autoload flag
+	 *
+	 * @return array traits used
+	 * @since 3.1.0
+	 */
+	public static function TraitsUsedByClass(string $sClass, bool $bAutoload = true): array
+	{
+		$aTraits = [];
+		do {
+			$aTraits = array_merge(class_uses($sClass, $bAutoload), $aTraits);
+		} while ($sClass = get_parent_class($sClass));
+		foreach ($aTraits as $sTrait => $same) {
+			$aTraits = array_merge(class_uses($sTrait, $bAutoload), $aTraits);
+		}
+
+		return array_unique($aTraits);
+	}
+
+	/**
+	 * Test trait usage by a class or by parent classes hierarchy.
+	 *
+	 * @param string $sTrait Trait to search for
+	 * @param string $sClass Class to check
+	 *
+	 * @return bool
+	 * @since 3.1.0
+	 */
+	public static function IsTraitUsedByClass(string $sTrait, string $sClass): bool
+	{
+		return in_array($sTrait, self::TraitsUsedByClass($sClass, true));
+	}
+  
 	public static function GetUniqId()
 	{
 		return hash('sha256', uniqid(sprintf('%x', rand()), true).sprintf('%x', rand()));
