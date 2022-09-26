@@ -150,16 +150,35 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
    }
 }
 
-
-.ibo-table--alert-selection{
+// table alert information
+.ibo-table--alert-information{
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  .ibo-table--alert-information--label{
+    margin-right: 35px;
+  }
+  .ibo-alert--title{
+    display: none;
+  }
+  .ibo-table--alert-information--delete-button{
+    display: none;
+  }
+  .ibo-table--alert-information--add-button{
+    display: unset;
+  }
 }
-.ibo-table--alert-selection button{
-  float: right;
+
+.ibo-table--alert-selection.ibo-is-information{
+  .ibo-table--alert-information--delete-button{
+    display: unset;
+  }
+  .ibo-table--alert-information--add-button{
+    display: none;
+  }
 }
-.ibo-table--alert-selection--hidden{
-  display: none;
-}
+
+
 
 .ibo-datatable--selection-panel{
   padding: 8px 5px;
@@ -175,6 +194,8 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
   .ibo-block-datatable-selection-panel--remove-button{
     display: none;
   }
+
+
 }
 
 .ibo-datatable--selection-panel.active{

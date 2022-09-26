@@ -57,16 +57,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			return me.OnFormSubmit();
 		});
 
-		this.UpdateCount();
-
+		this.UpdateTableInformation();
 	};
 
-	this.UpdateCount = function(){
-		let count = $('#linkedset_'+this.id+' tbody tr').length;
-		// $('#linkedset_'+this.id+' div[data-role="ibo-panel--subtitle"]').text(count + ' éléments');
-	}
-
-	this.UpdateSelection = function(){
+	this.UpdateTableInformation = function(){
 
 		let nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
 		if (nbChecked > 0)
@@ -78,8 +72,16 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			$('#'+me.id+'_btnRemove').prop('disabled', true);
 		}
 
-		$('#linkedset_'+me.iInputId+'_alert_selection').toggleClass('ibo-table--alert-selection--hidden', nbChecked == 0);
-		$('#linkedset_'+me.iInputId+'_alert_selection span[data-role="ibo-datatable-selection-value"]').text(nbChecked + ' éléments sélectionnés');
+		let count = $('#linkedset_'+this.id+' tbody tr').length;
+
+		$('#linkedset_'+me.iInputId+'_alert_information').toggleClass('ibo-is-information', nbChecked > 0);
+
+		if(nbChecked > 0){
+			$('#linkedset_'+me.iInputId+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(nbChecked + ' / ' + count + ' éléments sélectionnés');
+		}
+		else{
+			$('#linkedset_'+me.iInputId+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(count + ' éléments');
+		}
 	}
 
 	this.RemoveSelected = function () {
@@ -96,7 +98,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			$('#'+me.id+'_empty_row').show();
 		}
 
-		this.UpdateSelection();
+		this.UpdateTableInformation();
 	};
 
 	this.Remove = function(oRowElement){
@@ -119,11 +121,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				me.aAdded[iUniqueId] = null;
 			}
 
-		this.UpdateCount();
+		this.UpdateTableInformation();
 		}
 
 	this.OnSelectChange = function () {
-		this.UpdateSelection();
+		this.UpdateTableInformation();
 	};
 
 	this.AddObjects = function () {
@@ -275,6 +277,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		// Run the query and display the results
 		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap,
 			function (data) {
+				console.log(data);
 				if (data != '') {
 					$.each(data.data, function (idx, row) {
 						$('#datatable_'+me.id).DataTable().row.add(row).draw();

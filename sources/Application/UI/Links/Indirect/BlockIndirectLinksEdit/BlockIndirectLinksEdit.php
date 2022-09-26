@@ -93,11 +93,11 @@ class BlockIndirectLinksEdit extends Panel
 		// Hidden
 		$this->AddSubBlock(InputUIBlockFactory::MakeForHidden("{$this->sFormPrefix}{$this->oUILinksWidget->GetInputId()}", '', "{$this->sFormPrefix}{$this->oUILinksWidget->GetInputId()}"));
 
-		// Selection alert
-		$this->AddSubBlock($this->CreateSelectionAlert());
+		// table information alert
+		$this->AddSubBlock($this->CreateTableInformationAlert());
 
 		// Toolbar
-		$this->InitToolBar();
+//		$this->InitToolBar();
 
 		// To prevent adding forms inside the main form
 		$oDeferredBlock = new UIContentBlock("dlg_{$this->oUILinksWidget->GetLinkedSetId()}", ['ibo-block-indirect-links--edit--dialog']);
@@ -118,26 +118,33 @@ class BlockIndirectLinksEdit extends Panel
 	}
 
 	/**
-	 * CreateSelectionAlert.
+	 * CreateTableInformationAlert.
 	 *
 	 * @return void
 	 */
-	private function CreateSelectionAlert()
+	private function CreateTableInformationAlert()
 	{
 		// Selection alert
-		$oAlert = AlertUIBlockFactory::MakeForInformation('Sélection en cours', '', "linkedset_{$this->oUILinksWidget->GetInputId()}_alert_selection");
+		$oAlert = AlertUIBlockFactory::MakeNeutral('', '', "linkedset_{$this->oUILinksWidget->GetInputId()}_alert_information");
 		$oAlert->AddCSSClasses([
-			'ibo-table--alert-selection',
-			'ibo-table--alert-selection--hidden',
+			'ibo-table--alert-information',
 		]);
 		$oAlert->SetIsClosable(false);
 		$oAlert->SetIsCollapsible(false);
-		$oAlert->AddSubBlock(new Html('<span data-role="ibo-datatable-selection-value"></span>'));
+		$oAlert->AddSubBlock(new Html('<span class="ibo-table--alert-information--label" data-role="ibo-datatable-selection-value"></span>'));
 
 		// Delete button
-		$oUIButton = ButtonUIBlockFactory::MakeForDestructiveAction("Enlever les {$this->oUILinksWidget->GetRemoteClass()} sélectionnés", 'table-selection');
+		$oUIButton = ButtonUIBlockFactory::MakeForDestructiveAction("Supprimer les liens", 'table-selection');
 		$oUIButton->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();");
+		$oUIButton->AddCSSClass('ibo-table--alert-information--delete-button');
 		$oAlert->AddSubBlock($oUIButton);
+
+		// Add button
+		$oUIAddButton = ButtonUIBlockFactory::MakeForPrimaryAction("Lier des {$this->oUILinksWidget->GetRemoteClass()}", 'table-selection');
+		$oUIAddButton->AddCSSClass('ibo-table--alert-information--add-button');
+		$oUIAddButton->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
+		$oAlert->AddSubBlock($oUIAddButton);
+
 
 		//	$oAlert = new DataTableSelectionPanel('dd', $this->oUILinksWidget, 'contact');
 
