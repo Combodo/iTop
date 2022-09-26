@@ -196,7 +196,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	{
 		// test trait
 		$sTableClass = get_class($oTable);
-		if (!utils::IsClassUsesDeepTrait($sTableClass, tTableRowActions::class)) {
+		if (!utils::IsTraitUsedByClass(tTableRowActions::class, $sTableClass)) {
 			throw new \Exception("DataTableUIBlockFactory::MakeActionRowToolbarTemplate: {$sTableClass} iUIBlock needs tTableRowActions trait");
 		}
 

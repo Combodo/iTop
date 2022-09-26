@@ -1294,24 +1294,6 @@ HTML
 			$iListId = $aExtraParams['currentId'];
 		}
 
-		$aExtraParams['row_actions'] = [
-			[
-				'tooltip'       => 'remove an element',
-				'icon_classes'  => 'fas fa-minus',
-				'js_row_action' => 'console.log("Action row:");console.log(oTrElement);',
-			],
-			[
-				'tooltip'       => 'open in new tab',
-				'icon_classes'  => 'fas fa-external-link-square-alt',
-				'js_row_action' => 'console.log("Action table:");console.log(oDatatable);',
-			],
-			[
-				'icon_classes'  => 'fas fa-ellipsis-v',
-				'js_row_action' => 'console.log("Action data:");console.log(aData);',
-			],
-		];
-
-
 		return DataTableUIBlockFactory::MakeForResult($oPage, $iListId, $oSet, $aExtraParams);
 	}
 
