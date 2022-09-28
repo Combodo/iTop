@@ -40,7 +40,7 @@ class UISearchFormForeignKeys
 	 */
 	public function ShowModalSearchForeignKeys($oPage, $sTitle)
 	{
-
+		alert('ShowModalSearchForeignKeys');
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
@@ -89,6 +89,7 @@ HTML
 					id: 'btn_ok_{$this->m_iInputId}',
 					class: "ok ibo-is-regular ibo-is-primary",
 					click: function() {
+                        alert(oForeignKeysWidget{$this->m_iInputId});
 						oForeignKeysWidget{$this->m_iInputId}.DoAddObjects(this.id);							
 					}
 				},

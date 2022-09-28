@@ -207,6 +207,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.DoAddObjects = function () {
+
 		let theMap = {
 			sAttCode: me.sAttCode,
 			iInputId: me.iInputId,

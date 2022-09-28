@@ -43,11 +43,15 @@ $(function()
 			buttons: ['create', 'delete'],
 			oWizardHelper: null
 		},
+
+		bla: function(){
+			alert('bla bla');
+		},
 	
 		// the constructor
 		_create: function()
 		{
-			alert();
+			alert('_create');
 			var me = this;
 			this.id = this.element.attr('id');
 

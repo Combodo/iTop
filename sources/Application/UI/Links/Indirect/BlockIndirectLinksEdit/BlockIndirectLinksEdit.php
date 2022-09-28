@@ -14,7 +14,6 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Dict;
 use MetaModel;
 
 /**
@@ -53,22 +52,19 @@ class BlockIndirectLinksEdit extends Panel
 	 * Constructor.
 	 *
 	 * @param \UILinksWidget $oUILinksWidget
-	 * @param string $sFormPrefix
 	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	public function __construct(\UILinksWidget $oUILinksWidget, string $sFormPrefix)
+	public function __construct(\UILinksWidget $oUILinksWidget)
 	{
 		parent::__construct($oUILinksWidget->GetRemoteClass(), [], Self::DEFAULT_COLOR_SCHEME, "linkedset_{$oUILinksWidget->GetLinkedSetId()}");
 
 		// Retrieve parameters
 		$this->oUILinksWidget = $oUILinksWidget;
-		$this->sFormPrefix = $sFormPrefix;
 
 		// Compute
 		$this->sDuplicates = ($oUILinksWidget->IsDuplicatesAllowed()) ? 'true' : 'false';
-		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
 		$this->sJSDoSearch = \utils::IsHighCardinality($oUILinksWidget->GetRemoteClass()) ? 'false' : 'true'; // Don't automatically launch the search if the table is huge
 
 		// Initialize UI
@@ -86,12 +82,8 @@ class BlockIndirectLinksEdit extends Panel
 		// Panel
 		$this->SetCSSClasses(["ibo-block-indirect-links--edit"]);
 		$this->SetSubTitle(MetaModel::GetAttributeDef($this->oUILinksWidget->GetClass(), $this->oUILinksWidget->GetAttCode())->GetDescription());
-//		$this->SetSubTitle('Total: 1 object');
 		$this->SetColorFromClass($this->oUILinksWidget->GetRemoteClass());
 		$this->SetIcon(MetaModel::GetClassIcon($this->oUILinksWidget->GetRemoteClass(), false));
-
-		// Hidden
-		$this->AddSubBlock(InputUIBlockFactory::MakeForHidden("{$this->sFormPrefix}{$this->oUILinksWidget->GetInputId()}", '', "{$this->sFormPrefix}{$this->oUILinksWidget->GetInputId()}"));
 
 		// table information alert
 		$this->AddSubBlock($this->CreateTableInformationAlert());
@@ -134,13 +126,13 @@ class BlockIndirectLinksEdit extends Panel
 		$oAlert->AddSubBlock(new Html('<span class="ibo-table--alert-information--label" data-role="ibo-datatable-selection-value"></span>'));
 
 		// Delete button
-		$oUIButton = ButtonUIBlockFactory::MakeForDestructiveAction("Supprimer les liens", 'table-selection');
+		$oUIButton = ButtonUIBlockFactory::MakeForDestructiveAction("Détacher les {$this->oUILinksWidget->GetRemoteClass()}", 'table-selection');
 		$oUIButton->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();");
 		$oUIButton->AddCSSClass('ibo-table--alert-information--delete-button');
 		$oAlert->AddSubBlock($oUIButton);
 
 		// Add button
-		$oUIAddButton = ButtonUIBlockFactory::MakeForPrimaryAction("Lier des {$this->oUILinksWidget->GetRemoteClass()}", 'table-selection');
+		$oUIAddButton = ButtonUIBlockFactory::MakeForPrimaryAction("Attacher des {$this->oUILinksWidget->GetRemoteClass()}", 'table-selection');
 		$oUIAddButton->AddCSSClass('ibo-table--alert-information--add-button');
 		$oUIAddButton->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
 		$oAlert->AddSubBlock($oUIAddButton);
@@ -163,6 +155,8 @@ class BlockIndirectLinksEdit extends Panel
 	 */
 	public function InitTable(\WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $aTableConfig)
 	{
+		$this->AddSubBlock(InputUIBlockFactory::MakeForHidden("{$sFormPrefix}{$this->oUILinksWidget->GetInputId()}", '', "{$sFormPrefix}{$this->oUILinksWidget->GetInputId()}"));
+		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
 		$oValue->Rewind();
 		$aForm = array();
 		$iMaxAddedId = 0;
@@ -196,6 +190,11 @@ class BlockIndirectLinksEdit extends Panel
 		// Row actions
 		$aRow_actions = [
 			[
+				'tooltip'       => 'Edit',
+				'icon_classes'  => 'fas fa-edit',
+				'js_row_action' => "alert('edit link');",
+			],
+			[
 				'tooltip'       => 'Unlink',
 				'icon_classes'  => 'fas fa-unlink',
 				'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
@@ -228,7 +227,7 @@ class BlockIndirectLinksEdit extends Panel
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	protected function GetFormRow(\WebPage $oP, \DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false)
+	public function GetFormRow(\WebPage $oP, \DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false)
 	{
 		$sPrefix = "{$this->oUILinksWidget->GetAttCode()}{$this->oUILinksWidget->GetNameSuffix()}";
 		$aRow = array();

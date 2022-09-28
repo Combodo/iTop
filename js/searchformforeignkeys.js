@@ -221,6 +221,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 	 * @return {boolean}
 	 */
 	this.DoAddObjects = function () {
+		alert('DoAddObjects');
 		// Gather the parameters from the search form
 		var theMap = {};
 		var context = $('#SearchResultsToAdd_'+me.id);

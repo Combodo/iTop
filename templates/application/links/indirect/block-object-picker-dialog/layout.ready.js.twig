@@ -2,13 +2,13 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
 
-$('#dlg_{{ oUIBlock.sLinkedSetId }}').dialog({
+$('#dlg_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}').dialog({
     width: $(window).width()*0.8,
     height: $(window).height()*0.8,
-    title:"{{ 'UI:AddObjectsOf_Class_LinkedWith_Class'|dict_format(oUIBlock.sLinkedClassName, oUIBlock.sClassName) }}" ,
+    title:"{{ 'UI:AddObjectsOf_Class_LinkedWith_Class'|dict_format(oUIBlock.oUILinksWidget.GetLinkedClass(), oUIBlock.oUILinksWidget.GetClass()) }}" ,
     autoOpen: false,
     modal: true,
-    resizeStop: oWidget{{ oUIBlock.iInputId }}.UpdateSizes,
+    resizeStop: oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.UpdateSizes,
     buttons: [
         { 
             text: "{{ 'UI:Button:Cancel'| dict_s }}",
@@ -20,16 +20,16 @@ $('#dlg_{{ oUIBlock.sLinkedSetId }}').dialog({
         { 
             text:  "{{ 'UI:Button:Add'| dict_s }}",
             class: "ibo-is-regular ibo-is-primary",
-            id: "btn_ok_{{ oUIBlock.sLinkedSetId }}",
+            id: "btn_ok_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}",
             click: function() {
-                return oWidget{{ oUIBlock.iInputId }}.DoAddObjects();
+                return oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.DoAddObjects();
             } 
         },
     ],
 
 });
 
-$('#SearchFormToAdd_{{ oUIBlock.sLinkedSetId }} form').bind('submit.uilinksWizard', oWidget{{ oUIBlock.iInputId }}.SearchObjectsToAdd);
-$('#SearchFormToAdd_{{ oUIBlock.sLinkedSetId }}').resize(oWidget{{ oUIBlock.iInputId }}.UpdateSizes);
+$('#SearchFormToAdd_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }} form').bind('submit.uilinksWizard', oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.SearchObjectsToAdd);
+$('#SearchFormToAdd_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}').resize(oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.UpdateSizes);
 
 {% endapply %}

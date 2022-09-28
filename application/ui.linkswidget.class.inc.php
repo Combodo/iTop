@@ -45,9 +45,10 @@ class UILinksWidget
 	{
 		$this->m_sClass = $sClass;
 		$this->m_sAttCode = $sAttCode;
-		$this->m_sNameSuffix = $sNameSuffix;
 		$this->m_sInputId = $sInputId;
+		$this->m_sNameSuffix = $sNameSuffix;
 		$this->m_bDuplicatesAllowed = $bDuplicatesAllowed;
+
 		$this->m_aEditableFields = array();
 
 		/** @var AttributeLinkedSetIndirect $oAttDef */
@@ -90,8 +91,6 @@ class UILinksWidget
 			);
 		}
 	}
-
-
 
 	private function GetFieldId($iLnkId, $sFieldCode, $bSafe = true)
 	{
@@ -137,40 +136,10 @@ class UILinksWidget
 	 */
 	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj): string
 	{
-		$oBlock = new BlockIndirectLinksEdit($this, $sFormPrefix);
+		$oBlock = new BlockIndirectLinksEdit($this);
 		$oBlock->InitTable($oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $this->m_aTableConfig);
 
 		return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
-	}
-
-	/**
-	 * @param string $sClass
-	 * @param string $sAttCode
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	protected static function GetTargetClass($sClass, $sAttCode)
-	{
-		/** @var AttributeLinkedSet $oAttDef */
-		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		$sLinkedClass = $oAttDef->GetLinkedClass();
-		$sTargetClass = '';
-		switch(get_class($oAttDef))
-		{
-			case 'AttributeLinkedSetIndirect':
-			/** @var AttributeExternalKey $oLinkingAttDef */
-			/** @var AttributeLinkedSetIndirect $oAttDef */
-			$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
-			$sTargetClass = $oLinkingAttDef->GetTargetClass();
-			break;
-
-			case 'AttributeLinkedSet':
-			$sTargetClass = $sLinkedClass;
-			break;
-		}
-		
-		return $sTargetClass;
 	}
 
 	/**
@@ -204,7 +173,7 @@ class UILinksWidget
 
 		$sLinkedSetId = "{$this->m_sAttCode}{$this->m_sNameSuffix}";
 
-		$oBlock = new BlockObjectPickerDialog();
+		$oBlock = new BlockObjectPickerDialog($this);
 		$oPage->AddUiBlock($oBlock);
 
 		$oBlock->sLinkedSetId = $sLinkedSetId;
@@ -279,7 +248,8 @@ class UILinksWidget
 		foreach ($aLinkedObjectIds as $iObjectId) {
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj)) {
-				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
+				$oBlock = new BlockIndirectLinksEdit($this);
+				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
 				$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aRow, -$iAdditionId);
 				$oP->AddUiBlock($oRow);
 				$iAdditionId++;
@@ -306,7 +276,8 @@ class UILinksWidget
 		foreach ($aLinkedObjectIds as $iObjectId) {
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj)) {
-				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
+				$oBlock = new BlockIndirectLinksEdit($this);
+				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
 				$aData = [];
 				foreach ($aRow as $item) {
 					$aData[] = $item;

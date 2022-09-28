@@ -38,13 +38,16 @@ class BlockDirectLinksEditInPlace extends Panel
 	public const TYPE_ACTION_CREATE_DELETE = 'ACTION_CREATE_DELETE';
 
 	/** @var \UILinksWidgetDirect */
-	private \UILinksWidgetDirect $oUILinksDirectWidget;
+	public \UILinksWidgetDirect $oUILinksDirectWidget;
 
 	/** @var string */
-	private string $sType;
+	public string $sType;
 
 	/** @var string */
 	public string $sInputName;
+
+	/** @var array */
+	public array $aLabels;
 
 	/** @var string */
 	public string $sLabels;
@@ -61,19 +64,27 @@ class BlockDirectLinksEditInPlace extends Panel
 	/** @var string */
 	public string $sJSDoSearch;
 
-	public function __construct(\UILinksWidgetDirect $oUILinksDirectWidget, string $sType, string $sFormPrefix)
+	/**
+	 * Constructor.
+	 *
+	 * @param \UILinksWidgetDirect $oUILinksDirectWidget
+	 * @param string $sType
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
+	public function __construct(\UILinksWidgetDirect $oUILinksDirectWidget, string $sType)
 	{
-		parent::__construct($oUILinksDirectWidget->GetLinkedClass(), [], Self::DEFAULT_COLOR_SCHEME);
+		parent::__construct($oUILinksDirectWidget->GetLinkedClass());
 
 		// Retrieve parameters
 		$this->oUILinksDirectWidget = $oUILinksDirectWidget;
 		$this->sType = $sType;
 
 		// compute
-		$this->sInputName = $sFormPrefix.'attr_'.$this->oUILinksDirectWidget->GetAttCode();
-		$aLabels = array(
+		$this->aLabels = array(
 			'delete'          => Dict::S('UI:Button:Delete'),
-			// 'modify' => 'Modify...' ,
 			'creation_title'  => Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
 			'create'          => Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
 			'remove'          => Dict::S('UI:Button:Remove'),
@@ -82,9 +93,9 @@ class BlockDirectLinksEditInPlace extends Panel
 		);
 		$oContext = new \ApplicationContext();
 		$this->sSubmitUrl = \utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?'.$oContext->GetForLink();
-		$this->sLabels = json_encode($aLabels);
+		$this->sLabels = json_encode($this->aLabels);
 		$this->sButtons = json_encode($this->GetButtons());
-		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
+
 		// Don't automatically launch the search if the table is huge
 		$bDoSearch = !\utils::IsHighCardinality($this->oUILinksDirectWidget->GetLinkedClass());
 		$this->sJSDoSearch = $bDoSearch ? 'true' : 'false';
@@ -121,15 +132,14 @@ class BlockDirectLinksEditInPlace extends Panel
 		// Panel
 		$this->SetCSSClasses(["ibo-block-direct-links--edit-in-place"]);
 		$this->SetSubTitle(MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetClass(), $this->oUILinksDirectWidget->GetAttCode())->GetDescription());
-//		$this->SetSubTitle('Total: 1 object');
 		$this->SetColorFromClass($this->oUILinksDirectWidget->GetLinkedClass());
 		$this->SetIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false));
 
-		// Selection alert
-		$this->AddSubBlock($this->CreateSelectionAlert());
+		// table information alert
+		$this->AddSubBlock($this->CreateTableInformationAlert());
 
 		// Toolbar
-		$this->InitToolBar();
+//		$this->InitToolBar();
 	}
 
 	/**
@@ -146,26 +156,33 @@ class BlockDirectLinksEditInPlace extends Panel
 	}
 
 	/**
-	 * CreateSelectionAlert.
+	 * CreateTableInformationAlert.
 	 *
 	 * @return void
 	 */
-	private function CreateSelectionAlert()
+	private function CreateTableInformationAlert()
 	{
 		// Selection alert
-		$oAlert = AlertUIBlockFactory::MakeForInformation('Sélection en cours', '', "linkedset_{$this->oUILinksDirectWidget->GetInputId()}_alert_selection");
+		$oAlert = AlertUIBlockFactory::MakeNeutral('', '', "linkedset_{$this->oUILinksDirectWidget->GetInputId()}_alert_information");
 		$oAlert->AddCSSClasses([
-			'ibo-table--alert-selection',
-			'ibo-table--alert-selection--hidden',
+			'ibo-table--alert-information',
 		]);
 		$oAlert->SetIsClosable(false);
 		$oAlert->SetIsCollapsible(false);
-		$oAlert->AddSubBlock(new Html('<span data-role="ibo-datatable-selection-value"></span>'));
+		$oAlert->AddSubBlock(new Html('<span class="ibo-table--alert-information--label" data-role="ibo-datatable-selection-value"></span>'));
 
 		// Delete button
-		$oUIButton = ButtonUIBlockFactory::MakeForDestructiveAction("Enlever les {$this->oUILinksDirectWidget->GetLinkedClass()} sélectionnés", 'table-selection');
+		$oUIButton = ButtonUIBlockFactory::MakeForDestructiveAction("Détacher les {$this->oUILinksDirectWidget->GetLinkedClass()}", 'table-selection');
 		$oUIButton->SetOnClickJsCode("oWidget{$this->oUILinksDirectWidget->GetInputId()}.RemoveSelected();");
+		$oUIButton->AddCSSClass('ibo-table--alert-information--delete-button');
 		$oAlert->AddSubBlock($oUIButton);
+
+		// Add button
+		$oUIAddButton = ButtonUIBlockFactory::MakeForPrimaryAction("Attacher des {$this->oUILinksDirectWidget->GetLinkedClass()}", 'table-selection');
+		$oUIAddButton->AddCSSClass('ibo-table--alert-information--add-button');
+		$oUIAddButton->SetOnClickJsCode("oWidget{$this->oUILinksDirectWidget->GetInputId()}._selectToAdd();");
+		$oAlert->AddSubBlock($oUIAddButton);
+
 
 		//	$oAlert = new DataTableSelectionPanel('dd', $this->oUILinksWidget, 'contact');
 
@@ -175,11 +192,15 @@ class BlockDirectLinksEditInPlace extends Panel
 	/**
 	 * @param \Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit\WebPage $oPage
 	 * @param $oValue
+	 * @param $sFormPrefix
 	 *
 	 * @return void
 	 */
-	public function InitTable(\WebPage $oPage, $oValue)
+	public function InitTable(\WebPage $oPage, $oValue, $sFormPrefix)
 	{
+		$this->sInputName = $sFormPrefix.'attr_'.$this->oUILinksDirectWidget->GetAttCode();
+		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
+
 		$aAttribs = $this->oUILinksDirectWidget->GetTableConfig();
 		$oValue->Rewind();
 		$aData = array();
@@ -194,6 +215,11 @@ class BlockDirectLinksEditInPlace extends Panel
 
 
 		$aRow_actions = [
+			[
+				'tooltip'       => 'Edit',
+				'icon_classes'  => 'fas fa-edit',
+				'js_row_action' => "alert('edit link');",
+			],
 			[
 				'tooltip'       => 'displayblock.class.inc.php :: RenderList()',
 				'icon_classes'  => 'fas fa-minus',
