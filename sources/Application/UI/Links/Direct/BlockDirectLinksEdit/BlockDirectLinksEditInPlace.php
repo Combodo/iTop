@@ -69,14 +69,15 @@ class BlockDirectLinksEditInPlace extends Panel
 	 *
 	 * @param \UILinksWidgetDirect $oUILinksDirectWidget
 	 * @param string $sType
+	 * @param string $sId
 	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function __construct(\UILinksWidgetDirect $oUILinksDirectWidget, string $sType)
+	public function __construct(\UILinksWidgetDirect $oUILinksDirectWidget, string $sType, string $sId)
 	{
-		parent::__construct($oUILinksDirectWidget->GetLinkedClass());
+		parent::__construct($oUILinksDirectWidget->GetLinkedClass(), [], self::DEFAULT_COLOR_SCHEME, $sId);
 
 		// Retrieve parameters
 		$this->oUILinksDirectWidget = $oUILinksDirectWidget;
@@ -180,7 +181,7 @@ class BlockDirectLinksEditInPlace extends Panel
 		// Add button
 		$oUIAddButton = ButtonUIBlockFactory::MakeForPrimaryAction("Attacher des {$this->oUILinksDirectWidget->GetLinkedClass()}", 'table-selection');
 		$oUIAddButton->AddCSSClass('ibo-table--alert-information--add-button');
-		$oUIAddButton->SetOnClickJsCode("oWidget{$this->oUILinksDirectWidget->GetInputId()}._selectToAdd();");
+		$oUIAddButton->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
 		$oAlert->AddSubBlock($oUIAddButton);
 
 

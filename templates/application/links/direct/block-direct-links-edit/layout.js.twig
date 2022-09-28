@@ -1,8 +1,6 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
-console.log($('#{{ oUIBlock.oUILinksDirectWidget.GetInputId() }}').length + ' widgets');
-console.log('#{{ oUIBlock.oUILinksDirectWidget.GetInputId() }}');
 oWidget{{ oUIBlock.oUILinksDirectWidget.GetInputId() }} = $('#{{ oUIBlock.oUILinksDirectWidget.GetInputId() }}').directlinks({
     class_name: '{{ oUIBlock.oUILinksDirectWidget.GetClass() }}',
     att_code: '{{ oUIBlock.oUILinksDirectWidget.GetAttCode() }}',
@@ -13,6 +11,4 @@ oWidget{{ oUIBlock.oUILinksDirectWidget.GetInputId() }} = $('#{{ oUIBlock.oUILin
     oWizardHelper: '{{ oUIBlock.sWizHelper }}',
     do_search: '{{ oUIBlock.sJSDoSearch }}'
 });
-
-oWidget{{ oUIBlock.oUILinksDirectWidget.GetInputId() }}.bla();
 {% endapply %}

@@ -110,7 +110,7 @@ class UILinksWidgetDirect
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
 				$oBlock = new BlockDirectLinksEditInPlace($this, BlockDirectLinksEditInPlace::TYPE_ACTION_CREATE_DELETE);
 				$oBlock->InitTable($oPage, $oValue, $sFormPrefix);
-				ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
+				ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock, $this->sInputid);
 				break;
 			
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
@@ -121,7 +121,7 @@ class UILinksWidgetDirect
 				if ($oExtKeyDef->IsNullAllowed()) {
 					$sType = BlockDirectLinksEditInPlace::TYPE_ACTION_ADD_REMOVE;
 				}
-				$oBlock = new BlockDirectLinksEditInPlace($this, $sType);
+				$oBlock = new BlockDirectLinksEditInPlace($this, $sType, $this->sInputid);
 				$oBlock->InitTable($oPage, $oValue, $sFormPrefix);
 
 				return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
