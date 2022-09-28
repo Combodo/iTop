@@ -623,12 +623,11 @@ XML,
 
 	/**
 	 * @dataProvider providerAlterationAPIs
-	 * @covers \MFElement::GetDelta
+	 * @covers \ModelFactory::GetDelta
 	 * @covers \MFElement::AddChildNode
 	 * @covers \MFElement::RedefineChildNode
 	 * @covers \MFElement::SetChildNode
 	 * @covers \MFElement::Delete
-	 * @covers \MFElement::Rename
 	 */
 	public function testAlterationsByAPIs($sInitialXML, $sOperation, $sExpectedXML)
 	{
