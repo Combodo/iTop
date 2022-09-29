@@ -6,13 +6,13 @@
 
 namespace Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit;
 
-
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use MetaModel;
 
@@ -88,33 +88,17 @@ class BlockIndirectLinksEdit extends Panel
 		// table information alert
 		$this->AddSubBlock($this->CreateTableInformationAlert());
 
-		// Toolbar
-//		$this->InitToolBar();
-
 		// To prevent adding forms inside the main form
 		$oDeferredBlock = new UIContentBlock("dlg_{$this->oUILinksWidget->GetLinkedSetId()}", ['ibo-block-indirect-links--edit--dialog']);
 		$this->AddDeferredBlock($oDeferredBlock);
 	}
 
 	/**
-	 * InitToolBar.
-	 *
-	 * @return void
-	 */
-	private function InitToolBar()
-	{
-		// Add button
-		$oAddButton = ButtonUIBlockFactory::MakeNeutral("Add {$this->oUILinksWidget->GetRemoteClass()}", 'create-link');
-		$oAddButton->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
-		$this->AddToolbarBlock($oAddButton);
-	}
-
-	/**
 	 * CreateTableInformationAlert.
 	 *
-	 * @return void
+	 * @return iUIBlock
 	 */
-	private function CreateTableInformationAlert()
+	private function CreateTableInformationAlert(): iUIBlock
 	{
 		// Selection alert
 		$oAlert = AlertUIBlockFactory::MakeNeutral('', '', "linkedset_{$this->oUILinksWidget->GetInputId()}_alert_information");
@@ -137,14 +121,11 @@ class BlockIndirectLinksEdit extends Panel
 		$oUIAddButton->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
 		$oAlert->AddSubBlock($oUIAddButton);
 
-
-		//	$oAlert = new DataTableSelectionPanel('dd', $this->oUILinksWidget, 'contact');
-
 		return $oAlert;
 	}
 
 	/**
-	 * @param \Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit\WebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param $oValue
 	 * @param $aArgs
 	 * @param $sFormPrefix
@@ -187,7 +168,7 @@ class BlockIndirectLinksEdit extends Panel
 		}
 		$this->iMaxAddedId = (int)$iMaxAddedId;
 
-		// Row actions
+		// Row actions (EDIT, UNLINK)
 		$aRow_actions = [
 			[
 				'tooltip'       => 'Edit',

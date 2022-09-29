@@ -88,9 +88,7 @@ $(function()
 				me._updateButtons();
 			});
 			this.oButtons['delete'].on('click', function () {
-				$('.selectList'+me.id+':checked', me.element).each(function () {
-					me._deleteRow($(this));
-				});
+				me._deleteSelection();
 			});
 			this.oButtons['create'].on('click', function () {
 				me._createRow();
@@ -105,6 +103,11 @@ $(function()
 			});
 
 			this._updateButtons();
+
+			me._updateTableInformation();
+			$('tbody', me.element).on('click', 'input[type="checkbox"]',function(){
+				me._updateTableInformation();
+			});
 		},
 
 		// called when created, and later when changing options
@@ -152,6 +155,25 @@ $(function()
 					this.oButtons['modify'].prop('disabled', true);
 					break;
 			}
+		},
+		_updateTableInformation: function(){
+
+			let nbChecked = $('tbody tr input:checked', this.element).length;
+			let count = $('tbody tr input', this.element).length;
+
+			$('#linkedset_'+this.id+'_alert_information').toggleClass('ibo-is-information', nbChecked > 0);
+
+			if(nbChecked > 0){
+				$('#'+this.id+'_btnRemove').prop('disabled', false);
+				$('#linkedset_'+this.id+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(nbChecked + ' / ' + count + ' éléments sélectionnés');
+			}
+			else{
+				$('#'+this.id+'_btnRemove').prop('disabled', true);
+				$('#linkedset_'+this.id+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(count + ' éléments');
+			}
+		},
+		_onSelectChange: function () {
+			this.UpdateTableInformation();
 		},
 		_updateTable: function () {
 			var me = this;
@@ -438,10 +460,12 @@ $(function()
 
 				//me.datatable.find('tbody').append(data);
 				$('#datatable_'+me.id+' .dataTables_empty').hide();
-				me.datatable.find('tbody').append(data);
+			//	me.datatable.find('tbody').append(data);
 				me._updateTable();
 				me.indicator.html('');
 				me.oButtons['add'].prop('disabled', false);
+
+				me._updateTableInformation();
 			});
 		},
 		subclassSelected: function()
@@ -529,6 +553,11 @@ $(function()
 			var dlgHeight = this.oDlg.height();
 			$('.wizContainer', this.oDlg).height(dlgHeight-20);
 			$('#SearchResultsToAdd_'+this.id).height(dlgHeight-50-searchHeight);
+		},
+		_deleteSelection: function(){
+			$('.selectList'+me.id+':checked', me.element).each(function () {
+				me._deleteRow($(this));
+			});
 		},
 		_deleteRow: function (oCheckbox) {
 			var iObjKey = parseInt(oCheckbox.val(), 10); // Number in base 10

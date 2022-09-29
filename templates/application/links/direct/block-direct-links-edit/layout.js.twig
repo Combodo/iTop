@@ -5,10 +5,10 @@ oWidget{{ oUIBlock.oUILinksDirectWidget.GetInputId() }} = $('#{{ oUIBlock.oUILin
     class_name: '{{ oUIBlock.oUILinksDirectWidget.GetClass() }}',
     att_code: '{{ oUIBlock.oUILinksDirectWidget.GetAttCode() }}',
     input_name: '{{ oUIBlock.sInputName }}',
-    labels: '{{ oUIBlock.sLabels }}',
+    labels: '{{ oUIBlock.aLabels|json_encode }}',
     submit_to: '{{ oUIBlock.sSubmitUrl }}',
-    buttons: '{{ oUIBlock.sButtons }}',
-    oWizardHelper: '{{ oUIBlock.sWizHelper }}',
+    buttons: '{{ oUIBlock.GetButtons()|json_encode }}',
+    oWizardHelper: {{ oUIBlock.sWizHelper }},
     do_search: '{{ oUIBlock.sJSDoSearch }}'
 });
 {% endapply %}

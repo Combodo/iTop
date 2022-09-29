@@ -11,12 +11,9 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Dict;
 use MetaModel;
 
@@ -50,13 +47,7 @@ class BlockDirectLinksEditInPlace extends Panel
 	public array $aLabels;
 
 	/** @var string */
-	public string $sLabels;
-
-	/** @var string */
 	public string $sSubmitUrl;
-
-	/** @var string */
-	public string $sButtons;
 
 	/** @var string */
 	public string $sWizHelper;
@@ -94,8 +85,6 @@ class BlockDirectLinksEditInPlace extends Panel
 		);
 		$oContext = new \ApplicationContext();
 		$this->sSubmitUrl = \utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?'.$oContext->GetForLink();
-		$this->sLabels = json_encode($this->aLabels);
-		$this->sButtons = json_encode($this->GetButtons());
 
 		// Don't automatically launch the search if the table is huge
 		$bDoSearch = !\utils::IsHighCardinality($this->oUILinksDirectWidget->GetLinkedClass());
@@ -103,23 +92,6 @@ class BlockDirectLinksEditInPlace extends Panel
 
 		// Initialize UI
 		$this->InitUI();
-	}
-
-
-	/**
-	 * @return array|string[]
-	 */
-	private function GetButtons()
-	{
-		switch ($this->sType) {
-			case Self::TYPE_ACTION_ADD:
-				return array('add');
-			case Self::TYPE_ACTION_ADD_REMOVE:
-				return array('add', 'remove');
-			case Self::TYPE_ACTION_NONE:
-			default:
-				return array();
-		}
 	}
 
 	/**
@@ -132,36 +104,25 @@ class BlockDirectLinksEditInPlace extends Panel
 	{
 		// Panel
 		$this->SetCSSClasses(["ibo-block-direct-links--edit-in-place"]);
-		$this->SetSubTitle(MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetClass(), $this->oUILinksDirectWidget->GetAttCode())->GetDescription());
+		try {
+			$this->SetSubTitle(MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetClass(), $this->oUILinksDirectWidget->GetAttCode())->GetDescription());
+		}
+		catch (\Exception $e) {
+			$this->SetSubTitle('Error Direct Links Edit in Place attribute definition error.');
+		}
 		$this->SetColorFromClass($this->oUILinksDirectWidget->GetLinkedClass());
 		$this->SetIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false));
 
 		// table information alert
 		$this->AddSubBlock($this->CreateTableInformationAlert());
-
-		// Toolbar
-//		$this->InitToolBar();
-	}
-
-	/**
-	 * InitToolBar.
-	 *
-	 * @return void
-	 */
-	private function InitToolBar()
-	{
-		// Add button
-		$oAddButton = ButtonUIBlockFactory::MakeNeutral("Add {$this->oUILinksDirectWidget->GetLinkedClass()}", 'create-link');
-		$oAddButton->SetOnClickJsCode("oWidget{$this->oUILinksDirectWidget->GetInputId()}.AddObjects();");
-		$this->AddToolbarBlock($oAddButton);
 	}
 
 	/**
 	 * CreateTableInformationAlert.
 	 *
-	 * @return void
+	 * @return iUIBlock
 	 */
-	private function CreateTableInformationAlert()
+	private function CreateTableInformationAlert(): iUIBlock
 	{
 		// Selection alert
 		$oAlert = AlertUIBlockFactory::MakeNeutral('', '', "linkedset_{$this->oUILinksDirectWidget->GetInputId()}_alert_information");
@@ -174,8 +135,8 @@ class BlockDirectLinksEditInPlace extends Panel
 
 		// Delete button
 		$oUIButton = ButtonUIBlockFactory::MakeForDestructiveAction("Détacher les {$this->oUILinksDirectWidget->GetLinkedClass()}", 'table-selection');
-		$oUIButton->SetOnClickJsCode("oWidget{$this->oUILinksDirectWidget->GetInputId()}.RemoveSelected();");
 		$oUIButton->AddCSSClass('ibo-table--alert-information--delete-button');
+		$oUIButton->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteSelection();");
 		$oAlert->AddSubBlock($oUIButton);
 
 		// Add button
@@ -184,53 +145,105 @@ class BlockDirectLinksEditInPlace extends Panel
 		$oUIAddButton->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
 		$oAlert->AddSubBlock($oUIAddButton);
 
-
-		//	$oAlert = new DataTableSelectionPanel('dd', $this->oUILinksWidget, 'contact');
-
 		return $oAlert;
 	}
 
 	/**
-	 * @param \Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit\WebPage $oPage
-	 * @param $oValue
-	 * @param $sFormPrefix
+	 * @param \WebPage $oPage
+	 * @param \DBObjectSet $oValue
+	 * @param string $sFormPrefix
 	 *
 	 * @return void
 	 */
-	public function InitTable(\WebPage $oPage, $oValue, $sFormPrefix)
+	public function InitTable(\WebPage $oPage, \DBObjectSet $oValue, string $sFormPrefix)
 	{
+		/** @todo fields initialization */
 		$this->sInputName = $sFormPrefix.'attr_'.$this->oUILinksDirectWidget->GetAttCode();
 		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
 
-		$aAttribs = $this->oUILinksDirectWidget->GetTableConfig();
+		try {
+			$aAttribs = $this->oUILinksDirectWidget->GetTableConfig();
+			$aRows = $this->GetTableRows($oValue);
+			$aRowActions = $this->GetRowActions();
+			$oDatatable = DataTableUIBlockFactory::MakeForForm($this->oUILinksDirectWidget->GetInputId(), $aAttribs, $aRows, '', $aRowActions);
+			$oDatatable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
+			$this->AddSubBlock($oDatatable);
+		}
+		catch (\Exception $e) {
+			$this->AddSubBlock(PanelUIBlockFactory::MakeForDanger('error', 'error while trying to load datatable'));
+		}
+	}
+
+	/**
+	 * Return table rows.
+	 *
+	 * @param \DBObjectSet $oValue
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \Exception
+	 */
+	private function GetTableRows(\DBObjectSet $oValue): array
+	{
+		// result data
+		$aRows = array();
+
+		// set pointer to start
 		$oValue->Rewind();
-		$aData = array();
+
+		// create a row table for each value...
 		while ($oLinkObj = $oValue->Fetch()) {
 			$aRow = array();
 			$aRow['form::select'] = '<input type="checkbox" class="selectList'.$this->oUILinksDirectWidget->GetInputId().'" value="'.$oLinkObj->GetKey().'"/>';
 			foreach ($this->oUILinksDirectWidget->GetZList() as $sLinkedAttCode) {
 				$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 			}
-			$aData[] = $aRow;
+			$aRows[] = $aRow;
 		}
 
+		return $aRows;
+	}
 
-		$aRow_actions = [
+	/**
+	 * Return global buttons.
+	 *
+	 * @return array|string[]
+	 */
+	public function GetButtons(): array
+	{
+		switch ($this->sType) {
+			case self::TYPE_ACTION_ADD:
+				return array('add');
+			case self::TYPE_ACTION_ADD_REMOVE:
+				return array('add', 'remove');
+			case self::TYPE_ACTION_NONE:
+			default:
+				return array();
+		}
+	}
+
+	/**
+	 * Return row actions.
+	 *
+	 * @return \string[][]
+	 */
+	private function GetRowActions(): array
+	{
+		return [
 			[
 				'tooltip'       => 'Edit',
 				'icon_classes'  => 'fas fa-edit',
 				'js_row_action' => "alert('edit link');",
 			],
 			[
-				'tooltip'       => 'displayblock.class.inc.php :: RenderList()',
-				'icon_classes'  => 'fas fa-minus',
-				'js_row_action' => 'console.log("Action ID:");console.log(iActionId);',
+				'tooltip'       => 'Unlink',
+				'icon_classes'  => 'fas fa-unlink',
+				'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteRow($('checkbox', oTrElement));",
 			],
 		];
-		$oDatatable = DataTableUIBlockFactory::MakeForForm($this->oUILinksDirectWidget->GetInputId(), $aAttribs, $aData, '', $aRow_actions);
-		$oDatatable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
-		$this->AddSubBlock($oDatatable);
-
 	}
-
 }

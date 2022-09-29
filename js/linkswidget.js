@@ -63,23 +63,16 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.UpdateTableInformation = function(){
 
 		let nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
-		if (nbChecked > 0)
-		{
-			$('#'+me.id+'_btnRemove').prop('disabled', false);
-		}
-		else
-		{
-			$('#'+me.id+'_btnRemove').prop('disabled', true);
-		}
-
 		let count = $('#linkedset_'+this.id+' tbody tr').length;
 
 		$('#linkedset_'+me.iInputId+'_alert_information').toggleClass('ibo-is-information', nbChecked > 0);
 
 		if(nbChecked > 0){
+			$('#'+me.id+'_btnRemove').prop('disabled', false);
 			$('#linkedset_'+me.iInputId+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(nbChecked + ' / ' + count + ' éléments sélectionnés');
 		}
 		else{
+			$('#'+me.id+'_btnRemove').prop('disabled', true);
 			$('#linkedset_'+me.iInputId+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(count + ' éléments');
 		}
 	}
@@ -159,8 +152,6 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				"dataType": "html"
 			})
 			.done(function (data) {
-				console.log('#dlg_'+me.id);
-				console.log($('#dlg_'+me.id));
 				$('#dlg_'+me.id).html(data);
 				window[sPromiseId].then(function () {
 					$('#dlg_'+me.id).dialog('open');
