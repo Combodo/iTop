@@ -5,8 +5,6 @@
  */
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/template.class.inc.php');
@@ -266,6 +264,14 @@ class ApplicationMenu
 			$sMenuGroupIdx = $aMenuGroup['index'];
 			/** @var \MenuGroup $oMenuNode */
 			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
+
+			if (!($oMenuNode instanceof MenuGroup)) {
+				IssueLog::Error('Menu node was not displayed as a menu group as it is actually not a menu group', LogChannels::CONSOLE, [
+					'menu_node_class' => get_class($oMenuNode),
+					'menu_node_label' => $oMenuNode->GetLabel(),
+				]);
+				continue;
+			}
 
 			$aMenuGroups[] = [
 				'sId' => $oMenuNode->GetMenuID(),
@@ -655,8 +661,7 @@ abstract class MenuNode
 		$this->sMenuId = $sMenuId;
 		$this->iParentIndex = $iParentIndex;
 		$this->aReflectionProperties = array();
-		if (utils::StrLen($sEnableClass) > 0)
-		{
+		if (utils::IsNotNullOrEmptyString($sEnableClass)) {
 			$this->aReflectionProperties['enable_class'] = $sEnableClass;
 			$this->aReflectionProperties['enable_action'] = $iActionCode;
 			$this->aReflectionProperties['enable_permission'] = $iAllowedResults;

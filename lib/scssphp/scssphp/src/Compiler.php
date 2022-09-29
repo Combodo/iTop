@@ -3544,11 +3544,11 @@ EOL;
                 // 1. op[op name][left type][right type]
                 // 2. op[left type][right type] (passing the op as first arg)
                 // 3. op[op name]
-                if (\is_callable([$this, $fn = "op${ucOpName}${ucLType}${ucRType}"])) {
+                if (\is_callable([$this, $fn = "op{$ucOpName}{$ucLType}{$ucRType}"])) {
                     $out = $this->$fn($left, $right, $shouldEval);
-                } elseif (\is_callable([$this, $fn = "op${ucLType}${ucRType}"])) {
+                } elseif (\is_callable([$this, $fn = "op{$ucLType}{$ucRType}"])) {
                     $out = $this->$fn($op, $left, $right, $shouldEval);
-                } elseif (\is_callable([$this, $fn = "op${ucOpName}"])) {
+                } elseif (\is_callable([$this, $fn = "op{$ucOpName}"])) {
                     $out = $this->$fn($left, $right, $shouldEval);
                 } else {
                     $out = null;
@@ -3892,7 +3892,7 @@ EOL;
 
         // Special functions overriding a CSS function are case-insensitive. We normalize them as lowercase
         // to avoid the deprecation warning about the wrong case being used.
-        if ($lowercasedName === 'min' || $lowercasedName === 'max') {
+        if ($lowercasedName === 'min' || $lowercasedName === 'max' || $lowercasedName === 'rgb' || $lowercasedName === 'rgba' || $lowercasedName === 'hsl' || $lowercasedName === 'hsla') {
             $normalizedName = $lowercasedName;
         }
 
@@ -8769,7 +8769,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
     protected function libNth($args)
     {
         $list = $this->coerceList($args[0], ',', false);
-        $n = $this->assertNumber($args[1])->getDimension();
+        $n = $this->assertInteger($args[1]);
 
         if ($n > 0) {
             $n--;
@@ -8784,7 +8784,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
     protected function libSetNth($args)
     {
         $list = $this->coerceList($args[0]);
-        $n = $this->assertNumber($args[1])->getDimension();
+        $n = $this->assertInteger($args[1]);
 
         if ($n > 0) {
             $n--;

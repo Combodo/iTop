@@ -12,7 +12,7 @@
     {% endif %}
 {% endif %}
 
-<table id="{{ oUIBlock.GetId() }}" width="100%" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}" data-role="ibo-datatable">
+<table id="{{ oUIBlock.GetId() }}" width="100%" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}" data-role="ibo-datatable" data-status="loading">
     <thead>
     {% if oUIBlock.GetOption("select_mode") is not empty %}
         <th></th>
@@ -20,5 +20,12 @@
     {% for aColumn in oUIBlock.GetDisplayColumns() %}
         <th class="ibo-datatable-header" {% if aColumn["description"] is not empty %}title="{{ aColumn["description"] }}"{% endif %}>{{ aColumn["attribute_label"] }} </th>
     {% endfor %}
+    {% if oUIBlock.HasRowActions() %}
+        <th class="ibo-datatable-header">{{ 'UI:Datatables:Column:RowActions:Label'|dict_s }} </th>
+    {% endif %}
     </thead>
 </table>
+
+{% if oUIBlock.HasRowActions() %}
+    {{ render_block(oUIBlock.GetRowActionsTemplate()) }}
+{% endif %}

@@ -94,41 +94,33 @@ try
 		$oCollapsible = CollapsibleSectionUIBlockFactory::MakeStandard(Dict::S('UI:RunQuery:MoreInfo'));
 		$oPage->AddSubBlock($oCollapsible);
 
-		$oHtml = new Html(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
+		$oHtml = new Html(Dict::S('UI:RunQuery:DevelopedQuery').utils::EscapeHtml($oFilter->ToOQL()));
 		$oCollapsible->AddSubBlock($oHtml);
-
-		/*$oPage->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'SearchQuery');
-		$oPage->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
-		$oPage->EndCollapsibleSection();*/
 	}
 
 	$oPage->output();
 
-} catch (AjaxSearchException $e)
-{
+} catch (AjaxSearchException $e) {
 	http_response_code($e->getCode());
 	// note: transform to cope with XSS attacks
-	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
+	echo '<html><head></head><body><div>'.utils::EscapeHtml($e->GetMessage()).'</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
-} catch (SecurityException $e)
-{
+} catch (SecurityException $e) {
 	http_response_code(403);
 	// note: transform to cope with XSS attacks
-	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
+	echo '<html><head></head><body><div>'.utils::EscapeHtml($e->GetMessage()).'</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
-} catch (MySQLException $e)
-{
+} catch (MySQLException $e) {
 	http_response_code(500);
 	// Sanytize error:
 	$sMsg = $e->GetMessage();
 	$sMsg = preg_replace("@^.* mysql_error = @", '', $sMsg);
 	// note: transform to cope with XSS attacks
-	echo '<html><head></head><body><div>'.htmlentities($sMsg, ENT_QUOTES, 'utf-8').'</div></body></html>';
+	echo '<html><head></head><body><div>'.utils::EscapeHtml($sMsg).'</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
-} catch (Exception $e)
-{
+} catch (Exception $e) {
 	http_response_code(500);
 	// note: transform to cope with XSS attacks
-	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
+	echo '<html><head></head><body><div>'.utils::EscapeHtml($e->GetMessage()).'</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }

@@ -311,7 +311,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function Count()
+	public function Count(): int
 	{
 		$this->LoadOriginalIds();
 		$iRet = count($this->aPreserved) + count($this->aAdded) + count($this->aModified);
@@ -326,7 +326,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws Exception
 	 * @internal param int $iRow
 	 */
-	public function Seek($iPosition)
+	public function Seek($iPosition): void
 	{
 		$this->LoadOriginalIds();
 
@@ -374,6 +374,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
 	public function current()
 	{
 		$this->LoadOriginalIds();
@@ -381,9 +383,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$iPreservedCount = count($this->aPreserved);
 		if ($this->iCursor < $iPreservedCount)
 		{
-			$iRet = current($this->aPreserved);
-			$this->oOriginalSet->Seek($iRet);
-			$oRet = $this->oOriginalSet->Fetch();
+			$sId = key($this->aPreserved);
+			$oRet = MetaModel::GetObject($this->sClass, $sId);
 		}
 		else
 		{
@@ -409,7 +410,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function next()
+	public function next(): void
 	{
 		$this->LoadOriginalIds();
 
@@ -439,6 +440,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @link http://php.net/manual/en/iterator.key.php
 	 * @return mixed scalar on success, or null on failure.
 	 */
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
 	public function key()
 	{
 		return $this->iCursor;
@@ -454,7 +457,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function valid()
+	public function valid(): bool
 	{
 		$this->LoadOriginalIds();
 
@@ -472,7 +475,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function rewind()
+	public function rewind(): void
 	{
 	    $this->LoadOriginalIds();
 
@@ -746,6 +749,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 					$oLink->DBClone();
 				}
 			}
+			$oLink->SetLinkHostObject($oHostObject);
 			$oLink->DBWrite();
 
 			$this->aPreserved[$oLink->GetKey()] = $oLink;

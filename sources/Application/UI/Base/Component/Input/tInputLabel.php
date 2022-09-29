@@ -7,6 +7,8 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\Input;
 
+use utils;
+
 /**
  * Trait tInputLabel Label for input
  *
@@ -88,7 +90,7 @@ trait tInputLabel
 	 */
 	public function HasLabel(): bool
 	{
-		return strlen($this->sLabel) > 0;
+		return utils::StrLen($this->sLabel) > 0;
 	}
 
 	/**
@@ -108,6 +110,7 @@ trait tInputLabel
 	public function SetDescription(?string $sDescription)
 	{
 		$this->sDescription = $sDescription;
+
 		return $this;
 	}
 
@@ -117,6 +120,6 @@ trait tInputLabel
 	 */
 	public function HasDescription(): bool
 	{
-		return strlen($this->sDescription) > 0;
+		return utils::StrLen($this->sDescription) > 0;
 	}
 }

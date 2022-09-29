@@ -649,9 +649,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:UniversalSearch:LabelSelectTheClass' => '选择要搜索的类别: ',
 
 	'UI:CSVReport-Value-Modified' => '已修改',
-	'UI:CSVReport-Value-SetIssue' => '无法修改 - 原因: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => '无法修改成 %1$s - 原因: %2$s',
-	'UI:CSVReport-Value-NoMatch' => '不匹配',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => '缺少必填项',
 	'UI:CSVReport-Value-Ambiguous' => '模糊匹配: 找到 %1$s 个对象',
 	'UI:CSVReport-Row-Unchanged' => '保持不变',

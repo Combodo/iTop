@@ -25,6 +25,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Service\EventData;
+use Combodo\iTop\Service\EventService;
+
 
 /**
  * ormDocument
@@ -109,17 +112,14 @@ class ormDocument
 	public function GetAsHTML()
 	{
 		$sResult = '';
-		if ($this->IsEmpty())
-		{
+		if ($this->IsEmpty()) {
 			// If the filename is not empty, display it, this is used
 			// by the creation wizard while the file has not yet been uploaded
-			$sResult = htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8');
-		}
-		else
-		{
+			$sResult = utils::EscapeHtml($this->GetFileName());
+		} else {
 			$data = $this->GetData();
 			$sSize = utils::BytesToFriendlyFormat(strlen($data));
-			$sResult = htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8').' ('.$sSize.')<br/>';
+			$sResult = utils::EscapeHtml($this->GetFileName()).' ('.$sSize.')<br/>';
 		}
 		return $sResult;
 	}
@@ -131,7 +131,8 @@ class ormDocument
 	public function GetDisplayLink($sClass, $Id, $sAttCode)
 	{
 		$sUrl = $this->GetDisplayURL($sClass, $Id, $sAttCode);
-		return "<a href=\"$sUrl\" target=\"_blank\" >".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
+
+		return "<a href=\"$sUrl\" target=\"_blank\" >".utils::EscapeHtml($this->GetFileName())."</a>\n";
 	}
 	
 	/**
@@ -141,7 +142,8 @@ class ormDocument
 	public function GetDownloadLink($sClass, $Id, $sAttCode)
 	{
 		$sUrl = $this->GetDownloadURL($sClass, $Id, $sAttCode);
-		return "<a href=\"$sUrl\">".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
+
+		return "<a href=\"$sUrl\">".utils::EscapeHtml($this->GetFileName())."</a>\n";
 	}
 
 	/**
@@ -194,7 +196,6 @@ class ormDocument
 	 * @param string $sContentDisposition Either 'inline' or 'attachment'
 	 * @param string $sSecretField The attcode of the field containing a "secret" to be provided in order to retrieve the file
 	 * @param string $sSecretValue The value of the secret to be compared with the value of the attribute $sSecretField
-	 * @return none
 	 */
 	public static function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
 	{
@@ -213,6 +214,12 @@ class ormDocument
 			$oDocument = $oObj->Get($sAttCode);
 			if (is_object($oDocument))
 			{
+				$aEventData = array(
+					'debug_info' => $oDocument->GetFileName(),
+					'object' => $oObj,
+					'document' => $oDocument,
+					);
+				EventService::FireEvent(new EventData(EVENT_SERVICE_DOWNLOAD_DOCUMENT, $sClass, $aEventData));
 				$oPage->TrashUnexpectedOutput();
 				$oPage->SetContentType($oDocument->GetMimeType());
 				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());

@@ -812,10 +812,14 @@ class RunTimeEnvironment
 		// Database is created, installation has been tracked into it
 		return true;	
 	}
-	
+
+	/**
+	 * @param \Config $oConfig
+	 *
+	 * @return array|false
+	 */
 	public function GetApplicationVersion(Config $oConfig)
 	{
-		$aResult = false;
 		try
 		{
 			CMDBSource::InitFromConfig($oConfig);
@@ -829,7 +833,8 @@ class RunTimeEnvironment
 			$this->log_error('Exception '.$e->getMessage());
 			return false;
 		}
-	
+
+		$aResult = [];
 		// Scan the list of installed modules to get the version of the 'ROOT' module which holds the main application version
 		foreach ($aSelectInstall as $aInstall)
 		{
@@ -867,7 +872,7 @@ class RunTimeEnvironment
 			$aResult['datamodel_version'] = $aResult['product_version'];
 		}
 		$this->log_info("GetApplicationVersion returns: product_name: ".$aResult['product_name'].', product_version: '.$aResult['product_version']);
-		return $aResult;	
+		return empty($aResult) ? false : $aResult;
 	}
 
 	public static function MakeDirSafe($sDir)

@@ -28,7 +28,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:OAuthClient' => 'Oauth Client~~',
+	'Class:OAuthClient' => 'OAuth Client~~',
 	'Class:OAuthClient/Attribute:provider' => 'Provider~~',
 	'Class:OAuthClient/Attribute:provider+' => '~~',
 	'Class:OAuthClient/Attribute:name' => 'Login~~',

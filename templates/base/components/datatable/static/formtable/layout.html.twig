@@ -4,7 +4,7 @@
 <input type="hidden" name="attr_{{ oUIBlock.GetRef() }}" value="">
 
 {% set columns = oUIBlock.GetColumns() %}
-<table id="{{ oUIBlock.GetId() }}" width="100%" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} listResults{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-datatable">
+<table id="{{ oUIBlock.GetId() }}" width="100%" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} listResults{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-datatable" data-status="loading">
     <thead>
     <tr>
         {% for column in columns %}
@@ -13,8 +13,12 @@
     </tr>
     </thead>
     <tbody>
-    {% for oSubBlock in oUIBlock.GetRows() %}
-        {{ render_block(oSubBlock, {aPage: aPage}) }}
+    {% for oRowBlock in oUIBlock.GetRows() %}
+        {{ render_block(oRowBlock, {aPage: aPage}) }}
     {% endfor %}
     </tbody>
 </table>
+
+{% if oUIBlock.HasRowActions() %}
+    {{ render_block(oUIBlock.GetRowActionsTemplate()) }}
+{% endif %}

@@ -41,7 +41,7 @@ class PopupMenuExtension implements \iPopupMenuExtension
 					$sId = $oObj->GetKey();
 					$sAjaxUri = utils::GetAbsoluteUrlModulePage(static::MODULE_CODE, 'ajax.php');
 					// Add a new menu item that triggers a custom JS function defined in our own javascript file: js/sample.js
-					$sJSFileUrl = utils::GetAbsoluteUrlModulesRoot().static::MODULE_CODE.'/assets/js/oauth_connect.js';
+					$sJSFileUrl = 'env-'.utils::GetCurrentEnvironment().'/'.static::MODULE_CODE.'/assets/js/oauth_connect.js';
 					$sRedirectUri = OAuthClientProviderFactory::GetRedirectUri();
 					$aResult[] = new JSPopupMenuItem(
 						$sMenu.' from '.$sObjClass,
@@ -51,8 +51,8 @@ class PopupMenuExtension implements \iPopupMenuExtension
 					);
 
 					if ($bHasToken) {
-						$sScope = $oObj->Get('scope');
-						if ($sScope == 'EMail') {
+						$aScopes = $oObj->Get('scope')->GetValues();
+						if (in_array('IMAP', $aScopes)) {
 							$aParams = $oAppContext->GetAsHash();
 							$sMenu = 'Menu:CreateMailbox';
 							$sObjClass = get_class($oObj);

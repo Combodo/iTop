@@ -1,7 +1,6 @@
 # laminas-mail
 
-[![Build Status](https://travis-ci.com/laminas/laminas-mail.svg?branch=master)](https://travis-ci.com/laminas/laminas-mail)
-[![Coverage Status](https://coveralls.io/repos/github/laminas/laminas-mail/badge.svg?branch=master)](https://coveralls.io/github/laminas/laminas-mail?branch=master)
+[![Build Status](https://github.com/laminas/laminas-mail/workflows/Continuous%20Integration/badge.svg)](https://github.com/laminas/laminas-mail/actions?query=workflow%3A"Continuous+Integration")
 
 `Laminas\Mail` provides generalized functionality to compose and send both text and
 MIME-compliant multipart email messages. Mail can be sent with `Laminas\Mail` via

@@ -304,6 +304,8 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 				// Remove attachments that are no longer attached to the current object
 				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
 				{
+					$aData = ['target_object' => $oObject];
+					$oAttachment->FireEvent(EVENT_SERVICE_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
 					$oAttachment->DBDelete();
 					$aActions[] = self::GetActionChangeOp($oAttachment, false /* false => deletion */);
 				}
@@ -332,6 +334,8 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 						$oAttachment->DBUpdate();
 						// temporary attachment confirmed, list it in the history
 						$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
+						$aData = ['target_object' => $oObject];
+						$oAttachment->FireEvent(EVENT_SERVICE_ADD_ATTACHMENT_TO_OBJECT, $aData);
 					}
 				}
 			}
@@ -679,13 +683,12 @@ class CMDBChangeOpAttachmentAdded extends CMDBChangeOp
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
 		$sTargetObjectClass = 'Attachment';
 		$iTargetObjectKey = $this->Get('attachment_id');
-		$sFilename = htmlentities($this->Get('filename'), ENT_QUOTES, 'UTF-8');
+		$sFilename = utils::EscapeHtml($this->Get('filename'));
 		$oTargetSearch = new DBObjectSearch($sTargetObjectClass);
 		$oTargetSearch->AddCondition('id', $iTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if ($oMonoObjectSet->Count() > 0)
-		{
+		if ($oMonoObjectSet->Count() > 0) {
 			$oAttachment = $oMonoObjectSet->Fetch();
 			$oDoc = $oAttachment->Get('contents');
 			$sPreview = $oDoc->IsPreviewAvailable() ? 'data-preview="true"' : '';
@@ -739,7 +742,7 @@ class CMDBChangeOpAttachmentRemoved extends CMDBChangeOp
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
 		$sResult = Dict::Format('Attachments:History_File_Removed',
-			'<span class="attachment-history-deleted">'.htmlentities($this->Get('filename'), ENT_QUOTES, 'UTF-8').'</span>');
+			'<span class="attachment-history-deleted">'.utils::EscapeHtml($this->Get('filename')).'</span>');
 
 		return $sResult;
 	}

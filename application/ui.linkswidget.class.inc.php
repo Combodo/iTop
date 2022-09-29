@@ -368,39 +368,42 @@ JS
 		$aForm = array();
 		$iMaxAddedId = 0;
 		$iAddedId = -1; // Unique id for new links
+		$oBlock->aRemoved = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->m_sAttCode}_tbd", '[]', 'raw_data'));
 		$oModified = $oValue->GetModified($this->m_sExtKeyToRemote);
 		while ($oCurrentLink = $oValue->Fetch()) {
 			// We try to retrieve the remote object as usual
-			$bModified = false;
-			if (array_key_exists($oCurrentLink->GetKey(), $oModified)) {
-				$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oModified[$oCurrentLink->GetKey()], false /* Must not be found */);
-				$bModified = true;
-			} else {
-				$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */);
-			}
-			// If successful, it means that we can edit its link
-			if ($oLinkedObj !== null) {
-				$bReadOnly = false;
-			} // Else we retrieve it without restrictions (silos) and will display its link as readonly
-			else {
-				$bReadOnly = true;
-				$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */, true);
-			}
+			if (!in_array($oCurrentLink->GetKey(), $oBlock->aRemoved)) {
+				$bModified = false;
+				if (array_key_exists($oCurrentLink->GetKey(), $oModified)) {
+					$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oModified[$oCurrentLink->GetKey()], false /* Must not be found */);
+					$bModified = true;
+				} else {
+					$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */);
+				}
+				// If successful, it means that we can edit its link
+				if ($oLinkedObj !== null) {
+					$bReadOnly = false;
+				} // Else we retrieve it without restrictions (silos) and will display its link as readonly
+				else {
+					$bReadOnly = true;
+					$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */, true);
+				}
 
-			if ($oCurrentLink->IsNew()) {
-				$key = $iAddedId--;
-			} else {
-				$key = $oCurrentLink->GetKey();
-			}
+				if ($oCurrentLink->IsNew()) {
+					$key = $iAddedId--;
+				} else {
+					$key = $oCurrentLink->GetKey();
+				}
 
-			$iMaxAddedId = max($iMaxAddedId, $key);
-			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly, $bModified);
+				$iMaxAddedId = max($iMaxAddedId, $key);
+				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly, $bModified);
+			}
 		}
 		$oBlock->iMaxAddedId = (int)$iMaxAddedId;
 
 
 		$oDataTable = DataTableUIBlockFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aForm);
-		$oDataTable->SetOptions(['select_mode' => 'custom']);
+		$oDataTable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
 		$oBlock->AddSubBlock($oDataTable);
 
 		$oBlock->AddControls();

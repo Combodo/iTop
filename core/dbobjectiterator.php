@@ -38,7 +38,7 @@ interface iDBObjectSetIterator extends Countable
 	 *
 	 * @return int
 	 */
-	public function Count();
+	public function Count(): int;
 
 	/**
 	 * Reset the cursor to the first item in the collection. Equivalent to Seek(0)
@@ -52,7 +52,7 @@ interface iDBObjectSetIterator extends Countable
 	 *
 	 * @param int $iRow
 	 */
-	public function Seek($iPosition);
+	public function Seek($iPosition): void;
 
 	/**
 	 * Fetch the object at the current position in the collection and move the cursor to the next position.

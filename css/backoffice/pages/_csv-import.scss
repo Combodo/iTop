@@ -27,11 +27,6 @@ tr.ibo-csv-import--row-unchanged td {
   border-bottom: 1px $ibo-color-grey-400 solid;
 }
 
-.wizContainer table tr.ibo-csv-import--row-error td {
-  border-bottom: 1px $ibo-color-grey-400 solid;
-  background-color: $ibo-color-red-200;
-}
-
 tr.ibo-csv-import--row-modified td {
   border-bottom: 1px $ibo-color-grey-400 solid;
 }

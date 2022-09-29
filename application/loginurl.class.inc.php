@@ -57,9 +57,11 @@ class LoginURL extends AbstractLoginFSMExtension
 			$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
 			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
 			{
+				$_SESSION['auth_user'] = $sAuthUser;
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
+			Session::Set('auth_user', $sAuthUser);
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
@@ -68,8 +70,7 @@ class LoginURL extends AbstractLoginFSMExtension
 	{
 		if (Session::Get('login_mode') == 'url')
 		{
-			$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
-			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', Session::Get('login_mode'));
+			LoginWebPage::OnLoginSuccess(Session::Get('auth_user'), 'internal', Session::Get('login_mode'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}

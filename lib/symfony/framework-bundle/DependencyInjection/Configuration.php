@@ -1236,7 +1236,7 @@ class Configuration implements ConfigurationInterface
                                 ->info('The status code of the response. Null to let Symfony decide.')
                                 ->validate()
                                     ->ifTrue(function ($v) { return $v < 100 || $v > 599; })
-                                    ->thenInvalid('The log level is not valid. Pick a value between 100 and 599.')
+                                    ->thenInvalid('The status code is not valid. Pick a value between 100 and 599.')
                                 ->end()
                                 ->defaultNull()
                             ->end()
@@ -1861,7 +1861,7 @@ class Configuration implements ConfigurationInterface
                     ->integerNode('max_delay')->defaultValue(0)->min(0)->info('Max time in ms that a retry should ever be delayed (0 = infinite)')->end()
                     ->floatNode('jitter')->defaultValue(0.1)->min(0)->max(1)->info('Randomness in percent (between 0 and 1) to apply to the delay')->end()
                 ->end()
-            ;
+        ;
     }
 
     private function addMailerSection(ArrayNodeDefinition $rootNode, callable $enableIfStandalone)

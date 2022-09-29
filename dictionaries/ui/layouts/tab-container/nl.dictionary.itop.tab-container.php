@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'UI:Layout:TabContainer:ExtraTabsListToggler:Label' => 'Other tabs~~',
-	'UIBlock:Error:AddBlockNotTabForbidden' => 'Cannot add block %1$s to %2$s (only Tab blocks are allowed)~~',
-	'UIBlock:TabContainer:RemoteTabLoad' => 'Click to load this tab~~',
+	'UI:Layout:TabContainer:ExtraTabsListToggler:Label' => 'Andere tabbladen',
+	'UIBlock:Error:AddBlockNotTabForbidden' => 'Kan blok %1$s niet toevoegen aan %2$s (enkel tabbladen zijn toegelaten)',
+	'UIBlock:TabContainer:RemoteTabLoad' => 'Klik om dit tabblad in te laden',
 ]);

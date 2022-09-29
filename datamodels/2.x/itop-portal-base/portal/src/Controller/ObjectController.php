@@ -195,6 +195,8 @@ class ObjectController extends BrickController
 		$sObjectClass = get_class($oObject);
 		$sObjectId = $oObject->GetKey();
 
+		$oObject->FireEvent(EVENT_SERVICE_DISPLAY_OBJECT_DETAILS);
+
 		$aData = array('sMode' => 'view');
 		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
 		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:View:Title', MetaModel::GetName($sObjectClass),
@@ -589,6 +591,8 @@ class ObjectController extends BrickController
 		$oSecurityHelper = $this->get('security_helper');
 		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 		$oScopeValidator = $this->get('scope_validator');
+		/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oFormHandlerHelper */
+		$oFormHandlerHelper = $this->get('object_form_handler');
 
 		$aData = array(
 			'results' => array(
@@ -640,16 +644,14 @@ class ObjectController extends BrickController
 		// Updating host object with form data / values
 		$sFormManagerClass = $aRequestContent['formmanager_class'];
 		$sFormManagerData = $aRequestContent['formmanager_data'];
-		if (!empty($sFormManagerClass) && !empty($sFormManagerData))
-		{
+		if (!empty($sFormManagerClass) && !empty($sFormManagerData)) {
 			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetContainer($this->container);
+			$oFormManager->SetObjectFormHandlerHelper($oFormHandlerHelper);
 			$oFormManager->SetObject($oHostObject);
 
 			// Applying action rules if present
-			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== ''))
-			{
+			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
 				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
 				$oObj = $oFormManager->GetObject();
 				$oContextManipulator->PrepareObject($aActionRules, $oObj);
@@ -769,13 +771,14 @@ class ObjectController extends BrickController
 		$oSecurityHelper = $this->get('security_helper');
 		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 		$oScopeValidator = $this->get('scope_validator');
-
+		/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oFormHandlerHelper */
+		$oFormHandlerHelper = $this->get('object_form_handler');
 
 		$aData = array(
-			'sMode' => 'search_regular',
-			'sTargetAttCode' => $sTargetAttCode,
-			'sHostObjectClass' => $sHostObjectClass,
-			'sHostObjectId' => $sHostObjectId,
+			'sMode'             => 'search_regular',
+			'sTargetAttCode'    => $sTargetAttCode,
+			'sHostObjectClass'  => $sHostObjectClass,
+			'sHostObjectId'     => $sHostObjectId,
 			'sActionRulesToken' => $oRequestManipulator->ReadParam('ar_token', ''),
 		);
 
@@ -807,16 +810,14 @@ class ObjectController extends BrickController
 		// Updating host object with form data / values
 		$sFormManagerClass = $oRequestManipulator->ReadParam('formmanager_class', '', FILTER_UNSAFE_RAW);
 		$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
-		if (!empty($sFormManagerClass) && !empty($sFormManagerData))
-		{
+		if (!empty($sFormManagerClass) && !empty($sFormManagerData)) {
 			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetContainer($this->container);
+			$oFormManager->SetObjectFormHandlerHelper($oFormHandlerHelper);
 			$oFormManager->SetObject($oHostObject);
 
 			// Applying action rules if present
-			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== ''))
-			{
+			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
 				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
 				$oObj = $oFormManager->GetObject();
 				$oContextManipulator->PrepareObject($aActionRules, $oObj);
@@ -1235,12 +1236,12 @@ class ObjectController extends BrickController
 						$oAttachment->Set('contents', $oDocument);
 						$iAttId = $oAttachment->DBInsert();
 
-						$aData['msg'] = htmlentities($oDocument->GetFileName(), ENT_QUOTES, 'UTF-8');
+						$aData['msg'] = utils::EscapeHtml($oDocument->GetFileName());
 						$aData['icon'] = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/icons8-image-file.svg';
 
 						// Checking if the instance has attachments
 						if (class_exists('AttachmentPlugIn')) {
-							$aData['icon'] = utils::GetAbsoluteUrlAppRoot() . AttachmentPlugIn::GetFileIcon($oDocument->GetFileName());
+							$aData['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDocument->GetFileName());
 						}
 
 						$aData['att_id'] = $iAttId;

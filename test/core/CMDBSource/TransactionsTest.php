@@ -11,6 +11,7 @@ use Combodo\iTop\Core\DbConnectionWrapper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Exception;
 use MetaModel;
+use MySQLTransactionNotClosedException;
 
 /**
  * @runTestsInSeparateProcesses
@@ -18,6 +19,7 @@ use MetaModel;
  * @backupGlobals disabled
  *
  * @group itopRequestMgmt
+ * @group specificOrgInSampleData
  * Class TransactionsTest
  *
  * @package Combodo\iTop\Test\UnitTest\Core
@@ -230,22 +232,56 @@ class TransactionsTest extends ItopTestCase
 	public function DBUpdateProvider()
 	{
 		return [
-			"Normal case" => ['iFailAt' => -1, 'bIsModified' => false],
-			"ticket_request" => ['iFailAt' => 1, 'bIsModified' => true],
+			"Normal case"        => ['iFailAt' => -1, 'bIsModified' => false],
+			"ticket_request"     => ['iFailAt' => 1, 'bIsModified' => true],
 			"lnkcontacttoticket" => ['iFailAt' => 2, 'bIsModified' => true],
-			"History 1" => ['iFailAt' => 3, 'bIsModified' => true],
-			"History 2" => ['iFailAt' => 4, 'bIsModified' => true],
-			"History 3" => ['iFailAt' => 5, 'bIsModified' => true],
-			"History 4" => ['iFailAt' => 6, 'bIsModified' => true],
-			"History 5" => ['iFailAt' => 7, 'bIsModified' => true],
-			"History 6" => ['iFailAt' => 8, 'bIsModified' => true],
-			"History 7" => ['iFailAt' => 9, 'bIsModified' => true],
-			"History 8" => ['iFailAt' => 10, 'bIsModified' => true],
-			"History 9" => ['iFailAt' => 11, 'bIsModified' => true],
-			"History 10" => ['iFailAt' => 12, 'bIsModified' => true],
-			"History 11" => ['iFailAt' => 13, 'bIsModified' => true],
-			"History 12" => ['iFailAt' => 14, 'bIsModified' => true],
-			"History 13" => ['iFailAt' => 15, 'bIsModified' => true],
+			"History 1"          => ['iFailAt' => 3, 'bIsModified' => true],
+			"History 2"          => ['iFailAt' => 4, 'bIsModified' => true],
+			"History 3"          => ['iFailAt' => 5, 'bIsModified' => true],
+			"History 4"          => ['iFailAt' => 6, 'bIsModified' => true],
+			"History 5"          => ['iFailAt' => 7, 'bIsModified' => true],
+			"History 6"          => ['iFailAt' => 8, 'bIsModified' => true],
+			"History 7"          => ['iFailAt' => 9, 'bIsModified' => true],
+			"History 8"          => ['iFailAt' => 10, 'bIsModified' => true],
+			"History 9"          => ['iFailAt' => 11, 'bIsModified' => true],
+			"History 10"         => ['iFailAt' => 12, 'bIsModified' => true],
+			"History 11"         => ['iFailAt' => 13, 'bIsModified' => true],
+			"History 12"         => ['iFailAt' => 14, 'bIsModified' => true],
+			"History 13"         => ['iFailAt' => 15, 'bIsModified' => true],
 		];
+	}
+
+	/**
+	 * @return void
+	 * @doesNotPerformAssertions
+	 */
+	public function testTransactionOpenedThenClosed()
+	{
+		CMDBSource::Query('START TRANSACTION;');
+		CMDBSource::Query('COMMIT;');
+	}
+
+	/**
+	 * This will throw an exception in the tearDown method.
+	 * This cannot be detected nor by `@expectedException` nor `expectException` method, so we have a specific tearDown impl
+	 *
+	 * @return void
+	 * @doesNotPerformAssertions
+	 */
+	public function testTransactionOpenedNotClosed()
+	{
+		CMDBSource::Query('START TRANSACTION;');
+	}
+
+	protected function tearDown(): void
+	{
+		try {
+			parent::tearDown();
+		}
+		catch (MySQLTransactionNotClosedException $e) {
+			if ($this->getName() === 'testTransactionOpenedNotClosed') {
+				$this->debug('Executing the testTransactionOpenNoClose method throws a '.MySQLTransactionNotClosedException::class.' exception in tearDown');
+			}
+		}
 	}
 }

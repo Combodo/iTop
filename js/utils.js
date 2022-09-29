@@ -389,11 +389,13 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle) {
 		var oColumns = $('#'+sDataTableName).DataTable().ajax.params()['columns'];
 		for (var j in oColumns) {
 			if (oColumns[j]['data']) {
-				var sCode = oColumns[j]['data'].split("/");
-				if (sCode[1] == '_key_') {
-					sCode[1] = 'id';
+				if (oColumns[j]['data']!='id') {
+					var sCode = oColumns[j]['data'].split("/");
+					if (sCode[1] == '_key_') {
+						sCode[1] = 'id';
+					}
+					aFields.push(sCode[0]+'.'+sCode[1]);
 				}
-				aFields.push(sCode[0]+'.'+sCode[1]);
 			} else {
 				for (var k in oColumns[j]) {
 					if (oColumns[j][k].checked) {
@@ -807,8 +809,10 @@ const CombodoTooltip = {
 		oOptions['content'] = sContent;
 
 		// Interaction (selection, click, ...) have to be enabled manually
-		// Important: When set to true, if "data-tooltip-append-to" is not specified, tooltip will be append to the parent element instead of the body
-		const bInteractive = oElem.attr('data-tooltip-interaction-enabled') === 'true';
+		// Important: When set to true, if "data-tooltip-append-to" is not specified, tooltip will be appended to the parent element instead of the body
+		// Note: Defaults to true if it contains hyperlink
+		let bDefaultInteractive = (bEnableHTML && sContent.indexOf("<a ") > -1)
+		const bInteractive = oElem.attr('data-tooltip-interaction-enabled') !== undefined ? oElem.attr('data-tooltip-interaction-enabled') === 'true' : bDefaultInteractive;
 		oOptions['interactive'] = bInteractive;
 
 		// Element to append the tooltip to

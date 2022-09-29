@@ -19,5 +19,5 @@
 
 // Input
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'No coincide la contraseña',
 ));

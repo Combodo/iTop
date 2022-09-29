@@ -1,0 +1,15 @@
+{# @copyright   Copyright (C) 2010-2022 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+// for each row action
+{% if oUIBlock.HasRowActions() %}
+    {% for aAction in oUIBlock.GetRowActions() %}
+        $('#{{ oUIBlock.GetId() }} tbody').on('click', 'button[data-action-id="{{ loop.index0 }}"]', function() {
+            let iActionId = $(this).data('action-id');
+            let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
+            let oTrElement = $(this).closest('tr');
+            let aData = oDatatable.row(oTrElement).data();
+            {{ aAction.js_row_action|raw }};
+        });
+    {% endfor %}
+{% endif %}

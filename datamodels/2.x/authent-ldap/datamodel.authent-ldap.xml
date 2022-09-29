@@ -27,7 +27,9 @@
                     </attributes>
                 </naming>
                 <display_template/>
-                <icon/>
+                <style>
+                  <icon/>
+                </style>
                 <reconciliation>
                     <attributes>
                         <attribute id="login"/>

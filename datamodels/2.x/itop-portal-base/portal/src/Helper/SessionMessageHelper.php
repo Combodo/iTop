@@ -23,6 +23,7 @@ use ArrayIterator;
 use Combodo\iTop\Application\Helper\Session;
 use IteratorAggregate;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Traversable;
 use utils;
 
 /**
@@ -98,9 +99,9 @@ class SessionMessageHelper implements IteratorAggregate
 	}
 
 	/**
-	 * @return \ArrayIterator|\Traversable
+	 * @return \ArrayIterator|\Traversable (\Traversable is the return type from the interface, \ArrayIterator is what we actually return)
 	 */
-	public function getIterator()
+	public function getIterator(): Traversable
 	{
 		$this->FetchMessages();
 
@@ -161,9 +162,11 @@ class SessionMessageHelper implements IteratorAggregate
 					}
 
 					$sMsgMetadata = '';
-					foreach ($aMessageData['metadata'] as $sMetadatumName => $sMetadatumValue)
-					{
-						$sMsgMetadata .= 'data-'.str_replace('_', '-', $sMetadatumName).'="'.utils::HtmlEntities($sMetadatumValue).'" ';
+					// Protection for missing metadata entry when session messages are not created from the portal
+					if (isset($aMessageData['metadata'])) {
+						foreach ($aMessageData['metadata'] as $sMetadatumName => $sMetadatumValue) {
+							$sMsgMetadata .= 'data-'.str_replace('_', '-', $sMetadatumName).'="'.utils::HtmlEntities($sMetadatumValue).'" ';
+						}
 					}
 					$aObjectMessages[] = array('css_classes' => $sMsgClass, 'message' => $aMessageData['message'], 'metadata' => $sMsgMetadata);
 					$aRanks[] = $aMessageData['rank'];

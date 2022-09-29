@@ -36,11 +36,11 @@ function DisplayStatus(WebPage $oPage)
 			$sCode = $oExtension->sCode;
 			$sDir = basename($oExtension->sSourceDir);
 			$oPage->add('<input type="checkbox" data-extension-code="'.$sCode.'" data-extension-dir="'.$sDir.'" checked disabled>&nbsp;');
-			$oPage->add('<label><b>'.htmlentities($oExtension->sLabel, ENT_QUOTES, 'UTF-8').'</b> '.$sInstallation.'</label>');
+			$oPage->add('<label><b>'.utils::EscapeHtml($oExtension->sLabel).'</b> '.$sInstallation.'</label>');
 			$oPage->add('<div class="description">');
 			$oPage->add('<p>');
 			if ($oExtension->sDescription != '') {
-				$oPage->add(htmlentities($oExtension->sDescription, ENT_QUOTES, 'UTF-8').'</br>');
+				$oPage->add(utils::EscapeHtml($oExtension->sDescription).'</br>');
 			}
 			$oPage->add('</p>');
 			$oPage->add('</div>');
@@ -161,11 +161,11 @@ function DoInstall(WebPage $oPage)
 				$oPage->add('<div class="choice">');
 				$oPage->add('<input type="checkbox" disabled>&nbsp;');
 				$sTitle = Dict::Format('iTopHub:InstallationEffect:MissingDependencies_Details', implode(', ', $oExtension->aMissingDependencies));
-				$oPage->add('<label><b>'.htmlentities($oExtension->sLabel, ENT_QUOTES, 'UTF-8').'</b> <span style="color:red" title="'.$sTitle.'">'.Dict::S('iTopHub:InstallationEffect:MissingDependencies').'<span></label>');
+				$oPage->add('<label><b>'.utils::EscapeHtml($oExtension->sLabel).'</b> <span style="color:red" title="'.$sTitle.'">'.Dict::S('iTopHub:InstallationEffect:MissingDependencies').'<span></label>');
 				$oPage->add('<div class="description">');
 				$oPage->add('<p>');
 				if ($oExtension->sDescription != '') {
-					$oPage->add(htmlentities($oExtension->sDescription, ENT_QUOTES, 'UTF-8').'</br>');
+					$oPage->add(utils::EscapeHtml($oExtension->sDescription).'</br>');
 				}
 				$oPage->add('</p>');
 				$oPage->add('</div>');
@@ -189,11 +189,11 @@ function DoInstall(WebPage $oPage)
 				$sCode = $oExtension->sCode;
 				$sDir = basename($oExtension->sSourceDir);
 				$oPage->add('<input type="checkbox" checked disabled data-extension-code="'.$sCode.'" data-extension-dir="'.$sDir.'">&nbsp;');
-				$oPage->add('<label><b>'.htmlentities($oExtension->sLabel, ENT_QUOTES, 'UTF-8').'</b> '.$sInstallation.'</label>');
+				$oPage->add('<label><b>'.utils::EscapeHtml($oExtension->sLabel).'</b> '.$sInstallation.'</label>');
 				$oPage->add('<div class="description">');
 				$oPage->add('<p>');
 				if ($oExtension->sDescription != '') {
-					$oPage->add(htmlentities($oExtension->sDescription, ENT_QUOTES, 'UTF-8').'</br>');
+					$oPage->add(utils::EscapeHtml($oExtension->sDescription).'</br>');
 				}
 				$oPage->add('</p>');
 				$oPage->add('</div>');

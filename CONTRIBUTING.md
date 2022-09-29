@@ -114,9 +114,9 @@ Our tests are located in the `test/` directory, containing a PHPUnit config file
 * Use the present tense ("Add feature" not "Added feature")
 * Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
 * Limit the first line to 72 characters or less
-* Please start the commit message with an applicable emoji code (following the [Gitmoji guide](https://gitmoji.carloscuesta.me/)).  
- Beware to use the code (for example `:bug:`) and not the character (🐛) as Unicode support in git clients is very poor for now...  
- Emoji examples :
+* Please start the commit message with an applicable emoji code (following the [Gitmoji guide](https://gitmoji.dev/)).  
+  Beware to use the code (for example `:bug:`) and not the character (🐛) as Unicode support in git clients is very poor for now...  
+  Emoji examples :
     * 🌐 `:globe_with_meridians:` for translations
     * 🎨 `:art:` when improving the format/structure of the code
     * ⚡️ `:zap:` when improving performance
@@ -160,4 +160,4 @@ We have one sticker per contribution type. You might get multiple stickers with 
 
 Here is the design of each stickers for year 2022:
 
-![iTop stickers 2022](.doc/contributing-guide/contributing-stickers-side-by-side.png)
+![iTop stickers 2022](.doc/contributing-guide/2022.contributing-stickers-side-by-side.png)

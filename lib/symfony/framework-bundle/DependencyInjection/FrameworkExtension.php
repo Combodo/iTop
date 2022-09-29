@@ -669,6 +669,10 @@ class FrameworkExtension extends Extension
         }
 
         if ($this->isConfigEnabled($container, $config['form']['csrf_protection'])) {
+            if (!$container->hasDefinition('security.csrf.token_generator')) {
+                throw new \LogicException('To use form CSRF protection, "framework.csrf_protection" must be enabled.');
+            }
+
             $loader->load('form_csrf.php');
 
             $container->setParameter('form.type_extension.csrf.enabled', true);
@@ -917,7 +921,7 @@ class FrameworkExtension extends Extension
             if (isset($workflow['marking_store']['type'])) {
                 $markingStoreDefinition = new ChildDefinition('workflow.marking_store.method');
                 $markingStoreDefinition->setArguments([
-                    'state_machine' === $type, //single state
+                    'state_machine' === $type, // single state
                     $workflow['marking_store']['property'],
                 ]);
             } elseif (isset($workflow['marking_store']['service'])) {
@@ -2437,11 +2441,11 @@ class FrameworkExtension extends Extension
             MailgunTransportFactory::class => 'mailer.transport_factory.mailgun',
             MailjetTransportFactory::class => 'mailer.transport_factory.mailjet',
             MandrillTransportFactory::class => 'mailer.transport_factory.mailchimp',
+            OhMySmtpTransportFactory::class => 'mailer.transport_factory.ohmysmtp',
             PostmarkTransportFactory::class => 'mailer.transport_factory.postmark',
             SendgridTransportFactory::class => 'mailer.transport_factory.sendgrid',
             SendinblueTransportFactory::class => 'mailer.transport_factory.sendinblue',
             SesTransportFactory::class => 'mailer.transport_factory.amazon',
-            OhMySmtpTransportFactory::class => 'mailer.transport_factory.ohmysmtp',
         ];
 
         foreach ($classToServices as $class => $service) {

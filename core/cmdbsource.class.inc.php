@@ -157,7 +157,7 @@ class CMDBSource
 		$iPort = null;
 		self::InitServerAndPort($sDbHost, $sServer, $iPort);
 
-		$iFlags = null;
+		$iFlags = 0;
 
 		// *some* errors (like connection errors) will throw mysqli_sql_exception instead of generating warnings printed to the output
 		// but some other errors will still cause the query() method to return false !!!
@@ -166,7 +166,6 @@ class CMDBSource
 		try
 		{
 			$oMysqli = new mysqli();
-			$oMysqli->init();
 
 			if ($bTlsEnabled)
 			{

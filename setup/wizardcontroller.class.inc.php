@@ -201,25 +201,22 @@ HTML;
 		$oPage->add('<div class="ibo-setup--wizard--content">');
 		$oStep->Display($oPage);
 		$oPage->add('</div>');
-		
+
 		// Add the back / next buttons and the hidden form
 		// to store the parameters
 		$oPage->add('<input type="hidden" id="_class" name="_class" value="'.get_class($oStep).'"/>');
 		$oPage->add('<input type="hidden" id="_state" name="_state" value="'.$oStep->GetState().'"/>');
-		foreach($this->aParameters as $sCode => $value)
-		{
-			$oPage->add('<input type="hidden" name="_params['.$sCode.']" value="'.htmlentities($value, ENT_QUOTES, 'UTF-8').'"/>');
+		foreach ($this->aParameters as $sCode => $value) {
+			$oPage->add('<input type="hidden" name="_params['.$sCode.']" value="'.utils::EscapeHtml($value).'"/>');
 		}
 
-		$oPage->add('<input type="hidden" name="_steps" value="'.htmlentities(json_encode($this->aSteps), ENT_QUOTES, 'UTF-8').'"/>');
+		$oPage->add('<input type="hidden" name="_steps" value="'.utils::EscapeHtml(json_encode($this->aSteps)).'"/>');
 		$oPage->add('<table style="width:100%;" class="ibo-setup--wizard--buttons-container"><tr>');
-		if ((count($this->aSteps) > 0) && ($oStep->CanMoveBackward()))
-		{
+		if ((count($this->aSteps) > 0) && ($oStep->CanMoveBackward())) {
 			$oPage->add('<td style="text-align: left"><button id="btn_back" class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="back"><span class="ibo-button--label">Back</span></button></td>');
 		}
-		if ($oStep->CanMoveForward())
-		{
-			$oPage->add('<td style="text-align:right;"><button id="btn_next" class="default ibo-button ibo-is-regular ibo-is-primary" type="submit" name="operation" value="next"><span class="ibo-button--label">'.htmlentities($oStep->GetNextButtonLabel(), ENT_QUOTES, 'UTF-8').'</span></button></td>');
+		if ($oStep->CanMoveForward()) {
+			$oPage->add('<td style="text-align:right;"><button id="btn_next" class="default ibo-button ibo-is-regular ibo-is-primary" type="submit" name="operation" value="next"><span class="ibo-button--label">'.utils::EscapeHtml($oStep->GetNextButtonLabel()).'</span></button></td>');
 		}
 		$oPage->add('</tr></table>');
 		$oPage->add("</form>");

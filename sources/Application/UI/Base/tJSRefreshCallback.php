@@ -40,7 +40,7 @@ trait tJSRefreshCallback
 	public function GetJSRefreshCallback(): string
 	{
 		$sJSRefresh = $this->GetJSRefresh();
-		tJSRefreshCallback::GetRecursiveJSRefresh($this, $sJSRefresh);
+		self::GetRecursiveJSRefresh($this, $sJSRefresh);
 
 		return $sJSRefresh;
 	}
@@ -60,7 +60,7 @@ trait tJSRefreshCallback
 			if ($usingTrait && $oSubBlock->GetJSRefresh() != "") {
 				$sJSRefresh = $oSubBlock->GetJSRefresh()."\n".$sJSRefresh;
 			}
-			tJSRefreshCallback::GetRecursiveJSRefresh($oSubBlock, $sJSRefresh);
+			self::GetRecursiveJSRefresh($oSubBlock, $sJSRefresh);
 		}
 
 		return $sJSRefresh;

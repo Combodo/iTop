@@ -112,7 +112,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:User/Attribute:language/Value:FR FR+' => 'Frans (Frankrijk)',
 	'Class:User/Attribute:profile_list' => 'Profielen',
 	'Class:User/Attribute:profile_list+' => 'Rollen waarmee rechten verleend zijn aan deze account.',
-	'Class:User/Attribute:allowed_org_list' => 'Mijn organisaties',
+	'Class:User/Attribute:allowed_org_list' => 'Toegestane organisaties',
 	'Class:User/Attribute:allowed_org_list+' => 'De eindgebruiker heeft toestemming om data te bekijken van de gerelateerde organisaties. Als er geen organisatie is opgegeven, heeft de persoon toegang tot data van alle organisaties.',
 	'Class:User/Attribute:status' => 'Status',
 	'Class:User/Attribute:status+' => 'De gebruikersaccount kan in- of uitgeschakeld zijn.',
@@ -121,10 +121,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login moet uniek zijn - "%1s" is al in gebruik',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Minstens één profiel moet toegewezen zijn aan deze gebruiker',
-	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
-	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
-	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:ProfileNotAllowed' => 'Profiel "%1$s" kan niet toegevoegd worden omdat het de toegang tot de backoffice zou ontzeggen.',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Je kan de status voor je eigen gebruikersaccount niet wijzigen.',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'De toegestande organisaties moeten minstens de organisatie bevatten waartoe de gebruikersaccount behoort.',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'De huidige lijst van profielen heeft niet voldoende toegangsrechten (gebruikersaccount zijn niet meer wijzigbaar).',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Minstens één organisatie moet toegewezen zijn aan deze gebruiker',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organisatie is niet toegestaan.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'De gebruikersaccount behoort niet tot de organisaties waar je zelf rechten voor hebt.',
@@ -368,14 +368,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 <li>Het beheren van het belangrijkste middel: documentatie.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+	'UI:WelcomeMenu:Text'=>  '<div>Proficiat, je werkt nu met '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
-<div>This version features a brand new modern and accessible backoffice design.</div>
+<div>Deze versie heeft een volledig nieuw, modern en toegankelijk uiterlijk.</div>
 
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+<div>De belangrijkste en meest vertrouwde '.ITOP_APPLICATION.' functies hebben we behouden en een modern jasje gegeven.
+We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben genoten om het te ontwerpen.</div>
 
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
+<div>Wijzig je '.ITOP_APPLICATION.'-voorkeuren voor een gepersonaliseerde ervaring.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open aanvragen: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mijn aanvragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Open incidenten: %1$d',
@@ -383,8 +383,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => 'Aan mij toegewezen incidenten',
 	'UI:AllOrganizations' => ' Alle Organisaties ',
 	'UI:YourSearch' => 'Jouw zoekopdracht',
-	'UI:LoggedAsMessage' => 'Ingelogd als %1$s (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => 'Ingelogd als %1$s (%2$s, Beheerder)~~',
+	'UI:LoggedAsMessage' => 'Ingelogd als %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Ingelogd als %1$s (%2$s, Beheerder)',
 	'UI:Button:Logoff' => 'Log uit',
 	'UI:Button:GlobalSearch' => 'Zoek',
 	'UI:Button:Search' => ' Zoek ',
@@ -423,7 +423,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:Insert' => 'Invoegen',
 	'UI:Button:More' => 'Meer',
 	'UI:Button:Less' => 'Minder',
-	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Button:Wait' => 'Even geduld terwijl de velden vernieuwd worden',
 	'UI:Treeview:CollapseAll' => 'Alles inklappen',
 	'UI:Treeview:ExpandAll' => 'Alles uitklappen',
 	'UI:UserPref:DoNotShowAgain' => 'Niet meer opnieuw tonen',
@@ -470,7 +470,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:InvalidDashboard' => 'Fout: ongeldig dashboard',
 	'UI:Error:MaintenanceMode' => 'Toepassing is momenteel in onderhoud',
 	'UI:Error:MaintenanceTitle' => 'Onderhoud',
-	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+	'UI:Error:InvalidToken' => 'Fout: de gevraagde bewerking werd al uitgevoerd (CSRF token niet gevonden)',
 
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 
@@ -644,9 +644,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Selecteer de klasse om te zoeken: ',
 
 	'UI:CSVReport-Value-Modified' => 'Aangepast',
-	'UI:CSVReport-Value-SetIssue' => 'Kon niet worden aangepast - reden: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Kon niet worden aangepast naar %1$s - reden: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Geen match',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Ontbrekende verplichte waarde',
 	'UI:CSVReport-Value-Ambiguous' => 'Onduidelijk: gevonden %1$s objecten',
 	'UI:CSVReport-Row-Unchanged' => 'onveranderd',
@@ -705,18 +705,18 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Gecontroleerde objecten',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Foutieve objecten',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Gevalideerde objecten',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s fouten van de %2$s - %3$s%%',
 
 
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Evaluatie van OQL-query',
 	'UI:RunQuery:QueryExamples' => 'Voorbeelden van query\'s',
-	'UI:RunQuery:QueryResults' => 'Query Results~~',
+	'UI:RunQuery:QueryResults' => 'Query-resultaten',
 	'UI:RunQuery:HeaderPurpose' => 'Doel',
 	'UI:RunQuery:HeaderPurpose+' => 'Uitleg over de query',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL-expressie',
 	'UI:RunQuery:HeaderOQLExpression+' => 'De query in OQL syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expressie om te evalueren: ',
-	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
+	'UI:RunQuery:QueryArguments' => 'Query-argumenten',
 	'UI:RunQuery:MoreInfo' => 'Meer informatie over de query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Herschreven query-expressie: ',
 	'UI:RunQuery:SerializedFilter' => 'Geserialiseerde filter: ',
@@ -728,7 +728,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Query:UrlForExcel' => 'URL om te gebruiken voor MS Excel-webquery\'s',
 	'UI:Query:UrlV1' => 'De lijst van velden is leeg gelaten. De pagina <em>export-V2.php</em> kan niet aangeroepen worden zonder deze informatie.Daarom verwijst de onderstaande link naar de oude export-pagina: <em>export.php</em>. Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van '.ITOP_APPLICATION_SHORT.'. Als je wil dat de lijst van geëxporteerde kolommen hetzelfde blijft over lange tijd, dan moet je een waarde opgeven voor het attribuut "Velden" en de pagina <em>export-V2.php</em> gebruiken.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objecten-schema',
-	'UI:Schema:TitleForClass' => '%1$s schema~~',
+	'UI:Schema:TitleForClass' => '%1$s schema',
 	'UI:Schema:CategoryMenuItem' => 'Categorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relaties',
 	'UI:Schema:AbstractClass' => 'Abstracte klasse: objecten van deze klasse kunnen niet worden geïnstantieerd.',
@@ -795,7 +795,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:Attribute/Filter' => 'Filter',
 	'UI:Schema:DefaultNullValue' => 'Standaardwaarde null : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Typ de eerste 3 karakters...',
-	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
+	'UI:Edit:SearchQuery' => 'Kies een vooraf gedefinieerde query',
 	'UI:Edit:TestQuery' => 'Test query',
 	'UI:Combo:SelectValue' => '--- selecteer een waarde ---',
 	'UI:Label:SelectedObjects' => 'Geselecteerde objecten: ',
@@ -994,24 +994,24 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 </ol>
 </p>
 <p>
-<i><b>Acties</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<i><b>Acties</b></i> definieer de acties die uitgevoerd moeten worden als de triggers geactiveerd worden. Er zijn momenteel 2 soorten standaardacties:
 <ol>
-	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	<li>Stuur een e-mail: Bij deze acties definieer je een sjabloon voor het bericht en ook parameters zoals ontvanger(s), prioriteit, enz.<br />
 	Een <a href="../setup/email.test.php" target="_blank">speciale testpagina (email.test.php)</a> is beschikbaar voor het testen en oplossen van eventuele problemen met jouw PHP e-mailconfiguratie.</li>
-	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+	<li>Webhooks: Staat toe om te integreren met toepassingen van derde partijen, door gestructureerde data te sturen naar een URL.</li>
 </ol>
 </p>
 <p>Acties moeten gekoppeld zijn aan triggers.
-Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt in welke volgorde de acties moeten worden uitgevoerd.</p>~~',
+Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt in welke volgorde de acties moeten worden uitgevoerd.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Beschikbare triggers',
 	'UI:NotificationsMenu:OnCreate' => 'Wanneer een object is aangemaakt',
 	'UI:NotificationsMenu:OnStateEnter' => 'Wanneer een object een bepaalde fase intreedt',
 	'UI:NotificationsMenu:OnStateLeave' => 'Wanneer een object een bepaalde fase uittreedt',
 	'UI:NotificationsMenu:Actions' => 'Acties',
-	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
-	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
-	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email acties',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook acties (uitgaande integraties)',
+	'UI:NotificationsMenu:Actions:Action' => 'Andere acties',
 	'UI:NotificationsMenu:AvailableActions' => 'Beschikbare acties',
 
 	'Menu:TagAdminMenu' => 'Tags-configuratie',
@@ -1055,8 +1055,8 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:iTopVersion:Long' => '%1$s versie %2$s-%3$s uitgegeven op %4$s',
 	'UI:PropertiesTab' => 'Eigenschappen',
 
-	'UI:OpenDocumentInNewWindow_' => 'Open~~',
-	'UI:DownloadDocument_' => 'Download~~',
+	'UI:OpenDocumentInNewWindow_' => 'Open',
+	'UI:DownloadDocument_' => 'Download',
 	'UI:Document:NoPreview' => 'Er is geen voorbeeld beschikbaar voor dit soort document',
 	'UI:Download-CSV' => 'Download %1$s',
 
@@ -1178,7 +1178,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:ArchiveMode:Banner+' => 'Gearchiveerde objecten zijn zichtbaar, maar kunnen niet worden aangepast',
 	'UI:FavoriteOrganizations' => 'Favoriete organisaties',
 	'UI:FavoriteOrganizations+' => 'Duid in onderstaande lijst de organisaties aan die je wilt zien in de keuzelijst voor een snelle toegang. Dit is geen beveiligingsinstelling; objecten van elke organisatie zijn nog steed zichtbaar en toegankelijk door "Alle Organisaties" te selecteren in de keuzelijst.',
-	'UI:FavoriteLanguage' => 'Taal van de gebruikersinterface~~',
+	'UI:FavoriteLanguage' => 'Taal van de gebruikersinterface',
 	'UI:Favorites:SelectYourLanguage' => 'Selecteer jouw taal',
 	'UI:FavoriteOtherSettings' => 'Overige instellingen',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Standaardlengte: %1$s items per pagina',
@@ -1220,16 +1220,16 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:OQL:UnknownClassAndFix' => 'Onbekende klasse "%1$s". Je zou "%2$s" kunnen proberen.',
 	'UI:OQL:UnknownClassNoFix' => 'Onbekende klasse "%1$s"',
 
-	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
-	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
-	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
+	'UI:Dashboard:EditCustom' => 'Bewerk aangepaste versie...',
+	'UI:Dashboard:CreateCustom' => 'Maak aangepaste versie...',
+	'UI:Dashboard:DeleteCustom' => 'Verwijder aangepaste versie...',
 	'UI:Dashboard:RevertConfirm' => 'Alle bewerkingen die zijn gemaakt aan de originele versie zullen verloren gaan. Bevestig dat je wilt doorgaan.',
 	'UI:ExportDashBoard' => 'Exporteer naar een bestand',
 	'UI:ImportDashBoard' => 'Importeer vanuit een bestand',
 	'UI:ImportDashboardTitle' => 'Importeer vanuit een bestand',
 	'UI:ImportDashboardText' => 'Selecteer een bestand van het dashboard om te importeren:',
 	'UI:Dashboard:Actions' => 'Dashboard acties',
-	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'Dit dashboard toont informatie die nog geen rekening houdt met de wijzigingen die nu gemaakt worden.',
 
 
 	'UI:DashletCreation:Title' => 'Maak een nieuwe Dashlet aan',
@@ -1242,8 +1242,8 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:DashboardEdit:AutoReload' => 'Automatisch vernieuwen',
 	'UI:DashboardEdit:AutoReloadSec' => 'Interval voor het automatisch vernieuwen (seconden)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'Het toegestane minimum is 5 seconden',
-	'UI:DashboardEdit:Revert' => 'Revert~~',
-	'UI:DashboardEdit:Apply' => 'Apply~~',
+	'UI:DashboardEdit:Revert' => 'Herstel',
+	'UI:DashboardEdit:Apply' => 'Opslaan',
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Eigenschappen van dashboard',
@@ -1502,9 +1502,9 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Nog geen.',
 
 	// - Criteria header actions
-	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
-	'UI:Search:Criteria:Remove' => 'Remove~~',
-	'UI:Search:Criteria:Locked' => 'Locked~~',
+	'UI:Search:Criteria:Toggle' => 'Klap in / uit',
+	'UI:Search:Criteria:Remove' => 'Verwijder',
+	'UI:Search:Criteria:Locked' => 'Vergrendeld',
 
 	// - Criteria titles
 	//   - Default widget
@@ -1663,8 +1663,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Notifications:Title' => 'Auditcategorieën',
 	'Menu:RunQueriesMenu'         => 'Query\'s uitvoeren',
 	'Menu:RunQueriesMenu+'        => 'Voer een query uit',
-	'Menu:QueryMenu'              => 'Favoriete query\'s',
-	'Menu:QueryMenu+'             => 'Favoriete query\'s',
+	'Menu:QueryMenu'              => 'Voorgedefinieerde query\'s',
+	'Menu:QueryMenu+'             => 'Voorgedefinieerde query\'s',
 	'Menu:UniversalSearchMenu'    => 'Globale zoekopdracht',
 	'Menu:UniversalSearchMenu+'   => 'Zoek in alle data...',
 	'Menu:UserManagementMenu'     => 'Gebruikersbeheer',

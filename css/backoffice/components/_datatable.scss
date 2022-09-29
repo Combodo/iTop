@@ -119,10 +119,33 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
     &.selected {
       background-color: $ibo-datatable--row--background-color--is-selected;
     }
+
+    .ibo-datatable--row-actions-toolbar{
+      justify-content: end;
+    }
   }
 }
 
 .ibo-datatable--selected-count, .ibo-datatable--result-count{
   padding-right: 0.2em;
   padding-left: 0.1em;
+}
+
+//
+.ibo-datatable[data-status="loading"]{
+  margin-top: $ibo-datatable--toolbar--table-spacing;
+  td, th {
+    position: relative;
+    padding: $ibo-vendors-datatables--cell--padding-y $ibo-vendors-datatables--cell--padding-x;
+  }
+  td{
+    @extend %ibo-font-ral-med-100;
+  }
+  tr:nth-child(even){
+    background-color: $ibo-vendors-datatables--row--background-color--is-even;
+  }
+  th {
+     @extend %ibo-font-ral-sembol-100;
+    border-bottom: $ibo-vendors-datatables--columns-header--border-bottom;
+   }
 }
