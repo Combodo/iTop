@@ -496,7 +496,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Menu:Actions' => 'Actions',
 	'UI:Menu:OtherActions' => 'Autres Actions',
 	'UI:Menu:Transitions' => 'Transitions~~',
-	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Autres Transitions',
 	'UI:Menu:New' => 'Créer...',
 	'UI:Menu:Add' => 'Ajouter...',
 	'UI:Menu:Manage' => 'Gérer...',
