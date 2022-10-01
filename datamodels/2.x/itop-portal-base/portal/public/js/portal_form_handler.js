@@ -58,6 +58,8 @@ $(function()
 			if((this.options.cancel_url !== null) && (this.options.cancel_url !== ''))
 				this.options.cancel_rule.url = this.options.cancel_url;
 
+			this._bindEvents();
+
 			this._super();
 		},
    
@@ -79,6 +81,16 @@ $(function()
 		{
 			this._super( key, value );
 		},
+		_bindEvents: function() {
+			const me = this;
+
+			// Submit event from the form should be treated as a click on the submit button
+			// as it processes things before sending the request
+			this.element.on('submit', function(oEvent) {
+				me._onSubmitClick(oEvent);
+			});
+		},
+
 		// - Callback when some fields have been touched
 		_onFieldsTouched: function(oEvent)
 		{
