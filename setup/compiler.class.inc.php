@@ -2246,8 +2246,10 @@ EOF;
 		//
 		$sClassName = $oClass->getAttribute('id');
 		$bIsAbstractClass = ($oProperties->GetChildText('abstract') == 'true');
-		$oPhpParent = $oClass->GetUniqueElement('php_parent', false);
 		$aRequiredFiles = [];
+
+		// - PHP parent
+		$oPhpParent = $oClass->GetUniqueElement('php_parent', false);
 		if ($oPhpParent)
 		{
 			$sParentClass = $oPhpParent->GetChildText('name', '');
@@ -2271,6 +2273,19 @@ EOF;
 		{
 			$sParentClass = $oClass->GetChildText('parent', 'DBObject');
 		}
+
+		// - PHP traits
+		$aPhpTraits = [];
+		$oPhpTraits = $oClass->GetUniqueElement('php_traits', false);
+		if ($oPhpTraits) {
+			foreach ($oPhpTraits->getElementsByTagName('php_trait') as $oPhpTrait) {
+				$sPhpFQTN = $oPhpTrait->GetText();
+				if (utils::IsNotNullOrEmptyString($sPhpFQTN)) {
+					$aPhpTraits[] = $sPhpFQTN;
+				}
+			}
+		}
+
 		$sInitMethodCalls =
 			<<<EOF
 $sAttributes
@@ -2281,7 +2296,7 @@ EOF;
 
 		// some other stuff (magical attributes like friendlyName) are done in MetaModel::InitClasses and though not present in the
 		// generated PHP
-		$sPHP .= $this->GeneratePhpCodeForClass($sClassName, $sParentClass, $sClassParams, $sInitMethodCalls, $bIsAbstractClass, $sMethods, $aRequiredFiles, $sCodeComment);
+		$sPHP .= $this->GeneratePhpCodeForClass($sClassName, $sParentClass, $sClassParams, $sInitMethodCalls, $bIsAbstractClass, $aPhpTraits, $sMethods, $aRequiredFiles, $sCodeComment);
 
 		// N°931 generates TagFieldData classes for AttributeTag fields
 		if (!empty($aTagFieldsInfo))
@@ -3734,12 +3749,16 @@ PHP;
 	 * @param string $sClassParams serialized array. Use ::GetAssociativeArrayAsPhpCode if you need to keep some PHP code calls
 	 * @param string $sInitMethodCalls
 	 * @param bool $bIsAbstractClass
+	 * @param array $aPhpTraits Array of fully qualified trait names to be used in the class (eg. ['\Combodo\iTop\Extension\tTraitWith2FactorizedMethods', '\tTraitWithNoNamespace'])
 	 * @param string $sMethods
-	 *
 	 * @param array $aRequiredFiles
 	 * @param string $sCodeComment
 	 *
 	 * @return string php code for the class
+	 *
+	 * @since 3.1.0 Add $aPhpTraits parameter.
+	 *                      Note that param was placed on 6th place deliberately for better DX and consistency.
+	 *                      Also the method cannot be used by third parties, limiting the risk of BC breaks.
 	 */
 	private function GeneratePhpCodeForClass(
 		$sClassName,
@@ -3747,6 +3766,7 @@ PHP;
 		$sClassParams,
 		$sInitMethodCalls = '',
 		$bIsAbstractClass = false,
+		array $aPhpTraits = [],
 		$sMethods = '',
 		$aRequiredFiles = [],
 		$sCodeComment = ''
@@ -3767,9 +3787,16 @@ PHP;
 			$sPHP .= 'class '.$sClassName;
 		}
 		$sPHP .= " extends $sParentClassName\n";
-		$sPHP .=
-			<<<EOF
-{
+		$sPHP .= "{\n";
+
+		if (count($aPhpTraits) > 0) {
+			foreach ($aPhpTraits as $sPhpTrait) {
+				$sPHP .= "\tuse $sPhpTrait;\n";
+			}
+			$sPHP .= "\n";
+		}
+
+		$sPHP .= <<<PHP
 	public static function Init()
 	{
 		\$aParams = $sClassParams;
@@ -3780,7 +3807,7 @@ $sInitMethodCalls
 
 $sMethods
 }
-EOF;
+PHP;
 
 		return $sPHP;
 	}
