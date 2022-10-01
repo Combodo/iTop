@@ -747,7 +747,7 @@ $(function()
 
 			// - Helpers on case logs entry forms
 			/**
-			 * @returns {integer} The number of caselog entry form
+			 * @returns {integer} The number of caselog entry forms
 			 * @private
 			 * @since 3.1.0
 			 */
