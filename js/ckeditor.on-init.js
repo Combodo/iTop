@@ -6,6 +6,18 @@
 // WARNING: This code cannot be placed directly within the page as CKEditor could not be loaded yet.
 // As it can be loaded from an XHR call (several times), we need to ensure it will be called when necessary (see PHP WebResourcesHelper)
 
+CKEDITOR.on('instanceReady', function (oEvent) {
+	// Keyboard listener
+	oEvent.editor.on('key', function(oKeyEvent){
+		const oKeyboardEvent = oKeyEvent.data.domEvent.$;
+
+		// Submit value on "Ctrl + Enter" or "Meta (Cmd) + Enter" keyboard shortcut
+		if ((oKeyboardEvent.ctrlKey || oKeyboardEvent.metaKey) && oKeyboardEvent.key === 'Enter') {
+			$('#'+ oEvent.editor.name).closest('form').trigger('submit');
+		}
+	});
+});
+
 // For disabling the CKEditor at init time when the corresponding textarea is disabled !
 if ((CKEDITOR !== undefined) && (CKEDITOR.plugins.registered['disabler'] === undefined)) {
 	CKEDITOR.plugins.add( 'disabler',

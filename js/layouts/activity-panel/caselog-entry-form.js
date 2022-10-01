@@ -84,20 +84,32 @@ $(function() {
 				// Handlers for the CKEditor itself
 				CKEDITOR.on('instanceReady', function (oEvent) {
 					// Handle only the current CKEditor instance
-					if (oEvent.editor.name === me.options.text_input_id) {
-						// Update depending elements on change
-						// Note: That when images are uploaded, the "change" event is triggered before the image upload is complete, meaning that we don't have the <img> tag yet.
-						me._GetCKEditorInstance().on('change', function () {
-							const bWasDraftBefore = me.is_draft;
-							const bIsDraftNow = !me._IsInputEmpty();
-
-							if (bWasDraftBefore !== bIsDraftNow) {
-								me.is_draft = bIsDraftNow;
-								me._UpdateEditingVisualHint();
-								// Note: We must not call me._UpdateSubmitButtonState() as it will be updated by the disable_submission/enable_submission events
-							}
-						});
+					if (oEvent.editor.name !== me.options.text_input_id) {
+						return;
 					}
+
+					// Update depending elements on change
+					// Note: That when images are uploaded, the "change" event is triggered before the image upload is complete, meaning that we don't have the <img> tag yet.
+					me._GetCKEditorInstance().on('change', function () {
+						const bWasDraftBefore = me.is_draft;
+						const bIsDraftNow = !me._IsInputEmpty();
+
+						if (bWasDraftBefore !== bIsDraftNow) {
+							me.is_draft = bIsDraftNow;
+							me._UpdateEditingVisualHint();
+							// Note: We must not call me._UpdateSubmitButtonState() as it will be updated by the disable_submission/enable_submission events
+						}
+					});
+
+					// Dispatch submission to the right pipeline on submit
+					$(me.element).on('submit', function (oSubmitEvent) {
+						oSubmitEvent.preventDefault();
+						if (me._IsSubmitAutonomous()) {
+							me._RequestSubmission();
+						} else {
+							me._GetGeneralFormElement().trigger('submit');
+						}
+					});
 				});
 
 				if (false === this._IsSubmitAutonomous()) {

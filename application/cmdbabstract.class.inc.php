@@ -2278,7 +2278,7 @@ JS
 {$sValidationSpan}{$sReloadSpan}
 HTML;
 					$oPage->add_ready_script(
-						<<<EOF
+						<<<JS
                         $('#$iId').closest('.field_input_text').find('.fullscreen_button').on('click', function(oEvent){
                             var oOriginField = $('#$iId').closest('.field_input_text');
                             var oClonedField = oOriginField.clone();
@@ -2291,7 +2291,14 @@ HTML;
                                 oOriginField.find('textarea').triggerHandler('change');
                             });
                         });
-EOF
+                        
+                        // Submit host form on "Ctrl + Enter" or "Meta (Cmd) + Enter" keyboard shortcut
+                        $('#$iId').on('keyup', function (oEvent) {
+                            if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.key === 'Enter') {
+                                $(this).closest('form').trigger('submit');
+                            }
+                        });
+JS
 					);
 				break;
 
