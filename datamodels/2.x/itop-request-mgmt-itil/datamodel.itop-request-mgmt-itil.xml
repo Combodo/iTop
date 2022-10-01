@@ -205,6 +205,12 @@
 				</field>
 				<field id="origin" xsi:type="AttributeEnum">
 					<values>
+            <value id="in_person">
+              <code>in_person</code>
+            </value>
+            <value id="chat">
+              <code>chat</code>
+            </value>
 						<value id="mail">
 							<code>mail</code>
 						</value>
