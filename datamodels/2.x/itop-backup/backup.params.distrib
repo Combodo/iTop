@@ -20,6 +20,7 @@ auth_user = admin
 auth_pwd = admin
 
 # Target file - path and filename (optional)
+# Full path or relative to current directory
 #
 # Formatting rules:
 # %Y-%m-%d => 2011-01-25... see PHP documentation of strftime()
