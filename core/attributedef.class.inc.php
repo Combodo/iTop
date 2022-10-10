@@ -6022,9 +6022,6 @@ class AttributeDateTime extends AttributeDBField
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		if (!$this->IsNullAllowed()) {
-			return date($this->GetInternalFormat());
-		}
 		return $this->GetNullValue();
 	}
 
