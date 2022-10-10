@@ -124,7 +124,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:origin' => 'Oorsprong',
 	'Class:UserRequest/Attribute:origin+' => '',
 	'Class:UserRequest/Attribute:origin/Value:in_person' => 'Persoonlijk',
-	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Mondeling',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Mondeling, in persoon',
 	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat',
 	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Chat',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'E-mail',

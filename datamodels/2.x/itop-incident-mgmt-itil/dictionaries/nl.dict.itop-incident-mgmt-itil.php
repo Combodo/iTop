@@ -98,7 +98,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Attribute:origin' => 'Oorsprong',
 	'Class:Incident/Attribute:origin+' => '',
 	'Class:Incident/Attribute:origin/Value:in_person' => 'Persoonlijk',
-	'Class:Incident/Attribute:origin/Value:in_person+' => 'Mondeling',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Mondeling, in persoon',
 	'Class:Incident/Attribute:origin/Value:chat' => 'Chat',
 	'Class:Incident/Attribute:origin/Value:chat+' => 'Chat',
 	'Class:Incident/Attribute:origin/Value:mail' => 'E-mail',
