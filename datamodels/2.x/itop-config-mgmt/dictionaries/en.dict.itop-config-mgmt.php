@@ -528,7 +528,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareInstance' => 'Software Instance',
 	'Class:SoftwareInstance+' => '',
 	'Class:SoftwareInstance/Attribute:system_id' => 'System',
-	'Class:SoftwareInstance/Attribute:system_id+' => 'The system is a Server, a VirtualMachine or a PC',
+	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...',
 	'Class:SoftwareInstance/Attribute:system_name' => 'System name',
 	'Class:SoftwareInstance/Attribute:system_name+' => '',
 	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
