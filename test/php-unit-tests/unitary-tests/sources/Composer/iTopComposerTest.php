@@ -22,8 +22,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  *   along with iTop. If not, see <http: *www.gnu.org/licenses/>
  *
  */
-
-
 class iTopComposerTest extends ItopTestCase
 {
 
@@ -84,8 +82,7 @@ class iTopComposerTest extends ItopTestCase
 		$this->assertTrue(is_array($aDirs));
 
 		$aDeniedDirWrongFormat = [];
-		foreach ($aDirs as $sDir)
-		{
+		foreach ($aDirs as $sDir) {
 			if (false === iTopComposer::IsTestDir($sDir)) {
 				$aDeniedDirWrongFormat[] = $sDir;
 			}
@@ -138,8 +135,8 @@ class iTopComposerTest extends ItopTestCase
 		$this->assertEmpty(
 			$aMissing,
 			'Test dirs exists in /lib !'."\n"
-				.'  They must be declared either in the allowed or denied list in '.iTopComposer::class." (see N°2651).\n"
-				.'  List of dirs:'."\n".var_export($aMissing, true)
+			.'  They must be declared either in the allowed or denied list in '.iTopComposer::class." (see N°2651).\n"
+			.'  List of dirs:'."\n".var_export($aMissing, true)
 		);
 	}
 }

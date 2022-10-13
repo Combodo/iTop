@@ -24,7 +24,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 /**
  * @covers utils
  */
-class UtilsTest extends ItopTestCase
+class utilsTest extends ItopTestCase
 {
 	public function testEndsWith()
 	{

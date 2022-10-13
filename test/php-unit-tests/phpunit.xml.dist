@@ -50,6 +50,13 @@
     <testsuite name="Setup">
       <directory>unitary-tests/setup</directory>
     </testsuite>
+    <!-- Note: The unitary-tests/sources/application/TwigBase is omitted for now as the test is not working -->
+    <testsuite name="SourcesApplicationSearch">
+      <directory>unitary-tests/sources/application/search</directory>
+    </testsuite>
+    <testsuite name="SourcesComposer">
+      <directory>unitary-tests/sources/Composer</directory>
+    </testsuite>
     <testsuite name="Status">
       <directory>unitary-tests/status</directory>
     </testsuite>
