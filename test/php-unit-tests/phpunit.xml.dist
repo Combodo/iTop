@@ -34,11 +34,11 @@
     <testsuite name="Core">
       <directory>tests/core</directory>
     </testsuite>
-    <testsuite name="CoreExtensions">
-      <directory>tests/coreExtensions</directory>
-    </testsuite>
     <testsuite name="Integration">
       <directory>integration</directory>
+    </testsuite>
+    <testsuite name="Authent-local">
+      <directory>tests/datamodels/2.x/authent-local</directory>
     </testsuite>
     <testsuite name="Itop-Config">
       <directory>tests/datamodels/2.x/itop-config</directory>
