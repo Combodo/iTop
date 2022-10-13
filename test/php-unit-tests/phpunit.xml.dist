@@ -29,44 +29,44 @@
 
   <testsuites>
     <testsuite name="Application">
-      <directory>application</directory>
+      <directory>tests/application</directory>
     </testsuite>
     <testsuite name="Core">
-      <directory>core</directory>
+      <directory>tests/core</directory>
     </testsuite>
     <testsuite name="CoreExtensions">
-      <directory>coreExtensions</directory>
+      <directory>tests/coreExtensions</directory>
     </testsuite>
     <testsuite name="Integration">
       <directory>integration</directory>
     </testsuite>
     <testsuite name="Itop-Config">
-      <directory>itop-config</directory>
+      <directory>tests/datamodels/2.x/itop-config</directory>
     </testsuite>
     <testsuite name="Itop-Tickets">
-      <directory>itop-tickets</directory>
+      <directory>tests/datamodels/2.x/itop-tickets</directory>
     </testsuite>
     <testsuite name="Setup">
-      <directory>setup</directory>
+      <directory>tests/setup</directory>
     </testsuite>
     <testsuite name="Status">
-      <directory>status</directory>
+      <directory>tests/status</directory>
     </testsuite>
     <testsuite name="Webservices">
-      <directory>webservices</directory>
+      <directory>tests/webservices</directory>
     </testsuite>
 
     <testsuite name="Extensions">
-      <directory>../env-production/*/test</directory>
+      <directory>../../../env-production/*/test</directory>
     </testsuite>
   </testsuites>
 
   <!-- Code coverage white list -->
   <filter>
     <whitelist>
-      <file>../core/apc-emulation.php</file>
-      <file>../core/ormlinkset.class.inc.php</file>
-      <file>../datamodels/2.x/itop-tickets/main.itop-tickets.php</file>
+      <file>../../../core/apc-emulation.php</file>
+      <file>../../../core/ormlinkset.class.inc.php</file>
+      <file>../../../datamodels/2.x/itop-tickets/main.itop-tickets.php</file>
     </whitelist>
   </filter>
 

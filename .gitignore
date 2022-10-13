@@ -8,7 +8,7 @@
 
 # composer reserver directory, from sources, populate/update using "composer install"
 vendor/*
-test/vendor/*
+test/*/vendor/*
 
 # all conf but listing prevention
 /conf/**
@@ -33,7 +33,7 @@ test/vendor/*
 !/log/web.config
 
 # PHPUnit cache file
-/test/.phpunit.result.cache
+/test/php-unit-tests/.phpunit.result.cache
 
 
 # Jetbrains
