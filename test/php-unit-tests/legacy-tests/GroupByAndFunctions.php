@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-require_once ('../approot.inc.php');
+require_once ('../../../approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/itopwebpage.class.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
