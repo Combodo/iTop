@@ -27,7 +27,7 @@
 
     <testsuites>
         <testsuite name="PostBuildIntegration">
-            <directory>postbuild_integration</directory>
+            <directory>post-build-integration-tests</directory>
         </testsuite>
     </testsuites>
 
