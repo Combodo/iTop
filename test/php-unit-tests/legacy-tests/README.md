@@ -1,0 +1,1 @@
+Tests in this folder have been written before the introduction of PHPUnit in iTop, they are not run by the CI.
