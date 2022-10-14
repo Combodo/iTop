@@ -39,14 +39,16 @@ class ItopTestCase extends TestCase
 	/** @noinspection UsingInclusionOnceReturnValueInspection avoid errors for approot includes */
 	protected function setUp(): void
 	{
-		@include_once '../approot.inc.php';
-		@include_once '../../approot.inc.php';
-		@include_once '../../../approot.inc.php';
-		@include_once '../../../../approot.inc.php';
-		@include_once '../../../../../approot.inc.php';
-		@include_once '../../../../../../approot.inc.php';
-		@include_once '../../../../../../../approot.inc.php';
-		@include_once '../../../../../../../../approot.inc.php';
+		$sAppRootRelPath = 'approot.inc.php';
+		$sDepthSeparator = '../';
+		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
+			if (file_exists($sAppRootRelPath)) {
+				require_once $sAppRootRelPath;
+				break;
+			}
+
+			$sAppRootRelPath = $sDepthSeparator.$sAppRootRelPath;
+		}
 	}
 
 	/**
