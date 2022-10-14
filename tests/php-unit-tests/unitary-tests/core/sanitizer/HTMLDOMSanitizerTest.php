@@ -222,7 +222,7 @@ class HTMLDOMSanitizerTest extends AbstractDOMSanitizerTest
 	 */
 	public function testDoSanitizeCallInlineImageProcessImageTag($sHtml, $iExpectedCount)
 	{
-		require_once APPROOT.'test/core/sanitizer/InlineImageMock.php';
+		require_once APPROOT.'tests/core/sanitizer/InlineImageMock.php';
 		InlineImageMock::ResetCallCounter();
 
 		$oSanitizer = new HTMLDOMSanitizer(InlineImageMock::class);

@@ -41,7 +41,7 @@ else
 }
 $bError = false;
 $oP = new iTopWebPage('Database inconsistencies');
-$oP->set_base(utils::GetAbsoluteUrlAppRoot().'test/');
+$oP->set_base(utils::GetAbsoluteUrlAppRoot().'tests/');
 $oP->set_title('Grouping with functions');
 $oP->add('<div style="padding: 15px;"><h2>Grouping with functions</h2>');
 $oP->add('<div style="padding: 15px; background: #ddd;">');

@@ -28,7 +28,7 @@ require_once(APPROOT.'application/startup.inc.php');
 \LoginWebPage::DoLogin(true);
 
 $sOQLFile = APPROOT.'log/oql_records.txt';
-$sTestFile = APPROOT.'test/core/oql_records.php';
+$sTestFile = APPROOT.'tests/core/oql_records.php';
 
 $oTestHandle = @fopen($sTestFile, "w");
 
@@ -77,7 +77,7 @@ echo "File '$sTestFile' generated with $iCount entries (from $iRead captured OQL
 
 
 $sOQLFile = APPROOT.'log/oql_group_by_records.txt';
-$sTestFile = APPROOT.'test/core/oql_group_by_records.php';
+$sTestFile = APPROOT.'tests/core/oql_group_by_records.php';
 
 $oTestHandle = @fopen($sTestFile, "w");
 
