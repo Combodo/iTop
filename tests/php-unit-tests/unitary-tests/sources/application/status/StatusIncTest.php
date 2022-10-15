@@ -38,7 +38,7 @@ class StatusIncTest extends TestCase {
 	{
 		//AppRoot is the directory containing the directory
 		//Assume getcwd() is runned inside APPROOT/test
-		$this->sAppRoot = __DIR__.'/../../../../sources/application/status';
+		$this->sAppRoot = __DIR__.'/../../../../../../sources/application/status';
 	}
 
     /**

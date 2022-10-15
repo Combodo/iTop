@@ -2,7 +2,7 @@
 
 // Include status functions
 // Important: We can't use the APPROOT constant here as the current script will be executed via the PHP exec() function which won't have it loaded yet.
-require_once __DIR__.'/../../../../sources/application/status/status.inc.php';
+require_once __DIR__.'/../../../../../../sources/application/status/status.inc.php';
 
 // Do check Status
 try 
