@@ -28,24 +28,15 @@
   </php>
 
   <testsuites>
+    <!-- Unitary tests -->
     <testsuite name="Application">
       <directory>unitary-tests/application</directory>
     </testsuite>
     <testsuite name="Core">
       <directory>unitary-tests/core</directory>
     </testsuite>
-    <!-- Important: For now this suite must be here and not with the other core module suites or it will crash the CI -->
-    <testsuite name="Authent-local">
-      <directory>unitary-tests/datamodels/2.x/authent-local</directory>
-    </testsuite>
-    <testsuite name="Integration">
-      <directory>integration-tests</directory>
-    </testsuite>
-    <testsuite name="Itop-Config">
-      <directory>unitary-tests/datamodels/2.x/itop-config</directory>
-    </testsuite>
-    <testsuite name="Itop-Tickets">
-      <directory>unitary-tests/datamodels/2.x/itop-tickets</directory>
+    <testsuite name="Datamodels">
+      <directory>unitary-tests/datamodels/2.x</directory>
     </testsuite>
     <testsuite name="Setup">
       <directory>unitary-tests/setup</directory>
@@ -66,6 +57,11 @@
 
     <testsuite name="Extensions">
       <directory>../../env-production/*/test</directory>
+    </testsuite>
+
+    <!-- Integration tests -->
+    <testsuite name="Integration">
+      <directory>integration-tests</directory>
     </testsuite>
   </testsuites>
 
