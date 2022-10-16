@@ -44,17 +44,12 @@ class TwigTest extends ItopDataTestCase
 			$oTwig->addFunction($oFunction);
 		}
 
-		$sHtml = $oTwig->render($sId, ['AttackerURL' => 'file://'.__DIR__.'/attacker']);
-
-		$this->assertEquals($sExpected, $sHtml);
-	}
-
-	public static function TemplateProvider()
+	public static function testTemplateProvider()
 	{
 		$aReturn = array();
 		$aReturn['filter_system'] = [
-				'sFileName' => file_get_contents(__DIR__.'/test.html.twig'),
-				'expected' => file_get_contents(__DIR__.'/test.html'),
+				'sFileName' => 'test.html',
+				'expected' =>file_get_contents(dirname(__FILE__).'/test.html'),
 			];
 
 		return $aReturn;
