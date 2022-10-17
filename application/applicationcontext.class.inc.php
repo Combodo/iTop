@@ -380,16 +380,15 @@ class ApplicationContext
 	        $sUrlMakerClass = self::GetUrlMakerClass();
         }
 		$sUrl = call_user_func(array($sUrlMakerClass, 'MakeObjectUrl'), $sObjClass, $sObjKey);
-	   if (utils::strlen($sUrl) > 0) {
+	   if (utils::StrLen($sUrl) > 0) {
 		   if ($bWithNavigationContext) {
 			   return $sUrl."&".$oAppContext->GetForLink();
 		   } else {
 			   return $sUrl;
 		   }
-	   } else
-		{
-			return '';
-		}	
+	   } else {
+		   return '';
+	   }
 	}
 
 	/**
