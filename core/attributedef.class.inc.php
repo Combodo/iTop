@@ -7665,6 +7665,17 @@ class AttributeExternalField extends AttributeDefinition
 class AttributeURL extends AttributeString
 {
 	/**
+	 * @var string
+	 * SCHEME....... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH......................... GET............................................ ANCHOR..........................
+	 * Example: http://User:passWord@127.0.0.1:8888/patH/Page.php?arrayArgument[2]=something:blah20#myAnchor
+	 * @link http://www.php.net/manual/fr/function.preg-match.php#93824 regexp source
+	 * @since 3.0.1 N°4515 handle Alfresco and Sharepoint URLs
+	 * @since 3.0.3 moved from Config to AttributeURL constant
+	 */
+	public const DEFAULT_VALIDATION_PATTERN = /** @lang RegExp */
+		'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z0-9_.-][a-zA-Z0-9+\$_.-]*)?';
+
+	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
