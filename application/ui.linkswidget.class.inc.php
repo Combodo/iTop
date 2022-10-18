@@ -108,15 +108,14 @@ class UILinksWidget
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	protected function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false)
+	protected function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false, $bModified = false)
 	{
 		$sPrefix = "$this->m_sAttCode{$this->m_sNameSuffix}";
 		$aRow = array();
 		$aFieldsMap = array();
 		$iKey = 0;
 
-		if (is_object($linkObjOrId) && (!$linkObjOrId->IsNew()))
-		{
+		if (is_object($linkObjOrId) && (!$linkObjOrId->IsNew())) {
 			$iKey = $linkObjOrId->GetKey();
 			$iRemoteObjKey = $linkObjOrId->Get($this->m_sExtKeyToRemote);
 			$sPrefix .= "[$iKey][";
@@ -125,49 +124,44 @@ class UILinksWidget
 			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}{$iKey}";
 			$aArgs['this'] = $linkObjOrId;
 
-			if ($bReadOnly)
-			{
+			if ($bReadOnly) {
 				$aRow['form::checkbox'] = "";
-				foreach ($this->m_aEditableFields as $sFieldCode)
-				{
+				foreach ($this->m_aEditableFields as $sFieldCode) {
 					$sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
 					$aRow[$sFieldCode] = $sDisplayValue;
 				}
-			}
-			else
-			{
+			} else {
 				$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$iKey\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$iKey\">";
-				foreach ($this->m_aEditableFields as $sFieldCode)
-				{
+				foreach ($this->m_aEditableFields as $sFieldCode) {
 					$sSafeFieldId = $this->GetFieldId($linkObjOrId->GetKey(), $sFieldCode);
 					$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $linkObjOrId, $oP, $sNameSuffix, $sSafeFieldId);
 					$aFieldsMap[$sFieldCode] = $sSafeFieldId;
+
+					if ($bModified) {
+						$oP->add_ready_script(
+							<<<EOF
+oWidget{$this->m_iInputId}.AddModified($iUniqueId, {$this->m_iInputId},  $sFieldCode, {$linkObjOrId->Get($sFieldCode)});
+EOF
+						);
+					}
 				}
 			}
 
 			$sState = $linkObjOrId->GetState();
 			$sRemoteKeySafeFieldId = $this->GetFieldId($aArgs['this']->GetKey(), $this->m_sExtKeyToRemote);;
-		}
-		else
-		{
+		} else {
 			// form for creating a new record
-			if (is_object($linkObjOrId))
-			{
+			if (is_object($linkObjOrId)) {
 				// New link existing only in memory
 				$oNewLinkObj = $linkObjOrId;
 				$iRemoteObjKey = $oNewLinkObj->Get($this->m_sExtKeyToRemote);
-				$oNewLinkObj->Set($this->m_sExtKeyToMe,
-					$oCurrentObj); // Setting the extkey with the object also fills the related external fields
-			}
-			else
-			{
+				$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
+			} else {
 				$iRemoteObjKey = $linkObjOrId;
 				$oNewLinkObj = MetaModel::NewObject($this->m_sLinkedClass);
 				$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, $iRemoteObjKey);
-				$oNewLinkObj->Set($this->m_sExtKeyToRemote,
-					$oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
-				$oNewLinkObj->Set($this->m_sExtKeyToMe,
-					$oCurrentObj); // Setting the extkey with the object also fills the related external fields
+				$oNewLinkObj->Set($this->m_sExtKeyToRemote, $oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
+				$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
 			}
 			$sPrefix .= "[-$iUniqueId][";
 			$sNameSuffix = "]"; // To make a tabular form
@@ -177,8 +171,7 @@ class UILinksWidget
 			$sInputValue = $iUniqueId > 0 ? "-$iUniqueId" : "$iUniqueId";
 			$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"0\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$sInputValue\">";
 
-			if ($iUniqueId > 0)
-			{
+			if ($iUniqueId > 0) {
 				// Rows created with ajax call need OnLinkAdded call.
 				//
 				$oP->add_ready_script(
@@ -187,9 +180,7 @@ PrepareWidgets();
 oWidget{$this->m_iInputId}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
 EOF
 				);
-			}
-			else
-			{
+			} else {
 				// Rows added before loading the form don't have to call OnLinkAdded.
 				// Listeners are already present and DOM is not recreated
 				$iPositiveUniqueId = -$iUniqueId;
@@ -378,10 +369,17 @@ JS
 		$iMaxAddedId = 0;
 		$iAddedId = -1; // Unique id for new links
 		$oBlock->aRemoved = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->m_sAttCode}_tbd", '[]', 'raw_data'));
+		$oModified = $oValue->GetModified($this->m_sExtKeyToRemote);
 		while ($oCurrentLink = $oValue->Fetch()) {
 			// We try to retrieve the remote object as usual
 			if (!in_array($oCurrentLink->GetKey(), $oBlock->aRemoved)) {
-				$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */);
+				$bModified = false;
+				if (array_key_exists($oCurrentLink->GetKey(), $oModified)) {
+					$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oModified[$oCurrentLink->GetKey()], false /* Must not be found */);
+					$bModified = true;
+				} else {
+					$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */);
+				}
 				// If successful, it means that we can edit its link
 				if ($oLinkedObj !== null) {
 					$bReadOnly = false;
@@ -398,10 +396,11 @@ JS
 				}
 
 				$iMaxAddedId = max($iMaxAddedId, $key);
-				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
+				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly, $bModified);
 			}
 		}
 		$oBlock->iMaxAddedId = (int)$iMaxAddedId;
+
 
 		$oDataTable = DataTableUIBlockFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aForm);
 		$oDataTable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);

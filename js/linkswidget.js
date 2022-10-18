@@ -385,12 +385,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	 */
 	this.OnValueChange = function (iLink, iUniqueId, sAttCode, value, $oSourceObject) {
 		let sFormPrefix = me.iInputId;
-		if (iLink > 0)
-		{
+		if (iLink > 0) {
 			// Modifying an existing link
 			let oModified = me.aModified[iLink];
-			if (oModified == undefined)
-			{
+			if (oModified == undefined) {
 				// Still not marked as modified
 				oModified = {};
 				oModified['formPrefix'] = sFormPrefix;
@@ -398,16 +396,25 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			// Weird formatting, aligned with the output of the direct links widget (new links to be created)
 			oModified['attr_'+sFormPrefix+sAttCode] = value;
 			me.aModified[iLink] = oModified;
-		}
-		else
-		{
+		} else {
 			// Modifying a newly added link - the structure should already be up to date
-			if (iUniqueId < 0)
-			{
+			if (iUniqueId < 0) {
 				iUniqueId = -iUniqueId;
 			}
 			me.aAdded[iUniqueId]['attr_'+sFormPrefix+sAttCode] = value;
 		}
+	};
+	this.AddModified = function (iLink, sFormPrefix, sAttCode, value) {
+		// Modifying an existing link
+		let oModified = me.aModified[iLink];
+		if (oModified == undefined) {
+			// Still not marked as modified
+			oModified = {};
+			oModified['formPrefix'] = sFormPrefix;
+		}
+		// Weird formatting, aligned with the output of the direct links widget (new links to be created)
+		oModified['attr_'+sFormPrefix+sAttCode] = value;
+		me.aModified[iLink] = oModified;
 	};
 
 	this.OnFormSubmit = function () {

@@ -2095,15 +2095,13 @@ abstract class DBObject implements iDisplay
 			if ($bHasDuplicates)
 			{
 				$bIsBlockingRule = $aUniquenessRuleProperties['is_blocking'];
-				if (is_null($bIsBlockingRule))
-				{
+				if (is_null($bIsBlockingRule)) {
 					$bIsBlockingRule = true;
 				}
 
-				$sErrorMessage = $this->GetUniquenessRuleMessage($sUniquenessRuleId);
+				$sErrorMessage = $this->GetUniquenessRuleMessage($sUniquenessRuleId, $this);
 
-				if ($bIsBlockingRule)
-				{
+				if ($bIsBlockingRule) {
 					$this->m_aCheckIssues[] = $sErrorMessage;
 					continue;
 				}
@@ -2114,32 +2112,32 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     *
-     * @internal
-     *
+	 *
+	 * @internal
+	 *
 	 * @param string $sUniquenessRuleId
+	 * @param DBObject $oObj
 	 *
 	 * @return string dict key : Class:$sClassName/UniquenessRule:$sUniquenessRuleId if none then will use Core:UniquenessDefaultError
 	 * Dictionary keys can contain "$this" placeholders
 	 *
 	 * @since 2.6.0 N°659 uniqueness constraint
 	 */
-	protected function GetUniquenessRuleMessage($sUniquenessRuleId)
+	protected function GetUniquenessRuleMessage($sUniquenessRuleId, $oObj)
 	{
-		$sCurrentClass = get_class($this);
+		$sCurrentClass = get_class($oObj);
 		$sClass = MetaModel::GetRootClassForUniquenessRule($sUniquenessRuleId, $sCurrentClass);
 		$sMessageKey = "Class:$sClass/UniquenessRule:$sUniquenessRuleId";
 		$sTemplate = Dict::S($sMessageKey, '');
 
-		if (empty($sTemplate))
-		{
+		if (empty($sTemplate)) {
 			// we could add also a specific message if user is admin ("dict key is missing")
 			return Dict::Format('Core:UniquenessDefaultError', $sUniquenessRuleId);
 		}
 
 		$oString = new TemplateString($sTemplate);
 
-		return $oString->Render(array('this' => $this));
+		return $oString->Render(array('this' => $oObj));
 	}
 
 	/**
@@ -2238,20 +2236,41 @@ abstract class DBObject implements iDisplay
 		$aCurrentRemoteIds = [];
 		$aDuplicatesFields = [];
 		$value->rewind();
+		$oOneLnkFaill = null;
 		while ($oCurrentLnk = $value->current()) {
 			$iExtKeyToRemote = $oCurrentLnk->Get($sExtKeyToRemote);
 			if (isset($aCurrentRemoteIds[$iExtKeyToRemote])) {
 				$aDuplicatesFields[] = $oCurrentLnk->Get($sExtKeyToRemote.'_friendlyname');
 			} else {
 				$aCurrentRemoteIds[$iExtKeyToRemote] = true;
+				$oOneLnkFaill = $oCurrentLnk;
 			}
 			$value->next();
 		}
 
 		if (!empty($aDuplicatesFields)) {
-			$this->m_aCheckWarnings[] = Dict::Format('Core:AttributeLinkedSetDuplicatesFound',
-				$oAttDef->GetLabel(),
-				implode(', ', $aDuplicatesFields));
+			//check uniqueness rule in order to stop saving object if necessary
+			$sCurrentClass = $value->GetClass();
+			$aUniquenessRules = MetaModel::GetUniquenessRules($sCurrentClass);
+
+			foreach ($aUniquenessRules as $sUniquenessRuleId => $aUniquenessRuleProperties) {
+				$bIsBlockingRule = $aUniquenessRuleProperties['is_blocking'];
+				if (is_null($bIsBlockingRule)) {
+					$bIsBlockingRule = true;
+				}
+
+				if ($bIsBlockingRule || $aUniquenessRuleProperties['disabled'] === true) {
+					$sErrorMessage = $this->GetUniquenessRuleMessage($sUniquenessRuleId, $oOneLnkFaill);
+					$this->m_aCheckIssues[] = $sErrorMessage;
+					$this->m_aCheckIssues[] = Dict::Format('Core:AttributeLinkedSetDuplicatesFound',
+						$oAttDef->GetLabel(),
+						implode(', ', $aDuplicatesFields));
+				} else {
+					$this->m_aCheckWarnings[] = Dict::Format('Core:AttributeLinkedSetDuplicatesFound',
+						$oAttDef->GetLabel(),
+						implode(', ', $aDuplicatesFields));
+				}
+			}
 		}
 	}
 
@@ -3176,8 +3195,7 @@ abstract class DBObject implements iDisplay
 			// Freeze the changes at this point
 			$this->InitPreviousValuesForUpdatedAttributes();
 			$aChanges = $this->ListChanges();
-			if (count($aChanges) == 0)
-			{
+			if (count($aChanges) == 0) {
 				// Attempting to update an unchanged object
 				MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
 				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Aborted (no change)", LogChannels::DM_CRUD);
@@ -3281,8 +3299,7 @@ abstract class DBObject implements iDisplay
 						}
 
 						// Update scalar attributes
-						if (count($aDBChanges) != 0)
-						{
+						if (count($aDBChanges) != 0)	{
 							$oFilter = new DBObjectSearch($sClass);
 							$oFilter->AddCondition('id', $this->m_iKey, '=');
 							$oFilter->AllowAllData();
