@@ -18,7 +18,7 @@ function testSanitize ($sValue, $sType, &$index ){
 	<td>{$sValue}</td>
 	<td class="sanitized_php">{$sSanitizedValue}</td>
 	<td class="sanitized_js"></td>
-	<td class="hasDiff"></td>
+	<td class="status"></td>
 </tr>
 <script>
 var parentTr = $("tr#test{$index}"),
@@ -27,9 +27,15 @@ var parentTr = $("tr#test{$index}"),
 
 parentTr.find("td.sanitized_js").text(sanitizedJs);
 
-if (sanitizedJs !== sanitizedPhp) {
+if (sanitizedJs === sanitizedPhp) {
+	parentTr.find("td.status")
+		.addClass("status-success")
+		.text("OK");
+} else {
 	console.error("difference detected !", "{$sValueEscapedJs}", '{$sType}', sanitizedPhp, sanitizedJs);
-	parentTr.find("td.hasDiff").text("KO");
+	parentTr.find("td.status")
+		.addClass("status-error")
+		.text("KO");
 }
 </script>
 HTML;
@@ -73,7 +79,10 @@ table, tr, td {
 	border-collapse: collapse;
 }
 
-td.hasDiff {
+.status-success {
+	color: green;
+}
+.status-error {
 	color: red;
 }
 
