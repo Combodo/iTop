@@ -111,7 +111,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => 'low',
 	'Class:Incident/Attribute:origin' => 'Origin',
 	'Class:Incident/Attribute:origin+' => '',
-	'Class:Incident/Attribute:origin/Value:in_person' => 'in person',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'in-person',
 	'Class:Incident/Attribute:origin/Value:in_person+' => '',
 	'Class:Incident/Attribute:origin/Value:chat' => 'chat',
 	'Class:Incident/Attribute:origin/Value:chat+' => '',
