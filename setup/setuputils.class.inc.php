@@ -2157,6 +2157,7 @@ JS
 			'fileinfo', // N°3123 if disabled, will throw "wrong format" when uploading AttributeImage
 			'mbstring', // N°2891, N°2899
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
+			'curl', // N°5270 Needed for one of authent-cas dependencies
 		];
 	}
 
@@ -2171,7 +2172,6 @@ JS
 				'openssl' => 'Strong encryption will not be used.',
 			],
 			'ldap' => 'LDAP authentication will be disabled.',
-			'curl' => 'PDF exports won\'t be possible.',
 		];
 
 		if (utils::IsDevelopmentEnvironment()) {
