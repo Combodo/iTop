@@ -348,7 +348,7 @@ abstract class User extends cmdbAbstractObject
 		$aChanges = $this->ListChanges();
 		if (array_key_exists('login', $aChanges)) {
 			// Check login uniqueness
-			if ( $this->GetOriginal('login')== null || strcasecmp($this->Get('login'), $this->GetOriginal('login')) !== 0) {
+			if ( $this->GetOriginal('login') === null || strcasecmp($this->Get('login'), $this->GetOriginal('login')) !== 0) {
 				$sNewLogin = $aChanges['login'];
 				$oSearch = DBObjectSearch::FromOQL_AllData("SELECT User WHERE login = :newlogin");
 				if (!$this->IsNew()) {

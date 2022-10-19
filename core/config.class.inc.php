@@ -2270,7 +2270,7 @@ class Config
 		$oHandle = null;
 		$sConfig = null;
 
-		if ($this->m_sFile!= null && is_file($this->m_sFile))
+		if ($this->m_sFile !== null && is_file($this->m_sFile))
 		{
 			$oHandle = fopen($this->m_sFile, 'r');
 			$index = 0;
