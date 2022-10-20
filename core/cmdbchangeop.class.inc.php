@@ -472,7 +472,7 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 				$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
 				$sDisplayUrl = $oPrevDoc->GetDisplayURL(get_class($this), $this->GetKey(), 'prevdata');
 
-				$sDownloadLabel = Dict::Format('UI:DownloadDocument_');
+				$sDownloadLabel = Dict::S('UI:DownloadDocument_');
 				$sDownloadUrl = $oPrevDoc->GetDownloadURL(get_class($this), $this->GetKey(), 'prevdata');
 
 				$sDocView = <<<HTML
