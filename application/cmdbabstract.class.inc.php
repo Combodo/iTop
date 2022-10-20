@@ -3634,7 +3634,7 @@ HTML;
 					$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
 					$sDisplayUrl = $oDocument->GetDisplayURL(get_class($this), $this->GetKey(), $sAttCode);
 
-					$sDownloadLabel = Dict::Format('UI:DownloadDocument_');
+					$sDownloadLabel = Dict::S('UI:DownloadDocument_');
 					$sDownloadUrl = $oDocument->GetDownloadURL(get_class($this), $this->GetKey(), $sAttCode);
 
 					$sDisplayValue = <<<HTML
