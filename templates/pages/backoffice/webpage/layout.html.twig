@@ -4,7 +4,6 @@
 <html lang="{{ aPage.aMetadata.sLang }}">
 <head>
     <meta charset="{{ aPage.aMetadata.sCharset }}">
-    <meta name="viewport" content="width=device-width">
     {# This block can be used to add your own meta tags by extending the default template #}
     {% block iboPageExtraMetas %}
     {% endblock %}
@@ -16,7 +15,10 @@
         <link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version|raw }}">
     {% endif %}
     <link rel="search" type="application/opensearchdescription+xml" title="iTop" href="{{ aPage.sAbsoluteUrlAppRoot }}pages/opensearch.xml.php">
-
+    {# Main fonts have to be preloaded to avoid blocking content rendering #}
+    {% for aPreloadedFont in aPage.aPreloadedFonts %}
+        <link rel="preload" href="{{ aPreloadedFont['font'] }}" as="font" type="font/{{ aPreloadedFont['type'] }}" crossorigin>
+    {% endfor %}
     {# Stylesheets MUST be loaded before any scripts otherwise we may face problems such as
 	- Visual glitches
 	- jQuery scripts spurious problems (like failing on a 'reload') #}
@@ -36,13 +38,26 @@
             </style>
         {% endfor %}
     {% endblock %}
+
+    {% block iboPageJsInlineEarly %}
+        {% for sJsInline in aPage.aJsInlineEarly %}
+            {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+            <script type="text/javascript">
+            {{ sJsInline|raw }}
+            </script>
+        {% endfor %}
+    {% endblock %}
 </head>
 <body data-gui-type="backoffice">
-{% block iboPageBodyHtml %}
-    <div id="ibo-page-container">
-        {{ render_block(oLayout, {aPage: aPage}) }}
-    </div>
-{% endblock %}
+{% if aPage.isPrintable %}
+<div class="printable-content" style="width: 27.7cm;"> {% endif %}
+    {% block iboPageBodyHtml %}
+
+        <div id="ibo-page-container">
+            {{ render_block(oLayout, {aPage: aPage}) }}
+        </div>
+    {% endblock %}
+    {% if aPage.isPrintable %}</div> {% endif %}
 
 {% block iboDeferredBlocks %}
     {% for oBlock in aDeferredBlocks %}
@@ -51,8 +66,8 @@
 {% endblock %}
 {% if aPage.aJsFiles is not empty %}
     <script type="text/javascript">
-        var aListJsFiles = [];
-        {% for sJsFile in aPage.aJsFiles %}
+    var aListJsFiles = [];
+    {% for sJsFile in aPage.aJsFiles %}
             aListJsFiles.push("{{ sJsFile|raw }}");
         {% endfor %}
     </script>
@@ -94,7 +109,9 @@
     {% endblock %}
 {% endblock %}
 
-{{ aPage.sCapturedOutput|raw }}
+{% block iboCapturedOutput %}
+    {{ aPage.sCapturedOutput|raw }}
+{% endblock %}
 
 </body>
 </html>

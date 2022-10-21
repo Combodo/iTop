@@ -100,8 +100,8 @@ class ExcelBulkExport extends TabularBulkExport
 
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 
-				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
-				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+				$sDefaultFormat = utils::EscapeHtml((string)AttributeDateTime::GetFormat());
+				$sExample = utils::EscapeHtml(date((string)AttributeDateTime::GetFormat()));
 				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "excel_date_format_radio", "default", "excel_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 				$oRadioDefault->SetBeforeInput(false);
@@ -109,18 +109,17 @@ class ExcelBulkExport extends TabularBulkExport
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-				$sFormatInput = '<input type="text" size="15" name="date_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="excel_custom_date_time_format" title="" value="'.utils::EscapeHtml($sDateTimeFormat).'"/>';
 				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "excel_date_format_radio", "custom", "excel_date_time_format_custom", "radio");
+				$oRadioCustom->SetDescription(Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip'));
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 				$oRadioCustom->SetBeforeInput(false);
 				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 
 
-				$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
 				$oP->add_ready_script(
 					<<<EOF
-$('#excel_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#form_part_xlsx_options').on('preview_updated', function() { FormatDatesInPreview('excel', 'xlsx'); });
 $('#excel_date_time_format_default').on('click', function() { FormatDatesInPreview('excel', 'xlsx'); });
 $('#excel_date_time_format_custom').on('click', function() { FormatDatesInPreview('excel', 'xlsx'); });
@@ -157,16 +156,17 @@ EOF
 
 	protected function GetSampleData($oObj, $sAttCode)
 	{
-		if ($sAttCode != 'id')
-		{
+		if ($sAttCode != 'id') {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 			{
 				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
-				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.htmlentities($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj), ENT_QUOTES, 'UTF-8').'</div>';
+
+				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.utils::EscapeHtml($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj)).'</div>';
 			}
 		}
-		return '<div class="text-preview">'.htmlentities($this->GetValue($oObj, $sAttCode), ENT_QUOTES, 'UTF-8').'</div>';
+
+		return '<div class="text-preview">'.utils::EscapeHtml($this->GetValue($oObj, $sAttCode)).'</div>';
 	}
 
 	protected function GetValue($oObj, $sAttCode)

@@ -24,7 +24,7 @@ class MetaModelTest extends ItopDataTestCase
     protected static $sDefaultUserRequestTitle = 'Unit test title';
     protected static $sDefaultUserRequestDescription = 'Unit test description';
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once APPROOT.'/core/metamodel.class.php';
@@ -180,7 +180,6 @@ class MetaModelTest extends ItopDataTestCase
 		}
 	}
 
-
 	/**
 	 * @dataProvider enumPluginsProvider
 	 *
@@ -273,12 +272,40 @@ class MetaModelTest extends ItopDataTestCase
 		return $aInterfaces;
 	}
 
+	/**
+	 * @group itopRequestMgmt
+	 * @dataProvider GetClassStyleProvider
+	 */
+	public function testGetClassStyle($sClass, $sAwaitedCSSClass, $sAwaitedCSSClassAlt, $sAwaitedDecorationClasses, $sAwaitedIconRelPath)
+	{
+		$oStyle = MetaModel::GetClassStyle($sClass);
+
+		if (is_null($sAwaitedCSSClass) && is_null($sAwaitedIconRelPath)) {
+			self::assertNull($oStyle);
+			return;
+		}
+
+		self::assertInstanceOf('ormStyle', $oStyle);
+
+		self::assertEquals($sAwaitedCSSClass, $oStyle->GetStyleClass());
+		self::assertEquals($sAwaitedCSSClassAlt, $oStyle->GetAltStyleClass());
+		self::assertEquals($sAwaitedDecorationClasses, $oStyle->GetDecorationClasses());
+		self::assertEquals($sAwaitedIconRelPath, $oStyle->GetIconAsRelPath());
+	}
+
+	public function GetClassStyleProvider()
+	{
+		return [
+			'Class with no color, only icon' => ['Organization', null, null, null, 'itop-structure/../../images/icons/icons8-organization.svg'],
+			'Class with colors and icon' => ['Contact', 'ibo-dm-class--Contact', 'ibo-dm-class-alt--Contact', null, 'itop-structure/../../images/icons/icons8-customer.svg'],
+		];
+	}
 
 	/**
 	 * @group itopRequestMgmt
 	 * @dataProvider GetEnumStyleProvider
 	 */
-	public function testGetEnumStyle($sClass, $sAttCode, $sValue, $sAwaitedCSSClass)
+	public function testGetEnumStyle($sClass, $sAttCode, $sValue, $sAwaitedCSSClass, $sAwaitedCSSClassAlt, $sAwaitedDecorationClasses, $sAwaitedIconRelPath)
 	{
 		$oStyle = MetaModel::GetEnumStyle($sClass, $sAttCode, $sValue);
 
@@ -290,14 +317,15 @@ class MetaModelTest extends ItopDataTestCase
 		self::assertInstanceOf('ormStyle', $oStyle);
 
 		self::assertEquals($sAwaitedCSSClass, $oStyle->GetStyleClass());
+		self::assertEquals($sAwaitedCSSClassAlt, $oStyle->GetAltStyleClass());
 	}
 
 	public function GetEnumStyleProvider()
 	{
 		return [
-			'status-new' => ['UserRequest', 'status', 'new', 'ibo-enum--UserRequest-status-new'],
-			'status-default' => ['UserRequest', 'status', '', 'ibo-enum--UserRequest-status'],
-			'urgency' => ['UserRequest', 'origin', 'mail', null],
+			'status-new' => ['UserRequest', 'status', 'new', 'ibo-dm-enum--UserRequest-status-new', 'ibo-dm-enum-alt--UserRequest-status-new', null, null],
+			'status-default' => ['UserRequest', 'status', '', 'ibo-dm-enum--UserRequest-status', 'ibo-dm-enum-alt--UserRequest-status', null, null],
+			'urgency' => ['UserRequest', 'origin', 'mail', null, null, null, null],
 		];
 	}
 
@@ -333,6 +361,35 @@ class MetaModelTest extends ItopDataTestCase
 		return [
 			['Person', false],
 			['lnkPersonToTeam', true],
+		];
+	}
+
+	/**
+	 * @covers       \MetaModel::IsObjectInDB
+	 * @dataProvider IsObjectInDBProvider
+	 *
+	 * @param int $iKeyOffset Offset to apply on the key of the test object. This is necessary to test an object that doesn't exist yet in any DB as we can't know what is the last existing object key.
+	 * @param $bExpectedResult
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLQueryHasNoResultException
+	 */
+	public function testIsObjectInDB(int $iKeyOffset, $bExpectedResult)
+	{
+		$oPerson = $this->CreatePerson(1, 1);
+		$sClass = get_class($oPerson);
+		$iKey = $oPerson->GetKey() + $iKeyOffset;
+
+		$bTestResult = MetaModel::IsObjectInDB($sClass, $iKey);
+		$this->assertEquals($bTestResult, $bExpectedResult);
+	}
+
+	public function IsObjectInDBProvider(): array
+	{
+		return [
+			'Existing person' => [0, true],
+			'Non existing person' => [10, false],
 		];
 	}
 }

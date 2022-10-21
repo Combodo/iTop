@@ -20,7 +20,6 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 require_once(APPROOT.'core/mutex.class.inc.php');
 
@@ -49,7 +48,7 @@ function DisplayErrorAndDie($oPage, $sHtmlErrorMessage, $exitCode = null)
 
 $sOperation = utils::ReadParam('operation', '');
 
-$oPage = new ajax_page('');
+$oPage = new AjaxPage('');
 $oPage->SetContentType('text/html');
 
 
@@ -170,10 +169,6 @@ JS
 			require_once(dirname(__FILE__).'/dbrestore.class.inc.php');
 
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
-			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
-			IssueLog::Info("Backup Restore - Acquiring the LOCK 'restore.$sEnvironment'");
-			$oRestoreMutex->Lock();
-			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
 			try
 			{
 				set_time_limit(0);
@@ -203,7 +198,6 @@ JS
 			finally
 			{
 				unlink($tokenRealPath);
-				$oRestoreMutex->Unlock();
 			}
 
 			$oPage->output();

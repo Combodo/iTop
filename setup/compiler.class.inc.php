@@ -18,6 +18,7 @@
  */
 
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\DesignElement;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -54,10 +55,27 @@ class MFCompiler
 	const DATA_PRECOMPILED_FOLDER = 'data'.DIRECTORY_SEPARATOR.'precompiled_styles'.DIRECTORY_SEPARATOR;
 
 	/**
+	 * @var string
+	 * @see self::GenerateStyleDataFromNode
+	 * @internal
+	 * @since 3.0.0
+	 */
+	public const ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS = 'class';
+	/**
+	 * @var string
+	 * @see self::GenerateStyleDataFromNode
+	 * @internal
+	 * @since 3.0.0
+	 */
+	public const ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM = 'enum';
+
+	/**
 	 * Path to the "use symlinks" file
 	 * If this file is present, then we will compile to symlink !
 	 *
 	 * @var string
+	 *
+	 * @since 3.0.0 N°4092
 	 */
 	public const USE_SYMBOLIC_LINKS_FILE_PATH = APPROOT.'data/.compilation-symlinks';
 
@@ -81,6 +99,11 @@ class MFCompiler
 	protected $sMainPHPCode; // Code that goes into core/main.php
 	protected $aSnippets;
 	protected $aRelations;
+	/**
+	 * @var array Strings containing dynamic CSS definitions for DM classes
+	 * @since 3.0.0
+	 */
+	protected $aClassesCSSRules;
 	protected $sEnvironment;
 	protected $sCompilationTimeStamp;
 
@@ -101,6 +124,7 @@ class MFCompiler
 		$this->sMainPHPCode .= "define('COMPILATION_TIMESTAMP', '".$this->sCompilationTimeStamp."');\n";
 		$this->aSnippets = array();
 		$this->aRelations = array();
+		$this->aClassesCSSRules = [];
 	}
 
 	protected function Log($sText)
@@ -121,47 +145,58 @@ class MFCompiler
 	}
 
 	/**
-	 * @param bool $bForce if true then will just check file existence
+	 * @return bool if flag is present true, false otherwise
 	 *
-	 * @return bool possible return values :
-	 *   * always false if not in dev env
-	 *   * `symlink` function non existent : false
-	 *   * if flag is present true, false otherwise
-	 *
-	 * @uses utils::IsDevelopmentEnvironment()
-	 * @uses \function_exists()
 	 * @uses \file_exists()
 	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
 	 *
-	 * @since 3.0.0
+	 * @since 3.0.0 N°4092
 	 */
-	public static function IsUseSymbolicLinksFlagPresent(bool $bForce = false): bool
+	public static function IsUseSymbolicLinksFlagPresent(): bool
 	{
-		if (!$bForce) {
-			if (!utils::IsDevelopmentEnvironment()) {
-				return false;
-			}
+		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
+	}
 
-			if (!function_exists('symlink')) {
-				return false;
-			}
+	/**
+	 * This is to check if the functionality can be used. As this is really only useful for developers,
+	 * this is strictly limited and not available on any iTop instance !
+	 *
+	 * @return bool Check that the symlinks flag can be used
+	 *   *  always false if not in dev env
+	 *   * `symlink` function non-existent : false
+	 *   * true otherwise
+	 *
+	 * @uses utils::IsDevelopmentEnvironment()
+	 * @uses \function_exists()
+	 *
+	 * @since 3.0.0 N°4092
+	 */
+	public static function CanUseSymbolicLinksFlagBeUsed(): bool
+	{
+		if (false === utils::IsDevelopmentEnvironment()) {
+			return false;
 		}
 
-		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
+		if (false === function_exists('symlink')) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
 	 * @param bool $bUseSymbolicLinks
 	 *
-	 * @since 3.0.0 method creation
 	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
+	 *
+	 * @since 3.0.0 N°4092
 	 */
 	public static function SetUseSymbolicLinksFlag(bool $bUseSymbolicLinks): void
 	{
-		$bHasUseSymlinksFile = static::IsUseSymbolicLinksFlagPresent(true);
+		$bIsUseSymlinksFlagPresent = (static::IsUseSymbolicLinksFlagPresent());
 
 		if ($bUseSymbolicLinks) {
-			if ($bHasUseSymlinksFile) {
+			if ($bIsUseSymlinksFlagPresent) {
 				return;
 			}
 
@@ -170,7 +205,7 @@ class MFCompiler
 			return;
 		}
 
-		if (!$bHasUseSymlinksFile) {
+		if (!$bIsUseSymlinksFlagPresent) {
 			return;
 		}
 		unlink(static::USE_SYMBOLIC_LINKS_FILE_PATH);
@@ -205,7 +240,7 @@ class MFCompiler
 	{
 		if (is_null($bUseSymbolicLinks)) {
 			$bUseSymbolicLinks = false;
-			if (self::IsUseSymbolicLinksFlagPresent()) {
+			if (self::CanUseSymbolicLinksFlagBeUsed() && self::IsUseSymbolicLinksFlagPresent()) {
 				// We are only overriding the useSymLinks option if the consumer didn't specify anything
 				// The toolkit always send this parameter for example, but not the Designer Connector
 				$bUseSymbolicLinks = true;
@@ -337,6 +372,7 @@ class MFCompiler
 		}
 
 		$this->LoadSnippets();
+		$this->LoadGlobalEventListeners();
 
 		// Compile, module by module
 		//
@@ -383,7 +419,16 @@ class MFCompiler
 					$sCompiledCode .= $this->CompileConstant($oConstant)."\n";
 				}
 			}
-			
+
+			$oEvents = $this->oFactory->ListEvents($sModuleName);
+			if ($oEvents->length > 0)
+			{
+				foreach($oEvents as $oEvent)
+				{
+					$sCompiledCode .= $this->CompileEvent($oEvent, $sModuleName)."\n";
+				}
+			}
+
 			if (array_key_exists($sModuleName, $this->aSnippets))
 			{
 				foreach( $this->aSnippets[$sModuleName]['before'] as $aSnippet)
@@ -396,9 +441,6 @@ class MFCompiler
 				}
 			}
 
-
-			/** array of strings containing dynamic CSS class definitions */
-			$aClassesCss = [];
 
 			$oClasses = $this->oFactory->ListClasses($sModuleName);
 			$iClassCount = $oClasses->length;
@@ -415,11 +457,16 @@ class MFCompiler
 					$aAllClasses[] = $sClass;
 					try
 					{
-						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $aClassesCss);
+						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
 					}
 					catch (DOMFormatException $e)
 					{
-						throw new Exception("Failed to process class '$sClass', from '$sModuleRootDir': ".$e->getMessage());
+						$sMessage = "Failed to process class '$sClass', ";
+						if (!empty($sModuleRootDir)) {
+							$sMessage .= "from '$sModuleRootDir': ";
+						}
+						$sMessage .= $e->getMessage();
+						throw new Exception($sMessage);
 					}
 				}
 			}
@@ -450,11 +497,14 @@ EOF;
 				foreach($aMenusByModule[$sModuleName] as $sMenuId)
 				{
 					$oMenuNode = $aMenuNodes[$sMenuId];
-					if ($sParent = $oMenuNode->GetChildText('parent', null))
-					{
-						$aMenusToLoad[] = $sParent;
-						$aParentMenus[] = $sParent;
+					// compute parent hierarchy
+					$aParentIdHierarchy = [];
+					while ($sParent = $oMenuNode->GetChildText('parent', null)) {
+						array_unshift($aParentIdHierarchy, $sParent);
+						$oMenuNode = $aMenuNodes[$sParent];
 					}
+					$aMenusToLoad = array_merge($aMenusToLoad, $aParentIdHierarchy);
+					$aParentMenus = array_merge($aParentMenus, $aParentIdHierarchy);
 					// Note: the order matters: the parents must be defined BEFORE
 					$aMenusToLoad[] = $sMenuId;
 				}
@@ -555,15 +605,18 @@ EOF;
 				{
 					// Write the code into the given module as model.<module>.php
 					//
-					$sResultFile = $sTempTargetDir.'/'.$sRelativeDir.'/model.'.$sModuleName.'.php';
+					$sModelFileName = 'model.'.$sModuleName.'.php';
+					$sResultFile = $sTempTargetDir.'/'.$sRelativeDir.'/'.$sModelFileName;
 					$this->WritePHPFile($sResultFile, $sModuleName, $sModuleVersion, $sCompiledCode);
+					// In case the model file wasn't present in the module file, we're adding it ! (N°4875)
+					$oModule->AddFileToInclude('business', $sModelFileName);
 				}
 				else
 				{
 					// Write the code into core/main.php
 					//
 					$this->sMainPHPCode .=
-					<<<EOF
+						<<<EOF
 /**
  * Data model from the delta file
  */
@@ -571,20 +624,31 @@ EOF;
 EOF;
 					$this->sMainPHPCode .= $sCompiledCode;
 				}
-			}
-			else
-			{
-					$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
+			} else {
+				$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
 			}
 
 			// files to include (PHP datamodels)
 			foreach($oModule->GetFilesToInclude('business') as $sRelFileName)
 			{
-				$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+				if (file_exists("{$sTempTargetDir}/{$sRelativeDir}/{$sRelFileName}")) {
+					$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+				} else {
+					/** @noinspection NestedPositiveIfStatementsInspection */
+					if (utils::IsDevelopmentEnvironment()) {
+						$sMissingBusinessFileMessage = 'A module embeds a non existing file: Check the module.php "datamodel" key!';
+						$aContext = [
+							'moduleId'       => $oModule->GetId(),
+							'moduleLocation' => $oModule->GetRootDir(),
+							'includedFile'   => $sRelFileName,
+						];
+						SetupLog::Error($sMissingBusinessFileMessage, null, $aContext);
+						throw new CoreException($sMissingBusinessFileMessage, $aContext);
+					}
+				}
 			}
 			// files to include (PHP webservices providers)
-			foreach($oModule->GetFilesToInclude('webservices') as $sRelFileName)
-			{
+			foreach ($oModule->GetFilesToInclude('webservices') as $sRelFileName) {
 				$aWebservicesFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
 			}
 		} // foreach module
@@ -854,7 +918,17 @@ EOF
 		return $sPHP;
 	}
 
-	protected function GetPropString($oNode, $sTag, $sDefault = null)
+	/**
+	 * @param $oNode
+	 * @param string $sTag
+	 * @param string|null $sDefault
+	 * @param bool $bAddQuotes If true, surrounds property value with single quotes and escapes existing single quotes
+	 *
+	 * @return string|null
+	 *
+	 * @since 3.0.0 Add param. $bAddQuotes to be equivalent to {@see self::GetMandatoryPropString} and allow retrieving property without surrounding single quotes
+	 */
+	protected function GetPropString($oNode, string $sTag, string $sDefault = null, bool $bAddQuotes = true)
 	{
 		$val = $oNode->GetChildText($sTag);
 		if (is_null($val))
@@ -868,18 +942,23 @@ EOF
 				$val = $sDefault;
 			}
 		}
-		return "'".str_replace("'", "\\'", $val)."'";
+
+		if ($bAddQuotes) {
+			$val = "'".str_replace("'", "\\'", $val)."'";
+		}
+
+		return $val;
 	}
 
 	/**
 	 * @param $oNode
-	 * @param $sTag
+	 * @param string $sTag
 	 * @param bool $bAddQuotes
 	 *
 	 * @return string
 	 * @throws \DOMFormatException
 	 */
-	protected function GetMandatoryPropString($oNode, $sTag, $bAddQuotes = true)
+	protected function GetMandatoryPropString($oNode, string $sTag, bool $bAddQuotes = true)
 	{
 		$val = $oNode->GetChildText($sTag);
 		if (!is_null($val) && ($val !== ''))
@@ -1013,6 +1092,20 @@ EOF
 		return $sRet;
 	}
 
+	protected function CompileEvent(DesignElement $oEvent, string $sModuleName)
+	{
+		$sName = $oEvent->getAttribute('id');
+		$aEventDescription = DesignElement::ToArray($oEvent);
+
+		$sDescription = var_export($aEventDescription, true);
+		$sConstant = $sName;
+
+		$sOutput = "define('$sConstant', '$sName');\n";
+		$sOutput .= "Combodo\iTop\Service\EventService::RegisterEvent('$sName', $sDescription, '$sModuleName');\n";
+
+		return $sOutput;
+	}
+
 	protected function CompileConstant($oConstant)
 	{
 		$sName = $oConstant->getAttribute('id');
@@ -1070,52 +1163,58 @@ EOF
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
 	 * @param string $sModuleRelativeDir
-	 * @param array $aClassesCss Contains dynamic CSS class definitions
 	 *
 	 * @return string
 	 * @throws \DOMFormatException
 	 */
-	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, &$aClassesCss)
+	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir)
 	{
 		$sClass = $oClass->getAttribute('id');
 		$oProperties = $oClass->GetUniqueElement('properties');
 		$sPHP = '';
-		$sCss = ''; // Contains dynamic CSS class definitions
-	
+		/** @var Contains dynamic CSS class definitions $sCss */
+		$sCss = '';
+
 		// Class caracteristics
 		//
 		$aClassParams = array();
 		$aClassParams['category'] = $this->GetPropString($oProperties, 'category', '');
 		$aClassParams['key_type'] = "'autoincrement'";
-		if ((bool) $this->GetPropNumber($oProperties, 'is_link', 0))
-		{
+		if ((bool)$this->GetPropNumber($oProperties, 'is_link', 0)) {
 			$aClassParams['is_link'] = 'true';
 		}
 
 		// Naming
-		if ($oNaming = $oProperties->GetOptionalElement('naming'))
-		{
+		$sComplementaryNameAttCode = "";
+		if ($oNaming = $oProperties->GetOptionalElement('naming')) {
 			$oNameAttributes = $oNaming->GetUniqueElement('attributes');
 			/** @var \DOMNodeList $oAttributes */
 			$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
 			$aNameAttCodes = array();
 			/** @var \MFElement $oAttribute */
-			foreach($oAttributes as $oAttribute)
-			{
+			foreach ($oAttributes as $oAttribute) {
 				$aNameAttCodes[] = $oAttribute->getAttribute('id');
 			}
-			if (count($aNameAttCodes) > 0)
-			{
+			if (count($aNameAttCodes) > 0) {
 				// New style...
 				$sNameAttCode = "array('".implode("', '", $aNameAttCodes)."')";
-			}
-			else
-			{
+			} else {
 				$sNameAttCode = "''";
 			}
-		}
-		else
-		{
+			if ($oComplementaryNameAttributes = $oNaming->GetOptionalElement('complementary_attributes')) {
+				/** @var \DOMNodeList $oAttributes */
+				$oComplementaryAttributes = $oComplementaryNameAttributes->getElementsByTagName('attribute');
+				$aComplementaryNameAttCodes = array();
+				/** @var \MFElement $oAttribute */
+				foreach ($oComplementaryAttributes as $oComplementaryAttribute) {
+					$aComplementaryNameAttCodes[] = $oComplementaryAttribute->getAttribute('id');
+				}
+				if (count($aComplementaryNameAttCodes) > 0) {
+					$sComplementaryNameAttCode = "array('".implode("', '", $aComplementaryNameAttCodes)."')";
+				}
+				$aClassParams['complementary_name_attcode'] = $sComplementaryNameAttCode;
+			}
+		} else {
 			$sNameAttCode = "''";
 		}
 		$aClassParams['name_attcode'] = $sNameAttCode;
@@ -1173,20 +1272,9 @@ EOF
 
 		// Style
 		if ($oStyle = $oProperties->GetOptionalElement('style')) {
-			$sMainColor = $oStyle->GetChildText('main_color');
-			$sComplementaryColor = $oStyle->GetChildText('complementary_color');
-//			$bHasMainColor = (strlen($sMainColor) > 0);
-//			$bHasComplementaryColor = (strlen($sComplementaryColor) > 0);
-//			if ($bHasMainColor xor $bHasComplementaryColor) {
-//				throw new DOMFormatException("Tags 'main_color' and 'complementary_color' must be set or empty together in node 'style' of class $sClass");
-//			}
-			$sStyleCSSClass = "ibo-class-style--$sClass";
-			$sStyleCSSAltClass = "ibo-class-style-alt--$sClass";
-			if (($sIcon = $oStyle->GetChildText('icon')) && (strlen($sIcon) > 0)) {
-				$sIcon = $sModuleRelativeDir.'/'.$sIcon;
-				$sIcon = ", utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
-			}
-			$aClassParams['style'] = "new ormStyle('$sStyleCSSClass', '$sStyleCSSAltClass', '$sMainColor', '$sComplementaryColor', null $sIcon)";
+			$aClassStyleData = $this->GenerateStyleDataFromNode($oStyle, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS, $sClass);
+			$aClassParams['style'] = $aClassStyleData['orm_style_instantiation'];
+			$sCss .= $aClassStyleData['scss'];
 		}
 
 
@@ -1209,77 +1297,87 @@ EOF
 			foreach($oIndexes->getElementsByTagName('index') as $oIndex)
 			{
 				$sIndexId = $oIndex->getAttribute('id');
+				/** @var DesignElement $oAttributes */
 				$oAttributes = $oIndex->GetUniqueElement('attributes');
-				foreach($oAttributes->getElementsByTagName('attribute') as $oAttribute)
-				{
+				foreach ($oAttributes->getElementsByTagName('attribute') as $oAttribute) {
 					$aIndexes[$sIndexId][] = $oAttribute->getAttribute('id');
 				}
 			}
 			$aClassParams['indexes'] = var_export($aIndexes, true);
 		}
 
-		if ($oArchive = $oProperties->GetOptionalElement('archive'))
+		$sEvents = '';
+		$sMethods = '';
+		$oHooks = $oClass->GetOptionalElement('event_listeners');
+		if ($oHooks) {
+			foreach ($oHooks->getElementsByTagName('listener') as $oListener) {
+				/** @var DesignElement $oListener */
+				$oEventNode = $oListener->GetUniqueElement('event');
+				/** @var DesignElement $oEventNode $oEventNode */
+				$sEventName = $oEventNode->GetText();
+				$sListenerId = $oListener->getAttribute('id');
+				$oCallback = $oListener->GetUniqueElement('callback', false);
+				if (is_object($oCallback)) {
+					$sCallback = $oCallback->GetText();
+				} else {
+					$oExecute = $oListener->GetUniqueElement('execute', true);
+					$sExecute = trim($oExecute->GetText());
+					$sCallback = "EventHook_{$sEventName}_$sListenerId";
+					$sCallbackFct = preg_replace('@^function\s*\(@', "public function $sCallback(", $sExecute);
+					if ($sExecute == $sCallbackFct) {
+						throw new DOMFormatException("Malformed tag <execute> in class: $sClass hook: $sEventName listener: $sListenerId");
+					}
+					$sMethods .= "\n    $sCallbackFct\n\n";
+				}
+				if (strpos($sCallback, '::') === false) {
+					$sEventListener = '[$this, \''.$sCallback.'\']';
+				} else {
+					$sEventListener = "'$sCallback'";
+				}
+
+				$sListenerPriority = (float)($oListener->GetChildText('priority', '0'));
+				$sEvents .= "\n		Combodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", $sEventListener, \$this->m_sObjectUniqId, \"$sListenerId\", null, $sListenerPriority, '$sModuleRelativeDir');";
+			}
+		}
+
+		if (!empty($sEvents))
 		{
+			$sMethods .= <<<EOF
+	protected function RegisterEvents()
+	{
+		parent::RegisterEvents();
+$sEvents
+	}
+
+EOF;
+		}
+
+		if ($oArchive = $oProperties->GetOptionalElement('archive')) {
 			$bEnabled = $this->GetPropBoolean($oArchive, 'enabled', false);
 			$aClassParams['archive'] = $bEnabled;
 		}
 
-		if ($oObsolescence = $oProperties->GetOptionalElement('obsolescence'))
-		{
+		if ($oObsolescence = $oProperties->GetOptionalElement('obsolescence')) {
 			$sCondition = trim($this->GetPropString($oObsolescence, 'condition', ''));
-			if ($sCondition != "''")
-			{
+			if ($sCondition != "''") {
 				$aClassParams['obsolescence_expression'] = $sCondition;
 			}
 		}
 
-		if ($oAdditionalValueForSelect = $oProperties->GetOptionalElement('complement_for_select'))
-		{
-			$oNameAttributes = $oAdditionalValueForSelect->GetUniqueElement('attributes');
-			/** @var \DOMNodeList $oAttributes */
-			$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
-			$aNameAttCodes = array();
-			/** @var \MFElement $oAttribute */
-			foreach($oAttributes as $oAttribute)
-			{
-				$aNameAttCodes[] = $oAttribute->getAttribute('id');
-			}
-			if (count($aNameAttCodes) > 0)
-			{
-				// New style...
-				$sNameAttCode = "array('".implode("', '", $aNameAttCodes)."')";
-			}
-			else
-			{
-				$sNameAttCode = "''";
-			}
-		}
-		else
-		{
-			$sNameAttCode = "''";
-		}
-		$aClassParams['name_complement_for_select'] = $sNameAttCode;
-
-		if ($oUniquenessRules = $oProperties->GetOptionalElement('uniqueness_rules'))
-		{
+		if ($oUniquenessRules = $oProperties->GetOptionalElement('uniqueness_rules')) {
 			$aUniquenessRules = array();
 			/** @var \MFElement $oUniquenessSingleRule */
-			foreach ($oUniquenessRules->GetElementsByTagName('rule') as $oUniquenessSingleRule)
-			{
+			foreach ($oUniquenessRules->GetElementsByTagName('rule') as $oUniquenessSingleRule) {
 				$sCurrentRuleId = $oUniquenessSingleRule->getAttribute('id');
 
 				$oAttributes = $oUniquenessSingleRule->GetUniqueElement('attributes', false);
-				if ($oAttributes)
-				{
+				if ($oAttributes) {
 					$aUniquenessAttributes = array();
-					foreach ($oAttributes->getElementsByTagName('attribute') as $oAttribute)
-					{
+					foreach ($oAttributes->getElementsByTagName('attribute') as $oAttribute) {
 						$aUniquenessAttributes[] = $oAttribute->getAttribute('id');
 					}
 					$aUniquenessRules[$sCurrentRuleId]['attributes'] = $aUniquenessAttributes;
-				}
-				else
-				{
+				} else {
 					$aUniquenessRules[$sCurrentRuleId]['attributes'] = null;
 				}
 
@@ -1443,23 +1541,9 @@ EOF
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
-							$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
-							$sSafeCode = utils::GetSafeId($sCode);
-							$sEnumClass = "ibo-enum--$sClass-$sAttCode-$sSafeCode";
-							$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode-$sSafeCode";
-							$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
-							$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-							$aStyledValues[] = "'$sCode' => new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
-							$sCss .= <<<CSS
-.$sEnumClass {
-	color: $sComplementaryColor;
-	background-color: $sMainColor;
-}
-.$sEnumClassAlt {
-	color: $sMainColor;
-}
-
-CSS;
+							$aEnumStyleData = $this->GenerateStyleDataFromNode($oStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode, $sCode);
+							$aStyledValues[] = $aEnumStyleData['orm_style_instantiation'];
+							$sCss .= $aEnumStyleData['scss'];
 						}
 					}
 					$sValues = '"'.implode(',', $aValues).'"';
@@ -1468,24 +1552,11 @@ CSS;
 						$sStyledValues = "[".implode(',', $aStyledValues)."]";
 						$aParameters['styled_values'] = "$sStyledValues";
 					}
-					$oStyleNode = $oField->GetOptionalElement('default_style');
-					if ($oStyleNode) {
-						$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
-						$sEnumClass = "ibo-enum--$sClass-$sAttCode";
-						$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode";
-						$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
-						$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-						$aParameters['default_style'] = "new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
-						$sCss .= <<<CSS
-.$sEnumClass {
-	color: $sComplementaryColor;
-	background-color: $sMainColor;
-}
-.$sEnumClassAlt {
-	color: $sMainColor;
-}
-
-CSS;
+					$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
+					if ($oDefaultStyleNode) {
+						$aEnumStyleData = $this->GenerateStyleDataFromNode($oDefaultStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode);
+						$aParameters['default_style'] = $aEnumStyleData['orm_style_instantiation'];
+						$sCss .= $aEnumStyleData['scss'];
 					}
 					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
@@ -1505,23 +1576,9 @@ CSS;
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
-							$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
-							$sSafeCode = utils::GetSafeId($sCode);
-							$sEnumClass = "ibo-enum--$sClass-$sAttCode-$sSafeCode";
-							$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode-$sSafeCode";
-							$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
-							$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-							$aStyledValues[] = "'$sCode' => new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
-							$sCss .= <<<CSS
-.$sEnumClass {
-	color: $sComplementaryColor;
-	background-color: $sMainColor;
-}
-.$sEnumClassAlt {
-	color: $sMainColor;
-}
-
-CSS;
+							$aEnumStyleData = $this->GenerateStyleDataFromNode($oStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode, $sCode);
+							$aStyledValues[] = $aEnumStyleData['orm_style_instantiation'];
+							$sCss .= $aEnumStyleData['scss'];
 						}
 					}
 					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
@@ -1530,24 +1587,11 @@ CSS;
 						$sStyledValues = "[".implode(',', $aStyledValues)."]";
 						$aParameters['styled_values'] = "$sStyledValues";
 					}
-					$oStyleNode = $oField->GetOptionalElement('default_style');
-					if ($oStyleNode) {
-						$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
-						$sEnumClass = "ibo-enum--$sClass-$sAttCode";
-						$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode";
-						$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
-						$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-						$aParameters['default_style'] = "new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
-						$sCss .= <<<CSS
-.$sEnumClass {
-	color: $sComplementaryColor;
-	background-color: $sMainColor;
-}
-.$sEnumClassAlt {
-	color: $sMainColor;
-}
-
-CSS;
+					$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
+					if ($oDefaultStyleNode) {
+						$aEnumStyleData = $this->GenerateStyleDataFromNode($oDefaultStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode);
+						$aParameters['default_style'] = $aEnumStyleData['orm_style_instantiation'];
+						$sCss .= $aEnumStyleData['scss'];
 					}
 					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
@@ -1610,17 +1654,17 @@ CSS;
 						$aStates[] = '"'.$oState->GetAttribute('id').'"';
 					}
 					$aParameters['states'] = 'array('.implode(', ', $aStates).')';
-	
+
 					$aParameters['goal_computing'] = $this->GetPropString($oField, 'goal', 'DefaultMetricComputer'); // Optional, no deadline by default
 					$aParameters['working_time_computing'] = $this->GetPropString($oField, 'working_time', ''); // Blank (different than DefaultWorkingTimeComputer)
-	
+
 					$oThresholds = $oField->GetUniqueElement('thresholds');
 					$oThresholdNodes = $oThresholds->getElementsByTagName('threshold');
 					$aThresholds = array();
 					foreach($oThresholdNodes as $oThreshold)
 					{
 						$iPercent = (int)$oThreshold->getAttribute('id');
-	
+
 						$oHighlight = $oThreshold->GetUniqueElement('highlight', false);
 						$sHighlight = '';
 						if($oHighlight)
@@ -1629,7 +1673,7 @@ CSS;
 							$sPersistent =  $this->GetPropBoolean($oHighlight, 'persistent', false);
 							$sHighlight = "'highlight' => array('code' => '$sCode', 'persistent' => $sPersistent), ";
 						}
-						
+
 						$oActions = $oThreshold->GetUniqueElement('actions');
 						$oActionNodes = $oActions->getElementsByTagName('action');
 						$aActions = array();
@@ -1711,10 +1755,12 @@ CSS;
 				{
 					$oValues = $oField->GetUniqueElement('values');
 					$oValueNodes = $oValues->getElementsByTagName('value');
-					$aValues = array();
+					$aValues = [];
 					foreach($oValueNodes as $oValue)
 					{
-						$aValues[] = $oValue->textContent;
+						// New in 3.0 the format of values changed
+						$sCode = $this->GetMandatoryPropString($oValue, 'code', false);
+						$aValues[] = $sCode;
 					}
 					$sValues = '"'.implode(',', $aValues).'"';
 					$aParameters['allowed_values'] = 'null';
@@ -1796,7 +1842,7 @@ CSS;
 				{
 					$aParameters['tracking_level'] = $this->TrackingLevelToPHP($sAttType, $sTrackingLevel);
 				}
-		
+
 				$aParams = array();
 				foreach($aParameters as $sKey => $sValue)
 				{
@@ -1810,10 +1856,10 @@ CSS;
 			}
 			catch(Exception $e)
 			{
-				throw new DOMFormatException("Field: '$sAttCode', (type: $sAttType), ".$e->getMessage());	
+				throw new DOMFormatException("Field: '$sAttCode', (type: $sAttType), ".$e->getMessage());
 			}
 		}
-	
+
 		// Lifecycle
 		//
 		$sLifecycle = '';
@@ -1822,13 +1868,13 @@ CSS;
 		if ($oLifecycle) {
 			$sLifecycle .= "\t\t// Lifecycle (status attribute: $sStateAttCode)\n";
 			$sLifecycle .= "\t\t//\n";
-	
+
 			$oStimuli = $oLifecycle->GetUniqueElement('stimuli');
 			foreach ($oStimuli->getElementsByTagName('stimulus') as $oStimulus)
 			{
 				$sStimulus = $oStimulus->getAttribute('id');
 				$sStimulusClass = $oStimulus->getAttribute('xsi:type');
-	
+
 				$sLifecycle .= "		MetaModel::Init_DefineStimulus(new ".$sStimulusClass."(\"".$sStimulus."\", array()));\n";
 			}
 			$oHighlightScale = $oLifecycle->GetUniqueElement('highlight_scale', false);
@@ -1836,9 +1882,9 @@ CSS;
 			{
 				$sHighlightScale = "\t\t// Higlight Scale\n";
 				$sHighlightScale .= "		MetaModel::Init_DefineHighlightScale( array(\n";
-				
+
 				$this->CompileFiles($oHighlightScale, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
-				
+
 				foreach ($oHighlightScale->getElementsByTagName('item') as $oItem)
 				{
 					$sItemCode = $oItem->getAttribute('id');
@@ -1860,32 +1906,32 @@ CSS;
 						case 'HIGHLIGHT_CLASS_CRITICAL':
 						$sColor = 'HILIGHT_CLASS_CRITICAL';
 						break;
-						
+
 						case 'HILIGHT_CLASS_OK':
 						case 'HIGHLIGHT_CLASS_OK':
 						$sColor = 'HILIGHT_CLASS_OK';
 						break;
-						
+
 						case 'HIGHLIGHT_CLASS_WARNING':
 						case 'HILIGHT_CLASS_WARNING':
 						$sColor = 'HILIGHT_CLASS_WARNING';
 						break;
-						
+
 						case 'HIGHLIGHT_CLASS_NONE':
 						case 'HILIGHT_CLASS_NONE':
 						$sColor = 'HILIGHT_CLASS_NONE';
 						break;
-						
+
 						default:
 						// Future extension, specify your own color??
 						$sColor = "'".addslashes($sColor)."'";
 					}
 					$sHighlightScale .= "		    '$sItemCode' => array('rank' => $fRank, 'color' => $sColor, 'icon' => $sIcon),\n";
-					
+
 				}
 				$sHighlightScale .= "		));\n";
 			}
-					
+
 			$oStates = $oLifecycle->GetUniqueElement('states');
 			$aStatesDependencies = array();
 			$aStates = array();
@@ -1961,9 +2007,9 @@ CSS;
 					{
 						$sLifecycle .= "				'highlight' => array('code' => '$sCode'),\n";
 					}
-					
+
 				}
-				
+
 				$sLifecycle .= "				\"attribute_list\" => array(\n";
 
 				$oFlags = $oState->GetUniqueElement('flags');
@@ -1984,13 +2030,13 @@ CSS;
 				}
 				$sLifecycle .= "			)\n";
 				$sLifecycle .= "		);\n";
-	
+
 				$oTransitions = $oState->GetUniqueElement('transitions');
 				foreach ($oTransitions->getElementsByTagName('transition') as $oTransition)
 				{
 					$sStimulus = $oTransition->getAttribute('id');
 					$sTargetState = $oTransition->GetChildText('target');
-	
+
 					$oActions = $oTransition->GetUniqueElement('actions');
 					$aVerbs = array();
 					foreach ($oActions->getElementsByTagName('action') as $oAction)
@@ -2053,10 +2099,16 @@ CSS;
 
 			// Note: We can't use ModelFactory::GetField() as the current clas doesn't seem to be loaded yet.
 			$oField = $this->oFactory->GetNodes('field[@id="'.$sStateAttCode.'"]', $oFields)->item(0);
+			if ($oField == null) {
+				// Search field in parent class
+				$oField = $this->GetFieldInParentClasses($oClass, $sStateAttCode);
+				if ($oField == null) {
+					throw new DOMFormatException("Non existing attribute '$sStateAttCode'", null, null, $oStateAttribute);
+				}
+			}
 			$oValues = $oField->GetUniqueElement('values');
 			$oValueNodes = $oValues->getElementsByTagName('value');
-			foreach($oValueNodes as $oValue)
-			{
+			foreach ($oValueNodes as $oValue) {
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$oValue->GetText()."\",\n";
 				$sLifecycle .= "			array(\n";
@@ -2066,7 +2118,7 @@ CSS;
 				$sLifecycle .= "		);\n";
 			}
 		}
-		
+
 		// ZLists
 		//
 		$aListRef = array(
@@ -2075,7 +2127,7 @@ CSS;
 			'default_search' => 'default_search',
 			'list' => 'list',
 		);
-	
+
 		$oPresentation = $oClass->GetUniqueElement('presentation');
 		$sZlists = '';
 		foreach ($aListRef as $sListCode => $sListTag)
@@ -2089,14 +2141,13 @@ CSS;
 					$aAttributes = array();
 				}
 				$this->ArrayOfItemsToZList($aAttributes);
-		
+
 				$sZAttributes = var_export($aAttributes, true);
 				$sZlists .= "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";
 			}
 		}
-	
+
 		// Methods
-		$sMethods = "";
 		$oMethods = $oClass->GetUniqueElement('methods');
 		foreach($oMethods->getElementsByTagName('method') as $oMethod)
 		{
@@ -2108,7 +2159,7 @@ CSS;
 			else
 			{
 				$sMethods .= "\n\n".$sMethodCode."\n";
-			}		
+			}
 		}
 
 		// Relations
@@ -2227,6 +2278,7 @@ $sLifecycle
 $sHighlightScale
 $sZlists;
 EOF;
+
 		// some other stuff (magical attributes like friendlyName) are done in MetaModel::InitClasses and though not present in the
 		// generated PHP
 		$sPHP .= $this->GeneratePhpCodeForClass($sClassName, $sParentClass, $sClassParams, $sInitMethodCalls, $bIsAbstractClass, $sMethods, $aRequiredFiles, $sCodeComment);
@@ -2262,9 +2314,176 @@ EOF
 			}
 		}
 
-		$aClassesCss[] = $sCss;
+		if (strlen($sCss) > 0) {
+			if (array_key_exists($sClass, $this->aClassesCSSRules) === false) {
+				$this->aClassesCSSRules[$sClass] = '';
+			}
+			$this->aClassesCSSRules[$sClass] .= $sCss;
+		}
 
 		return $sPHP;
+	}
+
+	/**
+	 * @internal This method is public in order to be used in the tests
+	 *
+	 * @param \MFElement $oNode Style node, can be either a <style> node of a specific field value, or a <default_style> node of a field
+	 * @param string $sElementType Type of element the style is for: 'enum' for an Attribute(Meta)Enum field, 'class' for a class. {@see self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS, ...}
+	 * @param string $sClass
+	 * @param string|null $sAttCode Optional, att. code
+	 * @param string|null $sValue Optional, value (code) of the field. Used onlyIf null, then it will generate data as for the default style
+	 *
+	 * @return array Data generated from a style node of the DM ['orm_style_instantiation' => <GENERATED_ORMSTYLE_INSTANTIATION>, 'scss' => <GENERATED_SCSS>]
+	 * @throws \DOMFormatException
+	 */
+	public function GenerateStyleDataFromNode(MFElement $oNode, string $sModuleRelDir, string $sElementType, string $sClass, ?string $sAttCode = null, ?string $sValue = null): array
+	{
+		$aData = [];
+
+		/** @var $sCssClassSuffix Optional suffix for the CSS classes depending on the given parameters */
+		$sCssClassSuffix = "";
+		/** @var $sOrmStylePrefix Prefix used for the ormStyle instantiation in PHP */
+		$sOrmStylePrefix = "";
+
+		// In case $sAttCode and optionally $sValue are passed, we prepare additional info. Typically used for (meta)enum attributes
+		if (is_null($sAttCode) === false) {
+			$sCssClassSuffix .= "-$sAttCode";
+
+			if (is_null($sValue) === false) {
+				$sCssClassSuffix .= "-".utils::GetSafeId($sValue);
+				$sOrmStylePrefix = "'$sValue' => ";
+			}
+		}
+
+		// Retrieve colors (mandatory/optional depending on the element type)
+		// Note: For now we can't use CSS variables (only SCSS variables) in the style XML definition as the ibo-adjust-alpha() / ibo-adjust-lightness() used a few steps below do not support them,
+		//       if this ever should be considered, the following article might help: https://codyhouse.co/blog/post/how-to-combine-sass-color-functions-and-css-variables#other-color-functions
+		if ($sElementType === self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS) {
+			$sMainColorForCss = $this->GetPropString($oNode, 'main_color', null, false);
+			$sMainColorForOrm = $this->GetPropString($oNode, 'main_color', null);
+			if (is_null($sMainColorForOrm)) {
+				// TODO: Check for main color in parent classes definition is currently done in MetaModel::GetClassStyle() at runtime but it should be done here at compile time
+				$sMainColorForOrm = "null";
+			}
+
+			$sComplementaryColorForCss = $this->GetPropString($oNode, 'complementary_color', null, false);
+			$sComplementaryColorForOrm = $this->GetPropString($oNode, 'complementary_color', null);
+			if (is_null($sComplementaryColorForOrm)) {
+				// TODO: Check for main color in parent classes definition is currently done in MetaModel::GetClassStyle() at runtime but it should be done here at compile time
+				$sComplementaryColorForOrm = "null";
+			}
+		} else {
+			$sMainColorForCss = $this->GetMandatoryPropString($oNode, 'main_color', false);
+			$sMainColorForOrm = $this->GetMandatoryPropString($oNode, 'main_color');
+
+			$sComplementaryColorForCss = $this->GetMandatoryPropString($oNode, 'complementary_color', false);
+			$sComplementaryColorForOrm = $this->GetMandatoryPropString($oNode, 'complementary_color');
+		}
+		$bHasMainColor = is_null($sMainColorForCss) === false;
+		$bHasComplementaryColor = is_null($sComplementaryColorForCss) === false;
+		$bHasAtLeastOneColor = $bHasMainColor || $bHasComplementaryColor;
+
+		// Optional decoration classes
+		$sDecorationClasses = $this->GetPropString($oNode, 'decoration_classes', null);
+		if (is_null($sDecorationClasses)) {
+			$sDecorationClasses = "null";
+		}
+
+		// Optional icon
+		$sIconRelPath = $this->GetPropString($oNode, 'icon', null, false);
+		if (is_null($sIconRelPath)) {
+			$sIconRelPath = "null";
+		} else {
+			$sIconRelPath = "'$sModuleRelDir/$sIconRelPath'";
+		}
+
+		// CSS classes representing the element (regular and alternative)
+		$sCssRegularClass = "ibo-dm-$sElementType--$sClass$sCssClassSuffix";
+		$sCssRegularClassForOrm = $bHasAtLeastOneColor ? "'$sCssRegularClass'" : "null";
+
+		$sCssAlternativeClass = "ibo-dm-$sElementType-alt--$sClass$sCssClassSuffix";
+		$sCssAlternativeClassForOrm = $bHasAtLeastOneColor ? "'$sCssAlternativeClass'" : "null";
+
+		// Generate SCSS declaration
+		$sScss = "";
+		if ($bHasAtLeastOneColor) {
+			if ($bHasMainColor) {
+				$sMainColorScssVariableName = "\$$sCssRegularClass--main-color";
+				$sMainColorCssVariableName = "--$sCssRegularClass--main-color";
+
+				$sMainColorScssVariableDeclaration = "$sMainColorScssVariableName: $sMainColorForCss !default;";
+				$sMainColorCssVariableDeclaration = "$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};";
+
+				$sCssRegularClassMainColorDeclaration = "--ibo-main-color:  #{{$sMainColorScssVariableName}};";
+				// Note: We have to manually force the alpha channel in case the given color is transparent
+				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100)};";
+				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900)};";
+
+				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: #{{$sMainColorScssVariableName}};";
+			} else {
+				$sMainColorScssVariableDeclaration = null;
+
+				$sCssRegularClassMainColorDeclaration = null;
+				$sCssRegularClassMainColor900Declaration = null;
+
+				$sCssAlternativeClassComplementaryColorDeclaration = null;
+			}
+
+			if ($bHasComplementaryColor) {
+				$sComplementaryColorScssVariableName = "\$$sCssRegularClass--complementary-color";
+				$sComplementaryColorCssVariableName = "--$sCssRegularClass--complementary-color";
+
+				$sComplementaryScssVariableDeclaration = "$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;";
+				$sComplementaryCssVariableDeclaration = "$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};";
+
+				$sCssRegularClassComplementaryColorDeclaration = "--ibo-complementary-color:  #{{$sComplementaryColorScssVariableName}};";
+
+				$sCssAlternativeClassMainColorDeclaration = "--ibo-main-color:  #{{$sComplementaryColorScssVariableName}};";
+			} else {
+				$sComplementaryScssVariableDeclaration = null;
+				$sComplementaryCssVariableDeclaration = null;
+
+				$sCssRegularClassComplementaryColorDeclaration = null;
+
+				$sCssAlternativeClassMainColorDeclaration = null;
+			}
+
+			$sScss .= <<<CSS
+$sMainColorScssVariableDeclaration
+$sComplementaryScssVariableDeclaration
+
+:root {
+	$sMainColorCssVariableDeclaration
+	$sComplementaryCssVariableDeclaration
+}
+
+.$sCssRegularClass {
+	$sCssRegularClassMainColorDeclaration
+	$sCssRegularClassMainColor100Declaration
+	$sCssRegularClassMainColor900Declaration
+	$sCssRegularClassComplementaryColorDeclaration
+}
+.$sCssAlternativeClass {
+	$sCssAlternativeClassMainColorDeclaration
+	$sCssAlternativeClassComplementaryColorDeclaration
+}
+
+CSS;
+		}
+		$aData['scss'] = $sScss;
+
+		// Generate ormStyle instantiation
+		// - Convert SCSS variable to CSS variable use as SCSS variable cannot be used elsewhere than during SCSS compiling
+		//   Note: We check the $sXXXColorForCSS instead of the $sXXXColorForOrm because its value has been altered.
+		if ($bHasMainColor && (stripos($sMainColorForCss, '$') === 0)) {
+		       $sMainColorForOrm = "'var($sMainColorCssVariableName)'";
+		}
+		if ($bHasComplementaryColor && (stripos($sComplementaryColorForCss, '$') === 0)) {
+		       $sComplementaryColorForOrm = "'var($sComplementaryColorCssVariableName)'";
+		}
+		$aData['orm_style_instantiation'] = "$sOrmStylePrefix new ormStyle($sCssRegularClassForOrm, $sCssAlternativeClassForOrm, $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses, $sIconRelPath)";
+
+		return $aData;
 	}
 
 	private static function GetTagDataClassName($sClass, $sAttCode)
@@ -2557,6 +2776,10 @@ EOF
 					}
 					else
 					{
+						if (array_key_exists($sGroupId, $aGroupClasses) === false) {
+							SetupLog::Error("Profile \"$sName\" relies on group \"$sGroupId\" but it does not seem to be present in the DM yet (did you forgot a dependency in your module?)");
+						}
+
 						$aGrantClasses = $aGroupClasses[$sGroupId];
 					}
 					foreach ($aGrantClasses as $sClass)
@@ -2855,18 +3078,22 @@ EOF;
 	 */
 	protected function CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $sNodeName, $sTargetFile)
 	{
-		if (($sIcon = $oBrandingNode->GetChildText($sNodeName)) && (strlen($sIcon) > 0))
-		{
+		$sIcon = trim($oBrandingNode->GetChildText($sNodeName) ?? '');
+		if (strlen($sIcon) > 0) {
 			$sSourceFile = $sTempTargetDir.'/'.$sIcon;
-			$sTargetFile = $sTempTargetDir.'/branding/'.$sTargetFile.'.png';
+			$aIconName=explode(".", $sIcon);
+			$sIconExtension=$aIconName[count($aIconName)-1];
+			$sTargetFile = '/branding/'.$sTargetFile.'.'.$sIconExtension;
 
 			if (!file_exists($sSourceFile))
 			{
 				throw new Exception("Branding $sNodeName: could not find the file $sIcon ($sSourceFile)");
 			}
 
-			copy($sSourceFile, $sTargetFile);
+			copy($sSourceFile, $sTempTargetDir.$sTargetFile);
+			return $sTargetFile;
 		}
+		return null;
 	}
 
 	/**
@@ -2891,10 +3118,59 @@ EOF;
 		);
 
 		// Build compiled themes folder
-		$sThemesDir = $sTempTargetDir.'branding/themes/';
-		if(!is_dir($sThemesDir))
+		$sThemesRelDirPath = 'branding/themes/';
+		$sThemesAbsDirPath = $sTempTargetDir.$sThemesRelDirPath;
+		if(!is_dir($sThemesAbsDirPath))
 		{
-			SetupUtils::builddir($sThemesDir);
+			SetupUtils::builddir($sThemesAbsDirPath);
+		}
+
+		// Prepare DM CSS rules for inclusion
+		$sDmStylesheetFilename = 'datamodel-compiled-scss-rules.scss';
+		$sDmStylesheetContent = implode("\n", $this->aClassesCSSRules);
+		$sDmStylesheetId = 'datamodel-compiled-scss-rules';
+		$this->WriteFile($sThemesAbsDirPath.$sDmStylesheetFilename, $sDmStylesheetContent);
+
+		// Parsing theme from common theme node
+		/** @var \MFElement $oThemesCommonNodes */
+		$oThemesCommonNodes = $oBrandingNode->GetUniqueElement('themes_common', false);
+		$aThemesCommonParameters = array(
+			'variables' => array(),
+			'variable_imports' => array(),
+			'utility_imports' => array(),
+			'stylesheets' => array(),
+		);
+		
+		if($oThemesCommonNodes !== null) {
+			/** @var \DOMNodeList $oThemesCommonVariables */
+			$oThemesCommonVariables = $oThemesCommonNodes->GetNodes('variables/variable');
+			foreach ($oThemesCommonVariables as $oVariable) {
+				$sVariableId = $oVariable->getAttribute('id');
+				$aThemesCommonParameters['variables'][$sVariableId] = $oVariable->GetText();
+			}
+	
+			/** @var \DOMNodeList $oThemesCommonImports */
+			$oThemesCommonImports = $oThemesCommonNodes->GetNodes('imports/import');
+			foreach ($oThemesCommonImports as $oImport) {
+				$sImportId = $oImport->getAttribute('id');
+				$sImportType = $oImport->getAttribute('xsi:type');
+				if ($sImportType === 'variables') {
+					$aThemesCommonParameters['variable_imports'][$sImportId] = $oImport->GetText();
+				} elseif ($sImportType === 'utilities') {
+					$aThemesCommonParameters['utility_imports'][$sImportId] = $oImport->GetText();
+				} else {
+					SetupLog::Warning('CompileThemes: Theme common has an import (#'.$sImportId.') without explicit xsi:type, it will be ignored. Check Datamodel XML Reference to fix it.');
+				}
+			}
+	
+			// Stylesheets
+			// - Manually added in the XML
+			/** @var \DOMNodeList $oThemesCommonStylesheets */
+			$oThemesCommonStylesheets = $oThemesCommonNodes->GetNodes('stylesheets/stylesheet');
+			foreach ($oThemesCommonStylesheets as $oStylesheet) {
+				$sStylesheetId = $oStylesheet->getAttribute('id');
+				$aThemesCommonParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
+			}
 		}
 
 		// Parsing themes from DM
@@ -2932,6 +3208,8 @@ EOF;
 				}
 			}
 
+			// Stylesheets
+			// - Manually added in the XML
 			/** @var \DOMNodeList $oStylesheets */
 			$oStylesheets = $oTheme->GetNodes('stylesheets/stylesheet');
 			foreach($oStylesheets as $oStylesheet)
@@ -2940,6 +3218,16 @@ EOF;
 				$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
 			}
 
+			// - Computed from the DM
+			$aThemeParameters['stylesheets'][$sDmStylesheetId] = $sThemesRelDirPath.$sDmStylesheetFilename;
+
+			// - Overload default values with module ones
+			foreach ($aThemeParameters as $sThemeParameterName => $aThemeParameter) {
+				if(array_key_exists($sThemeParameterName, $aThemesCommonParameters)){
+					$aThemeParameters[$sThemeParameterName] = array_merge($aThemeParameter, $aThemesCommonParameters[$sThemeParameterName]);
+				}
+			}
+			
 			$aThemes[$sThemeId] = [
 				'theme_parameters' => $aThemeParameters,
 				'precompiled_stylesheet' => $oTheme->GetChildText('precompiled_stylesheet', '')
@@ -2950,6 +3238,7 @@ EOF;
 		if(empty($aThemes))
 		{
 			$aDefaultThemeInfo = ThemeHandler::GetDefaultThemeInformation();
+			$aDefaultThemeInfo['parameters']['stylesheets'][$sDmStylesheetId] = $sThemesRelDirPath.$sDmStylesheetFilename;
 			$aThemes[$aDefaultThemeInfo['name']] = $aDefaultThemeInfo['parameters'];
 		}
 
@@ -2965,7 +3254,7 @@ EOF;
 			$aThemeParameters = $aThemeInfos['theme_parameters'];
 			$sPrecompiledStylesheet = $aThemeInfos['precompiled_stylesheet'];
 
-			$sThemeDir = $sThemesDir.$sThemeId;
+			$sThemeDir = $sThemesAbsDirPath.$sThemeId;
 			if(!is_dir($sThemeDir))
 			{
 				SetupUtils::builddir($sThemeDir);
@@ -2988,7 +3277,7 @@ EOF;
 
 			if ($bHasCompiled) {
 				if (utils::GetConfig()->Get('theme.enable_precompilation')){
-					if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))
+					/*if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))  //N°4438 - Disable (temporary) copy of precompiled stylesheets after setup
 					{ //help developers to detect & push theme precompilation changes
 						$sInitialPrecompiledFilePath = null;
 						$aRootDirs = $this->oFactory->GetRootDirs();
@@ -3006,7 +3295,7 @@ EOF;
 							SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sInitialPrecompiledFilePath for next setup.");
 							copy($sThemeDir.'/main.css', $sInitialPrecompiledFilePath);
 						}
-					}
+					}*/
 
 					SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sPostCompilationLatestPrecompiledFile for next setup.");
 					copy($sThemeDir.'/main.css', $sPostCompilationLatestPrecompiledFile);
@@ -3105,11 +3394,27 @@ EOF;
 		{
 			// Transform file refs into files in the images folder
 			$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
+			$aDataBranding = [];
 
-			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'login_logo', 'login-logo');
-			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo', 'main-logo-full');
-			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo_compact', 'main-logo-compact');
-			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'portal_logo', 'portal-logo');
+			$aLogosToCompile = [
+				['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_LOGO],
+				['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL],
+				['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main-logo-compact', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT],
+				['sNodeName' => 'portal_logo', 'sTargetFile' =>'portal-logo', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_LOGO],
+			];
+			foreach ($aLogosToCompile as $aLogo) {
+				$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $aLogo['sNodeName'], $aLogo['sTargetFile']);
+				if ($sLogo != null) {
+					$aDataBranding[$aLogo['sType']] = $sLogo;
+				}
+			}
+			if ($sTempTargetDir == null) {
+				$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+			} else {
+				$sWorkingPath = $sTempTargetDir;
+			}
+
+			file_put_contents($sWorkingPath.'/branding/logos.json', json_encode($aDataBranding));
 
 			// Cleanup the images directory (eventually made by CompileFiles)
 			if (file_exists($sTempTargetDir.'/branding/images'))
@@ -3304,6 +3609,103 @@ EOF;
 		foreach($this->aSnippets as $sModuleId => $void)
 		{
 			uasort($this->aSnippets[$sModuleId]['before'], array(get_class($this), 'SortOnRank'));
+			uasort($this->aSnippets[$sModuleId]['after'], array(get_class($this), 'SortOnRank'));
+		}
+	}
+
+	/**
+	 * @throws \DOMFormatException
+	 */
+	protected function LoadGlobalEventListeners()
+	{
+		$sClassName = 'GlobalEventListeners';
+		$sModuleId = '_core_';
+		if (!array_key_exists($sModuleId, $this->aSnippets)) {
+			$this->aSnippets[$sModuleId] = ['before' => [], 'after' => []];
+		}
+		$oEventListeners = $this->oFactory->GetNodes('/itop_design/event_listeners/listener');
+		$aEventListeners = [];
+		foreach ($oEventListeners as $oListener) {
+			/** @var \DOMElement $oListener */
+			$sListenerId = $oListener->getAttribute('id');
+			$sEventName = $oListener->GetChildText('event');
+
+			$oExecute = $oListener->GetUniqueElement('execute');
+			$sExecute = trim($oExecute->GetText());
+			$sCallback = "{$sEventName}_{$sListenerId}";
+			$sCallbackFct = preg_replace('@^function\s*\(@', "public static function $sCallback(", $sExecute);
+			if ($sExecute == $sCallbackFct) {
+				throw new DOMFormatException("Malformed tag <execute> in event: $sEventName listener: $sListenerId");
+			}
+			$fPriority = (float)($oListener->GetChildText('priority', '0'));
+
+			$aFilters = [];
+			$oFilters = $oListener->GetNodes('filters/filter');
+			foreach ($oFilters as $oFilter) {
+				$aFilters[] = $oFilter->GetText();
+			}
+			if (empty($aFilters)) {
+				$sEventSource = 'null';
+			} else {
+				$sEventSource = '["'.implode('", "', $aFilters).'"]';
+			}
+
+			$aContexts = [];
+			$oContexts = $oListener->GetNodes('contexts/context');
+			foreach ($oContexts as $oContext) {
+				$aContexts[] = $oContext->GetText();
+			}
+			if (empty($aContexts)) {
+				$sContext = 'null';
+			} else {
+				$sContext = '["'.implode('", "', $aContexts).'"]';
+			}
+
+			$aEventListeners[] = array(
+				'event_name' => $sEventName,
+				'callback'   => $sCallback,
+				'content'    => $sCallbackFct,
+				'priority'   => $fPriority,
+				'source'     => $sEventSource,
+				'context'    => $sContext,
+			);
+		}
+
+		if (empty($aEventListeners)) {
+			return;
+		}
+
+		$sRegister = '';
+		$sMethods = '';
+		foreach ($aEventListeners as $aListener) {
+			$sCallback = $aListener['callback'];
+			$sEventName = $aListener['event_name'];
+			$sEventSource = $aListener['source'];
+			$sContext = $aListener['context'];
+			$sPriority = $aListener['priority'];
+			$sRegister .= "\nCombodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sPriority, '$sModuleId');";
+			$sCallbackFct = $aListener['content'];
+			$sMethods .= "\n    $sCallbackFct\n\n";
+		}
+
+		$sContent = <<<PHP
+class $sClassName
+{
+$sMethods
+}
+
+$sRegister
+
+PHP;
+
+		$fOrder = 0;
+		$this->aSnippets[$sModuleId]['after'][] = array(
+			'rank'       => $fOrder,
+			'content'    => $sContent,
+			'snippet_id' => $sClassName,
+		);
+		foreach ($this->aSnippets as $sModuleId => $void) {
+			uasort($this->aSnippets[$sModuleId]['after'], array(get_class($this), 'SortOnRank'));
 		}
 	}
 
@@ -3385,12 +3787,22 @@ EOF;
 
 	/**
 	 * Write a file only if not exists
-	 * Also add some informations in case of a write failleure
-	 * @param $sFilename
-	 * @param $sContent
+	 * Also add some informations when write failure occurs
+	 *
+	 * @param string $sFilename
+	 * @param string $sContent
+	 * @param int $flags
 	 *
 	 * @return bool|int
 	 * @throws \Exception
+	 *
+	 * @uses \unlink()
+	 * @uses \file_put_contents()
+	 *
+	 * @since 3.0.0 The file is removed before writing (commit c5d265f6)
+	 *      For now this causes model.*.php files to always be located in env-* dir, even if symlinks are enabled
+	 *      See N°4854
+	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Arelease%3A3_0_whats_new#compiler_always_generate_new_model_php compiler behavior change documentation
 	 */
 	protected function WriteFile($sFilename, $sContent, $flags = null)
 	{
@@ -3398,7 +3810,7 @@ EOF;
 		{
 			@unlink($sFilename);
 		}
-		$ret = file_put_contents($sFilename, $sContent, $flags);
+		$ret = file_put_contents($sFilename, $sContent, $flags ?? 0);
 		if ($ret === false)
 		{
 			$iLen = strlen($sContent);
@@ -3418,6 +3830,8 @@ EOF;
 	 * @param $sRelativeDir
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 2.7.0 N°2498
 	 */
 	protected function WriteStaticOnlyHtaccess($sTempTargetDir)
 	{
@@ -3459,6 +3873,8 @@ EOF;
 	 * @param $sModuleVersion
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 2.7.0 N°2498
 	 */
 	protected function WriteStaticOnlyWebConfig($sTempTargetDir)
 	{
@@ -3557,5 +3973,20 @@ EOF;
 		}
 
 		return $sValue;
+	}
+
+	private function GetFieldInParentClasses($oClass, $sAttCode)
+	{
+		$sParentClass = $oClass->GetChildText('parent', 'DBObject');
+		if ($sParentClass != 'DBObject') {
+			$oParent = $this->oFactory->GetClass($sParentClass);
+			$oParentFields = $oParent->GetOptionalElement('fields');
+			$oField = $this->oFactory->GetNodes('field[@id="'.$sAttCode.'"]', $oParentFields)->item(0);
+			if ($oField != null) {
+				return $oField;
+			}
+			return $this->GetFieldInParentClasses($oParent, $sAttCode);
+		}
+		return null;
 	}
 }

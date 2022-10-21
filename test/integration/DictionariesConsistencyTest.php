@@ -17,6 +17,7 @@ namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
+use Dict;
 
 class DictionariesConsistencyTest extends ItopTestCase
 {
@@ -34,7 +35,10 @@ class DictionariesConsistencyTest extends ItopTestCase
 			'da' => array('DA DA', 'Danish', 'Dansk'),
 			'de' => array('DE DE', 'German', 'Deutsch'),
 			'en' => array('EN US', 'English', 'English'),
-			'es_cr' => array('ES CR', 'Spanish', 'Español, Castellaño'),
+			'es_cr' => array('ES CR', 'Spanish', array(
+				'Español, Castellaño', // old value
+				'Español, Castellano', // new value since N°3635
+			)),
 			'fr' => array('FR FR', 'French', 'Français'),
 			'hu' => array('HU HU', 'Hungarian', 'Magyar'),
 			'it' => array('IT IT', 'Italian', 'Italiano'),
@@ -57,7 +61,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 			static::fail("Unknown prefix '$sLangPrefix' for dictionary file '$sDictFile'");
 		}
 
-		[$sExpectedLanguageCode, $sExpectedEnglishLanguageDesc, $sExpectedLocalizedLanguageDesc] = $aPrefixToLanguageData[$sLangPrefix];
+		[$sExpectedLanguageCode, $sExpectedEnglishLanguageDesc, $aExpectedLocalizedLanguageDesc] = $aPrefixToLanguageData[$sLangPrefix];
 
 		$sDictPHP = file_get_contents($sDictFile);
 		$iCount = preg_match_all("@Dict::Add\('(.*)'\s*,\s*'(.*)'\s*,\s*'(.*)'@", $sDictPHP, $aMatches);
@@ -76,8 +80,12 @@ class DictionariesConsistencyTest extends ItopTestCase
 			static::assertSame($sExpectedEnglishLanguageDesc, $sEnglishLanguageDesc,
 				"Unexpected language description (english) for Dict::Add in dictionary $sDictFile");
 		}
-		foreach ($aMatches[3] as $sLocalizedLanguageDesc) {
-			static::assertSame($sExpectedLocalizedLanguageDesc, $sLocalizedLanguageDesc,
+		foreach ($aMatches[3] as $sLocalizedLanguageDesc)
+		{
+			if (false === is_array($aExpectedLocalizedLanguageDesc)) {
+				$aExpectedLocalizedLanguageDesc = array($aExpectedLocalizedLanguageDesc);
+			}
+			static::assertContains($sLocalizedLanguageDesc,$aExpectedLocalizedLanguageDesc,
 				"Unexpected language description for Dict::Add in dictionary $sDictFile");
 		}
 	}
@@ -140,5 +148,68 @@ class DictionariesConsistencyTest extends ItopTestCase
 
 		$sMessage = "File `{$sDictFile}` syntax didn't matched expectations\nparsing results=".var_export($output, true);
 		self::assertEquals($bIsSyntaxValid, $bDictFileSyntaxOk, $sMessage);
+	}
+
+	/**
+	 * @dataProvider ImBulChanportCsvMessageStillOkProvider
+	 * make sure N°5305 dictionary changes are still here and UI remains unbroken for any lang
+	 */
+	public function testImportCsvMessageStillOk($sLangCode, $sDictFile)
+	{
+		$aFailedLabels = [];
+		$aLabelsToTest = [
+			'UI:CSVReport-Value-SetIssue' => [],
+			'UI:CSVReport-Value-ChangeIssue' => [ 'arg1' ],
+			'UI:CSVReport-Value-NoMatch' => [ 'arg1' ],
+			'UI:CSVReport-Value-NoMatch-PossibleValues' => [ 'arg1', 'arg2' ],
+			'UI:CSVReport-Value-NoMatch-NoObject' => [ 'arg1' ],
+			'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => [ 'arg1' ],
+			'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => [ 'arg1' ],
+		];
+
+		$sLanguageCode = strtoupper(str_replace('-', ' ', $sLangCode));
+		require_once(APPROOT.'env-'.\utils::GetCurrentEnvironment().'/dictionaries/languages.php');
+		Dict::SetUserLanguage($sLanguageCode);
+		foreach ($aLabelsToTest as $sLabelKey => $aLabelArgs){
+			try{
+				$sLabelValue = Dict::Format($sLabelKey, ...$aLabelArgs);
+				var_dump($sLabelValue);
+			} catch (\Exception $e){
+				$aFailedLabels[] = $sLabelKey;
+
+				var_dump([
+					'exception' => $e->getMessage(),
+					'trace' => $e->getTraceAsString(),
+					'label_name' => $sLabelKey,
+					'label_args' =>$aLabelArgs,
+				]);
+			}
+		}
+		$this->assertEquals([], $aFailedLabels, "test fail for lang $sLangCode and labels (" . implode(",", $aFailedLabels) . ')');
+	}
+
+	public function ImportCsvMessageStillOkProvider(){
+		return $this->GetDictFiles();
+	}
+
+	/**
+	 * return a map linked to *.dict.php files that are generated after setup
+	 * each entry key is lang code (example 'en')
+	 * each value is an array with lang code (again) and dict file path
+	 * @return array
+	 */
+	private function GetDictFiles() : array {
+		$aDictFiles = [];
+
+		foreach (glob(APPROOT.'env-'.\utils::GetCurrentEnvironment().'/dictionaries/*.dict.php') as $sDictFile){
+			if (preg_match('/.*\\/(.*).dict.php/', $sDictFile, $aMatches)){
+				$sLangCode = $aMatches[1];
+				$aDictFiles[$sLangCode] = [
+					'lang' => $sLangCode,
+					'file' => $sDictFile
+				];
+			}
+		}
+		return $aDictFiles;
 	}
 }

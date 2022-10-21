@@ -145,6 +145,8 @@ if (file_exists($sDotExecutable))
 		readfile($sImageFilePath);
 	}
 	@unlink($sDotFilePath);
+	// Image file is removed as well as there is no cache system yet
+	@unlink($sImageFilePath);
 }
 else
 {

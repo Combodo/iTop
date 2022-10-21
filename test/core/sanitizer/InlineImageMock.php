@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpUnused */
+/** @noinspection PhpIllegalPsrClassPathInspection */
 /**
  * Copyright (C) 2010-2021 Combodo SARL
  *
@@ -20,16 +22,22 @@
  */
 
 /**
- * Mock class used by @see \Combodo\iTop\Test\UnitTest\Core\HTMLDOMSanitizerTest
+ * Mock class used to count number of calls for the ProcessImage static method
  *
+ * @used-by \Combodo\iTop\Test\UnitTest\Core\Sanitizer\HTMLDOMSanitizerTest::testDoSanitizeCallInlineImageProcessImageTag()
  */
-class InlineImage
+class InlineImageMock
 {
 	private static $iCallCounter = 0;
 
 	public static function ProcessImageTag(DOMNode $oNode)
 	{
 		self::$iCallCounter++;
+	}
+
+	public static function ResetCallCounter()
+	{
+		self::$iCallCounter = 0;
 	}
 
 	public static function GetCallCounter()

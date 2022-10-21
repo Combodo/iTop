@@ -35,22 +35,19 @@ class ItopExtensionsExtraRoutes
 	static private $aRoutes = array();
 
 	/**
+	 * @var array $aControllersClasses
+	 * @since 3.1.0
+	 */
+	static private $aControllersClasses = array();
+
+	/**
 	 * @param array $extraRoutes
 	 *
 	 * @throws Exception
 	 */
 	public static function AddRoutes($extraRoutes)
 	{
-		@trigger_error(
-			sprintf(
-				'Usage of legacy route "%s" is deprecated. You should declare routes in YAML format.',
-				__FILE__
-			),
-			E_USER_DEPRECATED
-		);
-
-		if (!is_array($extraRoutes))
-		{
+		if (!is_array($extraRoutes)) {
 			throw new Exception('Only array are allowed as parameter to '.__METHOD__);
 		}
 
@@ -63,5 +60,29 @@ class ItopExtensionsExtraRoutes
 	public static function GetRoutes()
 	{
 		return self::$aRoutes;
+	}
+
+	/**
+	 * @param array $extraControllersClasses
+	 *
+	 * @throws Exception
+	 * @since 3.1.0
+	 */
+	public static function AddControllersClasses($extraControllersClasses)
+	{
+		if (!is_array($extraControllersClasses)) {
+			throw new Exception('Only array are allowed as parameter to '.__METHOD__);
+		}
+
+		self::$aControllersClasses = array_merge(self::$aControllersClasses, $extraControllersClasses);
+	}
+
+	/**
+	 * @return array
+	 * @since 3.1.0
+	 */
+	public static function GetControllersClasses()
+	{
+		return self::$aControllersClasses;
 	}
 }

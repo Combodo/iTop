@@ -114,7 +114,7 @@ class QueryLogEntry
 			$aGroupedBy = array();
 			foreach ($this->aGroupByExpr as $oExpr)
 			{
-				$aGroupedBy[] = $oExpr->Render();
+				$aGroupedBy[] = $oExpr->RenderExpression();
 			}
 			$this->sQueryDesc = implode(', ', $aGroupedBy);
 
@@ -147,6 +147,7 @@ class QueryLogEntry
 			$iRepeat = utils::ReadParam('repeat', 3);
 			try
 			{
+				$resQuery = null;
 				$fRefTime = MyHelpers::getmicrotime();
 				for($i = 0 ; $i < $iRepeat ; $i++)
 				{
@@ -167,7 +168,6 @@ class QueryLogEntry
 			catch (Exception $e)
 			{
 				$this->aErrors[] = "Failed to execute the SQL:".$e->getMessage();
-				$resQuery = null;
 			}
 			if ($resQuery)
 			{
@@ -205,7 +205,6 @@ class QueryLogEntry
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 $operation = utils::ReadParam('operation', '');

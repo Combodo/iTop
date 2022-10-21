@@ -20,25 +20,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:DeletedObjectLabel' => '%1s (usunięto)',
-	'Core:DeletedObjectTip' => 'Obiekt został usunięty w dniu %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'Obiekt został usunięty w dniu %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Nie znaleziono obiektu (klasa: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'Nie można znaleźć obiektu. Być może został usunięty jakiś czas temu, a od tego czasu dziennik został wyczyszczony.',
+	'Core:UnknownObjectTip'   => 'Nie można znaleźć obiektu. Być może został usunięty jakiś czas temu, a od tego czasu dziennik został wyczyszczony.',
 
 	'Core:UniquenessDefaultError' => 'Błąd zasady niepowtarzalności \'%1$s\'',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => 'Tablica obiektów',
+	'Core:AttributeLinkedSet'  => 'Tablica obiektów',
 	'Core:AttributeLinkedSet+' => 'Wszelkiego rodzaju obiekty tej samej klasy lub podklasy',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplikaty w polu \'%1$s\' : %2$s',
 
-	'Core:AttributeDashboard' => 'Pulpit',
+	'Core:AttributeDashboard'  => 'Pulpit',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Numer telefonu',
+	'Core:AttributePhoneNumber'  => 'Numer telefonu',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Data utraty ważności',
@@ -67,7 +68,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:AttributeDecimal+' => 'Wartość dziesiętna (może być ujemna)',
 
 	'Core:AttributeBoolean' => 'Wartość logiczna',
-	'Core:AttributeBoolean+' => 'Wartość logiczna',
+	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Tak',
 	'Core:AttributeBoolean/Value:no' => 'Nie',
@@ -94,7 +95,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:AttributeString+' => 'Ciąg alfanumeryczny',
 
 	'Core:AttributeClass' => 'Klasa',
-	'Core:AttributeClass+' => 'Klasa',
+	'Core:AttributeClass+' => '',
 
 	'Core:AttributeApplicationLanguage' => 'Język użutkownika',
 	'Core:AttributeApplicationLanguage+' => 'Język i kraj (EN US)',
@@ -117,10 +118,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:AttributeHTML+' => 'Ciąg HTML',
 
 	'Core:AttributeEmailAddress' => 'Adres e-mail',
-	'Core:AttributeEmailAddress+' => 'Adres e-mail',
+	'Core:AttributeEmailAddress+' => '',
 
 	'Core:AttributeIPAddress' => 'Adres IP',
-	'Core:AttributeIPAddress+' => 'Adres IP',
+	'Core:AttributeIPAddress+' => '',
 
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Język wyrażeń zapytania obiektowego OQL',
@@ -204,7 +205,7 @@ Operatory:<br/>
 	'Core:FriendlyName-Description' => 'Pełna nazwa',
 
 	'Core:AttributeTag' => 'Tagi',
-	'Core:AttributeTag+' => 'Tagi',
+	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchronizacja',
@@ -231,6 +232,14 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:CMDBChange/Attribute:date+' => 'data i czas zarejestrowania zmian',
 	'Class:CMDBChange/Attribute:userinfo' => 'misc. info',
 	'Class:CMDBChange/Attribute:userinfo+' => 'zdefiniowane informacje gościa',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -241,7 +250,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:CMDBChangeOp' => 'Operacje zmian',
 	'Class:CMDBChangeOp+' => 'Zmiana dokonana przez osobę na jednym obiekcie w jednostce czasu',
 	'Class:CMDBChangeOp/Attribute:change' => 'zmiana',
-	'Class:CMDBChangeOp/Attribute:change+' => 'zmiana',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'data',
 	'Class:CMDBChangeOp/Attribute:date+' => 'data i czas zmiany',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'użytkownik',
@@ -303,7 +312,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Change:TwoAttributesChanged' => 'Zmodyfikowano %1$s i %2$s',
 	'Change:ThreeAttributesChanged' => 'Zmodyfikowano %1$s, %2$s i 1 inny',
 	'Change:FourOrMoreAttributesChanged' => 'Zmodyfikowano %1$s, %2$s i %3$s inne',
-	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s zmianiono na %2$s (poprzednia wartość: %3$s)',
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s zmieniono na %2$s (poprzednia wartość: %3$s)',
 	'Change:AttName_SetTo' => '%1$s zmieniono na %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s dołączone do %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s zmodyfikowano, poprzednia wartość: %2$s',
@@ -377,17 +386,17 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventNotificationEmail' => 'Zdarzenie wysyłki wiadomości e-mail',
 	'Class:EventNotificationEmail+' => 'Ślad e-maila, który został wysłany',
 	'Class:EventNotificationEmail/Attribute:to' => 'TO',
-	'Class:EventNotificationEmail/Attribute:to+' => 'TO',
+	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'CC',
-	'Class:EventNotificationEmail/Attribute:cc+' => 'CC',
+	'Class:EventNotificationEmail/Attribute:cc+' => '',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'BCC',
-	'Class:EventNotificationEmail/Attribute:bcc+' => 'BCC',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '',
 	'Class:EventNotificationEmail/Attribute:from' => 'Od',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Nadawca wiadomości',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Temat',
-	'Class:EventNotificationEmail/Attribute:subject+' => 'Temat',
+	'Class:EventNotificationEmail/Attribute:subject+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Treść',
-	'Class:EventNotificationEmail/Attribute:body+' => 'Treść',
+	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Załączniki',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
 ));
@@ -410,7 +419,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventIssue/Attribute:arguments_get' => 'Argumenty adresu URL',
 	'Class:EventIssue/Attribute:arguments_get+' => 'Argumenty HTTP GET',
 	'Class:EventIssue/Attribute:callstack' => 'Stos wywołań',
-	'Class:EventIssue/Attribute:callstack+' => 'Stos wywołań',
+	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Dane',
 	'Class:EventIssue/Attribute:data+' => 'Więcej informacji',
 ));
@@ -461,9 +470,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventLoginUsage' => 'Korzystanie z logowania',
 	'Class:EventLoginUsage+' => 'Połączenie z aplikacją',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
-	'Class:EventLoginUsage/Attribute:user_id+' => 'Login',
+	'Class:EventLoginUsage/Attribute:user_id+' => '',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Nazwa Użytkownika',
-	'Class:EventLoginUsage/Attribute:contact_name+' => 'Nazwa Użytkownika',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'E-mail użytkownika',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Adres e-mail użytkownika',
 ));
@@ -482,15 +491,16 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Action/Attribute:status' => 'Status',
 	'Class:Action/Attribute:status+' => 'Ten stan steruje działaniem',
 	'Class:Action/Attribute:status/Value:test' => 'Testowane',
-	'Class:Action/Attribute:status/Value:test+' => 'Testowane',
+	'Class:Action/Attribute:status/Value:test+' => '',
 	'Class:Action/Attribute:status/Value:enabled' => 'W użytkowaniu',
-	'Class:Action/Attribute:status/Value:enabled+' => 'W użytkowaniu',
+	'Class:Action/Attribute:status/Value:enabled+' => '',
 	'Class:Action/Attribute:status/Value:disabled' => 'Nieaktywne',
-	'Class:Action/Attribute:status/Value:disabled+' => 'Nieaktywne',
+	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Powiązane wyzwalacze',
 	'Class:Action/Attribute:trigger_list+' => 'Wyzwalacze powiązane z działaniem',
 	'Class:Action/Attribute:finalclass' => 'Podklasa działania',
 	'Class:Action/Attribute:finalclass+' => 'Nazwa ostatniej klasy',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //
@@ -510,9 +520,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ActionEmail' => 'Powiadomienie e-mail',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Ten status decyduje o tym, kto zostanie powiadomiony: tylko odbiorca testowy, wszyscy (Do, DW i UDW) lub nikt',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Powiadomiony zostanie tylko odbiorca testowy',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Wszystkie e-maile "Do", "DW" i "UDW" są powiadamiane',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'Powiadomienie e-mail nie zostanie wysłane',
+	'Class:ActionEmail/Attribute:status/Value:test' => 'Powiadomiony zostanie tylko odbiorca testowy',
+	'Class:ActionEmail/Attribute:status/Value:enabled' => 'Wszystkie e-maile "Do", "DW" i "UDW" są powiadamiane',
+	'Class:ActionEmail/Attribute:status/Value:disabled' => 'Powiadomienie e-mail nie zostanie wysłane',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Odbiorca testowy',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Miejsce docelowe w przypadku, gdy status jest ustawiony na "Test"',
 	'Class:ActionEmail/Attribute:from' => 'Z',
@@ -536,11 +546,11 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ActionEmail/Attribute:importance' => 'ważna',
 	'Class:ActionEmail/Attribute:importance+' => 'Flaga ważności',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'niska',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'niska',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normalna',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normalna',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'wysoka',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'wysoka',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
 ));
 
 //
@@ -570,7 +580,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Klasa docelowa',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtr',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Błędne zapytanie filtru: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Zapytanie filtru musi zwracać obiekty klasy "%1$s"',
 ));
@@ -649,6 +659,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TriggerOnObjectMention' => 'Wyzwalacz (przy wzmiance o obiekcie)',
 	'Class:TriggerOnObjectMention+' => 'Wyzwalanie przy wzmiance (@xxx) o obiekcie [klasy potomnej] danej klasy w atrybucie dziennika',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
 ));
 
 //
@@ -688,7 +700,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 //
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Nazwa',
-	'Class:SynchroDataSource/Attribute:name+' => 'Nazwa',
+	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Opis',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Klasa docelowa',
@@ -987,7 +999,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TagSetFieldData/Attribute:label' => 'Etykieta',
 	'Class:TagSetFieldData/Attribute:label+' => 'Wyświetlana etykieta',
 	'Class:TagSetFieldData/Attribute:description' => 'Opis',
-	'Class:TagSetFieldData/Attribute:description+' => 'Opis',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Klasa Tagu~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Klasa obiektu~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Kod pola~~',
@@ -1078,6 +1090,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Ostatnia próba',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //
@@ -1115,5 +1129,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ResourceSystemMenu' => 'Zasób Menu systemowe',
 	'Class:ResourceSystemMenu+' => '',
 ));
+
 
 

@@ -4,7 +4,7 @@
 		<step>
 			<title>Configuration Management options</title>
 			<description><![CDATA[<h2>The options below allow you to configure the type of elements that are to be managed inside iTop.</h2>]]></description>
-			<banner>/images/modules.png</banner>
+			<banner>/images/icons/icons8-apps-tab.svg</banner>
 			<options type="array">
 				<choice>
 					<extension_code>itop-config-mgmt-core</extension_code>
@@ -21,6 +21,9 @@
 						<module>combodo-db-tools</module>
 						<module>itop-core-update</module>
 						<module>itop-hub-connector</module>
+            <module>itop-oauth-client</module>
+            <module>combodo-backoffice-darkmoon-theme</module>
+            <module>itop-themes-compat</module>
 					</modules>
 					<mandatory>true</mandatory>
 				</choice>
@@ -65,7 +68,7 @@
 		<step>
 			<title>Service Management options</title>
 			<description><![CDATA[<h2>Select the choice that best describes the relationships between the services and the IT infrastructure in your IT environment.</h2>]]></description>
-			<banner>./wizard-icons/service.png</banner>
+			<banner>/images/icons/icons8-services.svg</banner>
 			<alternatives type="array">
 				<choice>
 					<extension_code>itop-service-mgmt-enterprise</extension_code>
@@ -89,7 +92,7 @@
 		<step>
 			<title>Tickets Management options</title>
 			<description><![CDATA[<h2>Select the type of tickets you want to use in order to respond to user requests and incidents.</h2>]]></description>
-			<banner>./itop-incident-mgmt-itil/images/incident-escalated.png</banner>
+			<banner>/images/icons/icons8-discussion-forum.svg</banner>
 			<alternatives type="array">
 				<choice>
 					<extension_code>itop-ticket-mgmt-simple-ticket</extension_code>
@@ -161,7 +164,7 @@
 		<step>
 			<title>Change Management options</title>
 			<description><![CDATA[<h2>Select the type of tickets you want to use in order to manage changes to the IT infrastructure.</h2>]]></description>
-			<banner>./itop-change-mgmt/images/change.png</banner>
+			<banner>/images/icons/icons8-change.svg</banner>
 			<alternatives type="array">
 				<choice>
 					<extension_code>itop-change-mgmt-simple</extension_code>
@@ -192,17 +195,18 @@
 		<step>
 			<title>Additional ITIL tickets</title>
 			<description><![CDATA[<h2>Pick from the list below the additional ITIL processes that are to be implemented in iTop.</h2>]]></description>
-      <banner>./itop-knownerror-mgmt/images/known-error.png</banner>
+      <banner>/images/icons/icons8-important-book.svg</banner>
 			<options type="array">
 				<choice>
-					<extension_code>itop-kown-error-mgmt</extension_code>
-					<title>Known Errors Management and FAQ</title>
-					<description>Select this option to track "Known Errors" and FAQs in iTop.</description>
-					<modules type="array">
-						<module>itop-faq-light</module>
-						<module>itop-knownerror-mgmt</module>
-					</modules>
-				</choice>
+          <!-- Extension code has a typo but fixing it would remove that setup option for all existing iTop -->
+          <extension_code>itop-kown-error-mgmt</extension_code>
+          <title>Known Errors Management and FAQ</title>
+          <description>Select this option to track "Known Errors" and FAQs in iTop.</description>
+          <modules type="array">
+            <module>itop-faq-light</module>
+            <module>itop-knownerror-mgmt</module>
+          </modules>
+        </choice>
 				<choice>
 					<extension_code>itop-problem-mgmt</extension_code>
 					<title>Problem Management</title>

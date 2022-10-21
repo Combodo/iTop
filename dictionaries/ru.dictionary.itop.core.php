@@ -10,22 +10,24 @@
  */
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:DeletedObjectLabel' => '%1ы (удален)',
-	'Core:DeletedObjectTip' => 'Объект был удален %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'Объект был удален %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Объект не найден (class: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'Объект не удается найти. Возможно, он был удален некоторое время назад, и журнал с тех пор был очищен.',
+	'Core:UnknownObjectTip'   => 'Объект не удается найти. Возможно, он был удален некоторое время назад, и журнал с тех пор был очищен.',
 
 	'Core:UniquenessDefaultError' => 'Ошибка правила уникальности \'%1$s\'',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => 'Массив объектов (1-n)',
+	'Core:AttributeLinkedSet'  => 'Массив объектов (1-n)',
 	'Core:AttributeLinkedSet+' => 'Список объектов заданного класса, указывающих на текущий объект',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 
-	'Core:AttributeDashboard' => 'Дашборд',
+	'Core:AttributeDashboard'  => 'Дашборд',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Номер телефона',
+	'Core:AttributePhoneNumber'  => 'Номер телефона',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Дата устаревания',
@@ -101,13 +103,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeText+' => 'Многострочный текст',
 
 	'Core:AttributeHTML' => 'HTML',
-	'Core:AttributeHTML+' => 'HTML',
+	'Core:AttributeHTML+' => '',
 
 	'Core:AttributeEmailAddress' => 'Email',
 	'Core:AttributeEmailAddress+' => 'Email адрес',
 
 	'Core:AttributeIPAddress' => 'IP адрес',
-	'Core:AttributeIPAddress+' => 'IP адрес',
+	'Core:AttributeIPAddress+' => '',
 
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Выражение языка запроса объекта (Object Query Language)',
@@ -161,7 +163,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeDeadline+' => 'Дата, отображаемая относительно текущего времени',
 
 	'Core:AttributeExternalKey' => 'Внешний ключ',
-	'Core:AttributeExternalKey+' => 'Внешний ключ',
+	'Core:AttributeExternalKey+' => '',
 
 	'Core:AttributeHierarchicalKey' => 'Иерархический ключ',
 	'Core:AttributeHierarchicalKey+' => 'Внешний ключ к родителю',
@@ -191,7 +193,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:FriendlyName-Description' => 'Полное название',
 
 	'Core:AttributeTag' => 'Тег',
-	'Core:AttributeTag+' => 'Тег',
+	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
@@ -218,6 +220,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:CMDBChange/Attribute:date+' => 'Дата и время изменения',
 	'Class:CMDBChange/Attribute:userinfo' => 'Пользователь',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Кто произвёл изменение',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -228,15 +238,15 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:CMDBChangeOp' => 'Операция изменения CMDB',
 	'Class:CMDBChangeOp+' => 'Отслеживание операции изменения CMDB',
 	'Class:CMDBChangeOp/Attribute:change' => 'Изменение CMDB',
-	'Class:CMDBChangeOp/Attribute:change+' => 'Изменение CMDB',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'Дата',
 	'Class:CMDBChangeOp/Attribute:date+' => 'Дата и время изменения',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Пользователь',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Кто произвёл изменение',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'Класс объекта',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'Класс объекта',
+	'Class:CMDBChangeOp/Attribute:objclass+' => '',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'ID объекта',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'ID объекта',
+	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Итоговый класс',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
@@ -287,16 +297,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Change:ObjectCreated' => 'Объект создан.',
 	'Change:ObjectDeleted' => 'Объект удалён.',
 	'Change:ObjectModified' => 'Объект изменён.',
-	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
-	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
-	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
-	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => 'В поле "%1$s" установлено значение "%2$s" (предыдущее значение "%3$s").',
-	'Change:AttName_SetTo' => 'В поле "%1$s" установлено значение "%2$s".',
-	'Change:Text_AppendedTo_AttName' => 'Новое значение "%1$s" добавлено к полю "%2$s".',
-	'Change:AttName_Changed_PreviousValue_OldValue' => 'Поле "%1$s" изменено (предыдущее значение "%2$s").',
-	'Change:AttName_Changed' => 'Поле "%1$s" изменено.',
-	'Change:AttName_EntryAdded' => 'В поле "%1$s" добавлено новое значение.',
-	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
+	'Change:TwoAttributesChanged' => 'Изменены %1$s и %2$s',
+	'Change:ThreeAttributesChanged' => 'Изменены %1$s, %2$s и ещё 1',
+	'Change:FourOrMoreAttributesChanged' => 'Изменены %1$s, %2$s и ещё %3$s',
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => 'В поле %1$s установлено значение %2$s (предыдущее значение %3$s).',
+	'Change:AttName_SetTo' => 'В поле %1$s установлено значение %2$s.',
+	'Change:Text_AppendedTo_AttName' => 'Новое значение %1$s добавлено к полю %2$s.',
+	'Change:AttName_Changed_PreviousValue_OldValue' => 'Поле %1$s изменено (предыдущее значение %2$s).',
+	'Change:AttName_Changed' => 'Поле %1$s изменено.',
+	'Change:AttName_EntryAdded' => 'В поле %1$s добавлено новое значение.',
+	'Change:State_Changed_NewValue_OldValue' => 'Переход из %2$s в %1$s',
 	'Change:LinkSet:Added' => 'добавлен объект %1$s.',
 	'Change:LinkSet:Removed' => 'удалён объект %1$s.',
 	'Change:LinkSet:Modified' => 'изменён объект %1$s.',
@@ -364,17 +374,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:EventNotificationEmail' => 'Уведомление по email',
 	'Class:EventNotificationEmail+' => 'Отслеживание уведомлений по email',
 	'Class:EventNotificationEmail/Attribute:to' => 'Кому',
-	'Class:EventNotificationEmail/Attribute:to+' => 'Кому',
+	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'Копия',
-	'Class:EventNotificationEmail/Attribute:cc+' => 'Копия',
+	'Class:EventNotificationEmail/Attribute:cc+' => '',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'Скрытая копия',
-	'Class:EventNotificationEmail/Attribute:bcc+' => 'Скрытая копия',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '',
 	'Class:EventNotificationEmail/Attribute:from' => 'От',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Отправитель сообщения',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Тема',
-	'Class:EventNotificationEmail/Attribute:subject+' => 'Тема',
+	'Class:EventNotificationEmail/Attribute:subject+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Сообщение',
-	'Class:EventNotificationEmail/Attribute:body+' => 'Сообщение',
+	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Вложения',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
 ));
@@ -397,7 +407,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:EventIssue/Attribute:arguments_get' => 'Аргументы GET',
 	'Class:EventIssue/Attribute:arguments_get+' => 'Аргументы HTTP GET',
 	'Class:EventIssue/Attribute:callstack' => 'Стек вызовов',
-	'Class:EventIssue/Attribute:callstack+' => 'Стек вызовов',
+	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Данные',
 	'Class:EventIssue/Attribute:data+' => 'Подробнее',
 ));
@@ -469,15 +479,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Action/Attribute:status' => 'Статус',
 	'Class:Action/Attribute:status+' => '',
 	'Class:Action/Attribute:status/Value:test' => 'Тест',
-	'Class:Action/Attribute:status/Value:test+' => 'Тест',
+	'Class:Action/Attribute:status/Value:test+' => '',
 	'Class:Action/Attribute:status/Value:enabled' => 'Включено',
-	'Class:Action/Attribute:status/Value:enabled+' => 'Включено',
+	'Class:Action/Attribute:status/Value:enabled+' => '',
 	'Class:Action/Attribute:status/Value:disabled' => 'Выключено',
-	'Class:Action/Attribute:status/Value:disabled+' => 'Выключено',
+	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Связанные триггеры',
 	'Class:Action/Attribute:trigger_list+' => 'Триггеры, которые запускают данное действие',
 	'Class:Action/Attribute:finalclass' => 'Тип',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //
@@ -486,7 +497,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ActionNotification' => 'Уведомление',
-	'Class:ActionNotification+' => 'Уведомление',
+	'Class:ActionNotification+' => '',
 ));
 
 //
@@ -497,9 +508,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ActionEmail' => 'Уведомление по email',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
+	'Class:ActionEmail/Attribute:status/Value:test' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Тестовый получатель',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Получатель, если уведомление в статусе "Тест"',
 	'Class:ActionEmail/Attribute:from' => 'От~~',
@@ -513,7 +524,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ActionEmail/Attribute:to' => 'Кому',
 	'Class:ActionEmail/Attribute:to+' => 'Получатель email',
 	'Class:ActionEmail/Attribute:cc' => 'Копия',
-	'Class:ActionEmail/Attribute:cc+' => 'Копия',
+	'Class:ActionEmail/Attribute:cc+' => '',
 	'Class:ActionEmail/Attribute:bcc' => 'Скр. копия',
 	'Class:ActionEmail/Attribute:bcc+' => 'Скрытая копия',
 	'Class:ActionEmail/Attribute:subject' => 'Тема',
@@ -523,11 +534,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ActionEmail/Attribute:importance' => 'Важность',
 	'Class:ActionEmail/Attribute:importance+' => 'Флаг важности',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'Низкая',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'Низкая',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Нормальная',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'Нормальная',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Высокая',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'Высокая',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
 ));
 
 //
@@ -636,6 +647,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
 ));
 
 //
@@ -675,7 +688,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Название',
-	'Class:SynchroDataSource/Attribute:name+' => 'Название',
+	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Описание',
 	'Class:SynchroDataSource/Attribute:status' => 'Статус',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Целевой класс',
@@ -731,7 +744,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Synchro:SynchroEndedOn_Date' => 'Синхронизация была закончена в %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Синхронизация запущена в %1$s, сейчас в процессе...',
 	'Menu:DataSources' => 'Синхронизация данных', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'Синхронизация данных', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Игнор. (%1$s)~~',
 	'Core:Synchro:label_repl_disappeared' => 'Невид. (%1$s)~~',
 	'Core:Synchro:label_repl_existing' => 'Existing (%1$s)~~',
@@ -974,7 +987,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:TagSetFieldData/Attribute:label' => 'Метка',
 	'Class:TagSetFieldData/Attribute:label+' => 'Отображаемая метка',
 	'Class:TagSetFieldData/Attribute:description' => 'Описание',
-	'Class:TagSetFieldData/Attribute:description+' => 'Описание',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Класс тега',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Класс объекта',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Код поля',
@@ -996,17 +1009,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:DBProperty' => 'DB property~~',
-	'Class:DBProperty+' => '~~',
+	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Name~~',
-	'Class:DBProperty/Attribute:name+' => '~~',
+	'Class:DBProperty/Attribute:name+' => '',
 	'Class:DBProperty/Attribute:description' => 'Description~~',
-	'Class:DBProperty/Attribute:description+' => '~~',
+	'Class:DBProperty/Attribute:description+' => '',
 	'Class:DBProperty/Attribute:value' => 'Value~~',
-	'Class:DBProperty/Attribute:value+' => '~~',
+	'Class:DBProperty/Attribute:value+' => '',
 	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
-	'Class:DBProperty/Attribute:change_date+' => '~~',
+	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
-	'Class:DBProperty/Attribute:change_comment+' => '~~',
+	'Class:DBProperty/Attribute:change_comment+' => '',
 ));
 
 //
@@ -1014,29 +1027,29 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:BackgroundTask' => 'Background task~~',
-	'Class:BackgroundTask+' => '~~',
+	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
-	'Class:BackgroundTask/Attribute:class_name+' => '~~',
+	'Class:BackgroundTask/Attribute:class_name+' => '',
 	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '',
 	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
 	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '',
 	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:running' => 'Running~~',
-	'Class:BackgroundTask/Attribute:running+' => '~~',
+	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'Status~~',
-	'Class:BackgroundTask/Attribute:status+' => '~~',
+	'Class:BackgroundTask/Attribute:status+' => '',
 ));
 
 //
@@ -1044,27 +1057,29 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AsyncTask' => 'Async. task~~',
-	'Class:AsyncTask+' => '~~',
+	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Created~~',
-	'Class:AsyncTask/Attribute:created+' => '~~',
+	'Class:AsyncTask/Attribute:created+' => '',
 	'Class:AsyncTask/Attribute:started' => 'Started~~',
-	'Class:AsyncTask/Attribute:started+' => '~~',
+	'Class:AsyncTask/Attribute:started+' => '',
 	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
-	'Class:AsyncTask/Attribute:planned+' => '~~',
+	'Class:AsyncTask/Attribute:planned+' => '',
 	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
-	'Class:AsyncTask/Attribute:event_id+' => '~~',
+	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
-	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:finalclass+' => '',
 	'Class:AsyncTask/Attribute:status' => 'Status~~',
-	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:status+' => '',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
-	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
 	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
-	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
-	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //

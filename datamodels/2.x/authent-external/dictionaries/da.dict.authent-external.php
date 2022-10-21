@@ -22,5 +22,5 @@
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserExternal' => 'Extern Bruger',
-	'Class:UserExternal+' => 'Bruger udenfor iTop',
+	'Class:UserExternal+' => 'Bruger udenfor '.ITOP_APPLICATION_SHORT,
 ));

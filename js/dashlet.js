@@ -30,7 +30,7 @@ $(function()
 		{
 			var me = this;
 
-			this.closeBox = $('<div class="ibo-dashboard-editor--delete-dashlet-icon close-box"/>').append('<i class="fas fa-trash ibo-button--icon"></i>');
+			this.closeBox = $('<div class="ibo-dashboard-editor--delete-dashlet-icon close-box ibo-button ibo-is-alternative ibo-is-danger"/>').append('<i class="fas fa-trash ibo-button--icon"></i>');
 			this.closeBox
 				.on('click', function () {
 					me._remove_dashlet();

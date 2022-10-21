@@ -73,9 +73,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery model~~',
+	'Class:Organization/Attribute:deliverymodel_id' => 'Teslimat Modeli',
 	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
-	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name~~',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Teslimat Modeli Adı',
 	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
 ));
 

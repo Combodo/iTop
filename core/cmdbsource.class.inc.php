@@ -24,13 +24,15 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Core\DbConnectionWrapper;
+
 require_once('MyHelpers.class.inc.php');
 require_once(APPROOT.'core/kpi.class.inc.php');
 
 
 /**
  * CMDBSource
- * database access wrapper 
+ * database access wrapper
  *
  * @package     iTopORM
  */
@@ -65,11 +67,6 @@ class CMDBSource
 	 * @since 2.5.0 N°1260 MySQL TLS first implementation
 	 */
 	protected static $m_sDBTlsCA;
-
-	/** @var mysqli $m_oMysqli */
-	protected static $m_oMysqli;
-	/** @var mysqli or mock used for test purpose, only used in query() method */
-	protected static $oMySQLiForQuery;
 
 	/**
 	 * @var int number of level for nested transactions : 0 if no transaction was ever opened, +1 for each 'START TRANSACTION' sent
@@ -135,8 +132,8 @@ class CMDBSource
 		self::$m_bDBTlsEnabled = empty($bTlsEnabled) ? false : $bTlsEnabled;
 		self::$m_sDBTlsCA = empty($sTlsCA) ? null : $sTlsCA;
 
-		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, true);
-		self::SetMySQLiForQuery(self::$m_oMysqli);
+		$oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, true);
+		DbConnectionWrapper::SetDbConnection($oMysqli);
 	}
 
 	/**
@@ -150,6 +147,8 @@ class CMDBSource
 	 *
 	 * @return \mysqli
 	 * @throws \MySQLException
+	 *
+	 * @uses IsOpenedDbConnectionUsingTls when asking for a TLS connection, to check if it was really opened using TLS
 	 */
 	public static function GetMysqliInstance(
 		$sDbHost, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCa = null, $bCheckTlsAfterConnection = false
@@ -158,7 +157,7 @@ class CMDBSource
 		$iPort = null;
 		self::InitServerAndPort($sDbHost, $sServer, $iPort);
 
-		$iFlags = null;
+		$iFlags = 0;
 
 		// *some* errors (like connection errors) will throw mysqli_sql_exception instead of generating warnings printed to the output
 		// but some other errors will still cause the query() method to return false !!!
@@ -167,7 +166,6 @@ class CMDBSource
 		try
 		{
 			$oMysqli = new mysqli();
-			$oMysqli->init();
 
 			if ($bTlsEnabled)
 			{
@@ -252,41 +250,41 @@ class CMDBSource
 	 * parameters were used.<br>
 	 * This method can be called to ensure that the DB connection really uses TLS.
 	 *
-	 * <p>We're using this object connection : {@link self::$m_oMysqli}
+	 * <p>We're using our own mysqli instance to do the check as this check is done when creating the mysqli instance : the consumer
+	 * might want a dedicated object, and if so we don't want to overwrite the one saved in CMDBSource !<br>
+	 * This is the case for example with {@see \iTopMutex} !
 	 *
 	 * @param \mysqli $oMysqli
 	 *
-	 * @return boolean true if the connection was really established using TLS
+	 * @return boolean true if the connection was really established using TLS, false otherwise
 	 * @throws \MySQLException
 	 *
+	 * @used-by GetMysqliInstance
 	 * @uses IsMySqlVarNonEmpty
+	 * @uses 'ssl_version' MySQL var
+	 * @uses 'ssl_cipher' MySQL var
 	 */
 	private static function IsOpenedDbConnectionUsingTls($oMysqli)
 	{
-		if (self::$m_oMysqli == null)
-		{
-			self::$m_oMysqli = $oMysqli;
-		}
-
-		$bNonEmptySslVersionVar = self::IsMySqlVarNonEmpty('ssl_version');
-		$bNonEmptySslCipherVar = self::IsMySqlVarNonEmpty('ssl_cipher');
+		$bNonEmptySslVersionVar = self::IsMySqlVarNonEmpty('ssl_version', $oMysqli);
+		$bNonEmptySslCipherVar = self::IsMySqlVarNonEmpty('ssl_cipher', $oMysqli);
 
 		return ($bNonEmptySslVersionVar && $bNonEmptySslCipherVar);
 	}
 
 	/**
 	 * @param string $sVarName
+	 * @param mysqli $oMysqli connection to use for the query
 	 *
 	 * @return bool
 	 * @throws \MySQLException
-	 *
-	 * @uses SHOW STATUS queries
+	 * @uses 'SHOW SESSION STATUS' queries
 	 */
-	private static function IsMySqlVarNonEmpty($sVarName)
+	private static function IsMySqlVarNonEmpty($sVarName, $oMysqli)
 	{
 		try
 		{
-			$sResult = self::QueryToScalar("SHOW SESSION STATUS LIKE '$sVarName'", 1);
+			$sResult = self::QueryToScalar("SHOW SESSION STATUS LIKE '$sVarName'", 1, $oMysqli);
 		}
 		catch (MySQLQueryHasNoResultException $e)
 		{
@@ -345,30 +343,41 @@ class CMDBSource
 		{
 			// In case we don't have rights to enumerate the databases
 			// Let's try to connect directly
-			return @((bool)self::$m_oMysqli->query("USE `$sSource`"));
+			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
+			return @((bool)DbConnectionWrapper::GetDbConnection(true)->query("USE `$sSource`"));
 		}
 
 	}
 
+	/**
+	 * Get the version of the database server.
+	 *
+	 * @return string
+	 * @throws \MySQLException
+	 *
+	 * @uses \CMDBSource::QueryToScalar() so needs a connection opened !
+	 */
 	public static function GetDBVersion()
 	{
-		$aVersions = self::QueryToCol('SELECT Version() as version', 'version');
-		return $aVersions[0];
+		return static::QueryToScalar('SELECT VERSION()', 0);
 	}
 
 	/**
-	 * @return string
+	 * @deprecated Use `CMDBSource::GetDBVersion` instead.
+	 * @uses mysqli_get_server_info
 	 */
 	public static function GetServerInfo()
 	{
-		return mysqli_get_server_info ( self::$m_oMysqli );
+		return mysqli_get_server_info(DbConnectionWrapper::GetDbConnection());
 	}
 
 	/**
 	 * Get the DB vendor between MySQL and its main forks
 	 * @return string
+	 *
+	 * @uses \CMDBSource::GetServerVariable() so needs a connection opened !
 	 */
-	static public function GetDBVendor()
+	public static function GetDBVendor()
 	{
 		$sDBVendor = static::ENUM_DB_VENDOR_MYSQL;
 		
@@ -392,9 +401,9 @@ class CMDBSource
 	 */
 	public static function SelectDB($sSource)
 	{
-		if (!((bool)self::$m_oMysqli->query("USE `$sSource`")))
-		{
-			throw new MySQLException('Could not select DB', array('db_name'=>$sSource));
+		/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
+		if (!((bool)DbConnectionWrapper::GetDbConnection(true)->query("USE `$sSource`"))) {
+			throw new MySQLException('Could not select DB', array('db_name' => $sSource));
 		}
 		self::$m_sDBName = $sSource;
 	}
@@ -445,51 +454,29 @@ class CMDBSource
 
 	/**
 	 * @return \mysqli
+	 *
+	 * @since 2.5.0 N°1260
 	 */
 	public static function GetMysqli()
 	{
-		return self::$m_oMysqli;
-	}
-
-	/**
-	 * @return
-	 */
-	private static function GetMySQLiForQuery()
-	{
-		return self::$oMySQLiForQuery;
-	}
-
-
-	/**
-	 * Used for test purpose (mysqli mock)
-	 * @param $oMySQLi
-	 */
-	private static function SetMySQLiForQuery($oMySQLi)
-	{
-		self::$oMySQLiForQuery = $oMySQLi;
+		return DbConnectionWrapper::GetDbConnection(false);
 	}
 
 	public static function GetErrNo()
 	{
-		if (self::$m_oMysqli->errno != 0)
-		{
-			return self::$m_oMysqli->errno;
-		}
-		else
-		{
-			return self::$m_oMysqli->connect_errno;
+		if (DbConnectionWrapper::GetDbConnection()->errno != 0) {
+			return DbConnectionWrapper::GetDbConnection()->errno;
+		} else {
+			return DbConnectionWrapper::GetDbConnection()->connect_errno;
 		}
 	}
 
 	public static function GetError()
 	{
-		if (self::$m_oMysqli->error != '')
-		{
-			return self::$m_oMysqli->error;
-		}
-		else
-		{
-			return self::$m_oMysqli->connect_error;
+		if (DbConnectionWrapper::GetDbConnection()->error != '') {
+			return DbConnectionWrapper::GetDbConnection()->error;
+		} else {
+			return DbConnectionWrapper::GetDbConnection()->connect_error;
 		}
 	}
 
@@ -529,7 +516,8 @@ class CMDBSource
 		// Quote if not a number or a numeric string
 		if ($bAlways || is_string($value))
 		{
-			$value = $cQuoteStyle . self::$m_oMysqli->real_escape_string($value) . $cQuoteStyle;
+			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
+			$value = $cQuoteStyle.DbConnectionWrapper::GetDbConnection()->real_escape_string($value).$cQuoteStyle;
 		}
 		return $value;
 	}
@@ -590,7 +578,7 @@ class CMDBSource
 	/**
 	 * Send the query directly to the DB. **Be extra cautious with this !**
 	 *
-	 * Use {@link Query} if you're not sure.
+	 * Use {@see Query} if you're not sure.
 	 *
 	 * @internal
 	 *
@@ -612,26 +600,25 @@ class CMDBSource
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$oResult = self::GetMySQLiForQuery()->query($sSql);
+			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch (mysqli_sql_exception $e)
 		{
-			self::LogDeadLock($e);
+			self::LogDeadLock($e, true);
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
 		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
-		if ($oResult === false)
-		{
+		if ($oResult === false) {
 			$aContext = array('query' => $sSql);
 
-			$iMySqlErrorNo = self::$m_oMysqli->errno;
+			$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection(true)->errno;
 			$aMySqlHasGoneAwayErrorCodes = MySQLHasGoneAwayException::getErrorCodes();
-			if (in_array($iMySqlErrorNo, $aMySqlHasGoneAwayErrorCodes))
-			{
+			if (in_array($iMySqlErrorNo, $aMySqlHasGoneAwayErrorCodes)) {
 				throw new MySQLHasGoneAwayException(self::GetError(), $aContext);
 			}
 			$e = new MySQLException('Failed to issue SQL query', $aContext);
-			self::LogDeadLock($e);
+			self::LogDeadLock($e, true);
 			throw $e;
 		}
 
@@ -640,23 +627,24 @@ class CMDBSource
 
 	/**
 	 * @param \Exception $e
+	 * @param bool $bForQuery to get the proper DB connection
 	 *
 	 * @since 2.7.1
+	 * @since 3.0.0 N°4325 add new optional parameter to use the correct DB connection
 	 */
-	private static function LogDeadLock(Exception $e)
+	private static function LogDeadLock(Exception $e, $bForQuery = false)
 	{
 		// checks MySQL error code
-		$iMySqlErrorNo = self::$m_oMysqli->errno;
-		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK)))
-		{
+		$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection($bForQuery)->errno;
+		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK))) {
 			return;
 		}
 
 		// Get error info
 		$sUser = UserRights::GetUser();
-		$oError = self::$m_oMysqli->query('SHOW ENGINE INNODB STATUS');
-		if ($oError !== false)
-		{
+		/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
+		$oError = DbConnectionWrapper::GetDbConnection(true)->query('SHOW ENGINE INNODB STATUS');
+		if ($oError !== false) {
 			$aData = $oError->fetch_all(MYSQLI_ASSOC);
 			$sInnodbStatus = $aData[0];
 		}
@@ -693,13 +681,13 @@ class CMDBSource
 	private static function StartTransaction()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+
 		$bHasExistingTransactions = self::IsInsideTransaction();
 		if (!$bHasExistingTransactions) {
-			IssueLog::Trace("START TRANSACTION $sCaller", LogChannels::CMDB_SOURCE);
+			IssueLog::Trace("START TRANSACTION was sent to the DB", LogChannels::CMDB_SOURCE, ['stacktrace' => $aStackTrace]);
 			self::DBQuery('START TRANSACTION');
 		} else {
-			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") START TRANSACTION $sCaller", LogChannels::CMDB_SOURCE);
+			IssueLog::Trace("START TRANSACTION ignored as a transaction is already opened", LogChannels::CMDB_SOURCE, ['stacktrace' => $aStackTrace]);
 		}
 
 		self::AddTransactionLevel();
@@ -718,7 +706,11 @@ class CMDBSource
 	private static function Commit()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if(isset($aStackTrace[2]['class']) && isset($aStackTrace[2]['function'])) {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		} else {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].') ';
+		}
 		if (!self::IsInsideTransaction()) {
 			// should not happen !
 			IssueLog::Error("No Transaction COMMIT $sCaller", LogChannels::CMDB_SOURCE);
@@ -752,7 +744,11 @@ class CMDBSource
 	private static function Rollback()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if(isset($aStackTrace[2]['class']) && isset($aStackTrace[2]['function'])) {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		} else {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].') ';
+		}
 		if (!self::IsInsideTransaction()) {
 			// should not happen !
 			IssueLog::Error("No Transaction ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
@@ -829,7 +825,7 @@ class CMDBSource
 
 	public static function GetInsertId()
 	{
-		$iRes = self::$m_oMysqli->insert_id;
+		$iRes = DbConnectionWrapper::GetDbConnection()->insert_id;
 		if (is_null($iRes))
 		{
 			return 0;
@@ -861,26 +857,28 @@ class CMDBSource
 	/**
 	 * @param string $sSql
 	 * @param int $iCol beginning at 0
+	 * @param mysqli $oMysqli if not null will query using this connection, otherwise will use {@see GetMySQLiForQuery}
 	 *
 	 * @return string corresponding cell content on the first line
 	 * @throws \MySQLException
 	 * @throws \MySQLQueryHasNoResultException
+	 * @since 2.7.5-2 2.7.6 3.0.0 N°4215 new optional mysqli param
 	 */
-	public static function QueryToScalar($sSql, $iCol = 0)
+	public static function QueryToScalar($sSql, $iCol = 0, $oMysqli = null)
 	{
+		$oMysqliForQuery = $oMysqli ?: DbConnectionWrapper::GetDbConnection(true);
+
 		$oKPI = new ExecutionKPI();
-		try
-		{
-			$oResult = self::GetMySQLiForQuery()->query($sSql);
+		try {
+			/** @noinspection NullPointerExceptionInspection this shouldn't happen : either cnx is passed or the DB was init */
+			$oResult = $oMysqliForQuery->query($sSql);
 		}
-		catch(mysqli_sql_exception $e)
-		{
+		catch (mysqli_sql_exception $e) {
 			$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
 		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
-		if ($oResult === false)
-		{
+		if ($oResult === false) {
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
 
@@ -901,17 +899,19 @@ class CMDBSource
 
 	/**
 	 * @param string $sSql
+	 * @param int $iMode
 	 *
 	 * @return array
 	 * @throws \MySQLException if query cannot be processed
 	 */
-	public static function QueryToArray($sSql)
+	public static function QueryToArray($sSql, $iMode = MYSQLI_BOTH)
 	{
 		$aData = array();
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$oResult = self::GetMySQLiForQuery()->query($sSql);
+			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -924,7 +924,7 @@ class CMDBSource
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
 				
-		while ($aRow = $oResult->fetch_array(MYSQLI_BOTH))
+		while ($aRow = $oResult->fetch_array($iMode))
 		{
 			$aData[] = $aRow;
 		}
@@ -961,7 +961,8 @@ class CMDBSource
 		$aData = array();
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -993,7 +994,8 @@ class CMDBSource
 	{
 		try
 		{
-			$oResult = self::GetMySQLiForQuery()->query($sSql);
+			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -1018,7 +1020,7 @@ class CMDBSource
 
 	public static function AffectedRows()
 	{
-		return self::$m_oMysqli->affected_rows;
+		return DbConnectionWrapper::GetDbConnection()->affected_rows;
 	}
 
 	public static function FetchArray($oResult)
@@ -1136,7 +1138,7 @@ class CMDBSource
 	 *
 	 * We still need to do a case sensitive comparison for enum values !
 	 *
-	 * A better solution would be to generate SQL field definitions ({@link GetFieldSpec} method) based on the DB used... But for
+	 * A better solution would be to generate SQL field definitions ({@see GetFieldSpec} method) based on the DB used... But for
 	 * now (N°2490 / SF #1756 / PR #91) we did implement this simpler solution
 	 *
 	 * @see GetFieldDataTypeAndOptions extracts all info from the SQL field definition
@@ -1481,7 +1483,8 @@ class CMDBSource
 		$sSql = "SELECT * FROM `$sTable`";
 		try
 		{
-			$oResult = self::GetMySQLiForQuery()->query($sSql);
+			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -1505,19 +1508,13 @@ class CMDBSource
 	 * Returns the value of the specified server variable
 	 * @param string $sVarName Name of the server variable
 	 * @return mixed Current value of the variable
-	 */	   	
+	 * @throws \MySQLQueryHasNoResultException|\MySQLException
+	 */
 	public static function GetServerVariable($sVarName)
 	{
-		$result = '';
-		$sSql = "SELECT @@$sVarName as theVar";
-		$aRows = self::QueryToArray($sSql);
-		if (count($aRows) > 0)
-		{
-			$result = $aRows[0]['theVar'];
-		}
-		return $result;
+		$sSql = 'SELECT @@'.$sVarName;
+		return static::QueryToScalar($sSql, 0) ?: '';
 	}
-
 
 	/**
 	 * Returns the privileges of the current user

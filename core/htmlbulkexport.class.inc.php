@@ -62,7 +62,8 @@ class HTMLBulkExport extends TabularBulkExport
 			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 			{
 				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
-				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.htmlentities($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj), ENT_QUOTES, 'UTF-8').'</div>';
+
+				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.utils::EscapeHtml($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj)).'</div>';
 			}
 		}
 		return $this->GetValue($oObj, $sAttCode);

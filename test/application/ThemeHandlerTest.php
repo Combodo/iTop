@@ -13,30 +13,36 @@ class ThemeHandlerTest extends ItopTestCase
 	const PATTERN = '|\\\/var[^"]+testimages|';
 	
 	private $oCompileCSSServiceMock;
-	private $sCssPath;
+	private $sCompiledThemesDirAbsPath;
+	private $sCssAbsPath;
+	private $sDmCssAbsPath;
 	private $sJsonThemeParamFile;
 	private $sTmpDir;
 	private $aDirsToCleanup= [];
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/themehandler.class.inc.php');
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
+		require_once(APPROOT.'test/setup/SubMFCompiler.php');
 
 		$this->oCompileCSSServiceMock = $this->createMock('CompileCSSService');
 		ThemeHandler::mockCompileCSSService($this->oCompileCSSServiceMock);
 
-		$this->sTmpDir = $this->CreateTmpdir();
+		$this->sTmpDir = $this->CreateTmpdir().'/';
 		$this->aDirsToCleanup[] = $this->sTmpDir;
 
-		$this->recurseMkdir($this->sTmpDir."/branding/themes/basque-red");
-		$this->sCssPath = $this->sTmpDir.'/branding/themes/basque-red/main.css';
-		$this->sJsonThemeParamFile = $this->sTmpDir.'/branding/themes/basque-red/theme-parameters.json';
+
+		$this->sCompiledThemesDirAbsPath = $this->sTmpDir."branding/themes/";
+		$this->recurseMkdir($this->sCompiledThemesDirAbsPath."basque-red/");
+		$this->sCssAbsPath = $this->sCompiledThemesDirAbsPath.'basque-red/main.css';
+		$this->sDmCssAbsPath = $this->sCompiledThemesDirAbsPath.'datamodel-compiled-scss-rules.scss';
+		$this->sJsonThemeParamFile = $this->sCompiledThemesDirAbsPath.'basque-red/theme-parameters.json';
 		$this->RecurseCopy(APPROOT."/test/application/theme-handler/expected/css", $this->sTmpDir."/branding/css");
 	}
 
-	public function tearDown()
+	public function tearDown(): void
 	{
 		parent::tearDown();
 
@@ -44,130 +50,6 @@ class ThemeHandlerTest extends ItopTestCase
 		{
 			echo $sDir;
 			$this->RecurseRmdir($sDir);
-		}
-	}
-
-	/**
-	 * Test used to be notified by CI when precompiled styles are not up to date anymore in code repository.
-	 *
-	 * @param $xmlDataCusto
-	 * @param $sPrecompiledStylesheet
-	 * @param $oTheme
-	 *
-	 * @group beforeSetup
-	 *
-	 * @throws \Exception
-	 */
-	public function testValidatePrecompiledStyles()
-	{
-		$aErrors = [];
-		$aDataModelFiles=glob(APPROOT . utils::GetConfig()->Get('source_dir'). "/**/datamodel*.xml");
-		$aImportsPaths = [APPROOT.'datamodels'];
-
-		foreach ($aDataModelFiles as $sXmlDataCustoFilePath)
-		{
-			if (is_file($sXmlDataCustoFilePath))
-			{
-				$sXmlDataCustoFilePath = realpath($sXmlDataCustoFilePath);
-				$sContent = file_get_contents($sXmlDataCustoFilePath);
-				if (strpos($sContent, "precompiled_stylesheet") !== false)
-				{
-					$oDom = new MFDocument();
-					$oDom->load($sXmlDataCustoFilePath);
-					$oThemeNodes = $oDom->GetNodes("/itop_design/branding/themes/theme");
-
-					// Parsing themes from DM
-					foreach ($oThemeNodes as $oTheme)
-					{
-						/** @var \MFElement $oTheme */
-						$sPrecompiledStylesheetUri = $oTheme->GetChildText('precompiled_stylesheet', '');
-						if (empty($sPrecompiledStylesheetUri))
-						{
-							continue;
-						}
-
-						$sThemeId = $oTheme->getAttribute('id');
-
-						//echo "===  theme: $sThemeId ===\n";
-						$sPrecompiledFilePath = $sSourceDir = APPROOT . utils::GetConfig()->Get('source_dir') . $sPrecompiledStylesheetUri;
-						$sPreCompiledSig = ThemeHandler::GetSignature($sPrecompiledFilePath);
-						if (empty(trim($sPreCompiledSig))){
-							var_dump("$sThemeId: $sPrecompiledFilePath => " . realpath($sPrecompiledFilePath));
-						}
-						//echo "  precompiled signature: $sPreCompiledSig\n";
-
-						if (empty($sPreCompiledSig))
-						{
-							$aErrors[] = "Signature in precompiled theme '".$sThemeId."' is not retrievable (cf precompiledsheet $sPrecompiledStylesheetUri / datamodel $sXmlDataCustoFilePath)";
-							continue;
-						}
-
-						$aThemeParameters = array(
-							'variables' => array(),
-							'variable_imports' => array(),
-							'utility_imports' => array(),
-							'stylesheets' => array(),
-						);
-
-						/** @var \DOMNodeList $oVariables */
-						$oVariables = $oTheme->GetNodes('variables/variable');
-						foreach ($oVariables as $oVariable)
-						{
-							$sVariableId = $oVariable->getAttribute('id');
-							$aThemeParameters['variables'][$sVariableId] = $oVariable->GetText();
-						}
-
-						/** @var \DOMNodeList $oImports */
-						$oImports = $oTheme->GetNodes('imports/import');
-						$oFindStylesheetObject = new FindStylesheetObject();
-
-						foreach ($oImports as $oImport)
-						{
-							$sImportId = $oImport->getAttribute('id');
-
-							if($oImport->getAttribute('xsi:type') === 'variables'){
-								$aThemeParameters['variable_imports'][$sImportId] = $oImport->GetText();
-							} else {
-								$aThemeParameters['utility_imports'][$sImportId] = $oImport->GetText();
-								ThemeHandler::FindStylesheetFile($oImport->GetText(), $aImportsPaths, $oFindStylesheetObject);
-							}
-						}
-
-						/** @var \DOMNodeList $oStylesheets */
-						$oStylesheets = $oTheme->GetNodes('stylesheets/stylesheet');
-						foreach ($oStylesheets as $oStylesheet)
-						{
-							$sStylesheetId = $oStylesheet->getAttribute('id');
-							$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
-							ThemeHandler::FindStylesheetFile($oStylesheet->GetText(), $aImportsPaths, $oFindStylesheetObject);
-						}
-
-						$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $oFindStylesheetObject->GetAllStylesheetPaths(), $sThemeId);
-						$compiled_json_sig = ThemeHandler::ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages);
-						//echo "  current signature: $compiled_json_sig\n";
-
-						if ($sPreCompiledSig !== $compiled_json_sig)
-						{
-							$sSignatureDiffToPrint = $this->KeepSignatureDiff($sPreCompiledSig, $compiled_json_sig);
-							var_dump($sSignatureDiffToPrint);
-							$iLine = $oTheme->GetLineNo();
-							$aErrors[] = "       $sPrecompiledStylesheetUri declared in $sXmlDataCustoFilePath:$iLine.\n$sSignatureDiffToPrint";
-							continue;
-						}
-					}
-				}
-			}
-		}
-
-		if (count($aErrors)!=0)
-		{
-			$sMsg = "Below precompiled files are not up to date. Please run a new setup and save your precompiled files again:\n";
-			$sMsg .= implode("\n", $aErrors);
-			$this->fail($sMsg);
-		}
-		else
-		{
-			$this->assertTrue(true);
 		}
 	}
 
@@ -265,9 +147,9 @@ JSON;
 		{
 			unlink($this->sJsonThemeParamFile);
 		}
-		if (is_file($this->sCssPath))
+		if (is_file($this->sCssAbsPath))
 		{
-			unlink($this->sCssPath);
+			unlink($this->sCssAbsPath);
 		}
 
 		$this->oCompileCSSServiceMock->expects($this->exactly(1))
@@ -283,9 +165,9 @@ JSON;
 		{
 			$this->assertTrue(ThemeHandler::CompileTheme('basque-red', true, "COMPILATIONTIMESTAMP", $aThemeParameters, [$this->sTmpDir.'/branding/themes/'], $this->sTmpDir));
 		}
-		$this->assertTrue(is_file($this->sCssPath));
+		$this->assertTrue(is_file($this->sCssAbsPath));
 		$this->assertEquals($sExpectedThemeParamJson, file_get_contents($this->sJsonThemeParamFile));
-		$this->assertEquals(file_get_contents(APPROOT . 'test/application/theme-handler/expected/themes/basque-red/main.css'), file_get_contents($this->sCssPath));
+		$this->assertEquals(file_get_contents(APPROOT . 'test/application/theme-handler/expected/themes/basque-red/main.css'), file_get_contents($this->sCssAbsPath));
 	}
 
 	public function CompileThemesProviderWithoutCss()
@@ -655,7 +537,7 @@ SCSS;
 	 * @throws \Exception
 	 */
 	public function testFindStylesheetFile(string $sFileToFind, array $aAllImports){
-		$sImportsPath = $this->sTmpDir.'/branding/';
+		$sImportsPath = $this->sTmpDir.'branding/';
 
 		// Windows compat O:)
 		$sFileToFind = $this->UpdateDirSep($sFileToFind);

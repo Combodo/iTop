@@ -135,6 +135,7 @@ class ObjectResult
  */
 class RestResultWithObjects extends RestResult
 {
+	/** @var array "DBObject_class:DBObject_key" as key, {@see \ObjectResult} as value */
 	public $objects;
 
 	/**

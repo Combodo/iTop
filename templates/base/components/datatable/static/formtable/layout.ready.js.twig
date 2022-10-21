@@ -9,7 +9,6 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     scrollCollapse: true,
     paging: false,
     filter: false,
-    autoWidth: false,
     search: false,
     dom: "t",
     "order": [],
@@ -21,10 +20,17 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     },
     {% endif %}
     columnDefs: [
-        {orderable: false, targets: 0}
+        {orderable: false, targets: 0},
+        {% if oUIBlock.HasRowActions() %}
+            getRowActionsColumnDefinition('{{ oUIBlock.GetId() }}', {{ oUIBlock.GetColumnsCount() - 1 }}),
+        {% endif %}
     ],
     {% endif %}
-    drawCallback: function () {
+    drawCallback: function (settings) {
+        if(settings.json)
+        {
+            $(this).closest('.ibo-panel').find('.ibo-datatable--result-count').html(settings.json.recordsTotal);
+        }
         // Hiding pagination if only one page
         if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
         {
@@ -34,12 +40,30 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }
+
+        // Disable hyperlinks if necessary
+        {% if oUIBlock.GetOption("disable_hyperlinks") is same as true or (oUIBlock.GetOption("select_mode") is not empty and oUIBlock.GetOption("disable_hyperlinks") is not same as false) %}
+        $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
+            e.preventDefault();
+        });
+        {% endif %}
     },
     createdRow: function (row, data, dataIndex) {
         if (data['@class'] !== undefined)
         {
             $(row).addClass(data['@class']);
         }
+    },
+
+    initComplete: function () {
+        if (this.api().page.info().pages < 2)
+        {
+            this.closest('.dataTables_wrapper').find('.dataTables_length').hide();
+        }
+
+        // Set header and body datatables status as loaded
+        this.attr('data-status', 'loaded');
+        this.closest('.dataTables_scroll').find('.dataTables_scrollHead .ibo-datatable').attr('data-status', 'loaded');
     },
 });
 
@@ -56,11 +80,6 @@ if ($("#{{ oUIBlock.GetId() }}").height() > 0)
     }
 }
 {% endif %}
-
-if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible'))
-{
-    oTable{{ sListIDForVarSuffix }}.columns.adjust().draw();
-}
 
 if (window.ResizeObserver)
 {
@@ -108,3 +127,5 @@ if (window.ResizeObserver)
     {% endif %}
 
 }
+
+{% include 'base/components/datatable/row-actions/handler.js.twig' %}

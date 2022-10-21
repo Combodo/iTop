@@ -28,18 +28,10 @@ class AddExpressionLanguageProvidersPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // routing
-        if ($container->has('router')) {
-            $definition = $container->findDefinition('router');
+        if ($container->has('router.default')) {
+            $definition = $container->findDefinition('router.default');
             foreach ($container->findTaggedServiceIds('routing.expression_language_provider', true) as $id => $attributes) {
                 $definition->addMethodCall('addExpressionLanguageProvider', [new Reference($id)]);
-            }
-        }
-
-        // security
-        if ($container->has('security.expression_language')) {
-            $definition = $container->findDefinition('security.expression_language');
-            foreach ($container->findTaggedServiceIds('security.expression_language_provider', true) as $id => $attributes) {
-                $definition->addMethodCall('registerProvider', [new Reference($id)]);
             }
         }
     }

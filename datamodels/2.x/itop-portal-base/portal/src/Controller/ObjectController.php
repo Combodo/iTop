@@ -66,11 +66,11 @@ class ObjectController extends BrickController
 	const DEFAULT_LIST_LENGTH = 10;
 
 	/**
-	 * Displays an cmdbAbstractObject if the connected user is allowed to.
+	 * Displays an cmdbAbstractObject (from its ID) if the connected user is allowed to.
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param string                                    $sObjectClass (Class must be instance of cmdbAbstractObject)
-	 * @param string                                    $sObjectId
+	 * @param string $sObjectClass (Class must be an instance of cmdbAbstractObject)
+	 * @param string $sObjectId
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 *
@@ -83,29 +83,19 @@ class ObjectController extends BrickController
 	 */
 	public function ViewAction(Request $oRequest, $sObjectClass, $sObjectId)
 	{
-		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
-		$oRequestManipulator = $this->get('request_manipulator');
-		/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
-		$oUrlGenerator = $this->get('url_generator');
-		/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oObjectFormHandler */
-		$oObjectFormHandler = $this->get('object_form_handler');
 		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
 		$oSecurityHelper = $this->get('security_helper');
 		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 		$oScopeValidator = $this->get('scope_validator');
-		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
-		$oBrickCollection = $this->get('brick_collection');
 
 		// Checking parameters
-		if ($sObjectClass === '' || $sObjectId === '')
-		{
+		if ($sObjectClass === '' || $sObjectId === '') {
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass and sObjectId expected, "'.$sObjectClass.'" and "'.$sObjectId.'" given.');
 			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 		}
 
 		// Checking security layers
-		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sObjectClass, $sObjectId))
-		{
+		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sObjectClass, $sObjectId)) {
 			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to read '.$sObjectClass.'::'.$sObjectId.' object.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
@@ -113,14 +103,99 @@ class ObjectController extends BrickController
 		// Retrieving object
 		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */,
 			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
-		if ($oObject === null)
-		{
+		if ($oObject === null) {
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
+		return $this->PrepareViewObjectResponse($oRequest, $oObject);
+	}
+
+	/**
+	 * Displays an cmdbAbstractObject (if the connected user is allowed to) from a specific attribute. If several or none objects are found with the attribute value, an exception is thrown.
+	 * 
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param string $sObjectClass (Class must be an instance of cmdbAbstractObject)
+	 * @param string $sObjectAttCode
+	 * @param string $sObjectAttValue
+	 *
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response|null
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 *
+	 * @since 2.7.7 method creation
+	 */
+	public function ViewFromAttributeAction(Request $oRequest, $sObjectClass, $sObjectAttCode, $sObjectAttValue)
+	{
+		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
+		$oSecurityHelper = $this->get('security_helper');
+		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
+		$oScopeValidator = $this->get('scope_validator');
+
+		// Checking parameters
+		if ($sObjectClass === '' || $sObjectAttCode === '' || $sObjectAttValue === '') {
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass and sObjectAttCode/sObjectAttValue expected, "'
+				.$sObjectClass.'" and "'.$sObjectAttCode.' / '.$sObjectAttValue.'" given.');
+			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, Dict::Format('UI:Error:3ParametersMissing', 'class', 'attcode', 'attvalue'));
+		}
+
+		$oObject = MetaModel::GetObjectByColumn($sObjectClass, $sObjectAttCode, $sObjectAttValue, false,
+			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
+		if ($oObject === null) {
+			// null if object not found or multiple matches
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'" and "'.$sObjectAttCode.' / '.$sObjectAttValue.'.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
+
+		// Checking security layers
+		$sObjectId = $oObject->GetKey();
+		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sObjectClass, $sObjectId)) {
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to read '.$sObjectClass.'::'.$sObjectId.' object.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
+
+		return $this->PrepareViewObjectResponse($oRequest, $oObject);
+	}
+
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param \DBObject $oObject
+	 *
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response|null
+	 * @throws \ArchivedObjectException
+	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 *
+	 * @since 2.7.7 method creation (refactor for new `p_object_view_from_attribute` route)
+	 */
+	protected function PrepareViewObjectResponse(Request $oRequest, DBObject $oObject)
+	{
+		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
+		$oSecurityHelper = $this->get('security_helper');
+		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
+		$oRequestManipulator = $this->get('request_manipulator');
+		/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
+		$oUrlGenerator = $this->get('url_generator');
+		/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oObjectFormHandler */
+		$oObjectFormHandler = $this->get('object_form_handler');
+		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
+		$oBrickCollection = $this->get('brick_collection');
+
 		$sOperation = $oRequestManipulator->ReadParam('operation', '');
+		$sObjectClass = get_class($oObject);
+		$sObjectId = $oObject->GetKey();
+
+		$oObject->FireEvent(EVENT_SERVICE_DISPLAY_OBJECT_DETAILS);
 
 		$aData = array('sMode' => 'view');
 		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
@@ -128,8 +203,7 @@ class ObjectController extends BrickController
 			$oObject->GetName());
 
 		// Add an edit button if user is allowed
-		if ($oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId))
-		{
+		if ($oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId)) {
 			$sModifyUrl = $oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId));
 			$oModifyButton = new JSButtonItem(
 				'modify_object',
@@ -141,27 +215,19 @@ class ObjectController extends BrickController
 		}
 
 		// Preparing response
-		if ($oRequest->isXmlHttpRequest())
-		{
+		if ($oRequest->isXmlHttpRequest()) {
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
-			if (empty($sOperation))
-			{
+			if (empty($sOperation)) {
 				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
-			}
-			else
-			{
+			} else {
 				$oResponse = new JsonResponse($aData);
 			}
-		}
-		else
-		{
+		} else {
 			// Adding brick if it was passed
 			$sBrickId = $oRequestManipulator->ReadParam('sBrickId', '');
-			if (!empty($sBrickId))
-			{
+			if (!empty($sBrickId)) {
 				$oBrick = $oBrickCollection->GetBrickById($sBrickId);
-				if ($oBrick !== null)
-				{
+				if ($oBrick !== null) {
 					$aData['oBrick'] = $oBrick;
 				}
 			}
@@ -345,7 +411,7 @@ class ObjectController extends BrickController
 			'sObjectClass' => get_class($oTargetObject),
 		);
 
-		return $this->ForwardFromRoute('p_object_create', $aRouteParams, $oRequest->query->all());
+		return $this->ForwardToRoute('p_object_create', $aRouteParams, $oRequest->query->all());
 	}
 
 	/**
@@ -390,14 +456,18 @@ class ObjectController extends BrickController
 		}
 
 		// Checking security layers
+		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId))
+		{
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to modify '.$sObjectClass.'::'.$sObjectId.' object.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
 		if (!$oSecurityHelper->IsStimulusAllowed($sStimulusCode, $sObjectClass))
 		{
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */,
-			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, 	$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
@@ -447,6 +517,8 @@ class ObjectController extends BrickController
 				$oSubRequest = $oRequest;
 				$oSubRequest->request->set('operation', 'submit');
 				$oSubRequest->request->set('stimulus_code', '');
+				$oSubRequest->request->set('formmanager_class', $aData['form']['formmanager_class']);
+				$oSubRequest->request->set('formmanager_data', json_encode($aData['form']['formmanager_data']));
 
 				$aData = array('sMode' => 'apply_stimulus');
 				$aData['form'] = $oObjectFormHandler->HandleForm($oSubRequest, $aData['sMode'], $sObjectClass, $sObjectId,
@@ -519,6 +591,8 @@ class ObjectController extends BrickController
 		$oSecurityHelper = $this->get('security_helper');
 		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 		$oScopeValidator = $this->get('scope_validator');
+		/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oFormHandlerHelper */
+		$oFormHandlerHelper = $this->get('object_form_handler');
 
 		$aData = array(
 			'results' => array(
@@ -570,16 +644,14 @@ class ObjectController extends BrickController
 		// Updating host object with form data / values
 		$sFormManagerClass = $aRequestContent['formmanager_class'];
 		$sFormManagerData = $aRequestContent['formmanager_data'];
-		if (!empty($sFormManagerClass) && !empty($sFormManagerData))
-		{
+		if (!empty($sFormManagerClass) && !empty($sFormManagerData)) {
 			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetContainer($this->container);
+			$oFormManager->SetObjectFormHandlerHelper($oFormHandlerHelper);
 			$oFormManager->SetObject($oHostObject);
 
 			// Applying action rules if present
-			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== ''))
-			{
+			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
 				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
 				$oObj = $oFormManager->GetObject();
 				$oContextManipulator->PrepareObject($aActionRules, $oObj);
@@ -699,13 +771,14 @@ class ObjectController extends BrickController
 		$oSecurityHelper = $this->get('security_helper');
 		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 		$oScopeValidator = $this->get('scope_validator');
-
+		/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oFormHandlerHelper */
+		$oFormHandlerHelper = $this->get('object_form_handler');
 
 		$aData = array(
-			'sMode' => 'search_regular',
-			'sTargetAttCode' => $sTargetAttCode,
-			'sHostObjectClass' => $sHostObjectClass,
-			'sHostObjectId' => $sHostObjectId,
+			'sMode'             => 'search_regular',
+			'sTargetAttCode'    => $sTargetAttCode,
+			'sHostObjectClass'  => $sHostObjectClass,
+			'sHostObjectId'     => $sHostObjectId,
 			'sActionRulesToken' => $oRequestManipulator->ReadParam('ar_token', ''),
 		);
 
@@ -737,16 +810,14 @@ class ObjectController extends BrickController
 		// Updating host object with form data / values
 		$sFormManagerClass = $oRequestManipulator->ReadParam('formmanager_class', '', FILTER_UNSAFE_RAW);
 		$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
-		if (!empty($sFormManagerClass) && !empty($sFormManagerData))
-		{
+		if (!empty($sFormManagerClass) && !empty($sFormManagerData)) {
 			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetContainer($this->container);
+			$oFormManager->SetObjectFormHandlerHelper($oFormHandlerHelper);
 			$oFormManager->SetObject($oHostObject);
 
 			// Applying action rules if present
-			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== ''))
-			{
+			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
 				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
 				$oObj = $oFormManager->GetObject();
 				$oContextManipulator->PrepareObject($aActionRules, $oObj);
@@ -858,6 +929,7 @@ class ObjectController extends BrickController
 		if (!empty($sQuery))
 		{
 			$oFullExpr = null;
+			/** @noinspection SlowArrayOperationsInLoopInspection */
 			for ($i = 0; $i < count($aAttCodes); $i++)
 			{
 				// Checking if the current attcode is an external key in order to search on the friendlyname
@@ -1055,12 +1127,11 @@ class ObjectController extends BrickController
 		}
 
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* Must not be found */,
-			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass));
+		$bAllowAllDataFlag = ($bCheckSecurity === false) ? true : $oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass);
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* Must not be found */, $bAllowAllDataFlag);
 		if ($oObject === null)
 		{
-			// We should never be there as the security helper makes sure that the object exists, but just in case.
-			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.': Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -1083,6 +1154,12 @@ class ObjectController extends BrickController
 			$aHeaders['Cache-Control'] = 'no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec;
 			// Reset the value set previously
 			$aHeaders['Pragma'] = 'cache';
+
+			// N°3423 Fix bug in Symphony 3.x in Response::sendHeaders(): Headers need to send directly as SF doesn't replace header of page except for Content-Type
+			header('Cache-Control: no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec);
+			header('Pragma: cache');
+			header('Expires: ');
+
 			// An arbitrary date in the past is ok
 			$aHeaders['Last-Modified'] = 'Wed, 15 Jun 2015 13:21:15 GMT';
 		}
@@ -1091,6 +1168,11 @@ class ObjectController extends BrickController
 		$oDocument = $oObject->Get($sObjectField);
 		$aHeaders['Content-Type'] = $oDocument->GetMimeType();
 		$aHeaders['Content-Disposition'] = (($sOperation === 'display') ? 'inline' : 'attachment').';filename="'.$oDocument->GetFileName().'"';
+
+		// N°4129 - Prevent XSS attacks & other script executions
+		if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
+			$aHeaders['Content-Security-Policy'] = 'sandbox';
+		}
 
 		return new Response($oDocument->GetData(), Response::HTTP_OK, $aHeaders);
 	}
@@ -1154,16 +1236,16 @@ class ObjectController extends BrickController
 						$oAttachment->Set('contents', $oDocument);
 						$iAttId = $oAttachment->DBInsert();
 
-						$aData['msg'] = htmlentities($oDocument->GetFileName(), ENT_QUOTES, 'UTF-8');
+						$aData['msg'] = utils::EscapeHtml($oDocument->GetFileName());
 						$aData['icon'] = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/icons8-image-file.svg';
 
 						// Checking if the instance has attachments
 						if (class_exists('AttachmentPlugIn')) {
-							$aData['icon'] = utils::GetAbsoluteUrlAppRoot() . AttachmentPlugIn::GetFileIcon($oDocument->GetFileName());
+							$aData['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDocument->GetFileName());
 						}
 
 						$aData['att_id'] = $iAttId;
-						$aData['preview'] = $oDocument->IsPreviewAvailable() ? 'true' : 'false';
+						$aData['preview'] = $oDocument->IsPreviewAvailable();
 						$aData['file_size'] = $oDocument->GetFormattedSize();
 						$aData['creation_date'] = $oAttachment->Get('creation_date');
 						$aData['user_id_friendlyname'] = $oAttachment->Get('user_id_friendlyname');
@@ -1188,7 +1270,7 @@ class ObjectController extends BrickController
 					'sObjectField' => 'contents',
 				);
 
-				$oResponse = $this->forward($this->GetControllerNameFromRoute('p_object_document_download'), $aRouteParams, $oRequest->query->all());
+				$oResponse = $this->ForwardToRoute('p_object_document_download', $aRouteParams, $oRequest->query->all());
 
 				break;
 

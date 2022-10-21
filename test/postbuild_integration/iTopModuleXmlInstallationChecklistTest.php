@@ -3,28 +3,15 @@
 namespace Combodo\iTop\Test\UnitTest\ReleaseChecklist;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use DOMDocument;
-use iTopDesignFormat;
 
 
 /**
- * Class iTopDesignFormatChecklistTest
- * Ticket 3061 - Automatically check the installation.xml consistency
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
- * @covers iTopDesignFormat
+ * @since 2.7.2 N°3060 / N°3061 Automatically check the installation.xml consistency
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 {
-	protected function setUp()
-	{
-		parent::setUp();
-	}
-
 	/**
 	 * make sure installation.xml is provided and respects XML format
 	 */
@@ -49,30 +36,36 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 	public function testAllModuleAreIncludedInInstallationXml()
 	{
 		$sInstallationXmlPath = APPROOT.'datamodels/2.x/installation.xml';
-		if (!is_file($sInstallationXmlPath))
-		{
+		if (!is_file($sInstallationXmlPath)) {
 			$sInstallationXmlPath = APPROOT.'datamodels/1.x/installation.xml';
 		}
 		$this->assertTrue(is_file($sInstallationXmlPath), "$sInstallationXmlPath does not exist");
 
 		$sInstallationXmlContent = file_get_contents($sInstallationXmlPath);
 		preg_match_all("|<module>(.*)</module>|", $sInstallationXmlContent, $aMatches);
-		$aDeclaredModules =  [] ;
-		if (!empty($aMatches))
-		{
-			foreach ($aMatches[1] as $sModule)
-			{
-				if (!array_key_exists($sModule, $aDeclaredModules))
-				{
+		$aDeclaredModules = [];
+		if (!empty($aMatches)) {
+			foreach ($aMatches[1] as $sModule) {
+				if (!array_key_exists($sModule, $aDeclaredModules)) {
 					$aDeclaredModules[$sModule] = $sModule;
 				}
 			}
 		}
 
-		$this->assertArraySubset($this->GetFilteredModulesFromDatamodels(APPROOT.'/datamodels'), $aDeclaredModules, false, "$sInstallationXmlPath does not refer to all provided modules. Refered modules:\n " . var_export($aDeclaredModules, true));
+		$this->assertArraySubset(
+			$this->GetFilteredModulesFromDatamodels(APPROOT.'/datamodels'),
+			$aDeclaredModules,
+			false,
+			"{$sInstallationXmlPath} does not list all modules in /datamodels ! List of modules in installation.xml:\n ".var_export($aDeclaredModules, true)
+		);
 
 		$aModulesFromDatamodels = $this->GetAllModules(APPROOT.'/datamodels');
-		$this->assertArraySubset($aDeclaredModules, $aModulesFromDatamodels, false, "Not all modules are contained in $sInstallationXmlPath. Refered modules:\n " . var_export($aModulesFromDatamodels, true));
+		$this->assertArraySubset(
+			$aDeclaredModules,
+			$aModulesFromDatamodels,
+			false,
+			"Not all modules are contained in {$sInstallationXmlPath}. List of modules in /datamodels:\n ".var_export($aModulesFromDatamodels, true)
+		);
 	}
 
 	public function GetFilteredModulesFromDatamodels($sFolder)
@@ -85,6 +78,7 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 			{
 				if (is_dir($sPath))
 				{
+					/** @noinspection SlowArrayOperationsInLoopInspection */
 					$aModules = array_merge($aModules, $this->GetFilteredModulesFromDatamodels($sPath));
 				}
 				else if (preg_match("/module\..*\.php/", basename($sPath)))
@@ -124,6 +118,7 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 			{
 				if (is_dir($sPath))
 				{
+					/** @noinspection SlowArrayOperationsInLoopInspection */
 					$aModules = array_merge($aModules, $this->GetAllModules($sPath));
 				}
 				else if (preg_match("/module\..*\.php/", basename($sPath)))

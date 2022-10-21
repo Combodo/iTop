@@ -69,6 +69,40 @@ abstract class AbstractSingleFileVersionUpdater extends FileVersionUpdater
 	}
 }
 
+/**
+ * @since 2.7.7 3.0.1 3.1.0 N°4714
+ */
+class ConstantFileUpdater extends AbstractSingleFileVersionUpdater {
+	/** @var string */
+	private $sConstantName;
+
+	/**
+	 * @param $sConstantName constant to search, for example `ITOP_CORE_VERSION`
+	 * @param $sFileToUpdate file containing constant definition
+	 */
+	public function __construct($sConstantName, $sFileToUpdate)
+	{
+		$this->sConstantName = $sConstantName;
+		parent::__construct($sFileToUpdate);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function UpdateFileContent($sVersionLabel, $sFileContent, $sFileFullPath)
+	{
+		$sConstantSearchPattern = <<<REGEXP
+/define\('{$this->sConstantName}', ?'[^']+'\);/
+REGEXP;
+
+		return preg_replace(
+			$sConstantSearchPattern,
+			"define('{$this->sConstantName}', '{$sVersionLabel}');",
+			$sFileContent
+		);
+	}
+}
+
 class iTopVersionFileUpdater extends AbstractSingleFileVersionUpdater
 {
 	public function __construct()
@@ -83,26 +117,6 @@ class iTopVersionFileUpdater extends AbstractSingleFileVersionUpdater
 	{
 		return preg_replace(
 			'/(<version>)[^<]*(<\/version>)/',
-			'${1}'.$sVersionLabel.'${2}',
-			$sFileContent
-		);
-	}
-}
-
-class CssVariablesFileUpdater extends AbstractSingleFileVersionUpdater
-{
-	public function __construct()
-	{
-		parent::__construct('css/css-variables.scss');
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function UpdateFileContent($sVersionLabel, $sFileContent, $sFileFullPath)
-	{
-		return preg_replace(
-			'/(\$version: "v)[^"]*(";)/',
 			'${1}'.$sVersionLabel.'${2}',
 			$sFileContent
 		);

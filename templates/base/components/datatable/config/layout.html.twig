@@ -1,11 +1,11 @@
-<div id="datatable_dlg_{{ oUIBlock.GetTableId() }}" style="display: none; background : white;" class=" {{ oUIBlock.GetBlockCode() }}">
+<div id="datatable_dlg_{{ oUIBlock.GetTableId() }}" style="display: none;" class=" {{ oUIBlock.GetBlockCode() }}">
     <input type="hidden" name="action" value="none">
     <form id="form_{{ oUIBlock.GetTableId() }}" onsubmit="return false">
         <p>
             <input id="dtbl_dlg_settings_{{ oUIBlock.GetTableId() }}" type="radio" name="settings" {% if (oUIBlock.GetOption("bUseCustomSettings") == false) %} checked {% endif %} value="defaults">
             <label for="dtbl_dlg_settings_{{ oUIBlock.GetTableId() }}">&nbsp;{{ 'UI:UseDefaultSettings'|dict_s }}</label>
         </p>
-        <div class="ibo-panel ibo-is-neutral ibo-is-opened">
+        <div class="ibo-panel ibo-is-neutral ibo-is-opened" data-role="ibo-panel">
             <div class="ibo-panel--header">
                 <div class="ibo-panel--header-left">
                     <input id="dtbl_dlg_specific_{{ oUIBlock.GetTableId() }}" type="radio" class="specific_settings" name="settings" {% if oUIBlock.GetOption("bUseCustomSettings") %} checked {% endif %} value="specific">
@@ -25,7 +25,7 @@
                 <p> {{ 'UI:Display_X_ItemsPerPage_prefix'|dict_s }}<input type="text" size="4" name="page_size" value="{{ oUIBlock.GetOption("iPageSize") }}">{{ 'UI:Display_X_ItemsPerPage_suffix'|dict_s }}</p>
             </div>
         </div>
-        <div class="ibo-panel ibo-is-neutral ibo-is-opened">
+        <div class="ibo-panel ibo-is-neutral ibo-is-opened" data-role="ibo-panel">
             <div class="ibo-panel--header">
                 <div class="ibo-panel--header-left">
                     <input id="dtbl_dlg_save_{{ oUIBlock.GetTableId() }}" type="checkbox" {% if oUIBlock.GetOption("sTableId") != null %}checked{% endif %} name="save_settings">
@@ -41,8 +41,8 @@
         </div>
         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
             <div class=" ui-dialog-buttonset">
-                <button type="button" class="ibo-button ibo-is-alternative ibo-is-neutral action cancel" onclick="$('#datatable_dlg_{{ oUIBlock.GetTableId() }}').dialog('close')">&nbsp;{{ 'UI:Button:Cancel'|dict_s }}</button>
-                <button type="submit" class="ibo-button ibo-is-regular ibo-is-primary action" onclick="$('#datatable_dlg_{{ oUIBlock.GetTableId() }}').DataTableSettings('onDlgOk'); ">&nbsp;{{ 'UI:Button:Ok'|dict_s }}</button>
+                <button type="button" class="ibo-button ibo-is-alternative ibo-is-neutral action cancel" data-role="ibo-button" onclick="$('#datatable_dlg_{{ oUIBlock.GetTableId() }}').dialog('close')">&nbsp;{{ 'UI:Button:Cancel'|dict_s }}</button>
+                <button type="submit" class="ibo-button ibo-is-regular ibo-is-primary action" data-role="ibo-button" onclick="$('#datatable_dlg_{{ oUIBlock.GetTableId() }}').DataTableSettings('onDlgOk'); ">&nbsp;{{ 'UI:Button:Ok'|dict_s }}</button>
             </div>
         </div>
     </form>

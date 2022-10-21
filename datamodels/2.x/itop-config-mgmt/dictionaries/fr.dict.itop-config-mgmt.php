@@ -32,6 +32,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Relation:depends on/Description' => 'Eléments dont dépend',
 	'Relation:depends on/DownStream' => 'Dépend de...',
 	'Relation:depends on/UpStream' => 'Impacte...',
+	'Relation:impacts/LoadData'       => 'Charger les données',
+	'Relation:impacts/NoFilteredData' => 'Veuillez sélectionner des objets dans l\'onglet Graph',
 ));
 
 
@@ -754,7 +756,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:LogicalVolume/Attribute:storagesystem_id+' => '',
 	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Nom Système de stockage',
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Servers',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Serveurs',
 	'Class:LogicalVolume/Attribute:servers_list+' => '',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Machines virtuelles',
 	'Class:LogicalVolume/Attribute:virtualdevices_list+' => '',

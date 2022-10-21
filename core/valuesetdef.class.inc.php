@@ -24,6 +24,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+
 require_once('MyHelpers.class.inc.php');
 
 /**
@@ -379,41 +381,35 @@ class ValueSetObjects extends ValueSetDefinition
 
 		$this->m_aValues = array();
 
-		if ($this->m_bAllowAllData)
-		{
+		if ($this->m_bAllowAllData) {
 			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr);
-		}
-		else
-		{
+		} else {
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 		}
 
-		if (!$oFilter) return false;
-		if (!is_null($this->m_oExtraCondition))
-		{
+		if (!$oFilter) {
+			return false;
+		}
+		if (!is_null($this->m_oExtraCondition)) {
 			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
 		}
-		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
-		{
-			foreach ($aProperties as $sProperty => $value)
-			{
+		foreach ($this->m_aModifierProperties as $sPluginClass => $aProperties) {
+			foreach ($aProperties as $sProperty => $value) {
 				$oFilter->SetModifierProperty($sPluginClass, $sProperty, $value);
 			}
 		}
 
 		//$oExpression = DBObjectSearch::GetPolymorphicExpression($oFilter->GetClass(), 'friendlyname');
 		$sClass = $oFilter->GetClass();
+		$sClassAlias = $oFilter->GetClassAlias();
 
-		switch ($sOperation)
-		{
+		switch ($sOperation) {
 			case 'equals':
 				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-				$sClassAlias = $oFilter->GetClassAlias();
 				$aFilters = array();
 				$oValueExpr = new ScalarExpression($sContains);
-				foreach($aAttributes as $sAttribute)
-				{
+				foreach ($aAttributes as $sAttribute) {
 					$oNewFilter = $oFilter->DeepClone();
 					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
 					$oCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
@@ -425,7 +421,6 @@ class ValueSetObjects extends ValueSetDefinition
 				break;
 			case 'start_with':
 				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-				$sClassAlias = $oFilter->GetClassAlias();
 				$aFilters = array();
 				$oValueExpr = new ScalarExpression($sContains.'%');
 				foreach($aAttributes as $sAttribute)
@@ -442,63 +437,67 @@ class ValueSetObjects extends ValueSetDefinition
 
 			default:
 				$oValueExpr = new ScalarExpression('%'.$sContains.'%');
-				$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
+				$oNameExpr = new FieldExpression('friendlyname', $sClassAlias);
 				$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
 				$oFilter->AddConditionExpression($oNewCondition);
 				break;
 		}
 
 		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs, null, $this->m_iLimit, 0, $this->m_bSort);
-		if (empty($this->m_sValueAttCode))
-		{
-			$aAttToLoad = array($oFilter->GetClassAlias() => array('friendlyname'));
-		}
-		else
-		{
-			$aAttToLoad = array($oFilter->GetClassAlias() => array($this->m_sValueAttCode));
+		if (empty($this->m_sValueAttCode)) {
+			$aAttToLoad = ['friendlyname'];
+		} else {
+			$aAttToLoad = [$this->m_sValueAttCode];
 		}
 
-		$aComplementAttributeSpec = MetaModel::GetComplementAttributeSpec($sClass);
+		$sImageAttr = MetaModel::GetImageAttributeCode($sClass);
+		if (!empty($sImageAttr)) {
+			$aAttToLoad [] = $sImageAttr;
+		}
+
+		$aComplementAttributeSpec = MetaModel::GetNameSpec($sClass, FriendlyNameType::COMPLEMENTARY);
 		$sFormatAdditionalField = $aComplementAttributeSpec[0];
-		$aAdditionalField =  $aComplementAttributeSpec[1];
+		$aAdditionalField = $aComplementAttributeSpec[1];
 
-		if (count($aAdditionalField)>0)
-		{
-			$aAttToLoad = array_merge ($aAttToLoad, [$oFilter->GetClassAlias() => $aAdditionalField]);
+		if (count($aAdditionalField) > 0) {
+			if (is_array($aAdditionalField)) {
+				$aAttToLoad = array_merge($aAttToLoad, $aAdditionalField);
+			} else {
+				$aAttToLoad [] = $aAdditionalField;
+			}
 		}
 
-		$oObjects->OptimizeColumnLoad($aAttToLoad);
-		while ($oObject = $oObjects->Fetch())
-		{
-			$aData=[];
-			if (empty($this->m_sValueAttCode))
-			{
+		$oObjects->OptimizeColumnLoad([$sClassAlias => $aAttToLoad]);
+		while ($oObject = $oObjects->Fetch()) {
+			$aData = [];
+			if (empty($this->m_sValueAttCode)) {
 				$aData['label'] = $oObject->GetName();
-			}
-			else
-			{
+			} else {
 				$aData['label'] = $oObject->Get($this->m_sValueAttCode);
 			}
-			if($oObject->IsObsolete())
-			{
-				$aData['obsolescence_flag']='1';
+			if ($oObject->IsObsolete()) {
+				$aData['obsolescence_flag'] = '1';
+			} else {
+				$aData['obsolescence_flag'] = '0';
 			}
-			else
-			{
-				$aData['obsolescence_flag']='0';
-			}
-			if (count($aAdditionalField)>0)
-			{
+			if (count($aAdditionalField) > 0) {
 				$aArguments = [];
-				foreach ($aAdditionalField as $sAdditionalField)
-				{
-					array_push ($aArguments,$oObject->Get($sAdditionalField));
+				foreach ($aAdditionalField as $sAdditionalField) {
+					array_push($aArguments, $oObject->Get($sAdditionalField));
 				}
 				$aData['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
+			} else {
+				$aData['additional_field'] = '';
 			}
-			else
-			{
-				$aData['additional_field']='';
+			if (!empty($sImageAttr)) {
+				/** @var \ormDocument $oImage */
+				$oImage = $oObject->Get($sImageAttr);
+				if (!$oImage->IsEmpty()) {
+					$aData['picture_url'] = $oImage->GetDisplayURL($sClass, $oObject->GetKey(), $sImageAttr);
+					$aData['initials'] = '';
+				} else {
+					$aData['initials'] = utils::ToAcronym($aData['label']);
+				}
 			}
 			$this->m_aValues[$oObject->GetKey()] = $aData;
 		}

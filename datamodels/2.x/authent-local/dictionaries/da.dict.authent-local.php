@@ -21,8 +21,8 @@
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:UserLocal' => 'iTop-Bruger',
-	'Class:UserLocal+' => 'Bruger der godkendes af iTop',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'-Bruger',
+	'Class:UserLocal+' => 'Bruger der godkendes af '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Password',
 	'Class:UserLocal/Attribute:password+' => 'Brugerens password',
 
@@ -34,10 +34,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expired~~',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'One-time Password~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Password renewal~~',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'When the password was last changed~~',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.~~',
 
-	'UserLocal:password:expiration' => 'The fields below require an extension~~'
+	'UserLocal:password:expiration' => 'The fields below require an extension~~',
+	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
 ));

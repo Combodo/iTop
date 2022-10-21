@@ -3,8 +3,23 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
-function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote, bDoSearch) {
+/**
+ *
+ * @param id
+ * @param sClass
+ * @param sAttCode
+ * @param iInputId
+ * @param sSuffix
+ * @param bDuplicates
+ * @param oWizHelper
+ * @param sExtKeyToRemote
+ * @param bDoSearch
+ * @param iMaxAddedId
+ * @constructor
+ *
+ * @since 3.0.0 Add iMaxAddedId parameter
+ */
+function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote, bDoSearch, iMaxAddedId = 0, aRemoved = []) {
 	this.id = id;
 	this.iInputId = iInputId;
 	this.sClass = sClass;
@@ -13,9 +28,9 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.bDuplicates = bDuplicates;
 	this.oWizardHelper = oWizHelper;
 	this.sExtKeyToRemote = sExtKeyToRemote;
-	this.iMaxAddedId = 0;
+	this.iMaxAddedId = iMaxAddedId;
 	this.aAdded = [];
-	this.aRemoved = [];
+	this.aRemoved = aRemoved;
 	this.aModified = {};
 	this.bDoSearch = bDoSearch; // false if the search is not launched
 	let me = this;
@@ -45,7 +60,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 	this.RemoveSelected = function () {
 		let my_id = '#'+me.id;
-		$('#linkedset_'+me.id+' tr.selected').each(function () {
+		$('#linkedset_'+me.id+' .selection:checked').closest('tr').each(function () {
 			$('#datatable_'+me.id).DataTable().row($(this)).remove().draw();
 			var oCheckbox = $(this).find('.selection');
 			let iLink = $(oCheckbox).attr('data-link-id');
@@ -91,6 +106,8 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		let me = this;
 		$('#'+me.id+'_indicatorAdd').html('&nbsp;<img src="../images/indicator.gif"/>');
 		me.oWizardHelper.UpdateWizard();
+
+		let sPromiseId = 'ajax_promise_'+me.id;
 		let theMap = {
 			sAttCode: me.sAttCode,
 			iInputId: me.iInputId,
@@ -98,7 +115,8 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			bDuplicates: me.bDuplicates,
 			'class': me.sClass,
 			operation: 'addObjects',
-			json: me.oWizardHelper.ToJSON()
+			json: me.oWizardHelper.ToJSON(),
+			ajax_promise_id: sPromiseId
 		};
 
 		// Gather the already linked target objects
@@ -116,20 +134,22 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			})
 			.done(function (data) {
 				$('#dlg_'+me.id).html(data);
-				$('#dlg_'+me.id).dialog('open');
-				me.UpdateSizes(null, null);
-				if (me.bDoSearch)
-				{
-					me.SearchObjectsToAdd();
-				}
-				else
-				{
-					$('#count_'+me.id).change(function () {
-						let c = this.value;
-						me.UpdateButtons(c);
-					});
-				}
-				$('#'+me.id+'_indicatorAdd').html('');
+				window[sPromiseId].then(function () {
+					$('#dlg_'+me.id).dialog('open');
+					me.UpdateSizes(null, null);
+					if (me.bDoSearch)
+					{
+						me.SearchObjectsToAdd();
+					}
+					else
+					{
+						$('#count_'+me.id).change(function () {
+							let c = this.value;
+							me.UpdateButtons(c);
+						});
+					}
+					$('#'+me.id+'_indicatorAdd').html('');
+				});
 			})
 		;
 	};
@@ -412,5 +432,14 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 		// Remove unused inputs
 		$('#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]').prop("disabled", true);
+	};
+
+	this.UpdateMaxAddedId = function () {
+		const iCurrentMaxAddedId = this.iMaxAddedId;
+		this.iMaxAddedId = Math.max(iCurrentMaxAddedId, this.GetMaxAddedId());
+	};
+
+	this.GetMaxAddedId = function () {
+		this.oWizardHelper;
 	};
 }

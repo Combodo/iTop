@@ -15,46 +15,15 @@
 
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
+use ApplicationException;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use iTopDesignFormat;
+use utils;
 
 
 /**
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- * @group itop-community
- *
- * @covers iTopDesignFormat
- *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
-	/**
-	 * We had a problem when version was switched from 2.8.0 to 3.0.0, so this test aims to detect such problems
-	 *
-	 * @param string $sVersion
-	 * @param string $sExpectedMinVersion if null the test will expects an exception to occur
-	 *
-	 * @throws \Exception
-	 * @since 3.0.0
-	 * @dataProvider GetItopMinorVersionProvider
-	 */
-	public function testGetItopMinorVersion($sVersion, $sExpectedMinVersion) {
-		if (is_null($sExpectedMinVersion)) {
-			$this->expectException(\Exception::class);
-		}
-		$sActualMinVersion = \utils::GetItopMinorVersion($sVersion);
-		if (!is_null($sExpectedMinVersion)) {
-			$this->assertEquals($sExpectedMinVersion, $sActualMinVersion);
-		}
-	}
-
-	public function GetItopMinorVersionProvider() {
-		return [['2.8.0', '2.8'], ['3.0.0', '3.0'], ['3.', null], ['3', null]];
-	}
-
 	/**
 	 * @param string $sPhpFile iTop module file
 	 *
@@ -77,11 +46,18 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 	}
 
 	/**
-	 * Verify if the datamodel.*.xml files refer to the current itop version
+	 * Verify if `module.*.php` files contained in `datamodels/1.x` or `datamodels/2.x` refers to the current itop version
 	 * This is an integration test
 	 *
+	 * As ess and pro targets are copying modules into datamodels/2.x this test can only be run on a community target !
+	 *
+	 * @group itop-community
 	 * @group skipPostBuild
+	 *
 	 * @uses utils::GetItopMinorVersion()
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°4714 uses new {@link ITOP_CORE_VERSION} constant
+	 * @since 3.0.3 3.1.0 move itop-community group in this method
 	 */
 	public function testITopModulesPhpVersion(): void {
 		if (is_dir(APPROOT.'datamodels/2.x')) {
@@ -96,18 +72,42 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 		$sPath = $DatamodelsPath.'/*/module.*.php';
 		$aPhpFiles = glob($sPath);
 
-		$sMinorVersion = \utils::GetItopMinorVersion();
-		$sExpectedVersion = '/^'.str_replace('.', '\.', $sMinorVersion).'\.\d+$/';
+		$sExpectedVersion = ITOP_CORE_VERSION;
 
 		$aModuleWithError = [];
 		foreach ($aPhpFiles as $sPhpFile) {
 			$sActualVersion = $this->GetItopModuleVersion($sPhpFile);
 
-			if (!preg_match($sExpectedVersion, $sActualVersion)) {
-				$aModuleWithError[$sPhpFile] = $sActualVersion;
-			}
+			$this->assertSame($sExpectedVersion, $sActualVersion,
+				'Module desc file does not contain the same version as the core: '.$sPhpFile);
 		}
 
 		self::assertEquals([], $aModuleWithError, 'Some modules have wrong versions ! They should match '.$sExpectedVersion);
+	}
+
+	/**
+	 * @dataProvider ItopWikiVersionProvider
+	 * @since 2.7.7 3.0.1 3.1.1 N°4714 new ITOP_CORE_VERSION constant
+	 */
+	public function testItopWikiVersion($sItopVersion, $sExpectedWikiVersion) {
+		try {
+			$sActualWikiVersion = utils::GetItopVersionWikiSyntax($sItopVersion);
+		}
+		catch (ApplicationException $e) {
+			self::fail('Cannot get wiki version : '.$e->getMessage());
+		}
+		self::assertSame($sExpectedWikiVersion, $sActualWikiVersion, 'Computed wiki version is wrong !');
+	}
+
+	public function ItopWikiVersionProvider()
+	{
+		return [
+			['2.7.0', '2_7_0'],
+			['2.7.7', '2_7_0'],
+			['3.0.0', '3_0_0'],
+			['3.0.1', '3_0_0'],
+			['3.1.0', '3_1_0'],
+			['3.1.1', '3_1_0'],
+		];
 	}
 }

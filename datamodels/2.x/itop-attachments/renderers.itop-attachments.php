@@ -28,6 +28,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id=');
@@ -205,7 +206,7 @@ abstract class AbstractAttachmentsRenderer
 	function RefreshAttachmentsDisplay(dataUpload)
 	{
 		var sContentNode = '#AttachmentsListContainer',
-			aAttachmentsDeletedHiddenInputs = $('table.attachmentsList>tbody>tr[id^="display_attachment_"]>td input[name="removed_attachments[]"]'),
+			aAttachmentsDeletedHiddenInputs = $('#AttachmentsListContainer table>tbody>tr[id^="display_attachment_"]>td input[name="removed_attachments[]"]'),
 			aAttachmentsDeletedIds = aAttachmentsDeletedHiddenInputs.map(function() { return $(this).val() }).toArray();
 		$(sContentNode).block();
 		$.post(GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.itop-attachment.php',
@@ -366,7 +367,7 @@ JS
 			"btn_remove_".$iAttId);
 		$oButton->AddCSSClass('btn_hidden')
 			->SetOnClickJsCode("RemoveAttachment(".$iAttId.");")
-			->SetColor(Button::ENUM_COLOR_DESTRUCTIVE);
+			->SetColor(Button::ENUM_COLOR_SCHEME_DESTRUCTIVE);
 		
 		return $oButton;
 	}
@@ -415,7 +416,6 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$sFileDate = Dict::S('Attachments:File:Date');
 		$sFileUploader = Dict::S('Attachments:File:Uploader');
 		$sFileType = Dict::S('Attachments:File:MimeType');
-		$sDeleteColumn = '';
 
 		if ($bWithDeleteButton)
 		{
@@ -448,10 +448,13 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		if ($bWithDeleteButton) {
 			$aAttribs['delete'] = array('label' => '', 'description' => '');
 		}
-
+		$oPanel = PanelUIBlockFactory::MakeNeutral('');
+		$oPanel->AddCSSClass('ibo-datatable-panel');
 		$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
 		$oAttachmentTableBlock->AddCSSClass('ibo-attachment--datatable');
-		$this->oPage->AddUiBlock($oAttachmentTableBlock);
+		$oPanel->AddSubBlock($oAttachmentTableBlock);
+
+		$this->oPage->AddUiBlock($oPanel);
 
 		$sTableId = $oAttachmentTableBlock->GetId();
 
@@ -484,17 +487,9 @@ JS
 	{
 		$iAttachmentId = $oAttachment->GetKey();
 
-		$sLineClass = '';
-		if ($bIsEven)
-		{
-			$sLineClass = 'class="even"';
-		}
-
-		$sLineStyle = '';
 		$bIsDeletedAttachment = false;
 		if (in_array($iAttachmentId, $aAttachmentsDeleted, true))
 		{
-			$sLineStyle = 'style="display: none;"';
 			$bIsDeletedAttachment = true;
 		}
 
@@ -509,7 +504,6 @@ JS
 		$sFileFormattedSize = $oDoc->GetFormattedSize();
 		$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 		$sAttachmentDateFormatted = '';
-		$iAttachmentDateRaw = '';
 		if (!$bIsTempAttachment)
 		{
 			$sAttachmentDate = $oAttachment->Get('creation_date');
@@ -519,7 +513,6 @@ JS
 			}
 			$oAttachmentDate = DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $sAttachmentDate);
 			$sAttachmentDateFormatted = AttributeDateTime::GetFormat()->Format($oAttachmentDate);
-			$iAttachmentDateRaw = AttributeDateTime::GetAsUnixSeconds($sAttachmentDate);
 		}
 
 		$sAttachmentUploader = $oAttachment->Get('contact_id_friendlyname');
@@ -552,11 +545,15 @@ JS
 			'filename' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="$sIconClass">'.$sFileName.'</a>'.$sAttachmentMeta,
 			'formatted-size' => $sFileFormattedSize,
 			'upload-date' => $sAttachmentDateFormatted,
-			'uploader' => $sAttachmentUploader,
+			'uploader' => $sAttachmentUploaderForHtml,
 			'type' => $sFileType,
 			'js' => '',
 		);
-		
+
+		if ($bIsDeletedAttachment) {
+			$aAttachmentLine['@class'] = 'ibo-is-hidden';
+		}
+
 		if ($bWithDeleteButton)
 		{
 			$sDeleteButton = $this->GetDeleteAttachmentButton($iAttachmentId);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="TelephonyCI" _delta="define">
       <parent>PhysicalDevice</parent>
@@ -1390,7 +1390,7 @@
               <dashlet id="25" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:EndUsers</title>
-                  <icon>itop-config-mgmt/images/team.png</icon>
+                  <icon>../images/icons/icons8-team.svg</icon>
               </dashlet>
               <dashlet id="26" xsi:type="DashletBadge">
                 <rank>1</rank>

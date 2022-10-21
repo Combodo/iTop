@@ -16,6 +16,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
+
 define('CASELOG_VISIBLE_ITEMS', 2);
 define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\n\n");
 
@@ -27,6 +33,17 @@ define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class ormCaseLog {
+	/**
+	 * @var string "plain text" format for the log
+	 * @since 3.0.0
+	 */
+	public const ENUM_FORMAT_TEXT = 'text';
+	/**
+	 * @var string "HTML" format for the log
+	 * @since 3.0.0
+	 */
+	public const ENUM_FORMAT_HTML = 'html';
+
 	protected $m_sLog;
 	protected $m_aIndex;
 	protected $m_bModified;
@@ -47,7 +64,7 @@ class ormCaseLog {
 	{
 		if ($bConvertToPlainText)
 		{
-			// Rebuild the log, but filtering any HTML markup for the all 'html' entries in the log
+			// Rebuild the log, but filtering any HTML markup for the all {@see static::ENUM_FORMAT_HTML} entries in the log
 			return $this->GetAsPlainText();
 		}
 		else
@@ -130,15 +147,15 @@ class ormCaseLog {
 					$sDate = '';
 				}
 			}
-			$sFormat = array_key_exists('format',  $this->m_aIndex[$index]) ?  $this->m_aIndex[$index]['format'] : 'text';
+			$sFormat = array_key_exists('format',  $this->m_aIndex[$index]) ?  $this->m_aIndex[$index]['format'] : static::ENUM_FORMAT_TEXT;
 			switch($sFormat)
 			{
-				case 'text':
+				case static::ENUM_FORMAT_TEXT:
 					$sHtmlEntry = utils::TextToHtml($sTextEntry);
 					break;
 
-				case 'html':
-					$sHtmlEntry = $sTextEntry;
+				case static::ENUM_FORMAT_HTML:
+					$sHtmlEntry = InlineImage::FixUrls($sTextEntry);
 					$sTextEntry = utils::HtmlToText($sHtmlEntry);
 					break;
 			}
@@ -168,9 +185,9 @@ class ormCaseLog {
 		return $aEntries;
 	}
 
-
 	/**
-	 * Returns a "plain text" version of the log (equivalent to $this->m_sLog) where all the HTML markup from the 'html' entries have been removed
+	 * Returns a "plain text" version of the log (equivalent to $this->m_sLog) where all the HTML markup from the {@see static::ENUM_FORMAT_HTML} entries have been removed
+	 *
 	 * @return string
 	 */
 	public function GetAsPlainText()
@@ -201,6 +218,15 @@ class ormCaseLog {
     {
         return ($this->m_sLog === null);
     }
+
+	/**
+	 * @return int The number of entries in this log
+	 * @since 3.0.0
+	 */
+    public function GetEntryCount(): int
+    {
+    	return count($this->m_aIndex);
+    }
 	
 	public function ClearModifiedFlag()
 	{
@@ -223,10 +249,10 @@ class ormCaseLog {
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
 			$sCSSClass = 'caselog_entry_html';
-			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == 'text'))
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT))
 			{
 				$sCSSClass = 'caselog_entry';
-				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
 			}
 			else
 			{
@@ -266,19 +292,15 @@ class ormCaseLog {
 		}
 
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
-		if ($iPos < (strlen($this->m_sLog) - 1))
-		{
+		if ($iPos < (strlen($this->m_sLog) - 1)) {
 			$sTextEntry = substr($this->m_sLog, $iPos);
-			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
 
-			if (count($this->m_aIndex) == 0)
-			{
+			if (count($this->m_aIndex) == 0) {
 				$sHtml .= '<div class="caselog_entry" style="'.$sStyleCaseLogEntry.'"">';
 				$sHtml .= $sTextEntry;
 				$sHtml .= '</div>';
-			}
-			else
-			{
+			} else {
 				$sHtml .= '<div class="caselog_header" style="'.$sStyleCaseLogHeader.'">';
 				$sHtml .= Dict::S('UI:CaseLog:InitialValue');
 				$sHtml .= '</div>';
@@ -301,24 +323,18 @@ class ormCaseLog {
 		$sHtml = '<ul class="case_log_simple_html">';
 		$iPos = 0;
 		$aIndex = $this->m_aIndex;
-		for($index=count($aIndex)-1 ; $index >= 0 ; $index--)
-		{
+		for($index=count($aIndex)-1 ; $index >= 0 ; $index--) {
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
 			$sCSSClass = 'case_log_simple_html_entry_html';
-			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == 'text'))
-			{
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT)) {
 				$sCSSClass = 'case_log_simple_html_entry';
-				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
-				if (!is_null($aTransfoHandler))
-				{
+				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
+				if (!is_null($aTransfoHandler)) {
 					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
 				}
-			}
-			else
-			{
-				if (!is_null($aTransfoHandler))
-				{
+			} else {
+				if (!is_null($aTransfoHandler)) {
 					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry, true /* wiki "links" only */);
 				}
 				$sTextEntry = InlineImage::FixUrls($sTextEntry);
@@ -357,19 +373,15 @@ class ormCaseLog {
 		}
 
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
-		if ($iPos < (strlen($this->m_sLog) - 1))
-		{
+		if ($iPos < (strlen($this->m_sLog) - 1)) {
 			$sTextEntry = substr($this->m_sLog, $iPos);
-			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
 
-			if (count($this->m_aIndex) == 0)
-			{
+			if (count($this->m_aIndex) == 0) {
 				$sHtml .= '<li>';
 				$sHtml .= $sTextEntry;
 				$sHtml .= '</li>';
-			}
-			else
-			{
+			} else {
 				$sHtml .= '<li>';
 				$sHtml .= Dict::S('UI:CaseLog:InitialValue');
 				$sHtml .= '<div class="case_log_simple_html_entry" style="'.$sStyleCaseLogEntry.'">';
@@ -389,7 +401,7 @@ class ormCaseLog {
 	{
 		$bPrintableVersion = (utils::ReadParam('printable', '0') == '1');
 
-		$sHtml = '<table style="width:100%;table-layout:fixed"><tr><td>'; // Use table-layout:fixed to force the with to be independent from the actual content
+		$oBlock =  UIContentBlockUIBlockFactory::MakeStandard(null, ['ibo-caselog-list']);
 		$iPos = 0;
 		$aIndex = $this->m_aIndex;
 		if (($bEditMode) && (count($aIndex) > 0) && $this->m_bModified)
@@ -403,23 +415,17 @@ class ormCaseLog {
 		{
 			if (!$bPrintableVersion && ($index < count($aIndex) - CASELOG_VISIBLE_ITEMS))
 			{
-				$sOpen = '';
-				$sDisplay = 'style="display:none;"';
+				$bIsOpen = false;
 			}
 			else
 			{
-				$sOpen = ' open';
-				$sDisplay = '';
+				$bIsOpen = true;
 			}
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
-			$sCSSClass= 'caselog_entry_html';
-			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == 'text'))
-			{
-				$sCSSClass= 'caselog_entry';
-				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
-				if (!is_null($aTransfoHandler))
-				{
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT)) {
+				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
+				if (!is_null($aTransfoHandler)) {
 					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
 				}
 			}
@@ -433,7 +439,6 @@ class ormCaseLog {
 			}
 			$iPos += $aIndex[$index]['text_length'];
 
-			$sEntry = '<div class="caselog_header'.$sOpen.'">';
 			// Workaround: PHP < 5.3 cannot unserialize correctly DateTime objects,
 			// therefore we have changed the format. To preserve the compatibility with existing
 			// installations of iTop, both format are allowed:
@@ -456,68 +461,98 @@ class ormCaseLog {
 					$sDate = '';
 				}
 			}
-			$sEntry .= sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), $sDate, $aIndex[$index]['user_name']);
-			$sEntry .= '</div>';
-			$sEntry .= '<div class="'.$sCSSClass.'"'.$sDisplay.'>';
-			$sEntry .= $sTextEntry;
-			$sEntry .= '</div>';
-			$sHtml = $sHtml.$sEntry;
+			$oCollapsibleBlock = CollapsibleSectionUIBlockFactory::MakeStandard( sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), $sDate, $aIndex[$index]['user_name']));
+			$oCollapsibleBlock->AddSubBlock(new Html($sTextEntry));
+			$oCollapsibleBlock->SetOpenedByDefault($bIsOpen);
+			$oBlock->AddSubBlock($oCollapsibleBlock);
 		}
-
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
-		if ($iPos < (strlen($this->m_sLog) - 1))
-		{
+		if ($iPos < (strlen($this->m_sLog) - 1)) {
 			// In this case the format is always "text"
 			$sTextEntry = substr($this->m_sLog, $iPos);
-			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
-			if (!is_null($aTransfoHandler))
-			{
+			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sTextEntry));
+			if (!is_null($aTransfoHandler)) {
 				$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
 			}
 
-			if (count($this->m_aIndex) == 0)
-			{
-				$sHtml .= '<div class="caselog_entry open">';
-				$sHtml .= $sTextEntry;
-				$sHtml .= '</div>';
+			if (count($this->m_aIndex) == 0) {
+				$oCollapsibleBlock = CollapsibleSectionUIBlockFactory::MakeStandard('');
+				$oCollapsibleBlock->AddSubBlock(new Html($sTextEntry));
+				$oCollapsibleBlock->SetOpenedByDefault(true);
+				$oBlock->AddSubBlock($oCollapsibleBlock);
 			}
 			else
 			{
 				if (!$bPrintableVersion && (count($this->m_aIndex) - CASELOG_VISIBLE_ITEMS > 0))
 				{
-					$sOpen = '';
-					$sDisplay = 'style="display:none;"';
+					$bIsOpen = false;
 				}
 				else
 				{
-					$sOpen = ' open';
-					$sDisplay = '';
+					$bIsOpen = true;
 				}
-				$sHtml .= '<div class="caselog_header'.$sOpen.'">';
-				$sHtml .= Dict::S('UI:CaseLog:InitialValue');
-				$sHtml .= '</div>';
-				$sHtml .= '<div class="caselog_entry"'.$sDisplay.'>';
-				$sHtml .= $sTextEntry;
-				$sHtml .= '</div>';
+				$oCollapsibleBlock = CollapsibleSectionUIBlockFactory::MakeStandard(  Dict::S('UI:CaseLog:InitialValue'));
+				$oCollapsibleBlock->AddSubBlock(new Html($sTextEntry));
+				$oCollapsibleBlock->SetOpenedByDefault($bIsOpen);
 			}
 		}
-		$sHtml .= '</td></tr></table>';
-		return $sHtml;
+		$oBlockRenderer = new BlockRenderer($oBlock);
+		$sHtml = $oBlockRenderer->RenderHtml();
+		$sScript = $oBlockRenderer->RenderJsInlineRecursively($oBlock,iUIBlock::ENUM_JS_TYPE_ON_READY);
+		$aJsFiles = $oBlockRenderer->GetJsFiles();
+		if ($sScript!=''){
+			if ($oP == null) {
+				$sScript = '<script>'.$sScript.'</script>';
+				$sHtml .= $sScript;
+			} else {
+				$oP->add_ready_script($sScript);
+			}
+		}
+		// Ugly hack as we use a block and strip its content above, we'll also need JS files it depends on
+		if(count($aJsFiles) > 0){
+			foreach ($aJsFiles as $sFileAbsUrl) {
+				if ($oP === null) {
+					$sScript = '<script src="'.$sFileAbsUrl.'"></></script>';
+					$sHtml .= $sScript;
+				} else {
+					$oP->add_linked_script($sFileAbsUrl);
+				}
+			}
+		}
+		
+		return  $sHtml;
 	}
-	
+
 	/**
-	 * Add a new entry to the log or merge the given text into the currently modified entry 
+	 * Add a new entry to the log or merge the given text into the currently modified entry
 	 * and updates the internal index
-	 * @param $sText string The text of the new entry 
+	 *
+	 * @param string $sText The text of the new entry
+	 * @param string $sOnBehalfOf Display this name instead of current user name
+	 * @param null|int $iOnBehalfOfId Use this UserId to author this Entry. If $sOnBehalfOf equals '', it'll be replaced by this User friendlyname
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 * 
+	 * @since 3.0.0 New $iOnBehalfOfId parameter
+	 * @since 3.0.0 May throw \ArchivedObjectException exception
 	 */
-	public function AddLogEntry($sText, $sOnBehalfOf = '')
+	public function AddLogEntry(string $sText, $sOnBehalfOf = '', $iOnBehalfOfId = null)
 	{
 		$sText = HTMLSanitizer::Sanitize($sText);
 		$sDate = date(AttributeDateTime::GetInternalFormat());
-		if ($sOnBehalfOf == '')
-		{
+		if ($sOnBehalfOf == '' && $iOnBehalfOfId === null) {
 			$sOnBehalfOf = UserRights::GetUserFriendlyName();
 			$iUserId = UserRights::GetUserId();
+		}
+		elseif ($iOnBehalfOfId !== null) {
+			$iUserId = $iOnBehalfOfId;
+			/* @var User $oUser */
+			$oUser = MetaModel::GetObject('User', $iUserId, false, true);
+			if ($oUser !== null && $sOnBehalfOf === '') {
+				$sOnBehalfOf = $oUser->GetFriendlyName();
+			}
 		}
 		else
 		{
@@ -548,11 +583,10 @@ class ormCaseLog {
 			'date' => time(),
 			'text_length' => $iTextlength,
 			'separator_length' => $iSepLength,
-			'format' => 'html',
+			'format' => static::ENUM_FORMAT_HTML,
 		);
 		$this->m_bModified = true;
 	}
-
 
 	public function AddLogEntryFromJSON($oJson, $bCheckUserId = true)
 	{
@@ -603,11 +637,11 @@ class ormCaseLog {
 		else
 		{
 			// The default is HTML
-			$sFormat = 'html';
+			$sFormat = static::ENUM_FORMAT_HTML;
 		}
 
 		$sText = isset($oJson->message) ? $oJson->message : '';
-		if ($sFormat == 'html')
+		if ($sFormat == static::ENUM_FORMAT_HTML)
 		{
 			$sText = HTMLSanitizer::Sanitize($sText);
 		}
@@ -630,8 +664,7 @@ class ormCaseLog {
 		$this->m_bModified = true;
 	}
 
-
-	public function GetModifiedEntry($sFormat = 'text')
+	public function GetModifiedEntry($sFormat = self::ENUM_FORMAT_TEXT)
 	{
 		$sModifiedEntry = '';
 		if ($this->m_bModified)
@@ -646,34 +679,29 @@ class ormCaseLog {
 	 * @param string The expected output format text|html
 	 * @return string
 	 */
-	public function GetLatestEntry($sFormat = 'text')
+	public function GetLatestEntry($sFormat = self::ENUM_FORMAT_TEXT)
 	{
 		$sRes = '';
 		$aLastEntry = end($this->m_aIndex);
-		$sRaw = substr($this->m_sLog, $aLastEntry['separator_length'], $aLastEntry['text_length']);
-		switch($sFormat)
-		{
-			case 'text':
-			if ($aLastEntry['format'] == 'text')
-			{
-				$sRes = $sRaw;
+		if ($aLastEntry !== false) {
+			$sRaw = substr($this->m_sLog, $aLastEntry['separator_length'], $aLastEntry['text_length']);
+			switch ($sFormat) {
+				case static::ENUM_FORMAT_TEXT:
+					if ($aLastEntry['format'] == static::ENUM_FORMAT_TEXT) {
+						$sRes = $sRaw;
+					} else {
+						$sRes = utils::HtmlToText($sRaw);
+					}
+					break;
+
+				case static::ENUM_FORMAT_HTML:
+					if ($aLastEntry['format'] == static::ENUM_FORMAT_TEXT) {
+						$sRes = utils::TextToHtml($sRaw);
+					} else {
+						$sRes = InlineImage::FixUrls($sRaw);
+					}
+					break;
 			}
-			else
-			{
-				$sRes = utils::HtmlToText($sRaw);
-			}
-			break;
-			
-			case 'html':
-			if ($aLastEntry['format'] == 'text')
-			{
-				$sRes = utils::TextToHtml($sRaw);
-			}
-			else
-			{
-				$sRes = $sRaw;
-			}
-			break;
 		}
 		return $sRes;
 	}
@@ -706,7 +734,6 @@ class ormCaseLog {
 		}
 		$iPos += $this->m_aIndex[$index]['separator_length'];
 		$sText = substr($this->m_sLog, $iPos, $this->m_aIndex[$index]['text_length']);
-		return $sText;
+		return InlineImage::FixUrls($sText);
 	}
 }
-?>

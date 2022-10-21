@@ -54,11 +54,10 @@ class DBSearchTest extends ItopDataTestCase
 	/**
 	 * @throws \Exception
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
-		require_once(APPROOT.'application/itopwebpage.class.inc.php');
 		require_once(APPROOT.'application/displayblock.class.inc.php');
 	}
 
@@ -528,6 +527,7 @@ class DBSearchTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider GetFirstResultProvider
+	 * @group specificOrgInSampleData
 	 *
 	 * @param string $sOql query to test
 	 * @param bool $bMustHaveOneResultMax arg passed to the tested function

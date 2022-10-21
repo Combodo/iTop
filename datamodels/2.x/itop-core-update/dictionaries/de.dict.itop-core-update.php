@@ -24,7 +24,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:PageTitle' => 'Anwendungsupgrade',
     'itop-core-update:UI:SelectUpdateFile' => 'Upgrade-Datei hochladen',
     'itop-core-update:UI:ConfirmUpdate' => 'Upgrade bestätigen',
-    'itop-core-update:UI:UpdateCoreFiles' => 'Upgrade der iTop-Core-Dateien',
+    'itop-core-update:UI:UpdateCoreFiles' => 'Upgrade der '.ITOP_APPLICATION_SHORT.'-Core-Dateien',
 	'iTopUpdate:UI:MaintenanceModeActive' => 'Die Anwendung läuft im Wartungsmodus, Benutzerzugriffe sind nicht möglich. Führen Sie erneut ein Setup oder Restore der Anwendung aus, um in den normalen Betriebsmodus zurückzukehren.',
 	'itop-core-update:UI:UpdateDone' => 'Upgrade abgeschlossen',
 
@@ -61,7 +61,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
     'iTopUpdate:UI:DoBackup:Warning' => 'Wegen geringem verbleibenden Speicherplatz sollte kein Backup mehr erzeugt werden.',
 
     'iTopUpdate:UI:DiskFreeSpace' => 'Freier Speicherplatz',
-    'iTopUpdate:UI:ItopDiskSpace' => 'iTop Speicherplatz',
+    'iTopUpdate:UI:ItopDiskSpace' => ITOP_APPLICATION_SHORT.' Speicherplatz',
     'iTopUpdate:UI:DBDiskSpace' => 'Datenbankgröße',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'Maximale Dateigröße für Uploads',
 
@@ -74,8 +74,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Dateisystemprüfung fehlgeschlagen',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Anwendungsupgrade kann durchgeführt werden',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Anwendungsupgrade nicht möglich: %1$s',
-	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Vorsicht: App-Upgrade kann fehlerschlagen: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => 'Sie müssen das <a href="%1$s">Setup</a> benutzen, um Ihre Applikation zu aktualisieren.<br />Einige angepasste Dateien wurden erkannt, eine Teil-Update kann nicht ausgeführt werden.',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Vorsicht: App-Upgrade kann fehlschlagen: %1$s',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Einige angepasste Dateien wurden erkannt</b>, eine Teil-Update kann nicht ausgeführt werden.<br/>Befolgen Sie das  <a target="_blank" href="%2$s">Verfahren</a>, um Ihr iTop manuell zu aktualisieren. Sie müssen das <a href="%1$s">Setup</a> benutzen, um Ihre Applikation zu aktualisieren.<br />',
+	'iTopUpdate:UI:CheckInProgress'=>'Please wait during integrity check~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Bereit zum Upgrade',
@@ -86,7 +87,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Prüfung des Anwendungsupgrades',
 	'iTopUpdate:UI:SetupMessage:Compile' => 'Upgrade von Anwendung und Datenbank',
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgrade Datenbank',
-	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Wartungsmodus deaktivert',
+	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Wartungsmodus deaktiviert',
     'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Upgrade abgeschlossen',
 
 	// Errors
@@ -94,8 +95,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:Error:MissingFile' => 'Fehlende Datei: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => 'Datei %1$s ist beschädigt',
     'iTopUpdate:Error:BadFileFormat' => 'Die Upgradedatei ist keine ZIP-Datei',
-    'iTopUpdate:Error:BadFileContent' => 'Die Upgradedatei ist kein iTop-Paket',
-    'iTopUpdate:Error:BadItopProduct' => 'Die Upgradedatei ist nicht mit dieser iTop-Version kompatibel.',
+    'iTopUpdate:Error:BadFileContent' => 'Die Upgradedatei ist kein '.ITOP_APPLICATION_SHORT.'-Paket',
+    'iTopUpdate:Error:BadItopProduct' => 'Die Upgradedatei ist nicht mit dieser '.ITOP_APPLICATION_SHORT.'-Version kompatibel.',
 	'iTopUpdate:Error:Copy' => 'Fehler, kopieren von \'%1$s\' nach \'%2$s\' nicht möglich',
     'iTopUpdate:Error:FileNotFound' => 'Datei nicht gefunden',
     'iTopUpdate:Error:NoFile' => 'Keine Datei angegeben',
@@ -115,5 +116,3 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
     'Class:ModuleInstallation/Attribute:version' => 'Version',
     'Class:ModuleInstallation/Attribute:comment' => 'Kommentar',
 ));
-
-

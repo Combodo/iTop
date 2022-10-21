@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="StorageSystem" _delta="define">
       <parent>DatacenterDevice</parent>
@@ -16,7 +16,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/storageArea.png</icon>
+          <icon>../../images/icons/icons8-server-storage.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -267,7 +267,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/switch-san.png</icon>
+          <icon>../../images/icons/icons8-switch-san.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -515,7 +515,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/tapelibrary.png</icon>
+          <icon>../../images/icons/icons8-tape-library.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1105,7 +1105,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/filesystem.png</icon>
+          <icon>../../images/icons/icons8-map-as-drive.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1214,7 +1214,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/fc-interface.png</icon>
+          <icon>../../images/icons/icons8-globe-fiber.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1479,7 +1479,9 @@
             <attribute id="volume_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="volume_id"/>
@@ -1569,7 +1571,9 @@
             <attribute id="san_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="san_id"/>

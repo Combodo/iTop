@@ -139,7 +139,15 @@ class MFModule
 	 */
 	protected $sAutoSelect;
 	/**
-	 * @var array
+	 * @see ModelFactory::FindModules init of this structure from the module.*.php files
+	 * @var array{
+	 *          business: string[],
+	 *          webservices: string[],
+	 *          addons: string[],
+	 *     }
+	 * Warning, there are naming mismatches between this structure and the module.*.php :
+	 * - `business` here correspond to `datamodel` in module.*.php
+	 * - `webservices` here correspond to `webservice` in module.*.php
 	 */
 	protected $aFilesToInclude;
 
@@ -318,6 +326,14 @@ class MFModule
 	public function GetFilesToInclude($sCategory)
 	{
 		return $this->aFilesToInclude[$sCategory];
+	}
+
+	public function AddFileToInclude($sCategory, $sFile)
+	{
+		if (in_array($sFile, $this->aFilesToInclude[$sCategory], true)) {
+			return;
+		}
+		$this->aFilesToInclude[$sCategory][] = $sFile;
 	}
 
 }
@@ -563,6 +579,8 @@ class ModelFactory
 		$this->oRoot->AppendChild($this->oMenus);
 
 		$this->oMeta = $this->oDOMDocument->CreateElement('meta');
+		$this->oRoot->AppendChild($this->oMeta);
+		$this->oMeta = $this->oDOMDocument->CreateElement('events');
 		$this->oRoot->AppendChild($this->oMeta);
 
 		foreach ($aRootNodeExtensions as $sElementName)
@@ -844,6 +862,14 @@ class ModelFactory
 						$oNode->SetAttribute('_created_in', $sModuleName);
 					}
 				}
+				$oNodeList = $oXPath->query('/itop_design/events/event');
+				foreach ($oNodeList as $oNode)
+				{
+					if ($oNode->getAttribute('_created_in') == '')
+					{
+						$oNode->SetAttribute('_created_in', $sModuleName);
+					}
+				}
 				$oNodeList = $oXPath->query('/itop_design/menus/menu');
 				foreach ($oNodeList as $oNode)
 				{
@@ -961,9 +987,9 @@ class ModelFactory
 		catch (Exception $e) {
 			$aLoadedModuleNames = array();
 			foreach (self::$aLoadedModules as $oLoadedModule) {
-				$aLoadedModuleNames[] = $oLoadedModule->GetName();
+				$aLoadedModuleNames[] = $oLoadedModule->GetName().':'.$oLoadedModule->GetVersion();
 			}
-			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',',
+			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(', ',
 					$aLoadedModuleNames));
 		}
 	}
@@ -1237,6 +1263,19 @@ EOF
 	}
 
 	/**
+	 * List all events from the DOM, for a given module
+	 *
+	 * @param string $sModuleName
+	 *
+	 * @return \DOMNodeList
+	 * @throws Exception
+	 */
+	public function ListEvents($sModuleName)
+	{
+		return $this->GetNodes("/itop_design/events/event[@_created_in='$sModuleName']");
+	}
+
+	/**
 	 * List all classes from the DOM, for a given module
 	 *
 	 * @param string $sModuleName
@@ -1338,7 +1377,7 @@ EOF
 		{
 			return null;
 		}
-		$oClassNode = self::$aLoadedClasses[$sClassName];
+		$oClassNode = $this->GetClass($sClassName);
 		/** @var \MFElement|null $oFieldNode */
 		$oFieldNode = $this->GetNodes("fields/field[@id='$sAttCode']", $oClassNode)->item(0);
 		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetChildText('parent')))
@@ -1806,7 +1845,7 @@ EOF;
 		echo " <tr>\n";
 		echo "  <td width=\"50%\">\n";
 		echo "   <h4>DOM - Original values</h4>\n";
-		echo "   <pre>".htmlentities($sDOMOriginal)."</pre>\n";
+		echo "   <pre>".utils::EscapeHtml($sDOMOriginal)."</pre>\n";
 		echo "  </td>\n";
 		echo "  <td width=\"50%\" align=\"left\" valign=\"center\"><span style=\"$sArrStyle\">&rArr; &rArr; &rArr;</span></td>\n";
 		echo " </tr>\n";
@@ -1814,17 +1853,17 @@ EOF;
 		echo " <tr>\n";
 		echo "  <td width=\"50%\">\n";
 		echo "   <h4>DOM - Altered with various changes</h4>\n";
-		echo "   <pre>".htmlentities($sDOMModified)."</pre>\n";
+		echo "   <pre>".utils::EscapeHtml($sDOMModified)."</pre>\n";
 		echo "  </td>\n";
 		echo "  <td width=\"50%\">\n";
 		echo "   <h4>DOM - Rebuilt from the Delta</h4>\n";
-		echo "   <pre>".htmlentities($sDOMRebuilt)."</pre>\n";
+		echo "   <pre>".utils::EscapeHtml($sDOMRebuilt)."</pre>\n";
 		echo "  </td>\n";
 		echo " </tr>\n";
 		echo " <tr><td align=\"center\"><span style=\"$sArrStyle\">&dArr;</div></td><td align=\"center\"><span style=\"$sArrStyle\">&uArr;</div></td></tr>\n";
 		echo "  <td width=\"50%\">\n";
 		echo "   <h4>Delta (Computed by ModelFactory)</h4>\n";
-		echo "   <pre>".htmlentities($sDeltaXML)."</pre>\n";
+		echo "   <pre>".utils::EscapeHtml($sDeltaXML)."</pre>\n";
 		echo "  </td>\n";
 		echo "  <td width=\"50%\" align=\"left\" valign=\"center\"><span style=\"$sArrStyle\">&rArr; &rArr; &rArr;</span></td>\n";
 		echo " </tr>\n";
@@ -2177,8 +2216,13 @@ class MFElement extends Combodo\iTop\DesignElement
 			if ($oExisting->getAttribute('_alteration') != 'removed') {
 				$sPath = MFDocument::GetItopNodePath($oNode);
 				$iLine = $oNode->getLineNo();
-				throw new MFException($sPath.' at line '.$iLine.": could not be added (already exists)", MFException::COULD_NOT_BE_ADDED,
-					$iLine, $sPath);
+				$sExistingPath = MFDocument::GetItopNodePath($oExisting);
+				$iExistingLine = $oExisting->getLineNo();
+				
+				$sExceptionMessage = <<<EOF
+`{$sPath}` at line {$iLine} could not be added : already exists in `{$sExistingPath}` at line {$iExistingLine}
+EOF;
+				throw new MFException($sExceptionMessage, MFException::COULD_NOT_BE_ADDED, $iLine, $sPath);
 			}
 			$oExisting->ReplaceWithSingleNode($oNode);
 			$sFlag = 'replaced';
@@ -2306,6 +2350,9 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Replaces a node by another one, making sure that recursive nodes are preserved
 	 *
 	 * @param MFElement $oNewNode The replacement
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 rename method (from `ReplaceWith` to `ReplaceWithSingleNode`) to avoid collision with parent `\DOMElement::replaceWith` method (different method modifier and parameters :
+	 * throws fatal error in PHP 8.0)
 	 */
 	protected function ReplaceWithSingleNode($oNewNode)
 	{
@@ -2514,6 +2561,8 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 * @return string
 	 * @throws \Exception
 	 */
+	// Return type union is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
 	public function saveXML(DOMNode $node = null, $options = 0)
 	{
 		$oRootNode = $this->firstChild;
@@ -2537,12 +2586,14 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 *
 	 * @param string $sName
 	 * @param null $value
-	 * @param null $namespaceURI
+	 * @param string $namespaceURI
 	 *
 	 * @return \MFElement
 	 * @throws \Exception
+	 *
+	 * @since 3.1.0 N°4517 $namespaceURI parameter must be empty string by default so
 	 */
-	function createElement($sName, $value = null, $namespaceURI = null)
+	function createElement($sName, $value = null, $namespaceURI = '')
 	{
 		/** @var \MFElement $oElement */
 		$oElement = $this->importNode(new MFElement($sName, null, $namespaceURI));
@@ -2581,6 +2632,10 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	public function GetNodes($sXPath, $oContextNode = null, $bSafe = true)
 	{
 		$oXPath = new DOMXPath($this);
+		// For Designer audit
+		$oXPath->registerNamespace("php", "http://php.net/xpath");
+		$oXPath->registerPhpFunctions();
+
 		if ($bSafe)
 		{
 			$sXPath .= "[not(@_alteration) or @_alteration!='removed']";

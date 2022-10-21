@@ -1,3 +1,5 @@
+@import "../utilities/mixins";
+
 $navbar-background-color: $scheme-main !default;
 $navbar-box-shadow-size: 0 2px 0 0 !default;
 $navbar-box-shadow-color: $background !default;
@@ -46,6 +48,8 @@ $navbar-bottom-box-shadow-size: 0 -2px 0 0 !default;
 
 $navbar-breakpoint: $desktop !default;
 
+$navbar-colors: $colors !default;
+
 @mixin navbar-fixed {
   left: 0;
   position: fixed;
@@ -59,7 +63,7 @@ $navbar-breakpoint: $desktop !default;
   position: relative;
   z-index: $navbar-z;
 
-  @each $name, $pair in $colors {
+  @each $name, $pair in $navbar-colors {
     $color: nth($pair, 1);
     $color-invert: nth($pair, 2);
 
@@ -204,6 +208,8 @@ body {
 }
 
 .navbar-burger {
+  @extend %reset;
+
   color: $navbar-burger-color;
 
   @include hamburger($navbar-height);

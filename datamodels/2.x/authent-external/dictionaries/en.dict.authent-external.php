@@ -37,5 +37,5 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserExternal' => 'External user',
-	'Class:UserExternal+' => 'User authentified outside of iTop',
+	'Class:UserExternal+' => 'User authentified outside of '.ITOP_APPLICATION_SHORT,
 ));

@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Renderer\BlockRenderer;
@@ -30,7 +31,7 @@ class DisplayableNode extends GraphNode
 {
 	public $x;
 	public $y;
-	
+
 	/**
 	 * Create a new node inside a graph
 	 * @param SimpleGraph $oGraph
@@ -50,27 +51,27 @@ class DisplayableNode extends GraphNode
 	{
 		return $this->GetProperty('icon_url', '');
 	}
-	
+
 	public function GetLabel()
 	{
 		return $this->GetProperty('label', $this->sId);
 	}
-	
+
 	public function GetWidth()
 	{
 		return max(32, 5*strlen($this->GetProperty('label'))); // approximation of the text's bounding box
 	}
-	
+
 	public function GetHeight()
 	{
 		return 32;
 	}
-	
+
 	public function Distance2(DisplayableNode $oNode)
 	{
 		$dx = $this->x - $oNode->x;
 		$dy = $this->y - $oNode->y;
-		
+
 		$d2 = $dx*$dx + $dy*$dy - $this->GetHeight()*$this->GetHeight();
 		if ($d2 < 40)
 		{
@@ -78,12 +79,12 @@ class DisplayableNode extends GraphNode
 		}
 		return $d2;
 	}
-	
+
 	public function Distance(DisplayableNode $oNode)
 	{
 		return sqrt($this->Distance2($oNode));
 	}
-	
+
 	public function GetForRaphael($aContextDefs)
 	{
 		$aNode = array();
@@ -99,7 +100,7 @@ class DisplayableNode extends GraphNode
 		$aNode['label'] = $this->GetLabel();
 		$aNode['id'] = $this->GetId();
 		$fOpacity = ($this->GetProperty('is_reached') ? 1 : 0.4);
-		$aNode['icon_attr'] = array('opacity' => $fOpacity);		
+		$aNode['icon_attr'] = array('opacity' => $fOpacity);
 		$aNode['text_attr'] = array('opacity' => $fOpacity);
 		$aNode['tooltip'] = $this->GetTooltip($aContextDefs);
 		$aNode['context_icons'] = array();
@@ -113,7 +114,7 @@ class DisplayableNode extends GraphNode
 		}
 		return $aNode;
 	}
-	
+
 	public function RenderAsPDF(iTopPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
 	{
 		$Alpha = 1.0;
@@ -126,10 +127,8 @@ class DisplayableNode extends GraphNode
 		if ($this->GetProperty('source')) {
 			$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(204, 51, 51)));
 			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
-		}
-		else if ($this->GetProperty('sink'))
-		{
-			$oPdf->SetLineStyle(array('width' => 2*$fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(51, 51, 204)));
+		} else if ($this->GetProperty('sink')) {
+			$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(51, 51, 204)));
 			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
 		}
 
@@ -171,7 +170,7 @@ class DisplayableNode extends GraphNode
 		$oPdf->SetTextColor(0, 0, 0);
 		$oPdf->Text($this->x*$fScale - $width/2, ($this->y + 18)*$fScale, $this->GetProperty('label'));
 	}
-	
+
 	/**
 	 * Create a "whitened" version of the icon (retaining the transparency) to be used a background for masking the underlying lines
 	 * @param string $sIconFile The path to the file containing the icon
@@ -180,35 +179,35 @@ class DisplayableNode extends GraphNode
 	protected function CreateWhiteIcon(DisplayableGraph $oGraph, $sIconFile)
 	{
 		$aInfo = getimagesize($sIconFile);
-		
+
 		$im = null;
 		switch($aInfo['mime'])
 		{
 			case 'image/png':
-			if (function_exists('imagecreatefrompng'))
-			{
-				$im = imagecreatefrompng($sIconFile);
-			}
-			break;
-			
+				if (function_exists('imagecreatefrompng'))
+				{
+					$im = imagecreatefrompng($sIconFile);
+				}
+				break;
+
 			case 'image/gif':
-			if (function_exists('imagecreatefromgif'))
-			{
-				$im = imagecreatefromgif($sIconFile);
-			}
-			break;
-			
+				if (function_exists('imagecreatefromgif'))
+				{
+					$im = imagecreatefromgif($sIconFile);
+				}
+				break;
+
 			case 'image/jpeg':
 			case 'image/jpg':
-			if (function_exists('imagecreatefromjpeg'))
-			{
-				$im = imagecreatefromjpeg($sIconFile);
-			}
-			break;
-			
+				if (function_exists('imagecreatefromjpeg'))
+				{
+					$im = imagecreatefromjpeg($sIconFile);
+				}
+				break;
+
 			default:
-			return null;
-			
+				return null;
+
 		}
 		if($im && imagefilter($im, IMG_FILTER_COLORIZE, 255, 255, 255))
 		{
@@ -223,17 +222,17 @@ class DisplayableNode extends GraphNode
 			return null;
 		}
 	}
-	
+
 	public function GetObjectCount()
 	{
 		return 1;
 	}
-	
+
 	public function GetObjectClass()
 	{
 		return is_object($this->GetProperty('object', null)) ? get_class($this->GetProperty('object', null)) : null;
 	}
-	
+
 	protected function AddToStats($oNode, &$aNodesPerClass)
 	{
 		$sClass = $oNode->GetObjectClass();
@@ -257,9 +256,9 @@ class DisplayableNode extends GraphNode
 		{
 			$aNodesPerClass[$sClass][$sKey]['nodes'][$oNode->GetId()] = $oNode;
 			$aNodesPerClass[$sClass][$sKey]['count'] += $oNode->GetObjectCount();
-		}		
+		}
 	}
-	
+
 	/**
 	 * Retrieves the list of neighbour nodes, in the given direction: 'up' or 'down'
 	 * @param bool $bDirectionDown
@@ -280,11 +279,11 @@ class DisplayableNode extends GraphNode
 			foreach($this->GetIncomingEdges() as $oEdge)
 			{
 				$aNextNodes[] = $oEdge->GetSourceNode();
-			}	
+			}
 		}
 		return $aNextNodes;
 	}
-	
+
 	/**
 	 * Replaces the next neighbour node (in the given direction: 'up' or 'down') by the supplied group node
 	 * preserving the connectivity of the graph
@@ -352,7 +351,7 @@ class DisplayableNode extends GraphNode
 				}
 			}
 		}
-		
+
 		if ($oGraph->GetNode($oNextNode->GetId()))
 		{
 			$oGraph->_RemoveNode($oNextNode);
@@ -368,9 +367,9 @@ class DisplayableNode extends GraphNode
 			{
 				$oNewNode->AddObject($oNextNode->GetProperty('object'));
 			}
-		}			
+		}
 	}
-	
+
 	/**
 	 * Group together (as a special kind of nodes) all the similar neighbours of the current node
 	 * @param DisplayableGraph $oGraph
@@ -382,7 +381,7 @@ class DisplayableNode extends GraphNode
 	{
 		if ($this->GetProperty('grouped') === true) return;
 		$this->SetProperty('grouped', true);
-		
+
 		$aNodesPerClass = array();
 		foreach($this->GetNextNodes($bDirectionDown) as $oNode)
 		{
@@ -408,12 +407,12 @@ class DisplayableNode extends GraphNode
 					{
 						$oNewNode = new DisplayableGroupNode($oGraph, $sNewId);
 						$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
-						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+						$oNewNode->SetProperty('icon_url', MetaModel::GetClassIcon($sClass, false));
 						$oNewNode->SetProperty('class', $sClass);
 						$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
 						$oNewNode->SetProperty('count', $aGroupProps['count']);
 					}
-					
+
 					try
 					{
 						if ($bDirectionDown)
@@ -428,8 +427,8 @@ class DisplayableNode extends GraphNode
 					catch(Exception $e)
 					{
 						// Ignore this redundant egde
-					}				
-					
+					}
+
 					foreach($aGroupProps['nodes'] as $oNextNode)
 					{
 						$this->ReplaceNextNodeBy($oGraph, $oNextNode, $oNewNode, $bDirectionDown);
@@ -446,7 +445,7 @@ class DisplayableNode extends GraphNode
 			}
 		}
 	}
-	
+
 	public function GetTooltip($aContextDefs)
 	{
 		$sHtml = '';
@@ -460,11 +459,10 @@ class DisplayableNode extends GraphNode
 			{
 				$aContext = $aContextDefs[$key];
 				$aRootCauses = array();
-				foreach($aObjects as $oRootCause)
-				{
+				foreach ($aObjects as $oRootCause) {
 					$aRootCauses[] = $oRootCause->GetHyperlink();
 				}
-				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.htmlentities(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
+				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" class="ibo-class-icon ibo-is-small" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.utils::EscapeHtml(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
 			}
 			$sHtml .= '<hr/>';
 		}
@@ -475,9 +473,9 @@ class DisplayableNode extends GraphNode
 			$sHtml .= '<tr><td>'.$oAttDef->GetLabel().':&nbsp;</td><td>'.$oCurrObj->GetAsHtml($sAttCode).'</td></tr>';
 		}
 		$sHtml .= '</tbody></table>';
-		return $sHtml;		
+		return $sHtml;
 	}
-	
+
 	/**
 	 * Get the description of the node in "dot" language
 	 * Used to generate the positions in the graph, but we'd better use fake label
@@ -509,7 +507,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 	{
 		return 24;
 	}
-	
+
 	public function GetForRaphael($aContextDefs)
 	{
 		$aNode = array();
@@ -520,7 +518,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 		$aNode['x'] = $this->x;
 		$aNode['y']= $this->y;
 		$aNode['label'] = $this->GetLabel();
-		$aNode['id'] = $this->GetId();	
+		$aNode['id'] = $this->GetId();
 		$fDiscOpacity = ($this->GetProperty('is_reached') ? 1 : 0.2);
 		$sColor = ($this->GetProperty('is_reached_count') > $this->GetProperty('threshold')) ? '#c33' : '#999';
 		$aNode['disc_attr'] = array('stroke-width' => 2, 'stroke' => '#000', 'fill' => $sColor, 'opacity' => $fDiscOpacity);
@@ -551,35 +549,35 @@ class DisplayableRedundancyNode extends DisplayableNode
 		$height = $oPdf->GetStringHeight(1000, $sLabel);
 		$xPos = (float)$this->x*$fScale - $width/2;
 		$yPos = (float)$this->y*$fScale - $height/2;
-		
+
 		$oPdf->SetXY(($this->x - 16)*$fScale, ($this->y - 16)*$fScale);
-		
+
 		$oPdf->Cell(32*$fScale, 32*$fScale, $sLabel, 0, 0, 'C', 0, '', 0, false, 'T', 'C');
 	}
-	
+
 	/**
 	 * @see DisplayableNode::GroupSimilarNeighbours()
 	 */
 	public function GroupSimilarNeighbours(DisplayableGraph $oGraph, $iThresholdCount, $bDirectionUp = false, $bDirectionDown = true)
 	{
 		parent::GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
-				
+
 		if ($bDirectionUp)
 		{
 			$aNodesPerClass = array();
 			foreach($this->GetIncomingEdges() as $oEdge)
 			{
 				$oNode = $oEdge->GetSourceNode();
-				
+
 				if (($oNode->GetObjectClass() !== null) && (!$oNode->GetProperty('is_reached')))
-				{			
+				{
 					$this->AddToStats($oNode, $aNodesPerClass);
 				}
 				else
 				{
 					//$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 				}
-			}		
+			}
 			foreach($aNodesPerClass as $sClass => $aDefs)
 			{
 				foreach($aDefs as $sStatus => $aGroupProps)
@@ -588,12 +586,12 @@ class DisplayableRedundancyNode extends DisplayableNode
 					{
 						$oNewNode = new DisplayableGroupNode($oGraph, '-'.$this->GetId().'::'.$sClass.'/'.$sStatus);
 						$oNewNode->SetProperty('label', 'x'.count($aGroupProps['nodes']));
-						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+						$oNewNode->SetProperty('icon_url', MetaModel::GetClassIcon($sClass, false));
 						$oNewNode->SetProperty('is_reached', ($sStatus == 'is_reached'));
 						$oNewNode->SetProperty('class', $sClass);
 						$oNewNode->SetProperty('count', count($aGroupProps['nodes']));
-													
-						
+
+
 						$sNewId = $this->GetId().'::'.$sClass.'/'.(($sStatus == 'reached') ? '_reached': '');
 						$oNewNode = $oGraph->GetNode($sNewId);
 						if ($oNewNode == null)
@@ -605,7 +603,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 							$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
 							$oNewNode->SetProperty('count', $aGroupProps['count']);
 						}
-							
+
 						try
 						{
 							$oOutgoingEdge = new DisplayableEdge($oGraph, '-'.$this->GetId().'-'.$oNewNode->GetId().'/'.$sStatus, $oNewNode, $this);
@@ -614,7 +612,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 						{
 							// Ignore this redundant egde
 						}
-							
+
 						foreach($aGroupProps['nodes'] as $oNextNode)
 						{
 							$this->ReplaceNextNodeBy($oGraph, $oNextNode, $oNewNode, !$bDirectionUp);
@@ -632,7 +630,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 			}
 		}
 	}
-	
+
 	public function GetTooltip($aContextDefs)
 	{
 		$sHtml = '';
@@ -641,9 +639,9 @@ class DisplayableRedundancyNode extends DisplayableNode
 		$sHtml .= "<tr><td>".Dict::Format('UI:RelationTooltip:ImpactedItems_N_of_M' , $this->GetProperty('is_reached_count'), $this->GetProperty('min_up') + $this->GetProperty('threshold'))."</td></tr>";
 		$sHtml .= "<tr><td>".Dict::Format('UI:RelationTooltip:CriticalThreshold_N_of_M' , $this->GetProperty('threshold'), $this->GetProperty('min_up') + $this->GetProperty('threshold'))."</td></tr>";
 		$sHtml .= '</tbody></table>';
-		return $sHtml;		
+		return $sHtml;
 	}
-	
+
 
 	public function GetObjectCount()
 	{
@@ -667,7 +665,7 @@ class DisplayableEdge extends GraphEdge
 		}
 		$xStart = $oSourceNode->x * $fScale;
 		$yStart = $oSourceNode->y * $fScale;
-		
+
 		$oSinkNode = $this->GetSinkNode();
 		if (($oSinkNode->x == null) || ($oSinkNode->y == null))
 		{
@@ -675,9 +673,9 @@ class DisplayableEdge extends GraphEdge
 		}
 		$xEnd = $oSinkNode->x * $fScale;
 		$yEnd = $oSinkNode->y * $fScale;
-		
+
 		$bReached = ($this->GetSourceNode()->GetProperty('is_reached') && $this->GetSinkNode()->GetProperty('is_reached'));
-		
+
 		$oPdf->setAlpha(1);
 		if ($bReached)
 		{
@@ -689,8 +687,8 @@ class DisplayableEdge extends GraphEdge
 		}
 		$oPdf->SetLineStyle(array('width' => 2*$fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aColor));
 		$oPdf->Line($xStart, $yStart, $xEnd, $yEnd);
-		
-		
+
+
 		$vx = $xEnd - $xStart;
 		$vy = $yEnd - $yStart;
 		$l = sqrt($vx*$vx + $vy*$vy);
@@ -700,24 +698,24 @@ class DisplayableEdge extends GraphEdge
 		$uy = $vx;
 		$lPos = max($l/2, $l - 40*$fScale);
 		$iArrowSize = 5*$fScale;
-		
+
 		$x = $xStart  + $lPos * $vx;
 		$y = $yStart + $lPos * $vy;
 		$oPdf->Line($x, $y, $x + $iArrowSize * ($ux-$vx), $y + $iArrowSize * ($uy-$vy));
-		$oPdf->Line($x, $y, $x - $iArrowSize * ($ux+$vx), $y - $iArrowSize * ($uy+$vy));		
+		$oPdf->Line($x, $y, $x - $iArrowSize * ($ux+$vx), $y - $iArrowSize * ($uy+$vy));
 	}
 }
 
 class DisplayableGroupNode extends DisplayableNode
 {
 	protected $aObjects;
-	
+
 	public function __construct(SimpleGraph $oGraph, $sId, $x = 0, $y = 0)
 	{
 		parent::__construct($oGraph, $sId, $x, $y);
 		$this->aObjects = array();
 	}
-	
+
 	public function AddObject(DBObject $oObj = null)
 	{
 		if (is_object($oObj))
@@ -730,12 +728,12 @@ class DisplayableGroupNode extends DisplayableNode
 			$this->aObjects[$oObj->GetKey()] = $oObj;
 		}
 	}
-	
+
 	public function GetObjects()
 	{
 		return $this->aObjects;
 	}
-	
+
 	public function GetWidth()
 	{
 		return 50;
@@ -761,17 +759,14 @@ class DisplayableGroupNode extends DisplayableNode
 		$aNode['tooltip'] = $this->GetTooltip($aContextDefs);
 		return $aNode;
 	}
-	
+
 	public function RenderAsPDF(iTopPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
 	{
 		$bReached = $this->GetProperty('is_reached');
 		$oPdf->SetFillColor(255, 255, 255);
-		if ($bReached)
-		{
+		if ($bReached) {
 			$aBorderColor = array(100, 100, 100);
-		}
-		else
-		{
+		} else {
 			$aBorderColor = array(200, 200, 200);
 		}
 		$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aBorderColor));
@@ -779,14 +774,11 @@ class DisplayableGroupNode extends DisplayableNode
 		$sIconUrl = $this->GetProperty('icon_url');
 		$sIconPath = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
 		$oPdf->SetAlpha(1);
-		$oPdf->Circle($this->x*$fScale, $this->y*$fScale, $this->GetWidth() / 2 * $fScale, 0, 360, 'DF');
-		
-		if ($bReached)
-		{
+		$oPdf->Circle($this->x * $fScale, $this->y * $fScale, $this->GetWidth() / 2 * $fScale, 0, 360, 'DF');
+
+		if ($bReached) {
 			$oPdf->SetAlpha(1);
-		}
-		else
-		{
+		} else {
 			$oPdf->SetAlpha(0.4);
 		}
 		$oPdf->AddImage($sIconPath, ($this->x - 17) * $fScale, ($this->y - 17) * $fScale, 16 * $fScale, 16 * $fScale);
@@ -797,15 +789,14 @@ class DisplayableGroupNode extends DisplayableNode
 		$oPdf->SetTextColor(0, 0, 0);
 		$oPdf->Text($this->x * $fScale - $width / 2, ($this->y + 25) * $fScale, $this->GetProperty('label'));
 	}
-	
+
 	public function GetTooltip($aContextDefs)
 	{
-		$sHtml = '';
 		$iGroupIdx = $this->GetProperty('group_index');
-		$sHtml .= '<a href="#" onclick="$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');">'.Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx))."</a>";
+		$sHtml = '<a href="#" id="a_'.$iGroupIdx.'" onclick="$(this).closest(\'.tippy-box\').parent().hide();$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');return false;">'.Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx))."</a>";
 		$sHtml .= '<hr/>';
 		$sHtml .= '<table><tbody><tr>';
-		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';
+		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img class="ibo-class-icon ibo-is-small" src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';
 		$sHtml .= Dict::Format('UI_CountOfObjectsShort', $this->GetObjectCount()).'</td>';
 		$sHtml .= '</tr></tbody></table>';
 		return $sHtml;
@@ -831,7 +822,7 @@ class DisplayableGraph extends SimpleGraph
 	protected $aTempImages;
 	protected $aSourceObjects;
 	protected $aSinkObjects;
-	
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -839,14 +830,14 @@ class DisplayableGraph extends SimpleGraph
 		$this->aSourceObjects = array();
 		$this->aSinkObjects = array();
 	}
-	
+
 	public function GetTempImageName()
 	{
 		$sNewTempName = tempnam(APPROOT.'data', 'img-');
 		$this->aTempImages[] = $sNewTempName;
 		return $sNewTempName;
 	}
-	
+
 	public function __destruct()
 	{
 		foreach($this->aTempImages as $sTempFile)
@@ -854,66 +845,68 @@ class DisplayableGraph extends SimpleGraph
 			@unlink($sTempFile);
 		}
 	}
-	
+
 	/**
 	 * Build a DisplayableGraph from a RelationGraph
+	 *
 	 * @param RelationGraph $oGraph
 	 * @param number $iGroupingThreshold
 	 * @param string $bDirectionDown
+	 *
 	 * @return DisplayableGraph
 	 */
-	public static function FromRelationGraph(RelationGraph $oGraph, $iGroupingThreshold = 20, $bDirectionDown = true)
+	public static function FromRelationGraph(RelationGraph $oGraph, $iGroupingThreshold = 20, $bDirectionDown = true, $bForPdf = false)
 	{
 		$oNewGraph = new DisplayableGraph();
 		$oNewGraph->bDirectionDown = $bDirectionDown;
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		
+
 		$oNodesIter = new RelationTypeIterator($oGraph, 'Node');
-		foreach($oNodesIter as $oNode)
-		{
+		foreach ($oNodesIter as $oNode) {
 			set_time_limit(intval($iLoopTimeLimit));
-			switch(get_class($oNode))
-			{
-				case 'RelationObjectNode':				
-				$oNewNode = new DisplayableNode($oNewGraph, $oNode->GetId(), 0, 0);
-				
-				$oObj = $oNode->GetProperty('object');
-				$sClass = get_class($oObj);
-				if ($oNode->GetProperty('source'))
-				{
-					if (!array_key_exists($sClass, $oNewGraph->aSourceObjects))
-					{
-						$oNewGraph->aSourceObjects[$sClass] = array();
+			switch (get_class($oNode)) {
+				case 'RelationObjectNode':
+					$oNewNode = new DisplayableNode($oNewGraph, $oNode->GetId(), 0, 0);
+
+					$oObj = $oNode->GetProperty('object');
+					$sClass = get_class($oObj);
+					if ($oNode->GetProperty('source')) {
+						if (!array_key_exists($sClass, $oNewGraph->aSourceObjects)) {
+							$oNewGraph->aSourceObjects[$sClass] = array();
+						}
+						$oNewGraph->aSourceObjects[$sClass][] = $oObj->GetKey();
+						$oNewNode->SetProperty('source', true);
 					}
-					$oNewGraph->aSourceObjects[$sClass][] = $oObj->GetKey();
-					$oNewNode->SetProperty('source', true);
-				}
-				if ($oNode->GetProperty('sink'))
-				{
-					if (!array_key_exists($sClass, $oNewGraph->aSinkObjects))
-					{
-						$oNewGraph->aSinkObjects[$sClass] = array();
+					if ($oNode->GetProperty('sink')) {
+						if (!array_key_exists($sClass, $oNewGraph->aSinkObjects)) {
+							$oNewGraph->aSinkObjects[$sClass] = array();
+						}
+						$oNewGraph->aSinkObjects[$sClass][] = $oObj->GetKey();
+						$oNewNode->SetProperty('sink', true);
 					}
-					$oNewGraph->aSinkObjects[$sClass][] = $oObj->GetKey();
-					$oNewNode->SetProperty('sink', true);
-				}
-				$oNewNode->SetProperty('object', $oObj);
-				$oNewNode->SetProperty('icon_url', $oObj->GetIcon(false));
-				$oNewNode->SetProperty('label', $oObj->GetRawName());
-				$oNewNode->SetProperty('is_reached', $bDirectionDown ? $oNode->GetProperty('is_reached') : true); // When going "up" is_reached does not matter
-				$oNewNode->SetProperty('is_reached_allowed', $oNode->GetProperty('is_reached_allowed'));
-				$oNewNode->SetProperty('context_root_causes', $oNode->GetProperty('context_root_causes'));
-				break;
-				
+					$oNewNode->SetProperty('object', $oObj);
+					$sIconUrl = $oObj->GetIcon(false);
+					//when icons are displayed in a PDF file, puts the image data in place of the url
+					if ($bForPdf && strpos($sIconUrl, 'display_document') > 0) {
+						$sImageAttCode = MetaModel::GetImageAttributeCode($sClass);
+						$sIconUrl = '@'.$oObj->Get($sImageAttCode)->GetData();
+					}
+					$oNewNode->SetProperty('icon_url', $sIconUrl);
+					$oNewNode->SetProperty('label', $oObj->GetRawName());
+					$oNewNode->SetProperty('is_reached', $bDirectionDown ? $oNode->GetProperty('is_reached') : true); // When going "up" is_reached does not matter
+					$oNewNode->SetProperty('is_reached_allowed', $oNode->GetProperty('is_reached_allowed'));
+					$oNewNode->SetProperty('context_root_causes', $oNode->GetProperty('context_root_causes'));
+					break;
+
 				default:
-				$oNewNode = new DisplayableRedundancyNode($oNewGraph, $oNode->GetId(), 0, 0);
-				$iNbReached = (is_null($oNode->GetProperty('is_reached_count'))) ? 0 : $oNode->GetProperty('is_reached_count');
-				$oNewNode->SetProperty('label', $iNbReached."/".($oNode->GetProperty('min_up') + $oNode->GetProperty('threshold')));
-				$oNewNode->SetProperty('min_up', $oNode->GetProperty('min_up'));
-				$oNewNode->SetProperty('threshold', $oNode->GetProperty('threshold'));
-				$oNewNode->SetProperty('is_reached_count', $iNbReached);
-				$oNewNode->SetProperty('is_reached', true);
+					$oNewNode = new DisplayableRedundancyNode($oNewGraph, $oNode->GetId(), 0, 0);
+					$iNbReached = (is_null($oNode->GetProperty('is_reached_count'))) ? 0 : $oNode->GetProperty('is_reached_count');
+					$oNewNode->SetProperty('label', $iNbReached."/".($oNode->GetProperty('min_up') + $oNode->GetProperty('threshold')));
+					$oNewNode->SetProperty('min_up', $oNode->GetProperty('min_up'));
+					$oNewNode->SetProperty('threshold', $oNode->GetProperty('threshold'));
+					$oNewNode->SetProperty('is_reached_count', $iNbReached);
+					$oNewNode->SetProperty('is_reached', true);
 			}
 		}
 		$oEdgesIter = new RelationTypeIterator($oGraph, 'Edge');
@@ -924,7 +917,7 @@ class DisplayableGraph extends SimpleGraph
 			$oSinkNode = $oNewGraph->GetNode($oEdge->GetSinkNode()->GetId());
 			$oNewEdge = new DisplayableEdge($oNewGraph, $oEdge->GetId(), $oSourceNode, $oSinkNode);
 		}
-		
+
 		// Remove duplicate edges between two nodes
 		$oEdgesIter = new RelationTypeIterator($oNewGraph, 'Edge');
 		$aEdgeKeys = array();
@@ -952,7 +945,7 @@ class DisplayableGraph extends SimpleGraph
 				}
 			}
 		}
-		
+
 		$oNodesIter = new RelationTypeIterator($oNewGraph, 'Node');
 		foreach($oNodesIter as $oNode)
 		{
@@ -987,7 +980,7 @@ class DisplayableGraph extends SimpleGraph
 				}
 			}
 		}
-		
+
 		// Remove duplicate edges between two nodes
 		$oEdgesIter = new RelationTypeIterator($oNewGraph, 'Edge');
 		$aEdgeKeys = array();
@@ -1016,10 +1009,10 @@ class DisplayableGraph extends SimpleGraph
 			}
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
-		
+
 		return $oNewGraph;
 	}
-	
+
 	/**
 	 * Initializes the positions by rendering using Graphviz in xdot format
 	 * and parsing the output.
@@ -1032,7 +1025,7 @@ class DisplayableGraph extends SimpleGraph
 		{
 			throw new Exception($sDot);
 		}
-		
+
 		$aChunks = explode(";", $sDot);
 		foreach($aChunks as $sChunk)
 		{
@@ -1041,7 +1034,7 @@ class DisplayableGraph extends SimpleGraph
 				$sId = $aMatches[1];
 				$xPos = $aMatches[2];
 				$yPos = $aMatches[3];
-				
+
 				$oNode = $this->GetNode($sId);
 				if ($oNode !== null)
 				{
@@ -1055,7 +1048,7 @@ class DisplayableGraph extends SimpleGraph
 			}
 		}
 	}
-	
+
 	public function GetBoundingBox()
 	{
 		$xMin = null;
@@ -1080,10 +1073,10 @@ class DisplayableGraph extends SimpleGraph
 				$yMax = max($yMax, $oNode->y + $oNode->GetHeight() / 2);
 			}
 		}
-		
+
 		return array('xmin' => $xMin, 'xmax' => $xMax, 'ymin' => $yMin, 'ymax' => $yMax);
 	}
-	
+
 	function Translate($dx, $dy)
 	{
 		$oIterator = new RelationTypeIterator($this, 'Node');
@@ -1091,9 +1084,9 @@ class DisplayableGraph extends SimpleGraph
 		{
 			$oNode->x += $dx;
 			$oNode->y += $dy;
-		}		
+		}
 	}
-	
+
 	public function UpdatePositions($aPositions)
 	{
 		foreach($aPositions as $sNodeId => $aPos)
@@ -1113,7 +1106,7 @@ class DisplayableGraph extends SimpleGraph
 	function GetAsJSON($sContextKey)
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, false);
-		
+
 		$aData = array('nodes' => array(), 'edges' => array(), 'groups' => array(), 'lists' => array());
 		$iGroupIdx = 0;
 		$oIterator = new RelationTypeIterator($this, 'Node');
@@ -1137,7 +1130,7 @@ class DisplayableGraph extends SimpleGraph
 				$aData['groups'][$iGroupIdx] = array('class' => $sClass, 'keys' => $aKeys);
 				$oNode->SetProperty('group_index', $iGroupIdx);
 				$iGroupIdx++;
-				
+
 				if ($oNode->GetProperty('is_reached'))
 				{
 					// Also add the objects from this group into the 'list' tab
@@ -1145,11 +1138,11 @@ class DisplayableGraph extends SimpleGraph
 					{
 						$aData['lists'][$sClass] = $aKeys;
 					}
-					else 
+					else
 					{
 						$aData['lists'][$sClass] = array_merge($aData['lists'][$sClass], $aKeys);
 					}
-						
+
 				}
 			}
 			if (($oNode instanceof DisplayableNode) && $oNode->GetProperty('is_reached') && is_object($oNode->GetProperty('object')))
@@ -1163,9 +1156,9 @@ class DisplayableGraph extends SimpleGraph
 			}
 			$aData['nodes'][] = $oNode->GetForRaphael($aContextDefs);
 		}
-		
+
 		uksort($aData['lists'], array(get_class($this), 'SortOnClassLabel')); // sort on the localized names of the classes to provide a consistent and stable order
-		
+
 		$oIterator = new RelationTypeIterator($this, 'Edge');
 		foreach($oIterator as $sId => $oEdge)
 		{
@@ -1177,7 +1170,7 @@ class DisplayableGraph extends SimpleGraph
 			$aEdge['attr'] = array('opacity' => $fOpacity, 'stroke' => '#000');
 			$aData['edges'][] = $aEdge;
 		}
-	
+
 		return json_encode($aData);
 	}
 
@@ -1201,17 +1194,19 @@ class DisplayableGraph extends SimpleGraph
 	 * @param float $xMax Right coordinate of the bounding box to display the graph
 	 * @param float $yMin Top coordinate of the bounding box to display the graph
 	 * @param float $yMax Bottom coordinate of the bounding box to display the graph
+	 *
+	 * @since 2.7.7 3.0.2 3.1.0 N°4985 $sComments param is no longer optional
 	 */
-	function RenderAsPDF(PDFPage $oPage, $sComments = '', $sContextKey, $xMin = -1, $xMax = -1, $yMin = -1, $yMax = -1)
+	function RenderAsPDF(PDFPage $oPage, $sComments, $sContextKey, $xMin = -1, $xMax = -1, $yMin = -1, $yMax = -1)
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, false); // No need to develop the parameters
 		$oPdf = $oPage->get_tcpdf();
-				
+
 		$aBB = $this->GetBoundingBox();
 		$this->Translate(-$aBB['xmin'], -$aBB['ymin']);
-		
+
 		$aMargins = $oPdf->getMargins();
-		
+
 		if ($xMin == -1)
 		{
 			$xMin = $aMargins['left'];
@@ -1228,7 +1223,7 @@ class DisplayableGraph extends SimpleGraph
 		{
 			$yMax = $oPdf->getPageHeight() - $aMargins['bottom'];
 		}
-		
+
 		$fBreakMargin = $oPdf->getBreakMargin();
 		$oPdf->SetAutoPageBreak(false);
 		$aRemainingArea = $this->RenderKey($oPdf, $sComments, $xMin, $yMin, $xMax, $yMax, $aContextDefs);
@@ -1236,19 +1231,19 @@ class DisplayableGraph extends SimpleGraph
 		$xMax = $aRemainingArea['xmax'];
 		$yMin = $aRemainingArea['ymin'];
 		$yMax = $aRemainingArea['ymax'];
-		
+
 		//$oPdf->Rect($xMin, $yMin, $xMax - $xMin, $yMax - $yMin, 'D', array(), array(225, 50, 50));
-		
+
 		$fPageW = $xMax - $xMin;
 		$fPageH = $yMax - $yMin;
-		
-		$w = $aBB['xmax'] - $aBB['xmin']; 
+
+		$w = $aBB['xmax'] - $aBB['xmin'];
 		$h = $aBB['ymax'] - $aBB['ymin'] + 10; // Extra space for the labels which may appear "below" the icons
-		
+
 		$fScale = min($fPageW / $w, $fPageH / $h);
 		$dx = ($fPageW - $fScale * $w) / 2;
 		$dy = ($fPageH - $fScale * $h) / 2;
-		
+
 		$this->Translate(($xMin + $dx)/$fScale, ($yMin + $dy)/$fScale);
 
 		$oIterator = new RelationTypeIterator($this, 'Edge');
@@ -1270,7 +1265,7 @@ class DisplayableGraph extends SimpleGraph
 		$oPdf->SetAlpha(1);
 		$oPdf->SetTextColor(0, 0, 0);
 	}
-	
+
 	/**
 	 * Renders (in PDF) the key (legend) of the graphics vertically to the left of the specified zone (xmin,ymin, xmax,ymax),
 	 * and the comment (if any) at the bottom of the page. Returns the position of remaining area.
@@ -1338,25 +1333,24 @@ class DisplayableGraph extends SimpleGraph
 			$yPos += $fIconSize + 2 * $fPadding;
 		}
 		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3*$fPadding, $yMax - $yMin, 'D');
-		
-		if ($sComments != '')
-		{
+
+		if ($sComments != '') {
 			// Draw the comment text (surrounded by a rectangle)
-			$xPos = $xMin + $fMaxWidth + $fIconSize + 4*$fPadding;
-			$w = $xMax - $xPos - 2*$fPadding;
+			$xPos = $xMin + $fMaxWidth + $fIconSize + 4 * $fPadding;
+			$w = $xMax - $xPos - 2 * $fPadding;
 			$iNbLines = 1;
-			$sText = '<p>'.str_replace("\n", '<br/>', htmlentities($sComments, ENT_QUOTES, 'UTF-8'), $iNbLines).'</p>';
+			$sText = '<p>'.str_replace("\n", '<br/>', utils::EscapeHtml($sComments), $iNbLines).'</p>';
 			$fLineHeight = $oPdf->getStringHeight($w, $sText);
-			$h = (1+$iNbLines) * $fLineHeight;
-			$yPos = $yMax - 2*$fPadding - $h;
+			$h = (1 + $iNbLines) * $fLineHeight;
+			$yPos = $yMax - 2 * $fPadding - $h;
 			$oPdf->writeHTMLCell($w, $h, $xPos + $fPadding, $yPos + $fPadding, $sText, 0 /* border */, 1 /* ln */);
-			$oPdf->Rect($xPos, $yPos, $w + 2*$fPadding, $h + 2*$fPadding, 'D');
+			$oPdf->Rect($xPos, $yPos, $w + 2 * $fPadding, $h + 2 * $fPadding, 'D');
 			$yMax = $yPos - $fPadding;
 		}
-		
+
 		return array('xmin' => $xMin + $fMaxWidth + $fIconSize + 4*$fPadding, 'xmax' => $xMax, 'ymin' => $yMin, 'ymax' => $yMax);
 	}
-	
+
 	/**
 	 * Get the context definitions from the parameters / configuration. The format of the "key" string is:
 	 * <module>/relation_context/<class>/<relation>/<direction>
@@ -1378,7 +1372,7 @@ class DisplayableGraph extends SimpleGraph
 		else
 		{
 			$sLeafClass = $aLevels[2];
-			
+
 			if (!MetaModel::IsValidClass($sLeafClass))
 			{
 				IssueLog::Warning("GetContextDefinitions: invalid 'sLeafClass' = '$sLeafClass'. A valid class name is expected in 3rd position inside '$sContextKey' !");
@@ -1393,7 +1387,7 @@ class DisplayableGraph extends SimpleGraph
 						$aContextDefs = array_merge($aContextDefs, $aRelationContext[$sClass][$aLevels[3]][$aLevels[4]]['items']);
 					}
 				}
-				
+
 				// Check if the queries are valid
 				foreach($aContextDefs as $sKey => $sDefs)
 				{
@@ -1427,175 +1421,108 @@ class DisplayableGraph extends SimpleGraph
 	 * @param int $iObjKey
 	 * @param string $sContextKey
 	 * @param array $aContextParams
+	 * @param bool $bLazyLoading since 2.7.7 3.0.1
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array())
-	{	
-		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
-		$aExcludedByClass = array();
-		foreach($aExcludedObjects as $oObj)
-		{
-			if (!array_key_exists(get_class($oObj), $aExcludedByClass))
-			{
-				$aExcludedByClass[get_class($oObj)] = array();
-			}
-			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
-		}
-		$sSftShort = Dict::S('UI:ElementsDisplayed');
-		$sSearchToggle = Dict::S('UI:Search:Toggle');
-		$oP->add("<div class=\"not-printable\">\n");
-		$oUiSearchBlock = new Panel($sSftShort, [],Panel::ENUM_COLOR_CYAN, 'ds_flash');
-		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
+	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
+	{
+		list($aExcludedByClass, $aAdditionalContexts) = $this->DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $bLazyLoading);
 
-		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
-<<<EOF
- <div id="ds_flash" class="search_box ibo-display-graph--search-box">
-	<div id="dh_flash_criterion_outer" class="sf_criterion_area"><div class="sf_criterion_row">
-EOF
-		);
-		$oP->add_ready_script(
-<<<EOF
-	$("#dh_flash > .sf_title").on('click', function() {
-		$("#dh_flash").toggleClass('closed');
-	});
-    $('#ReloadMovieBtn').button().button('disable');
-EOF
-		);
-		$aSortedElements = array();
-		foreach($aResults as $sClassIdx => $aObjects)
-		{
-			foreach($aObjects as $oCurrObj)
-			{
-				$sSubClass = get_class($oCurrObj);
-				$aSortedElements[$sSubClass] = MetaModel::GetName($sSubClass);
-			}
-		}
-				
-		asort($aSortedElements);
-		$idx = 0;
-		foreach($aSortedElements as $sSubClass => $sClassName)
-		{
-			$oUiHtmlBlock->AddHtml("<div><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">");
-			$oUiMedallionBlock= new MedallionIcon(MetaModel::GetClassIcon($sSubClass, false));
-			$oUiMedallionBlock->SetDescription($sClassName);
-			$oUiHtmlBlock->AddHtml(BlockRenderer::RenderBlockTemplates($oUiMedallionBlock));
-			$oUiHtmlBlock->AddHtml("</label></div>");
-			$idx++;
-		}
-		$oUiHtmlBlock->AddHtml("</div>");
-		$oUiHtmlBlock->AddHtml("<button type=\"button\" id=\"ReloadMovieBtn\" class=\"ibo-button ibo-is-neutral ibo-is-regular\" onClick=\"DoReload()\">".Dict::S('UI:Button:Refresh')."</button></div></form>");
-		$oUiHtmlBlock->AddHtml("</div>\n");
-		$oUiHtmlBlock->AddHtml("</div>\n"); // class="not-printable"
-
-		$oUiSearchBlock->AddSubBlock($oUiHtmlBlock);
-		$oP->AddUiBlock($oUiSearchBlock);
-		$aAdditionalContexts = array();
-		foreach($aContextDefs as $sKey => $aDefinition)
-		{
-			$aAdditionalContexts[] = array('key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql'], 'default' => (array_key_exists('default', $aDefinition)  && ($aDefinition['default'] == 'yes')));
-		}
-		
-		$sDirection = utils::ReadParam('d', 'horizontal');
 		$iGroupingThreshold = utils::ReadParam('g', 5);
-	
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
-		try
-		{
+
+		WebResourcesHelper::EnableSimpleGraphInWebPage($oP);
+		try {
 			$this->InitFromGraphviz();
-			$sExportAsPdfURL = '';
 			$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
-			$oAppcontext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
 			$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s&'.$sContext;
 			$sExportAsDocumentURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_attachment&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
 			$sLoadFromURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_json&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
 			$sAttachmentExportTitle = '';
-			if (($sObjClass != null) && ($iObjKey != null))
-			{
+			if (($sObjClass != null) && ($iObjKey != null)) {
 				$oTargetObj = MetaModel::GetObject($sObjClass, $iObjKey, false);
-				if ($oTargetObj)
-				{
+				if ($oTargetObj) {
 					$sAttachmentExportTitle = Dict::Format('UI:Relation:AttachmentExportOptions_Name', $oTargetObj->GetName());
 				}
 			}
-	
+
 			$sId = 'graph';
 			$sStyle = '';
-			if ($oP->IsPrintableVersion())
-			{
+			if ($oP->IsPrintableVersion()) {
 				// Optimize for printing on A4/Letter vertically
 				$sStyle = 'margin-left:auto; margin-right:auto;';
 				$oP->add_ready_script("$('.simple-graph').width(18/2.54*96).resizable({ stop: function() { $(window).trigger('resized'); }});"); // Default width about 18 cm, since most browsers assume 96 dpi
 			}
 			$oP->add('<div id="'.$sId.'" class="simple-graph" style="'.$sStyle.'"></div>');
 			$aParams = array(
-				'source_url' => $sLoadFromURL,
-				'sources' => ($this->bDirectionDown ? $this->aSourceObjects : $this->aSinkObjects),
-				'excluded' => $aExcludedByClass,
-				'grouping_threshold' => $iGroupingThreshold,
-				'export_as_pdf' => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
+				'source_url'           => $sLoadFromURL,
+				'sources'              => ($this->bDirectionDown ? $this->aSourceObjects : $this->aSinkObjects),
+				'excluded'             => $aExcludedByClass,
+				'grouping_threshold'   => $iGroupingThreshold,
+				'export_as_pdf'        => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
 				'export_as_attachment' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsAttachment'), 'obj_class' => $sObjClass, 'obj_key' => $iObjKey),
-				'drill_down' => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
-				'labels' => array(
-					'export_pdf_title' => Dict::S('UI:Relation:PDFExportOptions'),
+				'drill_down'           => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
+				'labels'               => array(
+					'export_pdf_title'           => Dict::S('UI:Relation:PDFExportOptions'),
 					'export_as_attachment_title' => $sAttachmentExportTitle,
-					'export' => Dict::S('UI:Button:Export'),
-					'cancel' => Dict::S('UI:Button:Cancel'),
-					'title' => Dict::S('UI:RelationOption:Title'),
-					'untitled' => Dict::S('UI:RelationOption:Untitled'),
-					'include_list' => Dict::S('UI:RelationOption:IncludeList'),
-					'comments' => Dict::S('UI:RelationOption:Comments'),
-					'grouping_threshold' => Dict::S('UI:RelationOption:GroupingThreshold'),
-					'refresh' => Dict::S('UI:Button:Refresh'),
-					'check_all' => Dict::S('UI:SearchValue:CheckAll'),
-					'uncheck_all' => Dict::S('UI:SearchValue:UncheckAll'),
-					'none_selected' => Dict::S('UI:Relation:NoneSelected'),
-					'nb_selected' => Dict::S('UI:SearchValue:NbSelected'),
-					'additional_context_info' => Dict::S('UI:Relation:AdditionalContextInfo'),
-					'zoom' => Dict::S('UI:Relation:Zoom'),
-					'loading' => Dict::S('UI:Loading'),
+					'export'                     => Dict::S('UI:Button:Export'),
+					'cancel'                     => Dict::S('UI:Button:Cancel'),
+					'title'                      => Dict::S('UI:RelationOption:Title'),
+					'untitled'                   => Dict::S('UI:RelationOption:Untitled'),
+					'include_list'               => Dict::S('UI:RelationOption:IncludeList'),
+					'comments'                   => Dict::S('UI:RelationOption:Comments'),
+					'grouping_threshold'         => Dict::S('UI:RelationOption:GroupingThreshold'),
+					'refresh'                    => Dict::S('UI:Button:Refresh'),
+					'check_all'                  => Dict::S('UI:SearchValue:CheckAll'),
+					'uncheck_all'                => Dict::S('UI:SearchValue:UncheckAll'),
+					'none_selected'              => Dict::S('UI:Relation:NoneSelected'),
+					'nb_selected'                => Dict::S('UI:SearchValue:NbSelected'),
+					'additional_context_info'    => Dict::S('UI:Relation:AdditionalContextInfo'),
+					'zoom'                       => Dict::S('UI:Relation:Zoom'),
+					'loading'                    => Dict::S('UI:Loading'),
 				),
-				'page_format' => array(
-					'label' => Dict::S('UI:Relation:PDFExportPageFormat'),
+				'page_format'          => array(
+					'label'  => Dict::S('UI:Relation:PDFExportPageFormat'),
 					'values' => array(
-						'A3' => Dict::S('UI:PageFormat_A3'),
-						'A4' => Dict::S('UI:PageFormat_A4'),
+						'A3'     => Dict::S('UI:PageFormat_A3'),
+						'A4'     => Dict::S('UI:PageFormat_A4'),
 						'Letter' => Dict::S('UI:PageFormat_Letter'),
 					),
 				),
-				'page_orientation' => array(
-					'label' => Dict::S('UI:Relation:PDFExportPageOrientation'),
+				'page_orientation'     => array(
+					'label'  => Dict::S('UI:Relation:PDFExportPageOrientation'),
 					'values' => array(
 						'P' => Dict::S('UI:PageOrientation_Portrait'),
 						'L' => Dict::S('UI:PageOrientation_Landscape'),
 					),
 				),
-				'additional_contexts' => $aAdditionalContexts,
-				'context_key' => $sContextKey,
+				'additional_contexts'  => $aAdditionalContexts,
+				'context_key'          => $sContextKey,
 			);
-			if (!extension_loaded('gd'))
-			{
+			if (!extension_loaded('gd')) {
 				// PDF export requires GD
 				unset($aParams['export_as_pdf']);
 			}
-			if (!extension_loaded('gd') || is_null($sObjClass) || is_null($iObjKey))
-			{
+			if (!extension_loaded('gd') || is_null($sObjClass) || is_null($iObjKey)) {
 				// Export as Attachment requires GD (for building the PDF) AND a valid objclass/objkey couple
 				unset($aParams['export_as_attachment']);
 			}
-			$oP->add_ready_script("$('#$sId').simple_graph(".json_encode($aParams).");");
+			if ($oP->IsPrintableVersion() || !$bLazyLoading) {
+				$oP->add_ready_script(" $('#$sId').simple_graph(".json_encode($aParams).");");
+			} else {
+				$oP->add_script("function Load(){var aExcluded = [];	$('input[name^=excluded]').each( function() {if (!$(this).prop('checked'))	{	aExcluded.push($(this).val());		}} ); var params= $.extend(".json_encode($aParams).",  {excluded_classes: aExcluded}); $('#$sId').simple_graph(params);}");
+				$oP->add_ready_script("$('#impacted_objects_lists').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_groups').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');");
+
+			}
 		}
 		catch(Exception $e)
 		{
 			$oP->add('<div>'.$e->getMessage().'</div>');
 		}
 		$oP->add_script(
-<<<EOF
+			<<<EOF
 		
 	function DoReload()
 	{
@@ -1620,5 +1547,96 @@ EOF
 EOF
 		);
 	}
-	
+
+	/**
+	 * @param string $sContextKey
+	 * @param array $aContextParams
+	 * @param array $aExcludedObjects
+	 * @param \WebPage $oP
+	 * @param array $aResults
+	 * @param bool $bLazyLoading
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	public function DisplayFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects, WebPage $oP, array $aResults, bool $bLazyLoading = false): array
+	{
+		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
+		$aExcludedByClass = array();
+		foreach ($aExcludedObjects as $oObj) {
+			if (!array_key_exists(get_class($oObj), $aExcludedByClass)) {
+				$aExcludedByClass[get_class($oObj)] = array();
+			}
+			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
+		}
+		$sSftShort = Dict::S('UI:ElementsDisplayed');
+		$oP->add("<div class=\"not-printable\">\n");
+		$oUiSearchBlock = new Panel($sSftShort, [], Panel::ENUM_COLOR_SCHEME_CYAN, 'dh_flash');
+		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
+		$oUiSearchBlock->SetIsCollapsible(true);
+		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
+			<<<EOF
+		
+    <div id="ds_flash" class="search_box ibo-display-graph--search-box">
+	<div id="dh_flash_criterion_outer" class="sf_criterion_area"><div class="sf_criterion_row">
+EOF
+		);
+		$oP->add_ready_script(
+			<<<EOF
+	$("#dh_flash > .sf_title").on("click", function() {
+		$("#dh_flash").toggleClass("closed");
+	});
+	$("#ReloadMovieBtn").button().button("disable");
+EOF
+		);
+		if ($bLazyLoading) {
+			$oP->add_ready_script("$('#ReloadMovieBtn').button('enable');");
+		} else {
+			$oP->add_ready_script("$('#dh_flash').addClass('closed');");
+		}
+		$aSortedElements = array();
+		foreach ($aResults as $sClassIdx => $aObjects) {
+			foreach ($aObjects as $oCurrObj) {
+				$sSubClass = get_class($oCurrObj);
+				$aSortedElements[$sSubClass] = MetaModel::GetName($sSubClass);
+			}
+		}
+
+		asort($aSortedElements);
+		$idx = 0;
+		foreach ($aSortedElements as $sSubClass => $sClassName) {
+			$oUiHtmlBlock->AddHtml("<div><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">");
+			$oUiMedallionBlock = new MedallionIcon(MetaModel::GetClassIcon($sSubClass, false));
+			$oUiMedallionBlock->SetDescription($sClassName);
+			$oUiHtmlBlock->AddHtml(BlockRenderer::RenderBlockTemplates($oUiMedallionBlock));
+			$oUiHtmlBlock->AddHtml("</label></div>");
+			$idx++;
+		}
+		$oUiHtmlBlock->AddHtml("</div>");
+		if ($bLazyLoading) {
+			$sOnCLick = "Load(); $('#ReloadMovieBtn').attr('onclick','DoReload()');$('#ReloadMovieBtn').html('".Dict::S('UI:Button:Refresh')."');";
+			$oUiHtmlBlock->AddHtml("<button type=\"button\" id=\"ReloadMovieBtn\" class=\"ibo-button ibo-is-neutral ibo-is-regular\" onClick=\"$sOnCLick\">".Dict::S('Relation:impacts/LoadData')."</button></div></form>");
+		} else {
+			$sOnCLick = "DoReload()";
+			$oUiHtmlBlock->AddHtml("<button type=\"button\" id=\"ReloadMovieBtn\" class=\"ibo-button ibo-is-neutral ibo-is-regular\" onClick=\"$sOnCLick\">".Dict::S('UI:Button:Refresh')."</button></div></form>");
+		}
+		$oUiHtmlBlock->AddHtml("</div>\n");
+		$oUiHtmlBlock->AddHtml("</div>\n"); // class="not-printable"
+
+		$oUiSearchBlock->AddSubBlock($oUiHtmlBlock);
+		$oP->AddUiBlock($oUiSearchBlock);
+
+		$aAdditionalContexts = array();
+		foreach ($aContextDefs as $sKey => $aDefinition) {
+			$aAdditionalContexts[] = array('key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql'], 'default' => (array_key_exists('default', $aDefinition) && ($aDefinition['default'] == 'yes')));
+		}
+
+		return array($aExcludedByClass, $aAdditionalContexts);
+	}
+
 }

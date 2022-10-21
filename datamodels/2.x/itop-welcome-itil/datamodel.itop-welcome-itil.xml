@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <menus>
     <menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="redefine">
       <rank>10</rank>
@@ -14,7 +14,7 @@
 	            <dashlet id="1" xsi:type="DashletHeaderStatic">
                   <rank>0</rank>
                   <title>Menu:ConfigManagementCI</title>
-                    <icon>itop-welcome-itil/images/database.png</icon>
+                    <icon>../images/icons/icons8-database.svg</icon>
                 </dashlet>
               <dashlet id="4" xsi:type="DashletBadge">
                 <rank>3</rank>

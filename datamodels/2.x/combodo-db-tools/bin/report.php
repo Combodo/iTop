@@ -6,10 +6,7 @@
 
 use Combodo\iTop\DBTools\Service\DBAnalyzerUtils;
 
-@include_once('../approot.inc.php');
-@include_once('../../approot.inc.php');
-@include_once('../../../approot.inc.php');
-
+require_once ('../../../approot.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 
 require_once('../db_analyzer.class.inc.php');

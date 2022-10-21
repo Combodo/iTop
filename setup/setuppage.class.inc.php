@@ -39,9 +39,14 @@ class SetupPage extends NiceWebPage
 	{
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
 		$this->add_linked_script("../setup/setup.js");
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+
 		$this->LoadTheme();
 		$this->add_saas("css/setup.scss");
 	}
@@ -152,7 +157,7 @@ class SetupPage extends NiceWebPage
 
 	public function output()
 	{
-		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
+		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/logos/logo-itop-simple-dark.svg?t='.utils::GetCacheBusterTimestamp();
 		$oSetupPage = UIContentBlockUIBlockFactory::MakeStandard();
 		$oHeader = UIContentBlockUIBlockFactory::MakeStandard('header', ['ibo-setup--header']);
 		$oSetupPage->AddSubBlock($oHeader);
@@ -168,55 +173,18 @@ class SetupPage extends NiceWebPage
 	}
 
 	/**
-	 * @deprecated 3.0.0 use SetupLog::Error
-	 */
-	public static function log_error($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Error');
-		SetupLog::Error($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Warning
-	 */
-	public static function log_warning($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Warning');
-		SetupLog::Warning($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Info
-	 */
-	public static function log_info($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Info');
-		SetupLog::Info($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Ok
-	 */
-	public static function log_ok($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
-		SetupLog::Ok($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Ok
-	 */
-	public static function log($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
-		SetupLog::Ok($sText);
-	}
-
-	/**
 	 * @inheritDoc
 	 */
 	protected function LoadTheme()
 	{
 		// Do nothing
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return utils::GetAbsoluteUrlAppRoot().'setup/favicon.ico';
 	}
 }

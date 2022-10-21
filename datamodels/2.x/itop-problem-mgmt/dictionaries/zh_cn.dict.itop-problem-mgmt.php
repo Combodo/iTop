@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -29,10 +30,12 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
+
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -42,6 +45,8 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => '问题管理',
@@ -130,11 +135,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Attribute:resolution_date' => '解决日期',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => '已知问题',
-	'Class:Problem/Attribute:knownerrors_list+' => '该问题相关的所有已知问题',
+	'Class:Problem/Attribute:knownerrors_list+' => '此问题相关的所有已知问题',
 	'Class:Problem/Attribute:related_request_list' => '相关需求',
-	'Class:Problem/Attribute:related_request_list+' => '该问题相关的所有需求',
+	'Class:Problem/Attribute:related_request_list+' => '此问题相关的所有需求',
 	'Class:Problem/Attribute:related_incident_list' => '相关事件',
-	'Class:Problem/Attribute:related_incident_list+' => '该问题相关的所有事件',
+	'Class:Problem/Attribute:related_incident_list+' => '此问题相关的所有事件',
 	'Class:Problem/Stimulus:ev_assign' => '分配',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => '重新分配',

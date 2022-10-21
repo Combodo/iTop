@@ -12,8 +12,8 @@
 namespace Symfony\Bundle\TwigBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Adds tagged twig.extension services to twig service.
@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class TwigEnvironmentPass implements CompilerPassInterface
 {
+    use PriorityTaggedServiceTrait;
+
     public function process(ContainerBuilder $container)
     {
         if (false === $container->hasDefinition('twig')) {
@@ -37,11 +39,11 @@ class TwigEnvironmentPass implements CompilerPassInterface
         $currentMethodCalls = $definition->getMethodCalls();
         $twigBridgeExtensionsMethodCalls = [];
         $othersExtensionsMethodCalls = [];
-        foreach ($container->findTaggedServiceIds('twig.extension', true) as $id => $attributes) {
-            $methodCall = ['addExtension', [new Reference($id)]];
-            $extensionClass = $container->getDefinition($id)->getClass();
+        foreach ($this->findAndSortTaggedServices('twig.extension', $container) as $extension) {
+            $methodCall = ['addExtension', [$extension]];
+            $extensionClass = $container->getDefinition((string) $extension)->getClass();
 
-            if (\is_string($extensionClass) && 0 === strpos($extensionClass, 'Symfony\Bridge\Twig\Extension')) {
+            if (\is_string($extensionClass) && str_starts_with($extensionClass, 'Symfony\Bridge\Twig\Extension')) {
                 $twigBridgeExtensionsMethodCalls[] = $methodCall;
             } else {
                 $othersExtensionsMethodCalls[] = $methodCall;

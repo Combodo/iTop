@@ -1,30 +1,21 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
 $ibo-global-search--head--background-color: $ibo-color-white-100 !default;
 
-$ibo-global-search--icon-padding-x: 16px !default;
-$ibo-global-search--icon-padding-y: 0 !default;
+$ibo-global-search--icon-padding-x: $ibo-spacing-500 !default;
+$ibo-global-search--icon-padding-y: $ibo-spacing-0 !default;
+$ibo-global-search--icon--color: $ibo-color-primary-600 !default;
+$ibo-global-search--icon--color--on-hover: $ibo-color-primary-700 !default;
+$ibo-global-search--icon--color--on-active: $ibo-color-primary-800 !default;
 
-$ibo-global-search--input--padding: 0 default;
-$ibo-global-search--input--padding-x--is-opened: 8px !default;
-$ibo-global-search--input--padding-y--is-opened: 8px !default;
+
+$ibo-global-search--input--padding: $ibo-spacing-0 !default;
+$ibo-global-search--input--padding-x--is-opened: $ibo-spacing-300 !default;
+$ibo-global-search--input--padding-y--is-opened: $ibo-spacing-300 !default;
 $ibo-global-search--input--width: 0 !default;
 $ibo-global-search--input--width--is-opened: 245px !default;
 $ibo-global-search--input--text-color: $ibo-color-grey-800 !default;
@@ -32,30 +23,30 @@ $ibo-global-search--input--placeholder-color: $ibo-color-grey-600 !default;
 
 $ibo-global-search--drawer--max-height: 300px !default;
 $ibo-global-search--drawer--padding-x: $ibo-global-search--icon-padding-x !default;
-$ibo-global-search--drawer--padding-y: 16px !default;
-$ibo-global-search--drawer--top: -1 * ($ibo-global-search--drawer--max-height) !default;
+$ibo-global-search--drawer--padding-y: $ibo-spacing-500 !default;
+$ibo-global-search--drawer--top: -1 * ($ibo-global-search--drawer--max-height) - 10 !default; /* 10px of margin to avoid to be slightly visible when closed and has a lot of history */
 $ibo-global-search--drawer--top--is-opened: 100% !default;
 $ibo-global-search--drawer--background-color: $ibo-color-white-100 !default;
 
-$ibo-global-search--compartment-title--margin-bottom: 8px !default;
-$ibo-global-search--compartment-title--padding-left: 32px !default;
-$ibo-global-search--compartment-title--text-color: $ibo-color-grey-600 !default;
-$ibo-global-search--compartment-title--line-spacing: 8px !default;
+$ibo-global-search--compartment-title--margin-bottom: $ibo-spacing-300 !default;
+$ibo-global-search--compartment-title--padding-left: $ibo-spacing-700 !default;
+$ibo-global-search--compartment-title--text-color: $ibo-color-grey-800 !default;
+$ibo-global-search--compartment-title--line-spacing: $ibo-spacing-300 !default;
 
 $ibo-global-search--compartment-content--text-color: $ibo-color-grey-900 !default;
 
-$ibo-global-search--compartment-element--margin-bottom: 8px !default;
+$ibo-global-search--compartment-element--margin-bottom: $ibo-spacing-300 !default;
 
-$ibo-global-search--compartment-element-image--margin-right: 8px !default;
+$ibo-global-search--compartment-element-image--margin-right: $ibo-spacing-300 !default;
 $ibo-global-search--compartment-element-image--width: 20px !default;
 
-$ibo-global-search--compartment--placeholder-image--margin-top: 24px !default;
-$ibo-global-search--compartment--placeholder-image--margin-bottom: 16px !default;
+$ibo-global-search--compartment--placeholder-image--margin-top: $ibo-spacing-600 !default;
+$ibo-global-search--compartment--placeholder-image--margin-bottom: $ibo-spacing-500 !default;
 $ibo-global-search--compartment--placeholder-image--margin-y: auto !default;
 $ibo-global-search--compartment--placeholder-image--width: 66% !default;
 
-$ibo-global-search--compartment--placeholder-hint--padding-x: 8px !default;
-$ibo-global-search--compartment--placeholder-hint--padding-y: 0 !default;
+$ibo-global-search--compartment--placeholder-hint--padding-x: $ibo-spacing-300 !default;
+$ibo-global-search--compartment--placeholder-hint--padding-y: $ibo-spacing-0 !default;
 $ibo-global-search--compartment--placeholder-hint--text-color: $ibo-color-grey-700 !default;
 
 /* Animations*/
@@ -94,14 +85,23 @@ $ibo-global-search--compartment--placeholder-hint--text-color: $ibo-color-grey-7
 	background-color: $ibo-global-search--head--background-color;
 }
 .ibo-global-search--icon{
+  color: $ibo-global-search--icon--color;
 	align-self: center;
 	padding: $ibo-global-search--icon-padding-y $ibo-global-search--icon-padding-x;
 	@extend %ibo-font-ral-nor-400;
+
+  &:hover{
+    color: $ibo-global-search--icon--color--on-hover;
+  }
+  &:active{
+    color: $ibo-global-search--icon--color--on-active;
+  }
 }
 .ibo-global-search--input{
 	padding: $ibo-global-search--input--padding;
 	width: $ibo-global-search--input--width;
 	color: $ibo-global-search--input--text-color;
+  background-color: transparent;
 	@extend %ibo-font-ral-nor-300;
 
 	border: none;

@@ -53,12 +53,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name~~',
 	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
-	'Class:Organization/Attribute:parent_id_friendlyname' => 'Parent~~',
-	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Parent organization~~',
+	'Class:Organization/Attribute:parent_id_friendlyname' => 'Ana',
+	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Ana organizasyon',
 	'Class:Organization/Attribute:overview' => 'Overview~~',
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
-	'Organization:Overview:Users' => 'iTop Users within this organization~~',
+	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
 ));
 
 //
@@ -88,10 +88,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Location/Attribute:city+' => '',
 	'Class:Location/Attribute:country' => 'Ülke',
 	'Class:Location/Attribute:country+' => '',
-	'Class:Location/Attribute:physicaldevice_list' => 'Devices~~',
-	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
-	'Class:Location/Attribute:person_list' => 'Contacts~~',
-	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
+	'Class:Location/Attribute:physicaldevice_list' => 'Cihazlar',
+	'Class:Location/Attribute:physicaldevice_list+' => 'Bu konumdaki tüm cihazlar',
+	'Class:Location/Attribute:person_list' => 'Kişiler',
+	'Class:Location/Attribute:person_list+' => 'Bu konumda bulunan tüm kişiler',
 ));
 
 //
@@ -117,16 +117,16 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Contact/Attribute:email+' => '',
 	'Class:Contact/Attribute:phone' => 'Telefon',
 	'Class:Contact/Attribute:phone+' => '',
-	'Class:Contact/Attribute:notify' => 'Notification~~',
+	'Class:Contact/Attribute:notify' => 'Bildirim',
 	'Class:Contact/Attribute:notify+' => '~~',
-	'Class:Contact/Attribute:notify/Value:no' => 'no~~',
-	'Class:Contact/Attribute:notify/Value:no+' => 'no~~',
-	'Class:Contact/Attribute:notify/Value:yes' => 'yes~~',
-	'Class:Contact/Attribute:notify/Value:yes+' => 'yes~~',
-	'Class:Contact/Attribute:function' => 'Function~~',
+	'Class:Contact/Attribute:notify/Value:no' => 'hayır',
+	'Class:Contact/Attribute:notify/Value:no+' => 'hayır',
+	'Class:Contact/Attribute:notify/Value:yes' => 'evet',
+	'Class:Contact/Attribute:notify/Value:yes+' => 'evet',
+	'Class:Contact/Attribute:function' => 'İşlev',
 	'Class:Contact/Attribute:function+' => '~~',
-	'Class:Contact/Attribute:cis_list' => 'CIs~~',
-	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
+	'Class:Contact/Attribute:cis_list' => 'Cls',
+	'Class:Contact/Attribute:cis_list+' => 'Bu kişiyle bağlantılı tüm yapılandırma öğeleri',
 	'Class:Contact/Attribute:finalclass' => 'Tip',
 	'Class:Contact/Attribute:finalclass+' => '',
 ));
@@ -138,27 +138,27 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Person' => 'Kişi',
 	'Class:Person+' => '',
-	'Class:Person/Attribute:name' => 'Last Name~~',
+	'Class:Person/Attribute:name' => 'Soyad',
 	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'Adı',
 	'Class:Person/Attribute:first_name+' => '',
-	'Class:Person/Attribute:employee_number' => 'Employee number~~',
+	'Class:Person/Attribute:employee_number' => 'Sicil numarası',
 	'Class:Person/Attribute:employee_number+' => '~~',
-	'Class:Person/Attribute:mobile_phone' => 'Mobile phone~~',
+	'Class:Person/Attribute:mobile_phone' => 'Cep telefonu',
 	'Class:Person/Attribute:mobile_phone+' => '~~',
-	'Class:Person/Attribute:location_id' => 'Location~~',
+	'Class:Person/Attribute:location_id' => 'Konum',
 	'Class:Person/Attribute:location_id+' => '~~',
-	'Class:Person/Attribute:location_name' => 'Location name~~',
+	'Class:Person/Attribute:location_name' => 'Konum adı',
 	'Class:Person/Attribute:location_name+' => '~~',
-	'Class:Person/Attribute:manager_id' => 'Manager~~',
+	'Class:Person/Attribute:manager_id' => 'Yönetici',
 	'Class:Person/Attribute:manager_id+' => '~~',
-	'Class:Person/Attribute:manager_name' => 'Manager name~~',
+	'Class:Person/Attribute:manager_name' => 'Yönetici adı',
 	'Class:Person/Attribute:manager_name+' => '~~',
-	'Class:Person/Attribute:team_list' => 'Teams~~',
-	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
-	'Class:Person/Attribute:tickets_list' => 'Tickets~~',
-	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
-	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name~~',
+	'Class:Person/Attribute:team_list' => 'Ekipler',
+	'Class:Person/Attribute:team_list+' => 'Bu kişinin ait olduğu tüm ekipler',
+	'Class:Person/Attribute:tickets_list' => 'Çağrı kayıtları',
+	'Class:Person/Attribute:tickets_list+' => 'Bu kişinin oluşturduğu tüm çağrı kayıtları',
+	'Class:Person/Attribute:manager_id_friendlyname' => 'Yöneticinin kullandığı adı',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '~~',
 	'Class:Person/Attribute:picture' => 'Picture~~',
 	'Class:Person/Attribute:picture+' => '~~',
@@ -175,10 +175,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Team' => 'Ekip',
 	'Class:Team+' => '',
-	'Class:Team/Attribute:persons_list' => 'Members~~',
-	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
-	'Class:Team/Attribute:tickets_list' => 'Tickets~~',
-	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
+	'Class:Team/Attribute:persons_list' => 'Üyeler',
+	'Class:Team/Attribute:persons_list+' => 'Bu ekibe ait tüm kişiler',
+	'Class:Team/Attribute:tickets_list' => 'Çağrı Kayıtları',
+	'Class:Team/Attribute:tickets_list+' => 'Bu ekibe atanan tüm çağrı kayıtları',
 ));
 
 //
@@ -194,11 +194,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => 'Kurum Adı',
 	'Class:Document/Attribute:org_name+' => '',
-	'Class:Document/Attribute:documenttype_id' => 'Document type~~',
+	'Class:Document/Attribute:documenttype_id' => 'Belge Türü',
 	'Class:Document/Attribute:documenttype_id+' => '~~',
-	'Class:Document/Attribute:documenttype_name' => 'Document type name~~',
+	'Class:Document/Attribute:documenttype_name' => 'Belge türü adı',
 	'Class:Document/Attribute:documenttype_name+' => '~~',
-	'Class:Document/Attribute:version' => 'Version~~',
+	'Class:Document/Attribute:version' => 'Sürüm',
 	'Class:Document/Attribute:version+' => '~~',
 	'Class:Document/Attribute:description' => 'Tanımlama',
 	'Class:Document/Attribute:description+' => '',
@@ -210,9 +210,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Document/Attribute:status/Value:obsolete+' => '',
 	'Class:Document/Attribute:status/Value:published' => 'Yayınlanan',
 	'Class:Document/Attribute:status/Value:published+' => '',
-	'Class:Document/Attribute:cis_list' => 'CIs~~',
-	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
-	'Class:Document/Attribute:finalclass' => 'Document Type~~',
+	'Class:Document/Attribute:cis_list' => 'CI\'lar',
+	'Class:Document/Attribute:cis_list+' => 'Bu belgeye bağlı tüm yapılandırma öğeleri',
+	'Class:Document/Attribute:finalclass' => 'Belge Türü',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
 ));
 
@@ -221,9 +221,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:DocumentFile' => 'Document File~~',
+	'Class:DocumentFile' => 'Belge dosyası',
 	'Class:DocumentFile+' => '~~',
-	'Class:DocumentFile/Attribute:file' => 'File~~',
+	'Class:DocumentFile/Attribute:file' => 'Dosya',
 	'Class:DocumentFile/Attribute:file+' => '~~',
 ));
 
@@ -232,9 +232,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:DocumentNote' => 'Document Note~~',
+	'Class:DocumentNote' => 'Belge Notu',
 	'Class:DocumentNote+' => '~~',
-	'Class:DocumentNote/Attribute:text' => 'Text~~',
+	'Class:DocumentNote/Attribute:text' => 'Metin',
 	'Class:DocumentNote/Attribute:text+' => '~~',
 ));
 
@@ -243,9 +243,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:DocumentWeb' => 'Document Web~~',
+	'Class:DocumentWeb' => 'Belge Web',
 	'Class:DocumentWeb+' => '~~',
-	'Class:DocumentWeb/Attribute:url' => 'URL~~',
+	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '~~',
 ));
 
@@ -254,11 +254,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Typology' => 'Typology~~',
+	'Class:Typology' => 'Tipoloji',
 	'Class:Typology+' => '~~',
-	'Class:Typology/Attribute:name' => 'Name~~',
+	'Class:Typology/Attribute:name' => 'İsim',
 	'Class:Typology/Attribute:name+' => '~~',
-	'Class:Typology/Attribute:finalclass' => 'Type~~',
+	'Class:Typology/Attribute:finalclass' => 'Tip',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
 ));
 
@@ -267,7 +267,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:DocumentType' => 'Document Type~~',
+	'Class:DocumentType' => 'Belge Türü',
 	'Class:DocumentType+' => '~~',
 ));
 
@@ -276,7 +276,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:ContactType' => 'Contact Type~~',
+	'Class:ContactType' => 'İletişim Tipi',
 	'Class:ContactType+' => '~~',
 ));
 
@@ -285,19 +285,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkPersonToTeam' => 'Link Person / Team~~',
+	'Class:lnkPersonToTeam' => 'Bağlantılı Kişi / Ekip',
 	'Class:lnkPersonToTeam+' => '~~',
-	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team~~',
+	'Class:lnkPersonToTeam/Attribute:team_id' => 'Ekip',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '~~',
-	'Class:lnkPersonToTeam/Attribute:team_name' => 'Team name~~',
+	'Class:lnkPersonToTeam/Attribute:team_name' => 'Ekip adı',
 	'Class:lnkPersonToTeam/Attribute:team_name+' => '~~',
-	'Class:lnkPersonToTeam/Attribute:person_id' => 'Person~~',
+	'Class:lnkPersonToTeam/Attribute:person_id' => 'Kişi',
 	'Class:lnkPersonToTeam/Attribute:person_id+' => '~~',
-	'Class:lnkPersonToTeam/Attribute:person_name' => 'Person name~~',
+	'Class:lnkPersonToTeam/Attribute:person_name' => 'Kişi Adı',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '~~',
-	'Class:lnkPersonToTeam/Attribute:role_id' => 'Role~~',
+	'Class:lnkPersonToTeam/Attribute:role_id' => 'Rol',
 	'Class:lnkPersonToTeam/Attribute:role_id+' => '~~',
-	'Class:lnkPersonToTeam/Attribute:role_name' => 'Role name~~',
+	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rol Adı',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
 ));
 
@@ -339,19 +339,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:SearchContacts+' => 'İrtibat ara',
 	'Menu:ConfigManagement:Shortcuts' => 'Kısalyollar',
 	'Menu:ConfigManagement:AllContacts' => 'Tüm irtibatlar: %1$d',
-	'Menu:Typology' => 'Typology configuration~~',
-	'Menu:Typology+' => 'Typology configuration~~',
-	'UI_WelcomeMenu_AllConfigItems' => 'Summary~~',
-	'Menu:ConfigManagement:Typology' => 'Typology configuration~~',
+	'Menu:Typology' => 'Tipoloji Yapılandırması',
+	'Menu:Typology+' => 'Tipoloji Yapılandırması',
+	'UI_WelcomeMenu_AllConfigItems' => 'Özet',
+	'Menu:ConfigManagement:Typology' => 'Tipoloji Yapılandırması',
 ));
 
 // Add translation for Fieldsets
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Person:info' => 'General information~~',
-	'UserLocal:info' => 'General information~~',
+	'Person:info' => 'Genel Bilgi',
+	'UserLocal:info' => 'Genel Bilgi',
 	'Person:personal_info' => 'Personal information~~',
-	'Person:notifiy' => 'Notification~~',
+	'Person:notifiy' => 'Bildirim',
 ));
 
 // Themes

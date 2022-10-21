@@ -9,14 +9,7 @@ namespace coreExtensions;
 
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use UserLocal;
-use UserLocalPasswordPolicyMockNotValid;
-use UserLocalPasswordPolicyMockNotValidBis;
-use UserLocalPasswordPolicyMockValid;
-use UserLocalPasswordPolicyMockValidBis;
-use UserLocalPasswordValidity;
-use UserPasswordPolicyRegex;
 
 /**
  * test class for UserLocal class
@@ -28,32 +21,26 @@ use UserPasswordPolicyRegex;
 class UserLocalTest extends ItopDataTestCase
 {
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 
-		require_once(APPROOT.'application/startup.inc.php');
-		require_once (APPROOT.'test/coreExtensions/UserLocalTest/UserLocalPasswordPolicyMock.php');
-		require_once (APPROOT.'env-production/authent-local/model.authent-local.php');
+		require_once(APPROOT.'test/coreExtensions/UserLocalTest/UserLocalPasswordPolicyMock.php');
+		require_once(APPROOT.'env-production/authent-local/model.authent-local.php');
 	}
 
 	/**
 	 * @dataProvider ProviderValidatePassword
-	 *
-	 * @runTestsInSeparateProcesses
-	 * @preserveGlobalState disabled
-	 * @backupGlobals disabled
 	 */
 	public function testValidatePassword($sPassword, $aValidatorNames, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null, $sUserLanguage = null)
 	{
 		$configMock = $this->createMock(\Config::class);
-
 		$configMock
 			->method('GetModuleSetting')
 			->willReturnMap($aConfigValueMap);
+		restore_error_handler();
 
-		if (isset($sUserLanguage))
-		{
+		if (isset($sUserLanguage)) {
 			\Dict::SetUserLanguage($sUserLanguage);
 		}
 
@@ -74,12 +61,11 @@ class UserLocalTest extends ItopDataTestCase
 
 		$oUserLocal->ValidatePassword($sPassword, $configMock, $aValidatorCollection);
 
-		list($bCheckStatus, $aCheckIssues, $aSecurityIssues) =  $oUserLocal->CheckToWrite();
+		list($bCheckStatus, $aCheckIssues, $aSecurityIssues) = $oUserLocal->CheckToWrite();
 
 		$this->assertSame($bExpectedCheckStatus, $bCheckStatus);
 
-		if (isset($expectedCheckIssues))
-		{
+		if (isset($expectedCheckIssues)) {
 			$this->assertContains($expectedCheckIssues, $aCheckIssues);
 		}
 	}
@@ -87,25 +73,25 @@ class UserLocalTest extends ItopDataTestCase
 	public function ProviderValidatePassword()
 	{
 		return array(
-			'validPattern' => array(
-				'password' => 'foo',
+			'validPattern'    => array(
+				'password'             => 'foo',
 				'aValidatorCollection' => array(
 					'UserPasswordPolicyRegex',
 				),
-				'valueMap' => array(
-					array('authent-local', 'password_validation.pattern', null, '.{1,10}')
+				'valueMap'             => array(
+					array('authent-local', 'password_validation.pattern', null, '.{1,10}'),
 				),
-				'expectedCheckStatus' => true,
+				'expectedCheckStatus'  => true,
 			),
 			'notValidPattern' => array(
-				'password' => 'foo',
+				'password'             => 'foo',
 				'aValidatorCollection' => array(
 					'UserPasswordPolicyRegex',
 				),
-				'valueMap' => array(
-					array('authent-local', 'password_validation.pattern', null, '.{6,10}')
+				'valueMap'             => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
 				),
-				'expectedCheckStatus' => false,
+				'expectedCheckStatus'  => false,
 			),
 			'noPattern' => array(
 				'password' => 'foo',
@@ -250,7 +236,6 @@ class UserLocalTest extends ItopDataTestCase
 		);
 	}
 
-
 	/**
 	 * @dataProvider ProviderPasswordRenewal
 	 *
@@ -258,6 +243,7 @@ class UserLocalTest extends ItopDataTestCase
 	public function testPasswordRenewal($sBefore, $sExpectedAfter)
 	{
 		$oBefore = is_null($sBefore) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sBefore));
+		$oNow = date(\AttributeDate::GetInternalFormat());
 		$oExpectedAfter = is_null($sExpectedAfter) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sExpectedAfter));
 
 		$aUserLocalValues = array('login' => 'john');
@@ -281,7 +267,7 @@ class UserLocalTest extends ItopDataTestCase
 		//INSERT
 		$oUserLocal->Set('password', 'fooBar1???');
 		$oUserLocal->DBWrite();
-		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'INSERT changes the "password_renewed_date"');
+		$this->assertEquals($oNow, $oUserLocal->Get('password_renewed_date'), 'INSERT sets the "password_renewed_date" to the current date');
 
 		//UPDATE password_renewed_date
 		$oUserLocal->Set('password_renewed_date', $oBefore);

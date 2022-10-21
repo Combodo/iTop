@@ -18,23 +18,6 @@
  */
 
 
-$bUseLegacyDBSearch = utils::GetConfig()->Get('use_legacy_dbsearch');
-
-if ($bUseLegacyDBSearch)
-{
-	// excluded from autoload
-	require_once (APPROOT.'core/legacy/querybuilderexpressionslegacy.class.inc.php');
-	require_once (APPROOT.'core/legacy/querybuildercontextlegacy.class.inc.php');
-	require_once(APPROOT.'core/legacy/dbobjectsearchlegacy.class.php');
-}
-else
-{
-	// excluded from autoload
-	require_once (APPROOT.'core/querybuilderexpressions.class.inc.php');
-	require_once (APPROOT.'core/querybuildercontext.class.inc.php');
-	require_once(APPROOT.'core/dbobjectsearch.class.php');
-}
-
 /**
  * An object search
  *
@@ -63,22 +46,23 @@ else
  
 abstract class DBSearch
 {
-    /** @internal */
+	/** @internal */
 	const JOIN_POINTING_TO = 0;
-    /** @internal */
+	/** @internal */
 	const JOIN_REFERENCED_BY = 1;
 
 	protected $m_bNoContextParameters = false;
+	/** @var array For {@see iQueryModifier} impl */
 	protected $m_aModifierProperties = array();
 	protected $m_bArchiveMode = false;
 	protected $m_bShowObsoleteData = true;
 
-    /**
-     * DBSearch constructor.
-     *
-     * @api
-     * @see DBSearch::FromOQL()
-     */
+	/**
+	 * DBSearch constructor.
+	 *
+	 * @api
+	 * @see DBSearch::FromOQL()
+	 */
 	public function __construct()
 	{
 		$this->Init();
@@ -1658,7 +1642,7 @@ abstract class DBSearch
 		$oSet = new DBObjectSet($this);
 		if (MetaModel::IsStandaloneClass($sClass))
 		{
-			$oSet->OptimizeColumnLoad(array($this->GetClassAlias() => array('')));
+			$oSet->OptimizeColumnLoad(array($this->GetClassAlias() => array()));
 			$aIds = array($sClass => $oSet->GetColumnAsArray('id'));
 		}
 		else
@@ -1722,5 +1706,17 @@ abstract class DBSearch
 	public function UpdateContextFromUser()
 	{
 		$this->SetShowObsoleteData(utils::ShowObsoleteData());
+	}
+
+	/**
+	 * To ease the debug of filters
+	 * @internal
+	 *
+	 * @return string
+	 *
+	 */
+	public function __toString()
+	{
+		return $this->ToOQL();
 	}
 }

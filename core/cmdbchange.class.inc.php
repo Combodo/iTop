@@ -1,22 +1,4 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Persistent class (internal) cmdbChange
  *
@@ -24,6 +6,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 
 /**
  * A change as requested/validated at once by user, may groups many atomic changes 
@@ -53,7 +36,7 @@ class CMDBChange extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeDateTime("date", array("allowed_values"=>null, "sql"=>"date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("allowed_values"=>null, "sql"=>"user_id", "targetclass"=>"User", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("origin", array("allowed_values"=>new ValueSetEnum('interactive,csv-interactive,csv-import.php,webservice-soap,webservice-rest,synchro-data-source,email-processing,custom-extension'), "sql"=>"origin", "default_value"=>"interactive", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("origin", array("allowed_values"=>new ValueSetEnum(implode(',', [CMDBChangeOrigin::INTERACTIVE, CMDBChangeOrigin::CSV_INTERACTIVE, CMDBChangeOrigin::CSV_IMPORT, CMDBChangeOrigin::WEBSERVICE_SOAP, CMDBChangeOrigin::WEBSERVICE_REST, CMDBChangeOrigin::SYNCHRO_DATA_SOURCE, CMDBChangeOrigin::EMAIL_PROCESSING, CMDBChangeOrigin::CUSTOM_EXTENSION])), "sql"=>"origin", "default_value"=>CMDBChangeOrigin::INTERACTIVE, "is_null_allowed"=>true, "depends_on"=>array())));
 	}
 
 	/**

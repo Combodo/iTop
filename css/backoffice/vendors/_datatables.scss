@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -8,7 +8,7 @@ $ibo-vendors-datatables--pagination--color: $ibo-color-grey-800 !default;
 
 $ibo-vendors-datatables--pagination-button--min-size: 20px !default;
 $ibo-vendors-datatables--pagination-button--padding-x: 5px !default;
-$ibo-vendors-datatables--pagination-button--padding-y: 0 !default;
+$ibo-vendors-datatables--pagination-button--padding-y: $ibo-spacing-0 !default;
 $ibo-vendors-datatables--pagination-button--border-radius: $ibo-border-radius-300 !default;
 $ibo-vendors-datatables--pagination-button--background-color--on-hover: $ibo-color-grey-100 !default;
 $ibo-vendors-datatables--pagination-button--text-color--is-active: $ibo-color-grey-900 !default;
@@ -23,9 +23,12 @@ $ibo-vendors-datatables--page-length-selector--border-color: $ibo-color-grey-500
 $ibo-vendors-datatables--page-length-selector--border-radius: $ibo-border-radius-300 !default;
 $ibo-vendors-datatables--page-length-selector--border-color--on-focus: $ibo-color-primary-600 !default;
 
+$ibo-vendors-datatables--cell--padding-x: $ibo-spacing-400 !default;
+$ibo-vendors-datatables--cell--padding-y: 10px !default;
+
 $ibo-vendors-datatables--column-sorting-icon--opacity: 0.3 !default;
 $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted: 1 !default;
-$ibo-vendors-datatables--column-sorting-icon--right: 1em !default;
+$ibo-vendors-datatables--column-sorting-icon--right: calc((#{$ibo-vendors-datatables--cell--padding-x} - 8px) / 2) !default;
 $ibo-vendors-datatables--column-sorting-icon--content: "\f0dc" !default;
 $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc: "\f0d8" !default;
 $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc: "\f0d7" !default;
@@ -35,14 +38,30 @@ $ibo-vendors-datatables--columns-header--border-bottom: 1px solid $ibo-color-gre
 $ibo-vendors-datatables--row--background-color--is-odd: $ibo-color-white-100 !default;
 $ibo-vendors-datatables--row--background-color--is-even: $ibo-color-white-200 !default;
 
+$ibo-vendors-datatables--row-highlight--first-cell--width: 3px !default;
+
 $ibo-vendors-datatables--row-highlight--colors:(
         'red': ($ibo-color-red-100),
-        'danger': ($ibo-color-red-200),
+        'danger': ($ibo-color-danger-200),
         'alert': ($ibo-color-red-200),
         'orange': ($ibo-color-orange-100),
-        'warning': ($ibo-color-orange-200),
+        'warning': ($ibo-color-warning-200),
         'blue': ($ibo-color-blue-200),
-        'info': ($ibo-color-blue-200),
+        'info': ($ibo-color-information-200),
+        'green': ($ibo-color-green-100),
+        'success': ($ibo-color-success-200),
+) !default;
+
+$ibo-vendors-datatables--row-highlight--first-cell--colors:(
+        'red': ($ibo-color-red-300),
+        'danger': ($ibo-color-danger-400),
+        'alert': ($ibo-color-red-400),
+        'orange': ($ibo-color-orange-300),
+        'warning': ($ibo-color-warning-400),
+        'blue': ($ibo-color-blue-400),
+        'info': ($ibo-color-information-400),
+        'green': ($ibo-color-green-300),
+        'success': ($ibo-color-success-300),
 ) !default;
 
 .dataTables_paginate {
@@ -137,7 +156,7 @@ $ibo-vendors-datatables--row-highlight--colors:(
 .dataTable {
   th, td {
     position: relative;
-    padding: 10px 12px;
+    padding: $ibo-vendors-datatables--cell--padding-y $ibo-vendors-datatables--cell--padding-x;
     @extend %ibo-font-ral-med-100; /* Necessary to set the font-size as its container can have a different one */
   }
 
@@ -154,4 +173,17 @@ $ibo-vendors-datatables--row-highlight--colors:(
       background-color: $sBgColor;
     }
   }
+  @each $sColorLabel, $aAttributes in $ibo-vendors-datatables--row-highlight--first-cell--colors {
+    $sBgColor: nth($aAttributes, 1);
+    tr.ibo-is-#{$sColorLabel} td:first-child::before{
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background-color: $sBgColor;
+    }
+  }
+
 }

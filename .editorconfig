@@ -11,7 +11,7 @@ tab_width = 4
 ij_continuation_indent_size = 8
 ij_formatter_off_tag = @formatter:off
 ij_formatter_on_tag = @formatter:on
-ij_formatter_tags_enabled = false
+ij_formatter_tags_enabled = true
 ij_smart_tabs = false
 ij_visual_guides = 300
 ij_wrap_on_typing = true
@@ -78,7 +78,7 @@ ij_editorconfig_space_before_colon = false
 ij_editorconfig_space_before_comma = false
 ij_editorconfig_spaces_around_assignment_operators = true
 
-[{*.ant, *.fxml, *.jhm, *.jnlp, *.jrxml, *.rng, *.tld, *.wsdl, *.xml, *.xsd, *.xsl, *.xslt, *.xul, phpunit.xml.dist}]
+[{*.ant,*.fxml,*.jhm,*.jnlp,*.jrxml,*.rng,*.tld,*.wsdl,*.xml,*.xsd,*.xsl,*.xslt,*.xul,phpunit.xml.dist}]
 indent_size = 2
 tab_width = 2
 ij_smart_tabs = true
@@ -280,16 +280,17 @@ ij_javascript_while_brace_force = always
 ij_javascript_while_on_new_line = false
 ij_javascript_wrap_comments = false
 
-[{*.ctp, *.hphp, *.inc, *.module, *.php, *.php4, *.php5, *.phtml}]
+[{*.ctp,*.hphp,*.inc,*.module,*.php,*.php4,*.php5,*.phtml}]
 indent_style = tab
 ij_continuation_indent_size = 4
 ij_smart_tabs = true
 ij_wrap_on_typing = false
 ij_php_align_assignments = false
-ij_php_align_class_constants = false
+ij_php_align_class_constants = true
 ij_php_align_group_field_declarations = false
 ij_php_align_inline_comments = false
 ij_php_align_key_value_pairs = true
+ij_php_align_match_arm_bodies = false
 ij_php_align_multiline_array_initializer_expression = true
 ij_php_align_multiline_binary_operation = false
 ij_php_align_multiline_chained_methods = false
@@ -298,6 +299,7 @@ ij_php_align_multiline_for = true
 ij_php_align_multiline_parameters = false
 ij_php_align_multiline_parameters_in_calls = false
 ij_php_align_multiline_ternary_operation = false
+ij_php_align_named_arguments = false
 ij_php_align_phpdoc_comments = false
 ij_php_align_phpdoc_param_names = false
 ij_php_anonymous_brace_style = end_of_line
@@ -417,6 +419,7 @@ ij_php_see_weight = 3
 ij_php_since_weight = 28
 ij_php_sort_phpdoc_elements = true
 ij_php_space_after_colon = true
+ij_php_space_after_colon_in_enum_backed_type = true
 ij_php_space_after_colon_in_named_argument = true
 ij_php_space_after_colon_in_return_type = true
 ij_php_space_after_comma = true
@@ -431,6 +434,7 @@ ij_php_space_before_catch_parentheses = true
 ij_php_space_before_class_left_brace = true
 ij_php_space_before_closure_left_parenthesis = true
 ij_php_space_before_colon = true
+ij_php_space_before_colon_in_enum_backed_type = false
 ij_php_space_before_colon_in_named_argument = false
 ij_php_space_before_colon_in_return_type = false
 ij_php_space_before_comma = false
@@ -466,6 +470,7 @@ ij_php_spaces_around_equality_operators = true
 ij_php_spaces_around_logical_operators = true
 ij_php_spaces_around_multiplicative_operators = true
 ij_php_spaces_around_null_coalesce_operator = true
+ij_php_spaces_around_pipe_in_union_type = false
 ij_php_spaces_around_relational_operators = true
 ij_php_spaces_around_shift_operators = true
 ij_php_spaces_around_unary_operator = false
@@ -540,7 +545,6 @@ ij_html_space_after_tag_name = false
 ij_html_space_around_equality_in_attribute = false
 ij_html_space_inside_empty_tag = false
 ij_html_text_wrap = normal
-ij_html_uniform_ident = false
 
 [{*.markdown,*.md}]
 ij_visual_guides = none

@@ -49,12 +49,12 @@ function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHead
 		if ($sOptionnalHeaders !== null)
 		{
 			$aHeaders = explode("\n", $sOptionnalHeaders);
+			// N°3267 - Webservices: Fix optional headers not being taken into account
+			//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
+			$aHTTPHeaders = array();
 			foreach($aHeaders as $sHeaderString)
 			{
-				if(preg_match('/^([^:]): (.+)$/', $sHeaderString, $aMatches))
-				{
-					$aHTTPHeaders[$aMatches[1]] = $aMatches[2];
-				}
+				$aHTTPHeaders[] = trim($sHeaderString);
 			}
 		}
 		// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions

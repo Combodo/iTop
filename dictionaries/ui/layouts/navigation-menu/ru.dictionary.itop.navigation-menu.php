@@ -18,15 +18,16 @@
  */
 // Navigation menu
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo~~',
-	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse~~',
-	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Expand / Collapse (Filtered on %1$s)~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Type your keywords to filter menus~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Matches from all menu groups will be displayed~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter~~',
-	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!~~',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture~~',
-	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries~~',
-
+	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Логотип компании',
+	'UI:Layout:NavigationMenu:Silo:Label' => 'Select organization to filter on~~',
+	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Развернуть / Свернуть',
+	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Развернуть / Свернуть (фильтр по %1$s)',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Фильтр...',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Введите ключевые слова для фильтра',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Отображаются совпадения в каждой группе меню',
+	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Нет совпадений',
+	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Добрый день, %1$s!',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Фотография',
+	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open user menu~~',
+	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Фильтр пунктов меню',
 ));

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
 	<classes>
 		<class id="FunctionalCI" _delta="define">
 			<parent>cmdbAbstractObject</parent>
@@ -223,11 +223,9 @@
 			{
 				$sBlockId = __class__.'_opened_'.$sSubClass;
 
-				$oPage->add('<fieldset>');
-				$oPage->add('<legend>'.MetaModel::GetName($sSubClass).'</legend>');
+				$oPage->AddUiBlock(\Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory::MakeNeutral(MetaModel::GetName($sSubClass), 2));
 				$oBlock = new DisplayBlock($oSearch, 'list', false);
 				$oBlock->Display($oPage, $sBlockId, array('menu' => false));
-				$oPage->add('</fieldset>');
 			}
 		}
 	}]]></code>
@@ -969,7 +967,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/switch.png</icon>
+					<icon>../../images/icons/icons8-switch.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -1584,16 +1582,16 @@
 						<value id="active">
 							<code>active</code>
 							<style>
-								<main_color>#689F38</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 						<value id="inactive">
 							<code>inactive</code>
 							<style>
-								<main_color>#E1E7EC</main_color>
-								<complementary_color>#6E7A8A</complementary_color>
+								<main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
@@ -1736,16 +1734,16 @@
 						<value id="active">
 							<code>active</code>
 							<style>
-								<main_color>#689F38</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 						<value id="inactive">
 							<code>inactive</code>
 							<style>
-								<main_color>#E1E7EC</main_color>
-								<complementary_color>#6E7A8A</complementary_color>
+								<main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
@@ -1839,7 +1837,7 @@
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
 				<style>
-					<icon>../../images/icons/icons8-software.svg</icon>
+					<icon>../../images/icons/icons8-software-instance.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -1904,16 +1902,16 @@
 						<value id="active">
 							<code>active</code>
 							<style>
-								<main_color>#689F38</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 						<value id="inactive">
 							<code>inactive</code>
 							<style>
-								<main_color>#E1E7EC</main_color>
-								<complementary_color>#6E7A8A</complementary_color>
+								<main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
@@ -2035,7 +2033,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/middleware.png</icon>
+					<icon>../../images/icons/icons8-automatic.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2293,7 +2291,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/webserver.png</icon>
+					<icon>../../images/icons/icons8-server-custom.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2530,7 +2528,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/application.png</icon>
+					<icon>../../images/icons/icons8-software-other.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2637,7 +2635,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/middleware.png</icon>
+					<icon>../../images/icons/icons8-automatic.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2756,7 +2754,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/database-schema.png</icon>
+					<icon>../../images/icons/icons8-database-custom.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -3000,7 +2998,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/software.png</icon>
+					<icon>../../images/icons/icons8-software.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -3759,7 +3757,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>../../images/icons/icons8-software-licence.svg</icon>
+					<icon>../../images/icons/icons8-software-license.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -3891,7 +3889,9 @@
 						<attribute id="document_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="licence_id"/>
@@ -3970,7 +3970,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4036,7 +4038,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4083,7 +4087,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4150,7 +4156,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4308,7 +4316,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4368,7 +4378,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4436,7 +4448,9 @@
 						<attribute id="contact_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="functionalci_id"/>
@@ -4516,7 +4530,9 @@
 						<attribute id="document_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="patch_id"/>
@@ -4596,7 +4612,9 @@
 						<attribute id="softwareinstance_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="softwarepatch_id"/>
@@ -4676,7 +4694,9 @@
 						<attribute id="functionalci_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="ospatch_id"/>
@@ -4756,7 +4776,9 @@
 						<attribute id="document_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="software_id"/>
@@ -4836,7 +4858,9 @@
 						<attribute id="document_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="functionalci_id"/>
@@ -4916,7 +4940,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/subnet.png</icon>
+					<icon>../../images/icons/icons8-network.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -4950,12 +4974,12 @@
 				</field>
 				<field id="ip" xsi:type="AttributeIPAddress">
 					<sql>ip</sql>
-          <default_value>0.0.0.0</default_value>
+          <default_value></default_value>
 					<is_null_allowed>false</is_null_allowed>
 				</field>
 				<field id="ip_mask" xsi:type="AttributeIPAddress">
 					<sql>ip_mask</sql>
-          <default_value>0.0.0.0</default_value>
+          <default_value></default_value>
 					<is_null_allowed>false</is_null_allowed>
 				</field>
 				<field id="vlans_list" xsi:type="AttributeLinkedSetIndirect">
@@ -4976,47 +5000,47 @@
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-			$oPage->SetCurrentTab('Class:Subnet/Tab:IPUsage');
+      $bIsCreation = ($this->GetKey() != -1)? false : true;
+      if (!$bIsCreation)	{
+        $oPage->SetCurrentTab('Class:Subnet/Tab:IPUsage');
 
-			$bit_ip = ip2long($this->Get('ip'));
-			$bit_mask = ip2long($this->Get('ip_mask'));
+        $bit_ip = ip2long($this->Get('ip'));
+        $bit_mask = ip2long($this->Get('ip_mask'));
 
-			$iIPMin = sprintf('%u', ($bit_ip & $bit_mask) | 1); // exclude the first one: identifies the subnet itself
-			$iIPMax = sprintf('%u', (($bit_ip | (~$bit_mask))) & 0xfffffffe); // exclude the last one : broadcast address
+        $iIPMin = sprintf('%u', ($bit_ip & $bit_mask) | 1); // exclude the first one: identifies the subnet itself
+        $iIPMax = sprintf('%u', (($bit_ip | (~$bit_mask))) & 0xfffffffe); // exclude the last one : broadcast address
 
-			$sIPMin = long2ip($iIPMin);
-			$sIPMax = long2ip($iIPMax);
+        $sIPMin = long2ip($iIPMin);
+        $sIPMax = long2ip($iIPMax);
 
-			$oPage->p(Dict::Format('Class:Subnet/Tab:IPUsage-explain', $sIPMin, $sIPMax));
+        $oPage->p(Dict::Format('Class:Subnet/Tab:IPUsage-explain', $sIPMin, $sIPMax));
 
-			$oIfFilter = DBObjectSearch::FromOQL("SELECT IPInterface AS if WHERE INET_ATON(if.ipaddress) >= INET_ATON('$sIPMin') AND INET_ATON(if.ipaddress) <= INET_ATON('$sIPMax')");
-			$oIfSet = new CMDBObjectSet($oIfFilter);
-			$oBlock = new DisplayBlock($oIfFilter, 'list', false);
-			$oBlock->Display($oPage, 'nwif', array('menu' => false));
+        $oIfFilter = DBObjectSearch::FromOQL("SELECT IPInterface AS if WHERE INET_ATON(if.ipaddress) >= INET_ATON('$sIPMin') AND INET_ATON(if.ipaddress) <= INET_ATON('$sIPMax')");
+        $oIfSet = new CMDBObjectSet($oIfFilter);
+        $oBlock = new DisplayBlock($oIfFilter, 'list', false);
+        $oBlock->Display($oPage, 'nwif', array('menu' => false));
 
-			$iCountUsed = $oIfSet->Count();
-			$iCountRange = $iIPMax - $iIPMin; // On 32-bit systems the substraction will be computed using floats for values greater than PHP_MAX_INT;
-			$iFreeCount =  $iCountRange - $iCountUsed;
+        $iCountUsed = $oIfSet->Count();
+        $iCountRange = $iIPMax - $iIPMin; // On 32-bit systems the substraction will be computed using floats for values greater than PHP_MAX_INT;
+        $iFreeCount =  $iCountRange - $iCountUsed;
 
-			$oPage->SetCurrentTab('Class:Subnet/Tab:FreeIPs');
-			$oPage->p(Dict::Format('Class:Subnet/Tab:FreeIPs-count', $iFreeCount));
-			$oPage->p(Dict::S('Class:Subnet/Tab:FreeIPs-explain'));
+        $oPage->SetCurrentTab('Class:Subnet/Tab:FreeIPs');
+        $oPage->p(Dict::Format('Class:Subnet/Tab:FreeIPs-count', $iFreeCount));
+        $oPage->p(Dict::S('Class:Subnet/Tab:FreeIPs-explain'));
 
-			$aUsedIPs = $oIfSet->GetColumnAsArray('ipaddress', false);
-			$iAnIP = $iIPMin;
-			$iFound = 0;
-			while (($iFound < min($iFreeCount, 10)) && ($iAnIP <= $iIPMax))
-			{
-				$sAnIP = long2ip($iAnIP);
-				if (!in_array($sAnIP, $aUsedIPs))
-				{
-					$iFound++;
-					$oPage->p($sAnIP);
-				}
-				else
-				{
-				}
-				$iAnIP++;
+        $aUsedIPs = $oIfSet->GetColumnAsArray('ipaddress', false);
+        $iAnIP = $iIPMin;
+        $iFound = 0;
+        while (($iFound < min($iFreeCount, 10)) && ($iAnIP <= $iIPMax))
+        {
+          $sAnIP = long2ip($iAnIP);
+          if (!in_array($sAnIP, $aUsedIPs))
+          {
+            $iFound++;
+            $oPage->p($sAnIP);
+          }
+          $iAnIP++;
+        }
 			}
 	}]]></code>
 				</method>
@@ -5112,7 +5136,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/vlan.png</icon>
+					<icon>../../images/icons/icons8-hierarchy.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -5230,7 +5254,9 @@
 						<attribute id="vlan_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="subnet_id"/>
@@ -5316,7 +5342,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/interface.png</icon>
+					<icon>../../images/icons/icons8-globe-cable.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -5379,7 +5405,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/interface.png</icon>
+					<icon>../../images/icons/icons8-globe-cable.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -5524,7 +5550,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/interface.png</icon>
+					<icon>../../images/icons/icons8-globe-wire.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -5646,7 +5672,9 @@
 						<attribute id="vlan_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="physicalinterface_id"/>
@@ -5734,7 +5762,9 @@
 						<attribute id="connectableci_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="networkdevice_id"/>
@@ -5830,30 +5860,69 @@
 					<type>Overload-cmdbAbstractObject</type>
 					<code><![CDATA[	protected function UpdateConnectedNetworkDevice()
 	{
-		$oDevice = MetaModel::GetObject('ConnectableCI', $this->Get('connectableci_id'));
-		if (is_object($oDevice) && (get_class($oDevice) == 'NetworkDevice'))
-		{
-			// Note: in case a port has been changed, search with the original values
-			$sOQL = "SELECT  lnkConnectableCIToNetworkDevice WHERE connectableci_id = :device AND networkdevice_id = :network AND network_port = :nwport AND device_port = :devport";
+	  $aFields = array('networkdevice_id','connectableci_id','network_port','device_port','connection_type');
+    $aChanges = $this->ListPreviousValuesForUpdatedAttributes();
+    $aPrev = array(); // Previous values of the current link object before it was modified
+    foreach ($aFields as $sFieldCode) {
+        $aPrev[$sFieldCode] = array_key_exists($sFieldCode, $aChanges) ? $aChanges[$sFieldCode] : $this->Get($sFieldCode);
+    }
+		$sPrevLink = ($aPrev['connection_type'] == 'uplink') ? 'downlink' : 'uplink';
+		$sConnLink = ($this->Get('connection_type') == 'uplink') ? 'downlink' : 'uplink';
+
+    $oNewDevice = MetaModel::GetObject('ConnectableCI', $this->Get('connectableci_id'), false);
+    $oPrevDevice = MetaModel::GetObject('ConnectableCI', $aPrev['connectableci_id'], false);
+    $bNew = (is_object($oNewDevice) && (get_class($oNewDevice) == 'NetworkDevice'));
+    $bPrev = (is_object($oPrevDevice) && (get_class($oPrevDevice) == 'NetworkDevice'));
+		$sOQL = "SELECT  lnkConnectableCIToNetworkDevice WHERE connectableci_id = :device AND networkdevice_id = :network AND network_port = :nwport AND device_port = :devport AND connection_type = :link";
+
+    if ($bPrev) { // There was a twin
+      // Retrieve twin link using previous values of the current link
+			$oConnectionSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+							array(),
+							array(
+								'network' => $aPrev['connectableci_id'],
+								'device' => $aPrev['networkdevice_id'],
+								'devport' => $aPrev['network_port'],
+								'nwport' => $aPrev['device_port'],
+								'link' => $sPrevLink,
+								)
+			);
+			if ($bNew) { // and a twin must still exist, so update the existing
+			  while ($oConnection = $oConnectionSet->Fetch()) {
+				    $oConnection->Set('networkdevice_id', $this->Get('connectableci_id'));
+				    $oConnection->Set('connectableci_id', $this->Get('networkdevice_id'));
+				    $oConnection->Set('network_port', $this->Get('device_port'));
+				    $oConnection->Set('device_port', $this->Get('network_port'));
+				    $oConnection->Set('connection_type',$sConnLink);
+				    $oConnection->DBUpdate();
+			  }
+			}
+			else {  // and no twin is needed anymore, so delete the existing
+			  while ($oConnection = $oConnectionSet->Fetch()) {
+				    $oConnection->DBDelete();
+			  }
+			}
+		}
+		elseif ($bNew) { // There was no twin but a twin must exist now
+      // Search for a twin link using current values inverted
 			$oConnectionSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
 							array(),
 							array(
 								'network' => $this->Get('connectableci_id'),
 								'device' => $this->Get('networkdevice_id'),
-								'devport' => $this->GetOriginal('network_port'),
-								'nwport' => $this->GetOriginal('device_port'),
+								'devport' => $this->Get('device_port'),
+								'nwport' => $this->Get('network_port'),
+								'link' => $sConnLink,
 								)
 			);
-			$sLink = $this->Get('connection_type');
-			$sConnLink = ($sLink == 'uplink') ? 'downlink' : 'uplink';
-
-			// There should be one link - do it in a safe manner anyway
-			while ($oConnection = $oConnectionSet->Fetch())
-			{
-				$oConnection->Set('connection_type', $sConnLink);
-				$oConnection->Set('network_port', $this->Get('device_port'));
-				$oConnection->Set('device_port', $this->Get('network_port'));
-				$oConnection->DBUpdate();
+			if ($oConnectionSet->Count() == 0) {
+				$oNewLink = new lnkConnectableCIToNetworkDevice();
+				$oNewLink->Set('networkdevice_id', $this->Get('connectableci_id'));
+				$oNewLink->Set('connectableci_id', $this->Get('networkdevice_id'));
+				$oNewLink->Set('network_port', $this->Get('device_port'));
+				$oNewLink->Set('device_port', $this->Get('network_port'));
+				$oNewLink->Set('connection_type', $sConnLink);
+				$oNewLink->DBInsert();
 			}
 		}
 	}]]></code>
@@ -5994,7 +6063,9 @@
 						<attribute id="functionalci_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="applicationsolution_id"/>
@@ -6074,7 +6145,9 @@
 						<attribute id="applicationsolution_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="businessprocess_id"/>
@@ -6322,7 +6395,9 @@
 						<attribute id="group_id"/>
 					</attributes>
 				</naming>
-				<icon/>
+        <style>
+          <icon/>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="group_id"/>
@@ -6555,7 +6630,7 @@
 							<dashlet id="1" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:AllDevices</title>
-									<icon>itop-config-mgmt/images/server.png</icon>
+									<icon>../images/icons/icons8-server.svg</icon>
 								<subtitle>Menu_ConfigManagement_AllDevices</subtitle>
 							</dashlet>
 							<dashlet id="2" xsi:type="DashletBadge">
@@ -6574,7 +6649,7 @@
 							<dashlet id="4" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:SWAndApps</title>
-									<icon>itop-config-mgmt/images/application.png</icon>
+									<icon>../images/icons/icons8-software.svg</icon>
 							</dashlet>
 							<dashlet id="5" xsi:type="DashletBadge">
 								<rank>1</rank>
@@ -6624,7 +6699,7 @@
 							<dashlet id="15" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:Misc</title>
-									<icon>itop-config-mgmt/images/subnet.png</icon>
+									<icon>../images/icons/icons8-network.svg</icon>
 							</dashlet>
 							<dashlet id="16" xsi:type="DashletBadge">
 								<rank>1</rank>

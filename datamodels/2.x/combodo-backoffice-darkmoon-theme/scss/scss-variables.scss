@@ -1,0 +1,254 @@
+$ibo-color-grey-950: darken($nord0, 15%);
+$ibo-color-grey-900: darken($nord0, 10%);
+$ibo-color-grey-850: darken($nord0, 5%);
+$ibo-color-grey-800: $nord0 ;
+$ibo-color-grey-700: $nord1;
+$ibo-color-grey-600: $nord2;
+$ibo-color-grey-500: $nord3;
+$ibo-color-grey-400: lighten($ibo-color-grey-500, 10%);
+$ibo-color-grey-300: lighten($ibo-color-grey-400, 10%);
+$ibo-color-grey-250: lighten($ibo-color-grey-300, 15%);
+$ibo-color-grey-200: $nord4;
+$ibo-color-grey-100: $nord5;
+$ibo-color-grey-50: $nord6;
+
+$ibo-color-red-100: lighten($nord11, 40%);
+$ibo-color-red-200: lighten($nord11, 35%);
+$ibo-color-red-300: lighten($nord11, 22%);
+$ibo-color-red-400: lighten($nord11, 15%);
+$ibo-color-red-500: lighten($nord11, 7%);
+$ibo-color-red-600: $nord11;
+$ibo-color-red-700: darken($nord11, 7%);
+$ibo-color-red-800: darken($nord11, 15%);
+$ibo-color-red-900: darken($nord11, 22%);
+
+$ibo-color-primary-100: lighten($nord8, 15%);
+$ibo-color-primary-200: darken($ibo-color-primary-100, 7%);
+$ibo-color-primary-300: $nord8;
+$ibo-color-primary-400: darken($ibo-color-primary-300, 7%);
+$ibo-color-primary-500: $nord9;
+$ibo-color-primary-600: darken($ibo-color-primary-500, 7%);
+$ibo-color-primary-700: lighten($nord10, 7%);
+$ibo-color-primary-800: $nord10;
+$ibo-color-primary-900: darken($ibo-color-primary-800, 20%);
+$ibo-color-primary-950: darken($ibo-color-primary-900, 10%);
+
+/* - Secondary color of the brand */
+$ibo-color-secondary-100: $ibo-color-grey-100;
+$ibo-color-secondary-200: $ibo-color-grey-200;
+$ibo-color-secondary-300: $ibo-color-grey-300;
+$ibo-color-secondary-400: $ibo-color-grey-400;
+$ibo-color-secondary-500: $ibo-color-grey-500;
+$ibo-color-secondary-600: $ibo-color-grey-600;
+$ibo-color-secondary-700: $ibo-color-grey-700;
+$ibo-color-secondary-800: $ibo-color-grey-800;
+$ibo-color-secondary-850: $ibo-color-grey-850;
+$ibo-color-secondary-900: $ibo-color-grey-900;
+$ibo-color-secondary-950: $ibo-color-grey-950;
+
+$text    : $ibo-color-grey-100;
+$text-invert: $ibo-color-grey-800;
+$text-light : $ibo-color-grey-200;
+$text-strong: inherit;
+$code: $ibo-color-primary-800;
+$code-background: $ibo-color-grey-300;
+$pre-background: $ibo-color-grey-600;
+
+$ibo-scrollbar--scrollbar-track-background-color: $ibo-color-grey-700;
+$ibo-scrollbar--scrollbar-thumb-background-color: $ibo-color-grey-900;
+
+$ibo-navigation-menu--body--background-color: $ibo-color-grey-900;
+$ibo-navigation-menu--bottom-part--background-color: $ibo-color-grey-850;
+
+$ibo-top-bar--background-color: $ibo-color-grey-700;
+
+
+$ibo-content-block--background-color: $ibo-color-grey-800;
+$ibo-content-block--border: 1px solid $ibo-color-grey-900;
+
+$ibo-body-text-color: $text;
+$ibo-body-background-color: $ibo-color-grey-800;
+
+$ibo-dashlet-badge--background-color: $ibo-color-grey-700;
+$ibo-dashlet-badge--border: 1px solid $ibo-color-grey-850;
+$ibo-dashlet-header-static--body--text-color: $ibo-color-grey-200;
+
+$ibo-input--color: $ibo-color-grey-200;
+$ibo-input--background-color: $ibo-color-grey-600;
+$ibo-input--border-color: $ibo-color-grey-900;
+$ibo-input--focus--border-color: $ibo-color-primary-300;
+$ibo-input--placeholder--color: $ibo-color-grey-400;
+$ibo-input--disabled--background-color: $ibo-color-grey-500;
+$ibo-input--placeholder--color: $ibo-color-grey-200;
+
+$ibo-is-code--background-color: $ibo-color-grey-800;
+
+$ibo-field--label--description--color: $ibo-color-grey-300;
+
+$ibo-field--fullscreen-toggler--background-color--on-hover: $ibo-color-grey-500;
+
+$ibo-input-wrapper--is-error--background-color: $ibo-color-red-800;
+$ibo-input-wrapper--is-error--border-color: $ibo-color-red-700;
+$ibo-field-validation: $ibo-color-red-200;
+$ibo-field--background-color--is-fullscreen: $ibo-color-grey-700;
+$ibo-field--label--background-color--is-fullscreen: $ibo-color-grey-800;
+
+$ibo-navigation-menu--menu-filter-input--placeholder-color: $ibo-input--placeholder--color;
+$ibo-navigation-menu--menu-filter-input--text-color: $ibo-input--color;
+$ibo-navigation-menu--menu-filter-input--background-color: $ibo-input--background-color;
+$ibo-navigation-menu--menu-filter-input--border: 1px solid $ibo-input--focus--border-color;
+$ibo-navigation-menu--menu-filter-hotkey--border: 1px solid $ibo-color-grey-300;
+
+
+
+$ibo-panel--icon--background-color--as-medallion: $ibo-color-grey-600;
+$ibo-panel--icon--border--as-medallion: 2px solid $ibo-color-grey-700;
+$ibo-panel--title--color: $ibo-color-grey-200;
+$ibo-panel--subtitle--color: $ibo-color-grey-250;
+$ibo-panel--body--background-color: $ibo-color-grey-700;
+$ibo-panel--body--border-color: $ibo-color-grey-900;
+$ibo-panel--collapsible-toggler--color: $ibo-color-grey-400;
+
+$ibo-global-search--head--background-color: $ibo-top-bar--background-color;
+$ibo-global-search--drawer--background-color: $ibo-global-search--head--background-color;
+$ibo-global-search--compartment-title--text-color: $ibo-color-grey-300;
+$ibo-global-search--compartment-content--text-color: $ibo-color-grey-200;
+$ibo-global-search--compartment--placeholder-hint--text-color: $ibo-color-grey-100;
+$ibo-global-search--input--placeholder-color: $ibo-color-grey-200;
+$ibo-global-search--input--text-color: $ibo-color-grey-100;
+
+$ibo-quick-create--head--background-color: $ibo-top-bar--background-color;
+$ibo-quick-create--drawer--background-color: $ibo-quick-create--head--background-color;
+$ibo-quick-create--compartment-title--text-color: $ibo-color-grey-300;
+$ibo-quick-create--compartment-content--text-color: $ibo-color-grey-200;
+$ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-200;
+$ibo-quick-create--input--text-color: $ibo-color-grey-100;
+$ibo-quick-create--input--placeholder-color: $ibo-color-grey-200;
+$ibo-quick-create--compartment-element--background-color--is-active: $ibo-color-grey-500;
+
+$ibo-datatable--toolbar--text-color: $ibo-color-grey-300;
+$ibo-vendors-datatables--pagination-button--background-color--on-hover: $ibo-color-grey-700;
+$ibo-vendors-datatables--pagination-button--text-color--is-active: $ibo-color-grey-200;
+$ibo-vendors-datatables--pagination-button--background-color--is-active: $ibo-color-grey-900;
+$ibo-vendors-datatables--pagination-button--box-shadow--is-active: inset 0px 1px 0px rgba(0, 0, 0, 0.15);
+$ibo-vendors-datatables--pagination-button--text-color--is-disabled: $ibo-color-grey-600;
+
+$ibo-vendors-datatables--page-length-selector--text-color: $ibo-color-grey-100;
+$ibo-vendors-datatables--page-length-selector--background-color: $ibo-color-grey-600;
+$ibo-vendors-datatables--page-length-selector--border-color: $ibo-color-grey-800;
+$ibo-vendors-datatables--page-length-selector--border-color--on-focus: $ibo-color-primary-300;
+
+$ibo-vendors-datatables--columns-header--border-bottom: 1px solid $ibo-color-grey-400;
+$ibo-vendors-datatables--row--background-color--is-odd: $ibo-color-grey-700;
+$ibo-vendors-datatables--row--background-color--is-even: $ibo-color-grey-800;
+
+$ibo-datatable--row--background-color--is-hover: $ibo-color-blue-900;
+$ibo-datatable--row--background-color--is-selected: $ibo-color-blue-700;
+
+$ibo-field--value--color: $ibo-body-text-color;
+$ibo-title--text-color: $ibo-body-text-color;
+
+$ibo-hyperlink-color: $ibo-color-primary-200;
+$ibo-hyperlink-color--on-hover: $ibo-color-primary-400;
+$ibo-hyperlink-color--on-active: $ibo-color-primary-500;
+
+$ibo-breadcrumbs--item--text-color: $ibo-color-primary-200;
+$ibo-breadcrumbs--item-icon--text-color: $ibo-color-primary-400;
+
+$ibo-navigation-menu--menu-group--background-color--is-active: $ibo-color-primary-950;
+$ibo-navigation-menu--menu-node--text-color: $ibo-body-text-color;
+$ibo-navigation-menu--menu-filter-hint--text-color: $ibo-color-grey-100;
+$ibo-navigation-menu--body--text-color: $ibo-color-grey-200;
+$ibo-navigation-menu--menu-group-title--text-color--is-active: $ibo-color-primary-200;
+
+$ibo-navigation-menu--menu-node--background-color: $ibo-color-primary-600;
+$ibo-navigation-menu--menu-node-counter--background-color: $ibo-color-primary-600;
+
+$ibo-datatable-header--text-color: $ibo-color-secondary-200;
+$ibo-vendors-datatables--pagination--color: $ibo-color-secondary-200;
+
+$ibo-input-select-wrapper--after--color: $ibo-color-secondary-300;
+$ibo-input-select--action-button--color: $ibo-input-select-wrapper--after--color;
+$ibo-input-select-selectize--item--active--text-color: $ibo-color-grey-100;
+$ibo-input-select-selectize--item--active--background-color: $ibo-color-grey-500;
+$ibo-vendors-selectize-input--color: $ibo-body-text-color;
+
+$ibo-popover-menu--separator--background-color: $ibo-color-grey-500;
+$ibo-popover-menu--item--text-color: $ibo-color-grey-200;
+$ibo-popover-menu--background-color: $ibo-color-grey-700;
+$ibo-popover-menu--item--hover-background-color: $ibo-color-grey-500;
+
+$ibo-tab-container--tab-container--label--text-color: $ibo-color-grey-200;
+$ibo-tab-container--tabs-list--background-color: $ibo-color-grey-500;
+$ibo-tab-container--tab-header--text-color--is-active: $ibo-color-blue-300;
+$ibo-tab-container--tab-header--text-color--on-hover: $ibo-color-blue-200;
+$ibo-tab-container--tab-header--background-color--on-hover: $ibo-color-grey-400;
+$ibo-tab-container--extra-tab-toggler--text-color: $ibo-color-blue-100 !default;
+$ibo-tab-container--extra-tab-toggler--text-color--on-hover: $ibo-color-blue-200 !default;
+$ibo-tab-container--extra-tab-toggler--background-color--on-hover: $ibo-color-grey-500 !default;
+$ibo-activity-panel--header--background-color: $ibo-color-grey-400;
+$ibo-activity-panel--tab-toggler--is-active--background-color: $ibo-color-grey-200;
+$ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color;
+$ibo-caselog-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color;
+$ibo-object-details--tag--separator--background-color: $ibo-color-grey-300;
+
+$ibo-activity-panel--tab-toolbar--text-color: $ibo-color-grey-800;
+$ibo-activity-panel--tab-toolbar-action--color: $ibo-color-grey-800;
+
+$ibo-panel--body--border: 1px solid $ibo-color-grey-850;
+$ibo-panel--header--background-color--is-sticking: $ibo-color-grey-700;
+
+$ibo-tab-container--tab-header--text-color: $ibo-color-grey-50;
+
+$ibo-vendors-datatables--row-highlight--colors:('red': ($ibo-color-red-700),'danger': ($ibo-color-red-700),'alert': ($ibo-color-red-700),'orange': ($ibo-color-orange-700),'warning': (#d08770),'blue': (#5e81ac),'info': (#5e81ac),);
+
+$ibo-vendors-jqueryui--ui-dialog--background-color: $ibo-color-grey-800;
+$ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom: solid 1px $ibo-color-grey-500;
+
+
+
+$ibo-vendors-blockui--blockoverlay--background-color: $ibo-color-grey-800;
+$ibo-vendors-blockui--blockoverlay--within--datatable--background-color: $ibo-vendors-blockui--blockoverlay--background-color;
+$ibo-vendors-blockui--blockmsg--color: $ibo-color-grey-200;
+
+$ibo-search-form-panel--criteria--background-color: $ibo-color-grey-800;
+$ibo-search-form-panel--criteria--color: $ibo-color-grey-100;
+$ibo-search-form-panel--more-criteria--background-color: $ibo-color-grey-800;
+$ibo-search-form-panel--more-criteria--color: $ibo-color-grey-100;
+$ibo-search-form-panel--more-criteria--icon--color: $ibo-color-primary-500;
+$ibo-search-form-panel--criteria--border-color: $ibo-color-grey-500;
+$ibo-search-form-panel--multiple-choice--hover--color: $ibo-color-grey-500;
+$ibo-search-form-panel--items--hover--color: $ibo-search-form-panel--multiple-choice--hover--color;
+
+$ibo-activity-entry--main-information--background-color: $ibo-color-grey-200;
+$ibo-activity-entry--main-information--is-current-user--background-color: $ibo-color-primary-200;
+$ibo-activity-entry--sub-information--text-color: $ibo-color-grey-200;
+$ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-200;
+
+$ibo-wizard-container--background-color: $ibo-color-blue-900;
+
+$ibo-keyboard-shortcut--input--background-color: $ibo-input--background-color;
+$ibo-keyboard-shortcut--input--color: $ibo-input--color;
+
+
+$ibo-button-colors: ('regular': ('neutral': ('': ($ibo-color-secondary-600, $ibo-color-grey-200, $ibo-button--box-shadow-bottom $ibo-color-secondary-400, $ibo-color-secondary-300,  ),  ':hover': ( $ibo-color-secondary-500, $ibo-color-grey-100, $ibo-button--box-shadow-bottom $ibo-color-secondary-400, $ibo-color-secondary-300,  ),  ':active': ( $ibo-color-secondary-500, $ibo-color-grey-200, $ibo-button--box-shadow-top $ibo-color-secondary-400 #{','} $ibo-button--box-shadow-bottom $ibo-color-secondary-500, $ibo-color-secondary-300, ), ':disabled': ($ibo-color-grey-300,$ibo-color-grey-700,$ibo-button--box-shadow-top $ibo-color-grey-300,$ibo-color-grey-500,  ),  ),   'primary': (  '': (   $ibo-color-primary-700,   $ibo-color-white-100,   $ibo-button--box-shadow-bottom $ibo-color-primary-400,   $ibo-color-primary-300,  ),  ':hover': (   $ibo-color-primary-600,   $ibo-color-white-100,   $ibo-button--box-shadow-bottom $ibo-color-primary-400,   $ibo-color-primary-300,  ),  ':active': (   $ibo-color-primary-600,   $ibo-color-white-100,   $ibo-button--box-shadow-top $ibo-color-primary-400 #{','} $ibo-button--box-shadow-bottom $ibo-color-primary-600,   $ibo-color-primary-800,  ),  ':disabled': (   $ibo-color-grey-300,   $ibo-color-grey-700,   $ibo-button--box-shadow-top $ibo-color-grey-300,   $ibo-color-grey-500,  ),  ),  'secondary': (  '': (   $ibo-color-secondary-600,   $ibo-color-grey-200,   $ibo-button--box-shadow-bottom $ibo-color-secondary-400,   $ibo-color-secondary-300,  ),  ':hover': (   $ibo-color-secondary-500,   $ibo-color-grey-100,   $ibo-button--box-shadow-bottom $ibo-color-secondary-400,   $ibo-color-secondary-300,  ),  ':active': (   $ibo-color-secondary-500,   $ibo-color-grey-200,   $ibo-button--box-shadow-top $ibo-color-secondary-400 #{','} $ibo-button--box-shadow-bottom $ibo-color-secondary-500,   $ibo-color-secondary-200,  ),  ':disabled': (   $ibo-color-grey-300,   $ibo-color-grey-700,   $ibo-button--box-shadow-top $ibo-color-grey-300,   $ibo-color-grey-500,  ),  ),  'danger': (  '': (   $ibo-color-danger-700,   $ibo-color-white-100,   $ibo-button--box-shadow-bottom $ibo-color-danger-500,   $ibo-color-danger-700,  ),  ':hover': (   $ibo-color-danger-600,   $ibo-color-white-100,   $ibo-button--box-shadow-bottom $ibo-color-danger-500,   $ibo-color-danger-700,  ),  ':active': (   $ibo-color-danger-600,   $ibo-color-white-100,   $ibo-button--box-shadow-top $ibo-color-danger-500 #{','} $ibo-button--box-shadow-bottom $ibo-color-danger-600,   $ibo-color-danger-700,  ),  ':disabled': (   $ibo-color-grey-300,   $ibo-color-grey-700,   $ibo-button--box-shadow-top $ibo-color-grey-300,   $ibo-color-grey-500,  ),  ),  'success': (  '': (   $ibo-color-success-700,   $ibo-color-white-100,   $ibo-button--box-shadow-bottom $ibo-color-success-900,   $ibo-color-success-800,  ),  ':hover': (   $ibo-color-success-800,   $ibo-color-white-100,   $ibo-button--box-shadow-bottom $ibo-color-success-900,   $ibo-color-success-800, ), ':active': ($ibo-color-success-800,$ibo-color-white-100,$ibo-button--box-shadow-top $ibo-color-success-900 #{','} $ibo-button--box-shadow-bottom $ibo-color-success-800,$ibo-color-success-800, ), ':disabled': ($ibo-color-grey-300,$ibo-color-grey-700,$ibo-button--box-shadow-top $ibo-color-grey-300,$ibo-color-grey-500, ),  ),   'red': ( '': ($ibo-color-red-700,$ibo-color-white-100,$ibo-button--box-shadow-bottom $ibo-color-red-500,$ibo-color-red-700, ), ':hover': ($ibo-color-red-600,$ibo-color-white-100,$ibo-button--box-shadow-bottom $ibo-color-red-500,$ibo-color-red-700, ), ':active': ($ibo-color-red-600,$ibo-color-white-100,$ibo-button--box-shadow-top $ibo-color-red-500 #{','} $ibo-button--box-shadow-bottom $ibo-color-red-600,$ibo-color-red-700, ), ':disabled': ($ibo-color-grey-300,$ibo-color-grey-700,$ibo-button--box-shadow-top $ibo-color-grey-300,$ibo-color-grey-500, ),  ),  'green': ( '': ($ibo-color-green-700,$ibo-color-white-100,$ibo-button--box-shadow-bottom $ibo-color-green-900,$ibo-color-green-800, ), ':hover': ($ibo-color-green-800,$ibo-color-white-100,$ibo-button--box-shadow-bottom $ibo-color-green-900,$ibo-color-green-800, ), ':active': ($ibo-color-green-800,$ibo-color-white-100,$ibo-button--box-shadow-top $ibo-color-green-900 #{','} $ibo-button--box-shadow-bottom $ibo-color-green-800,$ibo-color-green-800, ), ':disabled': ($ibo-color-grey-300,$ibo-color-grey-700,$ibo-button--box-shadow-top $ibo-color-grey-300,$ibo-color-grey-500, ),  ),  'cyan': ( '': ($ibo-color-cyan-500,$ibo-color-white-100,$ibo-button--box-shadow-bottom $ibo-color-cyan-900,$ibo-color-cyan-900, ), ':hover': ($ibo-color-cyan-700,$ibo-color-white-100,$ibo-button--box-shadow-bottom $ibo-color-cyan-900,$ibo-color-cyan-900, ), ':active': ($ibo-color-cyan-700,$ibo-color-white-100,$ibo-button--box-shadow-top $ibo-color-cyan-900 #{','} $ibo-button--box-shadow-bottom $ibo-color-cyan-700,$ibo-color-cyan-700, ), ':disabled': ($ibo-color-grey-300,$ibo-color-grey-700,$ibo-button--box-shadow-top $ibo-color-grey-300,$ibo-color-grey-500, ),  )   ),   'alternative': (  'neutral': ( '': (transparent,$ibo-color-grey-300,$ibo-button--box-shadow-bottom transparent,$ibo-color-grey-800, ), ':hover': ($ibo-color-secondary-700,$ibo-color-grey-300,$ibo-button--box-shadow-bottom $ibo-color-secondary-700,$ibo-color-grey-800, ), ':active': ($ibo-color-secondary-700,$ibo-color-grey-300,$ibo-button--box-shadow-top $ibo-color-secondary-700 #{','} $ibo-button--box-shadow-bottom $ibo-color-secondary-700,$ibo-color-grey-800, ), ':disabled': (transparent,$ibo-color-grey-600,$ibo-button--box-shadow-top transparent,$ibo-color-grey-500, ),  ),  'primary': ( '': (transparent,$ibo-color-primary-300,$ibo-button--box-shadow-bottom transparent,$ibo-color-cyan-700, ), ':hover': ($ibo-color-primary-900,$ibo-color-primary-300,$ibo-button--box-shadow-bottom $ibo-color-primary-900,$ibo-color-grey-800, ), ':active': ($ibo-color-primary-900,$ibo-color-primary-300,$ibo-button--box-shadow-top $ibo-color-primary-900 #{','} $ibo-button--box-shadow-bottom $ibo-color-primary-900,$ibo-color-grey-800, ), ':disabled': (transparent,$ibo-color-grey-600,$ibo-button--box-shadow-top transparent,$ibo-color-grey-500, ),  ),  'secondary': ( '': (transparent,$ibo-color-grey-300,$ibo-button--box-shadow-bottom transparent,$ibo-color-grey-800, ), ':hover': ($ibo-color-secondary-100,$ibo-color-grey-900,$ibo-button--box-shadow-bottom $ibo-color-secondary-100,$ibo-color-grey-800, ), ':active': ($ibo-color-secondary-100,$ibo-color-grey-900,$ibo-button--box-shadow-top $ibo-color-secondary-200 #{','} $ibo-button--box-shadow-bottom $ibo-color-secondary-100,$ibo-color-grey-800, ), ':disabled': (transparent,$ibo-color-grey-600,$ibo-button--box-shadow-top transparent,$ibo-color-grey-500, ),  ),  'danger': ( '': (transparent,$ibo-color-danger-700,$ibo-button--box-shadow-bottom transparent,$ibo-color-danger-600, ), ':hover': ($ibo-color-danger-200,$ibo-color-danger-900,$ibo-button--box-shadow-bottom $ibo-color-danger-200,$ibo-color-danger-800, ), ':active': ($ibo-color-danger-200,$ibo-color-danger-900,$ibo-button--box-shadow-top $ibo-color-danger-700 #{','} $ibo-button--box-shadow-bottom $ibo-color-danger-200,$ibo-color-danger-800, ), ':disabled': (transparent,$ibo-color-grey-600,$ibo-button--box-shadow-top transparent,$ibo-color-grey-500, ),  ),  'success': ( '': (transparent,$ibo-color-success-900,$ibo-button--box-shadow-bottom transparent,$ibo-color-success-800, ), ':hover': ($ibo-color-success-100,$ibo-color-success-900,$ibo-button--box-shadow-bottom $ibo-color-success-100,$ibo-color-success-800, ), ':active': ($ibo-color-success-100,$ibo-color-success-900,$ibo-button--box-shadow-top $ibo-color-success-700 #{','} $ibo-button--box-shadow-bottom $ibo-color-success-100,$ibo-color-success-800, ), ':disabled': (transparent,$ibo-color-grey-600,$ibo-button--box-shadow-top transparent,$ibo-color-grey-500, ),  ),   'red': ( '': (transparent,$ibo-color-red-700,$ibo-button--box-shadow-bottom transparent,$ibo-color-red-600, ), ':hover': ($ibo-color-red-200,$ibo-color-red-900,$ibo-button--box-shadow-bottom $ibo-color-red-200,$ibo-color-red-800, ), ':active': ($ibo-color-red-200,$ibo-color-red-900,$ibo-button--box-shadow-top $ibo-color-red-700 #{','} $ibo-button--box-shadow-bottom $ibo-color-red-200,$ibo-color-red-800, ), ':disabled': (transparent,$ibo-color-grey-600,$ibo-button--box-shadow-top transparent,$ibo-color-grey-500, ),  ),  'green': ( '': (transparent,$ibo-color-green-900,$ibo-button--box-shadow-bottom transparent,$ibo-color-green-800, ), ':hover': ($ibo-color-green-100,$ibo-color-green-900,$ibo-button--box-shadow-bottom $ibo-color-green-100,$ibo-color-green-800, ), ':active': ($ibo-color-green-100,$ibo-color-green-900,$ibo-button--box-shadow-top $ibo-color-green-700 #{','} $ibo-button--box-shadow-bottom $ibo-color-green-100,$ibo-color-green-800, ), ':disabled': (transparent,$ibo-color-grey-600,$ibo-button--box-shadow-top transparent,$ibo-color-grey-500, ),  ),  'cyan': ( '': (transparent,$ibo-color-cyan-900,$ibo-button--box-shadow-bottom transparent,$ibo-color-cyan-800, ), ':hover': ($ibo-color-cyan-100,$ibo-color-cyan-900,$ibo-button--box-shadow-bottom $ibo-color-cyan-100,$ibo-color-cyan-800, ), ':active': ($ibo-color-cyan-100,$ibo-color-cyan-900,$ibo-button--box-shadow-top $ibo-color-cyan-800 #{','} $ibo-button--box-shadow-bottom $ibo-color-cyan-100,$ibo-color-cyan-800, ), ':disabled': (transparent,$ibo-color-grey-600,$ibo-button--box-shadow-top transparent,$ibo-color-grey-500, ),  ),   ));
+
+$ibo-alert-colors: ('primary': ($ibo-color-primary-900, $ibo-color-primary-700, $ibo-color-primary-200),  'secondary': ($ibo-color-secondary-900, $ibo-color-secondary-700, $ibo-color-secondary-200),'neutral': ($ibo-color-secondary-900, $ibo-color-secondary-700, $ibo-color-secondary-200),'information': ($ibo-color-information-900, $ibo-color-information-700, $ibo-color-information-200),'success': ($ibo-color-success-900, $ibo-color-success-700, $ibo-color-success-100),'failure': ($ibo-color-danger-900, $ibo-color-danger-700, $ibo-color-danger-200),'warning': ($ibo-color-warning-900, $ibo-color-warning-700, $ibo-color-warning-200),'danger': ($ibo-color-danger-900, $ibo-color-danger-700, $ibo-color-danger-200),'grey' : ($ibo-color-grey-900, $ibo-color-grey-700, $ibo-color-grey-200),'blue-grey': ($ibo-color-blue-grey-900, $ibo-color-blue-grey-700, $ibo-color-blue-grey-200),'blue': ($ibo-color-blue-900, $ibo-color-blue-700, $ibo-color-blue-200),'cyan': ($ibo-color-cyan-900, $ibo-color-blue-700, $ibo-color-cyan-100),'green': ($ibo-color-green-900, $ibo-color-green-700, $ibo-color-green-100),'orange' : ($ibo-color-orange-900, $ibo-color-orange-700, $ibo-color-orange-200),'red': ($ibo-color-red-900, $ibo-color-red-700, $ibo-color-red-200),'pink': ($ibo-color-pink-900, $ibo-color-pink-700, $ibo-color-pink-200),);
+
+$ibo-color-base-lightness-100: 23%;
+$ibo-color-base-lightness-900: 93%;
+
+$ibo-color-base-opacity-for-lightness-100: 1;
+$ibo-color-base-opacity-for-lightness-900: 1;
+
+$ibo-vendors-c3--path--color: $ibo-color-grey-300;
+$ibo-vendors-c3--tooltip--background-color: $ibo-color-grey-600;
+$ibo-vendors-c3--tooltip-th--background-color: $ibo-color-grey-600;
+$ibo-vendors-c3--tooltip-th--color: $ibo-body-text-color;
+$ibo-vendors-c3--tooltip-td--background-color: $ibo-color-grey-600;
+$ibo-vendors-c3--legend--fill: $ibo-color-white-200;
+$ibo-vendors-c3--legend--background-color: $ibo-color-white-100;
+$ibo-vendors-c3--legend-item--fill: $ibo-color-grey-100;
+$ibo-vendors-c3--axis--fill: $ibo-color-grey-200;
+
+$ibo-run-query--highlight--background-color: $ibo-color-primary-700;

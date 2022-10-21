@@ -8,15 +8,39 @@
           <variable id="var1">#C53030</variable>
         </variables>
         <imports>
+          <import id="css-variables" xsi:type="utilities">../css/css-variables.scss</import>
           <import id="scss-variables" xsi:type="utilities">../css/scss-variables.scss</import>
         </imports>
         <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/main.scss</stylesheet>
           <stylesheet id="custom">../css/custom.scss</stylesheet>
+        </stylesheets>
+      </theme>
+      <theme id="light-grey">
+        <variables/>
+        <imports>
+          <import id="css-variables" xsi:type="utilities">../css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/light-grey.scss</stylesheet>
         </stylesheets>
       </theme>
     </themes>
   </branding>
   <classes>
+    <class id="ClassWithNewValueInFieldWhichHasNoXsiTypeDueToMustExistFlag" _delta="must_exist">
+      <fields>
+        <field id="status" _delta="must_exist">
+          <values>
+            <value id="test" _delta="define">
+              <code>test</code>
+            </value>
+          </values>
+        </field>
+      </fields>
+    </class>
     <class id="ClassWithLifecycle">
       <properties>
         <fields_semantic>
@@ -27,6 +51,14 @@
         </style>
       </properties>
       <lifecycle/>
+    </class>
+    <class id="ClassWithLifecycleNoProperties">
+      <lifecycle/>
+      <properties>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+        </fields_semantic>
+      </properties>
     </class>
     <class id="OtherClass">
       <properties>

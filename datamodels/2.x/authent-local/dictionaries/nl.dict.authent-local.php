@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2021 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  * This file is part of iTop.
  *
@@ -25,10 +25,10 @@
 // Class: UserLocal
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:UserLocal' => 'iTop-gebruiker',
-	'Class:UserLocal+' => 'Gebruiker die aanmeldt met gegevens aangemaakt in het gebruikersbeheer van iTop',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'-gebruiker',
+	'Class:UserLocal+' => 'Gebruiker die aanmeldt met gegevens aangemaakt in het gebruikersbeheer van '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Wachtwoord',
-	'Class:UserLocal/Attribute:password+' => 'Het wachtwoord waarmee de gebruiker zich aanmeldt bij iTop',
+	'Class:UserLocal/Attribute:password+' => 'Het wachtwoord waarmee de gebruiker zich aanmeldt bij '.ITOP_APPLICATION_SHORT,
 
 	'Class:UserLocal/Attribute:expiration' => 'Wachtwoord verloopt',
 	'Class:UserLocal/Attribute:expiration+' => 'Of het wachtwoord al dan niet verlopen is (vereist een extensie vooraleer dit werkt)',
@@ -38,10 +38,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Moet veranderd worden',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'Eenmalig wachtwoord',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'De gebruiker kan dit wachtwoord niet veranderen.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Wachtwoord laatst aangepast',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Tijdstip waarop het wachtwoord het laatst aangepast werd.',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Het wachtwoord bestaat uit minstens 8 tekens en bestaat uit een mix van minstens 1 hoofdletter, kleine letter, cijfer en speciaal teken.',
 
-	'UserLocal:password:expiration' => 'De velden hieronder vereisen een extensie.'
+	'UserLocal:password:expiration' => 'De velden hieronder vereisen een extensie.',
+	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Je kan geen eenmalig wachtwoord instellen voor je eigen gebruiker.',
 ));

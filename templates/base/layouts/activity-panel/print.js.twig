@@ -4,7 +4,7 @@ $('[data-role="ibo-activity-panel--filter"]').on('click', function(){
 	if(sTabType=="caselog")
 	{
 		const sTabTypeCaseLog = $(this).attr('data-entry-caselog-attribute-code');
-		$(this).closest('.ibo-activity-panel').find('[data-entry-group-origin="'+sTabType+':'+sTabTypeCaseLog+'"]').toggle();
+		$(this).closest('.ibo-activity-panel').find('[data-entry-type="'+sTabType+'"][data-entry-caselog-attribute-code="'+sTabTypeCaseLog+'"]').toggle();
 	}
 	else
 	{
@@ -12,3 +12,4 @@ $('[data-role="ibo-activity-panel--filter"]').on('click', function(){
 	}
 	$(this).toggleClass('strikethrough');
 });
+$('.ibo-activity-panel').find('.ibo-activity-panel--entry-group').removeClass('ibo-is-hidden');

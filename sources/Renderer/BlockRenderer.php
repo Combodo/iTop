@@ -21,6 +21,8 @@ namespace Combodo\iTop\Renderer;
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\UIBlock;
+use Twig\Environment;
 use utils;
 
 /**
@@ -39,7 +41,7 @@ class BlockRenderer
 	/** @var string[] TWIG_ADDITIONAL_PATHS Additional paths for resources to be loaded either as a template or as an image, ... */
 	public const TWIG_ADDITIONAL_PATHS = [APPROOT.'images/'];
 
-	/** @var \Twig_Environment $oTwigEnv Singleton used during rendering */
+	/** @var Environment $oTwigEnv Singleton used during rendering */
 	protected static $oTwigEnv;
 
 	/**
@@ -157,7 +159,24 @@ class BlockRenderer
 
 		return trim($sOutput);
 	}
+	public function RenderJsInlineRecursively(UIBlock $oBlock, string $sType)
+	{
+		$sOutput = '';
+		if(!empty($oBlock->GetJsTemplatesRelPath($sType)))
+		{
+			$sOutput = trim(TwigHelper::RenderTemplate(
+				static::$oTwigEnv,
+				array_merge(['oUIBlock' => $oBlock], $this->aContextParams, $oBlock->GetParameters()),
+				$oBlock->GetJsTemplatesRelPath($sType),
+				$sType
+			));
+		}
+		foreach ($oBlock->GetSubBlocks() as $oSubBlock){
+			$sOutput = $sOutput . $this->RenderJsInlineRecursively($oSubBlock,  $sType);
+		}
 
+		return trim($sOutput);
+	}
 	/**
 	 * Return the raw output of the CSS template
 	 *

@@ -19,14 +19,16 @@
 // Navigation menu
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => '公司logo',
-	'UI:Layout:NavigationMenu:Toggler:Tooltip' => '展开 / 折叠',
-	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => '展开 / 折叠 (Filtered on %1$s)~~',
+	'UI:Layout:NavigationMenu:Silo:Label' => '请选择要过滤的组织',
+	'UI:Layout:NavigationMenu:Toggler:Tooltip' => '展开/折叠',
+	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => '展开/折叠 (过滤在 %1$s)',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => '过滤器...',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => '请输入要过滤的关键字',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => '将会显示所有匹配的菜单',
-	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter~~',
+	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => '此菜单暂无过滤结果',
 	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture~~',
-	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries~~',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s 的联系人头像',
+	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => '打开用户菜单',
+	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => '过滤菜单',
 
 ));

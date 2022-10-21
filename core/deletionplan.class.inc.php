@@ -242,7 +242,7 @@ class DeletionPlan
 
 	public function SetDeletionIssues($oObject, $aIssues, $bSecurityIssue)
 	{
-		if (count($aIssues) > 0)
+		if (count($aIssues ?? []) > 0)
 		{
 			$sClass = get_class($oObject);
 			$iId = $oObject->GetKey();

@@ -49,6 +49,10 @@ css/backoffice/
 |   |- tabular-fields
 |   ...
 |
+|- *datamodel/           # SCSS / CSS3 variables and CSS classes for PHP classes of the DM that are part of the core (not in a module) and cannot be styled otherwise
+|   |- _user.scss
+|   ...
+|
 |– pages/
 |   |– _home.scss        # Home specific styles
 |   |– _contact.scss     # Contact specific styles

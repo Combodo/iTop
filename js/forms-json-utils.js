@@ -112,13 +112,14 @@ function OnUnload(sTransactionId, sObjClass, iObjKey, sToken)
 	if (!window.bInSubmit)
 	{
 		// If it's not a submit, then it's a "cancel" (Pressing the Cancel button, closing the window, using the back button...)
-		// IMPORTANT: the ajax request MUST BE synchronous to be executed in this context
-		$.ajax({
-			url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			async: false,
-			method: 'POST',
-			data: {operation: 'on_form_cancel', transaction_id: sTransactionId, obj_class: sObjClass, obj_key: iObjKey, token: sToken }
-		});
+		var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
+		var oFormData = new FormData();
+		oFormData.append('operation', 'on_form_cancel');
+		oFormData.append('transaction_id', sTransactionId);
+		oFormData.append('obj_class', sObjClass);
+		oFormData.append('obj_key', iObjKey);
+		oFormData.append('token', sToken);
+		navigator.sendBeacon(sUrl, oFormData);
 	}
 }
 
@@ -235,21 +236,6 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 		{
 			$('#v_'+sFieldId).html(sExplain);
 		}
-		//Avoid replacing exisiting tooltip for periodically checked element (like CKeditor fields)
-		if($('#v_'+sFieldId).tooltip( "instance" ) === undefined)
-		{
-			// Visual feedback
-
-			$('#v_'+sFieldId).tooltip({
-				items: 'span',
-				classes: {
-					"ui-tooltip": "form_field_error"
-				},
-				content: function() {
-					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
-				}
-			});
-		}
 	}
 }
 
@@ -318,33 +304,29 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue, origi
 
 function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue)
 {
+	if ($('#'+sFieldId).length === 0) {
+		return;
+	}
+
 	var bValid;
 	var sExplain = '';
 	var sTextContent;
 
-	if ($('#'+sFieldId).prop('disabled'))
-	{
+	if ($('#'+sFieldId).prop('disabled')) {
 		bValid = true; // disabled fields are not checked
-	}
-	else
-	{
+	} else {
 		// Get the contents without the tags
 		var oFormattedContents = $("#cke_"+sFieldId+" iframe");
-		if (oFormattedContents.length == 0)
-		{
+		if (oFormattedContents.length == 0) {
 			var oSourceContents = $("#cke_"+sFieldId+" textarea.cke_source");
 			sTextContent = oSourceContents.val();
-		}
-		else
-		{
+		} else {
 			sTextContent = oFormattedContents.contents().find("body").text();
-			
-			if (sTextContent == '')
-			{
+
+			if (sTextContent == '') {
 				// No plain text, maybe there is just an image...
 				var oImg = oFormattedContents.contents().find("body img");
-				if (oImg.length != 0)
-				{
+				if (oImg.length != 0) {
 					sTextContent = 'image';
 				}
 			}
@@ -353,27 +335,19 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 		// Get the original value without the tags
 		var oFormattedOriginalContents = (originalValue !== undefined) ? $('<div></div>').html(originalValue) : undefined;
 		var sTextOriginalContents = (oFormattedOriginalContents !== undefined) ? oFormattedOriginalContents.text() : undefined;
-	
-		if (bMandatory && (sTextContent == nullValue))
-		{
+
+		if (bMandatory && (sTextContent == nullValue)) {
 			bValid = false;
 			sExplain = Dict.S('UI:ValueMustBeSet');
-		}
-		else if ((sTextOriginalContents != undefined) && (sTextContent == sTextOriginalContents))
-		{
+		} else if ((sTextOriginalContents != undefined) && (sTextContent == sTextOriginalContents)) {
 			bValid = false;
-			if (sTextOriginalContents == nullValue)
-			{
+			if (sTextOriginalContents == nullValue) {
 				sExplain = Dict.S('UI:ValueMustBeSet');
-			}
-			else
-			{
+			} else {
 				// Note: value change check is not working well yet as the HTML to Text conversion is not exactly the same when done from the PHP value or the CKEditor value.
 				sExplain = Dict.S('UI:ValueMustBeChanged');
 			}
-		}
-		else
-		{
+		} else {
 			bValid = true;
 		}
 	}
@@ -422,11 +396,14 @@ function ValidatePasswordField(id, sFormId)
 				oFormErrors['input_'+sFormId] = id;
 			}
 			// Visual feedback
-			$('#v_'+id).html('<img src="../images/validation_error.png"  style="vertical-align:middle"/>');
+			$('#v_'+id).html(Dict.S('UI:Component:Input:Password:DoesNotMatch'));
+			$('#field_'+id +' .ibo-input-wrapper').addClass('is-error');
+
 			return false;
 		}
 	}
-	$('#v_'+id).html(''); //<img src="../images/validation_ok.png" />');
+	$('#v_'+id).html('');
+	$('#field_'+id +' .ibo-input-wrapper').removeClass('is-error');
 	return true;
 }
 

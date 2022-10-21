@@ -19,12 +19,13 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 
 /**
  * Engine for displaying the various pages of a "wizard"
- * Each "step" of the wizard must be implemented as 
+ * Each "step" of the wizard must be implemented as
  * separate class derived from WizardStep. each 'step' can also have its own
  * internal 'state' for developing complex wizards.
  * The WizardController provides the "<< Back" feature by storing a stack
  * of the previous screens. The WizardController also maintains from page
  * to page a list of "parameters" to be dispayed/edited by each of the steps.
+ *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -181,7 +182,12 @@ class WizardController
 					$oP->add("<h2>Fatal error</h2>\n");
 					$oP->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
 					$oP->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
-					$oP->p('<button type="button" class="ibo-button ibo-is-regular ibo-is-primary" onclick="window.location.reload()">Reload</button>');
+
+					$sButtonsHtml = <<<HTML
+<button type="button" class="ibo-button ibo-is-regular ibo-is-primary" onclick="window.location.reload()">Reload</button>
+HTML;
+					$oP->p($sButtonsHtml);
+
 					$oP->output();
 					// Prevent token creation
 					exit;
@@ -195,25 +201,22 @@ class WizardController
 		$oPage->add('<div class="ibo-setup--wizard--content">');
 		$oStep->Display($oPage);
 		$oPage->add('</div>');
-		
+
 		// Add the back / next buttons and the hidden form
 		// to store the parameters
 		$oPage->add('<input type="hidden" id="_class" name="_class" value="'.get_class($oStep).'"/>');
 		$oPage->add('<input type="hidden" id="_state" name="_state" value="'.$oStep->GetState().'"/>');
-		foreach($this->aParameters as $sCode => $value)
-		{
-			$oPage->add('<input type="hidden" name="_params['.$sCode.']" value="'.htmlentities($value, ENT_QUOTES, 'UTF-8').'"/>');
+		foreach ($this->aParameters as $sCode => $value) {
+			$oPage->add('<input type="hidden" name="_params['.$sCode.']" value="'.utils::EscapeHtml($value).'"/>');
 		}
 
-		$oPage->add('<input type="hidden" name="_steps" value="'.htmlentities(json_encode($this->aSteps), ENT_QUOTES, 'UTF-8').'"/>');
+		$oPage->add('<input type="hidden" name="_steps" value="'.utils::EscapeHtml(json_encode($this->aSteps)).'"/>');
 		$oPage->add('<table style="width:100%;" class="ibo-setup--wizard--buttons-container"><tr>');
-		if ((count($this->aSteps) > 0) && ($oStep->CanMoveBackward()))
-		{
+		if ((count($this->aSteps) > 0) && ($oStep->CanMoveBackward())) {
 			$oPage->add('<td style="text-align: left"><button id="btn_back" class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="back"><span class="ibo-button--label">Back</span></button></td>');
 		}
-		if ($oStep->CanMoveForward())
-		{
-			$oPage->add('<td style="text-align:right;"><button id="btn_next" class="default ibo-button ibo-is-regular ibo-is-primary" type="submit" name="operation" value="next"><span class="ibo-button--label">'.htmlentities($oStep->GetNextButtonLabel(), ENT_QUOTES, 'UTF-8').'</span></button></td>');
+		if ($oStep->CanMoveForward()) {
+			$oPage->add('<td style="text-align:right;"><button id="btn_next" class="default ibo-button ibo-is-regular ibo-is-primary" type="submit" name="operation" value="next"><span class="ibo-button--label">'.utils::EscapeHtml($oStep->GetNextButtonLabel()).'</span></button></td>');
 		}
 		$oPage->add('</tr></table>');
 		$oPage->add("</form>");

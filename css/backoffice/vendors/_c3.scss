@@ -1,0 +1,52 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-vendors-c3--path--color: $ibo-color-grey-900 !default;
+$ibo-vendors-c3--arc-path--color: $ibo-color-white-100 !default;
+$ibo-vendors-c3--tooltip--background-color: $ibo-color-grey-500 !default;
+$ibo-vendors-c3--tooltip-th--background-color: $ibo-color-grey-500 !default;
+$ibo-vendors-c3--tooltip-th--color: $ibo-color-white-100 !default;
+$ibo-vendors-c3--tooltip-td--background-color: $ibo-color-grey-600 !default;
+$ibo-vendors-c3--legend--fill: $ibo-color-white-100 !default;
+$ibo-vendors-c3--legend--background-color: $ibo-color-white-200 !default;
+$ibo-vendors-c3--legend-item--fill: $ibo-color-grey-900 !default;
+$ibo-vendors-c3--axis--fill: $ibo-color-grey-900 !default;
+
+// All rules are !important because C3 css file is imported after main.css through WebResourcesHelper
+
+.c3 path, .c3 line {
+  &:not(.c3-legend-item-tile){
+    stroke: $ibo-vendors-c3--path--color !important;
+  }
+}
+.c3-chart-arc path:not(.c3-legend-item-tile){
+  stroke: $ibo-vendors-c3--arc-path--color !important;
+}
+.c3-axis{
+  fill: $ibo-vendors-c3--axis--fill !important;
+}
+.c3-tooltip th {
+  background-color: $ibo-vendors-c3--tooltip-th--background-color !important;
+  color: $ibo-vendors-c3--tooltip-th--color !important;
+}
+.c3-tooltip td {
+  background-color: $ibo-vendors-c3--tooltip-td--background-color !important;
+}
+
+.c3-legend-background {
+  fill: $ibo-vendors-c3--legend--fill !important;
+  stroke: $ibo-vendors-c3--legend--background-color !important;
+}
+.c3-tooltip {
+  background-color: $ibo-vendors-c3--tooltip--background-color !important;
+}
+.c3-tooltip tr {
+  border:1px solid #CCC
+}
+
+.c3-legend-item{
+  fill: $ibo-vendors-c3--legend-item--fill !important;
+}
+

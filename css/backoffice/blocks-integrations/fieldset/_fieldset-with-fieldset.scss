@@ -1,0 +1,10 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-fieldset--spacing-top--with-fieldset: $ibo-spacing-800 !default;
+
+.ibo-fieldset + .ibo-fieldset:not(.ibo-column) {
+    margin-top: $ibo-fieldset--spacing-top--with-fieldset;
+}

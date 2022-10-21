@@ -44,6 +44,7 @@ use Dict;
 /**
  * @group itopRequestMgmt
  * @group itopServiceMgmt
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -51,16 +52,6 @@ use Dict;
 class CriterionConversionTest extends ItopDataTestCase
 {
 	const CREATE_TEST_ORG = true;
-
-	/**
-	 * @throws \Exception
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		require_once(APPROOT."sources/application/search/criterionconversionabstract.class.inc.php");
-	}
 
 	/**
 	 * @dataProvider ToOqlProvider

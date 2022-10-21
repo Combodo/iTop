@@ -8,7 +8,7 @@ use CSVParser;
 
 class CSVParserTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 

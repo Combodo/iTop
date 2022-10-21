@@ -52,6 +52,7 @@ $(function()
 					user_menu_container: '[data-role="ibo-navigation-menu--user-menu-container"]',
 					user_menu: '[data-role="ibo-navigation-menu--user-menu-container"] > [data-role="ibo-popover-menu"]',
 					menu_node: '[data-role="ibo-navigation-menu--menu-node"]',
+					menu_node_label: '[data-role="ibo-navigation-menu--menu-node-label"]',
 				},
 			filter_throttle_timeout: null,
 
@@ -197,7 +198,7 @@ $(function()
 			},
 
 			_onAddShortcutNode: function (oData) {
-				this._addShortcut(oData.parent_menu_node_id, oData.new_menu_node_html_rendering);
+				this._addShortcut(oData.parent_menu_node_id, oData.new_menu_node_html_rendering, oData.new_menu_name);
 			},
 
 			// Methods
@@ -321,6 +322,7 @@ $(function()
 					}
 
 					if (bMatches) {
+						me.element.find(me.js_selectors.menu_filter_placeholder).css('display', 'none');
 						bHasAnyMatch = true;
 						// Note: Selector must be recursive
 						$(this).parents('[data-role="ibo-navigation-menu--menu-nodes"], [data-role="ibo-navigation-menu--menu-node"]').show();
@@ -371,15 +373,33 @@ $(function()
 			/**
 			 * @param sParentMenuNodeId {string} ID of the parent menu node the shortcut should be added to
 			 * @param sNewMenuNodeHtmlRendering {string} HTML rendering of the new menu node to add
+			 * @param sNewMenulabel {string} Label of the menu node to add
 			 * @return {boolean}
 			 */
-			_addShortcut: function (sParentMenuNodeId, sNewMenuNodeHtmlRendering) {
-				const oNewMenuNodeContainerElem = this.element.find(this.js_selectors.menu_node+'[data-menu-node-id="'+sParentMenuNodeId+'"] > ul');
+			_addShortcut: function (sParentMenuNodeId, sNewMenuNodeHtmlRendering, sNewMenulabel) {
+				const oNewMenuNodeContainerElem = this.element.find(this.js_selectors.menu_node+'[data-menu-node-id="'+sParentMenuNodeId+'"]');
 				if (oNewMenuNodeContainerElem.length === 0) {
 					return false;
 				}
-
-				oNewMenuNodeContainerElem.append(sNewMenuNodeHtmlRendering);
+				let oNewMenuNodeContainerElemUL = oNewMenuNodeContainerElem.find('ul');
+				if (oNewMenuNodeContainerElemUL.length === 0) {
+					oNewMenuNodeContainerElem.append('<ul>'+sNewMenuNodeHtmlRendering+'</ul>');
+				} else {
+					let oChildrenElem = oNewMenuNodeContainerElem.find('li');
+					let iIndex = 0;
+					let bInsertToDo = true;
+					while (bInsertToDo && iIndex < oChildrenElem.length) {
+						let oCurrentChild = oChildrenElem.eq(iIndex);
+						if (oCurrentChild.find(this.js_selectors.menu_node_label).attr('title').toUpperCase() > sNewMenulabel.toUpperCase()) {
+							oCurrentChild.before(sNewMenuNodeHtmlRendering);
+							bInsertToDo = false;
+						}
+						iIndex++;
+					}
+					if (bInsertToDo) {
+						oNewMenuNodeContainerElemUL.append(sNewMenuNodeHtmlRendering);
+					}
+				}
 				return true;
 			}
 		});

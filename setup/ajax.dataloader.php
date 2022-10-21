@@ -32,7 +32,8 @@
  * 'file': string Name of the file to load
  * 'session_status': string 'start', 'continue' or 'end'
  * 'percent': integer 0..100 the percentage of completion once the file has been loaded 
- */ 
+ */
+$bBypassMaintenance = true; // Reset maintenance mode in case of problem
 define('SAFE_MINIMUM_MEMORY', 64*1024*1024);
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
@@ -106,7 +107,7 @@ function FatalErrorCatcher($sOutput)
 		}
 		$sOutput = "$errors\n";
 		// Logging to a file does not work if the whole memory is exhausted...		
-		//SetupPage::log_error("Fatal error - in $__FILE__ , $errors");
+		// SetupLog::Error("Fatal error - in $__FILE__ , $errors");
 	}
 	return $sOutput;
 }
@@ -127,7 +128,6 @@ require_once(APPROOT.'/core/log.class.inc.php');
 require_once(APPROOT.'/core/kpi.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once('./xmldataloader.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 
 // Never cache this page
@@ -157,7 +157,7 @@ try
 		$sState = utils::ReadParam('step_state', '');
 		$sActionCode = utils::ReadParam('code', '');
 		$aParams = utils::ReadParam('params', array(), false, 'raw_data');
-		$oPage = new ajax_page('');
+		$oPage = new AjaxPage('');
 		$oDummyController = new WizardController('');
 		if (is_subclass_of($sClass, 'WizardStep'))
 		{
@@ -180,7 +180,7 @@ try
 			$sUseSymbolicLinks = Utils::ReadParam('bUseSymbolicLinks', false);
 			$bUseSymbolicLinks = ($sUseSymbolicLinks === 'true');
 			MFCompiler::SetUseSymbolicLinksFlag($bUseSymbolicLinks);
-			echo "toggle useSymbolicLInks file : $bUseSymbolicLinks";
+			echo "toggle useSymbolicLinks flag : $bUseSymbolicLinks";
 			break;
 
 		default:

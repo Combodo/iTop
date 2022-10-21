@@ -40,9 +40,11 @@ class DBAnalyzerUtils
 				$iCount = $aError['count'];
 				fwrite($fReport, '-- Count: '.$iCount."\r\n");
 				fwrite($fReport, '-- Error: '.$sErrorLabel."\r\n");
-				$sQuery = $aError['query'];
-				fwrite($fReport, '-- Query: '.$sQuery."\r\n");
-
+				if (array_key_exists('query', $aError)) {
+					$sQuery = $aError['query'];
+					fwrite($fReport, '-- Query: '.$sQuery."\r\n");
+				}
+				
 				if (isset($aError['fixit']))
 				{
 					fwrite($fReport, "\r\n-- Fix it (indication):\r\n\r\n");

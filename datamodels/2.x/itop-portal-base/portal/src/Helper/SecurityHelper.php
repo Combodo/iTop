@@ -20,6 +20,7 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
+use LogChannels;
 use UserRights;
 use IssueLog;
 use MetaModel;
@@ -95,13 +96,15 @@ class SecurityHelper
 		// Checking action type
 		if (!in_array($sAction, array(UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_CREATE)))
 		{
-			if ($this->bDebug)
-			{
-				IssueLog::Info($sDebugTracePrefix.' as the action value could not be understood ('.UR_ACTION_READ.'/'.UR_ACTION_MODIFY.'/'.UR_ACTION_CREATE.' expected');
-			}
-
+			IssueLog::Debug($sDebugTracePrefix.' as the action value could not be understood ('.UR_ACTION_READ.'/'.UR_ACTION_MODIFY.'/'.UR_ACTION_CREATE.' expected', LogChannels::PORTAL);
 			return false;
 		}
+
+		// Forcing allowed writing on the object if necessary. This is used in some particular cases.
+		$bObjectIsCurrentUser = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
+		if(in_array($sAction , array(UR_ACTION_MODIFY, UR_ACTION_READ)) && $bObjectIsCurrentUser){
+			return true;
+	    }
 
 		// Checking the scopes layer
 		// - Transforming scope action as there is only 2 values
@@ -110,11 +113,7 @@ class SecurityHelper
 		$oScopeQuery = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sObjectClass, $sScopeAction);
 		if ($oScopeQuery === null)
 		{
-			if ($this->bDebug)
-			{
-				IssueLog::Info($sDebugTracePrefix.' as there was no scope defined for action '.$sScopeAction.' and profiles '.implode('/', UserRights::ListProfiles()));
-			}
-
+			IssueLog::Debug($sDebugTracePrefix.' as there was no scope defined for action '.$sScopeAction.' and profiles '.implode('/', UserRights::ListProfiles()), LogChannels::PORTAL);
 			return false;
 		}
 		// - If action != create we do some additionnal checks
@@ -128,11 +127,7 @@ class SecurityHelper
 				{
 					if (static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId] === false)
 					{
-						if ($this->bDebug)
-						{
-							IssueLog::Info($sDebugTracePrefix.' as it was denied in the scope objects cache');
-						}
-
+						IssueLog::Debug($sDebugTracePrefix.' as it was denied in the scope objects cache', LogChannels::PORTAL);
 						return false;
 					}
 				}
@@ -157,11 +152,7 @@ class SecurityHelper
 						// Updating cache
 						static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId] = false;
 
-						if ($this->bDebug)
-						{
-							IssueLog::Info($sDebugTracePrefix.' as there was no result for the following scope query : '.$oScopeQuery->ToOQL(true));
-						}
-
+						IssueLog::Debug($sDebugTracePrefix.' as there was no result for the following scope query : '.$oScopeQuery->ToOQL(true), LogChannels::PORTAL);
 						return false;
 					}
 
@@ -174,13 +165,9 @@ class SecurityHelper
 		// Checking reading security layer. The object could be listed, check if it is actually allowed to view it
 		if (UserRights::IsActionAllowed($sObjectClass, $sAction) == UR_ALLOWED_NO)
 		{
-			// For security reasons, we don't want to give the user too many informations on why he cannot access the object.
+			// For security reasons, we don't want to give the user too many information on why he cannot access the object.
 			//throw new SecurityException('User not allowed to view this object', array('class' => $sObjectClass, 'id' => $sObjectId));
-			if ($this->bDebug)
-			{
-				IssueLog::Info($sDebugTracePrefix.' as the user is not allowed to access this object according to the datamodel security (cf. Console settings)');
-			}
-
+			IssueLog::Debug($sDebugTracePrefix.' as the user is not allowed to access this object according to the datamodel security (cf. Console settings)', LogChannels::PORTAL);
 			return false;
 		}
 

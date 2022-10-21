@@ -242,7 +242,7 @@ class ormStopWatch
 		foreach ($aProperties as $sProperty => $sValue)
 		{
 			$sRes .= "<TR>";
-			$sCell = str_replace("\n", "<br>\n", $sValue);
+			$sCell = str_replace("\n", "<br>\n", $sValue ?? '');
 			$sRes .= "<TD class=\"label\">$sProperty</TD><TD>$sCell</TD>";
 			$sRes .= "</TR>";
 		}
@@ -596,10 +596,9 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							$oSW = $oObj->Get($sAttCode);
 							$oSW->MarkThresholdAsTriggered($iThreshold);
 							$oObj->Set($sAttCode, $oSW);
-		
-							if($oObj->IsModified())
-							{
-								CMDBObject::SetTrackInfo("Automatic - threshold triggered");
+
+							if ($oObj->IsModified()) {
+								CMDBObject::SetCurrentChangeFromParams("Automatic - threshold triggered");
 
 								$oObj->DBUpdate();
 							}

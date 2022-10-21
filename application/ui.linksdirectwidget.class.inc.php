@@ -75,9 +75,15 @@ class UILinksWidgetDirect
 	 * @param array $aArgs
 	 * @param string $sFormPrefix
 	 * @param DBObject $oCurrentObj
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (handling wrong values at method start)
 	 */
-	public function Display(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj)
+	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj)
 	{
+		if (empty($aArgs)) {
+			$aArgs = [];
+		}
+
 		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		switch($oLinksetDef->GetEditMode())
 		{
@@ -127,8 +133,10 @@ class UILinksWidgetDirect
 	 * @param string $sFormPrefix
 	 * @param DBObject $oCurrentObj
 	 * @param bool $bDisplayMenu
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (protected method, always called with default value)
 	 */
-	protected function DisplayAsBlock(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, $bDisplayMenu)
+	protected function DisplayAsBlock(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $bDisplayMenu)
 	{
 		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$sTargetClass = $oLinksetDef->GetLinkedClass();
@@ -197,7 +205,6 @@ class UILinksWidgetDirect
 
 		if ($sRealClass != '')
 		{
-			$oPage->add("<h1>".MetaModel::GetClassIcon($sRealClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($sRealClass))."</h1>\n");
 			$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
 			$aFieldFlags = array( $sExtKeyToMe => OPT_ATT_HIDDEN);
@@ -229,8 +236,10 @@ class UILinksWidgetDirect
 	 * @param string $sFormPrefix
 	 * @param DBObject $oCurrentObj
 	 * @param array $aButtons
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (protected method, caller already handles it)
 	 */
-	protected function DisplayEditInPlace(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, $aButtons = array('create', 'delete'))
+	protected function DisplayEditInPlace(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $aButtons = array('create', 'delete'))
 	{
 		$aAttribs = $this->GetTableConfig();
 		$oValue->Rewind();
@@ -246,7 +255,7 @@ class UILinksWidgetDirect
 		$oDiv = UIContentBlockUIBlockFactory::MakeStandard($this->sInputid, ['listContainer']);
 		$oPage->AddSubBlock($oDiv);
 		$oDatatable = DataTableUIBlockFactory::MakeForForm($this->sInputid, $aAttribs, $aData);
-		$oDatatable->SetOptions(['select_mode' => 'custom']);
+		$oDatatable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
 		$oDiv->AddSubBlock($oDatatable);
 		$sInputName = $sFormPrefix.'attr_'.$this->sAttCode;
 		$aLabels = array(
@@ -297,7 +306,7 @@ class UILinksWidgetDirect
 		}
 		$oHiddenCriteria = $oHiddenFilter->GetCriteria();
 		$aArgs = $oHiddenFilter->GetInternalParams();
-		$sHiddenCriteria = $oHiddenCriteria->Render($aArgs);
+		$sHiddenCriteria = $oHiddenCriteria->RenderExpression(false, $aArgs);
 
 		$oLinkSetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$valuesDef = $oLinkSetDef->GetValuesDef();
@@ -473,6 +482,33 @@ HTML
 			$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 		}
 		return $oPage->GetTableRow($aRow, $aAttribs);		
+	}
+
+	/**
+	 * @param WebPage $oPage
+	 * @param $sRealClass
+	 * @param $aValues
+	 * @param int $iTempId
+	 *
+	 * @return array
+	 */
+	public function GetFormRow($oPage, $sRealClass, $aValues, $iTempId)
+	{
+		if ($sRealClass == '')
+		{
+			$sRealClass = $this->sLinkedClass;
+		}
+		$oLinkObj = new $sRealClass();
+		$oLinkObj->UpdateObjectFromPostedForm($this->sInputid);
+
+		$aAttribs = $this->GetTableConfig();
+		$aRow = array();
+		$aRow[] = '<input type="checkbox" class="selectList'.$this->sInputid.'" value="'.($iTempId).'"/>';
+		foreach($this->aZlist as $sLinkedAttCode)
+		{
+			$aRow[] = $oLinkObj->GetAsHTML($sLinkedAttCode);
+		}
+		return $aRow;
 	}
 	
 	/**

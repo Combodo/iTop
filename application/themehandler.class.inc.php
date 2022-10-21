@@ -27,6 +27,7 @@ class ThemeHandler
 {
 	const IMAGE_EXTENSIONS = ['png', 'gif', 'jpg', 'jpeg'];
 
+	/** @var \CompileCSSService */
 	private static $oCompileCSSService;
 
 	public static function GetAppRootWithSlashes()
@@ -315,11 +316,6 @@ class ThemeHandler
 		// Loading files to import and stylesheet to compile, also getting most recent modification time on overall files
 		$sTmpThemeScssContent = '';
 		$oFindStylesheetObject = new FindStylesheetObject();
-		if (isset($aThemeParameters['variable_imports'])) {
-			foreach ($aThemeParameters['variable_imports'] as $sImport) {
-				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
-			}
-		}
 
 		if (isset($aThemeParameters['utility_imports'])) {
 			foreach ($aThemeParameters['utility_imports'] as $sImport) {
@@ -335,6 +331,12 @@ class ThemeHandler
 
 		foreach ($oFindStylesheetObject->GetStylesheetFileURIs() as $sStylesheet){
 			$sTmpThemeScssContent .= '@import "'.$sStylesheet.'";'."\n";
+		}
+
+		if (isset($aThemeParameters['variable_imports'])) {
+			foreach ($aThemeParameters['variable_imports'] as $sImport) {
+				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
+			}
 		}
 
 		$iStyleLastModified = $oFindStylesheetObject->GetLastModified();
@@ -904,7 +906,8 @@ CSS;
 
 		foreach($aImportsPaths as $sPath)
 		{
-			$sFilePath = $sPath.'/'.$sFileURI;
+			$sAlterableFileURI = $sFileURI;
+			$sFilePath = $sPath.'/'.$sAlterableFileURI;
 			$sImportedFile = realpath($sFilePath);
 			if ($sImportedFile === false){
 				// Handle shortcut syntax : @import "typo" ;
@@ -912,7 +915,7 @@ CSS;
 				$sFilePath2 = "$sFilePath.scss";
 				$sImportedFile = realpath($sFilePath2);
 				if ($sImportedFile){
-					self::FindStylesheetFile("$sFileURI.scss", [ $sPath ], $oFindStylesheetObject, $bImports);
+					self::FindStylesheetFile("$sAlterableFileURI.scss", [ $sPath ], $oFindStylesheetObject, $bImports);
 					$sImportedFile = false;
 				}
 			}
@@ -922,7 +925,7 @@ CSS;
 				// file matched: _typo.scss
 				$sShortCut = substr($sFilePath, strrpos($sFilePath, '/') + 1);
 				$sFilePath = static::ReplaceLastOccurrence($sShortCut, "_$sShortCut.scss", $sFilePath);
-				$sFileURI = static::ReplaceLastOccurrence($sShortCut, "_$sShortCut.scss", $sFileURI);
+				$sAlterableFileURI = static::ReplaceLastOccurrence($sShortCut, "_$sShortCut.scss", $sAlterableFileURI);
 				$sImportedFile = realpath($sFilePath);
 			}
 
@@ -930,14 +933,14 @@ CSS;
 				&& (!$oFindStylesheetObject->AlreadyFetched($sImportedFile)))
 			{
 				if ($bImports){
-					$oFindStylesheetObject->AddImport($sFileURI, $sImportedFile);
+					$oFindStylesheetObject->AddImport($sAlterableFileURI, $sImportedFile);
 				}else{
-					$oFindStylesheetObject->AddStylesheet($sFileURI, $sImportedFile);
+					$oFindStylesheetObject->AddStylesheet($sAlterableFileURI, $sImportedFile);
 				}
 				$oFindStylesheetObject->UpdateLastModified($sImportedFile);
 
 				//Regexp matching on all included scss files : @import 'XXX.scss';
-				$sDirUri = dirname($sFileURI);
+				$sDirUri = dirname($sAlterableFileURI);
 				preg_match_all('/@import \s*[\"\']([^\"\']*)\s*[\"\']\s*;/', file_get_contents($sImportedFile), $aMatches);
 				if ( (is_array($aMatches)) && (count($aMatches)!==0) ){
 					foreach ($aMatches[1] as $sImportedFile){

@@ -20,18 +20,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Połącz się z iTop Hub',
 	'Menu:iTopHub:Register+' => 'Przejdź do iTop Hub, aby zaktualizować swoją instancję '.ITOP_APPLICATION_SHORT,
-	'Menu:iTopHub:Register:Description' => '<p>Uzyskaj dostęp do swojej platformy społecznościowej iTop Hub!</br>Znajdź wszystkie potrzebne treści i informacje, zarządzaj swoimi instancjami za pomocą spersonalizowanych narzędzi i zainstaluj więcej rozszerzeń.</br><br/>Łącząc się z Centrum z tej strony, będziesz przesyłać informacje o tej instancji iTop do Centrum.</p>',
+	'Menu:iTopHub:Register:Description' => '<p>Uzyskaj dostęp do swojej platformy społecznościowej iTop Hub!</br>Znajdź wszystkie potrzebne treści i informacje, zarządzaj swoimi instancjami za pomocą spersonalizowanych narzędzi i zainstaluj więcej rozszerzeń.</br><br/>Łącząc się z Centrum z tej strony, będziesz przesyłać informacje o tej instancji '.ITOP_APPLICATION_SHORT.' do Centrum.</p>',
 	'Menu:iTopHub:MyExtensions' => 'Wdrożone rozszerzenia',
 	'Menu:iTopHub:MyExtensions+' => 'Zobacz listę rozszerzeń wdrożonych w tej instancji '.ITOP_APPLICATION_SHORT,
 	'Menu:iTopHub:BrowseExtensions' => 'Pobierz rozszerzenia z iTop Hub',
 	'Menu:iTopHub:BrowseExtensions+' => 'Wyszukaj więcej rozszerzeń w iTop Hub',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Zajrzyj do sklepu iTop Hub, jedynego miejsca, w którym można znaleźć wspaniałe rozszerzenia iTop!</br>Znajdź te, które pomogą Ci dostosować i dostosować iTop do Twoich procesów.</br><br/>Łącząc się z Centrum z tej strony, będziesz przesyłać informacje o tej instancji iTop do Centrum.</p>',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Zajrzyj do sklepu iTop Hub, jedynego miejsca, w którym można znaleźć wspaniałe rozszerzenia '.ITOP_APPLICATION_SHORT.'!</br>Znajdź te, które pomogą Ci dostosować i dostosować '.ITOP_APPLICATION_SHORT.' do Twoich procesów.</br><br/>Łącząc się z Centrum z tej strony, będziesz przesyłać informacje o tej instancji '.ITOP_APPLICATION_SHORT.' do Centrum.</p>',
 	'iTopHub:GoBtn' => 'Przejdź do iTop Hub',
 	'iTopHub:CloseBtn' => 'Zamknij',
 	'iTopHub:GoBtn:Tooltip' => 'Idź do www.itophub.io',
@@ -56,6 +55,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopHub:ExtensionCategory:Remote' => 'Rozszerzenia wdrożone z iTop Hub',
 	'iTopHub:ExtensionCategory:Remote+' => 'Następujące rozszerzenia zostały wdrożone z iTop Hub:',
 	'iTopHub:NoExtensionInThisCategory' => 'W tej kategorii nie ma rozszerzenia.<br/><br/>Przeglądaj iTop Hub, aby znaleźć rozszerzenia, które pomogą Ci dostosować i dostosować '.ITOP_APPLICATION_SHORT.' do Twoich procesów.',
+	'iTopHub:NoExtensionInThisCategory+' => '~~',
 	'iTopHub:ExtensionNotInstalled' => 'Nie zainstalowane',
 	'iTopHub:GetMoreExtensions' => 'Pobierz rozszerzenia z iTop Hub...',
 

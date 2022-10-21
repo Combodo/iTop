@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Quick create
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...~~',
-	'UI:Component:QuickCreate:Recents:Title' => 'Recents~~',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet~~',
-	'UI:Component:QuickCreate:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open quick create~~',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'UI:Component:QuickCreate:Tooltip' => 'Crear rápidamente cualquier tipo de objeto',
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Seleccionar tipo de objeto...',
+	'UI:Component:QuickCreate:Recents:Title' => 'Recientes',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Aún no has creado ningún objeto.',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'El historial está deshabilitado',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Abrir creación rápida',
 ));

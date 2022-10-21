@@ -21,22 +21,24 @@
  */
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:DeletedObjectLabel' => '%1s (effacé)',
-	'Core:DeletedObjectTip' => 'L\'objet a été effacé le %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'L\'objet a été effacé le %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Classe: %1$s, Identifiant: %2$d',
-	'Core:UnknownObjectTip' => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
+	'Core:UnknownObjectTip'   => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
 
 	'Core:UniquenessDefaultError' => 'La règle d\'unicité \'%1$s\' renvoie une erreur',
+	'Core:CheckConsistencyError'  => 'La règle d\'intégrité %1$s n\'est pas respectée',
+	'Core:CheckValueError'        => 'Valeur de l\'attribut incorrecte \'%1$s\' (%2$s) : %3$s',
 
-	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
+	'Core:AttributeLinkedSet'  => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Des doublons sont présents dans le champ \'%1$s\' : %2$s',
 
-	'Core:AttributeDashboard' => 'Tableau de bord',
+	'Core:AttributeDashboard'  => 'Tableau de bord',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Numéro de téléphone',
+	'Core:AttributePhoneNumber'  => 'Numéro de téléphone',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Date d\'obsolescence',
@@ -65,7 +67,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeDecimal+' => 'Valeur numérique décimale',
 
 	'Core:AttributeBoolean' => 'Booléen',
-	'Core:AttributeBoolean+' => 'Booléen',
+	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Oui',
 	'Core:AttributeBoolean/Value:no' => 'Non',
@@ -118,7 +120,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeEmailAddress+' => 'Adresse électronique (xxxx@yyy.zzz)',
 
 	'Core:AttributeIPAddress' => 'Adresse IP',
-	'Core:AttributeIPAddress+' => 'Adresse IP',
+	'Core:AttributeIPAddress+' => '',
 
 	'Core:AttributeOQL' => 'Expression OQL',
 	'Core:AttributeOQL+' => 'Expression formattée en "Object Query Language"',
@@ -127,13 +129,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeEnum+' => 'Valeur choisie parmi un liste de chaîne de caractères',
 
 	'Core:AttributeTemplateString' => 'Modèle de chaîne de caractères',
-	'Core:AttributeTemplateString+' => 'Chaîne de caractères d\'une ligne, contenant des espaces réservés pour des données iTop',
+	'Core:AttributeTemplateString+' => 'Chaîne de caractères d\'une ligne, contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
 
 	'Core:AttributeTemplateText' => 'Modèle de texte',
-	'Core:AttributeTemplateText+' => 'Texte contenant des espaces réservés pour des données iTop',
+	'Core:AttributeTemplateText+' => 'Texte contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
 
 	'Core:AttributeTemplateHTML' => 'Modèle HTML',
-	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données iTop',
+	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
 
 	'Core:AttributeDateTime' => 'Date/heure',
 	'Core:AttributeDateTime+' => 'Date et heure (année-mois-jour hh:mm:ss)',
@@ -172,7 +174,7 @@ Opérateurs :<br/>
 	'Core:AttributeDeadline+' => 'Date/heure exprimée relativement à l\'heure courante',
 
 	'Core:AttributeExternalKey' => 'Clé externe',
-	'Core:AttributeExternalKey+' => 'Clé externe',
+	'Core:AttributeExternalKey+' => '',
 
 	'Core:AttributeHierarchicalKey' => 'Clé externe (hiérarchie)',
 	'Core:AttributeHierarchicalKey+' => 'Clé externe vers le parent',
@@ -202,7 +204,7 @@ Opérateurs :<br/>
 	'Core:FriendlyName-Description' => 'Nom complet',
 
 	'Core:AttributeTag' => 'Taxon',
-	'Core:AttributeTag+' => 'Taxon',
+	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
@@ -229,6 +231,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChange/Attribute:date+' => '',
 	'Class:CMDBChange/Attribute:userinfo' => 'Autres informations',
 	'Class:CMDBChange/Attribute:userinfo+' => '',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Action utilisateur dans l\'IHM',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'Script d\'import CSV',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'Import CSV dans l\'IHM',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Traitement d\'email',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Source de données synchronisée',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'Webservices REST/JSON',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'Webservices SOAP',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Par une extension',
 ));
 
 //
@@ -489,6 +499,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Action/Attribute:trigger_list+' => '',
 	'Class:Action/Attribute:finalclass' => 'Sous-classe d\'Action',
 	'Class:Action/Attribute:finalclass+' => 'Nom de la classe instanciable',
+	'Action:WarningNoTriggerLinked' => 'Attention, aucun déclencheur n\'est associé à l\'action. Elle ne sera pas active tant qu\'elle n\'en aura pas au moins 1.',
 ));
 
 //
@@ -508,9 +519,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionEmail' => 'Notification par mél',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Cet état définit qui va être notifié: le \'Destinataire de test\', tous les destinataires (A, Copie and Copie Cachée) ou personne',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Seul le destinataire de test est notifié ',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Tous les destinataires (A, Copie and Copie Cachée) sont notifiés',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'La notification n\'est pas envoyée',
+	'Class:ActionEmail/Attribute:status/Value:test' => 'Seul le destinataire de test est notifié ',
+	'Class:ActionEmail/Attribute:status/Value:enabled' => 'Tous les destinataires (A, Copie and Copie Cachée) sont notifiés',
+	'Class:ActionEmail/Attribute:status/Value:disabled' => 'La notification n\'est pas envoyée',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinataire de test',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
 	'Class:ActionEmail/Attribute:from' => 'De (mél)',
@@ -568,7 +579,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe cible',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtre',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Permet de limiter la liste des objets (de la classe cible) pour lesquels le déclencheur s\'activera',
 	'TriggerOnObject:WrongFilterQuery' => 'Requête de filtrage incorrecte: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'La requête de filtrage doit retourner des objets de la classe "%1$s"',
 ));
@@ -647,6 +658,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnObjectMention' => 'Déclencheur sur mention d\'objet',
 	'Class:TriggerOnObjectMention+' => 'Déclencheur sur un objet mentionné (@xxx) de la classe choisie (ou de ses filles) dans un attribut de type journal',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Objets mentionnés',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Permet de limiter la liste des objets mentionnés pour lesquels le déclencheur s\'activera. Si vide, n\'importe quel objet mentionné (de n\'importe quelle classe) l\'activera.',
 ));
 
 //
@@ -983,9 +996,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TagSetFieldData/Attribute:code' => 'Code',
 	'Class:TagSetFieldData/Attribute:code+' => 'Code interne. Doit contenir au moins 3 caractères alphanumériques',
 	'Class:TagSetFieldData/Attribute:label' => 'Label',
-	'Class:TagSetFieldData/Attribute:label+' => 'Label',
+	'Class:TagSetFieldData/Attribute:label+' => '',
 	'Class:TagSetFieldData/Attribute:description' => 'Description',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Type d\'étiquette',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Type d\'objet',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Code du champ',
@@ -1076,6 +1089,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Dernière tentative',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Format incorrect pour la configuration de "async_task_retries[%1$s]". La bonne syntaxe est un tableau avec comme clés: %2$s',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Format incorrect pour la configuration de "async_task_retries[%1$s]": clé "%2$s" invalide. Les clés attendues sont: %3$s',
 ));
 
 //

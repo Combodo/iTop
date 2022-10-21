@@ -35,7 +35,7 @@ $(function()
 			{
 				// In case there is an hidden input having the same id (somewhere else in the page), the change event does not occur unless the input loses the focus
 				// To reduce the impact, let's handle keyup as well
-				$('#'+this.options.field_id, this.element).on('change.itop-property-field keyup.itop-property-field', function() { me._on_change(); });
+				$('#'+this.options.field_id, this.element).on('change.itop-property-field keyup.itop-property-field input.itop-property-field', function() { me._on_change(); });
 				this.value = this._get_field_value();
 			}
 			this.element.find(".prop_apply").on('click.itop-property-field', function() { me._do_apply(); });
@@ -51,19 +51,19 @@ $(function()
 			{
 				this.element.addClass("itop-property-field-modified");
 				if (this.options.can_apply) {
-					this.element.find(".prop_icon.ibo-prop--apply").css({visibility: ''});
+					this.element.find(".prop_icon.ibo-prop--apply > span").show();
 					CombodoTooltip.InitTooltipFromMarkup(this.element.find(".prop_icon.ibo-prop--apply [data-tooltip-content]"), true);
 				} else {
-					this.element.find(".prop_icon.ibo-prop--apply").css({visibility: 'hidden'});
+					this.element.find(".prop_icon.ibo-prop--apply > span").hide();
 				}
-				this.element.find(".prop_icon.ibo-prop--cancel").css({visibility: ''});
+				this.element.find(".prop_icon.ibo-prop--cancel > span").show();
 				CombodoTooltip.InitTooltipFromMarkup(this.element.find(".prop_icon.ibo-prop--cancel [data-tooltip-content]"), true);
 			}
 			else
 			{
 				this.element.removeClass("itop-property-field-modified");
-				this.element.find(".prop_icon.ibo-prop--apply").css({visibility: 'hidden'});
-				this.element.find(".prop_icon.ibo-prop--cancel").css({visibility: 'hidden'});
+				this.element.find(".prop_icon.ibo-prop--apply > span").hide();
+				this.element.find(".prop_icon.ibo-prop--cancel > span").hide();
 			}
 		},
 	
@@ -539,7 +539,7 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 	if (oFormValidation[sFormId] == undefined) oFormValidation[sFormId] = [];
 	if (!bValid)
 	{
-		$('#v_'+sFieldId).addClass('ui-state-error');
+		$('#v_'+sFieldId).parent('.ibo-prop--apply').addClass('ui-state-error');
 		iFieldIdPos = jQuery.inArray(sFieldId, oFormValidation[sFormId]);
 		if (iFieldIdPos == -1)
 		{
@@ -547,22 +547,20 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 		}
 		if (sMessage)
 		{
-			$('#'+sFieldId).attr('title', sMessage).tooltip();
-			if ($('#'+sFieldId).is(":focus"))
-			{
-				$('#'+sFieldId).tooltip('open');
-			}
+			$('#'+sFieldId).attr('data-tooltip-content', sMessage);
+			CombodoTooltip.InitTooltipFromMarkup($('#'+sFieldId), true);
+			$('#'+sFieldId)[0]._tippy.show();
 		}
 	}
 	else
 	{
-		$('#v_'+sFieldId).removeClass('ui-state-error');
-		if ($('#'+sFieldId).data('uiTooltip'))
-		{
-			$('#'+sFieldId).tooltip('close');
+		$('#v_'+sFieldId).parent('.ibo-prop--apply').removeClass('ui-state-error');
+		if ($('#'+sFieldId)[0]._tippy ) {
+			$('#'+sFieldId)[0]._tippy.destroy();
+			$('#'+sFieldId).removeAttr('data-tooltip-instantiated');
+			$('#'+sFieldId).removeAttr('data-tooltip-content');
 		}
-		$('#'+sFieldId).removeAttr('title');
-		// Remove the element from the array 
+		// Remove the element from the array
 		iFieldIdPos = jQuery.inArray(sFieldId, oFormValidation[sFormId]);
 		if (iFieldIdPos > -1)
 		{
@@ -611,7 +609,7 @@ function ValidateInteger(sFieldId, bMandatory, sFormId, iMin, iMax, sExplainForm
 	if (oFormValidation[sFormId] == undefined) oFormValidation[sFormId] = [];
 	if (!bValid)
 	{
-		$('#v_'+sFieldId).addClass('ui-state-error');
+		$('#v_'+sFieldId).parent('.ibo-prop--apply').addClass('ui-state-error');
 		iFieldIdPos = jQuery.inArray(sFieldId, oFormValidation[sFormId]);
 		if (iFieldIdPos == -1)
 		{
@@ -628,7 +626,7 @@ function ValidateInteger(sFieldId, bMandatory, sFormId, iMin, iMax, sExplainForm
 	}
 	else
 	{
-		$('#v_'+sFieldId).removeClass('ui-state-error');
+		$('#v_'+sFieldId).parent('.ibo-prop--apply').removeClass('ui-state-error');
 		if ($('#'+sFieldId).data('uiTooltip'))
 		{
 			$('#'+sFieldId).tooltip('close');

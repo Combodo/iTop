@@ -8,7 +8,7 @@
 //
 var numberCachePages = 5;
 
-$.fn.dataTable.pipeline = function (opts) {
+$.fn.dataTable.pipeline = function (opts, initJson) {
 	// Configuration options
 	var conf = $.extend({
 		pages: numberCachePages,     // number of pages to cache
@@ -16,43 +16,22 @@ $.fn.dataTable.pipeline = function (opts) {
 		data: null,   // function or object with parameters to send to the server
 	                  // matching how `ajax.data` works in DataTables
 		method: 'GET' // Ajax HTTP method
-	}, opts );
+	}, opts);
 
 	// Private variables for storing the cache
 	var cacheLower = -1;
 	var cacheUpper = null;
 	var cacheLastRequest = null;
 	var cacheLastJson = null;
-	var	draw_number = 1;
+	var draw_number = 1;
 
-	return function ( request, drawCallback, settings ) {
-		let message = Dict.S('UI:Datatables:Language:Processing');
-		if (this.find('tbody').find('td').length == 0) {
-			this.find('tbody').append('<tr class="ibo-dataTables--processing"><td>&#160;</td></tr>');
-			this.find('tbody').block({
+	return function (request, drawCallback, settings) {
+		if (request.draw != 1) {
+			let message = '<i class="fa fa-sync-alt fa-spin fa-x fa-fw"></i>';
+			this.closest('.dataTables_wrapper').block({
 				message: message,
 				css: {
 					border: '0px '
-				}
-			});
-			this.find('thead').block({
-				message: '',
-				css: {
-					border: '0px '
-				}
-			});
-		} else {
-			this.find('tbody').block({
-				message: '',
-				css: {
-					border: '0px '
-				}
-			});
-			this.find('thead').block({
-				message: message,
-				css: {
-					border: '0px ',
-					top: '20px',
 				}
 			});
 		}
@@ -67,16 +46,12 @@ $.fn.dataTable.pipeline = function (opts) {
 		}
 		var requestEnd = requestStart+requestLength;
 
-		//Manage case requestLength=-1 => all the row are display 
-		if (requestLength == -1) {
-			requestLength = cacheLastJson.recordsTotal;
-			if (cacheLower != 0 || cacheLastJson.recordsTotal > cacheUpper) {
-				//new server request is mandatory
-				ajax = true;
-			}
-		}
-
-		if (settings.clearCache) {
+		if (request.draw == 1 && initJson != null) {
+			//do nothing
+			cacheLastJson = $.extend(true, {}, initJson);
+			cacheLower = 0;
+			cacheUpper = initJson.data.length;
+		} else if (settings.clearCache) {
 			// API requested that the cache be cleared
 			ajax = true;
 			settings.clearCache = false;
@@ -93,15 +68,24 @@ $.fn.dataTable.pipeline = function (opts) {
 			ajax = true;
 		}
 
+		//Manage case requestLength=-1 => all the row are display 
+		if (requestLength == -1) {
+			requestLength = cacheLastJson.recordsTotal;
+			if (cacheLower != 0 || cacheLastJson.recordsTotal > cacheUpper) {
+				//new server request is mandatory
+				ajax = true;
+			}
+		}
+		
 		// Store the request for checking next time around
-		cacheLastRequest = $.extend( true, {}, request );
+		cacheLastRequest = $.extend(true, {}, request);
 
-		if ( ajax ) {
+		if (ajax) {
 			// Need data from the server
-			if ( requestStart < cacheLower ) {
-				requestStart = requestStart - (requestLength*(conf.pages-1));
+			if (requestStart < cacheLower) {
+				requestStart = requestStart-(requestLength * (conf.pages-1));
 
-				if ( requestStart < 0 ) {
+				if (requestStart < 0) {
 					requestStart = 0;
 				}
 			}
@@ -132,7 +116,7 @@ $.fn.dataTable.pipeline = function (opts) {
 				"data":     request,
 				"dataType": "json",
 				"cache":    false,
-				"success":  function ( json ) {
+				"success": function (json) {
 					cacheLastJson = $.extend(true, {}, json);
 
 					if (cacheLower != drawStart && requestLength != -1) {
@@ -142,6 +126,28 @@ $.fn.dataTable.pipeline = function (opts) {
 						json.data.splice(requestLength, json.data.length);
 					}
 					drawCallback(json);
+				},
+				error: function (data) {
+					let oDlg = $('<div></div>');
+					$('body').append(oDlg);
+					oDlg.html(data.responseText);
+					oDlg.dialog({
+						title: settings["oLanguage"]["errorMessage"],
+						modal: true,
+						width: 'auto',
+						height: 'auto',
+						maxHeight: $(window).height() * 0.7,
+						maxWidth: '500',
+						position: {my: "center", at: "center", of: window},
+						buttons: [
+							{
+								text: settings["oLanguage"]["buttonOk"],
+								class: "ibo-is-primary ibo-is-neutral",
+								click: function () {
+									$(this).dialog('close');
+								}
+							}],
+					});
 				}
 			} );
 		} else {

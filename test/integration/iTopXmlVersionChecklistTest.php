@@ -16,23 +16,14 @@
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use iTopDesignFormat;
 
 
 /**
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- * @group itop-community
- *
- * @covers iTopDesignFormat
- *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class iTopXmlVersionIntegrationTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -50,10 +41,10 @@ class iTopXmlVersionIntegrationTest extends ItopTestCase
 	public function testItopXmlVersion()
 	{
 		// Retrieve only first 2 parts of the version
-		$aCoreVersionParts = explode('.', ITOP_VERSION);
+		$aCoreVersionParts = explode('.', ITOP_CORE_VERSION);
 		$sCoreVersion = $aCoreVersionParts[0].'.'.$aCoreVersionParts[1];
 
 		$sXMLVersion = ITOP_DESIGN_LATEST_VERSION;
-		$this->assertSame($sXMLVersion, $sCoreVersion, "XML datamodel version ($sXMLVersion) is not aligned with the app. core version ($sCoreVersion)");
+		$this->assertSame($sXMLVersion, $sCoreVersion, "XML datamodel version (ITOP_DESIGN_LATEST_VERSION={$sXMLVersion}) is not aligned with the app. core version (ITOP_CORE_VERSION={$sCoreVersion})");
 	}
 }

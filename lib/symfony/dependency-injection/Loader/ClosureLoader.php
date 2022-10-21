@@ -25,23 +25,24 @@ class ClosureLoader extends Loader
 {
     private $container;
 
-    public function __construct(ContainerBuilder $container)
+    public function __construct(ContainerBuilder $container, string $env = null)
     {
         $this->container = $container;
+        parent::__construct($env);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, string $type = null)
     {
-        \call_user_func($resource, $this->container);
+        return $resource($this->container, $this->env);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, string $type = null)
     {
         return $resource instanceof \Closure;
     }

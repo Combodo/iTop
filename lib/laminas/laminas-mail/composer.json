@@ -1,0 +1,83 @@
+{
+    "name": "laminas/laminas-mail",
+    "description": "Provides generalized functionality to compose and send both text and MIME-compliant multipart e-mail messages",
+    "keywords": [
+        "laminas",
+        "mail"
+    ],
+    "homepage": "https://laminas.dev",
+    "license": "BSD-3-Clause",
+    "require": {
+        "php": "^7.3 || ~8.0.0 || ~8.1.0",
+        "ext-iconv": "*",
+        "laminas/laminas-loader": "^2.8",
+        "laminas/laminas-mime": "^2.9.1",
+        "laminas/laminas-stdlib": "^3.6",
+        "laminas/laminas-validator": "^2.15",
+        "symfony/polyfill-mbstring": "^1.12.0",
+        "webmozart/assert": "^1.10",
+        "symfony/polyfill-intl-idn": "^1.24.0"
+    },
+    "conflict": {
+        "zendframework/zend-mail": "*"
+    },
+    "require-dev": {
+        "laminas/laminas-coding-standard": "~1.0.0",
+        "laminas/laminas-crypt": "^2.6 || ^3.4",
+        "laminas/laminas-db": "^2.13.3",
+        "laminas/laminas-servicemanager": "^3.7",
+        "phpunit/phpunit": "^9.5.5",
+        "psalm/plugin-phpunit": "^0.15.1",
+        "symfony/process": "^5.3.7",
+        "vimeo/psalm": "^4.7"
+    },
+    "suggest": {
+        "laminas/laminas-crypt": "Crammd5 support in SMTP Auth",
+        "laminas/laminas-servicemanager": "^2.7.10 || ^3.3.1 when using SMTP to deliver messages"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        },
+        "platform": {
+            "php": "7.3.99"
+        }
+    },
+    "extra": {
+        "laminas": {
+            "component": "Laminas\\Mail",
+            "config-provider": "Laminas\\Mail\\ConfigProvider"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Laminas\\Mail\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LaminasTest\\Mail\\": "test/"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@static-analysis",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "static-analysis": "psalm --shepherd --stats",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    },
+    "support": {
+        "issues": "https://github.com/laminas/laminas-mail/issues",
+        "forum": "https://discourse.laminas.dev",
+        "chat": "https://laminas.dev/chat",
+        "source": "https://github.com/laminas/laminas-mail",
+        "docs": "https://docs.laminas.dev/laminas-mail/",
+        "rss": "https://github.com/laminas/laminas-mail/releases.atom"
+    }
+}

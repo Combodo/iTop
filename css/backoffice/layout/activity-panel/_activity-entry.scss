@@ -1,27 +1,14 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
 /* - Entry group */
-$ibo-activity-panel--entry-group--margin-bottom: 24px !default;
+$ibo-activity-panel--entry-group--margin-bottom: $ibo-spacing-600 !default;
 
 /* - Entry */
-$ibo-activity-entry--medallion--margin-with-information: 8px !default;
+$ibo-activity-entry--medallion--margin-with-information: $ibo-spacing-300 !default;
 $ibo-activity-entry--medallion--margin-bottom: 18px !default;
 $ibo-activity-entry--medallion--diameter: 32px !default;
 $ibo-activity-entry--medallion--border-radius: $ibo-border-radius-full !default;
@@ -33,8 +20,8 @@ $ibo-activity-entry--medallion--has-no-image--border: 1px solid $ibo-color-grey-
 
 $ibo-activity-entry--information--margin-to-other-side: $ibo-activity-entry--medallion--diameter + $ibo-activity-entry--medallion--margin-with-information !default;
 
-$ibo-activity-entry--main-information--padding-x: 16px !default;
-$ibo-activity-entry--main-information--padding-y: 12px !default;
+$ibo-activity-entry--main-information--padding-x: $ibo-spacing-500 !default;
+$ibo-activity-entry--main-information--padding-y: $ibo-spacing-400 !default;
 $ibo-activity-entry--main-information--text-color: $ibo-color-grey-800 !default;
 $ibo-activity-entry--main-information--background-color: $ibo-color-grey-200 !default;
 $ibo-activity-entry--main-information--border-radius: $ibo-border-radius-500 !default;
@@ -50,18 +37,23 @@ $ibo-activity-entry--main-information--is-closed--placeholder-top: 30px !default
 $ibo-activity-entry--main-information--is-closed--placeholder-padding-left: $ibo-activity-entry--main-information--padding-x !default;
 
 $ibo-activity-entry--main-information-icon--text-color: $ibo-color-grey-700 !default;
-$ibo-activity-entry--main-information-icon--font-size: 16px !default;
+$ibo-activity-entry--main-information-icon--font-size: $ibo-font-size-200 !default;
 
-$ibo-activity-entry--sub-information--margin-top: 4px !default;
+$ibo-activity-entry--sub-information--margin-top: $ibo-spacing-200 !default;
 $ibo-activity-entry--sub-information--margin-bottom: $ibo-activity-entry--sub-information--margin-top !default;
 $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 
-$ibo-activity-entry--author-name--sibling-spacing: 0.2rem !default;
+$ibo-activity-entry--sub-information--sibling-spacing: 0.5rem !default;
+$ibo-activity-entry--sub-information-sibling-separator--size: 4px !default;
+$ibo-activity-entry--sub-information-sibling-separator--border-radius: 100% !default;
+$ibo-activity-entry--sub-information-sibling-separator--background-color: $ibo-color-grey-600 !default;
 
-$ibo-activity-panel--load-more-entries--size: 32px !default;
-$ibo-activity-panel--load-more-entries--border-radius: $ibo-border-radius-full !default;
-$ibo-activity-panel--load-more-entries--background-color: $ibo-activity-entry--main-information--background-color !default;
-$ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !default;
+$ibo-activity-panel--load-entries-button--size: 32px !default;
+$ibo-activity-panel--load-entries-button--border-radius: $ibo-border-radius-full !default;
+$ibo-activity-panel--load-entries-button--background-color: $ibo-activity-entry--main-information--background-color !default;
+$ibo-activity-panel--load-entries-button--border: $ibo-content-block--border !default;
+
+$ibo-activity-panel--load-all-entries--is-hover--margin-left: ($ibo-activity-panel--load-entries-button--size + 10px) * 2 !default; /* 2x is necessary here as the elements are centered */
 
 /* Entry group */
 .ibo-activity-panel--entry-group{
@@ -89,6 +81,7 @@ $ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !defa
 	/* Current or not user specificities */
 	&.ibo-is-current-user{
 		flex-direction: row-reverse;
+    min-width: min-content;
 
 		.ibo-activity-entry--medallion{
 			margin-right: initial;
@@ -196,17 +189,6 @@ $ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !defa
   flex-grow: 1; /* So it occupies all the remaining width, which is easier for the user to click */
   word-break: break-word; /* To avoid content to overflow its container (typically very long URLs) */
 
-  /* Avoid pre (code snippets) to overflow outside the entry */
-  pre {
-    white-space: pre-wrap;
-  }
-
-  /* Avoid table to overflow outside the entry (see N°2127) */
-  table {
-    table-layout: fixed;
-    width: 100%;
-  }
-
   /* Specific hyperlink color */
   a {
     color: $ibo-activity-entry--main-information-hyperlink--text-color;
@@ -228,26 +210,52 @@ $ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !defa
   color: $ibo-activity-entry--sub-information--text-color;
 
   @extend %ibo-font-size-50;
-}
 
-.ibo-activity-entry--author-name {
-  &:after {
-    content: "-";
-    margin-left: $ibo-activity-entry--author-name--sibling-spacing;
-    margin-right: $ibo-activity-entry--author-name--sibling-spacing;
+  > *:not(:last-child):after {
+    content: " ";
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: $ibo-activity-entry--sub-information--sibling-spacing;
+    margin-right: $ibo-activity-entry--sub-information--sibling-spacing;
+    width: $ibo-activity-entry--sub-information-sibling-separator--size;
+    height: $ibo-activity-entry--sub-information-sibling-separator--size;
+    border-radius: $ibo-activity-entry--sub-information-sibling-separator--border-radius;
+    background-color: $ibo-activity-entry--sub-information-sibling-separator--background-color;
   }
 }
 
 .ibo-activity-panel--load-more-entries-container {
+  position: relative;
   @extend %ibo-fully-centered-content;
+
+  &:hover {
+    .ibo-activity-panel--load-all-entries {
+      margin-left: $ibo-activity-panel--load-all-entries--is-hover--margin-left;
+    }
+  }
+  &:not(:hover) {
+    .ibo-activity-panel--load-all-entries {
+      visibility: hidden;
+    }
+  }
 }
 
-.ibo-activity-panel--load-more-entries {
-  width: $ibo-activity-panel--load-more-entries--size;
-  height: $ibo-activity-panel--load-more-entries--size;
-  border-radius: $ibo-activity-panel--load-more-entries--border-radius;
-  background-color: $ibo-activity-panel--load-more-entries--background-color;
-  border: $ibo-activity-panel--load-more-entries--border;
+.ibo-activity-panel--load-entries-button {
+  width: $ibo-activity-panel--load-entries-button--size;
+  height: $ibo-activity-panel--load-entries-button--size;
+  border-radius: $ibo-activity-panel--load-entries-button--border-radius;
+  background-color: $ibo-activity-panel--load-entries-button--background-color;
+  border: $ibo-activity-panel--load-entries-button--border;
   @extend %ibo-fully-centered-content;
   @extend %ibo-hyperlink-inherited-colors;
+}
+.ibo-activity-panel--load-more-entries {
+  z-index: 1;
+}
+.ibo-activity-panel--load-all-entries {
+  position: absolute;
+  z-index: 0; /* Must be below the other button as it will reveal later */
+  top: 0;
+  margin-left: 0;
+  transition: all 0.1s ease-in-out;
 }

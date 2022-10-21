@@ -4,7 +4,7 @@
 {% extends "base.html.twig" %}
 
 {% block login_content %}
-	{% import "macros.twig" as Macro %}
+
 	<div id="login-content">
 	{% block login_title %}
 		<div id="login-title">
@@ -22,31 +22,37 @@
 				<div id="login-form-content">
 					{% block login_sso_buttons %}
 						<div id="login-sso-buttons">
+                            {% import "macros.twig" as Macro %}
 							{{ Macro.BlockExtension(aPluginFormData, 'login_sso_buttons', '<div class="divider"><hr class="left">' ~ 'UI:Login:SeparatorOr'|dict_s ~ '<hr class="right"/></div>') }}
 						</div>
 					{% endblock login_sso_buttons %}
 					{% block login_input %}
 						<div id="login-input">
+                            {% import "macros.twig" as Macro %}
 							{{ Macro.BlockExtension(aPluginFormData, 'login_input') }}
 						</div>
 					{% endblock login_input %}
 					{% block login_additional_controls %}
 						<div id="login-additional-controls">
+                            {% import "macros.twig" as Macro %}
 							{{ Macro.BlockExtension(aPluginFormData, 'login_additional_controls') }}
 						</div>
 					{% endblock login_additional_controls %}
 					{% block login_submit %}
 						<div id="login-submit">
+                            {% import "macros.twig" as Macro %}
 							{{ Macro.BlockExtension(aPluginFormData, 'login_submit') }}
 						</div>
 					{% endblock login_submit %}
 					{% block login_links %}
 						<div id="login-links">
+                            {% import "macros.twig" as Macro %}
 							{{ Macro.BlockExtension(aPluginFormData, 'login_links') }}
 						</div>
 					{% endblock login_links %}
 					{% block login_form_footer %}
 						<div id="login-form-footer">
+                            {% import "macros.twig" as Macro %}
 							{{ Macro.BlockExtension(aPluginFormData, 'login_form_footer') }}
 						</div>
 					{% endblock login_form_footer %}
@@ -64,6 +70,7 @@
 
 {% block login_footer %}
 	<div id="login-footer">
+        {% import "macros.twig" as Macro %}
 		{{ Macro.BlockExtension(aPluginFormData, 'login_footer') }}
 	</div>
 {% endblock login_footer %}

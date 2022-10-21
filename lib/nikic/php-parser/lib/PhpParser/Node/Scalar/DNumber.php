@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace PhpParser\Node\Scalar;
 
@@ -15,13 +15,24 @@ class DNumber extends Scalar
      * @param float $value      Value of the number
      * @param array $attributes Additional attributes
      */
-    public function __construct($value, array $attributes = array()) {
-        parent::__construct($attributes);
+    public function __construct(float $value, array $attributes = []) {
+        $this->attributes = $attributes;
         $this->value = $value;
     }
 
-    public function getSubNodeNames() {
-        return array('value');
+    public function getSubNodeNames() : array {
+        return ['value'];
+    }
+
+    /**
+     * @param mixed[] $attributes
+     */
+    public static function fromString(string $str, array $attributes = []): DNumber
+    {
+        $attributes['rawValue'] = $str;
+        $float = self::parse($str);
+
+        return new DNumber($float, $attributes);
     }
 
     /**
@@ -33,7 +44,9 @@ class DNumber extends Scalar
      *
      * @return float The parsed number
      */
-    public static function parse($str) {
+    public static function parse(string $str) : float {
+        $str = str_replace('_', '', $str);
+
         // if string contains any of .eE just cast it to float
         if (false !== strpbrk($str, '.eE')) {
             return (float) $str;
@@ -60,5 +73,9 @@ class DNumber extends Scalar
 
         // dec
         return (float) $str;
+    }
+
+    public function getType() : string {
+        return 'Scalar_DNumber';
     }
 }

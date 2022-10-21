@@ -36,6 +36,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'bkp-status-backups-manual' => 'Manuální zálohy',
 	'bkp-status-backups-none' => 'Žádné zálohy',
 	'bkp-next-backup' => 'Další záloha bude provedena dne <b>%1$s</b> (%2$s) v %3$s',
+	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Zálohovat nyní!',
 	'bkp-button-restore-now' => 'Obnovit ze zálohy!',
 	'bkp-confirm-backup' => 'Potvrďte prosím, že chcete provést zálohu nyní.',

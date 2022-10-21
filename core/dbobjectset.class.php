@@ -842,7 +842,7 @@ class DBObjectSet implements iDBObjectSetIterator
      * @throws \MySQLException
      * @throws \MySQLHasGoneAwayException
      */
-	public function Count()
+	public function Count(): int
 	{
 		if (is_null($this->m_iNumTotalDBRows))
 		{
@@ -1077,14 +1077,13 @@ class DBObjectSet implements iDBObjectSetIterator
      *
      * @param int $iRow
      *
-     * @return int|mixed
-     *
      * @throws \CoreException
      * @throws \MissingQueryArgument
      * @throws \MySQLException
      * @throws \MySQLHasGoneAwayException
+     * @since 3.1.0 N°4517 Now returns void for return type to match parent class and be compatible with PHP 8.1
      */
-	public function Seek($iRow)
+	public function Seek($iRow): void
 	{
 		if (!$this->m_bLoaded) $this->Load();
 
@@ -1093,7 +1092,6 @@ class DBObjectSet implements iDBObjectSetIterator
 		{
 			$this->m_oSQLResult->data_seek($this->m_iCurrRow);
 		}
-		return $this->m_iCurrRow;
 	}
 
     /**

@@ -28,9 +28,6 @@ $oCtxCoreUpdate = new ContextTag(ContextTag::TAG_SETUP);
 $oUpdateController = new AjaxController(MODULESROOT.'itop-core-update/view', 'itop-core-update');
 $oUpdateController->DisableInDemoMode();
 $oUpdateController->AllowOnlyAdmin();
-
-// Allow parallel execution of ajax requests
-session_write_close();
 $oUpdateController->HandleAjaxOperation();
 
 unset($oCtxCoreUpdate);

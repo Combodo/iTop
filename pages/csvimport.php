@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
@@ -26,12 +27,12 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactor
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 try {
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
@@ -50,7 +51,7 @@ try {
 	/**
 	 * Helper function to build a select from the list of valid classes for a given action
 	 *
-	 * @deprecated since 3.0.0 use GetClassesSelectUIBlock
+	 * @deprecated 3.0.0 use GetClassesSelectUIBlock
 	 *
 	 * @param $sDefaultValue
 	 * @param integer $iWidthPx The width (in pixels) of the drop-down list
@@ -137,7 +138,7 @@ try {
 		}
 		return $aResult;
 	}
-	
+
 	/**
 	 * Return the most frequent (and regularly occuring) character among the given set, in the specified lines
 	 * @param array $aCSVData The input data, one entry per line
@@ -173,7 +174,7 @@ try {
 			}
 			$iLine++;
 		}
-		
+
 		$aScores = array();
 		foreach($aGuesses as $sSep => $aData)
 		{
@@ -184,7 +185,7 @@ try {
 		$sSeparator = $aKeys[0]; // Take the first key, the one with the best score
 		return $sSeparator;
 	}
-	
+
 	/**
 	 * Try to predict the CSV parameters based on the input data
 	 * @param string $sCSVData The input data
@@ -195,10 +196,10 @@ try {
 		$aData = explode("\n", $sCSVData);
 		$sSeparator = GuessFromFrequency($aData, array("\t", ',', ';', '|')); // Guess the most frequent (and regular) character on each line
 		$sQualifier = GuessFromFrequency($aData, array('"', "'")); // Guess the most frequent (and regular) character on each line
-		
+
 		return array('separator' => $sSeparator, 'qualifier' => $sQualifier);
 	}
-	
+
 	/**
 	 * Display a banner for the special "synchro" mode
 	 * @param WebPage $oP The Page for the output
@@ -209,7 +210,19 @@ try {
 	 {
 		 $oP->AddSubBlock(AlertUIBlockFactory::MakeForInformation(MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Title:BulkSynchro_nbItem_ofClass_class', $iCount, MetaModel::GetName($sClass))));
 	 }
-	 
+
+	/**
+	 * Add a paragraph to the body of the page
+	 *
+	 * @param string $s_html
+	 * @param ?string $sLinkUrl
+	 *
+	 * @return string
+	 */
+	function GetDivAlert($s_html)
+	{
+		return "<div class=\"ibo-csv-import--cell-error ibo-csv-import--cell-message\">$s_html</div>\n";
+	}
 	/**
 	 * Process the CSV data, for real or as a simulation
 	 * @param WebPage $oPage The page used to display the wizard
@@ -220,9 +233,13 @@ try {
 	{
 		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		// Class access right check for the import
-		if (UserRights::IsActionAllowed($sClassName, UR_ACTION_MODIFY) == UR_ALLOWED_NO)
-		{
+		if (UserRights::IsActionAllowed($sClassName, UR_ACTION_MODIFY) == UR_ALLOWED_NO) {
 			throw new CoreException(Dict::S('UI:ActionNotAllowed'));
+		}
+
+		// CSRF transaction id verification
+		if(!$bSimulate && !utils::IsTransactionValid(utils::ReadPostedParam('transaction_id', '', 'raw_data'))){
+			throw new CoreException(Dict::S('UI:Error:InvalidToken'));
 		}
 
 		$aResult = array();
@@ -232,8 +249,7 @@ try {
 		$sTextQualifier = utils::ReadParam('text_qualifier', '"', false, 'raw_data');
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
 		$iSkippedLines = 0;
-		if (utils::ReadParam('box_skiplines', '0') == 1)
-		{
+		if (utils::ReadParam('box_skiplines', '0') == 1) {
 			$iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
 		}
 		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
@@ -244,9 +260,9 @@ try {
 		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
 		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
 		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', (string)AttributeDateTime::GetFormat(), false, 'raw_data');
-		
+
 		$sChosenDateFormat = ($sDateTimeFormat == 'default') ? (string)AttributeDateTime::GetFormat() : $sCustomDateTimeFormat;
-		
+
 		if (!empty($sSynchroScope))
 		{
 			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
@@ -261,7 +277,7 @@ try {
 			$sSynchroScope  = '';
 			$aSynchroUpdate = null;
 		}
-				
+
 		// Parse the data set
 		$oCSVParser = new CSVParser($sCSVData, $sSeparator, $sTextQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
 		$aData = $oCSVParser->ToArray($iSkippedLines);
@@ -271,10 +287,10 @@ try {
 			$aResult[] = $sTextQualifier.implode($sTextQualifier.$sSeparator.$sTextQualifier, array_shift($aData)).$sTextQualifier; // Remove the first line and store it in case of error
 			$iRealSkippedLines++;
 		}
-	
+
 		// Format for the line numbers
 		$sMaxLen = (strlen(''.count($aData)) < 3) ? 3 : strlen(''.count($aData)); // Pad line numbers to the appropriate number of chars, but at least 3
-	
+
 		// Compute the list of search/reconciliation criteria
 		$aSearchKeys = array();
 		foreach($aSearchFields as $index => $sDummy)
@@ -288,16 +304,16 @@ try {
 			}
 			else
 			{
-				$aSearchKeys[$sSearchField] = '';			
+				$aSearchKeys[$sSearchField] = '';
 			}
 			if (!MetaModel::IsValidFilterCode($sClassName, $sSearchField))
 			{
 				// Remove invalid or unmapped search fields
 				$aSearchFields[$index] = null;
-				unset($aSearchKeys[$sSearchField]);			
+				unset($aSearchKeys[$sSearchField]);
 			}
 		}
-		
+
 		// Compute the list of fields and external keys to process
 		$aExtKeys = array();
 		$aAttributes = array();
@@ -330,23 +346,22 @@ try {
 						}
 						else
 						{
-							$aAttributes[$sAttCode] = $iIndex;				
+							$aAttributes[$sAttCode] = $iIndex;
 						}
 					}
 				}
-			}		
+			}
 		}
-		
+
 		$oMyChange = null;
 		if (!$bSimulate)
 		{
 			// We're doing it for real, let's create a change
 			$sUserString = CMDBChange::GetCurrentUserName().' (CSV)';
-			CMDBObject::SetTrackInfo($sUserString);
+			CMDBObject::SetCurrentChangeFromParams($sUserString, CMDBChangeOrigin::CSV_INTERACTIVE);
 			$oMyChange = CMDBObject::GetCurrentChange();
 		}
-		CMDBObject::SetTrackOrigin('csv-interactive');
-	
+
 		$oBulk = new BulkChange(
 			$sClassName,
 			$aData,
@@ -356,11 +371,11 @@ try {
 			empty($sSynchroScope) ? null : $sSynchroScope,
 			$aSynchroUpdate,
 			$sChosenDateFormat, // date format
-			true // localize		
+			true // localize
 		);
 		$oBulk->SetReportHtml();
 
-		$oPage->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8'), "csvdata_truncated"));
+		$oPage->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", utils::EscapeHtml($sCSVDataTruncated), "csvdata_truncated"));
 		$aRes = $oBulk->Process($oMyChange);
 
 		$aColumns = [];
@@ -395,7 +410,7 @@ try {
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
 					$sStatus = '<img src="../images/unchanged.png" title="'.Dict::S('UI:CSVReport-Icon-Unchanged').'">';
-					$sCSSRowClass = 'row_unchanged';
+					$sCSSRowClass = 'ibo-csv-import--row-unchanged';
 					break;
 
 				case 'RowStatus_Modify':
@@ -404,7 +419,7 @@ try {
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
 					$sStatus = '<img src="../images/modified.png" title="'.Dict::S('UI:CSVReport-Icon-Modified').'">';
-					$sCSSRowClass = 'row_modified';
+					$sCSSRowClass = 'ibo-csv-import--row-modified';
 					break;
 
 				case 'RowStatus_Disappeared':
@@ -413,7 +428,7 @@ try {
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
 					$sStatus = '<img src="../images/delete.png" title="'.Dict::S('UI:CSVReport-Icon-Missing').'">';
-					$sCSSRowClass = 'row_modified';
+					$sCSSRowClass = 'ibo-csv-import--row-modified';
 					if ($bSimulate) {
 						$sMessage = Dict::S('UI:CSVReport-Object-MissingToUpdate');
 					} else {
@@ -423,9 +438,8 @@ try {
 
 				case 'RowStatus_NewObj':
 					$iCreated++;
-					$sFinalClass = $aResRow['finalclass'];
 					$sStatus = '<img src="../images/added.png" title="'.Dict::S('UI:CSVReport-Icon-Created').'">';
-					$sCSSRowClass = 'row_added';
+					$sCSSRowClass = 'ibo-csv-import--row-added';
 					if ($bSimulate) {
 						$sMessage = Dict::S('UI:CSVReport-Object-ToCreate');
 					} else {
@@ -438,17 +452,17 @@ try {
 
 				case 'RowStatus_Issue':
 					$iErrors++;
-					$sMessage .= $oPage->GetP($oStatus->GetDescription());
-					$sStatus = '<img src="../images/error.png" title="'.Dict::S('UI:CSVReport-Icon-Error').'">';//translate
-					$sCSSMessageClass = 'cell_error';
-					$sCSSRowClass = 'row_error';
+					$sMessage .= GetDivAlert($oStatus->GetDescription());
+					$sStatus = '<div class="ibo-csv-import--cell-error"><i class="fas fa-exclamation-triangle" title="'.Dict::S('UI:CSVReport-Icon-Error').'" /></div>';//translate
+					$sCSSMessageClass = 'ibo-csv-import--cell-error';
+					$sCSSRowClass = 'ibo-csv-import--row-error';
 					if (array_key_exists($iLine, $aData)) {
 						$aRow = $aData[$iLine];
 						$aResult[] = $sTextQualifier.implode($sTextQualifier.$sSeparator.$sTextQualifier, $aRow).$sTextQualifier; // Remove the first line and store it in case of error
 					}
 					break;
 			}
-			$aTableRow['CSSClass'] = $sCSSRowClass;
+			$aTableRow['@class'] = $sCSSRowClass;
 			$aTableRow['line'] = sprintf("%0{$sMaxLen}d", 1 + $iLine + $iRealSkippedLines);
 			$aTableRow['status'] = $sStatus;
 			$aTableRow['object'] = $sUrl;
@@ -460,37 +474,40 @@ try {
 					if (isset($aExternalKeysByColumn[$iNumber - 1])) {
 						$sExtKeyName = $aExternalKeysByColumn[$iNumber - 1];
 						$oExtKeyCellStatus = $aResRow[$sExtKeyName];
-						switch (get_class($oExtKeyCellStatus)) {
-							case 'CellStatus_Issue':
-							case 'CellStatus_SearchIssue':
-							case 'CellStatus_NullIssue':
-							case 'CellStatus_Ambiguous':
-								$sCellMessage .= $oPage->GetP($oExtKeyCellStatus->GetDescription());
-								break;
-
-							default:
-								// Do nothing
-						}
+						$oCellStatus = $oExtKeyCellStatus;
 					}
 					$sHtmlValue = $oCellStatus->GetDisplayableValue();
 					switch (get_class($oCellStatus)) {
 						case 'CellStatus_Issue':
-							$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="cell_error">'.Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue).$sCellMessage.'</div>';
+						case 'CellStatus_NullIssue':
+							$sCellMessage .= GetDivAlert($oCellStatus->GetDescription());
+							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-error">'.Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue).$sCellMessage.'</div>';
 							break;
 
 						case 'CellStatus_SearchIssue':
-							$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="cell_error">ERROR: '.$sHtmlValue.$sCellMessage.'</div>';
+							$aTableRow[$sClassName.'/'.$sAttCode] = sprintf("%s%s%s%s%s%s",
+								'<a href="',
+								$oCellStatus->GetSearchLinkUrl(),
+								'"><div class="ibo-csv-import--cell-error">',
+								Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue),
+								GetDivAlert($oCellStatus->GetDescription()),
+								'<i class="fas fa-search"></i></div><a/>'
+							);
 							break;
 
 						case 'CellStatus_Ambiguous':
-							$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="cell_error" >'.Dict::Format('UI:CSVReport-Object-Ambiguous', $sHtmlValue).$sCellMessage.'</div>';
+							$aTableRow[$sClassName.'/'.$sAttCode] = sprintf("%s%s%s%s%s%s",
+								'<a href="',
+								$oCellStatus->GetSearchLinkUrl(),
+								'"><i class="fas fa-search"/><div class="ibo-csv-import--cell-error">',
+								Dict::Format('UI:CSVReport-Object-Ambiguous', $sHtmlValue),
+								GetDivAlert($oCellStatus->GetDescription()),
+								'<i class="fas fa-search"></i></div><a/>'
+							);
 							break;
 
 						case 'CellStatus_Modify':
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="cell_modified"><b>'.$sHtmlValue.'</b></div>';
+							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-modified"><b>'.$sHtmlValue.'</b></div>';
 							break;
 
 						default:
@@ -511,20 +528,21 @@ try {
 		$oForm = FormUIBlockFactory::MakeStandard('wizForm');
 		$oContainer->AddSubBlock($oForm);
 
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("transaction_id", utils::GetNewTransactionId()));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("step", ($iCurrentStep + 1)));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", htmlentities($sSeparator, ENT_QUOTES, 'UTF-8')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", utils::EscapeHtml($sSeparator)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", utils::EscapeHtml($sTextQualifier)));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("header_line", $bHeaderLine));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("nb_skipped_lines", utils::ReadParam('nb_skipped_lines', '0')));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("box_skiplines", utils::ReadParam('box_skiplines', '0')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8'), "csvdata_truncated"));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", htmlentities($sCSVData, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", utils::EscapeHtml($sCSVDataTruncated), "csvdata_truncated"));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", utils::EscapeHtml($sCSVData)));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("encoding", $sEncoding));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("synchro_scope", $sSynchroScope));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("class_name", $sClassName));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("advanced", $bAdvanced));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", utils::EscapeHtml($sDateTimeFormat)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", utils::EscapeHtml($sCustomDateTimeFormat)));
 
 		if (!empty($sSynchroScope)) {
 			foreach ($aSynchroUpdate as $sKey => $value) {
@@ -558,28 +576,28 @@ try {
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
-		$oPage->add_ready_script("$('#show_unchanged').on('click', function(){ToggleRows('row_unchanged')})");
+		$oPage->add_ready_script("$('#show_unchanged').on('click', function(){ToggleRows('ibo-csv-import--row-unchanged')})");
 
 		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/modified.png">&nbsp;'.sprintf($aDisplayFilters['modified'], $iModified), '', "1", "show_modified", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
-		$oPage->add_ready_script("$('#show_modified').on('click', function(){ToggleRows('row_modified')})");
+		$oPage->add_ready_script("$('#show_modified').on('click', function(){ToggleRows('ibo-csv-import--row-modified')})");
 
 		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/added.png">&nbsp;'.sprintf($aDisplayFilters['added'], $iCreated), '', "1", "show_created", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
-		$oPage->add_ready_script("$('#show_created').on('click', function(){ToggleRows('row_added')})");
+		$oPage->add_ready_script("$('#show_created').on('click', function(){ToggleRows('ibo-csv-import--row-added')})");
 
-		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/error.png">&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors), '', "1", "show_errors", "checkbox");
+		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<i class="fas fa-exclamation-triangle" style="color:#A33; background-color: #FFF0F0;">&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors).'</i></i>', '', "1", "show_errors", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
-		$oPage->add_ready_script("$('#show_errors').on('click', function(){ToggleRows('row_error')})");
+		$oPage->add_ready_script("$('#show_errors').on('click', function(){ToggleRows('ibo-csv-import--row-error')})");
 
 		$oPanel = PanelUIBlockFactory::MakeNeutral('');
 		$oPanel->AddCSSClasses(['ibo-datatable-panel', 'mb-5']);
@@ -626,12 +644,12 @@ try {
 		if ($bShouldConfirm) {
 			$sYesButton = Dict::S('UI:Button:Ok');
 			$sNoButton = Dict::S('UI:Button:Cancel');
-			$oDlg = UIContentBlockUIBlockFactory::MakeStandard("dlg_confirmation")->AddCSSClass('ibo-hidden');
+			$oDlg = UIContentBlockUIBlockFactory::MakeStandard("dlg_confirmation")->SetHasForcedDiv(true);
 			$oPage->AddSubBlock($oDlg);
 			$oDlg->AddSubBlock(new Html($sMessage));
-			$oDlg->AddSubBlock(new Html(htmlentities(Dict::S('UI:CSVImportConfirmMessage'), ENT_QUOTES, 'UTF-8')));
+			$oDlg->AddSubBlock(new Html(utils::EscapeHtml(Dict::S('UI:CSVImportConfirmMessage'))));
 
-			$oDlgConfirm = UIContentBlockUIBlockFactory::MakeStandard("confirmation_chart")->AddCSSClass('ibo-hidden');
+			$oDlgConfirm = UIContentBlockUIBlockFactory::MakeStandard("confirmation_chart")->SetHasForcedDiv(true);
 			$oDlg->AddSubBlock($oDlgConfirm);
 
 			$sDlgTitle = Dict::S('UI:CSVImportConfirmTitle');
@@ -646,20 +664,31 @@ try {
 			autoOpen: false, 
 			title:'$sDlgTitle',
 			buttons:
-			{
-				'$sYesButton': RunImport,
-				'$sNoButton': CancelImport 
-			} 
+			[
+				{ 
+					text: "$sNoButton",
+					click: CancelImport,
+				},
+				{ 
+					text: "$sYesButton",
+				    class: "ibo-is-primary",
+					click: RunImport,
+				},
+			]
 		});
 EOF
 			);
 		}
-		
+
 		$sErrors = json_encode(Dict::Format('UI:CSVImportError_items', $iErrors));
 		$sCreated = json_encode(Dict::Format('UI:CSVImportCreated_items', $iCreated));
 		$sModified = json_encode(Dict::Format('UI:CSVImportModified_items', $iModified));
 		$sUnchanged = json_encode(Dict::Format('UI:CSVImportUnchanged_items', $iUnchanged));
-		$oPage->add_script(		
+
+		// Add graphs dependencies
+		WebResourcesHelper::EnableC3JSToWebPage($oPage);
+
+		$oPage->add_script(
 <<< EOF
 function CSVGoBack()
 {
@@ -745,7 +774,7 @@ EOF
 		{
 			return null;
 		}
-	
+
 	}
 	/**
 	 * Perform the actual load of the CSV data and display the results
@@ -765,11 +794,11 @@ EOF
 			$oField = FieldUIBlockFactory::MakeLarge(Dict::S('UI:CSVImport:LinesNotImported+'));
 			$oCollapsibleSection->AddSubBlock($oField);
 
-			$oText = new TextArea("", htmlentities(implode("\n", $aResult), ENT_QUOTES, 'UTF-8'), "", 150, 50);
+			$oText = new TextArea("", utils::EscapeHtml(implode("\n", $aResult)), "", 150, 50);
 			$oField->AddSubBlock($oText);
 		}
 	}
-	
+
 	/**
 	 * Simulate the load of the CSV data and display the results
 	 * @param WebPage $oPage The web page to display the wizard
@@ -781,7 +810,7 @@ EOF
 		$oPage->AddSubBlock($oPanel);
 		ProcessCSVData($oPage, true /* simulate */);
 	}
-	
+
 	/**
 	 * Select the mapping between the CSV column and the fields of the objects
 	 * @param WebPage $oPage The web page to display the wizard
@@ -856,17 +885,17 @@ EOF
 		$oForm->AddSubBlock($oDivMapping);
 
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("step", "4"));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", htmlentities($sSeparator, ENT_QUOTES, 'UTF-8')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", utils::EscapeHtml($sSeparator)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", utils::EscapeHtml($sTextQualifier)));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("header_line", $bHeaderLine));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("nb_skipped_lines", utils::ReadParam('nb_skipped_lines', '0')));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("box_skiplines", utils::ReadParam('box_skiplines', '0')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8'), "csvdata_truncated"));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", htmlentities($sCSVData, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", utils::EscapeHtml($sCSVDataTruncated), "csvdata_truncated"));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", utils::EscapeHtml($sCSVData)));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("encoding", $sEncoding));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("synchro_scope", $sSynchroScope));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8')));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", utils::EscapeHtml($sDateTimeFormat)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", utils::EscapeHtml($sCustomDateTimeFormat)));
 
 		if (!empty($sSynchroScope)) {
 			foreach ($aSynchroUpdate as $sKey => $value) {
@@ -894,10 +923,10 @@ EOF
 			$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
 			$sFieldsMapping = addslashes(json_encode($aFieldsMapping));
 			$sSearchFields = addslashes(json_encode($aSearchFields));
-		
+
 			$oPage->add_ready_script("DoMapping('$sFieldsMapping', '$sSearchFields');"); // There is already a class selected, run the mapping
 		}
-	
+
 		$oPage->add_script(
 <<<EOF
 	var aDefaultKeys = new Array();
@@ -1007,7 +1036,7 @@ EOF
 					if ($(this).val() == sRefValue)
 					{
 						iOccurences++;
-					}c
+					}
 				});
 				if ((iOccurences > 1) && (sRefValue != ':none:'))
 				{
@@ -1113,7 +1142,7 @@ EOF
 EOF
 	);
 	}
-	
+
 	/**
 	 * Select the options of the CSV load and check for CSV parsing errors
 	 * @param WebPage $oPage The current web page
@@ -1132,12 +1161,12 @@ EOF
 				$sCSVData = $oDocument->GetData();
 			}
 			break;
-			
+
 			default:
 			$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 		}
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
-	
+
 		// Compute a subset of the data set, now that we know the charset
 		if ($sEncoding == 'UTF-8')
 		{
@@ -1154,15 +1183,15 @@ EOF
 		{
 			$sUTF8Data = iconv($sEncoding, 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
 		}
-	
+
 		$aGuesses = GuessParameters($sUTF8Data); // Try to predict the parameters, based on the input data
-		
+
 		$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
 		$bBoxSkipLines = utils::ReadParam('box_skiplines', 0);
 		$sTextQualifier = utils::ReadParam('text_qualifier', '', false, 'raw_data');
 		if ($sTextQualifier == '') // May be set to an empty value by the previous page
 		{
-			$sTextQualifier = $aGuesses['qualifier'];	
+			$sTextQualifier = $aGuesses['qualifier'];
 		}
 		$sOtherTextQualifier = in_array($sTextQualifier, array('"', "'")) ? '' : $sTextQualifier;
 		$bHeaderLine = utils::ReadParam('header_line', 0);
@@ -1233,10 +1262,10 @@ EOF
 			$sSeparator = "tab";
 		}
 		$sOtherSeparator = in_array($sSeparator, array(',', ';', "\t")) ? '' : $sSeparator;
-		$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator"  id="other_separator" value="'.htmlentities($sOtherSeparator, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>';
+		$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator"  id="other_separator" value="'.utils::EscapeHtml($sOtherSeparator).'" onChange="DoPreview()"/>';
 
 		foreach ($aSep as $sVal => $sLabel) {
-			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
+			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", utils::EscapeHtml($sVal), $sLabel, "radio");
 			$oRadio->GetInput()->SetIsChecked(($sVal == $sSeparator));
 			$oRadio->SetBeforeInput(false);
 			$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
@@ -1251,13 +1280,12 @@ EOF
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetTextQualifier));
 
 		$aQualifiers = array(
-			'"' => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
+			'"'  => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
 			'\'' => Dict::S('UI:CSVImport:QualifierSimpleQuote+'),
 		);
-		$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier" value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()/>';
-		//	<input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>
+		$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier" value="'.utils::EscapeHtml($sOtherTextQualifier).'" onChange="DoPreview()/>';
 		foreach ($aQualifiers as $sVal => $sLabel) {
-			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text_qualifier", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
+			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text_qualifier", utils::EscapeHtml($sVal), $sLabel, "radio");
 			$oRadio->GetInput()->SetIsChecked(($sVal == $sTextQualifier));
 			$oRadio->SetBeforeInput(false);
 			$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -1294,8 +1322,8 @@ EOF
 		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
 		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', (string)AttributeDateTime::GetFormat(), false, 'raw_data');
 
-		$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
-		$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+		$sDefaultFormat = utils::EscapeHtml((string)AttributeDateTime::GetFormat());
+		$sExample = utils::EscapeHtml(date((string)AttributeDateTime::GetFormat()));
 		$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('UI:CSVImport:DefaultDateTimeFormat_Format_Example', $sDefaultFormat, $sExample), "date_time_format", "default", "radio_date_time_std", "radio");
 		$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 		$oRadioDefault->SetBeforeInput(false);
@@ -1303,8 +1331,9 @@ EOF
 		$oFieldSetDate->AddSubBlock($oRadioDefault);
 		$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-		$sFormatInput = '<input type="text" size="15" name="custom_date_time_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+		$sFormatInput = '<input type="text" size="15" name="custom_date_time_format" id="excel_custom_date_time_format" title="" value="'.utils::EscapeHtml($sCustomDateTimeFormat).'"/>';
 		$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('UI:CSVImport:CustomDateTimeFormat', $sFormatInput), "date_time_format", "custom", "radio_date_time_custom", "radio");
+		$oRadioCustom->SetDescription(Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip'));
 		$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 		$oRadioCustom->SetBeforeInput(false);
 		$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -1313,8 +1342,8 @@ EOF
 		$oPage->add_ready_script("$('#custom_date_time_format').on('click', function() { DoPreview(); });");
 		$oPage->add_ready_script("$('#radio_date_time_std').on('click', function() { DoPreview(); });");
 
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8'), "csvdata_truncated"));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", htmlentities($sUTF8Data, ENT_QUOTES, 'UTF-8'), 'csvdata'));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", utils::EscapeHtml($sCSVDataTruncated), "csvdata_truncated"));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata", utils::EscapeHtml($sUTF8Data), 'csvdata'));
 		// The encoding has changed, keep that information within the wizard
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("encoding", "UTF-8"));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("class_name", $sClassName));
@@ -1401,11 +1430,9 @@ EOF
 	}
 EOF
 	);
-		$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
 		$oPage->add_ready_script(
 <<<EOF
 DoPreview();
-$('#custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#custom_date_time_format').on('click', function() { $('#radio_date_time_custom').prop('checked', true); });
 EOF
 		);
@@ -1497,17 +1524,18 @@ EOF
 		$oTabPaste->AddSubBlock($oFormPaste);
 
 
-		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
+		$sCSVData = utils::ReadParam('csvdata', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
 		$oTextarea = new TextArea('csvdata', $sCSVData, '', 120, 30);
+		$oTextarea->AddCSSClasses(['ibo-input-text', 'ibo-is-code']);
 		$oFieldPaste = FieldUIBlockFactory::MakeFromObject(Dict::S('UI:CSVImport:PasteData'), $oTextarea);
 		$oFormPaste->AddSubBlock($oFieldPaste);
 
 		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("encoding", 'UTF-8'));
 		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("step", '2'));
-		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", htmlentities($sSeparator, ENT_QUOTES, 'UTF-8')));
-		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8')));
-		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8')));
-		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8')));
+		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", utils::EscapeHtml($sSeparator)));
+		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", utils::EscapeHtml($sTextQualifier)));
+		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", utils::EscapeHtml($sDateTimeFormat)));
+		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", utils::EscapeHtml($sCustomDateTimeFormat)));
 		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("header_line", $bHeaderLine));
 		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("nb_skipped_lines", utils::ReadParam('nb_skipped_lines', '0')));
 		$oFormPaste->AddSubBlock(InputUIBlockFactory::MakeForHidden("box_skiplines", utils::ReadParam('box_skiplines', '0')));
@@ -1581,7 +1609,7 @@ EOF
 				null, AjaxTab::ENUM_TAB_PLACEHOLDER_MISC);
 		}
 	}
-			
+
 	switch($iStep)
 	{
 		case 11:
@@ -1589,45 +1617,45 @@ EOF
 			$oPage = new AjaxPage('');
 			BulkChange::DisplayImportHistory($oPage);
 			$oPage->add_ready_script('$("#CSVImportHistory table.listResults").tableHover();');
-			$oPage->add_ready_script('$("#CSVImportHistory table.listResults").tablesorter( { widgets: ["myZebra", "truncatedList"]} );');	
+			$oPage->add_ready_script('$("#CSVImportHistory table.listResults").tablesorter( { widgets: ["myZebra", "truncatedList"]} );');
 			break;
-		
+
 		case 10:
 			// Case generated by BulkChange::DisplayImportHistory
 			$iChange = (int)utils::ReadParam('changeid', 0);
 			BulkChange::DisplayImportHistoryDetails($oPage, $iChange);
 			break;
-			
+
 		case 5:
 			LoadData($oPage);
 			break;
-			
+
 		case 4:
 			Preview($oPage);
 			break;
-			
+
 		case 3:
 			SelectMapping($oPage);
 			break;
-			
+
 		case 2:
 			SelectOptions($oPage);
 			break;
-			
+
 		case 1:
 		case 6: // Loop back here when we are done
 		default:
 			Welcome($oPage);
 	}
-	
+
 	$oPage->output();
 }
 catch(CoreException $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
-	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
-	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
+	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
+	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));
 	$oP->output();
 
 	if (MetaModel::IsLogEnabledIssue())
@@ -1655,8 +1683,8 @@ catch(Exception $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
-	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
-	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	
+	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
+	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));
 	$oP->output();
 
 	if (MetaModel::IsLogEnabledIssue())

@@ -17,13 +17,37 @@
           <stylesheet id="custom">../css/custom.scss</stylesheet>
         </stylesheets>
       </theme>
+      <theme id="light-grey">
+        <variables/>
+        <imports>
+          <import id="css-variables">../css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/light-grey.scss</stylesheet>
+        </stylesheets>
+      </theme>
     </themes>
   </branding>
   <classes>
+    <class id="ClassWithNewValueInFieldWhichHasNoXsiTypeDueToMustExistFlag" _delta="must_exist">
+      <fields>
+        <field id="status" _delta="must_exist">
+          <values>
+            <value id="test" _delta="define">test</value>
+          </values>
+        </field>
+      </fields>
+    </class>
     <class id="ClassWithLifecycle">
       <properties>
         <icon>images/class-with-lifecycle.png</icon>
       </properties>
+      <lifecycle>
+        <attribute>foo</attribute>
+      </lifecycle>
+    </class>
+    <class id="ClassWithLifecycleNoProperties">
       <lifecycle>
         <attribute>foo</attribute>
       </lifecycle>

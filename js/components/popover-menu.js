@@ -123,46 +123,7 @@ $(function()
 
 				// Only recompute position when the menu is closed and about to be opened
 				if (false === this._isOpened()) {
-					const oTargetElem = ('toggler' === this.options.position.target) ? $(this.options.toggler) : $(this.options.position.target);
-					const oTargetPos = ('parent' === this.options.container) ? oTargetElem.position() : oTargetElem.offset();
-
-					let oNextCSSPosition = {
-						'z-index': 1,
-					};
-					const sVerticalPosExp = this.options.position.vertical;
-					const sHorizontalPosExp = this.options.position.horizontal;
-
-					// Position referential
-					if ('body' === this.options.container) {
-						oNextCSSPosition['position'] = 'fixed';
-						oNextCSSPosition['z-index'] = 30; // 30 to be above #ibo-page-container (10) and #ibo-navigation-menu (20)
-					}
-
-					// Vertical
-					if ('below' === sVerticalPosExp) {
-						oNextCSSPosition['top'] = (oTargetPos.top+oTargetElem.outerHeight())+'px';
-					} else if ('above' === sVerticalPosExp) {
-						oNextCSSPosition['top'] = (oTargetPos.top-this.element.outerHeight())+'px';
-					} else {
-						let oTmpFunction = eval('(oElem, oTargetElem, oTargetPos) => '+sVerticalPosExp);
-						oNextCSSPosition['top'] = oTmpFunction(this.element, oTargetElem, oTargetPos);
-					}
-
-					// Horizontal
-					if ('align_inner_left' === sHorizontalPosExp) {
-						oNextCSSPosition['left'] = (oTargetPos.left)+'px';
-					} else if ('align_outer_left' === sHorizontalPosExp) {
-						oNextCSSPosition['left'] = (oTargetPos.left-this.element.width())+'px';
-					} else if ('align_inner_right' === sHorizontalPosExp) {
-						oNextCSSPosition['left'] = (oTargetPos.left+oTargetElem.outerWidth(true)-this.element.width())+'px';
-					} else if ('align_outer_right' === sHorizontalPosExp) {
-						oNextCSSPosition['left'] = (oTargetPos.left+oTargetElem.outerWidth(true))+'px';
-					} else {
-						let oTmpFunction = eval('(oElem, oTargetElem, oTargetPos) => '+sHorizontalPosExp);
-						oNextCSSPosition['left'] = oTmpFunction(this.element, oTargetElem, oTargetPos);
-					}
-
-					this.element.css(oNextCSSPosition);
+					this._applyPosition();
 				}
 
 				this.togglePopup();
@@ -228,12 +189,77 @@ $(function()
 				return this.element.hasClass(this.css_classes.opened);
 			},
 			/**
+			 * Compute and apply current position of the menu
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_applyPosition: function () {
+				const oTargetElem = ('toggler' === this.options.position.target) ? $(this.options.toggler) : $(this.options.position.target);
+				const oTargetPos = ('parent' === this.options.container) ? oTargetElem.position() : oTargetElem.offset();
+
+				let oNextCSSPosition = {
+					'z-index': 1,
+				};
+				const sVerticalPosExp = this.options.position.vertical;
+				const sHorizontalPosExp = this.options.position.horizontal;
+
+				// Position referential
+				if ('body' === this.options.container) {
+					oNextCSSPosition['position'] = 'fixed';
+					oNextCSSPosition['z-index'] = 30; // 30 to be above #ibo-page-container (10) and #ibo-navigation-menu (20)
+				}
+
+				// Vertical
+				if ('below' === sVerticalPosExp) {
+					oNextCSSPosition['top'] = (oTargetPos.top+oTargetElem.outerHeight())+'px';
+				} else if ('above' === sVerticalPosExp) {
+					oNextCSSPosition['top'] = (oTargetPos.top-this.element.outerHeight())+'px';
+				} else {
+					let oTmpFunction = eval('(oElem, oTargetElem, oTargetPos) => '+sVerticalPosExp);
+					oNextCSSPosition['top'] = oTmpFunction(this.element, oTargetElem, oTargetPos);
+				}
+
+				// Horizontal
+				if ('align_inner_left' === sHorizontalPosExp) {
+					oNextCSSPosition['left'] = (oTargetPos.left)+'px';
+				} else if ('align_outer_left' === sHorizontalPosExp) {
+					oNextCSSPosition['left'] = (oTargetPos.left-this.element.width())+'px';
+				} else if ('align_inner_right' === sHorizontalPosExp) {
+					oNextCSSPosition['left'] = (oTargetPos.left+oTargetElem.outerWidth(true)-this.element.width())+'px';
+				} else if ('align_outer_right' === sHorizontalPosExp) {
+					oNextCSSPosition['left'] = (oTargetPos.left+oTargetElem.outerWidth(true))+'px';
+				} else {
+					let oTmpFunction = eval('(oElem, oTargetElem, oTargetPos) => '+sHorizontalPosExp);
+					oNextCSSPosition['left'] = oTmpFunction(this.element, oTargetElem, oTargetPos);
+				}
+
+				this.element.css(oNextCSSPosition);
+			},
+			/**
 			 * Open the menu
 			 * @return {void}
 			 * @private
 			 */
 			_openPopup: function () {
 				this.element.addClass(this.css_classes.opened);
+				let self = this;
+				let oTargetElem = ('toggler' === self.options.position.target) ? $(self.options.toggler) : $(self.options.position.target);
+				let id = this.element.id;
+				if (oTargetElem.scrollParent()[0].tagName != 'HTML') {
+					oTargetElem.scrollParent().on(['scroll.'+id, 'resize.'+id].join(" "), function () {
+						setTimeout(function () {
+							self._applyPosition();
+						}, 50);
+					});
+					if (oTargetElem.scrollParent().scrollParent()[0].tagName != 'HTML') {
+						oTargetElem.scrollParent().scrollParent().on(['scroll.'+id, 'resize.'+id].join(" "), function () {
+							setTimeout(function () {
+								self._applyPosition();
+							}, 50);
+						});
+					}
+				}
 			},
 			/**
 			 * Close the menu
@@ -242,6 +268,17 @@ $(function()
 			 */
 			_closePopup: function () {
 				this.element.removeClass(this.css_classes.opened);
+				let self = this;
+				let oTargetElem = ('toggler' === self.options.position.target) ? $(self.options.toggler) : $(self.options.position.target);
+				let id = this.element.id;
+				if (oTargetElem.scrollParent()[0].tagName != 'HTML') {
+					oTargetElem.scrollParent().off('scroll.'+id);
+					oTargetElem.scrollParent().off('resize.'+id);
+					if (oTargetElem.scrollParent().scrollParent()[0].tagName != 'HTML') {
+						oTargetElem.scrollParent().scrollParent().off('scroll.'+id);
+						oTargetElem.scrollParent().scrollParent().off('resize.'+id);
+					}
+				}
 			},
 			/**
 			 * @api

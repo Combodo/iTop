@@ -11,3 +11,16 @@
 		</div>
 	</div>
 {% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    
+	sessionStorage.clear();
+{% endblock %}
+
+{% block ready_script %}
+    {{ parent() }}
+
+    // Redirect after 1s so the user has time to read the message
+    setTimeout(function() { window.location.href = '{{ sUrl }}'; }, 1000);
+{% endblock %}

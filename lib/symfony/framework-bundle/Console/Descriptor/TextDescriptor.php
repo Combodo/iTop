@@ -12,17 +12,21 @@
 namespace Symfony\Bundle\FrameworkBundle\Console\Descriptor;
 
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Helper\Dumper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Alias;
+use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
+use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -33,9 +37,13 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class TextDescriptor extends Descriptor
 {
-    /**
-     * {@inheritdoc}
-     */
+    private $fileLinkFormatter;
+
+    public function __construct(FileLinkFormatter $fileLinkFormatter = null)
+    {
+        $this->fileLinkFormatter = $fileLinkFormatter;
+    }
+
     protected function describeRouteCollection(RouteCollection $routes, array $options = [])
     {
         $showControllers = isset($options['show_controllers']) && $options['show_controllers'];
@@ -47,17 +55,18 @@ class TextDescriptor extends Descriptor
 
         $tableRows = [];
         foreach ($routes->all() as $name => $route) {
+            $controller = $route->getDefault('_controller');
+
             $row = [
                 $name,
                 $route->getMethods() ? implode('|', $route->getMethods()) : 'ANY',
                 $route->getSchemes() ? implode('|', $route->getSchemes()) : 'ANY',
                 '' !== $route->getHost() ? $route->getHost() : 'ANY',
-                $route->getPath(),
+                $this->formatControllerLink($controller, $route->getPath(), $options['container'] ?? null),
             ];
 
             if ($showControllers) {
-                $controller = $route->getDefault('_controller');
-                $row[] = $controller ? $this->formatCallable($controller) : '';
+                $row[] = $controller ? $this->formatControllerLink($controller, $this->formatCallable($controller), $options['container'] ?? null) : '';
             }
 
             $tableRows[] = $row;
@@ -72,27 +81,30 @@ class TextDescriptor extends Descriptor
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function describeRoute(Route $route, array $options = [])
     {
+        $defaults = $route->getDefaults();
+        if (isset($defaults['_controller'])) {
+            $defaults['_controller'] = $this->formatControllerLink($defaults['_controller'], $this->formatCallable($defaults['_controller']), $options['container'] ?? null);
+        }
+
         $tableHeaders = ['Property', 'Value'];
         $tableRows = [
-            ['Route Name', isset($options['name']) ? $options['name'] : ''],
+            ['Route Name', $options['name'] ?? ''],
             ['Path', $route->getPath()],
             ['Path Regex', $route->compile()->getRegex()],
-            ['Host', ('' !== $route->getHost() ? $route->getHost() : 'ANY')],
-            ['Host Regex', ('' !== $route->getHost() ? $route->compile()->getHostRegex() : '')],
-            ['Scheme', ($route->getSchemes() ? implode('|', $route->getSchemes()) : 'ANY')],
-            ['Method', ($route->getMethods() ? implode('|', $route->getMethods()) : 'ANY')],
-            ['Requirements', ($route->getRequirements() ? $this->formatRouterConfig($route->getRequirements()) : 'NO CUSTOM')],
+            ['Host', '' !== $route->getHost() ? $route->getHost() : 'ANY'],
+            ['Host Regex', '' !== $route->getHost() ? $route->compile()->getHostRegex() : ''],
+            ['Scheme', $route->getSchemes() ? implode('|', $route->getSchemes()) : 'ANY'],
+            ['Method', $route->getMethods() ? implode('|', $route->getMethods()) : 'ANY'],
+            ['Requirements', $route->getRequirements() ? $this->formatRouterConfig($route->getRequirements()) : 'NO CUSTOM'],
             ['Class', \get_class($route)],
-            ['Defaults', $this->formatRouterConfig($route->getDefaults())],
+            ['Defaults', $this->formatRouterConfig($defaults)],
             ['Options', $this->formatRouterConfig($route->getOptions())],
         ];
-        if (isset($options['callable'])) {
-            $tableRows[] = ['Callable', $options['callable']];
+
+        if ('' !== $route->getCondition()) {
+            $tableRows[] = ['Condition', $route->getCondition()];
         }
 
         $table = new Table($this->getOutput());
@@ -100,9 +112,6 @@ class TextDescriptor extends Descriptor
         $table->render();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function describeContainerParameters(ParameterBag $parameters, array $options = [])
     {
         $tableHeaders = ['Parameter', 'Value'];
@@ -116,29 +125,23 @@ class TextDescriptor extends Descriptor
         $options['output']->table($tableHeaders, $tableRows);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function describeContainerTags(ContainerBuilder $builder, array $options = [])
     {
-        $showPrivate = isset($options['show_private']) && $options['show_private'];
+        $showHidden = isset($options['show_hidden']) && $options['show_hidden'];
 
-        if ($showPrivate) {
-            $options['output']->title('Symfony Container Public and Private Tags');
+        if ($showHidden) {
+            $options['output']->title('Symfony Container Hidden Tags');
         } else {
-            $options['output']->title('Symfony Container Public Tags');
+            $options['output']->title('Symfony Container Tags');
         }
 
-        foreach ($this->findDefinitionsByTag($builder, $showPrivate) as $tag => $definitions) {
+        foreach ($this->findDefinitionsByTag($builder, $showHidden) as $tag => $definitions) {
             $options['output']->section(sprintf('"%s" tag', $tag));
             $options['output']->listing(array_keys($definitions));
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function describeContainerService($service, array $options = [], ContainerBuilder $builder = null)
+    protected function describeContainerService(object $service, array $options = [], ContainerBuilder $builder = null)
     {
         if (!isset($options['id'])) {
             throw new \InvalidArgumentException('An "id" option must be provided.');
@@ -153,24 +156,21 @@ class TextDescriptor extends Descriptor
             $options['output']->table(
                 ['Service ID', 'Class'],
                 [
-                    [isset($options['id']) ? $options['id'] : '-', \get_class($service)],
+                    [$options['id'] ?? '-', \get_class($service)],
                 ]
             );
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function describeContainerServices(ContainerBuilder $builder, array $options = [])
     {
-        $showPrivate = isset($options['show_private']) && $options['show_private'];
-        $showTag = isset($options['tag']) ? $options['tag'] : null;
+        $showHidden = isset($options['show_hidden']) && $options['show_hidden'];
+        $showTag = $options['tag'] ?? null;
 
-        if ($showPrivate) {
-            $title = 'Symfony Container Public and Private Services';
+        if ($showHidden) {
+            $title = 'Symfony Container Hidden Services';
         } else {
-            $title = 'Symfony Container Public Services';
+            $title = 'Symfony Container Services';
         }
 
         if ($showTag) {
@@ -179,7 +179,9 @@ class TextDescriptor extends Descriptor
 
         $options['output']->title($title);
 
-        $serviceIds = isset($options['tag']) && $options['tag'] ? array_keys($builder->findTaggedServiceIds($options['tag'])) : $builder->getServiceIds();
+        $serviceIds = isset($options['tag']) && $options['tag']
+            ? $this->sortTaggedServicesByPriority($builder->findTaggedServiceIds($options['tag']))
+            : $this->sortServiceIds($builder->getServiceIds());
         $maxTags = [];
 
         if (isset($options['filter'])) {
@@ -188,12 +190,14 @@ class TextDescriptor extends Descriptor
 
         foreach ($serviceIds as $key => $serviceId) {
             $definition = $this->resolveServiceDefinition($builder, $serviceId);
+
+            // filter out hidden services unless shown explicitly
+            if ($showHidden xor '.' === ($serviceId[0] ?? null)) {
+                unset($serviceIds[$key]);
+                continue;
+            }
+
             if ($definition instanceof Definition) {
-                // filter out private services unless shown explicitly
-                if (!$showPrivate && (!$definition->isPublic() || $definition->isPrivate())) {
-                    unset($serviceIds[$key]);
-                    continue;
-                }
                 if ($showTag) {
                     $tags = $definition->getTag($showTag);
                     foreach ($tags as $tag) {
@@ -207,11 +211,6 @@ class TextDescriptor extends Descriptor
                         }
                     }
                 }
-            } elseif ($definition instanceof Alias) {
-                if (!$showPrivate && (!$definition->isPublic() || $definition->isPrivate())) {
-                    unset($serviceIds[$key]);
-                    continue;
-                }
             }
         }
 
@@ -221,21 +220,21 @@ class TextDescriptor extends Descriptor
         $tableHeaders = array_merge(['Service ID'], $tagsNames, ['Class name']);
         $tableRows = [];
         $rawOutput = isset($options['raw_text']) && $options['raw_text'];
-        foreach ($this->sortServiceIds($serviceIds) as $serviceId) {
+        foreach ($serviceIds as $serviceId) {
             $definition = $this->resolveServiceDefinition($builder, $serviceId);
 
             $styledServiceId = $rawOutput ? $serviceId : sprintf('<fg=cyan>%s</fg=cyan>', OutputFormatter::escape($serviceId));
             if ($definition instanceof Definition) {
                 if ($showTag) {
-                    foreach ($definition->getTag($showTag) as $key => $tag) {
+                    foreach ($this->sortByPriority($definition->getTag($showTag)) as $key => $tag) {
                         $tagValues = [];
                         foreach ($tagsNames as $tagName) {
-                            $tagValues[] = isset($tag[$tagName]) ? $tag[$tagName] : '';
+                            $tagValues[] = $tag[$tagName] ?? '';
                         }
                         if (0 === $key) {
                             $tableRows[] = array_merge([$serviceId], $tagValues, [$definition->getClass()]);
                         } else {
-                            $tableRows[] = array_merge(['  "'], $tagValues, ['']);
+                            $tableRows[] = array_merge([' (same service as previous, another tag)'], $tagValues, ['']);
                         }
                     }
                 } else {
@@ -252,18 +251,19 @@ class TextDescriptor extends Descriptor
         $options['output']->table($tableHeaders, $tableRows);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function describeContainerDefinition(Definition $definition, array $options = [])
     {
         if (isset($options['id'])) {
             $options['output']->title(sprintf('Information for Service "<info>%s</info>"', $options['id']));
         }
 
+        if ('' !== $classDescription = $this->getClassDescription((string) $definition->getClass())) {
+            $options['output']->text($classDescription."\n");
+        }
+
         $tableHeaders = ['Option', 'Value'];
 
-        $tableRows[] = ['Service ID', isset($options['id']) ? $options['id'] : '-'];
+        $tableRows[] = ['Service ID', $options['id'] ?? '-'];
         $tableRows[] = ['Class', $definition->getClass() ?: '-'];
 
         $omitTags = isset($options['omit_tags']) && $options['omit_tags'];
@@ -306,11 +306,6 @@ class TextDescriptor extends Descriptor
         $tableRows[] = ['Autowired', $definition->isAutowired() ? 'yes' : 'no'];
         $tableRows[] = ['Autoconfigured', $definition->isAutoconfigured() ? 'yes' : 'no'];
 
-        // forward compatibility with DependencyInjection component in version 4.0
-        if (method_exists($definition, 'getAutowiringTypes') && $autowiringTypes = $definition->getAutowiringTypes(false)) {
-            $tableRows[] = ['Autowiring Types', implode(', ', $autowiringTypes)];
-        }
-
         if ($definition->getFile()) {
             $tableRows[] = ['Required File', $definition->getFile() ?: '-'];
         }
@@ -345,8 +340,18 @@ class TextDescriptor extends Descriptor
                     } else {
                         $argumentsInformation[] = sprintf('Iterator (%d element(s))', \count($argument->getValues()));
                     }
+
+                    foreach ($argument->getValues() as $ref) {
+                        $argumentsInformation[] = sprintf('- Service(%s)', $ref);
+                    }
+                } elseif ($argument instanceof ServiceLocatorArgument) {
+                    $argumentsInformation[] = sprintf('Service locator (%d element(s))', \count($argument->getValues()));
                 } elseif ($argument instanceof Definition) {
                     $argumentsInformation[] = 'Inlined Service';
+                } elseif ($argument instanceof \UnitEnum) {
+                    $argumentsInformation[] = ltrim(var_export($argument, true), '\\');
+                } elseif ($argument instanceof AbstractArgument) {
+                    $argumentsInformation[] = sprintf('Abstract argument (%s)', $argument->getText());
                 } else {
                     $argumentsInformation[] = \is_array($argument) ? sprintf('Array (%d element(s))', \count($argument)) : $argument;
                 }
@@ -358,12 +363,39 @@ class TextDescriptor extends Descriptor
         $options['output']->table($tableHeaders, $tableRows);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    protected function describeContainerDeprecations(ContainerBuilder $builder, array $options = []): void
+    {
+        $containerDeprecationFilePath = sprintf('%s/%sDeprecations.log', $builder->getParameter('kernel.build_dir'), $builder->getParameter('kernel.container_class'));
+        if (!file_exists($containerDeprecationFilePath)) {
+            $options['output']->warning('The deprecation file does not exist, please try warming the cache first.');
+
+            return;
+        }
+
+        $logs = unserialize(file_get_contents($containerDeprecationFilePath));
+        if (0 === \count($logs)) {
+            $options['output']->success('There are no deprecations in the logs!');
+
+            return;
+        }
+
+        $formattedLogs = [];
+        $remainingCount = 0;
+        foreach ($logs as $log) {
+            $formattedLogs[] = sprintf("%sx: %s\n      in %s:%s", $log['count'], $log['message'], $log['file'], $log['line']);
+            $remainingCount += $log['count'];
+        }
+        $options['output']->title(sprintf('Remaining deprecations (%s)', $remainingCount));
+        $options['output']->listing($formattedLogs);
+    }
+
     protected function describeContainerAlias(Alias $alias, array $options = [], ContainerBuilder $builder = null)
     {
-        $options['output']->comment(sprintf('This service is an alias for the service <info>%s</info>', (string) $alias));
+        if ($alias->isPublic() && !$alias->isPrivate()) {
+            $options['output']->comment(sprintf('This service is a <info>public</info> alias for the service <info>%s</info>', (string) $alias));
+        } else {
+            $options['output']->comment(sprintf('This service is a <comment>private</comment> alias for the service <info>%s</info>', (string) $alias));
+        }
 
         if (!$builder) {
             return;
@@ -372,9 +404,6 @@ class TextDescriptor extends Descriptor
         $this->describeContainerDefinition($builder->getDefinition((string) $alias), array_merge($options, ['id' => (string) $alias]));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function describeContainerParameter($parameter, array $options = [])
     {
         $options['output']->table(
@@ -385,22 +414,89 @@ class TextDescriptor extends Descriptor
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    protected function describeContainerEnvVars(array $envs, array $options = [])
+    {
+        $dump = new Dumper($this->output);
+        $options['output']->title('Symfony Container Environment Variables');
+
+        if (null !== $name = $options['name'] ?? null) {
+            $options['output']->comment('Displaying detailed environment variable usage matching '.$name);
+
+            $matches = false;
+            foreach ($envs as $env) {
+                if ($name === $env['name'] || false !== stripos($env['name'], $name)) {
+                    $matches = true;
+                    $options['output']->section('%env('.$env['processor'].':'.$env['name'].')%');
+                    $options['output']->table([], [
+                        ['<info>Default value</>', $env['default_available'] ? $dump($env['default_value']) : 'n/a'],
+                        ['<info>Real value</>', $env['runtime_available'] ? $dump($env['runtime_value']) : 'n/a'],
+                        ['<info>Processed value</>', $env['default_available'] || $env['runtime_available'] ? $dump($env['processed_value']) : 'n/a'],
+                    ]);
+                }
+            }
+
+            if (!$matches) {
+                $options['output']->block('None of the environment variables match this name.');
+            } else {
+                $options['output']->comment('Note real values might be different between web and CLI.');
+            }
+
+            return;
+        }
+
+        if (!$envs) {
+            $options['output']->block('No environment variables are being used.');
+
+            return;
+        }
+
+        $rows = [];
+        $missing = [];
+        foreach ($envs as $env) {
+            if (isset($rows[$env['name']])) {
+                continue;
+            }
+
+            $rows[$env['name']] = [
+                $env['name'],
+                $env['default_available'] ? $dump($env['default_value']) : 'n/a',
+                $env['runtime_available'] ? $dump($env['runtime_value']) : 'n/a',
+            ];
+            if (!$env['default_available'] && !$env['runtime_available']) {
+                $missing[$env['name']] = true;
+            }
+        }
+
+        $options['output']->table(['Name', 'Default value', 'Real value'], $rows);
+        $options['output']->comment('Note real values might be different between web and CLI.');
+
+        if ($missing) {
+            $options['output']->warning('The following variables are missing:');
+            $options['output']->listing(array_keys($missing));
+        }
+    }
+
     protected function describeEventDispatcherListeners(EventDispatcherInterface $eventDispatcher, array $options = [])
     {
-        $event = \array_key_exists('event', $options) ? $options['event'] : null;
+        $event = $options['event'] ?? null;
+        $dispatcherServiceName = $options['dispatcher_service_name'] ?? null;
+
+        $title = 'Registered Listeners';
+
+        if (null !== $dispatcherServiceName) {
+            $title .= sprintf(' of Event Dispatcher "%s"', $dispatcherServiceName);
+        }
 
         if (null !== $event) {
-            $title = sprintf('Registered Listeners for "%s" Event', $event);
+            $title .= sprintf(' for "%s" Event', $event);
+            $registeredListeners = $eventDispatcher->getListeners($event);
         } else {
-            $title = 'Registered Listeners Grouped by Event';
+            $title .= ' Grouped by Event';
+            // Try to see if "events" exists
+            $registeredListeners = \array_key_exists('events', $options) ? array_combine($options['events'], array_map(function ($event) use ($eventDispatcher) { return $eventDispatcher->getListeners($event); }, $options['events'])) : $eventDispatcher->getListeners();
         }
 
         $options['output']->title($title);
-
-        $registeredListeners = $eventDispatcher->getListeners($event);
         if (null !== $event) {
             $this->renderEventListenerTable($eventDispatcher, $event, $registeredListeners, $options['output']);
         } else {
@@ -412,15 +508,12 @@ class TextDescriptor extends Descriptor
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function describeCallable($callable, array $options = [])
     {
         $this->writeText($this->formatCallable($callable), $options);
     }
 
-    private function renderEventListenerTable(EventDispatcherInterface $eventDispatcher, $event, array $eventListeners, SymfonyStyle $io)
+    private function renderEventListenerTable(EventDispatcherInterface $eventDispatcher, string $event, array $eventListeners, SymfonyStyle $io)
     {
         $tableHeaders = ['Order', 'Callable', 'Priority'];
         $tableRows = [];
@@ -432,10 +525,7 @@ class TextDescriptor extends Descriptor
         $io->table($tableHeaders, $tableRows);
     }
 
-    /**
-     * @return string
-     */
-    private function formatRouterConfig(array $config)
+    private function formatRouterConfig(array $config): string
     {
         if (empty($config)) {
             return 'NONE';
@@ -451,12 +541,61 @@ class TextDescriptor extends Descriptor
         return trim($configAsString);
     }
 
-    /**
-     * @param callable $callable
-     *
-     * @return string
-     */
-    private function formatCallable($callable)
+    private function formatControllerLink($controller, string $anchorText, callable $getContainer = null): string
+    {
+        if (null === $this->fileLinkFormatter) {
+            return $anchorText;
+        }
+
+        try {
+            if (null === $controller) {
+                return $anchorText;
+            } elseif (\is_array($controller)) {
+                $r = new \ReflectionMethod($controller[0], $controller[1]);
+            } elseif ($controller instanceof \Closure) {
+                $r = new \ReflectionFunction($controller);
+            } elseif (method_exists($controller, '__invoke')) {
+                $r = new \ReflectionMethod($controller, '__invoke');
+            } elseif (!\is_string($controller)) {
+                return $anchorText;
+            } elseif (str_contains($controller, '::')) {
+                $r = new \ReflectionMethod($controller);
+            } else {
+                $r = new \ReflectionFunction($controller);
+            }
+        } catch (\ReflectionException $e) {
+            if (\is_array($controller)) {
+                $controller = implode('::', $controller);
+            }
+
+            $id = $controller;
+            $method = '__invoke';
+
+            if ($pos = strpos($controller, '::')) {
+                $id = substr($controller, 0, $pos);
+                $method = substr($controller, $pos + 2);
+            }
+
+            if (!$getContainer || !($container = $getContainer()) || !$container->has($id)) {
+                return $anchorText;
+            }
+
+            try {
+                $r = new \ReflectionMethod($container->findDefinition($id)->getClass(), $method);
+            } catch (\ReflectionException $e) {
+                return $anchorText;
+            }
+        }
+
+        $fileLink = $this->fileLinkFormatter->format($r->getFileName(), $r->getStartLine());
+        if ($fileLink) {
+            return sprintf('<href=%s>%s</>', $fileLink, $anchorText);
+        }
+
+        return $anchorText;
+    }
+
+    private function formatCallable($callable): string
     {
         if (\is_array($callable)) {
             if (\is_object($callable[0])) {
@@ -472,7 +611,7 @@ class TextDescriptor extends Descriptor
 
         if ($callable instanceof \Closure) {
             $r = new \ReflectionFunction($callable);
-            if (false !== strpos($r->name, '{closure}')) {
+            if (str_contains($r->name, '{closure}')) {
                 return 'Closure()';
             }
             if ($class = $r->getClosureScopeClass()) {
@@ -489,10 +628,7 @@ class TextDescriptor extends Descriptor
         throw new \InvalidArgumentException('Callable is not describable.');
     }
 
-    /**
-     * @param string $content
-     */
-    private function writeText($content, array $options = [])
+    private function writeText(string $content, array $options = [])
     {
         $this->write(
             isset($options['raw_text']) && $options['raw_text'] ? strip_tags($content) : $content,

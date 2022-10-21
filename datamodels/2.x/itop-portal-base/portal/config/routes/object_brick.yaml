@@ -35,6 +35,11 @@ p_object_view:
   defaults:
     _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ViewAction'
 
+p_object_view_from_attribute:
+  path: '/object/view/{sObjectClass}/{sObjectAttCode}/{sObjectAttValue}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ViewFromAttributeAction'
+
 p_object_apply_stimulus:
   path: '/object/apply-stimulus/{sStimulusCode}/{sObjectClass}/{sObjectId}'
   defaults:

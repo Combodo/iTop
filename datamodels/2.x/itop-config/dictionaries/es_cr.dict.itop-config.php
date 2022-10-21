@@ -4,6 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2021 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  *
  * This file is part of iTop.
  *
@@ -20,7 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 	'Menu:ConfigEditor' => 'Configuración',
 	'config-edit-title' => 'Editor de Archivo de Configuración',
@@ -34,5 +35,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'config-reverted' => 'La configuración ha sido revertida.',
 	'config-parse-error' => 'Línea %2$d: %1$s.<br/>El archivo NO ha sido actualizado.',
 	'config-current-line' => 'Editando línea: %1$s',
-	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.~~',
+	'config-saved-warning-db-password' => 'Registrado correctamente, pero el respaldo NO funcionará debido a caracteres no admitidos en la contraseña de la base de datos.',
 ));
