@@ -72,7 +72,7 @@ $oKPI->ComputeAndReport("Session Start");
 $sSwitchEnv = utils::ReadParam('switch_env', null, true);
 $bAllowCache = true;
 if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE)) && 
-	((isset($_SESSION['itop_env']) && ($_SESSION['itop_env'] !== $sSwitchEnv)) || !isset($_SESSION['itop_env']))
+	(Session::Get('itop_env', null) !== $sSwitchEnv || Session::Get('itop_env', null) === null)
 )
 {
 	Session::Set('itop_env', $sSwitchEnv);
