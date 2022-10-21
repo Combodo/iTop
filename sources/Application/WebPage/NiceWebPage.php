@@ -90,7 +90,7 @@ class NiceWebPage extends WebPage
 		$sAppContext = addslashes($this->GetApplicationContext());
 
 		$this->add_script(
-			<<<EOF
+			<<<JS
 function GetAbsoluteUrlAppRoot()
 {
 	return '$sAbsURLAppRoot';
@@ -111,7 +111,7 @@ function GetAbsoluteUrlModulePage(sModule, sPage, aArguments)
 	{
 		if (aArguments.hasOwnProperty(sArgName))
 		{
-			sUrl = sUrl + '&'+sArgName+'='+aArguments[sArgname];
+			sUrl = sUrl + '&'+sArgName+'='+aArguments[sArgName];
 		}
 	}
 	return sUrl;
@@ -130,7 +130,7 @@ function AddAppContext(sURL)
 	}
 	return sURL;
 }
-EOF
+JS
 		);
 	}
 
