@@ -418,13 +418,14 @@ class ItopDataTestCase extends ItopTestCase
 	 * @param string $sLogin
 	 * @param int $iProfileId
 	 *
-	 * @return \DBObject
+	 * @return \UserLocal
 	 * @throws Exception
 	 */
 	protected function CreateUser($sLogin, $iProfileId, $sPassword=null, $iContactid=2)
 	{
 		$oUser = $this->CreateContactlessUser($sLogin, $iProfileId, $sPassword);
 		$oUser->Set('contactid', $iContactid);
+		$oUser->DBWrite();
 		return $oUser;
 	}
 
@@ -432,7 +433,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @param string $sLogin
 	 * @param int $iProfileId
 	 *
-	 * @return \DBObject
+	 * @return \UserLocal
 	 * @throws Exception
 	 */
 	protected function CreateContactlessUser($sLogin, $iProfileId, $sPassword=null)
@@ -445,6 +446,7 @@ class ItopDataTestCase extends ItopTestCase
 		$oUserProfile->Set('profileid', $iProfileId);
 		$oUserProfile->Set('reason', 'UNIT Tests');
 		$oSet = DBObjectSet::FromObject($oUserProfile);
+		/** @var \UserLocal $oUser */
 		$oUser = $this->createObject('UserLocal', array(
 			'login' => $sLogin,
 			'password' => $sPassword,
