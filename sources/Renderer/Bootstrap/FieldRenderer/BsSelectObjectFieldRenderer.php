@@ -381,7 +381,7 @@ EOF
 <<<JS
 				$('#{$sHierarchicalButtonId}').off('click').on('click', function(){
 					// Creating a new modal
-					CombodoPortalToolbox.OpenModal({
+					CombodoModal.OpenModal({
 						attributes: {
 							'data-source-element': '{$sHierarchicalButtonId}',
 						},
@@ -441,7 +441,7 @@ JS
 						'selector': '.modal[data-source-element="{$sSearchButtonId}"]:first'
 					};
 				}
-				CombodoPortalToolbox.OpenModal(oOptions);
+				CombodoModal.OpenModal(oOptions);
 			});
 JS
 		);

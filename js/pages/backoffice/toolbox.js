@@ -175,6 +175,23 @@ const CombodoBackofficeToolbox = {
 	}
 };
 
+/**
+ * @override
+ * @inheritDoc
+ */
+CombodoModal.CloseAllModals = function() {
+	// TODO: Implement
+};
+/**
+ * @override
+ * @inheritDoc
+ */
+CombodoModal.OpenModal = function(oOptions) {
+	// TODO: Implement
+
+	return null;
+};
+
 // Processing on each pages of the backoffice
 $(document).ready(function(){
 	// Initialize global keyboard shortcuts

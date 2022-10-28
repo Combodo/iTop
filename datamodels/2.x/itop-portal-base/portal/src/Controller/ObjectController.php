@@ -208,7 +208,7 @@ class ObjectController extends BrickController
 			$oModifyButton = new JSButtonItem(
 				'modify_object',
 				Dict::S('UI:Menu:Modify'),
-				'CombodoPortalToolbox.OpenUrlInModal("'.$sModifyUrl.'", true);'
+				'CombodoModal.OpenUrlInModal("'.$sModifyUrl.'", true);'
 			);
 			// Putting this one first
 			$aData['form']['buttons']['actions'][] = $oModifyButton->GetMenuItem() + array('js_files' => $oModifyButton->GetLinkedScripts());

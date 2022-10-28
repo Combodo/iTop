@@ -100,6 +100,6 @@ $(document).ready(function()
 			};
 		}
 
-		CombodoPortalToolbox.OpenModal(oOptions);
+		CombodoModal.OpenModal(oOptions);
 	});
 });
