@@ -2339,7 +2339,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \OQLException
 	 *
 	 */
-	public function CheckToWrite($bDoComputeValues = true)
+	public final function CheckToWrite($bDoComputeValues = true)
 	{
 		if (MetaModel::SkipCheckToWrite())
 		{
@@ -2353,8 +2353,11 @@ abstract class DBObject implements iDisplay
 			if ($bDoComputeValues) {
 				$this->DoComputeValues();
 			}
-			// Event before the legacy callback
+
+			$this->SetReadOnly('No modification allowed during CheckToWrite');
 			$this->EventCheckToWrite(['error_messages' => &$this->m_aCheckIssues]);
+			$this->SetReadWrite();
+
 			$this->DoCheckToWrite();
 			$oKPI->ComputeStats('CheckToWrite', get_class($this));
 			if (count($this->m_aCheckIssues) == 0)
@@ -2980,9 +2983,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		// Ultimate check - ensure DB integrity
-		$this->SetReadOnly('No modification allowed during CheckToWrite');
 		list($bRes, $aIssues) = $this->CheckToWrite(false);
-		$this->SetReadWrite();
 		if (!$bRes) {
 			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
