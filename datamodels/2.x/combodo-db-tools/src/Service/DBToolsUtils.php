@@ -16,7 +16,7 @@ class DBToolsUtils
 {
 	private static bool $bAnalyzed = false;
 
-	private final static function AnalyzeTables()
+	private static function AnalyzeTables()
 	{
 		if (self::$bAnalyzed) {
 			return;
