@@ -1671,13 +1671,6 @@ EOF
 	{
 		return $this->oDOMDocument->GetNodes($sXPath, $oContextNode, $bSafe);
 	}
-
-	/**
-	 * @return mixed
-	 */
-	public function GetRootDirs() {
-		return $this->aRootDirs;
-	}
 }
 
 /**
