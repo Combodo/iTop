@@ -75,9 +75,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Aplikacja może być zaktualizowana',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Nie można zaktualizować aplikacji: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Ostrzeżenie: aktualizacja aplikacji może się nie powieść: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a target="_blank" href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
-	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Some new modules were detected</b>, a partial update cannot be executed.</br>Follow the <a target="_blank" href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
-	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Wykryto kilka zmodyfikowanych plików</b>, nie można wykonać częściowej aktualizacji.</br>Postępuj zgodnie z <a target="_blank" href="%2$s"> procedurą</a> w celu ręcznej aktualizacji iTop. Musisz użyć <a href="%1$s">setup</a> aby zaktualizować aplikację.',
+	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Wykryto kilka nowych modułów</b>, nie można wykonać częściowej aktualizacji.</br>Postępuj zgodnie z <a target="_blank" href="%2$s"> procedurą</a> w celu ręcznej aktualizacji iTop. Musisz użyć <a href="%1$s">setup</a> aby zaktualizować aplikację.',
+	'iTopUpdate:UI:CheckInProgress' => 'Proszę czekać trwa sprawdzanie integralności',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Gotowy do startu',
