@@ -31,24 +31,24 @@
 // Class: lnkFunctionalCIToTicket
 //
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Class:lnkFunctionalCIToTicket' => 'Link FunctionalCI / Ticket~~',
-	'Class:lnkFunctionalCIToTicket+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Ref~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CI~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'CI Name~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impact (text)~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impact~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Added manually~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Computed~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Not impacted~~',
+	'Class:lnkFunctionalCIToTicket' => 'Połączenie Konfiguracja / Zgłoszenie',
+	'Class:lnkFunctionalCIToTicket+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Zgłoszenie',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Adnotacja',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Tytuł zgłoszenia',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'Konfiguracja',
+	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nazwa konfiguracji',
+	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Dotyczy (tekst)',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Dotyczy',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Dodane ręcznie',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Obliczone',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Nie dotyczy',
 ));
 
 //
@@ -73,16 +73,16 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 //
 
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Class:lnkFunctionalCIToService' => 'Link FunctionalCI / Service~~',
-	'Class:lnkFunctionalCIToService+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Service Name~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI Name~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '~~',
+	'Class:lnkFunctionalCIToService' => 'Połączenie Konfiguracja / Usługa',
+	'Class:lnkFunctionalCIToService+' => '',
+	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Usługa',
+	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
+	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Nazwa usługi',
+	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'Konfiguracja',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'Nazwa konfiguracji',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
 ));
 
 //
@@ -90,10 +90,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 //
 
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Provider contracts~~',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'All the provider contracts for this configuration item~~',
-	'Class:FunctionalCI/Attribute:services_list' => 'Services~~',
-	'Class:FunctionalCI/Attribute:services_list+' => 'All the services impacted by this configuration item~~',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets~~',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
+	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Umowy z dostawcami',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Wszystkie umowy dostawcy dla tej konfiguracji',
+	'Class:FunctionalCI/Attribute:services_list' => 'Usługi',
+	'Class:FunctionalCI/Attribute:services_list+' => 'Wszystkie usługi, na które ma wpływ tą konfigurację',
+	'Class:FunctionalCI/Attribute:tickets_list' => 'Zgłoszenia',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'Wszystkie zgłoszenia dla tej konfiguracji',
 ));
