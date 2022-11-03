@@ -46,7 +46,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Wygasło',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
-	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'Jednorazowe hasło~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'Jednorazowe hasło',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Hasło nie może być zmienione przez użytkownika.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Odnowienie hasła',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Kiedy ostatnio zmieniano hasło',
