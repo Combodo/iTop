@@ -20,7 +20,7 @@
 namespace Combodo\iTop\Portal\EventListener;
 
 use ApplicationContext;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use UserRights;
 use utils;
 
@@ -34,17 +34,16 @@ use utils;
 class ApplicationContextSetPluginPropertyClass
 {
 	/**
-	 * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $oGetResponseEvent
+	 * @param RequestEvent $oRequestEvent
 	 */
-    public function onKernelRequest(GetResponseEvent $oGetResponseEvent)
-    {
-	    // Enable archived data
-	    utils::InitArchiveMode();
-	    
-	    // Enabling datalocalizer if needed
-	    if (!defined('DISABLE_DATA_LOCALIZER_PORTAL'))
-	    {
-		    ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', UserRights::GetUserLanguage());
-	    }
-    }
+	public function onKernelRequest(RequestEvent $oRequestEvent)
+	{
+		// Enable archived data
+		utils::InitArchiveMode();
+
+		// Enabling datalocalizer if needed
+		if (!defined('DISABLE_DATA_LOCALIZER_PORTAL')) {
+			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', UserRights::GetUserLanguage());
+		}
+	}
 }

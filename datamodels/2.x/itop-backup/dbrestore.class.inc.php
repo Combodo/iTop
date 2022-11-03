@@ -133,8 +133,7 @@ class DBRestore extends DBBackup
 
 		try {
 			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
-			$bReadonlyBefore = SetupUtils::IsInReadOnlyMode();
-			SetupUtils::EnterReadOnlyMode(MetaModel::GetConfig());
+			$bReadonlyBefore = SetupUtils::EnterMaintenanceMode(MetaModel::GetConfig());
 
 			try {
 				//safe zone for db backup => cron is stopped/ itop in readonly
@@ -199,10 +198,10 @@ class DBRestore extends DBBackup
 				$oEnvironment->CompileFrom($sEnvironment);
 			} finally {
 				if (! $bReadonlyBefore) {
-					SetupUtils::ExitReadOnlyMode();
+					SetupUtils::ExitMaintenanceMode();
 				} else {
 					//we are in the scope of main process that needs to handle/keep readonly mode.
-					$this->LogInfo("Keep readonly mode after restore");
+					$this->LogInfo("Keep maintenance mode after restore");
 				}
 			}
 		}

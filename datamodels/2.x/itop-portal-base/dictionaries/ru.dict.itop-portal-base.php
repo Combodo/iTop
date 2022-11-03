@@ -31,7 +31,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Page:PleaseWait' => 'Пожалуйста, подождите...',
 	'Page:Home' => 'Домашняя страница',
 	'Page:GoPortalHome' => 'Домашняя страница',
-	'Page:GoPreviousPage' => 'Предыдущяя страница',
+	'Page:GoPreviousPage' => 'Предыдущая страница',
 	'Page:ReloadPage' => 'Перезагрузить страницу',
 	'Portal:Button:Submit' => 'Применить',
 	'Portal:Button:Apply' => 'Обновить',

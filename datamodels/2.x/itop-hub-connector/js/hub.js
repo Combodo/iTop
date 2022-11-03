@@ -2,7 +2,7 @@
 $(function()
 {
 	// the widget definition, where "itop" is the namespace,
-	// "fieldsorter" the widget name
+	// "hub_installation" the widget name
 	$.widget( "itop.hub_installation",
 	{
 		// default options

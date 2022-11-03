@@ -1,7 +1,7 @@
 Archive_Tar
 ==========
 
-[![Build Status](https://secure.travis-ci.org/pear/Archive_Tar.png?branch=master)](https://travis-ci.org/pear/Archive_Tar)
+![.github/workflows/build.yml](https://github.com/pear/Archive_Tar/workflows/.github/workflows/build.yml/badge.svg)
 
 This package provides handling of tar files in PHP.
 It supports creating, listing, extracting and adding to tar files.

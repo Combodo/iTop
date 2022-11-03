@@ -7,7 +7,11 @@
  */
 
 
-use Combodo\iTop\TwigExtension;
+use Combodo\iTop\Application\Branding;
+use Combodo\iTop\Application\TwigBase\Twig\Extension;
+use Twig\Environment;
+use Twig\Loader\ChainLoader;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Twig context for modules extending the login screen
@@ -216,14 +220,14 @@ class LoginTwigRenderer
 			$sTwigLoaderPath = $oLoginContext->GetTwigLoaderPath();
 			if ($sTwigLoaderPath != null)
 			{
-				$oExtensionLoader = new Twig_Loader_Filesystem();
+				$oExtensionLoader = new FilesystemLoader();
 				$oExtensionLoader->setPaths($sTwigLoaderPath);
 				$aTwigLoaders[] = $oExtensionLoader;
 			}
 			$this->aPostedVars = array_merge($this->aPostedVars, $oLoginContext->GetPostedVars());
 		}
 
-		$oCoreLoader = new Twig_Loader_Filesystem(array(), APPROOT.'templates');
+		$oCoreLoader = new FilesystemLoader(array(), APPROOT.'templates');
 		$aCoreTemplatesPaths = array('pages/login', 'pages/login/password');
 		// Having this path declared after the plugins let the plugins replace the core templates
 		$oCoreLoader->setPaths($aCoreTemplatesPaths);
@@ -231,23 +235,16 @@ class LoginTwigRenderer
 		$oCoreLoader->setPaths($aCoreTemplatesPaths, 'ItopCore');
 		$aTwigLoaders[] = $oCoreLoader;
 
-		$oLoader = new Twig_Loader_Chain($aTwigLoaders);
-		$this->oTwig = new Twig_Environment($oLoader);
-		TwigExtension::RegisterTwigExtensions($this->oTwig);
+		$oLoader = new ChainLoader($aTwigLoaders);
+		$this->oTwig = new Environment($oLoader);
+		Extension::RegisterTwigExtensions($this->oTwig);
 	}
 
 	public function GetDefaultVars()
 	{
-		$sLogo = 'itop-logo-external.png';
-		$sBrandingLogo = 'login-logo.png';
-
 		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
-		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/'.$sLogo.'?t='.utils::GetCacheBusterTimestamp();
-		if (file_exists(MODULESROOT.'branding/'.$sBrandingLogo))
-		{
-			$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/'.$sBrandingLogo.'?t='.utils::GetCacheBusterTimestamp();
-		}
+		$sDisplayIcon = Branding::GetLoginLogoAbsoluteUrl();
 
 		$aVars = array(
 			'sAppRootUrl' => utils::GetAbsoluteUrlAppRoot(),
@@ -312,7 +309,7 @@ class LoginTwigRenderer
 	}
 
 	/**
-	 * @return \Twig_Environment
+	 * @return \Twig\Environment
 	 */
 	public function GetTwig()
 	{

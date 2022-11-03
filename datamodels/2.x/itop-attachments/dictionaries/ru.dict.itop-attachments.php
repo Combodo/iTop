@@ -16,7 +16,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Attachments:History_File_Added' => 'Вложение %1$s добавлено.',
 	'Attachments:History_File_Removed' => 'Вложение %1$s удалено.',
 	'Attachments:AddAttachment' => 'Добавить вложение:',
-	'Attachments:UploadNotAllowedOnThisSystem' => 'Загрузка файлов НЕ разрешена в этой системе. За подробностями обратитесь к администратору вашего iTop',
+	'Attachments:UploadNotAllowedOnThisSystem' => 'Загрузка файлов НЕ разрешена в этой системе. За подробностями обратитесь к администратору вашего '.ITOP_APPLICATION_SHORT,
 	'Attachment:Max_Go' => '(Максимальный размер файла: %1$s ГБ)',
 	'Attachment:Max_Mo' => '(Максимальный размер файла: %1$s МБ)',
 	'Attachment:Max_Ko' => '(Максимальный размер файла: %1$s кБ)',
@@ -25,7 +25,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Attachments:Error:FileTooLarge' => 'Файл слишком велик для загрузки. %1$s',
 	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
 Either you have pushed an empty file,
-or ask your iTop administrator if the iTop server disk is full.~~',
+or ask your '.ITOP_APPLICATION_SHORT.' administrator if the '.ITOP_APPLICATION_SHORT.' server disk is full.~~',
 	'Attachments:Render:Icons' => 'Display as icons~~',
 	'Attachments:Render:Table' => 'Display as list~~',
 	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',

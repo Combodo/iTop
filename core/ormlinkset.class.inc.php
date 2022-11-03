@@ -153,8 +153,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
      */
 	public function AddObject(DBObject $oObject, $sClassAlias = '')
     {
-	    // cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
-	    //DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \ormLinkSet::AddItem() instead');
+	    DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \ormLinkSet::AddItem() instead');
 	    $this->AddItem($oObject);
     }
 
@@ -312,7 +311,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function Count()
+	public function Count(): int
 	{
 		$this->LoadOriginalIds();
 		$iRet = count($this->aPreserved) + count($this->aAdded) + count($this->aModified);
@@ -327,7 +326,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws Exception
 	 * @internal param int $iRow
 	 */
-	public function Seek($iPosition)
+	public function Seek($iPosition): void
 	{
 		$this->LoadOriginalIds();
 
@@ -375,6 +374,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
 	public function current()
 	{
 		$this->LoadOriginalIds();
@@ -382,9 +383,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$iPreservedCount = count($this->aPreserved);
 		if ($this->iCursor < $iPreservedCount)
 		{
-			$iRet = current($this->aPreserved);
-			$this->oOriginalSet->Seek($iRet);
-			$oRet = $this->oOriginalSet->Fetch();
+			$sId = key($this->aPreserved);
+			$oRet = MetaModel::GetObject($this->sClass, $sId);
 		}
 		else
 		{
@@ -410,7 +410,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function next()
+	public function next(): void
 	{
 		$this->LoadOriginalIds();
 
@@ -440,6 +440,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @link http://php.net/manual/en/iterator.key.php
 	 * @return mixed scalar on success, or null on failure.
 	 */
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
 	public function key()
 	{
 		return $this->iCursor;
@@ -455,7 +457,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function valid()
+	public function valid(): bool
 	{
 		$this->LoadOriginalIds();
 
@@ -473,7 +475,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function rewind()
+	public function rewind(): void
 	{
 	    $this->LoadOriginalIds();
 
@@ -719,70 +721,69 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
                             {
                                 unset($this->aRemoved[$sLinkKey]);
                             }
-                            $bIsDuplicate = true;
-                            break;
+	                        $bIsDuplicate = true;
+	                        break;
                         }
                     }
-                    if ($bIsDuplicate)
-                    {
-                        continue;
-                    }
+					if ($bIsDuplicate) {
+						continue;
+					}
 				}
 
-			}
-			else
-			{
-				if (!array_key_exists($oLink->GetKey(), $aExistingLinks))
-				{
+			} else {
+				if (!array_key_exists($oLink->GetKey(), $aExistingLinks)) {
 					$oLink->DBClone();
 				}
 			}
+			$oLink->SetLinkHostObject($oHostObject);
 			$oLink->DBWrite();
+
+			$this->aPreserved[$oLink->GetKey()] = $oLink;
+			$this->aOriginalObjects[$oLink->GetKey()] = $oLink;
 		}
-		foreach ($this->aRemoved as $iLinkId)
-		{
-			if (array_key_exists($iLinkId, $aExistingLinks))
-			{
+		$this->aAdded = [];
+
+		foreach ($this->aRemoved as $iLinkId) {
+			if (array_key_exists($iLinkId, $aExistingLinks)) {
 				$oLink = $aExistingLinks[$iLinkId];
-				if ($oAttDef->IsIndirect())
-				{
+				if ($oAttDef->IsIndirect()) {
 					$oLink->DBDelete();
-				}
-				else
-				{
+				} else {
 					$oExtKeyToRemote = MetaModel::GetAttributeDef($this->sClass, $sExtKeyToMe);
-					if ($oExtKeyToRemote->IsNullAllowed())
-					{
-						if ($oLink->Get($sExtKeyToMe) == $oHostObject->GetKey())
-						{
+					if ($oExtKeyToRemote->IsNullAllowed()) {
+						if ($oLink->Get($sExtKeyToMe) == $oHostObject->GetKey()) {
 							// Detach the link object from this
 							$oLink->Set($sExtKeyToMe, 0);
 							$oLink->DBUpdate();
 						}
-					}
-					else
-					{
+					} else {
 						$oLink->DBDelete();
 					}
 				}
+				unset($this->aPreserved[$oLink->GetKey()], $this->aOriginalObjects[$oLink->GetKey()]);
 			}
 		}
+		$this->aRemoved = [];
+
 		// Note: process modifications at the end: if a link to remove has also been listed as modified, then it will be gracefully ignored
-		foreach ($this->aModified as $iLinkId => $oLink)
-		{
-			if (array_key_exists($oLink->GetKey(), $aExistingLinks))
-			{
+		foreach ($this->aModified as $iLinkId => $oLink) {
+			if (array_key_exists($oLink->GetKey(), $aExistingLinks)) {
 				$oLink->DBUpdate();
-			}
-			else
-			{
+			} else {
 				$oLink->DBClone();
 			}
+			$this->aPreserved[$oLink->GetKey()] = $oLink;
+			$this->aOriginalObjects[$oLink->GetKey()] = $oLink;
 		}
+		$this->aModified = [];
 
 		// End of the critical section
 		//
 		$oMtx->Unlock();
+
+		// we updated the instance (original/preserved/added/modified/removed arrays) all along the way
+		$this->bHasDelta = false;
+		$this->oOriginalSet->GetFilter()->SetInternalParams(['id', $oHostObject->GetKey()]);
 	}
 
 	/**
@@ -803,6 +804,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$oLinkSearch = $this->GetFilter();
 		if ($oAttDef->IsIndirect())
 		{
+			$oLinkSearch->RenameAlias($oLinkSearch->GetClassAlias(), self::LINK_ALIAS);
 			$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
 			/** @var \AttributeExternalKey $oLinkingAttDef */
 			$oLinkingAttDef = MetaModel::GetAttributeDef($this->sClass, $sExtKeyToRemote);
@@ -810,12 +812,12 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			// N°2334 add pointed class (SELECT L,R) to have all fields (lnk + remote) in display
 			// the pointed class is always present in the search, as generated by \AttributeLinkedSet::GetDefaultValue
 			$sTargetClass = $oLinkingAttDef->GetTargetClass();
-			$oRemoteClassSearch = new DBObjectSearch($sTargetClass);
+			$oRemoteClassSearch = new DBObjectSearch($sTargetClass, self::REMOTE_ALIAS);
 
 			if (!$bShowObsolete && MetaModel::IsObsoletable($sTargetClass))
 			{
 				$oNotObsolete = new BinaryExpression(
-					new FieldExpression('obsolescence_flag', $sTargetClass),
+					new FieldExpression('obsolescence_flag', self::REMOTE_ALIAS),
 					'=',
 					new ScalarExpression(0)
 				);
@@ -825,7 +827,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			if (!utils::IsArchiveMode() && MetaModel::IsArchivable($sTargetClass))
 			{
 				$oNotArchived = new BinaryExpression(
-					new FieldExpression('archive_flag', $sTargetClass),
+					new FieldExpression('archive_flag', self::REMOTE_ALIAS),
 					'=',
 					new ScalarExpression(0)
 				);
@@ -833,9 +835,14 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 				$oRemoteClassSearch->AddConditionExpression($oNotArchived);
 			}
 
-			$oLinkSearch->AddCondition_PointingTo($oRemoteClassSearch, $sExtKeyToRemote);
-			$oLinkSearch->RenameAlias($oLinkSearch->GetClassAlias(), self::LINK_ALIAS);
-			$oLinkSearch->RenameAlias($sTargetClass, self::REMOTE_ALIAS);
+			$aReAliasingMap = [];
+			$oLinkSearch->AddCondition_PointingTo($oRemoteClassSearch, $sExtKeyToRemote, TREE_OPERATOR_EQUALS, $aReAliasingMap);
+			if (array_key_exists(self::REMOTE_ALIAS, $aReAliasingMap)) {
+				// If 'Remote' alias has been renamed, change it back.
+				if ($aReAliasingMap[self::REMOTE_ALIAS][0] != self::REMOTE_ALIAS) {
+					$oLinkSearch->RenameAlias($aReAliasingMap[self::REMOTE_ALIAS][0], self::REMOTE_ALIAS);
+				}
+			}
 			$oLinkSearch->SetSelectedClasses([self::LINK_ALIAS, self::REMOTE_ALIAS]);
 		}
 		$oLinkSet = new DBObjectSet($oLinkSearch);

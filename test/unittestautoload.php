@@ -1,7 +1,5 @@
 <?php
+include('vendor/autoload.php');
 
-@include_once('ItopTestCase.php');
-@include_once('ItopDataTestCase.php');
-
-
-@include_once('./vendor/autoload.php');
+include('ItopTestCase.php');
+include('ItopDataTestCase.php');

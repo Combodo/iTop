@@ -21,11 +21,10 @@ namespace Combodo\iTop\Portal;
 
 use DeprecatedCallsLog;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use utils;
 
 /**
@@ -36,7 +35,7 @@ use utils;
  */
 class Kernel extends BaseKernel
 {
-    use MicroKernelTrait;
+	use MicroKernelTrait;
 
     /** @var string CONFIG_EXTS */
     const CONFIG_EXTS = '.{php,xml,yaml,yml}';
@@ -45,11 +44,11 @@ class Kernel extends BaseKernel
 	 * @return string
 	 */
 	public function getCacheDir()
-    {
-	    $cacheDir = $_ENV['PORTAL_ID'] . '-' . $this->environment;
+	{
+		$cacheDir = $_ENV['PORTAL_ID'].'-'.$this->environment;
 
-	    return utils::GetCachePath() . "/portals/$cacheDir";
-    }
+		return utils::GetCachePath()."/portals/$cacheDir";
+	}
 
 	/**
 	 * @return string
@@ -69,45 +68,43 @@ class Kernel extends BaseKernel
         $contents = require $this->getProjectDir().'/config/bundles.php';
         foreach ($contents as $class => $envs) {
             if (isset($envs[$this->environment]) || isset($envs['all'])) {
-                yield new $class();
+	            yield new $class();
             }
         }
     }
 
 	/**
-	 * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-	 * @param \Symfony\Component\Config\Loader\LoaderInterface        $loader
+	 * @param \Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator $container
 	 *
-	 * @throws \Exception
+	 * @return void
 	 */
-	protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
-    {
-        $container->addResource(new FileResource($this->getProjectDir().'/config/bundles.php'));
-        // Feel free to remove the "container.autowiring.strict_mode" parameter
-        // if you are using symfony/dependency-injection 4.0+ as it's the default behavior
-        $container->setParameter('container.autowiring.strict_mode', true);
-        $container->setParameter('container.dumper.inline_class_loader', true);
-        $confDir = $this->getProjectDir().'/config';
+	protected function configureContainer(ContainerConfigurator $container)
+	{
+		$confDir = '../config';
 
-        $loader->load($confDir.'/{packages}/*'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/{packages}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/{services}'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
-    }
+		$container->import(new FileResource($this->getProjectDir().'/config/bundles.php'));
+		$container->parameters()->set('container.dumper.inline_class_loader', true);
+
+		$container->import($confDir.'/{packages}/*'.self::CONFIG_EXTS);
+		$container->import($confDir.'/{packages}/'.$this->environment.'/**/*'.self::CONFIG_EXTS);
+		$container->import($confDir.'/{services}'.self::CONFIG_EXTS);
+		$container->import($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS);
+	}
 
 	/**
-	 * @param \Symfony\Component\Routing\RouteCollectionBuilder $routes
+	 * @param \Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator $routes
 	 *
-	 * @throws \Symfony\Component\Config\Exception\FileLoaderLoadException
+	 * @return void
 	 */
-	protected function configureRoutes(RouteCollectionBuilder $routes)
-    {
-        $confDir = $this->getProjectDir().'/config';
+	protected function configureRoutes(RoutingConfigurator $routes)
+	{
+		$confDir = '../config';
 
-        $routes->import($confDir.'/{routes}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
-        $routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
-        $routes->import($confDir.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
-    }
+		$routes->import($confDir.'/{routes}/'.$this->environment.'/**/*'.self::CONFIG_EXTS);
+		$routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS);
+		$routes->import($confDir.'/{routes}'.self::CONFIG_EXTS);
+	}
+
 
 	/**
 	 * Checks if a given class name belongs to an active bundle.

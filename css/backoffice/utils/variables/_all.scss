@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -8,6 +8,8 @@
 @import "depression";
 @import "elevation";
 @import "path";
+@import "size";
+@import "spacing";
 @import "typography";
 // Important: Keep this partial last as it includes variables from the previous partials
 @import "base";

@@ -1225,10 +1225,10 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	width: 40px;
-	height: 40px;
+	width: $messaging-block-medallion-size;
+	height: $messaging-block-medallion-size;
 	text-align: center;
-	line-height: 40px;
+	line-height: $messaging-block-medallion-size;
 	font-size: 18px;
 	color: $messaging-self-secondary-color; /* .caselog-thread--block-entries color */
 
@@ -1248,7 +1248,8 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 .caselog-thread--block-entries{
 	position: relative;
 	display: inline-block;
-	margin-left: 60px;
+	margin-left: $messaging-block-entries-margin-x;
+  max-width: calc(100% - #{$messaging-block-entries-margin-x});
 	background-color: $messaging-self-primary-color;
 	color: $messaging-self-secondary-color;
 }
@@ -1312,6 +1313,11 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	> p:last-of-type{
 		margin-bottom: 0px;
 	}
+  /* Force user-generated tables to fit within the container as they often have an hard-coded width */
+  table {
+    width: unset !important;
+    max-width: max-content;
+  }
 }
 .caselog-thread--block-entry-date{
 	margin-top: 5px;
@@ -1344,7 +1350,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	}
 	.caselog-thread--block-entries{
 		margin-left: initial;
-		margin-right: 60px;
+		margin-right: $messaging-block-entries-margin-x;
 		text-align: right;
 
 		.caselog-thread--block-entry{
@@ -1565,13 +1571,8 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	}
 }
 .attachment-tooltip {
-	width: 350px;
-	height: 300px;
-
-	img {
 		max-width: 100%;
 		max-height: 100%;
-	}
 }
 
 .upload_container input{

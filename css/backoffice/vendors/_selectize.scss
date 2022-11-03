@@ -1,0 +1,13 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-vendors-selectize-input--color: $ibo-color-grey-900 !default;
+
+.selectize-dropdown-content {
+  max-height: unset; /* Overloaded as it will be handled by the _input-select.scss partial */
+}
+.selectize-input input{
+  color: $ibo-vendors-selectize-input--color;
+}

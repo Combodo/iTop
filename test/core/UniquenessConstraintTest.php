@@ -14,13 +14,9 @@ use MetaModel;
  *
  * @package Combodo\iTop\Test\UnitTest\Core
  */
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */class UniquenessConstraintTest extends ItopTestCase
+class UniquenessConstraintTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'/core/metamodel.class.php');

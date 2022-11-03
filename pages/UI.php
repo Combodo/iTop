@@ -4,21 +4,21 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
-use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
-use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -30,7 +30,7 @@ use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
  */
 function DisplayWelcomePopup(WebPage $oP)
 {
-	if (!isset($_SESSION['welcome']))
+	if (!Session::IsSet('welcome'))
 	{
 		// Check, only once per session, if the popup should be displayed...
 		// If the user did not already ask for hiding it forever
@@ -38,7 +38,7 @@ function DisplayWelcomePopup(WebPage $oP)
 		if ($bPopup)
 		{
 			TwigHelper::RenderIntoPage($oP, APPROOT.'/', 'templates/pages/backoffice/welcome_popup/welcome_popup');
-			$_SESSION['welcome'] = 'ok';
+			Session::Set('welcome', 'ok');
 		}
 	}	
 }
@@ -177,7 +177,8 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 				$sTableId = 'result_1';
 			}
 			$aExtraParams['table_id'] = $sTableId;
-			$oUIBlockForm = $oBlockForm->GetDisplay($oP, 'search_1',$aExtraParams);
+			$aExtraParams['submit_on_load'] = false;
+			$oUIBlockForm = $oBlockForm->GetDisplay($oP, 'search_1', $aExtraParams);
 			//add result block
 			$oUIBlock = $oBlock->GetDisplay($oP, $sTableId);
 			$oUIBlock->AddCSSClasses(['display_block', 'sf_results_area']);
@@ -200,12 +201,15 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
  * @param string $sNextOperation string The next operation (code) to be executed when the form is submitted
  * @param ActionChecker $oChecker ActionChecker The helper class/instance used to check for which object the action is valid
  * @param array $aExtraFormParams
+ * @param array $aDisplayParams
+ *
+ * @since 3.0.0 $aDisplayParams parameter
  *
  * @throws \ApplicationException
  * @throws \ArchivedObjectException
  * @throws \CoreException
  */
-function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sNextOperation, ActionChecker $oChecker, array $aExtraFormParams = [])
+function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sNextOperation, ActionChecker $oChecker, array $aExtraFormParams = [], array $aDisplayParams = [])
 {
 	$oAppContext = new ApplicationContext();
 	$iBulkActionAllowed = $oChecker->IsAllowed();
@@ -231,6 +235,15 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
 	//by default all the elements are selected
 	$aExtraParams['selectionMode'] = 'negative';
+	if(array_key_exists('icon', $aDisplayParams) || array_key_exists('title', $aDisplayParams)){
+		$aExtraParams['surround_with_panel'] = true;
+		if(array_key_exists('icon', $aDisplayParams)){
+			$aExtraParams['panel_icon'] = $aDisplayParams['icon'];
+		}		
+		if(array_key_exists('title', $aDisplayParams)){
+			$aExtraParams['panel_title'] = $aDisplayParams['title'];
+		}
+	}
 	$oForm->AddSubBlock($oDisplayBlock->GetDisplay($oP, 1, $aExtraParams));
 	$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
 	$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
@@ -241,31 +254,33 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 	$oP->AddUiBlock($oForm);
 }
 
+/**
+ * @param $oP
+ * @param $aResults
+ * @param $sRelation
+ * @param $sDirection
+ * @param $oObj
+ * for operation :  'swf_navigator'
+ *
+ * @throws \DictExceptionMissingString
+ */
 function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 {
 	$oP->SetCurrentTab('UI:RelationshipList');
-	$oP->add("<div id=\"impacted_objects\" style=\"width:100%;background-color:#fff;padding:10px;\">");
-	$sOldRelation = $sRelation;
-	if (($sRelation == 'impacts') && ($sDirection == 'up'))
-	{
-		$sOldRelation = 'depends on';
-	}
-	$oP->add("<h1>".MetaModel::GetRelationDescription($sOldRelation).' '.$oObj->GetName()."</h1>\n");
-	$oP->add("<div id=\"impacted_objects_lists\">");
-	$oP->add('<img src="../images/indicator.gif">');
-	/*
-	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_lists
-	 */
-
-	$oP->add("</div>");
-	$oP->add("</div>");
+	$oImpactedObject = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects", ['ibo-is-visible']);
+	$oP->AddSubBlock($oImpactedObject);
+	$oImpactedObject->AddSubBlock(AlertUIBlockFactory::MakeForWarning(Dict::S("Relation:impacts/FilteredData"), '', "alert_filtered_list")->SetIsHidden(true));
+	$oImpactedObjectList = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists", ['ibo-is-visible']);
+	$oImpactedObject->AddSubBlock($oImpactedObjectList);
+	$oImpactedObjectList->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists_placeholder", ['ibo-is-visible']));
 }
 
 function DisplayNavigatorGroupTab($oP)
 {
 	$oP->SetCurrentTab('UI:RelationGroups');
-	$oP->add("<div id=\"impacted_groups\" style=\"width:100%;background-color:#fff;padding:10px;\">");
-	$oP->add('<img src="../images/indicator.gif">');
+	$oP->add("<div id=\"impacted_groups\">");
+	$oP->add("<div id=\"impacted_groups_placeholder\"></div>");
+
 	/*
 	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_groups
 	*/
@@ -292,7 +307,6 @@ try
 	$oKPI = new ExecutionKPI();
 	$oKPI->ComputeAndReport('Data model loaded');
 
-	$oKPI = new ExecutionKPI();
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	$sLoginMessage = LoginWebPage::DoLogin(); // Check user rights and prompt if needed
@@ -331,22 +345,30 @@ try
 		
 		case 'details': // Details of an object
 			$sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
-			if ( empty($sClass) || empty($id))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
+
+			if (empty($sClass)) {
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
 
-			if (is_numeric($id))
-			{
-				$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+			$id = utils::ReadParam('id', null);
+			if (false === is_null($id)) {
+				if (is_numeric($id)) {
+					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+				} else {
+					$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
+				}
+			} else {
+				$sAttCode = utils::ReadParam('attcode', '', false, utils::ENUM_SANITIZATION_FILTER_FIELD_NAME);
+				$sAttValue = utils::ReadParam('attvalue', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+
+				if ((strlen($sAttCode) === 0) || (strlen($sAttValue) === 0)) {
+					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
+				}
+
+				$oObj = MetaModel::GetObjectByColumn($sClass, $sAttCode, $sAttValue, true);
 			}
-			else
-			{
-				$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
-			}
-			if (is_null($oObj))
-			{
+
+			if (is_null($oObj)) {
 				// Check anyhow if there is a message for this object (like you've just created it)
 				$sMessageKey = $sClass.'::'.$id;
 				DisplayMessages($sMessageKey, $oP);
@@ -354,8 +376,7 @@ try
 
 				// Attempt to load the object in archive mode
 				utils::PushArchiveMode(true);
-				if (is_numeric($id))
-				{
+				if (is_numeric($id)) {
 					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
 				}
 				else
@@ -403,7 +424,7 @@ try
 
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT : cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
 					$oObj->DisplayDetails($oP);
 				}
 			}
@@ -424,7 +445,7 @@ try
 			iTopOwnershipLock::ReleaseLock($sClass, $id, $sToken);
 		}
 
-		$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+		$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
 		cmdbAbstractObject::ReloadAndDisplay($oP, $oObj, array('operation' => 'details'));
 		break;
 	
@@ -611,17 +632,17 @@ try
 					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 					$oP->add("<div style=\"padding: 10px;\">\n");
 					$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
-					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', htmlentities($sFullText, ENT_QUOTES, 'UTF-8')).'</span>');
+					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', utils::EscapeHtml($sFullText)).'</span>');
 					$oP->add("</div>\n");
 					$oP->add("<div id=\"full_text_results\">\n");
 					$oP->add("<div id=\"full_text_progress_placeholder\" style=\"padding: 1.5em;\">&nbsp;</div>\n");
-					$oP->add("<h2>".Dict::Format('UI:FullTextSearchTitle_Text', htmlentities($sFullText, ENT_QUOTES, 'UTF-8'))."</h2>");
+					$oP->add("<h2>".Dict::Format('UI:FullTextSearchTitle_Text', utils::EscapeHtml($sFullText))."</h2>");
 					$oP->add("</div>\n");
 					$oP->add("</div>\n");
 					$sJSClass = addslashes($sClassName);
 					$sJSNeedles = json_encode($aFullTextNeedles);
 					$oP->add_ready_script(
-<<<EOF
+						<<<EOF
 						var oParams = {operation: 'full_text_search', position: 0, 'classname': '$sJSClass', needles: $sJSNeedles, tune: $iTune};
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
 							$('#full_text_results').append(data);
@@ -657,7 +678,7 @@ EOF
 				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO) {
 					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
 				}
-				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT));
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT));
 				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
 				$oObj->DisplayModifyForm($oP, array('wizard_container' => 1)); // wizard_container: Display the title above the form
 			}
@@ -734,7 +755,7 @@ EOF
 				// 2nd - set values from the page argument 'default'
 				$oObjToClone->UpdateObjectFromArg('default');
 				$aPrefillFormParam = array(
-					'user' => $_SESSION["auth_user"],
+					'user' => Session::Get('auth_user'),
 					'context' => $oAppContext->GetAsHash(),
 					'default' => utils::ReadParam('default', array(), '', 'raw_data'),
 					'origin' => 'console',
@@ -749,58 +770,11 @@ EOF
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 				// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE));
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
 				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1, 'keep_source_object' => true)); // wizard_container: Display the title above the form
 			} else {
 				// Select the derived class to create
-				$sClassLabel = MetaModel::GetName($sClass);
-				$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
-				$sTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
-
-				$oP->set_title($sTitle);
-				$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)
-					->SetIcon($sClassIconUrl);
-				$oP->AddUiBlock($oPanel);
-
-				$oClassForm = FormUIBlockFactory::MakeStandard();
-				$oPanel->AddMainBlock($oClassForm);
-
-				$oClassForm->AddSubBlock(HtmlFactory::MakeParagraph(Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel)))
-					->AddHtml($oAppContext->GetForForm())
-					->AddSubBlock(InputUIBlockFactory::MakeForHidden('checkSubclass', '0'))
-					->AddSubBlock(InputUIBlockFactory::MakeForHidden('state', $sStateCode))
-					->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'new'));
-
-				$aDefaults = utils::ReadParam('default', array(), false, 'raw_data');
-				foreach ($aDefaults as $key => $value) {
-					if (is_array($value)) {
-						foreach ($value as $key2 => $value2) {
-							if (is_array($value2)) {
-								foreach ($value2 as $key3 => $value3) {
-									$sValue = utils::EscapeHtml($value3);
-									$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key][$key2][$key3]", $sValue));
-								}
-							} else {
-								$sValue = utils::EscapeHtml($value2);
-								$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key][$key2]", $sValue));
-							}
-						}
-					} else {
-						$sValue = utils::EscapeHtml($value);
-						$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key]", $sValue));
-					}
-				}
-
-				$oSelect = SelectUIBlockFactory::MakeForSelect('class');
-				$oClassForm->AddSubBlock($oSelect);
-				asort($aPossibleClasses);
-				foreach ($aPossibleClasses as $sClassName => $sClassLabel) {
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sClassLabel, ($sClassName == $sClass)));
-				}
-
-				$oToolbar = ToolbarUIBlockFactory::MakeForAction();
-				$oClassForm->AddSubBlock($oToolbar);
-				$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
+				cmdbAbstractObject::DisplaySelectClassToCreate($sClass, $oP, $oAppContext, $aPossibleClasses,['state' => $sStateCode]);
 			}
 		break;
 	
@@ -982,11 +956,18 @@ EOF
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
 			}
 			$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
-			$oP->add("<h1>".Dict::S('UI:BulkDeleteTitle')."</h1>\n");
+			
 			$oFilter = DBSearch::unserialize($sFilter); // TO DO : check that the filter is valid
 			$oFilter->UpdateContextFromUser();
+
+			$sClass = $oFilter->GetClass();
+
+			$aDisplayParams = [
+				'icon' => MetaModel::GetClassIcon($sClass, false),
+				'title' => Dict::S('UI:BulkDeleteTitle'),
+			];
 			$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_DELETE);
-			DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker);
+			DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker, [], $aDisplayParams);
 		break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////
@@ -1181,9 +1162,6 @@ EOF
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sHeaderTitle, $sClassIcon, Title::DEFAULT_ICON_COVER_METHOD, false);
-				$oP->AddUiBlock($oTitle);
-
 				if (!empty($aIssues)) {
 					$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
 				}
@@ -1191,7 +1169,7 @@ EOF
 					$sWarnings = implode(', ', $aWarnings);
 					$oP->AddHeaderMessage($sWarnings, 'message_warning');
 				}
-				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
+				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj, [], ['transaction_id' => $sTransactionId]);
 			}
 		}
 		break;
@@ -1214,13 +1192,15 @@ EOF
 		$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 		$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
 		$oP->set_title($sActionLabel);
-		$oP->add('<div class="page_header">');
-		$oP->add('<h1>'.MetaModel::GetClassIcon($sClass).'&nbsp;'.$sActionLabel.'</h1>');
-		$oP->add('</div>');
+		$sClass = $oFilter->GetClass();
 
+		$aDisplayParams = [
+			'icon' => MetaModel::GetClassIcon($sClass, false),
+			'title' => $sActionLabel,
+		];
 		$oChecker = new StimulusChecker($oFilter, $sState, $sStimulus);
 		$aExtraFormParams = array('stimulus' => $sStimulus, 'state' => $sState);
-		DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_stimulus', $oChecker, $aExtraFormParams);
+		DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_stimulus', $oChecker, $aExtraFormParams, $aDisplayParams);
 		break;
 		
 		case 'bulk_stimulus':
@@ -1254,9 +1234,17 @@ EOF
 			$aTargetStateDef = $aStates[$sTargetState];
 
 			$oP->set_title(Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aSelectObject), $sClass));
-			$oP->add('<div class="page_header">');
-			$oP->add('<h1>'.MetaModel::GetClassIcon($sClass).'&nbsp;'.Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aSelectObject), $sClass).'</h1>');
-			$oP->add('</div>');
+			$oP->add(<<<HTML
+	<!-- Beginning of objects-transition -->
+	<div class="object-transition" data-object-class="$sClass" data-object-current-state="$sState" data-object-target-state="$sTargetState">
+HTML
+			);
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aSelectObject), $sClass)));
+			if (!empty($sActionDetails)) {
+				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionDetails));
+			}
+
+
 
 			$aExpectedAttributes = MetaModel::GetTransitionAttributes($sClass, $sStimulus, $sState);
 			$aDetails = array();
@@ -1302,14 +1290,14 @@ EOF
 					}
 					$aArgs = array('this' => $oObj);
 					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), $sFieldInputId, '', $iExpectCode, $aArgs);
-					$sComments = '<input type="checkbox" checked id="enable_'.$sFieldInputId.'"  onClick="ToggleField(this.checked, \''.$sFieldInputId.'\')"/>';
+					$sComments = '<input type="checkbox" class="ibo-field--enable-bulk--checkbox" checked id="enable_'.$sFieldInputId.'"  onClick="ToggleField(this.checked, \''.$sFieldInputId.'\')"/>';
 					if (!isset($aValues[$sAttCode]))
 					{
 						$aValues[$sAttCode] = array();
 					}
 					if (count($aValues[$sAttCode]) == 1)
 					{
-						$sComments .= '<div class="mono_value">1</div>';
+						$sComments = '<div class="mono_value ibo-field--enable-bulk ibo-pill ibo-is-success">1'.$sComments.'</div>';
 					}
 					else
 					{
@@ -1330,47 +1318,50 @@ EOF
 						}
 						$sTip .= "</ul></p>";
 						$sTip = utils::HtmlEntities($sTip);
-						$sComments .= '<div class="multi_values" id="multi_values_'.$sFieldInputId.'"  data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.count($aValues[$sAttCode]).'</div>';
+						$sComments = '<div class="multi_values ibo-field--enable-bulk ibo-pill ibo-is-failure" id="multi_values_'.$sFieldInputId.'"  data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.count($aValues[$sAttCode]).$sComments.'</div>';
 					}
 					$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_$sFieldInputId\">$sHTMLValue</span>", 'comments' => $sComments);
 					$aFieldsMap[$sAttCode] = $sFieldInputId;
 					$iFieldIndex++;
 				}
 			}
-			$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-			if ($sButtonsPosition == 'bottom')
-			{
-				// bottom: Displays the ticket details BEFORE the actions
-				$oP->add('<div class="ui-widget-content">');
-				$oObj->DisplayBareProperties($oP);
-				$oP->add('</div>');
+			$oFormContainer = new UIContentBlock(null, ['ibo-wizard-container']);
+			$oP->AddUiBlock($oFormContainer);
+			$oForm = new Combodo\iTop\Application\UI\Base\Component\Form\Form($sFormId);
+			$oFormContainer->AddSubBlock($oForm);
+			$oForm->SetOnSubmitJsCode("return OnSubmit('{$sFormId}');")
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'bulk_apply_stimulus'))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('stimulus', $sStimulus))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('preview_mode', 1))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('filter', utils::HtmlEntities($sFilter)))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('state', $sState))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('selectObject', implode(',',$aSelectObject)))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+
+			$aContextInputBlocks = $oAppContext->GetForUIForm();
+			foreach ($aContextInputBlocks as $oContextInputBlock){
+				$oForm->AddSubBlock($oContextInputBlock);
 			}
-			$oP->add("<div class=\"wizContainer\">\n");
-			$oP->add("<form id=\"{$sFormId}\" method=\"post\" onSubmit=\"return OnSubmit('{$sFormId}');\">\n");
-			$oP->add("<table><tr><td>\n");
-			$oP->details($aDetails);
-			$oP->add("</td></tr></table>\n");
-			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_apply_stimulus\">\n");
-			$oP->add("<input type=\"hidden\" name=\"preview_mode\" value=\"1\">\n");
-			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".utils::HtmlEntities($sFilter)."\">\n");
-			$oP->add("<input type=\"hidden\" name=\"stimulus\" value=\"$sStimulus\">\n");
-			$oP->add("<input type=\"hidden\" name=\"state\" value=\"$sState\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-			$oP->add($oAppContext->GetForForm());
-			$oP->add("<input type=\"hidden\" name=\"selectObject\" value=\"".implode(',',$aSelectObject)."\">\n");
+			// Note: Remove the table if we want fields to occupy the whole width of the container
+			$oForm->AddHtml('<table><tr><td>');
+			$oForm->AddHtml($oP->GetDetails($aDetails));
+			$oForm->AddHtml('</td></tr></table>');
+
 			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-			$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.location.href='$sURL'\">&nbsp;&nbsp;&nbsp;&nbsp;\n");
-			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
-			$oP->add("</form>\n");
-			$oP->add("</div>\n");
-			if ($sButtonsPosition != 'bottom')
-			{
-				// top or both: Displays the ticket details AFTER the actions
-				$oP->add('<div class="ui-widget-content">');
-				$oObj->DisplayBareProperties($oP);
-				$oP->add('</div>');
-			}
+			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
+			$oCancelButton->SetOnClickJsCode("window.location.href='$sURL'");
+			$oForm->AddSubBlock($oCancelButton);
+
+			$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
+			$oForm->AddSubBlock($oSubmitButton);
+
+			$oP->add(<<<HTML
+	<!-- End of object-transition -->
+	</div>
+HTML
+			);
+			
 			$iFieldsCount = count($aFieldsMap);
 			$sJsonFieldsMap = json_encode($aFieldsMap);
 
@@ -1432,9 +1423,6 @@ EOF
 			$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
 			
 			$oP->set_title(Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aObjects), $sClass));
-			$oP->add('<div class="page_header">');
-			$oP->add('<h1>'.MetaModel::GetClassIcon($sClass).'&nbsp;'.Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aObjects), $sClass).'</h1>');
-			$oP->add('</div>');
 			
 			$oSet = DBObjectSet::FromArray($sClass, $aObjects);
 			
@@ -1473,7 +1461,7 @@ EOF
 								if ( ($iFlags & OPT_ATT_SLAVE) && ($paramValue != $oObj->Get($sAttCode)) )
 								{
 									$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-									$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
+									$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel(), $sAttCode);
 									unset($aExpectedAttributes[$sAttCode]);
 								}
 							}
@@ -1493,7 +1481,10 @@ EOF
 								}
 								else
 								{
-									$sError = '<p>'.implode('</p></p>',$aErrors)."</p>\n";
+									$aErrorsToDisplay = array_map(function($sError) {
+										return utils::HtmlEntities($sError);
+									}, $aErrors);
+									$sError = '<p>'.implode('</p></p>',$aErrorsToDisplay)."</p>\n";
 								}
 							}
 							else
@@ -1520,10 +1511,22 @@ EOF
 					'errors' => $sError,
 				);
 			}
-			$oP->Table($aHeaders, $aRows);
+			$oBlock = PanelUIBlockFactory::MakeForClass($sClass, Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aObjects), $sClass));
+				$oBlock->SetIcon(MetaModel::GetClassIcon($sClass, false));
+			
+
+			$oDataTable = DataTableUIBlockFactory::MakeForStaticData('', $aHeaders,$aRows);
+			$oBlock->AddSubBlock($oDataTable);
+			$oP->AddUiBlock($oBlock);
+
 			// Back to the list
 			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-			$oP->add('<input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Done').'">');
+			$oSubmitButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Done'), 'submit', 'submit', true);
+			$oSubmitButton->SetOnClickJsCode("window.location.href='$sURL'");
+			$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+			$oToolbarButtons->AddSubBlock($oSubmitButton);
+			$oP->AddSubBlock($oToolbarButtons);
 		}
 		break;
 
@@ -1548,12 +1551,12 @@ EOF
 		$oObj = MetaModel::GetObject($sClass, $id, false);
 		if ($oObj != null)
 		{
-			$aPrefillFormParam = array(
-				'user'     => $_SESSION["auth_user"],
+			$aPrefillFormParam = [
+				'user'     => Session::Get('auth_user'),
 				'context'  => $oAppContext->GetAsHash(),
 				'stimulus' => $sStimulus,
 				'origin'   => 'console',
-			);
+			];
 			try {
 				$bApplyTransition = $oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
 			}
@@ -1774,11 +1777,18 @@ EOF
 
 			$aResults = $oRelGraph->GetObjectsByClass();
 			$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
-
-			$oP->AddTabContainer('Navigator');
+			$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
+			$sClassIcon = MetaModel::GetClassIcon($sClass, false);
+			if (strlen($sClassIcon) > 0){
+				$oPanel->SetIcon($sClassIcon);
+			}
+			
+			$oP->AddUiBlock($oPanel);
+			$oP->AddTabContainer('Navigator', '', $oPanel);
 			$oP->SetCurrentTabContainer('Navigator');
 
 			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
+			$bLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
 			$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
 
 			// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
@@ -1793,26 +1803,26 @@ EOF
 					}
 				}
 			}
-		
-		// Display the tabs
-		if ($sFirstTab == 'list')
-		{
-			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-			$oP->SetCurrentTab('UI:RelationshipGraph');
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
-			DisplayNavigatorGroupTab($oP);
-		}
-		else
-		{
-			$oP->SetCurrentTab('UI:RelationshipGraph');
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
-			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-			DisplayNavigatorGroupTab($oP);
-		}
 
-		$oP->SetCurrentTab('');
-		break;
-		
+			// Display the tabs
+			if ($sFirstTab == 'list')
+			{
+				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
+				$oP->SetCurrentTab('UI:RelationshipGraph');
+				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$bLazyLoading);
+				DisplayNavigatorGroupTab($oP);
+			}
+			else
+			{
+				$oP->SetCurrentTab('UI:RelationshipGraph');
+				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$bLazyLoading);
+				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
+				DisplayNavigatorGroupTab($oP);
+			}
+
+			$oP->SetCurrentTab('');
+			break;
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		case 'kill_lock':
@@ -1847,6 +1857,7 @@ EOF
 
 	}
 	DisplayWelcomePopup($oP);
+	$oKPI->ComputeAndReport('Compute page');
 	$oP->output();	
 }
 catch (Exception $e) {
@@ -1912,9 +1923,13 @@ class UI
 		// Add user filter
 		$oFilter->UpdateContextFromUser();
 		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
-		$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:ModifyAllPageTitle')));
+		$sClass = $oFilter->GetClass();
 
-		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker);
+		$aDisplayParams = [
+			'icon' => MetaModel::GetClassIcon($sClass, false),
+			'title' => Dict::S('UI:ModifyAllPageTitle'),
+		];
+		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker, [], $aDisplayParams);
 	}
 
 	/**
@@ -1939,7 +1954,7 @@ class UI
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array('filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
+		$aContext = array('filter' => utils::EscapeHtml($sFilter));
 		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
 	}
 
@@ -1974,7 +1989,7 @@ class UI
 		$aSelectedObj = explode(',', $sSelectedObj);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 		$aContext = array(
-			'filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'),
+			'filter'    => utils::EscapeHtml($sFilter),
 			'selectObj' => $sSelectedObj,
 		);
 		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);

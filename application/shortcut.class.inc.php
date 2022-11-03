@@ -288,7 +288,8 @@ class ShortcutOQL extends Shortcut
 		$oPage->add_ready_script(
 <<<JS
 // Note: the title gets deleted by the validation mechanism
-$("#attr_auto_reload_sec").tooltip({items: 'input', content: '$sRateTitle'});
+$("#attr_auto_reload_sec").attr('data-tooltip-content', '$sRateTitle');
+CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 $("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 
 $('#attr_auto_reload').change( function(ev) {

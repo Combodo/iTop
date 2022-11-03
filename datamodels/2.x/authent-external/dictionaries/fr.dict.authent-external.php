@@ -20,6 +20,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:UserExternal' => 'Utilisateur externe à iTop',
-	'Class:UserExternal+' => 'Utilisateur authentifié à l\'extérieur d\'iTop',
+	'Class:UserExternal' => 'Utilisateur externe à '.ITOP_APPLICATION_SHORT,
+	'Class:UserExternal+' => 'Utilisateur authentifié à l\'extérieur de '.ITOP_APPLICATION_SHORT,
 ));

@@ -13,10 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
 use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
 
-require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/itopwebpage.class.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
-require_once(APPROOT.'application/loginwebpage.class.inc.php');
 
 
 /**
@@ -49,6 +46,30 @@ function DBPasswordInNewConfigIsOk($sSafeContent)
 		return false;
 	}
 	return true;
+}
+
+function CheckAsyncTasksRetryConfig(Config $oTempConfig, iTopWebPage $oP)
+{
+    $iWarnings = 0;
+    foreach(get_declared_classes() as $sPHPClass)
+    {
+        $oRefClass = new ReflectionClass($sPHPClass);
+        if ($oRefClass->isSubclassOf('AsyncTask') && !$oRefClass->isAbstract())
+        {
+            $aMessages = AsyncTask::CheckRetryConfig($oTempConfig, $oRefClass->getName());
+
+            if (count($aMessages) !== 0)
+            {
+                foreach($aMessages as $sMessage)
+                {
+                    $oAlert = AlertUIBlockFactory::MakeForWarning('', $sMessage);
+                    $oP->AddUiBlock($oAlert);
+                    $iWarnings ++;
+                }
+            }
+        }
+    }
+    return $iWarnings;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -142,8 +163,13 @@ try {
 								$iEditorTopMargin += 5;
 							}
 							$oP->AddUiBlock($oAlert);
+
+							$iWarnings = CheckAsyncTasksRetryConfig($oTempConfig, $oP);
+							$iEditorTopMargin += 5*$iWarnings;
+
 							$sOriginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
-						} catch (Exception $e) {
+						}
+						catch (Exception $e) {
 							$oAlert = AlertUIBlockFactory::MakeForDanger('', $e->getMessage());
 							$iEditorTopMargin += 5;
 							$oP->AddUiBlock($oAlert);
@@ -153,22 +179,24 @@ try {
 			}
 
 
-			$sConfigEscaped = htmlentities($sConfig, ENT_QUOTES, 'UTF-8');
-			$sOriginalConfigEscaped = htmlentities($sOriginalConfig, ENT_QUOTES, 'UTF-8');
+			$sConfigEscaped = utils::EscapeHtml($sConfig);
+			$sOriginalConfigEscaped = utils::EscapeHtml($sOriginalConfig);
 			$oP->AddUiBlock(new Html('<p>'.Dict::S('config-edit-intro').'</p>'));
 
 			$oForm = new Form();
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'save'));
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
 
-			// - Cancel button
+			//--- Cancel button
 			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('config-cancel'), 'cancel_button', null, true, 'cancel_button');
 			$oCancelButton->SetOnClickJsCode("return ResetConfig();");
 			$oForm->AddSubBlock($oCancelButton);
 
-			// - Submit button
+			//--- Submit button
 			$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('config-apply'), null, Dict::S('config-apply'), true, 'submit_button');
 			$oForm->AddSubBlock($oSubmitButton);
+
+			//--- Config editor
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('prev_config', $sOriginalConfigEscaped, 'prev_config'));
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('new_config', $sConfigEscaped));
 			$oForm->AddHtml("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");

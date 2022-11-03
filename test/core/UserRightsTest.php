@@ -28,7 +28,9 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreCannotSaveObjectException;
+use CoreException;
 use DBObject;
+use DBObjectSearch;
 use DBObjectSet;
 use DeleteException;
 use URP_UserProfile;
@@ -38,13 +40,15 @@ use utils;
 /**
  * @group itopRequestMgmt
  * @group userRights
+ * @group defaultProfiles
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
 class UserRightsTest extends ItopDataTestCase
 {
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 
@@ -305,6 +309,36 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		return [
 			'Administrator'         => [1],
+		];
+	}
+
+	/**
+	 * @dataProvider ProfileCannotModifySelfProvider
+	 * @doesNotPerformAssertions
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
+	 */
+	public function testProfileCannotModifySelf(int $iProfileId)
+	{
+		$oUser = $this->AddUser('test1', $iProfileId);
+		$_SESSION = [];
+		UserRights::Login('test1');
+
+		try {
+			$this->AddProfileToUser($oUser, 1); // trying to become an admin
+			$this->fail('User should not modify self');
+		} catch (CoreException $e) {
+		}
+
+		// logout
+		$_SESSION = [];
+	}
+
+	public function ProfileCannotModifySelfProvider(): array
+	{
+		return [
 			'Configuration manager' => [3],
 		];
 	}
@@ -391,6 +425,7 @@ class UserRightsTest extends ItopDataTestCase
 			$this->AddProfileToUser($oUser, 1);
 			$this->fail('Should not be able to upgrade to Administrator');
 		} catch (CoreCannotSaveObjectException $e) {
+		} catch (CoreException $e) {
 		}
 
 		// logout
@@ -428,4 +463,68 @@ class UserRightsTest extends ItopDataTestCase
 		$_SESSION = [];
 	}
 
+	/**
+	 *@dataProvider NonAdminCanListOwnProfilesProvider
+	 */
+	public function testNonAdminCanListOwnProfiles($bHideAdministrators)
+	{
+		$oUser = $this->AddUser('test1', 2); // portal user
+		$_SESSION = [];
+		utils::GetConfig()->Set('security.hide_administrators', $bHideAdministrators);
+		UserRights::Login('test1');
+
+		// List the link between the User and the Profiles
+		$oSearch = new DBObjectSearch('URP_UserProfile');
+		$oSearch->AddCondition('userid', $oUser->GetKey());
+		$oSet = new DBObjectSet($oSearch);
+		$this->assertEquals(1, $oSet->Count());
+
+		// Get the Profiles as well
+		$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles JOIN URP_UserProfile ON URP_UserProfile.profileid = URP_Profiles.id WHERE URP_UserProfile.userid='.$oUser->GetKey());
+		$oSet = new DBObjectSet($oSearch);
+		$this->assertEquals(1, $oSet->Count());
+
+		// logout
+		$_SESSION = [];
+	}
+
+	public function NonAdminCanListOwnProfilesProvider(): array
+	{
+		return [
+			'with Admins visible'=> [false],
+			'with Admins hidden' => [true],
+		];
+	}
+	/**
+	 *@dataProvider NonAdminCannotListAdminProfilesProvider
+	 */
+	public function testNonAdminCannotListAdminProfiles($bHideAdministrators, $iExpectedCount)
+	{
+		utils::GetConfig()->Set('security.hide_administrators', $bHideAdministrators);
+
+		$this->AddUser('test1', 2); // portal user
+		$oUserAdmin = $this->AddUser('admin1', 1);
+		$_SESSION = [];
+		UserRights::Login('test1');
+
+		$oSearch = new DBObjectSearch('URP_UserProfile');
+		$oSearch->AddCondition('userid', $oUserAdmin->GetKey());
+		$oSet = new DBObjectSet($oSearch);
+		$this->assertEquals($iExpectedCount, $oSet->Count());
+		// Get the Profiles as well
+		$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles JOIN URP_UserProfile ON URP_UserProfile.profileid = URP_Profiles.id WHERE URP_UserProfile.userid='.$oUserAdmin->GetKey());
+		$oSet = new DBObjectSet($oSearch);
+		$this->assertEquals($iExpectedCount, $oSet->Count());
+
+		// logout
+		$_SESSION = [];
+	}
+
+	public function NonAdminCannotListAdminProfilesProvider(): array
+	{
+		return [
+			'with Admins visible'=> [false, 1],
+			'with Admins hidden' => [true, 0],
+		];
+	}
 }

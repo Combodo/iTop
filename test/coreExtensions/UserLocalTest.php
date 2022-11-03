@@ -21,28 +21,19 @@ use UserLocal;
 class UserLocalTest extends ItopDataTestCase
 {
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 
-		require_once(APPROOT.'application/startup.inc.php');
-		require_once (APPROOT.'test/coreExtensions/UserLocalTest/UserLocalPasswordPolicyMock.php');
-		require_once (APPROOT.'env-production/authent-local/model.authent-local.php');
+		require_once(APPROOT.'test/coreExtensions/UserLocalTest/UserLocalPasswordPolicyMock.php');
+		require_once(APPROOT.'env-production/authent-local/model.authent-local.php');
 	}
 
 	/**
 	 * @dataProvider ProviderValidatePassword
-	 *
-	 * @runTestsInSeparateProcesses
-	 * @preserveGlobalState disabled
-	 * @backupGlobals disabled
 	 */
 	public function testValidatePassword($sPassword, $aValidatorNames, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null, $sUserLanguage = null)
 	{
-		// We are calling methods that generates DEPRECATED warnings :( Like PHPUnit\Framework\MockObject\Generator::generateMock
-		// Since N°3002 this would make the test fail, so this is a workaround !
-		// changing ways to do mock will be done in N°4224
-		set_error_handler(array(__CLASS__, 'VoidErrorHandlerForDeprecated'));
 		$configMock = $this->createMock(\Config::class);
 		$configMock
 			->method('GetModuleSetting')
@@ -77,28 +68,6 @@ class UserLocalTest extends ItopDataTestCase
 		if (isset($expectedCheckIssues)) {
 			$this->assertContains($expectedCheckIssues, $aCheckIssues);
 		}
-	}
-
-	/**
-	 * Fake error handler to silently discard DEPRECATED warnings
-	 *
-	 * @param int $iErrNo
-	 * @param string $sErrStr
-	 * @param string $sErrFile
-	 * @param int $iErrLine
-	 *
-	 * @return boolean
-	 */
-	public static function VoidErrorHandlerForDeprecated($iErrno, $sErrStr, $sErrFile, $iErrLine)
-	{
-		if (
-			(\E_USER_DEPRECATED !== $iErrno)
-			&& (\E_DEPRECATED !== $iErrno)
-		) {
-			return false;
-		}
-
-		return true; // Ignore the error
 	}
 
 	public function ProviderValidatePassword()
@@ -266,7 +235,6 @@ class UserLocalTest extends ItopDataTestCase
 			),
 		);
 	}
-
 
 	/**
 	 * @dataProvider ProviderPasswordRenewal

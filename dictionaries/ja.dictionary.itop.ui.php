@@ -110,12 +110,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'ログイン名は一意でないといけません。- "%1s" はすでに使われています。',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => '少なくとも1件のプロフィールがこのユーザに指定されなければなりません。',
+	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
 	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
 	'Class:UserInternal' => 'User Internal~~',
-	'Class:UserInternal+' => 'User defined within iTop~~',
+	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT.'~~',
 ));
 
 //
@@ -320,14 +324,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'BooleanLabel:yes' => 'はい',
 	'BooleanLabel:no' => 'いいえ',
-	'UI:Login:Title' => 'iTop login~~',
-	'Menu:WelcomeMenu' => 'ようこそ', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'ようこそ、iTopへ', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'ようこそ', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'ようこそ、iTopへ', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => 'ようこそ、iTopへ',
+	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
+	'Menu:WelcomeMenu' => 'ようこそ',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'ようこそ',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
 
-	'UI:WelcomeMenu:LeftBlock' => '<p>iTopは、オープンソースの、完結したIT運用ポータルです。</p>
+	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.'は、オープンソースの、完結したIT運用ポータルです。</p>
 <ul>以下を含みます。
 <li>ITインベントリを文書化し、管理するための完全なCMDB(構成管理データベース)。</li>
 <li>IT環境で発生する出来事を追跡、共有するためのインシデント管理モジュール。</li>
@@ -338,7 +342,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 </ul>
 <p>すべてのモジュールはお互いに独立しており、別個にセットアップが可能です。</p>',
 
-	'UI:WelcomeMenu:RightBlock' => '<p>iTopはサービスプロバイダ志向であり、ITエンジニアが複数の顧客や組織を簡単に管理できるようになります。
+	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.'はサービスプロバイダ志向であり、ITエンジニアが複数の顧客や組織を簡単に管理できるようになります。
 <ul>iTopは、機能豊富な下記のビジネスプロセスのセットを提供します。
 <li>IT管理の実効性の強化。</li>
 <li>IT運用効率化の推進。</li>
@@ -353,7 +357,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 <li>ITの中でもっとも重要な財産である「文書化」の管理。</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => '要求を開く: %1$d',
 	'UI:WelcomeMenu:MyCalls' => '担当中の要求',
 	'UI:WelcomeMenu:OpenIncidents' => 'インシデントを開く: %1$d',
@@ -367,7 +378,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Button:GlobalSearch' => '検索',
 	'UI:Button:Search' => '　検索　',
 	'UI:Button:Clear' => ' Clear ~~',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' クエリ',
 	'UI:Button:Ok' => 'OK',
 	'UI:Button:Save' => '　保存　',
@@ -450,6 +461,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+
 	'UI:GroupBy:Count' => 'カウント',
 	'UI:GroupBy:Count+' => '要素数',
 	'UI:CountOfObjects' => '%1$d 個のオブジェクトが条件にマッチしました。',
@@ -507,14 +520,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:SearchValue:CheckAll' => 'Check All~~',
 	'UI:SearchValue:UncheckAll' => 'Uncheck All~~',
 	'UI:SelectOne' => '-- 選んでください --',
-	'UI:Login:Welcome' => 'iTopへようこそ',
+	'UI:Login:Welcome' => ITOP_APPLICATION_SHORT.'へようこそ',
 	'UI:Login:IncorrectLoginPassword' => 'ログイン/パスワードが正しくありません。再度入力ください。',
 	'UI:Login:IdentifyYourself' => '続けて作業を行う前に認証を受けてください。',
 	'UI:Login:UserNamePrompt' => 'ユーザー名',
 	'UI:Login:PasswordPrompt' => 'パスワード',
 	'UI:Login:ForgotPwd' => 'Forgot your password?~~',
 	'UI:Login:ForgotPwdForm' => 'Forgot your password~~',
-	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
+	'UI:Login:ForgotPwdForm+' => ITOP_APPLICATION_SHORT.' can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
 	'UI:Login:SeparatorOr' => 'Or~~',
@@ -536,43 +549,43 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ResetPwd-Ready' => 'The password has been changed.~~',
 	'UI:ResetPwd-Login' => 'Click here to login...~~',
 
-	'UI:Login:About' => '',
-	'UI:Login:ChangeYourPassword' => 'パスワードを変更してください',
-	'UI:Login:OldPasswordPrompt' => '古いパスワード',
-	'UI:Login:NewPasswordPrompt' => '新しいパスワード',
-	'UI:Login:RetypeNewPasswordPrompt' => '新しいパスワードを再度入力してください。',
-	'UI:Login:IncorrectOldPassword' => 'エラー：既存パスワードが正しくありません。',
-	'UI:LogOffMenu' => 'ログオフ',
-	'UI:LogOff:ThankYou' => 'iTopをご利用いただき、ありがとうございます。',
-	'UI:LogOff:ClickHereToLoginAgain' => '再度ログインするにはここをクリックしてください...',
-	'UI:ChangePwdMenu' => 'パスワードを変更する...',
-	'UI:Login:PasswordChanged' => 'パスワードは変更されました。',
-	'UI:AccessRO-All' => 'iTopは参照専用です。',
-	'UI:AccessRO-Users' => 'エンドユーザの方はiTopは参照専用です。',
-	'UI:ApplicationEnvironment' => 'アプリケーション環境: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch' => '2度入力された新しいパスワードが一致しません!',
-	'UI:Button:Login' => 'iTopへ入る',
-	'UI:Login:Error:AccessRestricted' => 'iTopへのアクセスは制限されています。iTop管理者に問い合わせしてください。',
-	'UI:Login:Error:AccessAdmin' => '管理者権限をもつユーザにアクセスが制限されています。iTop管理者に問い合わせしてください。',
-	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:About'                               => '',
+	'UI:Login:ChangeYourPassword'                  => 'パスワードを変更してください',
+	'UI:Login:OldPasswordPrompt'                   => '古いパスワード',
+	'UI:Login:NewPasswordPrompt'                   => '新しいパスワード',
+	'UI:Login:RetypeNewPasswordPrompt'             => '新しいパスワードを再度入力してください。',
+	'UI:Login:IncorrectOldPassword'                => 'エラー：既存パスワードが正しくありません。',
+	'UI:LogOffMenu'                                => 'ログオフ',
+	'UI:LogOff:ThankYou'                           => ITOP_APPLICATION_SHORT.'をご利用いただき、ありがとうございます。',
+	'UI:LogOff:ClickHereToLoginAgain'              => '再度ログインするにはここをクリックしてください...',
+	'UI:ChangePwdMenu'                             => 'パスワードを変更する...',
+	'UI:Login:PasswordChanged'                     => 'パスワードは変更されました。',
+	'UI:AccessRO-All'                              => ITOP_APPLICATION_SHORT.'は参照専用です。',
+	'UI:AccessRO-Users'                            => 'エンドユーザの方は'.ITOP_APPLICATION_SHORT.'は参照専用です。',
+	'UI:ApplicationEnvironment'                    => 'アプリケーション環境: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch'               => '2度入力された新しいパスワードが一致しません!',
+	'UI:Button:Login'                              => ITOP_APPLICATION_SHORT.'へ入る',
+	'UI:Login:Error:AccessRestricted'              => ITOP_APPLICATION_SHORT.'へのアクセスは制限されています。'.ITOP_APPLICATION_SHORT.'管理者に問い合わせしてください。',
+	'UI:Login:Error:AccessAdmin'                   => '管理者権限をもつユーザにアクセスが制限されています。'.ITOP_APPLICATION_SHORT.'管理者に問い合わせしてください。',
+	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization~~',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
-	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
-	'UI:CSVImport:MappingSelectOne' => '-- 選択ください --',
-	'UI:CSVImport:MappingNotApplicable' => '--このフィールドを無視する --',
-	'UI:CSVImport:NoData' => '空のデータセット..., データを提供してください。',
-	'UI:Title:DataPreview' => 'データプレビュー',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'エラー：このデータにはカラムが1つしか含まれていません。適切なセパレータ文字を選択しましたか。',
-	'UI:CSVImport:FieldName' => 'フィールド %1$d',
-	'UI:CSVImport:DataLine1' => 'データ行 1',
-	'UI:CSVImport:DataLine2' => 'データ行 2',
-	'UI:CSVImport:idField' => 'ID (主キー)',
-	'UI:Title:BulkImport' => 'iTop - バルクインポート',
-	'UI:Title:BulkImport+' => 'CSV インポートウィザード',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => '%2$s クラスの %1$d オブジェクトを同期',
-	'UI:CSVImport:ClassesSelectOne' => '--選択してください --',
-	'UI:CSVImport:ErrorExtendedAttCode' => '内部エラー： "%2$s" は"%3$s"クラスの外部キーではないので、"%1$s" は誤ったコードです。',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d オブジェクトは変更されません。',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d オブジェクトが修正されます。',
+	'UI:Login:Error:NoValidProfiles'               => 'No valid profile provided~~',
+	'UI:CSVImport:MappingSelectOne'                => '-- 選択ください --',
+	'UI:CSVImport:MappingNotApplicable'            => '--このフィールドを無視する --',
+	'UI:CSVImport:NoData'                          => '空のデータセット..., データを提供してください。',
+	'UI:Title:DataPreview'                         => 'データプレビュー',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'エラー：このデータにはカラムが1つしか含まれていません。適切なセパレータ文字を選択しましたか。',
+	'UI:CSVImport:FieldName'                       => 'フィールド %1$d',
+	'UI:CSVImport:DataLine1'                       => 'データ行 1',
+	'UI:CSVImport:DataLine2'                       => 'データ行 2',
+	'UI:CSVImport:idField'                         => 'ID (主キー)',
+	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - バルクインポート',
+	'UI:Title:BulkImport+'                         => 'CSV インポートウィザード',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => '%2$s クラスの %1$d オブジェクトを同期',
+	'UI:CSVImport:ClassesSelectOne'                => '--選択してください --',
+	'UI:CSVImport:ErrorExtendedAttCode'            => '内部エラー： "%2$s" は"%3$s"クラスの外部キーではないので、"%1$s" は誤ったコードです。',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d オブジェクトは変更されません。',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d オブジェクトが修正されます。',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d オブジェクトが追加されます。',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d オブジェクトにエラーがあります。',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d オブジェクトは変更されていません。',
@@ -615,14 +628,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.~~',
 	'UI:CSVImport:AlertNoSearchCriteria' => '少なくとも1つ以上の検索条件を選択してください。',
 	'UI:CSVImport:Encoding' => '文字エンコーディング',
-	'UI:UniversalSearchTitle' => 'iTop - ユニバーサル検索',
+	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - ユニバーサル検索',
 	'UI:UniversalSearch:Error' => 'エラー：%1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => '検索するクラスを選択してください。',
 
 	'UI:CSVReport-Value-Modified' => '修正済み',
-	'UI:CSVReport-Value-SetIssue' => '変更出来ません - 理由: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => '%1$s へ変更出来ません - 理由: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'マッチしません',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => '必須の値がありません',
 	'UI:CSVReport-Value-Ambiguous' => 'あいまいな値:  %1$s オブジェクト',
 	'UI:CSVReport-Row-Unchanged' => '未変更',
@@ -665,7 +678,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:CSVExport:LostChars' => 'エンコーディングの課題',
 	'UI:CSVExport:LostChars+' => 'ダウンロードファイルは %1$s でエンコードされます. iTop はこのフォーマットと整合性のない文字を検出しました。 これらの文字は代りの文字になります。（たとえばアクセント付き文字からはアクセント記号が無くなります。または、削除されます。 Webブラウザからコピー／ペーストが出来ます。 あるいは、システム管理者にエンコードの変更を問い合わせください。 (See parameter \'csv_file_default_charset\').',
 
-	'UI:Audit:Title' => 'iTop - CMDB 監査',
+	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB 監査',
 	'UI:Audit:InteractiveAudit' => '対話型監査',
 	'UI:Audit:HeaderAuditRule' => '監査ルール',
 	'UI:Audit:HeaderNbObjects' => 'オブジェクト数',
@@ -684,7 +697,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
 
 
-	'UI:RunQuery:Title' => 'iTop - OQLクエリ評価',
+	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQLクエリ評価',
 	'UI:RunQuery:QueryExamples' => 'クエリの例',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => '目的',
@@ -692,6 +705,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL式',
 	'UI:RunQuery:HeaderOQLExpression+' => 'OQL文法によるクエリ',
 	'UI:RunQuery:ExpressionToEvaluate' => '評価式',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'クエリに関する追加情報',
 	'UI:RunQuery:DevelopedQuery' => 'クエリ式の再開発',
 	'UI:RunQuery:SerializedFilter' => 'シリアライズされたフィルタ：',
@@ -701,8 +715,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'An error occured while running the query~~',
 	'UI:Query:UrlForExcel' => 'MS-Excel Webクエリに使用するURL',
-	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
-	'UI:Schema:Title' => 'iTop オブジェクトスキーマ',
+	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
+	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' オブジェクトスキーマ',
+	'UI:Schema:TitleForClass' => '%1$s schema~~',
 	'UI:Schema:CategoryMenuItem' => 'カテゴリ <b>%1$s</b>',
 	'UI:Schema:Relationships' => '関係',
 	'UI:Schema:AbstractClass' => '抽象クラス：このクラスのインスタンスを作成することはできません。',
@@ -818,9 +833,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Delete:PleaseDoTheManualOperations' => 'このオブジェクトの削除を要求する前に、上記にリストされている手動操作を実行してください。',
 	'UI:Delect:Confirm_Object' => '%1$sを削除しようとしています。確認ください。',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '以下の%2$sクラスの%1$dオブジェクトを削除しようとしています。確認ください。',
-	'UI:WelcomeToITop' => 'iTopへようこそ',
-	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$sの詳細',
-	'UI:ErrorPageTitle' => 'iTop - エラー',
+	'UI:WelcomeToITop' => ITOP_APPLICATION_SHORT.'へようこそ',
+	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$sの詳細',
+	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - エラー',
 	'UI:ObjectDoesNotExist' => '申し訳ございません。このオブジェクトは既に存在しません。(あるいは参照する権限がありません。)',
 	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
 	'Tag:Archived' => 'Archived~~',
@@ -830,7 +845,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Tag:Synchronized' => 'Synchronized~~',
 	'ObjectRef:Archived' => 'Archived~~',
 	'ObjectRef:Obsolete' => 'Obsolete~~',
-	'UI:SearchResultsPageTitle' => 'iTop - 検索結果',
+	'UI:SearchResultsPageTitle' => ITOP_APPLICATION_SHORT.' - 検索結果',
 	'UI:SearchResultsTitle' => '検索結果',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => '検索するものがありません。',
@@ -840,27 +855,27 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:FullTextSearchTitle_Text' => '"%1$s"の結果：',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%2$sクラスの%1$dオブジェクトが見つかりました。',
 	'UI:Search:NoObjectFound' => 'オブジェクトが見つかりませんでした。',
-	'UI:ModificationPageTitle_Object_Class' => 'iTop - %1$s - %2$s 修正',
+	'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s 修正',
 	'UI:ModificationTitle_Class_Object' => '%1$sの修正： <span class=\\"hilite\\">%2$s</span>',
-	'UI:ClonePageTitle_Object_Class' => 'iTop - クローン%1$s - %2$s 修正',
+	'UI:ClonePageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - クローン%1$s - %2$s 修正',
 	'UI:CloneTitle_Class_Object' => '%1$sのクローン：<span class=\\"hilite">%2$s</span>',
-	'UI:CreationPageTitle_Class' => 'iTop - 新規%1$sを作成',
+	'UI:CreationPageTitle_Class' => ITOP_APPLICATION_SHORT.' - 新規%1$sを作成',
 	'UI:CreationTitle_Class' => '新規%1$sの作成',
 	'UI:SelectTheTypeOf_Class_ToCreate' => '作成する%1$sのタイプを選択:',
 	'UI:Class_Object_NotUpdated' => '変更は検出されませんでした。%1$s(%2$s)は修正されて<strong>いません</strong>',
 	'UI:Class_Object_Updated' => '%1$s (%2$s) は更新されました。',
-	'UI:BulkDeletePageTitle' => 'iTop - バルク削除',
+	'UI:BulkDeletePageTitle' => ITOP_APPLICATION_SHORT.' - バルク削除',
 	'UI:BulkDeleteTitle' => '削除するオブジェクトを選択してください。',
-	'UI:PageTitle:ObjectCreated' => 'iTopオブジェクトが作成されました。',
+	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.'オブジェクトが作成されました。',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s が作成されました。',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => '状態%3$sにあるオブジェクト：%2$sに、ターゲット状態:%4$sで、%1$sを適用します。',
 	'UI:ObjectCouldNotBeWritten' => 'そのオブジェクトへは書き込みできません: %1$s',
-	'UI:PageTitle:FatalError' => 'iTop - 致命的なエラー',
+	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - 致命的なエラー',
 	'UI:SystemIntrusion' => 'アクセスが拒否されました。あなたが許可されていない操作を実行しようとしています。',
 	'UI:FatalErrorMessage' => '致命的なエラー、ITOPを続行することはできません。',
 	'UI:Error_Details' => 'エラー：%1$s',
 
-	'UI:PageTitle:ProfileProjections' => 'iTop ユーザ管理 - プロフィールプロジェクション',
+	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' ユーザ管理 - プロフィールプロジェクション',
 	'UI:UserManagement:Class' => 'クラス',
 	'UI:UserManagement:Class+' => 'オブジェクトのクラス',
 	'UI:UserManagement:ProjectedObject' => 'オブジェクト',
@@ -895,9 +910,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'このクラスにはライフサイクルは定義されていません。',
 	'UI:UserManagement:GrantMatrix' => '権限マトリクス',
 
-	'Menu:AdminTools' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => '管理ツール',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => '管理ツール',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => '変更管理',
@@ -943,20 +958,20 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ContactsMenu-ContactsByType' => 'タイプ別連絡先',
 	'UI-ContactsMenu-ContactsByStatus' => '状態別連絡先',
 
-	'Menu:CSVImportMenu' => 'CSV インポート', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => '一括作成/一括更新', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'CSV インポート',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => '一括作成/一括更新',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'データモデル', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'データモデル概要', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'データモデル',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'データモデル概要',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'エクスポート', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => '任意のクエリ結果をHTML、CSV、XMLでエクスポートする', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'エクスポート',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => '任意のクエリ結果をHTML、CSV、XMLでエクスポートする',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => '通知', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => '通知の設定', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu' => '通知',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => '通知の設定',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => '通知の設定',
 	'UI:NotificationsMenu:Help' => 'ヘルプ',
-	'UI:NotificationsMenu:HelpContent' => '<p>iTopでは、通知はすべてカスタマイズが可能です。通知は<i>トリガーとアクション</i>という二つのオブジェクトがベースになっています。
+	'UI:NotificationsMenu:HelpContent' => '<p>'.ITOP_APPLICATION_SHORT.'では、通知はすべてカスタマイズが可能です。通知は<i>トリガーとアクション</i>という二つのオブジェクトがベースになっています。
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
 	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
@@ -965,10 +980,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 </ol>
 </p>
 <p>
-<i><b>アクション</b></i>はトリガーが実行される際の動作を定義します。例えば今、「メールを送信する」という動作で構成されるたった1種類だけのアクションがあるとします。
-このようなアクションは、受信者、重要度といったメッセージに付随する他のパラメータと同様、メール送信に利用されるテンプレートも定義します。
+<i><b>アクション</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	特別なページ: <a href="../setup/email.test.php" target="_blank">email.test.php</a> は、PHPのメール設定をテストしたりトラブルシュートするのに利用可能であす。</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>特別なページ: <a href="../setup/email.test.php" target="_blank">email.test.php</a> は、PHPのメール設定をテストしたりトラブルシュートするのに利用可能であす。</p>
 <p>実行するには、アクションがトリガーに関連づけられている必要があります。
 トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'トリガー',
@@ -977,6 +995,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:NotificationsMenu:OnStateEnter' => 'オブジェクトが指定状態に入った時',
 	'UI:NotificationsMenu:OnStateLeave' => 'オブジェクトが指定状態から出た時',
 	'UI:NotificationsMenu:Actions' => 'アクション',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => '利用可能アクション',
 
 	'Menu:TagAdminMenu' => 'Tags configuration~~',
@@ -985,27 +1006,27 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
 
-	'Menu:AuditCategories' => '監査カテゴリ', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => '監査カテゴリ', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => '監査カテゴリ', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => '監査カテゴリ',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => '監査カテゴリ',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => '監査カテゴリ',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'クエリ実行', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => '任意のクエリを実行', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'クエリ実行',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => '任意のクエリを実行',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'クエリのフレーズブック', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'クエリのフレーズブック', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'クエリのフレーズブック',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'クエリのフレーズブック',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'データ管理', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'データ管理', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'データ管理',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'データ管理',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => '全検索', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => '何か...検索', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => '全検索',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => '何か...検索',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'ユーザ管理', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'ユーザ管理', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'ユーザ管理',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'ユーザ管理',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'プロフィール', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'プロフィール', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'プロフィール',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'プロフィール',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'プロフィール',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -1031,7 +1052,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Deadline_Hours_Minutes' => '%1$d時間%2$d分',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$d日%2$d時間%3$d分',
 	'UI:Help' => 'ヘルプ',
-	'UI:PasswordConfirm' => '(確認)',
+	'UI:PasswordConfirm' => '確認',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => '%1$sオブジェクトをさらに追加する前に、このオブジェクトを保存してください。',
 	'UI:DisplayThisMessageAtStartup' => '起動時にこのメッセージを表示する',
 	'UI:RelationshipGraph' => 'グラフィカル表示',
@@ -1066,7 +1087,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:RelationTooltip:Redundancy' => 'Redundancy~~',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# of impacted items: %1$d / %2$d~~',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Critical threshold: %1$d / %2$d~~',
-	'Portal:Title' => 'iTopユーザポータル',
+	'Portal:Title' => ITOP_APPLICATION_SHORT.'ユーザポータル',
 	'Portal:NoRequestMgmt' => '%1$s さん, このページにリダイレクトされました。あなたのプロファイルは、「ポータルユーザ」として登録されています。残念ながら、iTop は、「要求管理」としてインストールされていません。管理者に問い合わせてください。',
 	'Portal:Refresh' => 'リフレッシュ',
 	'Portal:Back' => '戻る',
@@ -1207,6 +1228,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh~~',
 	'UI:DashboardEdit:AutoReloadSec' => 'Automatic refresh interval (seconds)~~',
 	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds~~',
+	'UI:DashboardEdit:Revert' => 'Revert~~',
+	'UI:DashboardEdit:Apply' => 'Apply~~',
 
 	'UI:DashboardEdit:Layout' => 'レイアウト',
 	'UI:DashboardEdit:Properties' => 'ダッシュボードプロパティ',
@@ -1343,13 +1366,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Month-10-Short' => 'Oct~~',
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
-	'Calendar-FirstDayOfWeek' => '0~~', // 0 = Sunday, 1 = Monday, etc...
+	'Calendar-FirstDayOfWeek' => '0~~',// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'ショートカットを作成',
 	'UI:ShortcutRenameDlg:Title' => 'ショートカットの名前変更',
 	'UI:ShortcutListDlg:Title' => 'このリストのショートカットを作成',
 	'UI:ShortcutDelete:Confirm' => 'このショートカットを本当に削除してもいいですか。',
-	'Menu:MyShortcuts' => '私のショートカット', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => '私のショートカット',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'ショートカット',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => '名前',
@@ -1399,8 +1422,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...~~',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s~~',
 
-	'UI:AboutBox' => 'About iTop...~~',
-	'UI:About:Title' => 'About iTop~~',
+	'UI:AboutBox' => 'About '.ITOP_APPLICATION_SHORT.'...~~',
+	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT.'~~',
 	'UI:About:DataModel' => 'Data model~~',
 	'UI:About:Support' => 'Support information~~',
 	'UI:About:Licenses' => 'Licenses~~',
@@ -1425,7 +1448,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'ExcelExport:PreparingExport' => 'Preparing the export...~~',
 	'ExcelExport:Statistics' => 'Statistics~~',
 	'portal:legacy_portal' => 'End-User Portal~~',
-	'portal:backoffice' => 'iTop Back-Office User Interface~~',
+	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface~~',
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
@@ -1455,7 +1478,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
+	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1529,12 +1552,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
 
@@ -1609,9 +1632,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:DataSources' => '同期データソース',
 	'Menu:DataSources+' => '全ての同期データソース',
 	'Menu:WelcomeMenu' => 'ようこそ',
-	'Menu:WelcomeMenu+' => 'ようこそ、iTopへ',
+	'Menu:WelcomeMenu+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
 	'Menu:WelcomeMenuPage' => 'ようこそ',
-	'Menu:WelcomeMenuPage+' => 'ようこそ、iTopへ',
+	'Menu:WelcomeMenuPage+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
 	'Menu:AdminTools' => '管理ツール',
 	'Menu:AdminTools+' => '管理ツール',
 	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。',
@@ -1624,30 +1647,30 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:AuditCategories' => '監査カテゴリ',
 	'Menu:AuditCategories+' => '監査カテゴリ',
 	'Menu:Notifications:Title' => '監査カテゴリ',
-	'Menu:RunQueriesMenu' => 'クエリ実行',
-	'Menu:RunQueriesMenu+' => '任意のクエリを実行',
-	'Menu:QueryMenu' => 'クエリのフレーズブック',
-	'Menu:QueryMenu+' => 'クエリのフレーズブック',
-	'Menu:UniversalSearchMenu' => '全検索',
-	'Menu:UniversalSearchMenu+' => '何か...検索',
-	'Menu:UserManagementMenu' => 'ユーザ管理',
-	'Menu:UserManagementMenu+' => 'ユーザ管理',
-	'Menu:ProfilesMenu' => 'プロフィール',
-	'Menu:ProfilesMenu+' => 'プロフィール',
-	'Menu:ProfilesMenu:Title' => 'プロフィール',
-	'Menu:UserAccountsMenu' => 'ユーザアカウント',
-	'Menu:UserAccountsMenu+' => 'ユーザアカウント',
+	'Menu:RunQueriesMenu'         => 'クエリ実行',
+	'Menu:RunQueriesMenu+'        => '任意のクエリを実行',
+	'Menu:QueryMenu'              => 'クエリのフレーズブック',
+	'Menu:QueryMenu+'             => 'クエリのフレーズブック',
+	'Menu:UniversalSearchMenu'    => '全検索',
+	'Menu:UniversalSearchMenu+'   => '何か...検索',
+	'Menu:UserManagementMenu'     => 'ユーザ管理',
+	'Menu:UserManagementMenu+'    => 'ユーザ管理',
+	'Menu:ProfilesMenu'           => 'プロフィール',
+	'Menu:ProfilesMenu+'          => 'プロフィール',
+	'Menu:ProfilesMenu:Title'     => 'プロフィール',
+	'Menu:UserAccountsMenu'       => 'ユーザアカウント',
+	'Menu:UserAccountsMenu+'      => 'ユーザアカウント',
 	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
-	'Menu:MyShortcuts' => '私のショートカット',
-	'Menu:UserManagement' => 'User Management~~',
-	'Menu:Queries' => 'Queries~~',
-	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:MyShortcuts'            => '私のショートカット',
+	'Menu:UserManagement'         => 'User Management~~',
+	'Menu:Queries'                => 'Queries~~',
+	'Menu:ConfigurationTools'     => 'Configuration~~',
 ));
 
 // Additional language entries not present in English dict
 Dict::Add('JA JP', 'Japanese', '日本語', array(
- 'UI:Toggle:StandardDashboard' => 'Standard~~',
- 'UI:Toggle:CustomDashboard' => 'Custom~~',
- 'UI:Dashboard:Edit' => 'このページを編集...',
- 'UI:Dashboard:Revert' => '元のバージョンに戻す...',
+	'UI:Toggle:StandardDashboard' => 'Standard~~',
+	'UI:Toggle:CustomDashboard'   => 'Custom~~',
+	'UI:Dashboard:Edit'           => 'このページを編集...',
+	'UI:Dashboard:Revert'         => '元のバージョンに戻す...',
 ));

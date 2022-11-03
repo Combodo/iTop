@@ -13,12 +13,12 @@ namespace Symfony\Bundle\FrameworkBundle\Console;
 
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\ListCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Kernel;
@@ -41,17 +41,27 @@ class Application extends BaseApplication
 
         $inputDefinition = $this->getDefinition();
         $inputDefinition->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', $kernel->getEnvironment()));
-        $inputDefinition->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
+        $inputDefinition->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switch off debug mode.'));
     }
 
     /**
      * Gets the Kernel associated with this Console.
      *
-     * @return KernelInterface A KernelInterface instance
+     * @return KernelInterface
      */
     public function getKernel()
     {
         return $this->kernel;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reset()
+    {
+        if ($this->kernel->getContainer()->has('services_resetter')) {
+            $this->kernel->getContainer()->get('services_resetter')->reset();
+        }
     }
 
     /**
@@ -61,15 +71,13 @@ class Application extends BaseApplication
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
-        $this->kernel->boot();
-
-        $this->setDispatcher($this->kernel->getContainer()->get('event_dispatcher'));
-
         $this->registerCommands();
 
         if ($this->registrationErrors) {
             $this->renderRegistrationErrors($input, $output);
         }
+
+        $this->setDispatcher($this->kernel->getContainer()->get('event_dispatcher'));
 
         return parent::doRun($input, $output);
     }
@@ -79,17 +87,29 @@ class Application extends BaseApplication
      */
     protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
     {
-        if ($this->registrationErrors) {
-            $this->renderRegistrationErrors($input, $output);
+        if (!$command instanceof ListCommand) {
+            if ($this->registrationErrors) {
+                $this->renderRegistrationErrors($input, $output);
+                $this->registrationErrors = [];
+            }
+
+            return parent::doRunCommand($command, $input, $output);
         }
 
-        return parent::doRunCommand($command, $input, $output);
+        $returnCode = parent::doRunCommand($command, $input, $output);
+
+        if ($this->registrationErrors) {
+            $this->renderRegistrationErrors($input, $output);
+            $this->registrationErrors = [];
+        }
+
+        return $returnCode;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function find($name)
+    public function find(string $name)
     {
         $this->registerCommands();
 
@@ -99,7 +119,7 @@ class Application extends BaseApplication
     /**
      * {@inheritdoc}
      */
-    public function get($name)
+    public function get(string $name)
     {
         $this->registerCommands();
 
@@ -115,7 +135,7 @@ class Application extends BaseApplication
     /**
      * {@inheritdoc}
      */
-    public function all($namespace = null)
+    public function all(string $namespace = null)
     {
         $this->registerCommands();
 
@@ -127,7 +147,7 @@ class Application extends BaseApplication
      */
     public function getLongVersion()
     {
-        return parent::getLongVersion().sprintf(' (kernel: <comment>%s</>, env: <comment>%s</>, debug: <comment>%s</>)', $this->kernel->getName(), $this->kernel->getEnvironment(), $this->kernel->isDebug() ? 'true' : 'false');
+        return parent::getLongVersion().sprintf(' (env: <comment>%s</>, debug: <comment>%s</>) <bg=#0057B7;fg=#FFDD00>#StandWith</><bg=#FFDD00;fg=#0057B7>Ukraine</> <href=https://sf.to/ukraine>https://sf.to/ukraine</>', $this->kernel->getEnvironment(), $this->kernel->isDebug() ? 'true' : 'false');
     }
 
     public function add(Command $command)
@@ -153,10 +173,8 @@ class Application extends BaseApplication
             if ($bundle instanceof Bundle) {
                 try {
                     $bundle->registerCommands($this);
-                } catch (\Exception $e) {
-                    $this->registrationErrors[] = $e;
                 } catch (\Throwable $e) {
-                    $this->registrationErrors[] = new FatalThrowableError($e);
+                    $this->registrationErrors[] = $e;
                 }
             }
         }
@@ -171,10 +189,8 @@ class Application extends BaseApplication
                 if (!isset($lazyCommandIds[$id])) {
                     try {
                         $this->add($container->get($id));
-                    } catch (\Exception $e) {
-                        $this->registrationErrors[] = $e;
                     } catch (\Throwable $e) {
-                        $this->registrationErrors[] = new FatalThrowableError($e);
+                        $this->registrationErrors[] = $e;
                     }
                 }
             }
@@ -190,9 +206,7 @@ class Application extends BaseApplication
         (new SymfonyStyle($input, $output))->warning('Some commands could not be registered:');
 
         foreach ($this->registrationErrors as $error) {
-            $this->doRenderException($error, $output);
+            $this->doRenderThrowable($error, $output);
         }
-
-        $this->registrationErrors = [];
     }
 }

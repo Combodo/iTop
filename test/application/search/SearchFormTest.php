@@ -29,6 +29,7 @@ use Exception;
 
 /**
  * @group itopRequestMgmt
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -36,16 +37,6 @@ use Exception;
 class SearchFormTest extends ItopDataTestCase
 {
 	const CREATE_TEST_ORG = true;
-
-	/**
-	 * @throws Exception
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		require_once(APPROOT."sources/application/search/searchform.class.inc.php");
-	}
 
 	/**
 	 * @dataProvider GetFieldsProvider

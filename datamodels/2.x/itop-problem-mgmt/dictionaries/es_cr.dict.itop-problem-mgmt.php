@@ -15,8 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -44,7 +44,7 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ProblemManagement' => 'Administración de Problemas',
 	'Menu:ProblemManagement+' => 'Administración de Problemas',
 	'Menu:Problem:Overview' => 'Resumen de Problemas',
@@ -72,7 +72,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Problem
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Problem' => 'Problema',
 	'Class:Problem+' => 'Problema',
 	'Class:Problem/Attribute:status' => 'Estatus',

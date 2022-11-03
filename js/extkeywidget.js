@@ -25,8 +25,10 @@ Selectize.define('custom_itop', function(aOptions) {
 					if (this.$control_input.val() === '' && !this.$activeItems.length) {
 						iIndex = this.caretPos-1;
 						if (iIndex >= 0 && iIndex < this.items.length) {
+							let sPreviousValue = this.options[this.items[iIndex]].search_label;
 							this.clear(true);
 							e.preventDefault();
+							this.setTextboxValue(sPreviousValue.slice(0, -1));
 							return;
 						}
 					}
@@ -58,6 +60,7 @@ Selectize.define('custom_itop', function(aOptions) {
 			original.apply(self);
 		}
 	})();
+
 	ManageScroll = function (self) {
 		let id = self.$input[0].id;
 		if (self.$input.scrollParent()[0].tagName != 'HTML') {
@@ -126,7 +129,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	}
 	this.AddSelectize = function (options, initValue) {
 		let $select = $('#'+me.id).selectize({
-			plugins:['custom_itop'],
+			plugins:['custom_itop', 'selectize-plugin-a11y'],
 			render: {
 				item: function (item) {
 					if (item.obsolescence_flag == 1) {
@@ -134,33 +137,46 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					} else {
 						val = item.label;
 					}
-					return $("<div>").append(val);
+					return $("<div title ='"+item.label+"'>").append(val);
 				},
 				option: function(item) {
+					val = '';
+					if (item.initials != undefined) {
+						if (item.picture_url != undefined) {
+							val = '<span class="ibo-input-select--autocomplete-item-image" style="background-image: url('+item.picture_url+');">'+item.initials+'</span>';
+						} else {
+							val = '<span class="ibo-input-select--autocomplete-item-image">'+item.initials+'</span>';
+						}
+					}
+					val = val+'<span class="ibo-input-select--autocomplete-item-txt" title="'+item.label+'">';
 					if (item.obsolescence_flag == 1) {
-						val = '<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+item.label;
+						val = val+'<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+item.label;
 					} else {
-						val = item.label;
+						val = val+item.label;
 					}
 					if (item.additional_field != undefined) {
 						val = val+'<br><i>'+item.additional_field+'</i>';
 					}
-					return $("<div class=\"option\">").append(val);
+					val = val+'</span>';
+					return $("<div class=\"option ibo-input-select--autocomplete-item\" role=\"option\" id=\"${$item.text.replace(' ', '')}\">g").append(val);
 				}
 			},
 			valueField: 'value',
 			labelField: 'label',
-			searchField: 'label',
+			searchField: 'search_label',
 			options: JSON.parse(options),
 			maxItems: 1,
 			copyClassesToDropdown: false,
 			inputClass: 'ibo-input ibo-input-select ibo-input-selectize',
 			// To avoid dropdown to be cut by the container's overflow hidden rule
 			dropdownParent: 'body',
+			onDropdownOpen: function (oDropdownElem) {
+				me.UpdateDropdownPosition(this.$control, oDropdownElem);
+			},
 		});
 		let $selectize = $select[0].selectize; // This stores the selectize object to a variable (with name 'selectize')
 		$selectize.setValue(initValue, true);
-		var iPaddingRight = 	$('#'+this.id).parent().find('.ibo-input-select--action-buttons')[0].childElementCount*20+15;
+		var iPaddingRight = $('#'+this.id).parent().find('.ibo-input-select--action-buttons')[0].childElementCount*20+15;
 		 $('#'+this.id).parent().find('.ibo-input-select').css('padding-right',iPaddingRight);
 
 	}
@@ -169,6 +185,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		var hasFocus = 0;
 		var cache = {};
 		$('#label_'+me.id).data('selected_value', $('#label_'+me.id).val());
+		$('#label_'+me.id).attr('title', $('#label_'+me.id).val());
 		$('#label_'+me.id).autocomplete({
 				source: function (request, response) {
 					term = request.term.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
@@ -217,8 +234,10 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				},
 				select: function (event, ui) {
 					$('#'+me.id).val(ui.item.value);
-					$('#label_'+me.id).val(ui.item.label);
-					$('#label_'+me.id).data('selected_value', ui.item.label);
+					let labelValue = $('<div>').html(ui.item.label).text();
+					$('#label_'+me.id).val(labelValue);
+					$('#label_'+me.id).data('selected_value', labelValue);
+					$('#label_'+me.id).attr('title',labelValue);
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
 					$('#'+me.id).trigger('change');
@@ -230,6 +249,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					if (dialog.length > 0) {
 						$('.ui-autocomplete.ui-front').css('z-index', parseInt(dialog.css("z-index"))+1);
 					}
+					me.UpdateDropdownPosition($(this), $('.ui-autocomplete.selectize-dropdown:visible'));
 					me.ManageScroll();
 				},
 				close: function (event, ui) {
@@ -238,19 +258,27 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			})
 		.autocomplete("instance")._renderItem = function (ul, item) {
 			$(ul).addClass('selectize-dropdown');
-			var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
-			var val = $('<div>').text(item.label).html();
-			val = val.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
-			if (item.obsolescence_flag == '1') {
-				val = ' <span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+val;
+			let term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
+			let val = '';
+			if (item.initials != undefined) {
+				if (item.picture_url != undefined) {
+					val = '<span class="ibo-input-select--autocomplete-item-image" style="background-image: url('+item.picture_url+');">'+item.initials+'</span>';
+				} else {
+					val = '<span class="ibo-input-select--autocomplete-item-image");">'+item.initials+'</span>';
+				}
 			}
-			if (item.additional_field != undefined )
-			{
+			val = val+'<div class="ibo-input-select--autocomplete-item-txt" title="'+item.label+'">';
+			if (item.obsolescence_flag == '1') {
+				val = val+' <span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>';
+			}
+			let labelValue = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+			val = val+labelValue;
+			if (item.additional_field != undefined) {
 				val = val+'<br><i>'+item.additional_field+'</i>';
 			}
-
+			val = val+'</div>';
 			return $("<li>")
-				.append("<div data-selectable=\"\">"+val+"</div>")
+				.append("<div data-selectable=\"\" class=\"ibo-input-select--autocomplete-item\">"+val+"</div>")
 				.appendTo(ul);
 		};
 
@@ -285,6 +313,35 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#'+this.id).parent().find('.ibo-input-select').css('padding-right', iPaddingRight);
 	};
 
+	/**
+	 * Update the dropdown's position so it always fits in the screen
+	 *
+	 * @param {object} oControlElem jQuery object representing the "control" input (= where the user types) of the external key
+	 * @param {object} oDropdownElem jQuery object representing the results dropdown
+	 * @return {void}
+	 */
+	this.UpdateDropdownPosition = function (oControlElem, oDropdownElem) {
+		const fWindowHeight = window.innerHeight;
+
+		const fControlTopY = oControlElem.offset().top;
+		const fControlHeight = oControlElem.outerHeight();
+
+		const fDropdownTopY = oDropdownElem.offset().top;
+		// This one is "let" as it might be updated if necessary
+		let fDropdownHeight = oDropdownElem.outerHeight();
+		const fDropdownBottomY = fDropdownTopY + fDropdownHeight;
+
+		if (fDropdownBottomY > fWindowHeight) {
+			// Set dropdown max-height to 1/3 of the screen, this way we are sure the dropdown will fit in either the top / bottom half of the screen
+			oDropdownElem.css('max-height', '30vh');
+			fDropdownHeight = oDropdownElem.outerHeight();
+
+			// Position dropdown above input if not enough space on the bottom part of the screen
+			if ((fDropdownTopY / fWindowHeight) > 0.6) {
+				oDropdownElem.css('top', fDropdownTopY - fDropdownHeight - fControlHeight);
+			}
+		}
+	};
 	this.ManageScroll = function () {
 		if ($('#label_'+me.id).scrollParent()[0].tagName != 'HTML') {
 			$('#label_'+me.id).scrollParent().on(['scroll.'+me.id, 'resize.'+me.id].join(" "), function () {
@@ -341,7 +398,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		} else {
 			$('#label_'+me.id).addClass('ac_dlg_loading');
 		}
-		var theMap = {
+
+		let sPromiseId = 'ajax_promise_'+me.id;
+		let theMap = {
 			sAttCode: me.sAttCode,
 			iInputId: me.id,
 			sTitle: me.sTitle,
@@ -349,7 +408,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			sTargetClass: me.sTargetClass,
 			sFilter: me.sFilter,
 			bSearchMode: me.bSearchMode,
-			operation: 'objectSearchForm'
+			operation: 'objectSearchForm',
+			ajax_promise_id: sPromiseId
 		};
 
 		if (me.oWizardHelper == null) {
@@ -368,24 +428,29 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 			function (data) {
 				$('#ac_dlg_'+me.id).html(data);
-				$('#ac_dlg_'+me.id).dialog('open');
-				me.UpdateSizes();
-				me.UpdateButtons();
-				me.ajax_request = null;
-				$('#count_'+me.id+'_results').change(function () {
+				window[sPromiseId].then(function () {
+					$('#ac_dlg_'+me.id).dialog('open');
+					me.UpdateSizes();
 					me.UpdateButtons();
+					me.ajax_request = null;
+					$('#count_'+me.id+'_results').change(function () {
+						me.UpdateButtons();
+					});
+					if (me.bDoSearch) {
+						me.DoSearchObjects();
+					}
 				});
-				if (me.bDoSearch) {
-					me.DoSearchObjects();
-				}
 			},
 			'html'
 		);
 	};
 
+	/**
+	 * Update the dialog size to fit into the screen
+	 * @constructor
+	 */
 	this.UpdateSizes = function () {
 		var dlg = $('#ac_dlg_'+me.id);
-		// Adjust the dialog's size to fit into the screen
 		if (dlg.width() > ($(window).width()-40)) {
 			dlg.width($(window).width()-40);
 		}
@@ -499,6 +564,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				var oTemp = $('<div>'+data.name+'</div>');
 				var txt = oTemp.text(); // this causes HTML entities to be interpreted
 
+				var prevValue = $('#'+me.id).val();
 				var newValue;
 				if ($('#label_'+me.id).length) {
 					newValue = iObjectId;
@@ -511,7 +577,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					newValue = txt;
 				}
 
-				var prevValue = $('#'+me.id).val();
 				$('#'+me.id).val(newValue);
 				if (prevValue != newValue) {
 					// dependent fields will be updated using the WizardHelper JS object
@@ -671,7 +736,10 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 							var sId = $(this).attr('id');
 							var editorInst = CKEDITOR.instances[sId];
 							if (editorInst) {
-								editorInst.updateElement();
+								editorInst.destroy();
+							}
+							if ($('#'+sId).data('timeout_validate') != undefined) {
+								clearInterval($('#'+sId).data('timeout_validate'));
 							}
 						}
 
@@ -708,8 +776,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 						// Put the value corresponding to the newly created object in the autocomplete
 						var oTemp = $('<div>'+data.name+'</div>');
 						var txt = oTemp.text(); // this causes HTML entities to be interpreted
-						$('#label_'+me.id).val(txt);
 						$('#'+me.id).val(data.id);
+						$('#label_'+me.id).val(txt);
+						$('#label_'+me.id).data('selected_value',txt);
 						$('#label_'+me.id).removeClass('ac_dlg_loading');
 						$('#label_'+me.id).focus();
 					}
@@ -835,6 +904,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 
 					$('#label_'+me.id).val(txt);
 					$('#label_'+me.id).removeClass('ac_dlg_loading');
+					$('#label_'+me.id).data('selected_value',txt);
 
 					var prevValue = $('#'+me.id).val();
 					$('#'+me.id).val(iObjectId);

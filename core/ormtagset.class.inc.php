@@ -138,7 +138,7 @@ final class ormTagSet extends ormSet
 	}
 
 	/**
-	 * @return array of tags indexed by code
+	 * @return array index: code, value: corresponding {@see \TagSetFieldData}
 	 */
 	public function GetTags()
 	{

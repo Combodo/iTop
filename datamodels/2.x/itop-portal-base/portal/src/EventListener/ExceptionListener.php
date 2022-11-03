@@ -23,13 +23,13 @@ namespace Combodo\iTop\Portal\EventListener;
 
 
 use Dict;
-use IssueLog;
-use Symfony\Component\Debug\Exception\FlattenException;
+use ExceptionLog;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
@@ -51,17 +51,23 @@ class ExceptionListener implements ContainerAwareInterface
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public function onKernelException(GetResponseForExceptionEvent $oEvent)
+	public function onKernelException(ExceptionEvent $oEvent)
 	{
 		// Get the exception object from the received event
-		$oException = $oEvent->getException();
+		$oException = $oEvent->getThrowable();
 
 		// Prepare / format exception data
-		$sErrorMessage = $oException->getMessage();
+		if ($oException instanceof \MySQLException) {
+			// Those exceptions should be caught before (in the metamodel startup, before event starting Symfony !)
+			// They could contain far too much info :/
+			// So as an extra precaution we are filtering here anyway !
+			$sErrorMessage = 'DB Server error, check error log !';
+		} else {
+			$sErrorMessage = $oException->getMessage();
+		}
 		// - For none HTTP exception, status code will be a generic 500
 		$iStatusCode = ($oException instanceof HttpExceptionInterface) ? $oException->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
-		switch ($iStatusCode)
-		{
+		switch ($iStatusCode) {
 			case 404:
 				$sErrorTitle = Dict::S('Error:HTTP:404');
 				break;
@@ -71,7 +77,7 @@ class ExceptionListener implements ContainerAwareInterface
 		}
 
 		// Prepare flatten exception
-		$oFlattenException = ($_SERVER['APP_DEBUG'] == 1) ? FlattenException::create($oException) : null;
+		$oFlattenException = ($_SERVER['APP_DEBUG'] == 1) ? FlattenException::createFromThrowable($oException) : null;
 		// Remove APPROOT from file paths if in production (SF context)
 		if (!is_null($oFlattenException) && ($_SERVER['APP_ENV'] === 'prod'))
 		{
@@ -86,14 +92,16 @@ class ExceptionListener implements ContainerAwareInterface
 		}
 
 		// Log exception in iTop log
-		IssueLog::Error($sErrorTitle.': '.$sErrorMessage);
+		ExceptionLog::LogException($oException, [
+			'uri' => $oEvent->getRequest()->getUri(),
+		]);
 
 		// Prepare data for template
 		$aData = array(
-			'exception' => $oFlattenException,
-			'code' => $iStatusCode,
-			'error_title' => $sErrorTitle,
-			'error_message' => '',
+			'exception'     => $oFlattenException,
+			'code'          => $iStatusCode,
+			'error_title'   => $sErrorTitle,
+			'error_message' => $sErrorMessage,
 		);
 
 		// Generate the response
@@ -104,15 +112,18 @@ class ExceptionListener implements ContainerAwareInterface
 		else
 		{
 			$oResponse = new Response();
-			$oResponse->setContent($this->oContainer->get('twig')->render('itop-portal-base/portal/templates/errors/layout.html.twig',
-				$aData));
+			$oResponse->setContent($this->oContainer->get('twig')->render('itop-portal-base/portal/templates/errors/layout.html.twig', $aData));
 		}
 		$oResponse->setStatusCode($iStatusCode);
 
 		// HttpExceptionInterface is a special type of exception that holds status code and header details
-		if ($oException instanceof HttpExceptionInterface)
-		{
+		if ($oException instanceof HttpExceptionInterface) {
 			$oResponse->headers->replace($oException->getHeaders());
+		}
+
+		// display original error page when app debug is on
+		if (($_SERVER['APP_DEBUG'] == 1)) {
+			return;
 		}
 
 		// Send the modified response object to the event

@@ -20,11 +20,11 @@
 
 * @copyright     Copyright (C) 2021 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
-*		
+*
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:UserLocal' => 'iTop-Benutzer',
-	'Class:UserLocal+' => 'Benutzer, der von iTop authentifiziert wird',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'-Benutzer',
+	'Class:UserLocal+' => 'Benutzer, der von '.ITOP_APPLICATION_SHORT.' authentifiziert wird',
 	'Class:UserLocal/Attribute:password' => 'Passwort',
 	'Class:UserLocal/Attribute:password+' => 'Benutzerpasswort',
 
@@ -43,5 +43,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort entspricht nicht dem in den Konfigurationsregeln hinterlegten RegEx-Ausdruck',
 
-	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine iTop Erweiterung'
+	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine '.ITOP_APPLICATION_SHORT.' Erweiterung',
+	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Das setzen des Passwortablaufs auf "Einmalpasswort" ist für den eigenen Benutzer nicht erlaubt.',
 ));

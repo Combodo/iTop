@@ -85,7 +85,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Organization/Attribute:overview' => 'Tableau de bord',
 	'Organization:Overview:FunctionalCIs' => 'Infrastructure de cette organisation',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'par type',
-	'Organization:Overview:Users' => 'Utilisateurs iTop dans cette organisation',
+	'Organization:Overview:Users' => 'Utilisateurs '.ITOP_APPLICATION_SHORT.' dans cette organisation',
 ));
 
 //

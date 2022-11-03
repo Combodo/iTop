@@ -18,10 +18,10 @@
  */
 // Quick create
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...~~',
-	'UI:Component:QuickCreate:Recents:Title' => 'Recents~~',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet~~',
-	'UI:Component:QuickCreate:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open quick create~~',
+	'UI:Component:QuickCreate:Tooltip' => 'Быстрое создание объекта любого типа',
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Выбрать тип объекта...',
+	'UI:Component:QuickCreate:Recents:Title' => 'Недавние',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Вы ещё не создавали объекты',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'История отключена',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Открыть быстрое создание объекта',
 ));

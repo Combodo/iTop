@@ -644,6 +644,8 @@
     },
 
     checkAll: function(e) {
+	   /* currentTarget.addClass();
+	    currentTarget.removeClass();*/
       this._toggleChecked(true);
       this._trigger('checkAll');
     },

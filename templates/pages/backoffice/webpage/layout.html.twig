@@ -15,7 +15,10 @@
         <link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version|raw }}">
     {% endif %}
     <link rel="search" type="application/opensearchdescription+xml" title="iTop" href="{{ aPage.sAbsoluteUrlAppRoot }}pages/opensearch.xml.php">
-
+    {# Main fonts have to be preloaded to avoid blocking content rendering #}
+    {% for aPreloadedFont in aPage.aPreloadedFonts %}
+        <link rel="preload" href="{{ aPreloadedFont['font'] }}" as="font" type="font/{{ aPreloadedFont['type'] }}" crossorigin>
+    {% endfor %}
     {# Stylesheets MUST be loaded before any scripts otherwise we may face problems such as
 	- Visual glitches
 	- jQuery scripts spurious problems (like failing on a 'reload') #}
@@ -46,11 +49,15 @@
     {% endblock %}
 </head>
 <body data-gui-type="backoffice">
-{% block iboPageBodyHtml %}
-    <div id="ibo-page-container">
-        {{ render_block(oLayout, {aPage: aPage}) }}
-    </div>
-{% endblock %}
+{% if aPage.isPrintable %}
+<div class="printable-content" style="width: 27.7cm;"> {% endif %}
+    {% block iboPageBodyHtml %}
+
+        <div id="ibo-page-container">
+            {{ render_block(oLayout, {aPage: aPage}) }}
+        </div>
+    {% endblock %}
+    {% if aPage.isPrintable %}</div> {% endif %}
 
 {% block iboDeferredBlocks %}
     {% for oBlock in aDeferredBlocks %}
@@ -59,8 +66,8 @@
 {% endblock %}
 {% if aPage.aJsFiles is not empty %}
     <script type="text/javascript">
-        var aListJsFiles = [];
-        {% for sJsFile in aPage.aJsFiles %}
+    var aListJsFiles = [];
+    {% for sJsFile in aPage.aJsFiles %}
             aListJsFiles.push("{{ sJsFile|raw }}");
         {% endfor %}
     </script>
@@ -102,7 +109,9 @@
     {% endblock %}
 {% endblock %}
 
-{{ aPage.sCapturedOutput|raw }}
+{% block iboCapturedOutput %}
+    {{ aPage.sCapturedOutput|raw }}
+{% endblock %}
 
 </body>
 </html>

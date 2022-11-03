@@ -21,8 +21,8 @@
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:UserLocal' => 'iTopユーザー',
-	'Class:UserLocal+' => 'iTopローカル認証ユーザー',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'ユーザー',
+	'Class:UserLocal+' => ITOP_APPLICATION_SHORT.'ローカル認証ユーザー',
 	'Class:UserLocal/Attribute:password' => 'パスワード',
 	'Class:UserLocal/Attribute:password+' => '認証文字列',
 
@@ -34,10 +34,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expired~~',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'One-time Password~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Password renewal~~',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'When the password was last changed~~',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.~~',
 
-	'UserLocal:password:expiration' => 'The fields below require an extension~~'
+	'UserLocal:password:expiration' => 'The fields below require an extension~~',
+	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
 ));

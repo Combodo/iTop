@@ -7,13 +7,19 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBSource;
+use Combodo\iTop\Core\DbConnectionWrapper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Exception;
 use MetaModel;
+use MySQLTransactionNotClosedException;
 
 /**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
  *
  * @group itopRequestMgmt
+ * @group specificOrgInSampleData
  * Class TransactionsTest
  *
  * @package Combodo\iTop\Test\UnitTest\Core
@@ -23,10 +29,10 @@ class TransactionsTest extends ItopTestCase
 	/** @var DeadLockInjection */
 	private $oMySQLiMock;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once ('DeadLockInjection.php');
+		require_once('DeadLockInjection.php');
 		require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 		$sEnv = 'production';
 		$sConfigFile = APPCONF.$sEnv.'/config-itop.php';
@@ -48,7 +54,7 @@ class TransactionsTest extends ItopTestCase
 				}
 			));
 
-		$this->InvokeNonPublicStaticMethod('CMDBSource', 'SetMySQLiForQuery', [$oMockMysqli]);
+		DbConnectionWrapper::SetDbConnectionMockForQuery($oMockMysqli);
 	}
 
 	/**
@@ -93,7 +99,7 @@ class TransactionsTest extends ItopTestCase
 		}
 
 		// Verify if the ticket is considered as saved in the database
-		$this->assertEquals($bIsInDB, !$oTicket->IsNew());
+		$this->assertEquals($bIsInDB, !$oTicket->IsNew(), " The ticket should be persisted in the DB");
 
 		if (!$oTicket->IsNew()) {
 			$this->oMySQLiMock->SetShowRequest(false);
@@ -226,22 +232,56 @@ class TransactionsTest extends ItopTestCase
 	public function DBUpdateProvider()
 	{
 		return [
-			"Normal case" => ['iFailAt' => -1, 'bIsModified' => false],
-			"ticket_request" => ['iFailAt' => 1, 'bIsModified' => true],
+			"Normal case"        => ['iFailAt' => -1, 'bIsModified' => false],
+			"ticket_request"     => ['iFailAt' => 1, 'bIsModified' => true],
 			"lnkcontacttoticket" => ['iFailAt' => 2, 'bIsModified' => true],
-			"History 1" => ['iFailAt' => 3, 'bIsModified' => true],
-			"History 2" => ['iFailAt' => 4, 'bIsModified' => true],
-			"History 3" => ['iFailAt' => 5, 'bIsModified' => true],
-			"History 4" => ['iFailAt' => 6, 'bIsModified' => true],
-			"History 5" => ['iFailAt' => 7, 'bIsModified' => true],
-			"History 6" => ['iFailAt' => 8, 'bIsModified' => true],
-			"History 7" => ['iFailAt' => 9, 'bIsModified' => true],
-			"History 8" => ['iFailAt' => 10, 'bIsModified' => true],
-			"History 9" => ['iFailAt' => 11, 'bIsModified' => true],
-			"History 10" => ['iFailAt' => 12, 'bIsModified' => true],
-			"History 11" => ['iFailAt' => 13, 'bIsModified' => true],
-			"History 12" => ['iFailAt' => 14, 'bIsModified' => true],
-			"History 13" => ['iFailAt' => 15, 'bIsModified' => true],
+			"History 1"          => ['iFailAt' => 3, 'bIsModified' => true],
+			"History 2"          => ['iFailAt' => 4, 'bIsModified' => true],
+			"History 3"          => ['iFailAt' => 5, 'bIsModified' => true],
+			"History 4"          => ['iFailAt' => 6, 'bIsModified' => true],
+			"History 5"          => ['iFailAt' => 7, 'bIsModified' => true],
+			"History 6"          => ['iFailAt' => 8, 'bIsModified' => true],
+			"History 7"          => ['iFailAt' => 9, 'bIsModified' => true],
+			"History 8"          => ['iFailAt' => 10, 'bIsModified' => true],
+			"History 9"          => ['iFailAt' => 11, 'bIsModified' => true],
+			"History 10"         => ['iFailAt' => 12, 'bIsModified' => true],
+			"History 11"         => ['iFailAt' => 13, 'bIsModified' => true],
+			"History 12"         => ['iFailAt' => 14, 'bIsModified' => true],
+			"History 13"         => ['iFailAt' => 15, 'bIsModified' => true],
 		];
+	}
+
+	/**
+	 * @return void
+	 * @doesNotPerformAssertions
+	 */
+	public function testTransactionOpenedThenClosed()
+	{
+		CMDBSource::Query('START TRANSACTION;');
+		CMDBSource::Query('COMMIT;');
+	}
+
+	/**
+	 * This will throw an exception in the tearDown method.
+	 * This cannot be detected nor by `@expectedException` nor `expectException` method, so we have a specific tearDown impl
+	 *
+	 * @return void
+	 * @doesNotPerformAssertions
+	 */
+	public function testTransactionOpenedNotClosed()
+	{
+		CMDBSource::Query('START TRANSACTION;');
+	}
+
+	protected function tearDown(): void
+	{
+		try {
+			parent::tearDown();
+		}
+		catch (MySQLTransactionNotClosedException $e) {
+			if ($this->getName() === 'testTransactionOpenedNotClosed') {
+				$this->debug('Executing the testTransactionOpenNoClose method throws a '.MySQLTransactionNotClosedException::class.' exception in tearDown');
+			}
+		}
 	}
 }

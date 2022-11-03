@@ -1,19 +1,6 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 $family-sans-serif: $ibo-font-family-base, $ibo-font-family-fallbacks !default;
@@ -30,8 +17,19 @@ $body-overflow-y: auto !default;
  * customize Bulma content variables
  * See https://bulma.io/documentation/elements/content/
  */
-$content-table-cell-border: 1px solid black;
-$content-table-cell-border-width: 1px;
-$content-table-head-cell-border-width: 1px;
-$content-table-foot-cell-border-width: 1px;
-$content-table-foot-cell-color: black;
+$content-block-margin-bottom: 0 !default;
+
+/* Table: Reset style as much as possible to match rich text editor preview, which is the browser's default stylesheet.
+ * As there is no way to avoid bulma rules, we simply make them invalid by setting an invalid variable value, the rules will then be ignored by the browser.
+ * "!default" has been omitted on purpose as we want to overload the variables no matter what.
+ * See N°4481 for more information
+ */
+$content-table-cell-border: 'invalid on purpose';
+$content-table-cell-border-width: 'invalid on purpose';
+$content-table-cell-padding: 'invalid on purpose';
+$content-table-cell-heading-color: 'invalid on purpose';
+$content-table-head-cell-border-width: 'invalid on purpose';
+$content-table-head-cell-color: 'invalid on purpose';
+$content-table-body-last-row-cell-border-bottom-width: 1px !default;
+$content-table-foot-cell-border-width: 'invalid on purpose';
+$content-table-foot-cell-color: 'invalid on purpose';

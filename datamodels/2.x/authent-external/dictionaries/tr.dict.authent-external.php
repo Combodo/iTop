@@ -36,5 +36,5 @@
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:UserExternal' => 'Harici kullanıcı',
-	'Class:UserExternal+' => 'iTop dışında yetki kontrolü yapılan kullanıcı',
+	'Class:UserExternal+' => ITOP_APPLICATION_SHORT.' dışında yetki kontrolü yapılan kullanıcı',
 ));

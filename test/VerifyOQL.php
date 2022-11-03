@@ -73,9 +73,9 @@ function ShowExamples($oP, $sExpression)
 			}
 			//$aDisplayData[$sTopic][] = array(
 			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
-				'desc' => "<div style=\"$sHighlight\">".htmlentities($sDescription, ENT_QUOTES, 'UTF-8')."</div>",
-				'oql' => "<div style=\"$sHighlight\">".htmlentities($sOql, ENT_QUOTES, 'UTF-8')."</div>",
-				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable>$sContext</form>\n",
+				'desc' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
+				'oql'  => "<div style=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
+				'go'   => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable>$sContext</form>\n",
 			);
 		}
 	}
@@ -147,8 +147,7 @@ try
 				{
 					$aArgs[$sParam] = $value;
 				}
-				else
-				{
+				else {
 					$aArgs[$sParam] = '';
 				}
 			}
@@ -158,7 +157,7 @@ try
 
 	$oP->add("<form method=\"post\">\n");
 	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
-	$oP->add("<textarea cols=\"120\" rows=\"8\" id=\"expression\" name=\"expression\">".htmlentities($sExpression, ENT_QUOTES, 'UTF-8')."</textarea>\n");
+	$oP->add("<textarea cols=\"120\" rows=\"8\" id=\"expression\" name=\"expression\">".utils::EscapeHtml($sExpression)."</textarea>\n");
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
 	$oP->add_ready_script(<<<EOF
 $("#expression").select();
@@ -252,15 +251,14 @@ EOF
 			{
 				$sSuggestedWord = OqlException::FindClosestString($sWrongWord, $aSuggestedWords);
 
-				if (strlen($sSuggestedWord) > 0)
-				{
+				if (strlen($sSuggestedWord) > 0) {
 					$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->GetIssue().' <em>'.$sWrongWord).'</em></b>');
 					$sBefore = substr($sExpression, 0, $e->GetColumn());
 					$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
 					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
 					$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
 					$oP->p("Suggesting: $sFixedExpressionHtml");
-					$oP->add('<button onClick="$(\'textarea[name=expression]\').val(\''.htmlentities(addslashes($sFixedExpression)).'\');">Use this query</button>');
+					$oP->add('<button onClick="$(\'textarea[name=expression]\').val(\''.utils::EscapeHtml(addslashes($sFixedExpression)).'\');">Use this query</button>');
 				}
 				else
 				{

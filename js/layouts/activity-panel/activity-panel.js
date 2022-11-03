@@ -132,6 +132,7 @@ $(function()
 					this._InitializeLockWatcher();
 				}
 
+				this._InitializeCurrentTab();
 				this._ApplyEntriesFilters();
 				this._UpdateMessagesCounters();
 				this._UpdateFiltersCheckboxesFromOptions();
@@ -178,11 +179,11 @@ $(function()
 				});
 				// - Click on open all case log messages
 				this.element.find(this.js_selectors.caselog_tab_open_all).on('click', function () {
-					me._onCaseLogOpenAllClick($(this));
+					me._onOpenAllEntriesClick();
 				});
 				// - Click on close all case log messages
 				this.element.find(this.js_selectors.caselog_tab_close_all).on('click', function () {
-					me._onCaseLogCloseAllClick($(this));
+					me._onCloseAllEntriesClick();
 				});
 
 				// Entry form
@@ -214,7 +215,7 @@ $(function()
 				// Entries
 				// - Click on a closed case log message
 				this.element.on('click', this.js_selectors.entry+'.'+this.css_classes.is_closed+' '+this.js_selectors.entry_main_information, function (oEvent) {
-					me._onCaseLogClosedMessageClick($(this).closest(me.js_selectors.entry));
+					me._onClosedEntryClick($(this).closest(me.js_selectors.entry));
 				});
 				// - Click on an edits entry's long description toggler
 				this.element.on('click', this.js_selectors.edits_entry_long_description_toggler, function (oEvent) {
@@ -244,7 +245,9 @@ $(function()
 				}
 				// - Processing / cleanup when the leaving page
 				$(window).on('unload', function() {
-					return me._onUnload();
+					if (true === me._HasDraftEntries()) {
+						return me._onUnload();
+					}
 				});
 
 				// Mostly for outside clicks that should close elements
@@ -277,6 +280,8 @@ $(function()
 			_onTabTitleClick: function (oEvent, oTabTitleElem) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
+				let oState = {};
+				const sId = this.element.attr('id');
 
 				const oTabTogglerElem = oTabTitleElem.closest(this.js_selectors.tab_toggler);
 				const sTabType = oTabTogglerElem.attr('data-tab-type');
@@ -291,12 +296,17 @@ $(function()
 				{
 					const sCaselogAttCode = oTabTogglerElem.attr('data-caselog-attribute-code');
 					this._ShowCaseLogTab(sCaselogAttCode);
+					oState[sId] = "caselog-"+sCaselogAttCode;
 				}
 				else
 				{
 					this.element.find(this.js_selectors.tab_toolbar + '[data-tab-type="activity"]').addClass(this.css_classes.is_active);
 					this._ShowActivityTab();
+					oState[sId] = "activity";
 				}
+
+				// Add current activity tab to url hash
+				$.bbq.pushState(oState);
 			},
 			/**
 			 * @param oInputElem {Object} jQuery object representing the filter's input
@@ -334,15 +344,13 @@ $(function()
 				this._UpdateFiltersCheckboxesFromOptions();
 				this._ApplyEntriesFilters();
 			},
-			_onCaseLogOpenAllClick: function(oIconElem)
+			_onOpenAllEntriesClick: function()
 			{
-				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab_toggler).attr('data-caselog-attribute-code');
-				this._OpenAllMessages(sCaseLogAttCode);
+				this._OpenAllEntries();
 			},
-			_onCaseLogCloseAllClick: function(oIconElem)
+			_onCloseAllEntriesClick: function()
 			{
-				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab_toggler).attr('data-caselog-attribute-code');
-				this._CloseAllMessages(sCaseLogAttCode);
+				this._CloseAllEntries();
 			},
 			/**
 			 * @param oEvent {Object}
@@ -355,13 +363,22 @@ $(function()
 				const oActiveTabData = this._GetActiveTabData();
 				// If on a caselog tab, open its form if it has one
 				if ((this.enums.tab_types.caselog === oActiveTabData.type) && this._HasCaseLogEntryFormForTab(oActiveTabData.att_code)) {
-					// Note: Stop propogation to avoid the menu to be opened automatically by the popover handler, we will decide when it can opens below
+					// Note: Stop propagation to avoid the menu to be opened automatically by the popover handler
 					oEvent.stopImmediatePropagation();
 
 					this._ShowCaseLogTab(oActiveTabData.att_code);
 					this._ShowCaseLogsEntryForms();
 					this._SetFocusInCaseLogEntryForm(oActiveTabData.att_code);
 				}
+				// Else (activity tab) if only 1 clog tab, open it directly
+				else if (this._GetCaseLogEntryFormCount() === 1) {
+					// Note: Stop propagation to avoid the menu to be opened automatically by the popover handler
+					oEvent.stopImmediatePropagation();
+
+					// Simulate click on the only menu item
+					this.element.find(this.js_selectors.compose_menu_item+':first').trigger('click');
+				}
+
 				// Else, the compose menu will open automatically
 			},
 			/**
@@ -455,24 +472,24 @@ $(function()
 					return;
 				}
 
+				let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
 				// If several entry forms filled, show a confirmation message
 				if ((true === this.options.show_multiple_entries_submit_confirmation) && (Object.keys(this._GetEntriesFromAllForms()).length > 1)) {
-					this._ShowEntriesSubmitConfirmation();
+					this._ShowEntriesSubmitConfirmation(sStimulusCode);
 				}
 				// Else push data directly to the server
 				else {
-					let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
 					this._SendEntriesToServer(sStimulusCode);
 				}
 			},
-			_onCaseLogClosedMessageClick: function (oEntryElem) {
-				this._OpenMessage(oEntryElem);
+			_onClosedEntryClick: function (oEntryElem) {
+				this._OpenEntry(oEntryElem);
 			},
 			_onEntryLongDescriptionTogglerClick: function (oEvent, oEntryElem) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
 
-				oEntryElem.toggleClass(this.css_classes.is_opened);
+				oEntryElem.toggleClass(this.css_classes.is_closed);
 			},
 			/**
 			 * Callback for mouse clicks that should interact with the activity panel (eg. Clic outside a dropdown should close it, ...)
@@ -589,6 +606,22 @@ $(function()
 				}
 
 				return oTabData;
+			},
+			/**
+			 * Set a tab active if it's specified in the url
+			 * @returns {void}
+			 * @private
+			 */
+			_InitializeCurrentTab : function(){
+				const sTabId = $.bbq.getState(this.element.attr('id'), true);
+				if(sTabId !== undefined){
+					if(sTabId.startsWith("caselog-")){
+						this._GetTabTogglerFromCaseLogAttCode(sTabId.replace("caselog-", "")).find(this.js_selectors.tab_title).trigger('click')
+					}
+					else if(sTabId === "activity"){
+						this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="activity"]').find(this.js_selectors.tab_title).trigger('click')
+					}
+				}
 			},
 			/**
 			 * @returns {Object} Active tab toolbar jQuery element
@@ -714,6 +747,14 @@ $(function()
 
 			// - Helpers on case logs entry forms
 			/**
+			 * @returns {integer} The number of caselog entry forms
+			 * @private
+			 * @since 3.1.0
+			 */
+			_GetCaseLogEntryFormCount: function () {
+				return this.element.find(this.js_selectors.caselog_entry_form).length;
+			},
+			/**
 			 * @param sCaseLogAttCode {string}
 			 * @returns {boolean} Return true if there is a case log for entry for the sCaseLogAttCode tab
 			 * @private
@@ -786,6 +827,22 @@ $(function()
 				return oEntries;
 			},
 			/**
+			 * @returns {Object} The case logs having a new entry and their values, format is {<ATT_CODE_1>: <HTML_VALUE_1>, <ATT_CODE_2>: <HTML_VALUE_2>}
+			 * @private
+			 */
+			_GetExtraInputsFromAllForms: function () {
+				const me = this;
+
+				let oExtraInputs = {};
+				this.element.find(this.js_selectors.caselog_entry_form).each(function () {
+					const oEntryFormElem = $(this);
+					oExtraInputs = $.extend(oExtraInputs, oEntryFormElem.triggerHandler('get_extra_inputs.caselog_entry_form.itop'));
+				});
+
+				return oExtraInputs;
+			},
+
+			/**
 			 * @return {boolean} True if at least 1 of the entry form is draft (has some text in it)
 			 * @private
 			 */
@@ -804,6 +861,7 @@ $(function()
 					minWidth: 400,
 					modal: true,
 					position: {my: "center center", at: "center center", of: this.js_selectors.tabs_toolbars},
+					close: function () { me._HideEntriesSubmitConfirmation(); },
 					buttons: [
 						{
 							text: Dict.S('UI:Button:Cancel'),
@@ -820,8 +878,11 @@ $(function()
 								if (bDoNotShowAgain) {
 									me._SaveSubmitConfirmationPref();
 								}
+
+								// Needs to be retrieved before hiding the dialog as it will wipe out the value in the process
+								const sStimulusCode = $(this).attr('data-stimulus-code');
 								me._HideEntriesSubmitConfirmation();
-								me._SendEntriesToServer();
+								me._SendEntriesToServer(sStimulusCode);
 							}
 						},
 					],
@@ -829,11 +890,14 @@ $(function()
 			},
 			/**
 			 * Show the confirmation dialog when multiple case log entries have been editied
+			 * @param sStimulusCode {string|null} Code of the stimulus to apply if confirmation is given
 			 * @private
 			 */
-			_ShowEntriesSubmitConfirmation: function()
+			_ShowEntriesSubmitConfirmation: function(sStimulusCode = null)
 			{
-				$(this.js_selectors.caselog_entry_forms_confirmation_dialog).dialog('open');
+				$(this.js_selectors.caselog_entry_forms_confirmation_dialog)
+					.dialog('open')
+					.attr('data-stimulus-code', sStimulusCode);
 			},
 			/**
 			 * Hide the confirmation dialog for multiple edited case log entries
@@ -841,7 +905,9 @@ $(function()
 			 */
 			_HideEntriesSubmitConfirmation: function()
 			{
-				$(this.js_selectors.caselog_entry_forms_confirmation_dialog).dialog('close');
+				$(this.js_selectors.caselog_entry_forms_confirmation_dialog)
+					.dialog('close')
+					.attr('data-stimulus-code', '');
 			},
 			/**
 			 * Save that the user don't want the confirmation dialog to be shown in the future
@@ -854,13 +920,14 @@ $(function()
 			},
 			/**
 			 * Send the edited case logs entries to the server
-			 * @param sStimulusCode {string} Stimulus code to apply after the entries are saved
+			 * @param sStimulusCode {string|null} Stimulus code to apply after the entries are saved
 			 * @return {void}
 			 * @private
 			 */
 			_SendEntriesToServer: function (sStimulusCode = null) {
 				const me = this;
 				const oEntries = this._GetEntriesFromAllForms();
+				const oExtraInputs = this._GetExtraInputsFromAllForms();
 
 				// Proceed only if entries to send
 				if (Object.keys(oEntries).length === 0) {
@@ -868,13 +935,13 @@ $(function()
 				}
 
 				// Prepare parameters
-				let oParams = {
+				let oParams = $.extend(oExtraInputs, {
 					operation: 'activity_panel_add_caselog_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					transaction_id: this.options.transaction_id,
 					entries: oEntries,
-				};
+				});
 
 				// Freeze case logs
 				this._FreezeCaseLogsEntryForms();
@@ -896,16 +963,22 @@ $(function()
 							return false;
 						}
 
-						// Update the feed
+						// Update the feed and tab toggler message counter
 						for (let sCaseLogAttCode in oData.data.entries) {
 							me._AddEntry(oData.data.entries[sCaseLogAttCode], 'start');
+							me._IncreaseTabTogglerMessagesCounter(sCaseLogAttCode);
 						}
 						me._ApplyEntriesFilters();
+
+						// Try to fix inline images width
+						CombodoInlineImage.FixImagesWidth();
 
 						// For now, we don't hide the forms as the user may want to add something else
 						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
 
 						// Redirect to stimulus
+						// - Convert undefined, null and empty string to null
+						sStimulusCode = ((sStimulusCode ?? '') === '') ? null : sStimulusCode;
 						if (null !== sStimulusCode) {
 							window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
 						}
@@ -915,7 +988,30 @@ $(function()
 						me._UnfreezeCaseLogsEntryForms();
 					});
 			},
-
+			/**
+			 * Increase a tab toggler number of messages indicator given a caselog attribute code
+			 *
+			 * @param sCaseLogAttCode {string} A caselog attribute code
+			 * @return {void}
+			 * @private
+			 */
+			_IncreaseTabTogglerMessagesCounter: function(sCaseLogAttCode){
+				let oTabTogglerCounter = this._GetTabTogglerFromCaseLogAttCode(sCaseLogAttCode).find('[data-role="ibo-activity-panel--tab-title-messages-count"]');
+				let iNewCounterValue = parseInt(oTabTogglerCounter.attr('data-messages-count')) + 1;
+				
+				oTabTogglerCounter.attr('data-messages-count', iNewCounterValue).text(iNewCounterValue);
+			},
+			/**
+			 * Return tab toggler given a caselog attribute code
+			 *
+			 * @param sCaseLogAttCode {string} A caselog attribute code
+			 * @return {Object}
+			 * @private
+			 */
+			_GetTabTogglerFromCaseLogAttCode: function(sCaseLogAttCode)
+			{
+				return this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]')
+			},
 			// - Helpers on object lock
 			/**
 			 * Initialize the lock watcher on a regular basis
@@ -1096,20 +1192,23 @@ $(function()
 			},
 
 			// - Helpers on messages
-			_OpenMessage: function (oEntryElem) {
+			_OpenEntry: function (oEntryElem) {
 				oEntryElem.removeClass(this.css_classes.is_closed);
 			},
-			_OpenAllMessages: function (sCaseLogAttCode = null) {
-				this._SwitchAllMessages('open', sCaseLogAttCode);
+			_OpenAllEntries: function () {
+				this._SwitchAllEntries('open');
 			},
-			_CloseAllMessages: function (sCaseLogAttCode = null) {
-				this._SwitchAllMessages('close', sCaseLogAttCode);
+			_CloseAllEntries: function () {
+				this._SwitchAllEntries('close');
 			},
-			_SwitchAllMessages: function (sMode, sCaseLogAttCode = null) {
-				const sExtraSelector = (sCaseLogAttCode === null) ? '' : '[data-entry-caselog-attribute-code="'+sCaseLogAttCode+'"]';
+			/**
+			 *
+			 * @param sMode {string} Which way to switch the entries, can be either "open" or "close".
+			 * @private
+			 */
+			_SwitchAllEntries: function (sMode) {
 				const sCallback = (sMode === 'open') ? 'removeClass' : 'addClass';
-
-				this.element.find(this.js_selectors.entry+sExtraSelector)[sCallback](this.css_classes.is_closed);
+				this.element.find(this.js_selectors.entry)[sCallback](this.css_classes.is_closed);
 			},
 			/**
 			 * Update the messages and users counters in the tabs toolbar
@@ -1180,7 +1279,6 @@ $(function()
 				});
 
 				this._UpdateEntryGroupsVisibility();
-				this._UpdateLoadMoreEntriesButtonVisibility();
 				this._UpdateMessagesCounters();
 			},
 			_ShowAllEntries: function()
@@ -1254,30 +1352,6 @@ $(function()
 						$(this).removeClass(me.css_classes.is_hidden);
 					}
 				});
-			},
-			/**
-			 * Update the "load more entries" button visibility regarding the current filters
-			 *
-			 * @private
-			 * @return {void}
-			 */
-			_UpdateLoadMoreEntriesButtonVisibility: function () {
-				const oMoreButtonElem = this.element.find(this.js_selectors.load_more_entries);
-				const oAllButtonElem = this.element.find(this.js_selectors.load_all_entries);
-
-				// Check if button exists (if all entries have been loaded, we might have remove it
-				if (oMoreButtonElem.length === 0) {
-					return;
-				}
-
-				// Show button only if the states / edits filters are selected as log entries are always fully loaded
-				if (this._GetActiveTabToolbarElement().find(this.js_selectors.activity_filter + '[data-target-entry-types!="'+this.enums.entry_types.caselog+'"]:checked').length > 0) {
-					oMoreButtonElem.removeClass(this.css_classes.is_hidden);
-					oAllButtonElem.removeClass(this.css_classes.is_hidden);
-				} else {
-					oMoreButtonElem.addClass(this.css_classes.is_hidden);
-					oAllButtonElem.addClass(this.css_classes.is_hidden);
-				}
 			},
 			/**
 			 * Load the next entries and append them to the current ones

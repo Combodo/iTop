@@ -36,6 +36,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Relation:depends on/Description' => 'Elements impacting',
 	'Relation:depends on/DownStream' => 'Depends on...',
 	'Relation:depends on/UpStream' => 'Impacts...',
+	'Relation:impacts/LoadData'       => 'Load data',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag',
 ));
 
 
@@ -526,7 +528,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareInstance' => 'Software Instance',
 	'Class:SoftwareInstance+' => '',
 	'Class:SoftwareInstance/Attribute:system_id' => 'System',
-	'Class:SoftwareInstance/Attribute:system_id+' => '',
+	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...',
 	'Class:SoftwareInstance/Attribute:system_name' => 'System name',
 	'Class:SoftwareInstance/Attribute:system_name+' => '',
 	'Class:SoftwareInstance/Attribute:software_id' => 'Software',

@@ -20,14 +20,15 @@
 
 namespace Combodo\iTop\Portal\Form;
 
-use Exception;
-use Dict;
-use UserRights;
-use IssueLog;
-use Combodo\iTop\Form\FormManager;
-use Combodo\iTop\Form\Form;
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Form\Field\HiddenField;
 use Combodo\iTop\Form\Field\PasswordField;
+use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\FormManager;
+use Dict;
+use Exception;
+use IssueLog;
+use UserRights;
 
 /**
  * Description of PasswordFormManager
@@ -111,7 +112,7 @@ class PasswordFormManager extends FormManager
 			try
 			{
 				// Updating password
-				$sAuthUser = $_SESSION['auth_user'];
+				$sAuthUser = Session::Get('auth_user');
 				$sOldPassword = $this->oForm->GetField('old_password')->GetCurrentValue();
 				$sNewPassword = $this->oForm->GetField('new_password')->GetCurrentValue();
 				$sConfirmPassword = $this->oForm->GetField('confirm_password')->GetCurrentValue();

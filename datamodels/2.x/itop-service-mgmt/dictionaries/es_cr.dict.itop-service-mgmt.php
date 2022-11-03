@@ -15,8 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -31,7 +31,7 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ServiceManagement' => 'Administración de Servicios',
 	'Menu:ServiceManagement+' => 'Administración de Servicios',
 	'Menu:Service:Overview' => 'Resumen de Servicios',
@@ -65,7 +65,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Organization
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo de Entrega',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'Modelo de Entrega',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nombre del Modelo de Entrega',
@@ -76,7 +76,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ContractType
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ContractType' => 'Tipo de Contrato',
 	'Class:ContractType+' => 'Tipo de Contrato',
 ));
@@ -85,7 +85,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Contract
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Contract' => 'Contrato',
 	'Class:Contract+' => 'Contrato',
 	'Class:Contract/Attribute:name' => 'Nombre',
@@ -139,7 +139,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: CustomerContract
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CustomerContract' => 'Acuerdo con Cliente',
 	'Class:CustomerContract+' => 'Acuerdo con Cliente',
 	'Class:CustomerContract/Attribute:services_list' => 'Servicios',
@@ -150,7 +150,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ProviderContract
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ProviderContract' => 'Contrato con Proveedor',
 	'Class:ProviderContract+' => 'Contrato con Proveedor',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'ECs',
@@ -169,7 +169,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkContactToContract
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkContactToContract' => 'Relación Contacto y Contrato',
 	'Class:lnkContactToContract+' => 'Relación Contacto y Contrato',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Contrato',
@@ -186,7 +186,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkContractToDocument
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkContractToDocument' => 'Relación Contrato y Documento',
 	'Class:lnkContractToDocument+' => 'Relación Contrato y Documento',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contrato',
@@ -203,7 +203,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ServiceFamily
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ServiceFamily' => 'Familia de Servicios',
 	'Class:ServiceFamily+' => 'Familia de Servicios',
 	'Class:ServiceFamily/Attribute:name' => 'Nombre',
@@ -218,7 +218,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Service
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Service' => 'Servicio',
 	'Class:Service+' => 'Servicio',
 	'Class:Service/Attribute:name' => 'Nombre',
@@ -261,7 +261,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkDocumentToService
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDocumentToService' => 'Relación Documento y Servicio',
 	'Class:lnkDocumentToService+' => 'Relación Documento y Servicio',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Servicio',
@@ -278,7 +278,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkContactToService
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkContactToService' => 'Relación Contacto y Servicio',
 	'Class:lnkContactToService+' => 'Relación Contacto y Servicio',
 	'Class:lnkContactToService/Attribute:service_id' => 'Servicio',
@@ -295,7 +295,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ServiceSubcategory
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ServiceSubcategory' => 'Subcategoría',
 	'Class:ServiceSubcategory+' => 'Subcategoría',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nombre',
@@ -326,7 +326,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: SLA
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SLA' => 'SLA - Acuerdo de Nivel de Servicio',
 	'Class:SLA+' => 'SLA - Acuerdo de Nivel de Servicio',
 	'Class:SLA/Attribute:name' => 'Nombre',
@@ -341,14 +341,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:SLA/Attribute:slts_list+' => 'Objetivos de Nivel de Servicio',
 	'Class:SLA/Attribute:customercontracts_list' => 'Acuerdos con Clientes',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Acuerdos con Clientes',
-	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'No se puede guardar relación de Acuerco con Cliente %1$s con Servicio %2$s : El SLA ya existe',
 ));
 
 //
 // Class: SLT
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SLT' => 'SLT - Objetivos de Nivel de Servicio',
 	'Class:SLT+' => 'SLT - Objetivos de Nivel de Servicio',
 	'Class:SLT/Attribute:name' => 'Nombre',
@@ -389,7 +389,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkSLAToSLT' => 'Relación SLA y SLT',
 	'Class:lnkSLAToSLT+' => 'Relación SLA y SLT',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
@@ -402,7 +402,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkSLAToSLT/Attribute:slt_name+' => 'SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Métrica',
 	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Tipo de reporte',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Tipo de Requerimiento',
 	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Prioridad',
 	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '',
@@ -416,7 +416,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkCustomerContractToService' => 'Relación Acuerdo con Cliente y Servicio',
 	'Class:lnkCustomerContractToService+' => 'Relación Acuerdo con Cliente y Servicio',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Acuerdo con Cliente',
@@ -437,7 +437,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkProviderContractToService
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkProviderContractToService' => 'Relación Contrato con Proveedor y Servicio',
 	'Class:lnkProviderContractToService+' => 'Relación Contrato con Proveedor y Servicio',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Servicio',
@@ -454,7 +454,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: DeliveryModel
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DeliveryModel' => 'Modelo de Entrega',
 	'Class:DeliveryModel+' => 'Modelo de Entrega',
 	'Class:DeliveryModel/Attribute:name' => 'Nombre',
@@ -475,7 +475,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDeliveryModelToContact' => 'Relación Modelo de Entrega y Contacto',
 	'Class:lnkDeliveryModelToContact+' => 'Relación Modelo de Entrega y Contacto',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Modelo de Entrega',

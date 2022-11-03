@@ -30,12 +30,14 @@ if (!defined('APPROOT'))
 	}
 }
 require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 require_once(dirname(__FILE__).'/dbrestore.class.inc.php');
 
-class MyDBRestore extends DBRestore
+/**
+ * @since 3.0.0 N°4227 new class to handle iTop restore manually via a CLI command
+ */
+class MyCliRestore extends DBRestore
 {
 	/** @var Page used to send log */
 	protected $oPage;
@@ -56,26 +58,6 @@ class MyDBRestore extends DBRestore
 		$this->oPage = $oPage;
 		parent::__construct();
 	}
-}
-
-
-/**
- * Checks if a parameter (possibly empty) was specified when calling this page
- */
-function CheckParam($sParamName)
-{
-	global $argv;
-	
-	if (isset($_REQUEST[$sParamName])) return true; // HTTP parameter either GET or POST
-	if (!is_array($argv)) return false;
-	foreach($argv as $sArg)
-	{
-		if ($sArg == '--'.$sParamName) return true; // Empty command line parameter, long unix style
-		if ($sArg == $sParamName) return true; // Empty command line parameter, Windows style
-		if ($sArg == '-'.$sParamName) return true; // Empty command line parameter, short unix style
-		if (preg_match('/^--'.$sParamName.'=(.*)$/', $sArg, $aMatches)) return true; // Command parameter with a value
-	}
-	return false;
 }
 
 function Usage($oP)
@@ -101,103 +83,67 @@ function Usage($oP)
 	}
 }
 
-function ExitError($oP, $sMessage)
-{
-	ToolsLog::Error($sMessage);
-	$oP->p($sMessage);
-	$oP->output();
-	exit;
+function GetOperationName() {
+	return "iTop - iTop Restore";
 }
 
-
-function ReadMandatoryParam($oP, $sParam)
-{
-	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */, 'raw_data');
-	if (is_null($sValue))
+/**
+ * @param \Page $oP
+ *
+ * @throws \DictExceptionUnknownLanguage
+ * @throws \OQLException
+ */
+function ExecuteMainOperation($oP){
+	if (utils::IsModeCLI())
 	{
-		ExitError($oP, "ERROR: Missing argument '$sParam'");
-	}
-	return trim($sValue);
-}
+		$oP->p(date('Y-m-d H:i:s')." - running restore utility");
+		$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
+		$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
+		$sBackupFile = ReadMandatoryParam($oP, 'backup_file');
+		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
+		{
+			UserRights::Login($sAuthUser); // Login & set the user's language
+		}
+		else
+		{
+			ExitError($oP, "Access restricted or wrong credentials ('$sAuthUser')");
+		}
 
-
-/////////////////////////////////
-// Main program
-
-set_time_limit(0);
-
-if (utils::IsModeCLI())
-{
-	$oP = new CLIPage("iTop - iTop Restore");
-
-	SetupUtils::CheckPhpAndExtensionsForCli($oP);
-}
-else
-{
-	$oP = new WebPage("iTop - iTop Restore");
-}
-
-try
-{
-	utils::UseParamFile();
-}
-catch(Exception $e)
-{
-	ExitError($oP, $e->GetMessage());
-}
-
-if (utils::IsModeCLI())
-{
-	$oP->p(date('Y-m-d H:i:s')." - running backup utility");
-	$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
-	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
-	$sBackupFile = ReadMandatoryParam($oP, 'backup_file');
-	$bDownloadBackup = false;
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-	{
-		UserRights::Login($sAuthUser); // Login & set the user's language
+		if (!is_file($sBackupFile) || !is_readable($sBackupFile)){
+			ExitError($oP, "Cannot access backup file ('$sBackupFile')");
+		}
 	}
 	else
 	{
-		ExitError($oP, "Access restricted or wrong credentials ('$sAuthUser')");
+		require_once(APPROOT.'application/loginwebpage.class.inc.php');
+		LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	}
 
-	if (!is_file($sBackupFile) && is_readable($sBackupFile)){
-		ExitError($oP, "Cannot access backup file ('$sBackupFile')");
+	if (!UserRights::IsAdministrator())
+	{
+		ExitError($oP, "Access restricted to administrators");
 	}
-}
-else
-{
-	require_once(APPROOT.'application/loginwebpage.class.inc.php');
-	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-}
 
-if (!UserRights::IsAdministrator())
-{
-	ExitError($oP, "Access restricted to administors");
-}
-
-if (CheckParam('?') || CheckParam('h') || CheckParam('help'))
-{
-	Usage($oP);
-	$oP->output();
-	exit;
-}
-
+	if (CheckParam('?') || CheckParam('h') || CheckParam('help'))
+	{
+		Usage($oP);
+		$oP->output();
+		exit;
+	}
 
 // Interpret strftime specifications (like %Y) and database placeholders
-$oRestore = new MyDBRestore($oP);
-$oRestore->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
+	$oRestore = new MyCliRestore($oP);
+	$oRestore->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 
-$res = false;
-if (MetaModel::GetConfig()->Get('demo_mode'))
-{
-	$oP->p("Sorry, iTop is in demonstration mode: the feature is disabled");
-}
-else
-{
-	$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
-	$oRestore->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
+	if (MetaModel::GetConfig()->Get('demo_mode'))
+	{
+		$oP->p("Sorry, iTop is in demonstration mode: the feature is disabled");
+	}
+	else
+	{
+		$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
+		$oRestore->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
+	}
 }
 
-$oP->output();
+require_once(dirname(__FILE__).'/common.cli-execution.php');

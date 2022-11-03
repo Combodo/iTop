@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <constants></constants>
   <classes>
     <class id="lnkFunctionalCIToTicket" _delta="define">
@@ -18,7 +18,9 @@
             <attribute id="functionalci_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="ticket_id"/>
@@ -133,7 +135,9 @@
             <attribute id="functionalci_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="providercontract_id"/>
@@ -213,7 +217,9 @@
             <attribute id="functionalci_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="service_id"/>
@@ -307,35 +313,35 @@
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>100</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>110</rank>
             </item>
           </items>
         </details>
       </presentation>
     </class>
-    <class id="NetworkDevice" _delta="must_exist">
+    <class id="NetworkDevice" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>60</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>70</rank>
             </item>
           </items>
         </details>
       </presentation>
     </class>
-    <class id="Server" _delta="must_exist">
+    <class id="Server" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>100</rank>
             </item>
             <item id="services_list" _delta="define">
@@ -345,126 +351,126 @@
         </details>
       </presentation>
     </class>
-    <class id="ApplicationSolution" _delta="must_exist">
+    <class id="ApplicationSolution" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>120</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>130</rank>
             </item>
           </items>
         </details>
       </presentation>
     </class>
-    <class id="Middleware" _delta="must_exist">
+    <class id="Middleware" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>160</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>170</rank>
             </item>
           </items>
         </details>
       </presentation>
     </class>
-    <class id="DBServer" _delta="must_exist">
+    <class id="DBServer" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>160</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>170</rank>
             </item>
           </items>
         </details>
       </presentation>
     </class>
-    <class id="WebServer" _delta="must_exist">
+    <class id="WebServer" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>160</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>170</rank>
             </item>
           </items>
         </details>
       </presentation>
     </class>
-    <class id="PCSoftware" _delta="must_exist">
+    <class id="PCSoftware" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>150</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>160</rank>
             </item>
           </items>
         </details>
       </presentation>
     </class>
-    <class id="OtherSoftware" _delta="must_exist">
+    <class id="OtherSoftware" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>150</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>160</rank>
             </item>
           </items>
         </details>
       </presentation>
     </class>
-    <class id="MiddlewareInstance" _delta="must_exist">
+    <class id="MiddlewareInstance" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>110</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>120</rank>
             </item>
           </items>
         </details>
       </presentation>
     </class>
-    <class id="DatabaseSchema" _delta="must_exist">
+    <class id="DatabaseSchema" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>110</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>120</rank>
             </item>
           </items>
         </details>
       </presentation>
     </class>
-    <class id="WebApplication" _delta="must_exist">
+    <class id="WebApplication" _delta="if_exists">
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>120</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>130</rank>
             </item>
           </items>

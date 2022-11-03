@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -53,16 +53,16 @@
             <value id="active">
               <code>active</code>
               <style>
-                <main_color>#689F38</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
               <style>
-                <main_color>#E1E7EC</main_color>
-                <complementary_color>#6E7A8A</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -97,7 +97,7 @@
                     <rank>0</rank>
                     <title>Organization:Overview:FunctionalCIs</title>
                     <style>
-                      <icon>itop-config-mgmt/images/server.png</icon>
+                      <icon>../images/icons/icons8-server.svg</icon>
                     </style>
                     <subtitle>Organization:Overview:FunctionalCIs:subtitle</subtitle>
                     <query>SELECT FunctionalCI WHERE org_id=:this-&gt;id</query>
@@ -230,16 +230,16 @@
             <value id="active">
               <code>active</code>
               <style>
-                <main_color>#689F38</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
               <style>
-                <main_color>#E1E7EC</main_color>
-                <complementary_color>#6E7A8A</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -392,8 +392,8 @@
         </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-customer.svg</icon>
-          <main_color>blue-grey</main_color>
-          <complementary_color>white</complementary_color>
+          <main_color>$ibo-color-blue-grey-600</main_color>
+          <complementary_color>$ibo-color-white-100</complementary_color>
         </style>
         <reconciliation>
           <attributes>
@@ -419,16 +419,16 @@
             <value id="active">
               <code>active</code>
               <style>
-                <main_color>#689F38</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
               <style>
-                <main_color>#E1E7EC</main_color>
-                <complementary_color>#6E7A8A</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -1012,7 +1012,9 @@
             <attribute id="person_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="team_id"/>
@@ -1109,7 +1111,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1444,7 +1448,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/document.png</icon>
+          <icon>../../images/icons/icons8-note.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1633,7 +1637,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1680,7 +1686,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1766,7 +1774,7 @@
                 <rank>1</rank>
                 <title>Menu:Contact</title>
                 <style>
-                  <icon>itop-structure/images/team.png</icon>
+                  <icon>../images/icons/icons8-team.svg</icon>
                 </style>
                 <subtitle>Menu:Contact:Count</subtitle>
                 <query>SELECT Contact</query>
@@ -1822,7 +1830,7 @@
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:Typology</title>
                 <style>
-                  <icon>itop-structure/images/typology.png</icon>
+                  <icon>../images/icons/icons8-new-item.svg</icon>
                 </style>
               </dashlet>
               <dashlet id="9" xsi:type="DashletBadge">
@@ -1873,6 +1881,14 @@
         <precompiled_stylesheet>itop-structure/precompiled-themes/test-red/main.css</precompiled_stylesheet>
       </theme>
     </themes>
+    <themes_common>
+        <variables>
+        </variables>
+        <imports>
+        </imports>
+        <stylesheets>
+        </stylesheets>
+    </themes_common>
   </branding>
   <user_rights>
     <groups>
@@ -1880,4 +1896,5 @@
     <profiles>
     </profiles>
   </user_rights>
+  <constants/>
 </itop_design>

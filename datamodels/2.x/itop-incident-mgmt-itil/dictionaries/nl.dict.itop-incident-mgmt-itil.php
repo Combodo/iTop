@@ -5,7 +5,7 @@
  * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @author      Thomas Casteleyn <info@super-visions.com>
- * @author 		Jeffrey Bostoen (2018, 2019)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:IncidentManagement' => 'Incident Management',
@@ -97,6 +97,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => 'Laag',
 	'Class:Incident/Attribute:origin' => 'Oorsprong',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'Persoonlijk',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Mondeling, in persoon',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Chat',
 	'Class:Incident/Attribute:origin/Value:mail' => 'E-mail',
 	'Class:Incident/Attribute:origin/Value:mail+' => 'E-mail',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoring',

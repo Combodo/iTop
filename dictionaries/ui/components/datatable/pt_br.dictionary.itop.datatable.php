@@ -18,13 +18,14 @@
  */
 // Display DataTable
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'UI:Datatables:Language:Processing' => 'Please wait...~~',
-	'UI:Datatables:Language:LengthMenu' => '_MENU_ per page~~',
-	'UI:Datatables:Language:ZeroRecords' => 'No result~~',
-	'UI:Datatables:Language:Info' => '_TOTAL_ item(s)~~',
-	'UI:Datatables:Language:InfoEmpty' => 'No information~~',
-	'UI:Datatables:Language:EmptyTable' => 'No data available in this table~~',
-	'UI:Datatables:Language:DisplayLength:All' => 'All~~',
-	'UI:Datatables:Language:Sort:Ascending' => 'enable for an ascending sort~~',
-	'UI:Datatables:Language:Sort:Descending' => 'enable for a descending sort~~',
+	'UI:Datatables:Language:Processing'        => 'Aguarde...',
+	'UI:Datatables:Language:LengthMenu'        => '_MENU_ por página',
+	'UI:Datatables:Language:ZeroRecords'       => 'Nenhum resultado',
+	'UI:Datatables:Language:Info'              => '_TOTAL_ item(ns)',
+	'UI:Datatables:Language:InfoEmpty'         => 'Nenhuma informação',
+	'UI:Datatables:Language:EmptyTable'        => 'Não há dados disponíveis nesta tabela',
+	'UI:Datatables:Language:Error'             => 'Ocorreu um erro ao executar a consulta',
+	'UI:Datatables:Language:DisplayLength:All' => 'Tudo',
+	'UI:Datatables:Language:Sort:Ascending'    => 'Ordem ascendente',
+	'UI:Datatables:Language:Sort:Descending'   => 'Ordem descendente',
 ));

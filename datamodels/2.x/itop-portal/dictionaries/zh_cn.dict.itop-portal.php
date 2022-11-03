@@ -29,8 +29,8 @@
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'portal:itop-portal' => '标准门户', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => 'iTop - 用户门户',
-	'Brick:Portal:UserProfile:Title' => '我的资料',
+	'Page:DefaultTitle' => ITOP_APPLICATION_SHORT.' - 用户门户',
+	'Brick:Portal:UserProfile:Title' => '我的设置',
 	'Brick:Portal:NewRequest:Title' => '新建工单',
 	'Brick:Portal:NewRequest:Title+' => '<p>需要帮助?</p><p>选择子服务,然后提交工单给我们的支持团队.</p>',
 	'Brick:Portal:OngoingRequests:Title' => '正在处理的工单',

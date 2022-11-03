@@ -11,7 +11,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 	'Menu:ConfigEditor' => 'Konfigurace',
 	'config-edit-title' => 'Editor konfiguračního souboru',
-	'config-edit-intro' => 'Při úpravách konfiguračního souboru buďte velice opatrní. Nesprávné nastavení může vést k nedostupnosti iTop',
+	'config-edit-intro' => 'Při úpravách konfiguračního souboru buďte velice opatrní. Nesprávné nastavení může vést k nedostupnosti '.ITOP_APPLICATION_SHORT,
 	'config-apply' => 'Použít',
 	'config-apply-title' => 'Použít (Ctrl+S)',
 	'config-cancel' => 'Zrušit',

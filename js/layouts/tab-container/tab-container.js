@@ -24,6 +24,8 @@ $(function()
             {
                 tabs_list: '[data-role="ibo-tab-container--tabs-list"]',
                 tab_header: '[data-role="ibo-tab-container--tab-header"]',
+                tab_ajax_type: '[data-tab-type="ajax"]',
+                tab_html_type: '[data-tab-type="html"]',
                 tab_toggler: '[data-role="ibo-tab-container--tab-toggler"]',
                 extra_tabs_container: '[data-role="ibo-tab-container--extra-tabs-container"]',
                 extra_tabs_list_toggler: '[data-role="ibo-tab-container--extra-tabs-list-toggler"]',
@@ -65,10 +67,27 @@ $(function()
 		            // will be executed for the selected tab whenever the hash changes.
 		            oTabsParams['event'] = 'change';
 	            }
+	            
+	            // While our tab widget is loading, protect tab toggler from being triggered
+	            this.element.find(this.js_selectors.tab_toggler).on('click', function(e){
+		            if(me.element.attr('data-status') === 'loading') {
+			            e.preventDefault();
+			            e.stopImmediatePropagation();
+		            }
+	            });
+	            // Now that we are protected from toggler being triggered without tab container being loaded, we can put back
+	            // data-target attribute value back into href attribute
+	            $.each(this.element.find(this.js_selectors.tab_header + this.js_selectors.tab_ajax_type), function (a){
+	            	let oLink = $(this).find(me.js_selectors.tab_toggler);
+		            oLink.attr('href', oLink.attr('data-target'));
+	            })
+	            
 	            this._addTabsWidget(oTabsParams);
 
-
-	            this._bindEvents();
+	            this._bindEvents()
+	            
+	            // We're done, set our status as loaded
+	            this.element.attr('data-status', 'loaded');
             },
 	        /**
 	         * @param oParams {Object} Structured object representing the options for the jQuery UI Tabs widget
@@ -79,6 +98,17 @@ $(function()
 			        this.element.scrollabletabs(oParams);
 		        } else {
 			        this.element.regulartabs(oParams);
+		        }
+	        },
+	        /**
+	         * Return tabs widget instance
+	         * @public
+	         */
+	        GetTabsWidget: function () {
+		        if (this.element.hasClass(this.css_classes.is_scrollable)) {
+			        return this.element.scrollabletabs('instance');
+		        } else {
+			        return this.element.regulartabs('instance');
 		        }
 	        },
             // events bound via _bind are removed automatically
@@ -126,8 +156,8 @@ $(function()
 		                });
                 		me._updateExtraTabsList();
 	                }, {
-                		root: $('.ibo-tab-container--tabs-list')[0],
-		                threshold: [1] // Must be completely visible
+                		root: this.element.find(this.js_selectors.tabs_list)[0],
+		                threshold: [0.9] // N°4783 Should be completely visible, but lowering the threshold prevents a bug in the JS Observer API when the window is zoomed in/out, in which case all items respond as being hidden even when they are not.
 	                });
                 	this.element.find(this.js_selectors.tab_header).each(function(){
 		                oTabsListIntersectObs.observe(this);
@@ -231,6 +261,16 @@ $(function()
             {
                 // Prevent anchor default behaviour
                 oEvent.preventDefault();
+
+				// Compute list position
+	            // Note: Arbitrary +6px for the position as we don't want it to be exactly against the toggler
+	            let fTopOffset = this.element.find(this.js_selectors.extra_tabs_list_toggler).offset().top + this.element.find(this.js_selectors.extra_tabs_list_toggler).outerHeight() + 6;
+				// We need to compute position from the right side of the screen because at this time the list isn't visible and we can't know its width, so we can't position it regarding the left side of the screen
+	            // Note: We use window.innerWidth instead of outerWidth as we need the width of the actual viewport, not the OS browser window
+				let fRightOffset = window.innerWidth - this.element.find(this.js_selectors.extra_tabs_list_toggler).offset().left - this.element.find(this.js_selectors.extra_tabs_list_toggler).outerWidth();
+	            this.element.find(this.js_selectors.extra_tabs_list)
+		            .css('top', fTopOffset + 'px')
+		            .css('right', fRightOffset + 'px');
 
                 // TODO 3.0.0: Should/could we use a popover menu instead here?
                 this.element.find(this.js_selectors.extra_tabs_list).toggleClass(this.css_classes.is_hidden);

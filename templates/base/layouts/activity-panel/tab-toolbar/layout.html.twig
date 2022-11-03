@@ -11,12 +11,14 @@
                     {% block bTabToolbarLeftActions %}
                         <a href="#" class="ibo-activity-panel--tab-toolbar-action ibo-activity-panel--tab-toolbar-action-open-all"
                            data-role="ibo-activity-panel--caselog-open-all"
-                           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip'|dict_s }}">
+                           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip'|dict_s }}"
+                           aria-label="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip'|dict_s }}">
                             <span class="fas fa-book-open"></span>
                         </a>
                         <a href="#" class="ibo-activity-panel--tab-toolbar-action ibo-activity-panel--tab-toolbar-action-close-all"
                            data-role="ibo-activity-panel--caselog-close-all"
-                           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip'|dict_s }}">
+                           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip'|dict_s }}"
+                           aria-label="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip'|dict_s }}">
                             <span class="fas fa-book"></span>
                         </a>
                     {% endblock %}
@@ -29,8 +31,9 @@
                                    {% if (aFilteredCaseLogsAttCodes is not defined) or (aFilteredCaseLogsAttCodes is empty) or (get_config_parameter('activity_panel.prefilter_only_current_log') == false) %}checked{% endif %}>
                             {{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title'|dict_s }}
                             {% if oUIBlock.GetCaseLogTabs()|length > 0 %}
-                                <a class="ibo-activity-panel--filter-options-toggler ibo-is-closed"
-                                   data-role="ibo-activity-panel--filter-options-toggler" href="#">
+                                <a class="ibo-activity-panel--filter-options-toggler ibo-is-closed" href="#"
+                                    data-role="ibo-activity-panel--filter-options-toggler"
+                                    aria-label="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint'|dict_s }}">
                                     <span class="fas fa-caret-up"></span>
                                 </a>
                                 <div class="ibo-activity-panel--filter-options" data-role="ibo-activity-panel--filter-options">

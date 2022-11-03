@@ -29,6 +29,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Relation:depends on/Description' => 'Elementi di questo elemento dipende da',
 	'Relation:depends on/DownStream' => 'Dipende da...',
 	'Relation:depends on/UpStream' => 'Impatto...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 

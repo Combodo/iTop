@@ -28,12 +28,21 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroup;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
+use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletBadge;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Pill\PillFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockWithJSRefreshCallback;
 use iTopWebPage;
 use LoginWebPage;
 use MetaModel;
@@ -48,18 +57,8 @@ $oPageContentLayout = PageContentFactory::MakeStandardEmpty();
 $oPage->SetContentLayout($oPageContentLayout);
 
 $oPage->add_style(<<<CSS
-h1, h2 {
-	font-size: initial;
-	font-weight: initial;
-	margin: initial;
-	padding: initial;
-}
-h1 {
-	text-align: center;
-}
-
 hr {
-	background-color: black;
+	background-color: var(--ibo-color-grey-950);
 }
 CSS
 );
@@ -72,8 +71,7 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 /////////
 // Alerts
 /////////
-$oAlertsTitle = new Html('<h2 id="title-alerts">Alerts examples</h2>');
-$oPage->AddUiBlock($oAlertsTitle);
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Alerts examples', 2, 'title-alert'));
 $sContent = <<<HTML
 <div>The content text is made of raw HTML, therefore it must be sanitized before being injected into the component.</div>
 <div>Here we put an hyperlink (<a href="#">link</a>) and a smiley (😻), just to see if it renders correctly</div>
@@ -103,8 +101,7 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 //////////
 // Buttons
 //////////
-$oButtonsJSTitle = new Html('<h2 id="title-buttons">ButtonsJS examples</h2>');
-$oPage->AddUiBlock($oButtonsJSTitle);
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ButtonsJS examples', 2, 'title-buttonsjs'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral dis.', 'neutral')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Primary'));
@@ -126,12 +123,11 @@ $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeValida
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
 
-$oButtonsURLTitle = new Html('<h2 id="title-buttons">ButtonsURL examples</h2>');
-$oPage->AddUiBlock($oButtonsURLTitle);
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ButtonsURL examples', 2, 'title-buttonsurl'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral('#', 'Link neutral'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button', '#'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral('#', 'Link primary')->SetColor(Button::ENUM_COLOR_PRIMARY));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button primary', '#')->SetColor(Button::ENUM_COLOR_PRIMARY));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral('#', 'Link primary')->SetColor(Button::ENUM_COLOR_SCHEME_PRIMARY));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button primary', '#')->SetColor(Button::ENUM_COLOR_SCHEME_PRIMARY));
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
@@ -139,7 +135,8 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 // ButtonGroup
 //////////////
 
-$oPage->AddUiBlock(new Html('<h2 id="title-button-groups">ButtonGroups examples: button + menu</h2>'));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ButtonGroups examples: button + menu', 2, 'title-button-groupsmenu'));
+
 $oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
 	ButtonUIBlockFactory::MakeNeutral('Neutral with options'),
 	new PopoverMenu()
@@ -181,7 +178,8 @@ $oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptio
 	new PopoverMenu()
 ));
 
-$oPage->AddUiBlock(new Html('<h2 id="title-button-groups">ButtonGroups examples: button + button + button</h2>'));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ButtonGroups examples: button + button + button', 2, 'title-button-groupsh'));
+
 $oPageContentLayout->AddMainBlock(new ButtonGroup(
 	[
 		ButtonUIBlockFactory::MakeNeutral('Three'),
@@ -209,8 +207,8 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 /////////
 // Panels
 /////////
-$oPanelsTitle = new Html('<h2 id="title-panels">Panels examples</h2>');
-$oPage->AddUiBlock($oPanelsTitle);
+///
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Panels examples', 2, 'title-panels'));
 
 $aSubBlocks = [
 	new Html('<div>Panel body, can contain anything from simple text to rich text, forms, images, <a href="#">links</a>, graphs or tables.</div>'),
@@ -292,8 +290,7 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 /////////
 // ObjectDetails
 /////////
-$oObjecTDetailsTitle = new Html('<h2 id="title-object-details">ObjectDetails examples</h2>');
-$oPage->AddUiBlock($oObjecTDetailsTitle);
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ObjectDetails examples', 2, 'title-object-details'));
 
 $oOrgObject = MetaModel::NewObject('Organization');
 $oOrgObject->Set('name', 'Stub, no tab container. Just to see how the header is displayed');
@@ -318,8 +315,7 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 /////////
 // Collapsible Section
 /////////
-$oCollapsibleSectionTitle = new Html('<h2 id="title-panels">Collapsible Sections examples</h2>');
-$oPage->AddUiBlock($oCollapsibleSectionTitle);
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Collapsible Sections examples', 2, 'title-collapsible'));
 
 $sSectionContent = 'This is the section content !';
 $oCollapsibleSection = new CollapsibleSection('Section title', [new Html($sSectionContent)]);
@@ -328,5 +324,107 @@ $oPage->AddUiBlock($oCollapsibleSection);
 $oCollapsibleSectionSaveState = new CollapsibleSection('Section save state', [new Html($sSectionContent)]);
 $oCollapsibleSectionSaveState->EnableSaveCollapsibleState('RenderAllUiBlocks__section');
 $oPage->AddUiBlock($oCollapsibleSectionSaveState);
+
+/////////
+// Fieldset
+/////////
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Fieldset/field examples', 2));
+
+
+$oDashletFieldset1 = new FieldSet('Fieldset 1');
+$oDashletField1 = FieldUIBlockFactory::MakeStandard('Field A');
+$oDashletInput1 = InputUIBlockFactory::MakeStandard('text', 'input1', 'Input 1');
+$oDashletField2 = FieldUIBlockFactory::MakeStandard('Field B');
+$oDashletInput2 = InputUIBlockFactory::MakeStandard('text', 'input2', 'Input 2');
+$oDashletField3 = FieldUIBlockFactory::MakeStandard('Field C');
+$oDashletInput3 = InputUIBlockFactory::MakeStandard('text', 'input3', 'Input 3');
+$oDashletFieldset2 = new FieldSet('Fieldset 2');
+$oDashletField4 = FieldUIBlockFactory::MakeStandard('Field D');
+$oDashletField5 = FieldUIBlockFactory::MakeStandard('Field E');
+$oDashletField6 = FieldUIBlockFactory::MakeStandard('Field F');
+$oPage->AddUiBlock($oDashletFieldset1);
+$oPage->AddUiBlock($oDashletFieldset2);
+$oDashletFieldset1->AddSubBlock($oDashletField1);
+$oDashletFieldset1->AddSubBlock($oDashletInput1);
+$oDashletFieldset1->AddSubBlock($oDashletField2);
+$oDashletFieldset1->AddSubBlock($oDashletInput2);
+$oDashletFieldset1->AddSubBlock($oDashletField3);
+$oDashletFieldset1->AddSubBlock($oDashletInput3);
+$oDashletFieldset2->AddSubBlock($oDashletField4);
+$oDashletFieldset2->AddSubBlock($oDashletField5);
+$oDashletFieldset2->AddSubBlock($oDashletField6);
+
+/////////
+// Pill
+/////////
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Pill examples', 2 ));
+
+$oBlock = new UIContentBlockWithJSRefreshCallback(null, ["ibo-dashlet-header-dynamic--container"]);
+$oPage->AddUiBlock($oBlock);
+$oPill1 = PillFactory::MakeForState('Person', 'active')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">active</span>");
+$oPill2 = PillFactory::MakeForState('Person', 'inactive')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">inactive</span>");
+$oPill3 = PillFactory::MakeForState('Person', 'closed')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">closed</span>");
+$oPill4 = PillFactory::MakeForState('Person', 'new')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">new</span>");
+$oPill5 = PillFactory::MakeForState('Person', 'waiting')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">waiting</span>");
+$oPill6 = PillFactory::MakeForState('Person', 'escalated')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">escalated</span>");
+$oBlock->AddSubBlock($oPill1);
+$oBlock->AddSubBlock($oPill2);
+$oBlock->AddSubBlock($oPill3);
+$oBlock->AddSubBlock($oPill4);
+$oBlock->AddSubBlock($oPill5);
+$oBlock->AddSubBlock($oPill6);
+
+/////////
+// Title
+/////////
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title examples', 2 ));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 1', 1 ));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 2', 2 ));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 3', 3 ));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 4', 4 ));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 5', 5 ));
+
+/////////
+// DataTable
+/////////
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Datatable examples', 2 ));
+
+$oPage->AddUiBlock(DataTableUIBlockFactory::MakeForStaticData('Static datatable',
+	array(
+		'a' => array('label' => 'a'),
+		'b' => array('label' => 'b'),
+		'c' => array('label' => 'c'),
+		'd' => array('label' => 'd')
+	),
+	array(
+		array(
+	'a' => 'A1', 'b' => 'B1', 'c' => 'C1', 'd' => 'D1'
+	), array(
+	'a' => 'A2', 'b' => 'B2', 'c' => 'C2', 'd' => 'D2'
+	), array(
+    'a' => 'A3', 'b' => 'B3', 'c' => 'C3', 'd' => 'D3'
+	), array(
+	'a' => 'A4', 'b' => 'B4', 'c' => 'C4', 'd' => 'D4'
+	),array(
+		'@class' => 'ibo-is-red','a' => 'A5 (Red highlighting)', 'b' => 'B5', 'c' => 'C5', 'd' => 'D5'
+	),array(
+		'@class' => 'ibo-is-danger','a' => 'A6 (Danger highlighting)', 'b' => 'B6', 'c' => 'C6', 'd' => 'D6'
+	),array(
+		'@class' => 'ibo-is-orange','a' => 'A7 (Orange highlighting)', 'b' => 'B7', 'c' => 'C7', 'd' => 'D7'
+	),array(
+		'@class' => 'ibo-is-warning','a' => 'A8 (Warning highlighting)', 'b' => 'B8', 'c' => 'C8', 'd' => 'D8'
+	),array(
+		'@class' => 'ibo-is-blue','a' => 'A9 (Blue highlighting)', 'b' => 'B9', 'c' => 'C9', 'd' => 'D9'
+	),array(
+		'@class' => 'ibo-is-info','a' => 'A10 (Info highlighting)', 'b' => 'B10', 'c' => 'C10', 'd' => 'D10'
+	),array(
+		'@class' => 'ibo-is-green','a' => 'A11 (Green highlighting)', 'b' => 'B11', 'c' => 'C11', 'd' => 'D11'
+	),array(
+		'@class' => 'ibo-is-success','a' => 'A12 (Success highlighting)', 'b' => 'B12', 'c' => 'C12', 'd' => 'D12'
+	),
+)));
 
 $oPage->output();

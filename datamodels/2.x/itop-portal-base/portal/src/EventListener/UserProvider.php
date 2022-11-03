@@ -26,7 +26,7 @@ use ModuleDesign;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
 
@@ -44,12 +44,16 @@ class UserProvider implements ContainerAwareInterface
 	private $sPortalId;
 	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $container */
 	private $oContainer;
+	/** @var \User $oUser */
+	private $oUser;
+	/** @var array $aAllowedPortals */
+	private $aAllowedPortals;
 
 	/**
 	 * UserProvider constructor.
 	 *
 	 * @param \ModuleDesign $oModuleDesign
-	 * @param string        $sPortalId
+	 * @param string $sPortalId
 	 */
 	public function __construct(ModuleDesign $oModuleDesign, $sPortalId)
 	{
@@ -58,11 +62,11 @@ class UserProvider implements ContainerAwareInterface
 	}
 
 	/**
-	 * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $oGetResponseEvent
+	 * @param RequestEvent $oRequestEvent
 	 *
 	 * @throws \Exception
 	 */
-	public function onKernelRequest(GetResponseEvent $oGetResponseEvent)
+	public function onKernelRequest(RequestEvent $oRequestEvent)
 	{
 		// User pre-checks
 		// Note: The following note and handling of the $iExitMethod were for the old login mechanism
@@ -71,45 +75,62 @@ class UserProvider implements ContainerAwareInterface
 		//
 		// Note: At this point the Exception handler is not registered, so we can't use $oApp::abort() method, hence the die().
 		// - Checking user rights and prompt if needed (401 HTTP code returned if XHR request)
-		$iExitMethod = ($oGetResponseEvent->getRequest()->isXmlHttpRequest()) ? LoginWebPage::EXIT_RETURN : LoginWebPage::EXIT_PROMPT;
+		$iExitMethod = ($oRequestEvent->getRequest()->isXmlHttpRequest()) ? LoginWebPage::EXIT_RETURN : LoginWebPage::EXIT_PROMPT;
 		$iLogonRes = LoginWebPage::DoLoginEx($this->sPortalId, false, $iExitMethod);
-		if( ($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0) )
-		{
+		if( ($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0) ) {
 			die(Dict::S('Portal:ErrorUserLoggedOut'));
 		}
 		// - User must be associated with a Contact
-		if (UserRights::GetContactId() == 0)
-		{
+		if (UserRights::GetContactId() == 0) {
 			die(Dict::S('Portal:ErrorNoContactForThisUser'));
 		}
 
 		// User
-		$oUser = UserRights::GetUserObject();
-		if ($oUser === null)
-		{
+		$this->oUser = UserRights::GetUserObject();
+		if ($this->oUser === null) {
 			throw new Exception('Could not load connected user.');
 		}
-		$this->oContainer->set('combodo.current_user', $oUser);
 
 		// Allowed portals
 		$aAllowedPortals = UserRights::GetAllowedPortals();
 
 		// Checking that user is allowed this portal
 		$bAllowed = false;
-		foreach ($aAllowedPortals as $aAllowedPortal)
-		{
-			if ($aAllowedPortal['id'] === $this->sPortalId)
-			{
+		foreach ($aAllowedPortals as $aAllowedPortal) {
+			if ($aAllowedPortal['id'] === $this->sPortalId) {
 				$bAllowed = true;
 				break;
 			}
 		}
-		if (!$bAllowed)
-		{
+		if (!$bAllowed) {
 			throw new HttpException(Response::HTTP_NOT_FOUND);
 		}
-		/** @noinspection PhpParamsInspection It's an array and it's gonna stay that way */
-		$this->oContainer->set('combodo.current_user.allowed_portals', $aAllowedPortals);
+
+		$this->aAllowedPortals = $aAllowedPortals;
+	}
+
+	/**
+	 * Get current user.
+	 *
+	 * @return \User current user
+	 * @since 3.1.0
+	 *
+	 */
+	public function getCurrentUser()
+	{
+		return $this->oUser;
+	}
+
+	/**
+	 * Get allowed portals.
+	 *
+	 * @return array allowed portals
+	 * @since 3.1.0
+	 *
+	 */
+	public function getAllowedPortals()
+	{
+		return $this->aAllowedPortals;
 	}
 
 	/**

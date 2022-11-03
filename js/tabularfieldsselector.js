@@ -51,8 +51,8 @@ $(function () {
 						<div class= "ibo-panel--title" > `+this._format(this.options.labels.columns_selection, i)+`</div>
 					</div>`;
 					sContent += `
-					<div className="ibo-panel--header-right">
-						<div className="ibo-panel--toolbar">
+					<div class="ibo-panel--header-right">
+						<div class="ibo-panel--toolbar">
 						<button class="check_all ibo-button ibo-is-regular ibo-is-neutral action" type="button"><span class=""ibo-button-label">`+this.options.labels.check_all+`</span></button>
 					    <button class="uncheck_all ibo-button ibo-is-regular ibo-is-neutral action" type="button"><span class=""ibo-button-label">`+this.options.labels.uncheck_all+`</span></button>
 				</div>
@@ -125,17 +125,19 @@ $(function () {
 				}
 			},
 			_on_multi_click: function (sMultiFieldCode, bChecked) {
+				var me = this;
 				var oField = this._get_main_field_by_code(sMultiFieldCode);
 				if (oField != null) {
-					var sPrefix = '#tfs_'+this.sId+'_';
+					var sPrefix = '#tfs_'+me.sId+'_';
 					for (var k in oField.subattr) {
-						this._mark_as_selected(oField.subattr[k].code, bChecked);
+						me._mark_as_selected(oField.subattr[k].code, bChecked);
 						// In case the tooltip is visible, also update the checkboxes
 						sElementId = (sPrefix+oField.subattr[k].code).replace('.', '_');
 						$(sElementId).prop('checked', bChecked);
 					}
-					this._update_holder();
-					this._update_preview();
+					me._update_tooltips(sMultiFieldCode);
+					me._update_holder();
+					me._update_preview();
 				}
 			},
 			_on_check_all: function (jSelector, bChecked) {
@@ -145,7 +147,8 @@ $(function () {
 					me._mark_as_selected($(this).val(), bChecked);
 				});
 				jSelector.find('.tfs_checkbox_multi').each(function () {
-					var oField = me._get_main_field_by_code($(this).val());
+					var sMultiFieldCode = $(this).val();
+					var oField = me._get_main_field_by_code(sMultiFieldCode);
 					if (oField != null) {
 						$(this).prop('checked', bChecked);
 						$(this).prop('indeterminate', false);
@@ -156,6 +159,7 @@ $(function () {
 							sElementId = (sPrefix+oField.subattr[k].code).replace('.', '_');
 							$(sElementId).prop('checked', bChecked);
 						}
+						me._update_tooltips(sMultiFieldCode);
 					}
 				});
 				this._update_holder();
@@ -248,7 +252,7 @@ $(function () {
 					for (var k in this.aSelected) {
 						var sField = this.aSelected[k];
 						if ($.inArray(sField, this.aSelected) != -1) {
-							var sRemoveBtn = '&nbsp;<span style="display:inline-block;float:right;cursor:pointer;" class="export-field-close" data-attcode="'+sField+'">×</span>';
+							var sRemoveBtn = '<span class="export-field-close ibo-table-preview--remove-column" data-attcode="'+sField+'"><span class="fas fa-times"></span></span>';
 							sHtml += '<th data-attcode="'+sField+'"><span class="drag-handle">'+this.aFieldsByCode[sField].unique_label+'</span>'+sRemoveBtn+'</th>';
 						}
 					}
@@ -321,6 +325,7 @@ $(function () {
 				var me = this;
 				$('#'+this.sId+' .tfs_checkbox_multi').each(function () {
 					me._update_tristate($(this).attr('id'));
+					me._update_tooltips($(this).val());
 				});
 			},
 			_format: function () {
@@ -387,7 +392,13 @@ $(function () {
 						}
 					});
 				});
-
+			},
+			_update_tooltips: function (sDataAttCode) {
+				let sTooltipContent = this._get_tooltip_content(sDataAttCode);
+				$('#'+this.sId+'  label[data-attcode="'+sDataAttCode+'"]').each(function (index, elt) {
+					let tippyInstance = elt._tippy;
+					tippyInstance.setContent(sTooltipContent);
+				});
 			},
 			_get_tooltip_content: function (sDataAttCode) {
 				var oField = this._get_main_field_by_code(sDataAttCode);
@@ -419,9 +430,9 @@ $(function () {
 					sDataParent = ' data-parent="'+sParentId+'" ';
 				}
 				if (bHasTooltip) {
-					sContent = '<div style="display:block; clear:both;"><span style="white-space: nowrap;"><input data-instance-id="'+this.sId+'" class="tfs_checkbox_multi" type="checkbox" id="'+sElementId+'_multi" value="'+sCode+'"'+sChecked+sDataParent+'><label data-attcode="'+sCode+'" class="'+aClasses.join(' ')+'" title="'+sCode+'">&nbsp;'+sLabel+'</label></div>';
+					sContent = '<div style="display:block; clear:both;"><span style="white-space: nowrap;"><input data-instance-id="'+this.sId+'" class="tfs_checkbox_multi" type="checkbox" id="'+sElementId+'_multi" value="'+sCode+'"'+sChecked+sDataParent+'><label data-attcode="'+sCode+'" class="'+aClasses.join(' ')+'" title="'+sCode+'">'+sLabel+'</label></div>';
 				} else {
-					sContent = '<div style="display:block; clear:both;"><span style="white-space: nowrap;"><input data-instance-id="'+this.sId+'" class="tfs_checkbox" type="checkbox" id="'+sElementId+'" value="'+sCode+'"'+sChecked+sDataParent+'><label data-attcode="'+sCode+'" class="'+aClasses.join(' ')+'" title="'+sCode+'" for="'+sElementId+'">&nbsp;'+sLabel+'</label></div>';
+					sContent = '<div style="display:block; clear:both;"><span style="white-space: nowrap;"><input data-instance-id="'+this.sId+'" class="tfs_checkbox" type="checkbox" id="'+sElementId+'" value="'+sCode+'"'+sChecked+sDataParent+'><label data-attcode="'+sCode+'" class="'+aClasses.join(' ')+'" title="'+sCode+'" for="'+sElementId+'">'+sLabel+'</label></div>';
 				}
 				return sContent;
 			}

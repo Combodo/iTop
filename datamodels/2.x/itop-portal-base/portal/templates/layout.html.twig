@@ -112,12 +112,12 @@
         {# Moment.js with locales #}
         <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/moment-with-locales.min.js'|add_itop_version }}"></script>
         {# Datatables #}
-        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net/js/jquery.dataTables.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net/js/jquery.dataTables.min.js'|add_itop_version }}"></script>
         <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.bootstrap.min.js'|add_itop_version }}"></script>
-        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.js'|add_itop_version }}"></script>
-        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-responsive/js/dataTables.responsive.js'|add_itop_version }}"></script>
-        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-scroller/js/dataTables.scroller.js'|add_itop_version }}"></script>
-        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-select/js/dataTables.select.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-responsive/js/dataTables.responsive.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-scroller/js/dataTables.scroller.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-select/js/dataTables.select.min.js'|add_itop_version }}"></script>
         <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/datetime-moment.js'|add_itop_version }}"></script>
         <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/dataTables.accentNeutraliseForFilter.js'|add_itop_version }}"></script>
         {# Export for Datatables #}
@@ -159,11 +159,6 @@
 				<script type="text/javascript" src="{{ js_file|add_itop_version }}"></script>
 			{% endfor %}
         {% endif %}
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('.tile.tile_badge[data-toggle="tooltip"]').tooltip({'html': true});
-			});
-		</script>
 	{% endblock %}
 </head>
 <body class="{% block pPageBodyClass %}{% endblock %}" data-gui-type="portal">
@@ -229,14 +224,14 @@
 								{% if bUserConnected %}
 									<li role="separator" class="divider"></li>
                                     <li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-2x fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
-									{% for aPortal in app['combodo.current_user.allowed_portals'] %}
+									{% for aPortal in allowed_portals %}
 										{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
 											{% set sIconClass = (aPortal.id == 'backoffice') ? 'far fa-list-alt' : 'fas fa-external-link-alt' %}
 											<li><a href="{{ aPortal.url }}" target="_blank"><span class="brick_icon {{ sIconClass }} fa-2x fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
 										{% endif %}
 									{% endfor %}
 									{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
-									{% if app['combodo.current_user.allowed_portals']|length > 1 %}
+									{% if allowed_portals|length > 1 %}
 										<li role="separator" class="divider"></li>
 									{% endif %}
 									<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fas fa-sign-out-alt fa-2x fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
@@ -268,14 +263,14 @@
 								</a>
 								<ul class="dropdown-menu user_options" aria-labelledby="user_options">
 									<li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
-									{% for aPortal in app['combodo.current_user.allowed_portals'] %}
+									{% for aPortal in allowed_portals %}
 										{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
 											{% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'far fa-list-alt' : 'fas fa-external-link-alt' %}
 											<li><a href="{{ aPortal.url }}" {% if app['combodo.portal.instance.conf'].properties.allowed_portals.opening_mode == 'tab' %}target="_blank"{% endif %} title="{{ aPortal.label|dict_s }}"><span class="brick_icon {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
 										{% endif %}
 									{% endfor %}
 									{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
-									{% if app['combodo.current_user.allowed_portals']|length > 1 %}
+									{% if allowed_portals|length > 1 %}
 										<li role="separator" class="divider"></li>
 									{% endif %}
 									<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fas fa-sign-out-alt fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
@@ -317,7 +312,7 @@
 							{% block pNavigationSideMenuLogo %}
 								{# This is a debug helper to know in which screen size we are #}
 								{% if app['kernel'].debug == true %}
-									<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug : Taille <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
+									<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug: Screen size <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
 								{% endif %}
 								<a href="{{ get_config_parameter('app_icon_url') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
 									<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />

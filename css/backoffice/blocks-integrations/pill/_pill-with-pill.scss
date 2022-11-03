@@ -1,0 +1,14 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-pill--spacing-left--with-same-block: $ibo-spacing-500 !default;
+
+
+/* For pills, margin is set on the right to keep them aligned horizontally when they wrap */
+/* The drawback is that we can't set the margin only when next to another .ibo-pill as there is no such CSS selector */
+/* Also :last-child is used instead of :last-of-type as pill can be either an <a> or a <span> */
+.ibo-pill:not(:last-child) {
+  margin-right: $ibo-pill--spacing-left--with-same-block;
+}

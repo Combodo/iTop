@@ -18,5 +18,5 @@
  */
 // Global search
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',
+	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Неизвестные значения',
 ));

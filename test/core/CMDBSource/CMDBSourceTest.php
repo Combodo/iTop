@@ -4,7 +4,9 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBSource;
+use Combodo\iTop\Core\DbConnectionWrapper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use utils;
 
 /**
  * @since 2.7.0
@@ -19,7 +21,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  */
 class CMDBSourceTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 
 		parent::setUp();
@@ -114,5 +116,25 @@ class CMDBSourceTest extends ItopTestCase
 				"enum('value 1 (with parenthesis)','value 3') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 			),
 		);
+	}
+
+	/**
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @since 3.0.0 N°4215
+	 */
+	public function testIsOpenedDbConnectionUsingTls()
+	{
+		$oConfig = utils::GetConfig();
+		CMDBSource::InitFromConfig($oConfig);
+		$oMysqli = CMDBSource::GetMysqli();
+
+		// resets \CMDBSource::$oMySQLiForQuery to simulate call to \CMDBSource::Init with a TLS connexion
+		DbConnectionWrapper::SetDbConnection(null);
+
+		// before N°4215 fix, this was crashing : "Call to a member function query() on null"
+		$bIsTlsCnx = $this->InvokeNonPublicStaticMethod(CMDBSource::class, 'IsOpenedDbConnectionUsingTls', [$oMysqli]);
+		$this->assertFalse($bIsTlsCnx);
 	}
 }

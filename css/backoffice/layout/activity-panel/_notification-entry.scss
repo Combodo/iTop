@@ -1,12 +1,12 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
 $ibo-notification-entry--short-description--text-color: inherit !default;
-$ibo-notification-entry--long-description-toggler-icon--margin-left: 12px !default;
-$ibo-notification-entry--long-description--margin-top: 8px !default;
+$ibo-notification-entry--long-description-toggler-icon--margin-left: $ibo-spacing-400 !default;
+$ibo-notification-entry--long-description--margin-top: $ibo-spacing-300 !default;
 
 /* CSS rules */
 /* - Long description */
@@ -24,7 +24,7 @@ a.ibo-notification-entry--short-description {
 }
 /* - Long desc. opened */
 .ibo-notification-entry{
-  &.ibo-is-opened{
+  &:not(.ibo-is-closed){
     .ibo-notification-entry--long-description-toggler-icon{
       transform: rotateX(180deg);
     }

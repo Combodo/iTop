@@ -27,7 +27,10 @@ namespace Combodo\iTop\Test\UnitTest;
  */
 
 use ArchivedObjectException;
+use CMDBObject;
 use CMDBSource;
+use Combodo\iTop\Service\EventData;
+use Combodo\iTop\Service\EventService;
 use Contact;
 use DBObject;
 use DBObjectSet;
@@ -47,6 +50,7 @@ use Ticket;
 use URP_UserProfile;
 use VirtualHost;
 use VirtualMachine;
+use XMLDataLoader;
 
 
 /** @see \Combodo\iTop\Test\UnitTest\ItopDataTestCase::CreateObjectWithTagSet() */
@@ -54,15 +58,26 @@ define('TAG_CLASS', 'FAQ');
 define('TAG_ATTCODE', 'domains');
 
 /**
+ * Helper class to extend for tests needing access to iTop's metamodel
+ *
+ * **⚠ Warning** Each class extending this one needs to add the following annotations :
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
+ *
+ * @since 2.7.7 3.0.1 3.1.0 N°4624 processIsolation is disabled by default and must be enabled in each test needing it (basically all tests using
+ * iTop datamodel)
  */
 class ItopDataTestCase extends ItopTestCase
 {
 	private $iTestOrgId;
+
 	// For cleanup
 	private $aCreatedObjects = array();
+
+	// Counts
+	public $aReloadCount = [];
 
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = false;
@@ -70,7 +85,7 @@ class ItopDataTestCase extends ItopTestCase
 	/**
 	 * @throws Exception
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/utils.inc.php');
@@ -87,20 +102,19 @@ class ItopDataTestCase extends ItopTestCase
 		{
 			$this->CreateTestOrganization();
 		}
+
+		EventService::RegisterListener(EVENT_SERVICE_DB_OBJECT_RELOAD, [$this, 'CountObjectReload']);
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	protected function tearDown()
+	protected function tearDown(): void
 	{
-		if (static::USE_TRANSACTION)
-		{
+		if (static::USE_TRANSACTION) {
 			$this->debug("ROLLBACK !!!");
 			CMDBSource::Query('ROLLBACK');
-		}
-		else
-		{
+		} else {
 			$this->debug("");
 			$this->aCreatedObjects = array_reverse($this->aCreatedObjects);
 			foreach ($this->aCreatedObjects as $oObject)
@@ -113,12 +127,13 @@ class ItopDataTestCase extends ItopTestCase
 					$this->debug("Removing $sClass::$iKey");
 					$oObject->DBDelete();
 				}
-				catch (Exception $e)
-				{
-					$this->debug($e->getMessage());
+				catch (Exception $e) {
+					$this->debug("Error when removing created objects: $sClass::$iKey. Exception message: ".$e->getMessage());
 				}
 			}
 		}
+
+		parent::tearDown();
 	}
 
 	/**
@@ -406,7 +421,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @return \DBObject
 	 * @throws Exception
 	 */
-	protected function CreateUser($sLogin, $iProfileId, $sPassword=null)
+	protected function CreateUser($sLogin, $iProfileId, $sPassword=null, $iContactid=2)
 	{
 		if (empty($sPassword)){
 			$sPassword = $sLogin;
@@ -417,7 +432,7 @@ class ItopDataTestCase extends ItopTestCase
 		$oUserProfile->Set('reason', 'UNIT Tests');
 		$oSet = DBObjectSet::FromObject($oUserProfile);
 		$oUser = $this->createObject('UserLocal', array(
-			'contactid' => 2,
+			'contactid' => $iContactid,
 			'login' => $sLogin,
 			'password' => $sPassword,
 			'language' => 'EN US',
@@ -440,9 +455,9 @@ class ItopDataTestCase extends ItopTestCase
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('profileid', $iProfileId);
 		$oUserProfile->Set('reason', 'UNIT Tests');
-		/** @var DBObjectSet $oSet */
+		/** @var \ormLinkSet $oSet */
 		$oSet = $oUser->Get('profile_list');
-		$oSet->AddObject($oUserProfile);
+		$oSet->AddItem($oUserProfile);
 		$oUser = $this->updateObject('UserLocal', $oUser->GetKey(), array(
 			'profile_list' => $oSet,
 		));
@@ -779,6 +794,50 @@ class ItopDataTestCase extends ItopTestCase
 		// Create a specific organization for the tests
 		$oOrg = $this->CreateOrganization('UnitTestOrganization');
 		$this->iTestOrgId = $oOrg->GetKey();
+		return $oOrg;
+	}
+
+	public function ResetReloadCount()
+	{
+		$this->aReloadCount = [];
+	}
+
+	public function DebugReloadCount($sMsg, $bResetCount = true)
+	{
+		$iTotalCount = 0;
+		$aTotalPerClass = [];
+		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
+			$iClassCount = 0;
+			foreach ($aCountByKeys as $iCount) {
+				$iClassCount += $iCount;
+			}
+			$iTotalCount += $iClassCount;
+			$aTotalPerClass[$sClass] = $iClassCount;
+		}
+		$this->debug("$sMsg - $iTotalCount reload(s)");
+		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
+			$this->debug("    $sClass => $aTotalPerClass[$sClass] reload(s)");
+			foreach ($aCountByKeys as $sKey => $iCount) {
+				$this->debug("        $sClass::$sKey => $iCount");
+			}
+		}
+		if ($bResetCount) {
+			$this->ResetReloadCount();
+		}
+	}
+
+	public function CountObjectReload(EventData $oData)
+	{
+		$oObject = $oData->Get('object');
+		$sClass = get_class($oObject);
+		$sKey = $oObject->GetKey();
+		$iCount = $this->GetObjectReloadCount($sClass, $sKey);
+		$this->aReloadCount[$sClass][$sKey] = 1 + $iCount;
+	}
+
+	public function GetObjectReloadCount($sClass, $sKey)
+	{
+		return $this->aReloadCount[$sClass][$sKey] ?? 0;
 	}
 
 	/**
@@ -790,7 +849,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @throws \MySQLException
 	 * @throws \MySQLQueryHasNoResultException
 	 */
-	protected static function assertDBQueryCount($iExpectedCount, callable $oFunction)
+	protected function assertDBQueryCount($iExpectedCount, callable $oFunction)
 	{
 		$iInitialCount = (int) CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
 		$oFunction();
@@ -798,12 +857,51 @@ class ItopDataTestCase extends ItopTestCase
 		$iCount = $iFinalCount - 1 - $iInitialCount;
 		if ($iCount != $iExpectedCount)
 		{
-			static::fail("Expected $iExpectedCount queries. $iCount have been executed.");
+			$this->fail("Expected $iExpectedCount queries. $iCount have been executed.");
 		}
 		else
 		{
-			// Otherwise PHP Unit will consider that no assertion has been made
-			static::assertTrue(true);
+			// Otherwise, PHP Unit will consider that no assertion has been made
+			$this->assertTrue(true);
 		}
+	}
+
+	/**
+	 * Import a set of XML files describing a consistent set of iTop objects
+	 * @param string[] $aFiles
+	 * @param boolean $bSearch If true, a search will be performed on each object (based on its reconciliation keys)
+	 *                         before trying to import it (existing objects will be updated)
+	 * @return int Number of objects created
+	 */
+	protected function CreateFromXMLFiles($aFiles, $bSearch = false)
+	{
+		$oLoader = new XMLDataLoader();
+		$oLoader->StartSession(CMDBObject::GetCurrentChange());
+		foreach($aFiles as $sFilePath)
+		{
+			$oLoader->LoadFile($sFilePath, false, $bSearch);
+		}
+		$oLoader->EndSession();
+
+		return $oLoader->GetCountCreated();
+	}
+
+	/**
+	 * Import a consistent set of iTop objects from the specified XML text string
+	 * @param string $sXmlDataset
+	 * @param boolean $bSearch If true, a search will be performed on each object (based on its reconciliation keys)
+	 *                         before trying to import it (existing objects will be updated)
+	 * @return int The number of objects created
+	 */
+	protected function CreateFromXMLString($sXmlDataset, $bSearch = false)
+	{
+		$sTmpFileName = tempnam(sys_get_temp_dir(), 'xml');
+		file_put_contents($sTmpFileName, $sXmlDataset);
+
+		$ret = $this->CreateFromXMLFiles([$sTmpFileName], $bSearch);
+
+		unlink($sTmpFileName);
+
+		return $ret;
 	}
 }

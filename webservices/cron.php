@@ -106,18 +106,18 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		$oTask->Set('system_user', utils::GetCurrentUserName());
 		$oTask->Set('running', 1);
 		$oTask->DBUpdate();
+		// Time in seconds allowed to the task
+		$iCurrTimeLimit = $iTimeLimit;
 		// Compute allowed time
-		if ($oRefClass->implementsInterface('iScheduledProcess'))
+		if ($oRefClass->implementsInterface('iScheduledProcess') === false) 
 		{
-			$iCurrTimeLimit = $iTimeLimit;
-		}
-		else
-		{
-			// Periodic task, allow only 3x the period
-			$iCurrTimeLimit = time() + $oProcess->GetPeriodicity() * 3;
-			if ($iCurrTimeLimit > $iTimeLimit)
+			// Periodic task, allow only X times ($iMaxTaskExecutionTime) its periodicity (GetPeriodicity())
+			$iMaxTaskExecutionTime = MetaModel::GetConfig()->Get('cron_task_max_execution_time');
+			$iTaskLimit = time() + $oProcess->GetPeriodicity() * $iMaxTaskExecutionTime;
+			// If our proposed time limit is less than cron limit, and cron_task_max_execution_time is > 0
+			if ($iTaskLimit < $iTimeLimit && $iMaxTaskExecutionTime > 0)
 			{
-				$iCurrTimeLimit = $iTimeLimit;
+				$iCurrTimeLimit = $iTaskLimit;
 			}
 		}
 		$sMessage = $oProcess->Process($iCurrTimeLimit);
@@ -266,9 +266,7 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 
 				// N°3219 for each process will use a specific CMDBChange object with a specific track info
 				// Any BackgroundProcess can overrides this as needed
-				CMDBObject::SetCurrentChange(null);
-				CMDBObject::SetTrackInfo("Background task ($sTaskClass)");
-				CMDBObject::SetTrackOrigin(null);
+				CMDBObject::SetCurrentChangeFromParams("Background task ($sTaskClass)");
 
 				// Run the task and record its next run time
 				if ($bVerbose)

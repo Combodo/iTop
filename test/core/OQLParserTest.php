@@ -29,6 +29,7 @@ class OQLParserTest extends ItopDataTestCase
 	 * @group iTopChangeMgt
 	 * @group itopConfigMgmt
 	 * @group itopRequestMgmt
+	 * @group specificOrgInSampleData
 	 * @dataProvider NestedQueryProvider
 	 *
 	 * @param $sQuery

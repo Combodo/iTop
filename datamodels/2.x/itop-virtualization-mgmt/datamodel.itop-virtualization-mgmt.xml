@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="VirtualDevice" _delta="define">
       <parent>FunctionalCI</parent>
@@ -18,7 +18,9 @@
         <fields_semantic>
             <state_attribute>status</state_attribute>
         </fields_semantic>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -151,7 +153,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -270,7 +274,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/hypervisor.png</icon>
+          <icon>../../images/icons/icons8-hypervisor.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -419,7 +423,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/cluster.png</icon>
+          <icon>../../images/icons/icons8-farm.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -780,7 +784,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/interface.png</icon>
+          <icon>../../images/icons/icons8-globe-cable.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -901,7 +905,7 @@
               <dashlet id="38" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:virtualization</title>
-                  <icon>itop-virtualization-mgmt/images/hypervisor-sw.png</icon>
+                  <icon>../images/icons/icons8-old-vmware-logo.svg</icon>
               </dashlet>
               <dashlet id="39" xsi:type="DashletBadge">
                 <rank>1</rank>

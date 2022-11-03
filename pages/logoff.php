@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Helper\Session;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
@@ -26,7 +28,6 @@ $oAppContext = new ApplicationContext();
 $currentOrganization = utils::ReadParam('org_id', '');
 $operation = utils::ReadParam('operation', '');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 $bPortal = utils::ReadParam('portal', false);
 $sUrl = utils::GetAbsoluteUrlAppRoot();
 
@@ -35,15 +36,15 @@ if ($operation == 'do_logoff')
 	// Reload the same dummy page to let the "calling" page execute its 'onunload' method before performing the actual logoff.
 	// Note the redirection MUST NOT be made via an HTTP "header" since onunload is called only when the actual content of the DOM
 	// is replaced by some other content. So the "bouncing" page must provide some content (in our case a script making the redirection).
-	$oPage = new ajax_page('');
+	$oPage = new AjaxPage('');
 	$oPage->add_script("window.location.href='{$sUrl}pages/logoff.php?portal=$bPortal'");
 	$oPage->output();
 	exit;
 }
 
-if (isset($_SESSION['auth_user']))
+if (Session::IsSet('auth_user'))
 {
-	$sAuthUser = $_SESSION['auth_user'];
+	$sAuthUser = Session::Get('auth_user');
 	UserRights::Login($sAuthUser); // Set the user's language
 }
 

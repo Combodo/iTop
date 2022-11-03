@@ -24,6 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
@@ -223,9 +224,23 @@ class ApplicationContext
 	{
 		$sContext = "";
 		foreach ($this->aValues as $sName => $sValue) {
-			$sContext .= "<input type=\"hidden\" name=\"c[$sName]\" value=\"".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."\" />\n";
+			$sContext .= "<input type=\"hidden\" name=\"c[$sName]\" value=\"".utils::EscapeHtml($sValue)."\" />\n";
 		}
 		return $sContext;
+	}
+	/**
+	 * Returns the context an array of input blocks
+	 *
+	 * @return array The context as a sequence of <input type="hidden" /> tags
+	 * @since 3.0.0
+	 */
+	public function GetForUIForm()
+	{
+		$aContextInputBlocks = [];
+		foreach ($this->aValues as $sName => $sValue) {
+			$aContextInputBlocks[] = InputUIBlockFactory::MakeForHidden("c[$sName]", utils::EscapeHtml($sValue));
+		}
+		return $aContextInputBlocks;
 	}
 
 	/**
@@ -321,7 +336,7 @@ class ApplicationContext
 		$sPrevious = self::GetUrlMakerClass();
 
 		self::$m_sUrlMakerClass = $sClass;
-		$_SESSION['UrlMakerClass'] = $sClass;
+		Session::Set('UrlMakerClass', $sClass);
 
 		return $sPrevious;
 	}
@@ -334,9 +349,9 @@ class ApplicationContext
 	{
 		if (is_null(self::$m_sUrlMakerClass))
 		{
-			if (isset($_SESSION['UrlMakerClass']))
+			if (Session::IsSet('UrlMakerClass'))
 			{
-				self::$m_sUrlMakerClass = $_SESSION['UrlMakerClass'];
+				self::$m_sUrlMakerClass = Session::Get('UrlMakerClass');
 			}
 			else
 			{
@@ -361,26 +376,19 @@ class ApplicationContext
    {
    	$oAppContext = new ApplicationContext();
 
-      if (is_null($sUrlMakerClass))
-      {
-			$sUrlMakerClass = self::GetUrlMakerClass();
-		}
+        if (is_null($sUrlMakerClass)) {
+	        $sUrlMakerClass = self::GetUrlMakerClass();
+        }
 		$sUrl = call_user_func(array($sUrlMakerClass, 'MakeObjectUrl'), $sObjClass, $sObjKey);
-		if (strlen($sUrl) > 0)
-		{
-			if ($bWithNavigationContext)
-			{
-				return $sUrl."&".$oAppContext->GetForLink();
-			}
-			else
-			{
-				return $sUrl;
-			}
-		}
-		else
-		{
-			return '';
-		}	
+	   if (utils::StrLen($sUrl) > 0) {
+		   if ($bWithNavigationContext) {
+			   return $sUrl."&".$oAppContext->GetForLink();
+		   } else {
+			   return $sUrl;
+		   }
+	   } else {
+		   return '';
+	   }
 	}
 
 	/**
@@ -389,9 +397,9 @@ class ApplicationContext
 	 */
 	protected static function LoadPluginProperties()
 	{
-		if (isset($_SESSION['PluginProperties']))
+		if (Session::IsSet('PluginProperties'))
 		{
-			self::$m_aPluginProperties = $_SESSION['PluginProperties'];
+			self::$m_aPluginProperties = Session::Get('PluginProperties');
 		}
 		else
 		{
@@ -411,7 +419,7 @@ class ApplicationContext
 		if (is_null(self::$m_aPluginProperties)) self::LoadPluginProperties();
 
 		self::$m_aPluginProperties[$sPluginClass][$sProperty] = $value;
-		$_SESSION['PluginProperties'][$sPluginClass][$sProperty] = $value;
+		Session::Set(['PluginProperties', $sPluginClass, $sProperty], $value);
 	}
 
 	/**

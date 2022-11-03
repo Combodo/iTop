@@ -371,8 +371,8 @@ function DashletCreationDlg(sOQL, sContext) {
 function ShortcutListDlg(sOQL, sDataTableId, sContext) {
 	var sDataTableName = 'datatable_'+sDataTableId;
 	var oTableSettings = {
-		oColumns: $('#'+sDataTableName).DataTable().ajax.params()['columns'],
-		iPageSize: $('#'+sDataTableName).DataTable().ajax.params()['length']/numberCachePages
+		oColumns: $('#datatable_dlg_'+sDataTableName).DataTableSettings('GetColumns'),
+		iPageSize: $('#'+sDataTableName).DataTable().ajax.params()['length']
 	};
 	var sTableSettings = JSON.stringify(oTableSettings);
 
@@ -388,13 +388,23 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle) {
 		var sDataTableName = 'datatable_'+sDataTableId;
 		var oColumns = $('#'+sDataTableName).DataTable().ajax.params()['columns'];
 		for (var j in oColumns) {
-			for (var k in oColumns[j]) {
-				if (oColumns[j][k].checked) {
-					var sCode = oColumns[j][k].code;
-					if (sCode == '_key_') {
-						sCode = 'id';
+			if (oColumns[j]['data']) {
+				if (oColumns[j]['data']!='id') {
+					var sCode = oColumns[j]['data'].split("/");
+					if (sCode[1] == '_key_') {
+						sCode[1] = 'id';
 					}
-					aFields.push(j+'.'+sCode);
+					aFields.push(sCode[0]+'.'+sCode[1]);
+				}
+			} else {
+				for (var k in oColumns[j]) {
+					if (oColumns[j][k].checked) {
+						var sCode = oColumns[j][k].code;
+						if (sCode == '_key_') {
+							sCode = 'id';
+						}
+						aFields.push(j+'.'+sCode);
+					}
 				}
 			}
 		}
@@ -576,20 +586,10 @@ function ExportInitButton(sSelector) {
 }
 
 /**
- * @deprecated 3.0.0 will be removed in 3.1, see N°3824
- */
-function DisplayHistory(sSelector, sFilter, iCount, iStart) {
-	$(sSelector).block();
-	var oParams = {operation: 'history_from_filter', filter: sFilter, start: iStart, count: iCount};
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function (data) {
-			$(sSelector).html(data).unblock();
-		}
-	);
-}
-
-/**
+ * @deprecated 3.0.0 N°4367 deprecated, use {@see CombodoSanitizer.EscapeHtml} instead
+ *
  * @param sValue value to escape
- * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contrains html entities we want to keep)
+ * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
  * @returns {string} escaped value, ready to insert in the DOM without XSS risk
  *
  * @since 2.6.5, 2.7.2, 3.0.0 N°3332
@@ -656,7 +656,7 @@ Dict.Format = function () {
 	var args = Array.from(arguments);
 	args[0] = Dict.S(arguments[0]);
 	return Format(args);
-}
+};
 
 // TODO 3.0.0: Move functions above either in CombodoGlobalToolbox or CombodoBackofficeToolbox and deprecate them
 /**
@@ -809,8 +809,10 @@ const CombodoTooltip = {
 		oOptions['content'] = sContent;
 
 		// Interaction (selection, click, ...) have to be enabled manually
-		// Important: When set to true, if "data-tooltip-append-to" is not specified, tooltip will be append to the parent element instead of the body
-		const bInteractive = oElem.attr('data-tooltip-interaction-enabled') === 'true';
+		// Important: When set to true, if "data-tooltip-append-to" is not specified, tooltip will be appended to the parent element instead of the body
+		// Note: Defaults to true if it contains hyperlink
+		let bDefaultInteractive = (bEnableHTML && sContent.indexOf("<a ") > -1)
+		const bInteractive = oElem.attr('data-tooltip-interaction-enabled') !== undefined ? oElem.attr('data-tooltip-interaction-enabled') === 'true' : bDefaultInteractive;
 		oOptions['interactive'] = bInteractive;
 
 		// Element to append the tooltip to
@@ -839,6 +841,12 @@ const CombodoTooltip = {
 			oOptions['appendTo'] = mAppendTo;
 		}
 
+		// Max. width overload
+		const sMaxWidth = oElem.attr('data-tooltip-max-width');
+		if ((sMaxWidth !== undefined) && (sMaxWidth !== '')) {
+			oOptions['maxWidth'] = sMaxWidth;
+		}
+
 		oOptions['placement'] = oElem.attr('data-tooltip-placement') ?? 'top';
 		oOptions['trigger'] = oElem.attr('data-tooltip-trigger') ?? 'mouseenter focus';
 
@@ -857,6 +865,8 @@ const CombodoTooltip = {
 			(typeof sShowDelay === 'undefined') ? 200 : parseInt(sShowDelay),
 			(typeof sHideDelay === 'undefined') ? null : parseInt(sHideDelay),
 		];
+
+		oOptions['theme'] = oElem.attr('data-tooltip-theme') ?? '';
 
 		tippy(oElem[0], oOptions);
 
@@ -878,6 +888,25 @@ const CombodoTooltip = {
 		oContainerElem.find('[data-tooltip-content]' + (bForce ? '' : ':not([data-tooltip-instantiated="true"])')).each(function () {
 			CombodoTooltip.InitTooltipFromMarkup($(this), bForce);
 		});
+	},
+	/**
+	 * Instantiate a singleton for tooltips of elements matching sSelector.
+	 * Used to guarantee that tooltips from said selector elements won't show at same time.
+	 * Require selector elements tooltips to be instantiated before.
+	 *
+	 * @param {string} sSelector jQuery selector used to get elements tooltips
+	 */
+	InitSingletonFromSelector: function (sSelector) {
+		let oTippyInstances = [];
+		$(sSelector).each(function(){
+			if($(this)[0]._tippy !== undefined){
+				oTippyInstances.push($(this)[0]._tippy);
+			}
+		});
+		let aOptions = {
+			moveTransition: 'transform 0.2s ease-out',
+		}
+		tippy.createSingleton(oTippyInstances, $.extend(aOptions, oTippyInstances[0].props));
 	}
 };
 
@@ -946,5 +975,127 @@ const CombodoJSConsole = {
 	 */
 	Error: function(sMessage) {
 		this._Trace(sMessage, 'error');
+	}
+}
+
+/**
+ * Helper to Sanitize string
+ *
+ * Note: Same as in php (see \utils::Sanitize)
+ *
+ * @api
+ * @since 2.6.5 2.7.6 3.0.0 N°4367
+ */
+const CombodoSanitizer = {
+	ENUM_SANITIZATION_FILTER_INTEGER: 'integer',
+	ENUM_SANITIZATION_FILTER_STRING: 'string',
+	ENUM_SANITIZATION_FILTER_CONTEXT_PARAM: 'context_param',
+	ENUM_SANITIZATION_FILTER_PARAMETER: 'parameter',
+	ENUM_SANITIZATION_FILTER_FIELD_NAME: 'field_name',
+	ENUM_SANITIZATION_FILTER_TRANSACTION_ID: 'transaction_id',
+	ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER: 'element_identifier',
+	ENUM_SANITIZATION_FILTER_VARIABLE_NAME: 'variable_name',
+
+	/**
+	 * @param {String} sValue The string to sanitize
+	 * @param {String} sDefaultValue The string to return if sValue not match (used for some filters)
+	 * @param {String} sSanitizationFilter one of the ENUM_SANITIZATION_FILTERs
+	 */
+	Sanitize: function (sValue, sDefaultValue, sSanitizationFilter) {
+		switch (sSanitizationFilter) {
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_INTEGER:
+				return this._CleanString(sValue, sDefaultValue, /[^0-9-+]*/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_STRING:
+				return $("<div>").text(sValue).text();
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
+				return this._ReplaceString(sValue, sDefaultValue, /^([\. A-Za-z0-9_=-]*)$/g, '');
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_PARAMETER:
+				return this._ReplaceString(sValue, sDefaultValue, /^([ A-Za-z0-9_=-]*)$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_FIELD_NAME:
+				return this._ReplaceString(sValue, sDefaultValue, /^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
+				return this._ReplaceString(sValue, sDefaultValue, /^[ A-Za-z0-9_=%:+-]*$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
+				return this._CleanString(sValue, sDefaultValue, /[^a-zA-Z0-9_-]/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
+				return this._CleanString(sValue, sDefaultValue, /[^a-zA-Z0-9_]/g);
+
+		}
+		return sDefaultValue;
+	},
+	_CleanString: function (sValue, sDefaultValue, sRegExp) {
+		return sValue.replace(sRegExp, '');
+	},
+
+	_ReplaceString: function (sValue, sDefaultValue, sRegExp) {
+		if (sRegExp.test(sValue)) {
+			return sValue;
+		} else {
+			return sDefaultValue;
+		}
+	},
+
+	/**
+	 * @param sValue value to escape
+	 * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
+	 *
+	 * @returns {string} escaped value, ready to insert in the DOM without XSS risk
+	 *
+	 * @since 2.6.5, 2.7.2, 3.0.0 N°3332
+	 * @since 3.0.0 N°4367 deprecate EncodeHtml and copy the method here (CombodoSanitizer.EscapeHtml)
+	 *
+	 * @see https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
+	 * @see https://stackoverflow.com/questions/295566/sanitize-rewrite-html-on-the-client-side/430240#430240 why inserting in the DOM (for
+	 *        example the text() JQuery way) isn't safe
+	 */
+	EscapeHtml: function (sValue, bReplaceAmp) {
+		if (bReplaceAmp) {
+			return $('<div/>').text(sValue).html();
+		}
+
+		let sEncodedValue = (sValue+'')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#x27;')
+			.replace(/\//g, '&#x2F;');
+
+		return sEncodedValue;
+	}
+};
+
+/**
+ * Helper for InlineImages
+ * @since 3.0.0
+ */
+const CombodoInlineImage = {
+	/**
+	 * Max width to apply on inline images
+	 */
+	max_width: 600,
+	/**
+	 * @param sMaxWidth {string} {@see CombodoInlineImage.max_width}
+	 */
+	SetMaxWidth: function (sMaxWidth) {
+		this.max_width = sMaxWidth;
+	},
+	/**
+	 * Apply the {@see CombodoInlineImage.max_width} to all inline images
+	 */
+	FixImagesWidth: function () {
+		$('img[data-img-id]').each(function() {
+			if ($(this).width() > CombodoInlineImage.max_width)
+			{
+				$(this).css({'max-width': CombodoInlineImage.max_width+'px', width: '', height: '', 'max-height': ''});
+			}
+			$(this).addClass('inline-image').attr('href', $(this).attr('src'));
+		}).magnificPopup({type: 'image', closeOnContentClick: true });
 	}
 }

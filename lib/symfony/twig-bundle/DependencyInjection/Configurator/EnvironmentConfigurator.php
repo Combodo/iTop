@@ -15,7 +15,7 @@ use Symfony\Bridge\Twig\UndefinedCallableHandler;
 use Twig\Environment;
 
 // BC/FC with namespaced Twig
-class_exists('Twig\Environment');
+class_exists(Environment::class);
 
 /**
  * Twig environment configurator.
@@ -31,7 +31,7 @@ class EnvironmentConfigurator
     private $decimalPoint;
     private $thousandsSeparator;
 
-    public function __construct($dateFormat, $intervalFormat, $timezone, $decimals, $decimalPoint, $thousandsSeparator)
+    public function __construct(string $dateFormat, string $intervalFormat, ?string $timezone, int $decimals, string $decimalPoint, string $thousandsSeparator)
     {
         $this->dateFormat = $dateFormat;
         $this->intervalFormat = $intervalFormat;

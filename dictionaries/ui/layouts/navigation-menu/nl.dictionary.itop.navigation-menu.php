@@ -19,14 +19,16 @@
 // Navigation menu
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Bedrijfslogo',
+	'UI:Layout:NavigationMenu:Silo:Label' => 'Selecteer de organisatie waarop gefilterd moet worden',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Vergroot / Verberg',
 	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Vergroot / Verberg (Gefilterd op %1$s)',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter…',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Type your keywords to filter menus~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Matches from all menu groups will be displayed~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter~~',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Typ een zoekterm om de menu\'s te filteren',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Resultaten van alle menugroepen zullen getoond worden',
+	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Geen resultaten voor deze menufilter',
 	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Welkom %1$s!',
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s profielfoto',
+	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open gebruikersmenu',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu\'s',
 
 ));

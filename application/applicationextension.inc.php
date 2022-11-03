@@ -299,6 +299,7 @@ abstract class AbstractPreferencesExtension implements iPreferencesExtension
  *
  * @api
  * @package     Extensibility
+ * @deprecated
  */
 interface iApplicationUIExtension
 {
@@ -441,6 +442,7 @@ interface iApplicationUIExtension
  * @api
  * @package     Extensibility
  * @since       2.7.0
+ * @deprecated
  */
 abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
 {
@@ -909,6 +911,8 @@ abstract class ApplicationPopupMenuItem
 /**
  * Class for adding an item into a popup menu that browses to the given URL
  *
+ * Note: This works only in the backoffice, {@see \URLButtonItem} for the end-user portal
+ *
  * @api
  * @package     Extensibility
  * @since 2.0
@@ -962,6 +966,8 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 
 /**
  * Class for adding an item into a popup menu that triggers some Javascript code
+ *
+ * Note: This works only in the backoffice, {@see \JSButtonItem} for the end-user portal
  *
  * @api
  * @package     Extensibility
@@ -1097,7 +1103,9 @@ class JSButtonItem extends JSPopupMenuItem
  * @api
  * @package     Extensibility
  * @since 2.0
- * @deprecated since 3.0.0 use iPageUIBlockExtension instead
+ * @deprecated 3.0.0 If you need to include:
+ *   * JS/CSS files/snippets, use {@see \iBackofficeLinkedScriptsExtension}, {@see \iBackofficeLinkedStylesheetsExtension}, etc instead
+ *   * HTML (and optionally JS/CSS), use {@see \iPageUIBlockExtension} to manipulate {@see \Combodo\iTop\Application\UI\Base\UIBlock} instead
  */
 interface iPageUIExtension
 {
@@ -1178,7 +1186,7 @@ interface iPageUIBlockExtension
  * @api
  * @package     Extensibility
  * @since       2.7.0
- * @deprecated since 3.0.0 use AbstractPageUIBlockExtension instead
+ * @deprecated 3.0.0 use AbstractPageUIBlockExtension instead
  */
 abstract class AbstractPageUIExtension implements iPageUIExtension
 {
@@ -1249,13 +1257,158 @@ abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
 }
 
 /**
- * Implement this interface to add content to any enhanced portal page
+ * Implement this interface to add script (JS) files to the backoffice pages
  *
- * IMPORTANT! Experimental API, may be removed at anytime, we don't recommend to use it just now!
+ * @see \iTopWebPage::$a_linked_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeLinkedScriptsExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_linked_scripts Each script will be included using this property
+	 * @return array An array of absolute URLs to the files to include
+	 */
+	public function GetLinkedScriptsAbsUrls(): array;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages' head.
+ * Will be executed first, BEFORE the DOM interpretation.
+ *
+ * @see \iTopWebPage::$a_early_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeEarlyScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_early_scripts
+	 * @return string
+	 */
+	public function GetEarlyScript(): string;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages that will be executed immediately, without waiting for the DOM to be ready.
+ *
+ * @see \iTopWebPage::$a_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_scripts
+	 * @return string
+	 */
+	public function GetScript(): string;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages that will be executed right when the DOM is ready.
+ *
+ * @see \iTopWebPage::$a_init_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeInitScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_init_scripts
+	 * @return string
+	 */
+	public function GetInitScript(): string;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages that will be executed slightly AFTER the DOM is ready (just after the init. scripts).
+ *
+ * @see \iTopWebPage::$a_ready_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeReadyScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_ready_scripts
+	 * @return string
+	 */
+	public function GetReadyScript(): string;
+}
+
+/**
+ * Implement this interface to add stylesheets (CSS) to the backoffice pages
+ *
+ * @see \iTopWebPage::$a_linked_stylesheets
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeLinkedStylesheetsExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_linked_stylesheets
+	 * @return array An array of absolute URLs to the files to include
+	 */
+	public function GetLinkedStylesheetsAbsUrls(): array;
+}
+
+/**
+ * Implement this interface to add inline style (CSS) to the backoffice pages' head.
+ *
+ * @see \iTopWebPage::$a_styles
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeStyleExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_styles
+	 * @return string
+	 */
+	public function GetStyle(): string;
+}
+
+/**
+ * Implement this interface to add Dict entries
+ *
+ * @see \iTopWebPage::$a_dict_entries
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeDictEntriesExtension
+{
+	/**
+	 * @see \iTopWebPage::a_dict_entries
+	 * @return array
+	 */
+	public function GetDictEntries(): array;
+}
+
+/**
+ * Implement this interface to add Dict entries prefixes
+ *
+ * @see \iTopWebPage::$a_dict_entries_prefixes
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeDictEntriesPrefixesExtension
+{
+	/**
+	 * @see \iTopWebPage::a_dict_entries_prefixes
+	 * @return array
+	 */
+	public function GetDictEntriesPrefixes(): array;
+}
+
+/**
+ * Implement this interface to add content to any enhanced portal page
  *
  * @api
  * @package     Extensibility
- * @since 2.4.0
+ *
+ * @since 2.4.0 interface creation
+ * @since 2.7.0 change method signatures due to Silex to Symfony migration
  */
 interface iPortalUIExtension
 {
@@ -1328,7 +1481,11 @@ interface iPortalUIExtension
 }
 
 /**
- * IMPORTANT! Experimental API, may be removed at anytime, we don't recommend to use it just now!
+ * Extend this class instead of iPortalUIExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.4.0
  */
 abstract class AbstractPortalUIExtension implements iPortalUIExtension
 {

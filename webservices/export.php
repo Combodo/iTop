@@ -17,11 +17,22 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+
+/**
+ * ⚠ Warning, this page is only kept for legacy usages : **it is not maintained anymore**
+ *
+ * Instead, you should use `export-v2.php`
+ *
+ * @link https://www.itophub.io/wiki/page?id=latest:advancedtopics:exportdata_v1 script documentation
+ */
+
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/excelexporter.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
+
 
 const EXIT_CODE_ERROR = -1;
 const EXIT_CODE_FATAL = -2;
@@ -84,6 +95,8 @@ $sFileName = utils::ReadParam('filename', '', true, 'string');
 $sExpression = utils::ReadParam('expression', '', true /* Allow CLI */, 'raw_data');
 $sFields = trim(utils::ReadParam('fields', '', true, 'raw_data')); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
 $bFieldsAdvanced = utils::ReadParam('fields_advanced', 0);
+
+$oQuery = null;
 
 if (strlen($sExpression) == 0)
 {
@@ -182,6 +195,11 @@ if (!empty($sExpression))
 			}
 		}
 
+		// update last export information if check parameters ok
+		if($oQuery != null){
+			$oQuery->UpdateLastExportInformation();
+		}
+
 		if ($oFilter)
 		{
 			$oSet = new CMDBObjectSet($oFilter, array(), $aArgs);
@@ -226,11 +244,11 @@ if (!empty($sExpression))
 						);
 					} else {
 						$aExtraParams = array(
-							'menu'            => false,
-							'toolkit_menu'    => false,
-							'display_limit'   => false,
+							'menu' => false,
+							'toolkit_menu' => false,
+							'display_limit' => false,
 							'localize_values' => $bLocalize,
-							'zlist'           => 'details',
+							'zlist' => 'details',
 						);
 					}
 
@@ -283,7 +301,7 @@ if (!empty($sExpression))
 				break;
 				
 				case 'xlsx':
-				$oP = new ajax_page('');
+				$oP = new AjaxPage('');
 				$oExporter = new ExcelExporter();
 				$oExporter->SetObjectList($oFilter);
 				

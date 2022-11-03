@@ -17,9 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\OutputStyle;
+use ScssPhp\ScssPhp\ValueConverter;
 
 
 /**
@@ -96,6 +99,11 @@ class utils
 	 * @since 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
+	/**
+	 * @var string
+	 * @since 3.0.2, 3.1.0 N°4899
+	 */
+	public const ENUM_SANITIZATION_FILTER_URL = 'url';
 
 	/**
 	 * @var string
@@ -239,9 +247,9 @@ class utils
 
 	public static function InitArchiveMode()
 	{
-		if (isset($_SESSION['archive_mode']))
+		if (Session::IsSet('archive_mode'))
 		{
-			$iDefault = $_SESSION['archive_mode'];
+			$iDefault = Session::Get('archive_mode');
 		}
 		else
 		{
@@ -249,9 +257,9 @@ class utils
 		}
 		// Read and record the value for switching the archive mode
 		$iCurrent = self::ReadParam('with-archive', $iDefault);
-		if (isset($_SESSION))
+		if (Session::IsInitialized())
 		{
-			$_SESSION['archive_mode'] = $iCurrent;
+			Session::Set('archive_mode', $iCurrent);
 		}
 		// Read and use the value for the current page (web services)
 		$iCurrent = self::ReadParam('with_archive', $iCurrent, true);
@@ -376,6 +384,7 @@ class utils
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
 	 * @since 3.0.0 new utils::ENUM_SANITIZATION_* const
+	 * @since 2.7.7, 3.0.2, 3.1.0 N°4899 - new 'url' filter
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
@@ -451,6 +460,11 @@ class utils
 
 			case static::ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
+				break;
+
+			// For URL
+			case static::ENUM_SANITIZATION_FILTER_URL:
+				$retValue = filter_var($value, FILTER_SANITIZE_URL);
 				break;
 
 			default:
@@ -799,21 +813,20 @@ class utils
 	 */
 	public static function StringToTime($sDate, $sFormat)
 	{
-	   // Source: http://php.net/manual/fr/function.strftime.php
+		// Source: http://php.net/manual/fr/function.strftime.php
 		// (alternative: http://www.php.net/manual/fr/datetime.formats.date.php)
 		static $aDateTokens = null;
 		static $aDateRegexps = null;
-		if (is_null($aDateTokens))
-		{
-		   $aSpec = array(
-				'%d' =>'(?<day>[0-9]{2})',
+		if (is_null($aDateTokens)) {
+			$aSpec = array(
+				'%d' => '(?<day>[0-9]{2})',
 				'%m' => '(?<month>[0-9]{2})',
 				'%y' => '(?<year>[0-9]{2})',
 				'%Y' => '(?<year>[0-9]{4})',
 				'%H' => '(?<hour>[0-2][0-9])',
 				'%i' => '(?<minute>[0-5][0-9])',
 				'%s' => '(?<second>[0-5][0-9])',
-				);
+			);
 			$aDateTokens = array_keys($aSpec);
 			$aDateRegexps = array_values($aSpec);
 		}
@@ -860,6 +873,8 @@ class utils
 	}
 
 	/**
+	 * @param boolean $bForceGetFromDisk if true then will always read from disk without using instances in memory
+	 *
 	 * @return \Config Get object in the following order :
 	 * <ol>
 	 * <li>from {@link MetaModel::GetConfig} if loaded
@@ -872,25 +887,26 @@ class utils
 	 * @throws \CoreException
 	 *
 	 * @since 2.7.0 N°2478 this method will now always call {@link MetaModel::GetConfig} first, and cache in this class is only set when loading from disk
+	 * @since 3.0.0 N°4158 new $bReadFromDisk parameter
 	 */
-	public static function GetConfig()
+	public static function GetConfig($bForceGetFromDisk = false)
 	{
-		$oMetaModelConfig = MetaModel::GetConfig();
-		if ($oMetaModelConfig !== null)
-		{
-			return $oMetaModelConfig;
-		}
+		if (!$bForceGetFromDisk) {
+			$oMetaModelConfig = MetaModel::GetConfig();
+			if ($oMetaModelConfig !== null) {
+				return $oMetaModelConfig;
+			}
 
-		if (self::$oConfig !== null)
-		{
-			return self::$oConfig;
+			if (self::$oConfig !== null) {
+				return self::$oConfig;
+			}
 		}
 
 		$sCurrentEnvConfigPath = self::GetConfigFilePath();
-		if (file_exists($sCurrentEnvConfigPath))
-		{
+		if (file_exists($sCurrentEnvConfigPath)) {
 			$oCurrentEnvDiskConfig = new Config($sCurrentEnvConfigPath);
 			self::SetConfig($oCurrentEnvDiskConfig);
+
 			return self::$oConfig;
 		}
 
@@ -1210,7 +1226,7 @@ class utils
 	 */
 	static function CanLogOff()
 	{
-		return (isset($_SESSION['can_logoff']) ? $_SESSION['can_logoff'] : false);
+		return Session::Get('can_logoff', false);
 	}
 
 	/**
@@ -1219,7 +1235,7 @@ class utils
 	 */
 	public static function GetSessionLog()
 	{
-		return print_r($_SESSION, true);
+		return Session::GetLog();
 	}
 
 	 static function DebugBacktrace($iLimit = 5)
@@ -1312,14 +1328,17 @@ class utils
 	 */
 	public static function GetCurrentEnvironment()
 	{
-		if (isset($_SESSION['itop_env']))
-		{
-			return $_SESSION['itop_env'];
-		}
-		else
-		{
-			return ITOP_DEFAULT_ENV;
-		}
+		return Session::Get('itop_env', ITOP_DEFAULT_ENV);
+	}
+
+	/**
+	 * @return string Absolute path to the folder into which the current environment has been compiled.
+	 *                The corresponding folder is created or cleaned upon code compilation
+	 * @since 3.0.0
+	 */
+	public static function GetCompiledEnvironmentPath(): string
+	{
+		return APPROOT . 'env-' . MetaModel::GetEnvironment() . '/';
 	}
 
 	/**
@@ -1330,6 +1349,7 @@ class utils
 	{
 		return APPROOT.'data/cache-'.MetaModel::GetEnvironment().'/';
 	}
+
 	/**
 	 * @return string A path to a folder into which any module can store log
 	 * @since 2.7.0
@@ -1806,7 +1826,7 @@ class utils
 	 */
 	public static function HtmlEntities($sValue)
 	{
-		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+		return htmlentities($sValue ?? '', ENT_QUOTES, 'UTF-8');
 	}
 
 	/**
@@ -1822,7 +1842,7 @@ class utils
 	public static function EscapeHtml($sValue)
 	{
 		return htmlspecialchars(
-			$sValue,
+			$sValue ?? '',
 			ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5,
 			WebPage::PAGES_CHARSET,
 			false
@@ -1871,7 +1891,8 @@ class utils
 	{
 		$sText = str_replace("\r\n", "\n", $sText);
 		$sText = str_replace("\r", "\n", $sText);
-		return str_replace("\n", '<br/>', htmlentities($sText, ENT_QUOTES, 'UTF-8'));
+
+		return str_replace("\n", '<br/>', utils::EscapeHtml($sText));
 	}
 	
 	/**
@@ -1922,42 +1943,36 @@ class utils
 	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
 	{
 		$oSass = new Compiler();
-		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');
+		$oSass->setOutputStyle(OutputStyle::COMPRESSED);
 		// Setting our variables
-		$oSass->setVariables($aVariables);
+		$aScssVariables = [];
+		foreach ($aVariables as $entry => $value) {
+			$aScssVariables[$entry] = ValueConverter::parseValue($value);
+		}
+		$oSass->addVariables($aScssVariables);
 		// Setting our imports paths
 		$oSass->setImportPaths($aImportPaths);
 		// Temporary disabling max exec time while compiling
 		$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
 		set_time_limit(0);
 		// Compiling SASS
-		$sCss = $oSass->compile($sSassContent);
+		$oCompilationRes = $oSass->compileString($sSassContent);
 		set_time_limit(intval($iCurrentMaxExecTime));
 
-		return $sCss;
+		return $oCompilationRes->getCss();
 	}
-	
+
+	/**
+	 * Get the size of an image from a string.
+	 *
+	 * @see \getimagesizefromstring()
+	 * @param $sImageData string The image data, as a string.
+	 *
+	 * @return array|false
+	 */
 	public static function GetImageSize($sImageData)
 	{
-		if (function_exists('getimagesizefromstring')) // PHP 5.4.0 or higher
-		{
-			$aRet = @getimagesizefromstring($sImageData);
-		}
-		else if(ini_get('allow_url_fopen'))
-		{
-			// work around to avoid creating a tmp file
-			$sUri = 'data://application/octet-stream;base64,'.base64_encode($sImageData);
-			$aRet = @getimagesize($sUri);
-		}
-		else
-		{
-			// Damned, need to create a tmp file
-			$sTempFile = tempnam(SetupUtils::GetTmpDir(), 'img-');
-			@file_put_contents($sTempFile, $sImageData);
-			$aRet = @getimagesize($sTempFile);
-			@unlink($sTempFile);
-		}
-		return $aRet;
+		return @getimagesizefromstring($sImageData);
 	}
 
 	/**
@@ -2110,11 +2125,21 @@ class utils
 	}
 	
 	/**
-	 * Returns the relative (to MODULESROOT) path of the root directory of the module containing the file where the call to
-	 * this function is made
-	 * or an empty string if no such module is found (or not called within a module file)
-	 * @param number $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
-	 * @return string
+	 * **Warning** : returned result can be invalid as we're using backtrace to find the module dir name
+	 *
+	 * @param int $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
+	 *
+	 * @return string the relative (to MODULESROOT) path of the root directory of the module containing the file where the call to
+	 *     this function is made
+	 *     or an empty string if no such module is found (or not called within a module file)
+	 *
+	 * @uses \debug_backtrace()
+	 *
+	 * @since 3.0.0 Before writing model.*.php file, compiler will now always delete it.
+	 *      If you have symlinks enabled, base dir will be original module dir, but since this behavior change this won't be true anymore for model.*.php
+	 *      In consequence the backtrace analysis won't be possible for this file
+	 *      See N°4854
+	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Arelease%3A3_0_whats_new#compiler_always_generate_new_model_php compiler behavior change documentation
 	 */
 	public static function GetCurrentModuleDir($iCallDepth)
 	{
@@ -2139,9 +2164,14 @@ class utils
 	}
 
 	/**
+	 * **Warning** : as this method uses {@see GetCurrentModuleDir} it produces hazardous results.
+	 * You should better uses directly {@see GetAbsoluteUrlModulesRoot} and add the module dir name yourself ! See N°4573
+	 *
 	 * @return string the base URL for all files in the current module from which this method is called
 	 * or an empty string if no such module is found (or not called within a module file)
 	 * @throws \Exception
+	 *
+	 * @uses GetCurrentModuleDir
 	 */
 	public static function GetCurrentModuleUrl()
 	{
@@ -2396,43 +2426,19 @@ class utils
 	}
 
 	/**
-	 * @return string eg : '2_7_0' ITOP_VERSION is '2.7.1-dev'
+	 * @return string eg : '2_7_0' if iTop core version is '2.7.5-2'
+	 * @throws \ApplicationException if constant value is invalid
+	 * @uses ITOP_CORE_VERSION
 	 */
-	public static function GetItopVersionWikiSyntax() {
-		$sMinorVersion = self::GetItopMinorVersion();
+	public static function GetItopVersionWikiSyntax($sItopVersion = ITOP_CORE_VERSION)
+	{
+		$aExplodedVersion = explode('.', $sItopVersion);
 
-		return str_replace('.', '_', $sMinorVersion).'_0';
-	}
-
-	/**
-	 * @param string $sPatchVersion if non provided, will call GetItopPatchVersion
-	 *
-	 * @return string eg 2.7 if ITOP_VERSION is '2.7.0-dev'
-	 * @throws \Exception
-	 */
-	public static function GetItopMinorVersion($sPatchVersion = null) {
-		if (is_null($sPatchVersion)) {
-			$sPatchVersion = self::GetItopPatchVersion();
-		}
-		$aExplodedVersion = explode('.', $sPatchVersion);
-
-		if (count($aExplodedVersion) < 2) {
-			throw new Exception('iTop version is wrongfully configured!');
-		}
-		if (($aExplodedVersion[0] == '') || ($aExplodedVersion[1] == '')) {
-			throw new Exception('iTop version is wrongfully configured!');
+		if ((false === isset($aExplodedVersion[0])) || (false === isset($aExplodedVersion[1]))) {
+			throw new ApplicationException('iTop version is wrongfully configured!');
 		}
 
-		return sprintf('%d.%d', $aExplodedVersion[0], $aExplodedVersion[1]);
-	}
-
-	/**
-	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
-	 */
-	public static function GetItopPatchVersion() {
-		$aExplodedVersion = explode('-', ITOP_VERSION);
-
-		return $aExplodedVersion[0];
+		return "{$aExplodedVersion[0]}_{$aExplodedVersion[1]}_0";
 	}
 
 	/**
@@ -2630,7 +2636,9 @@ class utils
 		$aDefaultConf = array(
 			'language'=> $sLanguage,
 			'contentsLanguage' => $sLanguage,
-			'extraPlugins' => 'disabler,codesnippet,mentions,objectshortcut',
+			'extraPlugins' => 'disabler,codesnippet,mentions,objectshortcut,font,uploadimage',
+			'uploadUrl' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php',
+			'contentsCss' => array(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/contents.css', utils::GetAbsoluteUrlAppRoot().'css/ckeditor/contents.css'),
 		);
 
 		// Mentions
@@ -2652,11 +2660,11 @@ class utils
 				}
 
 				// Note: Endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal
-				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&marker='.$sMentionMarker.'&needle={encodedQuery}';
+				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&marker='.urlencode($sMentionMarker).'&needle={encodedQuery}';
 				$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sMentionClass.'&id={id}';
 
 				$sMentionItemPictureTemplate = (empty(MetaModel::GetImageAttributeCode($sMentionClass))) ? '' : <<<HTML
-<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="background-image: url('{picture_url}');">{initials}</span>
+<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="{picture_style}">{initials}</span>
 HTML;
 				$sMentionItemTemplate = <<<HTML
 <li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}">{$sMentionItemPictureTemplate}<span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
@@ -2710,9 +2718,23 @@ HTML;
 			$aAutoloadClassMaps = array_merge($aAutoloadClassMaps, glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php'));
 
 			$aClassMap = [];
+			$aAutoloaderErrors = [];
 			foreach ($aAutoloadClassMaps as $sAutoloadFile) {
+				if (false === static::RealPath($sAutoloadFile, APPROOT)) {
+					// can happen when we still have the autoloader symlink in env-*, but it points to a file that no longer exists
+					$aAutoloaderErrors[] = $sAutoloadFile;
+					continue;
+				}
 				$aTmpClassMap = include $sAutoloadFile;
+				/** @noinspection SlowArrayOperationsInLoopInspection we are getting an associative array so the documented workarounds cannot be used */
 				$aClassMap = array_merge($aClassMap, $aTmpClassMap);
+			}
+			if (count($aAutoloaderErrors) > 0) {
+				IssueLog::Debug(
+					"\utils::GetClassesForInterface cannot load some of the autoloader files",
+					LogChannels::CORE,
+					['autoloader_errors' => $aAutoloaderErrors]
+				);
 			}
 
 			// Add already loaded classes
@@ -2721,7 +2743,7 @@ HTML;
 
 			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
 				$bSkipped = false;
-				
+
 				// Check if our class matches name filter, or is in an excluded path
 				if ($sClassNameFilter !== '' && strpos($sPHPClass, $sClassNameFilter) === false) {
 					$bSkipped = true;
@@ -2819,24 +2841,71 @@ HTML;
 	}
 
 	//----------------------------------------------
+	// PHP function helpers
+	//----------------------------------------------
+
+	/**
+	 * Helper around the native strlen() PHP method to keep allowing usage of null value when computing the length of a string as null value is no longer allowed with PHP 8.1+
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return int Length of $sString, 0 if null
+	 * @since 3.0.2 N°5172
+	 */
+	public static function StrLen(?string $sString): int
+	{
+		return strlen($sString ?? '');
+	}
+
+	/**
+	 * Helper around the native strlen() PHP method to test a string for null or empty value
+	 *
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return bool if string null or empty
+	 * @since 3.0.2 N°5302
+	 */
+	public static function IsNullOrEmptyString(?string $sString): bool
+	{
+		return $sString === null || strlen($sString) === 0;
+	}
+
+	/**
+	 * Helper around the native strlen() PHP method to test a string not null or empty value
+	 *
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return bool if string is not null and not empty
+	 * @since 3.0.2 N°5302
+	 */
+	public static function IsNotNullOrEmptyString(?string $sString): bool
+	{
+		return !static::IsNullOrEmptyString($sString);
+	}
+
+	//----------------------------------------------
 	// Environment helpers
 	//----------------------------------------------
 
 	/**
-	 * Check if iTop is in a development environment (VCS vs build number)
+	 * Check if iTop is in a development environment
 	 *
-	 * @return bool
+	 * @return bool true if development environment
 	 *
 	 * @since 2.6.0 method creation
 	 * @since 3.0.0 add the `developer_mode.enabled` config parameter
 	 *
-	 * @use `developer_mode.enabled` config parameter
-	 * @use ITOP_REVISION
+	 * @uses GetDeveloperModeParam
+	 * @uses ITOP_REVISION constant (check 'svn' value)
 	 */
 	public static function IsDevelopmentEnvironment()
 	{
-		$oConfig = utils::GetConfig();
-		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
+		$bIsDevEnvInConfig = static::GetDeveloperModeParam();
 		if ($bIsDevEnvInConfig === true) {
 			return true;
 		}
@@ -2854,7 +2923,36 @@ HTML;
 	}
 
 	/**
-	 * @return bool : indicate whether we run under a windows environnement or not
+	 * In the setup there are times when the MetaModel config attribute is loaded but partially (only setup parameters are set, others have the default value)
+	 * So we need to load from disk then !
+	 *
+	 * But in other scenario we want to read from memory : for example when changing the option in a PHPUnit setUp method
+	 *
+	 * This method will first try to get the `developer_mode.enabled` config parameter the standard way (call to GetConfig without modification).
+	 * If we are getting null (not defined parameter), then we will load config from disk only (GetConfig(true))
+	 *
+	 * @return bool|null
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 *
+	 * @uses developer_mode.enabled config parameter
+	 */
+	private static function GetDeveloperModeParam(): ?bool
+	{
+		$oConfig = static::GetConfig(false);
+		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
+
+		if (!is_null($bIsDevEnvInConfig)) {
+			return $bIsDevEnvInConfig;
+		}
+
+		$oConfigFromDisk = static::GetConfig(true);
+
+		return $oConfigFromDisk->Get('developer_mode.enabled');
+	}
+
+	/**
+	 * @return bool true if we are running under a Windows environment
 	 * @since 2.7.4 : N°3412
 	 */
 	public static function IsWindowsEnvironment()
@@ -3019,5 +3117,81 @@ HTML;
 		}
 
 		return $aMentionedObjects;
+	}
+
+	/**
+	 * Note: This method is not ideal, but other solutions seemed even less ideal:
+	 *   * Add a "$sMaxLength" param. to utils::ToAcronym(): Does not work for every use cases (see corresponding ticket) as in some parts utils::ToAcronym isn't necessarly meant to be used in a medallion.
+	 *
+	 * @param string $sInitials
+	 *
+	 * @return string Truncates $sInitials so it can fit in medallions
+	 * @since 3.0.1 N°4913
+	 */
+	public static function FormatInitialsForMedallion(string $sInitials): string
+	{
+		return mb_substr($sInitials, 0, 3);
+	}
+
+	/**
+	 * @param $sUrl
+	 * @param string $sParamName
+	 * @param string $sParamValue
+	 *
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public static function AddParameterToUrl(string $sUrl, string $sParamName, string $sParamValue): string
+	{
+		if (strpos($sUrl, '?') === false) {
+			$sUrl = $sUrl.'?'.urlencode($sParamName).'='.urlencode($sParamValue);
+		} else {
+			$sUrl = $sUrl.'&'.urlencode($sParamName).'='.urlencode($sParamValue);
+		}
+
+		return $sUrl;
+	}
+
+	/**
+	 * Return traits array used by a class and by parent classes hierarchy.
+	 *
+	 * @see https://www.php.net/manual/en/function.class-uses.php#110752
+	 *
+	 * @param string $sClass Class to scan
+	 * @param bool $bAutoload Autoload flag
+	 *
+	 * @return array traits used
+	 * @since 3.1.0
+	 */
+	public static function TraitsUsedByClass(string $sClass, bool $bAutoload = true): array
+	{
+		$aTraits = [];
+		do {
+			$aTraits = array_merge(class_uses($sClass, $bAutoload), $aTraits);
+		} while ($sClass = get_parent_class($sClass));
+		foreach ($aTraits as $sTrait => $same) {
+			$aTraits = array_merge(class_uses($sTrait, $bAutoload), $aTraits);
+		}
+
+		return array_unique($aTraits);
+	}
+
+	/**
+	 * Test trait usage by a class or by parent classes hierarchy.
+	 *
+	 * @param string $sTrait Trait to search for
+	 * @param string $sClass Class to check
+	 *
+	 * @return bool
+	 * @since 3.1.0
+	 */
+	public static function IsTraitUsedByClass(string $sTrait, string $sClass): bool
+	{
+		return in_array($sTrait, self::TraitsUsedByClass($sClass, true));
+	}
+  
+	public static function GetUniqId()
+	{
+		return hash('sha256', uniqid(sprintf('%x', rand()), true).sprintf('%x', rand()));
 	}
 }

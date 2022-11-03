@@ -26,10 +26,14 @@
 {%- endblock money_widget %}
 
 {% block percent_widget -%}
-    <div class="input-group">
+    {%- if symbol -%}
+        <div class="input-group">
+            {{- block('form_widget_simple') -}}
+            <span class="input-group-addon">{{ symbol|default('%') }}</span>
+        </div>
+    {%- else -%}
         {{- block('form_widget_simple') -}}
-        <span class="input-group-addon">%</span>
-    </div>
+    {%- endif -%}
 {%- endblock percent_widget %}
 
 {% block datetime_widget -%}
@@ -64,11 +68,13 @@
         {%- if datetime is not defined or not datetime -%}
             <div {{ block('widget_container_attributes') -}}>
         {%- endif %}
+        {%- if label is not same as(false) -%}
             <div class="sr-only">
                 {{ form_label(form.year) }}
                 {{ form_label(form.month) }}
                 {{ form_label(form.day) }}
             </div>
+        {%- endif -%}
 
             {{- date_pattern|replace({
                 '{{ year }}': form_widget(form.year),
@@ -89,10 +95,10 @@
         {%- if datetime is not defined or false == datetime -%}
             <div {{ block('widget_container_attributes') -}}>
         {%- endif -%}
-        <div class="sr-only">{{ form_label(form.hour) }}</div>
+        {%- if label is not same as(false) -%}<div class="sr-only">{{ form_label(form.hour) }}</div>{%- endif -%}
         {{- form_widget(form.hour) -}}
-        {%- if with_minutes -%}:<div class="sr-only">{{ form_label(form.minute) }}</div>{{ form_widget(form.minute) }}{%- endif -%}
-        {%- if with_seconds -%}:<div class="sr-only">{{ form_label(form.second) }}</div>{{ form_widget(form.second) }}{%- endif -%}
+        {%- if with_minutes -%}:{%- if label is not same as(false) -%}<div class="sr-only">{{ form_label(form.minute) }}</div>{%- endif -%}{{ form_widget(form.minute) }}{%- endif -%}
+        {%- if with_seconds -%}:{%- if label is not same as(false) -%}<div class="sr-only">{{ form_label(form.second) }}</div>{%- endif -%}{{ form_widget(form.second) }}{%- endif -%}
         {%- if datetime is not defined or false == datetime -%}
             </div>
         {%- endif -%}
@@ -137,11 +143,6 @@
     {%- endif -%}
 {%- endblock dateinterval_widget -%}
 
-{% block choice_widget_collapsed -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) -%}
-    {{- parent() -}}
-{%- endblock choice_widget_collapsed %}
-
 {% block choice_widget_expanded -%}
     {%- if '-inline' in label_attr.class|default('') -%}
         {%- for child in form %}
@@ -166,7 +167,7 @@
 
 {% block choice_label -%}
     {# remove the checkbox-inline and radio-inline class, it's only useful for embed labels #}
-    {%- set label_attr = label_attr|merge({class: label_attr.class|default('')|replace({'checkbox-inline': '', 'radio-inline': '', 'checkbox-custom': '', 'radio-custom': ''})|trim}) -%}
+    {%- set label_attr = label_attr|merge({class: label_attr.class|default('')|replace({'checkbox-inline': '', 'radio-inline': '', 'checkbox-custom': '', 'radio-custom': '', 'switch-custom': ''})|trim}) -%}
     {{- block('form_label') -}}
 {% endblock choice_label %}
 
@@ -181,7 +182,7 @@
 {# Rows #}
 
 {% block button_row -%}
-    <div class="form-group">
+    <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' form-group')|trim})} %}{{ block('attributes') }}{% endwith %}>
         {{- form_widget(form) -}}
     </div>
 {%- endblock button_row %}

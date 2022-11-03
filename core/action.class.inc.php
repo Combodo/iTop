@@ -51,6 +51,7 @@ abstract class Action extends cmdbAbstractObject
 			"db_table" => "priv_action",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
+			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-in-transit.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -117,6 +118,39 @@ abstract class Action extends cmdbAbstractObject
 				return false;
 		}
 	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	public function AfterInsert()
+	{
+		parent::AfterInsert();
+		$this->DoCheckIfHasTrigger();
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	public function AfterUpdate()
+	{
+		parent::AfterUpdate();
+		$this->DoCheckIfHasTrigger();
+	}
+
+	/**
+	 * Check if the Action has at least 1 trigger linked. Otherwise, it adds a warning.
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function DoCheckIfHasTrigger()
+	{
+		$oTriggersSet = $this->Get('trigger_list');
+		if ($oTriggersSet->Count() === 0) {
+			$this->m_aCheckWarnings[] = Dict::S('Action:WarningNoTriggerLinked');
+		}
+	}
 }
 
 /**
@@ -167,19 +201,30 @@ abstract class ActionNotification extends Action
 class ActionEmail extends ActionNotification
 {
 	/**
+	 * @var string
+	 * @since 3.0.1
+	 */
+	const ENUM_HEADER_NAME_MESSAGE_ID = 'Message-ID';
+	/**
+	 * @var string
+	 * @since 3.0.1
+	 */
+	const ENUM_HEADER_NAME_REFERENCES = 'References';
+
+	/**
 	 * @inheritDoc
 	 */
 	public static function Init()
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb,application",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array('name'),
-			"db_table" => "priv_action_email",
-			"db_key_field" => "id",
+			"category"            => "grant_by_profile,core/cmdb,application",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "name",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('name'),
+			"db_table"            => "priv_action_email",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -232,7 +277,7 @@ class ActionEmail extends ActionNotification
 	protected function FindRecipients($sRecipAttCode, $aArgs)
 	{
 		$sOQL = $this->Get($sRecipAttCode);
-		if (strlen($sOQL) == '') return '';
+		if (strlen($sOQL) === 0) return '';
 
 		try
 		{
@@ -366,8 +411,7 @@ class ActionEmail extends ActionNotification
 		{
 			$this->m_iRecipients = 0;
 			$this->m_aMailErrors = array();
-			$bRes = false; // until we do succeed in sending the email
-	
+
 			// Determine recipients
 			//
 			$sTo = $this->FindRecipients('to', $aContextArgs);
@@ -381,37 +425,48 @@ class ActionEmail extends ActionNotification
 
 			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
 			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
-			
+
 			$oObj = $aContextArgs['this->object()'];
-			$sMessageId = sprintf('iTop_%s_%d_%f@%s.openitop.org', get_class($oObj), $oObj->GetKey(), microtime(true /* get as float*/), MetaModel::GetEnvironmentId());
-			$sReference = '<'.$sMessageId.'>';
+			$sMessageId = $this->GenerateIdentifierForHeaders($oObj, static::ENUM_HEADER_NAME_MESSAGE_ID);
+			$sReference = $this->GenerateIdentifierForHeaders($oObj, static::ENUM_HEADER_NAME_REFERENCES);
 		}
-		catch(Exception $e)
-		{
-  			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
-  			throw $e;
-  		}
-		ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
-		
-		if (!is_null($oLog))
-		{
+		catch (Exception $e) {
+			/** @noinspection PhpUnhandledExceptionInspection */
+			throw $e;
+		}
+		finally {
+			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
+		}
+
+		if (!is_null($oLog)) {
 			// Note: we have to secure this because those values are calculated
 			// inside the try statement, and we would like to keep track of as
 			// many data as we could while some variables may still be undefined
-			if (isset($sTo))       $oLog->Set('to', $sTo);
-			if (isset($sCC))       $oLog->Set('cc', $sCC);
-			if (isset($sBCC))      $oLog->Set('bcc', $sBCC);
-			if (isset($sFrom))     $oLog->Set('from', empty($sFromLabel) ? $sFrom : "$sFromLabel <$sFrom>");
-			if (isset($sSubject))  $oLog->Set('subject', $sSubject);
-			if (isset($sBody))     $oLog->Set('body', $sBody);
+			if (isset($sTo)) {
+				$oLog->Set('to', $sTo);
+			}
+			if (isset($sCC)) {
+				$oLog->Set('cc', $sCC);
+			}
+			if (isset($sBCC)) {
+				$oLog->Set('bcc', $sBCC);
+			}
+			if (isset($sFrom)) {
+				$oLog->Set('from', $sFrom);
+			}
+			if (isset($sSubject)) {
+				$oLog->Set('subject', $sSubject);
+			}
+			if (isset($sBody)) {
+				$oLog->Set('body', $sBody);
+			}
 		}
 		$sStyles = file_get_contents(APPROOT.'css/email.css');
 		$sStyles .= MetaModel::GetConfig()->Get('email_css');
 
 		$oEmail = new EMail();
 
-		if ($this->IsBeingTested())
-		{
+		if ($this->IsBeingTested()) {
 			$oEmail->SetSubject('TEST['.$sSubject.']');
 			$sTestBody = $sBody;
 			$sTestBody .= "<div style=\"border: dashed;\">\n";
@@ -421,8 +476,8 @@ class ActionEmail extends ActionNotification
 			$sTestBody .= "<li>TO: $sTo</li>\n";
 			$sTestBody .= "<li>CC: $sCC</li>\n";
 			$sTestBody .= "<li>BCC: $sBCC</li>\n";
-			$sTestBody .= empty($sFromLabel) ? "<li>From: $sFrom</li>\n": "<li>From: $sFromLabel &lt;$sFrom&gt;</li>\n";
-			$sTestBody .= empty($sReplyToLabel) ? "<li>Reply-To: $sReplyTo</li>\n": "<li>Reply-To: $sReplyToLabel &lt;$sReplyTo&gt;</li>\n";
+			$sTestBody .= empty($sFromLabel) ? "<li>From: $sFrom</li>\n" : "<li>From: $sFromLabel &lt;$sFrom&gt;</li>\n";
+			$sTestBody .= empty($sReplyToLabel) ? "<li>Reply-To: $sReplyTo</li>\n" : "<li>Reply-To: $sReplyToLabel &lt;$sReplyTo&gt;</li>\n";
 			$sTestBody .= "<li>References: $sReference</li>\n";
 			$sTestBody .= "</ul>\n";
 			$sTestBody .= "</p>\n";
@@ -432,9 +487,9 @@ class ActionEmail extends ActionNotification
 			$oEmail->SetRecipientFrom($sFrom, $sFromLabel);
 			$oEmail->SetReferences($sReference);
 			$oEmail->SetMessageId($sMessageId);
-		}
-		else
-		{
+			// Note: N°4849 We pass the "References" identifier instead of the "Message-ID" on purpose as we want notifications emails to group around the triggering iTop object, not just the users' replies to the notification
+			$oEmail->SetInReplyTo($sReference);
+		} else {
 			$oEmail->SetSubject($sSubject);
 			$oEmail->SetBody($sBody, 'text/html', $sStyles);
 			$oEmail->SetRecipientTO($sTo);
@@ -444,6 +499,8 @@ class ActionEmail extends ActionNotification
 			$oEmail->SetRecipientReplyTo($sReplyTo, $sReplyToLabel);
 			$oEmail->SetReferences($sReference);
 			$oEmail->SetMessageId($sMessageId);
+			// Note: N°4849 We pass the "References" identifier instead of the "Message-ID" on purpose as we want notifications emails to group around the triggering iTop object, not just the users' replies to the notification
+			$oEmail->SetInReplyTo($sReference);
 		}
 
 		if (isset($aContextArgs['attachments']))
@@ -470,26 +527,64 @@ class ActionEmail extends ActionNotification
 				{
 					case EMAIL_SEND_OK:
 						return "Sent";
-	
+
 					case EMAIL_SEND_PENDING:
 						return "Pending";
-	
+
 					case EMAIL_SEND_ERROR:
 						return "Errors: ".implode(', ', $aErrors);
 				}
 			}
-		}
-		else
-		{
-			if (is_array($this->m_aMailErrors) && count($this->m_aMailErrors) > 0)
-			{
+		} else {
+			if (is_array($this->m_aMailErrors) && count($this->m_aMailErrors) > 0) {
 				$sError = implode(', ', $this->m_aMailErrors);
-			}
-			else
-			{
+			} else {
 				$sError = 'Unknown reason';
 			}
+
 			return 'Notification was not sent: '.$sError;
 		}
+	}
+
+	/**
+	 * @param \DBObject $oObject
+	 * @param string $sHeaderName {@see \ActionEmail::ENUM_HEADER_NAME_REFERENCES}, {@see \ActionEmail::ENUM_HEADER_NAME_MESSAGE_ID}
+	 *
+	 * @return string The formatted identifier for $sHeaderName based on $oObject
+	 * @throws \Exception
+	 * @since 3.0.1 N°4849
+	 */
+	protected function GenerateIdentifierForHeaders(DBObject $oObject, string $sHeaderName): string
+	{
+		$sObjClass = get_class($oObject);
+		$sObjId = $oObject->GetKey();
+		$sAppName = utils::Sanitize(ITOP_APPLICATION_SHORT, '', utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME);
+
+		switch ($sHeaderName) {
+			case static::ENUM_HEADER_NAME_MESSAGE_ID:
+			case static::ENUM_HEADER_NAME_REFERENCES:
+				// Prefix
+				$sPrefix = sprintf('%s_%s_%d', $sAppName, $sObjClass, $sObjId);
+				if ($sHeaderName === static::ENUM_HEADER_NAME_MESSAGE_ID) {
+					$sPrefix .= sprintf('_%F', microtime(true /* get as float*/));
+				}
+				// Suffix
+				$sSuffix = sprintf('@%s.openitop.org', MetaModel::GetEnvironmentId());
+				// Identifier
+				$sIdentifier = $sPrefix.$sSuffix;
+				if ($sHeaderName === static::ENUM_HEADER_NAME_REFERENCES) {
+					$sIdentifier = "<$sIdentifier>";
+				}
+
+				return $sIdentifier;
+		}
+
+		// Requested header name invalid
+		$sErrorMessage = sprintf('%s: Could not generate identifier for header "%s", only %s are supported', static::class, $sHeaderName, implode(' / ', [static::ENUM_HEADER_NAME_MESSAGE_ID, static::ENUM_HEADER_NAME_REFERENCES]));
+		IssueLog::Error($sErrorMessage, LogChannels::NOTIFICATIONS, [
+			'Object' => $sObjClass.'::'.$sObjId.' ('.$oObject->GetRawName().')',
+			'Action' => get_class($this).'::'.$this->GetKey().' ('.$this->GetRawName().')',
+		]);
+		throw new Exception($sErrorMessage);
 	}
 }

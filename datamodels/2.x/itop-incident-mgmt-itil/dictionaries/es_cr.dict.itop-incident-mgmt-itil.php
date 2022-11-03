@@ -15,22 +15,22 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:IncidentManagement' => 'Administración de Incidentes',
 	'Menu:IncidentManagement+' => 'Administración de Incidentes',
 	'Menu:Incident:Overview' => 'Resumen de Incidentes',
 	'Menu:Incident:Overview+' => 'Resumen de Incidentes',
 	'Menu:NewIncident' => 'Nuevo Incidente',
 	'Menu:NewIncident+' => 'Crear Ticket de Incidente',
-	'Menu:SearchIncidents' => 'Búsqueda por Incidentes',
-	'Menu:SearchIncidents+' => 'Búsqueda por tickets de Incidente',
+	'Menu:SearchIncidents' => 'Búsqueda de Incidentes',
+	'Menu:SearchIncidents+' => 'Búsqueda de tickets de Incidente',
 	'Menu:Incident:Shortcuts' => 'Accesos Rápidos',
 	'Menu:Incident:Shortcuts+' => 'Accesos Rápidos',
 	'Menu:Incident:MyIncidents' => 'Incidentes Asignados a Mí',
@@ -61,7 +61,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Incident
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident' => 'Incidente',
 	'Class:Incident+' => 'Incidente',
 	'Class:Incident/Attribute:status' => 'Estatus',
@@ -192,8 +192,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Incident/Attribute:parent_change_ref+' => 'Ref. Cambio Padre',
 	'Class:Incident/Attribute:parent_problem_id' => 'Problema Padre',
 	'Class:Incident/Attribute:parent_problem_id+' => 'Problema Padre',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
-	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
+	'Class:Incident/Attribute:parent_problem_ref' => 'Ref. Problema Padre',
+	'Class:Incident/Attribute:parent_problem_ref+' => '',
 	'Class:Incident/Attribute:related_request_list' => 'Requerimientos Relacionados',
 	'Class:Incident/Attribute:related_request_list+' => 'Requerimientos Relacionados',
 	'Class:Incident/Attribute:child_incidents_list' => 'Incidentes Hijos',

@@ -22,19 +22,20 @@
  * @copyright Copyright (C) 2010-2021 Combodo SARL
  * @license http://opensource.org/licenses/AGPL-3.0
  */
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
-require_once (APPROOT.'application/webpage.class.inc.php');
-require_once (APPROOT.'application/ajaxwebpage.class.inc.php');
-require_once (APPROOT.'application/utils.inc.php');
-require_once (APPROOT.'core/log.class.inc.php');
+if (!defined('__DIR__')) {
+	define('__DIR__', dirname(__FILE__));
+}
+
+require_once(APPROOT.'application/utils.inc.php');
+require_once(APPROOT.'core/log.class.inc.php');
 IssueLog::Enable(APPROOT.'log/error.log');
 
-require_once (APPROOT.'setup/runtimeenv.class.inc.php');
-require_once (APPROOT.'setup/backup.class.inc.php');
-require_once (APPROOT.'core/mutex.class.inc.php');
-require_once (APPROOT.'core/dict.class.inc.php');
-require_once (APPROOT.'setup/xmldataloader.class.inc.php');
-require_once (__DIR__.'/hubruntimeenvironment.class.inc.php');
+require_once(APPROOT.'setup/runtimeenv.class.inc.php');
+require_once(APPROOT.'setup/backup.class.inc.php');
+require_once(APPROOT.'core/mutex.class.inc.php');
+require_once(APPROOT.'core/dict.class.inc.php');
+require_once(APPROOT.'setup/xmldataloader.class.inc.php');
+require_once(__DIR__.'/hubruntimeenvironment.class.inc.php');
 
 /**
  * Overload of DBBackup to handle logging
@@ -110,7 +111,7 @@ function DoBackup($sTargetFile)
  */
 function ReportStatus($sMessage, $bSuccess, $iErrorCode = 0, $aMoreFields = array())
 {
-	$oPage = new ajax_page("");
+	$oPage = new AjaxPage("");
 	$oPage->SetContentType('application/json');
 	$aResult = array(
 		'code' => $iErrorCode,

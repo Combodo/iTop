@@ -10,10 +10,6 @@ use SetupUtils;
 /**
  * Class SetupUtilsTest
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @covers SetupUtils
  *
  * @since 2.7.4 N°3412
@@ -26,7 +22,7 @@ class SetupUtilsTest extends ItopTestCase
 	const INFO = 2;
 	const TRACE = 3; // for log purposes : replace old SetupLog::Log calls
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -75,7 +71,7 @@ class SetupUtilsTest extends ItopTestCase
 				"/bin/ls",
 				self::WARNING,
 				"dot could not be executed (retcode=2): Please make sure it is installed and in the path",
-			]
+			],
 		];
 	}
 
@@ -120,5 +116,31 @@ class SetupUtilsTest extends ItopTestCase
 				'11.53 HB',
 			],
 		];
+	}
+
+	/**
+	 * @covers SetupUtils::PHP_MIN_VERSION
+	 * @covers SetupUtils::PHP_NOT_VALIDATED_VERSION
+	 * @covers composer.json
+	 * @group composerJson
+	 */
+	public function testPhpMinVersionConsistency()
+	{
+		$sPHPMinVersion = SetupUtils::PHP_MIN_VERSION;
+		$sPHPNotValidatedVersion = SetupUtils::PHP_NOT_VALIDATED_VERSION;
+
+		// Ensure that not validated version is greater than min. supported version
+		$this->assertTrue(version_compare($sPHPMinVersion, $sPHPNotValidatedVersion, '<'), "SetupUtils::PHP_MIN_VERSION ($sPHPMinVersion) is not strictly lower than SetupUtils::PHP_NOT_VALIDATED_VERSION ($sPHPNotValidatedVersion)");
+
+		if (file_exists(APPROOT.'composer.json')) {
+			$oComposerConfig = json_decode(file_get_contents(APPROOT.'composer.json'));
+			// Platform/PHP must be set to the minimum to ensure dependancies are compatible with the min. version
+			$sComposerPlatformPhp = $oComposerConfig->config->platform->php;
+			$this->assertEquals($sPHPMinVersion, $oComposerConfig->config->platform->php, "SetupUtils::PHP_MIN_VERSION ($sPHPMinVersion) is not equals composer.json > config > platform ($sComposerPlatformPhp)");
+			// Require/PHP must be set to the supported PHP versions range in order to keep our package constraints up-to-date
+			$sComposerRequirePhp = $oComposerConfig->require->php;
+			$this->assertEquals(">=$sPHPMinVersion <$sPHPNotValidatedVersion", $oComposerConfig->require->php,
+				"SetupUtils::PHP_MIN_VERSION ($sPHPMinVersion) and SetupUtils::PHP_NOT_VALIDATED_VERSION ($sPHPNotValidatedVersion) is not equals composer.json > require > php ($sComposerRequirePhp)");
+		}
 	}
 }

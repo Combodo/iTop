@@ -20,7 +20,7 @@ class MFCompilerTest extends ItopTestCase {
 
 	private $sTmpDir;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		require_once(APPROOT.'setup/compiler.class.inc.php');
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
@@ -30,7 +30,7 @@ class MFCompilerTest extends ItopTestCase {
 		$this->oMFCompiler = new SubMFCompiler($this->createMock(\ModelFactory::class), '');
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		$this->RecurseRmdir($this->sTmpDir);
 	}
@@ -88,7 +88,7 @@ class MFCompilerTest extends ItopTestCase {
 		}*/
 	}
 
-	public static function tearDownAfterClass()
+	public static function tearDownAfterClass(): void
 	{
 		if (is_null(self::$aFoldersToCleanup)){
 			return;
@@ -178,6 +178,7 @@ class MFCompilerTest extends ItopTestCase {
 			'stylesheets' => [
 				"fullmoon" => '../css/backoffice/main.scss',
 				"environment-banner" => '../css/backoffice/themes/page-banner.scss',
+				"datamodel-compiled-scss-rules" => 'branding/themes/datamodel-compiled-scss-rules.scss',
 			],
 		];
 
@@ -189,6 +190,6 @@ class MFCompilerTest extends ItopTestCase {
 
 		//CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp="", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
 		MFCompiler::SetThemeHandlerService($oThemeHandlerService);
-		$this->oMFCompiler->CompileThemes($oBrandingNode, $this->sTmpDir);
+		$this->InvokeNonPublicMethod(MFCompiler::class, 'CompileThemes', $this->oMFCompiler, [$oBrandingNode, $this->sTmpDir]);
 	}
 }

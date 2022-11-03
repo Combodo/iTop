@@ -157,7 +157,7 @@ abstract class AsyncTask extends DBObject
 		if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
 		{
 			$aConfig = $aRetries[get_class($this)];
-			$iRetryDelay = $aConfig['retry_delay'];
+			$iRetryDelay = $aConfig['retry_delay'] ?? $iRetryDelay;
 		}
 		return $iRetryDelay;
 	}
@@ -169,9 +169,69 @@ abstract class AsyncTask extends DBObject
 		if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
 		{
 			$aConfig = $aRetries[get_class($this)];
-			$iMaxRetries = $aConfig['max_retries'];
+			$iMaxRetries = $aConfig['max_retries'] ?? $iMaxRetries;
 		}
 		return $iMaxRetries;
+	}
+
+	public function IsRetryDelayExponential()
+	{
+	    $bExponential = false;
+	    $aRetries = MetaModel::GetConfig()->Get('async_task_retries');
+	    if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
+	    {
+	        $aConfig = $aRetries[get_class($this)];
+	        $bExponential = (bool)$aConfig['exponential_delay'] ?? $bExponential;
+	    }
+	    return $bExponential;
+	}
+
+	public static function CheckRetryConfig(Config $oConfig, $sAsyncTaskClass)
+	{
+	    $aMessages = [];
+	    $aRetries = $oConfig->Get('async_task_retries');
+	    if (is_array($aRetries) && array_key_exists($sAsyncTaskClass, $aRetries))
+	    {
+	        $aValidKeys = array("retry_delay", "max_retries", "exponential_delay");
+	        $aConfig = $aRetries[$sAsyncTaskClass];
+	        if (!is_array($aConfig))
+	        {
+	            $aMessages[] = Dict::Format('Class:AsyncTask:InvalidConfig_Class_Keys', $sAsyncTaskClass, implode(', ', $aValidKeys));
+	        }
+	        else
+	        {
+	            foreach($aConfig as $key => $value)
+	            {
+	                if (!in_array($key, $aValidKeys))
+	                {
+	                    $aMessages[] = Dict::Format('Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys', $sAsyncTaskClass, $key, implode(', ', $aValidKeys));
+	                }
+	            }
+	        }
+	    }
+	    return $aMessages;
+	}
+
+	/**
+	 * Compute the delay to wait for the "next retry", based on the given parameters
+	 * @param bool $bIsExponential
+	 * @param int $iRetryDelay
+	 * @param int $iMaxRetries
+	 * @param int $iRemainingRetries
+	 * @return int
+	 */
+	public static function GetNextRetryDelay($bIsExponential, $iRetryDelay, $iMaxRetries, $iRemainingRetries)
+	{
+	    if ($bIsExponential)
+	    {
+	        $iExponent = $iMaxRetries - $iRemainingRetries;
+	        if ($iExponent < 0) $iExponent = 0; // Safety net in case on configuration change in the middle of retries
+	        return $iRetryDelay * (2 ** $iExponent);
+	    }
+	    else
+	    {
+	        return $iRetryDelay;
+	    }
 	}
 
 	/**
@@ -233,7 +293,7 @@ abstract class AsyncTask extends DBObject
 			$this->Set('remaining_retries', $this->GetMaxRetries($iErrorCode));
 		}
 
-		$this->Set('last_error', $sErrorMessage);
+		$this->SetTrim('last_error', $sErrorMessage);
 		$this->Set('last_error_code', $iErrorCode); // Note: can be ZERO !!!
 		$this->Set('last_attempt', time());
 
@@ -241,25 +301,26 @@ abstract class AsyncTask extends DBObject
 		if ($iRemaining > 0)
 		{
 			$iRetryDelay = $this->GetRetryDelay($iErrorCode);
-			IssueLog::Info('Failed to process async task #'.$this->GetKey().' - reason: '.$sErrorMessage.' - remaining retries: '.$iRemaining.' - next retry in '.$iRetryDelay.'s');
+			$iNextRetryDelay = static::GetNextRetryDelay($this->IsRetryDelayExponential(), $iRetryDelay, $this->GetMaxRetries($iErrorCode), $iRemaining);
+			IssueLog::Info('Failed to process async task #'.$this->GetKey().' - reason: '.$sErrorMessage.' - remaining retries: '.$iRemaining.' - next retry in '.$iNextRetryDelay.'s');
 			if ($this->Get('event_id') != 0)
 			{
 				$oEventLog = MetaModel::GetObject('Event', $this->Get('event_id'));
-				$oEventLog->Set('message', "$sErrorMessage\nFailed to process async task. Remaining retries: '.$iRemaining.'. Next retry in '.$iRetryDelay.'s'");
+				$oEventLog->Set('message', "$sErrorMessage\nFailed to process async task. Remaining retries: $iRemaining. Next retry in {$iNextRetryDelay}s");
                 try
                 {
                     $oEventLog->DBUpdate();
                 }
                 catch (Exception $e)
                 {
-                    $oEventLog->Set('message', "Failed to process async task. Remaining retries: '.$iRemaining.'. Next retry in '.$iRetryDelay.'s', more details in the log");
+                    $oEventLog->Set('message', "Failed to process async task. Remaining retries: $iRemaining. Next retry in {$iNextRetryDelay}s, more details in the log");
                     $oEventLog->DBUpdate();
                 }
 			}
 			$this->Set('remaining_retries', $iRemaining - 1);
 			$this->Set('status', 'planned');
 			$this->Set('started', null);
-			$this->Set('planned', time() + $iRetryDelay);
+			$this->Set('planned', time() + $iNextRetryDelay);
 		}
 		else
 		{
@@ -348,8 +409,6 @@ class AsyncSendEmail extends AsyncTask
 		$oNew->Set('to', $oEMail->GetRecipientTO(true /* string */));
 		$oNew->Set('subject', $oEMail->GetSubject());
 
-//		$oNew->Set('version', 1);
-//		$sMessage = serialize($oEMail);
 		$oNew->Set('version', 2);
 		$sMessage = $oEMail->SerializeV2();
 		$oNew->Set('message', $sMessage);

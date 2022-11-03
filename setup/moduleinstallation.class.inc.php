@@ -31,14 +31,15 @@ class ModuleInstallation extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core,view_in_gui",
-			"key_type" => "autoincrement",
-			"name_attcode" => "",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"category"            => "core,view_in_gui",
+			"key_type"            => "autoincrement",
+			'name_attcode'        => array('name', 'version'),
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
 			"db_table" => "priv_module_install",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			'order_by_default' => array('installed' => false),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -51,7 +52,7 @@ class ModuleInstallation extends cmdbAbstractObject
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'version', 'installed', 'comment', 'parent_id')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'version', 'installed', 'comment')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('installed', 'comment')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
@@ -65,18 +66,17 @@ class ModuleInstallation extends cmdbAbstractObject
  * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 class ExtensionInstallation extends cmdbAbstractObject
 {
 	public static function Init()
 	{
 		$aParams = array
 		(
-				"category" => "core,view_in_gui",
-				"key_type" => "autoincrement",
-				"name_attcode" => "",
-				"state_attcode" => "",
-				"reconc_keys" => array(),
+			"category"                => "core,view_in_gui",
+			"key_type"                => "autoincrement",
+			"name_attcode"            => "",
+			"state_attcode"           => "",
+			"reconc_keys"             => array(),
 				"db_table" => "priv_extension_install",
 				"db_key_field" => "id",
 				"db_finalclass_field" => "",

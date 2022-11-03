@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\Session;
 
 /**
  * The standardized result of any pass/fail check performed by the setup
@@ -93,17 +94,17 @@ class CheckResult {
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
-	const PHP_MIN_VERSION = '7.1.3'; // 7 will be supported until the end of 2019 (see http://php.net/supported-versions.php)
-	const MYSQL_MIN_VERSION = '5.7.0'; // 5.6 is no longer supported
+	const PHP_MIN_VERSION             = '7.4.0';
+	const MYSQL_MIN_VERSION           = '5.7.0'; // 5.6 is no longer supported
 	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
 
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
-	const PHP_NEXT_MIN_VERSION = ''; //
-	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for next iTop version
+	const PHP_NEXT_MIN_VERSION   = ''; // No new PHP requirement for next iTop version yet
+	const MYSQL_NEXT_MIN_VERSION = ''; // No new MySQL requirement for next iTop version yet
 	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '8.0.0';
+	const PHP_NOT_VALIDATED_VERSION = '8.2.0';
 
-	const MIN_MEMORY_LIMIT = 33554432; // 32 * 1024 * 1024 - we can use expressions in const since PHP 5.6 but we are in the setup !
+	const MIN_MEMORY_LIMIT             = '32M';
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
 
 	/**
@@ -150,6 +151,14 @@ class SetupUtils
 		}
 		$aWritableDirsErrors = self::CheckWritableDirs($aWritableDirs);
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
+		// Check temp dir (N°5235) : as this path isn't under APPROOT we are doing a custom check and not using \SetupUtils::CheckWritableDirs
+		$sTmpDir = static::GetTmpDir();
+		clearstatcache(true, $sTmpDir);
+		if (is_writable($sTmpDir)) {
+			$aResult[] = new CheckResult(CheckResult::INFO, "The temp directory is writable by the application.");
+		} else {
+			$aResult[] = new CheckResult(CheckResult::WARNING, "The temp directory <b>'".$sTmpDir."'</b> is not writable by the application. Change its permission or use another dir (sys_temp_dir option in php.ini).");
+		}
 
 		$aMandatoryExtensions = self::GetPHPMandatoryExtensions();
 		$aOptionalExtensions = self::GetPHPOptionalExtensions();
@@ -305,24 +314,20 @@ class SetupUtils
 
 		// Check some more ini settings here, needed for file upload
 		$sMemoryLimit = trim(ini_get('memory_limit'));
-		if (empty($sMemoryLimit))
-		{
+		if (empty($sMemoryLimit)) {
 			// On some PHP installations, memory_limit does not exist as a PHP setting!
 			// (encountered on a 5.2.0 under Windows)
 			// In that case, ini_set will not work, let's keep track of this and proceed anyway
 			$aResult[] = new CheckResult(CheckResult::WARNING, "No memory limit has been defined in this instance of PHP");
-		}
-		else
-		{
+		} else {
 			// Check that the limit will allow us to load the data
 			//
-			$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-			if (!utils::IsMemoryLimitOk($iMemoryLimit, self::MIN_MEMORY_LIMIT)) {
-				$aResult[] = new CheckResult(CheckResult::ERROR,
-					"memory_limit ($iMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
-			}
-			else {
-				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - memory_limit is $iMemoryLimit, ok.");
+			$iCurrentMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
+			$iMinMemoryLimit = utils::ConvertToBytes(self::MIN_MEMORY_LIMIT);
+			if (!utils::IsMemoryLimitOk($iCurrentMemoryLimit, $iMinMemoryLimit)) {
+				$aResult[] = new CheckResult(CheckResult::ERROR, "memory_limit ($sMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
+			} else {
+				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - memory_limit is $sMemoryLimit, ok.");
 			}
 		}
 
@@ -457,12 +462,12 @@ class SetupUtils
 			if (!empty($sPhpNextMinVersion)) {
 				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>=')) {
 					$aResult[] = new CheckResult(CheckResult::INFO,
-						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")");
 				}
 				else
 				{
 					$aResult[] = new CheckResult(CheckResult::WARNING,
-						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")");
 				}
 			}
 
@@ -687,6 +692,7 @@ class SetupUtils
 	 * Emulates sys_get_temp_dir if needed (PHP < 5.2.1)
 	 *
 	 * @return string Path to the system's temp directory
+	 * @uses \sys_get_temp_dir()
 	 */
 	public static function GetTmpDir() {
 		return realpath(sys_get_temp_dir());
@@ -771,7 +777,9 @@ class SetupUtils
 		{
 			$parent = dirname($dir);
 			self::builddir($parent);
-			mkdir($dir);
+			if (!mkdir($dir) && !is_dir($dir)) {
+				throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+			}
 		}
 	}
 
@@ -1016,82 +1024,60 @@ class SetupUtils
 		$sWikiVersion = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
 		$sMysqlTlsWikiPageUrl = 'https://www.itophub.io/wiki/page?id='.$sWikiVersion.':install:php_and_mysql_tls';
 
-		$oPage->add('<tr><td colspan="2">');
 		$oPage->add('<fieldset><legend>Database Server Connection</legend>');
 		$oPage->add('<table id="table_db_options">');
 
 		//-- DB connection params
 		$oPage->add('<tbody>');
-		$oPage->add('<tr><td>Server Name:</td><td><input id="db_server" type="text" name="db_server" value="'.htmlentities($sDBServer, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td>E.g. "localhost", "dbserver.mycompany.com" or "192.142.10.23"</td></tr>');
-		$oPage->add('<tr><td>Login:</td><td><input id="db_user" type="text" name="db_user" value="'
-			.htmlentities($sDBUser, ENT_QUOTES, 'UTF-8')
-			.'" size="15"/></td><td rowspan="2" style="vertical-align:top">The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, CREATE VIEW, SHOW VIEW, LOCK TABLE, SUPER, TRIGGER</td></tr>');
-		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" autocomplete="off" type="password" name="db_pwd" value="'.htmlentities($sDBPwd, ENT_QUOTES, 'UTF-8').'" size="15"/></td></tr>');
-		$oPage->add('</tbody>');
+		$oPage->add('<tr><td>Server Name:</td><td><input id="db_server" class="ibo-input" type="text" name="db_server" value="'.utils::EscapeHtml($sDBServer).'" size="15"/></td><td><i class="fas fa-question-circle setup-input--hint--icon" data-tooltip-content="E.g. \'localhost\', \'dbserver.mycompany.com\' or \'192.142.10.23\'"></i></td></tr>');
+		$oPage->add('<tr><td>Login:</td><td><input id="db_user" class="ibo-input" type="text" name="db_user" value="'.utils::EscapeHtml($sDBUser)
+			.'" size="15"/></td><td><i class="fas fa-question-circle setup-input--hint--icon" data-tooltip-content="The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, CREATE VIEW, SHOW VIEW, LOCK TABLE, SUPER, TRIGGER"></i></td></tr>');
+		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" class="ibo-input" autocomplete="off" type="password" name="db_pwd" value="'.utils::EscapeHtml($sDBPwd).'" size="15"/></td></tr>');
+		$oPage->add('</tbody></table>');
 
 		//-- TLS params (N°1260)
 		$sTlsEnabledChecked = $bTlsEnabled ? ' checked' : '';
-		$sTlsCaDisabled     = $bTlsEnabled ? '' : ' disabled';
-		$oPage->add('<tbody id="tls_options" class="collapsable-options">');
-		$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 6em; font-weight: normal; color: #696969"><img style="vertical-align:bottom" id="db_tls_img">Use TLS encrypted connection</label></th></tr>');
-		$oPage->add('<tr style="display:none"><td colspan="3" class="message message-error">Before configuring MySQL with TLS encryption, read the documentation <a href="'.$sMysqlTlsWikiPageUrl.'" target="_blank">on Combodo\'s Wiki</a></td></tr>');
-		$oPage->add('<tr style="display:none"><td colspan="3"><label><input id="db_tls_enabled" type="checkbox"'.$sTlsEnabledChecked.' name="db_tls_enabled" value="1"> Encrypted connection enabled</label></td></tr>');
-		$oPage->add('<tr style="display:none"><td>SSL CA:</td>');
-		$oPage->add('<td><input id="db_tls_ca" autocomplete="off" type="text" name="db_tls_ca" value="'.htmlentities($sTlsCA,
-				ENT_QUOTES, 'UTF-8').'" size="15"'.$sTlsCaDisabled.'></td>');
-		$oPage->add('<td>Path to certificate authority file for SSL</td></tr>');
-		$oPage->add('</tbody>');
+		$sTlsCaDisabled = $bTlsEnabled ? '' : ' disabled';
+		$oPage->add('<div id="tls_options" class="collapsable-options">');
+		$oPage->add('<span data-role="setup-collapsable-options--toggler"><img id="db_tls_img"><label>Use TLS encrypted connection</label></span>');
+		$oPage->add('<div class="message message-error" style="display:none;">Before configuring MySQL with TLS encryption, read the documentation <a href="'.$sMysqlTlsWikiPageUrl.'" target="_blank">on Combodo\'s Wiki</a></div>');
+		$oPage->add('<label style="display:none;"><input id="db_tls_enabled" type="checkbox" '.$sTlsEnabledChecked.' name="db_tls_enabled" value="1"> Encrypted connection enabled</label>');
+		$oPage->add('<div class="setup-tls--input--container" style="display:none">SSL CA:');
+		$oPage->add('<input id="db_tls_ca" class="ibo-input" autocomplete="off" type="text" name="db_tls_ca" value="'.utils::EscapeHtml($sTlsCA).'" size="15"'.$sTlsCaDisabled.'>');
+		$oPage->add('Path to certificate authority file for SSL</div>');
+		$oPage->add('</div>');
 
-		$oPage->add('</table>');
 		$oPage->add('</fieldset>');
-		$oPage->add('</td></tr>');
 
-		$oPage->add('<tr><td colspan="2"><div id="db_info"></div></td></tr>');
+		$oPage->add('<div id="db_info"></div>');
 
-		$oPage->add('<tr><td colspan="2">');
+		$oPage->add('');
 		$oPage->add('<fieldset><legend>Database</legend>');
 		$oPage->add('<table>');
-		if ($bIsItopInstall)
-		{
+		if ($bIsItopInstall) {
 			$oPage->add('<tr><td><input type="radio" id="create_db" name="create_db" value="yes"/><label for="create_db">&nbsp;Create a new database:</label></td>');
-			$oPage->add('<td><input id="db_new_name" type="text" name="db_new_name" value="'.htmlentities($sNewDBName, ENT_QUOTES, 'UTF-8').'" size="15" maxlength="32"/><span style="width:20px;" id="v_db_new_name"></span></td></tr>');
+			$oPage->add('<td><input id="db_new_name" class="ibo-input" type="text" name="db_new_name" value="'.utils::EscapeHtml($sNewDBName).'" size="15" maxlength="32"/><span style="width:20px;" id="v_db_new_name"></span></td></tr>');
 			$oPage->add('<tr><td><input type="radio" id="existing_db" name="create_db" value="no"/><label for="existing_db">&nbsp;Use the existing database:</label></td>');
-			$oPage->add('<td id="db_name_container"><input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
-			$oPage->add('</tbody>');
-			$oPage->add('<tbody id="prefix_option" class="collapsable-options">');
-			$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 0.4em; font-weight: normal; color: #696969"><img style="vertical-align:bottom">Use shared database</label></th></tr>');
-			$oPage->add('<tr style="display:none"><td>Use a prefix for the tables:</td><td><input id="db_prefix" type="text" name="db_prefix" value="'.htmlentities($sDBPrefix,
-					ENT_QUOTES, 'UTF-8').'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></td></tr>');
-			$oPage->add('</tbody>');
-		}
-		else
-		{
-			$oPage->add('<tr><td>Database Name:</td><td id="db_name_container"><input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
-			$oPage->add('</tbody>');
-			$oPage->add('<tbody id="prefix_option" class="collapsable-options">');
-			$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 0.4em; font-weight: normal; color: #696969"><img style="vertical-align:bottom">Use shared database</label></th></tr>');
-			$oPage->add('<tr style="display:none"><td>Use a prefix for the tables:</td><td><input id="db_prefix" type="text" name="db_prefix" value="'.htmlentities($sDBPrefix,
-					ENT_QUOTES, 'UTF-8').'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></td></tr>');
-			$oPage->add('</tbody>');
+			$oPage->add('<td id="db_name_container" class="ibo-input-select-wrapper"><input id="db_name" class="ibo-input ibo-input-select" name="db_name" size="15" maxlen="32" value="'.utils::EscapeHtml($sDBName).'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
+		} else {
+			$oPage->add('<tr><td>Database Name:</td><td id="db_name_container" class="ibo-input-select-wrapper"><input id="db_name" class="ibo-input ibo-input-select" name="db_name" size="15" maxlen="32" value="'.utils::EscapeHtml($sDBName).'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
 		}
 		$oPage->add('</table>');
+		$oPage->add('<div id="prefix_option" class="collapsable-options">');
+		$oPage->add('<span data-role="setup-collapsable-options--toggler"><label style="font-weight: normal;"><img>Use shared database</label></span>');
+		$oPage->add('<div class="setup-prefix-toggler--input--container" style="display:none">Use a prefix for the tables:<input id="db_prefix" class="ibo-input" type="text" name="db_prefix" value="'.utils::EscapeHtml($sDBPrefix).'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></div>');
+		$oPage->add('</div>');
 		$oPage->add('</fieldset>');
-		$oPage->add('<tr><td colspan="2"><span id="table_info">&nbsp;</span></td></tr>');
-		$oPage->add('</td></tr>');
+		$oPage->add('<span id="table_info"></span>');
 
 		// Sub options toggle (TLS, prefix)
 		$oPage->add_script(<<<'JS'
 function toggleCollapsableOptions($tbody) {
-	$tbody.find("tr").not("tr:first-child").toggle();
+	$tbody.children().not(":first-child").toggle();
 	updateCollapsableImage($tbody);
 }
 function updateCollapsableImage($tbody) {
-	$collapsableImg = $tbody.find("tr:first-child>th>label>img");
-	imgPath = "../images/";
-	imgUrl = ($tbody.find("tr:nth-child(2)>td:visible").length > 0) 
-		? "minus.gif"
-		: "plus.gif";
-	$collapsableImg.attr("src", imgPath+imgUrl);
+	$tbody.toggleClass('setup-is-opened');
 }
 JS
 		);
@@ -1101,17 +1087,14 @@ JS
 		}
 		$oPage->add_ready_script(
 			<<<'JS'
-$("tbody.collapsable-options>tr>th>label").on('click', function() {
-	var $tbody = $(this).closest("tbody");
+$("[data-role=\"setup-collapsable-options--toggler\"").on('click', function() {
+	var $tbody = $(this).closest("div");
 	toggleCollapsableOptions($tbody);
 });
 $("#db_tls_enabled").on('click', function() {
 	var bTlsEnabled = $("#db_tls_enabled").is(":checked");
 	$("#db_tls_ca").prop("disabled", !bTlsEnabled);
 });
-$("tbody.collapsable-options").each(function() {
-	updateCollapsableImage($(this));
-})
 JS
 		);
 
@@ -1206,13 +1189,13 @@ function ValidateField(sFieldId, bUsed)
 			}
 			else
 			{
-				$("#v_"+sFieldId).html('<img src="../images/validation_error.png" title="Only the characters [A-Za-z0-9_] are allowed"/>');
+				$("#v_"+sFieldId).html('<i class="fas fa-exclamation-triangle setup-invalid-field--icon" title="Only the characters [A-Za-z0-9_] are allowed"></i>');
 				return false;
 			}
 		}
 		else if (bMandatory)
 		{
-			$("#v_"+sFieldId).html('<img src="../images/validation_error.png" title="This field cannot be empty"/>');
+			$("#v_"+sFieldId).html('<i class="fas fa-exclamation-triangle setup-invalid-field--icon" title="This field cannot be empty"></i>');
 			return false;
 		}
 		else
@@ -1496,23 +1479,18 @@ JS
 					}
 				}
 
-				if ($checks['databases'] == null)
-				{
-					$sDBNameInput = '<input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span>';
+				if ($checks['databases'] == null) {
+					$sDBNameInput = '<input id="db_name" name="db_name" size="15" maxlen="32" value="'.utils::EscapeHtml($sDBName).'"/><span style="width:20px;" id="v_db_name"></span>';
 					$oPage->add_ready_script(
-<<<JS
+						<<<JS
 $("#table_info").html('<div class="message message-error"><span class="message-title">Error:</span>Not enough rights to enumerate the databases</div>');
 JS
 					);
-				}
-				else
-				{
-					$sDBNameInput = '<select id="db_name" name="db_name">';
-					foreach ($checks['databases'] as $sDatabaseName)
-					{
-						if ($sDatabaseName != 'information_schema')
-						{
-							$sEncodedName = htmlentities($sDatabaseName, ENT_QUOTES, 'UTF-8');
+				} else {
+					$sDBNameInput = '<select id="db_name" class="ibo-input ibo-input-select" name="db_name">';
+					foreach ($checks['databases'] as $sDatabaseName) {
+						if ($sDatabaseName != 'information_schema') {
+							$sEncodedName = utils::EscapeHtml($sDatabaseName);
 							$sSelected = ($sDatabaseName == $sDBName) ? ' selected ' : '';
 							$sDBNameInput .= '<option value="'.$sEncodedName.'" '.$sSelected.'>'.$sEncodedName.'</option>';
 						}
@@ -1556,15 +1534,14 @@ JS
 
 	public static function GetLanguageSelect($sSourceDir, $sInputName, $sDefaultLanguageCode)
 	{
-		$sHtml = '<select  id="'.$sInputName.'" name="'.$sInputName.'">';
+		$sHtml = '<div class="ibo-input-select-wrapper"><select  id="'.$sInputName.'" class="ibo-input ibo-input-select" name="'.$sInputName.'">';
 		$sSourceDir = APPROOT.'dictionaries/';
 		$aLanguages = SetupUtils::GetAvailableLanguages($sSourceDir);
 		foreach ($aLanguages as $sCode => $aInfo) {
 			$sSelected = ($sCode == $sDefaultLanguageCode) ? 'selected ' : '';
-			$sHtml .= '<option value="'.$sCode.'" '.$sSelected.'>'.htmlentities($aInfo['description'], ENT_QUOTES,
-					'UTF-8').' ('.htmlentities($aInfo['localized_description'], ENT_QUOTES, 'UTF-8').')</option>';
+			$sHtml .= '<option value="'.$sCode.'" '.$sSelected.'>'.utils::EscapeHtml($aInfo['description']).' ('.utils::EscapeHtml($aInfo['localized_description']).')</option>';
 		}
-		$sHtml .= '</select></td></tr>';
+		$sHtml .= '</select></div>';
 
 		return $sHtml;
 	}
@@ -1888,21 +1865,30 @@ JS
 
 	public static function GetVersionManifest($sInstalledVersion)
 	{
-		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches))
-		{
+		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches)) {
 			return APPROOT.'datamodels/'.$aMatches[1].'.x/manifest-'.$sInstalledVersion.'.xml';
 		}
+
 		return false;
 	}
 
+	/**
+	 * Check paths relative to APPROOT : is existing, is dir, is writable
+	 *
+	 * @param string[] $aWritableDirs list of dirs to check, relative to APPROOT (for example : `['log','conf','data']`)
+	 *
+	 * @return array<string, \CheckResult> full path as key, CheckResult error as value
+	 *
+	 * @uses \is_dir()
+	 * @uses \is_writable()
+	 * @uses \file_exists()
+	 */
 	public static function CheckWritableDirs($aWritableDirs)
 	{
 		$aNonWritableDirs = array();
-		foreach($aWritableDirs as $sDir)
-		{
+		foreach ($aWritableDirs as $sDir) {
 			$sFullPath = APPROOT.$sDir;
-			if (is_dir($sFullPath) && !is_writable($sFullPath))
-			{
+			if (is_dir($sFullPath) && !is_writable($sFullPath)) {
 				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, "The directory <b>'".APPROOT.$sDir."'</b> exists but is not writable for the application.");
 			}
 			else if (file_exists($sFullPath) && !is_dir($sFullPath))
@@ -1959,8 +1945,8 @@ JS
 		$aLicenceFiles = glob(APPROOT.'setup/licenses/*.xml');
 		if (empty($sEnv)) {
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/*/license.*.xml'));
-			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/*/license.*.xml'));
-			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/*/license.*.xml'));
+			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/{*,*/*}/license.*.xml', GLOB_BRACE));
+			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/{*,*/*}/license.*.xml', GLOB_BRACE));
 		}
 		else
 		{
@@ -1985,14 +1971,22 @@ JS
 	 */
 	public static function GetSetupQueriesFilePath()
 	{
-		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
+		return APPROOT.'log/setup-queries-'.date('Y-m-d_H_i').'.sql';
 	}
 
-	public static function EnterMaintenanceMode($oConfig)
+	/**
+	 * @param $oConfig
+	 *
+	 * @return bool
+	 * @since 3.0.0 returns true if the app. was already in maintenance mode, false otherwise
+	 */
+	public static function EnterMaintenanceMode($oConfig): bool
 	{
+		$bPreviousMode = self::IsInMaintenanceMode();
 		@touch(MAINTENANCE_MODE_FILE);
-		self::Log("----> Entering maintenance mode");
+		SetupLog::Info("----> Entering maintenance mode");
 		self::WaitCronTermination($oConfig, "maintenance");
+		return $bPreviousMode;
 	}
 
 	public static function ExitMaintenanceMode($bLog = true)
@@ -2000,7 +1994,7 @@ JS
 		@unlink(MAINTENANCE_MODE_FILE);
 		if ($bLog)
 		{
-			self::Log("<---- Exiting maintenance mode");
+			SetupLog::Info("<---- Exiting maintenance mode");
 		}
 	}
 
@@ -2009,11 +2003,14 @@ JS
 		return file_exists(MAINTENANCE_MODE_FILE);
 	}
 
-	public static function EnterReadOnlyMode($oConfig)
+	public static function EnterReadOnlyMode($oConfig): bool
 	{
+		$bPreviousMode = self::IsInReadOnlyMode();
 		@touch(READONLY_MODE_FILE);
-		self::Log("----> Entering read only mode");
+		SetupLog::Info("----> Entering read only mode");
 		self::WaitCronTermination($oConfig, "read only");
+
+		return $bPreviousMode;
 	}
 
 	public static function ExitReadOnlyMode($bLog = true)
@@ -2021,7 +2018,7 @@ JS
 		@unlink(READONLY_MODE_FILE);
 		if ($bLog)
 		{
-			self::Log("<---- Exiting read only mode");
+			SetupLog::Info("<---- Exiting read only mode");
 		}
 	}
 
@@ -2039,8 +2036,7 @@ JS
 		try
 		{
 			// Wait for cron to stop
-			if (is_null($oConfig))
-			{
+			if (is_null($oConfig) || ContextTag::Check(ContextTag::TAG_CRON)) {
 				return;
 			}
 			// Use mutex to check if cron is running
@@ -2058,7 +2054,7 @@ JS
 			$iTimeLimit = $iStarted + $iMaxDuration;
 			while ($oMutex->IsLocked())
 			{
-				self::Log("Waiting for cron to stop ($iCount)");
+				SetupLog::Info("Waiting for cron to stop ($iCount)");
 				$iCount++;
 				sleep(1);
 				if (time() > $iTimeLimit)
@@ -2087,7 +2083,7 @@ JS
 		}
 		$sUID = hash('sha256', rand());
 		file_put_contents(APPROOT.'data/setup/authent', $sUID);
-		$_SESSION['setup_token'] = $sUID;
+		Session::Set('setup_token', $sUID);
 		return $sUID;
 	}
 
@@ -2119,8 +2115,8 @@ JS
 	 */
 	public static function IsSessionSetupTokenValid()
 	{
-		if (isset($_SESSION['setup_token'])) {
-			$sAuth = $_SESSION['setup_token'];
+		if (Session::IsSet('setup_token')) {
+			$sAuth = Session::Get('setup_token');
 			$sTokenFile = APPROOT.'data/setup/authent';
 			if (file_exists($sTokenFile) && $sAuth === file_get_contents($sTokenFile)) {
 				return true;
@@ -2139,23 +2135,7 @@ JS
 		if (is_file($sTokenFile)) {
 			unlink($sTokenFile);
 		}
-		unset($_SESSION['setup_token']);
-	}
-
-
-	/**
-	 * @param string $sText
-	 *
-	 * @since 2.7.0 N°2240 Maintenance mode
-	 * @since 3.0.0 N°2522 uses SetupLog instead of SetupPage (but still uses SetupPage for setup/console detection)
-	 */
-	private static function Log($sText) {
-		if (class_exists('SetupPage')) {
-			SetupLog::Ok($sText);
-		}
-		else {
-			IssueLog::Info($sText);
-		}
+		Session::Unset('setup_token');
 	}
 
 	/**
@@ -2174,9 +2154,10 @@ JS
 			'dom',
 			'zlib',
 			'zip',
-			'fileinfo', // N°3123
+			'fileinfo', // N°3123 if disabled, will throw "wrong format" when uploading AttributeImage
 			'mbstring', // N°2891, N°2899
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
+			'curl', // N°5270 Needed for one of authent-cas dependencies
 		];
 	}
 
@@ -2191,7 +2172,6 @@ JS
 				'openssl' => 'Strong encryption will not be used.',
 			],
 			'ldap' => 'LDAP authentication will be disabled.',
-			'curl' => 'PDF exports won\'t be possible.',
 		];
 
 		if (utils::IsDevelopmentEnvironment()) {

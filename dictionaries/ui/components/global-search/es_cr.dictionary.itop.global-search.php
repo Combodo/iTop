@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Global search
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'UI:Component:GlobalSearch:Tooltip' => 'Search throughout the whole application~~',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Search...~~',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Recents~~',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'You haven\'t run any search yet~~',
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Open global search~~',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'UI:Component:GlobalSearch:Tooltip' => 'Buscar en toda la aplicación',
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Búsqueda...',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Recientes',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Aún no ha realizado ninguna búsqueda',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'El historial está deshabilitado',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Abrir búsqueda global',
 ));

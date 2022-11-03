@@ -195,24 +195,26 @@
 				var levelPrimaryAction = levelActions[levelActionsKeys[0]];
 				var url = '';
 
-				var liElem  = $('<li></li>').addClass('list-group-item');
-				var aElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
-				var nameElem   = $('<a></a>').addClass('tree-item').text(item.name);
-				// Building node
-				$('ul[data-level-id="'+nodeId+'"]').append(liElem);
-				aElem.append(nameElem);
-				liElem.append(aElem);
-				
-				// Building tooltip for the node
-				if( (item.tooltip !== undefined) && (item.tooltip !== '') )
-				{
-					nameElem.attr('title', item.tooltip).attr('data-toggle', 'tooltip').tooltip({html: true, trigger: 'hover', placement: 'right'});
-				}
-				// Building description for the node
-				if( (item.description !== undefined) && (item.description !== '') )
-				{
-					aElem.append( $('<span class="list-group-item-description">'+item.description+'</span>') );
-				}
+                var liElem = $('<li></li>').addClass('list-group-item');
+                var aElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
+                var nameElem = $('<a></a>').addClass('tree-item').text(item.name);
+                // Building node
+                $('ul[data-level-id="'+nodeId+'"]').append(liElem);
+                aElem.append(nameElem);
+                liElem.append(aElem);
+
+                // Building tooltip for the node
+                // N°4662 - Surround tooltip with div to ensure text retrival
+                if ((item.tooltip !== undefined) && ($('<div>'+item.tooltip+'</div>').text() !== ''))
+                {
+                    nameElem.attr('data-tooltip-content', item.tooltip).attr('data-tooltip-html-enabled', true);
+                    CombodoTooltip.InitTooltipFromMarkup(nameElem);
+                }
+                // Building description for the node
+                if ((item.description !== undefined) && (item.description !== ''))
+                {
+                    aElem.append($('<span class="list-group-item-description">'+item.description+'</span>'));
+                }
 				
 				// Building actions for that node
 				switch(levelPrimaryAction.type)

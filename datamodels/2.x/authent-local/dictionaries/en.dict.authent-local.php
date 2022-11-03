@@ -36,8 +36,8 @@
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:UserLocal' => 'iTop user',
-	'Class:UserLocal+' => 'User authentified by iTop',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.' user',
+	'Class:UserLocal+' => 'User authentified by '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Password',
 	'Class:UserLocal/Attribute:password+' => 'User authentication string',
 

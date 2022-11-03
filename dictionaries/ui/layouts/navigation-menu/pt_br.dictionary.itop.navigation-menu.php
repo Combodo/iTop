@@ -18,15 +18,17 @@
  */
 // Navigation menu
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo~~',
-	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse~~',
-	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Expand / Collapse (Filtered on %1$s)~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Type your keywords to filter menus~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Matches from all menu groups will be displayed~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter~~',
-	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!~~',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture~~',
-	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries~~',
+	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Logo da organização',
+	'UI:Layout:NavigationMenu:Silo:Label' => 'Selecione a organização para filtrar',
+	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expandir / Recolher',
+	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Expandir / Recolher (Filtrado em %1$s)',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filtrar...',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Digite palavras-chave para filtrar os menus',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'As correspondências em todos os grupos de menus serão exibidas',
+	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Nenhum resultado para este filtro de menu',
+	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Olá %1$s!',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Imagem do contato %1$',
+	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Abrir menu do usuário',
+	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtrar entradas de menu',
 
 ));

@@ -1,23 +1,28 @@
-$ibo-dashboard-editor--pane--padding: 16px 30px 16px 15px !default;
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-dashboard-editor--pane--padding: $ibo-spacing-500 30px $ibo-spacing-500 15px !default;
 
 $ibo-dashboard-editor--available-dashlet-icon--height: 34px !default;
 $ibo-dashboard-editor--available-dashlet-icon--width: $ibo-dashboard-editor--available-dashlet-icon--height !default;
-$ibo-dashboard-editor--available-dashlet-icon--margin: 2px 5px !default;
+$ibo-dashboard-editor--available-dashlet-icon--margin: $ibo-spacing-100 5px !default;
 
 $ibo-dashboard-editor--properties-title--padding-bottom: 2rem !default;
 
-$ibo-dashboard-editor--layout-list--padding-bottom: 12px !default;
+$ibo-dashboard-editor--layout-list--padding-bottom: $ibo-spacing-400 !default;
 
 $ibo-dashboard-editor--layout-list--button--margin: 0 15px 0 5px !default;
 
-$ibo-dashboard-editor--padding: 0 !default;
+$ibo-dashboard-editor--padding: $ibo-spacing-0 !default;
 
 $ibo-dashboard-editor--dashboard--border-right: solid 1px $ibo-color-grey-200 !default;
-$ibo-dashboard-editor--dashboard--padding: 16px 15px 16px 30px !default;
+$ibo-dashboard-editor--dashboard--padding: $ibo-spacing-500 15px $ibo-spacing-500 30px !default;
 
 $ibo-dashboard-editor--delete-dashlet-icon--top: 7px !default;
 $ibo-dashboard-editor--delete-dashlet-icon--right: 9px !default;
-$ibo-dashboard-editor--delete-dashlet-icon--padding: 2px 6px !default;
+$ibo-dashboard-editor--delete-dashlet-icon--padding: $ibo-spacing-100 6px !default;
 $ibo-dashboard-editor--delete-dashlet-icon--z-index: 21 !default;
 
 

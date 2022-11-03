@@ -1,3 +1,8 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 $ibo-impact-analysis--graph-zoom-slider--height: 1.1em !default;
 $ibo-impact-analysis--graph-zoom-slider--width: 10em !default;
 
@@ -10,8 +15,9 @@ $ibo-simple-graph--grouping-threshold-additional-context--container--margin-righ
 $ibo-simple-graph--grouping-threshold-additional-context--content--margin-right: 1em !default;
 
 $ibo-impact-analysis--graph-zoom-slider--width: 10em !default;
+$ibo-impact-analysis--impacted-objects-lists--elements-spacing: $ibo-spacing-600 !default;
 
-$ibo-display-graph--search-box--criterion--content--padding-y: 0 !default;
+$ibo-display-graph--search-box--criterion--content--padding-y: $ibo-spacing-0 !default;
 $ibo-display-graph--search-box--criterion--content--padding-x: 15px !default;
 
 $ibo-display-graph--search-box--criterion--content--checkbox--margin-right: 10px !default;
@@ -108,4 +114,12 @@ $ibo-display-graph--search-box--criterion--content--checkbox--margin-right: 10px
   #ReloadMovieBtn {
     align-self: flex-end;
   }
+}
+#impacted_objects_lists{
+  > div ~ div{
+    margin-top: $ibo-impact-analysis--impacted-objects-lists--elements-spacing;
+  }
+}
+#impacted_objects_lists_placeholder, #impacted_groups_placeholder{
+  height: 250px;
 }

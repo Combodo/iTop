@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -13,6 +13,9 @@ $ibo-button-group--elements-separator--width: 1px !default;
 $ibo-button-group--elements-separator--border-left: 1px solid transparent !default;
 
 .ibo-button-group {
+  display: inline-flex; /* Ensure that buttons of a same group always stay on the same line */
+  flex-wrap: nowrap;
+
   .ibo-button {
     position: relative;
   }
@@ -45,8 +48,10 @@ $ibo-button-group--elements-separator--border-left: 1px solid transparent !defau
     border-left: $ibo-button-group--elements-separator--border-left;
   }
 
-  /* Note: Selector cannot be simplified in the one above as the "::before" must be after the different classes */
-  .ibo-button + .ibo-button {
+  /* Note: Selector cannot be simplified in the one above as the "::before" must be after the different classes.
+  * A more precise selector could be .ibo-button + .ibo-button, however .ibo-button is extended by multiple element and in a multiple loop it creates heavy selectors.
+  */
+  > * + * {
     @each $sType, $aColors in $ibo-button-colors {
       @each $sColor, $aPseudoclasses in $aColors {
         @each $sPseudoclass, $aAttributes in $aPseudoclasses {
@@ -58,11 +63,4 @@ $ibo-button-group--elements-separator--border-left: 1px solid transparent !defau
       }
     }
   }
-}
-
-/* Reset siblings spacing */
-.ibo-button-group + .ibo-button-group,
-.ibo-button + .ibo-button-group,
-.ibo-button-group + .ibo-button{
-  margin-left: $ibo-button--sibling-spacing;
 }

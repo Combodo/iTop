@@ -19,7 +19,7 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
  *
  * You should have received a copy of the GNU Affero General Public License
  *
- * @deprecated since 3.0.0 use Combodo\iTop\Application\UI\Base\Component\DataTable\Datatable
+ * @deprecated 3.0.0 use Combodo\iTop\Application\UI\Base\Component\DataTable\Datatable
  */
 
 class DataTable

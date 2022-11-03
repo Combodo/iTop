@@ -85,9 +85,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:KnownError/Attribute:version' => '版本',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => '配置项',
-	'Class:KnownError/Attribute:ci_list+' => '该已知错误相关的所有配置项',
+	'Class:KnownError/Attribute:ci_list+' => '此已知错误相关的所有配置项',
 	'Class:KnownError/Attribute:document_list' => '文档',
-	'Class:KnownError/Attribute:document_list+' => '该已知错误相关的所有文档',
+	'Class:KnownError/Attribute:document_list+' => '此已知错误相关的所有文档',
 ));
 
 //

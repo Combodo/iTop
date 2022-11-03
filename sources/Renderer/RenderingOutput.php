@@ -20,6 +20,8 @@
 
 namespace Combodo\iTop\Renderer;
 
+use utils;
+
 /**
  * Description of RenderingOutput
  *
@@ -111,15 +113,15 @@ class RenderingOutput
 
 	/**
 	 *
-	 * @param string $sHtml
-	 * @param bool $bEncodeHtmlEntities
+	 * @param ?string $sHtml
+	 * @param bool $bEscapeHtmlEntities
 	 *
 	 * @return \Combodo\iTop\Renderer\RenderingOutput
 	 */
-	public function AddHtml(?string $sHtml, bool $bEncodeHtmlEntities = false)
+	public function AddHtml(?string $sHtml, bool $bEscapeHtmlEntities = false)
 	{
 		if (!is_null($sHtml)) {
-			$this->sHtml .= ($bEncodeHtmlEntities) ? htmlentities($sHtml, ENT_QUOTES, 'UTF-8') : $sHtml;
+			$this->sHtml .= ($bEscapeHtmlEntities) ? utils::Escapehtml($sHtml) : $sHtml;
 		}
 		
 		return $this;

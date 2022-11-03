@@ -350,7 +350,7 @@ class WizardHelper
 	 */
 	public function GetJsForUpdateFields()
 	{
-		$sWizardHelperJsVar = ($this->m_aData['m_sWizHelperJsVarName']) ?? 'oWizardHelper'.$this->GetFormPrefix();
+		$sWizardHelperJsVar = (!is_null($this->m_aData['m_sWizHelperJsVarName'])) ? utils::Sanitize($this->m_aData['m_sWizHelperJsVarName'], '', utils::ENUM_SANITIZATION_FILTER_PARAMETER) : 'oWizardHelper'.$this->GetFormPrefix();
 		$sWizardHelperJson = $this->ToJSON();
 
 		return <<<JS
@@ -359,6 +359,10 @@ class WizardHelper
 JS;
 	}
 
+	/*
+	 * Function with an old pattern of code
+	 * @deprecated 3.1.0
+	*/
 	static function ParseJsonSet($oMe, $sLinkClass, $sExtKeyToMe, $sJsonSet)
 	{
 		$aSet = json_decode($sJsonSet, true); // true means hash array instead of object
