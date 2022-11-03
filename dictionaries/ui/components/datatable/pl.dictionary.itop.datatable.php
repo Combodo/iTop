@@ -18,14 +18,14 @@
  */
 // Display DataTable
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'UI:Datatables:Language:Processing'        => 'Please wait...~~',
-	'UI:Datatables:Language:LengthMenu'        => '_MENU_ per page~~',
-	'UI:Datatables:Language:ZeroRecords'       => 'No result~~',
-	'UI:Datatables:Language:Info'              => '_TOTAL_ item(s)~~',
-	'UI:Datatables:Language:InfoEmpty'         => 'No information~~',
-	'UI:Datatables:Language:EmptyTable'        => 'No data available in this table~~',
-	'UI:Datatables:Language:Error'             => 'An error occured while running the query~~',
-	'UI:Datatables:Language:DisplayLength:All' => 'All~~',
-	'UI:Datatables:Language:Sort:Ascending'    => 'enable for an ascending sort~~',
-	'UI:Datatables:Language:Sort:Descending'   => 'enable for a descending sort~~',
+	'UI:Datatables:Language:Processing'        => 'Proszę czekać...',
+	'UI:Datatables:Language:LengthMenu'        => '_MENU_ na stronę',
+	'UI:Datatables:Language:ZeroRecords'       => 'Brak wyników',
+	'UI:Datatables:Language:Info'              => '_TOTAL_ element(y)',
+	'UI:Datatables:Language:InfoEmpty'         => 'Brak informacji',
+	'UI:Datatables:Language:EmptyTable'        => 'Brak danych w tej tabeli',
+	'UI:Datatables:Language:Error'             => 'Wystąpił błąd podczas uruchamiania zapytania',
+	'UI:Datatables:Language:DisplayLength:All' => 'Wszystkie',
+	'UI:Datatables:Language:Sort:Ascending'    => 'włącz sortowanie rosnąco',
+	'UI:Datatables:Language:Sort:Descending'   => 'włącz sortowanie malejąco',
 ));
