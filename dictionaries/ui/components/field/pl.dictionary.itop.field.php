@@ -18,5 +18,5 @@
  */
 // Global search
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',
+	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Nieznane wartości',
 ));
