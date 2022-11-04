@@ -22,7 +22,7 @@ use utils;
  * @since 3.0.0
  * @package Combodo\iTop\Controller
  */
-class PreferencesController
+class PreferencesController extends AbstractController
 {
 	/**
 	 * @return string[]
@@ -31,7 +31,7 @@ class PreferencesController
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	public static function SetUserPicture(): array
+	public function SetUserPicture(): array
 	{
 		$sImageFilename = utils::ReadPostedParam('image_filename', null, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 

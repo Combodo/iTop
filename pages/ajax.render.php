@@ -2592,7 +2592,8 @@ EOF
 		case 'preferences_set_user_picture':
 			$oPage = new JsonPage();
 			try {
-				$aResult = PreferencesController::SetUserPicture();
+				$oController = new PreferencesController();
+				$aResult = $oController->SetUserPicture();
 				$aResult['success'] = true;
 			}
 			catch (Exception $oException) {
@@ -2611,7 +2612,8 @@ EOF
 		case 'activity_panel_save_state':
 			$oPage = new JsonPage();
 			try {
-				ActivityPanelController::SaveState();
+				$oController = new ActivityPanelController();
+				$oController->SaveState();
 				$aResult = [
 					'success' => true,
 				];
@@ -2629,7 +2631,8 @@ EOF
 		case 'activity_panel_add_caselog_entries':
 			$oPage = new JsonPage();
 			try {
-				$aResult = ActivityPanelController::AddCaseLogsEntries();
+				$oController = new ActivityPanelController();
+				$aResult = $oController->AddCaseLogsEntries();
 			}
 			catch (Exception $oException) {
 				$aResult = [
@@ -2644,7 +2647,8 @@ EOF
 		case 'activity_panel_load_more_entries':
 			$oPage = new JsonPage();
 			try {
-				$aResult = ActivityPanelController::LoadMoreEntries();
+				$oController = new ActivityPanelController();
+				$aResult = $oController->LoadMoreEntries();
 			}
 			catch (Exception $oException) {
 				$aResult = [
