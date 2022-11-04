@@ -2590,7 +2590,8 @@ EOF
 		//--------------------------------
 		// Preferences
 		//--------------------------------
-		case 'preferences_set_user_picture':
+		/** @internal */
+		case 'preferences.set_user_picture':
 			$oPage = new JsonPage();
 			try {
 				$oController = new PreferencesController();
@@ -2610,7 +2611,7 @@ EOF
 		// Activity panel
 		//--------------------------------
 		/** @internal */
-		case 'activity_panel_save_state':
+		case 'activity_panel.save_state':
 			$oPage = new JsonPage();
 			try {
 				$oController = new ActivityPanelController();
@@ -2629,7 +2630,7 @@ EOF
 			break;
 
 		/** @internal */
-		case 'activity_panel_add_caselog_entries':
+		case 'activity_panel.add_caselog_entries':
 			$oPage = new JsonPage();
 			try {
 				$oController = new ActivityPanelController();
@@ -2645,7 +2646,7 @@ EOF
 			break;
 
 		/** @internal */
-		case 'activity_panel_load_more_entries':
+		case 'activity_panel.load_more_entries':
 			$oPage = new JsonPage();
 			try {
 				$oController = new ActivityPanelController();
@@ -2672,6 +2673,7 @@ EOF
 		//--------------------------------
 		// Object
 		//--------------------------------
+		/** @internal */
 		case 'object.modify':
 			$oController = new ObjectController();
 			$oPage = $oController->Modify();

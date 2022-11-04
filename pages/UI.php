@@ -655,6 +655,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'modify': // Legacy operation
+		/** @internal */
 		case 'object.modify': // New operation
 			$oController = new ObjectController();
 			$oP = $oController->Modify();
