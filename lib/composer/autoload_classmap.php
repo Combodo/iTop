@@ -349,6 +349,7 @@ return array(
     'Combodo\\iTop\\Controller\\AbstractController' => $baseDir . '/sources/Controller/AbstractController.php',
     'Combodo\\iTop\\Controller\\AjaxRenderController' => $baseDir . '/sources/Controller/AjaxRenderController.php',
     'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => $baseDir . '/sources/Controller/Base/Layout/ActivityPanelController.php',
+    'Combodo\\iTop\\Controller\\Base\\Layout\\ObjectController' => $baseDir . '/sources/Controller/Base/Layout/ObjectController.php',
     'Combodo\\iTop\\Controller\\OAuth\\OAuthLandingController' => $baseDir . '/sources/Controller/OAuth/OAuthLandingController.php',
     'Combodo\\iTop\\Controller\\PreferencesController' => $baseDir . '/sources/Controller/PreferencesController.php',
     'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\IOAuthClientProvider' => $baseDir . '/sources/Core/Authentication/Client/OAuth/IOAuthClientProvider.php',

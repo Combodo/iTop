@@ -17,5 +17,16 @@ namespace Combodo\iTop\Controller;
  */
 class AbstractController
 {
-	// Empty stub for now, factorized needs might come later
+	/**
+	 * It works if your JavaScript library sets an X-Requested-With HTTP header.
+	 * It is known to work with common JavaScript frameworks: {@link https://wikipedia.org/wiki/List_of_Ajax_frameworks#JavaScript}
+	 *
+	 * @see \Symfony\Component\HttpFoundation\Request::isXmlHttpRequest() Inspired by
+	 *
+	 * @return bool True if the current request is an XmlHttpRequest (eg. an AJAX request)
+	 */
+	public function IsHandlingXmlHttpRequest(): bool
+	{
+		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
+	}
 }

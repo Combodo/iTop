@@ -19,6 +19,7 @@ use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Controller\Base\Layout\ObjectController;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -301,7 +302,7 @@ require_once(APPROOT.'/application/startup.inc.php');
 
 try
 {
-	$operation = utils::ReadParam('operation', '');
+	$operation = utils::ReadParam('operation', '', false, utils::ENUM_SANITIZATION_FILTER_OPERATION);
 	$bPrintable = (utils::ReadParam('printable', 0) == '1');
 
 	$oKPI = new ExecutionKPI();
@@ -321,22 +322,16 @@ try
 	switch($operation)
 	{
 		case 'new': // Form to create a new object
-		case 'modify': // Form to modify an object
 		case 'apply_new': // Creation of a new object
 		case 'apply_modify': // Applying the modifications to an existing object
 		case 'form_for_modify_all': // Form to modify multiple objects (bulk modify)
 		case 'bulk_stimulus': // For to apply a stimulus to multiple objects
 		case 'stimulus': // Form displayed when applying a stimulus (state change)
 		case 'apply_stimulus': // Form displayed when applying a stimulus (state change)
-		$oP->add_linked_script("../js/json.js");
-		$oP->add_linked_script("../js/forms-json-utils.js");
-		$oP->add_linked_script("../js/wizardhelper.js");
-		$oP->add_linked_script("../js/wizard.utils.js");
-		$oP->add_linked_script("../js/linkswidget.js");
-		$oP->add_linked_script("../js/linksdirectwidget.js");
-		$oP->add_linked_script("../js/extkeywidget.js");
-		$oP->add_linked_script("../js/jquery.blockUI.js");
-		break;
+			foreach (ObjectController::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
+				$oP->add_linked_script("../$sJsFileRelPath");
+			}
+			break;
 	}
 		
 	switch($operation)
@@ -659,29 +654,10 @@ EOF
 	
 		///////////////////////////////////////////////////////////////////////////////////////////
 
-		case 'modify': // Form to modify an object
-			$oP->DisableBreadCrumb();
-			$sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
-			if (empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
-			}
-			// Check if the user can modify this object
-			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-			if (is_null($oObj)) {
-				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
-			} else {
-				// The object could be read - check if it is allowed to modify it
-				$oSet = CMDBObjectSet::FromObject($oObj);
-				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO) {
-					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
-				}
-				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT));
-				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
-				$oObj->DisplayModifyForm($oP, array('wizard_container' => 1)); // wizard_container: Display the title above the form
-			}
+		case 'modify': // Legacy operation
+		case 'object.modify': // New operation
+			$oController = new ObjectController();
+			$oP = $oController->Modify();
 			break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////

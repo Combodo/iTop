@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
+use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Controller\PreferencesController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
@@ -2666,6 +2667,14 @@ EOF
 			$oPage = new JsonPage();
 			$oPage->SetOutputDataOnly(true);
 			$oAjaxRenderController->GetMenusCount($oPage);
+			break;
+
+		//--------------------------------
+		// Object
+		//--------------------------------
+		case 'object.modify':
+			$oController = new ObjectController();
+			$oPage = $oController->Modify();
 			break;
 
 		default:

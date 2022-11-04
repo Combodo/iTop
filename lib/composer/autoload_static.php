@@ -714,6 +714,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Controller\\AbstractController' => __DIR__ . '/../..' . '/sources/Controller/AbstractController.php',
         'Combodo\\iTop\\Controller\\AjaxRenderController' => __DIR__ . '/../..' . '/sources/Controller/AjaxRenderController.php',
         'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => __DIR__ . '/../..' . '/sources/Controller/Base/Layout/ActivityPanelController.php',
+        'Combodo\\iTop\\Controller\\Base\\Layout\\ObjectController' => __DIR__ . '/../..' . '/sources/Controller/Base/Layout/ObjectController.php',
         'Combodo\\iTop\\Controller\\OAuth\\OAuthLandingController' => __DIR__ . '/../..' . '/sources/Controller/OAuth/OAuthLandingController.php',
         'Combodo\\iTop\\Controller\\PreferencesController' => __DIR__ . '/../..' . '/sources/Controller/PreferencesController.php',
         'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\IOAuthClientProvider' => __DIR__ . '/../..' . '/sources/Core/Authentication/Client/OAuth/IOAuthClientProvider.php',
