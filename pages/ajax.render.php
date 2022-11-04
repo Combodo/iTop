@@ -34,7 +34,7 @@ try
 	$oKPI = new ExecutionKPI();
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	$operation = utils::ReadParam('operation', '');
+	$operation = utils::ReadParam('operation', '', false, utils::ENUM_SANITIZATION_FILTER_OPERATION);
 
 	// Only allow export functions to portal users
 	switch ($operation) {

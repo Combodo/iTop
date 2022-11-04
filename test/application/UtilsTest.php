@@ -421,6 +421,55 @@ class UtilsTest extends ItopTestCase
 	}
 
 	/**
+	 * @dataProvider ToCamelCaseProvider
+	 * @covers       utils::ToCamelCase
+	 *
+	 * @param string $sInput
+	 * @param string $sExpectedOutput
+	 *
+	 * @return void
+	 */
+	public function testToCamelCase(string $sInput, string $sExpectedOutput)
+	{
+		$sTestedOutput = utils::ToCamelCase($sInput);
+		$this->assertEquals($sExpectedOutput, $sTestedOutput, "Camel case transformation for '$sInput' doesn't match. Got '$sTestedOutput', expected '$sExpectedOutput'.");
+	}
+
+	/**
+	 * @since 3.1.0
+	 * @return \string[][]
+	 */
+	public function ToCamelCaseProvider(): array
+	{
+		return [
+			'One word' => [
+				'hello',
+				'Hello',
+			],
+			'Two words separated with space' => [
+				'hello world',
+				'HelloWorld',
+			],
+			'Two words separated with underscore' => [
+				'hello_world',
+				'HelloWorld',
+			],
+			'Two words separated with dash' => [
+				'hello-world',
+				'HelloWorld',
+			],
+			'Two words separated with dot' => [
+				'hello.world',
+				'Hello.world',
+			],
+			'Three words separated with underscore and space' => [
+				'hello_there world',
+				'HelloThereWorld',
+			],
+		];
+	}
+
+	/**
 	 * @dataProvider ToAcronymProvider
 	 * @covers       utils::ToAcronym
 	 *
@@ -654,8 +703,8 @@ class UtilsTest extends ItopTestCase
 	public function sanitizerDataProvider()
 	{
 		return [
-			'good integer'            => ['integer', '2565', '2565'],
-			'bad integer'             => ['integer', 'a2656', '2656'],
+			'good integer'            => [utils::ENUM_SANITIZATION_FILTER_INTEGER, '2565', '2565'],
+			'bad integer'             => [utils::ENUM_SANITIZATION_FILTER_INTEGER, 'a2656', '2656'],
 			/**
 			 * 'class' filter needs a loaded datamodel... and is only an indirection to \MetaModel::IsValidClass so might very important to test !
 			 * If we switch this class to ItopDataTestCase then we are seeing :
@@ -665,20 +714,26 @@ class UtilsTest extends ItopTestCase
 			 */
 			//			'good class' => ['class', 'UserRequest', 'UserRequest'],
 			//			'bad class' => ['class', 'MyUserRequest',null],
-			'good string'             => ['string', 'Is Peter smart and funny?', 'Is Peter smart and funny?'],
-			'bad string'              => ['string', 'Is Peter <smart> & funny?', 'Is Peter &#60;smart&#62; &#38; funny?'],
-			'good transaction_id'     => ['transaction_id', '8965.-dd', '8965.-dd'],
-			'bad transaction_id'      => ['transaction_id', '8965.-dd+', null],
-			'good parameter'          => ['parameter', 'JU8965-dd=_', 'JU8965-dd=_'],
-			'bad parameter'           => ['parameter', '8965.-dd+', null],
-			'good field_name'         => ['field_name', 'Name->bUzz38', 'Name->bUzz38'],
-			'bad field_name'          => ['field_name', 'name-buzz', null],
-			'good context_param'      => ['context_param', '%dssD25_=%:+-', '%dssD25_=%:+-'],
-			'bad context_param'       => ['context_param', '%dssD,25_=%:+-', null],
-			'good element_identifier' => ['element_identifier', 'AD05nb', 'AD05nb'],
-			'bad element_identifier' => ['element_identifier', 'AD05nb+', 'AD05nb'],
-			'good url' => ['url', 'https://www.w3schools.com', 'https://www.w3schools.com'],
-			'bad url' => ['url', 'https://www.w3schoo��ls.co�m', 'https://www.w3schools.com'],
+			'good string'             => [utils::ENUM_SANITIZATION_FILTER_STRING, 'Is Peter smart and funny?', 'Is Peter smart and funny?'],
+			'bad string'              => [utils::ENUM_SANITIZATION_FILTER_STRING, 'Is Peter <smart> & funny?', 'Is Peter &#60;smart&#62; &#38; funny?'],
+			'good transaction_id'     => [utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID, '8965.-dd', '8965.-dd'],
+			'bad transaction_id'      => [utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID, '8965.-dd+', null],
+			'good route'              => [utils::ENUM_SANITIZATION_FILTER_ROUTE, 'object.modify', 'object.modify'],
+			'good route with underscore' => [utils::ENUM_SANITIZATION_FILTER_ROUTE, 'object.apply_modify', 'object.apply_modify'],
+			'bad route with space'    => [utils::ENUM_SANITIZATION_FILTER_ROUTE, 'object modify', null],
+			'good operation'          => [utils::ENUM_SANITIZATION_FILTER_OPERATION, 'modify', 'modify'],
+			'good operation with underscore' => [utils::ENUM_SANITIZATION_FILTER_OPERATION, 'apply_modify', 'apply_modify'],
+			'bad operation with space' => [utils::ENUM_SANITIZATION_FILTER_OPERATION, 'apply modify', null],
+			'good parameter'          => [utils::ENUM_SANITIZATION_FILTER_PARAMETER, 'JU8965-dd=_', 'JU8965-dd=_'],
+			'bad parameter'           => [utils::ENUM_SANITIZATION_FILTER_PARAMETER, '8965.-dd+', null],
+			'good field_name'         => [utils::ENUM_SANITIZATION_FILTER_FIELD_NAME, 'Name->bUzz38', 'Name->bUzz38'],
+			'bad field_name'          => [utils::ENUM_SANITIZATION_FILTER_FIELD_NAME, 'name-buzz', null],
+			'good context_param'      => [utils::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM, '%dssD25_=%:+-', '%dssD25_=%:+-'],
+			'bad context_param'       => [utils::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM, '%dssD,25_=%:+-', null],
+			'good element_identifier' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, 'AD05nb', 'AD05nb'],
+			'bad element_identifier' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, 'AD05nb+', 'AD05nb'],
+			'good url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schools.com', 'https://www.w3schools.com'],
+			'bad url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schoo��ls.co�m', 'https://www.w3schools.com'],
 			'raw_data' => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
 		];
 	}
