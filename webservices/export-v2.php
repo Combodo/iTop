@@ -711,7 +711,7 @@ try
 			}
 			$oP->add_style("body { overflow: auto; }");
 		} else {
-			$oP = new AjaxPage('iTop export');
+			$oP = new DownloadPage('iTop export');
 			$oP->SetContentType($oExporter->GetMimeType());
 		}
 		DoExport($oP, $oExporter, false);
