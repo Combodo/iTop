@@ -21,8 +21,6 @@ class UILinksWidgetDirect
 	protected $sNameSuffix;
 	protected $sLinkedClass;
 
-	protected $sTest = "test";
-
 	/**
 	 * UILinksWidgetDirect constructor.
 	 *
@@ -409,7 +407,10 @@ HTML
 	public function GetTableConfig()
 	{
 		$aAttribs = array();
-		$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$this->sInputid}:not(:disabled)', this.checked);\" class=\"checkAll\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
+		$aAttribs['form::select'] = array(
+			'label'       => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$this->sInputid}:not(:disabled)', this.checked);oWidget".$this->sInputid.".directlinks('instance')._onSelectChange();\" class=\"checkAll\"></input>",
+			'description' => Dict::S('UI:SelectAllToggle+'),
+		);
 
 		foreach ($this->aZlist as $sLinkedAttCode) {
 			$oAttDef = MetaModel::GetAttributeDef($this->sLinkedClass, $sLinkedAttCode);

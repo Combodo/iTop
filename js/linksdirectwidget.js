@@ -105,9 +105,6 @@ $(function()
 			this._updateButtons();
 
 			me._updateTableInformation();
-			$('tbody', me.element).on('click', 'input[type="checkbox"]',function(){
-				me._updateTableInformation();
-			});
 		},
 
 		// called when created, and later when changing options
@@ -173,7 +170,7 @@ $(function()
 			}
 		},
 		_onSelectChange: function () {
-			this.UpdateTableInformation();
+			this._updateTableInformation();
 		},
 		_updateTable: function () {
 			var me = this;
@@ -448,6 +445,9 @@ $(function()
 			var me = this;
 			$.post(this.options.submit_to, oParams, function(data) {
 				var oInserted = $(data);
+
+				$('td:last-child',oInserted).after('<td>' + $(`#datatable_2_token_list_actions_buttons_template`).html() +'</td>');
+
 				oInserted.find('input:checkbox').each(function() {
 					var iKey = parseInt($(this).val(), 10); // Number in base 10
 					me.toBeAdded.push(iKey);
@@ -460,7 +460,7 @@ $(function()
 
 				//me.datatable.find('tbody').append(data);
 				$('#datatable_'+me.id+' .dataTables_empty').hide();
-			//	me.datatable.find('tbody').append(data);
+				me.datatable.find('tbody').append(oInserted[0].outerHTML);
 				me._updateTable();
 				me.indicator.html('');
 				me.oButtons['add'].prop('disabled', false);
@@ -555,6 +555,7 @@ $(function()
 			$('#SearchResultsToAdd_'+this.id).height(dlgHeight-50-searchHeight);
 		},
 		_deleteSelection: function(){
+			var me = this;
 			$('.selectList'+me.id+':checked', me.element).each(function () {
 				me._deleteRow($(this));
 			});
@@ -584,6 +585,7 @@ $(function()
 			oRow.remove();
 			this._updateButtons();
 			this._updateTable();
+			this._updateTableInformation();
 		},
 		_removeRow: function(oCheckbox)
 		{

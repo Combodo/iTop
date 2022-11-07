@@ -198,7 +198,7 @@ class BlockDirectLinksEditInPlace extends Panel
 		// create a row table for each value...
 		while ($oLinkObj = $oValue->Fetch()) {
 			$aRow = array();
-			$aRow['form::select'] = '<input type="checkbox" class="selectList'.$this->oUILinksDirectWidget->GetInputId().'" value="'.$oLinkObj->GetKey().'"/>';
+			$aRow['form::select'] = '<input type="checkbox" class="selectList'.$this->oUILinksDirectWidget->GetInputId().'" onClick="oWidget'.$this->oUILinksDirectWidget->GetInputId().'.directlinks(\'instance\')._onSelectChange();" value="'.$oLinkObj->GetKey().'"/>';
 			foreach ($this->oUILinksDirectWidget->GetZList() as $sLinkedAttCode) {
 				$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 			}
@@ -233,17 +233,22 @@ class BlockDirectLinksEditInPlace extends Panel
 	 */
 	private function GetRowActions(): array
 	{
-		return [
-			[
+		$aActions = array();
+
+		if ($this->sType == self::TYPE_ACTION_ADD_REMOVE) {
+			$aActions[] = [
 				'tooltip'       => 'Edit',
 				'icon_classes'  => 'fas fa-edit',
 				'js_row_action' => "alert('edit link');",
-			],
-			[
-				'tooltip'       => 'Unlink',
-				'icon_classes'  => 'fas fa-unlink',
-				'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteRow($('checkbox', oTrElement));",
-			],
-		];
+			];
+
+			$aActions[] = [
+				'tooltip'       => 'Delete',
+				'icon_classes'  => 'fas fa-trash',
+				'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteRow($(':checkbox', oTrElement));",
+			];
+		}
+
+		return $aActions;
 	}
 }
