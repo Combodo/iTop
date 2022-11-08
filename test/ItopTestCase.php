@@ -152,6 +152,7 @@ class ItopTestCase extends TestCase
 	 * @param $value
 	 *
 	 * @throws \ReflectionException
+	 * @since 2.7.8 3.0.3 3.1.0
 	 */
 	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
 	{
