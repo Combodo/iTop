@@ -8,14 +8,12 @@ use iTopDesignFormat;
 
 
 /**
- * Class iTopDesignFormatTest
- *
  * @covers iTopDesignFormat
  *
  * @since 2.7.0 N°2586
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
-class TestForITopDesignFormatClass extends ItopTestCase
+class iTopDesignFormatTest extends ItopTestCase
 {
 	protected function setUp(): void
 	{
