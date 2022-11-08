@@ -444,9 +444,8 @@ $(function()
 			
 			var me = this;
 			$.post(this.options.submit_to, oParams, function(data) {
-				var oInserted = $(data);
 
-				$('td:last-child',oInserted).after('<td>' + $(`#datatable_2_token_list_actions_buttons_template`).html() +'</td>');
+				var oInserted = $(data);
 
 				oInserted.find('input:checkbox').each(function() {
 					var iKey = parseInt($(this).val(), 10); // Number in base 10
@@ -458,9 +457,15 @@ $(function()
 				me.inputToBeRemoved.val(JSON.stringify(me.toBeRemoved));
 				me.inputToBeDeleted.val(JSON.stringify(me.toBeDeleted));
 
-				//me.datatable.find('tbody').append(data);
 				$('#datatable_'+me.id+' .dataTables_empty').hide();
-				me.datatable.find('tbody').append(oInserted[0].outerHTML);
+
+				// add actions on each row...
+				oInserted.each(function(){
+					$('td:last-child',$(this)).after('<td>' + $(`#datatable_${oParams.iInputId}_actions_buttons_template`).html() +'</td>');
+					me.datatable.find('tbody').append(this.outerHTML);
+				});
+
+
 				me._updateTable();
 				me.indicator.html('');
 				me.oButtons['add'].prop('disabled', false);
