@@ -29,7 +29,8 @@ class iTopDesignFormatTest extends ItopTestCase
 	 * @dataProvider ConvertProvider
 	 *
 	 * @param string $sTargetVersion
-	 * @param string $sXmlFileName Example "1.7_to_1.6". Corresponding files should exist with the ".input" and ".Expected" suffix
+	 * @param string $sXmlFileName Corresponding files should exist in the `Convert-samples` dir with the `.expected` and `.input` suffixes
+	 *                      Example "1.7_to_1.6" for `Convert-samples/1.7_to_1.6.expected.xml` and `Convert-samples/1.7_to_1.6.input.xml`
 	 *
 	 * @throws \Exception
 	 */
@@ -62,12 +63,12 @@ class iTopDesignFormatTest extends ItopTestCase
 	public function ConvertProvider()
 	{
 		return [
-			'Bug_4569'   => ['1.7', 'Bug_4569'],
-			'1.7 to 1.6' => ['1.6', '1.7_to_1.6'],
-			'1.6 to 1.7 2' => ['1.7', '1.6_to_1.7_2'],
-			'1.7 to 1.6 2' => ['1.6', '1.7_to_1.6_2'],
-			'1.7 to 3.0' => ['3.0', '1.7_to_3.0'],
-			'3.0 to 1.7' => ['1.7', '3.0_to_1.7'],
+			'1.6 to 1.7 2' => ['sTargetVersion' => '1.7', 'sXmlFileName' => '1.6_to_1.7_2'],
+			'1.7 to 1.6'   => ['sTargetVersion' => '1.6', 'sXmlFileName' => '1.7_to_1.6'],
+			'1.7 to 1.6 2' => ['sTargetVersion' => '1.6', 'sXmlFileName' => '1.7_to_1.6_2'],
+			'1.7 to 3.0'   => ['sTargetVersion' => '3.0', 'sXmlFileName' => '1.7_to_3.0'],
+			'3.0 to 1.7'   => ['sTargetVersion' => '1.7', 'sXmlFileName' => '3.0_to_1.7'],
+			'Bug_4569'     => ['sTargetVersion' => '1.7', 'sXmlFileName' => 'Bug_4569'],
 		];
 	}
 
