@@ -18,17 +18,17 @@
  */
 // Navigation menu
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo~~',
-	'UI:Layout:NavigationMenu:Silo:Label' => 'Select organization to filter on~~',
-	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse~~',
-	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Expand / Collapse (Filtered on %1$s)~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Type your keywords to filter menus~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Matches from all menu groups will be displayed~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Seems like there is no matching menu~~',
-	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!~~',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture~~',
-	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open user menu~~',
-	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries~~',
+	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Logo firmy',
+	'UI:Layout:NavigationMenu:Silo:Label' => 'Wybierz organizację do filtrowania',
+	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Rozwiń / Zwiń',
+	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Rozwiń / Zwiń (filtrowane na %1$s)',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filtr...',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Wpisz słowa kluczowe, aby filtrować menu',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Zostaną wyświetlone dopasowania ze wszystkich grup menu',
+	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Wygląda na to, że nie ma pasującego menu',
+	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Cześć %1$s!',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Zdjęcie kontaktu %1$s',
+	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Otwórz menu użytkownika',
+	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtruj wpisy w menu',
 
 ));

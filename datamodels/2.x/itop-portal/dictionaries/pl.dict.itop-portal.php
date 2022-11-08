@@ -28,14 +28,14 @@
 //////////////////////////////////////////////////////////////////////
 //
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'portal:itop-portal' => 'Standard portal~~', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
+	'portal:itop-portal' => 'Portal standardowy', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
 	'Page:DefaultTitle' => '%1$s portal użytkownika',
-	'Brick:Portal:UserProfile:Title' => 'My profile~~',
-	'Brick:Portal:NewRequest:Title' => 'New request~~',
-	'Brick:Portal:NewRequest:Title+' => '<p>Need help?</p><p>Pick from the services catalog and submit your request to our support teams.</p>~~',
-	'Brick:Portal:OngoingRequests:Title' => 'Ongoing requests~~',
-	'Brick:Portal:OngoingRequests:Title+' => '<p>Follow up with your ongoing requests.</p><p>Check the progress, add comments, attach documents, acknowledge the solution.</p>~~',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Open~~',
-	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolved~~',
-	'Brick:Portal:ClosedRequests:Title' => 'Closed requests~~',
+	'Brick:Portal:UserProfile:Title' => 'Mój profil',
+	'Brick:Portal:NewRequest:Title' => 'Nowy wniosek',
+	'Brick:Portal:NewRequest:Title+' => '<p>Potrzebujesz pomocy?</p><p>Wybierz z katalogu usług i prześlij swój wniosek do naszych zespołów wsparcia.</p>',
+	'Brick:Portal:OngoingRequests:Title' => 'Wnioski w toku',
+	'Brick:Portal:OngoingRequests:Title+' => '<p>Kontynuuj swoje bieżące wnioski.</p><p>Sprawdź postępy, dodaj komentarze, załącz dokumenty, potwierdź rozwiązanie.</p>',
+	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Otwarte',
+	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Rozwiązane',
+	'Brick:Portal:ClosedRequests:Title' => 'Zamknięte wnioski',
 ));

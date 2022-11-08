@@ -67,8 +67,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Zamknij ten wpis',
 	'Portal:Form:Close:Warning' => 'Chcesz opuścić ten formularz? Wprowadzone dane mogą zostać utracone',
-	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
-	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
+	'Portal:Error:ObjectCannotBeCreated' => 'Błąd: nie można utworzyć obiektu. Sprawdź powiązane obiekty i załączniki przed ponownym przesłaniem tego formularza.',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Błąd: nie można zaktualizować obiektu. Sprawdź powiązane obiekty i załączniki przed ponownym przesłaniem tego formularza.',
 ));
 
 // UserProfile brick

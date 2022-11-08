@@ -18,5 +18,5 @@
  */
 // Input
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'Hasła nie pasują',
 ));

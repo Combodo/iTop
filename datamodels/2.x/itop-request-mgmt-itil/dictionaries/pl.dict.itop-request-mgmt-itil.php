@@ -79,7 +79,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserRequest/Attribute:request_type+' => '',
 	'Class:UserRequest/Attribute:request_type/Value:service_request' => 'Zgłoszenie serwisowe',
 	'Class:UserRequest/Attribute:request_type/Value:service_request+' => 'Zgłoszenie serwisowe',
-	'Class:UserRequest/Attribute:impact' => 'Wpływ',
+	'Class:UserRequest/Attribute:impact' => 'Dotyczy',
 	'Class:UserRequest/Attribute:impact+' => '',
 	'Class:UserRequest/Attribute:impact/Value:1' => 'Wydział',
 	'Class:UserRequest/Attribute:impact/Value:1+' => '',
