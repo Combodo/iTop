@@ -135,6 +135,7 @@ class ItopTestCase extends TestCase
 	 * @return mixed property
 	 *
 	 * @throws \ReflectionException
+	 * @since 2.7.8 3.0.3 3.1.0
 	 */
 	public function GetNonPublicProperty(object $oObject, string $sProperty)
 	{
