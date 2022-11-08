@@ -716,13 +716,13 @@ HTML
 			{
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 
-				if ($oAttDef->IsIndirect()) {
-					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
-					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-				} else {
-					$sTargetClass = $sLinkedClass;
-				}
-
+// !! replaced by a panel in BlockIndirectLinkEdit
+//				if ($oAttDef->IsIndirect()) {
+//					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+//					$sTargetClass = $oLinkingAttDef->GetTargetClass();
+//				} else {
+//					$sTargetClass = $sLinkedClass;
+//				}
 //				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
 //				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
 //				$oPage->AddUiBlock($oClassIcon);
@@ -753,11 +753,18 @@ HTML
 					}
 					$aParams = array(
 						'target_attr' => $oAttDef->GetExtKeyToMe(),
-						'object_id' => $this->GetKey(),
-						'menu' => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
+						'object_id'   => $this->GetKey(),
+						'menu'        => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
 						//'menu_actions_target' => '_blank',
-						'default' => $aDefaults,
-						'table_id' => $sClass.'_'.$sAttCode,
+						'default'     => $aDefaults,
+						'table_id'    => $sClass.'_'.$sAttCode,
+						'row_actions' => [
+							[
+								'tooltip'       => 'remove an element',
+								'icon_classes'  => 'fas fa-minus',
+								'js_row_action' => 'alert("remove a direct link");console.log("Action row:");console.log(oTrElement);',
+							],
+						],
 					);
 				}
 				else {
@@ -787,20 +794,28 @@ HTML
 					$sAttCodesToDisplay = implode(',', $aAttCodesToDisplay);
 
 					$aParams = array(
-						'link_attr' => $oAttDef->GetExtKeyToMe(),
-						'object_id' => $this->GetKey(),
-						'target_attr' => $oAttDef->GetExtKeyToRemote(),
-						'view_link' => false,
-						'menu' => false,
+						'link_attr'     => $oAttDef->GetExtKeyToMe(),
+						'object_id'     => $this->GetKey(),
+						'target_attr'   => $oAttDef->GetExtKeyToRemote(),
+						'view_link'     => false,
+						'menu'          => false,
 						//'menu_actions_target' => '_blank',
 						// By default limit the list to speed up the initial load & display
 						'display_limit' => true,
-						'table_id' => $sClass.'_'.$sAttCode,
+						'table_id'      => $sClass.'_'.$sAttCode,
 						// N°2334 specify fields to display for n:n relations
-						'zlist' => false,
-						'extra_fields' => $sAttCodesToDisplay,
+						'zlist'         => false,
+						'extra_fields'  => $sAttCodesToDisplay,
+						'row_actions'   => [
+							[
+								'tooltip'       => 'remove an element',
+								'icon_classes'  => 'fas fa-minus',
+								'js_row_action' => 'alert("remove an indirect link");console.log("Action row:");console.log(oTrElement);',
+							],
+						],
 					);
 				}
+
 				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
 				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
 				$oPage->AddUiBlock($oClassIcon);
@@ -1290,24 +1305,6 @@ HTML
 		} else {
 			$iListId = $aExtraParams['currentId'];
 		}
-
-		$aExtraParams['row_actions'] = [
-			[
-				'tooltip'       => 'remove an element',
-				'icon_classes'  => 'fas fa-minus',
-				'js_row_action' => 'console.log("Action row:");console.log(oTrElement);',
-			],
-			[
-				'tooltip'       => 'open in new tab',
-				'icon_classes'  => 'fas fa-external-link-square-alt',
-				'js_row_action' => 'console.log("Action table:");console.log(oDatatable);',
-			],
-			[
-				'icon_classes'  => 'fas fa-ellipsis-v',
-				'js_row_action' => 'console.log("Action data:");console.log(aData);',
-			],
-		];
-
 
 		return DataTableUIBlockFactory::MakeForResult($oPage, $iListId, $oSet, $aExtraParams);
 	}

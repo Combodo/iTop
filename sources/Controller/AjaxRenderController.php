@@ -700,7 +700,6 @@ class AjaxRenderController
 	 */
 	public static function DoAddObjects(AjaxPage $oPage, string $sClass, string $sFilter)
 	{
-		alert('DoAddObjects');
 		$sAttCode = utils::ReadParam('sAttCode', '');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sSuffix = utils::ReadParam('sSuffix', '');
