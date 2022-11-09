@@ -191,6 +191,7 @@ class iTopDesignFormat
 				$aErrors[] = $aLogEntry['msg'];
 			}
 		}
+
 		return $aErrors;
 	}
 
@@ -203,14 +204,48 @@ class iTopDesignFormat
 	}
 
 	/**
+	 * @throws \iTopXmlException if root node not found
+	 */
+	public function GetITopDesignNode(): DOMNode
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+		// Retrieve the version number
+		$oNodeList = $oXPath->query('/itop_design');
+		if ($oNodeList->length === 0) {
+			throw new iTopXmlException('File format: no root <itop_design> tag found');
+		}
+
+		return $oNodeList->item(0);
+	}
+
+	/**
+	 * @return string
+	 * @throws \iTopXmlException
+	 */
+	public function GetVersion()
+	{
+		$oITopDesignNode = $this->GetITopDesignNode();
+
+		$sVersion = $oITopDesignNode->getAttribute('version');
+		if (utils::IsNullOrEmptyString($sVersion)) {
+			// Originally, the information was missing: default to 1.0
+			$sVersion = '1.0';
+		}
+
+		return $sVersion;
+	}
+
+	/**
 	 * An alternative to getNodePath, that gives the id of nodes instead of the position within the children
+	 *
 	 * @param $oNode
+	 *
 	 * @return string
 	 */
 	public static function GetItopNodePath($oNode)
 	{
 		if ($oNode instanceof DOMDocument) return '';
-	
+
 		$sId = $oNode->getAttribute('id');
 		$sNodeDesc = ($sId != '') ? $oNode->nodeName.'['.$sId.']' : $oNode->nodeName;
 		return self::GetItopNodePath($oNode->parentNode).'/'.$sNodeDesc;
@@ -247,30 +282,24 @@ class iTopDesignFormat
 		$this->aLog = array();
 		$this->bStatus = true;
 
-		$oXPath = new DOMXPath($this->oDocument);
-		// Retrieve the version number
-		$oNodeList = $oXPath->query('/itop_design');
-		if ($oNodeList->length == 0)
-		{
-			// Hmm, not an iTop Data Model file...
-			$this->LogError('File format, no root <itop_design> tag found');
+		try {
+			$sVersion = $this->GetVersion();
 		}
-		else
-		{
-			$sVersion = $oNodeList->item(0)->getAttribute('version');
-			if ($sVersion == '')
-			{
-				// Originaly, the information was missing: default to 1.0
-				$sVersion = '1.0';
-			}
-			$this->LogInfo("Converting from $sVersion to $sTargetVersion");
-			$this->DoConvert($sVersion, $sTargetVersion, $oFactory);
-			if ($this->bStatus)
-			{
-				// Update the version number
-				$oNodeList->item(0)->setAttribute('version', $sTargetVersion);
-			}
+		catch (iTopXmlException $e) {
+			$this->LogError($e->getMessage());
+
+			return $this->bStatus;
 		}
+
+		$this->LogInfo("Converting from $sVersion to $sTargetVersion");
+		$this->DoConvert($sVersion, $sTargetVersion, $oFactory);
+		if ($this->bStatus) {
+			/** @noinspection PhpUnhandledExceptionInspection already called earlier so should not crash */
+			$oITopDesignNode = $this->GetITopDesignNode();
+			// Update the version number
+			$oITopDesignNode->setAttribute('version', $sTargetVersion);
+		}
+
 		return $this->bStatus;
 	}
 
@@ -318,22 +347,39 @@ class iTopDesignFormat
 		}
 		// Transform to the intermediate format
 		$aCallSpec = array($this, $sTransform);
-		try
-		{
+		try {
 			call_user_func($aCallSpec, $oFactory);
 
 			// Recurse
 			$this->DoConvert($sIntermediate, $sTo, $oFactory);
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			$this->LogError($e->getMessage());
 		}
 	}
 
 	/**
+	 * @param \DOMNode|null $node
+	 * @param bool $bFormatOutput
+	 * @param bool $bPreserveWhiteSpace
+	 *
+	 * @return false|string
+	 *
+	 * @uses \DOMDocument::saveXML()
+	 */
+	public function GetXmlAsString($node = null, $bFormatOutput = true, $bPreserveWhiteSpace = false)
+	{
+		$this->oDocument->formatOutput = $bFormatOutput;
+		$this->oDocument->preserveWhiteSpace = $bPreserveWhiteSpace;
+
+		return $this->oDocument->saveXML($node = null);
+	}
+
+	/**
 	 * Upgrade the format from version 1.0 to 1.1
+	 *
 	 * @param \ModelFactory $oFactory
+	 *
 	 * @return void (Errors are logged)
 	 */
 	protected function From10To11($oFactory)
