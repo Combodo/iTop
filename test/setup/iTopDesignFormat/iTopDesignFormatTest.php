@@ -45,7 +45,8 @@ class iTopDesignFormatTest extends ItopTestCase
 		$oInputDesignFormat = static::GetItopFormatFromString($sInputXml);
 		$bResult = $oInputDesignFormat->Convert($sTargetVersion);
 		$aErrors = $oInputDesignFormat->GetErrors();
-		$this->assertCount($iExpectedErrors, $aErrors);
+		$this->assertCount($iExpectedErrors, $aErrors,
+			'errors in input format: '.var_export($aErrors, true));
 		if ($iExpectedErrors > 0) {
 			$this->assertFalse($bResult);
 			$this->assertEquals($sFirstErrorMessage, $aErrors[0]);
