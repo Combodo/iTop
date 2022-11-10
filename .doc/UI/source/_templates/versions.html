@@ -1,0 +1,32 @@
+{%- if current_version %}
+<!--
+  ~ @copyright   Copyright (C) 2010-2022 Combodo SARL
+  ~ @license     http://opensource.org/licenses/AGPL-3.0
+  -->
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: {{ current_version.name }}
+    <span class="fa fa-caret-down"></span>
+  </span>
+	<div class="rst-other-versions">
+		{%- if versions.tags %}
+		<dl>
+			<dt>Tags</dt>
+			{%- for item in versions.tags %}
+			<dd><a href="{{ item.url }}">{{ item.name }}</a></dd>
+			{%- endfor %}
+		</dl>
+		{%- endif %}
+		{%- if versions.branches %}
+		<dl>
+			<dt>Branches</dt>
+			{%- for item in versions.branches %}
+			<dd><a href="{{ item.url }}">{{ item.name }}</a></dd>
+			{%- endfor %}
+		</dl>
+		{%- endif %}
+	</div>
+</div>
+{%- endif %}
