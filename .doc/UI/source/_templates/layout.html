@@ -1,0 +1,18 @@
+{%- extends "!layout.html" %}
+{% block document %}
+{% if current_version and latest_version and current_version.name != 'latest' and current_version != latest_version %}
+<!--
+  ~ @copyright   Copyright (C) 2010-2022 Combodo SARL
+  ~ @license     http://opensource.org/licenses/AGPL-3.0
+  -->
+
+<div class="admonition attention">
+	<p class="admonition-title">Attention!</p>
+	<p>
+		Vous consultez une ancienne version de cette documentation.
+		Si vous voulez lire la plus récente, c'est par là <a href="{{ vpathto(latest_version.name) }}">{{latest_version.name}}</a>.
+	</p>
+</div>
+{% endif %}
+{{ super() }}
+{% endblock %}%
