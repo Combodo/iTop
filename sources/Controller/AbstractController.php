@@ -10,20 +10,16 @@ namespace Combodo\iTop\Controller;
  * Class AbstractController
  *
  * Abstract controller to centralize common features of business controllers which are still to be defined.
+ * Note that this can be extended by "TwigBase" controllers or standalone controllers.
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Controller
  * @since 3.1.0
  */
-class AbstractController
+abstract class AbstractController implements iController
 {
 	/**
-	 * It works if your JavaScript library sets an X-Requested-With HTTP header.
-	 * It is known to work with common JavaScript frameworks: {@link https://wikipedia.org/wiki/List_of_Ajax_frameworks#JavaScript}
-	 *
-	 * @see \Symfony\Component\HttpFoundation\Request::isXmlHttpRequest() Inspired by
-	 *
-	 * @return bool True if the current request is an XmlHttpRequest (eg. an AJAX request)
+	 * @inheritDoc
 	 */
 	public function IsHandlingXmlHttpRequest(): bool
 	{

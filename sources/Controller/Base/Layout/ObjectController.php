@@ -11,6 +11,7 @@ use ApplicationException;
 use cmdbAbstractObject;
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Controller\AbstractController;
 use Dict;
 use iTopWebPage;
 use MetaModel;
@@ -27,12 +28,9 @@ use WebPage;
  * @since 3.1.0
  * @package Combodo\iTop\Controller\Base\Layout
  */
-class ObjectController extends \Combodo\iTop\Controller\AbstractController
+class ObjectController extends AbstractController
 {
-	public function View()
-	{
-
-	}
+	public const ROUTE_NAMESPACE = 'object';
 
 	/**
 	 * @return \iTopWebPage|\AjaxPage Object edit form in its webpage
@@ -41,14 +39,11 @@ class ObjectController extends \Combodo\iTop\Controller\AbstractController
 	 * @throws \CoreException
 	 * @throws \SecurityException
 	 */
-	public function Modify()
+	public function OperationModify()
 	{
 		$bPrintable = utils::ReadParam('printable', '0') === '1';
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$sId = utils::ReadParam('id', '');
-
-		$sClass = 'Person';
-		$sId = 6;
 
 		// Check parameters
 		if (utils::IsNullOrEmptyString($sClass) || utils::IsNullOrEmptyString($sId))
