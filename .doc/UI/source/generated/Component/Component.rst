@@ -27,6 +27,7 @@ A UI component is a unitary block used to display information in iTop console.
    Input/Select/SelectOption
    Panel/Panel
    Spinner/Spinner
+   Template/Template
    Title/Title
    Toolbar/Toolbar
    Toolbar/ToolbarSpacer/ToolbarSpacer
