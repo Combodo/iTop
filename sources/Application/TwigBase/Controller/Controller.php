@@ -165,7 +165,7 @@ abstract class Controller
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
-			$sMethodName = 'Operation'.$this->m_sOperation;
+			$sMethodName = 'Operation'.utils::ToCamelCase($this->m_sOperation);
 			$oKPI = new ExecutionKPI();
 			$oKPI->ComputeAndReport('Starting operation '.$this->m_sOperation);
 			if (method_exists($this, $sMethodName))
@@ -201,7 +201,7 @@ abstract class Controller
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
-			$sMethodName = 'Operation'.$this->m_sOperation;
+			$sMethodName = 'Operation'.utils::ToCamelCase($this->m_sOperation);
 			if (method_exists($this, $sMethodName))
 			{
 				$this->$sMethodName();
