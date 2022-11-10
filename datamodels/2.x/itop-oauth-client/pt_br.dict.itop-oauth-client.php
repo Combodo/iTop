@@ -7,20 +7,20 @@
  */
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Menu:CreateMailbox' => 'Create a mailbox...~~',
-	'Menu:OAuthClient' => 'OAuth Client~~',
-	'Menu:OAuthClient+' => '~~',
-	'Menu:GenerateTokens' => 'Generate access tokens...~~',
-	'Menu:RegenerateTokens' => 'Regenerate access tokens...~~',
+	'Menu:CreateMailbox' => 'Criar uma caixa de e-mail...',
+	'Menu:OAuthClient' => 'Cliente OAuth',
+	'Menu:OAuthClient+' => '',
+	'Menu:GenerateTokens' => 'Criar tokens de acesso...',
+	'Menu:RegenerateTokens' => 'Recriar tokens de acesso...',
 
-	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Mailbox creation~~',
+	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Criação de caixa de e-mail',
 
-	'itop-oauth-client:UsedForSMTP' => 'This OAuth client is used for SMTP~~',
-	'itop-oauth-client:TestSMTP' => 'Email send test~~',
-	'itop-oauth-client:MissingOAuthClient' => 'Missing Oauth client for user name %1$s~~',
-	'itop-oauth-client:Message:MissingToken' => 'Generate access token before using this OAuth client~~',
-	'itop-oauth-client:Message:TokenCreated' => 'Access token created~~',
-	'itop-oauth-client:Message:TokenRecreated' => 'Access token regenerated~~',
+	'itop-oauth-client:UsedForSMTP' => 'Este cliente OAuth é usado para SMTP',
+	'itop-oauth-client:TestSMTP' => 'Enviar e-mail de teste',
+	'itop-oauth-client:MissingOAuthClient' => 'Cliente OAuth ausente para o nome de usuário %1$s',
+	'itop-oauth-client:Message:MissingToken' => 'Crie o token de acesso antes de usar este cliente OAuth',
+	'itop-oauth-client:Message:TokenCreated' => 'Token de acesso criado',
+	'itop-oauth-client:Message:TokenRecreated' => 'Token de acceso recriado',
 ]);
 
 //
@@ -28,38 +28,38 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:OAuthClient' => 'OAuth Client~~',
-	'Class:OAuthClient/Attribute:provider' => 'Provider~~',
-	'Class:OAuthClient/Attribute:provider+' => '~~',
-	'Class:OAuthClient/Attribute:name' => 'Login~~',
-	'Class:OAuthClient/Attribute:name+' => '~~',
-	'Class:OAuthClient/Attribute:scope' => 'Scope~~',
-	'Class:OAuthClient/Attribute:scope+' => '~~',
-	'Class:OAuthClient/Attribute:description' => 'Description~~',
-	'Class:OAuthClient/Attribute:description+' => '~~',
-	'Class:OAuthClient/Attribute:client_id' => 'Client id~~',
-	'Class:OAuthClient/Attribute:client_id+' => '~~',
-	'Class:OAuthClient/Attribute:client_secret' => 'Client secret~~',
-	'Class:OAuthClient/Attribute:client_secret+' => '~~',
-	'Class:OAuthClient/Attribute:refresh_token' => 'Refresh token~~',
-	'Class:OAuthClient/Attribute:refresh_token+' => '~~',
-	'Class:OAuthClient/Attribute:refresh_token_expiration' => 'Refresh token expiration~~',
-	'Class:OAuthClient/Attribute:refresh_token_expiration+' => '~~',
-	'Class:OAuthClient/Attribute:token' => 'Access token~~',
-	'Class:OAuthClient/Attribute:token+' => '~~',
-	'Class:OAuthClient/Attribute:token_expiration' => 'Access token expiration~~',
-	'Class:OAuthClient/Attribute:token_expiration+' => '~~',
-	'Class:OAuthClient/Attribute:redirect_url' => 'Redirect url~~',
-	'Class:OAuthClient/Attribute:redirect_url+' => '~~',
-	'Class:OAuthClient/Attribute:mailbox_list' => 'Mailbox list~~',
-	'Class:OAuthClient/Attribute:mailbox_list+' => '~~',
+	'Class:OAuthClient' => 'Cliente OAuth',
+	'Class:OAuthClient/Attribute:provider' => 'Provedor',
+	'Class:OAuthClient/Attribute:provider+' => '',
+	'Class:OAuthClient/Attribute:name' => 'Login',
+	'Class:OAuthClient/Attribute:name+' => '',
+	'Class:OAuthClient/Attribute:scope' => 'Escopo',
+	'Class:OAuthClient/Attribute:scope+' => '',
+	'Class:OAuthClient/Attribute:description' => 'Descrição',
+	'Class:OAuthClient/Attribute:description+' => '',
+	'Class:OAuthClient/Attribute:client_id' => 'ID de cliente',
+	'Class:OAuthClient/Attribute:client_id+' => '',
+	'Class:OAuthClient/Attribute:client_secret' => 'Segredo do cliente',
+	'Class:OAuthClient/Attribute:client_secret+' => '',
+	'Class:OAuthClient/Attribute:refresh_token' => 'Atualizar token',
+	'Class:OAuthClient/Attribute:refresh_token+' => '',
+	'Class:OAuthClient/Attribute:refresh_token_expiration' => 'Atualizar expiração do token',
+	'Class:OAuthClient/Attribute:refresh_token_expiration+' => '',
+	'Class:OAuthClient/Attribute:token' => 'Token de acesso',
+	'Class:OAuthClient/Attribute:token+' => '',
+	'Class:OAuthClient/Attribute:token_expiration' => 'Expiração do token de acesso',
+	'Class:OAuthClient/Attribute:token_expiration+' => '',
+	'Class:OAuthClient/Attribute:redirect_url' => 'URL de redirecionamento',
+	'Class:OAuthClient/Attribute:redirect_url+' => '',
+	'Class:OAuthClient/Attribute:mailbox_list' => 'Lista de caixa de e-mail',
+	'Class:OAuthClient/Attribute:mailbox_list+' => '',
 ]);
 
 //
 // Class: OAuthClientAzure
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:OAuthClientAzure' => 'OAuth client for Microsoft Azure~~',
+	'Class:OAuthClientAzure' => 'Cliente OAuth para Microsoft Azure',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)~~',
 
 ]);
@@ -68,7 +68,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 // Class: OAuthClientGoogle
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:OAuthClientGoogle' => 'OAuth client for Google~~',
+	'Class:OAuthClientGoogle' => 'Cliente OAuth para Google',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)~~',
 ]);
-

@@ -35,8 +35,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Relation:depends on/Description' => 'Elementos estes, que dependem deste elemento',
 	'Relation:depends on/DownStream' => 'Depende de...',
 	'Relation:depends on/UpStream' => 'Impactos...',
-	'Relation:impacts/LoadData'       => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:impacts/LoadData'       => 'Carregando dados',
+	'Relation:impacts/NoFilteredData' => 'Por favor, selecione os objetos na tag de visualização Gráfica',
 ));
 
 
@@ -129,7 +129,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Todos os softwares instalados neste item de configuração',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Tipo de IC',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
-	'Class:FunctionalCI/Tab:OpenedTickets' => 'Solicitações Ativas',
+	'Class:FunctionalCI/Tab:OpenedTickets' => 'Solicitações ativas',
 ));
 
 //
@@ -295,15 +295,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:NetworkDevice' => 'Dispositivo de Rede',
 	'Class:NetworkDevice+' => '',
-	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Tipo de rede',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Tipo de dispositivo de rede',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
-	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Nome do tipo de rede',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Nome do tipo de dispositivo de rede',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Dispositivos',
 	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Todos os dispositivos associados a este dispositivo de rede',
-	'Class:NetworkDevice/Attribute:iosversion_id' => 'Versão do IOS',
+	'Class:NetworkDevice/Attribute:iosversion_id' => 'Versão do SO',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
-	'Class:NetworkDevice/Attribute:iosversion_name' => 'Nome da versão do IOS',
+	'Class:NetworkDevice/Attribute:iosversion_name' => 'Nome da versão do SO',
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
 	'Class:NetworkDevice/Attribute:ram+' => '',
@@ -743,7 +743,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:LogicalVolume' => 'Volume lógico',
+	'Class:LogicalVolume' => 'Volume Lógico',
 	'Class:LogicalVolume+' => '',
 	'Class:LogicalVolume/Attribute:name' => 'Nome',
 	'Class:LogicalVolume/Attribute:name+' => '',
@@ -1136,7 +1136,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:IOSVersion' => 'Versão do IOS',
+	'Class:IOSVersion' => 'Versão do SO',
 	'Class:IOSVersion+' => '',
 	'Class:IOSVersion/Attribute:brand_id' => 'Fabricante',
 	'Class:IOSVersion/Attribute:brand_id+' => '',
@@ -1280,7 +1280,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:NetworkInterface' => 'Placa de Rede',
+	'Class:NetworkInterface' => 'Adaptador de Rede',
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => 'Nome',
 	'Class:NetworkInterface/Attribute:name+' => '',

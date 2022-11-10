@@ -233,9 +233,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimensão',
-	'Class:URP_ClassProjection/Attribute:dimensionid+' => 'Dimensão aplicação',
+	'Class:URP_ClassProjection/Attribute:dimensionid+' => 'Dimensão de aplicação',
 	'Class:URP_ClassProjection/Attribute:dimension' => 'Dimensão',
-	'Class:URP_ClassProjection/Attribute:dimension+' => 'Dimensão aplicação',
+	'Class:URP_ClassProjection/Attribute:dimension+' => 'Dimensão de aplicação',
 	'Class:URP_ClassProjection/Attribute:class' => 'Classe',
 	'Class:URP_ClassProjection/Attribute:class+' => 'Classe alvo',
 	'Class:URP_ClassProjection/Attribute:value' => 'Expressão de valor',
@@ -355,8 +355,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 	'UI:WelcomeMenu:RightBlock' => '<p>O '.ITOP_APPLICATION_SHORT.' é orientado para o provedor de serviços, ele permite que os especialistas de TI gerenciem facilmente vários clientes ou organizações.
 <ul>O '.ITOP_APPLICATION_SHORT.' oferece um conjunto rico em recursos de processos de negócios que:
-<li>Melhora a eficácia do gerenciamento de TI</li> 
-<li>Impulsiona o desempenho das operações de TI</li> 
+<li>Melhora a eficácia do gerenciamento de TI</li>
+<li>Impulsiona o desempenho das operações de TI</li>
 <li>Melhora a satisfação do cliente e fornece aos executivos insights sobre o desempenho dos negócios.</li>
 </ul>
 </p>
@@ -472,7 +472,7 @@ Esperamos que você goste desta versão tanto quanto gostamos de imaginá-la e c
 	'UI:Error:MaintenanceTitle' => 'Manutenção',
 	'UI:Error:InvalidToken' => 'Erro: A operação solicitada já foi executada (token CSRF não encontrado)',
 
-	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+	'UI:Error:SMTP:UnknownVendor' => 'O provedor de autenticação SMTP OAuth %1$s não existe (email_transport_smtp.oauth.provider)',
 
 	'UI:GroupBy:Count' => 'Número',
 	'UI:GroupBy:Count+' => 'Número de elementos',

@@ -30,7 +30,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 	'Core:UniquenessDefaultError' => 'Regra de exclusividade \'%1$s\' com erro',
 	'Core:CheckConsistencyError'  => 'Regras de consistência não seguidas: %1$s',
-	'Core:CheckValueError'        => 'Valor inesperado para o atributo \'%1$s\' (%2$s) : %3$s~~',
+	'Core:CheckValueError'        => 'Valor inesperado para o atributo \'%1$s\' (%2$s) : %3$s',
 
 	'Core:AttributeLinkedSet' => 'Array de objetos',
 	'Core:AttributeLinkedSet+' => 'Quaisquer tipos de objetos da mesma classe ou subclasses',
@@ -207,7 +207,7 @@ Operadores:<br/>
 
 	'Core:AttributeTag' => 'Etiquetas',
 	'Core:AttributeTag+' => '',
-	
+
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
@@ -353,7 +353,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Event' => 'Registro de evento',
-	'Class:Event+' => 'Um evento interno do aplicativo',
+	'Class:Event+' => 'Um evento interno da aplicação',
 	'Class:Event/Attribute:message' => 'Mensagem',
 	'Class:Event/Attribute:message+' => 'Descrição curta deste evento',
 	'Class:Event/Attribute:date' => 'Data',
