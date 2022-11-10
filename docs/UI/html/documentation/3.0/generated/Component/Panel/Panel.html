@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel &mdash; iTop UI iTop 3.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/ui-doc.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> iTop UI
+            <img src="../../../_static/itop-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Twig Base:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../TwigBase/TwigBase.html">Twig Base Presentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../TwigBaseTuto/TwigBaseTuto.html">Twig Base Tutorial</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">iTop UI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Panel</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="panel">
+<span id="id1"></span><h1>Panel<a class="headerlink" href="#panel" title="Permalink to this headline"></a></h1>
+<p>Class Panel</p>
+<hr class="docutils" />
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline"></a></h2>
+<p>No output provided yet</p>
+</section>
+<hr class="docutils" />
+<section id="twig-tag">
+<h2>Twig Tag<a class="headerlink" href="#twig-tag" title="Permalink to this headline"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Tag</dt>
+<dd class="field-odd"><p><strong>UIPanel</strong></p>
+</dd>
+<dt class="field-even">Syntax</dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIPanel</span> <span class="p">T</span><span class="nv">ype</span> <span class="o">{</span><span class="p">P</span><span class="nv">arameters</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIPanel</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 48%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panelneutral"><span class="std std-ref">Neutral</span></a></p></td>
+<td><p>Make a basis Panel component</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panelforinformation"><span class="std std-ref">ForInformation</span></a></p></td>
+<td><p>Make a Panel component for informational messages</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panelforsuccess"><span class="std std-ref">ForSuccess</span></a></p></td>
+<td><p>Make a Panel component for successful messages</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panelforwarning"><span class="std std-ref">ForWarning</span></a></p></td>
+<td><p>Make a Panel component for warning messages</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panelfordanger"><span class="std std-ref">ForDanger</span></a></p></td>
+<td><p>Make a Panel component for danger messages</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panelforfailure"><span class="std std-ref">ForFailure</span></a></p></td>
+<td><p>Make a Panel component for failure messages</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panelwithbrandingprimarycolor"><span class="std std-ref">WithBrandingPrimaryColor</span></a></p></td>
+<td><p>Make a Panel component with primary color scheme</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panelwithbrandingsecondarycolor"><span class="std std-ref">WithBrandingSecondaryColor</span></a></p></td>
+<td><p>Make a Panel component with secondary color scheme</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panelforclass"><span class="std std-ref">ForClass</span></a></p></td>
+<td><p>Make a Panel component with the specific $sClass color scheme</p></td>
+</tr>
+</tbody>
+</table>
+<section id="panel-neutral">
+<span id="panelneutral"></span><h3>Panel Neutral<a class="headerlink" href="#panel-neutral" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIPanel</span> <span class="p">N</span><span class="nv">eutral</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sSubTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIPanel</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sTitle</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sSubTitle</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="panel-forinformation">
+<span id="panelforinformation"></span><h3>Panel ForInformation<a class="headerlink" href="#panel-forinformation" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIPanel</span> <span class="p">F</span><span class="nv">orInformation</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sSubTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIPanel</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sTitle</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sSubTitle</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="panel-forsuccess">
+<span id="panelforsuccess"></span><h3>Panel ForSuccess<a class="headerlink" href="#panel-forsuccess" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIPanel</span> <span class="p">F</span><span class="nv">orSuccess</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sSubTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIPanel</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sTitle</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sSubTitle</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="panel-forwarning">
+<span id="panelforwarning"></span><h3>Panel ForWarning<a class="headerlink" href="#panel-forwarning" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIPanel</span> <span class="p">F</span><span class="nv">orWarning</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sSubTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIPanel</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sTitle</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sSubTitle</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="panel-fordanger">
+<span id="panelfordanger"></span><h3>Panel ForDanger<a class="headerlink" href="#panel-fordanger" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIPanel</span> <span class="p">F</span><span class="nv">orDanger</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sSubTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIPanel</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sTitle</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sSubTitle</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="panel-forfailure">
+<span id="panelforfailure"></span><h3>Panel ForFailure<a class="headerlink" href="#panel-forfailure" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIPanel</span> <span class="p">F</span><span class="nv">orFailure</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sSubTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIPanel</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sTitle</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sSubTitle</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="panel-withbrandingprimarycolor">
+<span id="panelwithbrandingprimarycolor"></span><h3>Panel WithBrandingPrimaryColor<a class="headerlink" href="#panel-withbrandingprimarycolor" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIPanel</span> <span class="p">W</span><span class="nv">ithBrandingPrimaryColor</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sSubTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIPanel</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sTitle</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sSubTitle</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="panel-withbrandingsecondarycolor">
+<span id="panelwithbrandingsecondarycolor"></span><h3>Panel WithBrandingSecondaryColor<a class="headerlink" href="#panel-withbrandingsecondarycolor" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIPanel</span> <span class="p">W</span><span class="nv">ithBrandingSecondaryColor</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sSubTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIPanel</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sTitle</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sSubTitle</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="panel-forclass">
+<span id="panelforclass"></span><h3>Panel ForClass<a class="headerlink" href="#panel-forclass" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIPanel</span> <span class="p">F</span><span class="nv">orClass</span> <span class="o">{</span><span class="nv">sClass</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sSubTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIPanel</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 11%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 51%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sClass</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td><p>Class of the object the panel is for</p></td>
+</tr>
+<tr class="row-even"><td><p>sTitle</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>sSubTitle</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="panel-common-parameters">
+<h3>Panel common parameters<a class="headerlink" href="#panel-common-parameters" title="Permalink to this headline"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 16%" />
+<col style="width: 57%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>AddCSSClass</p></td>
+<td><p>string</p></td>
+<td><p>CSS class to add to the generated html block</p></td>
+</tr>
+<tr class="row-even"><td><p>AddCSSClasses</p></td>
+<td><p>array</p></td>
+<td><p>like &lt;code&gt;[‘ibo-is-hidden’, ‘ibo-alert–body’]&lt;/code&gt;</p></td>
+</tr>
+<tr class="row-odd"><td><p>AddCssFileRelPath</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddDeferredBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddHtml</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddJsFileRelPath</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddMainBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddMainBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddMultipleCssFilesRelPaths</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddMultipleJsFilesRelPaths</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddSubBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddSubTitleBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddSubTitleBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddTitleBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddTitleBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddToolbarBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddToolbarBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>CSSClasses</p></td>
+<td><p>array</p></td>
+<td><p>like &lt;code&gt;[‘ibo-is-hidden’, ‘ibo-alert–body’]&lt;/code&gt;</p></td>
+</tr>
+<tr class="row-odd"><td><p>CSSColorClass</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ColorFromClass</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ColorFromColorSemantic</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ColorFromOrmStyle</p></td>
+<td><p>ormStyle</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>DataAttributes</p></td>
+<td><p>array</p></td>
+<td><p>Array of data attributes in the format [‘name’ =&gt; ‘value’]</p></td>
+</tr>
+<tr class="row-even"><td><p>DeferredBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>HasForcedDiv</p></td>
+<td><p>bool</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>IsCollapsible</p></td>
+<td><p>bool</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>IsHeaderVisibleOnScroll</p></td>
+<td><p>bool</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>IsHidden</p></td>
+<td><p>bool</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>MainBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>SubBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>SubTitle</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>SubTitleBlock</p></td>
+<td><p>iUIContentBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Title</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>TitleBlock</p></td>
+<td><p>iUIContentBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ToolBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+</section>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<p>No examples provided yet</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Combodo.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<!--
+  ~ @copyright   Copyright (C) 2010-2022 Combodo SARL
+  ~ @license     http://opensource.org/licenses/AGPL-3.0
+  -->
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: documentation/3.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+	<div class="rst-other-versions">
+		<dl>
+			<dt>Branches</dt>
+			<dd><a href="Panel.html">documentation/3.0</a></dd>
+			<dd><a href="../../../../latest/generated/Component/Panel/Panel.html">documentation/latest</a></dd>
+		</dl>
+	</div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

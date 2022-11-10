@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. Creating the structure &mdash; iTop UI iTop 3.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/ui-doc.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="2. Hello World!" href="../Step2/Step2.html" />
+    <link rel="prev" title="Twig Base Tutorial" href="../TwigBaseTuto.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> iTop UI
+            <img src="../../_static/itop-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Twig Base:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../TwigBase/TwigBase.html">Twig Base Presentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../TwigBaseTuto.html">Twig Base Tutorial</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Creating the structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Step2/Step2.html">2. Hello World!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Step3/Step3.html">3. Passing variables to templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Step4/Step4.html">4. Adding new operations</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">iTop UI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../TwigBaseTuto.html">Twig Base Tutorial</a> &raquo;</li>
+      <li>1. Creating the structure</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="creating-the-structure">
+<span id="step1"></span><h1>1. Creating the structure<a class="headerlink" href="#creating-the-structure" title="Permalink to this headline"></a></h1>
+<p>Create a module using the <a class="reference external" href="https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Adatamodel#creating_your_own_extension">helper to create a new extension</a> you’ll get the following structure:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nx">my</span><span class="o">-</span><span class="nx">module</span>
+<span class="nx">├──</span> <span class="nx">assets</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">css</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">img</span>
+<span class="nx">│  </span> <span class="nx">└──</span> <span class="nx">js</span>
+<span class="nx">├──</span> <span class="nx">doc</span>
+<span class="nx">├──</span> <span class="nx">src</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Controller</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Helper</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Hook</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Model</span>
+<span class="nx">│  </span> <span class="nx">└──</span> <span class="nx">Service</span>
+<span class="nx">└──</span> <span class="nx">vendor</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">src/Controller</span></code></p>
+<blockquote>
+<div><p>Contains all the PHP to control the display of the different pages of the module.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">src/Service</span></code></p>
+<blockquote>
+<div><p>Contains the PHP used to generate the data to be displayed.</p>
+</div></blockquote>
+<p>Create a folder <code class="docutils literal notranslate"><span class="pre">templates</span></code> for the <em>Twig</em> templates used for the presentation:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nx">my</span><span class="o">-</span><span class="nx">module</span>
+<span class="nx">├──</span> <span class="nx">assets</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">css</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">img</span>
+<span class="nx">│  </span> <span class="nx">└──</span> <span class="nx">js</span>
+<span class="nx">├──</span> <span class="nx">doc</span>
+<span class="nx">├──</span> <span class="nx">src</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Controller</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Helper</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Hook</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Model</span>
+<span class="nx">│  </span> <span class="nx">└──</span> <span class="nx">Service</span>
+<span class="nx">├──</span> <span class="nx">templates</span>
+<span class="nx">└──</span> <span class="nx">vendor</span>
+</pre></div>
+</div>
+<p>If your module is for iTop version 3.0 and above, you can put all the dictionaries into a dedicated folder <code class="docutils literal notranslate"><span class="pre">dictionaries</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nx">my</span><span class="o">-</span><span class="nx">module</span>
+<span class="nx">├──</span> <span class="nx">assets</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">css</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">img</span>
+<span class="nx">│  </span> <span class="nx">└──</span> <span class="nx">js</span>
+<span class="nx">├──</span> <span class="nx">dictionaries</span>
+<span class="nx">├──</span> <span class="nx">doc</span>
+<span class="nx">├──</span> <span class="nx">src</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Controller</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Helper</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Hook</span>
+<span class="nx">│  </span> <span class="nx">├──</span> <span class="nx">Model</span>
+<span class="nx">│  </span> <span class="nx">└──</span> <span class="nx">Service</span>
+<span class="nx">├──</span> <span class="nx">templates</span>
+<span class="nx">└──</span> <span class="nx">vendor</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../TwigBaseTuto.html" class="btn btn-neutral float-left" title="Twig Base Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../Step2/Step2.html" class="btn btn-neutral float-right" title="2. Hello World!" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Combodo.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<!--
+  ~ @copyright   Copyright (C) 2010-2022 Combodo SARL
+  ~ @license     http://opensource.org/licenses/AGPL-3.0
+  -->
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: documentation/3.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+	<div class="rst-other-versions">
+		<dl>
+			<dt>Branches</dt>
+			<dd><a href="Step1.html">documentation/3.0</a></dd>
+			<dd><a href="../../../latest/TwigBaseTuto/Step1/Step1.html">documentation/latest</a></dd>
+		</dl>
+	</div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

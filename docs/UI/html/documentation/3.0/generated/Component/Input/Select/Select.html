@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select &mdash; iTop UI iTop 3.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/ui-doc.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> iTop UI
+            <img src="../../../../_static/itop-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Twig Base:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../TwigBase/TwigBase.html">Twig Base Presentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../TwigBaseTuto/TwigBaseTuto.html">Twig Base Tutorial</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">iTop UI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Select</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="select">
+<span id="id1"></span><h1>Select<a class="headerlink" href="#select" title="Permalink to this headline"></a></h1>
+<p>Class Select</p>
+<hr class="docutils" />
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline"></a></h2>
+<p>No output provided yet</p>
+</section>
+<hr class="docutils" />
+<section id="twig-tag">
+<h2>Twig Tag<a class="headerlink" href="#twig-tag" title="Permalink to this headline"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Tag</dt>
+<dd class="field-odd"><p><strong>UISelect</strong></p>
+</dd>
+<dt class="field-even">Syntax</dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UISelect</span> <span class="p">T</span><span class="nv">ype</span> <span class="o">{</span><span class="p">P</span><span class="nv">arameters</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUISelect</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#selectforselect"><span class="std std-ref">ForSelect</span></a></p></td>
+<td><p>Create a default Select input</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#selectforselectwithlabel"><span class="std std-ref">ForSelectWithLabel</span></a></p></td>
+<td><p>Create a Select input with a label</p></td>
+</tr>
+</tbody>
+</table>
+<section id="select-forselect">
+<span id="selectforselect"></span><h3>Select ForSelect<a class="headerlink" href="#select-forselect" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UISelect</span> <span class="p">F</span><span class="nv">orSelect</span> <span class="o">{</span><span class="nv">sName</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sId</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUISelect</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 14%" />
+<col style="width: 19%" />
+<col style="width: 11%" />
+<col style="width: 44%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sName</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td><p>Input name for the form</p></td>
+</tr>
+<tr class="row-even"><td><p>sId</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td><p>ID of the block</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="select-forselectwithlabel">
+<span id="selectforselectwithlabel"></span><h3>Select ForSelectWithLabel<a class="headerlink" href="#select-forselectwithlabel" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UISelect</span> <span class="p">F</span><span class="nv">orSelectWithLabel</span> <span class="o">{</span><span class="nv">sName</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sLabel</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sId</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUISelect</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 62%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sName</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td><p>Input name for the form</p></td>
+</tr>
+<tr class="row-even"><td><p>sLabel</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td><p>Label to display with the input (null for no label)</p></td>
+</tr>
+<tr class="row-odd"><td><p>sId</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td><p>ID of the block</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="select-common-parameters">
+<h3>Select common parameters<a class="headerlink" href="#select-common-parameters" title="Permalink to this headline"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 14%" />
+<col style="width: 58%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>AddCSSClass</p></td>
+<td><p>string</p></td>
+<td><p>CSS class to add to the generated html block</p></td>
+</tr>
+<tr class="row-even"><td><p>AddCSSClasses</p></td>
+<td><p>array</p></td>
+<td><p>like &lt;code&gt;[‘ibo-is-hidden’, ‘ibo-alert–body’]&lt;/code&gt;</p></td>
+</tr>
+<tr class="row-odd"><td><p>AddCssFileRelPath</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddDeferredBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddHtml</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddJsFileRelPath</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddMultipleCssFilesRelPaths</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddMultipleJsFilesRelPaths</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddOption</p></td>
+<td><p>SelectOption</p></td>
+<td><p>Select option UIBlock</p></td>
+</tr>
+<tr class="row-even"><td><p>AddSubBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>CSSClasses</p></td>
+<td><p>array</p></td>
+<td><p>like &lt;code&gt;[‘ibo-is-hidden’, ‘ibo-alert–body’]&lt;/code&gt;</p></td>
+</tr>
+<tr class="row-even"><td><p>DataAttributes</p></td>
+<td><p>array</p></td>
+<td><p>Array of data attributes in the format [‘name’ =&gt; ‘value’]</p></td>
+</tr>
+<tr class="row-odd"><td><p>DeferredBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>HasForcedDiv</p></td>
+<td><p>bool</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>IsHidden</p></td>
+<td><p>bool</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>IsLabelBefore</p></td>
+<td><p>bool</p></td>
+<td><p>If true the label will be positioned before the input</p></td>
+</tr>
+<tr class="row-even"><td><p>IsMultiple</p></td>
+<td><p>bool</p></td>
+<td><p>Allow multiple selection</p></td>
+</tr>
+<tr class="row-odd"><td><p>Label</p></td>
+<td><p>string</p></td>
+<td><p>Label to display with the input (null for no label)</p></td>
+</tr>
+<tr class="row-even"><td><p>Name</p></td>
+<td><p>string</p></td>
+<td><p>Input name for the form</p></td>
+</tr>
+<tr class="row-odd"><td><p>SubBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>SubmitOnChange</p></td>
+<td><p>bool</p></td>
+<td><p>if true submit the form as soon as a change is detected</p></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+</section>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<p>No examples provided yet</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Combodo.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<!--
+  ~ @copyright   Copyright (C) 2010-2022 Combodo SARL
+  ~ @license     http://opensource.org/licenses/AGPL-3.0
+  -->
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: documentation/3.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+	<div class="rst-other-versions">
+		<dl>
+			<dt>Branches</dt>
+			<dd><a href="Select.html">documentation/3.0</a></dd>
+			<dd><a href="../../../../../latest/generated/Component/Input/Select/Select.html">documentation/latest</a></dd>
+		</dl>
+	</div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

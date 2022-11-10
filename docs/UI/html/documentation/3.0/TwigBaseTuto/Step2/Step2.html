@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2. Hello World! &mdash; iTop UI iTop 3.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/ui-doc.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="3. Passing variables to templates" href="../Step3/Step3.html" />
+    <link rel="prev" title="1. Creating the structure" href="../Step1/Step1.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> iTop UI
+            <img src="../../_static/itop-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Twig Base:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../TwigBase/TwigBase.html">Twig Base Presentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../TwigBaseTuto.html">Twig Base Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../Step1/Step1.html">1. Creating the structure</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. Hello World!</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-controller">The controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-template">The template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-end-point">The end point</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Step3/Step3.html">3. Passing variables to templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Step4/Step4.html">4. Adding new operations</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">iTop UI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../TwigBaseTuto.html">Twig Base Tutorial</a> &raquo;</li>
+      <li>2. Hello World!</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="hello-world">
+<span id="step2"></span><h1>2. Hello World!<a class="headerlink" href="#hello-world" title="Permalink to this headline"></a></h1>
+<section id="the-controller">
+<h2>The controller<a class="headerlink" href="#the-controller" title="Permalink to this headline"></a></h2>
+<p>Create a controller into <code class="docutils literal notranslate"><span class="pre">my-module/src/Controller</span></code>, let’s call it <code class="docutils literal notranslate"><span class="pre">MyModuleController</span></code> extending  <code class="docutils literal notranslate"><span class="pre">Combodo\iTop\Application\TwigBase\Controller\Controller</span></code></p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">src/Controller/MyModuleController.php</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="k">namespace</span> <span class="nx">MyCompany\iTop\MyModule\Controller</span><span class="p">;</span>
+<span class="linenos">4</span><span class="k">use</span> <span class="nx">Combodo\iTop\Application\TwigBase\Controller\Controller</span><span class="p">;</span>
+<span class="linenos">5</span>
+<span class="linenos">6</span><span class="k">class</span> <span class="nc">MyModuleController</span> <span class="k">extends</span> <span class="nx">Controller</span>
+<span class="linenos">7</span><span class="p">{</span>
+<span class="linenos">8</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s add a <em>Hello World</em> operation</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">src/Controller/MyModuleController.php</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="k">class</span> <span class="nc">MyModuleController</span> <span class="k">extends</span> <span class="nx">Controller</span>
+<span class="linenos">4</span><span class="p">{</span>
+<span class="linenos">5</span>    <span class="k">public</span> <span class="k">function</span> <span class="nf">OperationHelloWorld</span><span class="p">()</span>
+<span class="linenos">6</span>    <span class="p">{</span>
+<span class="linenos">7</span>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">DisplayPage</span><span class="p">();</span>
+<span class="linenos">8</span>    <span class="p">}</span>
+<span class="linenos">9</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>This will just display the Twig template corresponding to this operation.
+Here the operation is <strong>HelloWorld</strong> without space.
+The name of the method is built from the operation name by adding <em>Operation</em> at the beginning: <code class="docutils literal notranslate"><span class="pre">OperationHelloWorld</span></code>.</p>
+<p>Calling the method <code class="docutils literal notranslate"><span class="pre">DisplayPage()</span></code> will render the template named after the operation: <code class="docutils literal notranslate"><span class="pre">HelloWorld.html.twig</span></code> it will be located in the folder <code class="docutils literal notranslate"><span class="pre">my-module/templates</span></code>.</p>
+</section>
+<section id="the-template">
+<h2>The template<a class="headerlink" href="#the-template" title="Permalink to this headline"></a></h2>
+<p>Let’s create the template <code class="docutils literal notranslate"><span class="pre">my-module/templates/HelloWorld.html.twig</span></code> with a nice title.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">templates/HelloWorld.html.twig</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="cp">{%</span> <span class="k">UITitle</span> <span class="p">F</span><span class="nv">orPage</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;Hello World!&#39;</span><span class="o">}</span> <span class="cp">%}{%</span> <span class="k">EndUITitle</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+</div>
+<p>Twig syntax can be found <a class="reference external" href="https://twig.symfony.com/doc/3.x/">Here</a>.</p>
+<p>For more information on specific iTop Twig tags you can check <span class="xref std std-ref">Components</span> and <span class="xref std std-ref">Layouts</span>, <em>note that UI blocks are new in iTop 3.0 and cannot be used in iTop 2.7</em></p>
+</section>
+<section id="the-end-point">
+<h2>The end point<a class="headerlink" href="#the-end-point" title="Permalink to this headline"></a></h2>
+<p>Then create landing page for your module <code class="docutils literal notranslate"><span class="pre">my-module/index.php</span></code></p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">index.php</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="k">namespace</span> <span class="nx">MyCompany\iTop\MyModule</span><span class="p">;</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">use</span> <span class="nx">MyCompany\iTop\MyModule\Controller\MyModuleController</span><span class="p">;</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="k">require_once</span><span class="p">(</span><span class="nx">APPROOT</span><span class="o">.</span><span class="s1">&#39;application/startup.inc.php&#39;</span><span class="p">);</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="nv">$oUpdateController</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyModuleController</span><span class="p">(</span><span class="nx">MODULESROOT</span><span class="o">.</span><span class="s1">&#39;my-module/templates&#39;</span><span class="p">,</span> <span class="s1">&#39;my-module&#39;</span><span class="p">);</span>
+<span class="linenos">10</span><span class="nv">$oUpdateController</span><span class="o">-&gt;</span><span class="na">SetDefaultOperation</span><span class="p">(</span><span class="s1">&#39;HelloWorld&#39;</span><span class="p">);</span>
+<span class="linenos">11</span><span class="nv">$oUpdateController</span><span class="o">-&gt;</span><span class="na">HandleOperation</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<p>Create an instance of the controller indicating the templates path and the module name.
+The default operation is set to the operation we want when entering the module.
+The method <code class="docutils literal notranslate"><span class="pre">HandleOperation()</span></code> will call the method corresponding to the specified operation.</p>
+<p>Now you have to build the autoloader by running <code class="docutils literal notranslate"><span class="pre">composer</span> <span class="pre">dump-autoload</span></code> into the module folder <code class="docutils literal notranslate"><span class="pre">my-module</span></code>.</p>
+<p>The next operation is the <a class="reference external" href="https://www.itophub.io/wiki/page?id=latest%3Ainstall%3Ainstall_wizard">setup</a>. You will be able to select your module.</p>
+<img alt="../../_images/Setup.png" src="../../_images/Setup.png" />
+<p>For more comfort during the development of your module, you can <a class="reference external" href="https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Adatamodel#installing_the_toolkit">install the toolkit</a> and update your iTop with symlinks.</p>
+<p>if you go to your module page <code class="docutils literal notranslate"><span class="pre">https://localhost/itop/pages/exec.php?exec_module=my-module&amp;exec_page=index.php</span></code> you should see:</p>
+<img alt="../../_images/Step2.png" src="../../_images/Step2.png" />
+<p>You will notice that if you work with an iTop from an official package (not the sources from <code class="docutils literal notranslate"><span class="pre">https://github.com/Combodo/iTop</span></code>, when you modify the twig template, the result does not change.</p>
+<p>In this case, you’ll have to add the following parameter to your iTop configuration:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="sd">/**</span>
+<span class="sd"> *</span>
+<span class="sd"> * Configuration file, generated by the iTop configuration wizard</span>
+<span class="sd"> *</span>
+<span class="sd"> * The file is used in MetaModel::LoadConfig() which does all the necessary initialization job</span>
+<span class="sd"> *</span>
+<span class="sd"> */</span>
+<span class="nv">$MySettings</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="c1">// developer_mode.enabled: If true then unlocks dev env functionalities, see \utils::IsDevelopmentEnvironment</span>
+    <span class="s1">&#39;developer_mode.enabled&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+
+    <span class="c1">// ...</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../Step1/Step1.html" class="btn btn-neutral float-left" title="1. Creating the structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../Step3/Step3.html" class="btn btn-neutral float-right" title="3. Passing variables to templates" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Combodo.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<!--
+  ~ @copyright   Copyright (C) 2010-2022 Combodo SARL
+  ~ @license     http://opensource.org/licenses/AGPL-3.0
+  -->
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: documentation/3.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+	<div class="rst-other-versions">
+		<dl>
+			<dt>Branches</dt>
+			<dd><a href="Step2.html">documentation/3.0</a></dd>
+			<dd><a href="../../../latest/TwigBaseTuto/Step2/Step2.html">documentation/latest</a></dd>
+		</dl>
+	</div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
