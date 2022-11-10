@@ -122,10 +122,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:User/Error:LoginMustBeUnique' => 'Login musi być unikatowy - "%1s" jest już używany.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Do użytkownika musi być przypisany co najmniej jeden profil.',
 
-	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
-	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
-	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:ProfileNotAllowed' => 'Nie można dodać profilu "%1$s" nie ma on dostępu do zaplecza',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Zmiana statusu nie jest dozwolona dla własnego użytkownika',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Dozwolone organizacje muszą zawierać organizację użytkownika',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'Aktualna lista profili nie daje wystarczających praw dostępu (Użytkowników nie można już modyfikować)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Do użytkownika musi być przypisana co najmniej jedna organizacja.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organizacja niedozwolona.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'Konto użytkownika nie należy do Twoich dozwolonych organizacji.',
@@ -369,14 +369,14 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 <li>Zarządzaj najważniejszym zasobem swojego IT: dokumentacją.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+	'UI:WelcomeMenu:Text'=> '<div>Gratulacje, wylądowałeś na '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
-<div>This version features a brand new modern and accessible backoffice design.</div>
+<div>Ta wersja ma zupełnie nowy, bardziej nowoczesny i dostępny projekt zaplecza.</div>
 
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+<div>Urzymaliśmy podstawowe funkcje '.ITOP_APPLICATION.', które Ci się spodobały i zmodernizowaliśmy je, aby je bardziej pokochać.
+Mamy nadzieję, że spodoba ci się ta wersja tak samo, jak nam się podobało jej wymyślanie i tworzenie.</div>
 
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
+<div>Dostosuj swój '.ITOP_APPLICATION.' poprzez spersonalizowane preferencje.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otwarte zgłoszenia: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Moje zgłoszenia',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otwarte incydenty: %1$d',
@@ -384,8 +384,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => 'Incydenty przydzielone mi',
 	'UI:AllOrganizations' => ' Wszystkie organizacje ',
 	'UI:YourSearch' => 'Twoje wyszukiwania',
-	'UI:LoggedAsMessage' => 'zalogowany jako %1$s (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => 'Zalogowany jako %1$s (%2$s, Administrator)~~',
+	'UI:LoggedAsMessage' => 'zalogowany jako %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Zalogowany jako %1$s (%2$s, Administrator)',
 	'UI:Button:Logoff' => 'Wyloguj',
 	'UI:Button:GlobalSearch' => 'Szukaj',
 	'UI:Button:Search' => ' Szukaj ',
@@ -394,12 +394,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:Query' => ' Zapytanie ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Zapisz',
-	'UI:Button:SaveAnd' => 'Save and %1$s~~',
+	'UI:Button:SaveAnd' => 'Zapisz i %1$s',
 	'UI:Button:Cancel' => 'Anuluj',
 	'UI:Button:Close' => 'Zamknij',
 	'UI:Button:Apply' => 'Zastosuj',
 	'UI:Button:Send' => 'Wyślij',
-	'UI:Button:SendAnd' => 'Send and %1$s~~',
+	'UI:Button:SendAnd' => 'Wyślij i %1$s',
 	'UI:Button:Back' => ' << Wstecz ',
 	'UI:Button:Restart' => ' |<< Restart ',
 	'UI:Button:Next' => ' Następny >> ',
@@ -499,8 +499,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Loading' => 'Ładowanie...',
 	'UI:Menu:Actions' => 'Działania',
 	'UI:Menu:OtherActions' => 'Inne działania',
-	'UI:Menu:Transitions' => 'Transitions~~',
-	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
+	'UI:Menu:Transitions' => 'Przejścia',
+	'UI:Menu:OtherTransitions' => 'Inne przejścia',
 	'UI:Menu:New' => 'Nowy...',
 	'UI:Menu:Add' => 'Dodaj...',
 	'UI:Menu:Manage' => 'Zarządzaj...',
@@ -709,13 +709,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Wykonywanie zapytań OQL',
 	'UI:RunQuery:QueryExamples' => 'Przykłady zapytań',
-	'UI:RunQuery:QueryResults' => 'Query Results~~',
+	'UI:RunQuery:QueryResults' => 'Wyniki zapytań',
 	'UI:RunQuery:HeaderPurpose' => 'Cel, powód',
 	'UI:RunQuery:HeaderPurpose+' => 'Wyjaśnienie dotyczące zapytania',
 	'UI:RunQuery:HeaderOQLExpression' => 'Wyrażenie OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Zapytanie w składni OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Wyrażenie do wykonania: ',
-	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
+	'UI:RunQuery:QueryArguments' => 'Argumenty zapytań',
 	'UI:RunQuery:MoreInfo' => 'Więcej informacji o zapytaniu: ',
 	'UI:RunQuery:DevelopedQuery' => 'Rozwinięte wyrażenie zapytania: ',
 	'UI:RunQuery:SerializedFilter' => 'Filtr serializowany: ',
@@ -727,7 +727,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Query:UrlForExcel' => 'Adres URL do użycia w kwerendach web MS-Excel',
 	'UI:Query:UrlV1' => 'Lista pól pozostała nieokreślona. Strona <em>export-V2.php</em> nie może zostać wywołana bez tych informacji. Dlatego sugerowany poniżej adres URL wskazuje na starszą stronę: <em>export.php</em>. Ta starsza wersja eksportu ma następujące ograniczenie: lista eksportowanych pól może się różnić w zależności od formatu wyjściowego i modelu danych '.ITOP_APPLICATION_SHORT.'. <br/> Jeśli chcesz zagwarantować, że lista eksportowanych kolumn pozostanie stabilna w dłuższej perspektywie, musisz określić wartość dla atrybutu "Pola" i użyć strony <em>export-V2.php</em >.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' schemat obiektów',
-	'UI:Schema:TitleForClass' => '%1$s schemat~~',
+	'UI:Schema:TitleForClass' => 'Schemat %1$s',
 	'UI:Schema:CategoryMenuItem' => 'Kategoria <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relacje',
 	'UI:Schema:AbstractClass' => 'Klasa abstrakcyjna: nie można utworzyć instancji obiektu z tej klasy.',
@@ -786,13 +786,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Musi się zmienić',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'Użytkownik zostanie poproszony o zmianę wartości',
 	'UI:Schema:LifeCycleEmptyList' => 'pusta lista',
-	'UI:Schema:ClassFilter' => 'Klasa:~~',
-	'UI:Schema:DisplayLabel' => 'Pokaż:~~',
-	'UI:Schema:DisplaySelector/LabelAndCode' => 'Etykieta i kod~~',
-	'UI:Schema:DisplaySelector/Label' => 'Etykieta~~',
-	'UI:Schema:DisplaySelector/Code' => 'Kod~~',
-	'UI:Schema:Attribute/Filter' => 'Filtr~~',
-	'UI:Schema:DefaultNullValue' => 'Domyślnie pusty (null) : "%1$s"~~',
+	'UI:Schema:ClassFilter' => 'Klasa:',
+	'UI:Schema:DisplayLabel' => 'Pokaż:',
+	'UI:Schema:DisplaySelector/LabelAndCode' => 'Etykieta i kod',
+	'UI:Schema:DisplaySelector/Label' => 'Etykieta',
+	'UI:Schema:DisplaySelector/Code' => 'Kod',
+	'UI:Schema:Attribute/Filter' => 'Filtr',
+	'UI:Schema:DefaultNullValue' => 'Domyślnie pusty (null) : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Wpisz pierwsze 3 znaki...',
 	'UI:Edit:SearchQuery' => 'Wybierz wstępnie zdefiniowane zapytanie',
 	'UI:Edit:TestQuery' => 'Zapytanie testowe',
@@ -998,16 +998,16 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 </ol>
 </p>
 <p>Aby zostały wykonane, działania muszą być powiązane z wyzwalaczami.
-W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porządkowy", określający, w jakiej kolejności mają być wykonywane.</p>~~',
+W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porządkowy", określający, w jakiej kolejności mają być wykonywane.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Wyzwalacze',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostępne wyzwalacze',
 	'UI:NotificationsMenu:OnCreate' => 'Kiedy obiekt jest tworzony',
 	'UI:NotificationsMenu:OnStateEnter' => 'Kiedy obiekt wejdzie w określony stan',
 	'UI:NotificationsMenu:OnStateLeave' => 'Kiedy obiekt opuszcza dany stan',
 	'UI:NotificationsMenu:Actions' => 'Działania',
-	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
-	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
-	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Działania e-mail',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Działania webhook (integracje wychodzące)',
+	'UI:NotificationsMenu:Actions:Action' => 'Inne działania',
 	'UI:NotificationsMenu:AvailableActions' => 'Dostępne działania',
 
 	'Menu:TagAdminMenu' => 'Konfiguracja tagów',
@@ -1051,8 +1051,8 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:iTopVersion:Long' => '%1$s wersja %2$s-%3$s zbudowana na %4$s',
 	'UI:PropertiesTab' => 'Właściwości',
 
-	'UI:OpenDocumentInNewWindow_' => 'Otwórz~~',
-	'UI:DownloadDocument_' => 'Pobierz~~',
+	'UI:OpenDocumentInNewWindow_' => 'Otwórz',
+	'UI:DownloadDocument_' => 'Pobierz',
 	'UI:Document:NoPreview' => 'Brak podglądu tego typu dokumentu',
 	'UI:Download-CSV' => 'Pobierz %1$s',
 
@@ -1194,8 +1194,8 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:PrintResolution:A4Landscape' => 'A4 krajobraz',
 	'UI:PrintResolution:LetterPortrait' => 'Letter portret',
 	'UI:PrintResolution:LetterLandscape' => 'Letter krajobraz',
-	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
-	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Przełącz na standardowy pulpit nawigacyjny',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Przełącz na własny pulpit nawigacyjny',
 
 	'UI:ConfigureThisList' => 'Skonfiguruj listę...',
 	'UI:ListConfigurationTitle' => 'Konfiguracja listy',
@@ -1224,8 +1224,8 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:ImportDashBoard' => 'Importuj z pliku...',
 	'UI:ImportDashboardTitle' => 'Importuj z pliku',
 	'UI:ImportDashboardText' => 'Wybierz plik pulpitu do zaimportowania:',
-	'UI:Dashboard:Actions' => 'Dashboard actions~~',
-	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
+	'UI:Dashboard:Actions' => 'Działania na pulpicie',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'Ten pulpit nawigacyjny wyświetla informacje, które nie obejmują bieżących zmian.',
 
 
 	'UI:DashletCreation:Title' => 'Utwórz nową wtyczkę',
@@ -1238,8 +1238,8 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:DashboardEdit:AutoReload' => 'Automatyczne odświeżanie',
 	'UI:DashboardEdit:AutoReloadSec' => 'Automatyczne odświeżanie (w sekundach)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'Dopuszczalne minimum %1$d sekund',
-	'UI:DashboardEdit:Revert' => 'Revert~~',
-	'UI:DashboardEdit:Apply' => 'Apply~~',
+	'UI:DashboardEdit:Revert' => 'Odwróć',
+	'UI:DashboardEdit:Apply' => 'Zastosuj',
 
 	'UI:DashboardEdit:Layout' => 'Układ',
 	'UI:DashboardEdit:Properties' => 'Właściwości pulpitu',
@@ -1462,7 +1462,7 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 
 	'UI:CurrentObjectIsLockedBy_User' => 'Obiekt jest zablokowany, ponieważ jest obecnie modyfikowany przez %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Obiekt jest obecnie modyfikowany przez %1$s. Twoje modyfikacje nie mogą zostać przesłane, ponieważ zostałyby nadpisane.',
-	'UI:CurrentObjectIsSoftLockedBy_User' => 'Obiekt jest obecnie modyfikowany przez %1$s. Będziesz mógł przesłać swoje modyfikacje, gdy zostanie on zwolniony.~~',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'Obiekt jest obecnie modyfikowany przez %1$s. Będziesz mógł przesłać swoje modyfikacje, gdy zostanie on zwolniony.',
 	'UI:CurrentObjectLockExpired' => 'Blokada zapobiegająca jednoczesnym modyfikacjom obiektu wygasła.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'Blokada zapobiegająca jednoczesnym modyfikacjom obiektu wygasła. Nie możesz już przesłać swojej modyfikacji, ponieważ inni użytkownicy mogą teraz modyfikować ten obiekt.',
 	'UI:ConcurrentLockKilled' => 'Usunięto blokadę uniemożliwiającą modyfikacje bieżącego obiektu.',
@@ -1498,9 +1498,9 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Jeszcze nic.',
 
 	// - Criteria header actions
-	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
-	'UI:Search:Criteria:Remove' => 'Remove~~',
-	'UI:Search:Criteria:Locked' => 'Locked~~',
+	'UI:Search:Criteria:Toggle' => 'Minimalizuj / Rozwiń',
+	'UI:Search:Criteria:Remove' => 'Usunięty',
+	'UI:Search:Criteria:Locked' => 'Zablokowany',
 
 	// - Criteria titles
 	//   - Default widget
@@ -1627,7 +1627,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 //
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Newsroom:NoNewMessage' => 'Brak nowej wiadomości',
-	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
+	'UI:Newsroom:XNewMessage' => '%1$s nowa(e) wiadomość(ci)',
 	'UI:Newsroom:MarkAllAsRead' => 'Oznacz wszystkie wiadomości jako przeczytane',
 	'UI:Newsroom:ViewAllMessages' => 'Wyświetl wszystkie wiadomości',
 	'UI:Newsroom:Preferences' => 'Preferencje newsroomu',
@@ -1679,18 +1679,18 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 
 // OAuth
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Menu:OAuthWizardMenu'                          => 'OAuth 2.0~~',
-	'core/Operation:Wizard/Title'                   => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Page:Title'                    => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Panel:Title'              => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Input:ClientId:Label'     => 'Client Id~~',
-	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
-	'UI:OAuth:Wizard:Form:Input:Scope:Label'        => 'Scope~~',
-	'UI:OAuth:Wizard:Form:Input:Additional:Label'   => 'Additional parameters~~',
-	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label'  => 'Redirect Uri~~',
-	'UI:OAuth:Wizard:Form:Button:Submit:Label'      => 'Authentication~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Title'        => 'Configuration for SMTP~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Description'  => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
+	'Menu:OAuthWizardMenu'                          => 'OAuth 2.0',
+	'core/Operation:Wizard/Title'                   => 'Konfiguracja OAuth 2.0',
+	'UI:OAuth:Wizard:Page:Title'                    => 'Konfiguracja OAuth 2.0',
+	'UI:OAuth:Wizard:Form:Panel:Title'              => 'Konfiguracja OAuth 2.0',
+	'UI:OAuth:Wizard:Form:Input:ClientId:Label'     => 'Klient ID',
+	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Klient Sekret',
+	'UI:OAuth:Wizard:Form:Input:Scope:Label'        => 'Zakres',
+	'UI:OAuth:Wizard:Form:Input:Additional:Label'   => 'Dodatkowe parametry',
+	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label'  => 'Adres URL przekierowania',
+	'UI:OAuth:Wizard:Form:Button:Submit:Label'      => 'Uwierzytelnianie',
+	'UI:OAuth:Wizard:ResultConf:Panel:Title'        => 'Konfiguracja SMTP',
+	'UI:OAuth:Wizard:ResultConf:Panel:Description'  => 'Wklej tę treść do pliku konfiguracyjnego, aby używać tego połączenia OAuth dla wychodzących e-maili',
 ));
 
 // Additional language entries not present in English dict

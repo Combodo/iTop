@@ -21,6 +21,7 @@ use DataTableConfig;
 class DataTable extends UIContentBlock
 {
 	use tJSRefreshCallback;
+	use tTableRowActions;
 
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-datatable';
@@ -50,6 +51,7 @@ class DataTable extends UIContentBlock
 	 * array of data to display the first page
 	 */
 	protected $aInitDisplayData;
+
 
 	/**
 	 * Panel constructor.
@@ -250,4 +252,5 @@ class DataTable extends UIContentBlock
 
 		return [];
 	}
+
 }

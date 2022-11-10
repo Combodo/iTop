@@ -208,6 +208,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             }
         },
         {% endfor %}
+        {% if oUIBlock.HasRowActions() %}
+            getRowActionsColumnDefinition('{{ oUIBlock.GetId() }}'),
+        {% endif %}
     ],
     ajax: $.fn.dataTable.pipeline({
                 url: "{{ oUIBlock.GetAjaxUrl() }}",
@@ -416,3 +419,5 @@ if(window.ResizeObserver){
         });
         oTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
 }
+
+{% include 'base/components/datatable/row-actions/handler.js.twig' %}

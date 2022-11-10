@@ -54,6 +54,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             sortable: true
         },
         {% endfor %}
+        {% if oUIBlock.HasRowActions() %}
+            getRowActionsColumnDefinition('{{ oUIBlock.GetId() }}'),
+        {% endif %}
     ],
     drawCallback: function (settings) {
         if(settings.json)
@@ -104,3 +107,5 @@ if (window.ResizeObserver)
     });
     oStaticTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
 }
+
+{% include 'base/components/datatable/row-actions/handler.js.twig' %}

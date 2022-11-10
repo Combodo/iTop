@@ -78,7 +78,7 @@ class CMDBChangeOp extends DBObject implements iCMDBChangeOp
 	}
 
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
+	 * @inheritDoc
 	 */
 	public function GetDescription()
 	{
@@ -472,7 +472,7 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 				$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
 				$sDisplayUrl = $oPrevDoc->GetDisplayURL(get_class($this), $this->GetKey(), 'prevdata');
 
-				$sDownloadLabel = Dict::Format('UI:DownloadDocument_');
+				$sDownloadLabel = Dict::S('UI:DownloadDocument_');
 				$sDownloadUrl = $oPrevDoc->GetDownloadURL(get_class($this), $this->GetKey(), 'prevdata');
 
 				$sDocView = <<<HTML

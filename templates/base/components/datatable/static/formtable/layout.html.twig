@@ -13,8 +13,12 @@
     </tr>
     </thead>
     <tbody>
-    {% for oSubBlock in oUIBlock.GetRows() %}
-        {{ render_block(oSubBlock, {aPage: aPage}) }}
+    {% for oRowBlock in oUIBlock.GetRows() %}
+        {{ render_block(oRowBlock, {aPage: aPage}) }}
     {% endfor %}
     </tbody>
 </table>
+
+{% if oUIBlock.HasRowActions() %}
+    {{ render_block(oUIBlock.GetRowActionsTemplate()) }}
+{% endif %}

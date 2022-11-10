@@ -98,7 +98,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:product' => 'Produkt',
 	'Class:Problem/Attribute:product+' => '',
-	'Class:Problem/Attribute:impact' => 'Wpływ',
+	'Class:Problem/Attribute:impact' => 'Dotyczy',
 	'Class:Problem/Attribute:impact+' => '',
 	'Class:Problem/Attribute:impact/Value:1' => 'Wydział',
 	'Class:Problem/Attribute:impact/Value:1+' => '',

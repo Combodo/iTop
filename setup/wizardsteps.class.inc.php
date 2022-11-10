@@ -165,6 +165,7 @@ HTML
 			$oPage->p('Sorry, the installation cannot continue. Please fix the errors and reload this page to launch the installation again.');
 			$oPage->p('<button type="button" onclick="window.location.reload()">Reload</button>');
 		}
+		$oPage->add_ready_script('CheckDirectoryConfFilesPermissions("'.utils::GetItopVersionWikiSyntax().'")');
 	}
 
 	public function CanMoveForward()
@@ -630,10 +631,7 @@ EOF
 			);
 			if ($oMutex->IsLocked())
 			{
-				$oPage->add(<<<HTML
-<div class="message">An iTop cron process is being executed on the target database. iTop cron process will be stopped during the setup execution.</div>
-HTML
-				);
+				$oPage->add('<div class="message">'.ITOP_APPLICATION.' cron process is being executed on the target database. '.ITOP_APPLICATION.' cron process will be stopped during the setup execution.</div>');
 			}
 		}
 	}
@@ -730,8 +728,8 @@ CSS
 		    $oPage->add('<br>');
 		    $oPage->add('<fieldset>');
 		    $oPage->add('<legend>European General Data Protection Regulation</legend>');
-		    $oPage->add('<div class="ibo-setup-licenses--components-list">iTop software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).<p></p>
-By installing iTop you agree that some information will be collected by Combodo to help you manage your instances and for statistical purposes.
+		    $oPage->add('<div class="ibo-setup-licenses--components-list">'.ITOP_APPLICATION.' software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).<p></p>
+By installing '.ITOP_APPLICATION.' you agree that some information will be collected by Combodo to help you manage your instances and for statistical purposes.
 This data remains anonymous until it is associated to a user account on iTop Hub.</p>
 <p>List of collected data available in our <a target="_blank" href="https://www.itophub.io/page/data-privacy">Data privacy section.</a></p><br></div>');
 		    $oPage->add('<input type="checkbox" class="check_select" id="rgpd_consent">');

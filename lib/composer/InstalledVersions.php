@@ -29,10 +29,6 @@ class InstalledVersions
      * @psalm-var array{root: array{name: string, version: string, reference: string, pretty_version: string, aliases: string[], dev: bool, install_path: string, type: string}, versions: array<string, array{dev_requirement: bool, pretty_version?: string, version?: string, aliases?: string[], reference?: string, replaced?: string[], provided?: string[], install_path?: string, type?: string}>}|array{}|null
      */
     private static $installed;
-
-    /**
-     * @var bool|null
-     */
     private static $canGetVendors;
 
     /**

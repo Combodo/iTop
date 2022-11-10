@@ -174,7 +174,7 @@ abstract class Controller
 			}
 			else
 			{
-				$this->DisplayPageNotFound();
+				$this->DisplayBadRequest();
 			}
 		}
 		catch (Exception $e)
@@ -217,6 +217,15 @@ abstract class Controller
 			$aResponse = array('sError' => $e->getMessage());
 			echo json_encode($aResponse);
 		}
+	}
+
+	/**
+	 * Overridable "page not found" which is more an "operation not found"
+	 */
+	public function DisplayBadRequest()
+	{
+		http_response_code(400);
+		die('Operation not found');
 	}
 
 	/**

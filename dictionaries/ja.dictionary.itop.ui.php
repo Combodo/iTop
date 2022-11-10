@@ -633,9 +633,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => '検索するクラスを選択してください。',
 
 	'UI:CSVReport-Value-Modified' => '修正済み',
-	'UI:CSVReport-Value-SetIssue' => '変更出来ません - 理由: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => '%1$s へ変更出来ません - 理由: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'マッチしません',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => '必須の値がありません',
 	'UI:CSVReport-Value-Ambiguous' => 'あいまいな値:  %1$s オブジェクト',
 	'UI:CSVReport-Row-Unchanged' => '未変更',

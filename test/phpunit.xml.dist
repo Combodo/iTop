@@ -16,6 +16,7 @@
         stopOnRisky="false"
         stopOnSkipped="false"
         verbose="true"
+        printerClass="Sempro\PHPUnitPrettyPrinter\PrettyPrinter"
 >
 
   <php>
@@ -23,6 +24,7 @@
     <ini name="display_errors" value="On"/>
     <ini name="log_errors" value="On"/>
     <ini name="html_errors" value="Off"/>
+    <env name="PHPUNIT_PRETTY_PRINT_PROGRESS" value="true"/>
   </php>
 
   <testsuites>
@@ -61,6 +63,9 @@
     </testsuite>
     <testsuite name="CoreExtensions">
       <directory>coreExtensions</directory>
+    </testsuite>
+    <testsuite name="Service">
+      <directory>service</directory>
     </testsuite>
   </testsuites>
 

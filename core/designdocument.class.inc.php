@@ -182,6 +182,26 @@ class DesignElement extends \DOMElement
 		return $this->ownerDocument->GetNodes($sXPath, $this);
 	}
 
+	public static function ToArray(DesignElement $oNode)
+	{
+		$aRes = [];
+
+		if ($oNode->GetNodes('./*')->length == 0) {
+			return $oNode->GetText('');
+		}
+		foreach ($oNode->GetNodes('./*') as $oSubNode) {
+			/** @var \Combodo\iTop\DesignElement $oSubNode */
+			$aSubArray = DesignElement::ToArray($oSubNode);
+			if ($oSubNode->hasAttribute('id')) {
+				$aRes[$oSubNode->getAttribute('id')] = $aSubArray;
+			} else {
+				$aRes[$oSubNode->tagName] = $aSubArray;
+			}
+		}
+
+		return $aRes;
+	}
+
 	/**
 	 * Create an HTML representation of the DOM, for debugging purposes
 	 *

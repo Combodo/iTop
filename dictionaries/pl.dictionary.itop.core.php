@@ -28,8 +28,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:UnknownObjectTip'   => 'Nie można znaleźć obiektu. Być może został usunięty jakiś czas temu, a od tego czasu dziennik został wyczyszczony.',
 
 	'Core:UniquenessDefaultError' => 'Błąd zasady niepowtarzalności \'%1$s\'',
-	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
-	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
+	'Core:CheckConsistencyError'  => 'Nie przestrzegano zasad spójności: %1$s',
+	'Core:CheckValueError'        => 'Nieoczekiwana wartość atrybutu \'%1$s\' (%2$s) : %3$s',
 
 	'Core:AttributeLinkedSet'  => 'Tablica obiektów',
 	'Core:AttributeLinkedSet+' => 'Wszelkiego rodzaju obiekty tej samej klasy lub podklasy',
@@ -232,14 +232,14 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:CMDBChange/Attribute:date+' => 'data i czas zarejestrowania zmian',
 	'Class:CMDBChange/Attribute:userinfo' => 'misc. info',
 	'Class:CMDBChange/Attribute:userinfo+' => 'zdefiniowane informacje gościa',
-	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
-	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Interakcja użytkownika w GUI',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'Skrypt importu CSV',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'Import CSV w GUI',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Przetwarzanie wiadomości e-mail',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchronizacja źródła danych',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'Usługi sieciowe REST/JSON',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'Usługi internetowe SOAP',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Przez rozszerzenie',
 ));
 
 //
@@ -410,7 +410,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventIssue+' => 'Ślad problemu (ostrzeżenie, błąd itp.)',
 	'Class:EventIssue/Attribute:issue' => 'Problem',
 	'Class:EventIssue/Attribute:issue+' => 'Co się stało',
-	'Class:EventIssue/Attribute:impact' => 'Wpływ',
+	'Class:EventIssue/Attribute:impact' => 'Dotyczy',
 	'Class:EventIssue/Attribute:impact+' => 'Jakie są konsekwencje',
 	'Class:EventIssue/Attribute:page' => 'Strona',
 	'Class:EventIssue/Attribute:page+' => 'Punkt wejścia HTTP',
@@ -500,7 +500,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Action/Attribute:trigger_list+' => 'Wyzwalacze powiązane z działaniem',
 	'Class:Action/Attribute:finalclass' => 'Podklasa działania',
 	'Class:Action/Attribute:finalclass+' => 'Nazwa ostatniej klasy',
-	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
+	'Action:WarningNoTriggerLinked' => 'Ostrzeżenie, żaden wyzwalacz nie jest powiązany z akcją. Nie będzie aktywny, dopóki nie będzie miał co najmniej 1.',
 ));
 
 //
@@ -580,7 +580,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Klasa docelowa',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtr',
-	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Ogranicz listę obiektów (klasy docelowej), które aktywują wyzwalacz',
 	'TriggerOnObject:WrongFilterQuery' => 'Błędne zapytanie filtru: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Zapytanie filtru musi zwracać obiekty klasy "%1$s"',
 ));
@@ -659,8 +659,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TriggerOnObjectMention' => 'Wyzwalacz (przy wzmiance o obiekcie)',
 	'Class:TriggerOnObjectMention+' => 'Wyzwalanie przy wzmiance (@xxx) o obiekcie [klasy potomnej] danej klasy w atrybucie dziennika',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Wspomniany filtr',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Ogranicz listę wymienionych obiektów, które aktywują wyzwalacz. Jeśli jest pusty, dowolny wspomniany obiekt (dowolnej klasy) aktywuje go.',
 ));
 
 //
@@ -1000,9 +1000,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Wyświetlana etykieta',
 	'Class:TagSetFieldData/Attribute:description' => 'Opis',
 	'Class:TagSetFieldData/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Klasa Tagu~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Klasa obiektu~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Kod pola~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Klasa Tagu',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Klasa obiektu',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Kod pola',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Nie można usunąć używanych tagów',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Kody tagów lub etykiety muszą być unikalne',
@@ -1090,8 +1090,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Ostatnia próba',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Nieprawidłowy format konfiguracji "async_task_retries[%1$s]". Oczekuje się tablicy z następującymi kluczami: %2$s',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Nieprawidłowy format konfiguracji "async_task_retries[%1$s]": nieoczekiwany klucz "%2$s". Oczekuje się tylko następujących kluczy: %3$s',
 ));
 
 //

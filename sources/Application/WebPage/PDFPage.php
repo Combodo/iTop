@@ -142,7 +142,6 @@ EOF
 	/**
 	 * Generates the PDF document and returns the PDF content as a string
 	 *
-	 * @return string
 	 * @see WebPage::output()
 	 */
 	public function output()

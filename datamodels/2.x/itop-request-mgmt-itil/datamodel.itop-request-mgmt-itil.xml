@@ -205,6 +205,12 @@
 				</field>
 				<field id="origin" xsi:type="AttributeEnum">
 					<values>
+            <value id="in_person">
+              <code>in_person</code>
+            </value>
+            <value id="chat">
+              <code>chat</code>
+            </value>
 						<value id="mail">
 							<code>mail</code>
 						</value>
@@ -1198,7 +1204,7 @@
 					</state>
 				</states>
 			</lifecycle>
-			<methods>
+      <methods>
 				<method id="GetTicketRefFormat">
 					<static>true</static>
 					<access>public</access>
@@ -1343,7 +1349,6 @@
 					<type>Overload-DBObject</type>
 					<code><![CDATA[	public function ComputeValues()
 	{
-
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
 

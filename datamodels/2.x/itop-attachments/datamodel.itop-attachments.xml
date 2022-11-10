@@ -255,4 +255,50 @@
       </presentation>
     </class>
   </classes>
+  <events>
+    <event id="EVENT_SERVICE_ADD_ATTACHMENT_TO_OBJECT" _delta="define">
+      <description>An attachment has been added to an object</description>
+      <replaces>Attachment::AfterUpdate</replaces>
+      <sources>
+        <source id="Attachment">Attachment</source>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
+          <description>The attachment updated</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="target_object">
+          <description>The object to which the attachment is linked</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
+    <event id="EVENT_SERVICE_REMOVE_ATTACHMENT_FROM_OBJECT" _delta="define">
+      <description>An attachment has been removed from an object</description>
+      <replaces>Attachment::AfterUpdate</replaces>
+      <sources>
+        <source id="Attachment">Attachment</source>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
+          <description>The attachment updated</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="target_object">
+          <description>The object to which the attachment is linked</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
+  </events>
 </itop_design>

@@ -6,5 +6,5 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'theme:light-grey' => 'Light Grey (deprecated)~~',
+	'theme:light-grey' => 'Jasnoszary (przestarzałe)',
 ));

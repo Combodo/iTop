@@ -25,6 +25,8 @@ namespace Combodo\iTop\Test\UnitTest;
  * Time: 11:21
  */
 
+use CMDBSource;
+use MySQLTransactionNotClosedException;
 use PHPUnit\Framework\TestCase;
 use SetupUtils;
 
@@ -46,19 +48,28 @@ class ItopTestCase extends TestCase
 		@include_once '../../../../../../../approot.inc.php';
 		@include_once '../../../../../../../../approot.inc.php';
 		@include_once getcwd().'/approot.inc.php'; // this is when launching phpunit from within the IDE
+	}
 
-		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
+	/**
+	 * @throws \MySQLTransactionNotClosedException see N°5538
+	 * @since 2.7.8 3.0.3 3.1.0 N°5538
+	 */
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+
+		if (CMDBSource::IsInsideTransaction()) {
+			// Nested transactions were opened but not finished !
+			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
+		}
 	}
 
 	protected function debug($sMsg)
-    {
-        if (DEBUG_UNIT_TEST)
-        {
-        	if (is_string($sMsg))
-	        {
-	        	echo "$sMsg\n";
-	        }
-	        else {
+	{
+		if (DEBUG_UNIT_TEST) {
+			if (is_string($sMsg)) {
+				echo "$sMsg\n";
+			} else {
 		        /** @noinspection ForgottenDebugOutputInspection */
 		        print_r($sMsg);
 	        }
@@ -125,6 +136,42 @@ class ItopTestCase extends TestCase
 		$method->setAccessible(true);
 
 		return $method->invokeArgs($oObject, $aArgs);
+	}
+
+
+	/**
+	 * @param object $oObject
+	 * @param string $sProperty
+	 *
+	 * @return mixed property
+	 *
+	 * @throws \ReflectionException
+	 * @since 2.7.8 3.0.3 3.1.0
+	 */
+	public function GetNonPublicProperty(object $oObject, string $sProperty)
+	{
+		$class = new \ReflectionClass(get_class($oObject));
+		$property = $class->getProperty($sProperty);
+		$property->setAccessible(true);
+
+		return $property->getValue($oObject);
+	}
+
+	/**
+	 * @param object $oObject
+	 * @param string $sProperty
+	 * @param $value
+	 *
+	 * @throws \ReflectionException
+	 * @since 2.7.8 3.0.3 3.1.0
+	 */
+	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
+	{
+		$class = new \ReflectionClass(get_class($oObject));
+		$property = $class->getProperty($sProperty);
+		$property->setAccessible(true);
+
+		$property->setValue($oObject, $value);
 	}
 
 	public function RecurseRmdir($dir) {

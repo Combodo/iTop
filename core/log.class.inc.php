@@ -569,6 +569,14 @@ class LogChannels
 	public const INLINE_IMAGE = 'InlineImage';
 
 	public const PORTAL       = 'portal';
+
+	/**
+	 * @var string
+	 * @since 3.1.0 specific channel for event service
+	 */
+	public const EVENT_SERVICE = 'EventService';
+
+	public const DM_CRUD = 'DMCRUD';
 }
 
 

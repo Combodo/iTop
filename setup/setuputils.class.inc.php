@@ -151,6 +151,14 @@ class SetupUtils
 		}
 		$aWritableDirsErrors = self::CheckWritableDirs($aWritableDirs);
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
+		// Check temp dir (N°5235) : as this path isn't under APPROOT we are doing a custom check and not using \SetupUtils::CheckWritableDirs
+		$sTmpDir = static::GetTmpDir();
+		clearstatcache(true, $sTmpDir);
+		if (is_writable($sTmpDir)) {
+			$aResult[] = new CheckResult(CheckResult::INFO, "The temp directory is writable by the application.");
+		} else {
+			$aResult[] = new CheckResult(CheckResult::WARNING, "The temp directory <b>'".$sTmpDir."'</b> is not writable by the application. Change its permission or use another dir (sys_temp_dir option in php.ini).");
+		}
 
 		$aMandatoryExtensions = self::GetPHPMandatoryExtensions();
 		$aOptionalExtensions = self::GetPHPOptionalExtensions();
@@ -1857,21 +1865,30 @@ JS
 
 	public static function GetVersionManifest($sInstalledVersion)
 	{
-		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches))
-		{
+		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches)) {
 			return APPROOT.'datamodels/'.$aMatches[1].'.x/manifest-'.$sInstalledVersion.'.xml';
 		}
+
 		return false;
 	}
 
+	/**
+	 * Check paths relative to APPROOT : is existing, is dir, is writable
+	 *
+	 * @param string[] $aWritableDirs list of dirs to check, relative to APPROOT (for example : `['log','conf','data']`)
+	 *
+	 * @return array<string, \CheckResult> full path as key, CheckResult error as value
+	 *
+	 * @uses \is_dir()
+	 * @uses \is_writable()
+	 * @uses \file_exists()
+	 */
 	public static function CheckWritableDirs($aWritableDirs)
 	{
 		$aNonWritableDirs = array();
-		foreach($aWritableDirs as $sDir)
-		{
+		foreach ($aWritableDirs as $sDir) {
 			$sFullPath = APPROOT.$sDir;
-			if (is_dir($sFullPath) && !is_writable($sFullPath))
-			{
+			if (is_dir($sFullPath) && !is_writable($sFullPath)) {
 				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, "The directory <b>'".APPROOT.$sDir."'</b> exists but is not writable for the application.");
 			}
 			else if (file_exists($sFullPath) && !is_dir($sFullPath))
@@ -2140,6 +2157,7 @@ JS
 			'fileinfo', // N°3123 if disabled, will throw "wrong format" when uploading AttributeImage
 			'mbstring', // N°2891, N°2899
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
+			'curl', // N°5270 Needed for one of authent-cas dependencies
 		];
 	}
 
@@ -2154,7 +2172,6 @@ JS
 				'openssl' => 'Strong encryption will not be used.',
 			],
 			'ldap' => 'LDAP authentication will be disabled.',
-			'curl' => 'PDF exports won\'t be possible.',
 		];
 
 		if (utils::IsDevelopmentEnvironment()) {

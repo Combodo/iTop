@@ -389,11 +389,13 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle) {
 		var oColumns = $('#'+sDataTableName).DataTable().ajax.params()['columns'];
 		for (var j in oColumns) {
 			if (oColumns[j]['data']) {
-				var sCode = oColumns[j]['data'].split("/");
-				if (sCode[1] == '_key_') {
-					sCode[1] = 'id';
+				if (oColumns[j]['data']!='id') {
+					var sCode = oColumns[j]['data'].split("/");
+					if (sCode[1] == '_key_') {
+						sCode[1] = 'id';
+					}
+					aFields.push(sCode[0]+'.'+sCode[1]);
 				}
-				aFields.push(sCode[0]+'.'+sCode[1]);
 			} else {
 				for (var k in oColumns[j]) {
 					if (oColumns[j][k].checked) {

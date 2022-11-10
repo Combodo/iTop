@@ -171,6 +171,12 @@
 				</field>
 				<field id="origin" xsi:type="AttributeEnum">
 					<values>
+            <value id="in_person">
+              <code>in_person</code>
+            </value>
+            <value id="chat">
+              <code>chat</code>
+            </value>
 						<value id="mail">
 							<code>mail</code>
 						</value>
@@ -1472,7 +1478,7 @@
 					<code><![CDATA[	protected function OnInsert()
 
 	{
-        parent::OnInsert();    
+        parent::OnInsert();
 		$this->ComputeImpactedItems();
 		$this->SetIfNull('last_update', time());
 		$this->SetIfNull('start_date', time());
@@ -1484,7 +1490,7 @@
 					<type>Overload-DBObject</type>
 					<code><![CDATA[	protected function OnUpdate()
 	{
-        parent::OnUpdate(); 
+        parent::OnUpdate();
         $aChanges = $this->ListChanges();
         if (array_key_exists('functionalcis_list', $aChanges))
         {
