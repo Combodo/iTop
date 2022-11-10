@@ -147,5 +147,5 @@ local.properties
 .scala_dependencies
 .worksheet
 
-# MacOS specific
+# macOS specific
 .DS_Store
