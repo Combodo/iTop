@@ -49,6 +49,12 @@ class NewsroomMenuFactory
 		return $oMenu;
 	}
 
+	public static function HasProviders()
+	{
+		$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
+		return count($aProviders) > 0;
+	}
+
 	/**
 	 * Prepare parameters for the newsroom JS widget
 	 *
