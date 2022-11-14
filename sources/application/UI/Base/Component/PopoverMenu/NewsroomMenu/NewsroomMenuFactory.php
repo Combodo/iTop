@@ -50,6 +50,16 @@ class NewsroomMenuFactory
 	}
 
 	/**
+	 * Check if there is any Newsroom provider configured
+	 * @return boolean
+	 */	
+	public static function HasProviders()
+	{
+		$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
+		return count($aProviders) > 0;
+	}
+
+	/**
 	 * Prepare parameters for the newsroom JS widget
 	 *
 	 * @return array
