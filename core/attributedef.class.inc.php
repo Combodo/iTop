@@ -1510,9 +1510,31 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $this->GetOptional('tracking_level', MetaModel::GetConfig()->Get('tracking_level_linked_set_default'));
 	}
 
+	/**
+	 * @deprecated 3.1.0 N°5563 this attribute is no longer used
+	 * @return string see LINKSET_EDITMODE_* constants
+	 */
 	public function GetEditMode()
 	{
 		return $this->GetOptional('edit_mode', LINKSET_EDITMODE_ACTIONS);
+	}
+
+	/**
+	 * @return string see LINKSET_RELATIONTYPE_* constants
+	 * @since 3.1.0 N°5563
+	 */
+	public function GetRelationType()
+	{
+		return $this->GetOptional('relation_type', LINKSET_RELATIONTYPE_LINK);
+	}
+
+	/**
+	 * @return boolean
+	 * @since 3.1.0 N°5563
+	 */
+	public function GetReadOnly()
+	{
+		return $this->GetOptional('read_only', false);
 	}
 
 	public function GetLinkedClass()
@@ -2288,6 +2310,15 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	{
 		return $this->GetOptional("duplicates", false);
 	} // The same object may be linked several times... or not...
+
+	/**
+	 * @return boolean
+	 * @since 3.1.0 N°5563
+	 */
+	public function GetReadOnly()
+	{
+		return $this->GetOptional('read_only', false);
+	}
 
 	public function GetTrackingLevel()
 	{
