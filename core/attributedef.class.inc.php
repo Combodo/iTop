@@ -1520,7 +1520,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function GetEditMode()
 	{
-		return $this->GetOptional('edit_mode', LINKSET_EDITMODE_ACTIONS);
+		return $this->GetOptional('legacy_edit_mode', LINKSET_EDITMODE_ACTIONS);
 	}
 
 	/**
