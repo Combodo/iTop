@@ -89,8 +89,12 @@ define('LINKSET_EDITMODE_ACTIONS', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITMODE_INPLACE', 3); // The "linked" objects can be created/modified/deleted in place
 define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/removed in place
 
+define('LINKSET_RELATIONTYPE_PROPERTY', 'property');
+define('LINKSET_RELATIONTYPE_LINK', 'link');
+
 /**
  * Attributes implementing this interface won't be accepted as `group by` field
+ *
  * @since 2.7.4 N°3473
  */
 interface iAttributeNoGroupBy
