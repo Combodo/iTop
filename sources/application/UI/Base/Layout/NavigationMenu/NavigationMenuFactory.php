@@ -48,7 +48,7 @@ class NavigationMenuFactory
 	{
 		
 		$oNewsroomMenu = null;
-		if (MetaModel::GetConfig()->Get('newsroom_enabled') && NewsroomMenuFactory::HasProviders())
+		if (MetaModel::GetConfig()->Get('newsroom_enabled'))
 		{
 			$oNewsroomMenu = NewsroomMenuFactory::MakeNewsroomMenuForNavigationMenu();
 		}
