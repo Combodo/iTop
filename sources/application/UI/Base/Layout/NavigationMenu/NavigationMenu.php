@@ -196,7 +196,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		}
 		return '';
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -301,6 +301,11 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		$this->bHasSiloSelected = false;
 		$this->sSiloLabel = null;
 
+		\IssueLog::Info("test allow_menu_organization_filter", null, ['allow_menu_organization_filter' => MetaModel::GetConfig()->Get('allow_menu_organization_filter')]);
+		if (! MetaModel::GetConfig()->Get('allow_menu_organization_filter')){
+			return;
+		}
+
 		//TODO 3.0 Use components if we have the time to build select/autocomplete components before release
 		// List of visible Organizations
 		$iCount = 0;
@@ -343,7 +348,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 				$this->aSiloSelection['html'] = '<form data-role="ibo-navigation-menu--silo-selection--form" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
 
 				$oPage = new \CaptureWebPage();
-				
+
 				$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
 				$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
 				$this->aSiloSelection['html'] .= $oWidget->DisplaySelect($oPage, $iMaxComboLength, false, Dict::S('UI:Layout:NavigationMenu:Silo:Label'), $oSet, $iCurrentOrganization, false, 'c[org_id]', '',
@@ -376,7 +381,7 @@ $sAddClearButton
 JS;
 		}
 	}
-	
+
 	/**
 	 * Compute if the menu is expanded or collapsed
 	 *

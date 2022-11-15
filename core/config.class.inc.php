@@ -333,6 +333,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'allow_menu_organization_filter' => [
+			'type' => 'bool',
+			'description' => 'Display organization filter in menu',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'allow_target_creation' => [
 			'type' => 'bool',
 			'description' => 'Displays the + button on external keys to create target objects',
@@ -1861,7 +1869,7 @@ class Config
 		}
 		if (strlen($sNoise) > 0)
 		{
-			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack) 
+			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack)
 			throw new ConfigException('Syntax error in configuration file',
 				array('file' => $sConfigFile, 'error' => '<tt>'.htmlentities($sNoise, ENT_QUOTES, 'UTF-8').'</tt>'));
 		}
@@ -2671,7 +2679,7 @@ class ConfigPlaceholdersResolver
 		}
 
 		$sPattern = '/\%(env|server)\((\w+)\)(?:\?:(\w*))?\%/'; //3 capturing groups, ie `%env(HTTP_PORT)?:8080%` produce: `env` `HTTP_PORT` and `8080`.
-		
+
 		if (! preg_match_all($sPattern, $rawValue, $aMatchesCollection, PREG_SET_ORDER))
 		{
 			return $rawValue;
