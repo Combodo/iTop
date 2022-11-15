@@ -163,7 +163,7 @@ class BlockDirectLinksEditInPlace extends Panel
 
 		try {
 			$aAttribs = $this->oUILinksDirectWidget->GetTableConfig();
-			$aRows = $this->GetTableRows($oValue);
+			$aRows = $this->GetTableRows($oPage, $oValue);
 			$aRowActions = $this->GetRowActions();
 			$oDatatable = DataTableUIBlockFactory::MakeForForm($this->oUILinksDirectWidget->GetInputId(), $aAttribs, $aRows, '', $aRowActions);
 			$oDatatable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
@@ -187,7 +187,7 @@ class BlockDirectLinksEditInPlace extends Panel
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	private function GetTableRows(\DBObjectSet $oValue): array
+	private function GetTableRows(\WebPage $oPage, \DBObjectSet $oValue): array
 	{
 		// result data
 		$aRows = array();
@@ -201,11 +201,37 @@ class BlockDirectLinksEditInPlace extends Panel
 			$aRow['form::select'] = '<input type="checkbox" class="selectList'.$this->oUILinksDirectWidget->GetInputId().'" onClick="oWidget'.$this->oUILinksDirectWidget->GetInputId().'.directlinks(\'instance\')._onSelectChange();" value="'.$oLinkObj->GetKey().'"/>';
 			foreach ($this->oUILinksDirectWidget->GetZList() as $sLinkedAttCode) {
 				$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
+
+//				$sValue = $oLinkObj->Get($sLinkedAttCode);
+//				$sDisplayValue = $oLinkObj->GetEditValue($sLinkedAttCode);
+//				$oAttDef = MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetLinkedClass(), $sLinkedAttCode);
+//
+//				$aRow[$sLinkedAttCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'
+//					.\cmdbAbstractObject::GetFormElementForField(
+//						$oPage,
+//						$this->oUILinksDirectWidget->GetLinkedClass(),
+//						$sLinkedAttCode,
+//						$oAttDef,
+//						$sValue,
+//						$sDisplayValue,
+//						$this->GetFieldId($oValue, $sLinkedAttCode),
+//						']',
+//						0,
+//						[]
+//					)
+//					.'</div></div></div>';
 			}
 			$aRows[] = $aRow;
 		}
 
 		return $aRows;
+	}
+
+	private function GetFieldId($iLnkId, $sFieldCode, $bSafe = true)
+	{
+		$sFieldId = $this->oUILinksDirectWidget->GetInputId().'_'.$sFieldCode.'['.$iLnkId.']';
+
+		return ($bSafe) ? \utils::GetSafeId($sFieldId) : $sFieldId;
 	}
 
 	/**
@@ -220,6 +246,8 @@ class BlockDirectLinksEditInPlace extends Panel
 				return array('add');
 			case self::TYPE_ACTION_ADD_REMOVE:
 				return array('add', 'remove');
+			case self::TYPE_ACTION_CREATE_DELETE:
+				return array('create', 'delete');
 			case self::TYPE_ACTION_NONE:
 			default:
 				return array();
@@ -237,14 +265,8 @@ class BlockDirectLinksEditInPlace extends Panel
 
 		if ($this->sType == self::TYPE_ACTION_ADD_REMOVE) {
 			$aActions[] = [
-				'tooltip'       => 'Edit',
-				'icon_classes'  => 'fas fa-edit',
-				'js_row_action' => "alert('edit link');",
-			];
-
-			$aActions[] = [
-				'tooltip'       => 'Delete',
-				'icon_classes'  => 'fas fa-trash',
+				'tooltip'       => 'remove link',
+				'icon_classes'  => 'fas fa-minus',
 				'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteRow($(':checkbox', oTrElement));",
 			];
 		}

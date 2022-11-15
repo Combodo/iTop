@@ -760,9 +760,14 @@ HTML
 						'table_id'    => $sClass.'_'.$sAttCode,
 						'row_actions' => [
 							[
-								'tooltip'       => 'remove an element',
+								'tooltip'       => 'remove link',
 								'icon_classes'  => 'fas fa-minus',
-								'js_row_action' => 'alert("remove a direct link");console.log("Action row:");console.log(oTrElement);',
+								'js_row_action' => "RemoveLinkedSetElementAjax(oTrElement, '{$sTargetClass}', aData['{$sTargetClass}/_key_/raw'], '{$oAttDef->GetExtKeyToMe()}', oTrElement);",
+							],
+							[
+								'tooltip'       => 'delete object',
+								'icon_classes'  => 'fas fa-trash',
+								'js_row_action' => "RemoveLinkedSetElementAjax(oTrElement, '{$sLinkedClass}', aData['{$sLinkedClass}/_key_/raw']);",
 							],
 						],
 					);
@@ -772,6 +777,7 @@ HTML
 					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sLinkingAttCode = $oLinkingAttDef->GetCode();
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
+					$sLinkedClass = $oLinkingAttDef->GetHostClass();
 
 					// N°2334 fields to display for n:n relations
 					$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode);
@@ -808,9 +814,9 @@ HTML
 						'extra_fields'  => $sAttCodesToDisplay,
 						'row_actions'   => [
 							[
-								'tooltip'       => 'remove an element',
+								'tooltip'       => 'remove link',
 								'icon_classes'  => 'fas fa-minus',
-								'js_row_action' => 'alert("remove an indirect link");console.log("Action row:");console.log(oTrElement);',
+								'js_row_action' => "RemoveLinkedSetElementAjax(oTrElement, '{$sLinkedClass}', aData['Link/_key_/raw']);",
 							],
 						],
 					);
@@ -883,6 +889,10 @@ HTML
 				}
 			}
 		}
+
+		// add hidden input for linkset transactions
+		$oInputHidden = InputUIBlockFactory::MakeForHidden('linkset_transactions_id', utils::GetNewTransactionId(), 'linkset_transactions_id');
+		$oPage->AddUiBlock($oInputHidden);
 	}
 
 	/**

@@ -53,7 +53,6 @@ $(function()
 			this.element
 			.addClass('itop-directlinks');
 
-
 			this.datatable = this.element.find('table.listResults');
 			
 			var aButtonsTypes = ['delete', 'remove', 'modify', 'add', 'create'];
@@ -78,8 +77,8 @@ $(function()
 				.after(this.inputToBeDeleted)
 				.after(this.inputToBeAdded)
 				.after(this.inputToBeRemoved)
-				.after('<span style="float:left">&nbsp;&nbsp;&nbsp;<img src="../images/tv-item-last.gif">&nbsp;&nbsp;&nbsp;')
 				.after(this.indicator);
+
 			for (k in this.options.buttons) {
 				this.element.after(this.oButtons[this.options.buttons[k]]).after('&nbsp;&nbsp;&nbsp;');
 			}

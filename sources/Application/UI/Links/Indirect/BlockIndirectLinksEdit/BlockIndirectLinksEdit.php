@@ -168,22 +168,9 @@ class BlockIndirectLinksEdit extends Panel
 		}
 		$this->iMaxAddedId = (int)$iMaxAddedId;
 
-		// Row actions (EDIT, UNLINK)
-		$aRow_actions = [
-			[
-				'tooltip'       => 'Edit',
-				'icon_classes'  => 'fas fa-edit',
-				'js_row_action' => "alert('edit link');",
-			],
-			[
-				'tooltip'       => 'Unlink',
-				'icon_classes'  => 'fas fa-unlink',
-				'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
-			],
-		];
-
 		// Datatable
-		$oDataTable = DataTableUIBlockFactory::MakeForForm("{$this->oUILinksWidget->GetAttCode()}{$this->oUILinksWidget->GetNameSuffix()}", $aTableConfig, $aForm, '', $aRow_actions);
+		$aRowActions = $this->GetRowActions();
+		$oDataTable = DataTableUIBlockFactory::MakeForForm("{$this->oUILinksWidget->GetAttCode()}{$this->oUILinksWidget->GetNameSuffix()}", $aTableConfig, $aForm, '', $aRowActions);
 		$oDataTable->SetOptions([
 			'select_mode'        => 'custom',
 			'disable_hyperlinks' => true,
@@ -397,6 +384,25 @@ $sWizardHelperVarName.SetReturnNotEditableFields(true);
 $sWizardHelperVarName.SetWizHelperJsVarName('$sWizardHelperVarName');
 JS
 		);
+	}
+
+
+	/**
+	 * Return row actions.
+	 *
+	 * @return \string[][]
+	 */
+	private function GetRowActions(): array
+	{
+		$aActions = array();
+
+		$aActions[] = [
+			'tooltip'       => 'remove link',
+			'icon_classes'  => 'fas fa-minus',
+			'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
+		];
+
+		return $aActions;
 	}
 
 }

@@ -1099,3 +1099,23 @@ const CombodoInlineImage = {
 		}).magnificPopup({type: 'image', closeOnContentClick: true });
 	}
 }
+
+// @todo BDA ou declarer les fonctions pour les liens
+function RemoveLinkedSetElementAjax(oTrElement, sClass, iId, sAttCode = null){
+	$.post('../pages/ajax.render.php', {
+		operation: 'remove_linked_set_element',
+		obj_class: sClass,
+		obj_key: iId,
+		att_code: sAttCode,
+		transaction_id: $('#linkset_transactions_id').val()
+	}, function (data) {
+		if(data.data.operation_ack){
+			// oTrElement.remove();
+			alert('Operation succeeded, todo refresh table !!');
+		}
+		else{
+			alert('Operation failed, todo feedback !!');
+		}
+	});
+}
+
