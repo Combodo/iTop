@@ -301,7 +301,6 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		$this->bHasSiloSelected = false;
 		$this->sSiloLabel = null;
 
-		\IssueLog::Info("test allow_menu_organization_filter", null, ['allow_menu_organization_filter' => MetaModel::GetConfig()->Get('allow_menu_organization_filter')]);
 		if (! MetaModel::GetConfig()->Get('allow_menu_organization_filter')){
 			return;
 		}
