@@ -2545,40 +2545,6 @@ EOF
 				$oPage = $oController->Modify();
 				break;
 
-		case 'remove_linked_set_element':
-			try {
-				$oPage = new JsonPage();
-				$sClass = utils::ReadParam('obj_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
-				$sObjectId = utils::ReadParam('obj_key', 0, false, utils::ENUM_SANITIZATION_FILTER_STRING);
-				$sAttCode = utils::ReadParam('att_code', null, false, utils::ENUM_SANITIZATION_FILTER_STRING);
-				$sTransactionId = utils::ReadParam('transaction_id', null, false, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
-				$sErrorMessage = null;
-				if (utils::IsTransactionValid($sTransactionId, false)) {
-					if (!empty($sAttCode)) {
-						$oLinkedObject = MetaModel::GetObject($sClass, $sObjectId);
-						$oLinkedObject->Set($sAttCode, null);
-						$oLinkedObject->DBWrite();
-						$bOperationAck = true;
-					} else {
-						$oDeletionPlan = MetaModel::GetObject($sClass, $sObjectId)->DBDelete();
-						$bOperationAck = (count($oDeletionPlan->GetIssues()) === 0);
-						if (!$bOperationAck) {
-							$sErrorMessage = json_encode($oDeletionPlan->GetIssues());
-						}
-					}
-				} else {
-					$bOperationAck = false;
-				}
-				$oPage->SetData([
-					'success'       => $bOperationAck,
-					'error_message' => $sErrorMessage,
-				]);
-			}
-			catch (Exception $exception) {
-				http_response_code(500);
-			}
-			break;
-
 			default:
 				$oPage->p("Invalid query.");
 		}
