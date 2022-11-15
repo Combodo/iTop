@@ -529,9 +529,9 @@ JS
 	 */
 	public function SetContentLayout(PageContent $oLayout)
 	{
-		$oPrevContentLayout=$this->oContentLayout;
+		$oPrevContentLayout = $this->oContentLayout;
 		$this->oContentLayout = $oLayout;
-		foreach ($oPrevContentLayout->GetSubBlocks() as $oBlock){
+		foreach ($oPrevContentLayout->GetSubBlocks() as $oBlock) {
 			$this->AddUiBlock($oBlock);
 		}
 

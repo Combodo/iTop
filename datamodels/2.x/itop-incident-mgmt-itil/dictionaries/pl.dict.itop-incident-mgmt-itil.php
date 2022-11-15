@@ -81,7 +81,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Incident/Attribute:status/Value:resolved+' => '',
 	'Class:Incident/Attribute:status/Value:closed' => 'Zamknięty',
 	'Class:Incident/Attribute:status/Value:closed+' => '',
-	'Class:Incident/Attribute:impact' => 'Wpływ',
+	'Class:Incident/Attribute:impact' => 'Dotyczy',
 	'Class:Incident/Attribute:impact+' => '',
 	'Class:Incident/Attribute:impact/Value:1' => 'Wydział',
 	'Class:Incident/Attribute:impact/Value:1+' => '',

@@ -363,13 +363,22 @@ $(function()
 				const oActiveTabData = this._GetActiveTabData();
 				// If on a caselog tab, open its form if it has one
 				if ((this.enums.tab_types.caselog === oActiveTabData.type) && this._HasCaseLogEntryFormForTab(oActiveTabData.att_code)) {
-					// Note: Stop propogation to avoid the menu to be opened automatically by the popover handler, we will decide when it can opens below
+					// Note: Stop propagation to avoid the menu to be opened automatically by the popover handler
 					oEvent.stopImmediatePropagation();
 
 					this._ShowCaseLogTab(oActiveTabData.att_code);
 					this._ShowCaseLogsEntryForms();
 					this._SetFocusInCaseLogEntryForm(oActiveTabData.att_code);
 				}
+				// Else (activity tab) if only 1 clog tab, open it directly
+				else if (this._GetCaseLogEntryFormCount() === 1) {
+					// Note: Stop propagation to avoid the menu to be opened automatically by the popover handler
+					oEvent.stopImmediatePropagation();
+
+					// Simulate click on the only menu item
+					this.element.find(this.js_selectors.compose_menu_item+':first').trigger('click');
+				}
+
 				// Else, the compose menu will open automatically
 			},
 			/**
@@ -538,7 +547,7 @@ $(function()
 				$.post(
 					this.options.save_state_endpoint,
 					{
-						'operation': 'activity_panel_save_state',
+						'operation': 'activity_panel.save_state',
 						'object_class': this._GetHostObjectClass(),
 						'object_mode': this._GetHostObjectMode(),
 						'is_expanded': this.element.hasClass(this.css_classes.is_expanded),
@@ -738,6 +747,14 @@ $(function()
 
 			// - Helpers on case logs entry forms
 			/**
+			 * @returns {integer} The number of caselog entry forms
+			 * @private
+			 * @since 3.1.0
+			 */
+			_GetCaseLogEntryFormCount: function () {
+				return this.element.find(this.js_selectors.caselog_entry_form).length;
+			},
+			/**
 			 * @param sCaseLogAttCode {string}
 			 * @returns {boolean} Return true if there is a case log for entry for the sCaseLogAttCode tab
 			 * @private
@@ -919,7 +936,7 @@ $(function()
 
 				// Prepare parameters
 				let oParams = $.extend(oExtraInputs, {
-					operation: 'activity_panel_add_caselog_entries',
+					operation: 'activity_panel.add_caselog_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					transaction_id: this.options.transaction_id,
@@ -1363,7 +1380,7 @@ $(function()
 
 				// Send XHR request
 				let oParams = {
-					operation: 'activity_panel_load_more_entries',
+					operation: 'activity_panel.load_more_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					last_loaded_entries_ids: this.options.last_loaded_entries_ids,

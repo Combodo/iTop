@@ -1098,7 +1098,60 @@ const CombodoInlineImage = {
 			$(this).addClass('inline-image').attr('href', $(this).attr('src'));
 		}).magnificPopup({type: 'image', closeOnContentClick: true });
 	}
-}
+};
+
+/**
+ * Abstract wrapper to manage modal dialogs in iTop.
+ * Implementations for the various GUIs may vary but APIs are the same.
+ *
+ * @since 3.1.0
+ */
+let CombodoModal = {
+	/**
+	 * Close all opened modals on the page
+	 */
+	CloseAllModals: function() {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.CloseAllModals not implemented');
+	},
+	/**
+	 * Open a standard modal and put the content of the URL in it.
+	 *
+	 * @param sTargetUrl
+	 * @param bCloseOtherModals
+	 */
+	OpenUrlInModal: function(sTargetUrl, bCloseOtherModals) {
+		// Set default values
+		if(bCloseOtherModals === undefined)
+		{
+			bCloseOtherModals = false;
+		}
+
+		// Close other modals if necessary
+		if(bCloseOtherModals)
+		{
+			CombodoModal.CloseAllModals();
+		}
+
+		// Opening modal
+		CombodoModal.OpenModal({
+			content: {
+				endpoint: sTargetUrl,
+			}
+		});
+	},
+	/**
+	 * Generic function to create and open a modal, used by high-level functions such as "CombodoPortalToolbox.OpenUrlInModal()".
+	 * When developing extensions, you should use them instead.
+	 *
+	 * @param oOptions
+	 * @returns object The jQuery object of the modal element
+	 */
+	OpenModal: function(oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.OpenModal not implemented');
+	}
+};
 
 // @todo BDA ou declarer les fonctions pour les liens
 function RemoveLinkedSetElementAjax(oTrElement, sClass, iId, sAttCode = null){

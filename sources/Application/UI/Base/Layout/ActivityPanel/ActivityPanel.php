@@ -780,7 +780,7 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
-	 * @return bool True if the entry form shouldbe opened by default, false otherwise. Based on the user pref. or the config. param. by default.
+	 * @return bool True if the entry form should be opened by default, false otherwise. Based on the user pref. or the config. param. by default.
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException

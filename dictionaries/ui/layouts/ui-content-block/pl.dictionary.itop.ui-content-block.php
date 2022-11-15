@@ -4,5 +4,5 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('PL PL', 'Polish', 'Polski', [
-	'UIBlock:Error:AddBlockForbidden' => 'Cannot add block to %1$s~~',
+	'UIBlock:Error:AddBlockForbidden' => 'Nie można dodać bloku do %1$s',
 ]);

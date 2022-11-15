@@ -14,6 +14,22 @@ use DBObjectSet;
 
 class DBToolsUtils
 {
+	private static bool $bAnalyzed = false;
+
+	private static function AnalyzeTables()
+	{
+		if (self::$bAnalyzed) {
+			return;
+		}
+
+		$oResult = CMDBSource::Query('SHOW TABLES;');
+		while ($aRow = $oResult->fetch_array()) {
+			$sTable = $aRow['0'];
+			CMDBSource::Query("ANALYZE TABLE `$sTable`; ");
+		}
+		self::$bAnalyzed = true;
+	}
+
     /**
      * @return int
      * @throws \CoreException
@@ -22,6 +38,7 @@ class DBToolsUtils
      */
     public final static function GetDatabaseSize()
     {
+		self::AnalyzeTables();
         $sSchema = CMDBSource::DBName();
 
         $sReq = <<<EOF
@@ -48,6 +65,7 @@ EOF;
 	 */
 	public final static function GetDBDataSize()
 	{
+		self::AnalyzeTables();
 		$sSchema = CMDBSource::DBName();
 
 		$sReq = <<<EOF
@@ -74,6 +92,7 @@ EOF;
 	 */
 	public final static function GetDBIndexSize()
 	{
+		self::AnalyzeTables();
 		$sSchema = CMDBSource::DBName();
 
 		$sReq = <<<EOF
@@ -127,6 +146,7 @@ EOF;
 
 	public static function GetDBTablesInfo()
 	{
+		self::AnalyzeTables();
 		$sSchema = CMDBSource::DBName();
 
 		$sReq = <<<EOF

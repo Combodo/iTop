@@ -18,41 +18,41 @@
  */
 // Activity panel
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand~~',
-	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce~~',
-	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close~~',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries~~',
-	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries~~',
+	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Rozwiń',
+	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Zwiń',
+	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Zamknij',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Załaduj więcej wpisów',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Załaduj wszystkie poprzednie wpisy',
 
 	// Tabs
-	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity~~',
-	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Draft entry~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide logs entries on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choose which logs to display on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'State changes~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Show / hide state changes on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Edits~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Show / hide fields edits on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Open all entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Close all entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)~~',
+	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Aktywność',
+	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Szkice',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logi',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Pokaż / ukryj wpisy logów na tej karcie',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Wybierz, które dzienniki mają być wyświetlane na tej karcie',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Zmiany stanu',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Pokaż / ukryj zmiany stanu na tej karcie',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Edycje',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Pokaż / ukryj edycje pól na tej karcie',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Otwórz wszystkie wpisy',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Zamknij wszystkie wpisy',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Liczba osób wchodzących w interakcję w widocznych wpisach',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Liczba wiadomości w widocznym dzienniku(ach)',
 
 	// Compose button
-	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compose a new log entry~~',
+	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Utwórz nowy wpis w dzienniku',
 
 	// Case log entry
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Multiple logs save~~',
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited logs at once.~~',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Zapisywanie wielu dzienników',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'Naciskając przycisk "zapisz", prześlesz wpisy dla wszystkich edytowanych logów jednocześnie.',
 
 	// Notification entry
-	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Click to open the notifications tab and get more information~~',
+	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Kliknij, aby otworzyć zakładkę powiadomień i uzyskać więcej informacji',
 
 	// Placeholder
-	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet~~',
+	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Tu jest spokojnie, jeszcze nie ma aktywności',
 
 	// Closed cover
-	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activity panel~~',
-	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Click to open the activity panel~~',
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Panel aktywności',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Kliknij, aby otworzyć panel aktywności',
 ));

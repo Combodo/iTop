@@ -138,6 +138,42 @@ class ItopTestCase extends TestCase
 		return $method->invokeArgs($oObject, $aArgs);
 	}
 
+
+	/**
+	 * @param object $oObject
+	 * @param string $sProperty
+	 *
+	 * @return mixed property
+	 *
+	 * @throws \ReflectionException
+	 * @since 2.7.8 3.0.3 3.1.0
+	 */
+	public function GetNonPublicProperty(object $oObject, string $sProperty)
+	{
+		$class = new \ReflectionClass(get_class($oObject));
+		$property = $class->getProperty($sProperty);
+		$property->setAccessible(true);
+
+		return $property->getValue($oObject);
+	}
+
+	/**
+	 * @param object $oObject
+	 * @param string $sProperty
+	 * @param $value
+	 *
+	 * @throws \ReflectionException
+	 * @since 2.7.8 3.0.3 3.1.0
+	 */
+	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
+	{
+		$class = new \ReflectionClass(get_class($oObject));
+		$property = $class->getProperty($sProperty);
+		$property->setAccessible(true);
+
+		$property->setValue($oObject, $value);
+	}
+
 	public function RecurseRmdir($dir) {
 		if (is_dir($dir)) {
 			$objects = scandir($dir);

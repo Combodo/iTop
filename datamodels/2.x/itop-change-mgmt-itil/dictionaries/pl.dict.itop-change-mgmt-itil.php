@@ -95,7 +95,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Change/Attribute:requestor_email+' => '',
 	'Class:Change/Attribute:creation_date' => 'Data utworzenia',
 	'Class:Change/Attribute:creation_date+' => '',
-	'Class:Change/Attribute:impact' => 'Wpływ',
+	'Class:Change/Attribute:impact' => 'Dotyczy',
 	'Class:Change/Attribute:impact+' => '',
 	'Class:Change/Attribute:supervisor_group_id' => 'Zespół nadzorujący',
 	'Class:Change/Attribute:supervisor_group_id+' => '',
