@@ -5,9 +5,9 @@ oWidget{{ oUIBlock.oUILinksDirectWidget.GetInputId() }} = $('#{{ oUIBlock.oUILin
     class_name: '{{ oUIBlock.oUILinksDirectWidget.GetClass() }}',
     att_code: '{{ oUIBlock.oUILinksDirectWidget.GetAttCode() }}',
     input_name: '{{ oUIBlock.sInputName }}',
-    labels: {{ oUIBlock.aLabels|json_encode|raw  }},
+    {#labels: {{ oUIBlock.aLabels|json_encode|raw  }},#}
     submit_to: '{{ oUIBlock.sSubmitUrl }}',
-    buttons: {{ oUIBlock.GetButtons()|json_encode|raw }},
+    {#buttons: {{ oUIBlock.GetButtons()|json_encode|raw }},#}
     oWizardHelper: {{ oUIBlock.sWizHelper }},
     do_search: '{{ oUIBlock.sJSDoSearch }}'
 });

@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Links;
 
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use MetaModel;
 
 /**
@@ -16,11 +17,14 @@ use MetaModel;
  * @since 3.1.0
  * @package Combodo\iTop\Application\UI\Links
  */
-abstract class AbstractBlockLinksTable extends Panel
+abstract class AbstractBlockLinksTable extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE                   = 'ibo-block-links-table';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/layout';
+	public const DEFAULT_JS_FILES_REL_PATH    = [
+		'js/links/links.js',
+	];
 
 	/** @var \AttributeLinkedSet $oAttDef */
 	protected \AttributeLinkedSet $oAttDef;
@@ -50,7 +54,7 @@ abstract class AbstractBlockLinksTable extends Panel
 	 */
 	public function __construct(\WebPage $oPage, \AttributeLinkedSet $oAttDef, string $sAttCode, string $sObjectClass, \DBObject $oDbObject)
 	{
-		parent::__construct('', [], self::DEFAULT_COLOR_SCHEME, $sAttCode);
+		parent::__construct('', ["ibo-block-links-table"]);
 
 		// retrieve parameters
 		$this->oAttDef = $oAttDef;
@@ -84,13 +88,6 @@ abstract class AbstractBlockLinksTable extends Panel
 	 */
 	private function InitUI(\WebPage $oPage)
 	{
-		// Panel
-		$this->SetCSSClasses(["ibo-block-links-table"]);
-		$this->SetTitle($this->sTargetClass);
-		$this->SetSubTitle($this->oAttDef->GetDescription());
-		$this->SetColorFromClass($this->oAttDef->GetLinkedClass());
-		$this->SetIcon(MetaModel::GetClassIcon($this->sTargetClass, false));
-
 		// Table
 		$this->InitTable($oPage);
 	}

@@ -11,9 +11,11 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
 use MetaModel;
 
@@ -22,23 +24,14 @@ use MetaModel;
  *
  * @package Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksEdit
  */
-class BlockDirectLinksEditInPlace extends Panel
+class BlockDirectLinksEdit extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE                   = 'ibo-block-direct-links-edit-in-place';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/direct/block-direct-links-edit/layout';
 
-	// types constants
-	public const TYPE_ACTION_NONE          = 'ACTION_NONE';
-	public const TYPE_ACTION_ADD           = 'ACTION_ADD';
-	public const TYPE_ACTION_ADD_REMOVE    = 'ACTION_ADD_REMOVE';
-	public const TYPE_ACTION_CREATE_DELETE = 'ACTION_CREATE_DELETE';
-
 	/** @var \UILinksWidgetDirect */
 	public \UILinksWidgetDirect $oUILinksDirectWidget;
-
-	/** @var string */
-	public string $sType;
 
 	/** @var string */
 	public string $sInputName;
@@ -59,20 +52,19 @@ class BlockDirectLinksEditInPlace extends Panel
 	 * Constructor.
 	 *
 	 * @param \UILinksWidgetDirect $oUILinksDirectWidget
-	 * @param string $sType
 	 * @param string $sId
 	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
-	public function __construct(\UILinksWidgetDirect $oUILinksDirectWidget, string $sType, string $sId)
+	public function __construct(\UILinksWidgetDirect $oUILinksDirectWidget, string $sId)
 	{
-		parent::__construct($oUILinksDirectWidget->GetLinkedClass(), [], self::DEFAULT_COLOR_SCHEME, $sId);
+		parent::__construct($sId, ["ibo-block-direct-links--edit-in-place"]);
 
 		// Retrieve parameters
 		$this->oUILinksDirectWidget = $oUILinksDirectWidget;
-		$this->sType = $sType;
 
 		// compute
 		$this->aLabels = array(
@@ -84,7 +76,7 @@ class BlockDirectLinksEditInPlace extends Panel
 			'selection_title' => Dict::Format('UI:SelectionOf_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
 		);
 		$oContext = new \ApplicationContext();
-		$this->sSubmitUrl = \utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php'.$oContext->GetForLink();
+		$this->sSubmitUrl = \utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?'.$oContext->GetForLink();
 
 		// Don't automatically launch the search if the table is huge
 		$bDoSearch = !\utils::IsHighCardinality($this->oUILinksDirectWidget->GetLinkedClass());
@@ -99,22 +91,14 @@ class BlockDirectLinksEditInPlace extends Panel
 	 *
 	 * @return void
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	private function InitUI()
 	{
-		// Panel
-		$this->SetCSSClasses(["ibo-block-direct-links--edit-in-place"]);
-		try {
-			$this->SetSubTitle(MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetClass(), $this->oUILinksDirectWidget->GetAttCode())->GetDescription());
-		}
-		catch (\Exception $e) {
-			$this->SetSubTitle('Error Direct Links Edit in Place attribute definition error.');
-		}
-		$this->SetColorFromClass($this->oUILinksDirectWidget->GetLinkedClass());
-		$this->SetIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false));
-
-		// table information alert
-		$this->AddSubBlock($this->CreateTableInformationAlert());
+		// MedallionIcon
+		$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false));
+		$oClassIcon->SetDescription(MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetClass(), $this->oUILinksDirectWidget->GetAttCode())->GetDescription())->AddCSSClass('ibo-block-list--medallion');
+		$this->AddSubBlock($oClassIcon);
 	}
 
 	/**
@@ -145,6 +129,12 @@ class BlockDirectLinksEditInPlace extends Panel
 		$oUIAddButton->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
 		$oAlert->AddSubBlock($oUIAddButton);
 
+		// create button
+		$oUIAddButton = ButtonUIBlockFactory::MakeForPrimaryAction("Créer un {$this->oUILinksDirectWidget->GetLinkedClass()}", 'table-selection');
+		$oUIAddButton->AddCSSClass('ibo-table--alert-information--add-button');
+		$oUIAddButton->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._createRow();");
+		$oAlert->AddSubBlock($oUIAddButton);
+
 		return $oAlert;
 	}
 
@@ -167,7 +157,11 @@ class BlockDirectLinksEditInPlace extends Panel
 			$aRowActions = $this->GetRowActions();
 			$oDatatable = DataTableUIBlockFactory::MakeForForm($this->oUILinksDirectWidget->GetInputId(), $aAttribs, $aRows, '', $aRowActions);
 			$oDatatable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
-			$this->AddSubBlock($oDatatable);
+			$aTablePanel = PanelUIBlockFactory::MakeNeutral('');
+			$aTablePanel->SetSubTitle(sprintf('Total: %d objects.', count($aRows)));
+			$aTablePanel->AddSubBlock($this->CreateTableInformationAlert());
+			$aTablePanel->AddSubBlock($oDatatable);
+			$this->AddSubBlock($aTablePanel);
 		}
 		catch (\Exception $e) {
 			$this->AddSubBlock(PanelUIBlockFactory::MakeForDanger('error', 'error while trying to load datatable'));
@@ -202,6 +196,7 @@ class BlockDirectLinksEditInPlace extends Panel
 			foreach ($this->oUILinksDirectWidget->GetZList() as $sLinkedAttCode) {
 				$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 
+				// tentative d'ajout des champs en édition
 //				$sValue = $oLinkObj->Get($sLinkedAttCode);
 //				$sDisplayValue = $oLinkObj->GetEditValue($sLinkedAttCode);
 //				$oAttDef = MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetLinkedClass(), $sLinkedAttCode);
@@ -235,42 +230,18 @@ class BlockDirectLinksEditInPlace extends Panel
 	}
 
 	/**
-	 * Return global buttons.
-	 *
-	 * @return array|string[]
-	 */
-	public function GetButtons(): array
-	{
-		switch ($this->sType) {
-			case self::TYPE_ACTION_ADD:
-				return array('add');
-			case self::TYPE_ACTION_ADD_REMOVE:
-				return array('add', 'remove');
-			case self::TYPE_ACTION_CREATE_DELETE:
-				return array('create', 'delete');
-			case self::TYPE_ACTION_NONE:
-			default:
-				return array();
-		}
-	}
-
-	/**
 	 * Return row actions.
 	 *
 	 * @return \string[][]
 	 */
 	private function GetRowActions(): array
 	{
-		$aActions = array();
-
-		if ($this->sType == self::TYPE_ACTION_ADD_REMOVE) {
-			$aActions[] = [
+		return array(
+			[
 				'tooltip'       => 'remove link',
 				'icon_classes'  => 'fas fa-minus',
 				'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteRow($(':checkbox', oTrElement));",
-			];
-		}
-
-		return $aActions;
+			],
+		);
 	}
 }

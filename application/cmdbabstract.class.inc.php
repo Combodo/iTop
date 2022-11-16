@@ -658,9 +658,6 @@ HTML
 
 			$sLinkedClass = $oAttDef->GetLinkedClass();
 
-			// add links script
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/links/links.js');
-
 			// Filter out links pointing to obsolete objects (if relevant)
 			$oOrmLinkSet = $this->Get($sAttCode);
 			$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
@@ -715,17 +712,6 @@ HTML
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));
 			if ($bEditMode && (!$bReadOnly)) {
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
-
-				if ($oAttDef->IsIndirect()) {
-					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
-					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-				} else {
-					$sTargetClass = $sLinkedClass;
-				}
-				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
-				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
-				$oPage->AddUiBlock($oClassIcon);
-
 				$sDisplayValue = ''; // not used
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
 						$oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';

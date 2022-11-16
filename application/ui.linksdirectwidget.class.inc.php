@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\Links\Indirect\BlockDirectLinksEdit\BlockDirectLinksEditInPlace;
+use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksEdit;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
@@ -81,100 +81,10 @@ class UILinksWidgetDirect
 	 */
 	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj)
 	{
-		if (empty($aArgs)) {
-			$aArgs = [];
-		}
+		$oBlock = new BlockDirectLinksEdit($this, $this->sInputid);
+		$oBlock->InitTable($oPage, $oValue, $sFormPrefix);
 
-		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
-		switch($oLinksetDef->GetEditMode())
-		{
-			case LINKSET_EDITMODE_NONE: // The linkset is read-only
-			$this->DisplayAsBlock($oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, false /* bDisplayMenu*/);
-			break;
-			
-			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
-			if ($oCurrentObj && !$oCurrentObj->IsNew())
-			{
-				$sTargetClass = $oLinksetDef->GetLinkedClass();
-				$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
-				$sDefault = "default[$sExtKeyToMe]=".$oCurrentObj->GetKey();
-				$oAppContext = new ApplicationContext();
-				$sParams = $oAppContext->GetForLink();
-				$oPage->p("<a target=\"_blank\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sTargetClass&$sParams&{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sTargetClass))."</a>\n");
-			}
-			$this->DisplayAsBlock($oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, false /* bDisplayMenu*/);
-			break;
-
-			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
-				$oBlock = new BlockDirectLinksEditInPlace($this, BlockDirectLinksEditInPlace::TYPE_ACTION_CREATE_DELETE, $this->sInputid);
-				$oBlock->InitTable($oPage, $oValue, $sFormPrefix);
-
-				return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
-			
-			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
-				$sTargetClass = $oLinksetDef->GetLinkedClass();
-				$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
-				$oExtKeyDef = MetaModel::GetAttributeDef($sTargetClass, $sExtKeyToMe);
-				$sType = BlockDirectLinksEditInPlace::TYPE_ACTION_ADD;
-				if ($oExtKeyDef->IsNullAllowed()) {
-					$sType = BlockDirectLinksEditInPlace::TYPE_ACTION_ADD_REMOVE;
-				}
-				$oBlock = new BlockDirectLinksEditInPlace($this, $sType, $this->sInputid);
-				$oBlock->InitTable($oPage, $oValue, $sFormPrefix);
-
-				return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
-			
-			case LINKSET_EDITMODE_ACTIONS:
-			default:
-			$this->DisplayAsBlock($oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, true /* bDisplayMenu*/);
-		}
-	}
-
-	/**
-	 * @param WebPage $oPage
-	 * @param DBObjectSet $oValue
-	 * @param array $aArgs
-	 * @param string $sFormPrefix
-	 * @param DBObject $oCurrentObj
-	 * @param bool $bDisplayMenu
-	 *
-	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (protected method, always called with default value)
-	 */
-	protected function DisplayAsBlock(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $bDisplayMenu)
-	{
-		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
-		$sTargetClass = $oLinksetDef->GetLinkedClass();
-		if ($oCurrentObj && $oCurrentObj->IsNew() && $bDisplayMenu)
-		{
-			$oPage->p(Dict::Format('UI:BeforeAdding_Class_ObjectsSaveThisObject', MetaModel::GetName($sTargetClass)));
-		}
-		else
-		{
-			$oFilter = new DBObjectSearch($sTargetClass);
-			$oFilter->AddCondition($oLinksetDef->GetExtKeyToMe(), $oCurrentObj->GetKey(),'=');
-
-			$aDefaults = array($oLinksetDef->GetExtKeyToMe() => $oCurrentObj->GetKey());
-			$oAppContext = new ApplicationContext();
-			foreach($oAppContext->GetNames() as $sKey)
-			{
-				// The linked object inherits the parent's value for the context
-				if (MetaModel::IsValidAttCode($this->sClass, $sKey) && $oCurrentObj)
-				{
-					$aDefaults[$sKey] = $oCurrentObj->Get($sKey);
-				}
-			}
-			$aParams = array(
-				'target_attr' => $oLinksetDef->GetExtKeyToMe(),
-				'object_id' => $oCurrentObj ? $oCurrentObj->GetKey() : null,
-				'menu' => $bDisplayMenu,
-                'menu_actions_target' => '_blank',
-				'default' => $aDefaults,
-				'table_id' => $this->sClass.'_'.$this->sAttCode,
-			);
-
-			$oBlock = new DisplayBlock($oFilter, 'list', false);
-			$oBlock->Display($oPage, $this->sInputid, $aParams);
-		}	
+		return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
 	}
 
 	/**
@@ -231,21 +141,6 @@ class UILinksWidgetDirect
 			$oPage->add('&nbsp; <button type="button" onclick="$(\'#'.$this->sInputid.'\').directlinks(\'subclassSelected\');">'.Dict::S('UI:Button:Apply').'</button><span class="indicator" style="display:inline-block;width:16px"></span></nobr></p>');
 		}
 		$oPage->add('</div></div>');
-	}
-
-	/**
-	 * @param WebPage $oPage
-	 * @param DBObjectSet $oValue
-	 * @param array $aArgs
-	 * @param string $sFormPrefix
-	 * @param DBObject $oCurrentObj
-	 * @param array $aButtons
-	 *
-	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (protected method, caller already handles it)
-	 */
-	protected function DisplayEditInPlace(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $aButtons = array('create', 'delete'))
-	{
-
 	}
 
 	/**

@@ -6,13 +6,13 @@
 
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit\BlockIndirectLinksEdit;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog\BlockObjectPickerDialog;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 require_once(APPROOT.'application/displayblock.class.inc.php');
 
-class UILinksWidget 
+class UILinksWidget
 {
 	protected $m_sClass;
 	protected $m_sAttCode;

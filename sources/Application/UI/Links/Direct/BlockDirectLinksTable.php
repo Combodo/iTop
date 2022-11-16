@@ -37,6 +37,8 @@ class BlockDirectLinksTable extends AbstractBlockLinksTable
 			'default'     => $this->GetDefault(),
 			'table_id'    => $this->sObjectClass.'_'.$this->sAttCode,
 			'row_actions' => $this->GetRowActions(),
+			'panel_title' => $this->sTargetClass,
+			'panel_icon'  => MetaModel::GetClassIcon($this->sTargetClass, false),
 		);
 	}
 

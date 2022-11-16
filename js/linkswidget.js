@@ -15,6 +15,7 @@
  * @param sExtKeyToRemote
  * @param bDoSearch
  * @param iMaxAddedId
+ * @param aRemoved
  * @constructor
  *
  * @since 3.0.0 Add iMaxAddedId parameter
@@ -123,7 +124,6 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 	this.AddObjects = function () {
 		let me = this;
-		$('#'+me.id+'_indicatorAdd').html('&nbsp;<img src="../images/indicator.gif"/>');
 		me.oWizardHelper.UpdateWizard();
 
 		let sPromiseId = 'ajax_promise_'+me.id;
@@ -269,7 +269,6 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		// Run the query and display the results
 		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap,
 			function (data) {
-				console.log(data);
 				if (data != '') {
 					$.each(data.data, function (idx, row) {
 						$('#datatable_'+me.id).DataTable().row.add(row).draw();

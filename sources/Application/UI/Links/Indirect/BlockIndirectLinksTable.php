@@ -48,6 +48,8 @@ class BlockIndirectLinksTable extends AbstractBlockLinksTable
 			'zlist'         => false,
 			'extra_fields'  => $this->GetAttCodesToDisplay(),
 			'row_actions'   => $this->GetRowActions(),
+			'panel_title'   => $this->sTargetClass,
+			'panel_icon'    => MetaModel::GetClassIcon($this->sTargetClass, false),
 		);
 	}
 

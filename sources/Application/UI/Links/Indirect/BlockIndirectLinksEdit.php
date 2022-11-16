@@ -11,7 +11,9 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use MetaModel;
@@ -21,7 +23,7 @@ use MetaModel;
  *
  * @package Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit
  */
-class BlockIndirectLinksEdit extends Panel
+class BlockIndirectLinksEdit extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE                   = 'ibo-block-indirect-links-edit';
@@ -58,7 +60,7 @@ class BlockIndirectLinksEdit extends Panel
 	 */
 	public function __construct(\UILinksWidget $oUILinksWidget)
 	{
-		parent::__construct($oUILinksWidget->GetRemoteClass(), [], Self::DEFAULT_COLOR_SCHEME, "linkedset_{$oUILinksWidget->GetLinkedSetId()}");
+		parent::__construct("linkedset_{$oUILinksWidget->GetLinkedSetId()}", ["ibo-block-indirect-links--edit"]);
 
 		// Retrieve parameters
 		$this->oUILinksWidget = $oUILinksWidget;
@@ -76,17 +78,14 @@ class BlockIndirectLinksEdit extends Panel
 	 *
 	 * @return void
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	private function InitUI()
 	{
-		// Panel
-		$this->SetCSSClasses(["ibo-block-indirect-links--edit"]);
-		$this->SetSubTitle(MetaModel::GetAttributeDef($this->oUILinksWidget->GetClass(), $this->oUILinksWidget->GetAttCode())->GetDescription());
-		$this->SetColorFromClass($this->oUILinksWidget->GetRemoteClass());
-		$this->SetIcon(MetaModel::GetClassIcon($this->oUILinksWidget->GetRemoteClass(), false));
-
-		// table information alert
-		$this->AddSubBlock($this->CreateTableInformationAlert());
+		// MedallionIcon
+		$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($this->oUILinksWidget->GetRemoteClass(), false));
+		$oClassIcon->SetDescription(MetaModel::GetAttributeDef($this->oUILinksWidget->GetClass(), $this->oUILinksWidget->GetAttCode())->GetDescription())->AddCSSClass('ibo-block-list--medallion');
+		$this->AddSubBlock($oClassIcon);
 
 		// To prevent adding forms inside the main form
 		$oDeferredBlock = new UIContentBlock("dlg_{$this->oUILinksWidget->GetLinkedSetId()}", ['ibo-block-indirect-links--edit--dialog']);
@@ -175,7 +174,12 @@ class BlockIndirectLinksEdit extends Panel
 			'select_mode'        => 'custom',
 			'disable_hyperlinks' => true,
 		]);
-		$this->AddSubBlock($oDataTable);
+		$aTablePanel = PanelUIBlockFactory::MakeNeutral('');
+		$aTablePanel->SetSubTitle(sprintf('Total: %d objects.', count($aForm)));
+		$aTablePanel->AddSubBlock($this->CreateTableInformationAlert());
+		$aTablePanel->AddSubBlock($oDataTable);
+
+		$this->AddSubBlock($aTablePanel);
 	}
 
 	/**

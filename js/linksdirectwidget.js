@@ -32,15 +32,16 @@ $(function()
 			do_search: true,
 			submit_to: '../pages/ajax.render.php',
 			submit_parameters: {},
-			labels: { 'delete': 'Delete',
-				  	  modify: 'Modify...' , 
-				  	  creation_title: 'Creation of a new object...' , 
-					  create: 'Create...',
-					  add: 'Add...',
-					  remove: 'Remove',
+			labels: {
+				// 'delete': 'Delete',
+				//   	  modify: 'Modify...' ,
+				  	  creation_title: 'Creation of a new object...' ,
+					  // create: 'Create...',
+					  // add: 'Add...',
+					  // remove: 'Remove',
 					  selection_title: 'Objects selection'
 					},
-			buttons: ['create', 'delete'],
+			// buttons: ['create', 'delete'],
 			oWizardHelper: null
 		},
 
@@ -55,12 +56,12 @@ $(function()
 
 			this.datatable = this.element.find('table.listResults');
 			
-			var aButtonsTypes = ['delete', 'remove', 'modify', 'add', 'create'];
-			this.oButtons = {};
-			for(k in aButtonsTypes)
-			{
-				this.oButtons[aButtonsTypes[k]] =  $('<button class="ibo-button ibo-is-regular ibo-is-neutral" type="button">' + this.options.labels[aButtonsTypes[k]] + '</button>');
-			}
+			// var aButtonsTypes = ['delete', 'remove', 'modify', 'add', 'create'];
+			// this.oButtons = {};
+			// for(k in aButtonsTypes)
+			// {
+			// 	this.oButtons[aButtonsTypes[k]] =  $('<button class="ibo-button ibo-is-regular ibo-is-neutral" type="button">' + this.options.labels[aButtonsTypes[k]] + '</button>');
+			// }
 			this.indicator = $('<span></span>');
 			this.inputToBeCreated = $('<input type="hidden" name="'+this.options.input_name+'_tbc" value="{}">');
 			this.toBeCreated = {};
@@ -79,27 +80,27 @@ $(function()
 				.after(this.inputToBeRemoved)
 				.after(this.indicator);
 
-			for (k in this.options.buttons) {
-				this.element.after(this.oButtons[this.options.buttons[k]]).after('&nbsp;&nbsp;&nbsp;');
-			}
+			// for (k in this.options.buttons) {
+			// 	this.element.after(this.oButtons[this.options.buttons[k]]).after('&nbsp;&nbsp;&nbsp;');
+			// }
 
 			this.element.find('.selectList'+this.id).bind('change', function () {
 				me._updateButtons();
 			});
-			this.oButtons['delete'].on('click', function () {
-				me._deleteSelection();
-			});
-			this.oButtons['create'].on('click', function () {
-				me._createRow();
-			});
-			this.oButtons['remove'].on('click', function () {
-				$('.selectList'+me.id+':checked', me.element).each(function () {
-					me._removeRow($(this));
-				});
-			});
-			this.oButtons['add'].on('click', function () {
-				me._selectToAdd();
-			});
+			// this.oButtons['delete'].on('click', function () {
+			// 	me._deleteSelection();
+			// });
+			// this.oButtons['create'].on('click', function () {
+			// 	me._createRow();
+			// });
+			// this.oButtons['remove'].on('click', function () {
+			// 	$('.selectList'+me.id+':checked', me.element).each(function () {
+			// 		me._removeRow($(this));
+			// 	});
+			// });
+			// this.oButtons['add'].on('click', function () {
+			// 	me._selectToAdd();
+			// });
 
 			this._updateButtons();
 
@@ -134,21 +135,21 @@ $(function()
 			var oChecked = $('.selectList'+this.id+':checked', this.element);
 			switch (oChecked.length) {
 				case 0:
-					this.oButtons['delete'].prop('disabled', true);
-					this.oButtons['remove'].prop('disabled', true);
-					this.oButtons['modify'].prop('disabled', true);
+					// this.oButtons['delete'].prop('disabled', true);
+					// this.oButtons['remove'].prop('disabled', true);
+					// this.oButtons['modify'].prop('disabled', true);
 					break;
 
 				case 1:
-					this.oButtons['delete'].prop('disabled', false);
-					this.oButtons['remove'].prop('disabled', false);
-					this.oButtons['modify'].prop('disabled', false);
+					// this.oButtons['delete'].prop('disabled', false);
+					// this.oButtons['remove'].prop('disabled', false);
+					// this.oButtons['modify'].prop('disabled', false);
 					break;
 
 				default:
-					this.oButtons['delete'].prop('disabled', false);
-					this.oButtons['remove'].prop('disabled', false);
-					this.oButtons['modify'].prop('disabled', true);
+					// this.oButtons['delete'].prop('disabled', false);
+					// this.oButtons['remove'].prop('disabled', false);
+					// this.oButtons['modify'].prop('disabled', true);
 					break;
 			}
 		},
@@ -185,7 +186,7 @@ $(function()
 			this.oDlg.dialog('option', {position: {my: "center", at: "center", of: window}});
 		},
 		_createRow: function () {
-			this.oButtons['create'].prop('disabled', true);
+			// this.oButtons['create'].prop('disabled', true);
 			this.indicator.html('<img src="../images/indicator.gif">');
 			oParams = this.options.submit_parameters;
 			oParams.operation = 'createObject';
@@ -224,14 +225,14 @@ $(function()
 					}
 				});
 				me.indicator.html('');
-				me.oButtons['create'].prop('disabled', false);
+				// me.oButtons['create'].prop('disabled', false);
 				me._updateDlgPosition();
 
 			});
 		},
 		_selectToAdd: function()
 		{
-			this.oButtons['add'].prop('disabled', true);
+			// this.oButtons['add'].prop('disabled', true);
 			this.indicator.html('<img src="../images/indicator.gif">');
 			oParams = this.options.submit_parameters;
 			oParams.operation = 'selectObjectsToAdd';
@@ -297,7 +298,7 @@ $(function()
 
 				});
 				me.indicator.html('');
-				me.oButtons['add'].prop('disabled', false);
+				// me.oButtons['add'].prop('disabled', false);
 				if (me.options.do_search)
 				{
 					me._onSearchToAdd();
@@ -467,7 +468,7 @@ $(function()
 
 				me._updateTable();
 				me.indicator.html('');
-				me.oButtons['add'].prop('disabled', false);
+				// me.oButtons['add'].prop('disabled', false);
 
 				me._updateTableInformation();
 			});
@@ -534,7 +535,7 @@ $(function()
 				oParams.tempId = nextIdx;
 				var me = this;
 
-				this.oButtons['create'].prop('disabled', true);
+				// this.oButtons['create'].prop('disabled', true);
 				this.indicator.html('<img src="../images/indicator.gif">');
 
 				$.post(this.options.submit_to, oParams, function (data) {
@@ -544,7 +545,7 @@ $(function()
 
 					me._updateTable();
 					me.indicator.html('');
-					me.oButtons['create'].prop('disabled', false);
+					// me.oButtons['create'].prop('disabled', false);
 				});
 			}
 		},
