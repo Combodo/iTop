@@ -181,7 +181,7 @@ abstract class DBObject implements iDisplay
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
 			$this->m_sObjectUniqId = get_class($this).'::'.$this->GetKey().'_'.utils::GetUniqId();
-			$this->RegisterEvents();
+			$this->RegisterEventListeners();
 			return;
 		}
 		// Creation of a brand new object
@@ -204,10 +204,10 @@ abstract class DBObject implements iDisplay
 		$this->UpdateMetaAttributes();
 
 		$this->m_sObjectUniqId = get_class($this).'::0'.'_'.utils::GetUniqId();
-		$this->RegisterEvents();
+		$this->RegisterEventListeners();
 	}
 
-	protected function RegisterEvents()
+	protected function RegisterEventListeners()
 	{
 	}
 

@@ -12,12 +12,28 @@ use CoreException;
 use Exception;
 use ExecutionKPI;
 use ReflectionClass;
+use utils;
 
 class EventService
 {
-	public static $aEventListeners = [];
-	private static $iEventIdCounter = 0;
-	private static $aEventDescription = [];
+	public static $aEventListeners;
+	private static $iEventIdCounter;
+	private static $aEventDescription;
+
+	public static function InitService()
+	{
+		self::$aEventListeners = [];
+		self::$iEventIdCounter = 0;
+		self::$aEventDescription = [];
+
+		$aEventEnrolments = utils::GetClassesForInterface(iEventEnrolment::class);
+		foreach ($aEventEnrolments as $sEventEnrolmentClass) {
+			/** @var \Combodo\iTop\Service\iEventEnrolment $oEventEnrolment */
+			$oEventEnrolment = new $sEventEnrolmentClass();
+			$oEventEnrolment->InitEvents();
+		}
+
+	}
 
 	/**
 	 * Register a callback for a specific event
@@ -242,7 +258,13 @@ class EventService
 		return false;
 	}
 
-	// For information only
+	/**
+	 * @param string $sEvent
+	 * @param array $aDescription
+	 * @param string $sModule
+	 *
+	 * @return void
+	 */
 	public static function RegisterEvent(string $sEvent, array $aDescription, string $sModule)
 	{
 		if (isset(self::$aEventDescription[$sEvent])) {

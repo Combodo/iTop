@@ -1343,9 +1343,9 @@ EOF
 		if (!empty($sEvents))
 		{
 			$sMethods .= <<<EOF
-	protected function RegisterEvents()
+	protected function RegisterEventListeners()
 	{
-		parent::RegisterEvents();
+		parent::RegisterEventListeners();
 $sEvents
 	}
 

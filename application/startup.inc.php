@@ -16,6 +16,8 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Service\EventData;
+use Combodo\iTop\Service\EventService;
 
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
@@ -68,6 +70,9 @@ $oKPI = new ExecutionKPI();
 Session::Start();
 $oKPI->ComputeAndReport("Session Start");
 
+EventService::InitService();
+EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_REQUEST_RECEIVED));
+
 $sSwitchEnv = utils::ReadParam('switch_env', null);
 $bAllowCache = true;
 if (($sSwitchEnv != null) && file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE) &&( Session::Get('itop_env') !== $sSwitchEnv))
@@ -99,3 +104,4 @@ else
 }
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
+EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
