@@ -14,7 +14,6 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 if (!defined('__DIR__')) {
@@ -27,19 +26,15 @@ require_once(APPROOT.'/core/bulkexport.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-
-
 const EXIT_CODE_ERROR = -1;
 const EXIT_CODE_FATAL = -2;
-
-
 
 function ReportErrorAndExit($sErrorMessage)
 {
 	if (utils::IsModeCLI())
 	{
 		$oP = new CLIPage("iTop - Export");
-		$oP->p('ERROR: '.$sErrorMessage);
+		$oP->p('ERROR: '.utils::HtmlEntities($sErrorMessage));
 		$oP->output();
 		exit(EXIT_CODE_ERROR);
 	}
@@ -47,7 +42,7 @@ function ReportErrorAndExit($sErrorMessage)
 	{
 		$oP = new WebPage("iTop - Export");
 		$oP->add_xframe_options();
-		$oP->p('ERROR: '.$sErrorMessage);
+		$oP->p('ERROR: '.utils::HtmlEntities($sErrorMessage));
 		$oP->output();
 		exit(EXIT_CODE_ERROR);
 	}

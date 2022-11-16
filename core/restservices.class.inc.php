@@ -575,7 +575,7 @@ class CoreServices implements iRestServiceProvider
 					$oObject = $oElement->GetProperty('object');
 					if ($oObject)
 					{
-						if ($bEnableRedundancy)
+						if ($bEnableRedundancy && $sDirection == 'down')
 						{
 							// Add only the "reached" objects
 							if ($oElement->GetProperty('is_reached'))
