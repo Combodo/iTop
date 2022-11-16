@@ -1,33 +1,55 @@
 <?php
 namespace Combodo\iTop\Test\UnitTest;
 
-use AppBundle\Twig\AppExtension;
-use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Combodo\iTop\Portal\Twig\AppExtension;
+use Twig_Environment;
+use Twig_Loader_Array;
 
-class TwigTest extends ItopTestCase
+class TwigTest extends ItopDataTestCase
 {
+	protected function setUp(): void
+	{
+		parent::setUp();
+		require_once __DIR__.'/../../core/config.class.inc.php';
+	}
 
 	/**
 	 * Test the fix for ticket N°4384
 	 *
-	 * @dataProvider testTemplateProvider
+	 * @dataProvider TemplateProvider
 	 *
 	 */
-	public function testTemplate($sFileName, $expected)
+	public function testTemplate($sFileName, $sExpected)
 	{
-		$oTwig = TwigHelper::GetTwigEnvironment( dirname(__FILE__));
+		$sId = 'TestTwig';
+		$oAppExtension = new AppExtension();
 
-		$sHtml = $oTwig->render($sFileName.'.twig');
-	    $this->assertSame($sHtml, $expected);
+		// Creating sandbox twig env. to load and test the custom form template
+		$oTwig = new Twig_Environment(new Twig_Loader_Array([$sId => $sFileName]));
+
+		// Manually registering filters and functions as we didn't find how to do it automatically
+		$aFilters = $oAppExtension->getFilters();
+		foreach ($aFilters as $oFilter)
+		{
+			$oTwig->addFilter($oFilter);
+		}
+		$aFunctions = $oAppExtension->getFunctions();
+		foreach ($aFunctions as $oFunction)
+		{
+			$oTwig->addFunction($oFunction);
+		}
+
+		$sHtml = $oTwig->render($sId, ['AttackerURL' => 'file://'.__DIR__.'/attacker']);
+
+		$this->assertEquals($sExpected, $sHtml);
 	}
 
-	public static function testTemplateProvider()
+	public static function TemplateProvider()
 	{
 		$aReturn = array();
 		$aReturn['filter_system'] = [
-				'sFileName' => 'test.html',
-				'expected' =>file_get_contents(dirname(__FILE__).'/test.html'),
+				'sFileName' => file_get_contents(__DIR__.'/test.html.twig'),
+				'expected' => file_get_contents(__DIR__.'/test.html'),
 			];
 
 		return $aReturn;
