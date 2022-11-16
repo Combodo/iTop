@@ -129,82 +129,93 @@ class ModelFactoryTest extends ItopTestCase
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['No change at all - mini delta'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="merge" implicit'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="merge" explicit'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="merge"/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="merge" does not handle data'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB>Ghost busters!!!</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="merge" recursively'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB>
@@ -213,7 +224,8 @@ XML,
 		</nodeC>
 	</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>
@@ -222,161 +234,181 @@ XML,
 		</nodeC>
 	</nodeB>
 </nodeA>
-XML,
+XML
 		];
 
 		// Define or redefine
 		$aDeltas['_delta="define" without id'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="define"></nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="define" with id'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="define"></item>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="toto"></item>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="define" but existing node'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="define"></item>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="define"></item>
 </nodeA>
-XML,
-			'sExpectedXML' => null,
+XML
+			,
+			'sExpectedXML' => null
 		];
 		$aDeltas['_delta="redefine" without id'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 	<nodeB>Initial BB</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="redefine">Gainsbourg</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>Gainsbourg</nodeB>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="redefine" with id'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 	<item id="toto">Initial BB</item>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="redefine">Gainsbourg</item>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="toto">Gainsbourg</item>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="redefine" but missing node'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="redefine">Gainsbourg</item>
 </nodeA>
-XML,
-			'sExpectedXML' => null,
+XML
+			,
+			'sExpectedXML' => null
 		];
 		$aDeltas['_delta="force" without id + missing node'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="force">Hulk</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>Hulk</nodeB>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="force" with id + missing node'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="force">Hulk</item>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="toto">Hulk</item>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="force" without id + existing node'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 	<nodeB>Initial BB</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="force">Gainsbourg</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>Gainsbourg</nodeB>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="force" with id + existing node'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 	<item id="toto">Initial BB</item>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="force">Gainsbourg</item>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="toto">Gainsbourg</item>
 </nodeA>
-XML,
+XML
 		];
 
 		// Rename
@@ -385,32 +417,36 @@ XML,
 <nodeA>
 	<item id="Kent">Kryptonite</item>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="Superman" _rename_from="Kent"/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="Superman">Kryptonite</item>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['rename but missing node NOT INTUITIVE!!!'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="Superman" _rename_from="Kent"/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<item id="Superman"/>
 </nodeA>
-XML,
+XML
 		];
 
 		// Delete
@@ -419,40 +455,46 @@ XML,
 <nodeA>
 	<nodeB>Initial BB</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="delete"/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA/>
-XML,
+XML
 		];
 		$aDeltas['_delta="delete" with id'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 	<item id="toto">Initial BB</item>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="delete"/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA/>
-XML,
+XML
 		];
 		$aDeltas['_delta="delete" but missing node'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="delete"/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => null,
 		];
 		$aDeltas['_delta="delete_if_exists" without id + existing node'] = [
@@ -460,56 +502,64 @@ XML,
 <nodeA>
 	<nodeB>Initial BB</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="delete_if_exists"/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA/>
-XML,
+XML
 		];
 		$aDeltas['_delta="delete_if_exists" with id + existing node'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 	<item id="toto">Initial BB</item>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="delete_if_exists"/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA/>
-XML,
+XML
 		];
 		$aDeltas['_delta="delete_if_exists" without id + missing node'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="delete_if_exists"/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA/>
-XML,
+XML
 		];
 		$aDeltas['_delta="delete_if_exists" with id + missing node'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<item id="toto" _delta="delete_if_exists"/>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA/>
-XML,
+XML
 		];
 
 		// Conditionals
@@ -518,104 +568,117 @@ XML,
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="must_exist">
 		<nodeC _delta="define"/>
 	</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>
 		<nodeC/>
 	</nodeB>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="must_exist on missing node"'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="must_exist">
 		<nodeC _delta="define"/>
 	</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => null,
 		];
 		$aDeltas['_delta="if_exists on missing node"'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="if_exists">
 		<nodeC _delta="define"/>
 	</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 </nodeA>
-XML,
+XML
+			,
 		];
 		$aDeltas['_delta="if_exists on existing node"'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 	<nodeB/>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="if_exists">
 		<nodeC _delta="define"/>
 	</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>
 		<nodeC/>
 	</nodeB>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="define_if_not_exists on missing node"'] = [
 			'sInitialXML' => <<<XML
 <nodeA/>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="define_if_not_exists">The incredible Hulk</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>The incredible Hulk</nodeB>
 </nodeA>
-XML,
+XML
 		];
 		$aDeltas['_delta="define_if_not_exists on existing node"'] = [
 			'sInitialXML' => <<<XML
 <nodeA>
 	<nodeB>Luke Banner</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sDeltaXML' => <<<XML
 <nodeA>
 	<nodeB _delta="define_if_not_exists">The incredible Hulk</nodeB>
 </nodeA>
-XML,
+XML
+			,
 			'sExpectedXML' => <<<XML
 <nodeA>
 	<nodeB>Luke Banner</nodeB>
 </nodeA>
-XML,
+XML
 		];
 
 		return $aDeltas;
@@ -1045,7 +1108,8 @@ XML
 	<stairway_to_heaven/>
 	<robot id="r2d2"/>
 </root_node>
-XML,
+XML
+				,
 				// Weird, but seems ok as of now
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1058,7 +1122,8 @@ XML
 <root_node>
 	<james_bond _alteration="added"/>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1072,7 +1137,8 @@ XML
 <root_node>
 	<james_bond _alteration="added">Roger Moore</james_bond>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1088,7 +1154,8 @@ XML
 		<last_name>Roger</last_name>
 	</james_bond>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1104,7 +1171,8 @@ XML
 <root_node>
 	<james_bond _alteration="forced"/>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1117,7 +1185,8 @@ XML
 <root_node>
 	<james_bond _alteration="forced">Roger Moore</james_bond>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1133,7 +1202,8 @@ XML
 		<last_name>Roger</last_name>
 	</james_bond>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1149,7 +1219,8 @@ XML
 <root_node>
 	<james_bond _alteration="needed"/>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1162,7 +1233,8 @@ XML
 <root_node>
 	<james_bond _alteration="needed">Roger Moore</james_bond>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1178,7 +1250,8 @@ XML
 		<last_name>Roger</last_name>
 	</james_bond>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1194,7 +1267,8 @@ XML
 <root_node>
 	<james_bond _alteration="replaced">Sean Connery</james_bond>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1210,7 +1284,8 @@ XML
 		<last_name>Connery</last_name>
 	</james_bond>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1226,7 +1301,8 @@ XML
 <root_node>
 	<james_bond _alteration="removed"/>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1239,7 +1315,8 @@ XML
 <root_node>
 	<james_bond id="Sean" _old_id="Roger"/>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
@@ -1254,7 +1331,8 @@ XML
 		<subtree _alteration="added">etc.</subtree>
 	</james_bond>
 </root_node>
-XML,
+XML
+				,
 				'sExpectedXMLDelta' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <root_node>
