@@ -1717,6 +1717,6 @@ abstract class DBSearch
 	 */
 	public function __toString()
 	{
-		return $this->ToOQL();
+		return $this->ToOQL(true);
 	}
 }
