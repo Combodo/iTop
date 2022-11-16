@@ -710,7 +710,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\UI\\Links\\Direct\\BlockDirectLinksEdit' => __DIR__ . '/../..' . '/sources/Application/UI/Links/Direct/BlockDirectLinksEdit.php',
         'Combodo\\iTop\\Application\\UI\\Links\\Direct\\BlockDirectLinksTable' => __DIR__ . '/../..' . '/sources/Application/UI/Links/Direct/BlockDirectLinksTable.php',
         'Combodo\\iTop\\Application\\UI\\Links\\Indirect\\BlockIndirectLinksEdit' => __DIR__ . '/../..' . '/sources/Application/UI/Links/Indirect/BlockIndirectLinksEdit.php',
-        'Combodo\\iTop\\Application\\UI\\Links\\Indirect\\BlockIndirectLinksEdit\\DataTableSelectionPanel' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/DataTable/DataTableSelectionPanel.php',
         'Combodo\\iTop\\Application\\UI\\Links\\Indirect\\BlockIndirectLinksTable' => __DIR__ . '/../..' . '/sources/Application/UI/Links/Indirect/BlockIndirectLinksTable.php',
         'Combodo\\iTop\\Application\\UI\\Links\\Indirect\\BlockObjectPickerDialog' => __DIR__ . '/../..' . '/sources/Application/UI/Links/Indirect/BlockObjectPickerDialog.php',
         'Combodo\\iTop\\Application\\UI\\Preferences\\BlockShortcuts\\BlockShortcuts' => __DIR__ . '/../..' . '/sources/Application/UI/Preferences/BlockShortcuts/BlockShortcuts.php',

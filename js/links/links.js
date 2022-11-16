@@ -11,7 +11,7 @@ let LinkSetWorker = new function(){
 	 * @param sLinkedObjectKey
 	 * @constructor
 	 */
-	let CallAjaxDeleteLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey){
+	const CallAjaxDeleteLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey){
 		$.post(`${AJAX_RENDER_BASE_URL}?route=${ROUTE_LINK_SET_DELETE_OBJECT}`, {
 			linked_object_class: sLinkedObjectClass,
 			linked_object_key: sLinkedObjectKey,
@@ -34,7 +34,7 @@ let LinkSetWorker = new function(){
 	 * @param sExternalKeyAttCode
 	 * @constructor
 	 */
-	let CallAjaxDetachLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, sExternalKeyAttCode){
+	const CallAjaxDetachLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, sExternalKeyAttCode){
 		$.post(`${AJAX_RENDER_BASE_URL}?route=${ROUTE_LINK_SET_DETACH_OBJECT}`, {
 			linked_object_class: sLinkedObjectClass,
 			linked_object_key: sLinkedObjectKey,

@@ -345,7 +345,6 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Links\\Direct\\BlockDirectLinksEdit' => $baseDir . '/sources/Application/UI/Links/Direct/BlockDirectLinksEdit.php',
     'Combodo\\iTop\\Application\\UI\\Links\\Direct\\BlockDirectLinksTable' => $baseDir . '/sources/Application/UI/Links/Direct/BlockDirectLinksTable.php',
     'Combodo\\iTop\\Application\\UI\\Links\\Indirect\\BlockIndirectLinksEdit' => $baseDir . '/sources/Application/UI/Links/Indirect/BlockIndirectLinksEdit.php',
-    'Combodo\\iTop\\Application\\UI\\Links\\Indirect\\BlockIndirectLinksEdit\\DataTableSelectionPanel' => $baseDir . '/sources/Application/UI/Base/Component/DataTable/DataTableSelectionPanel.php',
     'Combodo\\iTop\\Application\\UI\\Links\\Indirect\\BlockIndirectLinksTable' => $baseDir . '/sources/Application/UI/Links/Indirect/BlockIndirectLinksTable.php',
     'Combodo\\iTop\\Application\\UI\\Links\\Indirect\\BlockObjectPickerDialog' => $baseDir . '/sources/Application/UI/Links/Indirect/BlockObjectPickerDialog.php',
     'Combodo\\iTop\\Application\\UI\\Preferences\\BlockShortcuts\\BlockShortcuts' => $baseDir . '/sources/Application/UI/Preferences/BlockShortcuts/BlockShortcuts.php',
