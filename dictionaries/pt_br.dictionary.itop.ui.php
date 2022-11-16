@@ -65,7 +65,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Query/Attribute:name' => 'Nome',
 	'Class:Query/Attribute:name+' => 'Identificação da consulta',
 	'Class:Query/Attribute:description' => 'Descrição',
-	'Class:Query/Attribute:description+' => 'Descrição longa para a consulta (finalidade, uso, etc.)',
+	'Class:Query/Attribute:description+' => 'Descrição longa para a consulta (finalidade, uso etc.)',
 	'Class:Query/Attribute:is_template' => 'Template para campos OQL',
 	'Class:Query/Attribute:is_template+' => 'Utilizável como origem para o Destinatário OQL em Notificações',
 	'Class:Query/Attribute:is_template/Value:yes' => 'Sim',
