@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Application\UI\Links\Indirect\BlockDirectLinksEdit;
+namespace Combodo\iTop\Application\UI\Links\Direct;
 
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
@@ -84,7 +84,7 @@ class BlockDirectLinksEditInPlace extends Panel
 			'selection_title' => Dict::Format('UI:SelectionOf_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
 		);
 		$oContext = new \ApplicationContext();
-		$this->sSubmitUrl = \utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?'.$oContext->GetForLink();
+		$this->sSubmitUrl = \utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php'.$oContext->GetForLink();
 
 		// Don't automatically launch the search if the table is huge
 		$bDoSearch = !\utils::IsHighCardinality($this->oUILinksDirectWidget->GetLinkedClass());

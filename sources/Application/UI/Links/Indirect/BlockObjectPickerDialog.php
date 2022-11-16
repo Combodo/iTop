@@ -4,8 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog;
-
+namespace Combodo\iTop\Application\UI\Links\Indirect;
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;

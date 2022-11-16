@@ -39,7 +39,8 @@ use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
-use Combodo\iTop\Application\UI\Links\BlockLinksTable;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksTable;
+use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksTable;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
@@ -731,7 +732,11 @@ HTML
 				$this->AddToFieldsMap($sAttCode, $sInputId);
 				$oPage->add($sHTMLValue);
 			} else {
-				$oBlockLinkTable = new BlockLinksTable($oPage, $oAttDef, $sAttCode, $sClass, $this);
+				if ($oAttDef->IsIndirect()) {
+					$oBlockLinkTable = new BlockIndirectLinksTable($oPage, $oAttDef, $sAttCode, $sClass, $this);
+				} else {
+					$oBlockLinkTable = new BlockDirectLinksTable($oPage, $oAttDef, $sAttCode, $sClass, $this);
+				}
 				$oPage->AddUiBlock($oBlockLinkTable);
 			}
 			if (array_key_exists($sAttCode, $aRedundancySettings)) {
