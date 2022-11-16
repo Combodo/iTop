@@ -209,7 +209,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document/Attribute:status/Value:obsolete+' => '',
 	'Class:Document/Attribute:status/Value:published' => 'Publicado',
 	'Class:Document/Attribute:status/Value:published+' => '',
-	'Class:Document/Attribute:cis_list' => 'CIs',
+	'Class:Document/Attribute:cis_list' => 'ICs',
 	'Class:Document/Attribute:cis_list+' => 'Todos os itens de configuração associados a este documento',
 	'Class:Document/Attribute:finalclass' => 'Tipo de documento',
 	'Class:Document/Attribute:finalclass+' => '',
