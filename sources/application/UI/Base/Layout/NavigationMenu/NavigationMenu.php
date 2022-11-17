@@ -35,6 +35,7 @@ use MetaModel;
 use UIExtKeyWidget;
 use UserRights;
 use utils;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\NewsroomMenu\NewsroomMenuFactory;
 
 /**
  * Class NavigationMenu
@@ -269,7 +270,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	 */
 	public function IsNewsroomEnabled(): bool
 	{
-		return MetaModel::GetConfig()->Get('newsroom_enabled');
+		return (MetaModel::GetConfig()->Get('newsroom_enabled') && NewsroomMenuFactory::HasProviders());
 	}
 
 	/**
