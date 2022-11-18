@@ -9,6 +9,9 @@ namespace Combodo\iTop\Service\Cron;
 use LogAPI;
 use Page;
 
+/**
+ * @since 3.1.0
+ */
 class CronLog extends LogAPI
 {
 	public static $iProcessNumber = 0;
