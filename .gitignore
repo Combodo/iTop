@@ -146,6 +146,3 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
-
-# macOS specific
-.DS_Store
