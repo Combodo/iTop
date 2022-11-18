@@ -204,10 +204,8 @@ function CronExec($bDebug)
 		$oTasks = new DBObjectSet($oSearch, ['next_run_date' => true]);
 
 		$aTasks = [];
-		if ($oTasks->CountExceeds(0))
-		{
-			$sCount = $oTasks->Count();
-			CronLog::Debug("$sCount Tasks planned to run now ($sNow):");
+		if ($oTasks->CountExceeds(0)) {
+			$aDebugMessages = [];
 			while ($oTask = $oTasks->Fetch())
 			{
 				$sTaskName = $oTask->Get('class_name');
@@ -220,7 +218,12 @@ function CronExec($bDebug)
 				$sStatus = $oTask->Get('status');
 				$sLastRunDate = $oTask->Get('latest_run_date');
 				$sNextRunDate = $oTask->Get('next_run_date');
-				CronLog::Debug(sprintf('Task Class: %1$-25.25s Status: %2$-7s Last Run: %3$-19s Next Run: %4$-19s', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate));
+				$aDebugMessages[] = sprintf('Task Class: %1$-25.25s Status: %2$-7s Last Run: %3$-19s Next Run: %4$-19s', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate);
+			}
+			$sCount = count($aDebugMessages);
+			CronLog::Debug("$sCount Tasks planned to run now ($sNow):");
+			foreach ($aDebugMessages as $sDebugMessage) {
+				CronLog::Debug($sDebugMessage);
 			}
 			$aRunTasks = [];
 			while ($aTasks != []) {
@@ -264,7 +267,7 @@ function CronExec($bDebug)
 				}
 				$oEnd = new DateTime();
 				$sNextRunDate = $oTask->Get('next_run_date');
-				CronLog::Debug("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:  %-'=42s", ' '.$sTaskClass.' ')." Next: $sNextRunDate");
+				CronLog::Debug("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:    %-'=49s", ' '.$sTaskClass.' ')." Next: $sNextRunDate");
 				if (time() > $iTimeLimit)
 				{
 					break 2;
@@ -293,6 +296,7 @@ function CronExec($bDebug)
 			}
 		}
 		if (count($aTasks) == 0) {
+			CronLog::Debug("sleeping...");
 			sleep($iCronSleep);
 		}
 	}
@@ -474,6 +478,11 @@ try
 {
 	utils::UseParamFile();
 
+	// Allow verbosity on output (writing debug messages to the cron.log file is configured with log_level_min config parameter)
+	$bVerbose = utils::ReadParam('verbose', false, true /* Allow CLI */);
+	CronLog::SetDebug($oP, $bVerbose);
+
+	// Used to launch the BackgroundTask in debug mode
 	$bDebug = utils::ReadParam('debug', false, true /* Allow CLI */);
 
 	if ($bIsModeCLI)
@@ -550,7 +559,8 @@ try
 			CronLog::Info('Starting: '.time().' ('.date('Y-m-d H:i:s').')');
 			CronExec($bDebug);
 		} else {
-			CronLog::Debug("Already $iMaxCronProcess are running...");
+			CronLog::$iProcessNumber = $iMaxCronProcess + 1;
+			CronLog::Debug("The limit of $iMaxCronProcess cron process running in parallel is already reached");
 		}
 	}
 }

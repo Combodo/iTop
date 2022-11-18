@@ -274,10 +274,12 @@ class MFCompiler
 
 		try
 		{
+			SetupLog::Info("Compiling $sTempTargetDir...");
 			$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
 		}
 		catch (Exception $e)
 		{
+			SetupLog::Info("Compiling error: ".$e->getMessage());
 			if ($sTempTargetDir != $sFinalTargetDir)
 			{
 				// Cleanup the temporary directory

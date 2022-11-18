@@ -2045,8 +2045,10 @@ JS
 	 */
 	private static function WaitCronTermination($oConfig, $sMode)
 	{
-		try
-		{
+		$iMaxDuration = $oConfig->Get('cron_max_execution_time');
+		// Avoid PHP stopping while waiting the cron
+		set_time_limit($iMaxDuration);
+		try {
 			// Wait for cron to stop
 			if (is_null($oConfig) || ContextTag::Check(ContextTag::TAG_CRON)) {
 				return;
@@ -2054,7 +2056,6 @@ JS
 			// Limit the number of cron process to run in parallel
 			$iMaxCronProcess = $oConfig->Get('cron.max_processes');
 			$iCount = 1;
-			$iMaxDuration = $oConfig->Get('cron_max_execution_time');
 			$iTimeLimit = time() + $iMaxDuration;
 			do {
 				$bIsRunning = false;
@@ -2062,26 +2063,26 @@ JS
 				for ($i = 0; $i < $iMaxCronProcess; $i++) {
 					$sName = "cron#$i";
 
-			$oMutex = new iTopMutex(
+					$oMutex = new iTopMutex(
 						$sName.$oConfig->Get('db_name').$oConfig->Get('db_subname'),
-				$oConfig->Get('db_host'),
-				$oConfig->Get('db_user'),
-				$oConfig->Get('db_pwd'),
-				$oConfig->Get('db_tls.enabled'),
-				$oConfig->Get('db_tls.ca')
-			);
+						$oConfig->Get('db_host'),
+						$oConfig->Get('db_user'),
+						$oConfig->Get('db_pwd'),
+						$oConfig->Get('db_tls.enabled'),
+						$oConfig->Get('db_tls.ca')
+					);
 					if ($oMutex->IsLocked()) {
 						$bIsRunning = true;
-				SetupLog::Info("Waiting for cron to stop ($iCount)");
-				$iCount++;
-				sleep(1);
-				if (time() > $iTimeLimit)
-				{
-					throw new Exception("Cannot enter $sMode mode, consider stopping the cron temporarily");
-				}
+						SetupLog::Info("Waiting for cron to stop ($iCount)");
+						$iCount++;
+						sleep(1);
+						if (time() > $iTimeLimit) {
+							SetupLog::Error("Cannot enter $sMode mode, consider stopping the cron temporarily");
+							throw new Exception("Cannot enter $sMode mode, consider stopping the cron temporarily");
+						}
 						break;
 					}
-			}
+				}
 			} while ($bIsRunning);
 		}
 		catch (Exception $e) {
