@@ -174,6 +174,7 @@ class DatamodelsXmlFiles extends AbstractGlobFileVersionUpdater
 	 */
 	public function UpdateFileContent($sVersionLabel, $sFileContent, $sFileFullPath)
 	{
+		//TODO should also CONVERT files !
 		return preg_replace(
 			'/(<itop_design .* version=")[^"]+(">)/',
 			'${1}'.$sVersionLabel.'${2}',

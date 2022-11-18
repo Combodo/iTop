@@ -173,9 +173,11 @@
         <field id="faq_list" xsi:type="AttributeLinkedSet">
           <linked_class>FAQ</linked_class>
           <ext_key_to_me>category_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <legacy_edit_mode>add_only</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -305,15 +307,15 @@
           <twig>
             <div class="row">
               <div class="col-sm-4">
-                <div class="form_field" data-field-id="category_name"></div>
-                <div class="form_field" data-field-id="title"></div>
-                <div class="form_field" data-field-id="error_code"></div>
-                <div class="form_field" data-field-id="key_words"></div>
-                <div class="form_field" data-field-id="domains"></div>
-                <div class="form_field" data-field-id="summary"></div>
+                <div class="form_field" data-field-id="category_name"/>
+                <div class="form_field" data-field-id="title"/>
+                <div class="form_field" data-field-id="error_code"/>
+                <div class="form_field" data-field-id="key_words"/>
+                <div class="form_field" data-field-id="domains"/>
+                <div class="form_field" data-field-id="summary"/>
               </div>
               <div class="col-sm-8">
-                <div class="form_field" data-field-id="description"></div>
+                <div class="form_field" data-field-id="description"/>
               </div>
             </div>
           </twig>

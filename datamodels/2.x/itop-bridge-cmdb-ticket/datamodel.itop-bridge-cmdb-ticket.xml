@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
-  <constants></constants>
+  <constants/>
   <classes>
     <class id="lnkFunctionalCIToTicket" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -292,6 +292,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>providercontract_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
         <field id="services_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
           <linked_class>lnkFunctionalCIToService</linked_class>
@@ -300,6 +301,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>service_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
         <field id="tickets_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
           <linked_class>lnkFunctionalCIToTicket</linked_class>
@@ -308,6 +310,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>ticket_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>

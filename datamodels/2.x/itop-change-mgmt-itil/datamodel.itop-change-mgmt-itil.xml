@@ -44,19 +44,11 @@
           <values>
             <value id="approved">approved
               <code>approved</code>
-              <style>
-                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
-                <decoration_classes>fas fa-user-check</decoration_classes>
-              </style>
+              <style><main_color>$ibo-lifecycle-success-state-primary-color</main_color><complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color><decoration_classes>fas fa-user-check</decoration_classes></style>
             </value>
             <value id="assigned">assigned
               <code>assigned</code>
-              <style>
-                <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
-                <decoration_classes/>
-              </style>
+              <style><main_color>$ibo-lifecycle-neutral-state-primary-color</main_color><complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color><decoration_classes/></style>
             </value>
             <value id="closed">
               <code>closed</code>
@@ -247,31 +239,39 @@
         <field id="related_request_list" xsi:type="AttributeLinkedSet">
           <linked_class>UserRequest</linked_class>
           <ext_key_to_me>parent_change_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
+          <legacy_edit_mode>add_remove</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="related_incident_list" xsi:type="AttributeLinkedSet">
           <linked_class>Incident</linked_class>
           <ext_key_to_me>parent_change_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
+          <legacy_edit_mode>add_remove</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="related_problems_list" xsi:type="AttributeLinkedSet">
           <linked_class>Problem</linked_class>
           <ext_key_to_me>related_change_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
+          <legacy_edit_mode>add_remove</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="child_changes_list" xsi:type="AttributeLinkedSet">
           <linked_class>Change</linked_class>
           <ext_key_to_me>parent_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
+          <legacy_edit_mode>add_remove</legacy_edit_mode>
           <filter><![CDATA[SELECT Change WHERE id != :this->id]]></filter>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <lifecycle>
@@ -279,17 +279,17 @@
           <item id="approved">
             <rank>1</rank>
             <color>HIGHLIGHT_CLASS_NONE</color>
-              <icon>images/change-approved.svg</icon>
+            <icon>images/change-approved.svg</icon>
           </item>
           <item id="rejected">
             <rank>2</rank>
             <color>HIGHLIGHT_CLASS_NONE</color>
-              <icon>images/change-rejected.svg</icon>
+            <icon>images/change-rejected.svg</icon>
           </item>
           <item id="closed">
             <rank>3</rank>
             <color>HIGHLIGHT_CLASS_NONE</color>
-              <icon>images/change-closed.svg</icon>
+            <icon>images/change-closed.svg</icon>
           </item>
         </highlight_scale>
         <stimuli>
@@ -976,17 +976,17 @@
         </states>
       </lifecycle>
       <methods>
-				<method id="GetTicketRefFormat">
-					<static>true</static>
-					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[
+        <method id="GetTicketRefFormat">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
         public static function GetTicketRefFormat()
         {
                 return 'C-%06d';
         }
         ]]></code>
-				</method>
+        </method>
         <method id="SetClosureDate">
           <comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
@@ -1026,8 +1026,7 @@
         $this->UpdateImpactedItems();
 		$this->SetIfNull('creation_date', time());
 		$this->SetIfNull('last_update', time());
-	}]]>
-          </code>
+	}]]></code>
         </method>
         <method id="OnUpdate">
           <static>false</static>
@@ -1043,8 +1042,7 @@
             $this->UpdateImpactedItems();
         }
   	    $this->Set('last_update', time());
-  	}]]>
-          </code>
+  	}]]></code>
         </method>
       </methods>
       <presentation>
@@ -4534,9 +4532,9 @@
   <menus>
     <menu id="ChangeManagement" xsi:type="MenuGroup" _delta="define">
       <rank>50</rank>
-	    <style>
-		    <decoration_classes>fas fa-exchange-alt</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-exchange-alt</decoration_classes>
+      </style>
     </menu>
     <menu id="Change:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>
@@ -4659,7 +4657,7 @@
                       AND (C.id != :this->id)
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                    <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4674,7 +4672,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                    <icon>itop-change-mgmt-itil/images/change-done.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-done.png</icon>
                 </item>
               </items>
             </down>
@@ -4696,7 +4694,7 @@
                       AND (C.id != :this->id)
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                    <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4711,7 +4709,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                    <icon>itop-change-mgmt-itil/images/change-done.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-done.png</icon>
                 </item>
               </items>
             </down>
@@ -4733,7 +4731,7 @@
                       AND (C.id != :this->id)
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                    <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4748,7 +4746,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                    <icon>itop-change-mgmt-itil/images/change-done.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-done.png</icon>
                 </item>
               </items>
             </down>
@@ -4773,7 +4771,7 @@
                       AND (L.impact_code != 'not_impacted')
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                    <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4787,7 +4785,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                    <icon>itop-change-mgmt-itil/images/change-done.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-done.png</icon>
                 </item>
               </items>
             </down>
@@ -4804,7 +4802,7 @@
                       AND (L.impact_code != 'not_impacted')
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                    <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4818,7 +4816,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                    <icon>itop-change-mgmt-itil/images/change-done.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-done.png</icon>
                 </item>
               </items>
             </up>

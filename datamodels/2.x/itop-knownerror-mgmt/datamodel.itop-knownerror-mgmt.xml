@@ -121,6 +121,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
         <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkDocumentToError</linked_class>
@@ -129,6 +130,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -414,9 +416,9 @@
   <menus>
     <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>42</rank>
-	    <style>
-		    <decoration_classes>fas fa-question</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-question</decoration_classes>
+      </style>
     </menu>
     <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
       <rank>5</rank>

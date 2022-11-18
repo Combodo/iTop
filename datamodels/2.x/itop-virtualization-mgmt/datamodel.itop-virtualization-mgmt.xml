@@ -16,7 +16,7 @@
           </attributes>
         </naming>
         <fields_semantic>
-            <state_attribute>status</state_attribute>
+          <state_attribute>status</state_attribute>
         </fields_semantic>
         <style>
           <icon/>
@@ -61,6 +61,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>volume_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -169,9 +170,11 @@
         <field id="virtualmachine_list" xsi:type="AttributeLinkedSet">
           <linked_class>VirtualMachine</linked_class>
           <ext_key_to_me>virtualhost_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <legacy_edit_mode>add_only</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -437,9 +440,11 @@
         <field id="hypervisor_list" xsi:type="AttributeLinkedSet">
           <linked_class>Hypervisor</linked_class>
           <ext_key_to_me>farm_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <legacy_edit_mode>add_only</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="redundancy" xsi:type="AttributeRedundancySettings">
           <sql>redundancy</sql>
@@ -626,10 +631,12 @@
         <field id="logicalinterface_list" xsi:type="AttributeLinkedSet">
           <linked_class>LogicalInterface</linked_class>
           <ext_key_to_me>virtualmachine_id</ext_key_to_me>
-          <edit_mode>in_place</edit_mode>
+          <legacy_edit_mode>in_place</legacy_edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>property</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="managementip" xsi:type="AttributeIPAddress">
           <sql>managementip</sql>
@@ -905,7 +912,7 @@
               <dashlet id="38" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:virtualization</title>
-                  <icon>../images/icons/icons8-old-vmware-logo.svg</icon>
+                <icon>../images/icons/icons8-old-vmware-logo.svg</icon>
               </dashlet>
               <dashlet id="39" xsi:type="DashletBadge">
                 <rank>1</rank>

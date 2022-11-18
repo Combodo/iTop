@@ -7,6 +7,8 @@
  *
  * datamodels/2.x/.../datamodel.*.xml
  *
+ * Warning : this will NOT update the XML structure (iTopDesignFormat convert methods)
+ *
  * Usage :
  * `php .make\release\update-xml.php "1.7"`
  *
