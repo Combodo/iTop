@@ -7,12 +7,11 @@
  *
  * datamodels/2.x/.../datamodel.*.xml
  *
- * Warning : this will NOT update the XML structure (iTopDesignFormat convert methods)
- *
  * Usage :
  * `php .make\release\update-xml.php "1.7"`
  *
- * @since 2.7.0
+ * @since 2.7.0 simple version change using regexp (not doing conversion)
+ * @since 3.1.0 N°5405 now does a real conversion
  ******************************************************************************/
 
 

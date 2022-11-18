@@ -174,11 +174,21 @@ class DatamodelsXmlFiles extends AbstractGlobFileVersionUpdater
 	 */
 	public function UpdateFileContent($sVersionLabel, $sFileContent, $sFileFullPath)
 	{
-		//TODO should also CONVERT files !
-		return preg_replace(
-			'/(<itop_design .* version=")[^"]+(">)/',
-			'${1}'.$sVersionLabel.'${2}',
-			$sFileContent
-		);
+		require_once APPROOT.'setup/itopdesignformat.class.inc.php';
+		$oFileXml = new DOMDocument();
+		/** @noinspection PhpComposerExtensionStubsInspection */
+		libxml_clear_errors();
+		$oFileXml->formatOutput = true;
+		$oFileXml->preserveWhiteSpace = false;
+		$oFileXml->loadXML($sFileContent);
+
+		$oFileItopFormat = new iTopDesignFormat($oFileXml);
+		$bConversionResult = $oFileItopFormat->Convert($sVersionLabel);
+
+		if (false === $bConversionResult) {
+			throw new Exception("Error when converting $sFileFullPath");
+		}
+
+		return $oFileItopFormat->GetXmlAsString();
 	}
 }
