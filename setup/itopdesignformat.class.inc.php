@@ -292,7 +292,15 @@ class iTopDesignFormat
 		}
 
 		$this->LogInfo("Converting from $sVersion to $sTargetVersion");
-		$this->DoConvert($sVersion, $sTargetVersion, $oFactory);
+		try {
+			$this->DoConvert($sVersion, $sTargetVersion, $oFactory);
+		}
+		catch (Exception|Error $e) {
+			$this->LogError($e->getMessage());
+
+			return false;
+		}
+
 		if ($this->bStatus) {
 			/** @noinspection PhpUnhandledExceptionInspection already called earlier so should not crash */
 			$oITopDesignNode = $this->GetITopDesignNode();
