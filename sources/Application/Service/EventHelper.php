@@ -70,6 +70,11 @@ class EventHelper
 		IssueLog::Error($sMessage, LogChannels::EVENT_SERVICE);
 	}
 
+	public static function Warning($sMessage)
+	{
+		IssueLog::Warning($sMessage, LogChannels::EVENT_SERVICE);
+	}
+
 	public static function MatchEventSource($srcRegistered, $srcEvent): bool
 	{
 		if (empty($srcRegistered)) {

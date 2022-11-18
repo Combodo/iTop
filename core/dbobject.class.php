@@ -5827,13 +5827,15 @@ abstract class DBObject implements iDisplay
 	 */
 	public function FireEvent($sEvent, $aEventData = array())
 	{
-		$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
-		$aEventData['object'] = $this;
-		$aEventSources = [$this->m_sObjectUniqId];
-		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass) {
-			$aEventSources[] = $sClass;
+		if (EventService::IsEventRegistered($sEvent)) {
+			$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
+			$aEventData['object'] = $this;
+			$aEventSources = [$this->m_sObjectUniqId];
+			foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass) {
+				$aEventSources[] = $sClass;
+			}
+			EventService::FireEvent(new EventData($sEvent, $aEventSources, $aEventData));
 		}
-		EventService::FireEvent(new EventData($sEvent, $aEventSources, $aEventData));
 	}
 
 	protected function EventInsertRequested()

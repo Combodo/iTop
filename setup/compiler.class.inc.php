@@ -1100,8 +1100,8 @@ EOF
 		$sDescription = var_export($aEventDescription, true);
 		$sConstant = $sName;
 
-		$sOutput = "define('$sConstant', '$sName');\n";
-		$sOutput .= "Combodo\iTop\Service\EventService::RegisterEvent('$sName', $sDescription, '$sModuleName');\n";
+		$sOutput = "const $sConstant = '$sName';\n";
+		$sOutput .= "Combodo\iTop\Service\EventService::RegisterEvent($sName, $sDescription, '$sModuleName');\n";
 
 		return $sOutput;
 	}

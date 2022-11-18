@@ -16,9 +16,9 @@ use utils;
 
 class EventService
 {
-	public static $aEventListeners;
-	private static $iEventIdCounter;
-	private static $aEventDescription;
+	public static $aEventListeners = [];
+	private static $iEventIdCounter = 0;
+	private static $aEventDescription = [];
 
 	public static function InitService()
 	{
@@ -103,7 +103,7 @@ class EventService
 	public static function FireEvent(EventData $oEventData)
 	{
 		$sEvent = $oEventData->GetEvent();
-		if (!array_key_exists($sEvent, self::$aEventDescription)) {
+		if (!self::IsEventRegistered($sEvent)) {
 			$sError = "Fire event error: Event $sEvent is not registered";
 			EventHelper::Error($sError);
 			throw new CoreException($sError);
@@ -267,9 +267,10 @@ class EventService
 	 */
 	public static function RegisterEvent(string $sEvent, array $aDescription, string $sModule)
 	{
-		if (isset(self::$aEventDescription[$sEvent])) {
+		if (self::IsEventRegistered($sEvent)) {
 			$sPrevious = self::$aEventDescription[$sEvent]['module'];
-			EventHelper::Error("The Event $sEvent defined by $sModule has already been defined in $sPrevious, check your delta");
+			EventHelper::Warning("The Event $sEvent defined by $sModule has already been defined in $sPrevious, check your delta");
+			return;
 		}
 
 		self::$aEventDescription[$sEvent] = [
@@ -307,6 +308,16 @@ class EventService
 				lcfirst($sMatch);
 		}
 		return implode('_', $aRet);
+	}
+
+	/**
+	 * @param string $sEvent
+	 *
+	 * @return bool
+	 */
+	public static function IsEventRegistered(string $sEvent): bool
+	{
+		return array_key_exists($sEvent, self::$aEventDescription);
 	}
 
 	public static function GetDefinedEventsAsJSON()
