@@ -19,28 +19,28 @@
  *
  * PHP Version 7
  *
- * @file     CAS/Language/French.php
+ * @file     CAS/Language/Portuguese.php
  * @category Authentication
  * @package  PhpCAS
- * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
+ * @author   Sherwin Harris <sherwin.harris@gmail.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- * @link     https://wiki.jasig.org/display/CASC/phpCAS
+ * @link     https://apereo.atlassian.net/wiki/spaces/CASC/pages/103252517/phpCAS
  */
 
 /**
- * French language class
+ * Portuguese language class
  *
- * @class    CAS_Languages_French
+ * @class    CAS_Languages_Portuguese
  * @category Authentication
  * @package  PhpCAS
- * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
+ * @author   Sherwin Harris <sherwin.harris@gmail.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- * @link     https://wiki.jasig.org/display/CASC/phpCAS
+ * @link     https://apereo.atlassian.net/wiki/spaces/CASC/pages/103252517/phpCAS
  *
  * @sa @link internalLang Internationalization @endlink
  * @ingroup internalLang
  */
-class CAS_Languages_French implements CAS_Languages_LanguageInterface
+class CAS_Languages_Portuguese implements CAS_Languages_LanguageInterface
 {
     /**
      * Get the using server string
@@ -49,7 +49,7 @@ class CAS_Languages_French implements CAS_Languages_LanguageInterface
      */
     public function getUsingServer()
     {
-        return 'utilisant le serveur';
+        return 'Usando o servidor';
     }
 
     /**
@@ -59,7 +59,7 @@ class CAS_Languages_French implements CAS_Languages_LanguageInterface
      */
     public function getAuthenticationWanted()
     {
-        return 'Authentication CAS nécessaire&nbsp;!';
+        return 'A autenticação do servidor CAS desejado!';
     }
 
     /**
@@ -69,48 +69,46 @@ class CAS_Languages_French implements CAS_Languages_LanguageInterface
      */
     public function getLogout()
     {
-        return 'Déconnexion demandée&nbsp;!';
+        return 'Saida do servidor CAS desejado!';
     }
 
     /**
      * Get the should have been redirected string
      *
-     * @return string should habe been redirected
+     * @return string should have been redirected
      */
     public function getShouldHaveBeenRedirected()
     {
-        return 'Vous auriez du etre redirigé(e) vers le serveur CAS. Cliquez <a href="%s">ici</a> pour continuer.';
+        return 'Você já deve ter sido redirecionado para o servidor CAS. Clique <a href="%s">aqui</a> para continuar';
     }
 
     /**
-     * Get authentication failed string
-     *
-     * @return string authentication failed
-     */
+    * Get authentication failed string
+    *
+    * @return string authentication failed
+    */
     public function getAuthenticationFailed()
     {
-        return 'Authentification CAS infructueuse&nbsp;!';
+        return 'A autenticação do servidor CAS falheu!';
     }
 
     /**
-     * Get the your were not authenticated string
-     *
-     * @return string not authenticated
-     */
+    * Get the your were not authenticated string
+    *
+    * @return string not authenticated
+    */
     public function getYouWereNotAuthenticated()
     {
-        return '<p>Vous n\'avez pas été authentifié(e).</p><p>Vous pouvez soumettre votre requete à nouveau en cliquant <a href="%s">ici</a>.</p><p>Si le problème persiste, vous pouvez contacter <a href="mailto:%s">l\'administrateur de ce site</a>.</p>';
+        return '<p>Você não foi autenticado.</p><p>Você pode enviar sua solicitação novamente clicando <a href="%s">aqui</a>. </p><p>Se o problema persistir, você pode entrar em contato com <a href="mailto:%s">o administrador deste site</a>.</p>';
     }
 
     /**
-     * Get the service unavailable string
-     *
-     * @return string service unavailable
-     */
+    * Get the service unavailable string
+    *
+    * @return string service unavailable
+    */
     public function getServiceUnavailable()
     {
-        return 'Le service `<b>%s</b>\' est indisponible (<b>%s</b>)';
+        return 'O serviço `<b>%s</b>\' não está disponível (<b>%s</b>).';
     }
 }
-
-?>
