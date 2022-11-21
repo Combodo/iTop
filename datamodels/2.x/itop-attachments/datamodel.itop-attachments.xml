@@ -109,7 +109,7 @@
           <code><![CDATA[
     public function DBInsertNoReload()
     {
-        $this->SetIfNull('creation_date', time());
+        $this->SetCurrentDateIfNull('creation_date');
         return parent::DBInsertNoReload();
     }
         ]]></code>
