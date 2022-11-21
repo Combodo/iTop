@@ -333,14 +333,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'allow_menu_organization_filter' => [
-			'type' => 'bool',
-			'description' => 'Display organization filter in menu',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
 		'allow_target_creation' => [
 			'type' => 'bool',
 			'description' => 'Displays the + button on external keys to create target objects',
@@ -1241,6 +1233,14 @@ class Config
 		'navigation_menu.show_menus_count' => [
 			'type' => 'bool',
 			'description' => 'Display count badges for OQL menu entries',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'navigation_menu.show_organization_filter' => [
+			'type' => 'bool',
+			'description' => 'Display organization filter in menu',
 			'default' => true,
 			'value' => true,
 			'source_of_value' => '',
