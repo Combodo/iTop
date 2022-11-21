@@ -31,4 +31,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Datatables:Language:Sort:Descending'      => 'enable for a descending sort',
 	'UI:Datatables:Column:RowActions:Label'       => '',
 	'UI:Datatables:Column:RowActions:Description' => '',
+	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation',
 ));

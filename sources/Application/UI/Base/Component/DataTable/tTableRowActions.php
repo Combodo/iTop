@@ -6,6 +6,8 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+
 /**
  * Trait tTableRowActions
  *
@@ -17,6 +19,9 @@ namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
  */
 trait tTableRowActions
 {
+	/** @var bool static dialog initialized flag to avoid multiple html markups */
+	static public bool $bDialogInitialized = false;
+
 	/**
 	 * @var $aRowActions array array of row actions
 	 * action => {
@@ -69,5 +74,34 @@ trait tTableRowActions
 	public function GetRowActionsTemplate()
 	{
 		return DataTableUIBlockFactory::MakeActionRowToolbarTemplate($this);
+	}
+
+	/**
+	 * GetRowActionsConfirmDialog.
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Html\Html
+	 */
+	public function GetRowActionsConfirmDialog()
+	{
+		static::$bDialogInitialized = true;
+
+		$sDoNotShowAgain = \Dict::S('UI:UserPref:DoNotShowAgain');
+
+		return new Html(
+			<<< HTML
+    <div class="ibo-abstract-block-links-view-table--action-confirmation" data-role="ibo-datatable--row-action--confirmation-dialog" title="" style="display: none">
+        <div class="ibo-abstract-block-links-view-table--action-confirmation-explanation"></div>
+        <label class="ibo-abstract-block-links-view-table--action-confirmation-preference">
+            <input type="checkbox" class="ibo-abstract-block-links-view-table--action-confirmation-preference-input" data-role="ibo-abstract-block-links-view-table--action-confirmation-preference-input">
+            <span class="ibo-abstract-block-links-view-table--action-confirmation-preference-text">{$sDoNotShowAgain}</span>
+        </label>
+    </div>
+HTML
+		);
+	}
+
+	public function GetRowActionsConfirmDialogInitializedFlag()
+	{
+		return static::$bDialogInitialized;
 	}
 }

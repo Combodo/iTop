@@ -1,25 +1,25 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Links\Indirect;
 
-use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
-use Combodo\iTop\Application\UI\Links\AbstractBlockLinksTable;
+use Combodo\iTop\Application\UI\Links\AbstractBlockLinksViewTable;
 use MetaModel;
 use PHPUnit\Exception;
 
 /**
- * Class BlockIndirectLinksTable
+ * Class BlockIndirectLinksViewTable
  *
  * @internal
  * @since 3.1.0
  * @package Combodo\iTop\Application\UI\Links\Indirect
  */
-class BlockIndirectLinksTable extends AbstractBlockLinksTable
+class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 {
+	public const BLOCK_CODE = 'ibo-block-indirect-links-view-table';
 
 	/** @inheritdoc */
 	public function GetTargetClass(): string
@@ -48,8 +48,6 @@ class BlockIndirectLinksTable extends AbstractBlockLinksTable
 			'zlist'         => false,
 			'extra_fields'  => $this->GetAttCodesToDisplay(),
 			'row_actions'   => $this->GetRowActions(),
-			'panel_title'   => $this->sTargetClass,
-			'panel_icon'    => MetaModel::GetClassIcon($this->sTargetClass, false),
 		);
 	}
 
@@ -58,9 +56,14 @@ class BlockIndirectLinksTable extends AbstractBlockLinksTable
 	{
 		return array(
 			[
-				'tooltip'       => 'remove link',
+				'tooltip'       => 'UI:Links:ActionRow:detach',
 				'icon_classes'  => 'fas fa-minus',
-				'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aData['Link/_key_/raw']);",
+				'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw']);",
+				'confirmation'  => [
+					'message'                  => 'UI:Links:ActionRow:detach:confirmation',
+					'message_row_data'         => "Remote/hyperlink",
+					'remember_choice_pref_key' => 'LinkSetWorker.DetachLinkedObject',
+				],
 			],
 		);
 	}
@@ -80,7 +83,7 @@ class BlockIndirectLinksTable extends AbstractBlockLinksTable
 		$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($this->sObjectClass, $this->sAttCode);
 		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($sTargetClass);
 		$aLnkAttCodesToDisplay = array_map(function ($oLnkAttDef) {
-			return ormLinkSet::LINK_ALIAS.'.'.$oLnkAttDef->GetCode();
+			return \ormLinkSet::LINK_ALIAS.'.'.$oLnkAttDef->GetCode();
 		},
 			$aLnkAttDefsToDisplay
 		);

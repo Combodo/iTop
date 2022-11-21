@@ -39,8 +39,8 @@ use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksTable;
-use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksTable;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksViewTable;
+use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksViewTable;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
@@ -719,11 +719,11 @@ HTML
 				$oPage->add($sHTMLValue);
 			} else {
 				if ($oAttDef->IsIndirect()) {
-					$oBlockLinkTable = new BlockIndirectLinksTable($oPage, $oAttDef, $sAttCode, $sClass, $this);
+					$oBlockLinkViewTable = new BlockIndirectLinksViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
 				} else {
-					$oBlockLinkTable = new BlockDirectLinksTable($oPage, $oAttDef, $sAttCode, $sClass, $this);
+					$oBlockLinkViewTable = new BlockDirectLinksViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
 				}
-				$oPage->AddUiBlock($oBlockLinkTable);
+				$oPage->AddUiBlock($oBlockLinkViewTable);
 			}
 			if (array_key_exists($sAttCode, $aRedundancySettings)) {
 				foreach ($aRedundancySettings[$sAttCode] as $oRedundancyAttDef) {

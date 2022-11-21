@@ -1,6 +1,7 @@
 let LinkSetWorker = new function(){
 
-	const AJAX_RENDER_BASE_URL = '../pages/ajax.render.php';
+	// defines
+	const ROUTER_BASE_URL = '../pages/ajax.render.php';
 	const ROUTE_LINK_SET_DELETE_OBJECT = 'linkset.DeleteLinkedObject';
 	const ROUTE_LINK_SET_DETACH_OBJECT = 'linkset.DetachLinkedObject';
 
@@ -12,7 +13,7 @@ let LinkSetWorker = new function(){
 	 * @constructor
 	 */
 	const CallAjaxDeleteLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey){
-		$.post(`${AJAX_RENDER_BASE_URL}?route=${ROUTE_LINK_SET_DELETE_OBJECT}`, {
+		$.post(`${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_DELETE_OBJECT}`, {
 			linked_object_class: sLinkedObjectClass,
 			linked_object_key: sLinkedObjectKey,
 			transaction_id: $('#linkset_transactions_id').val()
@@ -35,7 +36,7 @@ let LinkSetWorker = new function(){
 	 * @constructor
 	 */
 	const CallAjaxDetachLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, sExternalKeyAttCode){
-		$.post(`${AJAX_RENDER_BASE_URL}?route=${ROUTE_LINK_SET_DETACH_OBJECT}`, {
+		$.post(`${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_DETACH_OBJECT}`, {
 			linked_object_class: sLinkedObjectClass,
 			linked_object_key: sLinkedObjectKey,
 			external_key_att_code: sExternalKeyAttCode,

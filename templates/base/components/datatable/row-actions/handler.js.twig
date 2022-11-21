@@ -1,15 +1,34 @@
 {# @copyright   Copyright (C) 2010-2022 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-// for each row action
-{% if oUIBlock.HasRowActions() %}
-    {% for aAction in oUIBlock.GetRowActions() %}
-        $('#{{ oUIBlock.GetId() }} tbody').on('click', 'button[data-action-id="{{ loop.index0 }}"]', function() {
-            let iActionId = $(this).data('action-id');
-            let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
-            let oTrElement = $(this).closest('tr');
-            let aData = oDatatable.row(oTrElement).data();
-            {{ aAction.js_row_action|raw }};
+// for each row action...
+{% for aAction in oUIBlock.GetRowActions() %}
+
+    // register action buttons click
+    $('#{{ oUIBlock.GetId() }} tbody').on('click', 'button[data-action-id="{{ loop.index0 }}"]', function() {
+
+        // variables accessible from action row js
+        let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
+        let oTrElement = $(this).closest('tr');
+        let iActionId = $(this).data('action-id');
+        let aRowData = oDatatable.row(oTrElement).data();
+
+        // Handle action row
+        let sTitle = '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}';
+        let sMessage = '{{ aAction.confirmation.message|dict_s|raw }}';
+        sMessage = sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']);
+        HandleActionRow (sTitle, sMessage, '{{ aAction.confirmation.remember_choice_pref_key }}', ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}, {
+            action_id: iActionId,
+            datatable: oDatatable,
+            tr_element: oTrElement,
+            row_data: aRowData
         });
-    {% endfor %}
-{% endif %}
+    });
+
+    // action row function declaration
+    function ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}(oDatatable, oTrElement, iActionId, aRowData){
+        {{ aAction.js_row_action|raw }};
+        return true;
+    }
+
+{% endfor %}

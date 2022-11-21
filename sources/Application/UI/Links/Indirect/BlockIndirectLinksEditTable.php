@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -12,22 +12,23 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
-use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use MetaModel;
 
 /**
- * Class BlockIndirectLinksEdit
+ * Class BlockIndirectLinksEditTable
  *
- * @package Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit
+ * @internal
+ * @since 3.1.0
+ * @package Combodo\iTop\Application\UI\Links\Indirect
  */
-class BlockIndirectLinksEdit extends UIContentBlock
+class BlockIndirectLinksEditTable extends UIContentBlock
 {
 	// Overloaded constants
-	public const BLOCK_CODE                   = 'ibo-block-indirect-links-edit';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/indirect/block-indirect-links-edit/layout';
+	public const BLOCK_CODE                   = 'ibo-block-indirect-links-edit-table';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/indirect/block-indirect-links-edit-table/layout';
 
 	/** @var \UILinksWidget */
 	public \UILinksWidget $oUILinksWidget;

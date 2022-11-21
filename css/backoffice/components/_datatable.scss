@@ -155,6 +155,7 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+
   .ibo-table--alert-information--label{
     margin-right: 35px;
   }
@@ -179,37 +180,14 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
 }
 
 
+.ibo-abstract-block-links-view-table--action-confirmation{
 
-.ibo-datatable--selection-panel{
-  padding: 8px 5px;
-  display: flex;
-  margin-bottom: 20px;
-  align-items: center;
-  border-radius: 5px;
-  border: 1px $ibo-color-information-950 solid;
-
-  .ibo-block-datatable-selection-panel--add-button{
-    display: unset;
-  }
-  .ibo-block-datatable-selection-panel--remove-button{
-    display: none;
+  .ibo-abstract-block-links-view-table--action-confirmation-explanation{
+    margin-bottom: 16px;
   }
 
-
-}
-
-.ibo-datatable--selection-panel.active{
-  border: 1px $ibo-datatable--row--background-color--is-selected solid;
-  background-color: $ibo-datatable--row--background-color--is-selected;
-
-  .ibo-block-datatable-selection-panel--add-button{
-    display: none;
+  .ibo-abstract-block-links-view-table--action-confirmation-preference-input{
+    margin-right: 0.5rem;
   }
-  .ibo-block-datatable-selection-panel--remove-button{
-    display: unset;
-  }
-}
 
-.ibo-block-datatable-selection-panel--label{
-  margin-right: 15px;
 }

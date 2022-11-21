@@ -1,58 +1,59 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Links;
 
-use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use MetaModel;
 
 /**
- * Class AbstractBlockLinksTable
+ * Class AbstractBlockLinksViewTable
  *
  * @internal
  * @since 3.1.0
  * @package Combodo\iTop\Application\UI\Links
  */
-abstract class AbstractBlockLinksTable extends UIContentBlock
+abstract class AbstractBlockLinksViewTable extends UIContentBlock
 {
 	// Overloaded constants
-	public const BLOCK_CODE                   = 'ibo-block-links-table';
+	public const BLOCK_CODE                   = 'ibo-abstract-block-links-view-table';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/layout';
 	public const DEFAULT_JS_FILES_REL_PATH    = [
 		'js/links/links.js',
 	];
 
-	/** @var \AttributeLinkedSet $oAttDef */
-	protected \AttributeLinkedSet $oAttDef;
+	/** @var \DBObject $oDbObject db object witch link set belongs to */
+	protected \DBObject $oDbObject;
 
-	/** @var string $sTargetClass */
-	protected string $sTargetClass;
-
-	/** @var string $sAttCode */
-	protected string $sAttCode;
-
-	/** @var string $sObjectClass */
+	/** @var string $sObjectClass db object class name */
 	protected string $sObjectClass;
 
-	/** @var \DBObject $oDbObject */
-	protected \DBObject $oDbObject;
+	/** @var string $sAttCode db object link set attribute code */
+	protected string $sAttCode;
+
+	/** @var \AttributeLinkedSet $oAttDef attribute link set */
+	protected \AttributeLinkedSet $oAttDef;
+
+	/** @var string $sTargetClass links target classname */
+	protected string $sTargetClass;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param \WebPage $oPage
-	 * @param \AttributeLinkedSet $oAttDef
-	 * @param string $sAttCode
-	 * @param string $sObjectClass
 	 * @param \DBObject $oDbObject
+	 * @param string $sObjectClass
+	 * @param string $sAttCode
+	 * @param \AttributeLinkedSet $oAttDef
 	 *
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
-	public function __construct(\WebPage $oPage, \AttributeLinkedSet $oAttDef, string $sAttCode, string $sObjectClass, \DBObject $oDbObject)
+	public function __construct(\WebPage $oPage, \DBObject $oDbObject, string $sObjectClass, string $sAttCode, \AttributeLinkedSet $oAttDef)
 	{
 		parent::__construct('', ["ibo-block-links-table"]);
 
@@ -88,8 +89,25 @@ abstract class AbstractBlockLinksTable extends UIContentBlock
 	 */
 	private function InitUI(\WebPage $oPage)
 	{
+		// header
+		$this->InitHeader();;
+
 		// Table
 		$this->InitTable($oPage);
+	}
+
+	/**
+	 * InitHeader.
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	private function InitHeader()
+	{
+		// MedallionIcon
+		$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($this->sTargetClass, false));
+		$oClassIcon->SetDescription($this->oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
+		$this->AddSubBlock($oClassIcon);
 	}
 
 	/**
@@ -105,18 +123,23 @@ abstract class AbstractBlockLinksTable extends UIContentBlock
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 */
-	public function InitTable(\WebPage $oPage)
+	private function InitTable(\WebPage $oPage)
 	{
-		//
+		// retrieve db object set
 		$oOrmLinkSet = $this->oDbObject->Get($this->sAttCode);
 		$oLinkSet = $oOrmLinkSet->ToDBObjectSet(\utils::ShowObsoleteData());
 
+		// add list block
 		$oBlock = new \DisplayBlock($oLinkSet->GetFilter(), 'list', false);
 		$this->AddSubBlock($oBlock->GetRenderContent($oPage, $this->GetExtraParam(), 'rel_'.$this->sAttCode));
 	}
 
 	/**
 	 * GetExtraParam.
+	 *
+	 * Provide parameters for display block as list.
+	 *
+	 * @see \DisplayBlock::RenderList
 	 *
 	 * @return array
 	 * @throws \ArchivedObjectException
@@ -127,12 +150,18 @@ abstract class AbstractBlockLinksTable extends UIContentBlock
 	/**
 	 * Return row actions.
 	 *
+	 * Register row actions for table.
+	 *
+	 * @see \Combodo\iTop\Application\UI\Base\Component\DataTable\tTableRowActions
+	 *
 	 * @return \string[][]
 	 */
 	abstract function GetRowActions(): array;
 
 	/**
 	 * GetTargetClass.
+	 *
+	 * Return link set target class.
 	 *
 	 * @return string
 	 * @throws \Exception

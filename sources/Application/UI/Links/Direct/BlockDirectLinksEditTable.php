@@ -1,34 +1,35 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Links\Direct;
-
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
-use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
 use MetaModel;
 
 /**
- * Class BlockDirectLinksEditInPlace
+ * Class BlockDirectLinksEditTable
  *
- * @package Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksEdit
+ * @internal
+ * @since 3.1.0
+ * @package Combodo\iTop\Application\UI\Links\Direct
  */
-class BlockDirectLinksEdit extends UIContentBlock
+class BlockDirectLinksEditTable extends UIContentBlock
 {
 	// Overloaded constants
-	public const BLOCK_CODE                   = 'ibo-block-direct-links-edit-in-place';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/direct/block-direct-links-edit/layout';
+	public const BLOCK_CODE                   = 'ibo-block-direct-links-edit-table';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/direct/block-direct-links-edit-table/layout';
 
 	/** @var \UILinksWidgetDirect */
 	public \UILinksWidgetDirect $oUILinksDirectWidget;
@@ -160,6 +161,12 @@ class BlockDirectLinksEdit extends UIContentBlock
 			$aTablePanel = PanelUIBlockFactory::MakeNeutral('');
 			$aTablePanel->SetSubTitle(sprintf('Total: %d objects.', count($aRows)));
 			$aTablePanel->AddSubBlock($this->CreateTableInformationAlert());
+			$oToolbar = ToolbarUIBlockFactory::MakeForButton();
+			$oActionButton1 = ButtonUIBlockFactory::MakeNeutral('Attacher');
+			$oToolbar->AddSubBlock($oActionButton1);
+			$oActionButton2 = ButtonUIBlockFactory::MakeNeutral('Créer');
+			$oToolbar->AddSubBlock($oActionButton2);
+			$aTablePanel->AddToolbarBlock($oToolbar);
 			$aTablePanel->AddSubBlock($oDatatable);
 			$this->AddSubBlock($aTablePanel);
 		}
@@ -196,7 +203,7 @@ class BlockDirectLinksEdit extends UIContentBlock
 			foreach ($this->oUILinksDirectWidget->GetZList() as $sLinkedAttCode) {
 				$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 
-				// tentative d'ajout des champs en édition
+				// tentative d'ajout des attributs en édition
 //				$sValue = $oLinkObj->Get($sLinkedAttCode);
 //				$sDisplayValue = $oLinkObj->GetEditValue($sLinkedAttCode);
 //				$oAttDef = MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetLinkedClass(), $sLinkedAttCode);

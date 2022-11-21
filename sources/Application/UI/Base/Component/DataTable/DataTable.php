@@ -52,6 +52,8 @@ class DataTable extends UIContentBlock
 	 */
 	protected $aInitDisplayData;
 
+	public const DEFAULT_ACTION_ROW_CONFIRMATION = true;
+
 
 	/**
 	 * Panel constructor.

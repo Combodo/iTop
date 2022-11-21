@@ -6,17 +6,16 @@
 
 namespace Combodo\iTop\Application\UI\Links\Indirect;
 
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
 
 /**
  * Class BlockObjectPickerDialog
  *
- * @package Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog
+ * @internal
+ * @package Combodo\iTop\Application\UI\Links\Indirect
  */
 class BlockObjectPickerDialog extends UIContentBlock
 {
