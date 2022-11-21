@@ -1230,7 +1230,6 @@ class ObjectController extends BrickController
 						$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime')); // one hour...
 						$oAttachment->Set('temp_id', $sTempId);
 						$oAttachment->Set('item_class', $sObjectClass);
-						$oAttachment->Set('user_id', UserRights::GetUserObject());
 						$oAttachment->SetDefaultOrgId();
 						$oAttachment->Set('contents', $oDocument);
 						$iAttId = $oAttachment->DBInsert();
