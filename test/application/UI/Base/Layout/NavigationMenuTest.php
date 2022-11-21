@@ -8,21 +8,11 @@ use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class NavigationMenuTest extends ItopDataTestCase {
-	private $oConfigToRestore;
 
 	public function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/themehandler.class.inc.php');
-		$this->oConfigToRestore = null;
-	}
-
-	public function tearDown(): void
-	{
-		if (! is_null($this->oConfigToRestore)){
-			$oReflexionClass = new \ReflectionClass(\MetaModel::class);
-			$oReflexionClass->setStaticPropertyValue('m_oConfig', $this->oConfigToRestore);
-		}
 	}
 
 	public function IsAllowedProvider(){
@@ -67,7 +57,6 @@ class NavigationMenuTest extends ItopDataTestCase {
 		file_put_contents($sTmpFilePath, implode("\n", $aRows));
 		$oTempConfig = new \Config($sTmpFilePath);
 
-		$this->oConfigToRestore = $oInitConfig;
 		$oReflexionClass = new \ReflectionClass(\MetaModel::class);
 		$oReflexionClass->setStaticPropertyValue('m_oConfig', $oTempConfig);
 
@@ -77,6 +66,8 @@ class NavigationMenuTest extends ItopDataTestCase {
 		);
 
 		$isAllowed = $this->InvokeNonPublicMethod(NavigationMenu::class, "IsOrgMenuFilterAllowed", $oNavigationMenu, []);
+		$oReflexionClass->setStaticPropertyValue('m_oConfig', $oInitConfig);
+
 		$this->assertEquals(true, $isAllowed);
 	}
 }
