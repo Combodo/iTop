@@ -19,7 +19,6 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\NavigationMenu;
 
-
 use ApplicationContext;
 use ApplicationMenu;
 use appUserPreferences;
@@ -291,6 +290,10 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		}
 	}
 
+	public function IsSiloSelectionEnabled() : bool {
+		return MetaModel::GetConfig()->Get('navigation_menu.show_organization_filter');
+	}
+
 	/**
 	 * @return void
 	 * @throws \CoreException
@@ -302,7 +305,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		$this->bHasSiloSelected = false;
 		$this->sSiloLabel = null;
 
-		if (! MetaModel::GetConfig()->Get('allow_menu_organization_filter')){
+		if (! $this->IsSiloSelectionEnabled()){
 			return;
 		}
 
