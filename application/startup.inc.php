@@ -19,10 +19,11 @@ use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Service\EventData;
 use Combodo\iTop\Service\EventService;
 
-require_once(APPROOT.'/core/cmdbobject.class.inc.php');
-require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/core/contexttag.class.inc.php');
-require_once(APPROOT.'/core/kpi.class.inc.php');
+require_once(APPROOT.'core/cmdbobject.class.inc.php');
+require_once(APPROOT.'application/utils.inc.php');
+require_once(APPROOT.'core/contexttag.class.inc.php');
+require_once(APPROOT.'core/kpi.class.inc.php');
+require_once(APPROOT.'setup/setuputils.class.inc.php');
 
 
 /**

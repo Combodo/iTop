@@ -2772,7 +2772,7 @@ HTML;
 			if (!utils::IsDevelopmentEnvironment()) {
 				// Save to cache
 				$sCacheContent = "<?php\n\nreturn ".var_export($aMatchingClasses, true).";";
-				self::builddir(dirname($sCacheFileName));
+				SetupUtils::builddir(dirname($sCacheFileName));
 				file_put_contents($sCacheFileName, $sCacheContent);
 			}
 		}
@@ -3193,26 +3193,5 @@ HTML;
 	public static function GetUniqId()
 	{
 		return hash('sha256', uniqid(sprintf('%x', rand()), true).sprintf('%x', rand()));
-	}
-
-	/**
-	 * Helper to build the full path of a new directory
-	 * @param $dir
-	 */
-	public static function builddir($dir)
-	{
-		if (empty($dir))
-		{
-			// avoid infinite loops :/
-			return;
-		}
-		if (!is_dir($dir))
-		{
-			$parent = dirname($dir);
-			self::builddir($parent);
-			if (!mkdir($dir) && !is_dir($dir)) {
-				throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
-			}
-		}
 	}
 }
