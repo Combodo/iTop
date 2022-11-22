@@ -7,14 +7,16 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
+/**
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ * Class NavigationMenuTest
+ *
+ * @package UI\Base\Layout
+ */
 class NavigationMenuTest extends ItopDataTestCase {
-
-	public function setUp(): void
-	{
-		parent::setUp();
-		require_once(APPROOT.'application/themehandler.class.inc.php');
-	}
-
 	public function IsAllowedProvider(){
 		return [
 			'show menu' => [ true ],
