@@ -7,6 +7,8 @@
 
 namespace Combodo\iTop\Application\Helper;
 
+use utils;
+
 /**
  * Session management
  * Allow early session close to have multiple ajax calls in parallel
@@ -25,14 +27,19 @@ class Session
 
 	public static function Start()
 	{
+		if (utils::IsModeCLI()) {
+			return;
+		}
+
 		if (!self::$bIsInitialized) {
 			session_name('itop-'.md5(APPROOT));
 		}
+
 		self::$bIsInitialized = true;
 		if (!self::$bSessionStarted) {
 			if (!is_null(self::$iSessionId)) {
 				if (session_id(self::$iSessionId) === false) {
-					session_regenerate_id();
+					session_regenerate_id(true);
 				}
 			}
 			self::$bSessionStarted = session_start();
@@ -40,8 +47,36 @@ class Session
 		}
 	}
 
+	public static function FlushSession()
+	{
+		if (utils::IsModeCLI()) {
+			return;
+		}
+
+		if (!is_null(self::$iSessionId)) {
+			self::$bIsInitialized = false;
+			self::$bSessionStarted = false;
+			self::Start();
+		}
+	}
+
+	public static function RegenerateId($bDeleteOldSession = false)
+	{
+		if (utils::IsModeCLI()) {
+			return;
+		}
+
+		session_regenerate_id($bDeleteOldSession);
+		self::$bSessionStarted = session_start();
+		self::$iSessionId = session_id();
+	}
+
 	public static function WriteClose()
 	{
+		if (utils::IsModeCLI()) {
+			return;
+		}
+
 		if (self::$bSessionStarted) {
 			session_write_close();
 			self::$bSessionStarted = false;

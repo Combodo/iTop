@@ -1838,6 +1838,7 @@ class UserRights
 			self::$m_aAdmins = array();
 			self::$m_aPortalUsers = array();
 		}
+		Session::FlushSession();
 		self::_ResetSessionCache();
 		if (self::$m_oAddOn)
 		{
@@ -1936,7 +1937,7 @@ class UserRights
 			// The bug has been fixed in PHP 7.2, but in case session_regenerate_id()
 			// fails we just silently ignore the error and keep the same session id...
 			$old_error_handler = set_error_handler(array(__CLASS__, 'VoidErrorHandler'));
-			session_regenerate_id(true);
+			Session::RegenerateId(true);
 			if ($old_error_handler !== null) {
 				set_error_handler($old_error_handler);
 			}
