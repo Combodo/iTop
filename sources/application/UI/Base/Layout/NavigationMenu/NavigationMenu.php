@@ -289,6 +289,10 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		}
 	}
 
+	/**
+	 * @return True if the silo selection is enabled, false otherwise
+	 * @since 3.1.0
+	 */
 	public function IsSiloSelectionEnabled() : bool {
 		return MetaModel::GetConfig()->Get('navigation_menu.show_organization_filter');
 	}
