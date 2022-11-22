@@ -59,7 +59,11 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:OAuthClient/Attribute:token_expiration' => 'Access token expiration',
 	'Class:OAuthClient/Attribute:token_expiration+' => '',
 	'Class:OAuthClient/Attribute:redirect_url' => 'Redirect url',
-	'Class:OAuthClient/Attribute:redirect_url+' => 'This url must be copied in the OAuth2 configuration of the provider',
+	'Class:OAuthClient/Attribute:redirect_url+' => <<<EOF
+This url must be copied in the OAuth2 configuration of the provider
+Erase the field to recalculate default value
+EOF
+,
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Mailbox list',
 	'Class:OAuthClient/Attribute:mailbox_list+' => '',
 ]);

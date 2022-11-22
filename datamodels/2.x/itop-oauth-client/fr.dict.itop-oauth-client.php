@@ -59,7 +59,11 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OAuthClient/Attribute:token_expiration' => 'Date d\'expiration du jeton d\'accès',
 	'Class:OAuthClient/Attribute:token_expiration+' => '',
 	'Class:OAuthClient/Attribute:redirect_url' => 'URL de redirection',
-	'Class:OAuthClient/Attribute:redirect_url+' => 'Cet URL doit être recopié dans la configuration OAuth2 de votre fournisseur',
+	'Class:OAuthClient/Attribute:redirect_url+' => <<<EOF
+Cet URL doit être recopiée dans la configuration OAuth2 de votre fournisseur
+Pour recalculer la valeur par défaut, il faut effacer le champ
+EOF
+,
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Mailbox list',
 	'Class:OAuthClient/Attribute:mailbox_list+' => '',
 ]);
