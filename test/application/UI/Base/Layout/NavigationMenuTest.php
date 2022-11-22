@@ -32,7 +32,7 @@ class NavigationMenuTest extends ItopDataTestCase {
 			$this->createMock(ApplicationContext::class),
 			$this->createMock(PopoverMenu::class));
 
-		$isAllowed = $this->InvokeNonPublicMethod(NavigationMenu::class, "IsOrgMenuFilterAllowed", $oNavigationMenu, []);
+		$isAllowed = $oNavigationMenu->IsSiloSelectionEnabled();
 		$this->assertEquals($bExpectedIsAllowed, $isAllowed);
 	}
 
@@ -65,7 +65,7 @@ class NavigationMenuTest extends ItopDataTestCase {
 			$this->createMock(PopoverMenu::class)
 		);
 
-		$isAllowed = $this->InvokeNonPublicMethod(NavigationMenu::class, "IsOrgMenuFilterAllowed", $oNavigationMenu, []);
+		$isAllowed = $oNavigationMenu->IsSiloSelectionEnabled();
 		$oReflexionClass->setStaticPropertyValue('m_oConfig', $oInitConfig);
 
 		$this->assertEquals(true, $isAllowed);

@@ -289,7 +289,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		}
 	}
 
-	private function IsOrgMenuFilterAllowed() : bool {
+	public function IsSiloSelectionEnabled() : bool {
 		return MetaModel::GetConfig()->Get('navigation_menu.show_organization_filter');
 	}
 
@@ -304,7 +304,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		$this->bHasSiloSelected = false;
 		$this->sSiloLabel = null;
 
-		if (! $this->IsOrgMenuFilterAllowed()){
+		if (! $this->IsSiloSelectionEnabled()){
 			return;
 		}
 
