@@ -362,7 +362,10 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
 
 oTable{{ sListIDForVarSuffix }}.select();
 
-
+$('#{{ oUIBlock.GetId() }}').on('refresh.datatable.itop', function (){
+    oTable{{ sListIDForVarSuffix }}.clearPipeline();
+    oTable{{ sListIDForVarSuffix }}.ajax.reload(null, false);
+});
 
 {% if oUIBlock.GetOption('sCountSelector') is not empty %}
 $('#{{ sListId }} [name="selectionCount"]').bind('change', function () {

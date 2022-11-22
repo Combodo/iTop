@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
-    <classes>
-        <class id="UserLDAP" _delta="define">
-            <parent>cmdbAbstractObject</parent>
-            <php_parent>
-                <name>UserInternal</name>
-            </php_parent>
-            <properties>
-                <comment>/**
+  <classes>
+    <class id="UserLDAP" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <php_parent>
+        <name>UserInternal</name>
+      </php_parent>
+      <properties>
+        <comment>/**
                     * LDAP Authentication
                     * User authentication Module, no password at all!
                     *
                     * @copyright   Copyright (C) 2010-2020 Combodo SARL
                     * @license     http://opensource.org/licenses/AGPL-3.0
                     */</comment>
-                <category>addon/authentication,grant_by_profile,silo</category>
-                <abstract>false</abstract>
-                <key_type>autoincrement</key_type>
-                <db_table>priv_user_ldap</db_table>
-                <db_key_field>id</db_key_field>
-                <db_final_class_field/>
-                <naming>
-                    <format>%1$s</format>
-                    <attributes>
-                        <attribute id="login"/>
-                    </attributes>
-                </naming>
-                <display_template/>
-                <style>
-                  <icon/>
-                </style>
-                <reconciliation>
-                    <attributes>
-                        <attribute id="login"/>
-                    </attributes>
-                </reconciliation>
-            </properties>
-            <fields>
-                <field id="ldap_server" xsi:type="AttributeString">
-                    <sql>ldap_server</sql>
-                    <default_value/>
-                    <is_null_allowed>true</is_null_allowed>
-                </field>
-            </fields>
-            <methods>
-                <method id="CheckCredentials">
-                    <comment><![CDATA[/**
+        <category>addon/authentication,grant_by_profile,silo</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_user_ldap</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="login"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <style>
+          <icon/>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="login"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ldap_server" xsi:type="AttributeString">
+          <sql>ldap_server</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods>
+        <method id="CheckCredentials">
+          <comment><![CDATA[/**
 	 * Check the user's password against the LDAP server
 	 * Algorithm:
 	 * 1) Connect to the LDAP server, using a predefined account (or anonymously)
@@ -60,10 +60,10 @@
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */]]></comment>
-                    <static>false</static>
-                    <access>public</access>
-                    <type>OQLMenuNode</type>
-                    <code><![CDATA[	public function CheckCredentials($sPassword)
+          <static>false</static>
+          <access>public</access>
+          <type>OQLMenuNode</type>
+          <code><![CDATA[	public function CheckCredentials($sPassword)
 	{
 		$sServer = $this->Get('ldap_server');
 		if (empty($sServer))
@@ -190,39 +190,39 @@
 			return false;
 		}
 	}]]></code>
-                </method>
-                <method id="TrustWebServerContext">
-                    <static>false</static>
-                    <access>public</access>
-                    <type>OQLMenuNode</type>
-                    <code>	public function TrustWebServerContext()
+        </method>
+        <method id="TrustWebServerContext">
+          <static>false</static>
+          <access>public</access>
+          <type>OQLMenuNode</type>
+          <code>	public function TrustWebServerContext()
 	{
 		return false;
 	}</code>
-                </method>
-                <method id="CanChangePassword">
-                    <static>false</static>
-                    <access>public</access>
-                    <type>OQLMenuNode</type>
-                    <code>	public function CanChangePassword()
+        </method>
+        <method id="CanChangePassword">
+          <static>false</static>
+          <access>public</access>
+          <type>OQLMenuNode</type>
+          <code>	public function CanChangePassword()
 	{
 		return false;
 	}</code>
-                </method>
-                <method id="ChangePassword">
-                    <static>false</static>
-                    <access>public</access>
-                    <type>OQLMenuNode</type>
-                    <code>	public function ChangePassword($sOldPassword, $sNewPassword)
+        </method>
+        <method id="ChangePassword">
+          <static>false</static>
+          <access>public</access>
+          <type>OQLMenuNode</type>
+          <code>	public function ChangePassword($sOldPassword, $sNewPassword)
 	{
 		return false;
 	}</code>
-                </method>
-                <method id="LogIssue">
-                    <static>false</static>
-                    <access>protected</access>
-                    <type>OQLMenuNode</type>
-                    <code><![CDATA[	protected function LogIssue($bDebug, $sMessage, $aData = array())
+        </method>
+        <method id="LogIssue">
+          <static>false</static>
+          <access>protected</access>
+          <type>OQLMenuNode</type>
+          <code><![CDATA[	protected function LogIssue($bDebug, $sMessage, $aData = array())
 	{
 		if ($bDebug)
 		{
@@ -240,91 +240,91 @@
 		}
 		IssueLog::Error($sMessage);
 	}]]></code>
-                </method>
-                <method id="LogInfo">
-                    <static>false</static>
-                    <access>protected</access>
-                    <type>OQLMenuNode</type>
-                    <code><![CDATA[	protected function LogInfo($bDebug, $sMessage)
+        </method>
+        <method id="LogInfo">
+          <static>false</static>
+          <access>protected</access>
+          <type>OQLMenuNode</type>
+          <code><![CDATA[	protected function LogInfo($bDebug, $sMessage)
 	{
 		if ($bDebug)
 		{
 			IssueLog::Info($sMessage);
 		}
 	}]]></code>
-                </method>
-            </methods>
-            <presentation>
-                <details>
-                    <items>
-                        <item id="contactid">
-                            <rank>10</rank>
-                        </item>
-                        <item id="org_id">
-                            <rank>20</rank>
-                        </item>
-                        <item id="email">
-                            <rank>30</rank>
-                        </item>
-                        <item id="login">
-                            <rank>40</rank>
-                        </item>
-                        <item id="language">
-                            <rank>50</rank>
-                        </item>
-                        <item id="status">
-                            <rank>60</rank>
-                        </item>
-                        <item id="profile_list">
-                            <rank>70</rank>
-                        </item>
-                        <item id="allowed_org_list">
-                            <rank>80</rank>
-                        </item>
-                        <item id="ldap_server">
-                            <rank>90</rank>
-                        </item>
-                    </items>
-                </details>
-                <search>
-                    <items>
-                        <item id="login">
-                            <rank>10</rank>
-                        </item>
-                        <item id="contactid">
-                            <rank>20</rank>
-                        </item>
-                        <item id="status">
-                            <rank>30</rank>
-                        </item>
-                        <item id="org_id">
-                            <rank>40</rank>
-                        </item>
-                        <item id="ldap_server">
-                            <rank>50</rank>
-                        </item>
-                    </items>
-                </search>
-                <list>
-                    <items>
-                        <item id="first_name">
-                            <rank>10</rank>
-                        </item>
-                        <item id="last_name">
-                            <rank>20</rank>
-                        </item>
-                        <item id="status">
-                            <rank>30</rank>
-                        </item>
-                        <item id="org_id">
-                            <rank>40</rank>
-                        </item>
-                        <item id="ldap_server">
-                            <rank>50</rank>
-                        </item>
-                    </items>
-                </list>
-            </presentation>
-        </class>
-    </classes>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="contactid">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="login">
+              <rank>40</rank>
+            </item>
+            <item id="language">
+              <rank>50</rank>
+            </item>
+            <item id="status">
+              <rank>60</rank>
+            </item>
+            <item id="profile_list">
+              <rank>70</rank>
+            </item>
+            <item id="allowed_org_list">
+              <rank>80</rank>
+            </item>
+            <item id="ldap_server">
+              <rank>90</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="login">
+              <rank>10</rank>
+            </item>
+            <item id="contactid">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="ldap_server">
+              <rank>50</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="first_name">
+              <rank>10</rank>
+            </item>
+            <item id="last_name">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="ldap_server">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
 </itop_design>

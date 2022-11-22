@@ -282,9 +282,11 @@
         <field id="person_list" xsi:type="AttributeLinkedSet">
           <linked_class>Person</linked_class>
           <ext_key_to_me>location_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <legacy_edit_mode>add_only</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -674,6 +676,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>team_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods>
@@ -921,6 +924,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>person_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -1882,11 +1886,11 @@
       </theme>
     </themes>
     <themes_common>
-        <variables>
+      <variables>
         </variables>
-        <imports>
+      <imports>
         </imports>
-        <stylesheets>
+      <stylesheets>
         </stylesheets>
     </themes_common>
   </branding>

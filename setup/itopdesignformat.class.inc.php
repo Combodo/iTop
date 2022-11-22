@@ -191,6 +191,7 @@ class iTopDesignFormat
 				$aErrors[] = $aLogEntry['msg'];
 			}
 		}
+
 		return $aErrors;
 	}
 
@@ -203,14 +204,48 @@ class iTopDesignFormat
 	}
 
 	/**
+	 * @throws \iTopXmlException if root node not found
+	 */
+	public function GetITopDesignNode(): DOMNode
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+		// Retrieve the version number
+		$oNodeList = $oXPath->query('/itop_design');
+		if ($oNodeList->length === 0) {
+			throw new iTopXmlException('File format: no root <itop_design> tag found');
+		}
+
+		return $oNodeList->item(0);
+	}
+
+	/**
+	 * @return string
+	 * @throws \iTopXmlException
+	 */
+	public function GetVersion()
+	{
+		$oITopDesignNode = $this->GetITopDesignNode();
+
+		$sVersion = $oITopDesignNode->getAttribute('version');
+		if (utils::IsNullOrEmptyString($sVersion)) {
+			// Originally, the information was missing: default to 1.0
+			$sVersion = '1.0';
+		}
+
+		return $sVersion;
+	}
+
+	/**
 	 * An alternative to getNodePath, that gives the id of nodes instead of the position within the children
+	 *
 	 * @param $oNode
+	 *
 	 * @return string
 	 */
 	public static function GetItopNodePath($oNode)
 	{
 		if ($oNode instanceof DOMDocument) return '';
-	
+
 		$sId = $oNode->getAttribute('id');
 		$sNodeDesc = ($sId != '') ? $oNode->nodeName.'['.$sId.']' : $oNode->nodeName;
 		return self::GetItopNodePath($oNode->parentNode).'/'.$sNodeDesc;
@@ -247,30 +282,32 @@ class iTopDesignFormat
 		$this->aLog = array();
 		$this->bStatus = true;
 
-		$oXPath = new DOMXPath($this->oDocument);
-		// Retrieve the version number
-		$oNodeList = $oXPath->query('/itop_design');
-		if ($oNodeList->length == 0)
-		{
-			// Hmm, not an iTop Data Model file...
-			$this->LogError('File format, no root <itop_design> tag found');
+		try {
+			$sVersion = $this->GetVersion();
 		}
-		else
-		{
-			$sVersion = $oNodeList->item(0)->getAttribute('version');
-			if ($sVersion == '')
-			{
-				// Originaly, the information was missing: default to 1.0
-				$sVersion = '1.0';
-			}
-			$this->LogInfo("Converting from $sVersion to $sTargetVersion");
+		catch (iTopXmlException $e) {
+			$this->LogError($e->getMessage());
+
+			return $this->bStatus;
+		}
+
+		$this->LogInfo("Converting from $sVersion to $sTargetVersion");
+		try {
 			$this->DoConvert($sVersion, $sTargetVersion, $oFactory);
-			if ($this->bStatus)
-			{
-				// Update the version number
-				$oNodeList->item(0)->setAttribute('version', $sTargetVersion);
-			}
 		}
+		catch (Exception|Error $e) {
+			$this->LogError($e->getMessage());
+
+			return false;
+		}
+
+		if ($this->bStatus) {
+			/** @noinspection PhpUnhandledExceptionInspection already called earlier so should not crash */
+			$oITopDesignNode = $this->GetITopDesignNode();
+			// Update the version number
+			$oITopDesignNode->setAttribute('version', $sTargetVersion);
+		}
+
 		return $this->bStatus;
 	}
 
@@ -318,22 +355,39 @@ class iTopDesignFormat
 		}
 		// Transform to the intermediate format
 		$aCallSpec = array($this, $sTransform);
-		try
-		{
+		try {
 			call_user_func($aCallSpec, $oFactory);
 
 			// Recurse
 			$this->DoConvert($sIntermediate, $sTo, $oFactory);
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			$this->LogError($e->getMessage());
 		}
 	}
 
 	/**
+	 * @param \DOMNode|null $node
+	 * @param bool $bFormatOutput
+	 * @param bool $bPreserveWhiteSpace
+	 *
+	 * @return false|string
+	 *
+	 * @uses \DOMDocument::saveXML()
+	 */
+	public function GetXmlAsString($node = null, $bFormatOutput = true, $bPreserveWhiteSpace = false)
+	{
+		$this->oDocument->formatOutput = $bFormatOutput;
+		$this->oDocument->preserveWhiteSpace = $bPreserveWhiteSpace;
+
+		return $this->oDocument->saveXML($node = null);
+	}
+
+	/**
 	 * Upgrade the format from version 1.0 to 1.1
+	 *
 	 * @param \ModelFactory $oFactory
+	 *
 	 * @return void (Errors are logged)
 	 */
 	protected function From10To11($oFactory)
@@ -948,12 +1002,64 @@ class iTopDesignFormat
 	}
 	/**
 	 * Upgrade the format from version 3.0 to 3.1
+	 *
 	 * @param \ModelFactory $oFactory
+	 *
 	 * @return void (Errors are logged)
 	 */
 	protected function From30To31($oFactory)
 	{
-		//nothing
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// N°5563 AttributeLinkedSet
+		// - move edit_mode attribute to legacy_edit_mode attribute
+		// - fill relation_type & read_only
+		$oLinkedSetNodes = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']");
+		/** @var \DOMElement $oNode */
+		foreach ($oLinkedSetNodes as $oNode) {
+			$sEditMode = 'actions';
+			if ($oNode->hasChildNodes()) {
+				$oLinkedSetEditModeNodes = $oNode->getElementsByTagName('edit_mode');
+				if (count($oLinkedSetEditModeNodes)) {
+					$oEditModeNode = $oLinkedSetEditModeNodes->item(0);
+					/** @noinspection NullPointerExceptionInspection already checked */
+					$sEditMode = $oEditModeNode->nodeValue;
+					$oLegacyEditModeNode = $oNode->ownerDocument->createElement('legacy_edit_mode', $sEditMode);
+					/** @noinspection NullPointerExceptionInspection already checked */
+					$oNode->replaceChild($oLegacyEditModeNode, $oEditModeNode);
+				}
+
+				switch ($sEditMode) {
+					case 'none':
+						$sRelationType = 'link';
+						$sReadOnly = 'true';
+						break;
+					case 'add_only':
+					case 'add_remove':
+					case 'actions':
+						$sRelationType = 'link';
+						$sReadOnly = 'false';
+						break;
+					case 'in_place':
+						$sRelationType = 'property';
+						$sReadOnly = 'false';
+						break;
+				}
+
+				$oRelationTypeNode = $oNode->ownerDocument->createElement('relation_type', $sRelationType);
+				$oNode->appendChild($oRelationTypeNode);
+				$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', $sReadOnly);
+				$oNode->appendChild($oReadOnlyNode);
+			}
+		}
+
+		// N°5563 AttributeLinkedSetIndirect
+		// - fill read_only attribute
+		$oLinkedSetIndirectNodes = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSetIndirect']");
+		foreach ($oLinkedSetIndirectNodes as $oNode) {
+			$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', 'false');
+			$oNode->appendChild($oReadOnlyNode);
+		}
 	}
 	/**
 	 * Downgrade the format from version 3.1 to 3.0
@@ -962,7 +1068,26 @@ class iTopDesignFormat
 	 */
 	protected function From31To30($oFactory)
 	{
-		//nothing
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// N°5563 AttributeLinkedSet
+		// - remove relation_type & read_only (added in 3.1)
+		// - restore edit_mode attribute from legacy_edit_mode attribute
+		$this->RemoveNodeFromXPath("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']/read_only");
+		$this->RemoveNodeFromXPath("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']/relation_type");
+		$oLegacyEditModeNodesList = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']/legacy_edit_mode");
+		/** @var \DOMElement $oLegacyEditModeNode */
+		foreach ($oLegacyEditModeNodesList as $oLegacyEditModeNode) {
+			$sEditMode = $oLegacyEditModeNode->nodeValue;
+			$oEditModeNode = $oLegacyEditModeNode->ownerDocument->createElement('edit_mode', $sEditMode);
+			$oLinkedSetNode = $oLegacyEditModeNode->parentNode;
+			/** @noinspection NullPointerExceptionInspection already checked */
+			$oLinkedSetNode->replaceChild($oEditModeNode, $oLegacyEditModeNode);
+		}
+
+		// N°5563 AttributeLinkedSetIndirect
+		// - remove read_only attribute (added in 3.1)
+		$this->RemoveNodeFromXPath("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/read_only");
 	}
 
 	/**

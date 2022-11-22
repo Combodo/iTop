@@ -181,7 +181,7 @@ abstract class DBObject implements iDisplay
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
 			$this->m_sObjectUniqId = get_class($this).'::'.$this->GetKey().'_'.utils::GetUniqId();
-			$this->RegisterEvents();
+			$this->RegisterEventListeners();
 			return;
 		}
 		// Creation of a brand new object
@@ -204,10 +204,10 @@ abstract class DBObject implements iDisplay
 		$this->UpdateMetaAttributes();
 
 		$this->m_sObjectUniqId = get_class($this).'::0'.'_'.utils::GetUniqId();
-		$this->RegisterEvents();
+		$this->RegisterEventListeners();
 	}
 
-	protected function RegisterEvents()
+	protected function RegisterEventListeners()
 	{
 	}
 
@@ -5827,13 +5827,15 @@ abstract class DBObject implements iDisplay
 	 */
 	public function FireEvent($sEvent, $aEventData = array())
 	{
-		$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
-		$aEventData['object'] = $this;
-		$aEventSources = [$this->m_sObjectUniqId];
-		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass) {
-			$aEventSources[] = $sClass;
+		if (EventService::IsEventRegistered($sEvent)) {
+			$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
+			$aEventData['object'] = $this;
+			$aEventSources = [$this->m_sObjectUniqId];
+			foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass) {
+				$aEventSources[] = $sClass;
+			}
+			EventService::FireEvent(new EventData($sEvent, $aEventSources, $aEventData));
 		}
-		EventService::FireEvent(new EventData($sEvent, $aEventSources, $aEventData));
 	}
 
 	protected function EventInsertRequested()

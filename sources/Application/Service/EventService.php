@@ -12,12 +12,28 @@ use CoreException;
 use Exception;
 use ExecutionKPI;
 use ReflectionClass;
+use utils;
 
 class EventService
 {
 	public static $aEventListeners = [];
 	private static $iEventIdCounter = 0;
 	private static $aEventDescription = [];
+
+	public static function InitService()
+	{
+		self::$aEventListeners = [];
+		self::$iEventIdCounter = 0;
+		self::$aEventDescription = [];
+
+		$aEventEnrolments = utils::GetClassesForInterface(iEventEnrolment::class);
+		foreach ($aEventEnrolments as $sEventEnrolmentClass) {
+			/** @var \Combodo\iTop\Service\iEventEnrolment $oEventEnrolment */
+			$oEventEnrolment = new $sEventEnrolmentClass();
+			$oEventEnrolment->InitEvents();
+		}
+
+	}
 
 	/**
 	 * Register a callback for a specific event
@@ -87,7 +103,7 @@ class EventService
 	public static function FireEvent(EventData $oEventData)
 	{
 		$sEvent = $oEventData->GetEvent();
-		if (!array_key_exists($sEvent, self::$aEventDescription)) {
+		if (!self::IsEventRegistered($sEvent)) {
 			$sError = "Fire event error: Event $sEvent is not registered";
 			EventHelper::Error($sError);
 			throw new CoreException($sError);
@@ -242,12 +258,19 @@ class EventService
 		return false;
 	}
 
-	// For information only
+	/**
+	 * @param string $sEvent
+	 * @param array $aDescription
+	 * @param string $sModule
+	 *
+	 * @return void
+	 */
 	public static function RegisterEvent(string $sEvent, array $aDescription, string $sModule)
 	{
-		if (isset(self::$aEventDescription[$sEvent])) {
+		if (self::IsEventRegistered($sEvent)) {
 			$sPrevious = self::$aEventDescription[$sEvent]['module'];
-			EventHelper::Error("The Event $sEvent defined by $sModule has already been defined in $sPrevious, check your delta");
+			EventHelper::Warning("The Event $sEvent defined by $sModule has already been defined in $sPrevious, check your delta");
+			return;
 		}
 
 		self::$aEventDescription[$sEvent] = [
@@ -285,6 +308,16 @@ class EventService
 				lcfirst($sMatch);
 		}
 		return implode('_', $aRet);
+	}
+
+	/**
+	 * @param string $sEvent
+	 *
+	 * @return bool
+	 */
+	public static function IsEventRegistered(string $sEvent): bool
+	{
+		return array_key_exists($sEvent, self::$aEventDescription);
 	}
 
 	public static function GetDefinedEventsAsJSON()

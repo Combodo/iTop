@@ -28,47 +28,60 @@ class iTopDesignFormatTest extends ItopTestCase
 	 * @covers       iTopDesignFormat::Convert
 	 * @dataProvider ConvertProvider
 	 *
-	 * @param string $sTargetVersion
 	 * @param string $sXmlFileName Corresponding files should exist in the `Convert-samples` dir with the `.expected` and `.input` suffixes
 	 *                      Example "1.7_to_1.6" for `Convert-samples/1.7_to_1.6.expected.xml` and `Convert-samples/1.7_to_1.6.input.xml`
 	 *
 	 * @throws \Exception
 	 */
-	public function testConvert($sTargetVersion, $sXmlFileName, $iExpectedErrors = 0, $sFirstErrorMessage = '')
+	public function testConvert($sXmlFileName, $iExpectedErrors = 0, $sFirstErrorMessage = '')
 	{
 		$sSamplesRelDirPath = 'Convert-samples/';
-		$sInputXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.input');
 
-		$oInputDocument = new DOMDocument();
-		libxml_clear_errors();
-		$oInputDocument->preserveWhiteSpace = false;
-		$oInputDocument->loadXML($sInputXml);
-		$oInputDocument->formatOutput = true;
-		$oDesignFormat = new iTopDesignFormat($oInputDocument);
-		$bResult = $oDesignFormat->Convert($sTargetVersion);
-		$aErrors = $oDesignFormat->GetErrors();
-		$this->assertCount($iExpectedErrors, $aErrors);
+		$sExpectedXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.expected');
+		$oExpectedDesignFormat = static::GetItopFormatFromString($sExpectedXml);
+		$sTargetVersion = $oExpectedDesignFormat->GetVersion();
+
+		$sInputXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.input');
+		$oInputDesignFormat = static::GetItopFormatFromString($sInputXml);
+		$bResult = $oInputDesignFormat->Convert($sTargetVersion);
+		$aErrors = $oInputDesignFormat->GetErrors();
+		$this->assertCount($iExpectedErrors, $aErrors,
+			'errors in input format: '.var_export($aErrors, true));
 		if ($iExpectedErrors > 0) {
 			$this->assertFalse($bResult);
 			$this->assertEquals($sFirstErrorMessage, $aErrors[0]);
 		}
 
-		$sConvertedXml = $oInputDocument->saveXML();
+		/** @noinspection PhpRedundantOptionalArgumentInspection We REALLY want those options so specifying it anyway */
+		$sConvertedXml = $oInputDesignFormat->GetXmlAsString(null, true, false);
 		// Erase dynamic values
 		$sConvertedXml = preg_replace('@<trashed_node id="\w+"@', '<trashed_node id="XXX"', $sConvertedXml);
-		$sExpectedXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.expected');
 		$this->assertEquals($sExpectedXml, $sConvertedXml);
+	}
+
+	private static function GetItopFormatFromString(string $sFileContent): iTopDesignFormat
+	{
+		$oInputDocument = new DOMDocument();
+		/** @noinspection PhpComposerExtensionStubsInspection */
+		libxml_clear_errors();
+		$oInputDocument->formatOutput = true;
+		$oInputDocument->preserveWhiteSpace = false;
+		$oInputDocument->loadXML($sFileContent);
+
+		return new iTopDesignFormat($oInputDocument);
 	}
 
 	public function ConvertProvider()
 	{
 		return [
-			'1.6 to 1.7 2' => ['sTargetVersion' => '1.7', 'sXmlFileName' => '1.6_to_1.7_2'],
-			'1.7 to 1.6'   => ['sTargetVersion' => '1.6', 'sXmlFileName' => '1.7_to_1.6'],
-			'1.7 to 1.6 2' => ['sTargetVersion' => '1.6', 'sXmlFileName' => '1.7_to_1.6_2'],
-			'1.7 to 3.0'   => ['sTargetVersion' => '3.0', 'sXmlFileName' => '1.7_to_3.0'],
-			'3.0 to 1.7'   => ['sTargetVersion' => '1.7', 'sXmlFileName' => '3.0_to_1.7'],
-			'Bug_4569'     => ['sTargetVersion' => '1.7', 'sXmlFileName' => 'Bug_4569'],
+			'1.6 to 1.7 2' => ['sXmlFileName' => '1.6_to_1.7_2'],
+			'1.7 to 1.6'   => ['sXmlFileName' => '1.7_to_1.6'],
+			'1.7 to 1.6 2' => ['sXmlFileName' => '1.7_to_1.6_2'],
+			'1.7 to 3.0'   => ['sXmlFileName' => '1.7_to_3.0'],
+			'3.0 to 1.7'   => ['sXmlFileName' => '3.0_to_1.7'],
+			'3.0 to 3.1'   => ['sXmlFileName' => '3.0_to_3.1'],
+			'3.1 to 3.0'   => ['sXmlFileName' => '3.1_to_3.0'],
+			'Bug_4569'     => ['sXmlFileName' => 'Bug_4569'],
 		];
 	}
 

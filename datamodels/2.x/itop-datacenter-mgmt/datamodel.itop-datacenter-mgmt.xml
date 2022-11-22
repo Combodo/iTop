@@ -37,16 +37,20 @@
         <field id="device_list" xsi:type="AttributeLinkedSet">
           <linked_class>DatacenterDevice</linked_class>
           <ext_key_to_me>rack_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <legacy_edit_mode>add_only</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="enclosure_list" xsi:type="AttributeLinkedSet">
           <linked_class>Enclosure</linked_class>
           <ext_key_to_me>rack_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <legacy_edit_mode>add_only</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -229,9 +233,11 @@
         <field id="device_list" xsi:type="AttributeLinkedSet">
           <linked_class>DatacenterDevice</linked_class>
           <ext_key_to_me>enclosure_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <legacy_edit_mode>add_only</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -573,9 +579,11 @@
         <field id="pdus_list" xsi:type="AttributeLinkedSet">
           <linked_class>PDU</linked_class>
           <ext_key_to_me>powerstart_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <legacy_edit_mode>add_only</legacy_edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>

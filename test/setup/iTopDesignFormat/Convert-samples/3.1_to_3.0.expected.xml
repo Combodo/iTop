@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+  <classes>
+    <class id="ClassWithAttributeLinkedSetEditModeNone">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <edit_mode>none</edit_mode>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetEditModeAddOnly">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <edit_mode>add_only</edit_mode>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetEditModeAddRemove">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <edit_mode>add_remove</edit_mode>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetEditModeActions">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <edit_mode>actions</edit_mode>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetEditModeInPlace">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <edit_mode>in_place</edit_mode>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetNoEditMode">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <linked_class>Ticket</linked_class>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetIndirect">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSetIndirect"/>
+      </fields>
+    </class>
+  </classes>
+</itop_design>
