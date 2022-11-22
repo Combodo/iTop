@@ -19,13 +19,11 @@
 
 namespace Combodo\iTop\Portal\Twig;
 
+use Dict;
 use Twig\Extension\AbstractExtension;
-
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 use utils;
-use Dict;
-use MetaModel;
 
 /**
  * Class AppExtension
@@ -122,14 +120,6 @@ class AppExtension extends AbstractExtension
 		// Usage in twig:   {% if is_development_environment() %}
 		$functions[] = new Twig_SimpleFunction('is_development_environment', function () {
 			return utils::IsDevelopmentEnvironment();
-		});
-
-		// Function to get configuration parameter
-		// Usage in twig: {{ get_config_parameter('foo') }}
-		$functions[] = new Twig_SimpleFunction('get_config_parameter', function ($sParamName) {
-			$oConfig = MetaModel::GetConfig();
-
-			return $oConfig->Get($sParamName);
 		});
 
 		return $functions;

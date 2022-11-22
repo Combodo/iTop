@@ -80,4 +80,6 @@ foreach ($aPortalConf['properties']['themes'] as $sKey => $value)
 }
 $oKPI->ComputeAndReport('Generating CSS files');
 
+$aPortalConf['app_icon_url'] = MetaModel::GetConfig()->Get('app_icon_url');
+
 $container->setParameter('combodo.portal.instance.conf', $aPortalConf);
