@@ -13,16 +13,33 @@
         let iActionId = $(this).data('action-id');
         let aRowData = oDatatable.row(oTrElement).data();
 
-        // Handle action row
-        let sTitle = '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}';
-        let sMessage = '{{ aAction.confirmation.message|dict_s|raw }}';
-        sMessage = sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']);
-        HandleActionRow (sTitle, sMessage, '{{ aAction.confirmation.remember_choice_pref_key }}', ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}, {
-            action_id: iActionId,
-            datatable: oDatatable,
-            tr_element: oTrElement,
-            row_data: aRowData
-        });
+        {% if aAction.confirmation is defined %}
+
+            // Handle action row with confirmation
+            let sTitle = '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}';
+            let sMessage = '{{ 'UI:Datatables:RowActions:ConfirmationMessage'|dict_s }}';
+            {% if aAction.confirmation.message is defined %}
+                sMessage = '{{ aAction.confirmation.message|dict_s|raw }}';
+                sMessage = sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']);
+            {% endif %}
+            let sPrefKey = null;
+            {% if aAction.confirmation.message is defined %}
+                sPrefKey = '{{ aAction.confirmation.remember_choice_pref_key }}';
+            {% endif %}
+            HandleActionRowConfirmation (sTitle, sMessage, sPrefKey, ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}, {
+                action_id: iActionId,
+                datatable: oDatatable,
+                tr_element: oTrElement,
+                row_data: aRowData
+            });
+
+        {% else %}
+
+            // Handle action row without confirmation
+            ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}(oDatatable, oTrElement, iActionId, aRowData);
+
+        {% endif %}
+
     });
 
     // action row function declaration

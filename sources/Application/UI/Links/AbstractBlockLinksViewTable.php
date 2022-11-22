@@ -23,7 +23,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	public const BLOCK_CODE                   = 'ibo-abstract-block-links-view-table';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/layout';
 	public const DEFAULT_JS_FILES_REL_PATH    = [
-		'js/links/links.js',
+		'js/links/link_set_worker.js',
 	];
 
 	/** @var \DBObject $oDbObject db object witch link set belongs to */

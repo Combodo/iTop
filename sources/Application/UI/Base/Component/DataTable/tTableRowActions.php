@@ -88,7 +88,7 @@ trait tTableRowActions
 		$sDoNotShowAgain = \Dict::S('UI:UserPref:DoNotShowAgain');
 
 		return new Html(
-			<<< HTML
+<<< HTML
     <div class="ibo-abstract-block-links-view-table--action-confirmation" data-role="ibo-datatable--row-action--confirmation-dialog" title="" style="display: none">
         <div class="ibo-abstract-block-links-view-table--action-confirmation-explanation"></div>
         <label class="ibo-abstract-block-links-view-table--action-confirmation-preference">
