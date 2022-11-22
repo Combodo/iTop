@@ -5,7 +5,6 @@ namespace Combodo\iTop;
 use AttributeDateTime;
 use Dict;
 use Exception;
-use MetaModel;
 use Twig_Environment;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -113,14 +112,6 @@ class TwigExtension
 		$oTwigEnv->addFunction(new Twig_SimpleFunction('is_development_environment', function()
 		{
 			return utils::IsDevelopmentEnvironment();
-		}));
-
-		// Function to get configuration parameter
-		// Usage in twig: {{ get_config_parameter('foo') }}
-		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_config_parameter', function($sParamName)
-		{
-			$oConfig = MetaModel::GetConfig();
-			return $oConfig->Get($sParamName);
 		}));
 
 		// Function to get the URL of a static page in a module
