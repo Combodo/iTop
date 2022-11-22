@@ -36,7 +36,7 @@ class NavigationMenuTest extends ItopDataTestCase {
 		$this->assertEquals($bExpectedIsAllowed, $isAllowed);
 	}
 
-	public function testIsAllowedWithNoConfVariable(){
+	public function testIsAllowed_BackwardCompatibility_NoVariableInConfFile(){
 		\MetaModel::GetConfig()->Set('navigation_menu.show_organization_filter', false);
 
 		$sTmpFilePath = tempnam(sys_get_temp_dir(), 'test_');
@@ -57,17 +57,9 @@ class NavigationMenuTest extends ItopDataTestCase {
 		file_put_contents($sTmpFilePath, implode("\n", $aRows));
 		$oTempConfig = new \Config($sTmpFilePath);
 
-		$oReflexionClass = new \ReflectionClass(\MetaModel::class);
-		$oReflexionClass->setStaticPropertyValue('m_oConfig', $oTempConfig);
-
-		$oNavigationMenu = new NavigationMenu(
-			$this->createMock(ApplicationContext::class),
-			$this->createMock(PopoverMenu::class)
-		);
-
-		$isAllowed = $oNavigationMenu->IsSiloSelectionEnabled();
-		$oReflexionClass->setStaticPropertyValue('m_oConfig', $oInitConfig);
+		$isAllowed = $oTempConfig->Get('navigation_menu.show_organization_filter');
 
 		$this->assertEquals(true, $isAllowed);
+		unlink($sTmpFilePath);
 	}
 }
