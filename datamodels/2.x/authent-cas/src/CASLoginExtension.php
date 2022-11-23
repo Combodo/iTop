@@ -154,7 +154,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		$bCASDebug = Config::Get('cas_debug');
 		if ($bCASDebug)
 		{
-			phpCAS::setDebug(APPROOT.'log/cas.log');
+			phpCAS::setLogger(new CASLogger(APPROOT.'log/cas.log'));
 		}
 		
 		// Initialize phpCAS
@@ -162,7 +162,8 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		$sCASHost = Config::Get('cas_host');
 		$iCASPort = Config::Get('cas_port');
 		$sCASContext = Config::Get('cas_context');
-		phpCAS::client($sCASVersion, $sCASHost, $iCASPort, $sCASContext, false /* session already started */);
+		$sServiceBaseURL = Config::Get('service_base_url', self::GetServiceBaseURL());
+		phpCAS::client($sCASVersion, $sCASHost, $iCASPort, $sCASContext, $sServiceBaseURL, false /* session already started */);
 		$sCASCACertPath = Config::Get('cas_server_ca_cert_path');
 		if (empty($sCASCACertPath))
 		{
@@ -176,6 +177,38 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		{
 			phpCAS::setCasServerCACert($sCASCACertPath);
 		}
+	}
+
+	private static function GetServiceBaseURL()
+	{
+		$protocol = $_SERVER['REQUEST_SCHEME'];
+		$protocol .= '://';
+		if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+			// explode the host list separated by comma and use the first host
+			$hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+			// see rfc7239#5.3 and rfc7230#2.7.1: port is in HTTP_X_FORWARDED_HOST if non default
+			return $protocol . $hosts[0];
+		} else if (!empty($_SERVER['HTTP_X_FORWARDED_SERVER'])) {
+			$server_url = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+		} else {
+			if (empty($_SERVER['SERVER_NAME'])) {
+				$server_url = $_SERVER['HTTP_HOST'];
+			} else {
+				$server_url = $_SERVER['SERVER_NAME'];
+			}
+		}
+		if (!strpos($server_url, ':')) {
+			if (empty($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+				$server_port = $_SERVER['SERVER_PORT'];
+			} else {
+				$ports = explode(',', $_SERVER['HTTP_X_FORWARDED_PORT']);
+				$server_port = $ports[0];
+			}
+
+			$server_url .= ':';
+			$server_url .= $server_port;
+		}
+		return $protocol . $server_url;
 	}
 
 	private function DoUserProvisioning($sLogin)

@@ -19,28 +19,43 @@
  *
  * PHP Version 7
  *
- * @file     CAS/ProxiedService/Exception.php
+ * @file     CAS/ServerHostname/Interface.php
  * @category Authentication
  * @package  PhpCAS
- * @author   Adam Franco <afranco@middlebury.edu>
+ * @author   Henry Pan <git@phy25.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
 /**
- * An Exception for problems communicating with a proxied service.
+ * An interface for classes that gets the server name of the PHP server.
+ * This is used to generate service URL and PGT callback URL.
  *
- * @class    CAS_ProxiedService_Exception
+ * @class    CAS_ServiceBaseUrl_Interface
  * @category Authentication
  * @package  PhpCAS
- * @author   Adam Franco <afranco@middlebury.edu>
+ * @author   Henry Pan <git@phy25.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_ProxiedService_Exception
-extends Exception
-implements CAS_Exception
+interface CAS_ServiceBaseUrl_Interface
 {
 
+    /**
+     * Get PHP HTTP protocol and server name.
+     *
+     * @return string protocol, server hostname, and optionally port,
+     *                without trailing slash (https://localhost:8443)
+     */
+    public function get();
+
+    /**
+     * Check whether HTTPS is used.
+     *
+     * This is used to construct the protocol in the URL.
+     *
+     * @return bool true if HTTPS is used
+     */
+    public function isHttps();
+
 }
-?>
