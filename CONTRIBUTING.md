@@ -137,6 +137,9 @@ When your code is working, please:
 * squash as much as possible your commits,
 * rebase your branch on our repo last commit,
 * create a pull request
+* in the pull request description, mind to add all the information useful to understand why you're suggesting this modification and anything necessary to dive into your work. Especially:
+  - bugfixes: exact steps to reproduce the bug (given/when/then), description of the bug cause and what solution is implemented 
+  - enhancements: use cases, implementation details if needed
 * mind to check the "[Allow edits from maintainers](https://docs.github.com/en/github-ae@latest/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)" option !
 
 Detailed procedure to work on fork and create PR is available [in GitHub help pages](https://help.github.com/articles/creating-a-pull-request-from-a-fork/).
