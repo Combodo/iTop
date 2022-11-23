@@ -249,7 +249,7 @@ EOF
 								oEvent.stopPropagation();
 								
 								// Note : This could be better if we check for an existing modal first instead of always creating a new one
-								CombodoPortalToolbox.OpenModal({
+								CombodoModal.OpenModal({
 									content: {
 										endpoint: $(this).attr('href'),
 									},
@@ -527,7 +527,7 @@ EOF
 								'selector': '.modal[data-source-element="{$sButtonAddId}"]:first'
 							};
 						}
-						CombodoPortalToolbox.OpenModal(oOptions);
+						CombodoModal.OpenModal(oOptions);
 					});
 JS
 				);

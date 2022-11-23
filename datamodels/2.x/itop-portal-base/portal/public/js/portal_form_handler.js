@@ -397,7 +397,7 @@ $(function()
 				if(bRedirectInModal === true)
 				{
 					// Creating a new modal
-					CombodoPortalToolbox.OpenModal({
+					CombodoModal.OpenModal({
 						content: {
 							endpoint: sRedirectUrl,
 							data: {

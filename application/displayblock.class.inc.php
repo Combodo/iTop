@@ -1838,7 +1838,7 @@ class MenuBlock extends DisplayBlock
 							if ($bIsModifyAllowed) {
 								$aRegularActions['UI:Menu:Modify'] = array(
 										'label' => Dict::S('UI:Menu:Modify'),
-										'url' => "{$sRootUrl}pages/$sUIPage?operation=modify&class=$sClass&id=$id{$sContext}#",
+										'url' => "{$sRootUrl}pages/$sUIPage?operation=object.modify&class=$sClass&id=$id{$sContext}#",
 									) + $aActionParams;
 							}
 							if ($bIsCreationAllowed) {

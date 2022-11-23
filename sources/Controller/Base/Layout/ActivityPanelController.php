@@ -8,6 +8,7 @@ namespace Combodo\iTop\Controller\Base\Layout;
 
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelHelper;
+use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
 use Exception;
@@ -23,14 +24,14 @@ use utils;
  * @since 3.0.0
  * @package Combodo\iTop\Controller\Base\Layout
  */
-class ActivityPanelController
+class ActivityPanelController extends AbstractController
 {
 	/**
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public static function SaveState(): void
+	public function SaveState(): void
 	{
 		$sObjectClass = utils::ReadPostedParam('object_class', '', utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$sObjectMode = utils::ReadPostedParam('object_mode');
@@ -74,7 +75,7 @@ class ActivityPanelController
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public static function AddCaseLogsEntries(): array
+	public function AddCaseLogsEntries(): array
 	{
 		$sObjectClass = utils::ReadPostedParam('object_class', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$sObjectId = utils::ReadPostedParam('object_id', 0);
@@ -154,7 +155,7 @@ class ActivityPanelController
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public static function LoadMoreEntries(): array
+	public function LoadMoreEntries(): array
 	{
 		$sObjectClass = utils::ReadPostedParam('object_class', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$sObjectId = utils::ReadPostedParam('object_id', 0);

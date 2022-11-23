@@ -422,7 +422,7 @@ $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]')
 	$.post(
 		GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 		{
-			'operation': 'preferences_set_user_picture',
+			'operation': 'preferences.set_user_picture',
 			'image_filename': $(this).attr('data-image-name')
 		}
 	)

@@ -547,7 +547,7 @@ $(function()
 				$.post(
 					this.options.save_state_endpoint,
 					{
-						'operation': 'activity_panel_save_state',
+						'operation': 'activity_panel.save_state',
 						'object_class': this._GetHostObjectClass(),
 						'object_mode': this._GetHostObjectMode(),
 						'is_expanded': this.element.hasClass(this.css_classes.is_expanded),
@@ -936,7 +936,7 @@ $(function()
 
 				// Prepare parameters
 				let oParams = $.extend(oExtraInputs, {
-					operation: 'activity_panel_add_caselog_entries',
+					operation: 'activity_panel.add_caselog_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					transaction_id: this.options.transaction_id,
@@ -1380,7 +1380,7 @@ $(function()
 
 				// Send XHR request
 				let oParams = {
-					operation: 'activity_panel_load_more_entries',
+					operation: 'activity_panel.load_more_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					last_loaded_entries_ids: this.options.last_loaded_entries_ids,
