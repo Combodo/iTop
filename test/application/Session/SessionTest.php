@@ -133,4 +133,12 @@ class SessionTest extends ItopTestCase
 		$this->assertFalse(Session::IsSet(['test1', 'test2', 'test3']));
 	}
 
+	public function testRegenerateId()
+	{
+		Session::Start();
+		$iPrevSessionId = Session::$iSessionId;
+		Session::RegenerateId();
+		//$this->assertFalse(Session::IsSet('test'));
+		$this->assertNotEquals($iPrevSessionId, Session::$iSessionId);
+	}
 }

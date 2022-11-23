@@ -1838,7 +1838,6 @@ class UserRights
 			self::$m_aAdmins = array();
 			self::$m_aPortalUsers = array();
 		}
-		Session::FlushSession();
 		self::_ResetSessionCache();
 		if (self::$m_oAddOn)
 		{

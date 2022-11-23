@@ -49,19 +49,6 @@ class Session
 		}
 	}
 
-	public static function FlushSession()
-	{
-		if (self::IsModeCLI()) {
-			return;
-		}
-
-		if (!is_null(self::$iSessionId)) {
-			self::$bIsInitialized = false;
-			self::$bSessionStarted = false;
-			self::Start();
-		}
-	}
-
 	public static function RegenerateId($bDeleteOldSession = false)
 	{
 		if (self::IsModeCLI()) {
@@ -69,6 +56,9 @@ class Session
 		}
 
 		session_regenerate_id($bDeleteOldSession);
+		if (self::$bSessionStarted) {
+			self::WriteClose();
+		}
 		self::$bSessionStarted = session_start();
 		self::$iSessionId = session_id();
 	}
