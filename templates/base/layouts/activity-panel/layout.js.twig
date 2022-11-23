@@ -1,9 +1,9 @@
 $('#{{ oUIBlock.GetId() }}').activity_panel({
     datetime_format: {{ oUIBlock.GetDateTimeFormatForJSWidget()|json_encode|raw }},
-    datetimes_reformat_limit: {{ get_config_parameter('activity_panel.datetimes_reformat_limit') }},
+    datetimes_reformat_limit: {{ oUIBlock.GetDatetimesReformatLimit() }},
     {% if oUIBlock.HasTransactionId() %}transaction_id: {{ oUIBlock.GetTransactionId()|var_export }},{% endif %}
     lock_enabled: {{ oUIBlock.IsLockEnabled()|var_export }},
-    lock_watcher_period: {{ get_config_parameter('activity_panel.lock_watcher_period') }},
+    lock_watcher_period: {{ oUIBlock.GetLockWatcherPeriod() }},
     lock_endpoint: {{ oUIBlock.GetLockEndpoint()|var_export|raw }},
     show_multiple_entries_submit_confirmation: {{ oUIBlock.GetShowMultipleEntriesSubmitConfirmation()|var_export }},
     save_state_endpoint: {{ oUIBlock.GetSaveStateEndpoint()|var_export|raw }},

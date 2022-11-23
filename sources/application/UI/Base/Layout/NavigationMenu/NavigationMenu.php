@@ -86,6 +86,9 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	protected $bIsExpanded;
 	/** @var bool Whether the hint on how the menu filter works shoudl be displayed or not */
 	protected $bShowMenuFilterHint;
+	/** @var bool */
+	protected $bShowMenusCount;
+
 
 	/**
 	 * NavigationMenu constructor.
@@ -106,10 +109,13 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	) {
 		parent::__construct($sId);
 
+		$oConfig = MetaModel::GetConfig();
+
 		$this->sAppRevisionNumber = utils::GetAppRevisionNumber();
 		$this->sAppSquareIconUrl = Branding::GetCompactMainLogoAbsoluteUrl();
 		$this->sAppFullIconUrl = Branding::GetFullMainLogoAbsoluteUrl();
-		$this->sAppIconLink = MetaModel::GetConfig()->Get('app_icon_url');
+		$this->sAppIconLink = $oConfig->Get('app_icon_url');
+		$this->SetShowMenusCount($oConfig->Get('navigation_menu.show_menus_count'));
 		$this->aSiloSelection = array();
 		$this->aMenuGroups = ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash());
 		$this->oUserMenu = $oUserMenu;
@@ -479,4 +485,21 @@ JS;
 	{
 		return "[data-role='".static::BLOCK_CODE."']";
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetShowMenusCount(): bool
+	{
+		return $this->bShowMenusCount;
+	}
+
+	/**
+	 * @param bool $bShowMenusCount
+	 */
+	public function SetShowMenusCount(bool $bShowMenusCount): void
+	{
+		$this->bShowMenusCount = $bShowMenusCount;
+	}
+
 }

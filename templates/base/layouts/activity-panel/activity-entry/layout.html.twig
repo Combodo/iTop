@@ -39,7 +39,7 @@
                                 <span class="{{ oUIBlock.GetOriginDecorationClasses() }}"></span>
                             </span>
                         {% endif %}
-                        {% if get_config_parameter('activity_panel.show_author_name_below_entries') %}
+                        {% if oUIBlock.ShowAuthorNameBelowEntries() %}
                             <span class="ibo-activity-entry--author-name ibo-is-hidden" data-role="ibo-activity-entry--author-name">{{ oUIBlock.GetAuthorFriendlyname() }}</span>
                         {% endif %}
                         <span class="ibo-activity-entry--datetime" data-role="ibo-activity-entry--datetime"

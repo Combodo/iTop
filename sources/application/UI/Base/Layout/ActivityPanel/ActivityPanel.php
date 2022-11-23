@@ -90,6 +90,17 @@ class ActivityPanel extends UIBlock
 	protected $oComposeMenu;
 	/** @var bool Whether a confirmation dialog should be prompt when multiple entries are about to be submitted at once */
 	protected $bShowMultipleEntriesSubmitConfirmation;
+	/** @var int */
+	protected $iDatetimesReformatLimit;
+	/** @var int */
+	protected $iLockWatcherPeriod;
+	/** @var bool */
+	protected $bPrefilterOnlyCurrentLog;
+	/** @var bool */
+	protected $bPrefilterStateChangesOnLogs;
+	/** @var bool */
+	protected $bPrefilterEditsOnLogs;
+
 
 	/**
 	 * ActivityPanel constructor.
@@ -105,12 +116,18 @@ class ActivityPanel extends UIBlock
 	{
 		parent::__construct($sId);
 
+		$oConfig = MetaModel::GetConfig();
 		$this->InitializeCaseLogTabs();
 		$this->InitializeCaseLogTabsEntryForms();
 		$this->InitializeComposeMenu();
 		$this->SetObjectMode(cmdbAbstractObject::DEFAULT_DISPLAY_MODE);
 		$this->SetObject($oObject);
 		$this->SetEntries($aEntries);
+		$this->SetDatetimesReformatLimit($oConfig->Get('activity_panel.datetimes_reformat_limit'));
+		$this->SetLockWatcherPeriod($oConfig->Get('activity_panel.lock_watcher_period'));
+		$this->SetPrefilterOnlyCurrentLog($oConfig->Get('activity_panel.prefilter_only_current_log'));
+		$this->SetPrefilterStateChangesOnLogs($oConfig->Get('activity_panel.prefilter_state_changes_on_logs'));
+		$this->SetPrefilterEditsOnLogs($oConfig->Get('activity_panel.prefilter_edits_on_logs'));
 		$this->bAreEntriesSorted = false;
 		$this->bHasMoreEntriesToLoad = false;
 		$this->aLastLoadedEntriesIds = [];
@@ -844,6 +861,86 @@ class ActivityPanel extends UIBlock
 	public function GetLoadMoreEntriesEndpoint(): string
 	{
 		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
+	}
+
+	/**
+	 * @return int
+	 */
+	public function GetDatetimesReformatLimit(): int
+	{
+		return $this->iDatetimesReformatLimit;
+	}
+
+	/**
+	 * @param int $iDatetimesReformatLimit
+	 */
+	public function SetDatetimesReformatLimit(int $iDatetimesReformatLimit): void
+	{
+		$this->iDatetimesReformatLimit = $iDatetimesReformatLimit;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function GetLockWatcherPeriod(): int
+	{
+		return $this->iLockWatcherPeriod;
+	}
+
+	/**
+	 * @param int $iLockWatcherPeriod
+	 */
+	public function SetLockWatcherPeriod(int $iLockWatcherPeriod): void
+	{
+		$this->iLockWatcherPeriod = $iLockWatcherPeriod;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetPrefilterOnlyCurrentLog(): bool
+	{
+		return $this->bPrefilterOnlyCurrentLog;
+	}
+
+	/**
+	 * @param bool $bPrefilterOnlyCurrentLog
+	 */
+	public function SetPrefilterOnlyCurrentLog(bool $bPrefilterOnlyCurrentLog): void
+	{
+		$this->bPrefilterOnlyCurrentLog = $bPrefilterOnlyCurrentLog;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetPrefilterStateChangesOnLogs(): bool
+	{
+		return $this->bPrefilterStateChangesOnLogs;
+	}
+
+	/**
+	 * @param bool $bPrefilterStateChangesOnLogs
+	 */
+	public function SetPrefilterStateChangesOnLogs(bool $bPrefilterStateChangesOnLogs): void
+	{
+		$this->bPrefilterStateChangesOnLogs = $bPrefilterStateChangesOnLogs;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetPrefilterEditsOnLogs(): bool
+	{
+		return $this->bPrefilterEditsOnLogs;
+	}
+
+	/**
+	 * @param bool $bPrefilterEditsOnLogs
+	 */
+	public function SetPrefilterEditsOnLogs(bool $bPrefilterEditsOnLogs): void
+	{
+		$this->bPrefilterEditsOnLogs = $bPrefilterEditsOnLogs;
 	}
 
 	/**
