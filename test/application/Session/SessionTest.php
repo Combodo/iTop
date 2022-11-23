@@ -10,6 +10,18 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  */
 class SessionTest extends ItopTestCase
 {
+	protected function setUp(): void
+	{
+		parent::setUp();
+		Session::$bAllowCLI = true;
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		Session::$bAllowCLI = false;
+	}
+
 	/**
 	 * @covers \Combodo\iTop\Application\Helper\Session::Start
 	 */
@@ -121,4 +133,12 @@ class SessionTest extends ItopTestCase
 		$this->assertFalse(Session::IsSet(['test1', 'test2', 'test3']));
 	}
 
+	public function testRegenerateId()
+	{
+		Session::Start();
+		$iPrevSessionId = Session::$iSessionId;
+		Session::RegenerateId();
+		//$this->assertFalse(Session::IsSet('test'));
+		$this->assertNotEquals($iPrevSessionId, Session::$iSessionId);
+	}
 }
