@@ -1037,6 +1037,7 @@ class iTopDesignFormat
 					case 'add_only':
 					case 'add_remove':
 					case 'actions':
+					default:
 						$sRelationType = 'link';
 						$sReadOnly = 'false';
 						break;

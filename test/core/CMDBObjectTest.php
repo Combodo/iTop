@@ -108,8 +108,8 @@ class CMDBObjectTest extends ItopDataTestCase
 		$sAdminLogin = "admin-user-".$sUid;
 		$sImpersonatedLogin = "impersonated-user-".$sUid;
 
-		$iAdminUserId = $this->CreateUserForImpersonation($sAdminLogin, 'Administrator', 'AdminName', 'AdminSurName');
-		$this->CreateUserForImpersonation($sImpersonatedLogin, 'Configuration Manager', 'ImpersonatedName', 'ImpersonatedSurName');
+		$oAdminUser = $this->CreateUserForImpersonation($sAdminLogin, 'Administrator', 'AdminName', 'AdminSurName');
+		$oImpersonatedUser = $this->CreateUserForImpersonation($sImpersonatedLogin, 'Configuration Manager', 'ImpersonatedName', 'ImpersonatedSurName');
 
 		$_SESSION = [];
 		\UserRights::Login($sAdminLogin);
@@ -124,28 +124,31 @@ class CMDBObjectTest extends ItopDataTestCase
 		if (is_null($sTrackInfo)){
 			CMDBObject::SetTrackInfo(null);
 		} else {
+			$sTrackInfo = $this->ReplaceByFriendlyNames($sTrackInfo, $oAdminUser, $oImpersonatedUser);
 			CMDBObject::SetTrackInfo($sTrackInfo);
 		}
 
 		$this->CreateSimpleObject();
 		if (is_null($sTrackInfo)){
-			self::assertEquals("AdminSurName AdminName", CMDBObject::GetCurrentChange()->Get('userinfo'),
+			self::assertEquals($oAdminUser->GetFriendlyName(), CMDBObject::GetCurrentChange()->Get('userinfo'),
 			'TrackInfo : no impersonation');
 		} else {
 			self::assertEquals($sTrackInfo, CMDBObject::GetCurrentChange()->Get('userinfo'),
 			'TrackInfo : no impersonation');
 		}
-		self::assertEquals($iAdminUserId, CMDBObject::GetCurrentChange()->Get('user_id'),
+		self::assertEquals($oAdminUser->GetKey(), CMDBObject::GetCurrentChange()->Get('user_id'),
 			'TrackInfo : admin userid');
 
 		\UserRights::Impersonate($sImpersonatedLogin);
 		$this->CreateSimpleObject();
 
 		if (is_null($sExpectedChangeLogWhenImpersonation)){
-			self::assertEquals("AdminSurName AdminName on behalf of ImpersonatedSurName ImpersonatedName", CMDBObject::GetCurrentChange()->Get('userinfo'),
+			$sExpectedMsg = $this->ReplaceByFriendlyNames("AdminSurName AdminName on behalf of ImpersonatedSurName ImpersonatedName", $oAdminUser, $oImpersonatedUser);
+			self::assertEquals($sExpectedMsg, CMDBObject::GetCurrentChange()->Get('userinfo'),
 				'TrackInfo : impersonation');
 		} else {
-			self::assertEquals($sExpectedChangeLogWhenImpersonation, CMDBObject::GetCurrentChange()->Get('userinfo'),
+			$sExpectedMsg = $this->ReplaceByFriendlyNames($sExpectedChangeLogWhenImpersonation, $oAdminUser, $oImpersonatedUser);
+			self::assertEquals($sExpectedMsg, CMDBObject::GetCurrentChange()->Get('userinfo'),
 				'TrackInfo : impersonation');
 		}
 
@@ -155,18 +158,24 @@ class CMDBObjectTest extends ItopDataTestCase
 		\UserRights::Deimpersonate();
 		$this->CreateSimpleObject();
 		if (is_null($sTrackInfo)){
-			self::assertEquals("AdminSurName AdminName", CMDBObject::GetCurrentChange()->Get('userinfo'),
+			self::assertEquals($oAdminUser->GetFriendlyName(), CMDBObject::GetCurrentChange()->Get('userinfo'),
 				'TrackInfo : no impersonation');
 		} else {
 			self::assertEquals($sTrackInfo, CMDBObject::GetCurrentChange()->Get('userinfo'),
 				'TrackInfo : no impersonation');
 		}
-		self::assertEquals($iAdminUserId, CMDBObject::GetCurrentChange()->Get('user_id'),
+		self::assertEquals($oAdminUser->GetKey(), CMDBObject::GetCurrentChange()->Get('user_id'),
 			'TrackInfo : admin userid');
 
 		// restore initial conditions
 		CMDBObject::SetCurrentChange($oInitialCurrentChange);
 		CMDBObject::SetTrackInfo($sInitialTrackInfo);
+	}
+
+	private function ReplaceByFriendlyNames($sMessage, $oAdminUser, $oImpersonatedUser) : string {
+		$sNewMessage = str_replace('AdminSurName AdminName', $oAdminUser->GetFriendlyName(), $sMessage);
+		$sNewMessage = str_replace('ImpersonatedSurName ImpersonatedName', $oImpersonatedUser->GetFriendlyName(), $sNewMessage);
+		return $sNewMessage;
 	}
 
 	private function CreateSimpleObject(){
@@ -178,7 +187,7 @@ class CMDBObjectTest extends ItopDataTestCase
 		$oTestObject->DBWrite();
 	}
 
-	private function CreateUserForImpersonation($sLogin, $sProfileName, $sName, $sSurname): int {
+	private function CreateUserForImpersonation($sLogin, $sProfileName, $sName, $sSurname): \UserLocal {
 		/** @var \Person $oPerson */
 		$oPerson = $this->createObject('Person', array(
 			'name' => $sName,
@@ -187,8 +196,9 @@ class CMDBObjectTest extends ItopDataTestCase
 		));
 
 		$oProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => $sProfileName), true);
+		/** @var \UserLocal $oUser */
 		$oUser = $this->CreateUser($sLogin, $oProfile->GetKey(), "1234567Azert@", $oPerson->GetKey());
 
-		return $oUser->GetKey();
+		return $oUser;
 	}
 }
