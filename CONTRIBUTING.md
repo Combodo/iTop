@@ -145,7 +145,7 @@ When your code is working, please:
 Detailed procedure to work on fork and create PR is available [in GitHub help pages](https://help.github.com/articles/creating-a-pull-request-from-a-fork/).
 
 
-### 🙏 We are thankful
+## 🙏 We are thankful
 
 We are thankful for all your contributions to the iTop universe! As a thank you gift, we will send stickers to every iTop (& extensions) contributors!
 
