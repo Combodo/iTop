@@ -54,8 +54,11 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 	/** @inheritdoc */
 	public function GetRowActions(): array
 	{
-		return array(
-			[
+		$aRowActions = array();
+
+		if (!$this->oAttDef->GetReadOnly()) {
+
+			$aRowActions[] = array(
 				'tooltip'       => 'UI:Links:ActionRow:detach',
 				'icon_classes'  => 'fas fa-minus',
 				'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw']);",
@@ -64,8 +67,11 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 					'message_row_data'         => "Remote/hyperlink",
 					'remember_choice_pref_key' => 'LinkSetWorker.DetachLinkedObject',
 				],
-			],
-		);
+			);
+
+		}
+
+		return $aRowActions;
 	}
 
 	/**

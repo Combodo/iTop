@@ -27,7 +27,12 @@ trait tTableRowActions
 	 * action => {
 	 *      tooltip: string,
 	 *      icon_classes: string,
-	 *      js_row_action: string
+	 *      js_row_action: string,
+	 *      confirmation => {
+	 *          message: string,
+	 *          message_row_data: string,
+	 *          remember_choice_pref_key: string
+	 *      }
 	 * }
 	 */
 	protected $aRowActions;

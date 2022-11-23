@@ -43,28 +43,41 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 	/** @inheritdoc * */
 	public function GetRowActions(): array
 	{
-		return array(
-			[
-				'tooltip'       => 'UI:Links:ActionRow:detach',
-				'icon_classes'  => 'fas fa-minus',
-				'js_row_action' => "LinkSetWorker.DetachLinkedObject('{$this->sTargetClass}', aRowData['{$this->sTargetClass}/_key_/raw'], '{$this->oAttDef->GetExtKeyToMe()}');",
-				'confirmation'  => [
-					'message'                  => 'UI:Links:ActionRow:detach:confirmation',
-					'message_row_data'         => "{$this->sTargetClass}/hyperlink",
-					'remember_choice_pref_key' => 'LinkSetWorker.DetachLinkedObject',
-				],
-			],
-			[
-				'tooltip'       => 'UI:Links:ActionRow:delete',
-				'icon_classes'  => 'fas fa-trash',
-				'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
-				'confirmation'  => [
-					'message'                  => 'UI:Links:ActionRow:delete:confirmation',
-					'message_row_data'         => "{$this->sTargetClass}/hyperlink",
-					'remember_choice_pref_key' => 'LinkSetWorker.DeleteLinkedObject',
-				],
-			],
-		);
+		$aRowActions = array();
+
+		if (!$this->oAttDef->GetReadOnly()) {
+
+			switch ($this->oAttDef->GetRelationType()) {
+
+				case LINKSET_RELATIONTYPE_LINK:
+					$aRowActions[] = array(
+						'tooltip'       => 'UI:Links:ActionRow:detach',
+						'icon_classes'  => 'fas fa-minus',
+						'js_row_action' => "LinkSetWorker.DetachLinkedObject('{$this->sTargetClass}', aRowData['{$this->sTargetClass}/_key_/raw'], '{$this->oAttDef->GetExtKeyToMe()}');",
+						'confirmation'  => [
+							'message'                  => 'UI:Links:ActionRow:detach:confirmation',
+							'message_row_data'         => "{$this->sTargetClass}/hyperlink",
+							'remember_choice_pref_key' => 'LinkSetWorker.DetachLinkedObject',
+						],
+					);
+					break;
+
+				case LINKSET_RELATIONTYPE_PROPERTY:
+					$aRowActions[] = array(
+						'tooltip'       => 'UI:Links:ActionRow:delete',
+						'icon_classes'  => 'fas fa-trash',
+						'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
+						'confirmation'  => [
+							'message'                  => 'UI:Links:ActionRow:delete:confirmation',
+							'message_row_data'         => "{$this->sTargetClass}/hyperlink",
+							'remember_choice_pref_key' => 'LinkSetWorker.DeleteLinkedObject',
+						],
+					);
+					break;
+			}
+		}
+
+		return $aRowActions;
 	}
 
 	/**

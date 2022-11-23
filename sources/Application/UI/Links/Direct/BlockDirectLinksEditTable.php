@@ -34,6 +34,9 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	/** @var \UILinksWidgetDirect */
 	public \UILinksWidgetDirect $oUILinksDirectWidget;
 
+	/** @var \AttributeLinkedSet */
+	private \AttributeLinkedSet $oAttributeLinkedSet;
+
 	/** @var string */
 	public string $sInputName;
 
@@ -83,8 +86,22 @@ class BlockDirectLinksEditTable extends UIContentBlock
 		$bDoSearch = !\utils::IsHighCardinality($this->oUILinksDirectWidget->GetLinkedClass());
 		$this->sJSDoSearch = $bDoSearch ? 'true' : 'false';
 
+		// Initialization
+		$this->Init();
+
 		// Initialize UI
 		$this->InitUI();
+	}
+
+	/**
+	 * Initialisation.
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	private function Init()
+	{
+		$this->oAttributeLinkedSet = MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetClass(), $this->oUILinksDirectWidget->GetAttCode());
 	}
 
 	/**
@@ -98,7 +115,8 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	{
 		// MedallionIcon
 		$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false));
-		$oClassIcon->SetDescription(MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetClass(), $this->oUILinksDirectWidget->GetAttCode())->GetDescription())->AddCSSClass('ibo-block-list--medallion');
+		$oClassIcon->SetDescription($this->oAttributeLinkedSet->GetDescription());
+		$oClassIcon->AddCSSClass('ibo-block-list--medallion');
 		$this->AddSubBlock($oClassIcon);
 	}
 
@@ -171,7 +189,10 @@ class BlockDirectLinksEditTable extends UIContentBlock
 			$this->AddSubBlock($aTablePanel);
 		}
 		catch (\Exception $e) {
-			$this->AddSubBlock(PanelUIBlockFactory::MakeForDanger('error', 'error while trying to load datatable'));
+			$oAlert = AlertUIBlockFactory::MakeForDanger('error', 'error while trying to load datatable');
+			$oAlert->SetIsClosable(false);
+			$oAlert->SetIsCollapsible(false);
+			$this->AddSubBlock($oAlert);
 		}
 	}
 
@@ -243,12 +264,16 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	 */
 	private function GetRowActions(): array
 	{
-		return array(
-			[
+		$aRowActions = array();
+
+		if (!$this->oAttributeLinkedSet->GetReadOnly()) {
+			$aRowActions[] = array(
 				'tooltip'       => 'remove link',
 				'icon_classes'  => 'fas fa-minus',
 				'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteRow($(':checkbox', oTrElement));",
-			],
-		);
+			);
+		}
+
+		return $aRowActions;
 	}
 }

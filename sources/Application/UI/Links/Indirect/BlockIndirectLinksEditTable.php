@@ -33,6 +33,9 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	/** @var \UILinksWidget */
 	public \UILinksWidget $oUILinksWidget;
 
+	/** @var \AttributeLinkedSetIndirect */
+	private \AttributeLinkedSetIndirect $oAttributeLinkedSetIndirect;
+
 	/** @var string */
 	public string $sDuplicates;
 
@@ -58,6 +61,7 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public function __construct(\UILinksWidget $oUILinksWidget)
 	{
@@ -70,8 +74,22 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 		$this->sDuplicates = ($oUILinksWidget->IsDuplicatesAllowed()) ? 'true' : 'false';
 		$this->sJSDoSearch = \utils::IsHighCardinality($oUILinksWidget->GetRemoteClass()) ? 'false' : 'true'; // Don't automatically launch the search if the table is huge
 
+		// Initialization
+		$this->Init();
+
 		// Initialize UI
 		$this->InitUI();
+	}
+
+	/**
+	 * Initialization.
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	private function Init()
+	{
+		$this->oAttributeLinkedSetIndirect = MetaModel::GetAttributeDef($this->oUILinksWidget->GetClass(), $this->oUILinksWidget->GetAttCode());
 	}
 
 	/**
@@ -85,7 +103,8 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	{
 		// MedallionIcon
 		$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($this->oUILinksWidget->GetRemoteClass(), false));
-		$oClassIcon->SetDescription(MetaModel::GetAttributeDef($this->oUILinksWidget->GetClass(), $this->oUILinksWidget->GetAttCode())->GetDescription())->AddCSSClass('ibo-block-list--medallion');
+		$oClassIcon->SetDescription($this->oAttributeLinkedSetIndirect->GetDescription());
+		$oClassIcon->AddCSSClass('ibo-block-list--medallion');
 		$this->AddSubBlock($oClassIcon);
 
 		// To prevent adding forms inside the main form
@@ -399,15 +418,17 @@ JS
 	 */
 	private function GetRowActions(): array
 	{
-		$aActions = array();
+		$aRowActions = array();
 
-		$aActions[] = [
-			'tooltip'       => 'remove link',
-			'icon_classes'  => 'fas fa-minus',
-			'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
-		];
+		if (!$this->oAttributeLinkedSetIndirect->GetReadOnly()) {
+			$aRowActions[] = array(
+				'tooltip'       => 'remove link',
+				'icon_classes'  => 'fas fa-minus',
+				'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
+			);
+		}
 
-		return $aActions;
+		return $aRowActions;
 	}
 
 }
