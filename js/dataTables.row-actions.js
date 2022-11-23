@@ -4,7 +4,7 @@
  */
 
 const TABLE_ACTION_CONFIRMATION_PREFIX = 'table_action_row';
-const TABLE_ACTION_CONFIRMATION_DIALOG_SELECTOR = '[data-role="ibo-datatable--row-action--confirmation-dialog"]';
+const TABLE_ACTION_CONFIRMATION_DIALOG_SELECTOR = '#table-row-action-confirmation-dialog';
 
 /**
  * Return column JSON declaration for row actions.
@@ -59,8 +59,8 @@ const HandleActionRowConfirmation = function (sTitle, sMessage, sDoNotShowAgainP
 	}
 
 	// fill confirmation dialog
-	$('.ibo-abstract-block-links-view-table--action-confirmation-explanation', $(TABLE_ACTION_CONFIRMATION_DIALOG_SELECTOR)).html(sMessage);
-	$('.ibo-abstract-block-links-view-table--action-confirmation-preference', $(TABLE_ACTION_CONFIRMATION_DIALOG_SELECTOR)).toggle(sDoNotShowAgainPreferenceKey != null);
+	$('.ibo-row-action--confirmation--explanation', $(TABLE_ACTION_CONFIRMATION_DIALOG_SELECTOR)).html(sMessage);
+	$('.ibo-row-action--confirmation--do-not-show-again', $(TABLE_ACTION_CONFIRMATION_DIALOG_SELECTOR)).toggle(sDoNotShowAgainPreferenceKey != null);
 
 	// open confirmation dialog
 	$(TABLE_ACTION_CONFIRMATION_DIALOG_SELECTOR).dialog({
@@ -90,7 +90,7 @@ const HandleActionRowConfirmation = function (sTitle, sMessage, sDoNotShowAgainP
 					// handle "do not show again" user preference
 					if(sDoNotShowAgainPreferenceKey != null){
 						// save preference
-						const bDoNotShowAgain = $(this).find($('.ibo-abstract-block-links-view-table--action-confirmation-preference-input')).prop('checked');
+						const bDoNotShowAgain = $(this).find($('.ibo-row-action--confirmation--do-not-show-again--checkbox')).prop('checked');
 						if (bDoNotShowAgain) {
 							SetUserPreference(`${TABLE_ACTION_CONFIRMATION_PREFIX}.${sDoNotShowAgainPreferenceKey}`, 'false', true);
 						}

@@ -13,6 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use MetaModel;
@@ -196,7 +197,14 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 		]);
 		$aTablePanel = PanelUIBlockFactory::MakeNeutral('');
 		$aTablePanel->SetSubTitle(sprintf('Total: %d objects.', count($aForm)));
-		$aTablePanel->AddSubBlock($this->CreateTableInformationAlert());
+		$oToolbar = ToolbarUIBlockFactory::MakeForButton();
+		$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
+		$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();");
+		$oToolbar->AddSubBlock($oActionButtonUnlink);
+		$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
+		$oActionButtonLink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
+		$oToolbar->AddSubBlock($oActionButtonLink);
+		$aTablePanel->AddToolbarBlock($oToolbar);
 		$aTablePanel->AddSubBlock($oDataTable);
 
 		$this->AddSubBlock($aTablePanel);

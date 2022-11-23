@@ -37,7 +37,7 @@ class DialogUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = Dialog::class;
 
 	/**
-	 * Make a basis Alert component
+	 * Make a basis Dialog component
 	 *
 	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
@@ -47,7 +47,7 @@ class DialogUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeNeutral(string $sTitle = '', string $sContent = '', ?string $sId = null)
 	{
-		return new Dialog($sTitle, $sContent, Alert::ENUM_COLOR_SCHEME_NEUTRAL, $sId);
+		return new Dialog($sTitle, $sContent, $sId);
 	}
 
 

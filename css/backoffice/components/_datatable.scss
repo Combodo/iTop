@@ -150,44 +150,18 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
    }
 }
 
-// table alert information
-.ibo-table--alert-information{
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-
-  .ibo-table--alert-information--label{
-    margin-right: 35px;
-  }
-  .ibo-alert--title{
-    display: none;
-  }
-  .ibo-table--alert-information--delete-button{
-    display: none;
-  }
-  .ibo-table--alert-information--add-button{
-    display: unset;
-  }
-}
-
-.ibo-table--alert-information.ibo-is-information{
-  .ibo-table--alert-information--delete-button{
-    display: unset;
-  }
-  .ibo-table--alert-information--add-button{
-    display: none;
-  }
-}
 
 
-.ibo-abstract-block-links-view-table--action-confirmation{
+#table-row-action-confirmation-dialog{
 
-  .ibo-abstract-block-links-view-table--action-confirmation-explanation{
+  .ibo-row-action--confirmation--explanation{
     margin-bottom: 16px;
   }
 
-  .ibo-abstract-block-links-view-table--action-confirmation-preference-input{
-    margin-right: 0.5rem;
+  .ibo-row-action--confirmation--do-not-show-again--checkbox{
+    height: auto;
+    display: inline-block;
+    width: auto;
   }
 
 }

@@ -121,43 +121,6 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	}
 
 	/**
-	 * CreateTableInformationAlert.
-	 *
-	 * @return iUIBlock
-	 */
-	private function CreateTableInformationAlert(): iUIBlock
-	{
-		// Selection alert
-		$oAlert = AlertUIBlockFactory::MakeNeutral('', '', "linkedset_{$this->oUILinksDirectWidget->GetInputId()}_alert_information");
-		$oAlert->AddCSSClasses([
-			'ibo-table--alert-information',
-		]);
-		$oAlert->SetIsClosable(false);
-		$oAlert->SetIsCollapsible(false);
-		$oAlert->AddSubBlock(new Html('<span class="ibo-table--alert-information--label" data-role="ibo-datatable-selection-value"></span>'));
-
-		// Delete button
-		$oUIButton = ButtonUIBlockFactory::MakeForDestructiveAction("Détacher les {$this->oUILinksDirectWidget->GetLinkedClass()}", 'table-selection');
-		$oUIButton->AddCSSClass('ibo-table--alert-information--delete-button');
-		$oUIButton->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteSelection();");
-		$oAlert->AddSubBlock($oUIButton);
-
-		// Add button
-		$oUIAddButton = ButtonUIBlockFactory::MakeForPrimaryAction("Attacher des {$this->oUILinksDirectWidget->GetLinkedClass()}", 'table-selection');
-		$oUIAddButton->AddCSSClass('ibo-table--alert-information--add-button');
-		$oUIAddButton->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
-		$oAlert->AddSubBlock($oUIAddButton);
-
-		// create button
-		$oUIAddButton = ButtonUIBlockFactory::MakeForPrimaryAction("Créer un {$this->oUILinksDirectWidget->GetLinkedClass()}", 'table-selection');
-		$oUIAddButton->AddCSSClass('ibo-table--alert-information--add-button');
-		$oUIAddButton->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._createRow();");
-		$oAlert->AddSubBlock($oUIAddButton);
-
-		return $oAlert;
-	}
-
-	/**
 	 * @param \WebPage $oPage
 	 * @param \DBObjectSet $oValue
 	 * @param string $sFormPrefix
@@ -178,12 +141,19 @@ class BlockDirectLinksEditTable extends UIContentBlock
 			$oDatatable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
 			$aTablePanel = PanelUIBlockFactory::MakeNeutral('');
 			$aTablePanel->SetSubTitle(sprintf('Total: %d objects.', count($aRows)));
-			$aTablePanel->AddSubBlock($this->CreateTableInformationAlert());
 			$oToolbar = ToolbarUIBlockFactory::MakeForButton();
-			$oActionButton1 = ButtonUIBlockFactory::MakeNeutral('Attacher');
-			$oToolbar->AddSubBlock($oActionButton1);
-			$oActionButton2 = ButtonUIBlockFactory::MakeNeutral('Créer');
-			$oToolbar->AddSubBlock($oActionButton2);
+			$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
+			$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._removeSelection();");
+			$oToolbar->AddSubBlock($oActionButtonUnlink);
+			$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
+			$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
+			$oToolbar->AddSubBlock($oActionButtonLink);
+			$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral('Create');
+			$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._createRow();");
+			$oToolbar->AddSubBlock($oActionButtonCreate);
+			$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete');
+			$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteSelection();");
+			$oToolbar->AddSubBlock($oActionButtonDelete);
 			$aTablePanel->AddToolbarBlock($oToolbar);
 			$aTablePanel->AddSubBlock($oDatatable);
 			$this->AddSubBlock($aTablePanel);

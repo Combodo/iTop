@@ -3299,6 +3299,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'iTopStandardURLMaker' => __DIR__ . '/../..' . '/application/applicationcontext.class.inc.php',
         'iTopWebPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/iTopWebPage.php',
         'iTopWizardWebPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/iTopWizardWebPage.php',
+        'iTopXmlException' => __DIR__ . '/../..' . '/application/exceptions/iTopXmlException.php',
         'iWorkingTimeComputer' => __DIR__ . '/../..' . '/core/computing.inc.php',
         'lnkTriggerAction' => __DIR__ . '/../..' . '/core/trigger.class.inc.php',
         'ormCaseLog' => __DIR__ . '/../..' . '/core/ormcaselog.class.inc.php',

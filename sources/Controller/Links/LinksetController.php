@@ -73,14 +73,14 @@ class LinkSetController extends AbstractController
 
 		// retrieve parameters
 		$sLinkedObjectClass = utils::ReadParam('linked_object_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
-		$sLinkedObjectObjectKey = utils::ReadParam('linked_object_key', 0, false, utils::ENUM_SANITIZATION_FILTER_STRING);
+		$sLinkedObjectKey = utils::ReadParam('linked_object_key', 0, false, utils::ENUM_SANITIZATION_FILTER_STRING);
 		$sExternalKeyAttCode = utils::ReadParam('external_key_att_code', null, false, utils::ENUM_SANITIZATION_FILTER_STRING);
 		$sTransactionId = utils::ReadParam('transaction_id', null, false, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
 
 		// check transaction id
 		if (utils::IsTransactionValid($sTransactionId, false)) {
 			try {
-				$oLinkedObject = MetaModel::GetObject($sLinkedObjectClass, $sLinkedObjectObjectKey);
+				$oLinkedObject = MetaModel::GetObject($sLinkedObjectClass, $sLinkedObjectKey);
 				$oLinkedObject->Set($sExternalKeyAttCode, null);
 				$oLinkedObject->DBWrite();
 				$bOperationSuccess = true;

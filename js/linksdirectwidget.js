@@ -592,6 +592,12 @@ $(function()
 			this._updateTable();
 			this._updateTableInformation();
 		},
+		_removeSelection: function(){
+			var me = this;
+			$('.selectList'+me.id+':checked', me.element).each(function () {
+				me._removeRow($(this));
+			});
+		},
 		_removeRow: function(oCheckbox)
 		{
 			var iObjKey = parseInt(oCheckbox.val(), 10); // Number in base 10

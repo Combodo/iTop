@@ -2934,6 +2934,7 @@ return array(
     'iTopStandardURLMaker' => $baseDir . '/application/applicationcontext.class.inc.php',
     'iTopWebPage' => $baseDir . '/sources/Application/WebPage/iTopWebPage.php',
     'iTopWizardWebPage' => $baseDir . '/sources/Application/WebPage/iTopWizardWebPage.php',
+    'iTopXmlException' => $baseDir . '/application/exceptions/iTopXmlException.php',
     'iWorkingTimeComputer' => $baseDir . '/core/computing.inc.php',
     'lnkTriggerAction' => $baseDir . '/core/trigger.class.inc.php',
     'ormCaseLog' => $baseDir . '/core/ormcaselog.class.inc.php',
