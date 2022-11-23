@@ -24,10 +24,12 @@ class Session
 	protected static $bIsInitialized = false;
 	/** @var bool */
 	protected static $bSessionStarted = false;
+	/** @var bool */
+	public static $bAllowCLI = false;
 
 	public static function Start()
 	{
-		if (utils::IsModeCLI()) {
+		if (self::IsModeCLI()) {
 			return;
 		}
 
@@ -49,7 +51,7 @@ class Session
 
 	public static function FlushSession()
 	{
-		if (utils::IsModeCLI()) {
+		if (self::IsModeCLI()) {
 			return;
 		}
 
@@ -62,7 +64,7 @@ class Session
 
 	public static function RegenerateId($bDeleteOldSession = false)
 	{
-		if (utils::IsModeCLI()) {
+		if (self::IsModeCLI()) {
 			return;
 		}
 
@@ -73,7 +75,7 @@ class Session
 
 	public static function WriteClose()
 	{
-		if (utils::IsModeCLI()) {
+		if (self::IsModeCLI()) {
 			return;
 		}
 
@@ -211,5 +213,15 @@ class Session
 	public static function GetLog()
 	{
 		return print_r($_SESSION, true);
+	}
+
+	private static function IsModeCLI(): bool
+	{
+		if (self::$bAllowCLI) {
+
+			return false;
+		}
+
+		return utils::IsModeCLI();
 	}
 }
