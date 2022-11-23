@@ -36,6 +36,7 @@ class StaticTable extends UIContentBlock
 		'js/dataTables.main.js',
 		'js/dataTables.settings.js',
 		'js/dataTables.pipeline.js',
+		'js/dataTables.row-actions.js',
 	];
 
 	/**

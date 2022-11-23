@@ -211,7 +211,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		foreach ($oTable->GetRowActions() as $iKey => $aAction) {
 			$oButton = ButtonUIBlockFactory::MakeIconAction(
 				array_key_exists('icon_classes', $aAction) ? $aAction['icon_classes'] : 'fas fa-question',
-				array_key_exists('tooltip', $aAction) ? $aAction['tooltip'] : '',
+				array_key_exists('tooltip', $aAction) ? Dict::S($aAction['tooltip']) : '',
 				array_key_exists('name', $aAction) ? $aAction['name'] : 'undefined'
 			);
 			$oButton->SetDataAttributes(['action-id' => $iKey]);
@@ -521,7 +521,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		if (isset($aExtraParams['row_actions'])) {
 			$oDataTable->SetRowActions($aExtraParams['row_actions']);
 		}
-
 
 		return $oDataTable;
 	}

@@ -40,6 +40,7 @@ class DataTable extends UIContentBlock
 		'js/dataTables.main.js',
 		'js/dataTables.settings.js',
 		'js/dataTables.pipeline.js',
+		'js/dataTables.row-actions.js',
 	];
 
 	protected $aOptions;//list of specific options for display datatable
@@ -51,6 +52,8 @@ class DataTable extends UIContentBlock
 	 * array of data to display the first page
 	 */
 	protected $aInitDisplayData;
+
+	public const DEFAULT_ACTION_ROW_CONFIRMATION = true;
 
 
 	/**

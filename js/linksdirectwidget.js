@@ -32,18 +32,19 @@ $(function()
 			do_search: true,
 			submit_to: '../pages/ajax.render.php',
 			submit_parameters: {},
-			labels: { 'delete': 'Delete',
-				  	  modify: 'Modify...' , 
-				  	  creation_title: 'Creation of a new object...' , 
-					  create: 'Create...',
-					  add: 'Add...',
-					  remove: 'Remove',
+			labels: {
+				// 'delete': 'Delete',
+				//   	  modify: 'Modify...' ,
+				  	  creation_title: 'Creation of a new object...' ,
+					  // create: 'Create...',
+					  // add: 'Add...',
+					  // remove: 'Remove',
 					  selection_title: 'Objects selection'
 					},
-			buttons: ['create', 'delete'],
+			// buttons: ['create', 'delete'],
 			oWizardHelper: null
 		},
-	
+
 		// the constructor
 		_create: function()
 		{
@@ -53,15 +54,14 @@ $(function()
 			this.element
 			.addClass('itop-directlinks');
 
-
 			this.datatable = this.element.find('table.listResults');
 			
-			var aButtonsTypes = ['delete', 'remove', 'modify', 'add', 'create'];
-			this.oButtons = {};
-			for(k in aButtonsTypes)
-			{
-				this.oButtons[aButtonsTypes[k]] =  $('<button class="ibo-button ibo-is-regular ibo-is-neutral" type="button">' + this.options.labels[aButtonsTypes[k]] + '</button>');
-			}
+			// var aButtonsTypes = ['delete', 'remove', 'modify', 'add', 'create'];
+			// this.oButtons = {};
+			// for(k in aButtonsTypes)
+			// {
+			// 	this.oButtons[aButtonsTypes[k]] =  $('<button class="ibo-button ibo-is-regular ibo-is-neutral" type="button">' + this.options.labels[aButtonsTypes[k]] + '</button>');
+			// }
 			this.indicator = $('<span></span>');
 			this.inputToBeCreated = $('<input type="hidden" name="'+this.options.input_name+'_tbc" value="{}">');
 			this.toBeCreated = {};
@@ -78,33 +78,33 @@ $(function()
 				.after(this.inputToBeDeleted)
 				.after(this.inputToBeAdded)
 				.after(this.inputToBeRemoved)
-				.after('<span style="float:left">&nbsp;&nbsp;&nbsp;<img src="../images/tv-item-last.gif">&nbsp;&nbsp;&nbsp;')
 				.after(this.indicator);
-			for (k in this.options.buttons) {
-				this.element.after(this.oButtons[this.options.buttons[k]]).after('&nbsp;&nbsp;&nbsp;');
-			}
+
+			// for (k in this.options.buttons) {
+			// 	this.element.after(this.oButtons[this.options.buttons[k]]).after('&nbsp;&nbsp;&nbsp;');
+			// }
 
 			this.element.find('.selectList'+this.id).bind('change', function () {
 				me._updateButtons();
 			});
-			this.oButtons['delete'].on('click', function () {
-				$('.selectList'+me.id+':checked', me.element).each(function () {
-					me._deleteRow($(this));
-				});
-			});
-			this.oButtons['create'].on('click', function () {
-				me._createRow();
-			});
-			this.oButtons['remove'].on('click', function () {
-				$('.selectList'+me.id+':checked', me.element).each(function () {
-					me._removeRow($(this));
-				});
-			});
-			this.oButtons['add'].on('click', function () {
-				me._selectToAdd();
-			});
+			// this.oButtons['delete'].on('click', function () {
+			// 	me._deleteSelection();
+			// });
+			// this.oButtons['create'].on('click', function () {
+			// 	me._createRow();
+			// });
+			// this.oButtons['remove'].on('click', function () {
+			// 	$('.selectList'+me.id+':checked', me.element).each(function () {
+			// 		me._removeRow($(this));
+			// 	});
+			// });
+			// this.oButtons['add'].on('click', function () {
+			// 	me._selectToAdd();
+			// });
 
 			this._updateButtons();
+
+			me._updateTableInformation();
 		},
 
 		// called when created, and later when changing options
@@ -135,23 +135,42 @@ $(function()
 			var oChecked = $('.selectList'+this.id+':checked', this.element);
 			switch (oChecked.length) {
 				case 0:
-					this.oButtons['delete'].prop('disabled', true);
-					this.oButtons['remove'].prop('disabled', true);
-					this.oButtons['modify'].prop('disabled', true);
+					// this.oButtons['delete'].prop('disabled', true);
+					// this.oButtons['remove'].prop('disabled', true);
+					// this.oButtons['modify'].prop('disabled', true);
 					break;
 
 				case 1:
-					this.oButtons['delete'].prop('disabled', false);
-					this.oButtons['remove'].prop('disabled', false);
-					this.oButtons['modify'].prop('disabled', false);
+					// this.oButtons['delete'].prop('disabled', false);
+					// this.oButtons['remove'].prop('disabled', false);
+					// this.oButtons['modify'].prop('disabled', false);
 					break;
 
 				default:
-					this.oButtons['delete'].prop('disabled', false);
-					this.oButtons['remove'].prop('disabled', false);
-					this.oButtons['modify'].prop('disabled', true);
+					// this.oButtons['delete'].prop('disabled', false);
+					// this.oButtons['remove'].prop('disabled', false);
+					// this.oButtons['modify'].prop('disabled', true);
 					break;
 			}
+		},
+		_updateTableInformation: function(){
+
+			let nbChecked = $('tbody tr input:checked', this.element).length;
+			let count = $('tbody tr input', this.element).length;
+
+			$('#linkedset_'+this.id+'_alert_information').toggleClass('ibo-is-information', nbChecked > 0);
+
+			if(nbChecked > 0){
+				$('#'+this.id+'_btnRemove').prop('disabled', false);
+				$('#linkedset_'+this.id+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(nbChecked + ' / ' + count + ' éléments sélectionnés');
+			}
+			else{
+				$('#'+this.id+'_btnRemove').prop('disabled', true);
+				$('#linkedset_'+this.id+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(count + ' éléments');
+			}
+		},
+		_onSelectChange: function () {
+			this._updateTableInformation();
 		},
 		_updateTable: function () {
 			var me = this;
@@ -167,7 +186,7 @@ $(function()
 			this.oDlg.dialog('option', {position: {my: "center", at: "center", of: window}});
 		},
 		_createRow: function () {
-			this.oButtons['create'].prop('disabled', true);
+			// this.oButtons['create'].prop('disabled', true);
 			this.indicator.html('<img src="../images/indicator.gif">');
 			oParams = this.options.submit_parameters;
 			oParams.operation = 'createObject';
@@ -206,14 +225,14 @@ $(function()
 					}
 				});
 				me.indicator.html('');
-				me.oButtons['create'].prop('disabled', false);
+				// me.oButtons['create'].prop('disabled', false);
 				me._updateDlgPosition();
 
 			});
 		},
 		_selectToAdd: function()
 		{
-			this.oButtons['add'].prop('disabled', true);
+			// this.oButtons['add'].prop('disabled', true);
 			this.indicator.html('<img src="../images/indicator.gif">');
 			oParams = this.options.submit_parameters;
 			oParams.operation = 'selectObjectsToAdd';
@@ -279,7 +298,7 @@ $(function()
 
 				});
 				me.indicator.html('');
-				me.oButtons['add'].prop('disabled', false);
+				// me.oButtons['add'].prop('disabled', false);
 				if (me.options.do_search)
 				{
 					me._onSearchToAdd();
@@ -425,7 +444,9 @@ $(function()
 			
 			var me = this;
 			$.post(this.options.submit_to, oParams, function(data) {
+
 				var oInserted = $(data);
+
 				oInserted.find('input:checkbox').each(function() {
 					var iKey = parseInt($(this).val(), 10); // Number in base 10
 					me.toBeAdded.push(iKey);
@@ -436,12 +457,20 @@ $(function()
 				me.inputToBeRemoved.val(JSON.stringify(me.toBeRemoved));
 				me.inputToBeDeleted.val(JSON.stringify(me.toBeDeleted));
 
-				//me.datatable.find('tbody').append(data);
 				$('#datatable_'+me.id+' .dataTables_empty').hide();
-				me.datatable.find('tbody').append(data);
+
+				// add actions on each row...
+				oInserted.each(function(){
+					$('td:last-child',$(this)).after('<td>' + $(`#datatable_${oParams.iInputId}_actions_buttons_template`).html() +'</td>');
+					me.datatable.find('tbody').append(this.outerHTML);
+				});
+
+
 				me._updateTable();
 				me.indicator.html('');
-				me.oButtons['add'].prop('disabled', false);
+				// me.oButtons['add'].prop('disabled', false);
+
+				me._updateTableInformation();
 			});
 		},
 		subclassSelected: function()
@@ -506,7 +535,7 @@ $(function()
 				oParams.tempId = nextIdx;
 				var me = this;
 
-				this.oButtons['create'].prop('disabled', true);
+				// this.oButtons['create'].prop('disabled', true);
 				this.indicator.html('<img src="../images/indicator.gif">');
 
 				$.post(this.options.submit_to, oParams, function (data) {
@@ -516,7 +545,7 @@ $(function()
 
 					me._updateTable();
 					me.indicator.html('');
-					me.oButtons['create'].prop('disabled', false);
+					// me.oButtons['create'].prop('disabled', false);
 				});
 			}
 		},
@@ -529,6 +558,12 @@ $(function()
 			var dlgHeight = this.oDlg.height();
 			$('.wizContainer', this.oDlg).height(dlgHeight-20);
 			$('#SearchResultsToAdd_'+this.id).height(dlgHeight-50-searchHeight);
+		},
+		_deleteSelection: function(){
+			var me = this;
+			$('.selectList'+me.id+':checked', me.element).each(function () {
+				me._deleteRow($(this));
+			});
 		},
 		_deleteRow: function (oCheckbox) {
 			var iObjKey = parseInt(oCheckbox.val(), 10); // Number in base 10
@@ -555,6 +590,13 @@ $(function()
 			oRow.remove();
 			this._updateButtons();
 			this._updateTable();
+			this._updateTableInformation();
+		},
+		_removeSelection: function(){
+			var me = this;
+			$('.selectList'+me.id+':checked', me.element).each(function () {
+				me._removeRow($(this));
+			});
 		},
 		_removeRow: function(oCheckbox)
 		{

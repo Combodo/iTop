@@ -1,15 +1,51 @@
 {# @copyright   Copyright (C) 2010-2022 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-// for each row action
-{% if oUIBlock.HasRowActions() %}
-    {% for aAction in oUIBlock.GetRowActions() %}
-        $('#{{ oUIBlock.GetId() }} tbody').on('click', 'button[data-action-id="{{ loop.index0 }}"]', function() {
-            let iActionId = $(this).data('action-id');
-            let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
-            let oTrElement = $(this).closest('tr');
-            let aData = oDatatable.row(oTrElement).data();
-            {{ aAction.js_row_action|raw }};
-        });
-    {% endfor %}
-{% endif %}
+// for each row action...
+{% for aAction in oUIBlock.GetRowActions() %}
+
+    // register action buttons click
+    $('#{{ oUIBlock.GetId() }} tbody').on('click', 'button[data-action-id="{{ loop.index0 }}"]', function() {
+
+        // variables accessible from action row js
+        let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
+        let oTrElement = $(this).closest('tr');
+        let iActionId = $(this).data('action-id');
+        let aRowData = oDatatable.row(oTrElement).data();
+
+        {% if aAction.confirmation is defined %}
+
+            // Handle action row with confirmation
+            let sTitle = '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}';
+            let sMessage = '{{ 'UI:Datatables:RowActions:ConfirmationMessage'|dict_s }}';
+            {% if aAction.confirmation.message is defined %}
+                sMessage = '{{ aAction.confirmation.message|dict_s|raw }}';
+                sMessage = sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']);
+            {% endif %}
+            let sPrefKey = null;
+            {% if aAction.confirmation.remember_choice_pref_key is defined %}
+                sPrefKey = '{{ aAction.confirmation.remember_choice_pref_key }}';
+            {% endif %}
+            HandleActionRowConfirmation (sTitle, sMessage, sPrefKey, ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}, {
+                action_id: iActionId,
+                datatable: oDatatable,
+                tr_element: oTrElement,
+                row_data: aRowData
+            });
+
+        {% else %}
+
+            // Handle action row without confirmation
+            ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}(oDatatable, oTrElement, iActionId, aRowData);
+
+        {% endif %}
+
+    });
+
+    // action row function declaration
+    function ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}(oDatatable, oTrElement, iActionId, aRowData){
+        {{ aAction.js_row_action|raw }};
+        return true;
+    }
+
+{% endfor %}

@@ -21,4 +21,7 @@
 
 {% if oUIBlock.HasRowActions() %}
     {{ render_block(oUIBlock.GetRowActionsTemplate()) }}
+    {% if not oUIBlock.GetRowActionsConfirmDialogInitializedFlag() %}
+        {{ render_block(oUIBlock.GetRowActionsConfirmDialog()) }}
+    {% endif %}
 {% endif %}

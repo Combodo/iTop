@@ -1471,6 +1471,7 @@ JS
 						} else {
 							$iListId = $aExtraParams['currentId'];
 						}
+
 						$oBlock = DataTableUIBlockFactory::MakeForRendering($iListId, $oSet, $aExtraParams);
 						$oHtml->AddHtml("<tr><td>");
 						$oContentBlock->AddSubBlock($oBlock);
@@ -1838,7 +1839,7 @@ class MenuBlock extends DisplayBlock
 							if ($bIsModifyAllowed) {
 								$aRegularActions['UI:Menu:Modify'] = array(
 										'label' => Dict::S('UI:Menu:Modify'),
-										'url' => "{$sRootUrl}pages/$sUIPage?operation=object.modify&class=$sClass&id=$id{$sContext}#",
+										'url'   => "{$sRootUrl}pages/$sUIPage?route=object.modify&class=$sClass&id=$id{$sContext}#",
 									) + $aActionParams;
 							}
 							if ($bIsCreationAllowed) {

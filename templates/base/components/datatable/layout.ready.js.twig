@@ -423,4 +423,6 @@ if(window.ResizeObserver){
         oTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
 }
 
-{% include 'base/components/datatable/row-actions/handler.js.twig' %}
+{% if oUIBlock.HasRowActions() %}
+    {% include 'base/components/datatable/row-actions/handler.js.twig' %}
+{% endif %}

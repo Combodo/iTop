@@ -39,6 +39,8 @@ use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksViewTable;
+use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksViewTable;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
@@ -650,8 +652,7 @@ HTML
 			}
 
 			// Display mode
-			if (!$oAttDef->IsLinkset())
-			{
+			if (!$oAttDef->IsLinkset()) {
 				continue;
 			} // Process only linkset attributes...
 
@@ -662,12 +663,9 @@ HTML
 			$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
 
 			$iCount = $oLinkSet->Count();
-			if ($this->IsNew())
-			{
+			if ($this->IsNew()) {
 				$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
-			}
-			else
-			{
+			} else {
 				$iFlags = $this->GetAttributeFlags($sAttCode);
 			}
 			// Adjust the flags according to user rights
@@ -712,103 +710,20 @@ HTML
 
 			$aArgs = array('this' => $this);
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));
-			if ($bEditMode && (!$bReadOnly))
-			{
+			if ($bEditMode && (!$bReadOnly)) {
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
-
-				if ($oAttDef->IsIndirect())
-				{
-					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
-					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-				}
-				else
-				{
-					$sTargetClass = $sLinkedClass;
-				}
-
-				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
-				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
-				$oPage->AddUiBlock($oClassIcon);
-
 				$sDisplayValue = ''; // not used
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
 						$oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 				$this->AddToFieldsMap($sAttCode, $sInputId);
 				$oPage->add($sHTMLValue);
-			}
-			else
-			{
-				// Display mode
-				if (!$oAttDef->IsIndirect())
-				{
-					// 1:n links
-					$sTargetClass = $sLinkedClass;
-
-					$aDefaults = array($oAttDef->GetExtKeyToMe() => $this->GetKey());
-					$oAppContext = new ApplicationContext();
-					foreach($oAppContext->GetNames() as $sKey)
-					{
-						// The linked object inherits the parent's value for the context
-						if (MetaModel::IsValidAttCode($sClass, $sKey))
-						{
-							$aDefaults[$sKey] = $this->Get($sKey);
-						}
-					}
-					$aParams = array(
-						'target_attr' => $oAttDef->GetExtKeyToMe(),
-						'object_id' => $this->GetKey(),
-						'menu' => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
-						//'menu_actions_target' => '_blank',
-						'default' => $aDefaults,
-						'table_id' => $sClass.'_'.$sAttCode,
-					);
+			} else {
+				if ($oAttDef->IsIndirect()) {
+					$oBlockLinkViewTable = new BlockIndirectLinksViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
+				} else {
+					$oBlockLinkViewTable = new BlockDirectLinksViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
 				}
-				else {
-					// n:n links
-					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
-					$sLinkingAttCode = $oLinkingAttDef->GetCode();
-					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-
-					// N°2334 fields to display for n:n relations
-					$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode);
-					$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($sTargetClass);
-					$aLnkAttCodesToDisplay = array_map(function ($oLnkAttDef) {
-						return ormLinkSet::LINK_ALIAS.'.'.$oLnkAttDef->GetCode();
-					},
-						$aLnkAttDefsToDisplay
-					);
-					if (!in_array(ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode, $aLnkAttCodesToDisplay)) {
-						// we need to display a link to the remote class instance !
-						$aLnkAttCodesToDisplay[] = ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode;
-					}
-					$aRemoteAttCodesToDisplay = array_map(function ($oRemoteAttDef) {
-						return ormLinkSet::REMOTE_ALIAS.'.'.$oRemoteAttDef->GetCode();
-					},
-						$aRemoteAttDefsToDisplay
-					);
-					$aAttCodesToDisplay = array_merge($aLnkAttCodesToDisplay, $aRemoteAttCodesToDisplay);
-					$sAttCodesToDisplay = implode(',', $aAttCodesToDisplay);
-
-					$aParams = array(
-						'link_attr' => $oAttDef->GetExtKeyToMe(),
-						'object_id' => $this->GetKey(),
-						'target_attr' => $oAttDef->GetExtKeyToRemote(),
-						'view_link' => false,
-						'menu' => false,
-						//'menu_actions_target' => '_blank',
-						// By default limit the list to speed up the initial load & display
-						'display_limit' => true,
-						'table_id' => $sClass.'_'.$sAttCode,
-						// N°2334 specify fields to display for n:n relations
-						'zlist' => false,
-						'extra_fields' => $sAttCodesToDisplay,
-					);
-				}
-				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
-				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
-				$oPage->AddUiBlock($oClassIcon);
-				$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'list', false);
-				$oBlock->Display($oPage, 'rel_'.$sAttCode, $aParams);
+				$oPage->AddUiBlock($oBlockLinkViewTable);
 			}
 			if (array_key_exists($sAttCode, $aRedundancySettings)) {
 				foreach ($aRedundancySettings[$sAttCode] as $oRedundancyAttDef) {
@@ -871,6 +786,10 @@ HTML
 				}
 			}
 		}
+
+		// add hidden input for linkset transactions
+		$oInputHidden = InputUIBlockFactory::MakeForHidden('linkset_transactions_id', utils::GetNewTransactionId(), 'linkset_transactions_id');
+		$oPage->AddUiBlock($oInputHidden);
 	}
 
 	/**
