@@ -481,6 +481,21 @@ HTML
   }
             ]]></code>
         </method>
+        <method id="OnUpdate">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+      protected function OnUpdate()
+      {
+		    $aChanges = $this->ListChanges();
+        if (array_key_exists('client_id', $aChanges) || array_key_exists('client_secret', $aChanges) || array_key_exists('redirect_url', $aChanges)) {
+            $sMessage = Dict::S('itop-oauth-client:Message:RegenerateToken');
+            self::SetSessionMessage(get_class($this), $this->GetKey(), 'RegenerateToken', $sMessage, 'info', 1);
+        }
+      }
+           ]]></code>
+        </method>
         <method id="DoCheckToWrite">
           <static>false</static>
           <access>public</access>
@@ -490,15 +505,13 @@ HTML
 		parent::DoCheckToWrite();
 
 		$aChanges = $this->ListChanges();
-		if (array_key_exists('name', $aChanges) || array_key_exists('used_for_smtp', $aChanges))
-		{
+		if (array_key_exists('name', $aChanges) || array_key_exists('used_for_smtp', $aChanges)) {
 			$sNewName = $this->Get('name');
 			$sNewUseForSMTP = $this->Get('used_for_smtp');
 			if ($sNewUseForSMTP == 'yes') {
         $oSearch = DBObjectSearch::FromOQL_AllData("SELECT OAuthClientGoogle WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id UNION SELECT OAuthClientAzure WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id");
         $oSet = new DBObjectSet($oSearch, array(), ['id' => $this->GetKey(), 'newname' => $sNewName, 'newuseforsmtp' => $sNewUseForSMTP]);
-        if ($oSet->Count() > 0)
-        {
+        if ($oSet->Count() > 0) {
             $this->m_aCheckIssues[] = Dict::Format('OAuthClient:Name/UseForSMTPMustBeUnique', $sNewName, $sNewUseForSMTP);
         }
 			}
@@ -540,7 +553,6 @@ HTML
   {
     switch ($sAttCode) {
         case 'provider':
-        case 'redirect_url':
         case 'used_scope':
             return OPT_ATT_READONLY;
     }
@@ -558,7 +570,6 @@ HTML
   {
     switch ($sAttCode) {
         case 'provider':
-        case 'redirect_url':
         case 'used_scope':
             return OPT_ATT_READONLY;
     }
@@ -853,7 +864,6 @@ HTML
 	{
     switch ($sAttCode) {
         case 'provider':
-        case 'redirect_url':
         case 'used_scope':
             return OPT_ATT_READONLY;
     }
@@ -871,7 +881,6 @@ HTML
 	{
     switch ($sAttCode) {
         case 'provider':
-        case 'redirect_url':
         case 'used_scope':
             return OPT_ATT_READONLY;
     }
@@ -915,6 +924,21 @@ HTML
     return implode(' ', $aRawScopes);
   }
             ]]></code>
+        </method>
+        <method id="OnUpdate">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+      protected function OnUpdate()
+      {
+		    $aChanges = $this->ListChanges();
+        if (array_key_exists('client_id', $aChanges) || array_key_exists('client_secret', $aChanges) || array_key_exists('redirect_url', $aChanges)) {
+            $sMessage = Dict::S('itop-oauth-client:Message:RegenerateToken');
+            self::SetSessionMessage(get_class($this), $this->GetKey(), 'RegenerateToken', $sMessage, 'info', 1);
+        }
+      }
+           ]]></code>
         </method>
       </methods>
     </class>

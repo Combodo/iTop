@@ -19,6 +19,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'itop-oauth-client:TestSMTP' => 'Tester l\'envoi de mail',
 	'itop-oauth-client:MissingOAuthClient' => 'Il n\'y a pas de client OAuth pour l\'utilisateur %1$s',
 	'itop-oauth-client:Message:MissingToken' => 'Générez le jeton d\'accès avant d\'utiliser ce client OAuth',
+	'itop-oauth-client:Message:RegenerateToken' => 'Re-générez le jeton d\'accès prendre en compte les modifications',
 	'itop-oauth-client:Message:TokenCreated' => 'Le jeton d\'accès à été créé',
 	'itop-oauth-client:Message:TokenRecreated' => 'Le jeton d\'accès à été renouvelé',
 	'itop-oauth-client:Message:TokenError' => 'Le jeton d\'accès n\'a pas été généré à cause d`une erreur serveur',
@@ -58,7 +59,11 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OAuthClient/Attribute:token_expiration' => 'Date d\'expiration du jeton d\'accès',
 	'Class:OAuthClient/Attribute:token_expiration+' => '',
 	'Class:OAuthClient/Attribute:redirect_url' => 'URL de redirection',
-	'Class:OAuthClient/Attribute:redirect_url+' => 'Cet URL doit être recopié dans la configuration OAuth2 de votre fournisseur',
+	'Class:OAuthClient/Attribute:redirect_url+' => <<<EOF
+Cet URL doit être recopiée dans la configuration OAuth2 de votre fournisseur
+Pour recalculer la valeur par défaut, il faut effacer le champ
+EOF
+,
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Mailbox list',
 	'Class:OAuthClient/Attribute:mailbox_list+' => '',
 ]);
