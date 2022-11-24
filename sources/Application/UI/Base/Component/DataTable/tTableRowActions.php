@@ -56,9 +56,9 @@ trait tTableRowActions
 	/**
 	 * Get row actions.
 	 *
-	 * @return array
+	 * @return array|null
 	 */
-	public function GetRowActions(): array
+	public function GetRowActions(): ?array
 	{
 		return $this->aRowActions;
 	}
