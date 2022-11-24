@@ -551,6 +551,9 @@ class LogChannels
 	 */
 	public const NOTIFICATIONS = 'notifications';
 
+	/**
+	 * @since 3.0.0
+	 */
 	public const CLI = 'CLI';
 
 	/**
@@ -560,15 +563,18 @@ class LogChannels
 	 */
 	public const CMDB_SOURCE = 'cmdbsource';
 
-	public const CONSOLE      = 'console';
+	/**
+	 * @since 3.0.0
+	 */
+	public const CONSOLE = 'console';
 
-	public const CORE         = 'core';
+	public const CORE = 'core';
 
-	public const DEADLOCK     = 'DeadLock';
+	public const DEADLOCK = 'DeadLock';
 
 	public const INLINE_IMAGE = 'InlineImage';
 
-	public const PORTAL       = 'portal';
+	public const PORTAL = 'portal';
 }
 
 
