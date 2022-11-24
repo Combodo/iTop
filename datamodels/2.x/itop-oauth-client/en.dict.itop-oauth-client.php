@@ -19,6 +19,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'itop-oauth-client:TestSMTP' => 'Email send test',
 	'itop-oauth-client:MissingOAuthClient' => 'Missing Oauth client for user name %1$s',
 	'itop-oauth-client:Message:MissingToken' => 'Generate access token before using this OAuth client',
+	'itop-oauth-client:Message:RegenerateToken' => 'Regenerate access token to to take into account the changes',
 	'itop-oauth-client:Message:TokenCreated' => 'Access token created',
 	'itop-oauth-client:Message:TokenRecreated' => 'Access token regenerated',
 	'itop-oauth-client:Message:TokenError' => 'Access token not generated due to server error',
@@ -58,7 +59,11 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:OAuthClient/Attribute:token_expiration' => 'Access token expiration',
 	'Class:OAuthClient/Attribute:token_expiration+' => '',
 	'Class:OAuthClient/Attribute:redirect_url' => 'Redirect url',
-	'Class:OAuthClient/Attribute:redirect_url+' => 'This url must be copied in the OAuth2 configuration of the provider',
+	'Class:OAuthClient/Attribute:redirect_url+' => <<<EOF
+This url must be copied in the OAuth2 configuration of the provider
+Erase the field to recalculate default value
+EOF
+,
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Mailbox list',
 	'Class:OAuthClient/Attribute:mailbox_list+' => '',
 ]);
