@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Combodo\\iTop\\OAuthClient\\Controller\\AjaxOauthClientController' => $baseDir . '/src/Controller/AjaxOauthClientController.php',
     'Combodo\\iTop\\OAuthClient\\Controller\\OAuthClientController' => $baseDir . '/src/Controller/OAuthClientController.php',
+    'Combodo\\iTop\\OAuthClient\\Service\\ApplicationUIExtension' => $baseDir . '/src/Service/ApplicationUIExtension.php',
     'Combodo\\iTop\\OAuthClient\\Service\\PopupMenuExtension' => $baseDir . '/src/Service/PopupMenuExtension.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
 );
