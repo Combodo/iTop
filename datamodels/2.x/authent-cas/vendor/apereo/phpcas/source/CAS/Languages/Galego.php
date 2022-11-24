@@ -19,28 +19,29 @@
  *
  * PHP Version 7
  *
- * @file     CAS/Language/French.php
+ * @file     CAS/Language/Galego.php
  * @category Authentication
  * @package  PhpCAS
- * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
+ * @author   Enrique Huelva Rivero enrique.huelvarivero@plexus.es
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
 /**
- * French language class
+ * Galego language class
  *
- * @class    CAS_Languages_French
+ * @class    CAS_Languages_Galego
  * @category Authentication
  * @package  PhpCAS
- * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
+ * @author   Enrique Huelva Rivero enrique.huelvarivero@plexus.es
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  *
+
  * @sa @link internalLang Internationalization @endlink
  * @ingroup internalLang
  */
-class CAS_Languages_French implements CAS_Languages_LanguageInterface
+class CAS_Languages_Galego implements CAS_Languages_LanguageInterface
 {
     /**
      * Get the using server string
@@ -49,7 +50,7 @@ class CAS_Languages_French implements CAS_Languages_LanguageInterface
      */
     public function getUsingServer()
     {
-        return 'utilisant le serveur';
+        return 'usando servidor';
     }
 
     /**
@@ -59,7 +60,7 @@ class CAS_Languages_French implements CAS_Languages_LanguageInterface
      */
     public function getAuthenticationWanted()
     {
-        return 'Authentication CAS nécessaire&nbsp;!';
+        return 'Autenticación CAS necesaria!';
     }
 
     /**
@@ -69,7 +70,7 @@ class CAS_Languages_French implements CAS_Languages_LanguageInterface
      */
     public function getLogout()
     {
-        return 'Déconnexion demandée&nbsp;!';
+        return 'Saída CAS necesaria!';
     }
 
     /**
@@ -79,7 +80,7 @@ class CAS_Languages_French implements CAS_Languages_LanguageInterface
      */
     public function getShouldHaveBeenRedirected()
     {
-        return 'Vous auriez du etre redirigé(e) vers le serveur CAS. Cliquez <a href="%s">ici</a> pour continuer.';
+        return 'Xa debería ser redireccionado ao servidor CAS. Faga click <a href="%s">aquí</a> para continuar';
     }
 
     /**
@@ -89,7 +90,7 @@ class CAS_Languages_French implements CAS_Languages_LanguageInterface
      */
     public function getAuthenticationFailed()
     {
-        return 'Authentification CAS infructueuse&nbsp;!';
+        return 'Autenticación CAS errada!';
     }
 
     /**
@@ -99,7 +100,8 @@ class CAS_Languages_French implements CAS_Languages_LanguageInterface
      */
     public function getYouWereNotAuthenticated()
     {
-        return '<p>Vous n\'avez pas été authentifié(e).</p><p>Vous pouvez soumettre votre requete à nouveau en cliquant <a href="%s">ici</a>.</p><p>Si le problème persiste, vous pouvez contacter <a href="mailto:%s">l\'administrateur de ce site</a>.</p>';
+        return '
+        <p>Non estás autenticado</p><p>Podes volver tentalo facendo click <a href="%s">aquí</a>.</p><p>Se o problema persiste debería contactar con el <a href="mailto:%s">administrador deste sitio</a>.</p>';
     }
 
     /**
@@ -109,8 +111,7 @@ class CAS_Languages_French implements CAS_Languages_LanguageInterface
      */
     public function getServiceUnavailable()
     {
-        return 'Le service `<b>%s</b>\' est indisponible (<b>%s</b>)';
+        return 'O servizo `<b>%s</b>\' non está dispoñible (<b>%s</b>).';
     }
 }
-
 ?>

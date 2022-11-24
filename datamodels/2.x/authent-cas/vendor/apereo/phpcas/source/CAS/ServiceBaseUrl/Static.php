@@ -19,28 +19,51 @@
  *
  * PHP Version 7
  *
- * @file     CAS/ProxiedService/Exception.php
+ * @file     CAS/ServiceBaseUrl/Static.php
  * @category Authentication
  * @package  PhpCAS
- * @author   Adam Franco <afranco@middlebury.edu>
+ * @author   Henry Pan <git@phy25.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
 
 /**
- * An Exception for problems communicating with a proxied service.
+ * Class that gets the server name of the PHP server by statically set
+ * hostname and port. This is used to generate service URL and PGT
+ * callback URL.
  *
- * @class    CAS_ProxiedService_Exception
+ * @class    CAS_ServiceBaseUrl_Static
  * @category Authentication
  * @package  PhpCAS
- * @author   Adam Franco <afranco@middlebury.edu>
+ * @author   Henry Pan <git@phy25.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_ProxiedService_Exception
-extends Exception
-implements CAS_Exception
-{
 
+class CAS_ServiceBaseUrl_Static
+extends CAS_ServiceBaseUrl_Base
+{
+    private $_name = null;
+
+    public function __construct($name) {
+        if (is_string($name)) {
+            $this->_name = $this->removeStandardPort($name);
+        } else {
+            throw new CAS_TypeMismatchException($name, '$name', 'string');
+        }
+    }
+
+    /**
+     * Get the server name through static config.
+     *
+     * @return string the server hostname and port of the server configured
+     */
+    public function get()
+    {
+        phpCAS::traceBegin();
+        phpCAS::trace("Returning static server name: " . $this->_name);
+        phpCAS::traceEnd(true);
+        return $this->_name;
+    }
 }
-?>

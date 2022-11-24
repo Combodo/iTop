@@ -17,9 +17,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ *
  * PHP Version 7
  *
- * @file     CAS/ProxiedService/Exception.php
+ * @file     CAS/Session/PhpSession.php
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
@@ -28,19 +29,17 @@
  */
 
 /**
- * An Exception for problems communicating with a proxied service.
+ * Empty class used as a default implementation for phpCAS.
  *
- * @class    CAS_ProxiedService_Exception
+ * Implements the standard PHP session handler without no alterations.
+ *
+ * @class    CAS_Session_PhpSession
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_ProxiedService_Exception
-extends Exception
-implements CAS_Exception
+class CAS_Session_PhpSession extends SessionHandler implements SessionHandlerInterface
 {
-
 }
-?>

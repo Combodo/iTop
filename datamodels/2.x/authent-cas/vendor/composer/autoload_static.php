@@ -6,6 +6,20 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitfbc00f22d0b7b7b490d18e0252e08746
 {
+    public static $prefixLengthsPsr4 = array (
+        'C' => 
+        array (
+            'Combodo\\iTop\\Cas\\' => 17,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Combodo\\iTop\\Cas\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
+    );
+
     public static $classMap = array (
         'CAS_AuthenticationException' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/AuthenticationException.php',
         'CAS_Client' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Client.php',
@@ -17,10 +31,12 @@ class ComposerStaticInitfbc00f22d0b7b7b490d18e0252e08746
         'CAS_Languages_ChineseSimplified' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Languages/ChineseSimplified.php',
         'CAS_Languages_English' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Languages/English.php',
         'CAS_Languages_French' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Languages/French.php',
+        'CAS_Languages_Galego' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Languages/Galego.php',
         'CAS_Languages_German' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Languages/German.php',
         'CAS_Languages_Greek' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Languages/Greek.php',
         'CAS_Languages_Japanese' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Languages/Japanese.php',
         'CAS_Languages_LanguageInterface' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Languages/LanguageInterface.php',
+        'CAS_Languages_Portuguese' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Languages/Portuguese.php',
         'CAS_Languages_Spanish' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Languages/Spanish.php',
         'CAS_OutOfSequenceBeforeAuthenticationCallException' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/OutOfSequenceBeforeAuthenticationCallException.php',
         'CAS_OutOfSequenceBeforeClientException' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/OutOfSequenceBeforeClientException.php',
@@ -50,13 +66,25 @@ class ComposerStaticInitfbc00f22d0b7b7b490d18e0252e08746
         'CAS_Request_Exception' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Request/Exception.php',
         'CAS_Request_MultiRequestInterface' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Request/MultiRequestInterface.php',
         'CAS_Request_RequestInterface' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Request/RequestInterface.php',
+        'CAS_ServiceBaseUrl_AllowedListDiscovery' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/ServiceBaseUrl/AllowedListDiscovery.php',
+        'CAS_ServiceBaseUrl_Base' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/ServiceBaseUrl/Base.php',
+        'CAS_ServiceBaseUrl_Interface' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/ServiceBaseUrl/Interface.php',
+        'CAS_ServiceBaseUrl_Static' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/ServiceBaseUrl/Static.php',
+        'CAS_Session_PhpSession' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/Session/PhpSession.php',
         'CAS_TypeMismatchException' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS/TypeMismatchException.php',
+        'Combodo\\iTop\\Cas\\CASLog' => __DIR__ . '/../..' . '/src/CASLog.php',
+        'Combodo\\iTop\\Cas\\CASLogger' => __DIR__ . '/../..' . '/src/CASLogger.php',
+        'Combodo\\iTop\\Cas\\CASLoginExtension' => __DIR__ . '/../..' . '/src/CASLoginExtension.php',
+        'Combodo\\iTop\\Cas\\Config' => __DIR__ . '/../..' . '/src/Config.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'phpCAS' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInitfbc00f22d0b7b7b490d18e0252e08746::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitfbc00f22d0b7b7b490d18e0252e08746::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInitfbc00f22d0b7b7b490d18e0252e08746::$classMap;
 
         }, null, ClassLoader::class);
