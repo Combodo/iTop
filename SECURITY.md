@@ -36,7 +36,7 @@ The assignee will keep you informed of the resolution progress, and may ask you 
 
 
 ## 📆 Disclosure Policy
-Once the fix done and acknowledge by every stakeholder, it will be included in next iTop version.  
+Once the fix is done and acknowledged by every stakeholder, it will be included in next iTop version.  
 Mind we have at least 2 active branches (LTS and STS, see [iTop Community Releases [iTop Documentation]](https://www.itophub.io/wiki/page?id=latest:release:start)) 
 
 The release communications will include the information of the vulnerability fix.
