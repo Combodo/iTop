@@ -5,18 +5,18 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '0520e72b9d1190cab294aebc5ab7542a18d2bc51',
+        'reference' => 'cdde765a85ee0262181e3c493183b1fb80536e74',
         'name' => 'combodo/itop',
         'dev' => true,
     ),
     'versions' => array(
         'apereo/phpcas' => array(
-            'pretty_version' => '1.5.0',
-            'version' => '1.5.0.0',
+            'pretty_version' => '1.6.0',
+            'version' => '1.6.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../apereo/phpcas',
             'aliases' => array(),
-            'reference' => 'd6f5797fb568726f34c8e48741776d81e4a2646b',
+            'reference' => 'f817c72a961484afef95ac64a9257c8e31f063b9',
             'dev_requirement' => false,
         ),
         'combodo/itop' => array(
@@ -25,7 +25,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '0520e72b9d1190cab294aebc5ab7542a18d2bc51',
+            'reference' => 'cdde765a85ee0262181e3c493183b1fb80536e74',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(

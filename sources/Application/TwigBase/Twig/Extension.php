@@ -1,6 +1,6 @@
 <?php
-/**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -14,7 +14,6 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
 use Exception;
-use MetaModel;
 use Twig\Environment;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -168,28 +167,6 @@ class Extension
 		$aFunctions[] = new TwigFunction('is_development_environment', function () {
 			return utils::IsDevelopmentEnvironment();
 		});
-
-		// Function to get configuration parameter
-		// Usage in twig: {{ get_config_parameter('foo') }}
-		$aFunctions[] = new TwigFunction('get_config_parameter', function ($sParamName) {
-			$oConfig = MetaModel::GetConfig();
-
-			return $oConfig->Get($sParamName);
-		});
-
-		/**
-		 * Function to get a module setting
-		 * Usage in twig: {{ get_module_setting(<MODULE_CODE>, <PROPERTY_CODE> [, <DEFAULT_VALUE>]) }}
-		 *
-		 * @uses Config::GetModuleSetting()
-		 * @since 3.0.0
-		 */
-		$aFunctions[] = new TwigFunction('get_module_setting',
-			function (string $sModuleCode, string $sPropertyCode, $defaultValue = null) {
-				$oConfig = MetaModel::GetConfig();
-
-				return $oConfig->GetModuleSetting($sModuleCode, $sPropertyCode, $defaultValue);
-			});
 
 		// Function to get iTop's app root absolute URL (eg. https://aaa.bbb.ccc/xxx/yyy/)
 		// Usage in twig: {{ get_absolute_url_app_root() }}

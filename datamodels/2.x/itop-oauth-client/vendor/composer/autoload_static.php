@@ -23,6 +23,7 @@ class ComposerStaticInitd52424b43ff18219f2ec935428aff074
     public static $classMap = array (
         'Combodo\\iTop\\OAuthClient\\Controller\\AjaxOauthClientController' => __DIR__ . '/../..' . '/src/Controller/AjaxOauthClientController.php',
         'Combodo\\iTop\\OAuthClient\\Controller\\OAuthClientController' => __DIR__ . '/../..' . '/src/Controller/OAuthClientController.php',
+        'Combodo\\iTop\\OAuthClient\\Service\\ApplicationUIExtension' => __DIR__ . '/../..' . '/src/Service/ApplicationUIExtension.php',
         'Combodo\\iTop\\OAuthClient\\Service\\PopupMenuExtension' => __DIR__ . '/../..' . '/src/Service/PopupMenuExtension.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );

@@ -24,6 +24,7 @@ use AttributeDateTime;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 use DateTime;
+use MetaModel;
 use UserRights;
 use utils;
 
@@ -74,6 +75,8 @@ class ActivityEntry extends UIBlock
 	 */
 	protected $sOrigin;
 
+	protected $bShowAuthorNameBelowEntries;
+
 	/**
 	 * ActivityEntry constructor.
 	 *
@@ -94,6 +97,7 @@ class ActivityEntry extends UIBlock
 		$this->SetDateTime($oDateTime);
 		$this->SetAuthor($sAuthorLogin);
 		$this->SetOrigin(static::DEFAULT_ORIGIN);
+		$this->SetShowAuthorNameBelowEntries(MetaModel::GetConfig()->Get('activity_panel.show_author_name_below_entries'));
 	}
 
 	/**
@@ -304,6 +308,22 @@ class ActivityEntry extends UIBlock
 	public function GetOrigin(): string
 	{
 		return $this->sOrigin;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function ShowAuthorNameBelowEntries(): bool
+	{
+		return $this->bShowAuthorNameBelowEntries;
+	}
+
+	/**
+	 * @param bool $bShowAuthorNameBelowEntries
+	 */
+	public function SetShowAuthorNameBelowEntries($bShowAuthorNameBelowEntries): void
+	{
+		$this->bShowAuthorNameBelowEntries = $bShowAuthorNameBelowEntries;
 	}
 
 	/**

@@ -134,7 +134,7 @@ Our tests are located in the `test/` directory, containing a PHPUnit config file
 
 When your code is working, please:
 
-* stash as much as possible your commits,
+* squash as much as possible your commits,
 * rebase your branch on our repo last commit,
 * create a pull request
 * mind to check the "[Allow edits from maintainers](https://docs.github.com/en/github-ae@latest/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)" option !
