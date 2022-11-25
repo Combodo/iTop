@@ -52,12 +52,12 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-        <field id="client_id" xsi:type="AttributeText">
+        <field id="client_id" xsi:type="AttributeString">
           <sql>client_id</sql>
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
-        <field id="client_secret" xsi:type="AttributeText">
+        <field id="client_secret" xsi:type="AttributePassword">
           <sql>client_secret</sql>
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
@@ -293,7 +293,6 @@
             <attributes>
               <attribute id="provider"/>
               <attribute id="client_id"/>
-              <attribute id="client_secret"/>
             </attributes>
             <is_blocking>true</is_blocking>
           </rule>
@@ -441,21 +440,6 @@
   }
             ]]></code>
         </method>
-        <method id="OnUpdate">
-          <static>false</static>
-          <access>protected</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
-      protected function OnUpdate()
-      {
-		    $aChanges = $this->ListChanges();
-        if (array_key_exists('client_id', $aChanges) || array_key_exists('client_secret', $aChanges) || array_key_exists('redirect_url', $aChanges)) {
-            $sMessage = Dict::S('itop-oauth-client:Message:RegenerateToken');
-            self::SetSessionMessage(get_class($this), $this->GetKey(), 'RegenerateToken', $sMessage, 'info', 1);
-        }
-      }
-           ]]></code>
-        </method>
         <method id="DoCheckToWrite">
           <static>false</static>
           <access>public</access>
@@ -501,6 +485,12 @@
 		    $this->Set('used_scope', 'advanced');
 		    $this->Set('scope', '');
 		}
+    $aChanges = $this->ListChanges();
+    if (array_key_exists('client_id', $aChanges) || array_key_exists('client_secret', $aChanges) || array_key_exists('redirect_url', $aChanges)) {
+        $sMessage = Dict::S('itop-oauth-client:Message:RegenerateToken');
+        self::SetSessionMessage(get_class($this), $this->GetKey(), 'RegenerateToken', $sMessage, 'info', 1);
+        $this->Set('status', 'inactive');
+    }
   }
             ]]></code>
         </method>
@@ -604,7 +594,6 @@
             <attributes>
               <attribute id="provider"/>
               <attribute id="client_id"/>
-              <attribute id="client_secret"/>
             </attributes>
             <is_blocking>true</is_blocking>
           </rule>
@@ -799,6 +788,12 @@
 		    $this->Set('used_scope', 'advanced');
 		    $this->Set('scope', '');
 		}
+    $aChanges = $this->ListChanges();
+    if (array_key_exists('client_id', $aChanges) || array_key_exists('client_secret', $aChanges) || array_key_exists('redirect_url', $aChanges)) {
+        $sMessage = Dict::S('itop-oauth-client:Message:RegenerateToken');
+        self::SetSessionMessage(get_class($this), $this->GetKey(), 'RegenerateToken', $sMessage, 'info', 1);
+        $this->Set('status', 'inactive');
+    }
 	}
             ]]></code>
         </method>
@@ -871,21 +866,6 @@
     return implode(' ', $aRawScopes);
   }
             ]]></code>
-        </method>
-        <method id="OnUpdate">
-          <static>false</static>
-          <access>protected</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
-      protected function OnUpdate()
-      {
-		    $aChanges = $this->ListChanges();
-        if (array_key_exists('client_id', $aChanges) || array_key_exists('client_secret', $aChanges) || array_key_exists('redirect_url', $aChanges)) {
-            $sMessage = Dict::S('itop-oauth-client:Message:RegenerateToken');
-            self::SetSessionMessage(get_class($this), $this->GetKey(), 'RegenerateToken', $sMessage, 'info', 1);
-        }
-      }
-           ]]></code>
         </method>
       </methods>
     </class>
