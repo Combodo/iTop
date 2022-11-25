@@ -98,7 +98,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:User/Attribute:org_id+' => 'Organização à qual esse usuário pertence',
 	'Class:User/Attribute:last_name' => 'Sobrenome',
 	'Class:User/Attribute:last_name+' => 'Último nome do usuário correspondente',
-	'Class:User/Attribute:first_name' => 'Primeiro nome',
+	'Class:User/Attribute:first_name' => 'Nome',
 	'Class:User/Attribute:first_name+' => 'Primeiro nome do usuário correspondente',
 	'Class:User/Attribute:email' => 'E-mail',
 	'Class:User/Attribute:email+' => 'Endereço de e-mail do usuário correspondente',
@@ -170,7 +170,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_UserProfile' => 'Perfil de Usuário',
 	'Class:URP_UserProfile+' => 'Perfil de Usuário',
-	'Class:URP_UserProfile/Name' => 'Link entre %1$s e %2$s',
+	'Class:URP_UserProfile/Name' => 'Relação entre %1$s e %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Usuário',
 	'Class:URP_UserProfile/Attribute:userid+' => 'Conta de usuário',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -191,7 +191,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_UserOrg' => 'Organização do usuário',
 	'Class:URP_UserOrg+' => 'Organizações permitidas',
-	'Class:URP_UserOrg/Name' => 'Link entre %1$s e %2$s',
+	'Class:URP_UserOrg/Name' => 'Relação entre %1$s e %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Usuário',
 	'Class:URP_UserOrg/Attribute:userid+' => 'Conta de usuário',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',

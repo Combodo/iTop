@@ -82,7 +82,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkContactToFunctionalCI' => 'Link Contato / IC',
+	'Class:lnkContactToFunctionalCI' => 'Relação entre Contato / IC',
 	'Class:lnkContactToFunctionalCI+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
@@ -120,13 +120,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FunctionalCI/Attribute:move2production' => 'Data de migração para produção',
 	'Class:FunctionalCI/Attribute:move2production+' => '',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Contatos',
-	'Class:FunctionalCI/Attribute:contacts_list+' => 'Todos os contatos associados a este item de configuração',
+	'Class:FunctionalCI/Attribute:contacts_list+' => 'Todos os Contatos associados à este Item de Configuração (IC)',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Documentos',
-	'Class:FunctionalCI/Attribute:documents_list+' => 'Todos os documentos associados a este item de configuração',
+	'Class:FunctionalCI/Attribute:documents_list+' => 'Todos os Documentos associados à este Item de Configuração (IC)',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Soluções de aplicação',
-	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Todas as soluções de aplicação dependentes desse item de configuração',
+	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Todas as Soluções de Aplicação dependentes deste Item de Configuração (IC)',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Softwares',
-	'Class:FunctionalCI/Attribute:softwares_list+' => 'Todos os softwares instalados neste item de configuração',
+	'Class:FunctionalCI/Attribute:softwares_list+' => 'Todos os Softwares instalados neste Item de Configuração (IC)',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Tipo de IC',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Solicitações ativas',
@@ -181,9 +181,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Rack/Attribute:nb_u' => 'Unidades',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Dispositivos',
-	'Class:Rack/Attribute:device_list+' => 'Todos os dispositivos físicos empilhados neste rack',
+	'Class:Rack/Attribute:device_list+' => 'Todos os Dispositivos físicos empilhados neste Rack',
 	'Class:Rack/Attribute:enclosure_list' => 'Gavetas',
-	'Class:Rack/Attribute:enclosure_list+' => 'Todas as gavetas neste rack',
+	'Class:Rack/Attribute:enclosure_list+' => 'Todas as Gavetas neste Rack',
 ));
 
 //
@@ -245,9 +245,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ConnectableCI' => 'Conectividade',
 	'Class:ConnectableCI+' => 'Físico',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Dispositivo de rede',
-	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Todos os dispositivos de rede conectados neste dispositivo',
+	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Todos os Dispositivos de rede conectados neste dispositivo',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interface de rede',
-	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Todas as interfaces de rede',
+	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Todas as Interfaces de rede presentes neste dispositivo',
 ));
 
 //
@@ -278,9 +278,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'Nome da fonte energia B',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'Portas FC',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Todas as portas Fiber Channel para esse dispositivo',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Todas as portas Fiber Channel (FC) para este Dispositivo de datacenter',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
-	'Class:DatacenterDevice/Attribute:san_list+' => 'Todos os switches SAN associados a este dispositivo',
+	'Class:DatacenterDevice/Attribute:san_list+' => 'Todos os Switches SAN associados à este Dispositivo de datacenter',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundância',
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'O dispositivo está ativo se pelo menos uma conexão de energia (A ou B) estiver ativa',
 	// Unused yet
@@ -299,8 +299,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Nome do tipo de dispositivo de rede',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
-	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Dispositivos',
-	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Todos os dispositivos associados a este dispositivo de rede',
+	'Class:NetworkDevice/Attribute:connectablecis_list' => 'ICs',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Todos os Itens de configuração (ICs) associados à este Dispositivo de rede',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'Versão do SO',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'Nome da versão do SO',
@@ -333,7 +333,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Server/Attribute:ram' => 'RAM',
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Volumes lógicos',
-	'Class:Server/Attribute:logicalvolumes_list+' => 'Todos os volumoes lógicos associados a este servidor',
+	'Class:Server/Attribute:logicalvolumes_list+' => 'Todos os Volumes lógicos associados à este Servidor',
 ));
 
 //
@@ -344,7 +344,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:StorageSystem' => 'Sistema de Storage',
 	'Class:StorageSystem+' => '',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumes lógicos',
-	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Todos os volumes lógicos neste sistema storage',
+	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Todos os Volumes lógicos neste Sistema de storage',
 ));
 
 //
@@ -355,7 +355,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SANSwitch' => 'Switch SAN',
 	'Class:SANSwitch+' => '',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Dispositivos',
-	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Todos os dispositivos associados a este switch SAN',
+	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Todos os Dispositivos associados à este Switch SAN',
 ));
 
 //
@@ -366,7 +366,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TapeLibrary' => 'Biblioteca de Fitas',
 	'Class:TapeLibrary+' => '',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Fitas',
-	'Class:TapeLibrary/Attribute:tapes_list+' => 'Todas as fitas associadas à esta biblioteca de fitas',
+	'Class:TapeLibrary/Attribute:tapes_list+' => 'Todas as Fitas associadas à esta Biblioteca de fitas',
 ));
 
 //
@@ -377,7 +377,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Sistemas de arquivos',
-	'Class:NAS/Attribute:nasfilesystem_list+' => 'Todos os sistemas de arquivos para esse NAS',
+	'Class:NAS/Attribute:nasfilesystem_list+' => 'Todos os Sistemas de arquivos para este NAS',
 ));
 
 //
@@ -433,7 +433,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:PowerSource' => 'Fonte de Energia',
 	'Class:PowerSource+' => '',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
-	'Class:PowerSource/Attribute:pdus_list+' => 'Todos os PDUs utilizando essa fonte de energia',
+	'Class:PowerSource/Attribute:pdus_list+' => 'Todos os PDUs utilizando esta Fonte de energia',
 ));
 
 //
@@ -476,7 +476,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Enclosure/Attribute:nb_u' => 'Unidades',
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'Dispositivos',
-	'Class:Enclosure/Attribute:device_list+' => 'Todos os dispositivos para essa gaveta',
+	'Class:Enclosure/Attribute:device_list+' => 'Todos os Dispositivos presentes nesta Gaveta',
 ));
 
 //
@@ -487,9 +487,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ApplicationSolution' => 'Solução de Aplicação',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'ICs',
-	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Todos os itens de configuração que compõem essa solução de aplicação',
+	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Todos os Itens de configuração (IC) que compõem esta Solução de aplicação',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Processos de negócio',
-	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Todos os processos do negócio dependente para essa solução de aplicação',
+	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Todos os Processos de negócio dependentes desta Solução de aplicação',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Ativo',
@@ -497,9 +497,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Inativo',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => '',
 	'Class:ApplicationSolution/Attribute:redundancy' => 'Análise de impacto: configuração de redundância',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'A solução está funcionando se todos os ICs estiverem funcionando',
-	'Class:ApplicationSolution/Attribute:redundancy/count' => 'A solução está funcionando se no mínimo %1$s IC(s) estiver(em) funcionando',
-	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'A solução está funcionando se no mínimo %1$s %% dos ICs estiverem funcionando',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'A Solução de aplicação está funcionando se todos os Itens de configuração (ICs) estiverem funcionando',
+	'Class:ApplicationSolution/Attribute:redundancy/count' => 'A Solução de aplicação está funcionando se no mínimo %1$s Item(ns) de configuração (IC(s)) estiver(em) funcionando',
+	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'A Solução de aplicação está funcionando se no mínimo %1$s %% dos Itens de configuração (ICs) estiverem funcionando',
 ));
 
 //
@@ -566,8 +566,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DBServer' => 'Servidor de DB',
 	'Class:DBServer+' => '',
-	'Class:DBServer/Attribute:dbschema_list' => 'Esquemas de DB',
-	'Class:DBServer/Attribute:dbschema_list+' => 'Todos os esquemas para esse servidor de banco de dados',
+	'Class:DBServer/Attribute:dbschema_list' => 'Esquemas de BD',
+	'Class:DBServer/Attribute:dbschema_list+' => 'Todos os Esquemas de BD para este Servidor de Banco de Dados (BD)',
 ));
 
 //
@@ -578,7 +578,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:WebServer' => 'Servidor Web',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Aplicações Web',
-	'Class:WebServer/Attribute:webapp_list+' => 'Todas as aplicações web disponíveis para esse servidor web',
+	'Class:WebServer/Attribute:webapp_list+' => 'Todas as Aplicações Web disponíveis para esse Servidor Web',
 ));
 
 //
@@ -659,7 +659,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Suporte',
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'Suporte',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volume lógico',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Todos os volumes lógicos associados a este dispositivo',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Todos os Volumes lógicos associados à este Dispositivo virtual',
 ));
 
 //
@@ -669,9 +669,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:VirtualHost' => 'Host Virtual',
 	'Class:VirtualHost+' => '',
-	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Máquinas Virtuais',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Todas as máquinas virtuais hospedadas neste Host',
-));
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Máquinas virtuais (VMs)',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Todas as Máquinas virtuais (VMs) hospedadas neste Host virtual',
+)); 
 
 //
 // Class: Hypervisor
@@ -682,7 +682,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Hypervisor+' => '',
 	'Class:Hypervisor/Attribute:farm_id' => 'Cluster/HA',
 	'Class:Hypervisor/Attribute:farm_id+' => '',
-	'Class:Hypervisor/Attribute:farm_name' => 'Nome do Cluster/HA',
+	'Class:Hypervisor/Attribute:farm_name' => 'Nome do cluster/HA',
 	'Class:Hypervisor/Attribute:farm_name+' => '',
 	'Class:Hypervisor/Attribute:server_id' => 'Servidor',
 	'Class:Hypervisor/Attribute:server_id+' => '',
@@ -698,11 +698,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Farm' => 'Cluster/HA',
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
-	'Class:Farm/Attribute:hypervisor_list+' => 'Todos os hypervisors que compõem esse Cluster/HA',
+	'Class:Farm/Attribute:hypervisor_list+' => 'Todos os Hypervisors que compõem este Cluster/HA',
 	'Class:Farm/Attribute:redundancy' => 'Alta disponibilidade',
-	'Class:Farm/Attribute:redundancy/disabled' => 'O farm está ativo se todos os hipervisores estiverem em alta',
-	'Class:Farm/Attribute:redundancy/count' => 'O farm está ativo se pelo menos %1$s hypervisor(es) estiver (ão) para cima',
-	'Class:Farm/Attribute:redundancy/percent' => 'O farm está ativo se pelo menos %1$s %% dos hipervisores estiverem em alta',
+	'Class:Farm/Attribute:redundancy/disabled' => 'O farm está ativo se todos os hypervisors estiverem disponíveis',
+	'Class:Farm/Attribute:redundancy/count' => 'O farm está ativo se pelo menos %1$s hypervisor(s) estiver(em) disponíveis',
+	'Class:Farm/Attribute:redundancy/percent' => 'O farm está ativo se pelo menos %1$s %% dos hypervisors estiverem disponíveis',
 ));
 
 //
@@ -734,8 +734,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:VirtualMachine/Attribute:ram+' => '',
 	'Class:VirtualMachine/Attribute:managementip' => 'IP',
 	'Class:VirtualMachine/Attribute:managementip+' => '',
-	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Placas de rede',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Todas as placas de rede',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfaces de rede',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Todas as interfaces de rede',
 ));
 
 //
@@ -751,7 +751,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:LogicalVolume/Attribute:lun_id+' => '',
 	'Class:LogicalVolume/Attribute:description' => 'Descrição',
 	'Class:LogicalVolume/Attribute:description+' => '',
-	'Class:LogicalVolume/Attribute:raid_level' => 'Nível RAID',
+	'Class:LogicalVolume/Attribute:raid_level' => 'Nível de RAID',
 	'Class:LogicalVolume/Attribute:raid_level+' => '',
 	'Class:LogicalVolume/Attribute:size' => 'Tamanho',
 	'Class:LogicalVolume/Attribute:size+' => '',
@@ -760,9 +760,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Nome do sistema de arquivos',
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
 	'Class:LogicalVolume/Attribute:servers_list' => 'Servidores',
-	'Class:LogicalVolume/Attribute:servers_list+' => 'Todos os servidores usando esse volume',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'Todos os Servidores usando este Volume lógico',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispositivos virtuais',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Todos os dispositivos virtuais usando esse volume',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Todos os Dispositivos virtuais usando este Volume lógico',
 ));
 
 //
@@ -770,7 +770,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkServerToVolume' => 'Link Servidor / Volume',
+	'Class:lnkServerToVolume' => 'Relação entre Servidor / Volume',
 	'Class:lnkServerToVolume+' => '',
 	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
 	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
@@ -789,7 +789,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkVirtualDeviceToVolume' => 'Link Dispositivo Virtual / Volume',
+	'Class:lnkVirtualDeviceToVolume' => 'Relação entre Dispositivo virtual / Volume',
 	'Class:lnkVirtualDeviceToVolume+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
@@ -808,7 +808,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkSanToDatacenterDevice' => 'Link SAN / Dispositivo Datacenter',
+	'Class:lnkSanToDatacenterDevice' => 'Relação entre Switch SAN / Dispositivo de datacenter',
 	'Class:lnkSanToDatacenterDevice+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'Switch SAN',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
@@ -818,9 +818,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Nome do dispositivo',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'FC SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'FC do SAN',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Dispositivo de FC',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'FC do dispositivo',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '',
 ));
 
@@ -878,7 +878,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Software/Attribute:version' => 'Versão',
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Documentos',
-	'Class:Software/Attribute:documents_list+' => 'Todos os documentos associados a este software',
+	'Class:Software/Attribute:documents_list+' => 'Todos os Documentos associados a este Software',
 	'Class:Software/Attribute:type' => 'Tipo',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Servidor de DB',
@@ -909,7 +909,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Patch/Attribute:name' => 'Nome',
 	'Class:Patch/Attribute:name+' => '',
 	'Class:Patch/Attribute:documents_list' => 'Documentos',
-	'Class:Patch/Attribute:documents_list+' => 'Todos os documentos associados à esta atualização',
+	'Class:Patch/Attribute:documents_list+' => 'Todos os Documentos associados à esta Atualização',
 	'Class:Patch/Attribute:description' => 'Descrição',
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Tipo',
@@ -924,7 +924,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:OSPatch' => 'Atualização de SO',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Dispositivos',
-	'Class:OSPatch/Attribute:functionalcis_list+' => 'Todos os sistemas onde essa atualização está instalada',
+	'Class:OSPatch/Attribute:functionalcis_list+' => 'Todos os sistemas onde essa Atualização de SO está instalada',
 	'Class:OSPatch/Attribute:osversion_id' => 'Versão do SO',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'Nome da versão do SO',
@@ -942,8 +942,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SoftwarePatch/Attribute:software_id+' => '',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Nome do software',
 	'Class:SoftwarePatch/Attribute:software_name+' => '',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Instâncias do Software',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Todos os sistemas onde essa atualização de software está instalada',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Instâncias de software',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Todos os sistemas onde essa Atualização de software está instalada',
 ));
 
 //
@@ -956,7 +956,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Licence/Attribute:name' => 'Nome',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Documentos',
-	'Class:Licence/Attribute:documents_list+' => 'Todos os documentos associados à esta licença',
+	'Class:Licence/Attribute:documents_list+' => 'Todos os Documentos associados à esta Licença',
 	'Class:Licence/Attribute:org_id' => 'Organização',
 	'Class:Licence/Attribute:org_id+' => '',
 	'Class:Licence/Attribute:organization_name' => 'Nome da organização',
@@ -992,10 +992,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'Nome da versão do SO',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
-	'Class:OSLicence/Attribute:virtualmachines_list' => 'Máquinas virtuais',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Todas as máquinas virtuais onde essa licença é utilizada',
-	'Class:OSLicence/Attribute:servers_list' => 'servidores',
-	'Class:OSLicence/Attribute:servers_list+' => 'Todos os servidores onde essa licença é utilizada',
+	'Class:OSLicence/Attribute:virtualmachines_list' => 'Máquinas virtuais (VMs)',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Todas as Máquinas virtuais (VMs) onde essa Licença é utilizada',
+	'Class:OSLicence/Attribute:servers_list' => 'Servidores',
+	'Class:OSLicence/Attribute:servers_list+' => 'Todos os Servidores onde essa Licença é utilizada',
 ));
 
 //
@@ -1003,14 +1003,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:SoftwareLicence' => 'Licença de software',
+	'Class:SoftwareLicence' => 'Licença de Software',
 	'Class:SoftwareLicence+' => '',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Nome do software',
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Instâncias do software',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Todos os sistemas onde essa licença é utilizada',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Instâncias de software',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Todos os sistemas onde esta Licença é utilizada',
 ));
 
 //
@@ -1018,7 +1018,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkDocumentToLicence' => 'Link Documento / Licença',
+	'Class:lnkDocumentToLicence' => 'Relação entre Documento / Licença',
 	'Class:lnkDocumentToLicence+' => '',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licença',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
@@ -1060,7 +1060,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Brand' => 'Fabricante',
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Dispositivos físicos',
-	'Class:Brand/Attribute:physicaldevices_list+' => 'Todos os dispositivos físicos correspondentes a esse(a) fabricante',
+	'Class:Brand/Attribute:physicaldevices_list+' => 'Todos os Dispositivos físicos correspondentes a esse(a) Fabricante',
 	'Class:Brand/UniquenessRule:name+' => 'O nome do(a) fabricante deve ser único',
 	'Class:Brand/UniquenessRule:name' => 'Esse(a) fabricante já existe',
 ));
@@ -1115,7 +1115,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Model/Attribute:type/Value:Phone' => 'Telefone',
 	'Class:Model/Attribute:type/Value:Phone+' => '',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo físico',
-	'Class:Model/Attribute:physicaldevices_list+' => 'Todos os dispositivos físicos correspondentes a este modelo',
+	'Class:Model/Attribute:physicaldevices_list+' => 'Todos os Dispositivos físicos correspondentes a esse Modelo',
 	'Class:Model/UniquenessRule:name_brand+' => 'O nome do modelo deve ser único',
 	'Class:Model/UniquenessRule:name_brand' => 'Este modelo já existe',
 ));
@@ -1127,8 +1127,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:NetworkDeviceType' => 'Tipo de dispositivo de rede',
 	'Class:NetworkDeviceType+' => '',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Dispositivo de rede',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Todos os dispositivo de rede correspondentes a este tipo',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Dispositivos de rede',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Todos os Dispositivos de rede correspondentes a este Tipo',
 ));
 
 //
@@ -1149,7 +1149,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkDocumentToPatch' => 'Link Documento / Atualização',
+	'Class:lnkDocumentToPatch' => 'Relação entre Documento / Atualização',
 	'Class:lnkDocumentToPatch+' => '',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Atualização',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
@@ -1166,7 +1166,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Link Instância de Software / Atualização de Software',
+	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Relação entre Instância de software / Atualização de software',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Atualização de software',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
@@ -1183,7 +1183,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToOSPatch' => 'Link IC / Atualização de SO',
+	'Class:lnkFunctionalCIToOSPatch' => 'Relação entre IC / Atualização de SO',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Atualização de SO',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
@@ -1200,7 +1200,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkDocumentToSoftware' => 'Link Documento / Software',
+	'Class:lnkDocumentToSoftware' => 'Relação entre Documento / Software',
 	'Class:lnkDocumentToSoftware+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Software',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
@@ -1261,7 +1261,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkSubnetToVLAN' => 'Link Sub-rede / VLAN',
+	'Class:lnkSubnetToVLAN' => 'Relação entre Sub-rede / VLAN',
 	'Class:lnkSubnetToVLAN+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Sub-rede',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
@@ -1331,7 +1331,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkPhysicalInterfaceToVLAN' => 'Link Interfaces físicas / VLAN',
+	'Class:lnkPhysicalInterfaceToVLAN' => 'Relação entre Interface física / VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Interface física',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
@@ -1385,7 +1385,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkConnectableCIToNetworkDevice' => 'Link ConnectableCI / NetworkDevice',
+	'Class:lnkConnectableCIToNetworkDevice' => 'Relação entre Dispositivo conectado / Dispositivo de rede',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Dispositivo de rede',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
@@ -1412,7 +1412,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkApplicationSolutionToFunctionalCI' => 'Link Solução de Aplicação / IC',
+	'Class:lnkApplicationSolutionToFunctionalCI' => 'Relação entre Solução de aplicação / IC',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Solução de aplicação',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
@@ -1429,7 +1429,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkApplicationSolutionToBusinessProcess' => 'Link ApplicationSolution / BusinessProcess',
+	'Class:lnkApplicationSolutionToBusinessProcess' => 'Relação entre Solução de aplicação / Processo de negócio',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Processo de negócio',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
@@ -1472,7 +1472,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Group/Attribute:parent_name' => 'Nome',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'ICs relacionados',
-	'Class:Group/Attribute:ci_list+' => 'Todos os itens de configuração associados a este grupo',
+	'Class:Group/Attribute:ci_list+' => 'Todos os Itens de configuração (IC) associados a esse Grupo',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Grupo pai',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
 ));
@@ -1482,7 +1482,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkGroupToCI' => 'Link Grupo / IC',
+	'Class:lnkGroupToCI' => 'Relação entre Grupo / IC',
 	'Class:lnkGroupToCI+' => '',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Grupo',
 	'Class:lnkGroupToCI/Attribute:group_id+' => '',
@@ -1518,9 +1518,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Link de Documento / IC',
+	'Class:lnkDocumentToFunctionalCI' => 'Relação entre Documento / IC',
 	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'ICs',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'IC',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
@@ -1563,9 +1563,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:MobilePhone+' => 'Lista de Telefones Celulares',
 	'Menu:PC' => 'Estação de Trabalho',
 	'Menu:PC+' => 'Lista de Estações de Trabalho',
-	'Menu:NewCI' => 'Novo IC',
+	'Menu:NewCI' => 'Novo Item de Configuração (IC)',
 	'Menu:NewCI+' => '',
-	'Menu:SearchCIs' => 'Pesquisar por ICs',
+	'Menu:SearchCIs' => 'Pesquisar por Itens de Configuração (ICs)',
 	'Menu:SearchCIs+' => '',
 	'Menu:ConfigManagement:Devices' => 'Dispositivos',
 	'Menu:ConfigManagement:AllDevices' => 'Infraestrutura',
@@ -1573,8 +1573,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ConfigManagement:EndUsers' => 'Dispositivos de usuários finais',
 	'Menu:ConfigManagement:SWAndApps' => 'Softwares e aplicações',
 	'Menu:ConfigManagement:Misc' => 'Diversos',
-	'Menu:Group' => 'Grupos de ICs',
-	'Menu:Group+' => 'Lista de Grupos de ICs',
+	'Menu:Group' => 'Grupos de Itens de Configuração (ICs)',
+	'Menu:Group+' => 'Lista de Grupos de Itens de Configuração (ICs)',
 	'Menu:OSVersion' => 'Versão do SO',
 	'Menu:OSVersion+' => 'Lista de Versões do SO',
 	'Menu:Software' => 'Catálogo de Software',

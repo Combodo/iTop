@@ -44,7 +44,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Organization/Attribute:status/Value:active+' => '',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Inativo',
 	'Class:Organization/Attribute:status/Value:inactive+' => '',
-	'Class:Organization/Attribute:parent_id' => 'Pai',
+	'Class:Organization/Attribute:parent_id' => 'Organização pai',
 	'Class:Organization/Attribute:parent_id+' => 'Organização pai',
 	'Class:Organization/Attribute:parent_name' => 'Organização pai',
 	'Class:Organization/Attribute:parent_name+' => 'Nome da organização pai',
@@ -52,12 +52,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nome do modelo de entrega',
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
-	'Class:Organization/Attribute:parent_id_friendlyname' => 'Pai (nome amigável)',
+	'Class:Organization/Attribute:parent_id_friendlyname' => 'Organização pai (nome amigável)',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Nome amigável da organização pai',
 	'Class:Organization/Attribute:overview' => 'Visão geral',
-	'Organization:Overview:FunctionalCIs' => 'Itens de configuração associadas à esta organização',
+	'Organization:Overview:FunctionalCIs' => 'Itens de Configuração (ICs) associados à esta Organização',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'por tipo',
-	'Organization:Overview:Users' => 'Usuários do '.ITOP_APPLICATION_SHORT.' associados à esta organização',
+	'Organization:Overview:Users' => 'Usuários do '.ITOP_APPLICATION_SHORT.' associados à esta Organização',
 ));
 
 //
@@ -88,9 +88,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Location/Attribute:country' => 'País',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'Dispositivos',
-	'Class:Location/Attribute:physicaldevice_list+' => 'Todos os dispositivos associados à esta localização',
+	'Class:Location/Attribute:physicaldevice_list+' => 'Todos os Dispositivos associados à esta Localização',
 	'Class:Location/Attribute:person_list' => 'Contatos',
-	'Class:Location/Attribute:person_list+' => 'Todos os contatos associados à esta localização',
+	'Class:Location/Attribute:person_list+' => 'Todos os Contatos associados à esta Localização',
 ));
 
 //
@@ -125,7 +125,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Contact/Attribute:function' => 'Função',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'ICs',
-	'Class:Contact/Attribute:cis_list+' => 'Todos os itens de configuração associados a este contato',
+	'Class:Contact/Attribute:cis_list+' => 'Todos os Itens de Configuração (ICs) associados à este Contato',
 	'Class:Contact/Attribute:finalclass' => 'Tipo de contato',
 	'Class:Contact/Attribute:finalclass+' => '',
 ));
@@ -137,11 +137,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person' => 'Pessoa',
 	'Class:Person+' => '',
-	'Class:Person/Attribute:name' => 'Último nome',
+	'Class:Person/Attribute:name' => 'Sobrenome',
 	'Class:Person/Attribute:name+' => '',
-	'Class:Person/Attribute:first_name' => 'Primeiro nome',
+	'Class:Person/Attribute:first_name' => 'Nome',
 	'Class:Person/Attribute:first_name+' => '',
-	'Class:Person/Attribute:employee_number' => 'Número de colaborador',
+	'Class:Person/Attribute:employee_number' => 'Matrícula do colaborador',
 	'Class:Person/Attribute:employee_number+' => '',
 	'Class:Person/Attribute:mobile_phone' => 'Celular',
 	'Class:Person/Attribute:mobile_phone+' => '',
@@ -154,9 +154,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person/Attribute:manager_name' => 'Nome do gerente',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'Equipes',
-	'Class:Person/Attribute:team_list+' => 'Todas as equipes que essa pessoa pertence',
+	'Class:Person/Attribute:team_list+' => 'Todas as Equipes que esta Pessoa pertence',
 	'Class:Person/Attribute:tickets_list' => 'Solicitações',
-	'Class:Person/Attribute:tickets_list+' => 'Todos as solicitações que essa pessoa solicitou',
+	'Class:Person/Attribute:tickets_list+' => 'Todas as Solicitações que esta Pessoa solicitou',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nome amigável do gerente',
 	'Class:Person/Attribute:manager_id_friendlyname+' => 'Nome amigável do gerente do usuário correspondente',
 	'Class:Person/Attribute:picture' => 'Imagem',
@@ -210,7 +210,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document/Attribute:status/Value:published' => 'Publicado',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'ICs',
-	'Class:Document/Attribute:cis_list+' => 'Todos os itens de configuração associados a este documento',
+	'Class:Document/Attribute:cis_list+' => 'Todos os Itens de Configuração (IC) associados à este Documento',
 	'Class:Document/Attribute:finalclass' => 'Tipo de documento',
 	'Class:Document/Attribute:finalclass+' => '',
 ));
@@ -284,7 +284,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkPersonToTeam' => 'Link Pessoa / Equipe',
+	'Class:lnkPersonToTeam' => 'Relação entre Pessoa / Equipe',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Equipe',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
@@ -317,8 +317,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:Organization+' => 'Lista de Organizações',
 	'Menu:ConfigManagement' => 'Gerenciamento Configuração',
 	'Menu:ConfigManagement+' => 'Gerenciamento de Configuração',
-	'Menu:ConfigManagementCI' => 'Itens de Configuração',
-	'Menu:ConfigManagementCI+' => 'Lista de Itens de Configuração',
+	'Menu:ConfigManagementCI' => 'Itens de Configuração (ICs)',
+	'Menu:ConfigManagementCI+' => 'Lista de Itens de Configuração (ICs)',
 	'Menu:ConfigManagementOverview' => 'Visão geral',
 	'Menu:ConfigManagementOverview+' => '',
 	'Menu:Contact' => 'Contatos',

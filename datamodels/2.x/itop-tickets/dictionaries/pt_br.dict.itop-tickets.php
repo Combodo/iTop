@@ -69,11 +69,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Ticket/Attribute:private_log' => 'Log privado',
 	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => 'Contatos',
-	'Class:Ticket/Attribute:contacts_list+' => 'Todos os contatos associados à esta solicitação',
+	'Class:Ticket/Attribute:contacts_list+' => 'Todos os Contatos associados à esta Solicitação',
 	'Class:Ticket/Attribute:functionalcis_list' => 'ICs',
-	'Class:Ticket/Attribute:functionalcis_list+' => 'Todos os itens de configuração afetados por essa solicitação',
+	'Class:Ticket/Attribute:functionalcis_list+' => 'Todos os Itens de Configuração (ICs) afetados por esta Solicitação',
 	'Class:Ticket/Attribute:workorders_list' => 'Ordens de serviço',
-	'Class:Ticket/Attribute:workorders_list+' => 'Todos as ordens de serviço para essa solicitação',
+	'Class:Ticket/Attribute:workorders_list+' => 'Todos as Ordens de serviço associadas à esta Solicitação',
 	'Class:Ticket/Attribute:finalclass' => 'Tipo',
 	'Class:Ticket/Attribute:finalclass+' => '',
 	'Class:Ticket/Attribute:operational_status' => 'Status operacional',
@@ -93,7 +93,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkContactToTicket' => 'Link Contato / Solicitação',
+	'Class:lnkContactToTicket' => 'Relação entre Contato / Solicitação',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Solicitação',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
@@ -250,7 +250,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document/Attribute:contracts_list' => 'Contratos',
-	'Class:Document/Attribute:contracts_list+' => 'Todos os contratos associados a este documento',
+	'Class:Document/Attribute:contracts_list+' => 'Todos os Contratos associados à este Documento',
 	'Class:Document/Attribute:services_list' => 'Serviços',
-	'Class:Document/Attribute:services_list+' => 'Todos os serviços associados a este documento',
+	'Class:Document/Attribute:services_list+' => 'Todos os Serviços associados à este Documento',
 ));

@@ -683,7 +683,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkTriggerAction' => 'Ação/Gatilho',
-	'Class:lnkTriggerAction+' => 'Link Gatilho / Ação',
+	'Class:lnkTriggerAction+' => 'Relação entre Gatilho / Ação',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Ação',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'Ação a ser executada',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'Ação',

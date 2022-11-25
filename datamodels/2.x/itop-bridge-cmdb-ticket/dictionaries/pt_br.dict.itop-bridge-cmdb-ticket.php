@@ -31,7 +31,7 @@
 // Class: lnkFunctionalCIToTicket
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToTicket' => 'Link IC / Solicitação',
+	'Class:lnkFunctionalCIToTicket' => 'Relação entre IC / Solicitação',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Solicitação',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
@@ -56,7 +56,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Link IC / Contrato de provedor',
+	'Class:lnkFunctionalCIToProviderContract' => 'Relação entre IC / Contrato de provedor',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrato de provedor',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
@@ -73,7 +73,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToService' => 'Link IC / Serviço',
+	'Class:lnkFunctionalCIToService' => 'Relação entre IC / Serviço',
 	'Class:lnkFunctionalCIToService+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Serviço',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
@@ -91,9 +91,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contrato de provedor',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Todos os contratos para esse item de configuração',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Todos os Contratos de provedor associados à este Item de Configuração (IC)',
 	'Class:FunctionalCI/Attribute:services_list' => 'Serviços',
-	'Class:FunctionalCI/Attribute:services_list+' => 'Todos os serviços impactados por esse item de configuração',
+	'Class:FunctionalCI/Attribute:services_list+' => 'Todos os Serviços impactados por este Item de Configuração (IC)',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Solicitações',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'Todos as solicitações para este item de configuração',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'Todas as Solicitações associadas à este Item de Configuração (IC)',
 ));
