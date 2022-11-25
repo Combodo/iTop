@@ -1,0 +1,27 @@
+<?php
+/**
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
+class TestAutoload extends ItopDataTestCase
+{
+
+	/**
+	 */
+	public function testAutoloader()
+	{
+		if (class_exists('Composer\InstalledVersions')) {
+			$this->assertTrue(true);
+			return;
+		}
+		$this->assertTrue(false, 'You should run composer install on the faulty module');
+	}
+}
