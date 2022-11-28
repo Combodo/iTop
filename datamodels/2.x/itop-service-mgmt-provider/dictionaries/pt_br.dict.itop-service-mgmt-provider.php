@@ -170,7 +170,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ProviderContract' => 'Contrato de provedor',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'ICs',
-	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Todos os Itens de Configuração (IC) abrangidos por esse Contrato',
+	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Todos os Itens de Configuração (IC) abrangidos por este Contrato',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Acordo de Nível de Serviço (ANS)',
 	'Class:ProviderContract/Attribute:coverage' => 'Horário de serviço',
@@ -240,7 +240,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ServiceFamily/Attribute:icon' => 'Ícone',
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Serviços',
-	'Class:ServiceFamily/Attribute:services_list+' => 'Todos os Serviços associados à esta Família de Serviços',
+	'Class:ServiceFamily/Attribute:services_list+' => 'Todos os Serviços associados à esta Família de serviços',
 ));
 
 //
@@ -252,10 +252,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Service+' => '',
 	'Class:Service/Attribute:name' => 'Nome',
 	'Class:Service/Attribute:name+' => '',
-	'Class:Service/Attribute:org_id' => 'Organização',
+	'Class:Service/Attribute:org_id' => 'Provedor',
 	'Class:Service/Attribute:org_id+' => '',
-	'Class:Service/Attribute:organization_name' => 'Nome',
-	'Class:Service/Attribute:organization_name+' => 'Nome comum',
+	'Class:Service/Attribute:organization_name' => 'Nome do provedor',
+	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:description' => 'Descrição',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Família de serviços',
@@ -274,12 +274,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Service/Attribute:status/Value:obsolete+' => '',
 	'Class:Service/Attribute:status/Value:production' => 'Em produção',
 	'Class:Service/Attribute:status/Value:production+' => '',
-	'Class:Service/Attribute:icon' => 'Icon',
+	'Class:Service/Attribute:icon' => 'Ícone',
 	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Contratos de clientes',
-	'Class:Service/Attribute:customercontracts_list+' => 'Todos os Contratos de clientes que contrataram esse Serviço',
+	'Class:Service/Attribute:customercontracts_list+' => 'Todos os Contratos de clientes que contrataram este Serviço',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Subcategorias de serviço',
-	'Class:Service/Attribute:servicesubcategories_list+' => 'Todas as Subcategorias de serviço associadas à esse Serviço',
+	'Class:Service/Attribute:servicesubcategories_list+' => 'Todas as Subcategorias de serviço associadas à este Serviço',
 ));
 
 //
@@ -365,9 +365,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SLA/Attribute:organization_name' => 'Nome da organização',
 	'Class:SLA/Attribute:organization_name+' => '',
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
-	'Class:SLA/Attribute:slts_list+' => 'Todos os Níveis Mínimos de Serviço (SLTs) para esse Acordo de Nível de Serviço (SLA)',
+	'Class:SLA/Attribute:slts_list+' => 'Todos os Níveis Mínimos de Serviço (SLTs) para este Acordo de Nível de Serviço (SLA)',
 	'Class:SLA/Attribute:customercontracts_list' => 'Contratos de clientes',
-	'Class:SLA/Attribute:customercontracts_list+' => 'Todos os Contratos de clientes utilizando esse Acordo de Nível de Serviço (SLA)',
+	'Class:SLA/Attribute:customercontracts_list+' => 'Todos os Contratos de clientes utilizando este Acordo de Nível de Serviço (SLA)',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Não foi possível salvar o vínculo entre o Contrato de cliente %1$s e o Serviço %2$s : SLA já existe',
 ));
 
@@ -503,16 +503,16 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Nome',
 	'Class:DeliveryModel/Attribute:name+' => '',
-	'Class:DeliveryModel/Attribute:org_id' => 'Organização',
+	'Class:DeliveryModel/Attribute:org_id' => 'Provedor',
 	'Class:DeliveryModel/Attribute:org_id+' => '',
 	'Class:DeliveryModel/Attribute:organization_name' => 'Nome da organização',
 	'Class:DeliveryModel/Attribute:organization_name+' => '',
 	'Class:DeliveryModel/Attribute:description' => 'Descrição',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contatos',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'Todos os Contatos associados à esse Modelo de entrega',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'Todos os Contatos (Equipes e Pessoas) associados à este Modelo de entrega',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Clientes',
-	'Class:DeliveryModel/Attribute:customers_list+' => 'Todos os Contatos associados à esse Modelo de entrega',
+	'Class:DeliveryModel/Attribute:customers_list+' => 'Todos os clientes atendidos por este Modelo de entrega',
 ));
 
 //

@@ -578,7 +578,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:WebServer' => 'Servidor Web',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Aplicações Web',
-	'Class:WebServer/Attribute:webapp_list+' => 'Todas as Aplicações Web disponíveis para esse Servidor Web',
+	'Class:WebServer/Attribute:webapp_list+' => 'Todas as Aplicações Web disponíveis para este Servidor Web',
 ));
 
 //
@@ -892,11 +892,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Software/Attribute:type/Value:WebServer' => 'Servidor Web',
 	'Class:Software/Attribute:type/Value:WebServer+' => 'Servidor Web',
 	'Class:Software/Attribute:softwareinstance_list' => 'Instâncias de Software',
-	'Class:Software/Attribute:softwareinstance_list+' => 'Todas as instâncias software para esse software',
+	'Class:Software/Attribute:softwareinstance_list+' => 'Todas as Instâncias de software para este Software',
 	'Class:Software/Attribute:softwarepatch_list' => 'Atualizações de software',
-	'Class:Software/Attribute:softwarepatch_list+' => 'Todas as atualizações para esse software',
-	'Class:Software/Attribute:softwarelicence_list' => 'Licenças de Software',
-	'Class:Software/Attribute:softwarelicence_list+' => 'Todas as licenças software para esse software',
+	'Class:Software/Attribute:softwarepatch_list+' => 'Todas as Atualizações para este Software',
+	'Class:Software/Attribute:softwarelicence_list' => 'Licenças de software',
+	'Class:Software/Attribute:softwarelicence_list+' => 'Todas as Licenças de software para este Software',
 ));
 
 //
@@ -1115,7 +1115,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Model/Attribute:type/Value:Phone' => 'Telefone',
 	'Class:Model/Attribute:type/Value:Phone+' => '',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo físico',
-	'Class:Model/Attribute:physicaldevices_list+' => 'Todos os Dispositivos físicos correspondentes a esse Modelo',
+	'Class:Model/Attribute:physicaldevices_list+' => 'Todos os Dispositivos físicos correspondentes à este Modelo',
 	'Class:Model/UniquenessRule:name_brand+' => 'O nome do modelo deve ser único',
 	'Class:Model/UniquenessRule:name_brand' => 'Este modelo já existe',
 ));
@@ -1472,7 +1472,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Group/Attribute:parent_name' => 'Nome',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'ICs relacionados',
-	'Class:Group/Attribute:ci_list+' => 'Todos os Itens de configuração (IC) associados a esse Grupo',
+	'Class:Group/Attribute:ci_list+' => 'Todos os Itens de configuração (IC) associados à este Grupo',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Grupo pai',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
 ));
@@ -1563,17 +1563,17 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:MobilePhone+' => 'Lista de Telefones Celulares',
 	'Menu:PC' => 'Estação de Trabalho',
 	'Menu:PC+' => 'Lista de Estações de Trabalho',
-	'Menu:NewCI' => 'Novo Item de Configuração (IC)',
-	'Menu:NewCI+' => '',
-	'Menu:SearchCIs' => 'Pesquisar por Itens de Configuração (ICs)',
-	'Menu:SearchCIs+' => '',
+	'Menu:NewCI' => 'Novo IC',
+	'Menu:NewCI+' => 'Novo Item de Configuração (IC)',
+	'Menu:SearchCIs' => 'Pesquisar por ICs',
+	'Menu:SearchCIs+' => 'Pesquisar por Itens de Configuração (ICs)',
 	'Menu:ConfigManagement:Devices' => 'Dispositivos',
 	'Menu:ConfigManagement:AllDevices' => 'Infraestrutura',
 	'Menu:ConfigManagement:virtualization' => 'Virtualização',
 	'Menu:ConfigManagement:EndUsers' => 'Dispositivos de usuários finais',
 	'Menu:ConfigManagement:SWAndApps' => 'Softwares e aplicações',
 	'Menu:ConfigManagement:Misc' => 'Diversos',
-	'Menu:Group' => 'Grupos de Itens de Configuração (ICs)',
+	'Menu:Group' => 'Grupos de ICs',
 	'Menu:Group+' => 'Lista de Grupos de Itens de Configuração (ICs)',
 	'Menu:OSVersion' => 'Versão do SO',
 	'Menu:OSVersion+' => 'Lista de Versões do SO',

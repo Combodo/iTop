@@ -142,7 +142,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CustomerContract' => 'Contrato de Cliente',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Serviços',
-	'Class:CustomerContract/Attribute:services_list+' => 'Todos os Serviços contratados para o presente Contrato de cliente',
+	'Class:CustomerContract/Attribute:services_list+' => 'Todos os Serviços contratados para este Contrato de cliente',
 ));
 
 //
@@ -203,7 +203,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ServiceFamily' => 'Família de Serviços',
+	'Class:ServiceFamily' => 'Família de serviços',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Nome',
 	'Class:ServiceFamily/Attribute:name+' => '',
@@ -332,7 +332,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SLA/Attribute:name+' => '',
 	'Class:SLA/Attribute:description' => 'Descrição',
 	'Class:SLA/Attribute:description+' => '',
-	'Class:SLA/Attribute:org_id' => 'Organização',
+	'Class:SLA/Attribute:org_id' => 'Provedor',
 	'Class:SLA/Attribute:org_id+' => '',
 	'Class:SLA/Attribute:organization_name' => 'Nome da organização',
 	'Class:SLA/Attribute:organization_name+' => '',
@@ -454,20 +454,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:DeliveryModel' => 'Modelo de Entrega',
+	'Class:DeliveryModel' => 'Modelo de entrega',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Nome',
 	'Class:DeliveryModel/Attribute:name+' => '',
-	'Class:DeliveryModel/Attribute:org_id' => 'Organização',
+	'Class:DeliveryModel/Attribute:org_id' => 'Provedor',
 	'Class:DeliveryModel/Attribute:org_id+' => '',
 	'Class:DeliveryModel/Attribute:organization_name' => 'Nome da organização',
 	'Class:DeliveryModel/Attribute:organization_name+' => 'Nome comum',
 	'Class:DeliveryModel/Attribute:description' => 'Descrição',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contatos',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'Todos os Contatos associados à este Modelo de entrega',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'Todos os Contatos (Equipes e Pessoas) associados à este Modelo de entrega',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Clientes',
-	'Class:DeliveryModel/Attribute:customers_list+' => 'Todos os Clientes associados à este Modelo de entrega',
+	'Class:DeliveryModel/Attribute:customers_list+' => 'Todos os clientes atendidos por este Modelo de entrega',
 ));
 
 //

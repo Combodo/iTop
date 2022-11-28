@@ -8,7 +8,7 @@
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:CreateMailbox' => 'Criar uma caixa de e-mail...',
-	'Menu:OAuthClient' => 'Cliente OAuth',
+	'Menu:OAuthClient' => 'Clientes OAuth',
 	'Menu:OAuthClient+' => '',
 	'Menu:GenerateTokens' => 'Criar tokens de acesso...',
 	'Menu:RegenerateTokens' => 'Recriar tokens de acesso...',
