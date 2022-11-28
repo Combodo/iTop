@@ -35,6 +35,18 @@
 	{% endif %}
 {% endblock %}
 
+{% block iboPageTemplates %}
+    <template id="ibo-small-loading-placeholder-template">
+        <div>TODO 3.1: LOADER AVEC ICONE SEULE</div>
+    </template>
+    <template id="ibo-large-loading-placeholder-template">
+        <div>TODO 3.1: LOADER AVEC TEXTE ET ICONE</div>
+    </template>
+    <template id="ibo-modal-template">
+        <div class="ibo-modal" data-role="ibo-modal">TODO 3.1: Please wait</div>
+    </template>
+{% endblock %}
+
 {% block iboCapturedOutput %}
     <div id="ibo-raw-output" class="ibo-raw-output ibo-is-hidden" title="Debug Output">{{ aPage.sCapturedOutput|raw }}</div>
 {% endblock %}

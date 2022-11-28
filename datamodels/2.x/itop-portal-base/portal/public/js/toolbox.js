@@ -39,6 +39,10 @@ const CombodoPortalToolbox = {
 	 * @deprecated 3.1.0 Use CombodoModal.OpenModal() instead
 	 */
 	OpenModal: function(oOptions) {
+		// Default value fallback for calls prior to 3.1.0
+		if (oOptions.size === undefined) {
+			oOptions.size = 'lg';
+		}
 		return CombodoModal.OpenModal(oOptions);
 	},
 	/**
@@ -92,73 +96,28 @@ CombodoModal.CloseAllModals = function() {
  * @override
  * @inheritDoc
  */
-CombodoModal.OpenModal = function(oOptions) {
-	// Set default options
-	oOptions = $.extend(
-		true,
-		{
-			id: null,           // ID of the created modal
-			attributes: {},     // HTML attributes
-			base_modal: {
-				usage: 'clone',             // Either 'clone' or 'replace'
-				selector: '#modal-for-all' // Either a selector of the modal element used to base this one on or the modal element itself
-			},
-			content: undefined, // Either a string, an object containing the endpoint / data or undefined to keep base modal content as-is
-			size: 'lg',         // Either 'xs' / 'sm' / 'md' / 'lg'
-		},
-		oOptions
-	);
+CombodoModal._GetDefaultBaseModalSelector = function() {
+	return '#modal-for-all';
+};
+/**
+ * @override
+ * @inheritDoc
+ */
+CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
+	const me = this;
 
-	// Compute modal selector
-	let oSelectorElem = null;
-	switch(typeof oOptions.base_modal.selector)
-	{
+	// Resize to desired size
+	switch (typeof oOptions.size) {
 		case 'string':
-			oSelectorElem = $(oOptions.base_modal.selector);
+			oModalElem.find('.modal-dialog')
+				.removeClass('modal-lg')
+				.addClass('modal-' + oOptions.size);
 			break;
 
 		case 'object':
-			oSelectorElem = oOptions.base_modal.selector;
-			break;
-
-		default:
-			if (window.console && window.console.warn)
-			{
-				console.warn('Could not open modal dialog as the select option was malformed: ', oOptions.content);
-			}
+			CombodoJSConsole.Error('Could not open modal dialog as portal modals only support "xs", "sm", "md", "lg" sizes. Not specific width/height yet.');
 			return false;
 	}
-
-	// Get modal element by either
-	let oModalElem = null;
-	// - Create a new modal from template
-	//   Note : This could be better if we check for an existing modal first instead of always creating a new one
-	if (oOptions.base_modal.usage === 'clone')
-	{
-		oModalElem = oSelectorElem.clone();
-
-		// Force modal to have an HTML ID, otherwise it can lead to complications, especially with the portal_leave_handle.js
-		// See N°3469
-		var sModalID = (oOptions.id !== null) ? oOptions.id : 'modal-with-generated-id-'+Date.now();
-		oModalElem.attr('id', sModalID)
-			.appendTo('body');
-	}
-	// - Get an existing modal in the DOM
-	else
-	{
-		oModalElem = oSelectorElem;
-	}
-
-	// Set attributes
-	for(let sProp in oOptions.attributes)
-	{
-		oModalElem.attr(sProp, oOptions.attributes[sProp]);
-	}
-
-	// Resize to small modal
-	oModalElem.find('.modal-dialog')
-		.removeClass('modal-lg')
-		.addClass('modal-' + oOptions.size);
 
 	// Load content
 	switch (typeof oOptions.content)
@@ -166,7 +125,10 @@ CombodoModal.OpenModal = function(oOptions) {
 		case 'string':
 			oModalElem.find('.modal-content').html(oOptions.content);
 
-			//Manually triggers bootstrap event in order to keep listeners working
+			// Internal callbacks
+			this._OnContentLoaded(oModalElem, oOptions.callbackOnContentLoaded);
+
+			// Manually triggers bootstrap event in order to keep listeners working
 			oModalElem.trigger('loaded.bs.modal');
 			break;
 
@@ -185,6 +147,9 @@ CombodoModal.OpenModal = function(oOptions) {
 						oModalElem.modal('hide');
 					}
 
+					// Internal callbacks
+					me._OnContentLoaded(oModalElem, oOptions.callbackOnContentLoaded);
+
 					//Manually triggers bootstrap event in order to keep listeners working
 					oModalElem.trigger('loaded.bs.modal');
 				}
@@ -196,14 +161,21 @@ CombodoModal.OpenModal = function(oOptions) {
 			break;
 
 		default:
-			if (window.console && window.console.warn)
-			{
-				console.warn('Could not open modal dialog as the content option was malformed: ', oOptions.content);
-			}
+			CombodoJSConsole.Warn('Could not open modal dialog as the content option was malformed: ' + oOptions.content);
+			return false;
 	}
 
 	// Show modal
-	oModalElem.modal('show');
+	if (oOptions.auto_open) {
+		oModalElem.modal('show');
+	}
 
-	return oModalElem;
+	return true;
+};
+/**
+ * @override
+ * @inheritDoc
+ */
+CombodoModal._CenterModalInViewport = function (oModalElem) {
+	// No need to override, modal centers itself automatically
 };

@@ -186,10 +186,141 @@ CombodoModal.CloseAllModals = function() {
  * @override
  * @inheritDoc
  */
-CombodoModal.OpenModal = function(oOptions) {
-	// TODO: Implement
+CombodoModal._GetDefaultBaseModalSelector = function() {
+	return '#ibo-modal-template';
+};
+/**
+ * @override
+ * @inheritDoc
+ */
+CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
+	const me = this;
 
-	return null;
+	// Default options of the jQuery Dialog widget
+	let oJQueryOptions = {
+		width: 'auto',
+		height: 'auto',
+		modal: oOptions.extra_options.modal ?? true,
+		autoOpen: oOptions.auto_open,
+	};
+
+	// Resize to desired size
+	switch (typeof oOptions.size) {
+		case 'string':
+			switch (oOptions.size) {
+				case 'xs':
+					oJQueryOptions.width = Math.min(window.innerWidth * 0.2, '200px');
+					oJQueryOptions.height = Math.min(window.innerHeight * 0.2, '150px');
+					break;
+
+				case 'sm':
+					oJQueryOptions.width = Math.min(window.innerWidth * 0.6, '800px');
+					oJQueryOptions.height = Math.min(window.innerHeight * 0.6, '400px');
+					break;
+
+				case 'md':
+					oJQueryOptions.width = Math.min(window.innerWidth * 0.75, '1200px');
+					oJQueryOptions.height = Math.min(window.innerHeight * 0.75, '600px');
+					break;
+
+				case 'lg':
+					oJQueryOptions.width = Math.min(window.innerWidth * 0.9, '1800px');
+					oJQueryOptions.height = Math.min(window.innerHeight * 0.9, '900px');
+					break;
+			}
+			break;
+
+		case 'object':
+			if (oOptions.size.width !== undefined) {
+				oJQueryOptions.width = oOptions.size.width;
+			}
+			if (oOptions.size.height !== undefined) {
+				oJQueryOptions.height = oOptions.size.height;
+			}
+			break;
+	}
+
+	// Load content
+	switch (typeof oOptions.content)
+	{
+		case 'string':
+			oModalElem.html(oOptions.content);
+			this._OnContentLoaded(oModalElem, oOptions.callbackOnContentLoaded);
+			break;
+
+		case 'object':
+			// Put loader while fetching content
+			const oLoaderElem = $($('#ibo-large-loading-placeholder-template')[0].content.cloneNode(true));
+			oModalElem.html(oLoaderElem.html());
+
+			// Fetch content in background
+			oModalElem.load(
+				oOptions.content.endpoint,
+				oOptions.content.data || {},
+				function(sResponseText, sStatus) {
+					// Hiding modal in case of error as the general AJAX error handler will display a message
+					// TODO 3.1: Add general ajax error handler
+					if (sStatus === 'error') {
+						oModalElem.dialog('close');
+						return;
+					}
+
+					// Update position as the new content is most likely not like the previous one (if any)
+					// - First when content is displayed
+					me._CenterModalInViewport(oModalElem);
+					// - Then content is fully initialized
+					// TODO 3.1: We need to put an event when an object is done initialiazing (fields generated, etc)
+					setTimeout(function () {
+						me._CenterModalInViewport(oModalElem);
+					}, 500);
+
+					me._OnContentLoaded(oModalElem, oOptions.callbackOnContentLoaded);
+				}
+			);
+			break;
+
+		case 'undefined':
+			// Do nothing, we keep the content as-is
+			break;
+
+		default:
+			CombodoJSConsole.Warn('Could not open modal dialog as the content option was malformed: ' + oOptions.content);
+			return false;
+	}
+
+	// Show modal
+	oModalElem.dialog(oJQueryOptions);
+
+	// TODO 3.1 : Cleanup
+	// {
+	// 	height: 'auto',
+	// 		width: 'auto',
+	// 	modal: true,
+	// 	title: '$sDialogTitle',
+	// 	buttons: [
+	// 	{ text: "$sOkButtonLabel", click: function() {
+	// 			if ($('#$sDialogId .ui-state-error').length == 0)
+	// 			{
+	// 				var aTargetsSelect = [];
+	//
+	// 			}
+	// 		} },
+	// 	{ text: "$sCancelButtonLabel", click: function() {
+	// 			$(this).dialog( "close" );
+	// 		} },
+	// ],
+	// }
+
+	return true;
+};
+/**
+ * @override
+ * @inheritDoc
+ */
+CombodoModal._CenterModalInViewport = function (oModalElem) {
+	oModalElem.dialog('option', {
+		position: {my: 'center', at: 'center', of: window},
+	});
 };
 
 // Processing on each pages of the backoffice

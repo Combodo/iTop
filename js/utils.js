@@ -1109,6 +1109,8 @@ const CombodoInlineImage = {
 let CombodoModal = {
 	/**
 	 * Close all opened modals on the page
+	 *
+	 * @return {void}
 	 */
 	CloseAllModals: function() {
 		// Meant for overlaoding
@@ -1117,10 +1119,12 @@ let CombodoModal = {
 	/**
 	 * Open a standard modal and put the content of the URL in it.
 	 *
-	 * @param sTargetUrl
-	 * @param bCloseOtherModals
+	 * @param sTargetUrl {String}
+	 * @param bCloseOtherModals {String}
+	 * @return {Object} The jQuery object representing the modal element
+	 * @api
 	 */
-	OpenUrlInModal: function(sTargetUrl, bCloseOtherModals) {
+	OpenUrlInModal: function(sTargetUrl, bCloseOtherModals, callbackOnContentLoaded) {
 		// Set default values
 		if(bCloseOtherModals === undefined)
 		{
@@ -1133,22 +1137,159 @@ let CombodoModal = {
 			CombodoModal.CloseAllModals();
 		}
 
-		// Opening modal
-		CombodoModal.OpenModal({
+		// Prepare options
+		let oOptions = {
 			content: {
 				endpoint: sTargetUrl,
 			}
-		});
+		};
+
+		if (callbackOnContentLoaded !== undefined) {
+			oOptions.callbackOnContentLoaded = callbackOnContentLoaded;
+		}
+
+		// Opening modal
+		return CombodoModal.OpenModal(oOptions);
 	},
 	/**
-	 * Generic function to create and open a modal, used by high-level functions such as "CombodoPortalToolbox.OpenUrlInModal()".
+	 * Generic function to create and open a modal, used by high-level functions such as "CombodoModal.OpenUrlInModal()".
 	 * When developing extensions, you should use them instead.
 	 *
-	 * @param oOptions
-	 * @returns object The jQuery object of the modal element
+	 * @param oOptions {Object} TODO: Document
+	 * @returns {(Object | null)} The jQuery object of the modal element or null if the modal could not be opened
+	 * @internal
 	 */
 	OpenModal: function(oOptions) {
+		// Set default options
+		oOptions = $.extend(
+			true,
+			{
+				id: null,           // ID of the created modal
+				attributes: {},     // HTML attributes
+				base_modal: {
+					usage: 'clone',                                 // Either 'clone' or 'replace'
+					selector: this._GetDefaultBaseModalSelector()   // Either a selector of the modal element used to base this one on or the modal element itself
+				},
+				content: undefined, // Either a string, an object containing the endpoint / data or undefined to keep base modal content as-is
+				size: 'auto',       // Either 'auto' / 'xs' / 'sm' / 'md' / 'lg' or specific height & width via {width: '80px', height: '100px'}
+				auto_open: true,    // true for the modal to open automatically on instantiation
+				callbackOnContentLoaded: null, // Callback to call once the content is loaded. Arguments will be oModalElem (the jQuery object representing the modal)
+				extra_options: {},  // Extra options to pass to the modal lib directly if they are not handled by the CombodoModal widget yet
+			},
+			oOptions
+		);
+
+		// Compute modal selector
+		let oSelectorElem = null;
+		switch(typeof oOptions.base_modal.selector) {
+			case 'string':
+				oSelectorElem = $(oOptions.base_modal.selector);
+				if (oSelectorElem.length === 0) {
+					CombodoJSConsole.Error('Could not open modal dialog as the selector option did not return any element: ' + oOptions.base_modal.selector);
+					return null;
+				}
+				break;
+
+			case 'object':
+				oSelectorElem = oOptions.base_modal.selector;
+				break;
+
+			default:
+				CombodoJSConsole.Warn('Could not open modal dialog as the selector option was malformed: '+oOptions.base_modal.selector);
+				return null;
+		}
+
+		// Get modal element by either
+		let oModalElem = null;
+		// - Create a new modal from template
+		//   Note : This could be better if we check for an existing modal first instead of always creating a new one
+		if (oOptions.base_modal.usage === 'clone') {
+			// Clone modal using a real template
+			if (oSelectorElem[0].tagName === 'TEMPLATE') {
+				oModalElem = $(oSelectorElem[0].content.firstElementChild.cloneNode(true));
+			}
+			// Clone modal using an existing element
+			else {
+				oModalElem = oSelectorElem.clone();
+			}
+
+			// Force modal to have an HTML ID, otherwise it can lead to complications, especially with the portal_leave_handle.js
+			// See N°3469
+			let sModalID = (oOptions.id !== null) ? oOptions.id : 'modal-with-generated-id-'+Date.now();
+			oModalElem.attr('id', sModalID)
+				.appendTo('body');
+		}
+		// - Get an existing modal in the DOM
+		else {
+			oModalElem = oSelectorElem;
+		}
+
+		// Set attributes
+		for (let sProp in oOptions.attributes) {
+			oModalElem.attr(sProp, oOptions.attributes[sProp]);
+		}
+
+		if (false === this._InstantiateModal(oModalElem, oOptions)) {
+			return null;
+		}
+
+		return oModalElem;
+	},
+	/**
+	 * @return {String} The JS selector to the default base modal to use either for display or as a template ("clone" usage)
+	 * @private
+	 * @internal
+	 */
+	_GetDefaultBaseModalSelector: function() {
 		// Meant for overlaoding
-		CombodoJSConsole.Debug('CombodoModal.OpenModal not implemented');
+		CombodoJSConsole.Debug('CombodoModal._GetDefaultBaseModalSelector not implemented');
+	},
+	/**
+	 * Instantiate the oModal modal regarding the oOptions
+	 *
+	 * @param oModalElem {Object} The jQuery object representing the modal element
+	 * @param oOptions {Object}
+	 * @return {boolean} True if the modal could be instantiated, false otherwise
+	 * @private
+	 * @internal
+	 */
+	_InstantiateModal: function(oModalElem, oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._InstantiateModal not implemented');
+		return false;
+	},
+	/**
+	 * Center the modal in the current viewport
+	 *
+	 * @param oModalElem {Object} The jQuery representation of the modale element
+	 * @return {void}
+	 * @private
+	 * @internal
+	 */
+	_CenterModalInViewport: function (oModalElem) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._CenterModalInViewport not implemented');
+	},
+	/**
+	 * Callback called when the content of the modal has been loaded.
+	 *
+	 * @param oModalElem {object} The jQuery object representing the modal element
+	 * @param callback {(string | function)} The callback to be executed. Can be either a string representing a function declared in the window object or an anonymous function
+	 * @private
+	 * @return {void}
+	 */
+	_OnContentLoaded: function (oModalElem, callback) {
+		if (callback !== undefined) {
+			if (typeof callback === 'string') {
+				if (window[callback] === undefined) {
+					CombodoJSConsole.Error('Could not call _OnContentLoaded callback "' + callback + '" as it is not defined in the window object.');
+					return;
+				}
+				window[callback](oModalElem);
+			}
+			else if (typeof callback === 'function') {
+				callback(oModalElem);
+			}
+		}
 	}
 };
