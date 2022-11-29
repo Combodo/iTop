@@ -1479,6 +1479,29 @@ JS
 	}
 
 	/**
+	 * @param string $sDashboardFileRelative can also be an absolute path (compatibility with old URL)
+	 *
+	 * @return string full path to the Dashboard file
+	 * @throws \SecurityException if path isn't under approot
+	 * @uses utils::RealPath()
+	 * @since 2.7.8 3.0.3 3.1.0 N°4449 remove FPD
+	 */
+	public static function GetDashboardFileFromRelativePath($sDashboardFileRelative)
+	{
+		if (utils::RealPath($sDashboardFileRelative, APPROOT)) {
+			// compatibility with old URL containing absolute path !
+			return $sDashboardFileRelative;
+		}
+
+		$sDashboardFile = APPROOT.$sDashboardFileRelative;
+		if (false === utils::RealPath($sDashboardFile, APPROOT)) {
+			throw new SecurityException('Invalid dashboard file !');
+		}
+
+		return $sDashboardFile;
+	}
+
+	/**
 	 * @param string $sDefinitionFile
 	 */
 	public function SetDefinitionFile($sDefinitionFile)
