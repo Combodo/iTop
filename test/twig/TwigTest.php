@@ -2,6 +2,8 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use Combodo\iTop\Portal\Twig\AppExtension;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 use Twig_Environment;
 use Twig_Loader_Array;
 
@@ -25,7 +27,7 @@ class TwigTest extends ItopDataTestCase
 		$oAppExtension = new AppExtension();
 
 		// Creating sandbox twig env. to load and test the custom form template
-		$oTwig = new Twig_Environment(new Twig_Loader_Array([$sId => $sFileName]));
+		$oTwig = new Environment(new ArrayLoader([$sId => $sFileName]));
 
 		// Manually registering filters and functions as we didn't find how to do it automatically
 		$aFilters = $oAppExtension->getFilters();
