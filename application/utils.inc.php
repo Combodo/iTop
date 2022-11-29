@@ -1467,19 +1467,19 @@ class utils
 				$oDashboard = $param;
 				$sDashboardId = $oDashboard->GetId();
 				$sDashboardFile = $oDashboard->GetDefinitionFile();
+				$sDashboardFileRelative = utils::LocalPath($sDashboardFile);
 				$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
 				$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
 				$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
-				$sDashboardFileJS = addslashes($sDashboardFile);
-				$sDashboardFileURL = urlencode($sDashboardFile);
+				$sDashboardFileJS = addslashes($sDashboardFileRelative);
+				$sDashboardFileURL = urlencode($sDashboardFileRelative);
 				$sUploadDashboardTransactId = utils::GetNewTransactionId();
 				$aResult = array(
 					new SeparatorPopupMenuItem(),
 					new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sDashboardId.'&file='.$sDashboardFileURL),
 					new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sDashboardId', file: '$sDashboardFileJS', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn', transaction: '$sUploadDashboardTransactId' })"),
 				);
-				if ($oDashboard->GetReloadURL())
-				{
+				if ($oDashboard->GetReloadURL()) {
 					$aResult[] = new SeparatorPopupMenuItem();
 					$aResult[] = new URLPopupMenuItem('UI:Menu:PrintableVersion', Dict::S('UI:Menu:PrintableVersion'), $oDashboard->GetReloadURL().'&printable=1', '_blank');
 				}

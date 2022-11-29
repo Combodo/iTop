@@ -876,7 +876,10 @@ try
 		case 'export_dashboard':
 			$oPage = new DownloadPage('');
 			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
-			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sDashboardFileRelative = utils::ReadParam('file', '', false, 'raw_data');
+
+			$sDashboardFile = RuntimeDashboard::GetDashboardFileFromRelativePath($sDashboardFileRelative);
+
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			if (!is_null($oDashboard)) {
 				$oPage->TrashUnexpectedOutput();
@@ -891,18 +894,18 @@ try
 			$oPage->SetOutputDataOnly(true);
 
 			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
-			if (!utils::IsTransactionValid($sTransactionId, true))
-			{
+			if (!utils::IsTransactionValid($sTransactionId, true)) {
 				throw new SecurityException('ajax.render.php import_dashboard : invalid transaction_id');
 			}
 			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
-			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sDashboardFileRelative = utils::ReadParam('file', '', false, 'raw_data');
+
+			$sDashboardFile = RuntimeDashboard::GetDashboardFileFromRelativePath($sDashboardFileRelative);
+
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			$aResult = array('error' => '');
-			if (!is_null($oDashboard))
-			{
-				try
-				{
+			if (!is_null($oDashboard)) {
+				try {
 					$oDoc = utils::ReadPostedDocument('dashboard_upload_file');
 					$oDashboard->FromXml($oDoc->GetData());
 					$oDashboard->Save();
