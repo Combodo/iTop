@@ -839,7 +839,10 @@ try
 			case 'export_dashboard':
 				$oPage = new DownloadPage('');
 				$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
-				$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+				$sDashboardFileRelative = utils::ReadParam('file', '', false, 'raw_data');
+
+				$sDashboardFile = RuntimeDashboard::GetDashboardFileFromRelativePath($sDashboardFileRelative);
+
 				$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 				if (!is_null($oDashboard)) {
 					$oPage->TrashUnexpectedOutput();
@@ -858,7 +861,10 @@ try
 					throw new SecurityException('ajax.render.php import_dashboard : invalid transaction_id');
 				}
 				$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
-				$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+				$sDashboardFileRelative = utils::ReadParam('file', '', false, 'raw_data');
+
+				$sDashboardFile = RuntimeDashboard::GetDashboardFileFromRelativePath($sDashboardFileRelative);
+
 				$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 				$aResult = array('error' => '');
 				if (!is_null($oDashboard)) {
