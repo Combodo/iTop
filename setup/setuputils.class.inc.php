@@ -1598,6 +1598,8 @@ JS
 	 * @param array $aModules List of available module codes
 	 *
 	 * @return bool true if the Hub connector is installed
+	 *
+	 * @since 2.7.8 3.0.3 3.1.0 N°5758 method creation
 	 */
 	public static function IsConnectableToITopHub($aModules)
 	{

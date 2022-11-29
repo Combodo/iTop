@@ -709,7 +709,8 @@ class WizStepLicense extends WizardStep
 	/**
 	 * @return bool true if we need to display a GDPR confirmation
 	 * @throws \Exception
-	 * @since 2.7.7 3.0.2 3.1.0 N°5037
+	 * @since 2.7.7 3.0.2 3.1.0 N°5037 method creation
+	 * @since 2.7.8 3.0.3 3.1.0 N°5758 rename from NeedsRgpdConsent to NeedsGdprConsent
 	 */
 	private function NeedsGdprConsent()
 	{
