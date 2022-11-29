@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Template;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 /**
  * Class TemplateUIBlockFactory
@@ -46,5 +47,13 @@ class TemplateUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeStandard(string $sId)
 	{
 		return new Template($sId);
+	}
+
+	public static function MakeForBlock(string $sId, UIContentBlock $oContentBlock)
+	{
+		$oBlock = TemplateUIBlockFactory::MakeStandard($sId);
+		$oBlock->AddSubBlock($oContentBlock);
+
+		return $oBlock;
 	}
 }

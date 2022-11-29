@@ -8,7 +8,9 @@
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
+use Combodo\iTop\Application\UI\Base\Component\Dialog\DialogDoNotShowAgainOptionBlock;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Template\TemplateUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu;
@@ -210,6 +212,10 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_dict_entry('UI:DisconnectedDlgTitle');
 		$this->add_dict_entry('UI:LoginAgain');
 		$this->add_dict_entry('UI:StayOnThePage');
+
+		// confirmation modal
+		$this->add_dict_entry('UI:Dialog:ConfirmationTitle');
+		$this->add_dict_entry('UI:Dialog:ConfirmationMessage');
 	}
 
 	/**
@@ -891,6 +897,8 @@ HTML;
 		// - Prepare content
 		$aData['aLayouts']['oPageContent'] = $this->GetContentLayout();
 		$aData['aDeferredBlocks']['oPageContent'] = $this->GetDeferredBlocks($this->GetContentLayout());
+		// - Prepare generic templates
+		$aData['aTemplates']['oTemplateDoNotShowAgainOption'] = TemplateUIBlockFactory::MakeForBlock('ibo-dialog-option--do-not-show-again-template', new DialogDoNotShowAgainOptionBlock());
 
 		// - Retrieve layouts linked files
 		//   Note: Adding them now instead of in the template allow us to remove duplicates and lower the browser parsing time
@@ -1241,4 +1249,5 @@ EOF
 
 		return parent::SetBlockParam($sKey, $value);
 	}
+
 }

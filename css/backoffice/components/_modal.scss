@@ -2,3 +2,14 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+// Dialog Option - Do not show again
+.ibo-dialog-option--do-not-show-again{
+  margin-top: 16px;
+
+  input[type="checkbox"]{
+    height: auto;
+    display: inline-block;
+    width: auto;
+  }
+}

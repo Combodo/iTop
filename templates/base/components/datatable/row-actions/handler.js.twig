@@ -15,23 +15,19 @@
 
         {% if aAction.confirmation is defined %}
 
-            // Handle action row with confirmation
-            let sTitle = '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}';
+            // Handle action row with confirmation modal
             let sMessage = '{{ 'UI:Datatables:RowActions:ConfirmationMessage'|dict_s }}';
             {% if aAction.confirmation.message is defined %}
                 sMessage = '{{ aAction.confirmation.message|dict_s|raw }}';
-                sMessage = sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']);
             {% endif %}
-            let sPrefKey = null;
-            {% if aAction.confirmation.remember_choice_pref_key is defined %}
-                sPrefKey = '{{ aAction.confirmation.remember_choice_pref_key }}';
-            {% endif %}
-            HandleActionRowConfirmation (sTitle, sMessage, sPrefKey, ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}, {
-                action_id: iActionId,
-                datatable: oDatatable,
-                tr_element: oTrElement,
-                row_data: aRowData
-            });
+
+            CombodoModal.OpenConfirmationModal({
+                {#title: '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}',#}
+                content: sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']),
+                {% if aAction.confirmation.remember_choice_pref_key is defined %}
+                user_preference_key: {{ aAction.confirmation.remember_choice_pref_key }},
+                {% endif %}
+            }, ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}, [oDatatable, oTrElement, iActionId, aRowData]);
 
         {% else %}
 
@@ -44,7 +40,17 @@
 
     // action row function declaration
     function ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}(oDatatable, oTrElement, iActionId, aRowData){
-        {{ aAction.js_row_action|raw }};
+
+        console.log('oDatatable');
+        console.log(oDatatable);
+        console.log('oTrElement');
+        console.log(oTrElement);
+        console.log('iActionId');
+        console.log(iActionId);
+        console.log('aRowData');
+        console.log(aRowData);
+
+{#        {{ aAction.js_row_action|raw }};#}
         return true;
     }
 

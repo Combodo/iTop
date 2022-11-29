@@ -202,6 +202,9 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 		height: 'auto',
 		modal: oOptions.extra_options.modal ?? true,
 		autoOpen: oOptions.auto_open,
+
+		title: oOptions.title,
+		buttons: CombodoModal.ConvertButtonDefinition(oOptions.buttons)
 	};
 
 	// Resize to desired size
@@ -313,6 +316,28 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 
 	return true;
 };
+
+/**
+ * Convert generic buttons definitions to jquery ui dialog definitions.
+ *
+ * @param aButtonsDefinitions
+ * @returns {*[]}
+ * @constructor
+ */
+CombodoModal.ConvertButtonDefinition = function(aButtonsDefinitions){
+	const aConverted = [];
+	aButtonsDefinitions.forEach(element => {
+			const aButton = {
+				text: element.text,
+				class: element.class,
+				click: element.click_callback
+			}
+		aConverted.push(aButton);
+		}
+	);
+	return aConverted;
+}
+
 /**
  * @override
  * @inheritDoc
@@ -322,6 +347,67 @@ CombodoModal._CenterModalInViewport = function (oModalElem) {
 		position: {my: 'center', at: 'center', of: window},
 	});
 };
+
+/**
+ * Open a standard confirmation modal and put the content into it.
+ *
+ * @param oOptions array{title: string, content: array{type: 'html'|'jquery_selector', value: string, placeholders: array}, user_preference_key: string}
+ * @param oConfirmHandler confirm handler
+ * @param aConfirmHandlerData data passed to confirm handler
+ * @returns object The jQuery object of the modal element
+ */
+CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfirmHandlerData) {
+
+	console.log('CombodoModal.OpenConfirmationModal');
+	console.log(oOptions);
+
+	alert(oOptions.user_preference_key);
+
+	// merge external options with confirmation modal default options
+	oOptions = $.extend({
+		title: Dict.S('UI:Dialog:ConfirmationTitle'),
+		content: Dict.S('UI:Dialog:ConfirmationMessage'),
+		user_preference_key: null,
+		buttons: [
+			{
+				text: Dict.S('UI:Button:Cancel'),
+				class: 'ibo-is-alternative',
+				click_callback: function () {
+					$(this).dialog('close'); // close dialog
+				}
+			},
+			{
+				text: Dict.S('UI:Button:Ok'),
+				class: 'ibo-is-primary',
+				click_callback: function () {
+					// handle "do not show again" user preference
+					if(oOptions.user_preference_key != null){
+						alert(oOptions.user_preference_key);
+						// save preference
+						const bDoNotShowAgain = $('[name="do_not_show_again"]', $(this)).prop('checked');
+						alert(oOptions.user_preference_key + ' >>> ' + bDoNotShowAgain);
+						if (bDoNotShowAgain) {
+							SetUserPreference(oOptions.user_preference_key, 'false', true);
+						}
+					}
+					// call confirm handler and close dialog
+					if(oConfirmHandler(...aConfirmHandlerData)){
+						$(this).dialog('close'); // close dialog
+					}
+				}
+			}
+		],
+		callbackOnContentLoaded: function(oModalContentElement){
+			// option do not show again
+			if(oOptions.user_preference_key != null) {
+				oModalContentElement.append($('#ibo-dialog-option--do-not-show-again-template').html());
+			}
+		}
+	}, oOptions);
+
+	// Open modal
+	CombodoModal.OpenModal(oOptions);
+}
 
 // Processing on each pages of the backoffice
 $(document).ready(function(){

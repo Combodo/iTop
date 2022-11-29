@@ -1170,7 +1170,9 @@ let CombodoModal = {
 					usage: 'clone',                                 // Either 'clone' or 'replace'
 					selector: this._GetDefaultBaseModalSelector()   // Either a selector of the modal element used to base this one on or the modal element itself
 				},
+				title: undefined,   // Title of the modal
 				content: undefined, // Either a string, an object containing the endpoint / data or undefined to keep base modal content as-is
+				buttons: null,
 				size: 'auto',       // Either 'auto' / 'xs' / 'sm' / 'md' / 'lg' or specific height & width via {width: '80px', height: '100px'}
 				auto_open: true,    // true for the modal to open automatically on instantiation
 				callbackOnContentLoaded: null, // Callback to call once the content is loaded. Arguments will be oModalElem (the jQuery object representing the modal)
@@ -1291,5 +1293,16 @@ let CombodoModal = {
 				callback(oModalElem);
 			}
 		}
+	},
+
+	/**
+	 * Open a standard confirmation modal and put the content into it.
+	 *
+	 * @param oOptions
+	 * @returns object The jQuery object of the modal element
+	 */
+	OpenConfirmationModal: function(oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.OpenConfirmationModal not implemented');
 	}
 };

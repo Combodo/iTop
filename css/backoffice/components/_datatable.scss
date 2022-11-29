@@ -151,17 +151,3 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
 }
 
 
-
-#table-row-action-confirmation-dialog{
-
-  .ibo-row-action--confirmation--explanation{
-    margin-bottom: 16px;
-  }
-
-  .ibo-row-action--confirmation--do-not-show-again--checkbox{
-    height: auto;
-    display: inline-block;
-    width: auto;
-  }
-
-}

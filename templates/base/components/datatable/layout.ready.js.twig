@@ -404,6 +404,7 @@ var aOptions{{ sListIDForVarSuffix }} = {
     oData: {{ oUIBlock.GetJsonAjaxData() |raw }},
     oDefaultSettings: {{ oUIBlock.GetOption("oDefaultSettings")|raw }},
     oLabels: {moveup: "{{ 'UI:Button:MoveUp'|dict_s }}", movedown: "{{ 'UI:Button:MoveDown'|dict_s }}"},
+    bHasRowActions: {{ oUIBlock.HasRowActions()|var_export }},
 };
 
 if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable'))

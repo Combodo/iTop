@@ -111,6 +111,13 @@ $(function () {
 						}
 					});
 
+					// append row actions column
+					if(me.options.bHasRowActions){
+						sThead += "<th></th>";
+						let iColumnCount = aOptions['columns'].length;
+						aOptions["columns"][iColumnCount] = getRowActionsColumnDefinition(oParams.list_id);
+					}
+
 					parentElt.append("<table id=\""+me.options.sListId+"\" width=\"100%\" class=\"ibo-datatable\">"+
 						"<thead><tr>"+sThead+"</tr></thead></table>");
 					aOptions["lengthMenu"] = [[oParams.end, oParams.end * 2, oParams.end * 3, oParams.end * 4, -1], [oParams.end, oParams.end * 2, oParams.end * 3, oParams.end * 4, aOptions["lengthMenu"]]];
