@@ -1599,7 +1599,7 @@ JS
 	 *
 	 * @return bool true if the Hub connector is installed
 	 */
-	public static function IsItopHubInstance($aModules)
+	public static function IsConnectableToITopHub($aModules)
 	{
 		return array_key_exists('itop-hub-connector', $aModules);
 	}
