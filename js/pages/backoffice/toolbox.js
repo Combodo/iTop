@@ -358,11 +358,13 @@ CombodoModal._CenterModalInViewport = function (oModalElem) {
  */
 CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfirmHandlerData) {
 
-	console.log('CombodoModal.OpenConfirmationModal');
-	console.log(oOptions);
-
-	alert(oOptions.user_preference_key);
-
+	// check do not show again preference key
+	if(oOptions.user_preference_key != null){
+		if(GetUserPreference(oOptions.user_preference_key, 'false') == 'true'){
+			oConfirmHandler(...aConfirmHandlerData);
+			return;
+		}
+	}
 	// merge external options with confirmation modal default options
 	oOptions = $.extend({
 		title: Dict.S('UI:Dialog:ConfirmationTitle'),
@@ -382,10 +384,8 @@ CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfir
 				click_callback: function () {
 					// handle "do not show again" user preference
 					if(oOptions.user_preference_key != null){
-						alert(oOptions.user_preference_key);
 						// save preference
 						const bDoNotShowAgain = $('[name="do_not_show_again"]', $(this)).prop('checked');
-						alert(oOptions.user_preference_key + ' >>> ' + bDoNotShowAgain);
 						if (bDoNotShowAgain) {
 							SetUserPreference(oOptions.user_preference_key, 'false', true);
 						}
@@ -398,7 +398,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfir
 			}
 		],
 		callbackOnContentLoaded: function(oModalContentElement){
-			// option do not show again
+			// add option do not show again from template
 			if(oOptions.user_preference_key != null) {
 				oModalContentElement.append($('#ibo-dialog-option--do-not-show-again-template').html());
 			}

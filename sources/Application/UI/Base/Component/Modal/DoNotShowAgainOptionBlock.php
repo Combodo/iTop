@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,36 +19,39 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\Dialog;
 
-use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 /**
- * Class DialogUIBlockFactory
  *
- * @api
- *
- * @since 3.1.0
  * @package Combodo\iTop\Application\UI\Base\Component\Dialog
+ * @since 3.1.0
  */
-class DialogUIBlockFactory extends AbstractUIBlockFactory
+class DoNotShowAgainOptionBlock extends UIContentBlock
 {
-	/** @inheritDoc */
-	public const TWIG_TAG_NAME = 'UIDialog';
-	/** @inheritDoc */
-	public const UI_BLOCK_CLASS_NAME = Dialog::class;
-
 	/**
-	 * Make a basis Dialog component
+	 * Constructor.
 	 *
-	 * @param string $sTitle Title of the alert
-	 * @param string $sContent The raw HTML content, must be already sanitized
-	 * @param string|null $sId id of the html block
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
+	 * @param string|null $sId
 	 */
-	public static function MakeNeutral(string $sTitle = '', string $sContent = '', ?string $sId = null)
+	public function __construct(string $sId = null)
 	{
-		return new Dialog($sTitle, $sContent, $sId);
+		parent::__construct($sId, ['ibo-dialog-option--do-not-show-again']);
+
+		// initialize UI
+		$this->InitUI();
 	}
 
-
+	/**
+	 * Initialize UI.
+	 *
+	 * @return void
+	 */
+	private function InitUI()
+	{
+		// Create checkbox
+		$checkBox = InputUIBlockFactory::MakeStandard('checkbox', 'do_not_show_again', false);
+		$checkBox->SetLabel(\Dict::S('UI:UserPref:DoNotShowAgain'));
+		$this->AddSubBlock($checkBox);
+	}
 }

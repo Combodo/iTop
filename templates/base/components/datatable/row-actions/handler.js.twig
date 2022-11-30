@@ -22,10 +22,10 @@
             {% endif %}
 
             CombodoModal.OpenConfirmationModal({
-                {#title: '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}',#}
+                title: '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}',
                 content: sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']),
                 {% if aAction.confirmation.remember_choice_pref_key is defined %}
-                user_preference_key: {{ aAction.confirmation.remember_choice_pref_key }},
+                user_preference_key: '{{ aAction.confirmation.remember_choice_pref_key }}',
                 {% endif %}
             }, ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}, [oDatatable, oTrElement, iActionId, aRowData]);
 
