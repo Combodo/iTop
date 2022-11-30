@@ -5,6 +5,11 @@ use Combodo\iTop\Portal\Twig\AppExtension;
 use Twig_Environment;
 use Twig_Loader_Array;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class TwigTest extends ItopDataTestCase
 {
 	protected function setUp(): void
