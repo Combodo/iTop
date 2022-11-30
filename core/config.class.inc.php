@@ -592,12 +592,28 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_css'                                => [
-			'type'                => 'string',
-			'description'         => 'CSS that will override the standard stylesheet used for the notifications',
-			'default'             => "",
-			'value'               => "",
+		'email_transport_smtp.allow_self_signed' => array(
+			'type'                => 'bool',
+			'description'         => 'Allow self signed peer certificates',
+			'default'             => false,
+			'value'               => false,
 			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		),
+		'email_transport_smtp.verify_peer' => array(
+			'type'                => 'bool',
+			'description'         => 'Verify peer certificate',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		),
+		'email_css' => [
+			'type' => 'string',
+			'description' => 'CSS that will override the standard stylesheet used for the notifications',
+			'default' => "",
+			'value' => "",
+			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
 		'email_default_sender_address' => [
