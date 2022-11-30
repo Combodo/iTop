@@ -196,7 +196,7 @@
 				var url = '';
 
                 var liElem = $('<li></li>').addClass('list-group-item');
-                var aElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
+                var spanElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
                 var nameElem = $('<a></a>').addClass('tree-item').text(item.name);
                 // Building node
                 $('ul[data-level-id="'+nodeId+'"]').append(liElem);
@@ -222,14 +222,14 @@
                 // Building description for the node
                 if ((item.description !== undefined) && (item.description !== ''))
                 {
-                    aElem.append($('<span class="list-group-item-description">'+item.description+'</span>'));
+                    spanElem.append($('<span class="list-group-item-description">'+item.description+'</span>'));
                 }
 
 				// Building actions for that node
 				switch(levelPrimaryAction.type)
 				{
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}':
-                        aElem.addClass('tree-toggle');
+                        spanElem.addClass('tree-toggle');
                         nameElem.html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+nameElem.text()+'</span>');
                         break;
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
