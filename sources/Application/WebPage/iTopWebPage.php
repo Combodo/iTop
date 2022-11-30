@@ -898,7 +898,8 @@ HTML;
 		$aData['aLayouts']['oPageContent'] = $this->GetContentLayout();
 		$aData['aDeferredBlocks']['oPageContent'] = $this->GetDeferredBlocks($this->GetContentLayout());
 		// - Prepare generic templates
-		$aData['aTemplates']['oTemplateDoNotShowAgainOption'] = TemplateUIBlockFactory::MakeForBlock('ibo-dialog-option--do-not-show-again-template', new DoNotShowAgainOptionBlock());
+		$aData['aTemplates'] = array();
+		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-dialog-option--do-not-show-again-template', new DoNotShowAgainOptionBlock());
 
 		// - Retrieve layouts linked files
 		//   Note: Adding them now instead of in the template allow us to remove duplicates and lower the browser parsing time

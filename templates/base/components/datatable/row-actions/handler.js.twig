@@ -15,17 +15,18 @@
 
         {% if aAction.confirmation is defined %}
 
-            // Handle action row with confirmation modal
+            // Prepare confirmation message
             let sMessage = '{{ 'UI:Datatables:RowActions:ConfirmationMessage'|dict_s }}';
             {% if aAction.confirmation.message is defined %}
                 sMessage = '{{ aAction.confirmation.message|dict_s|raw }}';
             {% endif %}
 
+            // Handle action row with confirmation modal
             CombodoModal.OpenConfirmationModal({
                 title: '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}',
                 content: sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']),
-                {% if aAction.confirmation.remember_choice_pref_key is defined %}
-                user_preference_key: '{{ aAction.confirmation.remember_choice_pref_key }}',
+                {% if aAction.confirmation.do_not_show_again_pref_key is defined %}
+                do_not_show_again_pref_key: '{{ aAction.confirmation.do_not_show_again_pref_key }}',
                 {% endif %}
             }, ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}, [oDatatable, oTrElement, iActionId, aRowData]);
 
@@ -40,17 +41,7 @@
 
     // action row function declaration
     function ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}(oDatatable, oTrElement, iActionId, aRowData){
-
-        console.log('oDatatable');
-        console.log(oDatatable);
-        console.log('oTrElement');
-        console.log(oTrElement);
-        console.log('iActionId');
-        console.log(iActionId);
-        console.log('aRowData');
-        console.log(aRowData);
-
-{#        {{ aAction.js_row_action|raw }};#}
+        {{ aAction.js_row_action|raw }};
         return true;
     }
 

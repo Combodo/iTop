@@ -55,9 +55,9 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 						'icon_classes'  => 'fas fa-minus',
 						'js_row_action' => "LinkSetWorker.DetachLinkedObject('{$this->sTargetClass}', aRowData['{$this->sTargetClass}/_key_/raw'], '{$this->oAttDef->GetExtKeyToMe()}');",
 						'confirmation'  => [
-							'message'                  => 'UI:Links:ActionRow:detach:confirmation',
-							'message_row_data'         => "{$this->sTargetClass}/hyperlink",
-							'remember_choice_pref_key' => 'LinkSetWorker.DetachLinkedObject',
+							'message'                    => 'UI:Links:ActionRow:detach:confirmation',
+							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
+							'do_not_show_again_pref_key' => 'LinkSetWorker.DetachLinkedObject',
 						],
 					);
 					break;
@@ -68,9 +68,9 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 						'icon_classes'  => 'fas fa-trash',
 						'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
 						'confirmation'  => [
-							'message'                  => 'UI:Links:ActionRow:delete:confirmation',
-							'message_row_data'         => "{$this->sTargetClass}/hyperlink",
-							'remember_choice_pref_key' => 'LinkSetWorker.DeleteLinkedObject',
+							'message'                    => 'UI:Links:ActionRow:delete:confirmation',
+							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
+							'do_not_show_again_pref_key' => 'LinkSetWorker.DeleteLinkedObject',
 						],
 					);
 					break;

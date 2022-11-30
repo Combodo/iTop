@@ -201,8 +201,8 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 		width: 'auto',
 		height: 'auto',
 		modal: oOptions.extra_options.modal ?? true,
+		close: oOptions.extra_options.callbackOnModalClose,
 		autoOpen: oOptions.auto_open,
-
 		title: oOptions.title,
 		buttons: CombodoModal.ConvertButtonDefinition(oOptions.buttons)
 	};
@@ -248,7 +248,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 	{
 		case 'string':
 			oModalElem.html(oOptions.content);
-			this._OnContentLoaded(oModalElem, oOptions.callbackOnContentLoaded);
+			this._OnContentLoaded(oModalElem, oOptions.callback_on_content_loaded);
 			break;
 
 		case 'object':
@@ -277,7 +277,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 						me._CenterModalInViewport(oModalElem);
 					}, 500);
 
-					me._OnContentLoaded(oModalElem, oOptions.callbackOnContentLoaded);
+					me._OnContentLoaded(oModalElem, oOptions.callback_on_content_loaded);
 				}
 			);
 			break;
@@ -330,7 +330,7 @@ CombodoModal.ConvertButtonDefinition = function(aButtonsDefinitions){
 			const aButton = {
 				text: element.text,
 				class: element.class,
-				click: element.click_callback
+				click: element.callbackOnClick
 			}
 		aConverted.push(aButton);
 		}
@@ -351,7 +351,7 @@ CombodoModal._CenterModalInViewport = function (oModalElem) {
 /**
  * Open a standard confirmation modal and put the content into it.
  *
- * @param oOptions array{title: string, content: array{type: 'html'|'jquery_selector', value: string, placeholders: array}, user_preference_key: string}
+ * @param oOptions array @see CombodoModal.OpenModal + {do_not_show_again_pref_key: string}
  * @param oConfirmHandler confirm handler
  * @param aConfirmHandlerData data passed to confirm handler
  * @returns object The jQuery object of the modal element
@@ -359,8 +359,8 @@ CombodoModal._CenterModalInViewport = function (oModalElem) {
 CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfirmHandlerData) {
 
 	// check do not show again preference key
-	if(oOptions.user_preference_key != null){
-		if(GetUserPreference(oOptions.user_preference_key, 'false') == 'true'){
+	if(oOptions.do_not_show_again_pref_key != null){
+		if(GetUserPreference(oOptions.do_not_show_again_pref_key, false)){
 			oConfirmHandler(...aConfirmHandlerData);
 			return;
 		}
@@ -369,25 +369,30 @@ CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfir
 	oOptions = $.extend({
 		title: Dict.S('UI:Dialog:ConfirmationTitle'),
 		content: Dict.S('UI:Dialog:ConfirmationMessage'),
-		user_preference_key: null,
+		do_not_show_again_pref_key: null,
+		extra_options: {
+			callbackOnModalClose: function () {
+				$(this).dialog( "destroy" ); // destroy dialog object
+			}
+		},
 		buttons: [
 			{
 				text: Dict.S('UI:Button:Cancel'),
 				class: 'ibo-is-alternative',
-				click_callback: function () {
+				callbackOnClick: function () {
 					$(this).dialog('close'); // close dialog
 				}
 			},
 			{
 				text: Dict.S('UI:Button:Ok'),
 				class: 'ibo-is-primary',
-				click_callback: function () {
+				callbackOnClick: function () {
 					// handle "do not show again" user preference
-					if(oOptions.user_preference_key != null){
+					if(oOptions.do_not_show_again_pref_key != null){
 						// save preference
 						const bDoNotShowAgain = $('[name="do_not_show_again"]', $(this)).prop('checked');
 						if (bDoNotShowAgain) {
-							SetUserPreference(oOptions.user_preference_key, 'false', true);
+							SetUserPreference(oOptions.do_not_show_again_pref_key, true, true);
 						}
 					}
 					// call confirm handler and close dialog
@@ -397,9 +402,9 @@ CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfir
 				}
 			}
 		],
-		callbackOnContentLoaded: function(oModalContentElement){
+		callback_on_content_loaded: function(oModalContentElement){
 			// add option do not show again from template
-			if(oOptions.user_preference_key != null) {
+			if(oOptions.do_not_show_again_pref_key != null) {
 				oModalContentElement.append($('#ibo-dialog-option--do-not-show-again-template').html());
 			}
 		}

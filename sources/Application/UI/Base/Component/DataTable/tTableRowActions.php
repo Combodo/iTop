@@ -6,14 +6,7 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dialog\DialogUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Template\TemplateUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 /**
  * Trait tTableRowActions
@@ -38,7 +31,7 @@ trait tTableRowActions
 	 *      confirmation => {
 	 *          message: string,
 	 *          message_row_data: string,
-	 *          remember_choice_pref_key: string
+	 *          do_not_show_again_pref_key: string
 	 *      }
 	 * }
 	 */
