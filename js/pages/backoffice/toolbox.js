@@ -201,7 +201,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 		width: 'auto',
 		height: 'auto',
 		modal: oOptions.extra_options.modal ?? true,
-		close: oOptions.extra_options.callbackOnModalClose,
+		close: oOptions.extra_options.callback_on_modal_close,
 		autoOpen: oOptions.auto_open,
 		title: oOptions.title,
 		buttons: CombodoModal.ConvertButtonDefinition(oOptions.buttons)
@@ -330,7 +330,7 @@ CombodoModal.ConvertButtonDefinition = function(aButtonsDefinitions){
 			const aButton = {
 				text: element.text,
 				class: element.class,
-				click: element.callbackOnClick
+				click: element.callback_on_click
 			}
 		aConverted.push(aButton);
 		}
@@ -368,13 +368,13 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 	}
 	// merge external options with confirmation modal default options
 	oOptions = $.extend({
-		title: Dict.S('UI:Dialog:ConfirmationTitle'),
-		content: Dict.S('UI:Dialog:ConfirmationMessage'),
+		title: Dict.S('UI:Modal:ConfirmationTitle'),
+		content: '',
 		do_not_show_again_pref_key: null,
 		callback_on_confirm: null,
 		callback_on_cancel: null,
 		extra_options: {
-			callbackOnModalClose: function () {
+			callback_on_modal_close: function () {
 				$(this).dialog( "destroy" ); // destroy dialog object
 			}
 		},
@@ -382,7 +382,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 			{
 				text: Dict.S('UI:Button:Cancel'),
 				class: 'ibo-is-alternative',
-				callbackOnClick: function () {
+				callback_on_click: function () {
 					// call confirm handler and close dialog
 					let bCanClose = true;
 					if(oOptions.callback_on_cancel != null){
@@ -396,15 +396,11 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 			{
 				text: Dict.S('UI:Button:Ok'),
 				class: 'ibo-is-primary',
-				callbackOnClick: function () {
+				callback_on_click: function () {
 					// handle "do not show again" user preference
-					if(oOptions.do_not_show_again_pref_key != null){
-						// save preference
-						const bDoNotShowAgain = $('[name="do_not_show_again"]', $(this)).prop('checked');
-						if (bDoNotShowAgain) {
-							SetUserPreference(oOptions.do_not_show_again_pref_key, true, true);
-						}
-					}
+					let bDoNotShowAgain = oOptions.do_not_show_again_pref_key != null ?
+						$('[name="do_not_show_again"]', $(this)).prop('checked') :
+						false;
 					// call confirm handler and close dialog
 					let bCanClose = true;
 					if(oOptions.callback_on_confirm != null){
@@ -412,6 +408,10 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 					}
 					if(bCanClose){
 						$(this).dialog('close'); // close dialog
+						// save preference
+						if (bDoNotShowAgain) {
+							SetUserPreference(oOptions.do_not_show_again_pref_key, true, true);
+						}
 					}
 				}
 			}

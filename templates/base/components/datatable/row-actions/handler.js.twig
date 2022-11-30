@@ -42,8 +42,8 @@
 
     // action row function declaration
     function ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}(oDatatable, oTrElement, iActionId, aRowData){
-{#        {{ aAction.js_row_action|raw }};#}
-        return false;
+        {{ aAction.js_row_action|raw }};
+        return true;
     }
 
 {% endfor %}

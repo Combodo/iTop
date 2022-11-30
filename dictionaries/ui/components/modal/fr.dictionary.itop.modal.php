@@ -19,6 +19,5 @@
 
 // Input
 Dict::Add('FR FR', 'French', 'Français', array(
-	'UI:Dialog:ConfirmationTitle'   => 'Confirmation',
-	'UI:Dialog:ConfirmationMessage' => 'Confirmez vous ?',
+	'UI:Modal:ConfirmationTitle' => 'Confirmation',
 ));
