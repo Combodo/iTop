@@ -3,7 +3,7 @@
 {% extends 'itop-portal-base/portal/templates/bricks/browse/layout.html.twig' %}
 
 {#
-	Documentation : 
+	Documentation :
 	#brick_content_tree is populated by JS
 
 	#brick_search_field works differently regarding the brick data loading mode :
@@ -43,7 +43,7 @@
 
 {% block pPageLiveScripts %}
 	{{ parent() }}
-	
+
 	<script type="text/javascript">
 		var sNodeCollapsedClass = 'glyphicon-menu-right';
 		var sNodeExpandedClass = 'glyphicon-menu-down';
@@ -53,7 +53,7 @@
 		var oLevelsProperties = {{ aLevelsProperties|raw }};
 		var oRawDatas = {{ aItems|raw }};
 		var bIsFullyLoaded = ('{{ sDataLoading }}' === '{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') }}') ? true : false;
-			
+
 		// Collapses / Expands all the tree nodes
 		var collapseAll = function()
 		{
@@ -82,7 +82,7 @@
 		{
 			$('#brick_content_tree .tree-toggle').off('click').on('click', function (oEvent) {
 				oEvent.preventDefault();
-				
+
 				// Forcing subitems to expand after a filter, so we can browse subitems of a filtered item. Else is the regular toggle
 				if($(this).parent().children('ul.tree:visible').length > 0 && $(this).parent().children('ul.tree:visible').children('li:visible').length === 0)
 				{
@@ -90,7 +90,7 @@
 				}else{
 					$(this).parent().children('ul.tree').toggle(200);
 				}
-				
+
 				// Toggling glyphicon class
 				if($(this).find('.glyphicon').hasClass(sNodeCollapsedClass))
 				{
@@ -100,7 +100,7 @@
 				{
 					$(this).find('.glyphicon').removeClass(sNodeExpandedClass+' '+sNodeLoadingClass).addClass(sNodeCollapsedClass);
 				}
-				
+
 				// Check if the node has no children, if so we try to load them through AJAX (Only for the current item)
 				if($(this).parent().children('ul.tree').children('li').length === 0)
 				{
@@ -133,12 +133,12 @@
 					$(oElement).find('.list-group.tree:visible .list-group-item:not(:visible)').show();
 				}
 			});
-			
+
 			// Show / hide empty data message
 			if(bIsFullyLoaded)
 			{
 				hideTreeLoader();
-				
+
 				if($('#brick_content_tree > .list-group-item:visible').length > 0)
 				{
 					$('#brick_content_empty').hide();
@@ -148,7 +148,7 @@
 					$('#brick_content_empty').show();
 				}
 			}
-			
+
 			expandAll();
 		};
 		// Load current node childnodes throught AJAX
@@ -156,7 +156,7 @@
 		{
 			var sUrl = '{{ app.url_generator.generate('p_browse_brick_mode_tree', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseMode, 'sLevelAlias': '-sLevelAlias-', 'sNodeId': '-sNodeId-'})|raw }}';
 			sUrl = sUrl.replace(/-sLevelAlias-/, sLevelAlias).replace(/-sNodeId-/, sNodeId);
-			
+
 			$.ajax(sUrl)
 			.done(function(data) {
 				$('#brick_content_tree .tree-toggle[data-level-alias="'+sLevelAlias+'"][data-item-id="'+sNodeId+'"] .glyphicon').removeClass(sNodeCollapsedClass+' '+sNodeLoadingClass).addClass(sNodeExpandedClass);
@@ -186,7 +186,7 @@
 			{
 				isRootLevel = true;
 			}
-			
+
 			$.each(data, function(i, item){
 				var levelId = item.level_alias+'::'+item.id;
 				var levelAltId = item.level_alias+'_'+item.id;
@@ -196,12 +196,21 @@
 				var url = '';
 
                 var liElem = $('<li></li>').addClass('list-group-item');
-                var aElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
+                var spanElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
                 var nameElem = $('<a></a>').addClass('tree-item').text(item.name);
                 // Building node
                 $('ul[data-level-id="'+nodeId+'"]').append(liElem);
-                aElem.append(nameElem);
-                liElem.append(aElem);
+                spanElem.append(nameElem);
+                liElem.append(spanElem);
+
+                // Delegating a click on <span> to its child <a> element
+                // N°5396 - Fix BrowseBrick tree "opening_target" mode for "self" and "new" values
+                spanElem.on('click', function (event) {
+                    var aElem = $(this).children('a.tree-item')[0];
+                    if (aElem !== event.target) {
+                        aElem.trigger('click');
+                    }
+                });
 
                 // Building tooltip for the node
                 // N°4662 - Surround tooltip with div to ensure text retrival
@@ -213,31 +222,31 @@
                 // Building description for the node
                 if ((item.description !== undefined) && (item.description !== ''))
                 {
-                    aElem.append($('<span class="list-group-item-description">'+item.description+'</span>'));
+                    spanElem.append($('<span class="list-group-item-description">'+item.description+'</span>'));
                 }
-				
+
 				// Building actions for that node
 				switch(levelPrimaryAction.type)
 				{
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}':
-                        aElem.addClass('tree-toggle');
+                        spanElem.addClass('tree-toggle');
                         nameElem.html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+nameElem.text()+'</span>');
                         break;
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
 						url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
-						SetActionUrl(aElem, url);
-                        SetActionOpeningTarget(aElem, levelPrimaryAction.opening_target);
+						SetActionUrl(nameElem, url);
+                        SetActionOpeningTarget(nameElem, levelPrimaryAction.opening_target);
                         break;
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
 						url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
-						SetActionUrl(aElem, url);
-                        SetActionOpeningTarget(aElem, levelPrimaryAction.opening_target);
+						SetActionUrl(nameElem, url);
+                        SetActionOpeningTarget(nameElem, levelPrimaryAction.opening_target);
                         break;
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 						url = levelPrimaryAction.url.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
 						url = CombodoGlobalToolbox.AddParameterToUrl(url, 'ar_token', item.action_rules_token[levelPrimaryAction.type]);
-						SetActionUrl(aElem, url);
-                        SetActionOpeningTarget(aElem, levelPrimaryAction.opening_target);
+						SetActionUrl(nameElem, url);
+                        SetActionOpeningTarget(nameElem, levelPrimaryAction.opening_target);
 						break;
 					default:
 						//console.log('Action "'+levelPrimaryAction.type+'" not implemented for primary action');
@@ -252,7 +261,7 @@
 					{
 						actionsButtons[levelActionsKeys[j]] = levelActions[levelActionsKeys[j]];
 					}
-					
+
 					// Preparing secondary actions container
 					var actionsElem = $('<div></div>').addClass('list-group-item-actions');
 					liElem.append(actionsElem);
@@ -270,7 +279,7 @@
 						var action = actionsButtons[j];
 						var actionElem = $('<a></a>');
 						var actionIconElem = $('<span></span>').appendTo(actionElem);
-						
+
 						switch(action.type)
 						{
 							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
@@ -301,21 +310,21 @@
 						{
 							actionIconElem.addClass(action.icon_class);
 						}
-						
+
 						actionElem.append(action.title);
 						actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
 					}
 				}
-				
+
 				// Building subnodes if necessary
 				var ulElem  = $('<ul></ul>').addClass('list-group').addClass('tree').attr('data-level-id', levelId);
 				liElem.append(ulElem);
 				if(item.subitems.length !== 0)
 				{
 					buildTree(item.subitems, levelId, false);
-				}				
+				}
 			});
-			
+
 			// Update listeners
 			if(isRootLevel)
 			{
@@ -337,13 +346,13 @@
 				{
 					// Show a loader while fetching results
 					showTreeLoader();
-					
+
 					// If we don't do that now, we have have several calls
 					bIsFullyLoaded = true;
-					
+
 					// Display loader by toggling glyphicon class
 					$('#brick_content_tree .tree-toggle .glyphicon.'+sNodeCollapsedClass).removeClass(sNodeCollapsedClass).addClass(sNodeLoadingClass);
-					
+
 					// Load the whole tree
 					$.ajax('{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseMode, 'sDataLoading': constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL')})|raw }}')
 					.done(function(data)
@@ -365,19 +374,19 @@
 				}
 				expandAll();
 			});
-			
+
 			// Init filter field
 			// Note : If placed in the registerFilterListeners function, must be before the .treeListFilter as the off('change') will remove .treeListFilter
 			$('#brick_search_field').on('change', function(oEvent){
 				// Show a loader while fetching/filtering results
 				showTreeLoader();
-				
+
 				if(!bIsFullyLoaded)
 				{
-					
+
 					// We don't want to trigger TreeListFilter yet
 					oEvent.stopPropagation();
-					
+
 					// Load the whole tree
 					$.ajax('{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseMode, 'sDataLoading': constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL')})|raw }}')
 					.done(function(data)
@@ -395,19 +404,19 @@
 						// We don't need to call this because it will be called as a callback when "change" event is triggered on treeListFilter
 						//filterResultsHandler();
 					});
-				}				
+				}
 				else
 				{
 					// // We don't need to call this because it will be called as a callback when "change" event is triggered on treeListFilter
 					filterResultsHandler();
-				}				
+				}
 			});
-			
+
 			// Auto collapse item actions popup
 			$('body').on('click', function(){
 				$('#brick_content_tree .item-action-wrapper.collapse.in').collapse('hide');
 			});
-			
+
 			// Build the tree (collapsed)
 			buildTree(oRawDatas);
 			hideTreeLoader();
@@ -421,7 +430,7 @@
                     $('#brick_content_tree > .list-group-item > .tree-toggle').trigger('click');
                 }, 300);
             }
-			
+
 			{% if (sSearchValue is not null) and (sSearchValue != '') %}
 				// Filters from default value
 				$('#brick_search_field').trigger('change');
