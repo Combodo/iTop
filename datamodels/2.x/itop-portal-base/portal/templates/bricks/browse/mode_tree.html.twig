@@ -205,10 +205,10 @@
 
                 // Delegating a click on <span> to its child <a> element
                 // N°5396 - Fix BrowseBrick tree "opening_target" mode for "self" and "new" values
-                aElem.click(function (event) {
-                    var a = $(this).children('a.tree-item')[0];
-                    if (a !== event.target) {
-                        a.click();
+                spanElem.on('click', function (event) {
+                    var aElem = $(this).children('a.tree-item')[0];
+                    if (aElem !== event.target) {
+                        aElem.trigger('click');
                     }
                 });
 
