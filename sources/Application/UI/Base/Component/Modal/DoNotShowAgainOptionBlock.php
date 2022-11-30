@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\UI\Base\Component\Dialog;
+namespace Combodo\iTop\Application\UI\Base\Component\Modal;
 
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 /**
  *
- * @package Combodo\iTop\Application\UI\Base\Component\Dialog
+ * @package Combodo\iTop\Application\UI\Base\Component\Modal
  * @since 3.1.0
  */
 class DoNotShowAgainOptionBlock extends UIContentBlock
@@ -36,7 +36,7 @@ class DoNotShowAgainOptionBlock extends UIContentBlock
 	 */
 	public function __construct(string $sId = null)
 	{
-		parent::__construct($sId, ['ibo-dialog-option--do-not-show-again']);
+		parent::__construct($sId, ['ibo-modal-option--do-not-show-again']);
 
 		// initialize UI
 		$this->InitUI();

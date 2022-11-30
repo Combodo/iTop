@@ -126,7 +126,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 			oModalElem.find('.modal-content').html(oOptions.content);
 
 			// Internal callbacks
-			this._OnContentLoaded(oModalElem, oOptions.callbackOnContentLoaded);
+			this._OnContentLoaded(oModalElem, oOptions.callback_on_content_loaded);
 
 			// Manually triggers bootstrap event in order to keep listeners working
 			oModalElem.trigger('loaded.bs.modal');

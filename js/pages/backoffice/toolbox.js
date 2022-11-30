@@ -351,17 +351,18 @@ CombodoModal._CenterModalInViewport = function (oModalElem) {
 /**
  * Open a standard confirmation modal and put the content into it.
  *
- * @param oOptions array @see CombodoModal.OpenModal + {do_not_show_again_pref_key: string}
- * @param oConfirmHandler confirm handler
- * @param aConfirmHandlerData data passed to confirm handler
+ * @param oOptions array @see CombodoModal.OpenModal + {do_not_show_again_pref_key: string, callback_on_confirm: function, callback_on_cancel}
+ * @param aData data passed to callbacks
  * @returns object The jQuery object of the modal element
  */
-CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfirmHandlerData) {
+CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 
 	// check do not show again preference key
 	if(oOptions.do_not_show_again_pref_key != null){
 		if(GetUserPreference(oOptions.do_not_show_again_pref_key, false)){
-			oConfirmHandler(...aConfirmHandlerData);
+			if(oOptions.callback_on_confirm != null){
+				oOptions.callback_on_confirm(...aData);
+			}
 			return;
 		}
 	}
@@ -370,6 +371,8 @@ CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfir
 		title: Dict.S('UI:Dialog:ConfirmationTitle'),
 		content: Dict.S('UI:Dialog:ConfirmationMessage'),
 		do_not_show_again_pref_key: null,
+		callback_on_confirm: null,
+		callback_on_cancel: null,
 		extra_options: {
 			callbackOnModalClose: function () {
 				$(this).dialog( "destroy" ); // destroy dialog object
@@ -380,7 +383,11 @@ CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfir
 				text: Dict.S('UI:Button:Cancel'),
 				class: 'ibo-is-alternative',
 				callbackOnClick: function () {
-					$(this).dialog('close'); // close dialog
+					// call confirm handler and close dialog
+					if(oOptions.callback_on_cancel != null){
+						oOptions.callback_on_cancel(...aData);
+						$(this).dialog('close'); // close dialog
+					}
 				}
 			},
 			{
@@ -396,7 +403,8 @@ CombodoModal.OpenConfirmationModal = function(oOptions, oConfirmHandler, aConfir
 						}
 					}
 					// call confirm handler and close dialog
-					if(oConfirmHandler(...aConfirmHandlerData)){
+					if(oOptions.callback_on_confirm != null){
+						oOptions.callback_on_confirm(...aData);
 						$(this).dialog('close'); // close dialog
 					}
 				}
