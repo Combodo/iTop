@@ -384,8 +384,11 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 				class: 'ibo-is-alternative',
 				callbackOnClick: function () {
 					// call confirm handler and close dialog
+					let bCanClose = true;
 					if(oOptions.callback_on_cancel != null){
-						oOptions.callback_on_cancel(...aData);
+						bCanClose = oOptions.callback_on_cancel(...aData) != false;
+					}
+					if(bCanClose){
 						$(this).dialog('close'); // close dialog
 					}
 				}
@@ -403,8 +406,11 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 						}
 					}
 					// call confirm handler and close dialog
+					let bCanClose = true;
 					if(oOptions.callback_on_confirm != null){
-						oOptions.callback_on_confirm(...aData);
+						bCanClose = oOptions.callback_on_confirm(...aData) != false;
+					}
+					if(bCanClose){
 						$(this).dialog('close'); // close dialog
 					}
 				}
@@ -413,7 +419,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 		callback_on_content_loaded: function(oModalContentElement){
 			// add option do not show again from template
 			if(oOptions.do_not_show_again_pref_key != null) {
-				oModalContentElement.append($('#ibo-dialog-option--do-not-show-again-template').html());
+				oModalContentElement.append($('#ibo-modal-option--do-not-show-again-template').html());
 			}
 		}
 	}, oOptions);
