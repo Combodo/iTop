@@ -23,7 +23,9 @@ use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
 use Dict;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
+use Twig\Loader\FilesystemLoader;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 use utils;
@@ -166,14 +168,16 @@ class AppExtension extends AbstractExtension
 			if ($ret !== false) {
 				return [$ret];
 			}
-			return twig_array_filter($array, $arrow);
+			$oEnv = new Environment(new FilesystemLoader());
+			return twig_array_filter($oEnv, $array, $arrow);
 		});
 		$filters[] = new Twig_SimpleFilter('map', function ($array, $arrow) {
 			$ret = $this->SanitizeFilter($array, $arrow);
 			if ($ret !== false) {
 				return [$ret];
 			}
-			return twig_array_map($array, $arrow);
+			$oEnv = new Environment(new FilesystemLoader());
+			return twig_array_map($oEnv, $array, $arrow);
 		});
 		$filters[] = new Twig_SimpleFilter('reduce', function ($array, $arrow, $initial = null) {
 			$ret = $this->SanitizeFilter($array, $arrow);
@@ -181,7 +185,8 @@ class AppExtension extends AbstractExtension
 				return $ret;
 			}
 			// reduce return mixed results not only arrays
-			return twig_array_reduce($array, $arrow, $initial);
+			$oEnv = new Environment(new FilesystemLoader());
+			return twig_array_reduce($oEnv, $array, $arrow, $initial);
 		});
 
 		return $filters;
