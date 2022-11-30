@@ -159,11 +159,14 @@ class EmailSwiftMailer extends EMail
 				$sEncryption = static::$m_oConfig->Get('email_transport_smtp.encryption');
 				$sUserName = static::$m_oConfig->Get('email_transport_smtp.username');
 				$sPassword = static::$m_oConfig->Get('email_transport_smtp.password');
+				$bAllowSelfSigned = static::$m_oConfig->Get('email_transport_smtp.allow_self_signed');
+				$bVerifyPeer = static::$m_oConfig->Get('email_transport_smtp.verify_peer');
 
 				$oTransport = new Swift_SmtpTransport($sHost, $sPort, $sEncryption);
 				if (strlen($sUserName) > 0) {
 					$oTransport->setUsername($sUserName);
 					$oTransport->setPassword($sPassword);
+					$oTransport->setStreamOptions(array('ssl' => array('allow_self_signed' => $bAllowSelfSigned, 'verify_peer' => $bVerifyPeer)));
 				}
 				break;
 
