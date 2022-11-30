@@ -200,8 +200,8 @@
                 var nameElem = $('<a></a>').addClass('tree-item').text(item.name);
                 // Building node
                 $('ul[data-level-id="'+nodeId+'"]').append(liElem);
-                aElem.append(nameElem);
-                liElem.append(aElem);
+                spanElem.append(nameElem);
+                liElem.append(spanElem);
 
                 // Delegating a click on <span> to its child <a> element
                 // N°5396 - Fix BrowseBrick tree "opening_target" mode for "self" and "new" values
