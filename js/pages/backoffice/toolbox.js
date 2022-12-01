@@ -397,10 +397,6 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 				text: Dict.S('UI:Button:Ok'),
 				class: 'ibo-is-primary',
 				callback_on_click: function () {
-					// handle "do not show again" user preference
-					let bDoNotShowAgain = oOptions.do_not_show_again_pref_key != null ?
-						$('[name="do_not_show_again"]', $(this)).prop('checked') :
-						false;
 					// call confirm handler and close dialog
 					let bCanClose = true;
 					if(oOptions.callback_on_confirm != null){
@@ -408,7 +404,10 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 					}
 					if(bCanClose){
 						$(this).dialog('close'); // close dialog
-						// save preference
+						// handle "do not show again" user preference
+						let bDoNotShowAgain = oOptions.do_not_show_again_pref_key != null ?
+							$('[name="do_not_show_again"]', $(this)).prop('checked') :
+							false;
 						if (bDoNotShowAgain) {
 							SetUserPreference(oOptions.do_not_show_again_pref_key, true, true);
 						}
