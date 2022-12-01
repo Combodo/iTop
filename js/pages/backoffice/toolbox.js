@@ -368,7 +368,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 	}
 	// merge external options with confirmation modal default options
 	oOptions = $.extend({
-		title: Dict.S('UI:Modal:ConfirmationTitle'),
+		title: Dict.S('UI:Modal:DefaultConfirmationTitle'),
 		content: '',
 		do_not_show_again_pref_key: null,
 		callback_on_confirm: null,

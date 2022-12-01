@@ -19,5 +19,5 @@
 
 // Input
 Dict::Add('EN US', 'English', 'English', array(
-	'UI:Modal:ConfirmationTitle' => 'Confirmation',
+	'UI:Modal:DefaultConfirmationTitle' => 'Confirmation',
 ));
