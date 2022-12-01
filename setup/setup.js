@@ -54,8 +54,8 @@ function ExecuteStep(sStep)
 }
 
 function CheckDirectoryConfFilesPermissions(sWikiVersion){
-	$.ajax('permissions-test-folder/permissions-test-subfolder/permissions-test-file',
-		{
+	$.ajax('permissions-test-folder/permissions-test-subfolder/permissions-test-file', {
+		cache: false,
 		statusCode: {
 			200: function() {
 				$('#details').prepend('<div class="message message-warning"><span class="message-title">Security issue:</span> iTop is bundled with directory-level configuration files. You must check that those files will be read by your web server (eg.' +
