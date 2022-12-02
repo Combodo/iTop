@@ -264,36 +264,48 @@ class ValueSetObjects extends ValueSetDefinition
 		{
 			case 'equals':
 				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-				$sClassAlias = $oFilter->GetClassAlias();
-				$aFilters = array();
-				$oValueExpr = new ScalarExpression($sContains);
-				foreach($aAttributes as $sAttribute)
-				{
-					$oNewFilter = $oFilter->DeepClone();
-					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
-					$oCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
-					$oNewFilter->AddConditionExpression($oCondition);
-					$aFilters[] = $oNewFilter;
+				if (count($aAttributes) > 0) {
+					$sClassAlias = $oFilter->GetClassAlias();
+					$aFilters = array();
+					$oValueExpr = new ScalarExpression($sContains);
+					foreach ($aAttributes as $sAttribute) {
+						$oNewFilter = $oFilter->DeepClone();
+						$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
+						$oCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
+						$oNewFilter->AddConditionExpression($oCondition);
+						$aFilters[] = $oNewFilter;
+					}
+					// Unions are much faster than OR conditions
+					$oFilter = new DBUnionSearch($aFilters);
+				} else {
+					$oValueExpr = new ScalarExpression($sContains);
+					$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
+					$oNewCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
+					$oFilter->AddConditionExpression($oNewCondition);
 				}
-                // Unions are much faster than OR conditions
-				$oFilter = new DBUnionSearch($aFilters);
 				break;
-            case 'start_with':
-                $aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-                $sClassAlias = $oFilter->GetClassAlias();
-                $aFilters = array();
-                $oValueExpr = new ScalarExpression($sContains.'%');
-                foreach($aAttributes as $sAttribute)
-                {
-                    $oNewFilter = $oFilter->DeepClone();
-                    $oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
-                    $oCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
-                    $oNewFilter->AddConditionExpression($oCondition);
-                    $aFilters[] = $oNewFilter;
-                }
-                // Unions are much faster than OR conditions
-                $oFilter = new DBUnionSearch($aFilters);
-                break;
+			case 'start_with':
+				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
+				if (count($aAttributes) > 0) {
+					$sClassAlias = $oFilter->GetClassAlias();
+					$aFilters = array();
+					$oValueExpr = new ScalarExpression($sContains.'%');
+					foreach ($aAttributes as $sAttribute) {
+						$oNewFilter = $oFilter->DeepClone();
+						$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
+						$oCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+						$oNewFilter->AddConditionExpression($oCondition);
+						$aFilters[] = $oNewFilter;
+					}
+					// Unions are much faster than OR conditions
+					$oFilter = new DBUnionSearch($aFilters);
+				} else {
+					$oValueExpr = new ScalarExpression($sContains.'%');
+					$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
+					$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+					$oFilter->AddConditionExpression($oNewCondition);
+				}
+				break;
 
 			default:
 				$oValueExpr = new ScalarExpression('%'.$sContains.'%');
@@ -407,32 +419,48 @@ class ValueSetObjects extends ValueSetDefinition
 		switch ($sOperation) {
 			case 'equals':
 				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-				$aFilters = array();
-				$oValueExpr = new ScalarExpression($sContains);
-				foreach ($aAttributes as $sAttribute) {
-					$oNewFilter = $oFilter->DeepClone();
-					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
-					$oCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
-					$oNewFilter->AddConditionExpression($oCondition);
-					$aFilters[] = $oNewFilter;
+				if (count($aAttributes) > 0) {
+					$sClassAlias = $oFilter->GetClassAlias();
+					$aFilters = array();
+					$oValueExpr = new ScalarExpression($sContains);
+					foreach ($aAttributes as $sAttribute) {
+						$oNewFilter = $oFilter->DeepClone();
+						$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
+						$oCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
+						$oNewFilter->AddConditionExpression($oCondition);
+						$aFilters[] = $oNewFilter;
+					}
+					// Unions are much faster than OR conditions
+					$oFilter = new DBUnionSearch($aFilters);
+				} else {
+					$oValueExpr = new ScalarExpression($sContains);
+					$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
+					$oNewCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
+					$oFilter->AddConditionExpression($oNewCondition);
 				}
-				// Unions are much faster than OR conditions
-				$oFilter = new DBUnionSearch($aFilters);
 				break;
+
 			case 'start_with':
 				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-				$aFilters = array();
-				$oValueExpr = new ScalarExpression($sContains.'%');
-				foreach($aAttributes as $sAttribute)
-				{
-					$oNewFilter = $oFilter->DeepClone();
-					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
-					$oCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
-					$oNewFilter->AddConditionExpression($oCondition);
-					$aFilters[] = $oNewFilter;
+				if (count($aAttributes) > 0) {
+					$sClassAlias = $oFilter->GetClassAlias();
+					$aFilters = array();
+					$oValueExpr = new ScalarExpression($sContains.'%');
+					foreach ($aAttributes as $sAttribute) {
+						$oNewFilter = $oFilter->DeepClone();
+						$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
+						$oCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+						$oNewFilter->AddConditionExpression($oCondition);
+						$aFilters[] = $oNewFilter;
+					}
+					// Unions are much faster than OR conditions
+					$oFilter = new DBUnionSearch($aFilters);
+				} else {
+					$oValueExpr = new ScalarExpression($sContains.'%');
+					$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
+					$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+					$oFilter->AddConditionExpression($oNewCondition);
 				}
-				// Unions are much faster than OR conditions
-				$oFilter = new DBUnionSearch($aFilters);
 				break;
 
 			default:
