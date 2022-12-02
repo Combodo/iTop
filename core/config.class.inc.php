@@ -587,8 +587,8 @@ class Config
 		'email_transport_smtp.verify_peer' => array(
 			'type'                => 'bool',
 			'description'         => 'Verify peer certificate',
-			'default'             => false,
-			'value'               => false,
+			'default'             => true,
+			'value'               => true,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		),
