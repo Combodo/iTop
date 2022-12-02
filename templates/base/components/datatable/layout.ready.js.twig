@@ -388,7 +388,23 @@ $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
                 {
                     $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgCancel');
                 }
-            }
+            },
+            buttons: [
+                {
+                    text: "{{ 'UI:Button:Cancel'|dict_s }}",
+                    class: "ibo-is-alternative ibo-is-neutral",
+                    click: function() {
+                        $(this).dialog( "close" );
+                    }
+                },
+                {
+                    text: "{{ 'UI:Button:Ok'|dict_s }}",
+                    class: "ibo-is-regular ibo-is-primary",
+                    click: function() {
+                        $(this).DataTableSettings('onDlgOk');
+                    }
+                }
+            ]
         });
 
 var aOptions{{ sListIDForVarSuffix }} = {
