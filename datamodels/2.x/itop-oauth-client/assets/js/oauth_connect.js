@@ -77,11 +77,10 @@ const oOpenSignInWindow = function (url, name) {
 };
 
 
-const OAuthConnect = function(sClass, sId, sAjaxUri, sReturnUri) {
+const OAuthConnect = function(sClass, sId, sAjaxUri) {
 	sOAuthAjaxURI = sAjaxUri;
 	sOAuthObjClass = sClass;
 	sOAuthObjKey = sId;
-	sOAuthReturnURI = sReturnUri;
 
 	$.post(
 		sOAuthAjaxURI,
