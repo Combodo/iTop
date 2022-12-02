@@ -214,7 +214,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_dict_entry('UI:StayOnThePage');
 
 		// confirmation modal
-		$this->add_dict_entry('UI:Modal:DefaultConfirmationTitle');
+		$this->add_dict_entries('UI:Modal:');
 	}
 
 	/**

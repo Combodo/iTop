@@ -3,11 +3,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-// Dialog Option - Do not show again
+// Modal Option - Do not show again
 .ibo-modal-option--do-not-show-again{
-  margin-top: 16px;
+  margin-top: $ibo-spacing-500;
 
-  input[type="checkbox"]{
+  .ibo-modal-option--do-not-show-again--checkbox{
     height: auto;
     display: inline-block;
     width: auto;

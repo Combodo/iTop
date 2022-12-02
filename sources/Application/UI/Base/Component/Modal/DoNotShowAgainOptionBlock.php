@@ -50,8 +50,9 @@ class DoNotShowAgainOptionBlock extends UIContentBlock
 	private function InitUI()
 	{
 		// Create checkbox
-		$checkBox = InputUIBlockFactory::MakeStandard('checkbox', 'do_not_show_again', false);
-		$checkBox->SetLabel(\Dict::S('UI:UserPref:DoNotShowAgain'));
-		$this->AddSubBlock($checkBox);
+		$oCheckBox = InputUIBlockFactory::MakeStandard('checkbox', 'do_not_show_again', false);
+		$oCheckBox->AddCSSClass('ibo-modal-option--do-not-show-again--checkbox');
+		$oCheckBox->SetLabel(\Dict::S('UI:UserPref:DoNotShowAgain'));
+		$this->AddSubBlock($oCheckBox);
 	}
 }
