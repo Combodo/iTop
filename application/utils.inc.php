@@ -1410,12 +1410,14 @@ class utils
 	 */
 	public static function GetPopupMenuItemsBlock(iUIBlock &$oContainerBlock, $iMenuId, $param, &$aActions, $sDataTableId = null)
 	{
+		$aResult = [];
+
 		// 1st - add standard built-in menu items
 		// 
 		switch($iMenuId)
 		{
 			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
-				// $param is a DBObjectSet
+				/** @var \DBObjectSet $param */
 				$oAppContext = new ApplicationContext();
 				$sContext = $oAppContext->GetForLink();
 				$sDataTableId = is_null($sDataTableId) ? '' : $sDataTableId;
@@ -1453,7 +1455,7 @@ class utils
 				break;
 
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
-				// $param is a DBObject
+				/** @var \DBObject $param */
 				$oObj = $param;
 				$sOQL = "SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey();
 				$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
@@ -1502,7 +1504,6 @@ class utils
 
 			default:
 				// Unknown type of menu, do nothing
-				$aResult = array();
 		}
 		foreach ($aResult as $oMenuItem)
 		{

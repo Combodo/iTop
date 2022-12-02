@@ -1755,6 +1755,7 @@ class MenuBlock extends DisplayBlock
 
 		$sClass = $this->m_oFilter->GetClass();
 		$oSet = new CMDBObjectSet($this->m_oFilter);
+		$iSetCount = $oSet->Count();
 		$sRefreshAction = $aExtraParams['refresh_action'] ?? '';
 
 		/** @var array $aRegularActions Any action other than a transition */
@@ -1763,40 +1764,45 @@ class MenuBlock extends DisplayBlock
 		$aTransitionActions = [];
 		/** @var array $aToolkitActions Any "legacy" toolkit menu item, which are now displayed in the same menu as the $aRegularActions, after them */
 		$aToolkitActions = [];
+
 		if ((!isset($aExtraParams['selection_mode']) || $aExtraParams['selection_mode'] == "") && $this->m_sStyle != 'listInObject') {
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
-			if (!empty($sContext)) {
+			if (utils::IsNotNullOrEmptyString($sContext)) {
 				$sContext = '&'.$sContext;
 			}
+
 			$oReflectionClass = new ReflectionClass($sClass);
 			$sFilter = $this->m_oFilter->serialize();
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
 			$sRootUrl = utils::GetAbsoluteUrlAppRoot();
+
 			// Common params that will be applied to actions
 			$aActionParams = array();
 			if (isset($aExtraParams['menu_actions_target'])) {
 				$aActionParams['target'] = $aExtraParams['menu_actions_target'];
 			}
+
 			// 1:n links, populate the target object as a default value when creating a new linked object
 			if (isset($aExtraParams['target_attr'])) {
 				$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
 			}
-			$sDefault = '';
+			/** @var string $sDefaultValuesAsUrlParams Default values for the object to create, already formatted as URL params (eg. "&default[org_id]=3&default[title]=Foo") */
+			$sDefaultValuesAsUrlParams = '';
 			if (!empty($aExtraParams['default'])) {
 				foreach ($aExtraParams['default'] as $sKey => $sValue) {
-					$sDefault .= "&default[$sKey]=$sValue";
+					$sDefaultValuesAsUrlParams .= "&default[$sKey]=$sValue";
 				}
 			}
 			$bIsCreationAllowed = (UserRights::IsActionAllowed($sClass,
 						UR_ACTION_CREATE) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
-			switch ($oSet->Count()) {
+			switch ($iSetCount) {
 				case 0:
 					// No object in the set, the only possible action is "new"
 					if ($bIsCreationAllowed) {
 						$aRegularActions['UI:Menu:New'] = array(
 								'label' => Dict::S('UI:Menu:New'),
-								'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}",
+								'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefaultValuesAsUrlParams}",
 							) + $aActionParams;
 					}
 					break;
@@ -1808,7 +1814,7 @@ class MenuBlock extends DisplayBlock
 							if ($bIsCreationAllowed) {
 								$aRegularActions['UI:Menu:New'] = array(
 										'label' => Dict::S('UI:Menu:New'),
-										'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}",
+										'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefaultValuesAsUrlParams}",
 									) + $aActionParams;
 							}
 						}
@@ -1827,8 +1833,6 @@ class MenuBlock extends DisplayBlock
 							$aLockInfo = iTopOwnershipLock::IsLocked(get_class($oObj), $id);
 							if ($aLockInfo['locked']) {
 								$bLocked = true;
-								//$this->AddMenuSeparator($aActions);
-								//$aActions['concurrent_lock_unlock'] = array ('label' => Dict::S('UI:Menu:ReleaseConcurrentLock'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}");
 							}
 						}
 						$bRawModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
@@ -1845,7 +1849,7 @@ class MenuBlock extends DisplayBlock
 							if ($bIsCreationAllowed) {
 								$aRegularActions['UI:Menu:New'] = array(
 										'label' => Dict::S('UI:Menu:New'),
-										'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}",
+										'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefaultValuesAsUrlParams}",
 									) + $aActionParams;
 							}
 							if ($bIsDeleteAllowed) {
@@ -1969,7 +1973,7 @@ class MenuBlock extends DisplayBlock
 						if ($bIsCreationAllowed) {
 							$aRegularActions['UI:Menu:New'] = array(
 									'label' => Dict::S('UI:Menu:New'),
-									'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}",
+									'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefaultValuesAsUrlParams}",
 								) + $aActionParams;
 						}
 						if ($bIsBulkModifyAllowed) {
@@ -2056,8 +2060,9 @@ class MenuBlock extends DisplayBlock
 				$sRefreshAction = "window.location.reload();";
 			}
 		} else {
-			//it's easier just display configure this list and MENU_OBJLIST_TOOLKIT
+			// It's easier just display configure this list and MENU_OBJLIST_TOOLKIT
 		}
+
 		$param = null;
 		if (is_null($sId)) {
 			$sId = uniqid();
@@ -2089,6 +2094,7 @@ class MenuBlock extends DisplayBlock
 				break;
 
 		}
+
 		if ($oPopupMenuItemsBlock->HasSubBlocks()) {
 			$oRenderBlock->AddSubBlock($oPopupMenuItemsBlock);
 		} else {
@@ -2099,6 +2105,7 @@ class MenuBlock extends DisplayBlock
 				$oRenderBlock->AddCssFileRelPath($sCssPath);
 			}
 		}
+
 		// Extract favorite actions from their menus
 		$aFavoriteRegularActions = [];
 		$aFavoriteTransitionActions = [];
@@ -2223,7 +2230,7 @@ class MenuBlock extends DisplayBlock
 			}
 
 			// - Refresh
-			if ($sRefreshAction != '') {
+			if (utils::IsNotNullOrEmptyString($sRefreshAction)) {
 				$oActionButton = ButtonUIBlockFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
 				$oActionButton->SetIconClass('fas fa-sync-alt')
 					->SetOnClickJsCode($sRefreshAction)
