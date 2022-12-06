@@ -49,6 +49,11 @@ class TemplateUIBlockFactory extends AbstractUIBlockFactory
 		return new Template($sId);
 	}
 
+	/**
+	 * Make a Template component with a block inside.
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Template\Template
+	 */
 	public static function MakeForBlock(string $sId, UIContentBlock $oContentBlock)
 	{
 		$oBlock = TemplateUIBlockFactory::MakeStandard($sId);

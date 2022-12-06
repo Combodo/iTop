@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-// Input
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Modal:Confirmation:DefaultTitle' => 'Confirmation',
 ));
