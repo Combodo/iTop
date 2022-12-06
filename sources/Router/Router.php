@@ -97,12 +97,11 @@ class Router
 		}
 
 		$sOperationMethodName = $this->MakeOperationMethodNameFromOperation($sRouteOperation);
-		$aMethodSpecs = [$sControllerFQCN, $sOperationMethodName];
-		if (false === is_callable($aMethodSpecs)) {
+		if (false === method_exists($sControllerFQCN, $sOperationMethodName)) {
 			return null;
 		}
 
-		return $aMethodSpecs;
+		return [$sControllerFQCN, $sOperationMethodName];
 	}
 
 	/**
