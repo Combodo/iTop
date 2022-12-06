@@ -357,10 +357,10 @@ CombodoModal._CenterModalInViewport = function (oModalElem) {
  */
 CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 
-	// check do not show again preference key
-	if(oOptions.do_not_show_again_pref_key != null){
+	// Check do not show again preference key
+	if(oOptions.do_not_show_again_pref_key !== null){
 		if(GetUserPreference(oOptions.do_not_show_again_pref_key, false)){
-			if(oOptions.callback_on_confirm != null){
+			if(oOptions.callback_on_confirm !== null){
 				oOptions.callback_on_confirm(...aData);
 			}
 			return;
