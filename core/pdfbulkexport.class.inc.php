@@ -300,7 +300,7 @@ EOF
 				// avoid division by zero exception :/
 				$iNewWidth = $iDefaultMaxWidthPx;
 				$iNewHeight = $iDefaultMaxHeightPx;
-				IssueLog::Warning('AttributeImage : cannot read image size', LogChannels::EXPORT, [
+				IssueLog::Warning('AttributeImage: Cannot read image size', LogChannels::EXPORT, [
 					'ObjClass'        => get_class($oObj),
 					'ObjKey'          => $oObj->GetKey(),
 					'ObjFriendlyName' => $oObj->GetName(),
