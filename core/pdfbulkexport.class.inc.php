@@ -297,7 +297,7 @@ EOF
 
 			list($iWidth, $iHeight) = utils::GetImageSize($value->GetData());
 			if (($iWidth === 0) && ($iHeight === 0)) {
-				// avoid division by zero exception :/
+				// Avoid division by zero exception (SVGs, corrupted images, ...)
 				$iNewWidth = $iDefaultMaxWidthPx;
 				$iNewHeight = $iDefaultMaxHeightPx;
 				IssueLog::Warning('AttributeImage: Cannot read image size', LogChannels::EXPORT, [
