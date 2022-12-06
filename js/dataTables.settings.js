@@ -111,8 +111,8 @@ $(function () {
 						}
 					});
 
-					// append row actions column
-					if(me.options.bHasRowActions){
+					// Append row actions column
+					if (me.options.bHasRowActions) {
 						sThead += "<th></th>";
 						let iColumnCount = aOptions['columns'].length;
 						aOptions["columns"][iColumnCount] = getRowActionsColumnDefinition(oParams.list_id);
