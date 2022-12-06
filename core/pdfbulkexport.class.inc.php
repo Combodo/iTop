@@ -296,7 +296,7 @@ EOF
 			$iMaxHeightPx = min($iDefaultMaxHeightPx, $oAttDef->Get('display_max_height'));
 
 			list($iWidth, $iHeight) = utils::GetImageSize($value->GetData());
-			if (($iWidth === 0) && ($iHeight === 0)) {
+			if (($iWidth === 0) || ($iHeight === 0)) {
 				// Avoid division by zero exception (SVGs, corrupted images, ...)
 				$iNewWidth = $iDefaultMaxWidthPx;
 				$iNewHeight = $iDefaultMaxHeightPx;
