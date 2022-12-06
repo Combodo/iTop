@@ -35,7 +35,7 @@ trait tTableRowActions
 	 *      }
 	 * }
 	 */
-	protected $aRowActions = array();
+	protected $aRowActions = [];
 
 	/**
 	 * Set row actions.
