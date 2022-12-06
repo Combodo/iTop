@@ -404,7 +404,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 					}
 					if(bCanClose){
 						$(this).dialog('close'); // close dialog
-						// handle "do not show again" user preference
+						// Handle "do not show again" user preference
 						let bDoNotShowAgain = oOptions.do_not_show_again_pref_key != null ?
 							$('[name="do_not_show_again"]', $(this)).prop('checked') :
 							false;
