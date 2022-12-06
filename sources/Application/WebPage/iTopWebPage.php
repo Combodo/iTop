@@ -213,7 +213,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_dict_entry('UI:LoginAgain');
 		$this->add_dict_entry('UI:StayOnThePage');
 
-		// confirmation modal
+		// Modals
 		$this->add_dict_entries('UI:Modal:');
 	}
 
