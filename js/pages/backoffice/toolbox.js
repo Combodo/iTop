@@ -204,7 +204,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 		close: oOptions.extra_options.callback_on_modal_close,
 		autoOpen: oOptions.auto_open,
 		title: oOptions.title,
-		buttons: CombodoModal.ConvertButtonDefinition(oOptions.buttons)
+		buttons: this.ConvertButtonDefinition(oOptions.buttons)
 	};
 
 	// Resize to desired size
