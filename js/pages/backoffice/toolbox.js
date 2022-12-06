@@ -397,7 +397,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 				text: Dict.S('UI:Button:Ok'),
 				class: 'ibo-is-primary',
 				callback_on_click: function () {
-					// call confirm handler and close dialog
+					// Call confirm handler and close dialog
 					let bCanClose = true;
 					if(oOptions.callback_on_confirm != null){
 						bCanClose = oOptions.callback_on_confirm(...aData) != false;
