@@ -204,7 +204,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 		close: oOptions.extra_options.callback_on_modal_close,
 		autoOpen: oOptions.auto_open,
 		title: oOptions.title,
-		buttons: this.ConvertButtonDefinition(oOptions.buttons)
+		buttons: this._ConvertButtonDefinition(oOptions.buttons)
 	};
 
 	// Resize to desired size
@@ -324,7 +324,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
  * @returns {*[]}
  * @constructor
  */
-CombodoModal.ConvertButtonDefinition = function(aButtonsDefinitions){
+CombodoModal._ConvertButtonDefinition = function(aButtonsDefinitions){
 	const aConverted = [];
 	aButtonsDefinitions.forEach(element => {
 			const aButton = {
