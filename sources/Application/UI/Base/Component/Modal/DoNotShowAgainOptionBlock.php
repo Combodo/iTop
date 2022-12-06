@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Modal;
 
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Dict;
 
 /**
  *
