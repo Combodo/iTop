@@ -1121,10 +1121,11 @@ let CombodoModal = {
 	 *
 	 * @param sTargetUrl {String}
 	 * @param bCloseOtherModals {String}
+	 * @param callbackOnContentLoaded {function}
 	 * @return {Object} The jQuery object representing the modal element
 	 * @api
 	 */
-	OpenUrlInModal: function(sTargetUrl, bCloseOtherModals, oCallbackOnContentLoaded) {
+	OpenUrlInModal: function(sTargetUrl, bCloseOtherModals, callbackOnContentLoaded) {
 		// Set default values
 		if(bCloseOtherModals === undefined)
 		{
@@ -1144,8 +1145,8 @@ let CombodoModal = {
 			}
 		};
 
-		if (oCallbackOnContentLoaded !== undefined) {
-			oOptions.callback_on_content_loaded = oCallbackOnContentLoaded;
+		if (callbackOnContentLoaded !== undefined) {
+			oOptions.callback_on_content_loaded = callbackOnContentLoaded;
 		}
 
 		// Opening modal
