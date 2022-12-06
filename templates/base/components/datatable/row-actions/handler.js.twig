@@ -15,23 +15,21 @@
 
         {% if aAction.confirmation is defined %}
 
-            // Handle action row with confirmation
-            let sTitle = '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}';
+            // Prepare confirmation message
             let sMessage = '{{ 'UI:Datatables:RowActions:ConfirmationMessage'|dict_s }}';
             {% if aAction.confirmation.message is defined %}
                 sMessage = '{{ aAction.confirmation.message|dict_s|raw }}';
-                sMessage = sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']);
             {% endif %}
-            let sPrefKey = null;
-            {% if aAction.confirmation.remember_choice_pref_key is defined %}
-                sPrefKey = '{{ aAction.confirmation.remember_choice_pref_key }}';
-            {% endif %}
-            HandleActionRowConfirmation (sTitle, sMessage, sPrefKey, ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }}, {
-                action_id: iActionId,
-                datatable: oDatatable,
-                tr_element: oTrElement,
-                row_data: aRowData
-            });
+
+            // Handle action row with confirmation modal
+            CombodoModal.OpenConfirmationModal({
+                title: '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}',
+                content: sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']),
+                callback_on_confirm: ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }},
+                {% if aAction.confirmation.do_not_show_again_pref_key is defined %}
+                do_not_show_again_pref_key: '{{ aAction.confirmation.do_not_show_again_pref_key }}',
+                {% endif %}
+            }, [oDatatable, oTrElement, iActionId, aRowData]);
 
         {% else %}
 

@@ -214,7 +214,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				array_key_exists('tooltip', $aAction) ? Dict::S($aAction['tooltip']) : '',
 				array_key_exists('name', $aAction) ? $aAction['name'] : 'undefined'
 			);
-			$oButton->SetDataAttributes(['action-id' => $iKey]);
+			$oButton->SetDataAttributes(['action-id' => $iKey, 'tooltip-append-to' => 'body']);
 			$oToolbar->AddSubBlock($oButton);
 		}
 

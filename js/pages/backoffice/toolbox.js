@@ -201,7 +201,10 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 		width: 'auto',
 		height: 'auto',
 		modal: oOptions.extra_options.modal ?? true,
+		close: oOptions.extra_options.callback_on_modal_close,
 		autoOpen: oOptions.auto_open,
+		title: oOptions.title,
+		buttons: this._ConvertButtonDefinition(oOptions.buttons)
 	};
 
 	// Resize to desired size
@@ -245,7 +248,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 	{
 		case 'string':
 			oModalElem.html(oOptions.content);
-			this._OnContentLoaded(oModalElem, oOptions.callbackOnContentLoaded);
+			this._OnContentLoaded(oModalElem, oOptions.callback_on_content_loaded);
 			break;
 
 		case 'object':
@@ -274,7 +277,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 						me._CenterModalInViewport(oModalElem);
 					}, 500);
 
-					me._OnContentLoaded(oModalElem, oOptions.callbackOnContentLoaded);
+					me._OnContentLoaded(oModalElem, oOptions.callback_on_content_loaded);
 				}
 			);
 			break;
@@ -313,6 +316,28 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 
 	return true;
 };
+
+/**
+ * Convert generic buttons definitions to jquery ui dialog definitions.
+ *
+ * @param aButtonsDefinitions
+ * @returns {*[]}
+ * @constructor
+ */
+CombodoModal._ConvertButtonDefinition = function(aButtonsDefinitions){
+	const aConverted = [];
+	aButtonsDefinitions.forEach(element => {
+			const aButton = {
+				text: element.text,
+				class: element.class,
+				click: element.callback_on_click
+			}
+		aConverted.push(aButton);
+		}
+	);
+	return aConverted;
+}
+
 /**
  * @override
  * @inheritDoc
@@ -322,6 +347,85 @@ CombodoModal._CenterModalInViewport = function (oModalElem) {
 		position: {my: 'center', at: 'center', of: window},
 	});
 };
+
+/**
+ * Open a standard confirmation modal and put the content into it.
+ *
+ * @param oOptions array @see CombodoModal.OpenModal + {do_not_show_again_pref_key: string, callback_on_confirm: function, callback_on_cancel}
+ * @param aData data passed to callbacks
+ * @returns object The jQuery object of the modal element
+ */
+CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
+
+	// Check do not show again preference key
+	if(oOptions.do_not_show_again_pref_key !== null){
+		if(GetUserPreference(oOptions.do_not_show_again_pref_key, false)){
+			if(oOptions.callback_on_confirm !== null){
+				oOptions.callback_on_confirm(...aData);
+			}
+			return;
+		}
+	}
+	// Merge external options with confirmation modal default options
+	oOptions = $.extend({
+		title: Dict.S('UI:Modal:DefaultConfirmationTitle'),
+		content: '',
+		do_not_show_again_pref_key: null,
+		callback_on_confirm: null,
+		callback_on_cancel: null,
+		extra_options: {
+			callback_on_modal_close: function () {
+				$(this).dialog( "destroy" ); // destroy dialog object
+			}
+		},
+		buttons: [
+			{
+				text: Dict.S('UI:Button:Cancel'),
+				class: 'ibo-is-alternative',
+				callback_on_click: function () {
+					// call confirm handler and close dialog
+					let bCanClose = true;
+					if(oOptions.callback_on_cancel != null){
+						bCanClose = oOptions.callback_on_cancel(...aData) !== false;
+					}
+					if(bCanClose){
+						$(this).dialog('close'); // close dialog
+					}
+				}
+			},
+			{
+				text: Dict.S('UI:Button:Ok'),
+				class: 'ibo-is-primary',
+				callback_on_click: function () {
+					// Call confirm handler and close dialog
+					let bCanClose = true;
+					if(oOptions.callback_on_confirm != null){
+						bCanClose = oOptions.callback_on_confirm(...aData) !== false;
+					}
+					if(bCanClose){
+						$(this).dialog('close'); // close dialog
+						// Handle "do not show again" user preference
+						let bDoNotShowAgain = oOptions.do_not_show_again_pref_key !== null ?
+							$('[name="do_not_show_again"]', $(this)).prop('checked') :
+							false;
+						if (bDoNotShowAgain) {
+							SetUserPreference(oOptions.do_not_show_again_pref_key, true, true);
+						}
+					}
+				}
+			}
+		],
+		callback_on_content_loaded: function(oModalContentElement){
+			// Add option do not show again from template
+			if(oOptions.do_not_show_again_pref_key !== null) {
+				oModalContentElement.append($('#ibo-modal-option--do-not-show-again-template').html());
+			}
+		}
+	}, oOptions);
+
+	// Open modal
+	CombodoModal.OpenModal(oOptions);
+}
 
 // Processing on each pages of the backoffice
 $(document).ready(function(){

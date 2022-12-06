@@ -63,9 +63,9 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 				'icon_classes'  => 'fas fa-minus',
 				'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw']);",
 				'confirmation'  => [
-					'message'                  => 'UI:Links:ActionRow:detach:confirmation',
-					'message_row_data'         => "Remote/hyperlink",
-					'remember_choice_pref_key' => 'LinkSetWorker.DetachLinkedObject',
+					'message'                    => 'UI:Links:ActionRow:detach:confirmation',
+					'message_row_data'           => "Remote/hyperlink",
+					'do_not_show_again_pref_key' => 'LinkSetWorker.DetachLinkedObject',
 				],
 			);
 

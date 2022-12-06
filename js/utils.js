@@ -1121,6 +1121,7 @@ let CombodoModal = {
 	 *
 	 * @param sTargetUrl {String}
 	 * @param bCloseOtherModals {String}
+	 * @param callbackOnContentLoaded {function}
 	 * @return {Object} The jQuery object representing the modal element
 	 * @api
 	 */
@@ -1145,7 +1146,7 @@ let CombodoModal = {
 		};
 
 		if (callbackOnContentLoaded !== undefined) {
-			oOptions.callbackOnContentLoaded = callbackOnContentLoaded;
+			oOptions.callback_on_content_loaded = callbackOnContentLoaded;
 		}
 
 		// Opening modal
@@ -1170,10 +1171,12 @@ let CombodoModal = {
 					usage: 'clone',                                 // Either 'clone' or 'replace'
 					selector: this._GetDefaultBaseModalSelector()   // Either a selector of the modal element used to base this one on or the modal element itself
 				},
+				title: undefined,   // Title of the modal
 				content: undefined, // Either a string, an object containing the endpoint / data or undefined to keep base modal content as-is
+				buttons: null,
 				size: 'auto',       // Either 'auto' / 'xs' / 'sm' / 'md' / 'lg' or specific height & width via {width: '80px', height: '100px'}
 				auto_open: true,    // true for the modal to open automatically on instantiation
-				callbackOnContentLoaded: null, // Callback to call once the content is loaded. Arguments will be oModalElem (the jQuery object representing the modal)
+				callback_on_content_loaded: null, // Callback to call once the content is loaded. Arguments will be oModalElem (the jQuery object representing the modal) callback_on_content_loaded
 				extra_options: {},  // Extra options to pass to the modal lib directly if they are not handled by the CombodoModal widget yet
 			},
 			oOptions
@@ -1206,7 +1209,7 @@ let CombodoModal = {
 		if (oOptions.base_modal.usage === 'clone') {
 			// Clone modal using a real template
 			if (oSelectorElem[0].tagName === 'TEMPLATE') {
-				oModalElem = $(oSelectorElem[0].content.firstElementChild.cloneNode(true));
+				oModalElem = $(oSelectorElem.html());
 			}
 			// Clone modal using an existing element
 			else {
@@ -1216,8 +1219,7 @@ let CombodoModal = {
 			// Force modal to have an HTML ID, otherwise it can lead to complications, especially with the portal_leave_handle.js
 			// See N°3469
 			let sModalID = (oOptions.id !== null) ? oOptions.id : 'modal-with-generated-id-'+Date.now();
-			oModalElem.attr('id', sModalID)
-				.appendTo('body');
+			oModalElem.attr('id', sModalID);
 		}
 		// - Get an existing modal in the DOM
 		else {
@@ -1291,5 +1293,16 @@ let CombodoModal = {
 				callback(oModalElem);
 			}
 		}
+	},
+
+	/**
+	 * Open a standard confirmation modal and put the content into it.
+	 *
+	 * @param oOptions
+	 * @returns object The jQuery object of the modal element
+	 */
+	OpenConfirmationModal: function(oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.OpenConfirmationModal not implemented');
 	}
 };

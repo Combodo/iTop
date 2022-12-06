@@ -7,8 +7,6 @@
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
 use Combodo\iTop\Application\UI\Base\Component\Dialog\DialogUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 /**
  * Trait tTableRowActions
@@ -33,11 +31,11 @@ trait tTableRowActions
 	 *      confirmation => {
 	 *          message: string,
 	 *          message_row_data: string,
-	 *          remember_choice_pref_key: string
+	 *          do_not_show_again_pref_key: string
 	 *      }
 	 * }
 	 */
-	protected $aRowActions;
+	protected $aRowActions = [];
 
 	/**
 	 * Set row actions.
@@ -81,32 +79,5 @@ trait tTableRowActions
 	public function GetRowActionsTemplate()
 	{
 		return DataTableUIBlockFactory::MakeActionRowToolbarTemplate($this);
-	}
-
-	/**
-	 * GetRowActionsConfirmDialog.
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Html\Html
-	 */
-	public function GetRowActionsConfirmDialog()
-	{
-		static::$bDialogInitialized = true;
-
-		$oDialog = DialogUIBlockFactory::MakeNeutral('', '<div class="ibo-row-action--confirmation--explanation"></div>', 'table-row-action-confirmation-dialog');
-
-		$oContent = UIContentBlockUIBlockFactory::MakeStandard();
-		$oContent->AddCSSClass('ibo-row-action--confirmation--do-not-show-again');
-		$checkBox = InputUIBlockFactory::MakeStandard('checkbox', 'do_not_show_again', false);
-		$checkBox->AddCSSClass('ibo-row-action--confirmation--do-not-show-again--checkbox');
-		$checkBox->SetLabel(\Dict::S('UI:UserPref:DoNotShowAgain'));
-		$oContent->AddSubBlock($checkBox);
-		$oDialog->AddSubBlock($oContent);
-
-		return $oDialog;
-	}
-
-	public function GetRowActionsConfirmDialogInitializedFlag()
-	{
-		return static::$bDialogInitialized;
 	}
 }

@@ -45,6 +45,12 @@
     <template id="ibo-modal-template">
         <div class="ibo-modal" data-role="ibo-modal">TODO 3.1: Please wait</div>
     </template>
+
+    {# Templates #}
+    {% for oTemplate in aTemplates %}
+        {{ render_block(oTemplate, {aPage: aPage})  }}
+    {% endfor %}
+
 {% endblock %}
 
 {% block iboCapturedOutput %}

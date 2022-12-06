@@ -2,3 +2,17 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+/* SCSS variables */
+$ibo-modal-option--do-not-show-again--margin-top: $ibo-spacing-500 !default;
+
+// Modal Option - Do not show again
+.ibo-modal-option--do-not-show-again{
+  margin-top: $ibo-modal-option--do-not-show-again--margin-top;
+
+  .ibo-modal-option--do-not-show-again--checkbox{
+    height: auto;
+    display: inline-block;
+    width: auto;
+  }
+}
