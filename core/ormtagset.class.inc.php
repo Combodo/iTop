@@ -499,9 +499,9 @@ final class ormTagSet extends ormSet
 	}
 
 	/**
-	 * @param $sTagCode
+	 * @param $sTagLabel
 	 *
-	 * @return DBObject tag
+	 * @return string Tag code
 	 * @throws \CoreUnexpectedValue
 	 * @throws \CoreException
 	 */
