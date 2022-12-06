@@ -386,7 +386,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 					// call confirm handler and close dialog
 					let bCanClose = true;
 					if(oOptions.callback_on_cancel != null){
-						bCanClose = oOptions.callback_on_cancel(...aData) != false;
+						bCanClose = oOptions.callback_on_cancel(...aData) !== false;
 					}
 					if(bCanClose){
 						$(this).dialog('close'); // close dialog
