@@ -39,8 +39,8 @@ use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksViewTable;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksViewTable;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksViewTable;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
@@ -414,7 +414,7 @@ JS
 			$bCanBeDeletedByTask = false;
 			$bCanBeDeletedByUser = true;
 			$aMasterSources = array();
-			$aSyncData = $this->GetSynchroData();
+			$aSyncData = $this->GetSynchroData(true);
 			if (count($aSyncData) > 0) {
 				foreach ($aSyncData as $iSourceId => $aSourceData) {
 					$oDataSource = $aSourceData['source'];
