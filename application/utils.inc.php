@@ -3205,9 +3205,4 @@ HTML;
 	{
 		return in_array($sTrait, self::TraitsUsedByClass($sClass, true));
 	}
-  
-	public static function GetUniqId()
-	{
-		return hash('sha256', uniqid(sprintf('%x', rand()), true).sprintf('%x', rand()));
-	}
 }

@@ -180,7 +180,7 @@ abstract class DBObject implements iDisplay
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
-			$this->m_sObjectUniqId = get_class($this).'::'.$this->GetKey().'_'.utils::GetUniqId();
+			$this->m_sObjectUniqId = get_class($this).'::'.$this->GetKey().'_'.uniqId('', true);
 			$this->RegisterEventListeners();
 			return;
 		}
@@ -203,7 +203,7 @@ abstract class DBObject implements iDisplay
 
 		$this->UpdateMetaAttributes();
 
-		$this->m_sObjectUniqId = get_class($this).'::0'.'_'.utils::GetUniqId();
+		$this->m_sObjectUniqId = get_class($this).'::0'.'_'.uniqId('', true);
 		$this->RegisterEventListeners();
 	}
 

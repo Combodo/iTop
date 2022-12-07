@@ -131,15 +131,15 @@ class Config
 		],
 		'event_service.debug.filter_events' => [
 			'type' => 'array',
-			'description' => 'Filter Event Service debug by events',
-			'default' => '',
+			'description' => 'List of events name to filter Event Service debug messages',
+			'default' => [],
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
 		'event_service.debug.filter_sources' => [
 			'type' => 'array',
-			'description' => 'Filter Event Service debug by event sources',
+			'description' => 'List of event sources to filter Event Service debug messages',
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
