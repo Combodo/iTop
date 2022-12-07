@@ -19,8 +19,8 @@
 
 namespace Combodo\iTop\Portal\Twig;
 
+use Closure;
 use Dict;
-use PhpParser\Node\Expr\Closure;
 use Twig\Extension\AbstractExtension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
