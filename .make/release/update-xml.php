@@ -6,6 +6,8 @@
  * Will update version in the following files :
  *
  * datamodels/2.x/.../datamodel.*.xml
+ * application/*.xml
+ * core/*.xml
  *
  * Usage :
  * `php .make\release\update-xml.php "1.7"`
@@ -16,6 +18,7 @@
  * @since 2.7.0 simple version change using regexp (not doing conversion)
  * @since 3.1.0 N°5405 now does a real conversion
  * @since 3.1.0 N°5633 allow to use without parameter
+ * @since 3.1.0 N°5633 add /application and /core XML files
  ******************************************************************************/
 
 

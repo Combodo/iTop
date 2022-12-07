@@ -55,9 +55,9 @@
   <menus>
     <menu id="WelcomeMenu" xsi:type="MenuGroup" _delta="define">
       <rank>10</rank>
-	    <style>
-		    <decoration_classes>fas fa-home</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-home</decoration_classes>
+      </style>
     </menu>
     <menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="define">
       <rank>10</rank>
@@ -151,9 +151,9 @@
     </menu>
     <menu id="ConfigurationTools" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>90</rank>
-	    <style>
-		    <decoration_classes>fas fa-cog</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-cog</decoration_classes>
+      </style>
     </menu>
     <menu id="DataSources" xsi:type="OQLMenuNode" _delta="define">
       <rank>20</rank>
@@ -172,17 +172,17 @@
     </menu>
     <menu id="AdminTools" xsi:type="MenuGroup" _delta="define">
       <rank>80</rank>
-	    <style>
-		    <decoration_classes>fas fa-tools</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-tools</decoration_classes>
+      </style>
     </menu>
     <menu id="SystemTools" xsi:type="MenuGroup" _delta="define">
       <rank>100</rank>
       <enable_class>ResourceSystemMenu</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
-	    <style>
-		    <decoration_classes>fas fa-terminal</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-terminal</decoration_classes>
+      </style>
     </menu>
   </menus>
   <events>

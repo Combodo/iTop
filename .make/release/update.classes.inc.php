@@ -125,16 +125,31 @@ class iTopVersionFileUpdater extends AbstractSingleFileVersionUpdater
 
 abstract class AbstractGlobFileVersionUpdater extends FileVersionUpdater
 {
-	protected $sGlobPattern;
+	/** @var array|string glob patterns to seek for files to modify */
+	protected $globPattern;
 
-	public function __construct($sGlobPattern)
+	public function __construct($globPattern)
 	{
-		$this->sGlobPattern = $sGlobPattern;
+		$this->globPattern = $globPattern;
 	}
 
 	public function GetFiles()
 	{
-		return glob($this->sGlobPattern);
+		$aGlobPatterns = (is_array($this->globPattern))
+			? $this->globPattern
+			: [$this->globPattern];
+
+		$aFiles = [];
+		foreach ($aGlobPatterns as $sGlobPattern) {
+			$result = glob($sGlobPattern);
+			if (false === $result) {
+				continue;
+			}
+			/** @noinspection SlowArrayOperationsInLoopInspection */
+			$aFiles = array_merge($aFiles, $result);
+		}
+
+		return $aFiles;
 	}
 }
 
@@ -166,7 +181,11 @@ class DatamodelsXmlFiles extends AbstractGlobFileVersionUpdater
 {
 	public function __construct()
 	{
-		parent::__construct(APPROOT.'datamodels/2.x/*/datamodel.*.xml');
+		parent::__construct([
+			APPROOT.'datamodels/2.x/*/datamodel.*.xml',
+			APPROOT.'application/*.xml',
+			APPROOT.'core/*.xml',
+		]);
 	}
 
 	/**
