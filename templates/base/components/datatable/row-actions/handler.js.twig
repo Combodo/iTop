@@ -5,7 +5,7 @@
 {% for aAction in oUIBlock.GetRowActions() %}
 
     // register action buttons click
-    $('#{{ oUIBlock.GetId() }} tbody').on('click', 'button[data-action-id="{{ loop.index0 }}"]', function() {
+    $('body').on('click', 'button[data-table-id="{{ oUIBlock.GetId() }}"][data-action-id="{{ loop.index0 }}"]', function() {
 
         // variables accessible from action row js
         let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
