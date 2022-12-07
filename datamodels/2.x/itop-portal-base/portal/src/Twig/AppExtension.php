@@ -23,6 +23,7 @@ use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
 use Dict;
+use PhpParser\Node\Expr\Closure;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Loader\FilesystemLoader;
@@ -162,7 +163,7 @@ class AppExtension extends AbstractExtension
 		$filters[] = new Twig_SimpleFilter('var_export', 'var_export');
 
 		//since 2.7.7 3.0.2 3.1.0 N°4867 "Twig content not allowed" error when use the extkey widget search icon in the user portal
-		//overwrite native twig filter : disable use of 'system' filter
+		// Since 2.7.8 filter more functions as filter 'filter' is used by the portal
 		$filters[] = new Twig_SimpleFilter('filter', function ($array, $arrow) {
 			$ret = $this->SanitizeFilter($array, $arrow);
 			if ($ret !== false) {
@@ -171,22 +172,13 @@ class AppExtension extends AbstractExtension
 			$oEnv = new Environment(new FilesystemLoader());
 			return twig_array_filter($oEnv, $array, $arrow);
 		});
+		// Since 2.7.8 deactivate map
 		$filters[] = new Twig_SimpleFilter('map', function ($array, $arrow) {
-			$ret = $this->SanitizeFilter($array, $arrow);
-			if ($ret !== false) {
-				return [$ret];
-			}
-			$oEnv = new Environment(new FilesystemLoader());
-			return twig_array_map($oEnv, $array, $arrow);
+			return $array;
 		});
+		// Since 2.7.8 deactivate reduce
 		$filters[] = new Twig_SimpleFilter('reduce', function ($array, $arrow, $initial = null) {
-			$ret = $this->SanitizeFilter($array, $arrow);
-			if ($ret !== false) {
-				return $ret;
-			}
-			// reduce return mixed results not only arrays
-			$oEnv = new Environment(new FilesystemLoader());
-			return twig_array_reduce($oEnv, $array, $arrow, $initial);
+			return $array;
 		});
 
 		return $filters;
@@ -194,10 +186,67 @@ class AppExtension extends AbstractExtension
 
 	private function SanitizeFilter($array, $arrow)
 	{
+		$aRestricted = [
+			'system',
+			'exec',
+			'passthru',
+			'popen',
+			'proc_open',
+			'shell_exec',
+			'file_get_contents',
+			'file_put_contents',
+			'eval',
+			'pcntl_exec',
+			'chgrp',
+			'chmod',
+			'chown',
+			'lchgrp',
+			'lchown',
+			'umask',
+			'copy',
+			'delete',
+			'unlink',
+			'link',
+			'mkdir',
+			'rmdir',
+			'rename',
+			'symlink',
+			'tempnam',
+			'tmpfile',
+			'touch',
+			'fgetc',
+			'fgetcsv',
+			'fgets',
+			'fgetss',
+			'file',
+			'flock',
+			'fopen',
+			'fpassthru',
+			'fputcsv',
+			'fputs',
+			'fread',
+			'fscanf',
+			'ftruncate',
+			'fwrite',
+			'glob',
+			'readfile',
+			'readlink',
+			'parse_ini_file',
+			'mail',
+		];
+		$aRestrictedStartWith = ['ftp_', 'zip_', 'stream_'];
+
 		if (is_string($arrow)) {
-			if (in_array(strtolower($arrow), ['system', 'exec', 'passthru', 'popen'])) {
+			if (in_array(strtolower($arrow), $aRestricted)) {
 				return json_encode($array);
 			}
+			foreach ($aRestrictedStartWith as $sRestrictedStartWith) {
+				if (utils::StartsWith($arrow, $sRestrictedStartWith)) {
+					return json_encode($array);
+				}
+			}
+		} elseif ($arrow instanceof Closure) {
+			return json_encode($array);
 		}
 		return false;
 	}
