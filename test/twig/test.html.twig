@@ -28,11 +28,11 @@
 {{ self }}
 
 <div>[0]|reduce('system','echo')</div>
-{{ [0]|reduce('system','echo') }}
+{{ [0]|reduce('system','echo')|join(', ') }}
 
 <div>[1, 2, 3]|reduce((carry, v) => carry + v)</div>
 {% set numbers = [1, 2, 3] %}
-{{ numbers|reduce((carry, v) => carry + v) }}
+{{ numbers|reduce((carry, v) => carry + v)|join(', ') }}
 
 <div>['echo']|map('system')|join</div>
 {{ ['echo']|map('system')|join }}

@@ -19,7 +19,7 @@
 [&quot;touch+\/tmp\/test+&quot;]
 
 <div>[34, 36, 38, 40, 42]|filter(v => v > 38)|join(', ')</div>
-40, 42
+[34,36,38,40,42]
 
 <div>app.request.server.all|join(',')</div>
 
@@ -28,16 +28,16 @@
 
 
 <div>[0]|reduce('system','echo')</div>
-[0]
+0
 
 <div>[1, 2, 3]|reduce((carry, v) => carry + v)</div>
-6
+1, 2, 3
 
 <div>['echo']|map('system')|join</div>
-[&quot;echo&quot;]
+echo
 
 <div>{"Bob": "Smith", "Alice": "Dupond"}|map((value, key) => "#{key} #{value}")|join(', ')</div>
-Bob Smith, Alice Dupond
+Smith, Dupond
 
 <div>['echo',1]|sort('system')|join</div>
 [&quot;echo&quot;,1]
