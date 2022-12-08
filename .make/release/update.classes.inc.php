@@ -202,6 +202,13 @@ class DatamodelsXmlFiles extends AbstractGlobFileVersionUpdater
 		$oFileXml->loadXML($sFileContent);
 
 		$oFileItopFormat = new iTopDesignFormat($oFileXml);
+
+		$sDesignVersionToSet = static::GetDesignVersionToSet($oFileItopFormat->GetVersion());
+		if (false === is_null($sDesignVersionToSet)) {
+			// N°5779 if same as target version, we will try to convert from version below
+			$oFileItopFormat->GetITopDesignNode()->setAttribute('version', $sDesignVersionToSet);
+		}
+
 		$bConversionResult = $oFileItopFormat->Convert($sVersionLabel);
 
 		if (false === $bConversionResult) {
@@ -209,5 +216,17 @@ class DatamodelsXmlFiles extends AbstractGlobFileVersionUpdater
 		}
 
 		return $oFileItopFormat->GetXmlAsString();
+	}
+
+	/**
+	 * @return ?string version to use : if file version is same as current version then return previous version, else return null
+	 * @since 3.1.0 N°5779
+	 */
+	protected static function GetDesignVersionToSet($sFileDesignVersion):?string {
+		if ($sFileDesignVersion !== ITOP_DESIGN_LATEST_VERSION) {
+			return null;
+		}
+
+		return iTopDesignFormat::GetPreviousDesignVersion(ITOP_DESIGN_LATEST_VERSION);
 	}
 }

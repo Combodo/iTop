@@ -40,6 +40,17 @@
  */
 class iTopDesignFormat
 {
+	/**
+	 * @var array{
+	 *     string,
+	 *     array{
+	 *          previous: string,
+	 *          go_to_previous: string,
+	 *          next: string,
+	 *          go_to_next: string
+	 *     }
+     *  }
+	 */
 	public static $aVersions = array(
 		'1.0' => array(
 			'previous' => null,
@@ -160,6 +171,29 @@ class iTopDesignFormat
 			'severity' => 'Info',
 			'msg' => $sMessage,
 		);
+	}
+
+	/**
+	 * @param string $sCurrentDesignVersion A design version like 3.0
+	 *
+	 * @return ?string the previous design version from the one passed, null if passed version unknown or 1.0
+	 * @since 3.1.0 N°5779
+	 */
+	public static function GetPreviousDesignVersion(string $sCurrentDesignVersion): ?string
+	{
+		$aDesignVersions = array_keys(self::$aVersions);
+
+		$iCurrentDesignVersionIndex = array_search($sCurrentDesignVersion, $aDesignVersions, true);
+		if (false === $iCurrentDesignVersionIndex) {
+			return null;
+		}
+
+		$iPreviousDesignVersionIndex = $iCurrentDesignVersionIndex - 1;
+		if ($iPreviousDesignVersionIndex < 0) {
+			return null;
+		}
+
+		return $aDesignVersions[$iPreviousDesignVersionIndex];
 	}
 
 	/**
@@ -1013,7 +1047,7 @@ class iTopDesignFormat
 
 		// N°5563 AttributeLinkedSet
 		// - move edit_mode attribute to legacy_edit_mode attribute
-		// - fill relation_type & read_only
+		// - fill relation_type & read_only if non-existing
 		$oLinkedSetNodes = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']");
 		/** @var \DOMElement $oNode */
 		foreach ($oLinkedSetNodes as $oNode) {
@@ -1047,19 +1081,29 @@ class iTopDesignFormat
 						break;
 				}
 
-				$oRelationTypeNode = $oNode->ownerDocument->createElement('relation_type', $sRelationType);
-				$oNode->appendChild($oRelationTypeNode);
-				$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', $sReadOnly);
-				$oNode->appendChild($oReadOnlyNode);
+				$bHasRelationType = ($oNode->getElementsByTagName('relation_type')->count() > 0);
+				if (false === $bHasRelationType) {
+					$oRelationTypeNode = $oNode->ownerDocument->createElement('relation_type', $sRelationType);
+					$oNode->appendChild($oRelationTypeNode);
+				}
+
+				$bHasReadOnly = ($oNode->getElementsByTagName('read_only')->count() > 0);
+				if (false === $bHasReadOnly) {
+					$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', $sReadOnly);
+					$oNode->appendChild($oReadOnlyNode);
+				}
 			}
 		}
 
 		// N°5563 AttributeLinkedSetIndirect
-		// - fill read_only attribute
+		// - fill read_only attribute if non-existing
 		$oLinkedSetIndirectNodes = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSetIndirect']");
 		foreach ($oLinkedSetIndirectNodes as $oNode) {
-			$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', 'false');
-			$oNode->appendChild($oReadOnlyNode);
+			$bHasReadOnly = ($oNode->getElementsByTagName('read_only')->count() > 0);
+			if (false === $bHasReadOnly) {
+				$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', 'false');
+				$oNode->appendChild($oReadOnlyNode);
+			}
 		}
 	}
 	/**

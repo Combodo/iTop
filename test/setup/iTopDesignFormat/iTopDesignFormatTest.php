@@ -24,6 +24,16 @@ class iTopDesignFormatTest extends ItopTestCase
 		require_once APPROOT.'setup/itopdesignformat.class.inc.php';
 	}
 
+	public function testGetPreviousDesignVersion() {
+		$this->assertSame('3.0', iTopDesignFormat::GetPreviousDesignVersion('3.1'));
+		$this->assertSame('1.7', iTopDesignFormat::GetPreviousDesignVersion('3.0'));
+		$this->assertSame('1.6', iTopDesignFormat::GetPreviousDesignVersion('1.7'));
+		$this->assertSame('1.5', iTopDesignFormat::GetPreviousDesignVersion('1.6'));
+		$this->assertNull(iTopDesignFormat::GetPreviousDesignVersion('1.0'));
+		$this->assertNull(iTopDesignFormat::GetPreviousDesignVersion(''));
+		$this->assertNull(iTopDesignFormat::GetPreviousDesignVersion('NonExistingVersion'));
+	}
+
 	/**
 	 * @covers       iTopDesignFormat::Convert
 	 * @dataProvider ConvertProvider
