@@ -22,8 +22,10 @@ namespace Combodo\iTop\Portal\Twig;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
+use Closure;
 use Dict;
-use PhpParser\Node\Expr\Closure;
+use Exception;
+use IssueLog;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Loader\FilesystemLoader;
@@ -167,6 +169,7 @@ class AppExtension extends AbstractExtension
 		$filters[] = new Twig_SimpleFilter('filter', function ($array, $arrow) {
 			$ret = $this->SanitizeFilter($array, $arrow);
 			if ($ret !== false) {
+				IssueLog::Error('Twig "filter" filter has limited capabilities');
 				return [$ret];
 			}
 			$oEnv = new Environment(new FilesystemLoader());
@@ -174,10 +177,12 @@ class AppExtension extends AbstractExtension
 		});
 		// Since 2.7.8 deactivate map
 		$filters[] = new Twig_SimpleFilter('map', function ($array, $arrow) {
+			IssueLog::Error('Twig "map" filter is deactivated');
 			return $array;
 		});
 		// Since 2.7.8 deactivate reduce
 		$filters[] = new Twig_SimpleFilter('reduce', function ($array, $arrow, $initial = null) {
+			IssueLog::Error('Twig "reduce" filter is deactivated');
 			return $array;
 		});
 
