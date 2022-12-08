@@ -21,6 +21,7 @@ namespace Combodo\iTop\Portal\Twig;
 
 use Closure;
 use Dict;
+use IssueLog;
 use Twig\Extension\AbstractExtension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -103,16 +104,19 @@ class AppExtension extends AbstractExtension
 		$filters[] = new Twig_SimpleFilter('filter', function ($array, $arrow) {
 			$ret = $this->SanitizeFilter($array, $arrow);
 			if ($ret !== false) {
+				IssueLog::Error('Twig "filter" filter has limited capabilities');
 				return [$ret];
 			}
 			return twig_array_filter($array, $arrow);
 		});
 		// Since 2.7.8 deactivate map
 		$filters[] = new Twig_SimpleFilter('map', function ($array, $arrow) {
+			IssueLog::Error('Twig "map" filter is deactivated');
 			return $array;
 		});
 		// Since 2.7.8 deactivate reduce
 		$filters[] = new Twig_SimpleFilter('reduce', function ($array, $arrow, $initial = null) {
+			IssueLog::Error('Twig "reduce" filter is deactivated');
 			return $array;
 		});
 
