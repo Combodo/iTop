@@ -25,6 +25,7 @@ use AttributeText;
 use Closure;
 use Dict;
 use Exception;
+use IssueLog;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Loader\FilesystemLoader;
@@ -168,6 +169,7 @@ class AppExtension extends AbstractExtension
 		$filters[] = new TwigFilter('filter', function ($array, $arrow) {
 			$ret = $this->SanitizeFilter($array, $arrow);
 			if ($ret !== false) {
+				IssueLog::Error('Twig "filter" filter has limited capabilities');
 				return [$ret];
 			}
 			$oEnv = new Environment(new FilesystemLoader());
@@ -175,13 +177,16 @@ class AppExtension extends AbstractExtension
 		});
 		// Since 2.7.8 deactivate map
 		$filters[] = new TwigFilter('map', function ($array, $arrow) {
+			IssueLog::Error('Twig "map" filter is deactivated');
 			return $array;
 		});
 		// Since 2.7.8 deactivate reduce
 		$filters[] = new TwigFilter('reduce', function ($array, $arrow, $initial = null) {
+			IssueLog::Error('Twig "reduce" filter is deactivated');
 			return $array;
 		});
 		$filters[] = new TwigFilter('sort', function ($array, $arrow, $initial = null) {
+			IssueLog::Error('Twig "sort" filter is deactivated');
 			return $array;
 		});
 		return $filters;
