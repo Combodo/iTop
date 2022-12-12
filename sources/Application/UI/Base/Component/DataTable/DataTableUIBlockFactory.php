@@ -135,7 +135,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				$bToolkitMenu = false;
 			}
 			if ($bToolkitMenu) {
-				$aExtraParams['selection_mode'] = true;
 				$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
 				$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
 			} else {
@@ -742,6 +741,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		$aOptions['sTableId'] = $sTableId;
+		$aOptions['sListId'] = $sListId;
 		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
 		$aOptions['bViewLink'] = $bViewLink;
 		$aOptions['oClassAliases'] = json_encode($aClassAliases);

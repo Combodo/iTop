@@ -1912,7 +1912,7 @@ class UI
 	{
 		$oP->DisableBreadCrumb();
 		$oP->set_title(Dict::S('UI:ModifyAllPageTitle'));
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$sFilter = utils::ReadParam('filter', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 		if (empty($sFilter)) {
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
 		}
@@ -1921,10 +1921,11 @@ class UI
 		$oFilter->UpdateContextFromUser();
 		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
 		$sClass = $oFilter->GetClass();
+		$sClassName = MetaModel::GetName($sClass);
 
 		$aDisplayParams = [
 			'icon' => MetaModel::GetClassIcon($sClass, false),
-			'title' => Dict::S('UI:ModifyAllPageTitle'),
+			'title' => Dict::Format('UI:Modify_ObjectsOf_Class', $sClassName),
 		];
 		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker, [], $aDisplayParams);
 	}
@@ -1944,8 +1945,8 @@ class UI
 	public static function OperationFormForModifyAll(iTopWebPage $oP, ApplicationContext $oAppContext): void
 	{
 		$oP->DisableBreadCrumb();
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-		$sClass = utils::ReadParam('class', '', false, 'class');
+		$sFilter = utils::ReadParam('filter', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$sClass = utils::ReadParam('class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
 		// Add user filter
 		$oFullSetFilter->UpdateContextFromUser();

@@ -1753,9 +1753,10 @@ class MenuBlock extends DisplayBlock
 			$this->m_sStyle = 'list';
 		}
 
-		$sClass = $this->m_oFilter->GetClass();
+		$sClass = $this->GetFilter()->GetClass();
+		$aSelectedClasses = $this->GetFilter()->GetSelectedClasses();
 		$bIsForLinkset = isset($aExtraParams['target_attr']);
-		$oSet = new CMDBObjectSet($this->m_oFilter);
+		$oSet = new CMDBObjectSet($this->GetFilter());
 		$iSetCount = $oSet->Count();
 		/** @var string $sRefreshAction JS snippet to run when clicking on the refresh button of the menu */
 		$sRefreshAction = $aExtraParams['refresh_action'] ?? '';
@@ -1775,7 +1776,7 @@ class MenuBlock extends DisplayBlock
 			}
 
 			$oReflectionClass = new ReflectionClass($sClass);
-			$sFilter = $this->m_oFilter->serialize();
+			$sFilter = $this->GetFilter()->serialize();
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
 			$sRootUrl = utils::GetAbsoluteUrlAppRoot();
 
@@ -1801,24 +1802,29 @@ class MenuBlock extends DisplayBlock
 			// Any style actions
 			// - Bulk actions on objects set
 			if ($iSetCount > 1) {
-				// Check rights
-				$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
-				$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
-
-				// TODO 3.1: Remove when finished
-//				$id = $aExtraParams['object_id'];
-//				$sTargetAttr = $aExtraParams['target_attr'];
-//				$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
-//				$sTargetClass = $oAttDef->GetTargetClass();
-
 				if ($bIsCreationAllowed) {
 					$this->AddNewObjectMenuAction($aRegularActions, $sClass, $sDefaultValuesAsUrlParams);
 				}
-				if ($bIsBulkModifyAllowed) {
-					$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sClass, $sFilter);
-				}
-				if ($bIsBulkDeleteAllowed) {
-					$this->AddBulkDeleteObjectsMenuAction($aRegularActions, $sClass, $sFilter);
+
+				// Bulk actions for each selected classes (eg. "link" and "remote" on n:n relations)
+				foreach ($aSelectedClasses as $sSelectedAlias => $sSelectedClass) {
+					$sSelectedClassName = MetaModel::GetName($sSelectedClass);
+
+					// Check rights on class
+					$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sSelectedClass)) && UserRights::IsActionAllowed($sSelectedClass, UR_ACTION_BULK_MODIFY, $oSet) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+					$bIsBulkDeleteAllowed = (bool) UserRights::IsActionAllowed($sSelectedClass, UR_ACTION_BULK_DELETE, $sSelectedClass);
+
+					// Refine filter on selected class so bullk actions occur on the right class
+					$oSelectedClassFilter = $this->GetFilter()->DeepClone();
+					$oSelectedClassFilter->SetSelectedClasses([$sSelectedAlias]);
+
+					// Action identifier is using the alias on purpose so they can be used as "shortcut actions" easily for "Link" or "Remote" aliases on linksets.
+					if ($bIsBulkModifyAllowed) {
+						$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:ModifyAll:'.$sSelectedAlias, Dict::Format('UI:Menu:ModifyAll_Class', $sSelectedClassName));
+					}
+					if ($bIsBulkDeleteAllowed) {
+						$this->AddBulkDeleteObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:BulkDelete:'.$sSelectedAlias, Dict::Format('UI:Menu:BulkDelete_Class', $sSelectedClassName));
+					}
 				}
 
 				// Stimuli
