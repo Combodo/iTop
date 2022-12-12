@@ -51,7 +51,8 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 
 				case LINKSET_RELATIONTYPE_LINK:
 					$aRowActions[] = array(
-						'tooltip'       => 'UI:Links:ActionRow:detach',
+						'action'        => 'UI:Links:ActionRow:detach',
+						'tooltip'       => 'UI:Links:ActionRow:detach+',
 						'icon_classes'  => 'fas fa-minus',
 						'js_row_action' => "LinkSetWorker.DetachLinkedObject('{$this->sTargetClass}', aRowData['{$this->sTargetClass}/_key_/raw'], '{$this->oAttDef->GetExtKeyToMe()}');",
 						'confirmation'  => [
@@ -64,7 +65,8 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 
 				case LINKSET_RELATIONTYPE_PROPERTY:
 					$aRowActions[] = array(
-						'tooltip'       => 'UI:Links:ActionRow:delete',
+						'action'        => 'UI:Links:ActionRow:delete',
+						'tooltip'       => 'UI:Links:ActionRow:delete+',
 						'icon_classes'  => 'fas fa-trash',
 						'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
 						'confirmation'  => [

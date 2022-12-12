@@ -383,7 +383,7 @@ Dict::Add('EN US', 'English', 'English', array(
 <li>Manage the most important asset of your IT: Documentation.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
 <div>This version features a brand new modern and accessible backoffice design.</div>
 
@@ -404,6 +404,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:GlobalSearch' => 'Search',
 	'UI:Button:Search' => ' Search ',
 	'UI:Button:Clear' => ' Clear ',
+	'UI:Button:Confirm' => ' Confirm ',
 	'UI:Button:SearchInHierarchy' => 'Search in hierarchy',
 	'UI:Button:Query' => ' Query ',
 	'UI:Button:Ok' => 'Ok',

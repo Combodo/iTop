@@ -236,12 +236,28 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	{
 		$aRowActions = array();
 
-		if (!$this->oAttributeLinkedSet->GetReadOnly()) {
-			$aRowActions[] = array(
-				'tooltip'       => 'remove link',
-				'icon_classes'  => 'fas fa-minus',
-				'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteRow($(':checkbox', oTrElement));",
-			);
+		if (!$this->oAttDef->GetReadOnly()) {
+
+			switch ($this->oAttDef->GetRelationType()) {
+
+				case LINKSET_RELATIONTYPE_LINK:
+					$aRowActions[] = array(
+						'action'        => 'UI:Links:ActionRow:detach',
+						'tooltip'       => 'UI:Links:ActionRow:detach+',
+						'icon_classes'  => 'fas fa-minus',
+						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._removeRow($(':checkbox', oTrElement));",
+					);
+					break;
+
+				case LINKSET_RELATIONTYPE_PROPERTY:
+					$aRowActions[] = array(
+						'action'        => 'UI:Links:ActionRow:delete',
+						'tooltip'       => 'UI:Links:ActionRow:delete+',
+						'icon_classes'  => 'fas fa-trash',
+						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteRow($(':checkbox', oTrElement));",
+					);
+					break;
+			}
 		}
 
 		return $aRowActions;

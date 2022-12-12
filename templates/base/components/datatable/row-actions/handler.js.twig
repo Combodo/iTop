@@ -10,21 +10,23 @@
         // variables accessible from action row js
         let oDatatable = $('#{{ oUIBlock.GetId() }}').DataTable();
         let oTrElement = $(this).closest('tr');
+        let sAction = $(this).data('action');
         let iActionId = $(this).data('action-id');
         let aRowData = oDatatable.row(oTrElement).data();
 
         {% if aAction.confirmation is defined %}
 
             // Prepare confirmation message
-            let sMessage = '{{ 'UI:Datatables:RowActions:ConfirmationMessage'|dict_s }}';
+            let sMessage = `{{ 'UI:Datatables:RowActions:ConfirmationMessage'|dict_s|raw  }}`;
             {% if aAction.confirmation.message is defined %}
-                sMessage = '{{ aAction.confirmation.message|dict_s|raw }}';
+                sMessage = `{{ aAction.confirmation.message|dict_s|raw }}`;
             {% endif %}
 
             // Handle action row with confirmation modal
             CombodoModal.OpenConfirmationModal({
                 title: '{{ 'UI:Datatables:RowActions:ConfirmationDialog'|dict_s }}',
                 content: sMessage.replaceAll('{item}', aRowData['{{ aAction.confirmation.message_row_data }}']),
+                confirm_button_text: sAction,
                 callback_on_confirm: ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }},
                 {% if aAction.confirmation.do_not_show_again_pref_key is defined %}
                 do_not_show_again_pref_key: '{{ aAction.confirmation.do_not_show_again_pref_key }}',
