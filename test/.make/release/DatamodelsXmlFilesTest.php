@@ -46,64 +46,72 @@ class DatamodelsXmlFilesTest extends ItopTestCase
 		$iterator = new RecursiveIteratorIterator(
 			$oDirectoryIterator,
 			RecursiveIteratorIterator::CHILD_FIRST);
-
-		$aITopDesignFilesFromDisk = [];
-		$aDirectoriesToExclude = $this->GetAllDirectoriesToIgnoreForITopDesignFilesSearch();
-		$aDirectoriesToExclude = array_map(function ($value) {
-			$sRawDir = APPROOT.$value;
-
-			return str_replace('\\', '/', $sRawDir);
-		}, $aDirectoriesToExclude);
-
-		/** @var DirectoryIterator $file */
-		foreach ($iterator as $file) {
-			if ($file->isDir()) {
-				continue;
-			}
-			$sFilePath = str_replace('\\', '/', $file->getPathname());
-			if (substr($sFilePath, -4) !== '.xml') {
-				continue;
-			}
-
-			$bIsPartOfADirToExclude = false;
-			foreach ($aDirectoriesToExclude as $sDirToExclude) {
-				if (strpos($sFilePath, $sDirToExclude) === 0) {
-					$bIsPartOfADirToExclude = true;
-					break;
-				}
-			}
-			if ($bIsPartOfADirToExclude) {
-				continue;
-			}
-
-			if (false === $this->IsITopDesignFile($sFilePath)) {
-				continue;
-			}
-
-			$aITopDesignFilesFromDisk[] = $sFilePath;
-		}
+		$oITopDesignIterator = new ITopDesignFilter($iterator);
+		$aITopDesignFilesFromDisk = iterator_to_array($oITopDesignIterator);
+		$aITopDesignFilesFromDisk = array_map(function ($file) {
+			return str_replace('\\', '/', $file->getPathname());
+		}, $aITopDesignFilesFromDisk);
 
 		sort($aITopDesignFilesFromScript);
 		sort($aITopDesignFilesFromDisk);
 		$this->assertEquals($aITopDesignFilesFromDisk, $aITopDesignFilesFromScript, 'The XML files update script is not targeting some iTop design files ! '.DatamodelsXmlFiles::class.' must be updated !');
 	}
+}
 
-	private function GetAllDirectoriesToIgnoreForITopDesignFilesSearch(): array
+class ITopDesignFilter extends FilterIterator
+{
+	const DIRECTORIES_TO_EXCLUDE = [
+		// iTop repo excluded dirs
+		'.doc',
+		'.git',
+		'.idea',
+		'data/', // trailing slash to avoid confusion with datamodels dir
+		'env-',
+		'extensions',
+		'test',
+
+		// clones specificities
+		'toolkit',
+		'toolkit-pro',
+		'.delta',
+		'.hacks',
+	];
+	private $aDirToExcludeFullPath;
+
+	public function __construct($iterator)
 	{
-		return [
-			// iTop repo excluded dirs
-			'.doc',
-			'data/', // trailing slash to avoid confusion with datamodels dir
-			'env-',
-			'extensions',
-			'test',
+		parent::__construct($iterator);
 
-			// clones specificities
-			'toolkit',
-			'toolkit-pro',
-			'.delta',
-			'.hacks',
-		];
+		$this->aDirToExcludeFullPath = array_map(function ($value) {
+			$sRawDir = APPROOT.$value;
+
+			return str_replace('\\', '/', $sRawDir);
+		}, self::DIRECTORIES_TO_EXCLUDE);
+	}
+
+	public function accept()
+	{
+		$file = $this->current();
+
+		if ($file->isDir()) {
+			return false;
+		}
+		$sFilePath = str_replace('\\', '/', $file->getPathname());
+		if (substr($sFilePath, -4) !== '.xml') {
+			return false;
+		}
+
+		foreach ($this->aDirToExcludeFullPath as $sDirToExclude) {
+			if (strpos($sFilePath, $sDirToExclude) === 0) {
+				return false;
+			}
+		}
+
+		if (false === $this->IsITopDesignFile($sFilePath)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private function IsITopDesignFile($sFilePath)
