@@ -245,7 +245,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 						'action'        => 'UI:Links:ActionRow:detach',
 						'tooltip'       => 'UI:Links:ActionRow:detach+',
 						'icon_classes'  => 'fas fa-minus',
-						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._removeRow($(':checkbox', oTrElement));",
+						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
 					);
 					break;
 
@@ -254,7 +254,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 						'action'        => 'UI:Links:ActionRow:delete',
 						'tooltip'       => 'UI:Links:ActionRow:delete+',
 						'icon_classes'  => 'fas fa-trash',
-						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteRow($(':checkbox', oTrElement));",
+						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
 					);
 					break;
 			}
