@@ -25,7 +25,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-endusers-devices/2.7.8',
+	'itop-endusers-devices/2.7.9',
 	array(
 		// Identification
 		//

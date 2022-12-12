@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'itop-tickets/2.7.8',
+	'itop-tickets/2.7.9',
 	array(
 		// Identification
 		//
