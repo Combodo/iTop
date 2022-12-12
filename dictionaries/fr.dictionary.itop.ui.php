@@ -367,7 +367,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 <li>Contrôlez l\'actif le plus important de votre SI&nbsp;: la documentation.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '<div>Félicitations, vous avez atterri sur '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' !</div>
+	'UI:WelcomeMenu:Text' => '<div>Félicitations, vous avez atterri sur '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' !</div>
 
 <div>Cette version présente un tout nouveau design moderne et accessible pour la console de support.</div>
 
@@ -388,6 +388,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Button:GlobalSearch' => 'Rechercher',
 	'UI:Button:Search' => 'Rechercher',
 	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:Confirm' => 'Confirmer',
 	'UI:Button:SearchInHierarchy' => 'Rechercher dans la hiérarchie',
 	'UI:Button:Query' => ' Lancer la requête ',
 	'UI:Button:Ok' => 'Ok',

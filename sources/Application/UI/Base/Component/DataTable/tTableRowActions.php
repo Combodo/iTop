@@ -25,6 +25,7 @@ trait tTableRowActions
 	/**
 	 * @var $aRowActions array array of row actions
 	 * action => {
+	 *      action: string,
 	 *      tooltip: string,
 	 *      icon_classes: string,
 	 *      js_row_action: string,
