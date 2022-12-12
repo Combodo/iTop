@@ -16,6 +16,8 @@ use iTopDesignFormat;
  */
 class iTopDesignFormatTest extends ItopTestCase
 {
+	const SAMPLES_DIR_PATH = 'Convert-samples/';
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -24,7 +26,8 @@ class iTopDesignFormatTest extends ItopTestCase
 		require_once APPROOT.'setup/itopdesignformat.class.inc.php';
 	}
 
-	public function testGetPreviousDesignVersion() {
+	public function testGetPreviousDesignVersion()
+	{
 		$this->assertSame('3.0', iTopDesignFormat::GetPreviousDesignVersion('3.1'));
 		$this->assertSame('1.7', iTopDesignFormat::GetPreviousDesignVersion('3.0'));
 		$this->assertSame('1.6', iTopDesignFormat::GetPreviousDesignVersion('1.7'));
@@ -45,7 +48,7 @@ class iTopDesignFormatTest extends ItopTestCase
 	 */
 	public function testConvert($sXmlFileName, $iExpectedErrors = 0, $sFirstErrorMessage = '')
 	{
-		$sSamplesRelDirPath = 'Convert-samples/';
+		$sSamplesRelDirPath = self::SAMPLES_DIR_PATH;
 
 		$sExpectedXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.expected');
 		$oExpectedDesignFormat = static::GetItopFormatFromString($sExpectedXml);
@@ -67,6 +70,52 @@ class iTopDesignFormatTest extends ItopTestCase
 		// Erase dynamic values
 		$sConvertedXml = preg_replace('@<trashed_node id="\w+"@', '<trashed_node id="XXX"', $sConvertedXml);
 		$this->assertEquals($sExpectedXml, $sConvertedXml);
+	}
+
+	/**
+	 * Same provider as {@see testConvert} so that we need to modify only 1 provider when adding a new version
+	 *
+	 * Filters the dataprovider to get only upward conversions
+	 * On each upward conversion, will take the expected file and tries to convert from its immediate previous version
+	 * For example in '3.0_To_3.1' we will get the expected file which is in 3.1 version, and tries to convert this file from 3.0 to 3.1 : result must be the same content.
+	 *
+	 * This will guarantee that update-xml script will continue to work: we want to be able to convert files from version N to version N during version N dev
+	 *
+	 * @dataProvider ConvertProvider
+	 *
+	 * @param $sXmlFileName Corresponding files should exist in the `Convert-samples`, with a '.expected' suffix
+	 *
+	 * @return void
+	 * @since 3.1.0 N°5779 method creation
+	 */
+	public function testConvertNToN($sXmlFileName)
+	{
+		$sSamplesRelDirPath = self::SAMPLES_DIR_PATH;
+
+		$sInputXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.input');
+		$oInputDesignFormat = static::GetItopFormatFromString($sInputXml);
+		$sInputVersion = $oInputDesignFormat->GetVersion();
+
+		$sExpectedXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.expected');
+		$oExpectedDesignFormat = static::GetItopFormatFromString($sExpectedXml);
+		$sExpectedVersion = $oExpectedDesignFormat->GetVersion();
+
+		if (version_compare($sInputVersion, $sExpectedVersion, '>=')) {
+			$this->markTestSkipped("This dataset correspond to a downward conversion ($sInputVersion to $sExpectedVersion) and we want to test upwards conversions => skipping !");
+		}
+
+		$sExpectedPreviousVersion = iTopDesignFormat::GetPreviousDesignVersion($sExpectedVersion);
+		$oExpectedDesignFormat->GetITopDesignNode()->setAttribute('version', $sExpectedPreviousVersion);
+		$bConversionResult = $oExpectedDesignFormat->Convert($sExpectedVersion);
+
+		$this->assertTrue($bConversionResult,
+			'There were conversion errors: '.var_export($oExpectedDesignFormat->GetErrors(), true));
+
+		/** @noinspection PhpRedundantOptionalArgumentInspection We REALLY want those options so specifying it anyway */
+		$sConvertedXml = $oExpectedDesignFormat->GetXmlAsString(null, true, false);
+		// Erase dynamic values
+		$sConvertedXml = preg_replace('@<trashed_node id="\w+"@', '<trashed_node id="XXX"', $sConvertedXml);
+		$this->assertEquals($sExpectedXml, $sConvertedXml, 'Havin a file with N version, applying conversion from N-1 to N should not change the content');
 	}
 
 	private static function GetItopFormatFromString(string $sFileContent): iTopDesignFormat
