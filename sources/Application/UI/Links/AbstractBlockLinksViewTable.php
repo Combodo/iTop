@@ -135,6 +135,26 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	}
 
 	/**
+	 * GetTableId.
+	 *
+	 * @return string table identifier
+	 */
+	protected function GetTableId()
+	{
+		return $this->sObjectClass.'_'.$this->sAttCode;
+	}
+
+	/**
+	 * GetDoNotShowAgainPreferenceKey.
+	 *
+	 * @return string do not show again preference key
+	 */
+	protected function GetDoNotShowAgainPreferenceKey()
+	{
+		return "{$this->GetTableId()}.remove_link.do_not_show_again";
+	}
+
+	/**
 	 * GetExtraParam.
 	 *
 	 * Provide parameters for display block as list.

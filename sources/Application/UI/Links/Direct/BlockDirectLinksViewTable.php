@@ -35,7 +35,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 			'object_id'   => $this->oDbObject->GetKey(),
 			'menu'        => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
 			'default'     => $this->GetDefault(),
-			'table_id'    => $this->sObjectClass.'_'.$this->sAttCode,
+			'table_id'    => $this->GetTableId(),
 			'row_actions' => $this->GetRowActions(),
 		);
 	}
@@ -58,7 +58,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 						'confirmation'  => [
 							'message'                    => 'UI:Links:ActionRow:detach:confirmation',
 							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
-							'do_not_show_again_pref_key' => 'LinkSetWorker.DetachLinkedObject',
+							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 						],
 					);
 					break;
@@ -72,7 +72,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 						'confirmation'  => [
 							'message'                    => 'UI:Links:ActionRow:delete:confirmation',
 							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
-							'do_not_show_again_pref_key' => 'LinkSetWorker.DeleteLinkedObject',
+							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 						],
 					);
 					break;

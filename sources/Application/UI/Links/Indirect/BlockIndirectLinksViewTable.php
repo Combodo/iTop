@@ -44,7 +44,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 			'view_link'     => false,
 			'menu'          => false,
 			'display_limit' => true,
-			'table_id'      => $this->sObjectClass.'_'.$this->sAttCode,
+			'table_id'      => $this->GetTableId(),
 			'zlist'         => false,
 			'extra_fields'  => $this->GetAttCodesToDisplay(),
 			'row_actions'   => $this->GetRowActions(),
@@ -66,7 +66,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 				'confirmation'  => [
 					'message'                    => 'UI:Links:ActionRow:detach:confirmation',
 					'message_row_data'           => "Remote/hyperlink",
-					'do_not_show_again_pref_key' => 'LinkSetWorker.DetachLinkedObject',
+					'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 				],
 			);
 
