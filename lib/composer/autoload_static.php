@@ -793,6 +793,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Renderer\\FormRenderer' => __DIR__ . '/../..' . '/sources/Renderer/FormRenderer.php',
         'Combodo\\iTop\\Renderer\\RenderingOutput' => __DIR__ . '/../..' . '/sources/Renderer/RenderingOutput.php',
         'Combodo\\iTop\\Router\\Router' => __DIR__ . '/../..' . '/sources/Router/Router.php',
+        'Combodo\\iTop\\Service\\Description\\EventDataDescription' => __DIR__ . '/../..' . '/sources/Application/Service/Description/EventDataDescription.php',
+        'Combodo\\iTop\\Service\\Description\\EventDescription' => __DIR__ . '/../..' . '/sources/Application/Service/Description/EventDescription.php',
         'Combodo\\iTop\\Service\\EventData' => __DIR__ . '/../..' . '/sources/Application/Service/EventData.php',
         'Combodo\\iTop\\Service\\EventHelper' => __DIR__ . '/../..' . '/sources/Application/Service/EventHelper.php',
         'Combodo\\iTop\\Service\\EventService' => __DIR__ . '/../..' . '/sources/Application/Service/EventService.php',

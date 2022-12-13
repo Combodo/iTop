@@ -428,6 +428,8 @@ return array(
     'Combodo\\iTop\\Renderer\\FormRenderer' => $baseDir . '/sources/Renderer/FormRenderer.php',
     'Combodo\\iTop\\Renderer\\RenderingOutput' => $baseDir . '/sources/Renderer/RenderingOutput.php',
     'Combodo\\iTop\\Router\\Router' => $baseDir . '/sources/Router/Router.php',
+    'Combodo\\iTop\\Service\\Description\\EventDataDescription' => $baseDir . '/sources/Application/Service/Description/EventDataDescription.php',
+    'Combodo\\iTop\\Service\\Description\\EventDescription' => $baseDir . '/sources/Application/Service/Description/EventDescription.php',
     'Combodo\\iTop\\Service\\EventData' => $baseDir . '/sources/Application/Service/EventData.php',
     'Combodo\\iTop\\Service\\EventHelper' => $baseDir . '/sources/Application/Service/EventHelper.php',
     'Combodo\\iTop\\Service\\EventService' => $baseDir . '/sources/Application/Service/EventService.php',

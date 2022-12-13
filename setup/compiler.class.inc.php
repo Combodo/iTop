@@ -1097,11 +1097,65 @@ EOF
 		$sName = $oEvent->getAttribute('id');
 		$aEventDescription = DesignElement::ToArray($oEvent);
 
-		$sDescription = var_export($aEventDescription, true);
+		// array (
+		//  'description' => 'An object insert in the database has been requested. All changes to the object will be persisted automatically.',
+		//  'sources' =>
+		//  array (
+		//    'cmdbAbstractObject' => 'cmdbAbstractObject',
+		//  ),
+		//  'replaces' => 'DBObject::OnInsert',
+		//  'event_data' =>
+		//  array (
+		//    'object' =>
+		//    array (
+		//      'description' => 'The object inserted',
+		//      'type' => 'DBObject',
+		//    ),
+		//    'debug_info' =>
+		//    array (
+		//      'description' => 'Debug string',
+		//      'type' => 'string',
+		//    ),
+		//  ),
+		// )
 		$sConstant = $sName;
 
 		$sOutput = "const $sConstant = '$sName';\n";
-		$sOutput .= "Combodo\iTop\Service\EventService::RegisterEvent($sName, $sDescription, '$sModuleName');\n";
+		$sOutput .= "\Combodo\iTop\Service\EventService::RegisterEvent(\n";
+		$sOutput .= "  new \Combodo\iTop\Service\Description\EventDescription(\n";
+		//$sEventName
+		$sOutput .= "    '$sName',\n";
+		//$mEventSources
+		$sOutput .= "    [\n";
+		foreach ($aEventDescription['sources'] as $sSourceId => $sSourceName) {
+			$sOutput .= "        '$sSourceId' => '$sSourceName',\n";
+		}
+		$sOutput .= "    ],\n";
+		// $sDescription
+		$sOutput .= "    '{$aEventDescription['description']}',\n";
+		// $sReplaces
+		if (isset($aEventDescription['replaces'])) {
+			$sOutput .= "    '{$aEventDescription['replaces']}',\n";
+		} else {
+			$sOutput .= "    '',\n";
+		}
+		// $aEventDataDescription
+		$sOutput .= "    [\n";
+		foreach ($aEventDescription['event_data'] as $sEventDataName => $aEventDataDescription) {
+			$sEventDataDesc = $aEventDataDescription['description'];
+			$sEventDataType = $aEventDataDescription['type'];
+ 			$sOutput .= "        new \Combodo\iTop\Service\Description\EventDataDescription(\n";
+			$sOutput .= "            '$sEventDataName',\n";
+			$sOutput .= "            '$sEventDataDesc',\n";
+			$sOutput .= "            '$sEventDataType',\n";
+			$sOutput .= "        ),\n";
+		}
+		$sOutput .= "    ],\n";
+		// $sModule
+		$sOutput .= "    '$sModuleName'\n";
+		$sOutput .= "  )\n";
+		$sOutput .= ");\n";
+
 
 		return $sOutput;
 	}

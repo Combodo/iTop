@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Service;
 
 use Closure;
+use Combodo\iTop\Service\Description\EventDescription;
 use ContextTag;
 use CoreException;
 use Exception;
@@ -281,24 +282,25 @@ class EventService
 	 * This step is mandatory before firing an event.
 	 *
 	 * @api
-	 * @param string $sEvent
-	 * @param array $aDescription
-	 * @param string $sModule
+	 * @param \Combodo\iTop\Service\Description\EventDescription $oEventDescription
 	 *
 	 * @return void
 	 */
-	public static function RegisterEvent(string $sEvent, array $aDescription, string $sModule)
+	public static function RegisterEvent(EventDescription $oEventDescription)
 	{
+		$sEvent = $oEventDescription->GetEventName();
+		$sModule = $oEventDescription->GetModule();
 		if (self::IsEventRegistered($sEvent)) {
 			$sPrevious = self::$aEventDescription[$sEvent]['module'];
 			EventHelper::Warning("The Event $sEvent defined by $sModule has already been defined in $sPrevious, check your delta");
+
 			return;
 		}
 
 		self::$aEventDescription[$sEvent] = [
-			'name'=> $sEvent,
-			'description' => $aDescription,
-			'module' => $sModule,
+			'name'        => $sEvent,
+			'description' => $oEventDescription,
+			'module'      => $sModule,
 		];
 	}
 
@@ -307,8 +309,8 @@ class EventService
 		$aRes = [];
 		$oClass = new ReflectionClass($sClass);
 		foreach (self::$aEventDescription as $sEvent => $aEventInfo) {
-			if (isset($aEventInfo['description']['sources'])) {
-				foreach ($aEventInfo['description']['sources'] as $sSource) {
+			if (is_array($aEventInfo['description']->GetSources())) {
+				foreach ($aEventInfo['description']->GetSources() as $sSource) {
 					if ($sClass == $sSource || $oClass->isSubclassOf($sSource)) {
 						$aRes[$sEvent] = $aEventInfo;
 					}
