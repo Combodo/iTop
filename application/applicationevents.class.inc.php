@@ -6,9 +6,9 @@
  */
 
 use Combodo\iTop\Service\EventService;
-use Combodo\iTop\Service\iEventEnrolment;
+use Combodo\iTop\Service\iEventServiceSetup;
 
-class ApplicationEvents implements iEventEnrolment
+class ApplicationEvents implements iEventServiceSetup
 {
 	// Startup events
 	const APPLICATION_EVENT_REQUEST_RECEIVED = 'APPLICATION_EVENT_REQUEST_RECEIVED';
@@ -17,7 +17,7 @@ class ApplicationEvents implements iEventEnrolment
 	/**
 	 * @inheritDoc
 	 */
-	public function InitEvents()
+	public function RegisterEventsAndListeners()
 	{
 		EventService::RegisterEvent(self::APPLICATION_EVENT_REQUEST_RECEIVED, [
 			'description' => 'A request was received from the network, at this point only the session is started, the configuration is not even loaded',

@@ -16,7 +16,7 @@ use utils;
 
 class EventService
 {
-	public static $aEventListeners = [];
+	private static $aEventListeners = [];
 	private static $iEventIdCounter = 0;
 	private static $aEventDescription = [];
 
@@ -26,11 +26,11 @@ class EventService
 		self::$iEventIdCounter = 0;
 		self::$aEventDescription = [];
 
-		$aEventEnrolments = utils::GetClassesForInterface(iEventEnrolment::class);
-		foreach ($aEventEnrolments as $sEventEnrolmentClass) {
-			/** @var \Combodo\iTop\Service\iEventEnrolment $oEventEnrolment */
-			$oEventEnrolment = new $sEventEnrolmentClass();
-			$oEventEnrolment->InitEvents();
+		$aEventServiceSetup = utils::GetClassesForInterface(iEventServiceSetup::class);
+		foreach ($aEventServiceSetup as $sEventServiceSetupClass) {
+			/** @var \Combodo\iTop\Service\iEventServiceSetup $oEventServiceSetup */
+			$oEventServiceSetup = new $sEventServiceSetupClass();
+			$oEventServiceSetup->RegisterEventsAndListeners();
 		}
 
 	}
