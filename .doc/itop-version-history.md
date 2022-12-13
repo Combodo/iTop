@@ -58,4 +58,6 @@ gitGraph
     checkout support/3.0
     commit id: "2022-09-12" tag: "3.0.2-1"
     checkout develop
+    checkout support/2.7
+    commit id: "2022-12-28" tag: "2.7.8"
 ```
