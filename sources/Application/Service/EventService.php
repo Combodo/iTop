@@ -14,12 +14,27 @@ use ExecutionKPI;
 use ReflectionClass;
 use utils;
 
+/**
+ * Event driven extensibility.
+ * Inspired by [PSR-14: Event Dispatcher](https://www.php-fig.org/psr/psr-14).
+ * Adapted to iTop needs in terms of event filtering (using event source or context).
+ *
+ * @package Combodo\iTop\Service
+ * @api
+ * @since 3.1.0
+ */
 class EventService
 {
 	private static $aEventListeners = [];
 	private static $iEventIdCounter = 0;
 	private static $aEventDescription = [];
 
+	/**
+	 * Initialize the Event Service. This is called by iTop.
+	 *
+	 * @internal
+	 * @return void
+	 */
 	public static function InitService()
 	{
 		self::$aEventListeners = [];
@@ -38,6 +53,7 @@ class EventService
 	/**
 	 * Register a callback for a specific event
 	 *
+	 * @api
 	 * @param string $sEvent corresponding event
 	 * @param callable $callback The callback to call
 	 * @param array|string|null $sEventSource event filtering depending on the source of the event
@@ -45,7 +61,7 @@ class EventService
 	 * @param array|string|null $context context filter
 	 * @param float $fPriority optional priority for callback order
 	 *
-	 * @return string Id of the registration (used for unregistering)
+	 * @return string Id of the registration
 	 *
 	 */
 	public static function RegisterListener(string $sEvent, callable $callback, $sEventSource = null, $aCallbackData = [], $context = null, float $fPriority = 0.0, $sModuleId = ''): string
@@ -96,6 +112,7 @@ class EventService
 	/**
 	 * Fire an event. Call all the callbacks registered for this event.
 	 *
+	 * @api
 	 * @param \Combodo\iTop\Service\EventData $oEventData
 	 *
 	 * @throws \Exception from the callback
@@ -213,7 +230,7 @@ class EventService
 	}
 
 	/**
-	 * Unregister an event
+	 * Unregister all the listeners for an event
 	 *
 	 * @param string $sEvent event to unregister
 	 */
@@ -259,6 +276,11 @@ class EventService
 	}
 
 	/**
+	 * Register an event.
+	 * This allows to describe all the events available.
+	 * This step is mandatory before firing an event.
+	 *
+	 * @api
 	 * @param string $sEvent
 	 * @param array $aDescription
 	 * @param string $sModule
@@ -297,20 +319,11 @@ class EventService
 		return $aRes;
 	}
 
-	// Intentionally duplicated from SetupUtils, not yet loaded when RegisterEvent is called
-	private static function FromCamelCase($sInput) {
-		$sPattern = '!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!';
-		preg_match_all($sPattern, $sInput, $aMatches);
-		$aRet = $aMatches[0];
-		foreach ($aRet as &$sMatch) {
-			$sMatch = $sMatch == strtoupper($sMatch) ?
-				strtolower($sMatch) :
-				lcfirst($sMatch);
-		}
-		return implode('_', $aRet);
-	}
-
 	/**
+	 * Check is an event is already registered.
+	 * Can be used to avoid exception when firing an unregistered event.
+	 *
+	 * @api
 	 * @param string $sEvent
 	 *
 	 * @return bool

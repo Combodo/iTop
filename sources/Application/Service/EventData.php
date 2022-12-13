@@ -11,7 +11,9 @@ namespace Combodo\iTop\Service;
  * Data given to the Event Service callbacks
  * Class EventServiceData
  *
+ * @api
  * @package Combodo\iTop\Service
+ * @since 3.1.0
  */
 class EventData
 {
@@ -23,9 +25,10 @@ class EventData
 	/**
 	 * EventServiceData constructor.
 	 *
-	 * @param string $sEvent
-	 * @param string|array|null $mEventSource
-	 * @param array $aEventData
+	 * @api
+	 * @param string $sEvent    Event fired
+	 * @param string|array|null $mEventSource Event source
+	 * @param array $aEventData Event data for the listeners
 	 */
 	public function __construct(string $sEvent, $mEventSource = null, array $aEventData = [])
 	{
@@ -36,13 +39,24 @@ class EventData
 	}
 
 	/**
-	 * @return string
+	 * Get the event fired.
+	 *
+	 * @api
+	 * @return string Event fired.
 	 */
 	public function GetEvent()
 	{
 		return $this->sEvent;
 	}
 
+	/**
+	 * Get any parameter from the data sent when firing the event.
+	 *
+	 * @api
+	 * @param $sParam
+	 *
+	 * @return mixed|null Parameter given when firing the event.
+	 */
 	public function Get($sParam)
 	{
 		if (is_array($this->aEventData) && isset($this->aEventData[$sParam])) {
@@ -57,7 +71,10 @@ class EventData
 	}
 
 	/**
-	 * @return mixed
+	 * Get event source of fired event.
+	 *
+	 * @api
+	 * @return mixed Source given when firing the event.
 	 */
 	public function GetEventSource()
 	{
@@ -65,7 +82,10 @@ class EventData
 	}
 
 	/**
-	 * @return array
+	 * Get all the data sent when firing the event.
+	 *
+	 * @api
+	 * @return array All the data given when firing the event.
 	 */
 	public function GetEventData(): array
 	{
@@ -81,7 +101,11 @@ class EventData
 	}
 
 	/**
-	 * @return mixed
+	 * Get the data associated with the listener.
+	 * The data were passed when registering the listener.
+	 *
+	 * @api
+	 * @return mixed The data registered with the listener.
 	 */
 	public function GetCallbackData()
 	{

@@ -9,12 +9,16 @@ namespace Combodo\iTop\Service;
 /**
  * Interface to implement in order to register the events and listeners
  *
+ * @api
+ * @package Combodo\iTop\Service
  * @since 3.1.0
  */
 interface iEventServiceSetup
 {
 	/**
 	 * Extension point to register the events and events listeners
+	 *
+	 * @api
 	 * @return void
 	 */
 	public function RegisterEventsAndListeners();
