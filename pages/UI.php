@@ -327,7 +327,6 @@ try
 
 		// Response is a \WebPage, let's handle it like legacy operations
 		$oP = $mResponse;
-		// TODO 3.1: If no route match, die instead of fallback to legacy operation dispatch and dump available routes if in dev env.
 	}
 	// Otherwise, use legacy operation
 	else {

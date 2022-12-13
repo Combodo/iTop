@@ -6,6 +6,8 @@
 
 namespace Combodo\iTop\Router;
 
+use ReflectionClass;
+use ReflectionMethod;
 use utils;
 
 /**
@@ -33,6 +35,44 @@ class Router
 		}
 
 		return static::$oSingleton;
+	}
+
+	/**
+	 * @return array{0: string, 1: string} Array of available routes namespaces and their corresponding controllers (eg. ['object' => '\Combodo\iTop\Controller\Base\Layout\ObjectController', ...])
+	 */
+	public static function GetRoutesNamespaces(): array
+	{
+		$aRoutesNamespaces = [];
+		foreach (utils::GetClassesForInterface('Combodo\iTop\Controller\iController', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']) as $sControllerFQCN) {
+			$aRoutesNamespaces[$sControllerFQCN::ROUTE_NAMESPACE] = $sControllerFQCN;
+		}
+
+		return $aRoutesNamespaces;
+	}
+
+	/**
+	 * @return array{0: string, 1: string} Array of available routes and their corresponding controllers (eg. ['object.modify' => '\Combodo\iTop\Controller\Base\Layout\ObjectController::OperationModify', ...])
+	 * @throws \ReflectionException
+	 */
+	public static function GetRoutes(): array
+	{
+		$aRoutes = [];
+		foreach (static::GetRoutesNamespaces() as $sRouteNamespace => $sRouteControllerFQCN) {
+			$oReflectionClass = new ReflectionClass($sRouteControllerFQCN);
+			foreach ($oReflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $oReflectionMethod) {
+				// Ignore non "operation" methods
+				$sPrefix = 'Operation';
+				$iPos = stripos($oReflectionMethod->name, $sPrefix);
+				if ($iPos !== 0) {
+					continue;
+				}
+
+				$sOperationName = substr($oReflectionMethod->name, $iPos + strlen($sPrefix));
+				$aRoutes[$sRouteNamespace.'.'.utils::ToSnakeCase($sOperationName)] = $sRouteControllerFQCN.'::'.$oReflectionMethod->name;
+			}
+		}
+
+		return $aRoutes;
 	}
 
 	/**********************/
@@ -161,8 +201,8 @@ class Router
 	 */
 	protected function FindControllerFromRouteNamespace(string $sRouteNamespace): ?string
 	{
-		foreach (utils::GetClassesForInterface('Combodo\iTop\Controller\iController', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']) as $sControllerFQCN) {
-			if ($sControllerFQCN::ROUTE_NAMESPACE === $sRouteNamespace) {
+		foreach (static::GetRoutesNamespaces() as $sControllerRouteNamespace => $sControllerFQCN) {
+			if ($sControllerRouteNamespace === $sRouteNamespace) {
 				return $sControllerFQCN;
 			}
 		}
