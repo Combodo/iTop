@@ -216,7 +216,7 @@ EOF
 			// As sample data will be displayed in the web browser, AttributeImage needs to be rendered with a regular HTML format, meaning its "src" looking like "data:image/png;base64,iVBORw0KGgoAAAANSUh..."
 			// Whereas for the PDF generation it needs to be rendered with a TCPPDF-compatible format, meaning its "src" looking like "@iVBORw0KGgoAAAANSUh..."
 			if ($oAttDef instanceof AttributeImage) {
-				return $this->GetAttributeImageValue($oAttDef, $oObj->Get($sAttCode), static::ENUM_OUTPUT_TYPE_SAMPLE);
+				return $this->GetAttributeImageValue($oObj, $oAttDef, $oObj->Get($sAttCode), static::ENUM_OUTPUT_TYPE_SAMPLE);
 			}
 		}
 		return parent::GetSampleData($oObj, $sAttCode);
@@ -242,7 +242,7 @@ EOF
 					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 					if ($oAttDef instanceof AttributeImage)
 					{
-						$sRet = $this->GetAttributeImageValue($oAttDef, $value, static::ENUM_OUTPUT_TYPE_REAL);
+						$sRet = $this->GetAttributeImageValue($oObj, $oAttDef, $value, static::ENUM_OUTPUT_TYPE_REAL);
 					}
 					else
 					{
@@ -280,7 +280,7 @@ EOF
 	 * @return string Rendered value of $oAttDef / $oValue according to the desired $sOutputType
 	 * @since 2.7.8
 	 */
-	protected function GetAttributeImageValue(AttributeImage $oAttDef, ormDocument $oValue, string $sOutputType)
+	protected function GetAttributeImageValue(DBObject $oObj, AttributeImage $oAttDef, ormDocument $oValue, string $sOutputType)
 	{
 		// To limit the image size in the PDF output, we have to enforce the size as height/width because max-width/max-height have no effect
 		//
@@ -295,11 +295,13 @@ EOF
 			$iMaxWidthPx = min($iDefaultMaxWidthPx, $oAttDef->Get('display_max_width'));
 			$iMaxHeightPx = min($iDefaultMaxHeightPx, $oAttDef->Get('display_max_height'));
 
-			list($iWidth, $iHeight) = utils::GetImageSize($value->GetData());
-			if (($iWidth === 0) || ($iHeight === 0)) {
+			list($iWidth, $iHeight) = utils::GetImageSize($oValue->GetData());
+			if ((is_null($iWidth)) || (is_null($iHeight)) || ($iWidth === 0) || ($iHeight === 0)) {
 				// Avoid division by zero exception (SVGs, corrupted images, ...)
 				$iNewWidth = $iDefaultMaxWidthPx;
 				$iNewHeight = $iDefaultMaxHeightPx;
+
+				$sAttCode = $oAttDef->GetCode();
 				IssueLog::Warning('AttributeImage: Cannot read image size', LogChannels::EXPORT, [
 					'ObjClass'        => get_class($oObj),
 					'ObjKey'          => $oObj->GetKey(),
