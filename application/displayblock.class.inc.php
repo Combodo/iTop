@@ -2162,12 +2162,16 @@ class MenuBlock extends DisplayBlock
 						break;
 
 					case 'UI:Menu:ModifyAll':
+					case 'UI:Menu:ModifyAll:Link':      // Link class on linkset
+					case 'UI:Menu:ModifyAll:Remote':    // Remote class on linkset
 					case 'UI:Menu:Modify':
 						$sIconClass = 'fas fa-pen';
 						$sLabel = '';
 						break;
 
 					case 'UI:Menu:BulkDelete':
+					case 'UI:Menu:BulkDelete:Link':     // Link class on linkset
+					case 'UI:Menu:BulkDelete:Remote':   // Remote class on linkset
 					case 'UI:Menu:Delete':
 						$sIconClass = 'fas fa-trash';
 						$sLabel = '';
