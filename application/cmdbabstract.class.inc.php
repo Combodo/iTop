@@ -2775,8 +2775,13 @@ JS
 		$oPage->AddUiBlock($oContentBlock);
 
 		$oForm = new Form("form_{$this->m_iFormId}");
-		$oForm->SetAction($sFormAction)
-			->SetOnSubmitJsCode("return OnSubmit('form_{$this->m_iFormId}');");
+		$oForm->SetAction($sFormAction);
+		$sOnSubmitForm = "let bOnSubmitForm = OnSubmit('form_{$this->m_iFormId}');";
+		if (isset($aExtraParams['form_on_submit_js_code'])) {
+			$oForm->SetOnSubmitJsCode($sOnSubmitForm.$aExtraParams['form_on_submit_js_code']);
+		} else {
+			$oForm->SetOnSubmitJsCode($sOnSubmitForm."return bOnSubmitForm;");
+		}
 		$oContentBlock->AddSubBlock($oForm);
 
 		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {

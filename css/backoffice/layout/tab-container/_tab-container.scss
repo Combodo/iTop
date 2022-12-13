@@ -160,7 +160,7 @@ $ibo-tab-container--tab-container--last--min-height: 60vh !default;
   .ibo-tab-container--tab-container {
     min-height: $ibo-tab-container--tab-container--min-height;
   }  
-  .ibo-tab-container--tab-container:last-child {
+  .ibo-tab-container--tab-container:last-child:not(:only-child) {
     min-height: $ibo-tab-container--tab-container--last--min-height;
   }
 }

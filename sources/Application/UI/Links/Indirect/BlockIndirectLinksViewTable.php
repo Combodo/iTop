@@ -48,6 +48,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 			'zlist'         => false,
 			'extra_fields'  => $this->GetAttCodesToDisplay(),
 			'row_actions'   => $this->GetRowActions(),
+			'currentId' => $this->GetTableId(),
 		);
 	}
 
@@ -68,6 +69,12 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 					'message_row_data'           => "Remote/hyperlink",
 					'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 				],
+			);
+
+			$aRowActions[] = array(
+				'tooltip'       => 'UI:Links:ActionRow:Modify',
+				'icon_classes'  => 'fas fa-pen',
+				'js_row_action' => "LinkSetWorker.ModifyLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw'], '{$this->GetTableId()}');",
 			);
 
 		}

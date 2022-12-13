@@ -326,15 +326,17 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
  */
 CombodoModal._ConvertButtonDefinition = function(aButtonsDefinitions){
 	const aConverted = [];
-	aButtonsDefinitions.forEach(element => {
-			const aButton = {
-				text: element.text,
-				class: element.class,
-				click: element.callback_on_click
+	if(aButtonsDefinitions !== null) {
+		aButtonsDefinitions.forEach(element => {
+				const aButton = {
+					text: element.text,
+					class: element.class,
+					click: element.callback_on_click
+				}
+				aConverted.push(aButton);
 			}
-		aConverted.push(aButton);
-		}
-	);
+		);
+	}
 	return aConverted;
 }
 

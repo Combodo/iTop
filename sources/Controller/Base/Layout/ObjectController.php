@@ -18,7 +18,6 @@ use MetaModel;
 use SecurityException;
 use utils;
 use UserRights;
-use WebPage;
 
 /**
  * Class ObjectController
@@ -65,8 +64,27 @@ class ObjectController extends AbstractController
 		}
 
 		// Prepare web page (should more likely be some kind of response object like for Symfony)
+		$aFormExtraParams = array('wizard_container' => 1);
 		if ($this->IsHandlingXmlHttpRequest()) {
 			$oPage = new AjaxPage('');
+			
+			// We display this form in a modal, once we submit (in ajax) we probably want to only close the modal 
+			$aFormExtraParams['form_on_submit_js_code'] =
+				<<<JS
+				event.preventDefault();
+				if(bOnSubmitForm === true)
+				{
+					let oForm = $(this);
+					let sUrl = oForm.attr('action');
+					let sPosting = $.post( sUrl, oForm.serialize());
+
+					/* Alerts the results */
+					sPosting.done(function(data) {
+						oForm.closest('[data-role="ibo-modal"]').dialog('close');
+					});
+				}
+JS
+				;
 		} else {
 			$oPage = new iTopWebPage('', $bPrintable);
 			$oPage->DisableBreadCrumb();
@@ -78,7 +96,7 @@ class ObjectController extends AbstractController
 		}
 
 		// Note: Code duplicated to the case 'apply_modify' in UI.php when a data integrity issue has been found
-		$oObj->DisplayModifyForm($oPage, array('wizard_container' => 1)); // wizard_container: Display the title above the form
+		$oObj->DisplayModifyForm($oPage, $aFormExtraParams); // wizard_container: Display the title above the form
 
 		return $oPage;
 	}

@@ -4,6 +4,8 @@ let LinkSetWorker = new function(){
 	const ROUTER_BASE_URL = '../pages/ajax.render.php';
 	const ROUTE_LINK_SET_DELETE_OBJECT = 'linkset.DeleteLinkedObject';
 	const ROUTE_LINK_SET_DETACH_OBJECT = 'linkset.DetachLinkedObject';
+	const ROUTE_LINK_SET_MODIFY_OBJECT = 'object.modify';
+	const ROUTE_LINK_SET_CREATE_OBJECT = 'linkset.CreateLinkedObject';
 
 	/**
 	 * CallAjaxDeleteLinkedObject.
@@ -51,8 +53,75 @@ let LinkSetWorker = new function(){
 		});
 	};
 
+	/**
+	 * CallAjaxModifyLinkedObject.
+	 *
+	 * @param {string} sLinkedObjectClass
+	 * @param {string} sLinkedObjectKey
+	 * @param {string} sTableId
+	 * @constructor
+	 */
+	const CallAjaxModifyLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, sTableId){
+		let oTable = $('#datatable_' + sTableId);
+		let oTableSettingsDialog = $('#datatable_dlg_datatable_'+sTableId);
+
+		let oOptions = {
+			title: Dict.S('UI:Links:ActionRow:Modify:Modal:Title'),
+			content: {
+				endpoint: `${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_MODIFY_OBJECT}`,
+				data: {
+					class: sLinkedObjectClass,
+					id: sLinkedObjectKey,
+				},
+			},
+			extra_options: {
+				callback_on_modal_close: function () {
+					oTableSettingsDialog.DataTableSettings('DoRefresh');
+					$(this).find("form").remove();
+					$(this).dialog('destroy');
+				}
+			},
+		}
+		CombodoModal.OpenModal(oOptions);
+	};
+
+	/**
+	 * @param {string} sTableId
+	 */
+	const CallAjaxCreateLinkedObject = function(sTableId){
+		let oTable = $('#datatable_' + sTableId);
+		let oTableSettingsDialog = $('#datatable_dlg_datatable_'+sTableId);
+		let sClass = oTable.closest('[data-role="ibo-block-links-table"]').attr('data-link-class');
+		let sAttCode = oTable.closest('[data-role="ibo-block-links-table"]').attr('data-link-attcode');
+		let sHostObjectClass = oTable.closest('[data-role="ibo-object-details"]').attr('data-object-class');
+		let sHostObjectId = oTable.closest('[data-role="ibo-object-details"]').attr('data-object-id');
+		
+		let oOptions = {
+			title: Dict.S('UI:Links:New:Modal:Title'),
+			content: {
+				endpoint: `${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_CREATE_OBJECT}`,
+				data: {
+					class: sClass,
+					att_code: sAttCode,
+					host_class: sHostObjectClass,
+					host_id: sHostObjectId
+				}
+			},
+			extra_options: {
+				callback_on_modal_close: function () {
+					oTableSettingsDialog.DataTableSettings('DoRefresh');
+					$(this).find("form").remove();
+					$(this).dialog('destroy');
+				}
+			},
+		}
+		CombodoModal.OpenModal(oOptions);
+	};
+
 	return {
 		DeleteLinkedObject: CallAjaxDeleteLinkedObject,
-		DetachLinkedObject: CallAjaxDetachLinkedObject
+		DetachLinkedObject: CallAjaxDetachLinkedObject,
+		ModifyLinkedObject: CallAjaxModifyLinkedObject,
+		CreateLinkedObject: CallAjaxCreateLinkedObject
 	}
 };
