@@ -470,6 +470,71 @@ class UtilsTest extends ItopTestCase
 	}
 
 	/**
+	 * @dataProvider ToSnakeCaseProvider
+	 * @covers       utils::ToSnakeCase
+	 *
+	 * @param string $sInput
+	 * @param string $sExpectedOutput
+	 *
+	 * @return void
+	 */
+	public function testToSnakeCase(string $sInput, string $sExpectedOutput)
+	{
+		$sTestedOutput = utils::ToSnakeCase($sInput);
+		$this->assertEquals($sExpectedOutput, $sTestedOutput, "Snake case transformation for '$sInput' doesn't match. Got '$sTestedOutput', expected '$sExpectedOutput'.");
+	}
+
+	/**
+	 * @since 3.1.0
+	 * @return \string[][]
+	 */
+	public function ToSnakeCaseProvider(): array
+	{
+		return [
+			'One word lowercase' => [
+				'hello',
+				'hello',
+			],
+			'One word uppercase' => [
+				'HELLO',
+				'hello',
+			],
+			'One word capitalize' => [
+				'Hello',
+				'hello',
+			],
+			'Two words separated with space' => [
+				'hello world',
+				'hello_world',
+			],
+			'Two words separated with underscore' => [
+				'hello_world',
+				'hello_world',
+			],
+			'Two words separated with dash' => [
+				'hello-world',
+				'hello_world',
+			],
+			'Two words separated with dot' => [
+				'hello.world',
+				'hello_world',
+			],
+			'Two words camel cased' => [
+				'HelloWorld',
+				'hello_world',
+			],
+			'Two words camel cased with acronym' => [
+				'HTMLWorld',
+				'html_world',
+			],
+			'Three words separated with underscore and space' => [
+				'hello_there world',
+				'hello_there_world',
+			],
+		];
+	}
+
+	/**
 	 * @dataProvider ToAcronymProvider
 	 * @covers       utils::ToAcronym
 	 *
