@@ -315,7 +315,8 @@ class EMailLaminas extends Email
 		if ($bForceSynchronous) {
 			return $this->SendSynchronous($aIssues, $oLog);
 		} else {
-			$bConfigASYNC = MetaModel::GetConfig()->Get('email_asynchronous');
+			$oConfig = $this->LoadConfig();
+			$bConfigASYNC = $oConfig->Get('email_asynchronous');
 			if ($bConfigASYNC) {
 				return $this->SendAsynchronous($aIssues, $oLog);
 			} else {
