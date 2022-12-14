@@ -214,7 +214,7 @@ class HTMLDOMSanitizerTest extends AbstractDOMSanitizerTest
 				'expected' => 'bar',
 			),
 			
-			'list test' => array(
+			'ordered list with attributes' => array(
 				'html' => '<ol start="100" reversed="reversed" type="I" baz="1" biz="2"><li value="101" baz="1" biz="2">Some list item</li></ol>',
 				'expected' => '<ol start="100" reversed="reversed" type="I"><li value="101">Some list item</li></ol>',
 			),
