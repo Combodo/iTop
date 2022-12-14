@@ -1127,8 +1127,10 @@ EOF
 		$sOutput .= "    '$sName',\n";
 		//$mEventSources
 		$sOutput .= "    [\n";
-		foreach ($aEventDescription['sources'] as $sSourceId => $sSourceName) {
-			$sOutput .= "        '$sSourceId' => '$sSourceName',\n";
+		if (isset($aEventDescription['sources'])) {
+			foreach ($aEventDescription['sources'] as $sSourceId => $sSourceName) {
+				$sOutput .= "        '$sSourceId' => '$sSourceName',\n";
+			}
 		}
 		$sOutput .= "    ],\n";
 		// $sDescription
@@ -1141,14 +1143,16 @@ EOF
 		}
 		// $aEventDataDescription
 		$sOutput .= "    [\n";
-		foreach ($aEventDescription['event_data'] as $sEventDataName => $aEventDataDescription) {
-			$sEventDataDesc = $aEventDataDescription['description'];
-			$sEventDataType = $aEventDataDescription['type'];
- 			$sOutput .= "        new \Combodo\iTop\Service\Description\EventDataDescription(\n";
-			$sOutput .= "            '$sEventDataName',\n";
-			$sOutput .= "            '$sEventDataDesc',\n";
-			$sOutput .= "            '$sEventDataType',\n";
-			$sOutput .= "        ),\n";
+		if (isset($aEventDescription['event_data'])) {
+			foreach ($aEventDescription['event_data'] as $sEventDataName => $aEventDataDescription) {
+				$sEventDataDesc = $aEventDataDescription['description'];
+				$sEventDataType = $aEventDataDescription['type'];
+				$sOutput .= "        new \Combodo\iTop\Service\Description\EventDataDescription(\n";
+				$sOutput .= "            '$sEventDataName',\n";
+				$sOutput .= "            '$sEventDataDesc',\n";
+				$sOutput .= "            '$sEventDataType',\n";
+				$sOutput .= "        ),\n";
+			}
 		}
 		$sOutput .= "    ],\n";
 		// $sModule
@@ -1374,12 +1378,12 @@ EOF
 				if (is_object($oCallback)) {
 					$sCallback = $oCallback->GetText();
 				} else {
-					$oExecute = $oListener->GetUniqueElement('execute', true);
-					$sExecute = trim($oExecute->GetText());
+					$oCode = $oListener->GetUniqueElement('code');
+					$sCode = trim($oCode->GetText());
 					$sCallback = "EventHook_{$sEventName}_$sListenerId";
-					$sCallbackFct = preg_replace('@^function\s*\(@', "public function $sCallback(", $sExecute);
-					if ($sExecute == $sCallbackFct) {
-						throw new DOMFormatException("Malformed tag <execute> in class: $sClass hook: $sEventName listener: $sListenerId");
+					$sCallbackFct = preg_replace('@^function\s*\(@', "public function $sCallback(", $sCode);
+					if ($sCode == $sCallbackFct) {
+						throw new DOMFormatException("Malformed tag <code> in class: $sClass hook: $sEventName listener: $sListenerId");
 					}
 					$sMethods .= "\n    $sCallbackFct\n\n";
 				}
@@ -1389,8 +1393,8 @@ EOF
 					$sEventListener = "'$sCallback'";
 				}
 
-				$sListenerPriority = (float)($oListener->GetChildText('priority', '0'));
-				$sEvents .= "\n		Combodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", $sEventListener, \$this->m_sObjectUniqId, \"$sListenerId\", null, $sListenerPriority, '$sModuleRelativeDir');";
+				$sListenerRank = (float)($oListener->GetChildText('rank', '0'));
+				$sEvents .= "\n		Combodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", $sEventListener, \$this->m_sObjectUniqId, \"$sListenerId\", null, $sListenerRank, '$sModuleRelativeDir');";
 			}
 		}
 
@@ -3684,14 +3688,14 @@ EOF;
 			$sListenerId = $oListener->getAttribute('id');
 			$sEventName = $oListener->GetChildText('event');
 
-			$oExecute = $oListener->GetUniqueElement('execute');
-			$sExecute = trim($oExecute->GetText());
+			$oCode = $oListener->GetUniqueElement('code');
+			$sCode = trim($oCode->GetText());
 			$sCallback = "{$sEventName}_{$sListenerId}";
-			$sCallbackFct = preg_replace('@^function\s*\(@', "public static function $sCallback(", $sExecute);
-			if ($sExecute == $sCallbackFct) {
-				throw new DOMFormatException("Malformed tag <execute> in event: $sEventName listener: $sListenerId");
+			$sCallbackFct = preg_replace('@^function\s*\(@', "public static function $sCallback(", $sCode);
+			if ($sCode == $sCallbackFct) {
+				throw new DOMFormatException("Malformed tag <code> in event: $sEventName listener: $sListenerId");
 			}
-			$fPriority = (float)($oListener->GetChildText('priority', '0'));
+			$fRank = (float)($oListener->GetChildText('rank', '0'));
 
 			$aFilters = [];
 			$oFilters = $oListener->GetNodes('filters/filter');
@@ -3719,7 +3723,7 @@ EOF;
 				'event_name' => $sEventName,
 				'callback'   => $sCallback,
 				'content'    => $sCallbackFct,
-				'priority'   => $fPriority,
+				'rank'   => $fRank,
 				'source'     => $sEventSource,
 				'context'    => $sContext,
 			);
@@ -3736,8 +3740,8 @@ EOF;
 			$sEventName = $aListener['event_name'];
 			$sEventSource = $aListener['source'];
 			$sContext = $aListener['context'];
-			$sPriority = $aListener['priority'];
-			$sRegister .= "\nCombodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sPriority, '$sModuleId');";
+			$sRank = $aListener['rank'];
+			$sRegister .= "\nCombodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sRank, '$sModuleId');";
 			$sCallbackFct = $aListener['content'];
 			$sMethods .= "\n    $sCallbackFct\n\n";
 		}
