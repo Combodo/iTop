@@ -42,6 +42,8 @@ class BlockList extends UIContentBlock
 	public $sDefault = '';
 	/** @var string */
 	public $sEventAttachedData = '';
+	/** @var string */
+	public $sAbsoluteUrlAppRoot;
 	/** @var array */
 	public $aExtraParams;
 	/** @var string */

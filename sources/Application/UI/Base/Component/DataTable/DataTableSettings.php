@@ -12,12 +12,35 @@ use Dict;
 use Metamodel;
 use Serializable;
 
+/**
+ * Class DataTableSettings
+ *
+ * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\DataTable
+ * @since 3.0.0
+ */
 class DataTableSettings
 {
+	/**
+	 * @var array
+	 */
     public $aClassAliases;
+	/**
+	 * @var null|string
+	 */
     public $sTableId;
+	/**
+	 * @var int
+	 */
     public $iDefaultPageSize;
+	/**
+	 * @var array
+	 */
     public $aColumns;
+	/**
+	 * @var array
+	 */
+	public $aSortOrder;
 
 
     /**

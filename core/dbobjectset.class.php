@@ -54,6 +54,18 @@ class DBObjectSet implements iDBObjectSetIterator
 	 */
 	protected $m_aAttToLoad;
 	/**
+	 * @var null|array
+	 */
+	protected $m_aExtendedDataSpec;
+	/**
+	 * @var int Maximum number of elements to retrieve
+	 */
+	protected $m_iLimitCount;
+	/**
+	 * @var int Offset from which elements should be retrieved
+	 */
+	protected $m_iLimitStart;
+	/**
 	 * @var array
 	 */
 	protected $m_aOrderBy;

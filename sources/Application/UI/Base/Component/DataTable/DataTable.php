@@ -48,6 +48,10 @@ class DataTable extends UIContentBlock
 	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
+	/**
+	 * @var string
+	 */
+	protected $sJsonData;
 	/*
 	 * array of data to display the first page
 	 */
