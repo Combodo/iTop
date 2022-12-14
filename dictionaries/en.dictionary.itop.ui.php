@@ -1422,6 +1422,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Calendar-FirstDayOfWeek' => 0,// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Create a Shortcut...',
+	'UI:Menu:FilterList' => 'Filter list...',
 	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut',
 	'UI:ShortcutListDlg:Title' => 'Create a shortcut for the list',
 	'UI:ShortcutDelete:Confirm' => 'Please confirm that wou wish to delete the shortcut(s).',
