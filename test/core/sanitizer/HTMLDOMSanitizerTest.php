@@ -86,8 +86,8 @@ class HTMLDOMSanitizerTest extends AbstractDOMSanitizerTest
 			'strong' => array(),
 			'img' => array('src', 'style', 'alt', 'title'),
 			'ul' => array('style'),
-			'ol' => array('style'),
-			'li' => array('style'),
+			'ol' => array('reversed', 'start', 'style', 'type'),
+			'li' => array('style', 'value'),
 			'h1' => array('style'),
 			'h2' => array('style'),
 			'h3' => array('style'),
@@ -213,6 +213,12 @@ class HTMLDOMSanitizerTest extends AbstractDOMSanitizerTest
 				'html' => '<html><head></head><body lang="EN-GB" link="#0563C1" vlink="#954F72">bar</body></html>',
 				'expected' => 'bar',
 			),
+			
+			'list test' => array(
+				'html' => '<ol start="100" reversed="reversed" type="I" baz="1" biz="2"><li value="101" baz="1" biz="2">Some list item</li></ol>',
+				'expected' => '<ol start="100" reversed="reversed" type="I"><li value="101">Some list item</li></ol>',
+			),
+			
 		);
 	}
 
