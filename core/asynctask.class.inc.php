@@ -181,7 +181,7 @@ abstract class AsyncTask extends DBObject
 	    if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
 	    {
 	        $aConfig = $aRetries[get_class($this)];
-	        $bExponential = (bool)$aConfig['exponential_delay'] ?? $bExponential;
+		    $bExponential = (bool) ($aConfig['exponential_delay'] ?? $bExponential);
 	    }
 	    return $bExponential;
 	}
