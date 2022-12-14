@@ -1336,6 +1336,18 @@ class WizStepModulesChoice extends WizardStep
 		if ($sConfigPath !== null)
 		{
 			$oConfig = new Config($sConfigPath);
+
+			$aParamValues = array(
+				'db_server' => $oWizard->GetParameter('db_server', ''),
+				'db_user' => $oWizard->GetParameter('db_user', ''),
+				'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
+				'db_name' => $oWizard->GetParameter('db_name', ''),
+				'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
+				'db_tls_enabled' => $oWizard->GetParameter('db_tls_enabled', false),
+				'db_tls_ca' => $oWizard->GetParameter('db_tls_ca', ''),
+			);
+			$oConfig->UpdateFromParams($aParamValues);
+
 			$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($oConfig);
 		}
 	}
