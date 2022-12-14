@@ -1462,6 +1462,7 @@ class utils
 				}
 				$aResult[] = new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL', '$sContext')");
 				$aResult[] = new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')");
+
 				break;
 
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
@@ -1515,37 +1516,76 @@ class utils
 			default:
 				// Unknown type of menu, do nothing
 		}
-		foreach ($aResult as $oMenuItem)
-		{
+		foreach ($aResult as $oMenuItem) {
 			$aActions[$oMenuItem->GetUID()] = $oMenuItem->GetMenuItem();
 		}
 
 		// Invoke the plugins
 		//
 		/** @var \iPopupMenuExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
-		{
-			if (is_object($param) && !($param instanceof DBObject))
-			{
+		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance) {
+			if (is_object($param) && !($param instanceof DBObject)) {
 				$tmpParam = clone $param; // In case the parameter is an DBObjectSet, clone it to prevent alterations
-			}
-			else
-			{
+			} else {
 				$tmpParam = $param;
 			}
-			foreach($oExtensionInstance->EnumItems($iMenuId, $tmpParam) as $oMenuItem)
-			{
-				if (is_object($oMenuItem))
-				{
+			foreach ($oExtensionInstance->EnumItems($iMenuId, $tmpParam) as $oMenuItem) {
+				if (is_object($oMenuItem)) {
 					$aActions[$oMenuItem->GetUID()] = $oMenuItem->GetMenuItem();
-					
-					foreach($oMenuItem->GetLinkedScripts() as $sLinkedScript)
-					{
+
+					foreach ($oMenuItem->GetLinkedScripts() as $sLinkedScript) {
 						$oContainerBlock->AddJsFileRelPath($sLinkedScript);
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * We cannot use iMenuId (corresponding values in iPopupMenuExtension constants) as value is always \iPopupMenuExtension::MENU_OBJLIST_TOOLKIT
+	 * whenever we are in a datatable, whereas it is included in a object tab, a dashlet or a search.
+	 *
+	 * So a {@see \ContextTag} is set on the corresponding calls.
+	 *
+	 * @return bool true if we are in a search page context, either directly or by the datatable ajax call
+	 *
+	 * @since 3.0.0
+	 *
+	 * @uses \ContextTag::TAG_SEARCH
+	 */
+	public static function IsCurrentPageASearch(): bool
+	{
+		if (ContextTag::Check(ContextTag::TAG_SEARCH)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param \DBObjectSearch $oFilter object list
+	 *
+	 * @return string|null null if we are already in a search, otherwise the URL to open this list in a search
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @uses utils::IsCurrentPageASearch()
+	 *
+	 * @since 3.0.0
+	 */
+	public static function GetDataTableSearchUrl(DBSearch $oFilter): ?string
+	{
+		if (static::IsCurrentPageASearch()) {
+			// we don't want to add the link when already in a search page !
+			return null;
+		}
+
+		$sAppRootUrl = static::GetAbsoluteUrlAppRoot();
+		$oAppContext = new ApplicationContext();
+		$sUrl = $sAppRootUrl.'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($oFilter->serialize());
+
+		return $sUrl;
 	}
 
 	/**
@@ -1555,10 +1595,10 @@ class utils
 	 */
 	public static function GetConfigFilePath($sEnvironment = null)
 	{
-		if (is_null($sEnvironment))
-		{
+		if (is_null($sEnvironment)) {
 			$sEnvironment = self::GetCurrentEnvironment();
 		}
+
 		return APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
 	}
 
