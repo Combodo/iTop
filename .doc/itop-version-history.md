@@ -32,11 +32,11 @@ gitGraph
     commit id: "2020-01-23" tag: "2.6.3"
     checkout develop
     commit id: "2020-01-29" tag: "2.7.0-beta2" type: REVERSE
-    branch support/2.7 order: 860
     commit id: "2020-04-01" tag: "2.7.0-1"
     checkout support/2.6
     commit id: "2020-04-22" tag: "2.6.4"
-    checkout support/2.7
+    checkout develop
+    branch support/2.7 order: 860
     commit id: "2020-06-26" tag: "2.7.1"
     checkout support/2.7
     commit id: "2020-12-09" tag: "2.7.3"
