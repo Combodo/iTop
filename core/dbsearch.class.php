@@ -773,14 +773,14 @@ abstract class DBSearch
      * @see DBSearch::ToOQL()
      *
 	 * @param string $sQuery The OQL to convert to a DBSearch
-	 * @param mixed[string]  $aParams array of <mixed> params index by <string> name
+	 * @param array $aParams array of <mixed> params index by <string> name
 	 * @param ModelReflection|null $oMetaModel The MetaModel to use when checking the consistency of the OQL
      *
 	 * @return DBObjectSearch|DBUnionSearch
      *
 	 * @throws OQLException
 	 */
-	static public function FromOQL($sQuery, $aParams = null, ModelReflection $oMetaModel=null)
+	public static function FromOQL($sQuery, $aParams = null, ModelReflection $oMetaModel=null)
 	{
 		if (empty($sQuery))
 		{
