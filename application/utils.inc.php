@@ -2724,7 +2724,7 @@ HTML;
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']): array
+	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = []): array
 	{
 		$aMatchingClasses = [];
 

@@ -42,7 +42,7 @@ class EventService
 		self::$iEventIdCounter = 0;
 		self::$aEventDescription = [];
 
-		$aEventServiceSetup = utils::GetClassesForInterface(iEventServiceSetup::class);
+		$aEventServiceSetup = utils::GetClassesForInterface(iEventServiceSetup::class, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']);
 		foreach ($aEventServiceSetup as $sEventServiceSetupClass) {
 			/** @var \Combodo\iTop\Service\iEventServiceSetup $oEventServiceSetup */
 			$oEventServiceSetup = new $sEventServiceSetupClass();
