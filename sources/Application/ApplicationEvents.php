@@ -1,9 +1,10 @@
 <?php
-
 /*
  * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+namespace Combodo\iTop\Application;
 
 use Combodo\iTop\Service\Description\EventDescription;
 use Combodo\iTop\Service\EventService;
