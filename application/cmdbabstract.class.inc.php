@@ -3374,13 +3374,14 @@ EOF
 			// Consider only the "expected" fields for the target state
 			if (array_key_exists($sAttCode, $aExpectedAttributes)) {
 				$iExpectCode = $aExpectedAttributes[$sAttCode];
+
 				// Prompt for an attribute if
 				// - the attribute must be changed or must be displayed to the user for confirmation
 				// - or the field is mandatory and currently empty
 				if (($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
-					(($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) == ''))) {
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					(($iExpectCode & OPT_ATT_MANDATORY) && (false === $this->HasAValue($sAttCode)))) {
 					$aArgs = array('this' => $this);
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					// If the field is mandatory, set it to the only possible value
 					if ((!$oAttDef->IsNullAllowed()) || ($iExpectCode & OPT_ATT_MANDATORY)) {
 						if ($oAttDef->IsExternalKey()) {

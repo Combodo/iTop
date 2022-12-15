@@ -706,6 +706,17 @@ abstract class AttributeDefinition
 	}
 
 	/**
+	 * @param mixed $proposedValue
+	 *
+	 * @return bool True if $proposedValue is an actual value set in the attribute, false is the attribute remains "empty"
+	 * @since 3.0.3, 3.1.0 N°5784
+	 */
+	public function HasAValue(mixed $proposedValue): bool
+	{
+		return utils::IsNotNullOrEmptyString($proposedValue);
+	}
+
+	/**
 	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
 	 *
 	 * @param $proposedValue
@@ -2233,6 +2244,15 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		return false;
 	}
+
+	/**
+	 * @inheritDoc
+	 * @param \ormLinkSet $proposedValue
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return $proposedValue->Count() > 0;
+	}
 }
 
 /**
@@ -2711,6 +2731,14 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 	public function IsNull($proposedValue)
 	{
 		return ($proposedValue == 0);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return ((int) $proposedValue) !== 0;
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -4477,6 +4505,22 @@ class AttributeCaseLog extends AttributeLongText
 
 		return ($proposedValue->GetText() == '');
 	}
+
+	/**
+	 * @inheritDoc
+	 * @param \ormCaseLog $proposedValue
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (! ($proposedValue instanceof ormCaseLog)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		// TODO: What do we want to do? Check if there is a new entry or if the entire log is empty?
+		return utils::IsNotNullOrEmptyString($proposedValue->GetLatestEntry());
+	}
+
 
 	public function ScalarToSQL($value)
 	{
@@ -6798,6 +6842,14 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return ($proposedValue == 0);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return ((int) $proposedValue) !== 0;
+	}
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
@@ -8105,6 +8157,21 @@ class AttributeBlob extends AttributeDefinition
 		return $oFormField;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		if (!($proposedValue instanceof ormDocument)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		/** @var \ormDocument $proposedValue */
+		// TODO: How do we implement this? Keep in mind the example of the "empty file" PR on combodo-email-synchro
+		return utils::IsNullOrEmptyString($proposedValue->GetData()) && utils::IsNullOrEmptyString($proposedValue->GetFileName());
+	}
+
+
 }
 
 /**
@@ -9131,6 +9198,17 @@ class AttributeStopWatch extends AttributeDefinition
 
 		return $sRet;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// TODO: How to implement this?
+		return parent::HasAValue($proposedValue);
+	}
+
+
 }
 
 /**
@@ -9665,6 +9743,15 @@ class AttributeTable extends AttributeDBField
 		return (count($proposedValue) == 0);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return count($proposedValue) > 0;
+	}
+
+
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		return '';
@@ -10184,6 +10271,19 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 		/** @var \ormSet $proposedValue */
 		return $proposedValue->Count() == 0;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		if (!($proposedValue instanceof ormSet)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		/** @var \ormSet $proposedValue */
+		return $proposedValue->Count() > 0;
 	}
 
 	/**
@@ -12893,6 +12993,17 @@ class AttributeCustomFields extends AttributeDefinition
 
 		return $bEquals;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// TODO: How to implement this?
+		return parent::HasAValue($proposedValue);
+	}
+
+
 }
 
 class AttributeArchiveFlag extends AttributeBoolean
