@@ -10,6 +10,7 @@ namespace Combodo\iTop\Service\Description;
  * Description of the data given with an event when registering
  *
  * @api
+ * @package EventsAPI
  * @since 3.1.0
  */
 class EventDataDescription

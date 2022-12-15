@@ -20,7 +20,7 @@ use utils;
  * Inspired by [PSR-14: Event Dispatcher](https://www.php-fig.org/psr/psr-14).
  * Adapted to iTop needs in terms of event filtering (using event source or context).
  *
- * @package Combodo\iTop\Service
+ * @package EventsAPI
  * @api
  * @since 3.1.0
  */

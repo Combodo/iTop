@@ -12,7 +12,7 @@ namespace Combodo\iTop\Service;
  * Class EventServiceData
  *
  * @api
- * @package Combodo\iTop\Service
+ * @package EventsAPI
  * @since 3.1.0
  */
 class EventData

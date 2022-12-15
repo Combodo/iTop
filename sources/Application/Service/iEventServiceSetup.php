@@ -10,7 +10,7 @@ namespace Combodo\iTop\Service;
  * Interface to implement in order to register the events and listeners
  *
  * @api
- * @package Combodo\iTop\Service
+ * @package EventsAPI
  * @since 3.1.0
  */
 interface iEventServiceSetup
