@@ -528,7 +528,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Status bepaalt wie op de hoogte zal gesteld worden: enkel de testontvanger, iedereen (Aan, CC en BCC) of niemand',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Enkel de testontvanger zal op de hoogte gesteld worden',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Alle Aan, CC en BCC bestemmingen zullen op de hoogte gesteld worden',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Alle Aan, CC en BCC  zullen op de hoogte gesteld worden',
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'De e-mailmelding zal niet verstuurd worden',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testontvanger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Bestemming als de status op "Test" staat',
