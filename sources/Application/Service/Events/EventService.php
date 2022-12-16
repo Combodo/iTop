@@ -1,13 +1,13 @@
 <?php
-/**
- * @copyright   Copyright (C) 2010-2020 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Service;
+namespace Combodo\iTop\Service\Events;
 
 use Closure;
-use Combodo\iTop\Service\Description\EventDescription;
+use Combodo\iTop\Service\Events\Description\EventDescription;
 use ContextTag;
 use CoreException;
 use Exception;
@@ -44,7 +44,7 @@ class EventService
 
 		$aEventServiceSetup = utils::GetClassesForInterface(iEventServiceSetup::class, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']);
 		foreach ($aEventServiceSetup as $sEventServiceSetupClass) {
-			/** @var \Combodo\iTop\Service\iEventServiceSetup $oEventServiceSetup */
+			/** @var \Combodo\iTop\Service\Events\iEventServiceSetup $oEventServiceSetup */
 			$oEventServiceSetup = new $sEventServiceSetupClass();
 			$oEventServiceSetup->RegisterEventsAndListeners();
 		}
@@ -114,7 +114,7 @@ class EventService
 	 * Fire an event. Call all the callbacks registered for this event.
 	 *
 	 * @api
-	 * @param \Combodo\iTop\Service\EventData $oEventData
+	 * @param \Combodo\iTop\Service\Events\EventData $oEventData
 	 *
 	 * @throws \Exception from the callback
 	 */
@@ -282,7 +282,7 @@ class EventService
 	 * This step is mandatory before firing an event.
 	 *
 	 * @api
-	 * @param \Combodo\iTop\Service\Description\EventDescription $oEventDescription
+	 * @param \Combodo\iTop\Service\Events\Description\EventDescription $oEventDescription
 	 *
 	 * @return void
 	 */

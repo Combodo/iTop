@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Service\Description;
+namespace Combodo\iTop\Service\Events\Description;
 
 /**
  * Description of an event when registering
@@ -20,7 +20,7 @@ class EventDescription
 	private $mEventSources;
 	private string $sDescription;
 	private string $sReplaces;
-	/** @var \Combodo\iTop\Service\Description\EventDataDescription[]  */
+	/** @var \Combodo\iTop\Service\Events\Description\EventDataDescription[]  */
 	private array $aEventDataDescription;
 	private string $sModule;
 
@@ -32,7 +32,7 @@ class EventDescription
 	 * @param string|string[]|null $mEventSources Source(s) for this event (can be the root class for CRUD events)
 	 * @param string $sDescription Description of the event
 	 * @param string $sReplaces In case this event obsoletes previous extensibility functions
-	 * @param \Combodo\iTop\Service\Description\EventDataDescription[] $aEventDataDescription Description of the data associated with this event
+	 * @param \Combodo\iTop\Service\Events\Description\EventDataDescription[] $aEventDataDescription Description of the data associated with this event
 	 * @param string $sModule iTop Module name where the event is defined
 	 */
 	public function __construct(string $sEventName, $mEventSources, string $sDescription, string $sReplaces, array $aEventDataDescription, string $sModule)
@@ -102,7 +102,7 @@ class EventDescription
 	}
 
 	/**
-	 * @param \Combodo\iTop\Service\Description\EventDataDescription[]s $aEventDataDescription
+	 * @param \Combodo\iTop\Service\Events\Description\EventDataDescription[]s $aEventDataDescription
 	 */
 	public function SetEventDataDescription(array $aEventDataDescription): void
 	{

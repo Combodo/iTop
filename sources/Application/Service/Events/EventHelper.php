@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Service;
+namespace Combodo\iTop\Service\Events;
 
 use IssueLog;
 use LogChannels;

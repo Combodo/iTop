@@ -6,9 +6,9 @@
 
 namespace Combodo\iTop\Application;
 
-use Combodo\iTop\Service\Description\EventDescription;
-use Combodo\iTop\Service\EventService;
-use Combodo\iTop\Service\iEventServiceSetup;
+use Combodo\iTop\Service\Events\Description\EventDescription;
+use Combodo\iTop\Service\Events\EventService;
+use Combodo\iTop\Service\Events\iEventServiceSetup;
 
 class ApplicationEvents implements iEventServiceSetup
 {

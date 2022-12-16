@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Service\Description;
+namespace Combodo\iTop\Service\Events\Description;
 
 /**
  * Description of the data given with an event when registering
