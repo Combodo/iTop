@@ -320,7 +320,7 @@ function DisplayEvents(WebPage $oPage, $sClass)
 	$aColumns = [
 		'event'    => ['label' => 'Event'],
 		'listener' => ['label' => 'Listener'],
-		'priority' => ['label' => 'Priority'],
+		'priority' => ['label' => 'Rank'],
 		'module'   => ['label' => 'Module'],
 	];
 	$aRows = [];
@@ -331,14 +331,14 @@ function DisplayEvents(WebPage $oPage, $sClass)
 			if ($aListener['callback'][0] != $sClass) {
 				$oListenerReflectionClass = new ReflectionClass(get_class($aListener['callback'][0]));
 				if (!$oListenerReflectionClass->isSubclassOf($sClass)) {
-					$sListenerClass = get_class($aListener['callback'][0]);
+					$sListenerClass = $oListenerReflectionClass->getName();
 				} elseif (!$oReflectionClass->hasMethod($aListener['callback'][1])) {
 					continue;
 				}
 			}
 			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
 		} else {
-			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
+			$sListener = $aListener['callback'].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
 		}
 		$aRows[] = [
 			'event'    => $aListener['event'],
