@@ -309,8 +309,8 @@ class EventService
 		$aRes = [];
 		$oClass = new ReflectionClass($sClass);
 		foreach (self::$aEventDescription as $sEvent => $aEventInfo) {
-			if (is_array($aEventInfo['description']->GetSources())) {
-				foreach ($aEventInfo['description']->GetSources() as $sSource) {
+			if (is_array($aEventInfo['description']->GetEventSources())) {
+				foreach ($aEventInfo['description']->GetEventSources() as $sSource) {
 					if ($sClass == $sSource || $oClass->isSubclassOf($sSource)) {
 						$aRes[$sEvent] = $aEventInfo;
 					}

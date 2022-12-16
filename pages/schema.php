@@ -274,10 +274,11 @@ function DisplayEvents(WebPage $oPage, $sClass)
 	];
 	$aRows = [];
 	foreach ($aEvents as $sEvent => $aEventInfo) {
-		$aDesc = $aEventInfo['description'];
+		/** @var \Combodo\iTop\Service\Events\Description\EventDescription $oDesc */
+		$oDesc = $aEventInfo['description'];
 		$aRows[] = [
 			'event'       => $sEvent,
-			'description' => $aDesc['description'] ?? '',
+			'description' => $oDesc->GetDescription(),
 		];
 	}
 	$oTable = DataTableUIBlockFactory::MakeForStaticData(Dict::S('UI:Schema:Events:Defined'), $aColumns, $aRows);
