@@ -456,7 +456,7 @@
       </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_CHECK_TO_WRITE" _delta="define">
-      <description>Check an object before it is written into the database (no change possible)</description>
+      <description>Check an object before it is written into the database (no change possible). Call DBObject::AddCheckIssue() to signal an issue</description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -466,10 +466,6 @@
           <description>The object to check</description>
           <type>DBObject</type>
         </event_datum>
-        <event_datum id="error_messages">
-          <description>Array of strings where all the errors found during the object checking are added</description>
-          <type>array</type>
-        </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
@@ -477,7 +473,7 @@
       </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_CHECK_TO_DELETE" _delta="define">
-      <description>Check an object before it is deleted from the database (no change possible)</description>
+      <description>Check an object before it is deleted from the database (no change possible). Call DBObject::AddDeleteIssue() to signal an issue</description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -486,10 +482,6 @@
         <event_datum id="object">
           <description>The object to check</description>
           <type>DBObject</type>
-        </event_datum>
-        <event_datum id="error_messages">
-          <description>Array of strings where all the errors found during the object checking are added</description>
-          <type>array</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
@@ -521,6 +513,42 @@
       <event_data>
         <event_datum id="object">
           <description>The object unarchived</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
+    <event id="EVENT_SERVICE_DB_SET_ATTRIBUTES_FLAGS" _delta="define">
+      <description>Set object attributes flags. Call cmdbAbstractObject::AddAttributeFlags() for all the attributes to be set for this target state.</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
+          <description>The current object</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="target_state">
+          <description>The target state in which to evaluate the flags</description>
+          <type>array</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
+    <event id="EVENT_SERVICE_DB_SET_INITIAL_ATTRIBUTES_FLAGS" _delta="define">
+      <description>Set object initial attributes flags. Call cmdbAbstractObject::AddInitialAttributeFlags() for all the initial attributes to be set initially.</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
+          <description>The current object</description>
           <type>DBObject</type>
         </event_datum>
         <event_datum id="debug_info">

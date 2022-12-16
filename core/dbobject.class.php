@@ -1750,7 +1750,7 @@ abstract class DBObject implements iDisplay
      *
 	 * @param string $sAttCode $sAttCode The code of the attribute
 	 * @param array  $aReasons To store the reasons why the attribute is read-only (info about the synchro replicas)
-	 * @param string $sTargetState The target state in which to evalutate the flags, if empty the current state will be used
+	 * @param string $sTargetState The target state in which to evaluate the flags, if empty the current state will be used
 	 *
 	 * @return integer the binary combination of flags for the given attribute in the given state of the object.
 	 * Values can be one of the OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY, ... (see define in metamodel.class.php)
@@ -1793,7 +1793,8 @@ abstract class DBObject implements iDisplay
 				$iSynchroFlags |= OPT_ATT_READONLY;
 			}
 		}
-		return $iFlags | $iSynchroFlags; // Combine both sets of flags
+		$iExtensionsFlags = $this->GetExtensionsAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $iFlags | $iSynchroFlags | $iExtensionsFlags; // Combine both sets of flags
 	}
 
     /**
@@ -1910,7 +1911,9 @@ abstract class DBObject implements iDisplay
 			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 			$iFlags = MetaModel::GetInitialStateAttributeFlags($sClass, $this->Get($sStateAttCode), $sAttCode);
 		}
-		return $iFlags; // No need to care about the synchro flags since we'll be creating a new object anyway
+
+		$iExtensionsFlags = $this->GetExtensionsInitialStateAttributeFlags($sAttCode, $aReasons);
+		return $iFlags | $iExtensionsFlags; // No need to care about the synchro flags since we'll be creating a new object anyway
 	}
 
 	/**
@@ -2355,7 +2358,7 @@ abstract class DBObject implements iDisplay
 			}
 
 			$this->SetReadOnly('No modification allowed during CheckToWrite');
-			$this->EventCheckToWrite(['error_messages' => &$this->m_aCheckIssues]);
+			$this->EventCheckToWrite();
 			$this->SetReadWrite();
 
 			$this->DoCheckToWrite();
@@ -2387,7 +2390,7 @@ abstract class DBObject implements iDisplay
 	{
 		$this->m_aDeleteIssues = array(); // Ok
 
-		$this->EventCheckToDelete(['error_messages' => &$this->m_aDeleteIssues]);
+		$this->EventCheckToDelete();
 
 		if ($this->InSyncScope())
 		{
@@ -5819,6 +5822,28 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @param string $sIssue
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function AddCheckIssue(string $sIssue)
+	{
+		$this->m_aCheckIssues[] = $sIssue;
+	}
+
+	/**
+	 * @param string $sIssue
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function AddDeleteIssue(string $sIssue)
+	{
+		$this->m_aDeleteIssues[] = $sIssue;
+	}
+
+	/**
 	 * @param $sEvent
 	 * @param array $aEventData
 	 *
@@ -5854,11 +5879,11 @@ abstract class DBObject implements iDisplay
 	{
 	}
 
-	protected function EventCheckToWrite(array $aEventData)
+	protected function EventCheckToWrite()
 	{
 	}
 
-	protected function EventCheckToDelete(array $aEventData)
+	protected function EventCheckToDelete()
 	{
 	}
 
@@ -5889,6 +5914,16 @@ abstract class DBObject implements iDisplay
 
 	protected function EventUnarchive()
 	{
+	}
+
+	protected function GetExtensionsAttributeFlags(string $sAttCode, array &$aReasons, string $sTargetState): int
+	{
+		return 0;
+	}
+
+	protected function GetExtensionsInitialStateAttributeFlags(string $sAttCode, array &$aReasons): int
+	{
+		return 0;
 	}
 }
 

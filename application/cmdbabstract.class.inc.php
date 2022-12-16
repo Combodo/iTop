@@ -39,8 +39,8 @@ use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksViewTable;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksViewTable;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksViewTable;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
@@ -176,6 +176,13 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 * @var bool
 	 */
 	protected $bAllowDelete;
+
+
+	/** @var array attributes flags cache [target_state][attcode]['flags'] */
+	protected $aAttributesFlags;
+	/** @var array initial attributes flags cache [attcode]['flags'] */
+	protected $aInitialAttributesFlags;
+
 
 	/**
 	 * Constructor from a row of data (as a hash 'attcode' => value)
@@ -5669,25 +5676,21 @@ JS
 	}
 
 	/**
-	 * @param array $aEventData
-	 *
 	 * @return void
 	 * @throws \CoreException
 	 */
-	final protected function EventCheckToWrite(array $aEventData)
+	final protected function EventCheckToWrite()
 	{
-		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_WRITE, $aEventData);
+		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_WRITE);
 	}
 
 	/**
-	 * @param array $aEventData
-	 *
 	 * @return void
 	 * @throws \CoreException
 	 */
-	final protected function EventCheckToDelete(array $aEventData)
+	final protected function EventCheckToDelete()
 	{
-		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_DELETE, $aEventData);
+		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_DELETE);
 	}
 
 	/**
@@ -5746,6 +5749,120 @@ JS
 	final protected function EventUnarchive()
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_UNARCHIVE);
+	}
+
+	/**
+	 * Append attribute flags
+	 *
+	 * @param string $sAttCode
+	 * @param int $iFlags
+	 * @param string $sTargetState
+	 * @param string|null $sReason
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function AddAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', string $sReason = null)
+	{
+		if (!isset($this->aAttributesFlags[$sTargetState])) {
+			$this->aAttributesFlags[$sTargetState] = [];
+		}
+		$this->aAttributesFlags[$sTargetState][$sAttCode]['flags'] = ($this->aAttributesFlags[$sTargetState][$sAttCode]['flags'] ?? 0) | $iFlags;
+		if (!is_null($sReason)) {
+			$this->aAttributesFlags[$sTargetState][$sAttCode]['reasons'][] = $sReason;
+		}
+	}
+
+	/**
+	 * Force attribute state
+	 *
+	 * @param string $sAttCode
+	 * @param int $iFlags
+	 * @param string $sTargetState
+	 * @param string|null $sReason
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function ForceAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', string $sReason = null)
+	{
+		if (!isset($this->aAttributesFlags[$sTargetState])) {
+			$this->aAttributesFlags[$sTargetState] = [];
+		}
+		$this->aAttributesFlags[$sTargetState][$sAttCode]['flags'] = $iFlags;
+		if (!is_null($sReason)) {
+			$this->aAttributesFlags[$sTargetState][$sAttCode]['reasons'] = [$sReason];
+		}
+	}
+
+	final protected function GetExtensionsAttributeFlags(string $sAttCode, array &$aReasons, string $sTargetState): int
+	{
+		if (!isset($this->aAttributesFlags[$sTargetState])) {
+			$this->aAttributesFlags[$sTargetState] = [];
+			$aEventData = [
+				'target_state' => $sTargetState,
+			];
+			$this->FireEvent(EVENT_SERVICE_DB_SET_ATTRIBUTES_FLAGS, $aEventData);
+		}
+		$iFlags = $this->aAttributesFlags[$sTargetState][$sAttCode]['flags'] ?? 0;
+		$aReasons += ($this->aAttributesFlags[$sTargetState][$sAttCode]['reasons'] ?? []);
+
+		return $iFlags;
+	}
+
+
+	/**
+	 * Append attribute flags
+	 *
+	 * @param string $sAttCode
+	 * @param int $iFlags
+	 * @param string|null $sReason
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function AddInitialAttributeFlags(string $sAttCode, int $iFlags, string $sReason = null)
+	{
+		if (!isset($this->aInitialAttributesFlags)) {
+			$this->aInitialAttributesFlags = [];
+		}
+		$this->aInitialAttributesFlags[$sAttCode]['flags'] = ($this->aInitialAttributesFlags[$sAttCode]['flags'] ?? 0) | $iFlags;
+		if (!is_null($sReason)) {
+			$this->aInitialAttributesFlags[$sAttCode]['reasons'][] = $sReason;
+		}
+	}
+
+	/**
+	 * Force attribute state
+	 *
+	 * @param string $sAttCode
+	 * @param int $iFlags
+	 * @param string|null $sReason
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function ForceInitialAttributeFlags(string $sAttCode, int $iFlags, string $sReason = null)
+	{
+		if (!isset($this->aInitialAttributesFlags)) {
+			$this->aInitialAttributesFlags = [];
+		}
+		$this->aInitialAttributesFlags[$sAttCode]['flags'] = $iFlags;
+		if (!is_null($sReason)) {
+			$this->aInitialAttributesFlags[$sAttCode]['reasons'] = [$sReason];
+		}
+	}
+
+	final protected function GetExtensionsInitialStateAttributeFlags(string $sAttCode, array &$aReasons): int
+	{
+		if (!isset($this->aInitialAttributesFlags)) {
+			$this->aInitialAttributesFlags = [];
+			$this->FireEvent(EVENT_SERVICE_DB_SET_INITIAL_ATTRIBUTES_FLAGS);
+		}
+		$iFlags = $this->aInitialAttributesFlags[$sAttCode]['flags'] ?? 0;
+		$aReasons += ($this->aInitialAttributesFlags[$sAttCode]['reasons'] ?? []);
+
+		return $iFlags;
 	}
 
 }
