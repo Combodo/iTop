@@ -35,11 +35,16 @@ require_once(APPROOT.'application/newsroomprovider.class.inc.php');
  * @package     Extensibility
  * @since       2.7.0
  */
+
+/**
+ * @since       2.7.0
+ */
 interface iLoginExtension
 {
 	/**
 	 * Return the list of supported login modes for this plugin
 	 *
+	 * @api
 	 * @return array of supported login modes
 	 */
 	public function ListSupportedLoginModes();
@@ -66,6 +71,17 @@ interface iLoginFSMExtension extends iLoginExtension
 }
 
 /**
+ * Login automaton
+ *
+ * Execute the action corresponding to the current login state.
+ *
+ *  * If a page is displayed, the action must exit at this point
+ *  * if LoginWebPage::LOGIN_FSM_RETURN_ERROR is returned $iErrorCode must be set
+ *  * if LoginWebPage::LOGIN_FSM_RETURN_OK is returned then the login is OK and terminated
+ *  * if LoginWebPage::LOGIN_FSM_RETURN_IGNORE is returned then the FSM will proceed to next plugin or to next state
+ *
+ * @api
+ * @package LoginExtensibilityAPI
  * @since 2.7.0
  */
 abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
@@ -112,6 +128,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	/**
 	 * Initialization
 	 *
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -125,6 +142,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	 * Detect login mode explicitly without respecting configured order (legacy mode)
 	 * In most case do nothing here
 	 *
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -139,8 +157,9 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	 * This step can be called multiple times by the FSM:
 	 * for example:
 	 * 1 - display login form
-	 * 2 - read the values posted by the user
+	 * 2 - read the values posted by the user (store that in session)
 	 *
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -151,9 +170,10 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 
 	/**
-	 * Control the validity of the data provided by the user
+	 * Control the validity of the data from the session
 	 * Automatic user provisioning can be done here
 	 *
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -164,6 +184,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 
 	/**
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -174,6 +195,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 
 	/**
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -184,6 +206,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 
 	/**
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -194,6 +217,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 
 	/**
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -205,22 +229,30 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 }
 
 /**
+ * @api
+ * @package LoginExtensibilityAPI
  * @since 2.7.0
  */
 interface iLogoutExtension extends iLoginExtension
 {
 	/**
 	 * Execute all actions to log out properly
+	 * @api
 	 */
 	public function LogoutAction();
 }
 
 /**
+ * Login page extensibility
+ *
+ * @api
+ * @package UIExtensibilityAPI
  * @since 2.7.0
  */
 interface iLoginUIExtension extends iLoginExtension
 {
 	/**
+	 * @api
 	 * @return LoginTwigContext
 	 */
 	public function GetTwigContext();
@@ -228,18 +260,20 @@ interface iLoginUIExtension extends iLoginExtension
 
 /**
  * @api
- * @package     Extensibility
+ * @package     PreferencesExtensibilityAPI
  * @since 2.7.0
  */
 interface iPreferencesExtension
 {
 	/**
+	 * @api
 	 * @param \WebPage $oPage
 	 *
 	 */
 	public function DisplayPreferences(WebPage $oPage);
 
 	/**
+	 * @api
 	 * @param \WebPage $oPage
 	 * @param string $sOperation
 	 *
@@ -252,7 +286,7 @@ interface iPreferencesExtension
  * Extend this class instead of implementing iPreferencesExtension if you don't need to overload all methods
  *
  * @api
- * @package     Extensibility
+ * @package     PreferencesExtensibilityAPI
  * @since       2.7.0
  */
 abstract class AbstractPreferencesExtension implements iPreferencesExtension
@@ -298,7 +332,7 @@ abstract class AbstractPreferencesExtension implements iPreferencesExtension
  * A recommended pattern is to cache data by the mean of static members.
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @deprecated
  */
 interface iApplicationUIExtension
@@ -321,6 +355,7 @@ interface iApplicationUIExtension
 	 * }
 	 * </code>
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being displayed
 	 * @param WebPage $oPage The output context
 	 * @param boolean $bEditMode True if the edition form is being displayed
@@ -334,6 +369,7 @@ interface iApplicationUIExtension
 	 *
 	 * The method is called rigth after all the tabs have been displayed
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being displayed
 	 * @param WebPage $oPage The output context
 	 * @param boolean $bEditMode True if the edition form is being displayed
@@ -348,6 +384,7 @@ interface iApplicationUIExtension
 	 * The method is called after the changes from the standard form have been
 	 * taken into account, and before saving the changes into the database.
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being edited
 	 * @param string $sFormPrefix Prefix given to the HTML form inputs
 	 *
@@ -362,6 +399,7 @@ interface iApplicationUIExtension
 	 * javascript into the edition form, and if that code requires to store temporary data
 	 * (this is the case when a file must be uploaded).
 	 *
+	 * @api
 	 * @param string $sTempId Unique temporary identifier made of session_id and transaction_id. It identifies the object in a unique way.
 	 *
 	 * @return void
@@ -373,6 +411,7 @@ interface iApplicationUIExtension
 	 *
 	 * Sorry, the verb has been reserved. You must implement it, but it is not called as of now.
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being displayed
 	 *
 	 * @return string[] desc
@@ -384,6 +423,7 @@ interface iApplicationUIExtension
 	 *
 	 * Sorry, the verb has been reserved. You must implement it, but it is not called as of now.
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being displayed
 	 *
 	 * @return string Path of the icon, relative to the modules directory.
@@ -403,6 +443,7 @@ interface iApplicationUIExtension
 	 * * HILIGHT_CLASS_OK
 	 * * HILIGHT_CLASS_NONE
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being displayed
 	 *
 	 * @return integer The value representing the mood of the object
@@ -429,6 +470,7 @@ interface iApplicationUIExtension
 	 *
 	 * See also iPopupMenuExtension for greater flexibility
 	 *
+	 * @api
 	 * @param DBObjectSet $oSet A set of persistent objects (DBObject)
 	 *
 	 * @return array
@@ -440,7 +482,7 @@ interface iApplicationUIExtension
  * Extend this class instead of implementing iApplicationUIExtension if you don't need to overload
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since       2.7.0
  * @deprecated
  */
@@ -509,13 +551,13 @@ abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
 }
 
 /**
- * Implement this interface to perform specific things when objects are manipulated
+ * Implement this interface to perform specific operations when objects are manipulated
  *
  * Note that those methods will be called when objects are manipulated, either in a programmatic way
  * or through the GUI.
  *
  * @api
- * @package     Extensibility
+ * @package     ORMExtensibilityAPI
  */
 interface iApplicationObjectExtension
 {
@@ -528,6 +570,7 @@ interface iApplicationObjectExtension
 	 * If the extension returns false, then the framework will perform the usual evaluation.
 	 * Otherwise, the answer is definitively "yes, the object has changed".
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 *
 	 * @return boolean True if something has changed for the target object
@@ -540,6 +583,7 @@ interface iApplicationObjectExtension
 	 * The GUI calls this verb and reports any issue.
 	 * Anyhow, this API can be called in other contexts such as the CSV import tool.
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 *
 	 * @return string[] A list of errors message. An error message is made of one line and it can be displayed to the end-user.
@@ -553,6 +597,7 @@ interface iApplicationObjectExtension
 	 *
 	 * Please not that it is not possible to cascade deletion by this mean: only stopper issues can be handled.
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 *
 	 * @return string[] A list of errors message. An error message is made of one line and it can be displayed to the end-user.
@@ -568,6 +613,7 @@ interface iApplicationObjectExtension
 	 * * {@see DBObject::ListPreviousValuesForUpdatedAttributes()} : list of changed attributes and their values before the change
 	 * * {@see DBObject::Get()} : for a given attribute the new value that was persisted
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
 	 *     once for all the changes made within the current page
@@ -583,6 +629,7 @@ interface iApplicationObjectExtension
 	 *
 	 * The method is called right <b>after</b> the object has been written to the database.
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
 	 *     once for all the changes made within the current page
@@ -596,6 +643,7 @@ interface iApplicationObjectExtension
 	 *
 	 * The method is called right <b>before</b> the object will be deleted from the database.
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
 	 *     once for all the changes made within the current page
@@ -609,7 +657,7 @@ interface iApplicationObjectExtension
  * Extend this class instead of iApplicationObjectExtension if you don't need to overload all methods
  *
  * @api
- * @package     Extensibility
+ * @package     ORMExtensibilityAPI
  * @since       2.7.0
  */
 abstract class AbstractApplicationObjectExtension implements iApplicationObjectExtension
@@ -669,7 +717,7 @@ abstract class AbstractApplicationObjectExtension implements iApplicationObjectE
  * by the application, as long as the class definition is included somewhere in the code
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 interface iPopupMenuExtension
@@ -678,18 +726,21 @@ interface iPopupMenuExtension
 	 * Insert an item into the Actions menu of a list
 	 *
 	 * $param is a DBObjectSet containing the list of objects
+	 * @api
 	 */
 	const MENU_OBJLIST_ACTIONS = 1;
 	/**
 	 * Insert an item into the Toolkit menu of a list
 	 *
 	 * $param is a DBObjectSet containing the list of objects
+	 * @api
 	 */
 	const MENU_OBJLIST_TOOLKIT = 2;
 	/**
 	 * Insert an item into the Actions menu on an object details page
 	 *
 	 * $param is a DBObject instance: the object currently displayed
+	 * @api
 	 */
 	const MENU_OBJDETAILS_ACTIONS = 3;
 	/**
@@ -699,12 +750,14 @@ interface iPopupMenuExtension
 	 * is being displayed.
 	 *
 	 * $param is a Dashboard instance: the dashboard currently displayed
+	 * @api
 	 */
 	const MENU_DASHBOARD_ACTIONS = 4;
 	/**
 	 * Insert an item into the User menu (upper right corner)
 	 *
 	 * $param is null
+	 * @api
 	 */
 	const MENU_USER_ACTIONS = 5;
 	/**
@@ -712,6 +765,7 @@ interface iPopupMenuExtension
 	 *
 	 * $param is an array('portal_id' => $sPortalId, 'object' => $oObject) containing the portal id and a DBObject instance (the object on
 	 * the current line)
+	 * @api
 	 */
 	const PORTAL_OBJLISTITEM_ACTIONS = 7;
 	/**
@@ -719,6 +773,7 @@ interface iPopupMenuExtension
 	 *
 	 * $param is an array('portal_id' => $sPortalId, 'object' => $oObject) containing the portal id and a DBObject instance (the object
 	 * currently displayed)
+	 * @api
 	 */
 	const PORTAL_OBJDETAILS_ACTIONS = 8;
 
@@ -728,6 +783,7 @@ interface iPopupMenuExtension
 	 *
 	 * $param is an array('portal_id' => $sPortalId, 'object_set' => $oSet) containing DBObjectSet containing the list of objects
 	 *
+	 * @api
 	 * @todo
 	 */
 	const PORTAL_OBJLIST_ACTIONS = 6;
@@ -737,6 +793,7 @@ interface iPopupMenuExtension
 	 *
 	 * $param is the portal id
 	 *
+	 * @api
 	 * @todo
 	 */
 	const PORTAL_USER_ACTIONS = 9;
@@ -746,6 +803,7 @@ interface iPopupMenuExtension
 	 *
 	 * $param is the portal id
 	 *
+	 * @api
 	 * @todo
 	 */
 	const PORTAL_MENU_ACTIONS = 10;
@@ -756,6 +814,7 @@ interface iPopupMenuExtension
 	 * This method is called by the framework for each menu.
 	 * The items will be inserted in the menu in the order of the returned array.
 	 *
+	 * @api
 	 * @param int $iMenuId The identifier of the type of menu, as listed by the constants MENU_xxx
 	 * @param mixed $param Depends on $iMenuId, see the constants defined above
 	 *
@@ -768,7 +827,7 @@ interface iPopupMenuExtension
  * Base class for the various types of custom menus
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 abstract class ApplicationPopupMenuItem
@@ -788,7 +847,6 @@ abstract class ApplicationPopupMenuItem
 	 * Constructor
 	 *
 	 * @api
-	 *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
 	 */
@@ -835,6 +893,7 @@ abstract class ApplicationPopupMenuItem
 	}
 
 	/**
+	 * @api
 	 * @param $aCssClasses
 	 */
 	public function SetCssClasses($aCssClasses)
@@ -845,6 +904,7 @@ abstract class ApplicationPopupMenuItem
 	/**
 	 * Adds a CSS class to the CSS classes that will be put on the menu item
 	 *
+	 * @api
 	 * @param $sCssClass
 	 */
 	public function AddCssClass($sCssClass)
@@ -855,7 +915,8 @@ abstract class ApplicationPopupMenuItem
 
 	/**
 	 * @param $sTooltip
-	 * 
+	 *
+	 * @api
 	 * @since 3.0.0
 	 */
 	public function SetTooltip($sTooltip)
@@ -865,7 +926,8 @@ abstract class ApplicationPopupMenuItem
 
 	/**
 	 * @return string
-	 * 
+	 *
+	 * @api
 	 * @since 3.0.0
 	 */
 	public function GetTooltip()
@@ -875,7 +937,8 @@ abstract class ApplicationPopupMenuItem
 	
 	/**
 	 * @param $sIconClass
-	 * 
+	 *
+	 * @api
 	 * @since 3.0.0
 	 */
 	public function SetIconClass($sIconClass)
@@ -886,6 +949,7 @@ abstract class ApplicationPopupMenuItem
 	/**
 	 * @return string
 	 *
+	 * @api
 	 * @since 3.0.0
 	 */
 	public function GetIconClass()
@@ -914,7 +978,7 @@ abstract class ApplicationPopupMenuItem
  * Note: This works only in the backoffice, {@see \URLButtonItem} for the end-user portal
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 class URLPopupMenuItem extends ApplicationPopupMenuItem
@@ -927,6 +991,7 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 	/**
 	 * Constructor
 	 *
+	 * @api
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
 	 * @param string $sUrl If the menu is an hyperlink, provide the absolute hyperlink here
@@ -970,7 +1035,7 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
  * Note: This works only in the backoffice, {@see \JSButtonItem} for the end-user portal
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 class JSPopupMenuItem extends ApplicationPopupMenuItem
@@ -986,7 +1051,6 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	 * Class for adding an item that triggers some Javascript code
 	 *
 	 * @api
-	 *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
 	 * @param string $sJSCode In case the menu consists in executing some havascript code inside the page, pass it here. If supplied $sURL
@@ -1039,7 +1103,7 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
  * will automatically reduce several consecutive separators to just one
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
@@ -1048,6 +1112,7 @@ class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
 
 	/**
 	 * Constructor
+	 * @api
 	 */
 	public function __construct()
 	{
@@ -1065,7 +1130,7 @@ class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
  * Class for adding an item as a button that browses to the given URL
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 class URLButtonItem extends URLPopupMenuItem
@@ -1077,7 +1142,7 @@ class URLButtonItem extends URLPopupMenuItem
  * Class for adding an item as a button that runs some JS code
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 class JSButtonItem extends JSPopupMenuItem
@@ -1101,7 +1166,7 @@ class JSButtonItem extends JSPopupMenuItem
  * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  * @deprecated 3.0.0 If you need to include:
  *   * JS/CSS files/snippets, use {@see \iBackofficeLinkedScriptsExtension}, {@see \iBackofficeLinkedStylesheetsExtension}, etc instead
@@ -1112,6 +1177,7 @@ interface iPageUIExtension
 	/**
 	 * Add content to the header of the page
 	 *
+	 * @api
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
 	 * @return string The HTML content to add into the page
@@ -1121,6 +1187,7 @@ interface iPageUIExtension
 	/**
 	 * Add content to the footer of the page
 	 *
+	 * @api
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
 	 * @return string The HTML content to add into the page
@@ -1130,6 +1197,7 @@ interface iPageUIExtension
 	/**
 	 * Add content to the "admin banner"
 	 *
+	 * @api
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
 	 * @return string The HTML content to add into the page
@@ -1153,7 +1221,7 @@ interface iPageUIExtension
  * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
  *
  * @api
- * @package     Extensibility
+ * @package     UIBlockExtensibilityAPI
  * @since 3.0.0
  */
 interface iPageUIBlockExtension
@@ -1161,6 +1229,7 @@ interface iPageUIBlockExtension
 	/**
 	 * Add content to the "admin banner"
 	 *
+	 * @api
 	 * @return iUIBlock|null The Block to add into the page
 	 */
 	public function GetBannerBlock();
@@ -1168,6 +1237,7 @@ interface iPageUIBlockExtension
 	/**
 	 * Add content to the header of the page
 	 *
+	 * @api
 	 * @return iUIBlock|null The Block to add into the page
 	 */
 	public function GetHeaderBlock();
@@ -1175,6 +1245,7 @@ interface iPageUIBlockExtension
 	/**
 	 * Add content to the footer of the page
 	 *
+	 * @api
 	 * @return iUIBlock|null The Block to add into the page
 	 */
 	public function GetFooterBlock();
@@ -1184,7 +1255,7 @@ interface iPageUIBlockExtension
  * Extend this class instead of iPageUIExtension if you don't need to overload all methods
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since       2.7.0
  * @deprecated 3.0.0 use AbstractPageUIBlockExtension instead
  */
@@ -1226,7 +1297,7 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
  * Extend this class instead of iPageUIExtension if you don't need to overload all methods
  *
  * @api
- * @package     Extensibility
+ * @package     UIBlockExtensibilityAPI
  * @since       3.0.0
  */
 abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
@@ -1261,12 +1332,15 @@ abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
  *
  * @see \iTopWebPage::$a_linked_scripts
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeLinkedScriptsExtension
 {
 	/**
-	 * @see \iTopWebPage::$a_linked_scripts Each script will be included using this property
+	 * Each script will be included using this property
+	 * @api
+	 * @see \iTopWebPage::$a_linked_scripts
 	 * @return array An array of absolute URLs to the files to include
 	 */
 	public function GetLinkedScriptsAbsUrls(): array;
@@ -1278,11 +1352,13 @@ interface iBackofficeLinkedScriptsExtension
  *
  * @see \iTopWebPage::$a_early_scripts
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeEarlyScriptExtension
 {
 	/**
+	 * @api
 	 * @see \iTopWebPage::$a_early_scripts
 	 * @return string
 	 */
@@ -1294,11 +1370,13 @@ interface iBackofficeEarlyScriptExtension
  *
  * @see \iTopWebPage::$a_scripts
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeScriptExtension
 {
 	/**
+	 * @api
 	 * @see \iTopWebPage::$a_scripts
 	 * @return string
 	 */
@@ -1310,11 +1388,13 @@ interface iBackofficeScriptExtension
  *
  * @see \iTopWebPage::$a_init_scripts
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeInitScriptExtension
 {
 	/**
+	 * @api
 	 * @see \iTopWebPage::$a_init_scripts
 	 * @return string
 	 */
@@ -1326,11 +1406,13 @@ interface iBackofficeInitScriptExtension
  *
  * @see \iTopWebPage::$a_ready_scripts
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeReadyScriptExtension
 {
 	/**
+	 * @api
 	 * @see \iTopWebPage::$a_ready_scripts
 	 * @return string
 	 */
@@ -1342,11 +1424,13 @@ interface iBackofficeReadyScriptExtension
  *
  * @see \iTopWebPage::$a_linked_stylesheets
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeLinkedStylesheetsExtension
 {
 	/**
+	 * @api
 	 * @see \iTopWebPage::$a_linked_stylesheets
 	 * @return array An array of absolute URLs to the files to include
 	 */
@@ -1358,11 +1442,13 @@ interface iBackofficeLinkedStylesheetsExtension
  *
  * @see \iTopWebPage::$a_styles
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeStyleExtension
 {
 	/**
+	 * @api
 	 * @see \iTopWebPage::$a_styles
 	 * @return string
 	 */
@@ -1374,11 +1460,13 @@ interface iBackofficeStyleExtension
  *
  * @see \iTopWebPage::$a_dict_entries
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeDictEntriesExtension
 {
 	/**
+	 * @api
 	 * @see \iTopWebPage::a_dict_entries
 	 * @return array
 	 */
@@ -1390,11 +1478,13 @@ interface iBackofficeDictEntriesExtension
  *
  * @see \iTopWebPage::$a_dict_entries_prefixes
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeDictEntriesPrefixesExtension
 {
 	/**
+	 * @api
 	 * @see \iTopWebPage::a_dict_entries_prefixes
 	 * @return array
 	 */
@@ -1405,7 +1495,7 @@ interface iBackofficeDictEntriesPrefixesExtension
  * Implement this interface to add content to any enhanced portal page
  *
  * @api
- * @package     Extensibility
+ * @package     PortalExtensibilityAPI
  *
  * @since 2.4.0 interface creation
  * @since 2.7.0 change method signatures due to Silex to Symfony migration
@@ -1419,6 +1509,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns an array of CSS file urls
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return array
@@ -1428,6 +1519,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns inline (raw) CSS
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
@@ -1437,6 +1529,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns an array of JS file urls
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return array
@@ -1446,6 +1539,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns raw JS code
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
@@ -1455,6 +1549,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns raw HTML code to put at the end of the <body> tag
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
@@ -1464,6 +1559,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns raw HTML code to put at the end of the #main-wrapper element
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
@@ -1473,6 +1569,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns raw HTML code to put at the end of the #topbar and #sidebar elements
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
@@ -1484,7 +1581,7 @@ interface iPortalUIExtension
  * Extend this class instead of iPortalUIExtension if you don't need to overload all methods
  *
  * @api
- * @package     Extensibility
+ * @package     PortalExtensibilityAPI
  * @since       2.4.0
  */
 abstract class AbstractPortalUIExtension implements iPortalUIExtension
@@ -1550,7 +1647,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
  * Implement this interface to add new operations to the REST/JSON web service
  *
  * @api
- * @package     Extensibility
+ * @package     RESTExtensibilityAPI
  * @since 2.0.1
  */
 interface iRestServiceProvider
@@ -1558,6 +1655,7 @@ interface iRestServiceProvider
 	/**
 	 * Enumerate services delivered by this class
 	 *
+	 * @api
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
 	 *
 	 * @return array An array of hash 'verb' => verb, 'description' => description
@@ -1567,6 +1665,7 @@ interface iRestServiceProvider
 	/**
 	 * Enumerate services delivered by this class
 	 *
+	 * @api
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
 	 * @param string $sVerb
 	 * @param array $aParams
@@ -1580,69 +1679,92 @@ interface iRestServiceProvider
  * Minimal REST response structure. Derive this structure to add response data and error codes.
  *
  * @api
- * @package     Extensibility
+ * @package     RESTExtensibilityAPI
  * @since 2.0.1
  */
 class RestResult
 {
 	/**
 	 * Result: no issue has been encountered
+	 * @api
 	 */
 	const OK = 0;
 	/**
 	 * Result: missing/wrong credentials or the user does not have enough rights to perform the requested operation
+	 * @api
 	 */
 	const UNAUTHORIZED = 1;
 	/**
 	 * Result: the parameter 'version' is missing
+	 * @api
 	 */
 	const MISSING_VERSION = 2;
 	/**
 	 * Result: the parameter 'json_data' is missing
+	 * @api
 	 */
 	const MISSING_JSON = 3;
 	/**
 	 * Result: the input structure is not a valid JSON string
+	 * @api
 	 */
 	const INVALID_JSON = 4;
 	/**
 	 * Result: the parameter 'auth_user' is missing, authentication aborted
+	 * @api
 	 */
 	const MISSING_AUTH_USER = 5;
 	/**
 	 * Result: the parameter 'auth_pwd' is missing, authentication aborted
+	 * @api
 	 */
 	const MISSING_AUTH_PWD = 6;
 	/**
 	 * Result: no operation is available for the specified version
+	 * @api
 	 */
 	const UNSUPPORTED_VERSION = 10;
 	/**
 	 * Result: the requested operation is not valid for the specified version
+	 * @api
 	 */
 	const UNKNOWN_OPERATION = 11;
 	/**
 	 * Result: the requested operation cannot be performed because it can cause data (integrity) loss
+	 * @api
 	 */
 	const UNSAFE = 12;
 	/**
 	 * Result: the request page number is not valid. It must be an integer greater than 0
+	 * @api
 	 */
 	const INVALID_PAGE = 13;
 	/**
 	 * Result: the operation could not be performed, see the message for troubleshooting
+	 * @api
 	 */
 	const INTERNAL_ERROR = 100;
 
 	/**
 	 * Default constructor - ok!
+	 * @api
 	 */
 	public function __construct()
 	{
 		$this->code = RestResult::OK;
 	}
 
+	/**
+	 * Result code
+	 * @var int
+	 * @api
+	 */
 	public $code;
+	/**
+	 * Result message
+	 * @var string
+	 * @api
+	 */
 	public $message;
 }
 
@@ -1650,7 +1772,7 @@ class RestResult
  * Helpers for implementing REST services
  *
  * @api
- * @package     Extensibility
+ * @package     RESTExtensibilityAPI
  */
 class RestUtils
 {
@@ -1675,9 +1797,7 @@ class RestUtils
 	 * Read a mandatory parameter from  from a Rest/Json structure.
 	 *
 	 * @api
-	 *
 	 * @param string $sParamName Name of the parameter to fetch from the input data
-	 *
 	 * @param StdClass $oData Structured input data. Must contain the entry defined by sParamName.
 	 *
 	 * @return mixed parameter value if present
@@ -1697,10 +1817,9 @@ class RestUtils
 
 
 	/**
-	 * Read an optional parameter from  from a Rest/Json structure.
+	 * Read an optional parameter from a Rest/Json structure.
 	 *
 	 * @api
-	 *
 	 * @param string $sParamName Name of the parameter to fetch from the input data
 	 * @param mixed $default Default value if the parameter is not found in the input data
 	 *
@@ -1723,12 +1842,10 @@ class RestUtils
 
 
 	/**
-	 * Read a class  from a Rest/Json structure.
+	 * Read a class from a Rest/Json structure.
 	 *
 	 * @api
-	 *
 	 * @param string $sParamName Name of the parameter to fetch from the input data
-	 *
 	 * @param StdClass $oData Structured input data. Must contain the entry defined by sParamName.
 	 *
 	 * @return string
@@ -1750,7 +1867,6 @@ class RestUtils
 	 * Read a list of attribute codes from a Rest/Json structure.
 	 *
 	 * @api
-	 *
 	 * @param StdClass $oData Structured input data.
 	 * @param string $sParamName Name of the parameter to fetch from the input data
 	 *
@@ -1852,7 +1968,6 @@ class RestUtils
 	 * Find an object from a polymorph search specification (Rest/Json)
 	 *
 	 * @api
-	 *
 	 * @param mixed $key Either search criteria (substructure), or an object or an OQL string.
 	 * @param bool $bAllowNullValue Allow the cases such as key = 0 or key = {null} and return null then
 	 * @param string $sClass Name of the class
@@ -1959,7 +2074,6 @@ class RestUtils
 	 * Interpret the Rest/Json value and get a valid attribute value
 	 *
 	 * @api
-	 *
 	 * @param string $sAttCode Attribute code
 	 * @param mixed $value Depending on the type of attribute (a scalar, or search criteria, or list of related objects...)
 	 * @param string $sClass Name of the class
@@ -2026,7 +2140,6 @@ class RestUtils
 	 * Interpret a Rest/Json structure that defines attribute values, and build an object
 	 *
 	 * @api
-	 *
 	 * @param array $aFields A hash of attribute code => value specification.
 	 * @param string $sClass Name of the class
 	 *
@@ -2056,7 +2169,6 @@ class RestUtils
 	 * Interpret a Rest/Json structure that defines attribute values, and update the given object
 	 *
 	 * @api
-	 *
 	 * @param array $aFields A hash of attribute code => value specification.
 	 * @param DBObject $oObject The object being modified
 	 *
@@ -2093,5 +2205,8 @@ class RestUtils
  */
 interface iModuleExtension
 {
+	/**
+	 * @api
+	 */
 	public function __construct();
 }
