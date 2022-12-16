@@ -25,8 +25,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
 
 
 /**

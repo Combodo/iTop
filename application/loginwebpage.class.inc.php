@@ -26,8 +26,8 @@
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\Helper\Session;
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
 
 /**
  * Web page used for displaying the login form

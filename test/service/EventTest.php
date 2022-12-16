@@ -2,9 +2,9 @@
 
 namespace Combodo\iTop\Test\UnitTest\Service;
 
-use Combodo\iTop\Service\Description\EventDescription;
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Service\Events\Description\EventDescription;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use ContextTag;
 use Exception;

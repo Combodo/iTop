@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Service\Events\EventService;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -335,9 +335,9 @@ function DisplayEvents(WebPage $oPage, $sClass)
 					continue;
 				}
 			}
-			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\EventData $oEventData)';
+			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
 		} else {
-			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1].'(\Combodo\iTop\Service\EventData $oEventData)';
+			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
 		}
 		$aRows[] = [
 			'event'    => $aListener['event'],

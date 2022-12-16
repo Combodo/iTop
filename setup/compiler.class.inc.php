@@ -1121,8 +1121,8 @@ EOF
 		$sConstant = $sName;
 
 		$sOutput = "const $sConstant = '$sName';\n";
-		$sOutput .= "\Combodo\iTop\Service\EventService::RegisterEvent(\n";
-		$sOutput .= "  new \Combodo\iTop\Service\Description\EventDescription(\n";
+		$sOutput .= "\Combodo\iTop\Service\Events\EventService::RegisterEvent(\n";
+		$sOutput .= "  new \Combodo\iTop\Service\Events\Description\EventDescription(\n";
 		//$sEventName
 		$sOutput .= "    '$sName',\n";
 		//$mEventSources
@@ -1147,7 +1147,7 @@ EOF
 			foreach ($aEventDescription['event_data'] as $sEventDataName => $aEventDataDescription) {
 				$sEventDataDesc = $aEventDataDescription['description'];
 				$sEventDataType = $aEventDataDescription['type'];
-				$sOutput .= "        new \Combodo\iTop\Service\Description\EventDataDescription(\n";
+				$sOutput .= "        new \Combodo\iTop\Service\Events\Description\EventDataDescription(\n";
 				$sOutput .= "            '$sEventDataName',\n";
 				$sOutput .= "            '$sEventDataDesc',\n";
 				$sOutput .= "            '$sEventDataType',\n";
@@ -1394,7 +1394,7 @@ EOF
 				}
 
 				$sListenerRank = (float)($oListener->GetChildText('rank', '0'));
-				$sEvents .= "\n		Combodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", $sEventListener, \$this->m_sObjectUniqId, \"$sListenerId\", null, $sListenerRank, '$sModuleRelativeDir');";
+				$sEvents .= "\n		Combodo\iTop\Service\Events\EventService::RegisterListener(\"$sEventName\", $sEventListener, \$this->m_sObjectUniqId, \"$sListenerId\", null, $sListenerRank, '$sModuleRelativeDir');";
 			}
 		}
 
@@ -3741,7 +3741,7 @@ EOF;
 			$sEventSource = $aListener['source'];
 			$sContext = $aListener['context'];
 			$sRank = $aListener['rank'];
-			$sRegister .= "\nCombodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sRank, '$sModuleId');";
+			$sRegister .= "\nCombodo\iTop\Service\Events\EventService::RegisterListener(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sRank, '$sModuleId');";
 			$sCallbackFct = $aListener['content'];
 			$sMethods .= "\n    $sCallbackFct\n\n";
 		}

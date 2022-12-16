@@ -17,8 +17,8 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\ApplicationEvents;
 use Combodo\iTop\Application\Helper\Session;
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
 
 require_once(APPROOT.'core/cmdbobject.class.inc.php');
 require_once(APPROOT.'application/utils.inc.php');

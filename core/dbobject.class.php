@@ -5,8 +5,8 @@
  */
 
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
 
 /**
  * All objects to be displayed in the application (either as a list or as details)
