@@ -71,7 +71,7 @@ interface iLoginFSMExtension extends iLoginExtension
 }
 
 /**
- * Login automaton
+ * Login finite state machine
  *
  * Execute the action corresponding to the current login state.
  *
