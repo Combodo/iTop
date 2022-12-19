@@ -149,7 +149,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 *
 	 * @return string do not show again preference key
 	 */
-	protected function GetDoNotShowAgainPreferenceKey()
+	protected function GetDoNotShowAgainPreferenceKey(): string
 	{
 		return "{$this->GetTableId()}.remove_link.do_not_show_again";
 	}
