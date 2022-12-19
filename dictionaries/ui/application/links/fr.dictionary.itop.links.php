@@ -19,10 +19,10 @@
 
 // Display DataTable
 Dict::Add('FR FR', 'French', 'Français', array(
-	'UI:Links:ActionRow:detach'              => 'Détacher',
-	'UI:Links:ActionRow:detach+'             => 'Détacher cet objet',
-	'UI:Links:ActionRow:detach:confirmation' => 'Voulez-vous détacher <b>{item}</b> de l\'objet courant ?',
-	'UI:Links:ActionRow:delete'              => 'Supprimer',
-	'UI:Links:ActionRow:delete+'             => 'Supprimer cet objet',
-	'UI:Links:ActionRow:delete:confirmation' => 'Voulez-vous supprimer <b>{item}</b> de l\'objet courant ?',
+	'UI:Links:ActionRow:Detach'              => 'Détacher',
+	'UI:Links:ActionRow:Detach+'             => 'Détacher cet objet',
+	'UI:Links:ActionRow:Detach:Confirmation' => 'Voulez-vous détacher <b>{item}</b> de l\'objet courant ?',
+	'UI:Links:ActionRow:Delete'              => 'Supprimer',
+	'UI:Links:ActionRow:Delete+'             => 'Supprimer cet objet',
+	'UI:Links:ActionRow:Delete:Confirmation' => 'Voulez-vous supprimer <b>{item}</b> de l\'objet courant ?',
 ));
