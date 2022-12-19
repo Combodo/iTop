@@ -139,7 +139,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 *
 	 * @return string table identifier
 	 */
-	protected function GetTableId()
+	protected function GetTableId(): string
 	{
 		return $this->sObjectClass.'_'.$this->sAttCode;
 	}
