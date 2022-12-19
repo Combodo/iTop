@@ -395,7 +395,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 				}
 			},
 			{
-				text: oOptions.confirm_button_label != null ? oOptions.confirm_button_label : Dict.S('UI:Button:Confirm'),
+				text: oOptions.confirm_button_label ?? Dict.S('UI:Button:Confirm'),
 				class: 'ibo-is-primary',
 				callback_on_click: function () {
 					// Call confirm handler and close dialog
