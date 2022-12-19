@@ -59,8 +59,8 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 		if (!$this->oAttDef->GetReadOnly()) {
 
 			$aRowActions[] = array(
-				'label'         => 'UI:Links:ActionRow:detach',
-				'tooltip'       => 'UI:Links:ActionRow:detach+',
+				'label'         => 'UI:Links:ActionRow:Detach',
+				'tooltip'       => 'UI:Links:ActionRow:Detach+',
 				'icon_classes'  => 'fas fa-minus',
 				'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw']);",
 				'confirmation'  => [

@@ -242,8 +242,8 @@ class BlockDirectLinksEditTable extends UIContentBlock
 
 				case LINKSET_RELATIONTYPE_LINK:
 					$aRowActions[] = array(
-						'label'         => 'UI:Links:ActionRow:detach',
-						'tooltip'       => 'UI:Links:ActionRow:detach+',
+						'label'         => 'UI:Links:ActionRow:Detach',
+						'tooltip'       => 'UI:Links:ActionRow:Detach+',
 						'icon_classes'  => 'fas fa-minus',
 						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
 					);
@@ -251,8 +251,8 @@ class BlockDirectLinksEditTable extends UIContentBlock
 
 				case LINKSET_RELATIONTYPE_PROPERTY:
 					$aRowActions[] = array(
-						'label'         => 'UI:Links:ActionRow:delete',
-						'tooltip'       => 'UI:Links:ActionRow:delete+',
+						'label'         => 'UI:Links:ActionRow:Delete',
+						'tooltip'       => 'UI:Links:ActionRow:Delete+',
 						'icon_classes'  => 'fas fa-trash',
 						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
 					);

@@ -19,10 +19,10 @@
 
 // Display DataTable
 Dict::Add('EN US', 'English', 'English', array(
-	'UI:Links:ActionRow:detach'              => 'Detach',
-	'UI:Links:ActionRow:detach+'             => 'Detach this object',
-	'UI:Links:ActionRow:detach:confirmation' => 'Do you really want to detach <b>{item}</b> from current object ?',
-	'UI:Links:ActionRow:delete'              => 'Delete',
-	'UI:Links:ActionRow:delete+'             => 'Delete this object',
-	'UI:Links:ActionRow:delete:confirmation' => 'Do you really want to delete <b>{item}</b> from current object ?',
+	'UI:Links:ActionRow:Detach'              => 'Detach',
+	'UI:Links:ActionRow:Detach+'             => 'Detach this object',
+	'UI:Links:ActionRow:Detach:Confirmation' => 'Do you really want to detach <b>{item}</b> from current object ?',
+	'UI:Links:ActionRow:Delete'              => 'Delete',
+	'UI:Links:ActionRow:Delete+'             => 'Delete this object',
+	'UI:Links:ActionRow:Delete:Confirmation' => 'Do you really want to delete <b>{item}</b> from current object ?',
 ));
