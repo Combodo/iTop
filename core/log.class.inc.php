@@ -551,7 +551,7 @@ class LogChannels
 
 	/**
 	 * @var string
-	 * @since 2.7.8
+	 * @since 2.7.9
 	 */
 	const EXPORT = 'export';
 
