@@ -1819,11 +1819,13 @@ class MenuBlock extends DisplayBlock
 					$oSelectedClassFilter->SetSelectedClasses([$sSelectedAlias]);
 
 					// Action identifier is using the alias on purpose so they can be used as "shortcut actions" easily for "Link" or "Remote" aliases on linksets.
+					// Action label dict code has a specific suffix for "Link" / "Remote" aliases to allow dedicated labels in linksets.
+					$sActionLabelCodeSuffix = in_array($sSelectedAlias, ['Link', 'Remote']) ? $sSelectedAlias : 'Class';
 					if ($bIsBulkModifyAllowed) {
-						$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:ModifyAll:'.$sSelectedAlias, Dict::Format('UI:Menu:ModifyAll_Class', $sSelectedClassName));
+						$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:ModifyAll:'.$sSelectedAlias, Dict::Format('UI:Menu:ModifyAll_'.$sActionLabelCodeSuffix, $sSelectedClassName));
 					}
 					if ($bIsBulkDeleteAllowed) {
-						$this->AddBulkDeleteObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:BulkDelete:'.$sSelectedAlias, Dict::Format('UI:Menu:BulkDelete_Class', $sSelectedClassName));
+						$this->AddBulkDeleteObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:BulkDelete:'.$sSelectedAlias, Dict::Format('UI:Menu:BulkDelete_'.$sActionLabelCodeSuffix, $sSelectedClassName));
 					}
 				}
 
