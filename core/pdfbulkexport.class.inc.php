@@ -216,7 +216,7 @@ EOF
 			// As sample data will be displayed in the web browser, AttributeImage needs to be rendered with a regular HTML format, meaning its "src" looking like "data:image/png;base64,iVBORw0KGgoAAAANSUh..."
 			// Whereas for the PDF generation it needs to be rendered with a TCPPDF-compatible format, meaning its "src" looking like "@iVBORw0KGgoAAAANSUh..."
 			if ($oAttDef instanceof AttributeImage) {
-				return $this->GetAttributeImageValue($oObj, $oAttDef, $oObj->Get($sAttCode), static::ENUM_OUTPUT_TYPE_SAMPLE);
+				return $this->GetAttributeImageValue($oObj, $sAttCode, static::ENUM_OUTPUT_TYPE_SAMPLE);
 			}
 		}
 		return parent::GetSampleData($oObj, $sAttCode);
@@ -242,7 +242,7 @@ EOF
 					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 					if ($oAttDef instanceof AttributeImage)
 					{
-						$sRet = $this->GetAttributeImageValue($oObj, $oAttDef, $value, static::ENUM_OUTPUT_TYPE_REAL);
+						$sRet = $this->GetAttributeImageValue($oObj, $sAttCode, static::ENUM_OUTPUT_TYPE_REAL);
 					}
 					else
 					{
@@ -273,15 +273,22 @@ EOF
 	}
 
 	/**
-	 * @param \AttributeImage $oAttDef Instance of image attribute
-	 * @param \ormDocument $oValue Value of image attribute
+	 * @param \DBObject $oObj
+	 * @param string $sAttCode
 	 * @param string $sOutputType {@see \PDFBulkExport::ENUM_OUTPUT_TYPE_SAMPLE}, {@see \PDFBulkExport::ENUM_OUTPUT_TYPE_REAL}
 	 *
 	 * @return string Rendered value of $oAttDef / $oValue according to the desired $sOutputType
-	 * @since 2.7.8
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 2.7.8 N°2244 method creation
+	 * @since 2.7.9 N°5588 signature change to get the object so that we can log all the needed information
 	 */
-	protected function GetAttributeImageValue(DBObject $oObj, AttributeImage $oAttDef, ormDocument $oValue, string $sOutputType)
+	protected function GetAttributeImageValue(DBObject $oObj, string $sAttCode, string $sOutputType)
 	{
+		$oValue = $oObj->Get($sAttCode);
+		$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+
 		// To limit the image size in the PDF output, we have to enforce the size as height/width because max-width/max-height have no effect
 		//
 		$iDefaultMaxWidthPx = 48;
