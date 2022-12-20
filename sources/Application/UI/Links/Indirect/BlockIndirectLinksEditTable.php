@@ -430,7 +430,8 @@ JS
 
 		if (!$this->oAttributeLinkedSetIndirect->GetReadOnly()) {
 			$aRowActions[] = array(
-				'tooltip'       => 'remove link',
+				'label'         => 'UI:Links:ActionRow:Detach',
+				'tooltip'       => 'UI:Links:ActionRow:Detach+',
 				'icon_classes'  => 'fas fa-minus',
 				'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
 			);

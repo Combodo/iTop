@@ -747,6 +747,7 @@ class AjaxRenderController
 		} else {
 			$oFullSetFilter = new DBObjectSearch($sRemoteClass);
 		}
+		$oFullSetFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 		$oWidget->DoAddIndirectLinks($oPage, $iMaxAddedId, $oFullSetFilter, $oObj);
 		$oKPI->ComputeAndReport('Data write');
 	}

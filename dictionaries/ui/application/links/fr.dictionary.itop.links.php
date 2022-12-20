@@ -18,11 +18,11 @@
  */
 
 // Display DataTable
-Dict::Add('EN US', 'English', 'English', array(
-	'UI:Links:ActionRow:Detach'              => 'Detach',
-	'UI:Links:ActionRow:Detach+'             => 'Detach this object',
-	'UI:Links:ActionRow:Detach:Confirmation' => 'Do you really want to detach <b>{item}</b> from current object ?',
-	'UI:Links:ActionRow:Delete'              => 'Delete',
-	'UI:Links:ActionRow:Delete+'             => 'Delete this object',
-	'UI:Links:ActionRow:Delete:Confirmation' => 'Do you really want to delete <b>{item}</b> from current object ?',
+Dict::Add('FR FR', 'French', 'Français', array(
+	'UI:Links:ActionRow:Detach'              => 'Détacher',
+	'UI:Links:ActionRow:Detach+'             => 'Détacher cet objet',
+	'UI:Links:ActionRow:Detach:Confirmation' => 'Voulez-vous détacher <b>{item}</b> de l\'objet courant ?',
+	'UI:Links:ActionRow:Delete'              => 'Supprimer',
+	'UI:Links:ActionRow:Delete+'             => 'Supprimer cet objet',
+	'UI:Links:ActionRow:Delete:Confirmation' => 'Voulez-vous supprimer <b>{item}</b> de l\'objet courant ?',
 ));

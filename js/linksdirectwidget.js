@@ -652,6 +652,10 @@ $(function()
 				}
 			}
 			return aRes;
+		},
+		Remove: function(oCheckbox)  // for public access
+		{
+			this._removeRow(oCheckbox);
 		}
 	});	
 });

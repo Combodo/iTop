@@ -337,6 +337,7 @@ try
 					}
 				}
 				$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
+				$oFullSetFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 				$oWidget->DoAddObjects($oPage, $oFullSetFilter);
 				break;
 

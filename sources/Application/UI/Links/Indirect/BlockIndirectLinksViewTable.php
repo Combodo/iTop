@@ -44,7 +44,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 			'view_link'     => false,
 			'menu'          => false,
 			'display_limit' => true,
-			'table_id'      => $this->sObjectClass.'_'.$this->sAttCode,
+			'table_id'      => $this->GetTableId(),
 			'zlist'         => false,
 			'extra_fields'  => $this->GetAttCodesToDisplay(),
 			'row_actions'   => $this->GetRowActions(),
@@ -59,13 +59,14 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 		if (!$this->oAttDef->GetReadOnly()) {
 
 			$aRowActions[] = array(
-				'tooltip'       => 'UI:Links:ActionRow:detach',
+				'label'         => 'UI:Links:ActionRow:Detach',
+				'tooltip'       => 'UI:Links:ActionRow:Detach+',
 				'icon_classes'  => 'fas fa-minus',
 				'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw']);",
 				'confirmation'  => [
-					'message'                    => 'UI:Links:ActionRow:detach:confirmation',
+					'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
 					'message_row_data'           => "Remote/hyperlink",
-					'do_not_show_again_pref_key' => 'LinkSetWorker.DetachLinkedObject',
+					'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 				],
 			);
 

@@ -35,7 +35,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 			'object_id'   => $this->oDbObject->GetKey(),
 			'menu'        => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
 			'default'     => $this->GetDefault(),
-			'table_id'    => $this->sObjectClass.'_'.$this->sAttCode,
+			'table_id'    => $this->GetTableId(),
 			'row_actions' => $this->GetRowActions(),
 		);
 	}
@@ -51,26 +51,28 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 
 				case LINKSET_RELATIONTYPE_LINK:
 					$aRowActions[] = array(
-						'tooltip'       => 'UI:Links:ActionRow:detach',
+						'label'         => 'UI:Links:ActionRow:Detach',
+						'tooltip'       => 'UI:Links:ActionRow:Detach+',
 						'icon_classes'  => 'fas fa-minus',
 						'js_row_action' => "LinkSetWorker.DetachLinkedObject('{$this->sTargetClass}', aRowData['{$this->sTargetClass}/_key_/raw'], '{$this->oAttDef->GetExtKeyToMe()}');",
 						'confirmation'  => [
-							'message'                    => 'UI:Links:ActionRow:detach:confirmation',
+							'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
 							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
-							'do_not_show_again_pref_key' => 'LinkSetWorker.DetachLinkedObject',
+							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 						],
 					);
 					break;
 
 				case LINKSET_RELATIONTYPE_PROPERTY:
 					$aRowActions[] = array(
-						'tooltip'       => 'UI:Links:ActionRow:delete',
+						'label'         => 'UI:Links:ActionRow:Delete',
+						'tooltip'       => 'UI:Links:ActionRow:Delete+',
 						'icon_classes'  => 'fas fa-trash',
 						'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
 						'confirmation'  => [
-							'message'                    => 'UI:Links:ActionRow:delete:confirmation',
+							'message'                    => 'UI:Links:ActionRow:Delete:Confirmation',
 							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
-							'do_not_show_again_pref_key' => 'LinkSetWorker.DeleteLinkedObject',
+							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 						],
 					);
 					break;
