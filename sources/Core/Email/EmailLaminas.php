@@ -148,7 +148,6 @@ class EMailLaminas extends Email
 				$sEncryption = self::$m_oConfig->Get('email_transport_smtp.encryption');
 				$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
 				$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
-				$bAllowSelfSigned = static::$m_oConfig->Get('email_transport_smtp.allow_self_signed');
 				$bVerifyPeer = static::$m_oConfig->Get('email_transport_smtp.verify_peer');
 
 				$oTransport = new Smtp();
@@ -157,10 +156,9 @@ class EMailLaminas extends Email
 					'port'              => $sPort,
 					'connection_class'  => 'login',
 					'connection_config' => [
-						'ssl' => $sEncryption,
+						'ssl'               => $sEncryption,
+						'novalidatecert'       => !$bVerifyPeer,
 					],
-					'allow_self_signed' => $bAllowSelfSigned,
-					'verify_peer'       => $bVerifyPeer,
 				];
 				if (strlen($sUserName) > 0) {
 					$aOptions['connection_config']['username'] = $sUserName;
