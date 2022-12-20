@@ -5844,13 +5844,15 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * @param $sEvent
+	 * @param string $sEvent
 	 * @param array $aEventData
+	 * @return void
 	 *
 	 * @throws \CoreException
 	 * @throws \Exception
+	 * @since 3.1.0
 	 */
-	public function FireEvent($sEvent, $aEventData = array())
+	public function FireEvent(string $sEvent, array $aEventData = array()): void
 	{
 		if (EventService::IsEventRegistered($sEvent)) {
 			$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
@@ -5863,64 +5865,127 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
-	protected function EventInsertRequested()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventInsertRequested(): void
 	{
 	}
 
-	protected function EventInsertBefore()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventInsertBefore(): void
 	{
 	}
 
-	protected function EventInsertAfter()
+	protected function EventInsertAfter(): void
 	{
 	}
 
-	protected function EventComputeValues()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventComputeValues(): void
 	{
 	}
 
-	protected function EventCheckToWrite()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventCheckToWrite(): void
 	{
 	}
 
-	protected function EventCheckToDelete()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventCheckToDelete(): void
 	{
 	}
 
-	protected function EventUpdateRequested()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventUpdateRequested(): void
 	{
 	}
 
-	protected function EventUpdateBefore()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventUpdateBefore(): void
 	{
 	}
 
-	protected function EventUpdateAfter(array $aEventData)
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventUpdateAfter(array $aEventData): void
 	{
 	}
 
-	protected function EventDeleteBefore()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventDeleteBefore(): void
 	{
 	}
 
-	protected function EventDeleteAfter()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventDeleteAfter(): void
 	{
 	}
 
-	protected function EventArchive()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventArchive(): void
 	{
 
 	}
 
-	protected function EventUnarchive()
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventUnarchive(): void
 	{
 	}
 
+	/**
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 * @param string $sTargetState
+	 *
+	 * @return int
+	 * @since 3.1.0
+	 */
 	protected function GetExtensionsAttributeFlags(string $sAttCode, array &$aReasons, string $sTargetState): int
 	{
 		return 0;
 	}
 
+	/**
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 *
+	 * @return int
+	 * @since 3.1.0
+	 */
 	protected function GetExtensionsInitialStateAttributeFlags(string $sAttCode, array &$aReasons): int
 	{
 		return 0;

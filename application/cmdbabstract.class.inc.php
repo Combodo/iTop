@@ -5644,115 +5644,124 @@ JS
 	}
 
 	/**
-	 * @return void
+	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventInsertRequested()
+	final protected function EventInsertRequested(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_INSERT_REQUESTED);
 	}
 
 	/**
-	 * @return void
+	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventInsertBefore()
+	final protected function EventInsertBefore(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_INSERT);
 	}
 
 	/**
-	 * @return void
+	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventInsertAfter()
+	final protected function EventInsertAfter(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_INSERT_DONE);
 	}
 
-	final protected function EventComputeValues()
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
+	final protected function EventComputeValues(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_COMPUTE_VALUES);
 	}
 
 	/**
-	 * @return void
+	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventCheckToWrite()
+	final protected function EventCheckToWrite(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_WRITE);
 	}
 
 	/**
-	 * @return void
+	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventCheckToDelete()
+	final protected function EventCheckToDelete(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_DELETE);
 	}
 
 	/**
-	 * @return void
+	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventUpdateRequested()
+	final protected function EventUpdateRequested(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_REQUESTED);
 	}
 
 	/**
-	 * @return void
+	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventUpdateBefore()
+	final protected function EventUpdateBefore(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_UPDATE);
 	}
 
 	/**
-	 * @param array $aEventData
-	 *
-	 * @return void
+	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventUpdateAfter(array $aEventData)
+	final protected function EventUpdateAfter(array $aEventData): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_DONE, $aEventData);
 	}
 
 	/**
-	 * @return void
+	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventDeleteBefore()
+	final protected function EventDeleteBefore(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_DELETE);
 	}
 
 	/**
-	 * @return void
+	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventDeleteAfter()
+	final protected function EventDeleteAfter(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_DELETE_DONE);
 	}
 
-
-	final protected function EventArchive()
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
+	final protected function EventArchive(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_ARCHIVE);
 	}
 
-	final protected function EventUnarchive()
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
+	final protected function EventUnarchive(): void
 	{
 		$this->FireEvent(EVENT_SERVICE_DB_UNARCHIVE);
 	}
 
 	/**
-	 * Append attribute flags
+	 * Append $iFlags to $sAttCode attribute in $sTargetState
 	 *
 	 * @param string $sAttCode
 	 * @param int $iFlags
@@ -5762,7 +5771,7 @@ JS
 	 * @return void
 	 * @since 3.1.0
 	 */
-	final public function AddAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', string $sReason = null)
+	final public function AddAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', string $sReason = null): void
 	{
 		if (!isset($this->aAttributesFlags[$sTargetState])) {
 			$this->aAttributesFlags[$sTargetState] = [];
@@ -5774,7 +5783,7 @@ JS
 	}
 
 	/**
-	 * Force attribute state
+	 * Force $iFlags to $sAttCode attribute in $sTargetState
 	 *
 	 * @param string $sAttCode
 	 * @param int $iFlags
@@ -5784,7 +5793,7 @@ JS
 	 * @return void
 	 * @since 3.1.0
 	 */
-	final public function ForceAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', string $sReason = null)
+	final public function ForceAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', string $sReason = null): void
 	{
 		if (!isset($this->aAttributesFlags[$sTargetState])) {
 			$this->aAttributesFlags[$sTargetState] = [];
@@ -5795,6 +5804,10 @@ JS
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
 	final protected function GetExtensionsAttributeFlags(string $sAttCode, array &$aReasons, string $sTargetState): int
 	{
 		if (!isset($this->aAttributesFlags[$sTargetState])) {
@@ -5812,7 +5825,7 @@ JS
 
 
 	/**
-	 * Append attribute flags
+	 * Append $iFlags to $sAttCode attribute in initial state
 	 *
 	 * @param string $sAttCode
 	 * @param int $iFlags
@@ -5833,7 +5846,7 @@ JS
 	}
 
 	/**
-	 * Force attribute state
+	 * Force $iFlags to $sAttCode attribute in initial state
 	 *
 	 * @param string $sAttCode
 	 * @param int $iFlags
@@ -5853,6 +5866,10 @@ JS
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
 	final protected function GetExtensionsInitialStateAttributeFlags(string $sAttCode, array &$aReasons): int
 	{
 		if (!isset($this->aInitialAttributesFlags)) {
