@@ -320,12 +320,13 @@ class ApplicationMenu
 			}
 
 			$aSubMenuNodes[] = [
-				'sId' => $oSubMenuNode->GetMenuId(),
-				'sTitle' => $oSubMenuNode->GetTitle(),
-				'bHasCount' => $oSubMenuNode->HasCount(),
-				'sUrl' => $oSubMenuNode->GetHyperlink($aExtraParams),
+				'sId'              => $oSubMenuNode->GetMenuId(),
+				'sTitle'           => $oSubMenuNode->GetTitle(),
+				'sLabel'           => $oSubMenuNode->GetLabel(),  // Bug #4852
+				'bHasCount'        => $oSubMenuNode->HasCount(),
+				'sUrl'             => $oSubMenuNode->GetHyperlink($aExtraParams),
 				'bOpenInNewWindow' => $oSubMenuNode->IsHyperLinkInNewWindow(),
-				'aSubMenuNodes' => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
+				'aSubMenuNodes'    => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
 			];
 		}
 
