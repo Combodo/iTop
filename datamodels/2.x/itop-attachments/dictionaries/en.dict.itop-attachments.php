@@ -83,3 +83,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Attachment/Attribute:contact_id' => 'Contact id',
 	'Class:Attachment/Attribute:contact_id+' => '',
 ));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class',
+));

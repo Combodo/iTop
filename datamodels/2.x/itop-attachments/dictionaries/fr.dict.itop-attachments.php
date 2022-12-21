@@ -82,3 +82,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Attachment/Attribute:contact_id' => 'Contact',
 	'Class:Attachment/Attribute:contact_id+' => '',
 ));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:TriggerOnAttachmentDownload' => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
+	'Class:TriggerOnAttachmentDownload+' => '',
+));
