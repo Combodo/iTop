@@ -28,7 +28,7 @@ require_once(APPROOT.'core/restservices.class.inc.php');
 
 /**
  * Result structure that is specific to the hardcoded verb 'list_operations'
- */
+ */ 
 class RestResultListOperations extends RestResult
 {
 	public $version;
@@ -94,12 +94,12 @@ $oKPI = new ExecutionKPI();
 try
 {
 	utils::UseParamFile();
-
+        
 	$oKPI->ComputeAndReport('Data model loaded');
-	\Combodo\iTop\Application\Helper\Session::Set("ENDPOINT_CATEGORY", 'WEBSERVICE');
+
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
         $oKPI->ComputeAndReport('User login');
-
+        
         if ($iRet == LoginWebPage::EXIT_CODE_OK)
 	{
 		// Extra validation of the profile
@@ -116,23 +116,23 @@ try
 			case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
 			throw new Exception("Missing parameter 'auth_user'", RestResult::MISSING_AUTH_USER);
 			break;
-
+			
 			case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
 			throw new Exception("Missing parameter 'auth_pwd'", RestResult::MISSING_AUTH_PWD);
 			break;
-
+			
 			case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
 			throw new Exception("Invalid login", RestResult::UNAUTHORIZED);
 			break;
-
+			
 			case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
 			throw new Exception("Portal user is not allowed", RestResult::UNAUTHORIZED);
 			break;
-
+				
 			case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
 			throw new Exception("This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)", RestResult::UNAUTHORIZED);
 			break;
-
+				
 			default:
 			throw new Exception("Unknown authentication error (retCode=$iRet)", RestResult::UNAUTHORIZED);
 		}
@@ -224,7 +224,7 @@ try
 		/** @var iRestServiceProvider $oRS */
 		$oRS = $aOpToRestService[$sOperation]['service_provider'];
 		$sProvider = get_class($oRS);
-
+	
 		CMDBObject::SetTrackOrigin('webservice-rest');
 		$oResult = $oRS->ExecOperation($sVersion, $sOperation, $aJsonData);
 	}
