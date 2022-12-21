@@ -1,28 +1,20 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * ormDocument
- * encapsulate the behavior of a binary data set that will be stored an attribute of class AttributeBlob 
+ * Copyright (C) 2013-2022 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 use Combodo\iTop\Service\Events\EventData;
@@ -35,21 +27,52 @@ use Combodo\iTop\Service\Events\EventService;
  *
  * @package     itopORM
  */
-
 class ormDocument
 {
+	/**
+	 * @var string For content that should be displayed in the browser
+	 * @link https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Content-Disposition#syntaxe
+	 * @since 3.1.0
+	 */
+	public const ENUM_CONTENT_DISPOSITION_INLINE = 'inline';
+	/**
+	 * @var string For content that should be downloaded on the device. Mind that "attachment" Content-Disposition has nothing to do with the "Attachment" class from the DataModel.
+	 * @link https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Content-Disposition#syntaxe
+	 * @since 3.1.0
+	 */
+	public const ENUM_CONTENT_DISPOSITION_ATTACHMENT = 'attachment';
+
+	/**
+	 * @var int Default downloads count of the document, should always be 0.
+	 * @since 3.1.0
+	 */
+	public const DEFAULT_DOWNLOADS_COUNT = 0;
+
 	protected $m_data;
 	protected $m_sMimeType;
 	protected $m_sFileName;
-	
+	/**
+	 * @var int $m_iDownloadsCount Number of times the document has been downloaded (through the standard API!). Note that download from the browser's cache won't appear.
+	 * @since 3.1.0
+	 */
+	private $m_iDownloadsCount;
+
 	/**
 	 * Constructor
+	 *
+	 * @param null $data
+	 * @param string $sMimeType
+	 * @param string $sFileName
+	 * @param int $iDownloadsCount
+	 *
+	 * @since 3.1.0 N°2889 Add $iDownloadsCount parameter
 	 */
-	public function __construct($data = null, $sMimeType = 'text/plain', $sFileName = '')
+	public function __construct($data = null, $sMimeType = 'text/plain', $sFileName = '', $iDownloadsCount = self::DEFAULT_DOWNLOADS_COUNT)
 	{
 		$this->m_data = $data;
 		$this->m_sMimeType = $sMimeType;
 		$this->m_sFileName = $sFileName;
+		$this->m_iDownloadsCount = $iDownloadsCount;
 	}
 
 	public function __toString()
@@ -109,6 +132,30 @@ class ormDocument
 		return $this->m_sFileName;
 	}
 
+	/**
+	 * @see static::DownloadDocument()
+	 * @see static::$m_iDownloadsCount
+	 * @return int Number of times the document has been downloaded (through the standard API!)
+	 * @since 3.1.0
+	 */
+	public function GetDownloadsCount(): int
+	{
+		// Force cast to get 0 instead of null on fields prior to the features that have never been downloaded.
+		return (int) $this->m_iDownloadsCount;
+	}
+
+	/**
+	 * Increase the number of downloads of the document by $iNumber
+	 *
+	 * @param int $iNumber Step to increase the counter with, default is 1.
+	 * @return void
+	 * @since 3.1.0
+	 */
+	public function IncreaseDownloadsCount($iNumber = 1): void
+	{
+		$this->m_iDownloadsCount += $iNumber;
+	}
+
 	public function GetAsHTML()
 	{
 		$sResult = '';
@@ -119,7 +166,8 @@ class ormDocument
 		} else {
 			$data = $this->GetData();
 			$sSize = utils::BytesToFriendlyFormat(strlen($data));
-			$sResult = utils::EscapeHtml($this->GetFileName()).' ('.$sSize.')<br/>';
+			$iDownloadsCount = $this->GetDownloadsCount();
+			$sResult = utils::EscapeHtml($this->GetFileName()).' ('.$sSize.' / '.$iDownloadsCount.' <i class="fas fa-cloud-download-alt"></i>)<br/>';
 		}
 		return $sResult;
 	}
@@ -196,6 +244,8 @@ class ormDocument
 	 * @param string $sContentDisposition Either 'inline' or 'attachment'
 	 * @param string $sSecretField The attcode of the field containing a "secret" to be provided in order to retrieve the file
 	 * @param string $sSecretValue The value of the secret to be compared with the value of the attribute $sSecretField
+	 *
+	 * @return void
 	 */
 	public static function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
 	{
@@ -211,6 +261,7 @@ class ormDocument
 				usleep(200);
 				throw new Exception("Invalid secret for class '$sClass' - the object does not exist or you are not allowed to view it");
 			}
+			/** @var \ormDocument $oDocument */
 			$oDocument = $oObj->Get($sAttCode);
 			if (is_object($oDocument))
 			{
@@ -224,6 +275,13 @@ class ormDocument
 				$oPage->SetContentType($oDocument->GetMimeType());
 				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
 				$oPage->add($oDocument->GetData());
+
+				// Update downloads count only when content disposition is set to "attachment" as other disposition are to display the document within the page
+				if($sContentDisposition === static::ENUM_CONTENT_DISPOSITION_ATTACHMENT) {
+					$oDocument->IncreaseDownloadsCount();
+					$oObj->Set($sAttCode, $oDocument);
+					$oObj->DBUpdate();
+				}
 			}
 		}
 		catch(Exception $e)

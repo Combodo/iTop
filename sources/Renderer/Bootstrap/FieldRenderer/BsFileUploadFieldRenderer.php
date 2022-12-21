@@ -189,6 +189,7 @@ JS
 			'{{sAttachmentMeta}}',
 			'{{sFileSize}}',
 			'{{iFileSizeRaw}}',
+			'{{iFileDownloadsCount}}',
 			'{{sAttachmentDate}}',
 			'{{iAttachmentDateRaw}}',
 			$bIsDeleteAllowed
@@ -250,6 +251,7 @@ JS
 							{search: "{{sFileName}}", replace: data.result.msg },
 							{search: "{{sAttachmentMeta}}", replace:sAttachmentMeta },
 							{search: "{{sFileSize}}", replace:data.result.file_size },
+							{search: "{{iFileDownloadsCount}}", replace:data.result.downloads_count },
 							{search: "{{sAttachmentDate}}", replace:data.result.creation_date },
 						];
 						var sAttachmentRow = attachmentRowTemplate   ;
@@ -414,6 +416,7 @@ HTML
 
 				$iFileSizeRaw = $oDoc->GetSize();
 				$sFileSize = $oDoc->GetFormattedSize();
+				$iFileDownloadsCount = $oDoc->GetDownloadsCount();
 
 				$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 				$sAttachmentDate = '';
@@ -434,6 +437,7 @@ HTML
 					$sAttachmentMeta,
 					$sFileSize,
 					$iFileSizeRaw,
+					$iFileDownloadsCount,
 					$sAttachmentDate,
 					$iAttachmentDateRaw,
 					$bIsDeleteAllowed
@@ -460,6 +464,7 @@ HTML
 		$sTitleFileName = Dict::S('Attachments:File:Name');
 		$sTitleFileSize = Dict::S('Attachments:File:Size');
 		$sTitleFileDate = Dict::S('Attachments:File:Date');
+		$sTitleFileDownloadsCount = Dict::S('Attachments:File:DownloadsCount');
 
 		// Optional column
 		$sDeleteHeaderAsHtml = ($bIsDeleteAllowed) ? '<th role="delete" data-priority="1"></th>' : '';
@@ -470,6 +475,7 @@ HTML
 		<th role="filename" data-priority="1">$sTitleFileName</th>
 		<th role="formatted-size">$sTitleFileSize</th>
 		<th role="upload-date">$sTitleFileDate</th>
+		<th role="downloads-count">$sTitleFileDownloadsCount</th>
 		$sDeleteHeaderAsHtml
 	</thead>
 HTML;
@@ -494,7 +500,7 @@ HTML;
 	 */
 	protected static function GetAttachmentTableRow(
 		$iAttId, $sLineStyle, $sDocDownloadUrl, $bHasPreview, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
-		$iFileSizeRaw, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
+		$iFileSizeRaw, $iFileDownloadsCount, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
 	) {
 		$sDeleteCell = '';
 		if ($bIsDeleteAllowed)
@@ -511,10 +517,11 @@ HTML;
 		}
 
 		$sHtml .=  <<<HTML
-	 <td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
-	  <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
-	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>
-	  $sDeleteCell
+		<td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
+	    <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
+	    <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>
+	    <td role="downloads-count">$iFileDownloadsCount</td>
+	    $sDeleteCell
 	</tr>
 HTML;
 		return $sHtml;

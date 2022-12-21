@@ -69,6 +69,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Attachments:File:Uploader' => 'Uploaded by',
 	'Attachments:File:Size' => 'Size',
 	'Attachments:File:MimeType' => 'Type',
+	'Attachments:File:DownloadsCount' => 'Downloads',
 ));
 //
 // Class: Attachment
