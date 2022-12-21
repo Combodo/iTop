@@ -281,6 +281,32 @@ class ormDocument
 					$oDocument->IncreaseDownloadsCount();
 					$oObj->Set($sAttCode, $oDocument);
 					$oObj->DBUpdate();
+
+					// Activate any existing trigger
+					if ($sClass === 'Attachment')
+					{
+						$oHostObj = MetaModel::GetObject($oObj->Get('item_class'), $oObj->Get('item_id'), false /* false to avoid exception during trigger */, true);
+						$sTriggerClass = 'TriggerOnAttachmentDownload';
+						$aTriggerContextArgs = array(
+							'this->object()' => $oHostObj,
+							'attachment->object()' => $oObj,
+						);
+						$aTriggerParams = array('class_list' => MetaModel::EnumParentClasses($oObj->Get('item_class'), ENUM_PARENT_CLASSES_ALL));
+					}
+					else
+					{
+						$sTriggerClass = 'TriggerOnDocumentAttributeDownload';
+						$aTriggerContextArgs = array(
+							'this->object()' => $oObj,
+						);
+						$aTriggerParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+					}
+					$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sTriggerClass AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerParams);
+					while ($oTrigger = $oTriggerSet->Fetch())
+					{
+						/** @var \Trigger $oTrigger */
+						$oTrigger->DoActivate($aTriggerContextArgs);
+					}
 				}
 			}
 		}
