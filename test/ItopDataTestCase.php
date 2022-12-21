@@ -27,8 +27,8 @@ namespace Combodo\iTop\Test\UnitTest;
  */
 
 use ArchivedObjectException;
-use CMDBSource;
 use CMDBObject;
+use CMDBSource;
 use Contact;
 use DBObject;
 use DBObjectSet;
@@ -465,7 +465,7 @@ class ItopDataTestCase extends ItopTestCase
 		/** @var DBObjectSet $oSet */
 		$oSet = $oUser->Get('profile_list');
 		$oSet->AddItem($oUserProfile);
-		$oUser = $this->updateObject('UserLocal', $oUser->GetKey(), array(
+		$oUser = $this->updateObject(\User::class, $oUser->GetKey(), array(
 			'profile_list' => $oSet,
 		));
 		$this->debug("Updated {$oUser->GetName()} ({$oUser->GetKey()})");
