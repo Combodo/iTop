@@ -269,8 +269,8 @@ function DisplayEvents(WebPage $oPage, $sClass)
 {
 	$aEvents = EventService::GetEventsByClass($sClass);
 	$aColumns = [
-		'event'       => ['label' => 'Event'],
-		'description' => ['label' => 'Description'],
+		'event'       => ['label' => Dict::S('UI:Schema:Events:Event')],
+		'description' => ['label' => Dict::S('UI:Schema:Events:Description')],
 	];
 	$aRows = [];
 	foreach ($aEvents as $sEvent => $aEventInfo) {
@@ -318,10 +318,10 @@ function DisplayEvents(WebPage $oPage, $sClass)
 		return ($a['event'] > $b['event']) ? 1 : -1;
 	});
 	$aColumns = [
-		'event'    => ['label' => 'Event'],
-		'listener' => ['label' => 'Listener'],
-		'priority' => ['label' => 'Rank'],
-		'module'   => ['label' => 'Module'],
+		'event'    => ['label' => Dict::S('UI:Schema:Events:Event')],
+		'listener' => ['label' => Dict::S('UI:Schema:Events:Listener')],
+		'priority' => ['label' => Dict::S('UI:Schema:Events:Rank')],
+		'module'   => ['label' => Dict::S('UI:Schema:Events:Module')],
 	];
 	$aRows = [];
 	$oReflectionClass = new ReflectionClass($sClass);
