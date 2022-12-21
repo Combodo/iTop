@@ -68,6 +68,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:File:Uploader' => 'Chargé par',
 	'Attachments:File:Size' => 'Taille',
 	'Attachments:File:MimeType' => 'Type',
+	'Attachments:File:DownloadsCount' => 'Téléchargements',
 ));
 //
 // Class: Attachment

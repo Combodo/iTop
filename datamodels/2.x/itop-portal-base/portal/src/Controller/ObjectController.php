@@ -1245,6 +1245,7 @@ class ObjectController extends BrickController
 						$aData['att_id'] = $iAttId;
 						$aData['preview'] = $oDocument->IsPreviewAvailable();
 						$aData['file_size'] = $oDocument->GetFormattedSize();
+						$aData['downloads_count'] = $oDocument->GetDownloadsCount();
 						$aData['creation_date'] = $oAttachment->Get('creation_date');
 						$aData['user_id_friendlyname'] = $oAttachment->Get('user_id_friendlyname');
 						$aData['file_type'] = $oDocument->GetMimeType();

@@ -8095,34 +8095,38 @@ class AttributeBlob extends AttributeDefinition
 		$aColumns[''] = $sPrefix.'_mimetype';
 		$aColumns['_data'] = $sPrefix.'_data';
 		$aColumns['_filename'] = $sPrefix.'_filename';
+		$aColumns['_downloads_count'] = $sPrefix.'_downloads_count';
 
 		return $aColumns;
 	}
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		if (!array_key_exists($sPrefix, $aCols))
-		{
+		if (!array_key_exists($sPrefix, $aCols)) {
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
 		}
 		$sMimeType = isset($aCols[$sPrefix]) ? $aCols[$sPrefix] : '';
 
-		if (!array_key_exists($sPrefix.'_data', $aCols))
-		{
+		if (!array_key_exists($sPrefix.'_data', $aCols)) {
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_data' from {$sAvailable}");
 		}
 		$data = isset($aCols[$sPrefix.'_data']) ? $aCols[$sPrefix.'_data'] : null;
 
-		if (!array_key_exists($sPrefix.'_filename', $aCols))
-		{
+		if (!array_key_exists($sPrefix.'_filename', $aCols)) {
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_filename' from {$sAvailable}");
 		}
 		$sFileName = isset($aCols[$sPrefix.'_filename']) ? $aCols[$sPrefix.'_filename'] : '';
 
-		$value = new ormDocument($data, $sMimeType, $sFileName);
+		if (!array_key_exists($sPrefix.'_downloads_count', $aCols)) {
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '".$sPrefix."_downloads_count' from {$sAvailable}");
+		}
+		$iDownloadsCount = isset($aCols[$sPrefix.'_downloads_count']) ? $aCols[$sPrefix.'_downloads_count'] : ormDocument::DEFAULT_DOWNLOADS_COUNT;
+
+		$value = new ormDocument($data, $sMimeType, $sFileName, $iDownloadsCount);
 
 		return $value;
 	}
@@ -8148,6 +8152,7 @@ class AttributeBlob extends AttributeDefinition
 			}
 			$aValues[$this->GetCode().'_mimetype'] = $value->GetMimeType();
 			$aValues[$this->GetCode().'_filename'] = $value->GetFileName();
+			$aValues[$this->GetCode().'_downloads_count'] = $value->GetDownloadsCount();
 		}
 		else
 		{
@@ -8155,6 +8160,7 @@ class AttributeBlob extends AttributeDefinition
 			$aValues[$this->GetCode().'_data'] = '';
 			$aValues[$this->GetCode().'_mimetype'] = '';
 			$aValues[$this->GetCode().'_filename'] = '';
+			$aValues[$this->GetCode().'_downloads_count'] = ''; // Note: Should this be set to \ormDocument::DEFAULT_DOWNLOADS_COUNT ?
 		}
 
 		return $aValues;
@@ -8166,6 +8172,7 @@ class AttributeBlob extends AttributeDefinition
 		$aColumns[$this->GetCode().'_data'] = 'LONGBLOB'; // 2^32 (4 Gb)
 		$aColumns[$this->GetCode().'_mimetype'] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
 		$aColumns[$this->GetCode().'_filename'] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
+		$aColumns[$this->GetCode().'_downloads_count'] = 'INT(11) UNSIGNED';
 
 		return $aColumns;
 	}
@@ -8235,11 +8242,13 @@ class AttributeBlob extends AttributeDefinition
 		$sRet = '';
 		if (is_object($value))
 		{
+			/** @var \ormDocument $value */
 			if (!$value->IsEmpty())
 			{
 				$sRet = '<mimetype>'.$value->GetMimeType().'</mimetype>';
 				$sRet .= '<filename>'.$value->GetFileName().'</filename>';
 				$sRet .= '<data>'.base64_encode($value->GetData()).'</data>';
+				$sRet .= '<downloads_count>'.$value->GetDownloadsCount().'</downloads_count>';
 			}
 		}
 
@@ -8258,6 +8267,7 @@ class AttributeBlob extends AttributeDefinition
 			$aValues['data'] = base64_encode($value->GetData());
 			$aValues['mimetype'] = $value->GetMimeType();
 			$aValues['filename'] = $value->GetFileName();
+			$aValues['downloads_count'] = $value->GetDownloadsCount();
 		}
 		else
 		{
@@ -8276,7 +8286,7 @@ class AttributeBlob extends AttributeDefinition
 		if (isset($json->data))
 		{
 			$data = base64_decode($json->data);
-			$value = new ormDocument($data, $json->mimetype, $json->filename);
+			$value = new ormDocument($data, $json->mimetype, $json->filename, $json->downloads_count);
 		}
 		else
 		{
