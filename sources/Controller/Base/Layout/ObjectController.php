@@ -317,7 +317,7 @@ JS
 		}
 		$bDisplayDetails = true;
 		$oObj = MetaModel::GetObject($sClass, $id, false);
-		if ($oObj !== null)
+		if ($oObj === null)
 		{
 			$bDisplayDetails = false;
 
