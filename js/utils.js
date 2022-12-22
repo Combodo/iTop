@@ -1167,6 +1167,7 @@ let CombodoModal = {
 			{
 				id: null,           // ID of the created modal
 				attributes: {},     // HTML attributes
+				classes: {}, // Classes for the created modal elements
 				base_modal: {
 					usage: 'clone',                                 // Either 'clone' or 'replace'
 					selector: this._GetDefaultBaseModalSelector()   // Either a selector of the modal element used to base this one on or the modal element itself
@@ -1304,5 +1305,18 @@ let CombodoModal = {
 	OpenConfirmationModal: function(oOptions) {
 		// Meant for overlaoding
 		CombodoJSConsole.Debug('CombodoModal.OpenConfirmationModal not implemented');
+	},
+
+
+	/**
+	 * Open a standard informative modal.
+	 *
+	 * @param sMessage string Informative message to be displayed in the modal
+	 * @param sSeverity string Severity of the information. Default values are success, information, warning, error.
+	 * @param oOptions array @see CombodoModal.OpenModal
+	 */
+	OpenInformativeModal: function(sMessage,sSeverity, oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.OpenInformativeModal not implemented');
 	}
 };
