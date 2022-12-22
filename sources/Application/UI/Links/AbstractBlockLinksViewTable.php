@@ -192,13 +192,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 */
 	abstract function GetTargetClass(): string;
 
-	/**
-	 * @return string
-	 */
-	public function GetTableId(): string
-	{
-		return $this->sTableId;
-	}
+
 
 	/**
 	 * @return string
