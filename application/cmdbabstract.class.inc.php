@@ -4440,7 +4440,8 @@ HTML;
 			MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
 		}
 
-		if ($this->IsModified()) {
+		$aChanges = $this->ListChanges();
+		if (count($aChanges) != 0) {
 			$this->iUpdateLoopCount++;
 			if ($this->iUpdateLoopCount > self::MAX_UPDATE_LOOP_COUNT) {
 				$sClass = get_class($this);

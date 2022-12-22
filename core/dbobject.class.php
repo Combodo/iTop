@@ -5976,7 +5976,7 @@ abstract class DBObject implements iDisplay
 	 */
 	protected function GetExtensionsAttributeFlags(string $sAttCode, array &$aReasons, string $sTargetState): int
 	{
-		return 0;
+		return OPT_ATT_NORMAL;
 	}
 
 	/**
@@ -5988,7 +5988,7 @@ abstract class DBObject implements iDisplay
 	 */
 	protected function GetExtensionsInitialStateAttributeFlags(string $sAttCode, array &$aReasons): int
 	{
-		return 0;
+		return OPT_ATT_NORMAL;
 	}
 }
 
