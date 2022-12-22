@@ -2994,7 +2994,7 @@ abstract class DBObject implements iDisplay
 		}
 		$this->ComputeStopWatchesDeadline(true);
 
-		$this->SetReadOnly('No modification allowed during The Event :'.EVENT_DB_ABOUT_TO_INSERT);
+		$this->SetReadOnly('No modification allowed during The Event :'.EVENT_DB_ABOUT_TO_CREATE);
 		$this->EventAboutToCreate();
 		$this->SetReadWrite();
 
