@@ -45,12 +45,14 @@ class TextAreaField extends TextField
 	protected $oObject;
 	/** @var string|null */
 	protected $sTransactionId;
+	/**@array $aFields used for readonly fields */
+	protected $aFields;
 
 	/**
 	 * TextAreaField constructor.
 	 *
-	 * @param string         $sId
-	 * @param \Closure|null  $onFinalizeCallback
+	 * @param string $sId
+	 * @param \Closure|null $onFinalizeCallback
 	 * @param \DBObject|null $oObject
 	 */
 	public function __construct(string $sId, Closure $onFinalizeCallback = null, DBObject $oObject = null)
@@ -73,11 +75,20 @@ class TextAreaField extends TextField
 	/**
 	 *
 	 * @param string $sFormat
+	 *
 	 * @return \Combodo\iTop\Form\Field\TextAreaField
 	 */
 	public function SetFormat(string $sFormat)
 	{
 		$this->sFormat = $sFormat;
+
+		return $this;
+	}
+
+	public function SetFields(string $aFields)
+	{
+		$this->aFields = $aFields;
+
 		return $this;
 	}
 
@@ -124,15 +135,29 @@ class TextAreaField extends TextField
 	
 	public function GetDisplayValue()
 	{
-		if ($this->GetFormat() == TextAreaField::ENUM_FORMAT_TEXT)
-		{
-		    $sValue = \Str::pure2html($this->GetCurrentValue());
-			$sValue = AttributeText::RenderWikiHtml($sValue);
-			return "<div>".str_replace("\n", "<br>\n", $sValue).'</div>';			
+		$sCurrentValue = $this->GetCurrentValue();
+		if ($this->GetReadOnly()) {
+			$aMatches = [];
+			if (preg_match(StringField::DISPLAY_CONDITION_VALIDATION_PATTERN, $this->aFields, $aMatches, PREG_OFFSET_CAPTURE)) {
+				$sLinkedField = $aMatches[1][0];
+				if (array_key_exists($aMatches[1][0], $this->aFields)) {
+					if ($this->aFields[$aMatches[1][0]].isInstanceOf("SelectObjectField")) {
+						$oSearch = $this->aFields[$aMatches[1][0]]['oSearch'];
+						//	if ($oObject = MetaModel::GetObject($aValues['user_data_objclass'][$sLinkedField], $aValues['user_data_objkey'][$sLinkedField], false)) {
+						//		$sCurrentValue = $oObject->Get($aMatches[2][0]);
+						//	}
+					}
+				}
+			}
 		}
-		else
-		{
-			$sValue = AttributeText::RenderWikiHtml($this->GetCurrentValue(), true /* wiki only */);
+		if ($this->GetFormat() == TextAreaField::ENUM_FORMAT_TEXT) {
+			$sValue = \Str::pure2html($sCurrentValue);
+			$sValue = AttributeText::RenderWikiHtml($sValue);
+
+			return "<div>".str_replace("\n", "<br>\n", $sValue).'</div>';
+		} else {
+			$sValue = AttributeText::RenderWikiHtml($sCurrentValue, true /* wiki only */);
+
 			return "<div class=\"HTML\">".InlineImage::FixUrls($sValue).'</div>';
 		}
 	}

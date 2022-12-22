@@ -26,5 +26,9 @@ namespace Combodo\iTop\Form\Field;
  */
 abstract class TextField extends Field
 {
-
+	public function GetCurrentValue()
+	{
+		$value = parent::GetCurrentValue();
+		\IssueLog::Error("Text!!Field".$value);
+	}
 }
