@@ -95,12 +95,12 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 					if ($this->oField->GetReadOnly())
 					{
-						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue() ?? '', $this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 						$oValue->AddSubBlock(new Html($this->oField->GetCurrentValue() ?? ''));
 					}
 					else
 					{
-						$oValue->AddSubBlock(InputUIBlockFactory::MakeStandard("text", "", $this->oField->GetCurrentValue() ?? '', $this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeStandard("text", "", $this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
 					$oBlock->AddSubBlock($oValue);
@@ -113,8 +113,8 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 
 					if ($this->oField->GetReadOnly()) {
-						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue() ?? ''));
-						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue() ?? '', $this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue()));
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 					}
 					else
 					{
