@@ -36,6 +36,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
+			'vendor/autoload.php',
 			'model.itop-attachments.php',
 			'main.itop-attachments.php',
 			'renderers.itop-attachments.php',
