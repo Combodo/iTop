@@ -95,12 +95,12 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 					if ($this->oField->GetReadOnly())
 					{
-						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
-						$oValue->AddSubBlock(new Html($this->oField->GetCurrentValue()));
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue() ?? '', $this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(new Html($this->oField->GetCurrentValue() ?? ''));
 					}
 					else
 					{
-						$oValue->AddSubBlock(InputUIBlockFactory::MakeStandard("text","", $this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeStandard("text", "", $this->oField->GetCurrentValue() ?? '', $this->oField->GetGlobalId()));
 						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
 					$oBlock->AddSubBlock($oValue);
@@ -112,14 +112,13 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
 
 
-					if ($this->oField->GetReadOnly())
-					{
-						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue()));
-						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
+					if ($this->oField->GetReadOnly()) {
+						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue() ?? ''));
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue() ?? '', $this->oField->GetGlobalId()));
 					}
 					else
 					{
-						$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
+						$oText = new TextArea("", $this->oField->GetCurrentValue() ?? '', $this->oField->GetGlobalId(), 40, 8);
 						$oText->AddCSSClasses(['ibo-input-field-wrapper', 'ibo-input']);
 						$oValue->AddSubBlock($oText);
 						// Some additional stuff if we are displaying it with a rich editor
