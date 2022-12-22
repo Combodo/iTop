@@ -666,14 +666,14 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: TriggerOnAttributeDocumentDownload
+// Class: TriggerOnAttributeBlobDownload
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:TriggerOnAttributeDocumentDownload' => 'Trigger (on object\'s document download)',
-	'Class:TriggerOnAttributeDocumentDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class',
-	'Class:TriggerOnAttributeDocumentDownload/Attribute:target_attcodes' => 'Target fields',
-	'Class:TriggerOnAttributeDocumentDownload/Attribute:target_attcodes+' => '',
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
 ));
 
 //

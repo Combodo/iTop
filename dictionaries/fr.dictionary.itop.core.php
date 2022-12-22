@@ -663,14 +663,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: TriggerOnAttributeDocumentDownload
+// Class: TriggerOnAttributeBlobDownload
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:TriggerOnAttributeDocumentDownload' => 'Déclencheur sur le téléchargement d\'un document d\'un objet',
-	'Class:TriggerOnAttributeDocumentDownload+' => '',
-	'Class:TriggerOnAttributeDocumentDownload/Attribute:target_attcodes' => 'Attributs cible',
-	'Class:TriggerOnAttributeDocumentDownload/Attribute:target_attcodes+' => '',
+	'Class:TriggerOnAttributeBlobDownload' => 'Déclencheur sur le téléchargement d\'un document d\'un objet',
+	'Class:TriggerOnAttributeBlobDownload+' => '',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Attributs cible',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
 ));
 
 //
