@@ -2217,10 +2217,24 @@ class MenuBlock extends DisplayBlock
 			}
 
 			// - Search
-			if ($this->m_sStyle == 'details') {
+			if ($this->m_sStyle === 'details') {
 				$oActionButton = ButtonUIBlockFactory::MakeIconLink('fas fa-search', Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), "{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'UI:SearchFor_Class');
 				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				$oActionsToolbar->AddSubBlock($oActionButton);
+			} else if ($this->m_sStyle === 'listInObject'){
+				// - Filter list
+
+				// TODO 3.1 Needs to replace default UI:Menu:New initialized in AddNewObjectMenuAction
+				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
+					'fas fa-plus',
+					Dict::S('UI:Links:New:Button:Tooltip'),
+					Dict::S('UI:Links:New:Button:Tooltip'),
+					'',
+					false
+				);
+				$oAddLinkActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button'])
+					->SetOnClickJsCode("LinkSetWorker.CreateLinkedObject('$sId')");
+				$oActionsToolbar->AddSubBlock($oAddLinkActionButton);
 			}
 
 			// - Others
