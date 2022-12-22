@@ -170,7 +170,12 @@ class LinkSetController extends AbstractController
 
 					/* Alerts the results */
 					sPosting.done(function(data) {
-						oForm.closest('[data-role="ibo-modal"]').dialog('close');
+						if(data.success !== undefined && data.success === true) {
+							oForm.closest('[data-role="ibo-modal"]').dialog('close');
+						}
+						else {
+							CombodoModal.OpenInformativeModal(data.data.error_message, 'error');
+						}
 					});
 				}
 JS
