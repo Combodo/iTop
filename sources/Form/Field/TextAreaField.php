@@ -33,6 +33,8 @@ use AttributeText;
  */
 class TextAreaField extends TextField
 {
+	const DISPLAY_CONDITION_VALIDATION_PATTERN = '/^:template->([A-Za-z0-9_]+)->([A-Za-z0-9_]+)$/';
+
 	/** @var string */
 	const ENUM_FORMAT_TEXT = 'text';
 	/** @var string */
@@ -138,7 +140,7 @@ class TextAreaField extends TextField
 		$sCurrentValue = $this->GetCurrentValue();
 		if ($this->GetReadOnly()) {
 			$aMatches = [];
-			if (preg_match(StringField::DISPLAY_CONDITION_VALIDATION_PATTERN, $this->aFields, $aMatches, PREG_OFFSET_CAPTURE)) {
+			if (preg_match(TextAreaField::DISPLAY_CONDITION_VALIDATION_PATTERN, $this->aFields, $aMatches, PREG_OFFSET_CAPTURE)) {
 				$sLinkedField = $aMatches[1][0];
 				if (array_key_exists($aMatches[1][0], $this->aFields)) {
 					if ($this->aFields[$aMatches[1][0]].isInstanceOf("SelectObjectField")) {
