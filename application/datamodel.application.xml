@@ -671,7 +671,7 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_DOWNLOAD_DOCUMENT" _delta="define">
+    <event id="EVENT_DOWNLOAD_DOCUMENT" _delta="define">
       <description>A document has been downloaded from the GUI</description>
       <sources>
         <source id="Document">Document</source>
@@ -691,7 +691,7 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_LOGIN" _delta="define">
+    <event id="EVENT_LOGIN" _delta="define">
       <description>Inform the listeners about the connection states</description>
       <event_data>
         <event_datum id="code">

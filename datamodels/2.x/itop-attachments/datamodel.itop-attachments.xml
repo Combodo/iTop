@@ -256,7 +256,7 @@
     </class>
   </classes>
   <events>
-    <event id="EVENT_SERVICE_ADD_ATTACHMENT_TO_OBJECT" _delta="define">
+    <event id="EVENT_ADD_ATTACHMENT_TO_OBJECT" _delta="define">
       <description>An attachment has been added to an object</description>
       <replaces>Attachment::AfterUpdate</replaces>
       <sources>
@@ -278,7 +278,7 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_REMOVE_ATTACHMENT_FROM_OBJECT" _delta="define">
+    <event id="EVENT_REMOVE_ATTACHMENT_FROM_OBJECT" _delta="define">
       <description>An attachment has been removed from an object</description>
       <replaces>Attachment::AfterUpdate</replaces>
       <sources>

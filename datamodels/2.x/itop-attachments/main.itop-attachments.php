@@ -305,7 +305,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
 				{
 					$aData = ['target_object' => $oObject];
-					$oAttachment->FireEvent(EVENT_SERVICE_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
+					$oAttachment->FireEvent(EVENT_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
 					$oAttachment->DBDelete();
 					$aActions[] = self::GetActionChangeOp($oAttachment, false /* false => deletion */);
 				}
@@ -335,7 +335,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 						// temporary attachment confirmed, list it in the history
 						$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
 						$aData = ['target_object' => $oObject];
-						$oAttachment->FireEvent(EVENT_SERVICE_ADD_ATTACHMENT_TO_OBJECT, $aData);
+						$oAttachment->FireEvent(EVENT_ADD_ATTACHMENT_TO_OBJECT, $aData);
 					}
 				}
 			}
