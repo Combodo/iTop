@@ -540,14 +540,14 @@ JS
 			{
 				$sAttachmentThumbUrl = $sDocDisplayUrl;
 			}
-			$sPreviewMarkup = utils::HtmlEntities('<img src="'.$sDocDownloadUrl.'" style="max-width: '.$iMaxWidth.'"/>');
+			$sPreviewMarkup = utils::HtmlEntities('<img src="'.$sDocDisplayUrl.'" style="max-width: '.$iMaxWidth.'"/>');
 		}
 
 		
 		$aAttachmentLine = array(
 			'@id' => $sTrId,
 			'@meta' => 'data-file-type="'.utils::HtmlEntities($sFileType).'" data-file-size-raw="'.utils::HtmlEntities($iFileSize).'" data-file-size-formatted="'.utils::HtmlEntities($sFileFormattedSize).'" data-file-uploader="'.utils::HtmlEntities($sAttachmentUploader).'"',
-			'icon' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="trigger-preview '.$sIconClass.'" data-preview-url="$sAttachmentPreviewUrl"><img class="ibo-attachment--datatable--icon-preview '.$sIconClass.'" data-tooltip-content="'.$sPreviewMarkup.'" data-tooltip-html-enabled="true" src="'.$sAttachmentThumbUrl.'"></a>',
+			'icon' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="'.$sIconClass.'"><img class="ibo-attachment--datatable--icon-preview '.$sIconClass.'" data-tooltip-content="'.$sPreviewMarkup.'" data-tooltip-html-enabled="true" src="'.$sAttachmentThumbUrl.'"></a>',
 			'filename' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="$sIconClass">'.$sFileName.'</a>'.$sAttachmentMeta,
 			'formatted-size' => $sFileFormattedSize,
 			'upload-date' => $sAttachmentDateFormatted,
