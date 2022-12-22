@@ -291,7 +291,17 @@ class ApplicationMenu
 	 * @param string $sMenuGroupIdx
 	 * @param array $aExtraParams
 	 *
-	 * @return array
+	 * @return array {
+	 *   array {
+	 *     sId: string,
+	 *     sTitle: string,
+	 *     sLabel: string,
+	 *     bHasCount: bolean,
+	 *     sUrl: string url
+	 *     bOpenInNewWindow: bolean
+	 *     aSubMenuNodes: same structure recursively
+	 *   }
+	 * } $aSubMenuNodes
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 * @since 3.0.0
@@ -322,7 +332,7 @@ class ApplicationMenu
 			$aSubMenuNodes[] = [
 				'sId'              => $oSubMenuNode->GetMenuId(),
 				'sTitle'           => $oSubMenuNode->GetTitle(),
-				'sLabel'           => $oSubMenuNode->GetLabel(),  // Bug #4852
+				'sLabel'           => $oSubMenuNode->GetLabel(),
 				'bHasCount'        => $oSubMenuNode->HasCount(),
 				'sUrl'             => $oSubMenuNode->GetHyperlink($aExtraParams),
 				'bOpenInNewWindow' => $oSubMenuNode->IsHyperLinkInNewWindow(),
@@ -747,7 +757,7 @@ abstract class MenuNode
 	}
 
 	/**
-	 * @return string
+	 * @return string the + dictionary entry for this menu if exists, otherwise the Title
 	 */
 	public function GetLabel()
 	{
@@ -759,7 +769,6 @@ abstract class MenuNode
 			} else {
 				$sRet = $this->GetTitle();
 			}
-			//$sRet = $this->GetTitle();
 		}
 		return $sRet;
 	}
