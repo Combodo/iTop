@@ -103,7 +103,7 @@ class ItopDataTestCase extends ItopTestCase
 			$this->CreateTestOrganization();
 		}
 
-		EventService::RegisterListener(EVENT_SERVICE_DB_OBJECT_RELOAD, [$this, 'CountObjectReload']);
+		EventService::RegisterListener(EVENT_DB_OBJECT_RELOAD, [$this, 'CountObjectReload']);
 	}
 
 	/**

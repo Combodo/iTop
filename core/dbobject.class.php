@@ -355,7 +355,7 @@ abstract class DBObject implements iDisplay
 	public function Reload($bAllowAllData = false)
 	{
 		assert($this->m_bIsInDB);
-		$this->FireEvent(EVENT_SERVICE_DB_OBJECT_RELOAD);
+		$this->FireEvent(EVENT_DB_OBJECT_RELOAD);
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, true /* AllowAllData */);
 		if (empty($aRow))
 		{
@@ -2357,10 +2357,6 @@ abstract class DBObject implements iDisplay
 				$this->DoComputeValues();
 			}
 
-			$this->SetReadOnly('No modification allowed during CheckToWrite');
-			$this->EventCheckToWrite();
-			$this->SetReadWrite();
-
 			$this->DoCheckToWrite();
 			$oKPI->ComputeStats('CheckToWrite', get_class($this));
 			if (count($this->m_aCheckIssues) == 0)
@@ -2969,8 +2965,9 @@ abstract class DBObject implements iDisplay
 		$sRootClass = MetaModel::GetRootClass($sClass);
 
 		// Ensure the update of the values (we are accessing the data directly)
+		$this->EventCreateComputeValues();
 		$this->DoComputeValues();
-		$this->EventInsertRequested();
+		$this->EventCreateRequested();
 		$this->OnInsert();
 
 		if ($this->m_iKey < 0) {
@@ -2986,14 +2983,19 @@ abstract class DBObject implements iDisplay
 		}
 
 		// Ultimate check - ensure DB integrity
+		$this->SetReadOnly('No modification allowed during CheckToCreate');
+		$this->EventCheckToCreate();
+		$this->SetReadWrite();
+
 		list($bRes, $aIssues) = $this->CheckToWrite(false);
 		if (!$bRes) {
+			$this->EventCheckToCreateFailed(['check_issues' => $aIssues]);
 			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
 		$this->ComputeStopWatchesDeadline(true);
 
-		$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_ABOUT_TO_INSERT);
-		$this->EventInsertBefore();
+		$this->SetReadOnly('No modification allowed during The Event :'.EVENT_DB_ABOUT_TO_INSERT);
+		$this->EventAboutToCreate();
 		$this->SetReadWrite();
 
 		$iTransactionRetry = 1;
@@ -3073,7 +3075,7 @@ abstract class DBObject implements iDisplay
 		// Prevent DBUpdate at this point (reentrance protection)
 		MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
 
-		$this->EventInsertAfter();
+		$this->EventCreateDone();
 		$this->AfterInsert();
 
 		// Activate any existing trigger
@@ -3172,6 +3174,7 @@ abstract class DBObject implements iDisplay
 
 		try
 		{
+			$this->EventUpdateComputeValues();
 			$this->DoComputeValues();
 			$this->ComputeStopWatchesDeadline(false);
 			$this->EventUpdateRequested();
@@ -3191,10 +3194,12 @@ abstract class DBObject implements iDisplay
 
 			// Ultimate check - ensure DB integrity
 			$this->SetReadOnly('No modification allowed during CheckToWrite');
-			list($bRes, $aIssues) = $this->CheckToWrite(false);
+			$this->EventCheckToUpdate();
 			$this->SetReadWrite();
+			list($bRes, $aIssues) = $this->CheckToWrite(false);
 			if (!$bRes)
 			{
+				$this->EventCheckToUpdateFailed(['check_issues' => $aIssues]);
 				throw new CoreCannotSaveObjectException(['issues' => $aIssues, 'class' => $sClass, 'id' => $this->GetKey()]);
 			}
 
@@ -3229,8 +3234,8 @@ abstract class DBObject implements iDisplay
 				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
 				$iTransactionRetry = $iTransactionRetryCount;
 			}
-			$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_ABOUT_TO_UPDATE);
-			$this->EventUpdateBefore();
+			$this->SetReadOnly('No modification allowed during The Event :'.EVENT_DB_ABOUT_TO_UPDATE);
+			$this->EventAboutToUpdate();
 			$this->SetReadWrite();
 
 			while ($iTransactionRetry > 0)
@@ -3361,7 +3366,7 @@ abstract class DBObject implements iDisplay
 			$this->m_aModifiedAtt = array();
 
 			try {
-				$this->EventUpdateAfter(['changes' => $aChanges]);
+				$this->EventUpdateDone(['changes' => $aChanges]);
 				$this->AfterUpdate();
 
 				// Reset original values although the object has not been reloaded
@@ -3610,7 +3615,7 @@ abstract class DBObject implements iDisplay
 			return;
 		}
 
-		$this->EventDeleteBefore();
+		$this->EventAboutToDelete();
 		$this->OnDelete();
 
 		// Activate any existing trigger
@@ -3721,7 +3726,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		$this->EventDeleteAfter();
+		$this->EventDeleteDone();
 		$this->AfterDelete();
 
 
@@ -3770,6 +3775,7 @@ abstract class DBObject implements iDisplay
 		if ($oDeletionPlan->FoundStopper())
 		{
 			$aIssues = $oDeletionPlan->GetIssues();
+			$this->EventCheckToDeleteFailed(['check_issues' => $aIssues]);
 			throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));	
 		}
 
@@ -3925,7 +3931,7 @@ abstract class DBObject implements iDisplay
 			'new_state' => $sNewState,
 			'save_object' => !$bDoNotWrite,
 		];
-		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_APPLY_STIMULUS, $aEventData);
+		$this->FireEvent(EVENT_DB_BEFORE_APPLY_STIMULUS, $aEventData);
 
 		// $aTransitionDef is an
 		//    array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD
@@ -4040,7 +4046,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 
-			$this->FireEvent(EVENT_SERVICE_DB_AFTER_APPLY_STIMULUS, $aEventData);
+			$this->FireEvent(EVENT_DB_AFTER_APPLY_STIMULUS, $aEventData);
 		}
 		else
 		{
@@ -4050,7 +4056,7 @@ abstract class DBObject implements iDisplay
 				$this->m_aCurrValues[$sAttCode] = $aBackupValues[$sAttCode];
 			}
 			$aEventData['action'] = $sActionDesc;
-			$this->FireEvent(EVENT_SERVICE_DB_APPLY_STIMULUS_FAILED, $aEventData);
+			$this->FireEvent(EVENT_DB_APPLY_STIMULUS_FAILED, $aEventData);
 		}
 		return $bSuccess;
 	}
@@ -5626,7 +5632,7 @@ abstract class DBObject implements iDisplay
 		$this->m_aOrigValues['archive_flag'] = false;
 		$this->m_aCurrValues['archive_date'] = null;
 		$this->m_aOrigValues['archive_date'] = null;
-		$this->EventUnarchive();
+		$this->EventUnArchive();
 	}
 
 
@@ -5822,6 +5828,7 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @api
 	 * @param string $sIssue
 	 *
 	 * @return void
@@ -5833,14 +5840,46 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @api
 	 * @param string $sIssue
+	 * @param bool $bIsSecurityIssue
 	 *
 	 * @return void
 	 * @since 3.1.0
 	 */
-	final public function AddDeleteIssue(string $sIssue)
+	final public function AddDeleteIssue(string $sIssue, bool $bIsSecurityIssue = false)
 	{
 		$this->m_aDeleteIssues[] = $sIssue;
+		if ($bIsSecurityIssue) {
+			$this->m_bSecurityIssue = true;
+		}
+	}
+
+	/**
+	 * @api
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 * @param string $sTargetState
+	 *
+	 * @return int
+	 * @since 3.1.0
+	 */
+	protected function GetExtensionsAttributeFlags(string $sAttCode, array &$aReasons, string $sTargetState): int
+	{
+		return OPT_ATT_NORMAL;
+	}
+
+	/**
+	 * @api
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 *
+	 * @return int
+	 * @since 3.1.0
+	 */
+	protected function GetExtensionsInitialStateAttributeFlags(string $sAttCode, array &$aReasons): int
+	{
+		return OPT_ATT_NORMAL;
 	}
 
 	/**
@@ -5865,11 +5904,15 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
+	//////////////////
+	/// CREATE
+	///
+
 	/**
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventInsertRequested(): void
+	protected function EventCreateComputeValues(): void
 	{
 	}
 
@@ -5877,11 +5920,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventInsertBefore(): void
-	{
-	}
-
-	protected function EventInsertAfter(): void
+	protected function EventCreateRequested(): void
 	{
 	}
 
@@ -5889,7 +5928,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventComputeValues(): void
+	protected function EventCheckToCreate(): void
 	{
 	}
 
@@ -5897,7 +5936,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCheckToWrite(): void
+	protected function EventCheckToCreateFailed(array $aData): void
 	{
 	}
 
@@ -5905,7 +5944,27 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCheckToDelete(): void
+	protected function EventAboutToCreate(): void
+	{
+	}
+
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventCreateDone(): void
+	{
+	}
+
+	/////////////
+	/// UPDATE
+	///
+
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventUpdateComputeValues(): void
 	{
 	}
 
@@ -5921,7 +5980,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventUpdateBefore(): void
+	protected function EventCheckToUpdate(): void
 	{
 	}
 
@@ -5929,7 +5988,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventUpdateAfter(array $aEventData): void
+	protected function EventCheckToUpdateFailed(array $aData): void
 	{
 	}
 
@@ -5937,7 +5996,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventDeleteBefore(): void
+	protected function EventAboutToUpdate(): void
 	{
 	}
 
@@ -5945,7 +6004,51 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventDeleteAfter(): void
+	protected function EventUpdateDone(array $aData): void
+	{
+	}
+
+	//////////////
+	/// DELETE
+	///
+
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventCheckToDelete(): void
+	{
+	}
+
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventCheckToDeleteFailed(array $aData): void
+	{
+	}
+
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventAboutToDelete(): void
+	{
+	}
+
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventDeleteDone(): void
+	{
+	}
+
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected function EventComputeValues(): void
 	{
 	}
 
@@ -5962,33 +6065,8 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventUnarchive(): void
+	protected function EventUnArchive(): void
 	{
-	}
-
-	/**
-	 * @param string $sAttCode
-	 * @param array $aReasons
-	 * @param string $sTargetState
-	 *
-	 * @return int
-	 * @since 3.1.0
-	 */
-	protected function GetExtensionsAttributeFlags(string $sAttCode, array &$aReasons, string $sTargetState): int
-	{
-		return OPT_ATT_NORMAL;
-	}
-
-	/**
-	 * @param string $sAttCode
-	 * @param array $aReasons
-	 *
-	 * @return int
-	 * @since 3.1.0
-	 */
-	protected function GetExtensionsInitialStateAttributeFlags(string $sAttCode, array &$aReasons): int
-	{
-		return OPT_ATT_NORMAL;
 	}
 }
 

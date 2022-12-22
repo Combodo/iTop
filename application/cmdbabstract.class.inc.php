@@ -5661,31 +5661,160 @@ JS
 		);
 	}
 
+	//////////////////
+	/// CREATE
+	///
+
 	/**
 	 * @inheritDoc
-	 * @throws \CoreException
+	 * @since 3.1.0
 	 */
-	final protected function EventInsertRequested(): void
+	final protected function EventCreateComputeValues(): void
 	{
-		$this->FireEvent(EVENT_SERVICE_DB_INSERT_REQUESTED);
+		$this->FireEvent(EVENT_DB_CREATE_COMPUTE_VALUES);
 	}
 
 	/**
 	 * @inheritDoc
-	 * @throws \CoreException
+	 * @since 3.1.0
 	 */
-	final protected function EventInsertBefore(): void
+	final protected function EventCreateRequested(): void
 	{
-		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_INSERT);
+		$this->FireEvent(EVENT_DB_CREATE_REQUESTED);
 	}
 
 	/**
 	 * @inheritDoc
-	 * @throws \CoreException
+	 * @since 3.1.0
 	 */
-	final protected function EventInsertAfter(): void
+	final protected function EventCheckToCreate(): void
 	{
-		$this->FireEvent(EVENT_SERVICE_DB_INSERT_DONE);
+		$this->FireEvent(EVENT_DB_CHECK_TO_CREATE);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventCheckToCreateFailed(array $aData): void
+	{
+		$this->FireEvent(EVENT_DB_CHECK_TO_CREATE_FAILED, $aData);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventAboutToCreate(): void
+	{
+		$this->FireEvent(EVENT_DB_ABOUT_TO_CREATE);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventCreateDone(): void
+	{
+		$this->FireEvent(EVENT_DB_CREATE_DONE);
+	}
+
+	/////////////
+	/// UPDATE
+	///
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventUpdateComputeValues(): void
+	{
+		$this->FireEvent(EVENT_DB_UPDATE_COMPUTE_VALUES);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventUpdateRequested(): void
+	{
+		$this->FireEvent(EVENT_DB_UPDATE_REQUESTED);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventCheckToUpdate(): void
+	{
+		$this->FireEvent(EVENT_DB_CHECK_TO_UPDATE);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventCheckToUpdateFailed(array $aData): void
+	{
+		$this->FireEvent(EVENT_DB_CHECK_TO_UPDATE_FAILED, $aData);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventAboutToUpdate(): void
+	{
+		$this->FireEvent(EVENT_DB_ABOUT_TO_UPDATE);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventUpdateDone(array $aData): void
+	{
+		$this->FireEvent(EVENT_DB_UPDATE_DONE, $aData);
+	}
+
+	//////////////
+	/// DELETE
+	///
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventCheckToDelete(): void
+	{
+		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventCheckToDeleteFailed(array $aData): void
+	{
+		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE_FAILED, $aData);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventAboutToDelete(): void
+	{
+		$this->FireEvent(EVENT_DB_ABOUT_TO_DELETE);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0
+	 */
+	final protected function EventDeleteDone(): void
+	{
+		$this->FireEvent(EVENT_DB_DELETE_DONE);
 	}
 
 	/**
@@ -5694,70 +5823,7 @@ JS
 	 */
 	final protected function EventComputeValues(): void
 	{
-		$this->FireEvent(EVENT_SERVICE_DB_COMPUTE_VALUES);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @throws \CoreException
-	 */
-	final protected function EventCheckToWrite(): void
-	{
-		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_WRITE);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @throws \CoreException
-	 */
-	final protected function EventCheckToDelete(): void
-	{
-		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_DELETE);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @throws \CoreException
-	 */
-	final protected function EventUpdateRequested(): void
-	{
-		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_REQUESTED);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @throws \CoreException
-	 */
-	final protected function EventUpdateBefore(): void
-	{
-		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_UPDATE);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @throws \CoreException
-	 */
-	final protected function EventUpdateAfter(array $aEventData): void
-	{
-		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_DONE, $aEventData);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @throws \CoreException
-	 */
-	final protected function EventDeleteBefore(): void
-	{
-		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_DELETE);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @throws \CoreException
-	 */
-	final protected function EventDeleteAfter(): void
-	{
-		$this->FireEvent(EVENT_SERVICE_DB_DELETE_DONE);
+		$this->FireEvent(EVENT_DB_COMPUTE_VALUES);
 	}
 
 	/**
@@ -5766,21 +5832,22 @@ JS
 	 */
 	final protected function EventArchive(): void
 	{
-		$this->FireEvent(EVENT_SERVICE_DB_ARCHIVE);
+		$this->FireEvent(EVENT_DB_ARCHIVE);
 	}
 
 	/**
 	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventUnarchive(): void
+	final protected function EventUnArchive(): void
 	{
-		$this->FireEvent(EVENT_SERVICE_DB_UNARCHIVE);
+		$this->FireEvent(EVENT_DB_UNARCHIVE);
 	}
 
 	/**
 	 * Append $iFlags to $sAttCode attribute in $sTargetState
 	 *
+	 * @api
 	 * @param string $sAttCode
 	 * @param int $iFlags
 	 * @param string $sTargetState
@@ -5803,6 +5870,7 @@ JS
 	/**
 	 * Force $iFlags to $sAttCode attribute in $sTargetState
 	 *
+	 * @api
 	 * @param string $sAttCode
 	 * @param int $iFlags
 	 * @param string $sTargetState
@@ -5833,7 +5901,7 @@ JS
 			$aEventData = [
 				'target_state' => $sTargetState,
 			];
-			$this->FireEvent(EVENT_SERVICE_DB_SET_ATTRIBUTES_FLAGS, $aEventData);
+			$this->FireEvent(EVENT_DB_SET_ATTRIBUTES_FLAGS, $aEventData);
 		}
 		$iFlags = $this->aAttributesFlags[$sTargetState][$sAttCode]['flags'] ?? 0;
 		$aReasons += ($this->aAttributesFlags[$sTargetState][$sAttCode]['reasons'] ?? []);
@@ -5845,6 +5913,7 @@ JS
 	/**
 	 * Append $iFlags to $sAttCode attribute in initial state
 	 *
+	 * @api
 	 * @param string $sAttCode
 	 * @param int $iFlags
 	 * @param string|null $sReason
@@ -5866,6 +5935,7 @@ JS
 	/**
 	 * Force $iFlags to $sAttCode attribute in initial state
 	 *
+	 * @api
 	 * @param string $sAttCode
 	 * @param int $iFlags
 	 * @param string|null $sReason
@@ -5892,7 +5962,7 @@ JS
 	{
 		if (!isset($this->aInitialAttributesFlags)) {
 			$this->aInitialAttributesFlags = [];
-			$this->FireEvent(EVENT_SERVICE_DB_SET_INITIAL_ATTRIBUTES_FLAGS);
+			$this->FireEvent(EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS);
 		}
 		$iFlags = $this->aInitialAttributesFlags[$sAttCode]['flags'] ?? 0;
 		$aReasons += ($this->aInitialAttributesFlags[$sAttCode]['reasons'] ?? []);
