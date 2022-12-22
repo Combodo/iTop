@@ -10,6 +10,13 @@ use Combodo\iTop\Service\Events\Description\EventDescription;
 use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Service\Events\iEventServiceSetup;
 
+/**
+ * Class ApplicationEvents
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application
+ * @since 3.1.0
+ */
 class ApplicationEvents implements iEventServiceSetup
 {
 	// Startup events

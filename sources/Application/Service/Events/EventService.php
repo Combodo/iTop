@@ -26,9 +26,12 @@ use utils;
  */
 class EventService
 {
+	/** @var array */
 	private static $aEventListeners = [];
+	/** @var int */
 	private static $iEventIdCounter = 0;
-	private static $aEventDescription = [];
+	/** @var array */
+	private static $aEventDescriptions = [];
 
 	/**
 	 * Initialize the Event Service. This is called by iTop.
@@ -101,6 +104,9 @@ class EventService
 		return $sId;
 	}
 
+	/**
+	 * @return false|string
+	 */
 	public static function GetListenersAsJSON()
 	{
 		return json_encode(self::$aEventListeners, JSON_PRETTY_PRINT);
@@ -152,7 +158,7 @@ class EventService
 		$oKPI->ComputeStats('FireEvent', $sEvent);
 	}
 
-	public static function GetListeners($sEvent, $eventSource)
+	public static function GetListeners(string $sEvent, $eventSource)
 	{
 		$aListeners = [];
 		if (isset(self::$aEventListeners[$sEvent])) {
@@ -287,24 +293,29 @@ class EventService
 		$sEvent = $oEventDescription->GetEventName();
 		$sModule = $oEventDescription->GetModule();
 		if (self::IsEventRegistered($sEvent)) {
-			$sPrevious = self::$aEventDescription[$sEvent]['module'];
+			$sPrevious = self::$aEventDescriptions[$sEvent]['module'];
 			EventHelper::Warning("The Event $sEvent defined by $sModule has already been defined in $sPrevious, check your delta");
 
 			return;
 		}
 
-		self::$aEventDescription[$sEvent] = [
+		self::$aEventDescriptions[$sEvent] = [
 			'name'        => $sEvent,
 			'description' => $oEventDescription,
 			'module'      => $sModule,
 		];
 	}
 
-	public static function GetEventsByClass($sClass)
+	/**
+	 * @param string $sClass
+	 *
+	 * @return array
+	 */
+	public static function GetEventsByClass(string $sClass)
 	{
 		$aRes = [];
 		$oClass = new ReflectionClass($sClass);
-		foreach (self::$aEventDescription as $sEvent => $aEventInfo) {
+		foreach (self::$aEventDescriptions as $sEvent => $aEventInfo) {
 			if (is_array($aEventInfo['description']->GetEventSources())) {
 				foreach ($aEventInfo['description']->GetEventSources() as $sSource) {
 					if ($sClass == $sSource || $oClass->isSubclassOf($sSource)) {
@@ -328,11 +339,14 @@ class EventService
 	 */
 	public static function IsEventRegistered(string $sEvent): bool
 	{
-		return array_key_exists($sEvent, self::$aEventDescription);
+		return array_key_exists($sEvent, self::$aEventDescriptions);
 	}
 
+	/**
+	 * @return false|string
+	 */
 	public static function GetDefinedEventsAsJSON()
 	{
-		return json_encode(self::$aEventDescription, JSON_PRETTY_PRINT);
+		return json_encode(self::$aEventDescriptions, JSON_PRETTY_PRINT);
 	}
 }
