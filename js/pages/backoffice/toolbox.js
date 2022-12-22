@@ -326,8 +326,10 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
  */
 CombodoModal._ConvertButtonDefinition = function(aButtonsDefinitions){
 	const aConverted = [];
-	if(aButtonsDefinitions !== null) {
-		aButtonsDefinitions.forEach(element => {
+	if(aButtonsDefinitions === null) {
+		return aConverted
+	}
+	aButtonsDefinitions.forEach(element => {
 				const aButton = {
 					text: element.text,
 					class: element.class,
@@ -335,8 +337,7 @@ CombodoModal._ConvertButtonDefinition = function(aButtonsDefinitions){
 				}
 				aConverted.push(aButton);
 			}
-		);
-	}
+	);
 	return aConverted;
 }
 
