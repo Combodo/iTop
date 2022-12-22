@@ -38,10 +38,6 @@ class EventService
 	 */
 	public static function InitService()
 	{
-		self::$aEventListeners = [];
-		self::$iEventIdCounter = 0;
-		self::$aEventDescription = [];
-
 		$aEventServiceSetup = utils::GetClassesForInterface(iEventServiceSetup::class, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']);
 		foreach ($aEventServiceSetup as $sEventServiceSetupClass) {
 			/** @var \Combodo\iTop\Service\Events\iEventServiceSetup $oEventServiceSetup */

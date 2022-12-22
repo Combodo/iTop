@@ -13,7 +13,6 @@ use Combodo\iTop\Service\Events\iEventServiceSetup;
 class ApplicationEvents implements iEventServiceSetup
 {
 	// Startup events
-	const APPLICATION_EVENT_REQUEST_RECEIVED  = 'APPLICATION_EVENT_REQUEST_RECEIVED';
 	const APPLICATION_EVENT_METAMODEL_STARTED = 'APPLICATION_EVENT_METAMODEL_STARTED';
 
 	/**
@@ -21,13 +20,6 @@ class ApplicationEvents implements iEventServiceSetup
 	 */
 	public function RegisterEventsAndListeners()
 	{
-		EventService::RegisterEvent(new EventDescription(
-			self::APPLICATION_EVENT_REQUEST_RECEIVED,
-			null,
-			'A request was received from the network, at this point only the session is started, the configuration is not even loaded',
-			'',
-			[],
-			'application'));
 		EventService::RegisterEvent(new EventDescription(
 			self::APPLICATION_EVENT_METAMODEL_STARTED,
 			null,

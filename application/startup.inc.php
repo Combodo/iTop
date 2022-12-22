@@ -72,9 +72,6 @@ $oKPI = new ExecutionKPI();
 Session::Start();
 $oKPI->ComputeAndReport("Session Start");
 
-EventService::InitService();
-EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_REQUEST_RECEIVED));
-
 $sSwitchEnv = utils::ReadParam('switch_env', null);
 $bAllowCache = true;
 if (($sSwitchEnv != null) && file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE) &&( Session::Get('itop_env') !== $sSwitchEnv))
@@ -106,4 +103,6 @@ else
 }
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
+// Event service must be initialized after the MetaModel startup, otherwise it cannot discover classes implementing the iEventServiceSetup interface
+EventService::InitService();
 EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
