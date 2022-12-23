@@ -2357,6 +2357,15 @@ abstract class DBObject implements iDisplay
 				$this->DoComputeValues();
 			}
 
+			// Ultimate check - ensure DB integrity
+			$this->SetReadOnly('No modification allowed during CheckToCreate');
+			if ($this->IsNew()) {
+				$this->EventCheckToCreate();
+			} else {
+				$this->EventCheckToUpdate();
+			}
+			$this->SetReadWrite();
+
 			$this->DoCheckToWrite();
 			$oKPI->ComputeStats('CheckToWrite', get_class($this));
 			if (count($this->m_aCheckIssues) == 0)
@@ -2366,6 +2375,11 @@ abstract class DBObject implements iDisplay
 			else
 			{
 				$this->m_bCheckStatus = false;
+				if ($this->IsNew()) {
+					$this->EventCheckToCreateFailed(['check_issues' => $this->m_aCheckIssues]);
+				} else {
+					$this->EventCheckToUpdateFailed(['check_issues' => $this->m_aCheckIssues]);
+				}
 			}
 		}
 		return array($this->m_bCheckStatus, $this->m_aCheckIssues, $this->m_bSecurityIssue);
@@ -2965,7 +2979,6 @@ abstract class DBObject implements iDisplay
 		$sRootClass = MetaModel::GetRootClass($sClass);
 
 		// Ensure the update of the values (we are accessing the data directly)
-		$this->EventCreateComputeValues();
 		$this->DoComputeValues();
 		$this->EventCreateRequested();
 		$this->OnInsert();
@@ -2982,14 +2995,8 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		// Ultimate check - ensure DB integrity
-		$this->SetReadOnly('No modification allowed during CheckToCreate');
-		$this->EventCheckToCreate();
-		$this->SetReadWrite();
-
 		list($bRes, $aIssues) = $this->CheckToWrite(false);
 		if (!$bRes) {
-			$this->EventCheckToCreateFailed(['check_issues' => $aIssues]);
 			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
 		$this->ComputeStopWatchesDeadline(true);
@@ -3174,7 +3181,6 @@ abstract class DBObject implements iDisplay
 
 		try
 		{
-			$this->EventUpdateComputeValues();
 			$this->DoComputeValues();
 			$this->ComputeStopWatchesDeadline(false);
 			$this->EventUpdateRequested();
@@ -3192,14 +3198,9 @@ abstract class DBObject implements iDisplay
 				return $this->m_iKey;
 			}
 
-			// Ultimate check - ensure DB integrity
-			$this->SetReadOnly('No modification allowed during CheckToWrite');
-			$this->EventCheckToUpdate();
-			$this->SetReadWrite();
 			list($bRes, $aIssues) = $this->CheckToWrite(false);
 			if (!$bRes)
 			{
-				$this->EventCheckToUpdateFailed(['check_issues' => $aIssues]);
 				throw new CoreCannotSaveObjectException(['issues' => $aIssues, 'class' => $sClass, 'id' => $this->GetKey()]);
 			}
 
@@ -5912,14 +5913,6 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCreateComputeValues(): void
-	{
-	}
-
-	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
 	protected function EventCreateRequested(): void
 	{
 	}
@@ -5959,14 +5952,6 @@ abstract class DBObject implements iDisplay
 	/////////////
 	/// UPDATE
 	///
-
-	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
-	protected function EventUpdateComputeValues(): void
-	{
-	}
 
 	/**
 	 * @return void

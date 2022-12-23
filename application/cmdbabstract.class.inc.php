@@ -5669,15 +5669,6 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCreateComputeValues(): void
-	{
-		$this->FireEvent(EVENT_DB_CREATE_COMPUTE_VALUES);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
 	final protected function EventCreateRequested(): void
 	{
 		$this->FireEvent(EVENT_DB_CREATE_REQUESTED);
@@ -5722,15 +5713,6 @@ JS
 	/////////////
 	/// UPDATE
 	///
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
-	final protected function EventUpdateComputeValues(): void
-	{
-		$this->FireEvent(EVENT_DB_UPDATE_COMPUTE_VALUES);
-	}
 
 	/**
 	 * @inheritDoc
