@@ -291,17 +291,17 @@ class ApplicationMenu
 	 * @param string $sMenuGroupIdx
 	 * @param array $aExtraParams
 	 *
-	 * @return array {
-	 *   array {
-	 *     sId: string,
-	 *     sTitle: string,
-	 *     sLabel: string,
-	 *     bHasCount: bolean,
-	 *     sUrl: string url
-	 *     bOpenInNewWindow: bolean
-	 *     aSubMenuNodes: same structure recursively
-	 *   }
-	 * } $aSubMenuNodes
+	 * @return array{
+	 *     array{
+	 *        sId: string,
+	 *        sTitle: string,
+	 *        sLabel: string,
+	 *        bHasCount: boolean,
+	 *        sUrl: string,
+	 *        bOpenInNewWindow: boolean,
+	 *        aSubMenuNodes: array
+	 *     }
+	 * } The aSubMenuNodes key contains the same structure recursively
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 * @since 3.0.0
