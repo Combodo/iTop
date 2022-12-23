@@ -757,7 +757,7 @@ abstract class MenuNode
 	}
 
 	/**
-	 * @return string The "+" dictionary entry for this menu if exists, otherwise the Title
+	 * @return string The "+" dictionary entry for this menu if exists, otherwise the Title (if we have a parent title, will output parentTitle / currentTitle)
 	 */
 	public function GetLabel()
 	{
