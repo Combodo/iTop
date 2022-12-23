@@ -1772,7 +1772,7 @@ try
 
 				$aResults = $oRelGraph->GetObjectsByClass();
 				$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
-				$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
+				$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName());
 				$sClassIcon = MetaModel::GetClassIcon($sClass, false);
 				if (strlen($sClassIcon) > 0){
 					$oPanel->SetIcon($sClassIcon);
