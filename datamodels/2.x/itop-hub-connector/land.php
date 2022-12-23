@@ -202,10 +202,10 @@ function DoInstall(WebPage $oPage)
 		}
 	}
 
+	$oPage->add('</div>');
 	$oPage->add('<div id="hub-installation-feedback">');
 	$oPage->add('<div id="hub-installation-progress-text">'.Dict::S('iTopHub:DatabaseBackupProgress').'</div>');
 	$oPage->add('<div id="hub-installation-progress"></div>');
-	$oPage->add('</div>');
 
 	$oPage->add('</div>'); // module-selection-body
 
