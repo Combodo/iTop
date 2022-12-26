@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '64d9eef7c926f98aa1aabe61294397be308dd885',
+        'reference' => '1cac1890774b4defa212a142f88348f2f8743f4c',
         'name' => 'combodo/itop',
         'dev' => true,
     ),
@@ -25,7 +25,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '64d9eef7c926f98aa1aabe61294397be308dd885',
+            'reference' => '1cac1890774b4defa212a142f88348f2f8743f4c',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -717,12 +717,12 @@
             'dev_requirement' => false,
         ),
         'twig/twig' => array(
-            'pretty_version' => 'v3.4.2',
-            'version' => '3.4.2.0',
+            'pretty_version' => 'v3.4.3',
+            'version' => '3.4.3.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twig/twig',
             'aliases' => array(),
-            'reference' => 'e07cdd3d430cd7e453c31b36eb5ad6c0c5e43077',
+            'reference' => 'c38fd6b0b7f370c198db91ffd02e23b517426b58',
             'dev_requirement' => false,
         ),
         'webmozart/assert' => array(
