@@ -129,7 +129,7 @@ class ObjectResult
 /**
  * REST response for services managing objects. Derive this structure to add information and/or constants
  *
- * @package     Extensibility
+ * @package     RESTExtensibilityAPI
  * @package     REST Services
  * @api
  */
@@ -206,7 +206,7 @@ class RestResultWithRelations extends RestResultWithObjects
 /**
  * Deletion result codes for a target object (either deleted or updated)
  *
- * @package     Extensibility
+ * @package     RESTExtensibilityAPI
  * @api
  * @since 2.0.1  
  */
