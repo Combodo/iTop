@@ -228,7 +228,7 @@ interface iLoginUIExtension extends iLoginExtension
 
 /**
  * @api
- * @package     Extensibility
+ * @package     PreferencesExtensibilityAPI
  * @since 2.7.0
  */
 interface iPreferencesExtension
@@ -252,7 +252,7 @@ interface iPreferencesExtension
  * Extend this class instead of implementing iPreferencesExtension if you don't need to overload all methods
  *
  * @api
- * @package     Extensibility
+ * @package     PreferencesExtensibilityAPI
  * @since       2.7.0
  */
 abstract class AbstractPreferencesExtension implements iPreferencesExtension
@@ -298,7 +298,7 @@ abstract class AbstractPreferencesExtension implements iPreferencesExtension
  * A recommended pattern is to cache data by the mean of static members.
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  */
 interface iApplicationUIExtension
 {
@@ -439,7 +439,7 @@ interface iApplicationUIExtension
  * Extend this class instead of implementing iApplicationUIExtension if you don't need to overload
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since       2.7.0
  */
 abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
@@ -513,7 +513,7 @@ abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
  * or through the GUI.
  *
  * @api
- * @package     Extensibility
+ * @package     ORMExtensibilityAPI
  */
 interface iApplicationObjectExtension
 {
@@ -607,7 +607,7 @@ interface iApplicationObjectExtension
  * Extend this class instead of iApplicationObjectExtension if you don't need to overload all methods
  *
  * @api
- * @package     Extensibility
+ * @package     ORMExtensibilityAPI
  * @since       2.7.0
  */
 abstract class AbstractApplicationObjectExtension implements iApplicationObjectExtension
@@ -667,7 +667,7 @@ abstract class AbstractApplicationObjectExtension implements iApplicationObjectE
  * by the application, as long as the class definition is included somewhere in the code
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 interface iPopupMenuExtension
@@ -766,7 +766,7 @@ interface iPopupMenuExtension
  * Base class for the various types of custom menus
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 abstract class ApplicationPopupMenuItem
@@ -912,7 +912,7 @@ abstract class ApplicationPopupMenuItem
  * Note: This works only in the backoffice, {@see \URLButtonItem} for the end-user portal
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 class URLPopupMenuItem extends ApplicationPopupMenuItem
@@ -968,7 +968,7 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
  * Note: This works only in the backoffice, {@see \JSButtonItem} for the end-user portal
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 class JSPopupMenuItem extends ApplicationPopupMenuItem
@@ -1037,7 +1037,7 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
  * will automatically reduce several consecutive separators to just one
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
@@ -1063,7 +1063,7 @@ class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
  * Class for adding an item as a button that browses to the given URL
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 class URLButtonItem extends URLPopupMenuItem
@@ -1075,7 +1075,7 @@ class URLButtonItem extends URLPopupMenuItem
  * Class for adding an item as a button that runs some JS code
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  */
 class JSButtonItem extends JSPopupMenuItem
@@ -1099,7 +1099,7 @@ class JSButtonItem extends JSPopupMenuItem
  * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since 2.0
  * @deprecated 3.0.0 If you need to include:
  *   * JS/CSS files/snippets, use {@see \iBackofficeLinkedScriptsExtension}, {@see \iBackofficeLinkedStylesheetsExtension}, etc instead
@@ -1182,7 +1182,7 @@ interface iPageUIBlockExtension
  * Extend this class instead of iPageUIExtension if you don't need to overload all methods
  *
  * @api
- * @package     Extensibility
+ * @package     UIExtensibilityAPI
  * @since       2.7.0
  * @deprecated since 3.0.0 use AbstractPageUIBlockExtension instead
  */
@@ -1403,7 +1403,7 @@ interface iBackofficeDictEntriesPrefixesExtension
  * Implement this interface to add content to any enhanced portal page
  *
  * @api
- * @package     Extensibility
+ * @package     PortalExtensibilityAPI
  *
  * @since 2.4.0 interface creation
  * @since 2.7.0 change method signatures due to Silex to Symfony migration
@@ -1482,7 +1482,7 @@ interface iPortalUIExtension
  * Extend this class instead of iPortalUIExtension if you don't need to overload all methods
  *
  * @api
- * @package     Extensibility
+ * @package     PortalExtensibilityAPI
  * @since       2.4.0
  */
 abstract class AbstractPortalUIExtension implements iPortalUIExtension
@@ -1548,7 +1548,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
  * Implement this interface to add new operations to the REST/JSON web service
  *
  * @api
- * @package     Extensibility
+ * @package     RESTExtensibilityAPI
  * @since 2.0.1
  */
 interface iRestServiceProvider
@@ -1578,7 +1578,7 @@ interface iRestServiceProvider
  * Minimal REST response structure. Derive this structure to add response data and error codes.
  *
  * @api
- * @package     Extensibility
+ * @package     RESTExtensibilityAPI
  * @since 2.0.1
  */
 class RestResult
@@ -1648,7 +1648,7 @@ class RestResult
  * Helpers for implementing REST services
  *
  * @api
- * @package     Extensibility
+ * @package     RESTExtensibilityAPI
  */
 class RestUtils
 {
