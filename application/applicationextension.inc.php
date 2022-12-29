@@ -30,9 +30,9 @@ require_once(APPROOT.'application/newsroomprovider.class.inc.php');
  * You may implement such interfaces in a module file (e.g. main.mymodule.php)
  *
  * @api
+ * @package     LoginExtensibilityAPI
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
- * @package     Extensibility
  * @since       2.7.0
  */
 interface iLoginExtension
@@ -40,12 +40,16 @@ interface iLoginExtension
 	/**
 	 * Return the list of supported login modes for this plugin
 	 *
+	 * @api
+	 *
 	 * @return array of supported login modes
 	 */
 	public function ListSupportedLoginModes();
 }
 
 /**
+ * @api
+ * @package     LoginExtensibilityAPI
  * @since 2.7.0
  */
 interface iLoginFSMExtension extends iLoginExtension
@@ -57,6 +61,7 @@ interface iLoginFSMExtension extends iLoginExtension
 	 * if LoginWebPage::LOGIN_FSM_RETURN_OK is returned then the login is OK and terminated
 	 * if LoginWebPage::LOGIN_FSM_RETURN_IGNORE is returned then the FSM will proceed to next plugin or state
 	 *
+	 * @api
 	 * @param string $sLoginState (see LoginWebPage::LOGIN_STATE_...)
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
@@ -66,6 +71,8 @@ interface iLoginFSMExtension extends iLoginExtension
 }
 
 /**
+ * @api
+ * @package     LoginExtensibilityAPI
  * @since 2.7.0
  */
 abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
@@ -112,6 +119,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	/**
 	 * Initialization
 	 *
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -125,6 +133,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	 * Detect login mode explicitly without respecting configured order (legacy mode)
 	 * In most case do nothing here
 	 *
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -141,6 +150,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	 * 1 - display login form
 	 * 2 - read the values posted by the user
 	 *
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -154,6 +164,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	 * Control the validity of the data provided by the user
 	 * Automatic user provisioning can be done here
 	 *
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -164,6 +175,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 
 	/**
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -174,6 +186,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 
 	/**
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -184,6 +197,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 
 	/**
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -194,6 +208,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 
 	/**
+	 * @api
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
@@ -205,22 +220,28 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 }
 
 /**
+ * @api
+ * @package     LoginExtensibilityAPI
  * @since 2.7.0
  */
 interface iLogoutExtension extends iLoginExtension
 {
 	/**
 	 * Execute all actions to log out properly
+	 * @api
 	 */
 	public function LogoutAction();
 }
 
 /**
+ * @api
+ * @package     UIExtensibilityAPI
  * @since 2.7.0
  */
 interface iLoginUIExtension extends iLoginExtension
 {
 	/**
+	 * @api
 	 * @return LoginTwigContext
 	 */
 	public function GetTwigContext();
@@ -234,12 +255,14 @@ interface iLoginUIExtension extends iLoginExtension
 interface iPreferencesExtension
 {
 	/**
+	 * @api
 	 * @param \WebPage $oPage
 	 *
 	 */
 	public function DisplayPreferences(WebPage $oPage);
 
 	/**
+	 * @api
 	 * @param \WebPage $oPage
 	 * @param string $sOperation
 	 *
@@ -320,6 +343,7 @@ interface iApplicationUIExtension
 	 * }
 	 * </code>
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being displayed
 	 * @param WebPage $oPage The output context
 	 * @param boolean $bEditMode True if the edition form is being displayed
@@ -333,6 +357,7 @@ interface iApplicationUIExtension
 	 *
 	 * The method is called rigth after all the tabs have been displayed
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being displayed
 	 * @param WebPage $oPage The output context
 	 * @param boolean $bEditMode True if the edition form is being displayed
@@ -347,6 +372,7 @@ interface iApplicationUIExtension
 	 * The method is called after the changes from the standard form have been
 	 * taken into account, and before saving the changes into the database.
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being edited
 	 * @param string $sFormPrefix Prefix given to the HTML form inputs
 	 *
@@ -361,6 +387,7 @@ interface iApplicationUIExtension
 	 * javascript into the edition form, and if that code requires to store temporary data
 	 * (this is the case when a file must be uploaded).
 	 *
+	 * @api
 	 * @param string $sTempId Unique temporary identifier made of session_id and transaction_id. It identifies the object in a unique way.
 	 *
 	 * @return void
@@ -372,6 +399,7 @@ interface iApplicationUIExtension
 	 *
 	 * Sorry, the verb has been reserved. You must implement it, but it is not called as of now.
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being displayed
 	 *
 	 * @return string[] desc
@@ -383,6 +411,7 @@ interface iApplicationUIExtension
 	 *
 	 * Sorry, the verb has been reserved. You must implement it, but it is not called as of now.
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being displayed
 	 *
 	 * @return string Path of the icon, relative to the modules directory.
@@ -402,6 +431,7 @@ interface iApplicationUIExtension
 	 * * HILIGHT_CLASS_OK
 	 * * HILIGHT_CLASS_NONE
 	 *
+	 * @api
 	 * @param DBObject $oObject The object being displayed
 	 *
 	 * @return integer The value representing the mood of the object
@@ -428,6 +458,7 @@ interface iApplicationUIExtension
 	 *
 	 * See also iPopupMenuExtension for greater flexibility
 	 *
+	 * @api
 	 * @param DBObjectSet $oSet A set of persistent objects (DBObject)
 	 *
 	 * @return array
@@ -526,6 +557,7 @@ interface iApplicationObjectExtension
 	 * If the extension returns false, then the framework will perform the usual evaluation.
 	 * Otherwise, the answer is definitively "yes, the object has changed".
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 *
 	 * @return boolean True if something has changed for the target object
@@ -538,6 +570,7 @@ interface iApplicationObjectExtension
 	 * The GUI calls this verb and reports any issue.
 	 * Anyhow, this API can be called in other contexts such as the CSV import tool.
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 *
 	 * @return string[] A list of errors message. An error message is made of one line and it can be displayed to the end-user.
@@ -551,6 +584,7 @@ interface iApplicationObjectExtension
 	 *
 	 * Please not that it is not possible to cascade deletion by this mean: only stopper issues can be handled.
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 *
 	 * @return string[] A list of errors message. An error message is made of one line and it can be displayed to the end-user.
@@ -566,6 +600,7 @@ interface iApplicationObjectExtension
 	 * * {@see DBObject::ListPreviousValuesForUpdatedAttributes()} : list of changed attributes and their values before the change
 	 * * {@see DBObject::Get()} : for a given attribute the new value that was persisted
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
 	 *     once for all the changes made within the current page
@@ -581,6 +616,7 @@ interface iApplicationObjectExtension
 	 *
 	 * The method is called right <b>after</b> the object has been written to the database.
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
 	 *     once for all the changes made within the current page
@@ -594,6 +630,7 @@ interface iApplicationObjectExtension
 	 *
 	 * The method is called right <b>before</b> the object will be deleted from the database.
 	 *
+	 * @api
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
 	 *     once for all the changes made within the current page
@@ -676,18 +713,21 @@ interface iPopupMenuExtension
 	 * Insert an item into the Actions menu of a list
 	 *
 	 * $param is a DBObjectSet containing the list of objects
+	 * @api
 	 */
 	const MENU_OBJLIST_ACTIONS = 1;
 	/**
 	 * Insert an item into the Toolkit menu of a list
 	 *
 	 * $param is a DBObjectSet containing the list of objects
+	 * @api
 	 */
 	const MENU_OBJLIST_TOOLKIT = 2;
 	/**
 	 * Insert an item into the Actions menu on an object details page
 	 *
 	 * $param is a DBObject instance: the object currently displayed
+	 * @api
 	 */
 	const MENU_OBJDETAILS_ACTIONS = 3;
 	/**
@@ -697,12 +737,14 @@ interface iPopupMenuExtension
 	 * is being displayed.
 	 *
 	 * $param is a Dashboard instance: the dashboard currently displayed
+	 * @api
 	 */
 	const MENU_DASHBOARD_ACTIONS = 4;
 	/**
 	 * Insert an item into the User menu (upper right corner)
 	 *
 	 * $param is null
+	 * @api
 	 */
 	const MENU_USER_ACTIONS = 5;
 	/**
@@ -710,6 +752,7 @@ interface iPopupMenuExtension
 	 *
 	 * $param is an array('portal_id' => $sPortalId, 'object' => $oObject) containing the portal id and a DBObject instance (the object on
 	 * the current line)
+	 * @api
 	 */
 	const PORTAL_OBJLISTITEM_ACTIONS = 7;
 	/**
@@ -717,6 +760,7 @@ interface iPopupMenuExtension
 	 *
 	 * $param is an array('portal_id' => $sPortalId, 'object' => $oObject) containing the portal id and a DBObject instance (the object
 	 * currently displayed)
+	 * @api
 	 */
 	const PORTAL_OBJDETAILS_ACTIONS = 8;
 
@@ -754,6 +798,7 @@ interface iPopupMenuExtension
 	 * This method is called by the framework for each menu.
 	 * The items will be inserted in the menu in the order of the returned array.
 	 *
+	 * @api
 	 * @param int $iMenuId The identifier of the type of menu, as listed by the constants MENU_xxx
 	 * @param mixed $param Depends on $iMenuId, see the constants defined above
 	 *
@@ -776,7 +821,7 @@ abstract class ApplicationPopupMenuItem
 	/** @ignore */
 	protected $sLabel;
 	/** @ignore */
-	protected $sTooltip;	
+	protected $sTooltip;
 	/** @ignore */
 	protected $sIconClass;
 	/** @ignore */
@@ -833,6 +878,7 @@ abstract class ApplicationPopupMenuItem
 	}
 
 	/**
+	 * @api
 	 * @param $aCssClasses
 	 */
 	public function SetCssClasses($aCssClasses)
@@ -843,6 +889,7 @@ abstract class ApplicationPopupMenuItem
 	/**
 	 * Adds a CSS class to the CSS classes that will be put on the menu item
 	 *
+	 * @api
 	 * @param $sCssClass
 	 */
 	public function AddCssClass($sCssClass)
@@ -853,7 +900,7 @@ abstract class ApplicationPopupMenuItem
 
 	/**
 	 * @param $sTooltip
-	 * 
+	 *
 	 * @since 3.0.0
 	 */
 	public function SetTooltip($sTooltip)
@@ -863,24 +910,24 @@ abstract class ApplicationPopupMenuItem
 
 	/**
 	 * @return string
-	 * 
+	 *
 	 * @since 3.0.0
 	 */
 	public function GetTooltip()
 	{
 		return $this->sTooltip;
 	}
-	
+
 	/**
 	 * @param $sIconClass
-	 * 
+	 *
 	 * @since 3.0.0
 	 */
 	public function SetIconClass($sIconClass)
 	{
 		$this->sIconClass = $sIconClass;
-	}	
-	
+	}
+
 	/**
 	 * @return string
 	 *
@@ -890,7 +937,7 @@ abstract class ApplicationPopupMenuItem
 	{
 		return $this->sIconClass;
 	}
-	
+
 	/**
 	 * Returns the components to create a popup menu item in HTML
 	 *
@@ -925,6 +972,7 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 	/**
 	 * Constructor
 	 *
+	 * @api
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
 	 * @param string $sUrl If the menu is an hyperlink, provide the absolute hyperlink here
@@ -948,7 +996,7 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 			'tooltip' => $this->sTooltip
 		);
 	}
-	
+
 	/** @ignore */
 	public function GetUrl()
 	{
@@ -1018,13 +1066,13 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	{
 		return $this->aIncludeJSFiles;
 	}
-	
+
 	/** @ignore */
 	public function GetJsCode()
 	{
 		return $this->sJsCode;
 	}
-	
+
 	/** @ignore */
 	public function GetUrl()
 	{
@@ -1046,6 +1094,7 @@ class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
 
 	/**
 	 * Constructor
+	 * @api
 	 */
 	public function __construct()
 	{
@@ -1110,6 +1159,7 @@ interface iPageUIExtension
 	/**
 	 * Add content to the header of the page
 	 *
+	 * @api
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
 	 * @return string The HTML content to add into the page
@@ -1119,6 +1169,7 @@ interface iPageUIExtension
 	/**
 	 * Add content to the footer of the page
 	 *
+	 * @api
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
 	 * @return string The HTML content to add into the page
@@ -1128,6 +1179,7 @@ interface iPageUIExtension
 	/**
 	 * Add content to the "admin banner"
 	 *
+	 * @api
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
 	 * @return string The HTML content to add into the page
@@ -1417,6 +1469,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns an array of CSS file urls
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return array
@@ -1426,6 +1479,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns inline (raw) CSS
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
@@ -1435,6 +1489,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns an array of JS file urls
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return array
@@ -1444,6 +1499,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns raw JS code
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
@@ -1453,6 +1509,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns raw HTML code to put at the end of the <body> tag
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
@@ -1462,6 +1519,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns raw HTML code to put at the end of the #main-wrapper element
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
@@ -1471,6 +1529,7 @@ interface iPortalUIExtension
 	/**
 	 * Returns raw HTML code to put at the end of the #topbar and #sidebar elements
 	 *
+	 * @api
 	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
@@ -1556,6 +1615,7 @@ interface iRestServiceProvider
 	/**
 	 * Enumerate services delivered by this class
 	 *
+	 * @api
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
 	 *
 	 * @return array An array of hash 'verb' => verb, 'description' => description
@@ -1565,6 +1625,7 @@ interface iRestServiceProvider
 	/**
 	 * Enumerate services delivered by this class
 	 *
+	 * @api
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
 	 * @param string $sVerb
 	 * @param array $aParams
@@ -1585,62 +1646,83 @@ class RestResult
 {
 	/**
 	 * Result: no issue has been encountered
+	 * @api
 	 */
 	const OK = 0;
 	/**
 	 * Result: missing/wrong credentials or the user does not have enough rights to perform the requested operation
+	 * @api
 	 */
 	const UNAUTHORIZED = 1;
 	/**
 	 * Result: the parameter 'version' is missing
+	 * @api
 	 */
 	const MISSING_VERSION = 2;
 	/**
 	 * Result: the parameter 'json_data' is missing
+	 * @api
 	 */
 	const MISSING_JSON = 3;
 	/**
 	 * Result: the input structure is not a valid JSON string
+	 * @api
 	 */
 	const INVALID_JSON = 4;
 	/**
 	 * Result: the parameter 'auth_user' is missing, authentication aborted
+	 * @api
 	 */
 	const MISSING_AUTH_USER = 5;
 	/**
 	 * Result: the parameter 'auth_pwd' is missing, authentication aborted
+	 * @api
 	 */
 	const MISSING_AUTH_PWD = 6;
 	/**
 	 * Result: no operation is available for the specified version
+	 * @api
 	 */
 	const UNSUPPORTED_VERSION = 10;
 	/**
 	 * Result: the requested operation is not valid for the specified version
+	 * @api
 	 */
 	const UNKNOWN_OPERATION = 11;
 	/**
 	 * Result: the requested operation cannot be performed because it can cause data (integrity) loss
+	 * @api
 	 */
 	const UNSAFE = 12;
 	/**
 	 * Result: the request page number is not valid. It must be an integer greater than 0
+	 * @api
 	 */
 	const INVALID_PAGE = 13;
 	/**
 	 * Result: the operation could not be performed, see the message for troubleshooting
+	 * @api
 	 */
 	const INTERNAL_ERROR = 100;
 
 	/**
 	 * Default constructor - ok!
+	 * @api
 	 */
 	public function __construct()
 	{
 		$this->code = RestResult::OK;
 	}
 
+	/**
+	 * @var int
+	 * @api
+	 */
 	public $code;
+	/**
+	 * @var string
+	 * @api
+	 */
 	public $message;
 }
 
@@ -1797,6 +1879,7 @@ class RestUtils
 	/**
 	 * Read and interpret object search criteria from a Rest/Json structure
 	 *
+	 * @api
 	 * @param string $sClass Name of the class
 	 * @param StdClass $oCriteria Hash of attribute code => value (can be a substructure or a scalar, depending on the nature of the
 	 *     attriute)
@@ -1906,6 +1989,7 @@ class RestUtils
 	/**
 	 * Search objects from a polymorph search specification (Rest/Json)
 	 *
+	 * @api
 	 * @param string $sClass Name of the class
 	 * @param mixed $key Either search criteria (substructure), or an object or an OQL string.
 	 * @param int $iLimit The limit of results to return
