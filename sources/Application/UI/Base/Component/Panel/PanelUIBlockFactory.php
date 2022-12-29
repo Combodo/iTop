@@ -25,9 +25,9 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class PanelUIBlockFactory
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Panel
- * @since 3.0.0
+ * @package UIBlockExtensibilityAPI
  * @api
+ * @since 3.0.0
  *
  * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-panels to see live examples
  */
@@ -41,6 +41,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a basis Panel component
 	 *
+	 * @api
 	 * @param string $sTitle
 	 * @param string|null $sSubTitle
 	 *
@@ -60,6 +61,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a Panel component for informational messages
 	 *
+	 * @api
 	 * @param string $sTitle
 	 * @param string|null $sSubTitle
 	 *
@@ -79,6 +81,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a Panel component for successful messages
 	 *
+	 * @api
 	 * @param string $sTitle
 	 * @param string|null $sSubTitle
 	 *
@@ -98,6 +101,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a Panel component for warning messages
 	 *
+	 * @api
 	 * @param string $sTitle
 	 * @param string|null $sSubTitle
 	 *
@@ -117,6 +121,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a Panel component for danger messages
 	 *
+	 * @api
 	 * @param string $sTitle
 	 * @param string|null $sSubTitle
 	 *
@@ -136,6 +141,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a Panel component for failure messages
 	 *
+	 * @api
 	 * @param string $sTitle
 	 * @param string|null $sSubTitle
 	 *
@@ -155,6 +161,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a Panel component with primary color scheme
 	 *
+	 * @api
 	 * @param string $sTitle
 	 * @param string|null $sSubTitle
 	 *
@@ -174,6 +181,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a Panel component with secondary color scheme
 	 *
+	 * @api
 	 * @param string $sTitle
 	 * @param string|null $sSubTitle
 	 *
@@ -193,6 +201,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a Panel component with the specific $sClass color scheme
 	 *
+	 * @api
 	 * @param string $sClass Class of the object the panel is for
 	 * @param string $sTitle
 	 * @param string|null $sSubTitle

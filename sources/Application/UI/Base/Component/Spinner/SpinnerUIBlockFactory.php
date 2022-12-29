@@ -14,9 +14,9 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class SpinnerUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Spinner
+ * @package UIBlockExtensibilityAPI
+ * @api
  * @since 3.0.0
- * @internal
  */
 class SpinnerUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -25,6 +25,12 @@ class SpinnerUIBlockFactory extends AbstractUIBlockFactory
 	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Spinner::class;
 
+	/**
+	 * @api
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Spinner\Spinner
+	 */
 	public static function MakeStandard(?string $sId = null)
 	{
 		return new Spinner($sId);

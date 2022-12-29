@@ -29,14 +29,14 @@ require_once(APPROOT.'application/newsroomprovider.class.inc.php');
  * Definition of interfaces that can be implemented to customize iTop.
  * You may implement such interfaces in a module file (e.g. main.mymodule.php)
  *
- * @api
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
- * @package     Extensibility
  * @since       2.7.0
  */
 
 /**
+ * @api
+ * @package     LoginExtensibilityAPI
  * @since       2.7.0
  */
 interface iLoginExtension
@@ -51,6 +51,8 @@ interface iLoginExtension
 }
 
 /**
+ * @api
+ * @package     LoginExtensibilityAPI
  * @since 2.7.0
  */
 interface iLoginFSMExtension extends iLoginExtension
@@ -62,6 +64,7 @@ interface iLoginFSMExtension extends iLoginExtension
 	 * if LoginWebPage::LOGIN_FSM_RETURN_OK is returned then the login is OK and terminated
 	 * if LoginWebPage::LOGIN_FSM_RETURN_IGNORE is returned then the FSM will proceed to next plugin or state
 	 *
+	 * @api
 	 * @param string $sLoginState (see LoginWebPage::LOGIN_STATE_...)
 	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
 	 *
@@ -837,7 +840,7 @@ abstract class ApplicationPopupMenuItem
 	/** @ignore */
 	protected $sLabel;
 	/** @ignore */
-	protected $sTooltip;	
+	protected $sTooltip;
 	/** @ignore */
 	protected $sIconClass;
 	/** @ignore */
@@ -934,7 +937,7 @@ abstract class ApplicationPopupMenuItem
 	{
 		return $this->sTooltip;
 	}
-	
+
 	/**
 	 * @param $sIconClass
 	 *
@@ -944,8 +947,8 @@ abstract class ApplicationPopupMenuItem
 	public function SetIconClass($sIconClass)
 	{
 		$this->sIconClass = $sIconClass;
-	}	
-	
+	}
+
 	/**
 	 * @return string
 	 *
@@ -956,7 +959,7 @@ abstract class ApplicationPopupMenuItem
 	{
 		return $this->sIconClass;
 	}
-	
+
 	/**
 	 * Returns the components to create a popup menu item in HTML
 	 *
@@ -1015,7 +1018,7 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 			'tooltip' => $this->sTooltip
 		);
 	}
-	
+
 	/** @ignore */
 	public function GetUrl()
 	{
@@ -1084,13 +1087,13 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	{
 		return $this->aIncludeJSFiles;
 	}
-	
+
 	/** @ignore */
 	public function GetJsCode()
 	{
 		return $this->sJsCode;
 	}
-	
+
 	/** @ignore */
 	public function GetUrl()
 	{
@@ -1915,6 +1918,7 @@ class RestUtils
 	/**
 	 * Read and interpret object search criteria from a Rest/Json structure
 	 *
+	 * @api
 	 * @param string $sClass Name of the class
 	 * @param StdClass $oCriteria Hash of attribute code => value (can be a substructure or a scalar, depending on the nature of the
 	 *     attriute)
@@ -2023,6 +2027,7 @@ class RestUtils
 	/**
 	 * Search objects from a polymorph search specification (Rest/Json)
 	 *
+	 * @api
 	 * @param string $sClass Name of the class
 	 * @param mixed $key Either search criteria (substructure), or an object or an OQL string.
 	 * @param int $iLimit The limit of results to return

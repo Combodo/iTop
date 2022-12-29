@@ -16,9 +16,10 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  *
  * Use it to make a "field" which is composed of a label and a value (which can be read-only or editable)
  *
+ * @api
+ * @package UIBlockExtensibilityAPI
  * @author Pierre Goiffon <pierre.goiffon@combodo.com>
  * @since 3.0.0
- * @internal
  */
 class FieldUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -27,6 +28,12 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Field::class;
 
+	/**
+	 * @api
+	 * @param $aParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
+	 */
 	public static function MakeFromParams($aParams)
 	{
 		$oValue = new Html($aParams['value']);
@@ -75,6 +82,14 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 		$oField->$sMethodName((($iParamsFlags & $iConstant) === $iConstant));
 	}
 
+	/**
+	 * @api
+	 * @param string $sLabel
+	 * @param \Combodo\iTop\Application\UI\Base\UIBlock $oInput
+	 * @param string|null $sLayout
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
+	 */
 	public static function MakeFromObject(string $sLabel, UIBlock $oInput, ?string $sLayout = null)
 	{
 		$oField = new Field($sLabel, $oInput);
@@ -86,6 +101,13 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 		return $oField;
 	}
 
+	/**
+	 * @api
+	 * @param string $sLabel
+	 * @param string $sValueHtml
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
+	 */
 	public static function MakeLarge(string $sLabel, string $sValueHtml = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
@@ -93,6 +115,13 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 		return $oField;
 	}
 
+	/**
+	 * @api
+	 * @param string $sLabel
+	 * @param string $sValueHtml
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
+	 */
 	public static function MakeSmall(string $sLabel, string $sValueHtml = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
@@ -100,6 +129,14 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 		return $oField;
 	}
 
+	/**
+	 * @api
+	 * @param string $sLabel
+	 * @param string $sLayout
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
+	 */
 	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null)
 	{
 		$oField = new Field($sLabel, null, $sId);

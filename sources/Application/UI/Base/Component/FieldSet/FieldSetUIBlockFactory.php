@@ -14,9 +14,9 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class FieldSetUIBlockFactory
  *
  * @author eric Espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\FieldSet
- * @since 3.0.0
+ * @package UIBlockExtensibilityAPI
  * @api
+ * @since 3.0.0
  */
 class FieldSetUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -26,6 +26,7 @@ class FieldSetUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = FieldSet::class;
 
 	/**
+	 * @api
 	 * @param string $sLegend
 	 * @param string|null $sId
 	 *
