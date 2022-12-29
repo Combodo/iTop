@@ -1203,7 +1203,7 @@ interface iPageUIExtension
  * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
  *
  * @api
- * @package     Extensibility
+ * @package     UIBlockExtensibilityAPI
  * @since 3.0.0
  */
 interface iPageUIBlockExtension
@@ -1276,7 +1276,7 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
  * Extend this class instead of iPageUIExtension if you don't need to overload all methods
  *
  * @api
- * @package     Extensibility
+ * @package     UIBlockExtensibilityAPI
  * @since       3.0.0
  */
 abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
@@ -1311,6 +1311,7 @@ abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
  *
  * @see \iTopWebPage::$a_linked_scripts
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeLinkedScriptsExtension
@@ -1328,6 +1329,7 @@ interface iBackofficeLinkedScriptsExtension
  *
  * @see \iTopWebPage::$a_early_scripts
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeEarlyScriptExtension
@@ -1344,6 +1346,7 @@ interface iBackofficeEarlyScriptExtension
  *
  * @see \iTopWebPage::$a_scripts
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeScriptExtension
@@ -1360,6 +1363,7 @@ interface iBackofficeScriptExtension
  *
  * @see \iTopWebPage::$a_init_scripts
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeInitScriptExtension
@@ -1376,6 +1380,7 @@ interface iBackofficeInitScriptExtension
  *
  * @see \iTopWebPage::$a_ready_scripts
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeReadyScriptExtension
@@ -1392,6 +1397,7 @@ interface iBackofficeReadyScriptExtension
  *
  * @see \iTopWebPage::$a_linked_stylesheets
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeLinkedStylesheetsExtension
@@ -1408,6 +1414,7 @@ interface iBackofficeLinkedStylesheetsExtension
  *
  * @see \iTopWebPage::$a_styles
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeStyleExtension
@@ -1424,6 +1431,7 @@ interface iBackofficeStyleExtension
  *
  * @see \iTopWebPage::$a_dict_entries
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeDictEntriesExtension
@@ -1440,6 +1448,7 @@ interface iBackofficeDictEntriesExtension
  *
  * @see \iTopWebPage::$a_dict_entries_prefixes
  * @api
+ * @package BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iBackofficeDictEntriesPrefixesExtension
