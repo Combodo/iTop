@@ -6,8 +6,8 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
-use ApplicationException;
 use ApplicationContext;
+use ApplicationException;
 use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
@@ -35,9 +35,9 @@ use WebPage;
  * Class DataTableUIBlockFactory
  *
  * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\DataTable
- * @since 3.0.0
+ * @package UIBlockExtensibilityAPI
  * @api
+ * @since 3.0.0
  */
 class DataTableUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -47,6 +47,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = DataTable::class;
 
 	/**
+	 * @api
 	 * @param \WebPage $oPage
 	 * @param string $sListId
 	 * @param \DBObjectSet $oSet
@@ -71,6 +72,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
+	 * @api
 	 * @param \WebPage $oPage
 	 * @param string $sListId
 	 * @param DBObjectSet $oSet
@@ -183,6 +185,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a basis Panel component
 	 *
+	 * @api
 	 * @param string $sListId
 	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams
@@ -479,6 +482,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
+	 * @api
 	 * @param string $sListId
 	 * @param DBObjectSet $oSet
 	 * @param array $aExtraParams
@@ -721,7 +725,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sSelectMode
 	 * @param string $sFilter
 	 * @param int $iLength
+	 * @param array $aClassAliases
 	 * @param array $aExtraParams
+	 * @param string $sTableId
 	 *
 	 * @return array
 	 * @throws \Exception
@@ -901,6 +907,7 @@ JS;
 	}
 
 	/**
+	 * @api
 	 * @param string $sTitle
 	 * @param array $aColumns
 	 * @param array $aData
@@ -936,6 +943,7 @@ JS;
 	}
 
 	/**
+	 * @api
 	 * @param string $sRef
 	 * @param array $aColumns
 	 * @param array $aData

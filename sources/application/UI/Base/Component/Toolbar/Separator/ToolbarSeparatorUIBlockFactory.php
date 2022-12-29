@@ -14,9 +14,9 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class ToolbarSeparatorUIBlockFactory
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator
- * @since 3.0.0
+ * @package UIBlockExtensibilityAPI
  * @api
+ * @since 3.0.0
  */
 class ToolbarSeparatorUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -26,6 +26,7 @@ class ToolbarSeparatorUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = Toolbar::class;
 
 	/**
+	 * @api
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\VerticalSeparator

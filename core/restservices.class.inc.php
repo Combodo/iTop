@@ -30,18 +30,40 @@
 /**
  * Element of the response formed by RestResultWithObjects
  *
- * @package     REST Services
+ * @package     RESTExtensibilityAPI
+ * @api
  */
 class ObjectResult
 {
+	/**
+	 * @var int
+	 * @api
+	 */
 	public $code;
+	/**
+	 * @var string
+	 * @api
+	 */
 	public $message;
+	/**
+	 * @var mixed|null
+	 * @api
+	 */
 	public $class;
+	/**
+	 * @var mixed|null
+	 * @api
+	 */
 	public $key;
+	/**
+	 * @var array
+	 * @api
+	 */
 	public $fields;
 	
 	/**
 	 * Default constructor
+	 * @api
 	 */
 	public function __construct($sClass = null, $iId = null)
 	{
@@ -54,11 +76,17 @@ class ObjectResult
 
 	/**
 	 * Helper to make an output value for a given attribute
-	 * 	 
+	 *
+	 * @api
 	 * @param DBObject $oObject The object being reported
 	 * @param string $sAttCode The attribute code (must be valid)
 	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
+	 *
 	 * @return string A scalar representation of the value
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	protected function MakeResultValue(DBObject $oObject, $sAttCode, $bExtendedOutput = false)
 	{
@@ -112,11 +140,17 @@ class ObjectResult
 
 	/**
 	 * Report the value for the given object attribute
-	 * 	 
+	 *
+	 * @api
 	 * @param DBObject $oObject The object being reported
 	 * @param string $sAttCode The attribute code (must be valid)
 	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
+	 *
 	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function AddField(DBObject $oObject, $sAttCode, $bExtendedOutput = false)
 	{
@@ -129,8 +163,7 @@ class ObjectResult
 /**
  * REST response for services managing objects. Derive this structure to add information and/or constants
  *
- * @package     RESTExtensibilityAPI
- * @package     REST Services
+ * @package RESTExtensibilityAPI
  * @api
  */
 class RestResultWithObjects extends RestResult
@@ -139,13 +172,19 @@ class RestResultWithObjects extends RestResult
 
 	/**
 	 * Report the given object
-	 * 	 
-	 * @param int An error code (RestResult::OK is no issue has been found)
+	 *
+	 * @api
+	 * @param $iCode
 	 * @param string $sMessage Description of the error if any, an empty string otherwise
 	 * @param DBObject $oObject The object being reported
-	 * @param array $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
+	 * @param null $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
 	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
+	 *
 	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function AddObject($iCode, $sMessage, $oObject, $aFieldSpec = null, $bExtendedOutput = false)
 	{
@@ -183,16 +222,30 @@ class RestResultWithObjects extends RestResult
 	}
 }
 
+/**
+ * @package RESTExtensibilityAPI
+ * @api
+ */
 class RestResultWithRelations extends RestResultWithObjects
 {
 	public $relations;
-	
+
+	/**
+	 * @api
+	 */
 	public function __construct()
 	{
 		parent::__construct();
 		$this->relations = array();
 	}
-	
+
+	/**
+	 * @param $sSrcKey
+	 * @param $sDestKey
+	 *
+	 * @return void
+	 * @api
+	 */
 	public function AddRelation($sSrcKey, $sDestKey)
 	{
 		if (!array_key_exists($sSrcKey, $this->relations))
@@ -214,30 +267,37 @@ class RestDelete
 {
 	/**
 	 * Result: Object deleted as per the initial request
+	 * @api
 	 */
 	const OK = 0;
 	/**
-	 * Result: general issue (user rights or ... ?) 
+	 * Result: general issue (user rights or ... ?)
+	 * @api
 	 */
 	const ISSUE = 1;
 	/**
-	 * Result: Must be deleted to preserve database integrity 
+	 * Result: Must be deleted to preserve database integrity
+	 * @api
 	 */
 	const AUTO_DELETE = 2;
 	/**
-	 * Result: Must be deleted to preserve database integrity, but that is NOT possible 
+	 * Result: Must be deleted to preserve database integrity, but that is NOT possible
+	 * @api
 	 */
 	const AUTO_DELETE_ISSUE = 3;
 	/**
-	 * Result: Must be deleted to preserve database integrity, but this must be requested explicitely 
+	 * Result: Must be deleted to preserve database integrity, but this must be requested explicitly
+	 * @api
 	 */
 	const REQUEST_EXPLICITELY = 4;
 	/**
 	 * Result: Must be updated to preserve database integrity
+	 * @api
 	 */
 	const AUTO_UPDATE = 5;
 	/**
 	 * Result: Must be updated to preserve database integrity, but that is NOT possible
+	 * @api
 	 */
 	const AUTO_UPDATE_ISSUE = 6;
 }
