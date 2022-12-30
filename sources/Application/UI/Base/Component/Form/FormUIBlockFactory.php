@@ -14,7 +14,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class FormUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package UUIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @since 3.0.0
  * @api
  */

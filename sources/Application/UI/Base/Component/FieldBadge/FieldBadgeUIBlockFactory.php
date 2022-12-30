@@ -16,7 +16,7 @@ use utils;
  * Class FieldBadgeUIBlockFactory
  *
  * @author Eric espie <eric.espie@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @since 3.0.0
  * @internal
  */

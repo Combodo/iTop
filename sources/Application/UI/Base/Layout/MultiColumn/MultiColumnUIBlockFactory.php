@@ -13,7 +13,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class MultiColumnUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @since 3.0.0
  * @api
  */

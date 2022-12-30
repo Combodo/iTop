@@ -14,7 +14,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class SpinnerUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @api
  * @since 3.0.0
  */

@@ -15,7 +15,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  * Class ColumnUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @since 3.0.0
  * @api
  */

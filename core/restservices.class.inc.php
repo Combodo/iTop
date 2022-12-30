@@ -30,7 +30,7 @@
 /**
  * Element of the response formed by RestResultWithObjects
  *
- * @package     RESTExtensibilityAPI
+ * @package     RESTAPI
  * @api
  */
 class ObjectResult
@@ -163,7 +163,7 @@ class ObjectResult
 /**
  * REST response for services managing objects. Derive this structure to add information and/or constants
  *
- * @package RESTExtensibilityAPI
+ * @package RESTAPI
  * @api
  */
 class RestResultWithObjects extends RestResult
@@ -224,7 +224,7 @@ class RestResultWithObjects extends RestResult
 }
 
 /**
- * @package RESTExtensibilityAPI
+ * @package RESTAPI
  * @api
  */
 class RestResultWithRelations extends RestResultWithObjects
@@ -260,7 +260,7 @@ class RestResultWithRelations extends RestResultWithObjects
 /**
  * Deletion result codes for a target object (either deleted or updated)
  *
- * @package     RESTExtensibilityAPI
+ * @package     RESTAPI
  * @api
  * @since 2.0.1  
  */

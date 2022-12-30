@@ -14,7 +14,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class CollapsibleSectionUIBlockFactory
  *
  * @author Pierre Goiffon <pierre.goiffon@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @api
  * @since 3.0.0
  */

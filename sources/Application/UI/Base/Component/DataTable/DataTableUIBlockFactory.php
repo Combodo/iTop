@@ -38,7 +38,7 @@ use WebPage;
  * Class DataTableUIBlockFactory
  *
  * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @api
  * @since 3.0.0
  */

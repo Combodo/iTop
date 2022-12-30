@@ -27,7 +27,7 @@ use utils;
  * Class ButtonUIBlockFactory
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @api
  * @since 3.0.0
  *

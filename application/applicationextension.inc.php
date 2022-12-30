@@ -1221,7 +1221,7 @@ interface iPageUIExtension
  * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
  *
  * @api
- * @package     UIBlockExtensibilityAPI
+ * @package     BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
 interface iPageUIBlockExtension
@@ -1679,7 +1679,7 @@ interface iRestServiceProvider
  * Minimal REST response structure. Derive this structure to add response data and error codes.
  *
  * @api
- * @package     RESTExtensibilityAPI
+ * @package     RESTAPI
  * @since 2.0.1
  */
 class RestResult
@@ -1772,7 +1772,7 @@ class RestResult
  * Helpers for implementing REST services
  *
  * @api
- * @package     RESTExtensibilityAPI
+ * @package     RESTAPI
  */
 class RestUtils
 {

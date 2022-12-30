@@ -15,7 +15,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
  * Class UIContentBlockUIBlockFactory
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @api
  * @since 3.0.0
  */

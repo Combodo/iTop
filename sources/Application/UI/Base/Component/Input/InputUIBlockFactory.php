@@ -15,7 +15,7 @@ use Combodo\iTop\Application\UI\Base\Component\Field\Field;
  * Class InputUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @api
  * @since 3.0.0
  */

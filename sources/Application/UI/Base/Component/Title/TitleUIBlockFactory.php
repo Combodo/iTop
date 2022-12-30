@@ -16,7 +16,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  * Class TitleUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package UIBlockExtensibilityAPI
+ * @package UIBlockAPI
  * @api
  * @since 3.0.0
  */
