@@ -786,7 +786,6 @@ interface iPopupMenuExtension
 	 *
 	 * $param is an array('portal_id' => $sPortalId, 'object_set' => $oSet) containing DBObjectSet containing the list of objects
 	 *
-	 * @api
 	 * @todo
 	 */
 	const PORTAL_OBJLIST_ACTIONS = 6;
@@ -796,7 +795,6 @@ interface iPopupMenuExtension
 	 *
 	 * $param is the portal id
 	 *
-	 * @api
 	 * @todo
 	 */
 	const PORTAL_USER_ACTIONS = 9;
@@ -806,7 +804,6 @@ interface iPopupMenuExtension
 	 *
 	 * $param is the portal id
 	 *
-	 * @api
 	 * @todo
 	 */
 	const PORTAL_MENU_ACTIONS = 10;

@@ -2829,7 +2829,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \OQLException
 	 * @throws \Exception
 	 *
-	 * @internal
+	 * @api
 	 *
 	 */
 	public function DBInsert()
