@@ -3363,7 +3363,7 @@ abstract class DBObject implements iDisplay
 			$this->m_aModifiedAtt = array();
 
 			try {
-				$this->EventUpdateDone(['changes' => $aChanges]);
+				$this->EventUpdateDone($aChanges);
 				$this->AfterUpdate();
 
 				// Reset original values although the object has not been reloaded
@@ -4861,7 +4861,7 @@ abstract class DBObject implements iDisplay
 		}
 		// Check the node itself
 		$this->m_aDeleteIssues = array(); // Ok
-		$this->EventCheckToDelete();
+		$this->EventCheckToDelete($oDeletionPlan);
 		$this->DoCheckToDelete($oDeletionPlan);
 		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
 	
@@ -5987,7 +5987,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventUpdateDone(array $aData): void
+	protected function EventUpdateDone(array $aChanges): void
 	{
 	}
 
@@ -5999,7 +5999,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCheckToDelete(): void
+	protected function EventCheckToDelete(DeletionPlan $oDeletionPlan): void
 	{
 	}
 

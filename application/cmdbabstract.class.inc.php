@@ -5754,9 +5754,9 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventUpdateDone(array $aData): void
+	final protected function EventUpdateDone(array $aChanges): void
 	{
-		$this->FireEvent(EVENT_DB_UPDATE_DONE, $aData);
+		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
 	}
 
 	//////////////
@@ -5767,9 +5767,9 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCheckToDelete(): void
+	final protected function EventCheckToDelete(DeletionPlan $oDeletionPlan): void
 	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE);
+		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE, ['deletion_plan' => $oDeletionPlan]);
 	}
 
 	/**
