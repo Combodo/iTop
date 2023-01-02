@@ -2376,9 +2376,9 @@ abstract class DBObject implements iDisplay
 			{
 				$this->m_bCheckStatus = false;
 				if ($this->IsNew()) {
-					$this->EventCheckToCreateFailed(['check_issues' => $this->m_aCheckIssues]);
+					$this->EventCheckToCreateFailed($this->m_aCheckIssues);
 				} else {
-					$this->EventCheckToUpdateFailed(['check_issues' => $this->m_aCheckIssues]);
+					$this->EventCheckToUpdateFailed($this->m_aCheckIssues);
 				}
 			}
 		}
@@ -3772,7 +3772,7 @@ abstract class DBObject implements iDisplay
 		if ($oDeletionPlan->FoundStopper())
 		{
 			$aIssues = $oDeletionPlan->GetIssues();
-			$this->EventCheckToDeleteFailed(['check_issues' => $aIssues]);
+			$this->EventCheckToDeleteFailed($aIssues);
 			throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));	
 		}
 
@@ -5927,7 +5927,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCheckToCreateFailed(array $aData): void
+	protected function EventCheckToCreateFailed(array $aIssues): void
 	{
 	}
 
@@ -5971,7 +5971,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCheckToUpdateFailed(array $aData): void
+	protected function EventCheckToUpdateFailed(array $aIssues): void
 	{
 	}
 
@@ -6007,7 +6007,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCheckToDeleteFailed(array $aData): void
+	protected function EventCheckToDeleteFailed(array $aIssues): void
 	{
 	}
 

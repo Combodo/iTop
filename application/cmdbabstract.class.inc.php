@@ -5687,9 +5687,9 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCheckToCreateFailed(array $aData): void
+	final protected function EventCheckToCreateFailed(array $aIssues): void
 	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_CREATE_FAILED, $aData);
+		$this->FireEvent(EVENT_DB_CHECK_TO_CREATE_FAILED, ['check_issues' => $aIssues]);
 	}
 
 	/**
@@ -5736,9 +5736,9 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCheckToUpdateFailed(array $aData): void
+	final protected function EventCheckToUpdateFailed(array $aIssues): void
 	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_UPDATE_FAILED, $aData);
+		$this->FireEvent(EVENT_DB_CHECK_TO_UPDATE_FAILED, ['check_issues' => $aIssues]);
 	}
 
 	/**
@@ -5776,9 +5776,9 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCheckToDeleteFailed(array $aData): void
+	final protected function EventCheckToDeleteFailed(array $aIssues): void
 	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE_FAILED, $aData);
+		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE_FAILED, ['check_issues' => $aIssues]);
 	}
 
 	/**
