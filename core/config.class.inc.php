@@ -1545,11 +1545,11 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'security.hide_administrators' => [
-			'type' => 'bool',
-			'description' => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+			'type'                => 'bool',
+			'description'         => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'behind_reverse_proxy' => [
