@@ -90,8 +90,8 @@ PHP;
 	public function testType()
 	{
 		$_SESSION['itop_env'] = 'production';
-		$this->assertInternalType('string', Dict::S('Core:AttributeURL'));
-		$this->assertInternalType('string', Dict::Format('Change:AttName_SetTo', '1', '2'));
+		$this->assertIsString(Dict::S('Core:AttributeURL'));
+		$this->assertIsString(Dict::Format('Change:AttName_SetTo', '1', '2'));
 	}
 
 	public function testInitLangIfNeeded_NoApc()

@@ -60,7 +60,7 @@ class ConfigTest extends ItopTestCase
 		$this->assertFileExists($sTmpFile);
 		$sFileContent = file_get_contents($sTmpFile);
 
-		$this->assertContains($sExpectedContains, $sFileContent, "File content doesn't contain : ".$sExpectedContains);
+		$this->assertStringContainsString($sExpectedContains, $sFileContent, "File content doesn't contain : ".$sExpectedContains);
 	}
 
 	public function ProviderPreserveVarOnWriteToFile()

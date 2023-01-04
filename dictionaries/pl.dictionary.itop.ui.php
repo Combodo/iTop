@@ -643,9 +643,9 @@ Mamy nadzieję, że spodoba ci się ta wersja tak samo, jak nam się podobało j
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Wybierz klasę do przeszukania: ',
 
 	'UI:CSVReport-Value-Modified' => 'Zmodyfikowano',
-	'UI:CSVReport-Value-SetIssue' => 'Nie można było zmienić - powód: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Nie można zmienić na %1$s - powód: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Nie pasuje',
+	'UI:CSVReport-Value-SetIssue' => 'Nie można było zmienić',
+	'UI:CSVReport-Value-ChangeIssue' => 'Nie można zmienić na %1$s',
+	'UI:CSVReport-Value-NoMatch' => 'Nie pasuje - powód: %1$s',
 	'UI:CSVReport-Value-Missing' => 'Brak wymaganej wartości',
 	'UI:CSVReport-Value-Ambiguous' => 'Uwaga: znaleziono %1$s obiektów',
 	'UI:CSVReport-Row-Unchanged' => 'niezmieniony',

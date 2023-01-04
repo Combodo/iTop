@@ -72,14 +72,14 @@ class RestTest extends ItopDataTestCase
 		$aJson = json_decode($sOutputJson, true);
 
 		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
-			$this->assertContains("3", "".$aJson['code'], $sOutputJson);
-			$this->assertContains("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOutputJson);
+			$this->assertStringContainsString("3", "".$aJson['code'], $sOutputJson);
+			$this->assertStringContainsString("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOutputJson);
 			return;
 		}
 
-		$this->assertContains("0", "".$aJson['code'], $sOutputJson);
+		$this->assertStringContainsString("0", "".$aJson['code'], $sOutputJson);
 		$sUserRequestKey = $this->array_key_first($aJson['objects']);
-		$this->assertContains('UserRequest::', $sUserRequestKey);
+		$this->assertStringContainsString('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
 		$sExpectedJsonOuput=<<<JSON
 {"objects":{"UserRequest::$iId":{"code":0,"message":"created","class":"UserRequest","key":$iId,"fields":{"id":$iId}}},"code":0,"message":null}
@@ -126,14 +126,14 @@ JSON;
 		$aJson = json_decode($sOuputJson, true);
 
 		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
-			$this->assertContains("3", "".$aJson['code'], $sOuputJson);
-			$this->assertContains("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
+			$this->assertStringContainsString("3", "".$aJson['code'], $sOuputJson);
+			$this->assertStringContainsString("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
 			return;
 		}
 
-		$this->assertContains("0", "".$aJson['code'], $sOuputJson);
+		$this->assertStringContainsString("0", "".$aJson['code'], $sOuputJson);
 		$sUserRequestKey = $this->array_key_first($aJson['objects']);
-		$this->assertContains('UserRequest::', $sUserRequestKey);
+		$this->assertStringContainsString('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
 
 		//update ticket
@@ -165,21 +165,21 @@ JSON;
 		$aJson = json_decode($sOuputJson, true);
 
 		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
-			$this->assertContains("3", "".$aJson['code'], $sOuputJson);
-			$this->assertContains("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
+			$this->assertStringContainsString("3", "".$aJson['code'], $sOuputJson);
+			$this->assertStringContainsString("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
 			return;
 		}
 
-		$this->assertContains("0", "".$aJson['code'], $sOuputJson);
+		$this->assertStringContainsString("0", "".$aJson['code'], $sOuputJson);
 		$sUserRequestKey = $this->array_key_first($aJson['objects']);
-		$this->assertContains('UserRequest::', $sUserRequestKey);
+		$this->assertStringContainsString('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
 
 		//delete ticket
 		$sExpectedJsonOuput=<<<JSON
 {"objects":{"UserRequest::$iId"
 JSON;
-		$this->assertContains($sExpectedJsonOuput, $this->DeleteTicketFromApi($iId));
+		$this->assertStringContainsString($sExpectedJsonOuput, $this->DeleteTicketFromApi($iId));
 
 		$sExpectedJsonOuput=<<<JSON
 {"objects":null,"code":0,"message":"Found: 0"}

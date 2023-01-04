@@ -343,7 +343,7 @@ class DataSynchroTest extends ItopDataTestCase
 
 				$aKeys = ["creation", "update", "deletion"];
 				foreach ($aKeys as $sKey){
-					$this->assertContains("$sKey errors: 0", $sResultsViewable, "step $iRow : below res should contain '$sKey errors: 0': " . $sResultsViewable);
+					$this->assertStringContainsString("$sKey errors: 0", $sResultsViewable, "step $iRow : below res should contain '$sKey errors: 0': " . $sResultsViewable);
 				}
 
 				//N°3805 : potential javascript returned like

@@ -16,7 +16,7 @@
         stopOnRisky="false"
         stopOnSkipped="false"
         verbose="true"
-        printerClass="Sempro\PHPUnitPrettyPrinter\PrettyPrinter"
+        printerClass="\Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9"
 >
 
   <php>
@@ -69,7 +69,7 @@
     </testsuite>
   </testsuites>
 
-  <!-- Code coverage white list -->
+  <!-- Code coverage white list  -->
   <filter>
     <whitelist>
       <file>../core/apc-emulation.php</file>

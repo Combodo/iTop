@@ -147,15 +147,18 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	 * Test invalid tag codes
 	 * @dataProvider InvalidTagCodeProvider
 	 *
-	 * @expectedException \CoreException
-	 *
 	 * @param string $sTagCode
 	 *
-	 * @throws \CoreException
 	 */
 	public function testInvalidTagCode($sTagCode)
 	{
-		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, $sTagCode, 'First');
+		try {
+			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, $sTagCode, 'First');
+		}
+		catch (CoreException $e) {
+			static::assertTrue(true);
+			return;
+		}
 		// Should not pass here
 		static::assertFalse(true);
 	}
@@ -182,12 +185,16 @@ class TagSetFieldDataTest extends ItopDataTestCase
 
 	/**
 	 * Test invalid tag labels
-	 * @expectedException \CoreException
-	 * @throws \CoreException
 	 */
 	public function testInvalidTagLabel()
 	{
-		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First|Second');
+		try {
+			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First|Second');
+		}
+		catch (CoreException $e) {
+			static::assertFalse(false);
+			return;
+		}
 		// Should not pass here
 		static::assertFalse(true);
 	}

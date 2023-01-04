@@ -564,7 +564,7 @@ class DBSearchTest extends ItopDataTestCase
 				self::assertNull($oFirstResult, 'Null returned');
 				break;
 			case 'object':
-				self::assertInternalType('object', $oFirstResult, 'Object returned');
+				self::assertIsObject($oFirstResult, 'Object returned');
 				break;
 		}
 	}

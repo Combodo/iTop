@@ -97,9 +97,6 @@ class ormTagSetTest extends ItopDataTestCase
 
 
 	/**
-	 * @expectedException \CoreException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
 	 */
 	public function testMaxTagLimit()
 	{
@@ -115,9 +112,10 @@ class ormTagSetTest extends ItopDataTestCase
 		}
 		catch (CoreException $e)
 		{
-			$this->debug('Awaited: '.$e->getMessage());
-			throw $e;
+			static::assertEquals('Maximum number of tags (3) reached for FAQ:domains', $e->getMessage());
+			return;
 		}
+		static::assertFalse(true);
 	}
 
 	public function testEquals()

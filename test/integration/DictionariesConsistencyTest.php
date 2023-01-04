@@ -16,7 +16,6 @@
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-
 use Dict;
 
 class DictionariesConsistencyTest extends ItopTestCase
@@ -151,7 +150,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider ImBulChanportCsvMessageStillOkProvider
+	 * @dataProvider ImportCsvMessageStillOkProvider
 	 * make sure N°5305 dictionary changes are still here and UI remains unbroken for any lang
 	 */
 	public function testImportCsvMessageStillOk($sLangCode, $sDictFile)
@@ -173,11 +172,11 @@ class DictionariesConsistencyTest extends ItopTestCase
 		foreach ($aLabelsToTest as $sLabelKey => $aLabelArgs){
 			try{
 				$sLabelValue = Dict::Format($sLabelKey, ...$aLabelArgs);
-				var_dump($sLabelValue);
-			} catch (\Exception $e){
+				//$this->debug($sLabelValue);
+			} catch (\ValueError $e){
 				$aFailedLabels[] = $sLabelKey;
 
-				var_dump([
+				$this->debug([
 					'exception' => $e->getMessage(),
 					'trace' => $e->getTraceAsString(),
 					'label_name' => $sLabelKey,
@@ -185,7 +184,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 				]);
 			}
 		}
-		$this->assertEquals([], $aFailedLabels, "test fail for lang $sLangCode and labels (" . implode(",", $aFailedLabels) . ')');
+		$this->assertEquals([], $aFailedLabels, "test fail for lang $sLangCode and labels (" . implode(", ", $aFailedLabels) . ')');
 	}
 
 	public function ImportCsvMessageStillOkProvider(){
