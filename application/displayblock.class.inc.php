@@ -2223,7 +2223,7 @@ class MenuBlock extends DisplayBlock
 				$oActionsToolbar->AddSubBlock($oActionButton);
 			} else {
 				// - Filter list
-				$sSearchUrl = utils::GetDataTableSearchUrl($this->m_oFilter);
+				$sSearchUrl = utils::GetDataTableSearchUrl($this->m_oFilter, $aExtraParams);
 				if (!empty($sSearchUrl)) {
 					$oActionButton = ButtonUIBlockFactory::MakeIconLink(
 						'fas fa-filter',

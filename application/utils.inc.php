@@ -1542,20 +1542,20 @@ class utils
 	}
 
 	/**
-	 * We cannot use iMenuId (corresponding values in iPopupMenuExtension constants) as value is always \iPopupMenuExtension::MENU_OBJLIST_TOOLKIT
+	 * We cannot use iMenuId (corresponding values in {@see \iPopupMenuExtension} constants) as value is always {@see \iPopupMenuExtension::MENU_OBJLIST_TOOLKIT}
 	 * whenever we are in a datatable, whereas it is included in a object tab, a dashlet or a search.
 	 *
 	 * So a {@see \ContextTag} is set on the corresponding calls.
 	 *
 	 * @return bool true if we are in a search page context, either directly or by the datatable ajax call
 	 *
-	 * @since 3.0.0
+	 * @since 3.1.0 N°3200
 	 *
-	 * @uses \ContextTag::TAG_SEARCH
+	 * @uses \ContextTag::TAG_OBJECT_SEARCH
 	 */
 	public static function IsCurrentPageASearch(): bool
 	{
-		if (ContextTag::Check(ContextTag::TAG_SEARCH)) {
+		if (ContextTag::Check(ContextTag::TAG_OBJECT_SEARCH)) {
 			return true;
 		}
 
@@ -1564,28 +1564,111 @@ class utils
 
 	/**
 	 * @param \DBObjectSearch $oFilter object list
+	 * @param array $aExtraParams
 	 *
 	 * @return string|null null if we are already in a search, otherwise the URL to open this list in a search
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 *
 	 * @uses utils::IsCurrentPageASearch()
 	 *
-	 * @since 3.0.0
+	 * @since 3.1.0 N°3200
 	 */
-	public static function GetDataTableSearchUrl(DBSearch $oFilter): ?string
+	public static function GetDataTableSearchUrl(DBSearch $oFilter, array $aExtraParams): ?string
 	{
 		if (static::IsCurrentPageASearch()) {
 			// we don't want to add the link when already in a search page !
 			return null;
 		}
 
+		$bIsObjectRelation = isset($aExtraParams['object_id'], $aExtraParams['target_attr']);
+		if ($bIsObjectRelation) {
+			[$oDataTableSearchFilter, $aParams] = static::GetDataTableSearchForRelations($oFilter, $aExtraParams);
+		} else {
+			$oDataTableSearchFilter = $oFilter;
+			$aParams = [];
+		}
+
+		if (isset($aExtraParams['table_id'])) {
+			$aParams['table_id'] = $aExtraParams['table_id'];
+		}
+		$sParams = json_encode($aParams);
+
 		$sAppRootUrl = static::GetAbsoluteUrlAppRoot();
 		$oAppContext = new ApplicationContext();
-		$sUrl = $sAppRootUrl.'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($oFilter->serialize());
+
+		$sUrl = $sAppRootUrl
+			.'pages/UI.php?operation=search&'
+			.$oAppContext->GetForLink()
+			.'&filter='.rawurlencode($oDataTableSearchFilter->serialize());
+		$sUrl .= '&aParams='.rawurlencode($sParams); // Not working... yet, cause not handled by UI.php
 
 		return $sUrl;
+	}
+
+	/**
+	 * Rewrites filter for object relations, so that in the search page we will have the correct criteria and will be able to use "configure this list"
+	 *
+	 * @param \DBSearch $oFilter object list
+	 * @param array{link_attr: string, target_attr: string, object_id: string} $aExtraParams
+	 *
+	 * @return array{\DBObjectSearch, string[]}
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 *
+	 * @since 3.1.0 N°3200
+	 */
+	private static function GetDataTableSearchForRelations(DBSearch $oFilter, array $aExtraParams): array
+	{
+		$sObjectId = $aExtraParams['object_id'];
+		$bIsLinkedSetIndirect = isset($aExtraParams['link_attr']);
+		if ($bIsLinkedSetIndirect) {
+			//--- AttributeLinkedSetIndirect (n,n => lnk class)
+			$sLnkClass = $oFilter->GetClass();
+			$sExtKeyToObjectClass = $aExtraParams['link_attr'];
+			$sExtKeyToRemoteClass = $aExtraParams['target_attr'];
+
+			/** @var \AttributeExternalKey $oLnkExtKeyToRemote */
+			$oLnkExtKeyToRemote = MetaModel::GetAttributeDef($sLnkClass, $sExtKeyToRemoteClass);
+			$sRemoteClass = $oLnkExtKeyToRemote->GetTargetClass();
+
+			/** @var \AttributeExternalKey $oLnkExtKeyToRemote */
+			$oLnkExtKeyToObject = MetaModel::GetAttributeDef($sLnkClass, $sExtKeyToObjectClass);
+			$sObjectClass = $oLnkExtKeyToObject->GetTargetClass();
+
+			/** @var \AttributeExternalKey $oLnkExtKeyToRemote */
+			$oObjectExtKeyToLnk = $oLnkExtKeyToObject->GetMirrorLinkAttribute();
+			$sObjectExtKeyToLnkClass = $oObjectExtKeyToLnk->GetCode();
+
+			$sRemoteClassAliasName = ormLinkSet::REMOTE_ALIAS;
+			$sLnkClassAliasName = ormLinkSet::LINK_ALIAS;
+			$sOql = <<<SQL
+SELECT {$sRemoteClassAliasName},{$sLnkClassAliasName}
+	FROM {$sRemoteClass} AS {$sRemoteClassAliasName}
+	JOIN {$sLnkClass} AS {$sLnkClassAliasName} ON {$sLnkClassAliasName}.$sExtKeyToRemoteClass = {$sRemoteClassAliasName}.id
+	WHERE {$sLnkClassAliasName}.$sExtKeyToObjectClass = $sObjectId
+SQL;
+
+			$aAttCodesToDisplay = MetaModel::GetAttributeLinkedSetIndirectDatatableAttCodesToDisplay($sObjectClass, $sObjectExtKeyToLnkClass, $sRemoteClass, $sExtKeyToRemoteClass);
+			/** @noinspection PhpUnnecessaryLocalVariableInspection */
+			$sAttCodesToDisplay = implode(',', $aAttCodesToDisplay);
+			$aParams = [
+				'zlist'        => false,
+				'extra_fields' => $sAttCodesToDisplay,
+			];
+		} else {
+			//--- AttributeLinkedSet (1,n => AttributeExternalKey)
+			$sClass = $oFilter->GetClass();
+			$sExtKeyCode = $aExtraParams['target_attr'];
+
+			$sOql = "SELECT $sClass WHERE $sExtKeyCode = $sObjectId";
+
+			$aParams = [];
+		}
+
+		$oDataTableSearchFilter = DBSearch::FromOQL($sOql);
+
+		return [$oDataTableSearchFilter, $aParams];
 	}
 
 	/**

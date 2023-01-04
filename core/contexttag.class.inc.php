@@ -52,13 +52,17 @@
  */
 class ContextTag
 {
-	public const TAG_PORTAL = 'GUI:Portal';
-	public const TAG_CRON = 'CRON';
+	public const TAG_PORTAL  = 'GUI:Portal';
+	public const TAG_CRON    = 'CRON';
 	public const TAG_CONSOLE = 'GUI:Console';
-	public const TAG_SETUP = 'Setup';
+	public const TAG_SETUP   = 'Setup';
 	public const TAG_SYNCHRO = 'Synchro';
-	public const TAG_REST = 'REST/JSON';
-	public const TAG_SEARCH = 'Search';
+	public const TAG_REST    = 'REST/JSON';
+	/**
+	 * @var string
+	 * @since 3.1.0 N°3200
+	 */
+	public const TAG_OBJECT_SEARCH = 'ObjectSearch';
 
 	protected static $aStack = array();
 
