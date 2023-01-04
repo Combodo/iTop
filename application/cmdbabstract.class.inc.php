@@ -5678,15 +5678,6 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCheckToWriteFailed(array $aIssues): void
-	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_WRITE_FAILED, ['check_issues' => $aIssues]);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
 	final protected function EventCreateDone(): void
 	{
 		$this->FireEvent(EVENT_DB_CREATE_DONE);
@@ -5716,15 +5707,6 @@ JS
 	final protected function EventCheckToDelete(DeletionPlan $oDeletionPlan): void
 	{
 		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE, ['deletion_plan' => $oDeletionPlan]);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
-	final protected function EventCheckToDeleteFailed(array $aIssues): void
-	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE_FAILED, ['check_issues' => $aIssues]);
 	}
 
 	/**
