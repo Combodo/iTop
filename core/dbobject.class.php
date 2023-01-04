@@ -2361,11 +2361,7 @@ abstract class DBObject implements iDisplay
 
 			// Ultimate check - ensure DB integrity
 			$this->SetReadOnly('No modification allowed during CheckToCreate');
-			if ($this->IsNew()) {
-				$this->EventCheckToCreate();
-			} else {
-				$this->EventCheckToUpdate();
-			}
+			$this->EventCheckToWrite();
 			$this->SetReadWrite();
 
 			$this->DoCheckToWrite();
@@ -2377,11 +2373,7 @@ abstract class DBObject implements iDisplay
 			else
 			{
 				$this->m_bCheckStatus = false;
-				if ($this->IsNew()) {
-					$this->EventCheckToCreateFailed($this->m_aCheckIssues);
-				} else {
-					$this->EventCheckToUpdateFailed($this->m_aCheckIssues);
-				}
+				$this->EventCheckToWriteFailed($this->m_aCheckIssues);
 			}
 		}
 		return array($this->m_bCheckStatus, $this->m_aCheckIssues, $this->m_bSecurityIssue);
@@ -2978,7 +2970,6 @@ abstract class DBObject implements iDisplay
 
 		// Ensure the update of the values (we are accessing the data directly)
 		$this->DoComputeValues();
-		$this->EventCreateRequested();
 		$this->OnInsert();
 
 		if ($this->m_iKey < 0) {
@@ -2998,10 +2989,6 @@ abstract class DBObject implements iDisplay
 			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
 		$this->ComputeStopWatchesDeadline(true);
-
-		$this->SetReadOnly('No modification allowed during The Event :'.EVENT_DB_ABOUT_TO_CREATE);
-		$this->EventAboutToCreate();
-		$this->SetReadWrite();
 
 		$iTransactionRetry = 1;
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
@@ -3181,7 +3168,6 @@ abstract class DBObject implements iDisplay
 		{
 			$this->DoComputeValues();
 			$this->ComputeStopWatchesDeadline(false);
-			$this->EventUpdateRequested();
 			$this->OnUpdate();
 
 			// Freeze the changes at this point
@@ -3233,9 +3219,6 @@ abstract class DBObject implements iDisplay
 				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
 				$iTransactionRetry = $iTransactionRetryCount;
 			}
-			$this->SetReadOnly('No modification allowed during The Event :'.EVENT_DB_ABOUT_TO_UPDATE);
-			$this->EventAboutToUpdate();
-			$this->SetReadWrite();
 
 			while ($iTransactionRetry > 0)
 			{
@@ -3614,7 +3597,6 @@ abstract class DBObject implements iDisplay
 			return;
 		}
 
-		$this->EventAboutToDelete();
 		$this->OnDelete();
 
 		// Activate any existing trigger
@@ -5913,7 +5895,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCreateRequested(): void
+	protected function EventCheckToWrite(): void
 	{
 	}
 
@@ -5921,23 +5903,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCheckToCreate(): void
-	{
-	}
-
-	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
-	protected function EventCheckToCreateFailed(array $aIssues): void
-	{
-	}
-
-	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
-	protected function EventAboutToCreate(): void
+	protected function EventCheckToWriteFailed(array $aIssues): void
 	{
 	}
 
@@ -5952,38 +5918,6 @@ abstract class DBObject implements iDisplay
 	/////////////
 	/// UPDATE
 	///
-
-	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
-	protected function EventUpdateRequested(): void
-	{
-	}
-
-	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
-	protected function EventCheckToUpdate(): void
-	{
-	}
-
-	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
-	protected function EventCheckToUpdateFailed(array $aIssues): void
-	{
-	}
-
-	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
-	protected function EventAboutToUpdate(): void
-	{
-	}
 
 	/**
 	 * @return void
@@ -6010,14 +5944,6 @@ abstract class DBObject implements iDisplay
 	 * @since 3.1.0
 	 */
 	protected function EventCheckToDeleteFailed(array $aIssues): void
-	{
-	}
-
-	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
-	protected function EventAboutToDelete(): void
 	{
 	}
 

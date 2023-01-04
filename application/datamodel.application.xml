@@ -186,25 +186,8 @@
     </menu>
   </menus>
   <events>
-    <event id="EVENT_DB_CREATE_REQUESTED" _delta="define">
-      <description>An object create in the database has been requested. All changes to the object will be persisted automatically.</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>DBObject::OnInsert</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object inserted</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_CHECK_TO_CREATE" _delta="define">
-      <description>Check an object before it is created into the database (no change possible). Call DBObject::AddCheckIssue() to signal an issue</description>
+    <event id="EVENT_DB_CHECK_TO_WRITE" _delta="define">
+      <description>Check an object before it is written into the database (no change possible). Call DBObject::AddCheckIssue() to signal an issue</description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -220,36 +203,14 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_DB_CHECK_TO_CREATE_FAILED" _delta="define">
-      <description>A check has failed, it is not possible to create the object</description>
+    <event id="EVENT_DB_CHECK_TO_WRITE_FAILED" _delta="define">
+      <description>A check has failed, it is not possible to write the object in DB</description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
-      <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
       <event_data>
-        <event_datum id="check_issues">
-          <description>Array of the issues (string) that prevented the object creation</description>
-          <type>array</type>
-        </event_datum>
         <event_datum id="object">
           <description>The object to check</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_ABOUT_TO_CREATE" _delta="define">
-      <description>An object is about to be created in the database (no change possible)</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>DBObject::OnInsert</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object inserted</description>
           <type>DBObject</type>
         </event_datum>
         <event_datum id="debug_info">
@@ -267,78 +228,6 @@
       <event_data>
         <event_datum id="object">
           <description>The object inserted</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_UPDATE_REQUESTED" _delta="define">
-      <description>An object update has been requested. All changes to the object will be persisted automatically.</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>DBObject::OnUpdate, DBObject::DoComputeValues</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object updated</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_CHECK_TO_UPDATE" _delta="define">
-      <description>Check an object before it is written into the database (no change possible). Call DBObject::AddCheckIssue() to signal an issue</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object to check</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_CHECK_TO_UPDATE_FAILED" _delta="define">
-      <description>A check has failed, it is not possible to update the object</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
-      <event_data>
-        <event_datum id="check_issues">
-          <description>Array of the issues (string) that prevented the object update</description>
-          <type>array</type>
-        </event_datum>
-        <event_datum id="object">
-          <description>The object to check</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_ABOUT_TO_UPDATE" _delta="define">
-      <description>An object is about to be updated in the database (no change possible)</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>DBObject::OnUpdate</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object updated</description>
           <type>DBObject</type>
         </event_datum>
         <event_datum id="debug_info">
@@ -394,23 +283,6 @@
         </event_datum>
         <event_datum id="object">
           <description>The object to check</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_ABOUT_TO_DELETE" _delta="define">
-      <description>An object is about to be deleted in the database</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>DBObject::OnDelete</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object deleted</description>
           <type>DBObject</type>
         </event_datum>
         <event_datum id="debug_info">

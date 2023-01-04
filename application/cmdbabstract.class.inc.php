@@ -5669,36 +5669,18 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCreateRequested(): void
+	final protected function EventCheckToWrite(): void
 	{
-		$this->FireEvent(EVENT_DB_CREATE_REQUESTED);
+		$this->FireEvent(EVENT_DB_CHECK_TO_WRITE);
 	}
 
 	/**
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCheckToCreate(): void
+	final protected function EventCheckToWriteFailed(array $aIssues): void
 	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_CREATE);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
-	final protected function EventCheckToCreateFailed(array $aIssues): void
-	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_CREATE_FAILED, ['check_issues' => $aIssues]);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
-	final protected function EventAboutToCreate(): void
-	{
-		$this->FireEvent(EVENT_DB_ABOUT_TO_CREATE);
+		$this->FireEvent(EVENT_DB_CHECK_TO_WRITE_FAILED, ['check_issues' => $aIssues]);
 	}
 
 	/**
@@ -5713,42 +5695,6 @@ JS
 	/////////////
 	/// UPDATE
 	///
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
-	final protected function EventUpdateRequested(): void
-	{
-		$this->FireEvent(EVENT_DB_UPDATE_REQUESTED);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
-	final protected function EventCheckToUpdate(): void
-	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_UPDATE);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
-	final protected function EventCheckToUpdateFailed(array $aIssues): void
-	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_UPDATE_FAILED, ['check_issues' => $aIssues]);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
-	final protected function EventAboutToUpdate(): void
-	{
-		$this->FireEvent(EVENT_DB_ABOUT_TO_UPDATE);
-	}
 
 	/**
 	 * @inheritDoc
@@ -5779,15 +5725,6 @@ JS
 	final protected function EventCheckToDeleteFailed(array $aIssues): void
 	{
 		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE_FAILED, ['check_issues' => $aIssues]);
-	}
-
-	/**
-	 * @inheritDoc
-	 * @since 3.1.0
-	 */
-	final protected function EventAboutToDelete(): void
-	{
-		$this->FireEvent(EVENT_DB_ABOUT_TO_DELETE);
 	}
 
 	/**
