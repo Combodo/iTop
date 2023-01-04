@@ -168,6 +168,8 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 
 /**
  *
+ * @param bool $bDebug
+ *
  * @throws \ArchivedObjectException
  * @throws \CoreCannotSaveObjectException
  * @throws \CoreException
@@ -185,9 +187,19 @@ function CronExec($bDebug)
 	$iMaxDuration = MetaModel::GetConfig()->Get('cron_max_execution_time');
 	$iTimeLimit = $iStarted + $iMaxDuration;
 	$iCronSleep = MetaModel::GetConfig()->Get('cron_sleep');
-	$iMaxCronProcess = MetaModel::GetConfig()->Get('cron.max_processes');
+	$iMaxCronProcess = max(MetaModel::GetConfig()->Get('cron.max_processes'), 1);
+
+	// Allow a time slot for every task
+	// knowing that there are $iMaxCronProcess running in parallel for the amount of tasks
+	$oSearch = new DBObjectSearch('BackgroundTask');
+	$oSearch->AddCondition('status', 'active');
+	$oTasks = new DBObjectSet($oSearch);
+	$iCount = $oTasks->Count();
+	$iTotalAvailableTime = $iMaxDuration * $iMaxCronProcess;
+	$iTimeSlot = (int)($iTotalAvailableTime / max($iCount, 1));
 
 	CronLog::Debug("Planned duration = $iMaxDuration seconds");
+	CronLog::Debug("Planned duration per task = $iTimeSlot seconds");
 	CronLog::Debug("Loop pause = $iCronSleep seconds");
 
 	ReSyncProcesses($bDebug);
@@ -226,7 +238,7 @@ function CronExec($bDebug)
 				CronLog::Debug($sDebugMessage);
 			}
 			$aRunTasks = [];
-			while ($aTasks != []) {
+			while (count($aTasks) > 0) {
 				$oTask = array_shift($aTasks);
 
 				$sTaskClass = $oTask->Get('class_name');
@@ -241,7 +253,7 @@ function CronExec($bDebug)
 				$aRunTasks[] = $sTaskClass;
 
 				// N°3219 for each process will use a specific CMDBChange object with a specific track info
-				// Any BackgroundProcess can overrides this as needed
+				// Any BackgroundProcess can override this as needed
 				CMDBObject::SetCurrentChangeFromParams("Background task ($sTaskClass)");
 
 				// Run the task and record its next run time
@@ -249,7 +261,9 @@ function CronExec($bDebug)
 				CronLog::Debug(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Start task:%-'=49s", ' '.$sTaskClass.' '));
 				try
 				{
-					$sMessage = RunTask($oTask, $iTimeLimit);
+					// The limit of time for this task corresponds to the time slot allowed for every task
+					// but limited to the cron job time limit
+					$sMessage = RunTask($oTask, min($iTimeLimit, time() + $iTimeSlot));
 				} catch (MySQLHasGoneAwayException $e)
 				{
 					CronLog::Error("ERROR : 'MySQL has gone away' thrown when processing $sTaskClass  (error_code=".$e->getCode().")");
@@ -543,7 +557,7 @@ try
 	else
 	{
 		// Limit the number of cron process to run in parallel
-		$iMaxCronProcess = MetaModel::GetConfig()->Get('cron.max_processes');
+		$iMaxCronProcess = max(MetaModel::GetConfig()->Get('cron.max_processes'), 1);
 		$bCanRun = false;
 		$iProcessNumber = 0;
 		for ($i = 0; $i < $iMaxCronProcess; $i++) {
