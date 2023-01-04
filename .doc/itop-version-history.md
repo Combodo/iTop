@@ -61,3 +61,5 @@ gitGraph
     checkout support/2.7
     commit id: "2022-12-28" tag: "2.7.8"
 ```
+
+To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).
