@@ -2224,7 +2224,7 @@ class MenuBlock extends DisplayBlock
 			} else {
 				// - Filter list
 				$sSearchUrl = utils::GetDataTableSearchUrl($this->m_oFilter, $aExtraParams);
-				if (!empty($sSearchUrl)) {
+				if (utils::IsNotNullOrEmptyString($sSearchUrl)) {
 					$oActionButton = ButtonUIBlockFactory::MakeIconLink(
 						'fas fa-filter',
 						Dict::S('UI:Menu:FilterList'),
