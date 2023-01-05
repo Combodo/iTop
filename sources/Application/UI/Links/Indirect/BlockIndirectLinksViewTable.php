@@ -49,6 +49,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 			'extra_fields'  => $this->GetAttCodesToDisplay(),
 			'row_actions'   => $this->GetRowActions(),
 			'currentId' => $this->GetTableId(),
+			'allow_creation_in_modal' => true,
 		);
 	}
 

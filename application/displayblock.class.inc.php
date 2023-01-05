@@ -1802,7 +1802,7 @@ class MenuBlock extends DisplayBlock
 			// Any style actions
 			// - Bulk actions on objects set
 			if ($iSetCount > 1) {
-				if ($bIsCreationAllowed) {
+				if ($bIsCreationAllowed && !(isset($aExtraParams['allow_creation_in_modal']) && $aExtraParams['allow_creation_in_modal'] === true)) {
 					$this->AddNewObjectMenuAction($aRegularActions, $sClass, $sDefaultValuesAsUrlParams);
 				}
 
@@ -2221,10 +2221,10 @@ class MenuBlock extends DisplayBlock
 				$oActionButton = ButtonUIBlockFactory::MakeIconLink('fas fa-search', Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), "{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'UI:SearchFor_Class');
 				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				$oActionsToolbar->AddSubBlock($oActionButton);
-			} else if ($this->m_sStyle === 'listInObject'){
-				// - Filter list
-
-				// TODO 3.1 Needs to replace default UI:Menu:New initialized in AddNewObjectMenuAction
+			} 
+			
+			// - Creation in modal
+			if(isset($aExtraParams['allow_creation_in_modal']) && $aExtraParams['allow_creation_in_modal'] === true){
 				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
 					'fas fa-plus',
 					Dict::S('UI:Links:New:Button:Tooltip'),

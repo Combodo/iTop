@@ -1076,6 +1076,8 @@ JS;
 			/**give definition of id for select checkbox*/
 			'row_actions',
 			/** array of blocks displayed on every row */
+			'allow_creation_in_modal',
+			/** bool to allow a creation of a new object of this type in a modal */
 		];
 	}
 }
