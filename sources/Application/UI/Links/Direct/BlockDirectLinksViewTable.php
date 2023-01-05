@@ -30,6 +30,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 	/** @inheritdoc * */
 	public function GetExtraParam(): array
 	{
+		$bIsAllowedToCreate = !$this->oAttDef->GetReadOnly();
 		return array(
 			'target_attr' => $this->oAttDef->GetExtKeyToMe(),
 			'object_id'   => $this->oDbObject->GetKey(),
@@ -38,6 +39,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 			'table_id'    => $this->GetTableId(),
 			'row_actions' => $this->GetRowActions(),
 			'currentId' => $this->GetTableId(),
+			'allow_creation_in_modal' => $bIsAllowedToCreate,
 		);
 	}
 
