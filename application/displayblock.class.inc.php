@@ -1045,9 +1045,15 @@ JS
 			$aCount = $aCounts[$sStateValue];
 			$sHyperlink = $aCount['link'];
 			$sCountLabel = $aCount['label'];
-			$oPill = PillFactory::MakeForState($sClass, $sStateValue)
-				->SetTooltip($sStateLabel)
-				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".utils::HtmlEntities($sStateLabel)."</span>");
+			$oPill = PillFactory::MakeForState($sClass, $sStateValue);
+			//unencode label for ExternalKey attribute because friendlyname is already html encoded thanks to GetName function in GetAllowedValues function. (A fix in this function may have too much impact).
+			if ($oAttDef instanceof AttributeExternalKey) {
+				$oPill->SetTooltip(utils::HtmlEntityDecode($sStateLabel))
+					->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".$sStateLabel."</span>");
+			} else {
+				$oPill->SetTooltip($sStateLabel)
+					->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".utils::HtmlEntities($sStateLabel)."</span>");
+			}
 			if ($sHyperlink != '-') {
 				$oPill->SetUrl($sHyperlink);
 			}
