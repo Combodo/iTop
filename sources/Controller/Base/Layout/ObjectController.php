@@ -72,9 +72,9 @@ class ObjectController extends AbstractController
 		$aFormExtraParams = array('wizard_container' => 1);
 		if ($this->IsHandlingXmlHttpRequest()) {
 			$oPage = new AjaxPage('');
-			
+			$aFormExtraParams['js_handlers'] = [];
 			// We display this form in a modal, once we submit (in ajax) we probably want to only close the modal 
-			$aFormExtraParams['form_on_submit_js_code'] =
+			$aFormExtraParams['js_handlers']['form_on_submit'] =
 				<<<JS
 				event.preventDefault();
 				if(bOnSubmitForm === true)
@@ -93,8 +93,16 @@ class ObjectController extends AbstractController
 						}
 					});
 				}
-JS
-				;
+JS;
+
+
+			$aFormExtraParams['js_handlers']['cancel_button_on_click'] =
+				<<<JS
+				function() {
+					$(this).closest('[data-role="ibo-modal"]').dialog('close');
+				};
+JS;
+
 		} else {
 			$oPage = new iTopWebPage('', $bPrintable);
 			$oPage->DisableBreadCrumb();

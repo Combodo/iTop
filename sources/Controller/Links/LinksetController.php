@@ -180,7 +180,20 @@ class LinkSetController extends AbstractController
 				}
 JS
 			;
-			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), array('noRelations' => true, 'fieldsFlags' => $aFieldFlags, 'form_on_submit_js_code' => $sFormOnSubmitJsCode));
+			$aExtraParams = [
+				'noRelations' => true,
+				'fieldsFlags' => $aFieldFlags,
+				'js_handlers' => [
+					'form_on_submit' => $sFormOnSubmitJsCode,
+					'cancel_button_on_click' =>
+						<<<JS
+				function() {
+					$(this).closest('[data-role="ibo-modal"]').dialog('close');
+				};
+JS
+				]
+			];
+			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aExtraParams);
 			return $oPage;
 		}
 		return;
