@@ -174,10 +174,10 @@ class RestResultWithObjects extends RestResult
 	 * Report the given object
 	 *
 	 * @api
-	 * @param $iCode
+	 * @param int $iCode An error code (RestResult::OK is no issue has been found)
 	 * @param string $sMessage Description of the error if any, an empty string otherwise
 	 * @param DBObject $oObject The object being reported
-	 * @param null $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
+	 * @param array|null $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
 	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
 	 *
 	 * @return void
