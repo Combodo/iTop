@@ -36,7 +36,7 @@ class ModelFactoryTest extends ItopTestCase
 	{
 		parent::setUp();
 
-		require_once(APPROOT.'setup/modelfactory.class.inc.php');
+		$this->RequireOnceItopFile('setup/modelfactory.class.inc.php');
 	}
 
 	/**
