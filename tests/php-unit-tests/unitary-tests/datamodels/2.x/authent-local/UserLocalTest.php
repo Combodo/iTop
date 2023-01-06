@@ -25,8 +25,8 @@ class UserLocalTest extends ItopDataTestCase
 	{
 		parent::setUp();
 
-		require_once(APPROOT.'tests/php-unit-tests/unitary-tests/datamodels/2.x/authent-local/UserLocalTest/UserLocalPasswordPolicyMock.php');
-		require_once(APPROOT.'env-production/authent-local/model.authent-local.php');
+		$this->RequireOnceUnitTestFile('./UserLocalTest/UserLocalPasswordPolicyMock.php');
+		$this->RequireOnceItopFile('env-production/authent-local/model.authent-local.php');
 	}
 
 	/**

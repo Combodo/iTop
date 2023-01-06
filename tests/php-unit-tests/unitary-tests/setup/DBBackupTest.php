@@ -22,7 +22,7 @@ class DBBackupTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'setup/backup.class.inc.php');
+		$this->RequireOnceItopFile('setup/backup.class.inc.php');
 
 		// We need a connection to the DB, so let's open it !
 		// We are using the default config file... as the server might not be configured for all the combination we are testing

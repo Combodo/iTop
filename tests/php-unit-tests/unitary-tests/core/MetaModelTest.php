@@ -26,8 +26,8 @@ class MetaModelTest extends ItopDataTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once APPROOT.'/core/metamodel.class.php';
-		require_once APPROOT.'/core/coreexception.class.inc.php';
+		$this->RequireOnceItopFile('/core/metamodel.class.php');
+		$this->RequireOnceItopFile('/core/coreexception.class.inc.php');
 	}
 
     /**

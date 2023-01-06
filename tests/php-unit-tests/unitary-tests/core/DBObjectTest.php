@@ -43,8 +43,8 @@ class DBObjectTest extends ItopDataTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'core/coreexception.class.inc.php');
-		require_once(APPROOT.'core/dbobject.class.php');
+		$this->RequireOnceItopFile('core/coreexception.class.inc.php');
+		$this->RequireOnceItopFile('core/dbobject.class.php');
 	}
 
 	/**

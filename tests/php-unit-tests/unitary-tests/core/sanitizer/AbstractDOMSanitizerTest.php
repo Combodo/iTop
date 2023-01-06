@@ -12,8 +12,8 @@ abstract class AbstractDOMSanitizerTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'application/utils.inc.php');
-		require_once(APPROOT.'core/htmlsanitizer.class.inc.php');
+		$this->RequireOnceItopFile('application/utils.inc.php');
+		$this->RequireOnceItopFile('core/htmlsanitizer.class.inc.php');
 	}
 
 	protected function ReadTestFile($sFileToTest, $sFolderName)

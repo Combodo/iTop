@@ -80,9 +80,8 @@ class ItopDataTestCase extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'/application/startup.inc.php');
-
-		require_once(APPROOT.'application/utils.inc.php');
+		$this->RequireOnceItopFile('application/startup.inc.php');
+		$this->RequireOnceItopFile('application/utils.inc.php');
 
 		$sEnv = 'production';
 		$sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;

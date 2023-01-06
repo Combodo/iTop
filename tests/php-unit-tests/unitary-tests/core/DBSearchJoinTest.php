@@ -22,7 +22,7 @@ class DBSearchJoinTest extends ItopDataTestCase {
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'application/startup.inc.php');
+		$this->RequireOnceItopFile('application/startup.inc.php');
 	}
 
 	/**

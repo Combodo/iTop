@@ -21,8 +21,8 @@ class SetupUtilsTest extends ItopTestCase
 	{
 		parent::setUp();
 
-		require_once APPROOT.'setup/setuputils.class.inc.php';
-		require_once APPROOT.'setup/setuppage.class.inc.php';
+		$this->RequireOnceItopFile('setup/setuputils.class.inc.php');
+		$this->RequireOnceItopFile('setup/setuppage.class.inc.php');
 	}
 
 	/**

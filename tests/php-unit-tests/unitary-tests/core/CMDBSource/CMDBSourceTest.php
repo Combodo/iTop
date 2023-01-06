@@ -24,7 +24,7 @@ class CMDBSourceTest extends ItopTestCase
 	{
 
 		parent::setUp();
-		require_once(APPROOT.'/core/cmdbsource.class.inc.php');
+		$this->RequireOnceItopFile('/core/cmdbsource.class.inc.php');
 	}
 
 	/**

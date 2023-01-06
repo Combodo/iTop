@@ -20,8 +20,8 @@ class iTopConfigSyntaxValidatorTest extends ItopTestCase
 	{
 		parent::setUp();
 
-		require_once APPROOT.'env-production/itop-config/src/Validator/ConfigNodesVisitor.php';
-		require_once APPROOT.'env-production/itop-config/src/Validator/iTopConfigSyntaxValidator.php';
+		$this->RequireOnceItopFile('env-production/itop-config/src/Validator/ConfigNodesVisitor.php');
+		$this->RequireOnceItopFile('env-production/itop-config/src/Validator/iTopConfigSyntaxValidator.php');
 	}
 
 

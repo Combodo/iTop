@@ -31,7 +31,7 @@ class TransactionsTest extends ItopTestCase
 	{
 		parent::setUp();
 		require_once('DeadLockInjection.php');
-		require_once(APPROOT.'/core/cmdbsource.class.inc.php');
+		$this->RequireOnceItopFile('/core/cmdbsource.class.inc.php');
 		$sEnv = 'production';
 		$sConfigFile = APPCONF.$sEnv.'/config-itop.php';
 

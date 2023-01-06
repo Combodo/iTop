@@ -15,8 +15,8 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once APPROOT.'env-production/itop-config/src/Validator/iTopConfigAstValidator.php';
-		require_once APPROOT.'env-production/itop-config/src/Validator/ConfigNodesVisitor.php';
+		$this->RequireOnceItopFile('env-production/itop-config/src/Validator/iTopConfigAstValidator.php');
+		$this->RequireOnceItopFile('env-production/itop-config/src/Validator/ConfigNodesVisitor.php');
 	}
 
 	public function testValidateFileValid()

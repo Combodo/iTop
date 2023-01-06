@@ -15,7 +15,7 @@ class TwigTest extends ItopDataTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once __DIR__.'/../../core/config.class.inc.php';
+		$this->RequireOnceItopFile('core/config.class.inc.php');
 	}
 
 	/**
@@ -43,6 +43,7 @@ class TwigTest extends ItopDataTestCase
 		{
 			$oTwig->addFunction($oFunction);
 		}
+	}
 
 	public static function testTemplateProvider()
 	{

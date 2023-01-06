@@ -31,7 +31,7 @@ class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 	{
 		parent::setUp();
 
-		require_once APPROOT.'setup/itopdesignformat.class.inc.php';
+		$this->RequireOnceItopFile('setup/itopdesignformat.class.inc.php');
 	}
 
 

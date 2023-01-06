@@ -42,9 +42,9 @@ class dictTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'core'.DIRECTORY_SEPARATOR.'coreexception.class.inc.php');
-		require_once(APPROOT.'core'.DIRECTORY_SEPARATOR.'dict.class.inc.php');
-		require_once(APPROOT.'core'.DIRECTORY_SEPARATOR.'apc-service.class.inc.php');
+		$this->RequireOnceItopFile('core'.DIRECTORY_SEPARATOR.'coreexception.class.inc.php');
+		$this->RequireOnceItopFile('core'.DIRECTORY_SEPARATOR.'dict.class.inc.php');
+		$this->RequireOnceItopFile('core'.DIRECTORY_SEPARATOR.'apc-service.class.inc.php');
 		$this->sEnvName = time();
 		$sDictionaryFolder = APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries";
 		@mkdir($sDictionaryFolder, 0777, true);

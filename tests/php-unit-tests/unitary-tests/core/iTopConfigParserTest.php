@@ -16,8 +16,8 @@ class iTopConfigParserTest extends ItopTestCase
 	public function setUp(): void
 	{
 		parent::setUp();
-		require_once APPROOT.'/core/iTopConfigParser.php';
-		require_once APPROOT.'/setup/runtimeenv.class.inc.php';
+		$this->RequireOnceItopFile('/core/iTopConfigParser.php');
+		$this->RequireOnceItopFile('/setup/runtimeenv.class.inc.php');
 
 		clearstatcache();
 		$this->sConfigPath = utils::GetConfigFilePath();

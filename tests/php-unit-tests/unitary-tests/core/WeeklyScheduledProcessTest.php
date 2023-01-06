@@ -10,8 +10,8 @@ class WeeklyScheduledProcessTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'core/backgroundprocess.inc.php');
-		require_once(APPROOT.'tests/php-unit-tests/unitary-tests/core/WeeklyScheduledProcessMockConfig.php');
+		$this->RequireOnceItopFile('core/backgroundprocess.inc.php');
+		$this->RequireOnceUnitTestFile('./WeeklyScheduledProcessMockConfig.php');
 	}
 
 

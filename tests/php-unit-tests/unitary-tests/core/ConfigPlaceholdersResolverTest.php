@@ -34,7 +34,7 @@ class ConfigPlaceholdersResolverTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'core/config.class.inc.php');
+		$this->RequireOnceItopFile('core/config.class.inc.php');
 	}
 	/**
 	 * @dataProvider providerResolve

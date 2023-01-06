@@ -92,9 +92,9 @@ class StatusIncTest extends TestCase {
         include_once($this->sAppRoot . '/status.inc.php');
 
         StatusCheckConfigFile();
-        require_once(APPROOT . '/core/cmdbobject.class.inc.php');
-        require_once(APPROOT . '/application/utils.inc.php');
-        require_once(APPROOT . '/core/contexttag.class.inc.php');
+	    require_once(APPROOT . '/core/cmdbobject.class.inc.php');
+	    require_once(APPROOT . '/application/utils.inc.php');
+	    require_once(APPROOT . '/core/contexttag.class.inc.php');
 
         $oConfigWrong = new Config(ITOP_DEFAULT_CONFIG_FILE);
         $oConfigWrong->Set('db_pwd', $oConfigWrong->Get('db_pwd') . '_unittest');

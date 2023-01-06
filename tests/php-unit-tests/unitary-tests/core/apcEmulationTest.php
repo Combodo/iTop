@@ -42,7 +42,7 @@ class apcEmulationTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'core/apc-emulation.php');
+		$this->RequireOnceItopFile('core/apc-emulation.php');
 		require_once 'mockApcEmulation.incphp';
 		apc_clear_cache();
 	}

@@ -64,8 +64,8 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 	{
 		parent::setUp();
 
-		require_once APPROOT.'core/config.class.inc.php';
-		require_once APPROOT.'application/utils.inc.php';
+		$this->RequireOnceItopFile('core/config.class.inc.php');
+		$this->RequireOnceItopFile('application/utils.inc.php');
 
 		if (is_dir(APPROOT.'datamodels/2.x')) {
 			$DatamodelsPath = APPROOT.'datamodels/2.x';

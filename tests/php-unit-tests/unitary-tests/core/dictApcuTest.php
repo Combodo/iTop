@@ -44,9 +44,9 @@ class dictApcuTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'core'.DIRECTORY_SEPARATOR.'coreexception.class.inc.php');
-		require_once(APPROOT.'core'.DIRECTORY_SEPARATOR.'dict.class.inc.php');
-		require_once(APPROOT.'core'.DIRECTORY_SEPARATOR.'apc-service.class.inc.php');
+		$this->RequireOnceItopFile('core'.DIRECTORY_SEPARATOR.'coreexception.class.inc.php');
+		$this->RequireOnceItopFile('core'.DIRECTORY_SEPARATOR.'dict.class.inc.php');
+		$this->RequireOnceItopFile('core'.DIRECTORY_SEPARATOR.'apc-service.class.inc.php');
 
 		$this->sEnvName = time();
 		$_SESSION['itop_env'] = $this->sEnvName;
