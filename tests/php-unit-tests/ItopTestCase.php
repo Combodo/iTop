@@ -65,6 +65,37 @@ class ItopTestCase extends TestCase
 		}
 	}
 
+	/**
+	 * Require once an iTop file (core or extension) from its relative path to the iTop root dir.
+	 * This ensure to always use the right absolute path, especially in {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceUnitTestFile()}
+	 *
+	 * @param string $sFileRelPath Rel. path (from iTop root dir) of the iTop file (core or extension) to require (eg. 'core/attributedef.class.inc.php' for <ITOP>/core/attributedef.class.inc.php)
+	 *
+	 * @return void
+	 * @since 2.7.9 3.0.3 3.1.0 N°5608 Add method after PHPUnit directory moving
+	 */
+	protected function RequireOnceItopFile(string $sFileRelPath): void
+	{
+		require_once APPROOT . $sFileRelPath;
+	}
+
+	/**
+	 * Require once a unit test file (eg. a mock class) from its relative path from the *current* dir.
+	 * This ensure that required files don't crash when unit tests dir is moved in the iTop structure (see N°5608)
+	 *
+	 * @param string $sFileRelPath Rel. path (from the *current* dir) of the unit test file to require (eg. './WeeklyScheduledProcessMockConfig.php' for <ITOP>/tests/php-unit-tests/unitary-tests/core/WeeklyScheduledProcessMockConfig.php in Combodo\iTop\Test\UnitTest\Core\WeeklyScheduledProcessTest)
+	 *
+	 * @return void
+	 * @since 2.7.9 3.0.3 3.1.0 N°5608 Add method after PHPUnit directory moving
+	 */
+	protected function RequireOnceUnitTestFile(string $sFileRelPath): void
+	{
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+		$sCallerDirAbsPath = dirname($aStack[0]['file']);
+
+		require_once $sCallerDirAbsPath . DIRECTORY_SEPARATOR . $sFileRelPath;
+	}
+
 	protected function debug($sMsg)
 	{
 		if (DEBUG_UNIT_TEST) {
