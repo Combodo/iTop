@@ -30,11 +30,10 @@ use MySQLTransactionNotClosedException;
 use PHPUnit\Framework\TestCase;
 use SetupUtils;
 
-define('DEBUG_UNIT_TEST', true);
-
 class ItopTestCase extends TestCase
 {
 	const TEST_LOG_DIR = 'test';
+	static $DEBUG_UNIT_TEST = false;
 
 	/** @noinspection UsingInclusionOnceReturnValueInspection avoid errors for approot includes */
 	protected function setUp(): void
@@ -48,6 +47,10 @@ class ItopTestCase extends TestCase
 		@include_once '../../../../../../../approot.inc.php';
 		@include_once '../../../../../../../../approot.inc.php';
 		@include_once getcwd().'/approot.inc.php'; // this is when launching phpunit from within the IDE
+
+		static::$DEBUG_UNIT_TEST = getenv('DEBUG_UNIT_TEST');
+
+		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
 	}
 
 	/**
@@ -66,7 +69,7 @@ class ItopTestCase extends TestCase
 
 	protected function debug($sMsg)
 	{
-		if (DEBUG_UNIT_TEST) {
+		if (static::$DEBUG_UNIT_TEST) {
 			if (is_string($sMsg)) {
 				echo "$sMsg\n";
 			} else {

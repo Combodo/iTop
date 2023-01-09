@@ -19,6 +19,7 @@ class DBObjectTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = true;
+	const DEBUG_UNIT_TEST = true;
 
 
 	public function testReloadNotNecessaryForInsert()
@@ -28,6 +29,7 @@ class DBObjectTest extends ItopDataTestCase
 		// Insert without Reload
 		$oPerson->DBInsert();
 
+		// Get initial values
 		$aValues1 = [];
 		foreach (MetaModel::GetAttributesList('Person') as $sAttCode) {
 			if (MetaModel::GetAttributeDef('Person', $sAttCode) instanceof \AttributeLinkedSet) {

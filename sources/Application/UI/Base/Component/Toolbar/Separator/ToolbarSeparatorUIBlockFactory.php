@@ -9,6 +9,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator;
 
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 
 /**
  * Class ToolbarSeparatorUIBlockFactory

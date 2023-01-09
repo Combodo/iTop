@@ -254,7 +254,9 @@ class EventService
 	 */
 	public static function UnRegisterAll()
 	{
-		self::$aEventListeners = array();
+		self::$aEventListeners = [];
+		self::$aEventDescriptions = [];
+		self::$iEventIdCounter = 0;
 		EventHelper::Trace("Unregistered all events");
 	}
 
