@@ -2473,6 +2473,8 @@ class Config
 	 * @param string|null $sModulesDir
 	 * @param bool $bPreserveModuleSettings
 	 *
+	 * @return void
+	 *
 	 * @throws \Exception
 	 * @throws \CoreException
 	 */
