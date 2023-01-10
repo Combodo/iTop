@@ -19,7 +19,7 @@
  *
  */
 
-namespace Combodo\iTop\Test\UnitTest\Core;
+namespace Combodo\iTop\Test\UnitTest\Module\iTopConfig;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use ConfigPlaceholdersResolver;

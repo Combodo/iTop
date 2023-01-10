@@ -5,7 +5,7 @@
  * Time: 09:14
  */
 
-namespace coreExtensions;
+namespace Combodo\iTop\Test\UnitTest\Module\AuthentLocal;
 
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;

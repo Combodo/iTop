@@ -1,6 +1,6 @@
 <?php
 
-namespace Combodo\iTop\Test\UnitTest\Core;
+namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;

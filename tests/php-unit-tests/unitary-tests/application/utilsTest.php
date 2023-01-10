@@ -19,7 +19,10 @@
  *
  */
 
+namespace Combodo\iTop\Test\UnitTest\Application;
+
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use utils;
 
 /**
  * @covers utils
