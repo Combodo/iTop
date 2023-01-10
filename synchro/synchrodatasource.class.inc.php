@@ -2818,12 +2818,16 @@ class SynchroReplica extends DBObject implements iDisplay
 			$aData = $this->LoadExtendedDataFromTable($sSQLTable);
 
 			$aHeaders = array(
-				'attcode' => array('label' => 'Attribute Code', 'description' => ''),
-				'data'    => array('label' => 'Value', 'description' => ''),
+				'attcode' => array('label' => Dict::S('UI:Form:Property'), 'description' => ''),
+				'data'    => array('label' => Dict::S('UI:Form:Value'), 'description' => ''),
 			);
 			$aRows = array();
 			foreach ($aData as $sKey => $value) {
-				$aRows[] = array('attcode' => $sKey, 'data' => $value);
+				if (strpos(CMDBSource::GetFieldType($sSQLTable, $sKey), 'blob') !== false) {
+					$aRows[] = array('attcode' => $sKey, 'data' => sprintf('<i>%s (%s)</i>', Dict::S('Core:AttributeBlob'), utils::BytesToFriendlyFormat(strlen($value))));
+				} else {
+					$aRows[] = array('attcode' => $sKey, 'data' => utils::EscapeHtml($value));
+				}
 			}
 			$oPage->Table($aHeaders, $aRows);
 			$oPage->add('</fieldset>');
