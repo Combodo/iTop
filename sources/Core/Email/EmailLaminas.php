@@ -151,19 +151,25 @@ class EMailLaminas extends Email
 				$bVerifyPeer = static::$m_oConfig->Get('email_transport_smtp.verify_peer');
 
 				$oTransport = new Smtp();
-				$aOptions = [
-					'host'              => $sHost,
-					'port'              => $sPort,
-					'connection_class'  => 'login',
-					'connection_config' => [
-						'ssl'               => $sEncryption,
-						'novalidatecert'       => !$bVerifyPeer,
-					],
-				];
-				if (strlen($sUserName) > 0) {
-					$aOptions['connection_config']['username'] = $sUserName;
-					$aOptions['connection_config']['password'] = $sPassword;
+				$aOptions = [];
+				$aConnectionConfig = [];
+
+				$aOptions['host'] = $sHost;
+				$aOptions['port'] = $sPort;
+
+				$aConnectionConfig['ssl'] = $sEncryption;
+				$aConnectionConfig['novalidatecert'] = !$bVerifyPeer;
+
+				if (strlen($sPassword) > 0) {
+					$aConnectionConfig['username'] = $sUserName;
+					$aConnectionConfig['password'] = $sPassword;
+					$aOptions['connection_class'] = 'login';
+				} else {
+					$aOptions['connection_class'] = 'smtp';
 				}
+
+				$aOptions['connection_config'] = $aConnectionConfig;
+
 				$oOptions = new SmtpOptions($aOptions);
 				$oTransport->setOptions($oOptions);
 				break;
