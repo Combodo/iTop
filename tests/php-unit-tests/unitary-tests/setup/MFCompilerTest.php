@@ -41,7 +41,7 @@ class MFCompilerTest extends ItopTestCase {
 		}
 		clearstatcache();
 		$sPrefix = 'scsstest_';
-		$sAppRootForProvider = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR;
+		$sAppRootForProvider = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR;
 		$sTempTargetDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'UseLatestPrecompiledFileProvider';
 		$sExtensionTargetDir = $sAppRootForProvider . 'extensions/UseLatestPrecompiledFileProvider';
 		$sSourceDir = $sAppRootForProvider . 'datamodels' . DIRECTORY_SEPARATOR . '2.x';

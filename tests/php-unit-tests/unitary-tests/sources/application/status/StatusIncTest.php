@@ -12,6 +12,8 @@ namespace Combodo\iTop\Test\UnitTest\Status;
  * Date: 25/01/2019
  */
 
+use Combodo\iTop\Application\Status\Status;
+use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
 use PHPUnit\Framework\TestCase;
 use function Combodo\iTop\Application\Status\StatusCheckConfigFile;
@@ -27,7 +29,7 @@ if (!defined('DEBUG_UNIT_TEST')) {
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class StatusIncTest extends TestCase {
+class StatusIncTest extends ItopTestCase {
 
     /**
      * @var string
@@ -36,29 +38,26 @@ class StatusIncTest extends TestCase {
 
 	protected function setUp(): void
 	{
-		//AppRoot is the directory containing the directory
-		//Assume getcwd() is runned inside APPROOT/test
-		$this->sAppRoot = __DIR__.'/../../../../../../sources/application/status';
+		parent::setUp();
+		$this->RequireOnceItopFile('sources/application/status/Status.php');
 	}
 
     /**
      * @expectedException \Exception
      */
     public function testStatusGetAppRootWrongPath() {
-        include_once($this->sAppRoot . '/Status.php');
-
         $sAppRootFilenamewrong = 'approot.inc.php_wrong';
 
-        StatusGetAppRoot($sAppRootFilenamewrong);
+		$oStatus = new Status();
+		$this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusGetAppRoot", $oStatus, [$sAppRootFilenamewrong]);
     }
 
     /**
      * 
      */
     public function testStatusGetAppRootGood() {
-        include_once($this->sAppRoot . '/Status.php');
-
-        StatusGetAppRoot();
+	    $oStatus = new Status();
+	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusGetAppRoot", $oStatus, []);
 
         $this->assertNotEmpty(APPROOT);
     }
@@ -67,20 +66,18 @@ class StatusIncTest extends TestCase {
      * @expectedException \Exception
      */
     public function testStatusCheckConfigFileWrongPath() {
-        include_once($this->sAppRoot . '/Status.php');
-
         $sConfigFilenamewrong = 'config-itop.php_wrong';
 
-        StatusCheckConfigFile($sConfigFilenamewrong);
+	    $oStatus = new Status();
+	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusCheckConfigFile", $oStatus, [$sConfigFilenamewrong]);
     }
 
     /**
      * 
      */
     public function testStatusCheckConfigFileGood() {
-        include_once($this->sAppRoot . '/Status.php');
-
-        StatusCheckConfigFile();
+	    $oStatus = new Status();
+	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusCheckConfigFile", $oStatus, []);
 
         $this->assertTrue(true);
     }
@@ -89,26 +86,24 @@ class StatusIncTest extends TestCase {
      * @expectedException \MySQLException
      */
     public function testStatusStartupWrongDbPwd() {
-        include_once($this->sAppRoot . '/Status.php');
+	    $oStatus = new Status();
+	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusCheckConfigFile", $oStatus, []);
 
-        StatusCheckConfigFile();
-	    require_once(APPROOT . '/core/cmdbobject.class.inc.php');
-	    require_once(APPROOT . '/application/utils.inc.php');
-	    require_once(APPROOT . '/core/contexttag.class.inc.php');
+	    $this->RequireOnceItopFile('core/cmdbobject.class.inc.php');
+	    $this->RequireOnceItopFile('application/utils.inc.php');
+	    $this->RequireOnceItopFile('core/contexttag.class.inc.php');
 
         $oConfigWrong = new Config(ITOP_DEFAULT_CONFIG_FILE);
         $oConfigWrong->Set('db_pwd', $oConfigWrong->Get('db_pwd') . '_unittest');
-
-        StatusStartup($oConfigWrong);
+	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusStartup", $oStatus, [$oConfigWrong]);
     }
 
     /**
      * 
      */
     public function testStatusStartupGood() {
-        include_once($this->sAppRoot . '/Status.php');
-
-        StatusStartup();
+	    $oStatus = new Status();
+	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusStartup", $oStatus, []);
 
         $this->assertTrue(true);
     }
