@@ -565,15 +565,16 @@ class ApplicationInstaller
 		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
 		{
 			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
-			if (is_file($sConfigFilePath))
-			{
+			if (is_file($sConfigFilePath)) {
 				$oConfig = new Config($sConfigFilePath);
-			}
-			else
-			{
+			} else {
 				$oConfig = null;
 			}
-			$oConfig->UpdateFromParams($aParamValues);
+
+			if (false === is_null($oConfig)) {
+				$oConfig->UpdateFromParams($aParamValues);
+			}
+
 			SetupUtils::EnterMaintenanceMode($oConfig);
 		}
 
