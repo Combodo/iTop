@@ -38,7 +38,6 @@ class OQLTest extends ItopDataTestCase
 	 */
 	public function testOQLSetup()
 	{
-		utils::GetConfig()->Set('use_legacy_dbsearch', false, 'test');
 		utils::GetConfig()->Set('apc_cache.enabled', false, 'test');
 		utils::GetConfig()->Set('query_cache_enabled', false, 'test');
 		utils::GetConfig()->Set('expression_cache_enabled', false, 'test');
