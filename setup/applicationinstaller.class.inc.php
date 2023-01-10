@@ -165,14 +165,17 @@ class ApplicationInstaller
 	{
 		$sTargetEnvironment = $this->GetTargetEnv();
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
-		try
-		{
-			return new Config($sConfigFile);
+		try {
+			$oConfig = new Config($sConfigFile);
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			return null;
 		}
+
+		$aParamValues = $this->oParams->GetParamForConfigArray();
+		$oConfig->UpdateFromParams($aParamValues);
+
+		return $oConfig;
 	}
 
 	/**

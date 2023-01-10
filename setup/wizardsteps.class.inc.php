@@ -1337,15 +1337,7 @@ class WizStepModulesChoice extends WizardStep
 		{
 			$oConfig = new Config($sConfigPath);
 
-			$aParamValues = array(
-				'db_server' => $oWizard->GetParameter('db_server', ''),
-				'db_user' => $oWizard->GetParameter('db_user', ''),
-				'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
-				'db_name' => $oWizard->GetParameter('db_name', ''),
-				'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
-				'db_tls_enabled' => $oWizard->GetParameter('db_tls_enabled', false),
-				'db_tls_ca' => $oWizard->GetParameter('db_tls_ca', ''),
-			);
+			$aParamValues = $oWizard->GetParamForConfigArray();
 			$oConfig->UpdateFromParams($aParamValues);
 
 			$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($oConfig);
@@ -2588,6 +2580,8 @@ class WizStepDone extends WizardStep
 
 
 		$oConfig = new Config(utils::GetConfigFilePath());
+		$aParamValues = $this->oWizard->GetParamForConfigArray();
+		$oConfig->UpdateFromParams($aParamValues);
 		// Load the data model only, in order to load env-production/core/main.php to get the XML parameters (needed by GetModuleSettings below)
 		// But main.php may also contain classes (defined without any module), and thus requiring the full data model
 		// to be loaded to prevent "class not found" errors...
@@ -2595,8 +2589,7 @@ class WizStepDone extends WizardStep
 		$oProductionEnv->InitDataModel($oConfig, true);
 		$sIframeUrl = $oConfig->GetModuleSetting('itop-hub-connector', 'setup_url', '');
 
-		if ($sIframeUrl != '')
-		{
+		if ($sIframeUrl != '') {
 			$oPage->add('<iframe id="fresh_content" frameborder="0" scrolling="auto" src="'.$sIframeUrl.'"></iframe>');
 
 			$oPage->add_script("

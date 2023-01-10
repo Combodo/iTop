@@ -2469,11 +2469,14 @@ class Config
 	/**
 	 * Helper function to initialize a configuration from the page arguments
 	 *
+	 * @see \Parameters::GetParamForConfigArray() to get aParamValues from {@see Parameters} object hierarchy in setup
+	 * @see \WizardController::GetParamForConfigArray() to get aParamValues from {@see \WizardController} object hierarchy in setup
+	 *
 	 * @param array $aParamValues
-	 * @param string|null $sModulesDir
+	 * @param ?string $sModulesDir
 	 * @param bool $bPreserveModuleSettings
 	 *
-	 * @return void
+	 * @return void The current object is modified directly
 	 *
 	 * @throws \Exception
 	 * @throws \CoreException
