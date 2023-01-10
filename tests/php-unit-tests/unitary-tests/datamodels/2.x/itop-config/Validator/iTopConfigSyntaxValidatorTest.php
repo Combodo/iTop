@@ -5,7 +5,7 @@
  * Time: 12:31
  */
 
-namespace Combodo\iTop\Config\Test\Validator;
+namespace Combodo\iTop\Test\UnitTest\Module\iTopConfig\Validator;
 
 use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
 use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;

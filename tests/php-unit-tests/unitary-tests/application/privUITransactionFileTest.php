@@ -17,7 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+namespace Combodo\iTop\Test\UnitTest\Application;
+
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use MetaModel;
+use privUITransactionFile;
+use UserRights;
 
 /**
  * @runTestsInSeparateProcesses

@@ -24,7 +24,7 @@
  * Time: 13:34
  */
 
-namespace Combodo\iTop\Test\UnitTest\iTopTickets;
+namespace Combodo\iTop\Test\UnitTest\Module\iTopTickets;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Exception;

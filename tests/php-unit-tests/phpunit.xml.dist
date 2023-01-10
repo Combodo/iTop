@@ -60,6 +60,7 @@
 
     <testsuite name="Extensions">
       <directory>../../env-production/*/test</directory>
+      <directory>../../env-production/*/tests/php-unit-tests</directory>
     </testsuite>
 
     <!-- Integration tests -->
