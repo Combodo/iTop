@@ -32,7 +32,7 @@ class LogFileNameBuilderTest extends ItopTestCase
 	{
 		parent::setUp();
 
-		require_once APPROOT.'core/log.class.inc.php';
+		$this->RequireOnceItopFile('core/log.class.inc.php');
 	}
 
 	protected function tearDown(): void

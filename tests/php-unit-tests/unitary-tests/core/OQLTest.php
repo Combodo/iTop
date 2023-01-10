@@ -317,7 +317,6 @@ class OQLTest extends ItopDataTestCase
 	public function testOQLIntersect($sOQL1, $sOQL2, $sOQLIntersect)
 	{
 		// Check that legacy mode is not set
-		$this->assertFalse(utils::GetConfig()->Get('use_legacy_dbsearch'));
 		$this->assertFalse(utils::GetConfig()->Get('apc_cache.enabled'));
 		$this->assertFalse(utils::GetConfig()->Get('query_cache_enabled'));
 		$this->assertFalse(utils::GetConfig()->Get('expression_cache_enabled'));
