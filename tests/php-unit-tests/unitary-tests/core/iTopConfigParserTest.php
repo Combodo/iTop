@@ -5,7 +5,13 @@
  * Time: 14:43
  */
 
+namespace Combodo\iTop\Test\UnitTest\Core;
+
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Config;
+use iTopConfigParser;
+use RunTimeEnvironment;
+use utils;
 
 class iTopConfigParserTest extends ItopTestCase
 {

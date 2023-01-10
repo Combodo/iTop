@@ -1,6 +1,10 @@
 <?php
 
+namespace Combodo\iTop\Test\UnitTest\Application;
+
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use FindStylesheetObject;
+use ThemeHandler;
 
 /**
  * @runTestsInSeparateProcesses

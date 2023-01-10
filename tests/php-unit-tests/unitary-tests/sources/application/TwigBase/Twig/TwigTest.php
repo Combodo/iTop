@@ -1,5 +1,6 @@
 <?php
-namespace Combodo\iTop\Test\UnitTest;
+
+namespace Combodo\iTop\Test\UnitTest\Application\TwigBase;
 
 use Combodo\iTop\Portal\Twig\AppExtension;
 use Twig_Environment;

@@ -1,5 +1,7 @@
 <?php
 
+namespace Combodo\iTop\Test\UnitTest\Composer;
+
 use Combodo\iTop\Composer\iTopComposer;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 

@@ -1,6 +1,12 @@
 <?php
 
+namespace Combodo\iTop\Test\UnitTest\Setup;
+
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use MFCompiler;
+use MFDocument;
+use SubMFCompiler;
+use utils;
 
 /**
  * @runTestsInSeparateProcesses

@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Test\UnitTest\Application\Helper;
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;

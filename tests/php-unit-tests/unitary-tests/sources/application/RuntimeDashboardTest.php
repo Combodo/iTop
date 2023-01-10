@@ -4,7 +4,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Test\UnitTest\Application;
+
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use RuntimeDashboard;
+use SecurityException;
 
 
 /**
