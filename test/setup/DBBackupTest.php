@@ -61,8 +61,16 @@ class DBBackupTest extends ItopTestCase
 		$oConfigToTest->Set('db_tls.enabled', true);
 		$sCliArgsMinCfg = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
 
-		// depending on the MySQL version, we would have `--ssl` or `--ssl-mode=VERIFY_CA`
-		$this->assertStringStartsWith(' --ssl', $sCliArgsMinCfg);
+		// depending on the MySQL vendor, we would have `--ssl` or `--ssl-mode=REQUIRED`
+		if (CMDBSource::IsSslModeDBVersion())
+		{
+			$this->assertStringStartsWith(' --ssl-mode=REQUIRED', $sCliArgsMinCfg);
+		}
+		else
+		{
+			$this->assertStringStartsWith(' --ssl', $sCliArgsMinCfg);
+			$this->assertStringNotContainsString('--ssl-mode', $sCliArgsMinCfg);
+		}
 	}
 
 	/**
@@ -81,7 +89,17 @@ class DBBackupTest extends ItopTestCase
 		$oConfigToTest->Set('db_tls.ca', $sTestCa);
 		$sCliArgsCapathCfg = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
 
-		$this->assertStringStartsWith(' --ssl', $sCliArgsCapathCfg);
+		// depending on the MySQL vendor, we would have `--ssl` or `--ssl-mode=VERIFY_CA`
+		if (CMDBSource::IsSslModeDBVersion())
+		{
+			$this->assertStringStartsWith(' --ssl-mode=VERIFY_CA', $sCliArgsCapathCfg);
+		}
+		else
+		{
+			$this->assertStringStartsWith(' --ssl', $sCliArgsCapathCfg);
+			$this->assertStringNotContainsString('--ssl-mode', $sCliArgsCapathCfg);
+
+		}
 		$this->assertStringEndsWith('--ssl-ca='.DBBackup::EscapeShellArg($sTestCa), $sCliArgsCapathCfg);
 	}
 }

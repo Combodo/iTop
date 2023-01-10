@@ -1611,4 +1611,22 @@ class CMDBSource
 
 		return 'ALTER DATABASE'.CMDBSource::GetSqlStringColumnDefinition().';';
 	}
+
+	/**
+	 * Check which mysql client option (--ssl or --ssl-mode) to be used for encrypted connection
+	 *
+	 * @return bool true if --ssl-mode should be used, false otherwise
+	 * @throws \MySQLException
+	 *
+	 * @link https://dev.mysql.com/doc/refman/5.7/en/connection-options.html#encrypted-connection-options "Command Options for Encrypted Connections"
+	 */
+	public static function IsSslModeDBVersion()
+	{
+		if (static::GetDBVendor() === static::ENUM_DB_VENDOR_MYSQL)
+		{
+			//Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
+			return version_compare(static::GetDBVersion(), '5.7.11', '>=');
+		}
+		return false;
+	}
 }
