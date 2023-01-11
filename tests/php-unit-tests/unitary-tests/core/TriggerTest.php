@@ -60,7 +60,7 @@ class TriggerTest extends ItopDataTestCase
 			$this->assertEquals('Unknown class \'Toto\' (<b title="Trigger">TriggerOnObjectCreate</b>::-1 ()<br/>)', $e1->getMessage());
 
 			$fullStackTraceAsString = $e1->getFullStackTraceAsString();
-			$this->assertContains("MetaModel::NewObject", $fullStackTraceAsString,"new enriched exception should contain root cause method: " . $fullStackTraceAsString);
+			$this->assertStringContainsString("MetaModel::NewObject", $fullStackTraceAsString,"new enriched exception should contain root cause method: " . $fullStackTraceAsString);
 		}
 	}
 

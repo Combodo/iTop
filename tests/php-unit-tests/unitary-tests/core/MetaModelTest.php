@@ -334,7 +334,7 @@ class MetaModelTest extends ItopDataTestCase
 		try {
 			MetaModel::GetEnumStyle('Contact', 'name', '');
 		} catch (CoreException $e) {
-			self::assertContains('AttributeEnum', $e->getMessage());
+			self::assertStringContainsString('AttributeEnum', $e->getMessage());
 			return;
 		}
 
