@@ -6,6 +6,7 @@ namespace Combodo\iTop\Test\UnitTest\Status;
 use Combodo\iTop\Application\Status\Status;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
+use Exception;
 use MySQLException;
 use function Combodo\iTop\Application\Status\StatusCheckConfigFile;
 use function Combodo\iTop\Application\Status\StatusGetAppRoot;
@@ -30,17 +31,15 @@ class StatusIncTest extends ItopTestCase {
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->RequireOnceItopFile('sources/application/status/Status.php');
+		$this->RequireOnceItopFile('sources/Application/Status/Status.php');
 	}
 
-    /**
-     * @expectedException \Exception
-     */
-    public function testStatusGetAppRootWrongPath() {
-        $sAppRootFilenamewrong = 'approot.inc.php_wrong';
+	public function testStatusGetAppRootWrongPath() {
+		$this->expectException(Exception::class);
+		$sAppRootFilenamewrong = 'approot.inc.php_wrong';
 
 		$oStatus = new Status();
-		$this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusGetAppRoot", $oStatus, [$sAppRootFilenamewrong]);
+		$this->InvokeNonPublicMethod(Status::class, "StatusGetAppRoot", $oStatus, [$sAppRootFilenamewrong]);
     }
 
     /**
@@ -48,24 +47,22 @@ class StatusIncTest extends ItopTestCase {
      */
     public function testStatusGetAppRootGood() {
 	    $oStatus = new Status();
-	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusGetAppRoot", $oStatus, []);
+	    $this->InvokeNonPublicMethod(Status::class, "StatusGetAppRoot", $oStatus, []);
 
         $this->assertNotEmpty(APPROOT);
     }
 
-    /**
-     * @expectedException \Exception
-     */
-    public function testStatusCheckConfigFileWrongPath() {
-        $sConfigFilenamewrong = 'config-itop.php_wrong';
+	public function testStatusCheckConfigFileWrongPath() {
+		$this->expectException(Exception::class);
+		$sConfigFilenamewrong = 'config-itop.php_wrong';
 
 	    $oStatus = new Status();
-	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusCheckConfigFile", $oStatus, [$sConfigFilenamewrong]);
+	    $this->InvokeNonPublicMethod(Status::class, "StatusCheckConfigFile", $oStatus, [$sConfigFilenamewrong]);
     }
 
     public function testStatusCheckConfigFileGood() {
 	    $oStatus = new Status();
-	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusCheckConfigFile", $oStatus, []);
+	    $this->InvokeNonPublicMethod(Status::class, "StatusCheckConfigFile", $oStatus, []);
 
         $this->assertTrue(true);
     }
@@ -82,12 +79,9 @@ class StatusIncTest extends ItopTestCase {
 	    new Status($oConfigWrong);
     }
 
-    /**
-     * 
-     */
     public function testStatusStartupGood() {
 	    $oStatus = new Status();
-	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusStartup", $oStatus, []);
+	    $this->InvokeNonPublicMethod(Status::class, "StatusStartup", $oStatus, []);
 
         $this->assertTrue(true);
     }
