@@ -1,21 +1,12 @@
 <?php
-
-/**
- * User: Guy Couronné (guy.couronne@gmail.com)
- * Date: 25/01/2019
- */
-
 namespace Combodo\iTop\Test\UnitTest\Status;
 
-/**
- * User: Guy Couronné (guy.couronne@gmail.com)
- * Date: 25/01/2019
- */
+
 
 use Combodo\iTop\Application\Status\Status;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
-use PHPUnit\Framework\TestCase;
+use MySQLException;
 use function Combodo\iTop\Application\Status\StatusCheckConfigFile;
 use function Combodo\iTop\Application\Status\StatusGetAppRoot;
 use function Combodo\iTop\Application\Status\StatusStartup;
@@ -72,9 +63,6 @@ class StatusIncTest extends ItopTestCase {
 	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusCheckConfigFile", $oStatus, [$sConfigFilenamewrong]);
     }
 
-    /**
-     * 
-     */
     public function testStatusCheckConfigFileGood() {
 	    $oStatus = new Status();
 	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusCheckConfigFile", $oStatus, []);
@@ -82,10 +70,9 @@ class StatusIncTest extends ItopTestCase {
         $this->assertTrue(true);
     }
 
-    /**
-     * @expectedException \MySQLException
-     */
-    public function testStatusStartupWrongDbPwd() {
+    public function testStatusStartupWrongDbPwd()
+    {
+	    $this->expectException(MySQLException::class);
 	    $oStatus = new Status();
 	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusCheckConfigFile", $oStatus, []);
 
@@ -93,9 +80,9 @@ class StatusIncTest extends ItopTestCase {
 	    $this->RequireOnceItopFile('application/utils.inc.php');
 	    $this->RequireOnceItopFile('core/contexttag.class.inc.php');
 
-        $oConfigWrong = new Config(ITOP_DEFAULT_CONFIG_FILE);
-        $oConfigWrong->Set('db_pwd', $oConfigWrong->Get('db_pwd') . '_unittest');
-	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusStartup", $oStatus, [$oConfigWrong]);
+	    $oConfigWrong = new Config(ITOP_DEFAULT_CONFIG_FILE);
+	    $oConfigWrong->Set('db_pwd', $oConfigWrong->Get('db_pwd').'_unittest');
+	    $this->InvokeNonPublicMethod(Status::class, "StatusStartup", $oStatus, [$oConfigWrong]);
     }
 
     /**
