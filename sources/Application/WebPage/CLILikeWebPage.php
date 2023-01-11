@@ -7,6 +7,7 @@
 
 class CLILikeWebPage extends WebPage
 {
+	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/clilikewebpage/layout';
 	public function add_comment($sText)
 	{
 		$this->add('#'.$sText."<br/>\n");
