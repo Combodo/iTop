@@ -46,6 +46,7 @@ class iTopConfigParserTest extends ItopTestCase
 			// restoring config that was in place before the test
 			@chmod($this->sConfigPath, 0770); // RWX for owner and group, nothing for others : else we will have permission denied !
 			rename($this->tmpSavePath, $this->sConfigPath);
+			@chmod($this->sConfigPath, 0444);
 		}
 	}
 
