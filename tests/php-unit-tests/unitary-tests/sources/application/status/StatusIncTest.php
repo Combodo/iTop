@@ -72,17 +72,14 @@ class StatusIncTest extends ItopTestCase {
 
     public function testStatusStartupWrongDbPwd()
     {
-	    $this->expectException(MySQLException::class);
-	    $oStatus = new Status();
-	    $this->InvokeNonPublicMethod("Combodo\iTop\Application\Status\Status", "StatusCheckConfigFile", $oStatus, []);
-
 	    $this->RequireOnceItopFile('core/cmdbobject.class.inc.php');
 	    $this->RequireOnceItopFile('application/utils.inc.php');
 	    $this->RequireOnceItopFile('core/contexttag.class.inc.php');
 
 	    $oConfigWrong = new Config(ITOP_DEFAULT_CONFIG_FILE);
 	    $oConfigWrong->Set('db_pwd', $oConfigWrong->Get('db_pwd').'_unittest');
-	    $this->InvokeNonPublicMethod(Status::class, "StatusStartup", $oStatus, [$oConfigWrong]);
+	    $this->expectException(MySQLException::class);
+	    new Status($oConfigWrong);
     }
 
     /**
