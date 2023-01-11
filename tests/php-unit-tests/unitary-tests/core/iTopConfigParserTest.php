@@ -44,9 +44,10 @@ class iTopConfigParserTest extends ItopTestCase
 		parent::tearDown();
 		if ($this->conf_exists) {
 			// restoring config that was in place before the test
-			@chmod($this->sConfigPath, 0770); // RWX for owner and group, nothing for others : else we will have permission denied !
-			rename($this->tmpSavePath, $this->sConfigPath);
-			@chmod($this->sConfigPath, 0444);
+			$sBackupConfigFileContent = file_get_contents($this->tmpSavePath);
+			$hItopConfigFile = @fopen($this->sConfigPath, 'w');
+			fwrite($hItopConfigFile, $sBackupConfigFileContent);
+			fclose($hItopConfigFile);
 		}
 	}
 
