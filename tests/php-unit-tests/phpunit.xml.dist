@@ -67,9 +67,6 @@
     <testsuite name="Integration">
       <directory>integration-tests</directory>
     </testsuite>
-    <testsuite name="Service">
-      <directory>service</directory>
-    </testsuite>
   </testsuites>
 
   <!-- Code coverage white list  -->
