@@ -664,8 +664,8 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 .ibo-navigation-menu--menu-nodes-title{
 	margin-top: $ibo-navigation-menu--menu-nodes-title--margin-top;
 	margin-bottom: $ibo-navigation-menu--menu-nodes-title--margin-bottom;
+  word-break: break-word; /* Ensure that long words wrap instead of being clipped */
 	@extend %ibo-font-ral-nor-350;
-	@extend %ibo-text-truncated-with-ellipsis;
 }
 /* - Menu node */
 .ibo-navigation-menu--menu-node-title{
