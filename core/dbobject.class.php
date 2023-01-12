@@ -3345,10 +3345,12 @@ abstract class DBObject implements iDisplay
 			$this->m_bDirty = false;
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
-
+			$bModifiedByUpdateDone = false;
 			try {
 				$this->EventUpdateDone($aChanges);
 				$this->AfterUpdate();
+				// Save the status as it is reset just after...
+				$bModifiedByUpdateDone = $this->IsModified();
 
 				// Reset original values although the object has not been reloaded
 				foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded) {
@@ -3388,7 +3390,7 @@ abstract class DBObject implements iDisplay
 			MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
 		}
 
-		if ($this->IsModified()) {
+			if ($this->IsModified() || $bModifiedByUpdateDone) {
 			// Controlled reentrance
 			$this->DBUpdate();
 		}
