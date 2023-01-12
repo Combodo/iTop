@@ -52,18 +52,17 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 			}
 		}
 
-		$this->assertArraySubset(
-			$this->GetFilteredModulesFromDatamodels(APPROOT.'/datamodels'),
-			$aDeclaredModules,
-			false,
+		$aFilteredModulesFromDatamodels = $this->GetFilteredModulesFromDatamodels(APPROOT.'/datamodels');
+		$this->assertCount(
+			0,
+			array_diff($aFilteredModulesFromDatamodels, array_intersect($aFilteredModulesFromDatamodels, $aDeclaredModules)),
 			"{$sInstallationXmlPath} does not list all modules in /datamodels ! List of modules in installation.xml:\n ".var_export($aDeclaredModules, true)
 		);
 
 		$aModulesFromDatamodels = $this->GetAllModules(APPROOT.'/datamodels');
-		$this->assertArraySubset(
-			$aDeclaredModules,
-			$aModulesFromDatamodels,
-			false,
+		$this->assertCount(
+			0,
+			array_diff($aDeclaredModules, array_intersect($aDeclaredModules, $aModulesFromDatamodels)),
 			"Not all modules are contained in {$sInstallationXmlPath}. List of modules in /datamodels:\n ".var_export($aModulesFromDatamodels, true)
 		);
 	}
