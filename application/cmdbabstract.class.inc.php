@@ -3314,9 +3314,10 @@ EOF
 							}
 						}
 					}
+					$sInputType = '';
 					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
 						$this->Get($sAttCode), $this->GetEditValue($sAttCode), 'att_'.$iFieldIndex, '', $iExpectCode,
-						$aArgs);
+						$aArgs, true, $sInputType);
 					$aAttrib = array(
 						'label' => '<span>'.$oAttDef->GetLabel().'</span>',
 						'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>",
@@ -3333,13 +3334,13 @@ EOF
 					$aAttrib['atttype'] = $sAttDefClass;
 					$aAttrib['attlabel'] = $sAttLabel;
 					// - Attribute flags
-					$aAttrib['attflags'] = $this->GetFormAttributeFlags($sAttCode) ;
+					$aAttrib['attflags'] = $this->GetFormAttributeFlags($sAttCode);
 					// - How the field should be rendered
 					$aAttrib['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+					$aAttrib['inputtype'] = $sInputType;
 					// - For simple fields, we get the raw (stored) value as well
 					$bExcludeRawValue = false;
-					foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
-					{
+					foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
 						if (is_a($sAttDefClass, $sAttDefClassToExclude, true)) {
 							$bExcludeRawValue = true;
 							break;
