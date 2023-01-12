@@ -70,6 +70,7 @@ class RestTest extends ItopDataTestCase
 		$sOutputJson = $this->CreateTicketViaApi($description);
 		$this->debug("Output: '$sOutputJson'");
 		$aJson = json_decode($sOutputJson, true);
+		$this->assertNotNull($aJson, 'json_decode() on the REST API response returned null :(');
 
 		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
 			$this->assertStringContainsString("3", "".$aJson['code'], $sOutputJson);
@@ -124,6 +125,7 @@ JSON;
 		$description = date('dmY H:i:s');
 		$sOuputJson = $this->CreateTicketViaApi($description);
 		$aJson = json_decode($sOuputJson, true);
+		$this->assertNotNull($aJson, 'json_decode() on the REST API response returned null :(');
 
 		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
 			$this->assertStringContainsString("3", "".$aJson['code'], $sOuputJson);
@@ -163,6 +165,7 @@ JSON;
 
 		$sOuputJson = $this->CreateTicketViaApi($description);
 		$aJson = json_decode($sOuputJson, true);
+		$this->assertNotNull($aJson, 'json_decode() on the REST API response returned null :(');
 
 		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
 			$this->assertStringContainsString("3", "".$aJson['code'], $sOuputJson);
@@ -296,10 +299,12 @@ JSON;
 		$aUserInfo = [];
 		$sOutput = $this->CallRestApi($sJsonGetContent);
 		$aJson = json_decode($sOutput, true);
-		if (is_array($aJson) && array_key_exists('objects', $aJson)){
+		$this->assertNotNull($aJson, 'json_decode() on the REST API response returned null :(');
+
+		if (is_array($aJson) && array_key_exists('objects', $aJson)) {
 			$aObjects = $aJson['objects'];
-			if (!empty($aObjects)){
-				foreach ($aObjects as $aObject){
+			if (!empty($aObjects)) {
+				foreach ($aObjects as $aObject) {
 					$sClass = $aObject['class'];
 					$sUserInfo = $aObject['fields']['userinfo'];
 					$aUserInfo[$sClass] = $sUserInfo;
