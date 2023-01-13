@@ -2,10 +2,10 @@ let LinkSetWorker = new function(){
 
 	// defines
 	const ROUTER_BASE_URL = '../pages/ajax.render.php';
-	const ROUTE_LINK_SET_DELETE_OBJECT = 'linkset.DeleteLinkedObject';
-	const ROUTE_LINK_SET_DETACH_OBJECT = 'linkset.DetachLinkedObject';
+	const ROUTE_LINK_SET_DELETE_OBJECT = 'linkset.delete_linked_object';
+	const ROUTE_LINK_SET_DETACH_OBJECT = 'linkset.detach_linked_object';
 	const ROUTE_LINK_SET_MODIFY_OBJECT = 'object.modify';
-	const ROUTE_LINK_SET_CREATE_OBJECT = 'linkset.CreateLinkedObject';
+	const ROUTE_LINK_SET_CREATE_OBJECT = 'linkset.create_linked_object';
 
 	/**
 	 * CallAjaxDeleteLinkedObject.
