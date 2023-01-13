@@ -5385,6 +5385,8 @@
         <naming>
           <attributes>
             <attribute id="name"/>
+            <attribute id="org_id"/>
+						<attribute id="organization_name"/>
           </attributes>
         </naming>
         <style>
@@ -5403,6 +5405,16 @@
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalKey" _delta="define">
+					<sql>org_id</sql>
+					<target_class>Organization</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_MANUAL</on_target_delete>
+				</field>
+				<field id="organization_name" xsi:type="AttributeExternalField" _delta="define">
+					<extkey_attcode>org_id</extkey_attcode>
+					<target_attcode>name</target_attcode>
+				</field>
       </fields>
       <methods/>
       <presentation>
@@ -5410,6 +5422,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>15</rank>
             </item>
           </items>
         </details>
