@@ -2228,7 +2228,7 @@ class MenuBlock extends DisplayBlock
 				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
 					'fas fa-plus',
 					Dict::S('UI:Links:New:Button:Tooltip'),
-					Dict::S('UI:Links:New:Button:Tooltip'),
+					'UI:Links:New',
 					'',
 					false
 				);
