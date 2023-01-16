@@ -37,7 +37,7 @@ class PhoneField extends StringField
     public function GetDisplayValue()
     {
         $sLabel = Str::pure2html($this->currentValue);
-        if (strlen($sLabel) > 128)
+        if (utils::StrLen($sLabel) > 128)
         {
             // Truncate the length to 128 characters, by removing the middle
             $sLabel = substr($sLabel, 0, 100).'.....'.substr($sLabel, -20);

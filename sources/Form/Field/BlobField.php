@@ -70,7 +70,7 @@ class BlobField extends Field
 		else
 		{
 			$sFilename = $this->currentValue->GetFileName();
-			$iSize = utils::BytesToFriendlyFormat(strlen($this->currentValue->GetData()));
+			$iSize = utils::BytesToFriendlyFormat(utils::Strlen($this->currentValue->GetData()));
 			$sOpenLink = $this->GetDisplayUrl();
 			$sDownloadLink = $this->GetDownloadUrl();
 
