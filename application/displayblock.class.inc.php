@@ -2221,20 +2221,6 @@ class MenuBlock extends DisplayBlock
 				$oActionButton = ButtonUIBlockFactory::MakeIconLink('fas fa-search', Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), "{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'UI:SearchFor_Class');
 				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				$oActionsToolbar->AddSubBlock($oActionButton);
-			} else {
-				// - Filter list
-				$sSearchUrl = utils::GetDataTableSearchUrl($this->m_oFilter, $aExtraParams);
-				if (utils::IsNotNullOrEmptyString($sSearchUrl)) {
-					$oActionButton = ButtonUIBlockFactory::MakeIconLink(
-						'fas fa-filter',
-						Dict::S('UI:Menu:FilterList'),
-						$sSearchUrl,
-						'',
-						'UI:Menu:FilterList'
-					);
-					$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
-					$oActionsToolbar->AddSubBlock($oActionButton);
-				}
 			}
 
 			// - Others
