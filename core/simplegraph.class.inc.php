@@ -745,27 +745,27 @@ class RelationTypeIterator implements Iterator
 		}
 	}
 	
-	public function rewind(): void
+	public function rewind()
 	{
 		$this->iCurrentIdx = 0;
 	}
 	
-	public function valid(): bool
+	public function valid()
 	{
 		return array_key_exists($this->iCurrentIdx, $this->aList);
 	}
 	
-	public function next(): void
+	public function next()
 	{
 		$this->iCurrentIdx++;
 	}
 	
-	public function current(): mixed
+	public function current()
 	{
 		return $this->aList[$this->iCurrentIdx];
 	}
 	
-	public function key(): mixed
+	public function key()
 	{
 		return $this->iCurrentIdx;
 	}

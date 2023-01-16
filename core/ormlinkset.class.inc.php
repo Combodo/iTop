@@ -312,7 +312,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function Count(): int
+	public function Count()
 	{
 		$this->LoadOriginalIds();
 		$iRet = count($this->aPreserved) + count($this->aAdded) + count($this->aModified);
@@ -327,7 +327,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws Exception
 	 * @internal param int $iRow
 	 */
-	public function Seek($iPosition): void
+	public function Seek($iPosition)
 	{
 		$this->LoadOriginalIds();
 
@@ -375,7 +375,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public function current(): mixed
+	public function current()
 	{
 		$this->LoadOriginalIds();
 
@@ -410,7 +410,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function next(): void
+	public function next()
 	{
 		$this->LoadOriginalIds();
 
@@ -440,7 +440,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @link http://php.net/manual/en/iterator.key.php
 	 * @return mixed scalar on success, or null on failure.
 	 */
-	public function key(): mixed
+	public function key()
 	{
 		return $this->iCursor;
 	}
@@ -455,7 +455,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function valid(): bool
+	public function valid()
 	{
 		$this->LoadOriginalIds();
 
@@ -473,7 +473,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function rewind(): void
+	public function rewind()
 	{
 	    $this->LoadOriginalIds();
 
