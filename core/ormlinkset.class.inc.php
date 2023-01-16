@@ -847,11 +847,30 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		}
 		$oLinkSet = new DBObjectSet($oLinkSearch);
 		$oLinkSet->SetShowObsoleteData($bShowObsolete);
-		if ($this->HasDelta())
-		{
+		if ($this->HasDelta()) {
 			$oLinkSet->AddObjectArray($this->aAdded);
 		}
 
 		return $oLinkSet;
+	}
+
+	/**
+	 * GetValues.
+	 *
+	 * @return array of tag codes
+	 */
+	public function GetValues()
+	{
+		$aValues = array();
+		foreach ($this->aPreserved as $sTagCode => $oTag) {
+			$aValues[] = $sTagCode;
+		}
+		foreach ($this->aAdded as $sTagCode => $oTag) {
+			$aValues[] = $sTagCode;
+		}
+
+		sort($aValues);
+
+		return $aValues;
 	}
 }

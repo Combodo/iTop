@@ -20,4 +20,5 @@
 // Input
 Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
+	'UI:Component:Input:Set:AddOption'         => 'Créer',
 ));

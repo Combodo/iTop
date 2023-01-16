@@ -1,0 +1,25 @@
+<div class="option ibo-input-select--autocomplete-item" role="option" data-template-title="friendlyname">
+
+    {# image #}
+    <span class="ibo-input-select--autocomplete-item-image" data-template-condition="has_image" data-template-background-image="picture_url" data-template-text="initials"></span>
+
+    {# desc #}
+    <span class="ibo-input-select--autocomplete-item-txt" data-template-title="friendlyname">
+
+        {# obsolescnce #}
+		<span class="object-ref-icon text_decoration" data-template-condition="obsolescence_flag">
+            <span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>
+        </span>
+
+        {# friendly name #}
+		<span data-template-text="friendlyname"></span>
+
+        {# additional field #}
+		<div>
+			<i data-template-text="additional_field"></i>
+		</div>
+
+	</span>
+
+
+</div>

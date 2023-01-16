@@ -7,6 +7,8 @@
 namespace Combodo\iTop\Controller\Links;
 
 use Combodo\iTop\Controller\AbstractController;
+use Exception;
+use JsonPage;
 use MetaModel;
 use utils;
 
@@ -19,16 +21,16 @@ use utils;
  */
 class LinkSetController extends AbstractController
 {
-	public const ROUTE_NAMESPACE = 'linkset';
+	public const ROUTE_NAMESPACE = 'linkSet';
 
 	/**
 	 * OperationDeleteLinkedObject.
 	 *
-	 * @return \JsonPage
+	 * @return JsonPage
 	 */
-	public function OperationDeleteLinkedObject(): \JsonPage
+	public function OperationDeleteLinkedObject(): JsonPage
 	{
-		$oPage = new \JsonPage();
+		$oPage = new JsonPage();
 		$sErrorMessage = null;
 		$bOperationSuccess = false;
 
@@ -46,7 +48,7 @@ class LinkSetController extends AbstractController
 					$sErrorMessage = json_encode($oDeletionPlan->GetIssues());
 				}
 			}
-			catch (\Exception $e) {
+			catch (Exception $e) {
 				$sErrorMessage = $e->getMessage();
 			}
 		} else {
@@ -63,11 +65,11 @@ class LinkSetController extends AbstractController
 	/**
 	 * OperationDetachLinkedObject.
 	 *
-	 * @return \JsonPage
+	 * @return JsonPage
 	 */
-	public function OperationDetachLinkedObject(): \JsonPage
+	public function OperationDetachLinkedObject(): JsonPage
 	{
-		$oPage = new \JsonPage();
+		$oPage = new JsonPage();
 		$sErrorMessage = null;
 		$bOperationSuccess = false;
 
@@ -85,7 +87,7 @@ class LinkSetController extends AbstractController
 				$oLinkedObject->DBWrite();
 				$bOperationSuccess = true;
 			}
-			catch (\Exception $e) {
+			catch (Exception $e) {
 				$sErrorMessage = $e->getMessage();
 			}
 		} else {

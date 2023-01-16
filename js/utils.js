@@ -658,6 +658,94 @@ Dict.Format = function () {
 	return Format(args);
 };
 
+/**
+ * Render a template and inject data into it.
+ *
+ * This rendering engine is aimed to produce template rendering.
+ *
+ * markups with attributes:
+ *  data-template-text: replace text dom element with attribute value
+ *  data-template-condition: set dom element visibility depending on attribute value
+ *  data-template-background-image: set dom element style background image url with attribute value
+ *
+ * @param sTemplateId
+ * @param data
+ * @param TemplateClass
+ * @returns {*|jQuery|HTMLElement|JQuery<HTMLElement>}
+ * @constructor
+ */
+function RenderTemplate(sTemplateId, data, TemplateClass = null)
+{
+	let sHtml = '<div>' + $(sTemplateId).html() + '</div>';
+	let oElement = $(sHtml);
+
+	oElement.addClass(TemplateClass);
+
+	// texts replacement
+	$('[data-template-text]', oElement).each(function(){
+		$(this).text(data[$(this).attr('data-template-text')]);
+	})
+
+	// titles replacement
+	$('[data-template-title]', oElement).each(function(){
+		$(this).attr('title', data[$(this).attr('data-template-title')]);
+	})
+
+	// conditions
+	$('[data-template-condition]', oElement).each(function(){
+		$(this).toggle(data[$(this).attr('data-template-condition')]);
+	})
+
+	// background images
+	$('[data-template-background-image]', oElement).each(function(){
+		$(this).css('background-image', `url('${data[$(this).attr('data-template-background-image')]}')`);
+	})
+
+	// class
+	$('[data-template-class]', oElement).each(function(){
+		let sClass = data[$(this).attr('data-template-class')];
+		if(typeof(sClass) !== 'undefined') {
+			let classes = sClass.split(',');
+			classes.forEach(e => $(this).addClass(e));
+		}
+	})
+
+	return oElement;
+}
+
+/**
+ * ExtractArrayItemsContainingThisKeyAndValue.
+ *
+ * This function extract items of an array witch include the key value pair.
+ *
+ * @param aArrayToSearchIn
+ * @param sKey
+ * @param sValue
+ * @returns {*|*[]|null}
+ * @constructor
+ */
+function ExtractArrayItemsContainingThisKeyAndValue(aArrayToSearchIn, sKey, sValue)
+{
+	let aResult = [];
+
+	// Iterate throw items...
+	for(let i = 0 ; i < aArrayToSearchIn.length ; i++){
+		if(aArrayToSearchIn[i][sKey] === sValue){
+			aResult.push(aArrayToSearchIn[i]);
+		}
+	}
+
+	// Return result
+	switch(aResult.length){
+		case 0:
+			return null;
+		case 1:
+			return aResult[0];
+		default:
+			return aResult;
+	}
+}
+
 // TODO 3.0.0: Move functions above either in CombodoGlobalToolbox or CombodoBackofficeToolbox and deprecate them
 /**
  * A toolbox for common JS operations accross the app no matter the GUI. Meant to be used by Combodo developers and the community.

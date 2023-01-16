@@ -4,10 +4,104 @@
  */
 
 $ibo-vendors-selectize-input--color: $ibo-color-grey-900 !default;
+$ibo-vendors-selectize-control--plugin-add-button--add-option--right: $ibo-spacing-0 !default;
+$ibo-vendors-selectize-control--plugin-add-button--add-option--height: 100% !default;
+$ibo-vendors-selectize-control--plugin-add-button--add-option--width: $ibo-size-350 !default;
+$ibo-vendors-selectize-control--plugin-add-button--add-option--color: $ibo-color-grey-900 !default;
 
 .selectize-dropdown-content {
   max-height: unset; /* Overloaded as it will be handled by the _input-select.scss partial */
 }
 .selectize-input input{
   color: $ibo-vendors-selectize-input--color;
+}
+
+
+.selectize-control.plugin-combodo_add_button{
+  display: flex;
+
+  .selectize-add-option {
+    position: absolute;
+    right: $ibo-vendors-selectize-control--plugin-add-button--add-option--right;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: $ibo-vendors-selectize-control--plugin-add-button--add-option--height;
+    width: $ibo-vendors-selectize-control--plugin-add-button--add-option--width;
+    z-index: 1;
+    color: $ibo-vendors-selectize-control--plugin-add-button--add-option--color;
+  }
+}
+
+
+.simple-option-renderer{
+
+  .simple-option-renderer--container {
+    display: flex;
+    align-items: center;
+
+    .simple-option-renderer--container--icon {
+      width: 25px;
+      text-align: center;
+    }
+
+    .simple-option-renderer--container--label {
+      margin-left: 3px;
+      flex-grow: 1;
+    }
+
+  }
+
+}
+
+
+.item-remove{
+  background-image: linear-gradient(to bottom, red, #b40202)!important;
+  border-color: #b40202!important;
+  a{
+    border-left-color: #b40202!important;
+  }
+  .friendlyname:before{
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 600;
+    content: '\f1f8';
+    margin-right: 5px;
+  }
+}
+
+.item-add{
+  background-image: linear-gradient(to bottom, green, #005600)!important;
+  border-color: #005600!important;
+  a{
+    border-left-color: #005600!important;
+  }
+  .friendlyname:before{
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 600;
+    content: '\f055';
+    margin-right: 5px;
+  }
+}
+
+.item-ignore-all{
+  background-image: linear-gradient(to bottom, white, white)!important;
+  border-color: #cccccc !important;
+  color: #0a0a0a!important;
+  a{
+    border-left-color: #cccccc!important;
+  }
+}
+
+
+.item-ignore-partial{
+  background-image: linear-gradient(to bottom, #e5e5e5, #e5e5e5)!important;
+  border-color: #cccccc!important;
+  color: #0a0a0a!important;
+  a{
+    border-left-color: #cccccc!important;
+  }
+}
+
+.selectize-input.selectize-input-error{
+  border: 1px solid red;
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2022 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,8 +17,16 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-// Input
-Dict::Add('EN US', 'English', 'English', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match',
-	'UI:Component:Input:Set:AddOption'         => 'Create',
-));
+namespace Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider;
+
+/**
+ * Interface iDataBinder
+ *
+ * @package Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider
+ * @since 3.1.0
+ */
+interface iDataBinder
+{
+	public static function Bind(string $sObjectClassName, array $aData, array $aBinderSettings);
+
+}
