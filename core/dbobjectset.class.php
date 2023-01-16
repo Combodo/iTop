@@ -843,7 +843,7 @@ class DBObjectSet implements iDBObjectSetIterator
      * @throws \MySQLException
      * @throws \MySQLHasGoneAwayException
      */
-	public function Count()
+	public function Count(): int
 	{
 		if (is_null($this->m_iNumTotalDBRows))
 		{

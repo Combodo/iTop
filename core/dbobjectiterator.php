@@ -38,7 +38,7 @@ interface iDBObjectSetIterator extends Countable
 	 *
 	 * @return int
 	 */
-	public function Count();
+	public function Count(): int;
 
 	/**
 	 * Reset the cursor to the first item in the collection. Equivalent to Seek(0)
