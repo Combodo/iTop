@@ -35,7 +35,11 @@ class iTopConfigParserTest extends ItopTestCase
 	{
 		parent::tearDown();
 		if ($this->conf_exists) {
-			rename($this->tmpSavePath, $this->sConfigPath);
+			// restoring config that was in place before the test
+			@chmod($this->sConfigPath, 0770);
+			$bRenameResult = rename($this->tmpSavePath, $this->sConfigPath);
+			echo "Restored config file, result={$bRenameResult}";
+			@chmod($this->sConfigPath, 0440);
 		}
 	}
 
