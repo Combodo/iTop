@@ -42,20 +42,16 @@ class RestTest extends ItopDataTestCase
 		    unlink($this->sTmpFile);
 	    }
 
-		$sConfigFile = \utils::GetConfig()->GetLoadedFile();
-		@chmod($sConfigFile, 0770);
-		$this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
-		@chmod($sConfigFile, 0444); // Read-only
+	    $this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
 
-		$oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
-		$oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
+	    $oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
+	    $oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
 
-		if (is_object($oRestProfile) && is_object($oAdminProfile))
-		{
-			$oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
-			$this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
-		}
-	}
+	    if (is_object($oRestProfile) && is_object($oAdminProfile)) {
+		    $oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
+		    $this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
+	    }
+    }
 
 	/**
 	 * @dataProvider BasicProvider
@@ -70,7 +66,7 @@ class RestTest extends ItopDataTestCase
 		$sOutputJson = $this->CreateTicketViaApi($description);
 		$this->debug("Output: '$sOutputJson'");
 		$aJson = json_decode($sOutputJson, true);
-		$this->assertNotNull($aJson, 'json_decode() on the REST API response returned null :(');
+		$this->assertNotNull($aJson, "Cannot decode returned JSON : $sOutputJson");
 
 		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
 			$this->assertStringContainsString("3", "".$aJson['code'], $sOutputJson);
