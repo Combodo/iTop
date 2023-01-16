@@ -41,10 +41,11 @@ class OQLTest extends ItopDataTestCase
 		utils::GetConfig()->Set('apc_cache.enabled', false, 'test');
 		utils::GetConfig()->Set('query_cache_enabled', false, 'test');
 		utils::GetConfig()->Set('expression_cache_enabled', false, 'test');
+
 		$sConfigFile = utils::GetConfig()->GetLoadedFile();
 		@chmod($sConfigFile, 0770);
-		utils::GetConfig()->WriteToFile();
-		@chmod($sConfigFile, 0444); // Read-only
+		$oConfig->WriteToFile();
+		@chmod($sConfigFile, 0444);
 	}
 
 	/**
