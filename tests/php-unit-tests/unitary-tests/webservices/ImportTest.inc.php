@@ -2,7 +2,6 @@
 
 namespace Combodo\iTop\Test\UnitTest\Webservices;
 
-use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
@@ -37,10 +36,7 @@ class ImportTest extends ItopDataTestCase {
 		$this->sLogin = "import-" .$this->sUid;
 		$this->oOrg = $this->CreateOrganization($this->sUid);
 
-		$sConfigFile = \utils::GetConfig()->GetLoadedFile();
-		@chmod($sConfigFile, 0770);
 		$this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
-		@chmod($sConfigFile, 0444); // Read-only
 
 		$oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
 		$oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
