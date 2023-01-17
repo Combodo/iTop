@@ -1022,6 +1022,7 @@ class DeprecatedCallsLog extends LogAPI
 	public const ENUM_CHANNEL_FILE = 'deprecated-file';
 	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP_METHOD;
 
+	/** @var string Warning this constant won't be used directly ! To see the real default level check {@see GetLevelDefault()} */
 	public const LEVEL_DEFAULT = self::LEVEL_ERROR;
 
 	/** @var \FileLog we want our own instance ! */
@@ -1141,7 +1142,6 @@ class DeprecatedCallsLog extends LogAPI
 	 * - else call parent method
 	 *
 	 * In other words, when in dev mode all deprecated calls will be logged to file
-	 *
 	 */
 	protected static function GetLevelDefault(string $sConfigKey)
 	{
