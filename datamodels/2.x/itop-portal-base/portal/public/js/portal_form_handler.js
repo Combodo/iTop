@@ -427,8 +427,7 @@ $(function()
 			else
 			{
 				
-				if(window.history.length == 1) {
-					
+				if(window.history.length === 1) {
 					// Not a modal, but there is no other history.
 					// Try to close the window.
 					window.close();
