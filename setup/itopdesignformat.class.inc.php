@@ -1118,9 +1118,9 @@ class iTopDesignFormat
 		// N°5563 AttributeLinkedSet
 		// - remove relation_type & read_only (added in 3.1)
 		// - restore edit_mode attribute from legacy_edit_mode attribute
-		$this->RemoveNodeFromXPath("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']/read_only");
-		$this->RemoveNodeFromXPath("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']/relation_type");
-		$oLegacyEditModeNodesList = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']/legacy_edit_mode");
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/read_only");
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/relation_type");
+		$oLegacyEditModeNodesList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/legacy_edit_mode");
 		/** @var \DOMElement $oLegacyEditModeNode */
 		foreach ($oLegacyEditModeNodesList as $oLegacyEditModeNode) {
 			$sEditMode = $oLegacyEditModeNode->nodeValue;
@@ -1132,7 +1132,12 @@ class iTopDesignFormat
 
 		// N°5563 AttributeLinkedSetIndirect
 		// - remove read_only attribute (added in 3.1)
-		$this->RemoveNodeFromXPath("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/read_only");
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/read_only");
+
+		// N°4756 - Ease extensibility for CRUD operations : Event Service
+		$this->RemoveNodeFromXPath('/itop_design/events');
+		$this->RemoveNodeFromXPath('/itop_design/event_listeners');
+		$this->RemoveNodeFromXPath('/itop_design/classes//class/event_listeners');
 	}
 
 	/**

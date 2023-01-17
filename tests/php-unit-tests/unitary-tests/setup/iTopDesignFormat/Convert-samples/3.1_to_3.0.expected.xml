@@ -48,5 +48,21 @@
         <field id="status" xsi:type="AttributeLinkedSetIndirect"/>
       </fields>
     </class>
+    <class id="ClassWithEventListeners">
+      <methods>
+        <method id="OnUpdateDone" _delta="define">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[
+  public function OnUserRequestUpdateDone(Combodo\iTop\Service\EventData $oEventData)
+	{
+	      $sEvent = $oEventData->GetEvent();
+	      $aChange = $oEventData->Get('changes');
+	}
+]]></code>
+        </method>
+      </methods>
+    </class>
   </classes>
 </itop_design>
