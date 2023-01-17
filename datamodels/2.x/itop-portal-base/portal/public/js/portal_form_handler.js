@@ -440,7 +440,6 @@ $(function()
 				else {
 					
 					window.history.back(-1);
-					
 				}
 				
 			}
