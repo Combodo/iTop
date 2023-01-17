@@ -765,6 +765,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oDataTable->SetRowActions($aExtraParams['row_actions']);
 		}
 
+		if (isset($aExtraParams['creation_in_modal_handler'])){
+			$oDataTable->SetModalCreationHandler($aExtraParams['creation_in_modal_handler']);
+		}
+		
+
 		return $oDataTable;
 	}
 
@@ -1076,8 +1081,10 @@ JS;
 			/**give definition of id for select checkbox*/
 			'row_actions',
 			/** array of blocks displayed on every row */
-			'allow_creation_in_modal',
-			/** bool to allow a creation of a new object of this type in a modal */
+			'creation_in_modal_is_allowed',
+			/** bool to allow a creation of a new object of this type in a modal */	
+			'creation_in_modal_handler',
+			/** Handler to call when trying to create a new object in modal */
 		];
 	}
 }

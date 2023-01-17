@@ -56,6 +56,8 @@ class DataTable extends UIContentBlock
 	 * array of data to display the first page
 	 */
 	protected $aInitDisplayData;
+	
+	protected string $sModalCreationHandler;
 
 	public const DEFAULT_ACTION_ROW_CONFIRMATION = true;
 
@@ -73,6 +75,7 @@ class DataTable extends UIContentBlock
 		$this->aOptions = [];
 		$this->aResultColumns = [];
 		$this->sJsonData = '';
+		$this->sModalCreationHandler = '';
 	}
 
 	/**
@@ -258,6 +261,24 @@ class DataTable extends UIContentBlock
 		}
 
 		return [];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetModalCreationHandler(): string
+	{
+		return $this->sModalCreationHandler;
+	}
+
+	/**
+	 * @param string $sModalCreationHandler
+	 * @return $this
+	 */
+	public function SetModalCreationHandler(string $sModalCreationHandler)
+	{
+		$this->sModalCreationHandler = $sModalCreationHandler;
+		return $this;
 	}
 
 }

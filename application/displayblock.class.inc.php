@@ -1760,6 +1760,7 @@ class MenuBlock extends DisplayBlock
 		$iSetCount = $oSet->Count();
 		/** @var string $sRefreshAction JS snippet to run when clicking on the refresh button of the menu */
 		$sRefreshAction = $aExtraParams['refresh_action'] ?? '';
+		$bCreationInModalAllowed = isset($aExtraParams['creation_in_modal_is_allowed']) && $aExtraParams['creation_in_modal_is_allowed'] === true;
 
 		/** @var array $aRegularActions Any action other than a transition */
 		$aRegularActions = [];
@@ -1802,7 +1803,7 @@ class MenuBlock extends DisplayBlock
 			// Any style actions
 			// - Bulk actions on objects set
 			if ($iSetCount > 1) {
-				if ($bIsCreationAllowed && !(isset($aExtraParams['allow_creation_in_modal']) && $aExtraParams['allow_creation_in_modal'] === true)) {
+				if ($bIsCreationAllowed && !$bCreationInModalAllowed) {
 					$this->AddNewObjectMenuAction($aRegularActions, $sClass, $sDefaultValuesAsUrlParams);
 				}
 
@@ -2224,7 +2225,7 @@ class MenuBlock extends DisplayBlock
 			} 
 			
 			// - Creation in modal
-			if(isset($aExtraParams['allow_creation_in_modal']) && $aExtraParams['allow_creation_in_modal'] === true){
+			if($bCreationInModalAllowed === true){
 				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
 					'fas fa-plus',
 					Dict::S('UI:Links:New:Button:Tooltip'),
@@ -2232,8 +2233,14 @@ class MenuBlock extends DisplayBlock
 					'',
 					false
 				);
+				
+				// - If we are used in a Datatable, 'datatable_' will be prefixed to our $sId so we do the same here
+				$sRealId = $sId;
+				if($this->m_sStyle === 'list' || $this->m_sStyle === 'links'|| $this->m_sStyle === 'listInObject'){
+					$sRealId = 'datatable_' . $sId;
+				}
 				$oAddLinkActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button'])
-					->SetOnClickJsCode("LinkSetWorker.CreateLinkedObject('$sId')");
+					->SetOnClickJsCode("$('#$sRealId').trigger('creation_in_modal');");
 				$oActionsToolbar->AddSubBlock($oAddLinkActionButton);
 			}
 
