@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
+    <class id="ClassWithCustomZlist">
+      <presentation/>
+    </class>
     <class id="ClassWithAttributeLinkedSetEditModeNone">
       <fields>
         <field id="status" xsi:type="AttributeLinkedSet">
@@ -75,4 +78,7 @@
       </methods>
     </class>
   </classes>
+  <meta>
+    <presentation/>
+  </meta>
 </itop_design>

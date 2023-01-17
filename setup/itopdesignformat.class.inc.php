@@ -1131,6 +1131,10 @@ class iTopDesignFormat
 		// - remove display style
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/display_style");
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/display_style");
+
+		// N°2783 Custom zlists
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/presentation/custom_presentations");
+		$this->RemoveNodeFromXPath("/itop_design/meta/presentation/custom_presentations");
 	}
 
 	/**

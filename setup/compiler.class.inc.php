@@ -95,6 +95,11 @@ class MFCompiler
 	protected $oFactory;
 
 	protected $aRootClasses;
+	/**
+	 * @var array $aCustomListsCodes Codes of the custom zlists
+	 * @since 3.1.0
+	 */
+	protected $aCustomListsCodes;
 	protected $aLog;
 	protected $sMainPHPCode; // Code that goes into core/main.php
 	protected $aSnippets;
@@ -652,7 +657,21 @@ EOF;
 				$aWebservicesFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
 			}
 		} // foreach module
-		
+
+		// Register custom zlists
+		$this->sMainPHPCode .= <<<PHP
+/**
+ * Custom zlists 
+ */
+PHP;
+		foreach ($this->aCustomListsCodes as $sCustomListCode) {
+			// Note: HEREDOC used to ease finding of \MetaModel::RegisterZList() method usages
+			$this->sMainPHPCode .= <<<PHP
+MetaModel::RegisterZList('$sCustomListCode', ['description' => 'Custom zlist $sCustomListCode', 'type' => 'attributes']);
+PHP;
+		}
+		$this->sMainPHPCode .= "\n";
+
 		// Compile the dictionaries -out of the modules
 		//
 		$sDictDir = $sTempTargetDir.'/dictionaries';
@@ -2192,30 +2211,38 @@ EOF;
 
 		// ZLists
 		//
-		$aListRef = array(
+		$oPresentation = $oClass->GetUniqueElement('presentation');
+		$sZlists = '';
+
+		// - Standard zlists
+		$aListRef = [
 			'details' => 'details',
 			'standard_search' => 'search',
 			'default_search' => 'default_search',
 			'list' => 'list',
-		);
-
-		$oPresentation = $oClass->GetUniqueElement('presentation');
-		$sZlists = '';
-		foreach ($aListRef as $sListCode => $sListTag)
-		{
+		];
+		foreach ($aListRef as $sListCode => $sListTag) {
 			$oListNode = $oPresentation->GetOptionalElement($sListTag);
-			if ($oListNode)
-			{
-				$aAttributes = $oListNode->GetNodeAsArrayOfItems();
-				if(!is_array($aAttributes))
-				{
-					$aAttributes = array();
-				}
-				$this->ArrayOfItemsToZList($aAttributes);
-
-				$sZAttributes = var_export($aAttributes, true);
-				$sZlists .= "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";
+			if ($oListNode) {
+				$sZlists .= $this->GeneratePhpCodeForZlist($sListCode, $oListNode);
 			}
+		}
+
+		// - Custom zlists
+		foreach ($oPresentation->GetNodes('custom_presentations/custom_presentation') as $oListNode) {
+			$sListCode = $oListNode->getAttribute('id');
+
+			// Cannot have a custom zlist with an ID that is among the reserved ones {@see $aListRef}
+			if (array_key_exists($sListCode, $aListRef)) {
+				throw new DOMFormatException('Custom zlist "'.$sListCode.'" cannot be compiled as it is using a reserved identifier ('.implode(', ', array_keys($aListRef)).')');
+			}
+
+			// Store custom zlist code for further registration
+			if (false === in_array($sListCode, $this->aCustomListsCodes)) {
+				$this->aCustomListsCodes[] = $sListCode;
+			}
+
+			$sZlists .= "\n" . $this->GeneratePhpCodeForZlist($sListCode, $oListNode);
 		}
 
 		// Methods
@@ -3854,6 +3881,25 @@ $sMethods
 EOF;
 
 		return $sPHP;
+	}
+
+	/**
+	 * @param string $sListCode Code of the zlist, used in iTop code to retrieve a specific zlist
+	 * @param \DOMNode $oListNode XML node to parse to retrieve the zlist attributes
+	 *
+	 * @return string PHP Code to declare a zlist
+	 * @since 3.1.0 N°2783
+	 */
+	private function GeneratePhpCodeForZlist(string $sListCode, DOMNode $oListNode): string
+	{
+		$aAttributes = $oListNode->GetNodeAsArrayOfItems();
+		if(!is_array($aAttributes)) {
+			$aAttributes = array();
+		}
+		$this->ArrayOfItemsToZList($aAttributes);
+
+		$sZAttributes = var_export($aAttributes, true);
+		return "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";
 	}
 
 	/**
