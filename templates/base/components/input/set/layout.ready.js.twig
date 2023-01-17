@@ -11,7 +11,7 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     preload: true, {# call ajax directly #}
     loadingClass: '', {# @todo BDA handle errors #}
     {% endif %}
-    itemClass: 'attribute-set-item',
+    itemClass: 'item attribute-set-item',
     optionClass: '',
     hasError: {{ oUIBlock.HasError()|var_export() }},
 
@@ -64,7 +64,7 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     initial: {{ oUIBlock.GetValue()|raw }},
     items: {{ oUIBlock.GetValue()|raw }},
 
-    {# @todo BDA WIP >>> inputClass: 'ibo-input ibo-input-select ibo-input-selectize attribute-set selectize-input',#}
+    inputClass: 'ibo-input ibo-input-selectize ibo-input-set attribute-set selectize-input',
 
     {# Ajax data load #}
     {% if oDataProvider.IsAjaxProviderType %}

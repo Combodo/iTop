@@ -9,6 +9,18 @@ $ibo-vendors-selectize-control--plugin-add-button--add-option--height: 100% !def
 $ibo-vendors-selectize-control--plugin-add-button--add-option--width: $ibo-size-350 !default;
 $ibo-vendors-selectize-control--plugin-add-button--add-option--color: $ibo-color-grey-900 !default;
 
+$ibo-vendors-selectize--item--icon--margin-right: $ibo-spacing-200 !default;
+
+$ibo-vendors-selectize--item--add--background-color: $ibo-color-green-100 !default;
+$ibo-vendors-selectize--item--add--icon--color: $ibo-color-green-900 !default;
+
+$ibo-vendors-selectize--item--remove--background-color: $ibo-color-red-100 !default;
+$ibo-vendors-selectize--item--remove--icon--color: $ibo-color-red-800 !default;
+
+$ibo-vendors-selectize--item--ignore-partial--background-color: $ibo-color-grey-200 !default;
+
+$ibo-vendors-selectize--input-error--border: 1px solid $ibo-color-red-600 !default;
+
 .selectize-dropdown-content {
   max-height: unset; /* Overloaded as it will be handled by the _input-select.scss partial */
 }
@@ -54,54 +66,34 @@ $ibo-vendors-selectize-control--plugin-add-button--add-option--color: $ibo-color
 
 }
 
-
-.item-remove{
-  background-image: linear-gradient(to bottom, red, #b40202)!important;
-  border-color: #b40202!important;
-  a{
-    border-left-color: #b40202!important;
+.selectize-input{
+  .attribute-set-item{
+    >* {
+      display: inline;
+    }
+    &.item-add::before,&.item-remove::before{
+      @extend %fa-solid-base;
+      margin-right: $ibo-vendors-selectize--item--icon--margin-right;
+    }
+    &.item-add{
+      background-color: $ibo-vendors-selectize--item--add--background-color !important;
+      &::before{
+        color: $ibo-vendors-selectize--item--add--icon--color;
+        content: '\f067';
+      }
+    }
+    &.item-remove{
+      background-color: $ibo-vendors-selectize--item--remove--background-color !important;
+      &::before{
+        color: $ibo-vendors-selectize--item--remove--icon--color;
+        content: '\f1f8';
+      }
+    }
+    &.item-ignore-partial{
+      background-color: $ibo-vendors-selectize--item--ignore-partial--background-color !important;
+    }
   }
-  .friendlyname:before{
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 600;
-    content: '\f1f8';
-    margin-right: 5px;
+  &.selectize-input-error{
+    border: $ibo-vendors-selectize--input-error--border;
   }
-}
-
-.item-add{
-  background-image: linear-gradient(to bottom, green, #005600)!important;
-  border-color: #005600!important;
-  a{
-    border-left-color: #005600!important;
-  }
-  .friendlyname:before{
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 600;
-    content: '\f055';
-    margin-right: 5px;
-  }
-}
-
-.item-ignore-all{
-  background-image: linear-gradient(to bottom, white, white)!important;
-  border-color: #cccccc !important;
-  color: #0a0a0a!important;
-  a{
-    border-left-color: #cccccc!important;
-  }
-}
-
-
-.item-ignore-partial{
-  background-image: linear-gradient(to bottom, #e5e5e5, #e5e5e5)!important;
-  border-color: #cccccc!important;
-  color: #0a0a0a!important;
-  a{
-    border-left-color: #cccccc!important;
-  }
-}
-
-.selectize-input.selectize-input-error{
-  border: 1px solid red;
 }
