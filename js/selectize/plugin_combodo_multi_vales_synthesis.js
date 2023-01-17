@@ -15,11 +15,26 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-Selectize.define("combodo_multi_values_synthesis", function () {
+Selectize.define("combodo_multi_values_synthesis", function (aOptions) {
 
 	// Selectize instance
 	let oSelf = this;
 	oSelf.require("combodo_update_operations");
+
+	// Plugin options
+	aOptions = $.extend({
+		tooltip_links_will_be_created_for_all_objects: 'Links will be created for all objects',
+		tooltip_links_will_be_deleted_from_all_objects: 'Links will be deleted from all objects',
+		tooltip_links_will_be_created_for_one_object: 'Links will be created for one object',
+		tooltip_links_will_be_deleted_from_one_object: 'Links will be deleted from one object',
+		tooltip_links_will_be_created_for_x_objects: 'Links will be created for {count} objects',
+		tooltip_links_will_be_deleted_from_x_objects: 'Links will be deleted from {count} objects',
+		tooltip_links_exist_for_all_objects: 'Links exist for all objects',
+		tooltip_links_exist_for_one_object: 'Links exist for one object',
+		tooltip_links_exist_for_x_objects: 'Links exist for some objects'
+		},
+		aOptions
+	);
 
 	// Items operations
 	const OPERATIONS = {
@@ -134,21 +149,25 @@ Selectize.define("combodo_multi_values_synthesis", function () {
 
 	// Declare listenClick function
 	oSelf.listenClick = (function () {
-		return function ($item, item) {
+		return function ($item, sItem) {
 
 			// Listen item element click event
 			$item.on('click', function(){
 
 				// If element has operation
-				if(aOperations[item] === OPERATIONS.add || aOperations[item] === OPERATIONS.remove) {
+				if(aOperations[sItem] === OPERATIONS.add || aOperations[sItem] === OPERATIONS.remove) {
 
 					// Restore state
-					oSelf.Ignore($item, item);
+					oSelf.Ignore($item, sItem);
 				}
 				else{
 
+					// No need to add
+					if(oSelf.options[sItem]['full'])
+						return;
+
 					// Add element
-					oSelf.Add($item, item);
+					oSelf.Add($item, sItem);
 				}
 			});
 		}
@@ -156,40 +175,91 @@ Selectize.define("combodo_multi_values_synthesis", function () {
 
 	// Declare Add function
 	oSelf.Add = (function () {
-		return function (e, i) {
-			aOperations[i] = OPERATIONS.add;
+		return function ($item, sItem) {
+			aOperations[sItem] = OPERATIONS.add;
 			oSelf.updateOperationsInput();
-			oSelf.ResetElementClass(e);
-			e.addClass(ITEMS_CLASSES.add);
+			oSelf.ResetElementClass($item);
+			oSelf.UpdateAllTooltip($item, sItem);
+			$item.addClass(ITEMS_CLASSES.add);
 		}
 	})();
 
 	// Declare Remove function
 	oSelf.Remove = (function () {
-		return function (e, i) {
-			aOperations[i] = OPERATIONS.remove;
+		return function ($item, sItem) {
+			aOperations[sItem] = OPERATIONS.remove;
 			oSelf.updateOperationsInput();
-			oSelf.ResetElementClass(e);
-			e.addClass(ITEMS_CLASSES.remove);
+			oSelf.ResetElementClass($item);
+			oSelf.UpdateRemoveTooltip($item, sItem);
+			$item.addClass(ITEMS_CLASSES.remove);
 		}
 	})();
 
 	// Declare Ignore function
 	oSelf.Ignore = (function () {
-		return function (e, i) {
-			aOperations[i] = OPERATIONS.ignore;
+		return function ($item, sItem) {
+			aOperations[sItem] = OPERATIONS.ignore;
 			oSelf.updateOperationsInput();
-			oSelf.ResetElementClass(e);
-			oSelf.options[i]['full'] === true ?
-				e.addClass(ITEMS_CLASSES.ignore_all) :
-				e.addClass(ITEMS_CLASSES.ignore_partial);
+			oSelf.ResetElementClass($item);
+			oSelf.UpdateIgnoreTooltip($item, sItem);
+			oSelf.options[sItem]['full'] ?
+				$item.addClass(ITEMS_CLASSES.ignore_all) :
+				$item.addClass(ITEMS_CLASSES.ignore_partial);
 		}
 	})();
 
 	// Declare ResetElementClass function
 	oSelf.ResetElementClass = (function () {
-		return function (e) {
-			e.removeClass(Object.values(ITEMS_CLASSES));
+		return function ($item) {
+			$item.removeClass(Object.values(ITEMS_CLASSES));
+		}
+	})();
+
+	// Update add tooltip
+	oSelf.UpdateAllTooltip = (function () {
+		return function ($item, sItem) {
+			const iOccurrence = oSelf.options[sItem]['occurrence'];
+			if(oSelf.options[sItem]['empty']){
+				$item.attr('title', aOptions.tooltip_links_will_be_created_for_all_objects);
+			}
+			else if(iOccurrence === '1'){
+				$item.attr('title', aOptions.tooltip_links_will_be_created_for_one_object);
+			}
+			else{
+				$item.attr('title', aOptions.tooltip_links_will_be_created_for_x_objects.replaceAll('{count}', iOccurrence));
+			}
+		}
+	})();
+
+	// Update remove tooltip
+	oSelf.UpdateRemoveTooltip = (function () {
+		return function ($item, sItem) {
+			const iOccurrence = oSelf.options[sItem]['occurrence'];
+			if(oSelf.options[sItem]['full']){
+				$item.attr('title', aOptions.tooltip_links_will_be_deleted_from_all_objects);
+			}
+			else if(oSelf.options[sItem]['occurrence'] === '1'){
+				$item.attr('title', aOptions.tooltip_links_will_be_deleted_from_one_object);
+			}
+			else{
+				$item.attr('title', aOptions.tooltip_links_will_be_deleted_from_x_objects.replaceAll('{count}', iOccurrence));
+			}
+		}
+	})();
+
+	// Update ignore tooltip
+	oSelf.UpdateIgnoreTooltip = (function () {
+		return function ($item, sItem) {
+			const iOccurrence = oSelf.options[sItem]['occurrence'];
+			if(oSelf.options[sItem]['full']){
+				$item.attr('title', aOptions.tooltip_links_exist_for_all_objects);
+			}
+			else if(iOccurrence === '1'){
+				$item.attr('title', aOptions.tooltip_links_exist_for_one_object);
+			}
+			else{
+				$item.attr('title', aOptions.tooltip_links_exist_for_x_objects.replaceAll('{count}', iOccurrence));
+			}
 		}
 	})();
 });

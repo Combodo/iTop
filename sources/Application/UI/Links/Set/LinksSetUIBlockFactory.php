@@ -79,6 +79,7 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 	 * @param AttributeLinkedSet $oAttDef Link set attribute definition
 	 * @param iDBObjectSetIterator $oDbObjectSet Link set value
 	 * @param string $sWizardHelperJsVarName Wizard helper name
+	 * @param array $aBulkContext
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Set\Set
 	 */
@@ -89,12 +90,14 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 		// Bulk modify specific
 		$oSetUIBlock->GetDataProvider()->SetGroupField('group');
 		$oSetUIBlock->SetOptionsTemplate('application/object/set/bulk_option_renderer.html.twig');
+//		$oSetUIBlock->SetItemsTemplate('application/object/set/bulk_item_renderer.html.twig');
 		$oSetUIBlock->SetIsMultiValuesSynthesis(true);
 
 		$aBinderSettings = [
-			'bulk_oql'                  => $aBulkContext['oql'],
-			'attribute_linked_set_code' => $oAttDef->GetCode(),
-			'target_field'              => LinkSetModel::GetTargetField($oAttDef),
+			'bulk_oql'     => $aBulkContext['oql'],
+			'link_class'   => LinkSetModel::GetLinkedClass($oAttDef),
+			'target_field' => LinkSetModel::GetTargetField($oAttDef),
+			'origin_field' => $oAttDef->GetExtKeyToMe(),
 		];
 
 		$aOptions = $oSetUIBlock->GetDataProvider()->GetOptions();
@@ -102,7 +105,9 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 		$oSetUIBlock->GetDataProvider()->SetOptions($aOptions);
 
 		// Data binder
-		$oSetUIBlock->GetDataProvider()->SetPostParam('binder', [
+		/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider\AjaxDataProvider $oDataProvider */
+		$oDataProvider = $oSetUIBlock->GetDataProvider();
+		$oDataProvider->SetPostParam('binder', [
 			'class_name' => addslashes(LinksBulkDataBinder::class),
 			'settings'   => $aBinderSettings,
 		]);

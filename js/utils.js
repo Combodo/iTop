@@ -661,12 +661,14 @@ Dict.Format = function () {
 /**
  * Render a template and inject data into it.
  *
- * This rendering engine is aimed to produce template rendering.
+ * This rendering engine is aimed to produce client side template rendering.
  *
  * markups with attributes:
- *  data-template-text: replace text dom element with attribute value
- *  data-template-condition: set dom element visibility depending on attribute value
- *  data-template-background-image: set dom element style background image url with attribute value
+ *  data-template-attr-{title|name|for}: set dom element attribute with corresponding datavalue
+ *  data-template-text: set dom element text with corresponding data value
+ *  data-template-condition: set dom element visibility depending on data value
+ *  data-template-css-{background-image}: set dom element css property with corresponding data value
+ *  data-template-add-class: add class to dom element with corresponding data value
  *
  * @param sTemplateId
  * @param data
@@ -677,37 +679,40 @@ Dict.Format = function () {
 function RenderTemplate(sTemplateId, data, TemplateClass = null)
 {
 	let sHtml = '<div>' + $(sTemplateId).html() + '</div>';
-	let oElement = $(sHtml);
 
+	// Create element
+	let oElement = $(sHtml);
 	oElement.addClass(TemplateClass);
 
-	// texts replacement
+	// Attribute replacement
+	let aAttrElements = ['title', 'name', 'for'];
+	aAttrElements.forEach(function(e){
+		$(`[data-template-attr-${e}]`, oElement).each(function(){
+			$(this).attr(e, data[$(this).attr(`data-template-attr-${e}`)]);
+		})
+	});
+
+	// CSS replacement
+	let aCssElements = ['background-image'];
+	aCssElements.forEach(function(e){
+		$(`[data-template-css-${e}]`, oElement).each(function(){
+			$(this).css(e, data[$(this).attr(`data-template-css-${e}`)]);
+		})
+	});
+
+	// Text replacement
 	$('[data-template-text]', oElement).each(function(){
 		$(this).text(data[$(this).attr('data-template-text')]);
 	})
 
-	// titles replacement
-	$('[data-template-title]', oElement).each(function(){
-		$(this).attr('title', data[$(this).attr('data-template-title')]);
-	})
-
-	// conditions
+	// Condition
 	$('[data-template-condition]', oElement).each(function(){
 		$(this).toggle(data[$(this).attr('data-template-condition')]);
 	})
 
-	// background images
-	$('[data-template-background-image]', oElement).each(function(){
-		$(this).css('background-image', `url('${data[$(this).attr('data-template-background-image')]}')`);
-	})
-
-	// class
-	$('[data-template-class]', oElement).each(function(){
-		let sClass = data[$(this).attr('data-template-class')];
-		if(typeof(sClass) !== 'undefined') {
-			let classes = sClass.split(',');
-			classes.forEach(e => $(this).addClass(e));
-		}
+	// Add classes
+	$('[data-template-add-class]', oElement).each(function(){
+		$(this).addClass(data[$(this).attr('data-template-add-class')]);
 	})
 
 	return oElement;
@@ -716,11 +721,11 @@ function RenderTemplate(sTemplateId, data, TemplateClass = null)
 /**
  * ExtractArrayItemsContainingThisKeyAndValue.
  *
- * This function extract items of an array witch include the key value pair.
+ * This function extract item(s) of an array witch include the key value pair.
  *
- * @param aArrayToSearchIn
- * @param sKey
- * @param sValue
+ * @param aArrayToSearchIn Array to search in
+ * @param sKey Key to search
+ * @param sValue Value to search
  * @returns {*|*[]|null}
  * @constructor
  */

@@ -217,7 +217,7 @@ class ObjectRepository
 				/** @var \ormDocument $oImage */
 				$oImage = $oDbObject->Get($sObjectImageAttCode);
 				if (!$oImage->IsEmpty()) {
-					$aData['picture_url'] = $oImage->GetDisplayURL($sClass, $oDbObject->GetKey(), $sObjectImageAttCode);
+					$aData['picture_url'] = "url('{$oImage->GetDisplayURL($sClass, $oDbObject->GetKey(), $sObjectImageAttCode)}')";
 					$aData['initials'] = '';
 				} else {
 					$aData['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oDbObject->Get('friendlyname')));

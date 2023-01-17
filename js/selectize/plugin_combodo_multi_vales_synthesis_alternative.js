@@ -21,9 +21,16 @@ Selectize.define("combodo_multi_values_synthesis_alternative", function () {
 	let oSelf = this;
 	oSelf.require("combodo_update_operations");
 
+	// Items states css classes
+	const ITEMS_CLASSES = {
+		add: 'item-add',
+		remove: 'item-remove',
+	};
+
 	// Change default settings
-	oSelf.settings.placeholder = 'cliquer pour ajouter ou supprimer';
+	oSelf.settings.placeholder = 'click to add or remove';
 	oSelf.settings.items = [];
+	oSelf.settings.itemClass += ' item-flex';
 
 	// Override addItem function
 	oSelf.addItem = (function () {
@@ -44,9 +51,10 @@ Selectize.define("combodo_multi_values_synthesis_alternative", function () {
 
 	// Override updateOperations function
 	oSelf.updateOperations = (function () {
-		let oOriginal = oSelf.updateOperations;
 		return function () {
-			oOriginal.apply(this, arguments);
+
+			// Reset operations
+			oSelf.operations = {};
 
 			// reference data
 			const aCurrentItems = Object.values(oSelf.items);
@@ -67,6 +75,7 @@ Selectize.define("combodo_multi_values_synthesis_alternative", function () {
 					data: ExtractArrayItemsContainingThisKeyAndValue(aCurrentOptions, oSelf.settings.valueField, e)
 				}
 			});
+
 		}
 	})();
 
@@ -74,78 +83,67 @@ Selectize.define("combodo_multi_values_synthesis_alternative", function () {
 	oSelf.AddChoices = (function () {
 		return function ($item, item) {
 
-			// Variables
-			let sInputName = oSelf.$input.attr('name');
-			let sName = `${sInputName}${item}`;
-			let sAdd = `${sInputName}${item}Add`;
-			let sRem = `${sInputName}${item}Rem`;
-
 			const aCurrentOptions = Object.values(oSelf.options);
 			const aOption = ExtractArrayItemsContainingThisKeyAndValue(aCurrentOptions, oSelf.settings.valueField, item);
 
 			// Create operations selector
-			$item.css('display', 'inline-flex');
-			// $item.css('display', 'flex');
-			$item.css('justify-content', 'space-between');
-			let sRadio = `
-<div class="radio-toolbar" style="float: right;margin-left: 10px;">
-    <input type="radio" id="${sAdd}" name="${sName}" value="add" checked>
-    <label for="${sAdd}">Add</label>
-    <input type="radio" id="${sRem}" name="${sName}" value="remove">
-    <label for="${sRem}">Remove</label>
-</div>`;
-			let $radio =  $(sRadio);
-			$item.append($radio);
+			$firendlyName = $('.friendlyname', $item);
+			$firendlyName.css('display', 'flex');
+			$firendlyName.css('flex-grow', '1');
+
+			// show radio
+			let $radio =  $('.radio-toolbar', $item);
+			$radio.show();
 
 			// update operations on change
 			$('input', $radio).on('change', function(){
-				oSelf.updateOperations();
 				oSelf.updateOperationsInput();
 			});
 
+			// Disable
 			if(aOption.full){
-				$(`input[id="${sAdd}"]`).attr('disabled', true);
+				$(`input[value="add"]`, $item).attr('disabled', true);
 			}
 			if(aOption.empty){
-				$(`input[id="${sRem}"]`).attr('disabled', true);
+				$(`input[value="remove"]`, $item).attr('disabled', true);
 			}
 
 			// update ui
 			$('input', $radio).on('click', function(){
 				switch($(this).val()){
 					case 'add':
-						oSelf.Add($(this));
+						oSelf.Add($item);
 						break;
 					case 'remove':
-						oSelf.Remove($(this));
-						break;
-					case 'ignore':
-						oSelf.Ignore($(this));
+						oSelf.Remove($item);
 						break;
 				}
 			})
 
+			oSelf.Add($item);
 		}
 	})();
 
 	// Override updateOperations function
 	oSelf.Add = (function () {
 		return function (e) {
-			e.closest('.attribute-set-item').removeClass('item-delete');
+			oSelf.ResetElementClass(e);
+			e.addClass(ITEMS_CLASSES.add);
 		}
 	})();
 
 	// Override updateOperations function
 	oSelf.Remove = (function () {
 		return function (e) {
-			e.closest('.attribute-set-item').addClass('item-delete');
+			oSelf.ResetElementClass(e);
+			e.addClass(ITEMS_CLASSES.remove);
 		}
 	})();
 
-	// Override updateOperations function
-	oSelf.Ignore = (function () {
+	// Declare ResetElementClass function
+	oSelf.ResetElementClass = (function () {
 		return function (e) {
-			e.closest('.attribute-set-item').removeClass('item-delete');
+			e.removeClass(Object.values(ITEMS_CLASSES));
 		}
 	})();
 });

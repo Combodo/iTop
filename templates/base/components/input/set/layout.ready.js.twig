@@ -9,11 +9,12 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     {# Global options #}
     {% if oDataProvider.IsAjaxProviderType %}
     preload: true, {# call ajax directly #}
-    loadingClass: '', {# @todo BDA handle errors #}
+    loadingClass: '',
     {% endif %}
     itemClass: 'item attribute-set-item',
     optionClass: '',
     hasError: {{ oUIBlock.HasError()|var_export() }},
+    placeholder: '{{ oUIBlock.GetPlaceholder() }}',
 
     {# Remove button plugin #}
     plugins: {
@@ -30,7 +31,18 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         },
         {% endif %}
         {% if oUIBlock.IsMultiValuesSynthesis() %}
-        'combodo_multi_values_synthesis' : {},
+        'combodo_multi_values_synthesis' : {
+
+            tooltip_links_will_be_created_for_all_objects: '{{ 'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'|dict_s }}',
+            tooltip_links_will_be_deleted_from_all_objects: '{{ 'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects'|dict_s }}',
+            tooltip_links_will_be_created_for_one_object: '{{ 'UI:Links:Bulk:LinkWillBeCreatedFor1Object'|dict_s }}',
+            tooltip_links_will_be_deleted_from_one_object: '{{ 'UI:Links:Bulk:LinkWillBeDeletedFrom1Object'|dict_s }}',
+            tooltip_links_will_be_created_for_x_objects: '{{ 'UI:Links:Bulk:LinkWillBeCreatedForXObjects'|dict_s }}',
+            tooltip_links_will_be_deleted_from_x_objects: '{{ 'UI:Links:Bulk:LinkWillBeDeletedFromXObjects'|dict_s }}',
+            tooltip_links_exist_for_all_objects: '{{ 'UI:Links:Bulk:LinkExistForAllObjects'|dict_s }}',
+            tooltip_links_exist_for_one_object: '{{ 'UI:Links:Bulk:LinkExistForOneObject'|dict_s }}',
+            tooltip_links_exist_for_x_objects: '{{ 'UI:Links:Bulk:LinkExistForXObjects'|dict_s }}',
+        },
         {% endif %}
         {# PLUGIN remove button  #}
         {% if oUIBlock.HasRemoveItemButton() %}

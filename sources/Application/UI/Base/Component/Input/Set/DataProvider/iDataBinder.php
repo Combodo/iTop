@@ -27,6 +27,15 @@ namespace Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider;
  */
 interface iDataBinder
 {
-	public static function Bind(string $sObjectClassName, array $aData, array $aBinderSettings);
+	/**
+	 * Bind.
+	 *
+	 * @param string $sObjectClassName Class name of array elements
+	 * @param array $aData Array of elements
+	 * @param array $aBinderSettings Array of settings for binder implementation
+	 *
+	 * @return array
+	 */
+	public static function Bind(string $sObjectClassName, array $aData, array $aBinderSettings): array;
 
 }

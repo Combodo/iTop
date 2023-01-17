@@ -19,10 +19,13 @@
 
 namespace Combodo\iTop\Application\UI\Links\Set;
 
+use CMDBSource;
 use Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider\iDataBinder;
 use DBObjectSet;
 use DBSearch;
-use MetaModel;
+use Exception;
+use ExceptionLog;
+use FieldExpression;
 
 /**
  * Class LinksBulkDataBinder
@@ -35,63 +38,91 @@ use MetaModel;
 class LinksBulkDataBinder implements iDataBinder
 {
 	/** @inheritDoc */
-	public static function Bind(string $sObjectClassName, array $aData, array $aBinderSettings)
+	public static function Bind(string $sObjectClassName, array $aData, array $aBinderSettings): array
 	{
-		return self::ComputeScopeData($aData, $aBinderSettings['bulk_oql'], $aBinderSettings['attribute_linked_set_code'], $aBinderSettings['target_field'], $sObjectClassName);
+		return self::ComputeScopeData($aData, $aBinderSettings['bulk_oql'], $aBinderSettings['link_class'], $aBinderSettings['origin_field'], $aBinderSettings['target_field']);
 	}
 
-	/** @todo BDA create oql with count */
-	public static function ComputeScopeData(array $aResult, string $sScope, string $sScopeField, ?string $sTargetField, string $sObjectClass): array
+	public static function ComputeScopeData(array $aResult, string $sScope, string $sLinkClass, string $sOriginField, string $sTargetField): array
 	{
 		if (!empty($sScope)) {
-			$oDbObjectSearch = DBSearch::FromOQL($sScope);
-			$oDbObjectSet = new DBObjectSet($oDbObjectSearch);
-			foreach ($aResult as &$aObjectLink) {
-				$iCount = 0;
-				$aLinkKeys = [];
-				$oDbObjectSet->Rewind();
-				while ($oObject = $oDbObjectSet->Fetch()) {
-					$test = $oObject->Get($sScopeField);
-					if ($sTargetField != null) {
-						$aIds = $test->GetColumnAsArray($sTargetField);
-						foreach ($aIds as $iLinkId => $sObjectId) {
-							$o = MetaModel::GetObject($sObjectClass, $sObjectId);
-							if ($o->Get('id') == $aObjectLink['key']) {
-								$iCount++;
-								$aLinkKeys[] = $iLinkId;
-							}
-						}
-					} else {
-						$aIds = $test->GetColumnAsArray('id');
-						if (in_array($aObjectLink['key'], $aIds)) {
-							$iCount++;
+
+			try {
+				// OQL to select bulk object selection
+				$oDbObjectSearchBulkObjects = DBSearch::FromOQL($sScope);
+				$oDbObjectSetBulkObjects = new DBObjectSet($oDbObjectSearchBulkObjects);
+				$aBulksObjects = $oDbObjectSetBulkObjects->GetColumnAsArray('id', false);
+				$sBulkList = implode(',', $aBulksObjects);
+
+				// Get all links attached to object selection
+				$sOqlGroupBy = "SELECT $sLinkClass AS lnk WHERE lnk.$sOriginField IN ($sBulkList)";
+				$oDbObjectSearch = DBSearch::FromOQL($sOqlGroupBy);
+
+				// Group by links attached to object selection
+				$oFieldExp = new FieldExpression($sTargetField, 'lnk');
+				$sQuery = $oDbObjectSearch->MakeGroupByQuery([$sTargetField], array('grouped_by_1' => $oFieldExp), true);
+				$aGroupResult = CMDBSource::QueryToArray($sQuery, MYSQLI_ASSOC);
+
+				// Iterate throw result...
+				foreach ($aResult as &$aItem) {
+
+					// Find group by object to extract link count
+					$aFound = null;
+					foreach ($aGroupResult as $aItemGroup) {
+						if ($aItem['key'] === $aItemGroup['grouped_by_1']) {
+							$aFound = $aItemGroup;
 						}
 					}
+
+					// If found, get information
+					if ($aFound !== null) {
+						$aItem['group'] = 'Objects already linked';
+						$aItem['occurrence'] = $aFound['_itop_count_'];
+						$aItem['occurrence_label'] = "Link on {$aFound['_itop_count_']} Objects(s)";
+						$aItem['occurrence_info'] = "({$aFound['_itop_count_']})";
+						$aItem['full'] = ($aFound['_itop_count_'] == $oDbObjectSetBulkObjects->Count());
+
+						// Retrieve linked objects keys
+						$sOqlLinkKeys = "SELECT $sLinkClass AS lnk WHERE lnk.$sOriginField IN ($sBulkList) AND lnk.$sTargetField = {$aItem['key']}";
+						$oDbSearchLinkKeys = DBSearch::FromOQL($sOqlLinkKeys);
+						$aLinkedObjects = new DBObjectSet($oDbSearchLinkKeys);
+						$aItem['link_keys'] = $aLinkedObjects->GetColumnAsArray('id', false);
+
+					} else {
+						$aItem['group'] = 'Others';
+						$aItem['occurrence'] = '';
+						$aItem['empty'] = true;
+					}
+
 				}
-				if ($iCount) {
-					$aObjectLink['group'] = 'Objects already linked';
-					$aObjectLink['occurrence'] = 'Link on '.$iCount.' Objects(s)';
-					$aObjectLink['full'] = ($iCount === $oDbObjectSet->Count());
-					$aObjectLink['link_keys'] = $aLinkKeys;
-				} else {
-					$aObjectLink['group'] = 'Others';
-					$aObjectLink['occurrence'] = '';
-					$aObjectLink['empty'] = true;
-				}
+
+				// Order items
+				usort($aResult, [self::class, "CompareItems"]);
+			}
+			catch (Exception $e) {
+
+				ExceptionLog::LogException($e);
 			}
 
-			usort($aResult, [self::class, "cmp"]);
 		}
 
 		return $aResult;
 	}
 
-	static function cmp($a, $b)
+	/**
+	 * CompareItems.
+	 *
+	 * @param $aItemA
+	 * @param $aItemB
+	 *
+	 * @return array|int
+	 */
+	static private function CompareItems($aItemA, $aItemB): int
 	{
-		if ($a['group'] == $b['group']) {
+		if ($aItemA['occurrence'] === $aItemB['occurrence']) {
 			return 0;
 		}
 
-		return ($a['group'] < $b['group']) ? -1 : 1;
+		return ($aItemA['occurrence'] > $aItemB['occurrence']) ? -1 : 1;
 	}
 }
