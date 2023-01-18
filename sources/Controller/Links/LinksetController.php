@@ -8,10 +8,11 @@ namespace Combodo\iTop\Controller\Links;
 
 use AjaxPage;
 use cmdbAbstractObject;
-use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Controller\AbstractController;
+use CoreException;
 use DBObject;
-use iTopWebPage;
+use JsonPage;
 use MetaModel;
 use UserRights;
 use utils;
@@ -30,11 +31,16 @@ class LinkSetController extends AbstractController
 	/**
 	 * OperationDeleteLinkedObject.
 	 *
-	 * @return \JsonPage
+	 * @return JsonPage
+	 * @throws \CoreException
 	 */
-	public function OperationDeleteLinkedObject(): \JsonPage
+	public function OperationDeleteLinkedObject(): JsonPage
 	{
-		$oPage = new \JsonPage();
+		if (!$this->IsHandlingXmlHttpRequest()) {
+			throw new CoreException('LinksetController can only be called in ajax.');
+		}
+		
+		$oPage = new JsonPage();
 		$sErrorMessage = null;
 		$bOperationSuccess = false;
 
@@ -70,10 +76,15 @@ class LinkSetController extends AbstractController
 	 * OperationDetachLinkedObject.
 	 *
 	 * @return \JsonPage
+	 * @throws \CoreException
 	 */
-	public function OperationDetachLinkedObject(): \JsonPage
+	public function OperationDetachLinkedObject(): JsonPage
 	{
-		$oPage = new \JsonPage();
+		if (!$this->IsHandlingXmlHttpRequest()) {
+			throw new CoreException('LinksetController can only be called in ajax.');
+		}
+		
+		$oPage = new JsonPage();
 		$sErrorMessage = null;
 		$bOperationSuccess = false;
 
@@ -106,7 +117,7 @@ class LinkSetController extends AbstractController
 	}
 
 	/**
-	 * @return \iTopWebPage|\AjaxPage Create edit form in its webpage
+	 * @return \AjaxPage Create edit form in its webpage
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -114,7 +125,12 @@ class LinkSetController extends AbstractController
 	 */
 	public function OperationCreateLinkedObject()
 	{
-		$bPrintable = utils::ReadParam('printable', '0') === '1';
+		if (!$this->IsHandlingXmlHttpRequest()) {
+			throw new CoreException('LinksetController can only be called in ajax.');
+		}
+		
+		$oPage = new AjaxPage('');
+
 		$sProposedRealClass = utils::ReadParam('class', '', false, 'class');
 		$sAttCode = utils::ReadParam('att_code', '', false, 'raw');
 		$sClass = utils::ReadParam('host_class', '', false, 'class');
@@ -134,6 +150,7 @@ class LinkSetController extends AbstractController
 				$aPossibleClasses[$sCandidateClass] = MetaModel::GetName($sCandidateClass);
 			}
 		}
+
 		// Only one of the subclasses can be instantiated...
 		if (count($aPossibleClasses) == 1) {
 			$aKeys = array_keys($aPossibleClasses);
@@ -144,14 +161,6 @@ class LinkSetController extends AbstractController
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
 			$aFieldFlags = array(); // TODO 3.1 array($sExtKeyToMe => OPT_ATT_READONLY);
 			$oObj = DBObject::MakeDefaultInstance($sRealClass);
-
-			if ($this->IsHandlingXmlHttpRequest()) {
-				$oPage = new AjaxPage('');
-			} else {
-				$oPage = new iTopWebPage('', $bPrintable);
-				$oPage->DisableBreadCrumb();
-				$oPage->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
-			}
 
 			$oSourceObj = MetaModel::GetObject($sClass, $sId);
 
@@ -194,8 +203,38 @@ JS
 				]
 			];
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aExtraParams);
-			return $oPage;
 		}
-		return;
+		else
+		{
+			// - We'll let the user select a class if multiple classes are available
+			$oClassForm = FormUIBlockFactory::MakeStandard();
+			
+			// - When the user submit, redo the same request but with a real class
+			
+			$sCurrentParameters = json_encode([
+				'att_code' => $sAttCode,
+				'host_class' => $sClass,
+				'host_id' => $sId]);
+			$sCurrentUrl = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php?route=linkset.create_linked_object';
+			$oClassForm->SetOnSubmitJsCode(
+				<<<JS
+					let me = this;
+					let aParam = $sCurrentParameters;
+					aParam['class'] = $(this).find('[name="class"]').val();
+					let sPosting = $.post('$sCurrentUrl', aParam);
+					sPosting.done(function(data){
+                        $(me).closest('[data-role="ibo-modal"]').html(data);
+					});
+                    return false;
+JS
+			);
+			
+			// - Add a select and a button to validate the form
+			$oClassForm->AddSubBlock(cmdbAbstractObject::DisplayBlockSelectClassToCreate( $sProposedRealClass, MetaModel::GetName($sProposedRealClass),   $aPossibleClasses));
+
+			$oPage->AddUiBlock($oClassForm);
+		}
+
+		return $oPage;
 	}
 }

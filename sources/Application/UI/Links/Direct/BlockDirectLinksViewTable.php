@@ -30,14 +30,23 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 	/** @inheritdoc * */
 	public function GetExtraParam(): array
 	{
-		return array(
+		$aExtraParams = array(
 			'target_attr' => $this->oAttDef->GetExtKeyToMe(),
 			'object_id'   => $this->oDbObject->GetKey(),
 			'menu'        => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
 			'default'     => $this->GetDefault(),
 			'table_id'    => $this->GetTableId(),
 			'row_actions' => $this->GetRowActions(),
+			'currentId' => $this->GetTableId(),
 		);
+
+		// - Add creation in modal if the linkset is not readonly
+		if (!$this->oAttDef->GetReadOnly()) {
+			$aExtraParams['creation_in_modal_is_allowed'] = true;
+			$aExtraParams['creation_in_modal_js_handler'] = 'LinkSetWorker.CreateLinkedObject("'.$this->GetTableId().'");';
+		}
+		
+		return $aExtraParams;
 	}
 
 	/** @inheritdoc * */
@@ -77,6 +86,11 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 					);
 					break;
 			}
+			$aRowActions[] = array(
+				'tooltip'       => 'UI:Links:ActionRow:Modify',
+				'icon_classes'  => 'fas fa-pen',
+				'js_row_action' => "LinkSetWorker.ModifyLinkedObject('{$this->sTargetClass}', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], '{$this->GetTableId()}');",
+			);
 		}
 
 		return $aRowActions;
