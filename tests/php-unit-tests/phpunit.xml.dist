@@ -41,15 +41,8 @@
     <testsuite name="Setup">
       <directory>unitary-tests/setup</directory>
     </testsuite>
-    <!-- Note: The unitary-tests/sources/application/TwigBase is omitted for now as the test is not working -->
-    <testsuite name="SourcesApplicationSearch">
-      <directory>unitary-tests/sources/Application/Search</directory>
-    </testsuite>
-    <testsuite name="SourceApplicationStatus">
-      <directory>unitary-tests/sources/Application/Status</directory>
-    </testsuite>
-    <testsuite name="SourcesComposer">
-      <directory>unitary-tests/sources/Composer</directory>
+    <testsuite name="Sources">
+      <directory>unitary-tests/sources</directory>
     </testsuite>
     <testsuite name="Synchro">
       <directory>unitary-tests/synchro</directory>

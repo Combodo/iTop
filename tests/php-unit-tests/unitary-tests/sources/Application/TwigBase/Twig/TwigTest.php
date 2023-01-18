@@ -3,10 +3,9 @@
 namespace Combodo\iTop\Test\UnitTest\Application\TwigBase;
 
 use Combodo\iTop\Portal\Twig\AppExtension;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Twig\Environment;
-use Twig\Loader\ArrayLoader;
-use Twig_Environment;
-use Twig_Loader_Array;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * @runTestsInSeparateProcesses
@@ -29,13 +28,11 @@ class TwigTest extends ItopDataTestCase
 	 */
 	public function testTemplate($sFileName, $sExpected)
 	{
-		$sId = 'TestTwig';
-		$oAppExtension = new AppExtension();
-
 		// Creating sandbox twig env. to load and test the custom form template
-		$oTwig = new Environment(new ArrayLoader([$sId => $sFileName]));
+		$oTwig = new Environment(new FilesystemLoader(__DIR__.'/'));
 
 		// Manually registering filters and functions as we didn't find how to do it automatically
+		$oAppExtension = new AppExtension();
 		$aFilters = $oAppExtension->getFilters();
 		foreach ($aFilters as $oFilter)
 		{
@@ -46,14 +43,18 @@ class TwigTest extends ItopDataTestCase
 		{
 			$oTwig->addFunction($oFunction);
 		}
+
+		$sOutput = $oTwig->render($sFileName);
+
+		$this->assertEquals($sExpected, $sOutput);
 	}
 
-	public static function testTemplateProvider()
+	public static function TemplateProvider()
 	{
 		$aReturn = array();
 		$aReturn['filter_system'] = [
 				'sFileName' => 'test.html',
-				'expected' =>file_get_contents(dirname(__FILE__).'/test.html'),
+				'expected' => file_get_contents(__DIR__.'/test.html'),
 			];
 
 		return $aReturn;

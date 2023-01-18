@@ -184,9 +184,8 @@ class RouterTest extends ItopTestCase
 		$oRouter = Router::GetInstance();
 		$aRouteParts = $oRouter->GetRouteParts($sRoute);
 
-		$sTestedMethodName = $this->InvokeNonPublicMethod(get_class($oRouter), 'MakeOperationMethodNameFromOperation', $oRouter, [$aRouteParts[1]]);
-
-		$this->assertEquals($sExpectedMethodName, $sTestedMethodName, "Operation method name '$aRouteParts[1]' was not matching the expected one. Got '$sTestedMethodName', expected '$sExpectedMethodName'.");
+		$sTestedMethodName = $this->InvokeNonPublicMethod(get_class($oRouter), 'MakeOperationMethodNameFromOperation', $oRouter, [$aRouteParts['operation']]);
+		$this->assertEquals($sExpectedMethodName, $sTestedMethodName, "Operation method name '".$aRouteParts['operation']."' was not matching the expected one. Got '$sTestedMethodName', expected '$sExpectedMethodName'.");
 	}
 
 	public function GetOperationMethodNameFromRouteOperationProvider(): array
