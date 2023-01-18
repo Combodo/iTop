@@ -122,7 +122,6 @@ class LinkSetController extends AbstractController
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \SecurityException
-	 * @throws \PharIo\GnuPG\Exception
 	 */
 	public function OperationCreateLinkedObject()
 	{
