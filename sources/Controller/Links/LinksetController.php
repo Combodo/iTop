@@ -196,6 +196,9 @@ JS
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aExtraParams);
 			return $oPage;
 		}
+		
+		// TODO 3.1 Handle multiple classes
+		
 		return;
 	}
 }
