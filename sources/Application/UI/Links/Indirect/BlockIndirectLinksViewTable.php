@@ -37,7 +37,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 	/** @inheritdoc */
 	public function GetExtraParam(): array
 	{
-		return array(
+		$aExtraParams = array(
 			'link_attr'     => $this->oAttDef->GetExtKeyToMe(),
 			'object_id'     => $this->oDbObject->GetKey(),
 			'target_attr'   => $this->oAttDef->GetExtKeyToRemote(),
@@ -49,9 +49,16 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 			'extra_fields'  => $this->GetAttCodesToDisplay(),
 			'row_actions'   => $this->GetRowActions(),
 			'currentId' => $this->GetTableId(),
-			'creation_in_modal_is_allowed' => true,
-			'creation_in_modal_js_handler' => 'LinkSetWorker.CreateLinkedObject("'.$this->GetTableId().'");',
 		);
+		
+		// - Add creation in modal if the linkset is not readonly
+		
+		if (!$this->oAttDef->GetReadOnly()) {
+			$aExtraParams['creation_in_modal_is_allowed'] = true;
+			$aExtraParams['creation_in_modal_js_handler'] = 'LinkSetWorker.CreateLinkedObject("'.$this->GetTableId().'");';
+		}
+
+		return $aExtraParams;
 	}
 
 	/** @inheritdoc */
