@@ -24,6 +24,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/layout';
 	public const DEFAULT_JS_FILES_REL_PATH    = [
 		'js/links/link_set_worker.js',
+		'js/wizardhelper.js',
 	];
 
 	/** @var \DBObject $oDbObject db object witch link set belongs to */
@@ -40,6 +41,8 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 
 	/** @var string $sTargetClass links target classname */
 	protected string $sTargetClass;
+	
+	protected string $sTableId;
 
 	/**
 	 * Constructor.
@@ -62,7 +65,8 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 		$this->sAttCode = $sAttCode;
 		$this->sObjectClass = $sObjectClass;
 		$this->oDbObject = $oDbObject;
-
+		$this->sTableId = 'rel_'.$this->sAttCode;
+		$this->SetDataAttributes(['role' => 'ibo-block-links-table', 'link-attcode' => $sAttCode, 'link-class' => $this->oAttDef->GetLinkedClass()]);
 		// Initialization
 		$this->Init();
 
@@ -131,7 +135,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 
 		// add list block
 		$oBlock = new \DisplayBlock($oLinkSet->GetFilter(), 'list', false);
-		$this->AddSubBlock($oBlock->GetRenderContent($oPage, $this->GetExtraParam(), 'rel_'.$this->sAttCode));
+		$this->AddSubBlock($oBlock->GetRenderContent($oPage, $this->GetExtraParam(), $this->sTableId));
 	}
 
 	/**
@@ -187,4 +191,15 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 * @throws \Exception
 	 */
 	abstract function GetTargetClass(): string;
+
+
+
+	/**
+	 * @return string
+	 */
+	public function GetAttCode(): string
+	{
+		return $this->sAttCode;
+	}
+	
 }

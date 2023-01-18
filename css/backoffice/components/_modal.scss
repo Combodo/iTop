@@ -1,10 +1,17 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
 $ibo-modal-option--do-not-show-again--margin-top: $ibo-spacing-500 !default;
+
+$ibo-modal--is-informative--min-width: $ibo-size-700 !default;
+$ibo-modal--is-informative--min-height: $ibo-size-300 !default;
+$ibo-modal--is-informative--is-error--highlight--background-color: $ibo-color-red-600 !default;
+$ibo-modal--is-informative--is-warning--highlight--background-color: $ibo-color-orange-600 !default;
+$ibo-modal--is-informative--is-information--highlight--background-color: $ibo-color-blue-600 !default;
+$ibo-modal--is-informative--is-success--highlight--background-color: $ibo-color-green-600 !default;
 
 // Modal Option - Do not show again
 .ibo-modal-option--do-not-show-again{
@@ -14,5 +21,28 @@ $ibo-modal-option--do-not-show-again--margin-top: $ibo-spacing-500 !default;
     height: auto;
     display: inline-block;
     width: auto;
+  }
+}
+
+.ibo-modal.ibo-is-informative{
+  display: flex;
+  align-items: center;
+  min-width: $ibo-modal--is-informative--min-width;
+  min-height: $ibo-modal--is-informative--min-height !important; // !important in order to overload jQueryUI CSS rule that's put directly on the element
+  
+  &::before {
+    @include ibo-vertical-highlight;
+  }
+  &.ibo-is-error::before {
+    background-color: $ibo-modal--is-informative--is-error--highlight--background-color;
+  }  
+  &.ibo-is-warning::before {
+    background-color: $ibo-modal--is-informative--is-warning--highlight--background-color;
+  }  
+  &.ibo-is-information::before {
+    background-color: $ibo-modal--is-informative--is-information--highlight--background-color;
+  }  
+  &.ibo-is-success::before {
+    background-color: $ibo-modal--is-informative--is-success--highlight--background-color;
   }
 }

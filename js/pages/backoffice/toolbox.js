@@ -201,6 +201,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 		width: 'auto',
 		height: 'auto',
 		modal: oOptions.extra_options.modal ?? true,
+		classes: oOptions.classes ?? {},
 		close: oOptions.extra_options.callback_on_modal_close,
 		autoOpen: oOptions.auto_open,
 		title: oOptions.title,
@@ -326,14 +327,17 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
  */
 CombodoModal._ConvertButtonDefinition = function(aButtonsDefinitions){
 	const aConverted = [];
+	if(aButtonsDefinitions === null) {
+		return aConverted
+	}
 	aButtonsDefinitions.forEach(element => {
-			const aButton = {
-				text: element.text,
-				class: element.class,
-				click: element.callback_on_click
+				const aButton = {
+					text: element.text,
+					class: element.class,
+					click: element.callback_on_click
+				}
+				aConverted.push(aButton);
 			}
-		aConverted.push(aButton);
-		}
 	);
 	return aConverted;
 }
@@ -422,6 +426,42 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 				oModalContentElement.append($('#ibo-modal-option--do-not-show-again-template').html());
 			}
 		}
+	}, oOptions);
+
+	// Open modal
+	CombodoModal.OpenModal(oOptions);
+}
+
+/**
+ * Open a standard informative modal. 
+ *
+ * @param sMessage string Informative message to be displayed in the modal
+ * @param sSeverity string Severity of the information. Default values are success, information, warning, error.
+ * @param oOptions array @see CombodoModal.OpenModal
+ */
+CombodoModal.OpenInformativeModal = function(sMessage, sSeverity, oOptions) {
+	let sFirstLetterUppercaseSeverity = sSeverity.charAt(0).toUpperCase() + sSeverity.slice(1);
+	// Merge external options with confirmation modal default options
+	oOptions = $.extend({
+		title: Dict.S('UI:Modal:Informative' + sFirstLetterUppercaseSeverity + ':Title'),
+		classes : {
+			'ui-dialog-content': 'ibo-is-informative ibo-is-'+sSeverity,	
+		},
+		content: sMessage,
+		extra_options: {
+			callback_on_modal_close: function () {
+				$(this).dialog( "destroy" );
+			}
+		},
+		buttons: [
+			{
+				text: Dict.S('UI:Button:Ok'),
+				class: 'ibo-is-regular ibo-is-neutral',
+				callback_on_click: function () {
+						$(this).dialog('close');
+				}
+			},
+		],
 	}, oOptions);
 
 	// Open modal

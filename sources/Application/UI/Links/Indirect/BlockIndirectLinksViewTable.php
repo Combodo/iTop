@@ -37,7 +37,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 	/** @inheritdoc */
 	public function GetExtraParam(): array
 	{
-		return array(
+		$aExtraParams = array(
 			'link_attr'     => $this->oAttDef->GetExtKeyToMe(),
 			'object_id'     => $this->oDbObject->GetKey(),
 			'target_attr'   => $this->oAttDef->GetExtKeyToRemote(),
@@ -48,7 +48,17 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 			'zlist'         => false,
 			'extra_fields'  => $this->GetAttCodesToDisplay(),
 			'row_actions'   => $this->GetRowActions(),
+			'currentId' => $this->GetTableId(),
 		);
+		
+		// - Add creation in modal if the linkset is not readonly
+		
+		if (!$this->oAttDef->GetReadOnly()) {
+			$aExtraParams['creation_in_modal_is_allowed'] = true;
+			$aExtraParams['creation_in_modal_js_handler'] = 'LinkSetWorker.CreateLinkedObject("'.$this->GetTableId().'");';
+		}
+
+		return $aExtraParams;
 	}
 
 	/** @inheritdoc */
@@ -68,6 +78,12 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 					'message_row_data'           => "Remote/hyperlink",
 					'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 				],
+			);
+
+			$aRowActions[] = array(
+				'tooltip'       => 'UI:Links:ActionRow:Modify',
+				'icon_classes'  => 'fas fa-pen',
+				'js_row_action' => "LinkSetWorker.ModifyLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw'], '{$this->GetTableId()}');",
 			);
 
 		}

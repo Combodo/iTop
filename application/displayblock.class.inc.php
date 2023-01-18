@@ -1760,6 +1760,7 @@ class MenuBlock extends DisplayBlock
 		$iSetCount = $oSet->Count();
 		/** @var string $sRefreshAction JS snippet to run when clicking on the refresh button of the menu */
 		$sRefreshAction = $aExtraParams['refresh_action'] ?? '';
+		$bIsCreationInModalAllowed = isset($aExtraParams['creation_in_modal_is_allowed']) && $aExtraParams['creation_in_modal_is_allowed'] === true;
 
 		/** @var array $aRegularActions Any action other than a transition */
 		$aRegularActions = [];
@@ -1802,7 +1803,7 @@ class MenuBlock extends DisplayBlock
 			// Any style actions
 			// - Bulk actions on objects set
 			if ($iSetCount > 1) {
-				if ($bIsCreationAllowed) {
+				if ($bIsCreationAllowed && !$bIsCreationInModalAllowed) {
 					$this->AddNewObjectMenuAction($aRegularActions, $sClass, $sDefaultValuesAsUrlParams);
 				}
 
@@ -2216,11 +2217,31 @@ class MenuBlock extends DisplayBlock
 				$oActionsToolbar->AddSubBlock($oActionButton);
 			}
 
-			if ($this->m_sStyle == 'details') {
-				// - Search
+			// - Search
+			if ($this->m_sStyle === 'details') {
 				$oActionButton = ButtonUIBlockFactory::MakeIconLink('fas fa-search', Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), "{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'UI:SearchFor_Class');
 				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				$oActionsToolbar->AddSubBlock($oActionButton);
+			} 
+			
+			// - Creation in modal
+			if($bIsCreationInModalAllowed === true){
+				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
+					'fas fa-plus',
+					Dict::S('UI:Links:New:Button:Tooltip'),
+					'UI:Links:New',
+					'',
+					false
+				);
+				
+				// - If we are used in a Datatable, 'datatable_' will be prefixed to our $sId, so we do the same here
+				$sRealId = $sId;
+				if(in_array($this->m_sStyle, ['list', 'links', 'listInObject'])){
+					$sRealId = 'datatable_' . $sId;
+				}
+				$oAddLinkActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button'])
+					->SetOnClickJsCode("$('#$sRealId').trigger('open_creation_modal.object.itop');");
+				$oActionsToolbar->AddSubBlock($oAddLinkActionButton);
 			}
 
 			// - Others

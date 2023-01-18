@@ -25,4 +25,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Links:ActionRow:Delete'              => 'Delete',
 	'UI:Links:ActionRow:Delete+'             => 'Delete this object',
 	'UI:Links:ActionRow:Delete:Confirmation' => 'Do you really want to delete <b>{item}</b> from current object ?',
+	'UI:Links:ActionRow:Modify:Modal:Title' => 'Modify a link',
+	'UI:Links:New:Modal:Title' => 'Creation of a link',
+	'UI:Links:New:Button:Tooltip' => 'Add a new link',
 ));
