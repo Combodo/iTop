@@ -8,9 +8,13 @@ namespace Combodo\iTop\Controller\Links;
 
 use AjaxPage;
 use cmdbAbstractObject;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Controller\AbstractController;
 use DBObject;
+use Dict;
 use iTopWebPage;
 use MetaModel;
 use UserRights;
@@ -134,6 +138,13 @@ class LinkSetController extends AbstractController
 				$aPossibleClasses[$sCandidateClass] = MetaModel::GetName($sCandidateClass);
 			}
 		}
+		if ($this->IsHandlingXmlHttpRequest()) {
+			$oPage = new AjaxPage('');
+		} else {
+			$oPage = new iTopWebPage('', $bPrintable);
+			$oPage->DisableBreadCrumb();
+			$oPage->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
+		}
 		// Only one of the subclasses can be instantiated...
 		if (count($aPossibleClasses) == 1) {
 			$aKeys = array_keys($aPossibleClasses);
@@ -145,13 +156,6 @@ class LinkSetController extends AbstractController
 			$aFieldFlags = array(); // TODO 3.1 array($sExtKeyToMe => OPT_ATT_READONLY);
 			$oObj = DBObject::MakeDefaultInstance($sRealClass);
 
-			if ($this->IsHandlingXmlHttpRequest()) {
-				$oPage = new AjaxPage('');
-			} else {
-				$oPage = new iTopWebPage('', $bPrintable);
-				$oPage->DisableBreadCrumb();
-				$oPage->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
-			}
 
 			$oSourceObj = MetaModel::GetObject($sClass, $sId);
 
@@ -194,11 +198,45 @@ JS
 				]
 			];
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aExtraParams);
-			return $oPage;
 		}
-		
-		// TODO 3.1 Handle multiple classes
-		
-		return;
+		else
+		{
+			// - If multiple classes can be used to create an object
+			$sClassLabel = MetaModel::GetName($sProposedRealClass);
+			// - Display all possible classes
+			$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('class',Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel) );
+			asort($aPossibleClasses);
+			foreach($aPossibleClasses as $sClassName => $sClassLabel)
+			{
+				$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sClassLabel, false)
+				);
+			}
+			$oPage->AddUiBlock($oSelect);
+			
+			$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'));
+			
+			$sSelectId = $oSelect->GetId();
+			$sCurrentUrl = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php?route=linkset.create_linked_object';
+			
+			// - Call one more time this controller with a real class
+			
+			$sCurrentParameters = json_encode([
+					'att_code' => $sAttCode,
+					'host_class' => $sClass,
+					'host_id' => $sId]);
+			$oButton->SetOnClickJsCode(
+				<<<JS
+					let aParam = $sCurrentParameters;
+					aParam['class'] = $('#$sSelectId').val();
+					let sPosting = $.post('$sCurrentUrl', aParam);
+					sPosting.done(function(data){
+                        $('#$sSelectId').closest('[data-role="ibo-modal"]').html(data);
+					});
+JS
+			);
+			$oPage->AddUiBlock($oButton);
+		}
+
+		return $oPage;
 	}
 }
