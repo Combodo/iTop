@@ -368,7 +368,7 @@ $('#{{ oUIBlock.GetId() }}').on('refresh.datatable.itop', function (){
 });
 
 {% if oUIBlock.GetModalCreationHandler() is not empty %}
-$('#{{ oUIBlock.GetId() }}').on('creation_in_modal.object.itop', function (){
+$('body').on('creation_in_modal.object.itop','#{{ oUIBlock.GetId() }}', function (){
     {{ oUIBlock.GetModalCreationHandler() | raw}}
 });
 {% endif %}
