@@ -177,7 +177,9 @@ class FilesInformationUtils
             else
             {
                 $aStats = @stat($sFile);
-                $iSize += $aStats['size'];
+	            if (is_array($aStats)) {
+		            $iSize += $aStats['size'];
+	            }
             }
         }
         return $iSize;
