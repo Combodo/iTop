@@ -1760,7 +1760,7 @@ class MenuBlock extends DisplayBlock
 		$iSetCount = $oSet->Count();
 		/** @var string $sRefreshAction JS snippet to run when clicking on the refresh button of the menu */
 		$sRefreshAction = $aExtraParams['refresh_action'] ?? '';
-		$bCreationInModalAllowed = isset($aExtraParams['creation_in_modal_is_allowed']) && $aExtraParams['creation_in_modal_is_allowed'] === true;
+		$bIsCreationInModalAllowed = isset($aExtraParams['creation_in_modal_is_allowed']) && $aExtraParams['creation_in_modal_is_allowed'] === true;
 
 		/** @var array $aRegularActions Any action other than a transition */
 		$aRegularActions = [];
@@ -1803,7 +1803,7 @@ class MenuBlock extends DisplayBlock
 			// Any style actions
 			// - Bulk actions on objects set
 			if ($iSetCount > 1) {
-				if ($bIsCreationAllowed && !$bCreationInModalAllowed) {
+				if ($bIsCreationAllowed && !$bIsCreationInModalAllowed) {
 					$this->AddNewObjectMenuAction($aRegularActions, $sClass, $sDefaultValuesAsUrlParams);
 				}
 
@@ -2225,7 +2225,7 @@ class MenuBlock extends DisplayBlock
 			} 
 			
 			// - Creation in modal
-			if($bCreationInModalAllowed === true){
+			if($bIsCreationInModalAllowed === true){
 				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
 					'fas fa-plus',
 					Dict::S('UI:Links:New:Button:Tooltip'),
