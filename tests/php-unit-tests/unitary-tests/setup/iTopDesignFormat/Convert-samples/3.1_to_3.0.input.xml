@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <classes>
+    <class id="ClassWithAttributeLinkedSetEditModeNone">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <legacy_edit_mode>none</legacy_edit_mode>
+          <relation_type>link</relation_type>
+          <read_only>true</read_only>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetEditModeAddOnly">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetEditModeAddRemove">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <legacy_edit_mode>add_remove</legacy_edit_mode>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetEditModeActions">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <legacy_edit_mode>actions</legacy_edit_mode>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetEditModeInPlace">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <relation_type>property</relation_type>
+          <read_only>false</read_only>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetNoEditMode">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <linked_class>Ticket</linked_class>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetIndirect">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSetIndirect">
+          <read_only>false</read_only>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithEventListeners">
+      <event_listeners>
+        <listener id="OnUserRequestUpdateDone" _delta="define">
+          <event>EVENT_DB_UPDATE_DONE</event>
+          <callback>OnUpdateDone</callback>
+          <rank>0</rank>
+        </listener>
+      </event_listeners>
+      <methods>
+        <method id="OnUpdateDone" _delta="define">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[
+  public function OnUserRequestUpdateDone(Combodo\iTop\Service\EventData $oEventData)
+	{
+	      $sEvent = $oEventData->GetEvent();
+	      $aChange = $oEventData->Get('changes');
+	}
+]]></code>
+        </method>
+      </methods>
+    </class>
+  </classes>
+  <events>
+    <event id="EVENT_DB_CHECK_TO_WRITE" _delta="define">
+      <description>Check an object before it is written into the database (no change possible). Call DBObject::AddCheckIssue() to signal an issue</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
+      <event_data>
+        <event_datum id="object">
+          <description>The object to check</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
+  </events>
+  <event_listeners>
+    <listener id="GlobalFAQRead" _delta="define">
+      <event>EVENT_SERVICE_DISPLAY_OBJECT_DETAILS</event>
+      <filters>
+        <filter>FAQ</filter>
+      </filters>
+      <rank>0</rank>
+      <code><![CDATA[
+      function(\Combodo\iTop\Service\EventData $oEventData)
+      {
+        $sUser = UserRights::GetUser();
+        $oObject = $oEventData->Get('object');
+        $sFaqTitle = $oObject->Get('title');
+        $sId = $oObject->GetKey();
+        IssueLog::Info("FAQ: '{$sFaqTitle}' (id:{$sId}) was read by {$sUser}");
+      }
+]]></code>
+    </listener>
+  </event_listeners>
+</itop_design>

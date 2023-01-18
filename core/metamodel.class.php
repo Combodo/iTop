@@ -2065,6 +2065,43 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @param string $sObjectClass class of the object containing the AttributeLinkedSetIndirect (eg: Team)
+	 * @param string $sObjectLinkedSetIndirectAttCode code of the AttributeLinkedSetIndirect in the sObjectClass (eg: persons_list in the Team class, pointing to lnkPersonToTeam lnk class)
+	 * @param string $sRemoteClass remote class pointed by the lnk class (eg: Person pointed by lnkPersonToTeam)
+	 * @param string $sLnkExternalKeyToRemoteClassAttCode in the lnk class, external key to the remote class (eg: person_id in lnkPersonToTeam, pointing to a Person instance)
+	 *
+	 * @return string[] attcodes to display, containing aliases
+	 * @throws \CoreException
+	 *
+	 * @since 3.0.0 N°2334 added code for n-n relations in {@see BlockIndirectLinksViewTable::GetAttCodesToDisplay}
+	 * @since 3.1.0 N°3200 method creation so that it can be used elsewhere
+	 */
+	public static function GetAttributeLinkedSetIndirectDatatableAttCodesToDisplay(string $sObjectClass, string $sObjectLinkedSetIndirectAttCode, string $sRemoteClass, string $sLnkExternalKeyToRemoteClassAttCode):array
+	{
+		$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sObjectClass, $sObjectLinkedSetIndirectAttCode);
+		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($sRemoteClass);
+		$aLnkAttCodesToDisplay = array_map(
+			function ($oLnkAttDef) {
+				return ormLinkSet::LINK_ALIAS.'.'.$oLnkAttDef->GetCode();
+			},
+			$aLnkAttDefsToDisplay
+		);
+		if (!in_array(ormLinkSet::LINK_ALIAS.'.'.$sLnkExternalKeyToRemoteClassAttCode, $aLnkAttCodesToDisplay)) {
+			// we need to display a link to the remote class instance !
+			$aLnkAttCodesToDisplay[] = ormLinkSet::LINK_ALIAS.'.'.$sLnkExternalKeyToRemoteClassAttCode;
+		}
+		$aRemoteAttCodesToDisplay = array_map(
+			function ($oRemoteAttDef) {
+				return ormLinkSet::REMOTE_ALIAS.'.'.$oRemoteAttDef->GetCode();
+			},
+			$aRemoteAttDefsToDisplay
+		);
+		$aAttCodesToDisplay = array_merge($aLnkAttCodesToDisplay, $aRemoteAttCodesToDisplay);
+
+		return $aAttCodesToDisplay;
+	}
+
+	/**
 	 * @param string $sClass
 	 * @param string $sListCode
 	 * @param string $sAttCodeOrFltCode

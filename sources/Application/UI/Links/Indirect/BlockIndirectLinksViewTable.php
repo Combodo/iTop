@@ -92,35 +92,20 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 	}
 
 	/**
-	 * GetAttCodesToDisplay.
-	 *
 	 * @return string
 	 * @throws \CoreException
 	 */
 	private function GetAttCodesToDisplay(): string
 	{
-		$oLinkingAttDef = MetaModel::GetAttributeDef($this->oAttDef->GetLinkedClass(), $this->oAttDef->GetExtKeyToRemote());
-		$sLinkingAttCode = $oLinkingAttDef->GetCode();
-		$sTargetClass = $oLinkingAttDef->GetTargetClass();
+		/** @var \AttributeLinkedSetIndirect $oAttributeLinkedSetIndirectDefinition */
+		$oAttributeLinkedSetIndirectDefinition = MetaModel::GetAttributeDef($this->oAttDef->GetLinkedClass(), $this->oAttDef->GetExtKeyToRemote());
+		$sAttributeLinkedSetIndirectAttCode = $oAttributeLinkedSetIndirectDefinition->GetCode();
+		$sAttributeLinkedSetIndirectLinkedClass = $oAttributeLinkedSetIndirectDefinition->GetTargetClass();
 
-		$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($this->sObjectClass, $this->sAttCode);
-		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($sTargetClass);
-		$aLnkAttCodesToDisplay = array_map(function ($oLnkAttDef) {
-			return \ormLinkSet::LINK_ALIAS.'.'.$oLnkAttDef->GetCode();
-		},
-			$aLnkAttDefsToDisplay
-		);
-		if (!in_array(\ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode, $aLnkAttCodesToDisplay)) {
-			// we need to display a link to the remote class instance !
-			$aLnkAttCodesToDisplay[] = \ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode;
-		}
-		$aRemoteAttCodesToDisplay = array_map(function ($oRemoteAttDef) {
-			return \ormLinkSet::REMOTE_ALIAS.'.'.$oRemoteAttDef->GetCode();
-		},
-			$aRemoteAttDefsToDisplay
-		);
-		$aAttCodesToDisplay = array_merge($aLnkAttCodesToDisplay, $aRemoteAttCodesToDisplay);
+		$aAttCodesToDisplay = MetaModel::GetAttributeLinkedSetIndirectDatatableAttCodesToDisplay($this->sObjectClass, $this->sAttCode, $sAttributeLinkedSetIndirectLinkedClass, $sAttributeLinkedSetIndirectAttCode);
+		/** @noinspection PhpUnnecessaryLocalVariableInspection *//** @noinspection OneTimeUseVariablesInspection */
+		$sAttCodesToDisplay = implode(',', $aAttCodesToDisplay);
 
-		return implode(',', $aAttCodesToDisplay);
+		return $sAttCodesToDisplay;
 	}
 }

@@ -14,9 +14,9 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class ToolbarSpacerUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarSpacer
+ * @package UIBlockAPI
+ * @api
  * @since 3.0.0
- * @internal
  */
 class ToolbarSpacerUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -26,6 +26,7 @@ class ToolbarSpacerUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = ToolbarSpacer::class;
 
 	/**
+	 * @api
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarSpacer\ToolbarSpacer

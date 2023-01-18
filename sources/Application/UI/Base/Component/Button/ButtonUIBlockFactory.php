@@ -27,9 +27,9 @@ use utils;
  * Class ButtonUIBlockFactory
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Button
- * @since 3.0.0
+ * @package UIBlockAPI
  * @api
+ * @since 3.0.0
  *
  * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-buttons to see live examples
  */
@@ -47,6 +47,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a basis Button component for any purpose
 	 *
+	 * @api
 	 * @param string $sLabel
 	 * @param string|null $sName See {@link Button::$sName}
 	 * @param string|null $sId

@@ -1035,6 +1035,7 @@ class DeprecatedCallsLog extends LogAPI
 	public const ENUM_CHANNEL_FILE = 'deprecated-file';
 	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP_METHOD;
 
+	/** @var string Warning this constant won't be used directly ! To see the real default level check {@see GetLevelDefault()} */
 	public const LEVEL_DEFAULT = self::LEVEL_ERROR;
 
 	/** @var \FileLog we want our own instance ! */
@@ -1109,7 +1110,12 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
-		$iStackDeprecatedMethodLevel = 2; // level 0 = current method, level 1 = @trigger_error, level 2 = method containing the `trigger_error` call
+		$iStackDeprecatedMethodLevel = 2; // level 0 = current method, level 1 = @trigger_error, level 2 = method containing the `trigger_error` call (can be either 'trigger_deprecation' or the faulty method), level 3 = In some cases, method containing the 'trigger_deprecation' call
+		// In case current level is actually a 'trigger_deprecation' call, try to go one level further to get the real deprecated method
+		if (array_key_exists($iStackDeprecatedMethodLevel, $aStack) && ($aStack[$iStackDeprecatedMethodLevel]['function'] === 'trigger_deprecation') && array_key_exists($iStackDeprecatedMethodLevel + 1, $aStack)) {
+			$iStackDeprecatedMethodLevel++;
+		}
+
 		$sDeprecatedObject = $aStack[$iStackDeprecatedMethodLevel]['class'];
 		$sDeprecatedMethod = $aStack[$iStackDeprecatedMethodLevel]['function'];
 		if (($sDeprecatedObject === __CLASS__) && ($sDeprecatedMethod === 'Log')) {
@@ -1154,7 +1160,6 @@ class DeprecatedCallsLog extends LogAPI
 	 * - else call parent method
 	 *
 	 * In other words, when in dev mode all deprecated calls will be logged to file
-	 *
 	 */
 	protected static function GetLevelDefault(string $sConfigKey)
 	{

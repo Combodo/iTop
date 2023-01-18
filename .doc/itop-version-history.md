@@ -3,14 +3,14 @@
 ```mermaid
 %%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'showBranches': true,'mainBranchName': 'develop','rotateCommitLabel': true}} }%%
 gitGraph
-    commit id: "2016-07-06" tag: "2.3.0"
+    commit id: "2016-07-06" tag: "2.3.0" type: HIGHLIGHT
     branch support/2.3 order: 900
     commit id: "2016-07-08" tag: "2.3.1"
     commit id: "2016-12-22" tag: "2.3.3"
     commit id: "2017-04-14" tag: "2.3.4"
     checkout develop
     commit id: "2017-07-12" tag: "2.4.0-beta" type: REVERSE
-    commit id: "2017-11-16" tag: "2.4.0"
+    commit id: "2017-11-16" tag: "2.4.0" type: HIGHLIGHT
     branch support/2.4 order: 890
     commit id: "2018-02-14" tag: "2.4.1"
     checkout develop
@@ -18,10 +18,10 @@ gitGraph
     checkout support/2.4
     commit id: "2018-06-14" tag: "2.4.2"
     checkout develop
-    commit id: "2018-06-27" tag: "2.5.0"
+    commit id: "2018-06-27" tag: "2.5.0" type: HIGHLIGHT
     branch support/2.5 order: 880
     checkout develop
-    commit id: "2019-01-09" tag: "2.6.0"
+    commit id: "2019-01-09" tag: "2.6.0" type: HIGHLIGHT
     branch support/2.6 order: 870
     commit id: "2019-03-28" tag: "2.6.1"
     checkout develop
@@ -32,7 +32,7 @@ gitGraph
     commit id: "2020-01-23" tag: "2.6.3"
     checkout develop
     commit id: "2020-01-29" tag: "2.7.0-beta2" type: REVERSE
-    commit id: "2020-04-01" tag: "2.7.0-1"
+    commit id: "2020-04-01" tag: "2.7.0-1" type: HIGHLIGHT
     checkout support/2.6
     commit id: "2020-04-22" tag: "2.6.4"
     checkout develop
@@ -50,7 +50,7 @@ gitGraph
     checkout support/2.7
     commit id: "2021-12-17" tag: "2.7.6"
     checkout develop
-    commit id: "2022-01-04" tag: "3.0.0"
+    commit id: "2022-01-04" tag: "3.0.0" type: HIGHLIGHT
     branch support/3.0 order: 850
     commit id: "2022-04-08" tag: "3.0.1"
     checkout support/2.7
@@ -61,3 +61,5 @@ gitGraph
     checkout support/2.7
     commit id: "2022-12-28" tag: "2.7.8"
 ```
+
+To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).

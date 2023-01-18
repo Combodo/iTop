@@ -464,13 +464,13 @@ EOF;
 	 * @param Config $oConfig
 	 *
 	 * @return string TLS arguments for CLI programs such as mysqldump. Empty string if the config does not use TLS.
+	 * @throws \MySQLException
 	 *
-	 * @uses \CMDBSource::GetDBVendor() so needs a connection opened !
-	 * @uses \CMDBSource::GetDBVersion() so needs a connection opened !
+	 * @uses \CMDBSource::IsSslModeDBVersion() so needs a connection opened !
 	 *
 	 * @since 2.5.0 N°1260
 	 * @since 2.6.2 2.7.0 N°2336 Call DB to get vendor and version (so CMDBSource must be init before calling this method)
-	 * @link https://dev.mysql.com/doc/refman/5.6/en/connection-options.html#encrypted-connection-options "Command Options for Encrypted Connections"
+	 * @link https://dev.mysql.com/doc/refman/5.7/en/connection-options.html#encrypted-connection-options Command Options for Encrypted Connections
 	 */
 	public static function GetMysqlCliTlsOptions($oConfig)
 	{
@@ -480,13 +480,17 @@ EOF;
 			return '';
 		}
 		$sTlsOptions = '';
-
-		$sDBVendor = CMDBSource::GetDBVendor();
-		$sDBVersion = CMDBSource::GetDBVersion();
-		$sMysqlSSLModeVersion = '5.7.0'; //Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
-		if ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL && version_compare($sDBVersion, $sMysqlSSLModeVersion, '>='))
+		// Mysql 5.7.11 and upper deprecated --ssl and uses --ssl-mode instead
+		if (CMDBSource::IsSslModeDBVersion())
 		{
-			$sTlsOptions .= ' --ssl-mode=VERIFY_CA';
+			if(empty($oConfig->Get('db_tls.ca')))
+			{
+				$sTlsOptions .= ' --ssl-mode=REQUIRED';
+			}
+			else
+			{
+				$sTlsOptions .= ' --ssl-mode=VERIFY_CA';
+			}
 		}
 		else
 		{

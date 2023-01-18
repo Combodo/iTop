@@ -1545,11 +1545,11 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'security.hide_administrators' => [
-			'type' => 'bool',
-			'description' => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+			'type'                => 'bool',
+			'description'         => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'behind_reverse_proxy' => [
@@ -1588,6 +1588,14 @@ class Config
 			'type'                => 'bool',
 			'description'         => 'If true displays in the Application Upgrade screen a button allowing to launch the setup in a single click (no more manual config file permission change needed)',
 			'default'             => null,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'audit.enable_selection_landing_page' => [
+			'type'                => 'bool',
+			'description'         => 'If true audit categories must be selected before results are computed (use this setting in case of a lot of audit categories)',
+			'default'             => false,
 			'value'               => false,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
@@ -2469,9 +2477,14 @@ class Config
 	/**
 	 * Helper function to initialize a configuration from the page arguments
 	 *
+	 * @see \Parameters::GetParamForConfigArray() to get aParamValues from {@see Parameters} object hierarchy in setup
+	 * @see \WizardController::GetParamForConfigArray() to get aParamValues from {@see \WizardController} object hierarchy in setup
+	 *
 	 * @param array $aParamValues
-	 * @param string|null $sModulesDir
+	 * @param ?string $sModulesDir
 	 * @param bool $bPreserveModuleSettings
+	 *
+	 * @return void The current object is modified directly
 	 *
 	 * @throws \Exception
 	 * @throws \CoreException

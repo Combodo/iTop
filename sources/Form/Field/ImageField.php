@@ -41,7 +41,7 @@ class ImageField extends BlobField
 		else
 		{
 			$sFilename = $this->currentValue->GetFileName();
-			$iSize = utils::BytesToFriendlyFormat(strlen($this->currentValue->GetData()));
+			$iSize = utils::BytesToFriendlyFormat(utils::StrLen($this->currentValue->GetData()));
 			$sOpenLink = $this->GetDisplayUrl();
 			$sDownloadLink = $this->GetDownloadUrl();
 

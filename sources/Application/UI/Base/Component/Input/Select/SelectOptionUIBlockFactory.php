@@ -14,9 +14,9 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class SelectOptionUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Input\Select
+ * @package UIBlockAPI
+ * @api
  * @since 3.0.0
- * @internal
  */
 class SelectOptionUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -25,6 +25,15 @@ class SelectOptionUIBlockFactory extends AbstractUIBlockFactory
 	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = SelectOption::class;
 
+	/**
+	 * @api
+	 * @param string $sValue
+	 * @param string $sLabel
+	 * @param bool $bSelected
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOption
+	 */
 	public static function MakeForSelectOption(string $sValue, string $sLabel, bool $bSelected, ?string $sId = null)
 	{
 		$oInput = new SelectOption($sId);

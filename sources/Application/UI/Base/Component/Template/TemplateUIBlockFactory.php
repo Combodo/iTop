@@ -28,7 +28,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
  * @api
  *
  * @author Benjamin Dalsass <benjamin.dalsass@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Template
+ * @package UIBlockAPI
  * @since 3.1.0
  * @link
  */

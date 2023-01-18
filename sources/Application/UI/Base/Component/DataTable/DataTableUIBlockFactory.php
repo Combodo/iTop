@@ -6,8 +6,8 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
-use ApplicationException;
 use ApplicationContext;
+use ApplicationException;
 use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
@@ -38,9 +38,9 @@ use WebPage;
  * Class DataTableUIBlockFactory
  *
  * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\DataTable
- * @since 3.0.0
+ * @package UIBlockAPI
  * @api
+ * @since 3.0.0
  */
 class DataTableUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -50,6 +50,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = DataTable::class;
 
 	/**
+	 * @api
 	 * @param \WebPage $oPage
 	 * @param string $sListId
 	 * @param \DBObjectSet $oSet
@@ -74,6 +75,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
+	 * @api
 	 * @param \WebPage $oPage
 	 * @param string $sListId
 	 * @param DBObjectSet $oSet
@@ -149,24 +151,27 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				$iCount = $oSet->Count();
 			}
 			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), '')->AddCSSClass('ibo-datatable-panel');
-			if(isset($aExtraParams['panel_title'])){
-				if(isset($aExtraParams['panel_title_is_html']) && $aExtraParams['panel_title_is_html'] === true) {
+			if (isset($aExtraParams['panel_title'])) {
+				if (isset($aExtraParams['panel_title_is_html']) && $aExtraParams['panel_title_is_html'] === true) {
 					$oContainer->AddTitleBlock(HtmlFactory::MakeRaw($aExtraParams['panel_title']));
-				}
-				else {
+				} else {
 					$oContainer->SetTitle($aExtraParams['panel_title']);
 				}
 			}
-			if ($oDataTable->GetOption("select_mode") == 'multiple')
-			{
-				$sSubTitle =Dict::Format('UI:Pagination:HeaderSelection',  '<span class="ibo-datatable--result-count">'.$iCount.'</span>', '<span class="ibo-datatable--selected-count">0</span>');
+
+			$sCountHtml = '<span class="ibo-datatable--result-count">'.$iCount.'</span>';
+			if ($oDataTable->GetOption('select_mode') === 'multiple') {
+				$sSubTitle = Dict::Format('UI:Pagination:HeaderSelection', $sCountHtml, '<span class="ibo-datatable--selected-count">0</span>');
+			} else {
+				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection', $sCountHtml);
 			}
-			else
-			{
-				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection',  '<span class="ibo-datatable--result-count">'.$iCount.'</span>');
+			$sFilterListUrl = utils::GetDataTableSearchUrl($oSet->GetFilter(), $aExtraParams);
+			if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
+				$sSubTitle = '<a href="'.$sFilterListUrl.'" title="'.Dict::S('UI:Menu:FilterList').'">'.$sSubTitle.'</a>';
 			}
+
 			$oContainer->AddSubTitleBlock(new Html($sSubTitle));
-			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+			if (isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0) {
 				$oContainer->SetIcon($aExtraParams["panel_icon"]);
 			}
 			$oContainer->AddToolbarBlock($oBlockMenu);
@@ -225,6 +230,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a basis Panel component
 	 *
+	 * @api
 	 * @param string $sListId
 	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams
@@ -525,6 +531,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
+	 * @api
 	 * @param string $sListId
 	 * @param DBObjectSet $oSet
 	 * @param array $aExtraParams
@@ -778,7 +785,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sSelectMode
 	 * @param string $sFilter
 	 * @param int $iLength
+	 * @param array $aClassAliases
 	 * @param array $aExtraParams
+	 * @param string $sTableId
 	 *
 	 * @return array
 	 * @throws \Exception
@@ -958,6 +967,7 @@ JS;
 	}
 
 	/**
+	 * @api
 	 * @param string $sTitle
 	 * @param array $aColumns
 	 * @param array $aData
@@ -1001,6 +1011,7 @@ JS;
 	}
 
 	/**
+	 * @api
 	 * @param string $sRef
 	 * @param array $aColumns
 	 * @param array $aData

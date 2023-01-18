@@ -75,15 +75,37 @@ class WizardController
 	 */
 	public function GetParameter($sParamCode, $defaultValue = '')
 	{
-		if (array_key_exists($sParamCode, $this->aParameters))
-		{
+		if (array_key_exists($sParamCode, $this->aParameters)) {
 			return $this->aParameters[$sParamCode];
 		}
+
 		return $defaultValue;
 	}
 
 	/**
+	 * @return array Allow to update config using {@see Config::UpdateFromParams()}
+	 *
+	 * @since 3.1.0 N°2013
+	 */
+	public function GetParamForConfigArray(): array
+	{
+		/** @noinspection PhpUnnecessaryLocalVariableInspection */
+		$aParamValues = array(
+			'db_server'      => $this->GetParameter('db_server', ''),
+			'db_user'        => $this->GetParameter('db_user', ''),
+			'db_pwd'         => $this->GetParameter('db_pwd', ''),
+			'db_name'        => $this->GetParameter('db_name', ''),
+			'db_prefix'      => $this->GetParameter('db_prefix', ''),
+			'db_tls_enabled' => $this->GetParameter('db_tls_enabled', false),
+			'db_tls_ca'      => $this->GetParameter('db_tls_ca', ''),
+		);
+
+		return $aParamValues;
+	}
+
+	/**
 	 * Stores a "persistent" parameter in the wizard's context
+	 *
 	 * @param string $sParamCode The code identifying this parameter
 	 * @param mixed $value The value to store
 	 */

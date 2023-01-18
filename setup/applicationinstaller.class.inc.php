@@ -165,14 +165,17 @@ class ApplicationInstaller
 	{
 		$sTargetEnvironment = $this->GetTargetEnv();
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
-		try
-		{
-			return new Config($sConfigFile);
+		try {
+			$oConfig = new Config($sConfigFile);
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			return null;
 		}
+
+		$aParamValues = $this->oParams->GetParamForConfigArray();
+		$oConfig->UpdateFromParams($aParamValues);
+
+		return $oConfig;
 	}
 
 	/**
@@ -286,8 +289,9 @@ class ApplicationInstaller
 						}
 					}
 
+					$aParamValues = $this->oParams->GetParamForConfigArray();
 					self::DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sTargetEnvironment,
-						$bUseSymbolicLinks);
+						$bUseSymbolicLinks, $aParamValues);
 
 					$aResult = array(
 						'status' => self::OK,
@@ -510,7 +514,22 @@ class ApplicationInstaller
 	}
 
 
-	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sEnvironment, $bUseSymbolicLinks = null)
+	/**
+	 * @param array $aSelectedModules
+	 * @param string $sSourceDir
+	 * @param string $sExtensionDir
+	 * @param string $sTargetDir
+	 * @param string $sEnvironment
+	 * @param boolean $bUseSymbolicLinks
+	 * @param array $aParamValues
+	 *
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0 N°2013 added the aParamValues param
+	 */
+	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sEnvironment, $bUseSymbolicLinks = null, $aParamValues = [])
 	{
 		SetupLog::Info("Compiling data model.");
 
@@ -520,7 +539,7 @@ class ApplicationInstaller
 
 		if (empty($sSourceDir) || empty($sTargetDir)) {
 			throw new Exception("missing parameter source_dir and/or target_dir");
-		}		
+		}
 
 		$sSourcePath = APPROOT.$sSourceDir;
 		$aDirsToScan = array($sSourcePath);
@@ -546,14 +565,16 @@ class ApplicationInstaller
 		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
 		{
 			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
-			if (is_file($sConfigFilePath))
-			{
+			if (is_file($sConfigFilePath)) {
 				$oConfig = new Config($sConfigFilePath);
-			}
-			else
-			{
+			} else {
 				$oConfig = null;
 			}
+
+			if (false === is_null($oConfig)) {
+				$oConfig->UpdateFromParams($aParamValues);
+			}
+
 			SetupUtils::EnterMaintenanceMode($oConfig);
 		}
 

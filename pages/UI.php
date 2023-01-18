@@ -143,12 +143,15 @@ function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
  * @throws \CoreException
  * @throws \DictExceptionMissingString
  */
-function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = true)
+function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = true, $aParams = [])
 {
 	//search block
 	$oBlockForm = null;
 	if ($bSearchForm) {
-		$aParams = array('open' => $bSearchFormOpen, 'table_id' => 'result_1');
+		$aParams['open'] = $bSearchFormOpen;
+		if (false === isset($aParams['table_id'])) {
+			$aParams['table_id'] = 'result_1';
+		}
 		if (!empty($sBaseClass)) {
 			$aParams['baseClass'] = $sBaseClass;
 		}
@@ -519,6 +522,7 @@ try
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'search': // Serialized DBSearch
+				$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 				$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 				$sFormat = utils::ReadParam('format', '');
 				$bSearchForm = utils::ReadParam('search_form', true);
@@ -529,7 +533,13 @@ try
 				$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
 				$oFilter = DBSearch::unserialize($sFilter); // TO DO : check that the filter is valid
 				$oFilter->UpdateContextFromUser();
-				DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat);
+
+				//FIXME Params won't work as expected :(
+				// During the ajax call fetching the datatable data, the URL is rewritten and the info are lost, and we are getting a worse result :(
+//				$sParams = utils::ReadParam('aParams', '{}', false, \utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+//				$aParams = json_decode($sParams, true);
+
+				DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat, ''); //, true, $aParams
 			break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
