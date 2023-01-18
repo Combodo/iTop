@@ -2234,9 +2234,9 @@ class MenuBlock extends DisplayBlock
 					false
 				);
 				
-				// - If we are used in a Datatable, 'datatable_' will be prefixed to our $sId so we do the same here
+				// - If we are used in a Datatable, 'datatable_' will be prefixed to our $sId, so we do the same here
 				$sRealId = $sId;
-				if($this->m_sStyle === 'list' || $this->m_sStyle === 'links'|| $this->m_sStyle === 'listInObject'){
+				if(in_array($this->m_sStyle, ['list', 'links', 'listInObject'])){
 					$sRealId = 'datatable_' . $sId;
 				}
 				$oAddLinkActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button'])
