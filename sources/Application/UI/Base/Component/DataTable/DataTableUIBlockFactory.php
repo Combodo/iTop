@@ -527,6 +527,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oDataTable->SetRowActions($aExtraParams['row_actions']);
 		}
 
+		if (isset($aExtraParams['creation_in_modal_js_handler'])){
+			$oDataTable->SetModalCreationHandler($aExtraParams['creation_in_modal_js_handler']);
+		}
+		
 		return $oDataTable;
 	}
 
