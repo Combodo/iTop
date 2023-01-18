@@ -56,7 +56,9 @@ class DataTable extends UIContentBlock
 	 * array of data to display the first page
 	 */
 	protected $aInitDisplayData;
-	
+	/**
+	 * @var string JS Handler to be called when "open_creation_modal.object.itop" is fired on the table
+	 */
 	protected string $sModalCreationHandler;
 
 	public const DEFAULT_ACTION_ROW_CONFIRMATION = true;
