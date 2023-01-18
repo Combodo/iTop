@@ -43,10 +43,10 @@
     </testsuite>
     <!-- Note: The unitary-tests/sources/application/TwigBase is omitted for now as the test is not working -->
     <testsuite name="SourcesApplicationSearch">
-      <directory>unitary-tests/sources/application/search</directory>
+      <directory>unitary-tests/sources/Application/Search</directory>
     </testsuite>
     <testsuite name="SourceApplicationStatus">
-      <directory>unitary-tests/sources/application/status</directory>
+      <directory>unitary-tests/sources/Application/Status</directory>
     </testsuite>
     <testsuite name="SourcesComposer">
       <directory>unitary-tests/sources/Composer</directory>
