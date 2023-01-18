@@ -30,7 +30,7 @@
         <field id="logicalvolume_list" xsi:type="AttributeLinkedSet">
           <linked_class>LogicalVolume</linked_class>
           <ext_key_to_me>storagesystem_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -532,7 +532,7 @@
         <field id="tapes_list" xsi:type="AttributeLinkedSet">
           <linked_class>Tape</linked_class>
           <ext_key_to_me>tapelibrary_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -782,7 +782,7 @@
         <field id="nasfilesystem_list" xsi:type="AttributeLinkedSet">
           <linked_class>NASFileSystem</linked_class>
           <ext_key_to_me>nas_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>

@@ -100,7 +100,7 @@
         <field id="softwares_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareInstance</linked_class>
           <ext_key_to_me>system_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -541,7 +541,7 @@
         <field id="physicalinterface_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalInterface</linked_class>
           <ext_key_to_me>connectableci_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -773,7 +773,7 @@
         <field id="fiberinterfacelist_list" xsi:type="AttributeLinkedSet">
           <linked_class>FiberChannelInterface</linked_class>
           <ext_key_to_me>datacenterdevice_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -2064,7 +2064,7 @@
         <field id="middlewareinstance_list" xsi:type="AttributeLinkedSet">
           <linked_class>MiddlewareInstance</linked_class>
           <ext_key_to_me>middleware_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -2195,7 +2195,7 @@
         <field id="dbschema_list" xsi:type="AttributeLinkedSet">
           <linked_class>DatabaseSchema</linked_class>
           <ext_key_to_me>dbserver_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -2326,7 +2326,7 @@
         <field id="webapp_list" xsi:type="AttributeLinkedSet">
           <linked_class>WebApplication</linked_class>
           <ext_key_to_me>webserver_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -3080,7 +3080,7 @@
         <field id="softwareinstance_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareInstance</linked_class>
           <ext_key_to_me>software_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3089,7 +3089,7 @@
         <field id="softwarepatch_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwarePatch</linked_class>
           <ext_key_to_me>software_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3098,7 +3098,7 @@
         <field id="softwarelicence_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareLicence</linked_class>
           <ext_key_to_me>software_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3673,7 +3673,7 @@
         <field id="virtualmachines_list" xsi:type="AttributeLinkedSet">
           <linked_class>VirtualMachine</linked_class>
           <ext_key_to_me>oslicence_id</ext_key_to_me>
-          <legacy_edit_mode>none</legacy_edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3682,7 +3682,7 @@
         <field id="servers_list" xsi:type="AttributeLinkedSet">
           <linked_class>Server</linked_class>
           <ext_key_to_me>oslicence_id</ext_key_to_me>
-          <legacy_edit_mode>none</legacy_edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3818,7 +3818,7 @@
         <field id="softwareinstance_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareInstance</linked_class>
           <ext_key_to_me>softwarelicence_id</ext_key_to_me>
-          <legacy_edit_mode>none</legacy_edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -4145,7 +4145,7 @@
         <field id="physicaldevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalDevice</linked_class>
           <ext_key_to_me>brand_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -4292,7 +4292,7 @@
         <field id="physicaldevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalDevice</linked_class>
           <ext_key_to_me>model_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -4370,7 +4370,7 @@
         <field id="networkdevicesdevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>NetworkDevice</linked_class>
           <ext_key_to_me>networkdevicetype_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -6551,7 +6551,7 @@
         <field id="physicaldevice_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>PhysicalDevice</linked_class>
           <ext_key_to_me>location_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>

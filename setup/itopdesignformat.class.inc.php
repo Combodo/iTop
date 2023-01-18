@@ -1058,9 +1058,6 @@ class iTopDesignFormat
 					$oEditModeNode = $oLinkedSetEditModeNodes->item(0);
 					/** @noinspection NullPointerExceptionInspection already checked */
 					$sEditMode = $oEditModeNode->nodeValue;
-					$oLegacyEditModeNode = $oNode->ownerDocument->createElement('legacy_edit_mode', $sEditMode);
-					/** @noinspection NullPointerExceptionInspection already checked */
-					$oNode->replaceChild($oLegacyEditModeNode, $oEditModeNode);
 				}
 
 				switch ($sEditMode) {
@@ -1120,15 +1117,6 @@ class iTopDesignFormat
 		// - restore edit_mode attribute from legacy_edit_mode attribute
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/read_only");
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/relation_type");
-		$oLegacyEditModeNodesList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/legacy_edit_mode");
-		/** @var \DOMElement $oLegacyEditModeNode */
-		foreach ($oLegacyEditModeNodesList as $oLegacyEditModeNode) {
-			$sEditMode = $oLegacyEditModeNode->nodeValue;
-			$oEditModeNode = $oLegacyEditModeNode->ownerDocument->createElement('edit_mode', $sEditMode);
-			$oLinkedSetNode = $oLegacyEditModeNode->parentNode;
-			/** @noinspection NullPointerExceptionInspection already checked */
-			$oLinkedSetNode->replaceChild($oEditModeNode, $oLegacyEditModeNode);
-		}
 
 		// N°5563 AttributeLinkedSetIndirect
 		// - remove read_only attribute (added in 3.1)

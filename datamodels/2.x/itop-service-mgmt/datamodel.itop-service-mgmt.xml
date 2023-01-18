@@ -932,7 +932,7 @@ public function PrefillSearchForm(&$aContextParam)
         <field id="services_list" xsi:type="AttributeLinkedSet">
           <linked_class>Service</linked_class>
           <ext_key_to_me>servicefamily_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -1111,7 +1111,7 @@ public function PrefillSearchForm(&$aContextParam)
         <field id="servicesubcategories_list" xsi:type="AttributeLinkedSet">
           <linked_class>ServiceSubcategory</linked_class>
           <ext_key_to_me>service_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -1599,7 +1599,7 @@ public function PrefillSearchForm(&$aContextParam)
           <ext_key_to_me>sla_id</ext_key_to_me>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <legacy_edit_mode>none</legacy_edit_mode>
+          <edit_mode>none</edit_mode>
           <relation_type>link</relation_type>
           <read_only>true</read_only>
         </field>
@@ -2218,7 +2218,7 @@ public function PrefillSearchForm(&$aContextParam)
         <field id="customers_list" xsi:type="AttributeLinkedSet">
           <linked_class>Organization</linked_class>
           <ext_key_to_me>deliverymodel_id</ext_key_to_me>
-          <legacy_edit_mode>add_remove</legacy_edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>

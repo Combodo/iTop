@@ -4,7 +4,7 @@
     <class id="ClassWithAttributeLinkedSetEditModeNone">
       <fields>
         <field id="status" xsi:type="AttributeLinkedSet">
-          <legacy_edit_mode>none</legacy_edit_mode>
+          <edit_mode>none</edit_mode>
           <relation_type>link</relation_type>
           <read_only>true</read_only>
         </field>
@@ -13,7 +13,7 @@
     <class id="ClassWithAttributeLinkedSetEditModeAddOnly">
       <fields>
         <field id="status" xsi:type="AttributeLinkedSet">
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <relation_type>link</relation_type>
           <read_only>false</read_only>
         </field>
@@ -22,7 +22,7 @@
     <class id="ClassWithAttributeLinkedSetEditModeAddRemove">
       <fields>
         <field id="status" xsi:type="AttributeLinkedSet">
-          <legacy_edit_mode>add_remove</legacy_edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <relation_type>link</relation_type>
           <read_only>false</read_only>
         </field>
@@ -31,7 +31,7 @@
     <class id="ClassWithAttributeLinkedSetEditModeActions">
       <fields>
         <field id="status" xsi:type="AttributeLinkedSet">
-          <legacy_edit_mode>actions</legacy_edit_mode>
+          <edit_mode>actions</edit_mode>
           <relation_type>link</relation_type>
           <read_only>false</read_only>
         </field>
@@ -40,7 +40,7 @@
     <class id="ClassWithAttributeLinkedSetEditModeInPlace">
       <fields>
         <field id="status" xsi:type="AttributeLinkedSet">
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <relation_type>property</relation_type>
           <read_only>false</read_only>
         </field>

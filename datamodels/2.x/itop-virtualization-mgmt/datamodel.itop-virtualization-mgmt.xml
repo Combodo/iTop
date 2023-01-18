@@ -170,7 +170,7 @@
         <field id="virtualmachine_list" xsi:type="AttributeLinkedSet">
           <linked_class>VirtualMachine</linked_class>
           <ext_key_to_me>virtualhost_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -440,7 +440,7 @@
         <field id="hypervisor_list" xsi:type="AttributeLinkedSet">
           <linked_class>Hypervisor</linked_class>
           <ext_key_to_me>farm_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -631,7 +631,7 @@
         <field id="logicalinterface_list" xsi:type="AttributeLinkedSet">
           <linked_class>LogicalInterface</linked_class>
           <ext_key_to_me>virtualmachine_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>

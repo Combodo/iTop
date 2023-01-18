@@ -777,7 +777,7 @@
         <field id="tickets_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>Ticket</linked_class>
           <ext_key_to_me>caller_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -799,7 +799,7 @@
         <field id="tickets_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>Ticket</linked_class>
           <ext_key_to_me>team_id</ext_key_to_me>
-          <legacy_edit_mode>none</legacy_edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>

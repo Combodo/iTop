@@ -204,7 +204,7 @@
         <field id="knownerrors_list" xsi:type="AttributeLinkedSet">
           <linked_class>KnownError</linked_class>
           <ext_key_to_me>problem_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -213,7 +213,7 @@
         <field id="related_request_list" xsi:type="AttributeLinkedSet">
           <linked_class>UserRequest</linked_class>
           <ext_key_to_me>parent_problem_id</ext_key_to_me>
-          <legacy_edit_mode>add_remove</legacy_edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -222,7 +222,7 @@
         <field id="related_incident_list" xsi:type="AttributeLinkedSet">
           <linked_class>Incident</linked_class>
           <ext_key_to_me>parent_problem_id</ext_key_to_me>
-          <legacy_edit_mode>add_remove</legacy_edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
