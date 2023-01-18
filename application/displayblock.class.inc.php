@@ -2240,7 +2240,7 @@ class MenuBlock extends DisplayBlock
 					$sRealId = 'datatable_' . $sId;
 				}
 				$oAddLinkActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button'])
-					->SetOnClickJsCode("$('#$sRealId').trigger('creation_in_modal');");
+					->SetOnClickJsCode("$('#$sRealId').trigger('open_creation_modal.object.itop');");
 				$oActionsToolbar->AddSubBlock($oAddLinkActionButton);
 			}
 
