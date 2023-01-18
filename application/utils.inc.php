@@ -20,6 +20,7 @@
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
 use ScssPhp\ScssPhp\ValueConverter;
@@ -3362,4 +3363,5 @@ HTML;
 	{
 		return in_array($sTrait, self::TraitsUsedByClass($sClass, true));
 	}
+	
 }

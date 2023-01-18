@@ -7664,6 +7664,7 @@ abstract class MetaModel
 MetaModel::RegisterZList("noneditable", array("description" => "non editable fields", "type" => "attributes"));
 
 MetaModel::RegisterZList("details", array("description" => "All attributes to be displayed for the 'details' of an object", "type" => "attributes"));
+MetaModel::RegisterZList("summary", array("description" => "All attributes to be displayed for shorter 'details' of an object", "type" => "attributes"));
 MetaModel::RegisterZList("list", array("description" => "All attributes to be displayed for a list of objects", "type" => "attributes"));
 MetaModel::RegisterZList("preview", array("description" => "All attributes visible in preview mode", "type" => "attributes"));
 

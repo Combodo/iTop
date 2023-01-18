@@ -1812,6 +1812,7 @@ EOF;
 		// - Standard zlists
 		$aListRef = [
 			'details' => 'details',
+			'summary' => 'summary',
 			'standard_search' => 'search',
 			'default_search' => 'default_search',
 			'list' => 'list',

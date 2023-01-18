@@ -14,6 +14,7 @@ use CMDBObjectSet;
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
+use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Service\Base\ObjectRepository;
@@ -27,6 +28,7 @@ use iTopWebPage;
 use JsonPage;
 use MetaModel;
 use SecurityException;
+use SummaryCardService;
 use UserRights;
 use utils;
 
@@ -674,6 +676,37 @@ JS;
 		}
 		if ($this->IsHandlingXmlHttpRequest()) {
 			$oPage->SetData($aResult);
+		}
+		return $oPage;
+	}
+
+	public function OperationSummary() {
+		$oPage = new AjaxPage('');
+
+		$sClass = utils::ReadParam('obj_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
+		$sObjectKey = utils::ReadParam('obj_key', 0, false);
+		
+		// - Check if we are allowed to see/make summary for this class
+		if(SummaryCardService::IsAllowedForClass($sClass)){
+			if (is_numeric($sObjectKey))
+			{
+				$oObj = MetaModel::GetObject($sClass, $sObjectKey, false /* MustBeFound */);
+			}
+			else
+			{
+				$oObj = MetaModel::GetObjectByName($sClass, $sObjectKey, false /* MustBeFound */);
+			}
+	
+			if($oObj !== null) {
+				$oPage->AddUiBlock(new ObjectSummary($oObj));
+			}
+		}
+		else {
+			$oPage->AddUiBlock(
+				AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Error:ActionNotAllowed'))
+					->SetIsCollapsible(false)
+					->SetIsClosable(false)
+			);
 		}
 		return $oPage;
 	}
