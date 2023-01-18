@@ -50,7 +50,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 			'row_actions'   => $this->GetRowActions(),
 			'currentId' => $this->GetTableId(),
 			'creation_in_modal_is_allowed' => true,
-			'creation_in_modal_handler' => 'LinkSetWorker.CreateLinkedObject("'.$this->GetTableId().'");',
+			'creation_in_modal_js_handler' => 'LinkSetWorker.CreateLinkedObject("'.$this->GetTableId().'");',
 		);
 	}
 
