@@ -1048,7 +1048,7 @@ class iTopDesignFormat
 		// N°5563 AttributeLinkedSet
 		// - move edit_mode attribute to legacy_edit_mode attribute
 		// - fill relation_type & read_only if non-existing
-		$oLinkedSetNodes = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']");
+		$oLinkedSetNodes = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']");
 		/** @var \DOMElement $oNode */
 		foreach ($oLinkedSetNodes as $oNode) {
 			$sEditMode = 'actions';
@@ -1094,7 +1094,7 @@ class iTopDesignFormat
 
 		// N°5563 AttributeLinkedSetIndirect
 		// - fill read_only attribute if non-existing
-		$oLinkedSetIndirectNodes = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSetIndirect']");
+		$oLinkedSetIndirectNodes = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']");
 		foreach ($oLinkedSetIndirectNodes as $oNode) {
 			$bHasReadOnly = ($oNode->getElementsByTagName('read_only')->count() > 0);
 			if (false === $bHasReadOnly) {
