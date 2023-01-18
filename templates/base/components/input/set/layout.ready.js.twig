@@ -12,7 +12,6 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     loadingClass: '',
     {% endif %}
     itemClass: 'item attribute-set-item',
-    optionClass: '',
     hasError: {{ oUIBlock.HasError()|var_export() }},
     placeholder: '{{ oUIBlock.GetPlaceholder() }}',
 
@@ -181,6 +180,12 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
 
         {# Error #}
         this.toggleErrorClass(this.settings.hasError);
+    },
+
+
+    {# On item add #}
+    onItemAdd: function(value, $item){
+        $item.addClass(this.settings.itemClass);
     },
 
     {# plugin combodo_add_button #}

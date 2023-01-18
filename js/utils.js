@@ -671,24 +671,26 @@ Dict.Format = function () {
  *  data-template-add-class: add class to dom element with corresponding data value
  *
  * @param sTemplateId
- * @param data
- * @param TemplateClass
+ * @param aData
+ * @param sTemplateClass
  * @returns {*|jQuery|HTMLElement|JQuery<HTMLElement>}
  * @constructor
  */
-function RenderTemplate(sTemplateId, data, TemplateClass = null)
+function RenderTemplate(sTemplateId, aData, sTemplateClass = null)
 {
 	let sHtml = '<div>' + $(sTemplateId).html() + '</div>';
 
 	// Create element
 	let oElement = $(sHtml);
-	oElement.addClass(TemplateClass);
+	if(sTemplateClass !== null){
+		oElement.addClass(sTemplateClass);
+	}
 
 	// Attribute replacement
 	let aAttrElements = ['title', 'name', 'for'];
 	aAttrElements.forEach(function(e){
 		$(`[data-template-attr-${e}]`, oElement).each(function(){
-			$(this).attr(e, data[$(this).attr(`data-template-attr-${e}`)]);
+			$(this).attr(e, aData[$(this).attr(`data-template-attr-${e}`)]);
 		})
 	});
 
@@ -696,23 +698,23 @@ function RenderTemplate(sTemplateId, data, TemplateClass = null)
 	let aCssElements = ['background-image'];
 	aCssElements.forEach(function(e){
 		$(`[data-template-css-${e}]`, oElement).each(function(){
-			$(this).css(e, data[$(this).attr(`data-template-css-${e}`)]);
+			$(this).css(e, aData[$(this).attr(`data-template-css-${e}`)]);
 		})
 	});
 
 	// Text replacement
 	$('[data-template-text]', oElement).each(function(){
-		$(this).text(data[$(this).attr('data-template-text')]);
+		$(this).text(aData[$(this).attr('data-template-text')]);
 	})
 
 	// Condition
 	$('[data-template-condition]', oElement).each(function(){
-		$(this).toggle(data[$(this).attr('data-template-condition')]);
+		$(this).toggle(aData[$(this).attr('data-template-condition')]);
 	})
 
 	// Add classes
 	$('[data-template-add-class]', oElement).each(function(){
-		$(this).addClass(data[$(this).attr('data-template-add-class')]);
+		$(this).addClass(aData[$(this).attr('data-template-add-class')]);
 	})
 
 	return oElement;
