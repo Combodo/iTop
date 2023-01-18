@@ -2724,7 +2724,7 @@ HTML;
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']): array
+	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = []): array
 	{
 		$aMatchingClasses = [];
 
@@ -3045,16 +3045,33 @@ HTML;
 	}
 
 	/**
-	 * Transform a snake_case $sInput into a CamelCase string
-	 *
 	 * @param string $sInput
 	 *
-	 * @return string
+	 * @return string Camel case representation of $sInput (eg. "something_new" becomes "SomethingNew")
 	 * @since 2.7.0
 	 */
-	public static function ToCamelCase($sInput)
+	public static function ToCamelCase($sInput): string
 	{
 		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
+	}
+
+	/**
+	 * @param string $sInput
+	 *
+	 * @return string Snake case representation of $sInput (eg. "SomethingNew" becomes "something_new")
+	 * @since 3.1.0
+	 * @link https://stackoverflow.com/a/19533226/2710325
+	 */
+	public static function ToSnakeCase(string $sInput): string
+	{
+		// Remove special chars to join words
+		$sOutput = preg_replace('/(\W)/', '_', $sInput);
+		// Transform camel case words to snake case
+		$sOutput = preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '_$0', $sOutput);
+		// Lowercase everything
+		$sOutput = mb_strtolower($sOutput);
+		// Trim outer underscores
+		return trim($sOutput, '_');
 	}
 
 	/**
@@ -3214,10 +3231,5 @@ HTML;
 	public static function IsTraitUsedByClass(string $sTrait, string $sClass): bool
 	{
 		return in_array($sTrait, self::TraitsUsedByClass($sClass, true));
-	}
-  
-	public static function GetUniqId()
-	{
-		return hash('sha256', uniqid(sprintf('%x', rand()), true).sprintf('%x', rand()));
 	}
 }
