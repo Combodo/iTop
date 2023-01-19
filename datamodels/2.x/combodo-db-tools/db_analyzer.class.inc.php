@@ -21,6 +21,8 @@ use Combodo\iTop\Core\MetaModel\HierarchicalKey;
 
 class DatabaseAnalyzer
 {
+	const LIMIT = 100;
+
 	var $iTimeLimitPerOperation;
 
 	public function __construct($iTimeLimitPerOperation = null)
@@ -45,7 +47,7 @@ class DatabaseAnalyzer
 			set_time_limit(intval($this->iTimeLimitPerOperation));
 		}
 
-		$aWrongRecords = CMDBSource::QueryToArray($sSelWrongRecs);
+		$aWrongRecords = CMDBSource::QueryToArray($sSelWrongRecs.' limit '.self::LIMIT);
 		if (count($aWrongRecords) > 0)
 		{
 			foreach($aWrongRecords as $aRes)

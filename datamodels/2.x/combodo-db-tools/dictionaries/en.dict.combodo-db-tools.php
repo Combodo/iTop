@@ -49,6 +49,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'DBTools:Inconsistencies' => 'Database inconsistencies',
 	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s',
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Invalid external key %1$s (column: `%2$s.%3$s`)',
