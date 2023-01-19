@@ -3410,28 +3410,30 @@ EOF
 						}
 					}
 					$sInputType = '';
+					$sInputId   = 'att_'.$iFieldIndex;
 					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
-						$this->Get($sAttCode), $this->GetEditValue($sAttCode), 'att_'.$iFieldIndex, '', $iExpectCode,
+						$this->Get($sAttCode), $this->GetEditValue($sAttCode), $sInputId, '', $iExpectCode,
 						$aArgs, true, $sInputType);
-					$aAttrib = array(
+					$aAttrib    = array(
 						'label' => '<span>'.$oAttDef->GetLabel().'</span>',
 						'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>",
 					);
 
 					//add attrib for data-attribute
 					// Prepare metadata attributes
-					$sAttCode = $oAttDef->GetCode();
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					$sAttCode     = $oAttDef->GetCode();
+					$oAttDef      = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					$sAttDefClass = get_class($oAttDef);
-					$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
+					$sAttLabel    = MetaModel::GetLabel($sClass, $sAttCode);
 
-					$aAttrib['attcode'] = $sAttCode;
-					$aAttrib['atttype'] = $sAttDefClass;
+					$aAttrib['attcode']  = $sAttCode;
+					$aAttrib['atttype']  = $sAttDefClass;
 					$aAttrib['attlabel'] = $sAttLabel;
 					// - Attribute flags
 					$aAttrib['attflags'] = $this->GetFormAttributeFlags($sAttCode);
 					// - How the field should be rendered
-					$aAttrib['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+					$aAttrib['layout']    = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+					$aAttrib['inputid']   = $sInputId;
 					$aAttrib['inputtype'] = $sInputType;
 					// - For simple fields, we get the raw (stored) value as well
 					$bExcludeRawValue = false;
@@ -3443,8 +3445,8 @@ EOF
 					}
 					$aAttrib['value_raw'] = ($bExcludeRawValue === false) ? $this->Get($sAttCode) : '';
 
-					$aDetails[] = $aAttrib;
-					$aFieldsMap[$sAttCode] = 'att_'.$iFieldIndex;
+					$aDetails[]            = $aAttrib;
+					$aFieldsMap[$sAttCode] = $sInputId;
 					$iFieldIndex++;
 					$bExistFieldToDisplay = true;
 				}
