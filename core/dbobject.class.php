@@ -2826,24 +2826,14 @@ abstract class DBObject implements iDisplay
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
 		while ($oTrigger = $oSet->Fetch())
 		{
-			/** @var \Trigger $oTrigger */
+			/** @var \TriggerOnObjectCreate $oTrigger */
 			try
 			{
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
 			catch(Exception $e)
 			{
-				IssueLog::Error('A trigger did throw an exception', null, [
-					'exception.class'      => get_class($e),
-					'exception.message'    => $e->getMessage(),
-					'trigger.class'        => get_class($oTrigger),
-					'trigger.id'           => $oTrigger->GetKey(),
-					'trigger.friendlyname' => $oTrigger->GetRawName(),
-					'object.class'         => get_class($this),
-					'object.friendlyname'  => $this->GetRawName(),
-					'current_user'         => UserRights::GetUser(),
-					'exception.stack'      => $e->getTraceAsString(),
-				]);
+				$oTrigger->LogException($e, $this);
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
@@ -3161,18 +3151,7 @@ abstract class DBObject implements iDisplay
 					$oTrigger->DoActivate($this->ToArgs('this'));
 				}
 				catch (Exception $e) {
-					IssueLog::Error('A trigger did throw an exception', null, [
-						'exception.class'      => get_class($e),
-						'exception.message'    => $e->getMessage(),
-						'trigger.class'        => get_class($oTrigger),
-						'trigger.id'           => $oTrigger->GetKey(),
-						'trigger.friendlyname' => $oTrigger->GetRawName(),
-						'object.class'         => get_class($this),
-						'object.id'            => $this->GetKey(),
-						'object.friendlyname'  => $this->GetRawName(),
-						'current_user'         => UserRights::GetUser(),
-						'exception.stack'      => $e->getTraceAsString(),
-					]);
+					$oTrigger->LogException($e, $this);
 					utils::EnrichRaisedException($oTrigger, $e);
 				}
 			}
@@ -3493,24 +3472,13 @@ abstract class DBObject implements iDisplay
 			$aParams);
 		while ($oTrigger = $oSet->Fetch())
 		{
-			/** @var \Trigger $oTrigger */
+			/** @var \TriggerOnObjectDelete $oTrigger */
 			try
 			{
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
 			catch(Exception $e) {
-				IssueLog::Error('A trigger did throw an exception', null, [
-					'exception.class'      => get_class($e),
-					'exception.message'    => $e->getMessage(),
-					'trigger.class'        => get_class($oTrigger),
-					'trigger.id'           => $oTrigger->GetKey(),
-					'trigger.friendlyname' => $oTrigger->GetRawName(),
-					'object.class'         => get_class($this),
-					'object.id'            => $this->GetKey(),
-					'object.friendlyname'  => $this->GetRawName(),
-					'current_user'         => UserRights::GetUser(),
-					'exception.stack'      => $e->getTraceAsString(),
-				]);
+				$oTrigger->LogException($e, $this);
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
@@ -3925,6 +3893,7 @@ abstract class DBObject implements iDisplay
 					$oTrigger->DoActivate($this->ToArgs('this'));
 				}
 				catch (Exception $e) {
+					$oTrigger->LogException($e, $this);
 					utils::EnrichRaisedException($oTrigger, $e);
 				}
 			}
@@ -3936,6 +3905,7 @@ abstract class DBObject implements iDisplay
 					$oTrigger->DoActivate($this->ToArgs('this'));
 				}
 				catch (Exception $e) {
+					$oTrigger->LogException($e, $this);
 					utils::EnrichRaisedException($oTrigger, $e);
 				}
 			}
