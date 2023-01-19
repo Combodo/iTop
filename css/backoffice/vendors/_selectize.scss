@@ -46,25 +46,24 @@ $ibo-vendors-selectize--input-error--border: 1px solid $ibo-color-red-600 !defau
 }
 
 
-.simple-option-renderer{
+// Simple options renderer
 
-  .simple-option-renderer--container {
-    display: flex;
-    align-items: center;
-
-    .simple-option-renderer--container--icon {
-      width: 25px;
-      text-align: center;
-    }
-
-    .simple-option-renderer--container--label {
-      margin-left: 3px;
-      flex-grow: 1;
-    }
-
-  }
-
+.simple-option-renderer--container {
+  display: flex;
+  align-items: center;
 }
+
+.simple-option-renderer--container--icon {
+  width: 25px;
+  text-align: center;
+}
+
+.simple-option-renderer--container--label {
+  margin-left: 3px;
+  flex-grow: 1;
+}
+
+
 
 .selectize-input{
   .attribute-set-item{

@@ -21,7 +21,7 @@ use utils;
  */
 class LinkSetController extends AbstractController
 {
-	public const ROUTE_NAMESPACE = 'linkSet';
+	public const ROUTE_NAMESPACE = 'linkset';
 
 	/**
 	 * OperationDeleteLinkedObject.

@@ -132,14 +132,14 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         {# Options #}
         {% if oUIBlock.HasOptionsTemplate() %}
         option: function(option) {
-            return RenderTemplate('#{{ oUIBlock.GetId() }}_options_template', option, this.settings.optionClass)[0].outerHTML;
+            return CombodoGlobalToolbox.RenderTemplate('#{{ oUIBlock.GetId() }}_options_template', option, this.settings.optionClass)[0].outerHTML;
         },
         {% endif %}
 
         {# Items #}
         {% if oUIBlock.HasItemsTemplate() %}
         item: function (item) {
-            return RenderTemplate('#{{ oUIBlock.GetId() }}_items_template', item, this.settings.itemClass)[0].outerHTML;
+            return CombodoGlobalToolbox.RenderTemplate('#{{ oUIBlock.GetId() }}_items_template', item, this.settings.itemClass)[0].outerHTML;
         },
         {% endif %}
 

@@ -146,6 +146,10 @@ abstract class AttributeDefinition
 
 	abstract public function GetEditClass();
 
+	/**
+	 * @return array Css classes
+	 * @since 3.1.0 N°3190
+	 */
 	public function GetCssClasses(): array
 	{
 		return $this->aCSSClasses;
@@ -376,6 +380,8 @@ abstract class AttributeDefinition
 	 * Returns true if the attribute can be used in bulk modify.
 	 *
 	 * @return bool
+	 * @since 3.1.0 N°3190
+	 *
 	 */
 	public static function IsBulkModifyCompatible(): bool
 	{
@@ -2399,6 +2405,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 		return $oRet;
 	}
 
+	/** @inheritDoc */
 	public static function IsBulkModifyCompatible(): bool
 	{
 		return true;

@@ -141,7 +141,7 @@ Selectize.define("combodo_multi_values_synthesis", function (aOptions) {
 			for (const [key, value] of Object.entries(aOperations)) {
 				oSelf.operations[key] = {
 					operation: value,
-					data: ExtractArrayItemsContainingThisKeyAndValue(aCurrentOptions, oSelf.settings.valueField, key)
+					data: CombodoGlobalToolbox.ExtractArrayItemsContainingThisKeyAndValue(aCurrentOptions, oSelf.settings.valueField, key)
 				}
 			}
 		}

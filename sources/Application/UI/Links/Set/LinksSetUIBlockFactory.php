@@ -89,8 +89,6 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 
 		// Bulk modify specific
 		$oSetUIBlock->GetDataProvider()->SetGroupField('group');
-		$oSetUIBlock->SetOptionsTemplate('application/object/set/bulk_option_renderer.html.twig');
-//		$oSetUIBlock->SetItemsTemplate('application/object/set/bulk_item_renderer.html.twig');
 		$oSetUIBlock->SetIsMultiValuesSynthesis(true);
 
 		$aBinderSettings = [

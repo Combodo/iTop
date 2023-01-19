@@ -40,8 +40,7 @@ class Set extends AbstractInput
 		'js/selectize/plugin_combodo_add_button.js',
 		'js/selectize/plugin_combodo_auto_position.js',
 		'js/selectize/plugin_combodo_update_operations.js',
-		'js/selectize/plugin_combodo_multi_vales_synthesis.js',
-		'js/selectize/plugin_combodo_multi_vales_synthesis_alternative.js',
+		'js/selectize/plugin_combodo_multi_values_synthesis.js',
 	];
 
 	/** @var int|null $iMaxItems Maximum number of items selectable */
@@ -104,7 +103,7 @@ class Set extends AbstractInput
 		$this->iMaxOptions = null;
 		$this->bHasRemoveItemButton = true;
 		$this->bHasAddOptionButton = false;
-		$this->sAddButtonTitle = Dict::S('UI:Component:Input:Set:AddOption');
+		$this->sAddButtonTitle = Dict::S('UI:Button:Create');
 		$this->bIsPreloadEnabled = false;
 		$this->sTemplateOptions = null;
 		$this->sTemplateItems = null;

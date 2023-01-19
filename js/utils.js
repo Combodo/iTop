@@ -658,101 +658,6 @@ Dict.Format = function () {
 	return Format(args);
 };
 
-/**
- * Render a template and inject data into it.
- *
- * This rendering engine is aimed to produce client side template rendering.
- *
- * markups with attributes:
- *  data-template-attr-{title|name|for}: set dom element attribute with corresponding datavalue
- *  data-template-text: set dom element text with corresponding data value
- *  data-template-condition: set dom element visibility depending on data value
- *  data-template-css-{background-image}: set dom element css property with corresponding data value
- *  data-template-add-class: add class to dom element with corresponding data value
- *
- * @param sTemplateId
- * @param aData
- * @param sTemplateClass
- * @returns {*|jQuery|HTMLElement|JQuery<HTMLElement>}
- * @constructor
- */
-function RenderTemplate(sTemplateId, aData, sTemplateClass = null)
-{
-	let sHtml = '<div>' + $(sTemplateId).html() + '</div>';
-
-	// Create element
-	let oElement = $(sHtml);
-	if(sTemplateClass !== null){
-		oElement.addClass(sTemplateClass);
-	}
-
-	// Attribute replacement
-	let aAttrElements = ['title', 'name', 'for'];
-	aAttrElements.forEach(function(e){
-		$(`[data-template-attr-${e}]`, oElement).each(function(){
-			$(this).attr(e, aData[$(this).attr(`data-template-attr-${e}`)]);
-		})
-	});
-
-	// CSS replacement
-	let aCssElements = ['background-image'];
-	aCssElements.forEach(function(e){
-		$(`[data-template-css-${e}]`, oElement).each(function(){
-			$(this).css(e, aData[$(this).attr(`data-template-css-${e}`)]);
-		})
-	});
-
-	// Text replacement
-	$('[data-template-text]', oElement).each(function(){
-		$(this).text(aData[$(this).attr('data-template-text')]);
-	})
-
-	// Condition
-	$('[data-template-condition]', oElement).each(function(){
-		$(this).toggle(aData[$(this).attr('data-template-condition')]);
-	})
-
-	// Add classes
-	$('[data-template-add-class]', oElement).each(function(){
-		$(this).addClass(aData[$(this).attr('data-template-add-class')]);
-	})
-
-	return oElement;
-}
-
-/**
- * ExtractArrayItemsContainingThisKeyAndValue.
- *
- * This function extract item(s) of an array witch include the key value pair.
- *
- * @param aArrayToSearchIn Array to search in
- * @param sKey Key to search
- * @param sValue Value to search
- * @returns {*|*[]|null}
- * @constructor
- */
-function ExtractArrayItemsContainingThisKeyAndValue(aArrayToSearchIn, sKey, sValue)
-{
-	let aResult = [];
-
-	// Iterate throw items...
-	for(let i = 0 ; i < aArrayToSearchIn.length ; i++){
-		if(aArrayToSearchIn[i][sKey] === sValue){
-			aResult.push(aArrayToSearchIn[i]);
-		}
-	}
-
-	// Return result
-	switch(aResult.length){
-		case 0:
-			return null;
-		case 1:
-			return aResult[0];
-		default:
-			return aResult;
-	}
-}
-
 // TODO 3.0.0: Move functions above either in CombodoGlobalToolbox or CombodoBackofficeToolbox and deprecate them
 /**
  * A toolbox for common JS operations accross the app no matter the GUI. Meant to be used by Combodo developers and the community.
@@ -854,6 +759,105 @@ const CombodoGlobalToolbox = {
 			oCurrentDate = new Date();
 		}
 		while ((oCurrentDate - oDate) < iDuration);
+	},
+
+	/**
+	 * Render a template and inject data into it.
+	 *
+	 * This rendering engine is aimed to produce client side template rendering.
+	 *
+	 * markups with attributes:
+	 *  data-template-attr-{title|name|for}: set dom element attribute with corresponding datavalue
+	 *  data-template-text: set dom element text with corresponding data value
+	 *  data-template-condition: set dom element visibility depending on data value
+	 *  data-template-css-{background-image}: set dom element css property with corresponding data value
+	 *  data-template-add-class: add class to dom element with corresponding data value
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param sTemplateId
+	 * @param aData
+	 * @param sTemplateClass
+	 * @returns {*|jQuery|HTMLElement|JQuery<HTMLElement>}
+	 * @constructor
+	 */
+	RenderTemplate: function(sTemplateId, aData, sTemplateClass = null)
+	{
+		let sHtml = '<div>' + $(sTemplateId).html() + '</div>';
+
+		// Create element
+		let oElement = $(sHtml);
+		if(sTemplateClass !== null){
+			oElement.addClass(sTemplateClass);
+		}
+
+		// Attribute replacement
+		let aAttrElements = ['title', 'name', 'for'];
+		aAttrElements.forEach(function(e){
+			$(`[data-template-attr-${e}]`, oElement).each(function(){
+				$(this).attr(e, aData[$(this).attr(`data-template-attr-${e}`)]);
+			})
+		});
+
+		// CSS replacement
+		let aCssElements = ['background-image'];
+		aCssElements.forEach(function(e){
+			$(`[data-template-css-${e}]`, oElement).each(function(){
+				$(this).css(e, aData[$(this).attr(`data-template-css-${e}`)]);
+			})
+		});
+
+		// Text replacement
+		$('[data-template-text]', oElement).each(function(){
+			$(this).text(aData[$(this).attr('data-template-text')]);
+		})
+
+		// Condition
+		$('[data-template-condition]', oElement).each(function(){
+			$(this).toggle(aData[$(this).attr('data-template-condition')]);
+		})
+
+		// Add classes
+		$('[data-template-add-class]', oElement).each(function(){
+			$(this).addClass(aData[$(this).attr('data-template-add-class')]);
+		})
+
+		return oElement;
+	},
+
+	/**
+	 * ExtractArrayItemsContainingThisKeyAndValue.
+	 *
+	 * This function extract item(s) of an array witch include the key value pair.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param aArrayToSearchIn Array to search in
+	 * @param sKey Key to search
+	 * @param sValue Value to search
+	 * @returns {*|*[]|null}
+	 * @constructor
+	 */
+	ExtractArrayItemsContainingThisKeyAndValue: function(aArrayToSearchIn, sKey, sValue)
+	{
+		let aResult = [];
+
+		// Iterate throw items...
+		for(let i = 0 ; i < aArrayToSearchIn.length ; i++){
+			if(aArrayToSearchIn[i][sKey] === sValue){
+				aResult.push(aArrayToSearchIn[i]);
+			}
+		}
+
+		// Return result
+		switch(aResult.length){
+			case 0:
+				return null;
+			case 1:
+				return aResult[0];
+			default:
+				return aResult;
+		}
 	}
 };
 

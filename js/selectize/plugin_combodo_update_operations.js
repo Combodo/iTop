@@ -91,7 +91,7 @@ Selectize.define("combodo_update_operations", function () {
 				if(!oSelf.settings.initial.includes(e)){
 					oSelf.operations[e] = {
 						operation: 'add',
-						data: ExtractArrayItemsContainingThisKeyAndValue(aCurrentOptions, oSelf.settings.valueField, e)
+						data: CombodoGlobalToolbox.ExtractArrayItemsContainingThisKeyAndValue(aCurrentOptions, oSelf.settings.valueField, e)
 					}
 				}
 			});
@@ -101,7 +101,7 @@ Selectize.define("combodo_update_operations", function () {
 				if(!aCurrentItems.includes(e)){
 					oSelf.operations[e] = {
 						operation: 'remove',
-						data: ExtractArrayItemsContainingThisKeyAndValue(aCurrentOptions, oSelf.settings.valueField, e)
+						data: CombodoGlobalToolbox.ExtractArrayItemsContainingThisKeyAndValue(aCurrentOptions, oSelf.settings.valueField, e)
 					}
 				}
 			});
