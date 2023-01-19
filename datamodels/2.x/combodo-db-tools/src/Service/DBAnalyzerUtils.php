@@ -8,6 +8,7 @@
 namespace Combodo\iTop\DBTools\Service;
 
 use CoreException;
+use DatabaseAnalyzer;
 use Dict;
 use DictExceptionMissingString;
 use MetaModel;
@@ -38,6 +39,9 @@ class DBAnalyzerUtils
 				fwrite($fReport, "\r\n-- \r\n");
 				fwrite($fReport, '-- Class: '.MetaModel::GetName($sClass).' ('.$sClass.")\r\n");
 				$iCount = $aError['count'];
+				if ($iCount === DatabaseAnalyzer::LIMIT) {
+					$iCount = "$iCount(+)";
+				}
 				fwrite($fReport, '-- Count: '.$iCount."\r\n");
 				fwrite($fReport, '-- Error: '.$sErrorLabel."\r\n");
 				if (array_key_exists('query', $aError)) {
