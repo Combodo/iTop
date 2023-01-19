@@ -2833,6 +2833,17 @@ abstract class DBObject implements iDisplay
 			}
 			catch(Exception $e)
 			{
+				IssueLog::Error('A trigger did throw an exception', null, [
+					'exception.class'      => get_class($e),
+					'exception.message'    => $e->getMessage(),
+					'trigger.class'        => get_class($oTrigger),
+					'trigger.id'           => $oTrigger->GetKey(),
+					'trigger.friendlyname' => $oTrigger->GetRawName(),
+					'object.class'         => get_class($this),
+					'object.friendlyname'  => $this->GetRawName(),
+					'current_user'         => UserRights::GetUser(),
+					'exception.stack'      => $e->getTraceAsString(),
+				]);
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
