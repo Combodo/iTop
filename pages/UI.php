@@ -343,8 +343,6 @@ try
 		switch($operation)
 		{
 			case 'new': // Form to create a new object
-			case 'apply_new': // Creation of a new object
-			case 'apply_modify': // Applying the modifications to an existing object
 			case 'form_for_modify_all': // Form to modify multiple objects (bulk modify)
 			case 'bulk_stimulus': // For to apply a stimulus to multiple objects
 			case 'stimulus': // Form displayed when applying a stimulus (state change)

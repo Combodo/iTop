@@ -140,6 +140,7 @@ JS;
 		} else {
 			$oPage = new iTopWebPage('', $bPrintable);
 			$oPage->DisableBreadCrumb();
+			$this->AddRequiredForModificationJsFilesToPage($oPage);
 		}
 		
 		$sClass = utils::ReadPostedParam('class', '', 'class');
@@ -265,8 +266,8 @@ JS;
 				if ($this->IsHandlingXmlHttpRequest()) {
 					$aResult['data'] = ['error_message' => $e->getHtmlMessage()];
 				} else {
-					$sObjKey = $oObj->GetKey();
-					$sClassIcon = MetaModel::GetClassIcon($sClass, false);
+					$sClassLabel = MetaModel::GetName($sClass);
+					$sClassIcon = MetaModel::GetClassIcon($sClass);
 					$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 
 					$oPage->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
@@ -277,7 +278,8 @@ JS;
 						$sWarnings = implode(', ', $aWarnings);
 						$oPage->AddHeaderMessage($sWarnings, 'message_warning');
 					}
-					cmdbAbstractObject::DisplayCreationForm($oPage, $sClass, $oObj, [], ['transaction_id' => $sTransactionId]);
+					$oPage->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
+					cmdbAbstractObject::DisplayCreationForm($oPage, $sClass, $oObj, [], ['transaction_id' => $sTransactionId, 'wizard_container' => 1, 'keep_source_object' => true]);
 				}
 			}
 		}
@@ -308,6 +310,7 @@ JS;
 		} else {
 			$oPage = new iTopWebPage('', $bPrintable);
 			$oPage->DisableBreadCrumb();
+			$this->AddRequiredForModificationJsFilesToPage($oPage);
 		}
 
 		$sClass = utils::ReadPostedParam('class', '', 'class');
@@ -508,6 +511,20 @@ JS;
 			$oPage->SetData($aResult);
 		}
 		return $oPage;
+	}
+
+	/**
+	 * Add some JS files that are required during the modification of an object
+	 *
+	 * @param \iTopWebPage $oPage
+	 *
+	 * @return void
+	 */
+	protected function AddRequiredForModificationJsFilesToPage(iTopWebPage &$oPage): void
+	{
+		foreach (static::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
+			$oPage->add_linked_script("../$sJsFileRelPath");
+		}
 	}
 
 	/**
