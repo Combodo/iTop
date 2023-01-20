@@ -15,14 +15,16 @@ use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Controller\AbstractController;
 use CoreCannotSaveObjectException;
+use DeleteException;
 use Dict;
 use IssueLog;
+use iTopOwnershipLock;
 use iTopWebPage;
 use JsonPage;
 use MetaModel;
 use SecurityException;
-use utils;
 use UserRights;
+use utils;
 
 /**
  * Class ObjectController
