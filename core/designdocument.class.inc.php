@@ -30,6 +30,7 @@ use DOMDocument;
 use DOMFormatException;
 use IssueLog;
 use LogAPI;
+use utils;
 
 /**
  * Class \Combodo\iTop\DesignDocument
