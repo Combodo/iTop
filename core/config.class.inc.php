@@ -342,11 +342,11 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'allow_menu_on_linkset' => [
-			'type' => 'bool',
-			'description' => 'Display Action menus in view mode on any LinkedSet with edit_mode != none',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+			'type'                => 'bool',
+			'description'         => 'Display Action menus in view mode on any LinkedSet with edit_mode != none',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'allow_target_creation' => [
