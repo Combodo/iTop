@@ -1150,8 +1150,8 @@ EOF
 				//
 				$aIssues = $e->getIssues();
 
-				$sObjKey = $oObj->GetKey();
-				$sClassIcon = MetaModel::GetClassIcon($sClass, false);
+				$sClassLabel = MetaModel::GetName($sClass);
+				$sClassIcon = MetaModel::GetClassIcon($sClass);
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
@@ -1162,7 +1162,8 @@ EOF
 					$sWarnings = implode(', ', $aWarnings);
 					$oP->AddHeaderMessage($sWarnings, 'message_warning');
 				}
-				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj, [], ['transaction_id' => $sTransactionId]);
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
+				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj, [], ['transaction_id' => $sTransactionId, 'wizard_container' => 1, 'keep_source_object' => true]);
 			}
 		}
 		break;
