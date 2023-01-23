@@ -12,19 +12,22 @@ let LinkSetWorker = new function(){
 	 *
 	 * @param sLinkedObjectClass
 	 * @param sLinkedObjectKey
+	 * @param sTableId
 	 * @constructor
 	 */
-	const CallAjaxDeleteLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey){
+	const CallAjaxDeleteLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, sTableId){
+		let oTableSettingsDialog = $('#datatable_dlg_datatable_' + sTableId);
+
 		$.post(`${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_DELETE_OBJECT}`, {
 			linked_object_class: sLinkedObjectClass,
 			linked_object_key: sLinkedObjectKey,
 			transaction_id: $('#linkset_transactions_id').val()
 		}, function (data) {
-			if(data.data.success){
-				alert('Operation succeeded, todo refresh table !!');
+			if(data.data.success === true){
+				oTableSettingsDialog.DataTableSettings('DoRefresh');
 			}
 			else{
-				alert('Operation failed, todo feedback !!');
+				CombodoModal.OpenInformativeModal(data.data.error_message, 'error');
 			}
 		});
 	};
@@ -35,20 +38,23 @@ let LinkSetWorker = new function(){
 	 * @param sLinkedObjectClass
 	 * @param sLinkedObjectKey
 	 * @param sExternalKeyAttCode
+	 * @param sTableId
 	 * @constructor
 	 */
-	const CallAjaxDetachLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, sExternalKeyAttCode){
+	const CallAjaxDetachLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, sExternalKeyAttCode, sTableId){
+		let oTableSettingsDialog = $('#datatable_dlg_datatable_' + sTableId);
+
 		$.post(`${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_DETACH_OBJECT}`, {
 			linked_object_class: sLinkedObjectClass,
 			linked_object_key: sLinkedObjectKey,
 			external_key_att_code: sExternalKeyAttCode,
 			transaction_id: $('#linkset_transactions_id').val()
 		}, function (data) {
-			if(data.data.success){
-				alert('Operation succeeded, todo refresh table !!');
+			if(data.data.success === true){
+				oTableSettingsDialog.DataTableSettings('DoRefresh');
 			}
 			else{
-				alert('Operation failed, todo feedback !!');
+				CombodoModal.OpenInformativeModal(data.data.error_message, 'error');
 			}
 		});
 	};
@@ -63,7 +69,7 @@ let LinkSetWorker = new function(){
 	 */
 	const CallAjaxModifyLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, sTableId){
 		let oTable = $('#datatable_' + sTableId);
-		let oTableSettingsDialog = $('#datatable_dlg_datatable_'+sTableId);
+		let oTableSettingsDialog = $('#datatable_dlg_datatable_' + sTableId);
 
 		let oOptions = {
 			title: Dict.S('UI:Links:ActionRow:Modify:Modal:Title'),
@@ -90,7 +96,7 @@ let LinkSetWorker = new function(){
 	 */
 	const CallAjaxCreateLinkedObject = function(sTableId){
 		let oTable = $('#datatable_' + sTableId);
-		let oTableSettingsDialog = $('#datatable_dlg_datatable_'+sTableId);
+		let oTableSettingsDialog = $('#datatable_dlg_datatable_' + sTableId);
 		let sClass = oTable.closest('[data-role="ibo-block-links-table"]').attr('data-link-class');
 		let sAttCode = oTable.closest('[data-role="ibo-block-links-table"]').attr('data-link-attcode');
 		let sHostObjectClass = oTable.closest('[data-role="ibo-object-details"]').attr('data-object-class');

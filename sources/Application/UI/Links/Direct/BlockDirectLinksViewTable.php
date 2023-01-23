@@ -63,7 +63,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 						'label'         => 'UI:Links:ActionRow:Detach',
 						'tooltip'       => 'UI:Links:ActionRow:Detach+',
 						'icon_classes'  => 'fas fa-minus',
-						'js_row_action' => "LinkSetWorker.DetachLinkedObject('{$this->sTargetClass}', aRowData['{$this->sTargetClass}/_key_/raw'], '{$this->oAttDef->GetExtKeyToMe()}');",
+						'js_row_action' => "LinkSetWorker.DetachLinkedObject('{$this->sTargetClass}', aRowData['{$this->sTargetClass}/_key_/raw'], '{$this->oAttDef->GetExtKeyToMe()}', '{$this->GetTableId()}');",
 						'confirmation'  => [
 							'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
 							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
@@ -77,7 +77,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 						'label'         => 'UI:Links:ActionRow:Delete',
 						'tooltip'       => 'UI:Links:ActionRow:Delete+',
 						'icon_classes'  => 'fas fa-trash',
-						'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
+						'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], '{$this->GetTableId()}');",
 						'confirmation'  => [
 							'message'                    => 'UI:Links:ActionRow:Delete:Confirmation',
 							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
