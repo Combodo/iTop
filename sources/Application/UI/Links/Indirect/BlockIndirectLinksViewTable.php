@@ -81,7 +81,8 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 			);
 
 			$aRowActions[] = array(
-				'tooltip'       => 'UI:Links:ActionRow:Modify',
+				'label'         => 'UI:Links:ActionRow:Modify',
+				'tooltip'       => 'UI:Links:ActionRow:Modify+',
 				'icon_classes'  => 'fas fa-pen',
 				'js_row_action' => "LinkSetWorker.ModifyLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw'], '{$this->GetTableId()}');",
 			);
