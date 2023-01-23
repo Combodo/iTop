@@ -892,7 +892,7 @@ JS;
 						];
 						$aColumnDefinition["createdCell"] = <<<JS
 						$(td).attr('data-object-class', '$sClassName');
-						$(td).attr('data-attribute-label', '$sAttrLabel');
+						$(td).attr('data-attribute-label', '$sAttLabel');
 						$(td).attr('data-attribute-code', '$sAttCode');
 						$(td).attr('data-attribute-type', '$sAttDefClass');
 						if (rowData["$sClassAlias/$sAttCode/raw"]) {
