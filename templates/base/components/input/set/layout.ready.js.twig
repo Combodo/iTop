@@ -64,6 +64,7 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     labelField: '{{ oDataProvider.GetDataLabelField() }}',
     searchField: {{ oDataProvider.GetDataSearchFields()|json_encode()|raw }},
     optgroupField: '{{ oDataProvider.GetGroupField() }}',
+    tooltipField: '{{ oDataProvider.GetTooltipField() }}',
 
     {# Initial options data, may be oveeride by ajax load method #}
     options: {{ oDataProvider.GetOptions()|json_encode()|raw  }},
@@ -186,6 +187,11 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     {# On item add #}
     onItemAdd: function(value, $item){
         $item.addClass(this.settings.itemClass);
+        $item.attr({
+            'data-tooltip-content': this.options[value][this.settings.tooltipField],
+            'data-tooltip-html-enabled': true
+        });
+        CombodoTooltip.InitTooltipFromMarkup($item);
     },
 
     {# plugin combodo_add_button #}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2022 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,25 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider;
+Dict::Add('EN US', 'English', 'English', array(
 
-/**
- * Interface iDataBinder
- *
- * @package Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider
- * @since 3.1.0
- */
-interface iDataBinder
-{
-	/**
-	 * Bind.
-	 *
-	 * @param string $sObjectClassName Class name of array elements
-	 * @param array $aData Array of elements
-	 * @param array $aBinderSettings Array of settings for binder implementation
-	 *
-	 * @return array
-	 */
-	public static function Bind(string $sObjectClassName, array $aData, array $aBinderSettings): array;
+	// Bulk modify
+	'UI:Bulk:modify:IncompatibleAttribute' => 'This attribute can\'t be edited in bulk context',
 
-}
+));

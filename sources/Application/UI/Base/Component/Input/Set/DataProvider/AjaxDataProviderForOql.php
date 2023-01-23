@@ -38,7 +38,7 @@ class AjaxDataProviderForOQL extends AjaxDataProvider
 	 */
 	public function __construct(string $sObjectClass, string $sOql, string $sWizardHelperJsVarName = null, array $aFieldsToLoad = [])
 	{
-		parent::__construct('object.Search', [
+		parent::__construct('object.search', [
 			'object_class'   => $sObjectClass,
 			'oql'            => $sOql,
 			'fields_to_load' => json_encode($aFieldsToLoad),

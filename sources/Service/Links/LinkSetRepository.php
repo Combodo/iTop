@@ -4,9 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Controller\Links;
+namespace Combodo\iTop\Service\Links;
 
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+use Combodo\iTop\Service\Base\ObjectRepository;
 use Exception;
 use ExceptionLog;
 use iDBObjectSetIterator;
@@ -19,7 +20,7 @@ use utils;
  *
  * @internal
  * @since 3.1.0
- * @package Combodo\iTop\Controller
+ * @package Combodo\iTop\Service\Links
  */
 class LinkSetRepository
 {

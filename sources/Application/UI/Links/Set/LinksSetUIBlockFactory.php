@@ -22,9 +22,10 @@ namespace Combodo\iTop\Application\UI\Links\Set;
 use AttributeLinkedSet;
 use Combodo\iTop\Application\UI\Base\Component\Input\Set\Set;
 use Combodo\iTop\Application\UI\Base\Component\Input\Set\SetUIBlockFactory;
-use Combodo\iTop\Controller\Links\LinkSetModel;
-use Combodo\iTop\Controller\Links\LinkSetRepository;
-use Combodo\iTop\Controller\Links\LinksSetDataTransformer;
+use Combodo\iTop\Service\Links\LinksBulkDataPostProcessor;
+use Combodo\iTop\Service\Links\LinkSetDataTransformer;
+use Combodo\iTop\Service\Links\LinkSetModel;
+use Combodo\iTop\Service\Links\LinkSetRepository;
 use iDBObjectSetIterator;
 
 /**
@@ -57,7 +58,7 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 		$oSetUIBlock = SetUIBlockFactory::MakeForOQL($sId, $sTargetClass, $oAttDef->GetValuesDef()->GetFilterExpression(), $sWizardHelperJsVarName);
 
 		// Current value
-		$aCurrentValues = LinksSetDataTransformer::Decode($oDbObjectSet, $sTargetClass, $sTargetField);
+		$aCurrentValues = LinkSetDataTransformer::Decode($oDbObjectSet, $sTargetClass, $sTargetField);
 
 		// Initial options data
 		$aInitialOptions = LinkSetRepository::LinksDbSetToTargetObjectArray($oDbObjectSet, $sTargetClass, $sTargetField);
@@ -91,6 +92,7 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 		$oSetUIBlock->GetDataProvider()->SetGroupField('group');
 		$oSetUIBlock->SetIsMultiValuesSynthesis(true);
 
+		// Data post processing
 		$aBinderSettings = [
 			'bulk_oql'     => $aBulkContext['oql'],
 			'link_class'   => LinkSetModel::GetLinkedClass($oAttDef),
@@ -98,15 +100,16 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 			'origin_field' => $oAttDef->GetExtKeyToMe(),
 		];
 
+		// Initial options
 		$aOptions = $oSetUIBlock->GetDataProvider()->GetOptions();
-		$aOptions = LinksBulkDataBinder::Bind(LinkSetModel::GetTargetClass($oAttDef), $aOptions, $aBinderSettings);
+		$aOptions = LinksBulkDataPostProcessor::Execute($aOptions, $aBinderSettings);
 		$oSetUIBlock->GetDataProvider()->SetOptions($aOptions);
 
-		// Data binder
+		// Data provider post processor
 		/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider\AjaxDataProvider $oDataProvider */
 		$oDataProvider = $oSetUIBlock->GetDataProvider();
-		$oDataProvider->SetPostParam('binder', [
-			'class_name' => addslashes(LinksBulkDataBinder::class),
+		$oDataProvider->SetPostParam('data_post_processor', [
+			'class_name' => addslashes(LinksBulkDataPostProcessor::class),
 			'settings'   => $aBinderSettings,
 		]);
 

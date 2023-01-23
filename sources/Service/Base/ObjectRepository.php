@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Controller\Links;
+namespace Combodo\iTop\Service\Base;
 
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use DBObject;
@@ -24,7 +24,7 @@ use WizardHelper;
  *
  * @internal
  * @since 3.1.0
- * @package Combodo\iTop\Controller
+ * @package Combodo\iTop\Service\Base
  */
 class ObjectRepository
 {
@@ -209,6 +209,9 @@ class ObjectRepository
 					$aArguments[] = $oDbObject->Get($sAdditionalField);
 				}
 				$aData['additional_field'] = utils::HtmlEntities(vsprintf($aComplementAttributeSpec[0], $aArguments));
+				$aData['full_description'] = "{$aData['friendlyname']}<br><i><small>{$aData['additional_field']}</small></i>";
+			} else {
+				$aData['full_description'] = $aData['friendlyname'];
 			}
 
 			// Image

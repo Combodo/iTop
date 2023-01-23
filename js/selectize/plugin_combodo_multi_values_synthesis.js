@@ -219,15 +219,17 @@ Selectize.define("combodo_multi_values_synthesis", function (aOptions) {
 	oSelf.UpdateAllTooltip = (function () {
 		return function ($item, sItem) {
 			const iOccurrence = oSelf.options[sItem]['occurrence'];
+			let sTooltip = '';
 			if(oSelf.options[sItem]['empty']){
-				$item.attr('title', aOptions.tooltip_links_will_be_created_for_all_objects);
+				sTooltip = aOptions.tooltip_links_will_be_created_for_all_objects;
 			}
 			else if(iOccurrence === '1'){
-				$item.attr('title', aOptions.tooltip_links_will_be_created_for_one_object);
+				sTooltip = aOptions.tooltip_links_will_be_created_for_one_object;
 			}
 			else{
-				$item.attr('title', aOptions.tooltip_links_will_be_created_for_x_objects.replaceAll('{count}', iOccurrence));
+				sTooltip = aOptions.tooltip_links_will_be_created_for_x_objects.replaceAll('{count}', iOccurrence);
 			}
+			oSelf.CreateTooltip($item, sItem, sTooltip);
 		}
 	})();
 
@@ -235,15 +237,17 @@ Selectize.define("combodo_multi_values_synthesis", function (aOptions) {
 	oSelf.UpdateRemoveTooltip = (function () {
 		return function ($item, sItem) {
 			const iOccurrence = oSelf.options[sItem]['occurrence'];
+			let sTooltip = '';
 			if(oSelf.options[sItem]['full']){
-				$item.attr('title', aOptions.tooltip_links_will_be_deleted_from_all_objects);
+				sTooltip = aOptions.tooltip_links_will_be_deleted_from_all_objects;
 			}
 			else if(oSelf.options[sItem]['occurrence'] === '1'){
-				$item.attr('title', aOptions.tooltip_links_will_be_deleted_from_one_object);
+				sTooltip = aOptions.tooltip_links_will_be_deleted_from_one_object;
 			}
 			else{
-				$item.attr('title', aOptions.tooltip_links_will_be_deleted_from_x_objects.replaceAll('{count}', iOccurrence));
+				sTooltip = aOptions.tooltip_links_will_be_deleted_from_x_objects.replaceAll('{count}', iOccurrence);
 			}
+			oSelf.CreateTooltip($item, sItem, sTooltip);
 		}
 	})();
 
@@ -251,15 +255,26 @@ Selectize.define("combodo_multi_values_synthesis", function (aOptions) {
 	oSelf.UpdateIgnoreTooltip = (function () {
 		return function ($item, sItem) {
 			const iOccurrence = oSelf.options[sItem]['occurrence'];
+			let sTooltip = '';
 			if(oSelf.options[sItem]['full']){
-				$item.attr('title', aOptions.tooltip_links_exist_for_all_objects);
+				sTooltip = aOptions.tooltip_links_exist_for_all_objects;
 			}
 			else if(iOccurrence === '1'){
-				$item.attr('title', aOptions.tooltip_links_exist_for_one_object);
+				sTooltip = aOptions.tooltip_links_exist_for_one_object;
 			}
 			else{
-				$item.attr('title', aOptions.tooltip_links_exist_for_x_objects.replaceAll('{count}', iOccurrence));
+				sTooltip = aOptions.tooltip_links_exist_for_x_objects.replaceAll('{count}', iOccurrence);
 			}
+			oSelf.CreateTooltip($item, sItem, sTooltip);
+		}
+	})();
+
+	// Update ignore tooltip
+	oSelf.CreateTooltip = (function () {
+		return function ($item, sItem, sTooltip) {
+			$item.attr('data-tooltip-content', oSelf.options[sItem][this.settings.tooltipField] + '<br><span class="ibo-linked-set--bulk-tooltip-info">' + sTooltip + '</span>');
+			$item.attr('data-tooltip-html-enabled', true);
+			CombodoTooltip.InitTooltipFromMarkup($item, true);
 		}
 	})();
 });

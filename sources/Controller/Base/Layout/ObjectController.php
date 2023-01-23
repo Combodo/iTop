@@ -12,7 +12,7 @@ use cmdbAbstractObject;
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\Controller\Links\ObjectRepository;
+use Combodo\iTop\Service\Base\ObjectRepository;
 use Dict;
 use iTopWebPage;
 use JsonPage;
@@ -122,16 +122,16 @@ class ObjectController extends AbstractController
 		$sThisObjectData = utils::ReadPostedParam('this_object_data', null, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 		$oThisObj = ObjectRepository::GetObjectFromWizardHelperData($sThisObjectData);
 
-		// Retrieve binder data
-		$aBinder = utils::ReadParam('binder', null, false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		// Retrieve data post processor
+		$aDataProcessor = utils::ReadParam('data_post_processor', null, false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 
 		// Search objects
 		$aResult = ObjectRepository::SearchFromOql($sObjectClass, $aFieldsToLoad, $sOql, $sSearch, $oThisObj);
 
-		// Data binder
-		// Note: data binder allow you to perform actions on search result (compute object result statistics, add others information...).
-		if ($aResult !== null && $aBinder !== null) {
-			$aResult = call_user_func(array($aBinder['class_name'], 'Bind'), $sObjectClass, $aResult, $aBinder['settings']);
+		// Data post processor
+		// Note: Data post processor allow you to perform actions on search result (compute object result statistics, add others information...).
+		if ($aResult !== null && $aDataProcessor !== null) {
+			$aResult = call_user_func(array($aDataProcessor['class_name'], 'Execute'), $aResult, $aDataProcessor['settings']);
 		}
 
 		return $oPage->SetData([

@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\UI\Links\Set;
+namespace Combodo\iTop\Service\Links;
 
 use CMDBSource;
-use Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider\iDataBinder;
+use Combodo\iTop\Service\Base\iDataPostProcessor;
 use DBObjectSet;
 use DBSearch;
 use Exception;
@@ -28,21 +28,32 @@ use ExceptionLog;
 use FieldExpression;
 
 /**
- * Class LinksBulkDataBinder
+ * Class LinksBulkDataPostProcessor
  *
  * @api
  *
  * @since 3.1.0
- * @package Combodo\iTop\Application\UI\Links\Set
+ * @package Combodo\iTop\Service\Links
  */
-class LinksBulkDataBinder implements iDataBinder
+class LinksBulkDataPostProcessor implements iDataPostProcessor
 {
 	/** @inheritDoc */
-	public static function Bind(string $sObjectClassName, array $aData, array $aBinderSettings): array
+	public static function Execute(array $aData, array $aSettings): array
 	{
-		return self::ComputeScopeData($aData, $aBinderSettings['bulk_oql'], $aBinderSettings['link_class'], $aBinderSettings['origin_field'], $aBinderSettings['target_field']);
+		return self::ComputeScopeData($aData, $aSettings['bulk_oql'], $aSettings['link_class'], $aSettings['origin_field'], $aSettings['target_field']);
 	}
 
+	/**
+	 * ComputeScopeData.
+	 *
+	 * @param array $aResult
+	 * @param string $sScope
+	 * @param string $sLinkClass
+	 * @param string $sOriginField
+	 * @param string $sTargetField
+	 *
+	 * @return array
+	 */
 	public static function ComputeScopeData(array $aResult, string $sScope, string $sLinkClass, string $sOriginField, string $sTargetField): array
 	{
 		if (!empty($sScope)) {

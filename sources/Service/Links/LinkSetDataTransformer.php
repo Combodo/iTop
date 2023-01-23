@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Controller\Links;
+namespace Combodo\iTop\Service\Links;
 
 use Exception;
 use ExceptionLog;
@@ -32,9 +32,9 @@ use utils;
  * @api
  *
  * @since 3.1.0
- * @package Combodo\iTop\Controller\Links
+ * @package Combodo\iTop\Service\Links
  */
-class LinksSetDataTransformer
+class LinkSetDataTransformer
 {
 	/**
 	 * Decode.

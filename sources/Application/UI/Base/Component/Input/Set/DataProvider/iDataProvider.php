@@ -126,4 +126,20 @@ interface iDataProvider
 	 * @return $this
 	 */
 	public function SetGroupField(string $sField): iDataProvider;
+
+	/**
+	 * GetTooltipField.
+	 *
+	 * @return string|null
+	 */
+	public function GetTooltipField(): ?string;
+
+	/**
+	 * SetTooltipField.
+	 *
+	 * @param string $sField
+	 *
+	 * @return $this
+	 */
+	public function SetTooltipField(string $sField): iDataProvider;
 }

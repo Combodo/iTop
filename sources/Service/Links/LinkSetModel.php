@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Controller\Links;
+namespace Combodo\iTop\Service\Links;
 
 use AttributeExternalKey;
 use AttributeLinkedSet;
@@ -17,7 +17,7 @@ use MetaModel;
  *
  * @internal
  * @since 3.1.0
- * @package Combodo\iTop\Controller
+ * @package Combodo\iTop\Service\Links
  */
 class LinkSetModel
 {

@@ -42,11 +42,11 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksViewTable;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksViewTable;
 use Combodo\iTop\Application\UI\Links\Set\LinksSetUIBlockFactory;
-use Combodo\iTop\Controller\Links\LinkSetModel;
-use Combodo\iTop\Controller\Links\LinksSetDataTransformer;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
+use Combodo\iTop\Service\Links\LinkSetDataTransformer;
+use Combodo\iTop\Service\Links\LinkSetModel;
 
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
@@ -2033,7 +2033,7 @@ HTML
 		// attributes not compatible with bulk modify
 		$bAttNotCompatibleWithBulk = array_key_exists('bulk_context', $aArgs) && !$oAttDef->IsBulkModifyCompatible();
 		if ($bAttNotCompatibleWithBulk) {
-			$oTagSetBlock = new Html('<span><i class="fas fa-info-circle" style="color: hsla(211, 60.7%, 42.9%, 1);margin-right: 3px;"></i>This attribute can\'t be edited in bulk context</span>');
+			$oTagSetBlock = new Html('<span class="ibo-bulk--bulk-modify--incompatible-attribute">'.Dict::S('UI:Bulk:modify:IncompatibleAttribute').'</span>');
 			$sHTMLValue = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oTagSetBlock);
 		}
 
@@ -4221,7 +4221,7 @@ HTML;
 					$sLinkedClass = LinkSetModel::GetLinkedClass($oAttDef);
 					$sTargetField = LinkSetModel::GetTargetField($oAttDef);
 					$aOperations = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_operations", '{}', 'raw_data'), true);
-					$value = LinksSetDataTransformer::Encode($aOperations, $sLinkedClass, $sTargetField);
+					$value = LinkSetDataTransformer::Encode($aOperations, $sLinkedClass, $sTargetField);
 					break;
 				}
 				$aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}',
@@ -4999,7 +4999,7 @@ HTML
 							$currValue = $aKeys[0]; // The only value is the first key
 							if ($oAttDef->GetEditClass() == 'LinkedSet') {
 								$oOrmLinkSet = $oDummyObj->Get($sAttCode);
-								LinksSetDataTransformer::StringToOrmLinkSet($aValues[$sAttCode][$currValue]['edit_value'], $oOrmLinkSet);
+								LinkSetDataTransformer::StringToOrmLinkSet($aValues[$sAttCode][$currValue]['edit_value'], $oOrmLinkSet);
 
 							} else {
 								$oDummyObj->Set($sAttCode, $currValue);
@@ -5054,7 +5054,7 @@ HTML
 							} else if ($oAttDef->GetEditClass() == 'LinkedSet') {
 								$oOrmLinkSet = $oDummyObj->Get($sAttCode);
 								foreach ($aMultiValues as $key => $sValue) {
-									LinksSetDataTransformer::StringToOrmLinkSet($sValue['edit_value'], $oOrmLinkSet);
+									LinkSetDataTransformer::StringToOrmLinkSet($sValue['edit_value'], $oOrmLinkSet);
 								}
 
 							} else {

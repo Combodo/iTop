@@ -39,6 +39,9 @@ abstract class AbstractDataProvider implements iDataProvider
 	/** @var string|null $sGroupField Field used for grouping options */
 	private ?string $sGroupField;
 
+	/** @var string|null $sTooltipField Field used for item tooltip */
+	private ?string $sTooltipField;
+
 	/**
 	 * Constructor.
 	 *
@@ -60,6 +63,7 @@ abstract class AbstractDataProvider implements iDataProvider
 		$this->sDataValueField = 'value';
 		$this->aDataSearchFields = ['search'];
 		$this->sGroupField = null;
+		$this->sTooltipField = 'label';
 	}
 
 	/** @inheritDoc */
@@ -114,6 +118,20 @@ abstract class AbstractDataProvider implements iDataProvider
 	public function SetGroupField(string $sField): iDataProvider
 	{
 		$this->sGroupField = $sField;
+
+		return $this;
+	}
+
+	/** @inheritDoc */
+	public function GetTooltipField(): ?string
+	{
+		return $this->sTooltipField;
+	}
+
+	/** @inheritDoc */
+	public function SetTooltipField(string $sField): iDataProvider
+	{
+		$this->sTooltipField = $sField;
 
 		return $this;
 	}

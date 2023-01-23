@@ -6,7 +6,6 @@
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockLinksSetDisplayAsProperty;
-use Combodo\iTop\Controller\Links\LinkSetModel;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
@@ -14,6 +13,7 @@ use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use Combodo\iTop\Service\Links\LinkSetModel;
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');

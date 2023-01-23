@@ -66,7 +66,8 @@ class SetUIBlockFactory extends AbstractUIBlockFactory
 		$oDataProvider
 			->SetDataLabelField($sLabelFields)
 			->SetDataValueField($sValueField)
-			->SetDataSearchFields($aSearchFields);
+			->SetDataSearchFields($aSearchFields)
+			->SetTooltipField($sLabelFields);
 		if ($sGroupField != null) {
 			$oDataProvider->SetGroupField($sGroupField);
 		}
@@ -103,7 +104,8 @@ class SetUIBlockFactory extends AbstractUIBlockFactory
 		$oDataProvider
 			->SetDataLabelField($sLabelFields)
 			->SetDataValueField($sValueField)
-			->SetDataSearchFields($aSearchFields);
+			->SetDataSearchFields($aSearchFields)
+			->SetTooltipField($sLabelFields);
 		if ($sGroupField != null) {
 			$oDataProvider->SetGroupField($sGroupField);
 		}
@@ -144,6 +146,7 @@ class SetUIBlockFactory extends AbstractUIBlockFactory
 		if ($sGroupField != null) {
 			$oDataProvider->SetGroupField($sGroupField);
 		}
+		$oDataProvider->SetTooltipField('full_description');
 		$oSetUIBlock->SetDataProvider($oDataProvider);
 
 		return $oSetUIBlock;
