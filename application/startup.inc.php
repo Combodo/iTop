@@ -15,7 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-use Combodo\iTop\Application\ApplicationEvents;
+use Combodo\iTop\Application\EventRegister\ApplicationEvents;
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
