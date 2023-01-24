@@ -124,7 +124,7 @@ class LinkSetController extends AbstractController
 	 * @throws \CoreException
 	 * @throws \SecurityException
 	 */
-	public function OperationCreateLinkedObject()
+	public function OperationCreateLinkedObject(): AjaxPage
 	{
 		if (!$this->IsHandlingXmlHttpRequest()) {
 			throw new CoreException('LinksetController can only be called in ajax.');
@@ -192,6 +192,7 @@ JS
 			;
 			$aExtraParams = [
 				'noRelations' => true,
+				'hide_transitions' => true,
 				'fieldsFlags' => $aFieldFlags,
 				'js_handlers' => [
 					'form_on_submit' => $sFormOnSubmitJsCode,

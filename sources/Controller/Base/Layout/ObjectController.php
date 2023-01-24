@@ -77,6 +77,7 @@ class ObjectController extends AbstractController
 			$oPage = new AjaxPage('');
 			$aFormExtraParams['js_handlers'] = [];
 			$aFormExtraParams['noRelations'] = true;
+			$aFormExtraParams['hide_transitions'] = true;
 			// We display this form in a modal, once we submit (in ajax) we probably want to only close the modal 
 			$aFormExtraParams['js_handlers']['form_on_submit'] =
 				<<<JS
