@@ -12,11 +12,13 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
 use MetaModel;
+use UILinksWidgetDirect;
 use utils;
 
 /**
@@ -149,20 +151,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 				->AddCSSClass('ibo-datatable-panel');
 
 			// Toolbar and actions
-			$oToolbar = ToolbarUIBlockFactory::MakeForButton();
-			$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
-			$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._removeSelection();");
-			$oToolbar->AddSubBlock($oActionButtonUnlink);
-			$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
-			$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
-			$oToolbar->AddSubBlock($oActionButtonLink);
-			$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral('Create');
-			$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._createRow();");
-			$oToolbar->AddSubBlock($oActionButtonCreate);
-			$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete');
-			$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteSelection();");
-
-			$oToolbar->AddSubBlock($oActionButtonDelete);
+			$oToolbar = $this->InitToolBar();
 			$aTablePanel->AddToolbarBlock($oToolbar);
 			$aTablePanel->AddSubBlock($oDatatable);
 			$this->AddSubBlock($aTablePanel);
@@ -174,6 +163,54 @@ class BlockDirectLinksEditTable extends UIContentBlock
 			$this->AddSubBlock($oAlert);
 		}
 	}
+
+	/**
+	 * InitToolBar.
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar
+	 */
+	private function InitToolBar(): Toolbar
+	{
+		$oToolbar = ToolbarUIBlockFactory::MakeForButton();
+
+		// until a full link set refactoring (continue using edit_mode property)
+		switch ($this->oAttributeLinkedSet->GetEditMode()) {
+			case LINKSET_EDITMODE_NONE: // The linkset is read-only
+				break;
+
+			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
+				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
+				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
+				$oToolbar->AddSubBlock($oActionButtonLink);
+				break;
+
+			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
+				$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral('Create');
+				$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._createRow();");
+				$oToolbar->AddSubBlock($oActionButtonCreate);
+				$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete');
+				$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteSelection();");
+
+				$oToolbar->AddSubBlock($oActionButtonDelete);
+				break;
+
+			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
+				$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
+				$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._removeSelection();");
+				$oToolbar->AddSubBlock($oActionButtonUnlink);
+				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
+				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
+				$oToolbar->AddSubBlock($oActionButtonLink);
+				break;
+
+			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
+			default:
+
+		}
+
+		return $oToolbar;
+	}
+
 
 	/**
 	 * Return table rows.
