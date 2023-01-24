@@ -17,17 +17,31 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-// Display DataTable
 Dict::Add('EN US', 'English', 'English', array(
-	'UI:Links:ActionRow:Detach'              => 'Detach',
-	'UI:Links:ActionRow:Detach+'             => 'Detach this object',
-	'UI:Links:ActionRow:Detach:Confirmation' => 'Do you really want to detach <b>{item}</b> from current object ?',
-	'UI:Links:ActionRow:Delete'              => 'Delete',
-	'UI:Links:ActionRow:Delete+'             => 'Delete this object',
-	'UI:Links:ActionRow:Delete:Confirmation' => 'Do you really want to delete <b>{item}</b> from current object ?',
-	'UI:Links:ActionRow:Modify'              => 'Modify',
-	'UI:Links:ActionRow:Modify+'             => 'Modify this object',
-	'UI:Links:ActionRow:Modify:Modal:Title' => 'Modify a link',
-	'UI:Links:New:Modal:Title' => 'Creation of a link',
-	'UI:Links:New:Button:Tooltip' => 'Add a new link',
+
+	// Action row
+	'UI:Links:ActionRow:Detach'                     => 'Detach',
+	'UI:Links:ActionRow:Detach+'                    => 'Detach this object',
+	'UI:Links:ActionRow:Detach:Confirmation'        => 'Do you really want to detach <b>{item}</b> from current object ?',
+	'UI:Links:ActionRow:Delete'                     => 'Delete',
+	'UI:Links:ActionRow:Delete+'                    => 'Delete this object',
+	'UI:Links:ActionRow:Delete:Confirmation'        => 'Do you really want to delete <b>{item}</b> from current object ?',
+	'UI:Links:ActionRow:Modify'                     => 'Modify',
+	'UI:Links:ActionRow:Modify+'                    => 'Modify this object',
+	'UI:Links:ActionRow:Modify:Modal:Title'         => 'Modify a link',
+
+	// New
+	'UI:Links:New:Modal:Title'                      => 'Creation of a link',
+	'UI:Links:New:Button:Tooltip'                   => 'Add a new link',
+
+	// Bulk
+	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Link all objects',
+	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Unlink all objects',
+	'UI:Links:Bulk:LinkWillBeCreatedFor1Object'     => 'Link one object',
+	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object'    => 'Unlink one object',
+	'UI:Links:Bulk:LinkWillBeCreatedForXObjects'    => 'Link {count} objects',
+	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects'   => 'Unlink {count} objects',
+	'UI:Links:Bulk:LinkExistForAllObjects'          => 'All objets are already linked',
+	'UI:Links:Bulk:LinkExistForOneObject'           => 'One object is linked',
+	'UI:Links:Bulk:LinkExistForXObjects'            => '{count} objects are linked',
 ));

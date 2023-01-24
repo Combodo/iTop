@@ -60,16 +60,20 @@ class WizardHelper
 					// special handling for lists
 					// assumes this is handled as an array of objects
 					// thus encoded in json like: [ { name:'link1', 'id': 123}, { name:'link2', 'id': 124}...]
-					$aData = json_decode($value, true); // true means decode as a hash array (not an object)
+					if (!is_array($value)) {
+						$aData = json_decode($value, true); // true means decode as a hash array (not an object)
+					} else {
+						$aData = $value;
+					}
+
 					// Check what are the meaningful attributes
 					$aFields = $this->GetLinkedWizardStructure($oAttDef);
 					$sLinkedClass = $oAttDef->GetLinkedClass();
 					$aLinkedObjectsArray = array();
-					if (!is_array($aData))
-					{
-						echo ("aData: '$aData' (value: '$value')\n");
+					if (!is_array($aData)) {
+						echo("aData: '$aData' (value: '$value')\n");
 					}
-					foreach($aData as $aLinkedObject)
+					foreach ($aData as $aLinkedObject)
 					{
 						$oLinkedObj = MetaModel::NewObject($sLinkedClass);
 						foreach($aFields as $sLinkedAttCode)

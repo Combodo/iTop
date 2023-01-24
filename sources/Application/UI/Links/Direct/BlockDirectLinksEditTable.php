@@ -127,7 +127,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	 *
 	 * @return void
 	 */
-	public function InitTable(\WebPage $oPage, \DBObjectSet $oValue, string $sFormPrefix)
+	public function InitTable(\WebPage $oPage, $oValue, string $sFormPrefix)
 	{
 		/** @todo fields initialization */
 		$this->sInputName = $sFormPrefix.'attr_'.$this->oUILinksDirectWidget->GetAttCode();
@@ -193,26 +193,6 @@ class BlockDirectLinksEditTable extends UIContentBlock
 			$aRow['form::select'] = '<input type="checkbox" class="selectList'.$this->oUILinksDirectWidget->GetInputId().'" onClick="oWidget'.$this->oUILinksDirectWidget->GetInputId().'.directlinks(\'instance\')._onSelectChange();" value="'.$oLinkObj->GetKey().'"/>';
 			foreach ($this->oUILinksDirectWidget->GetZList() as $sLinkedAttCode) {
 				$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
-
-				// tentative d'ajout des attributs en édition
-//				$sValue = $oLinkObj->Get($sLinkedAttCode);
-//				$sDisplayValue = $oLinkObj->GetEditValue($sLinkedAttCode);
-//				$oAttDef = MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetLinkedClass(), $sLinkedAttCode);
-//
-//				$aRow[$sLinkedAttCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'
-//					.\cmdbAbstractObject::GetFormElementForField(
-//						$oPage,
-//						$this->oUILinksDirectWidget->GetLinkedClass(),
-//						$sLinkedAttCode,
-//						$oAttDef,
-//						$sValue,
-//						$sDisplayValue,
-//						$this->GetFieldId($oValue, $sLinkedAttCode),
-//						']',
-//						0,
-//						[]
-//					)
-//					.'</div></div></div>';
 			}
 			$aRows[] = $aRow;
 		}

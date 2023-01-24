@@ -5,12 +5,15 @@
  */
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockLinksSetDisplayAsProperty;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use Combodo\iTop\Service\Links\LinkSetModel;
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
@@ -92,6 +95,9 @@ define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/re
 define('LINKSET_RELATIONTYPE_PROPERTY', 'property');
 define('LINKSET_RELATIONTYPE_LINK', 'link');
 
+define('LINKSET_DISPLAY_STYLE_PROPERTY', 'property');
+define('LINKSET_DISPLAY_STYLE_TAB', 'tab');
+
 /**
  * Attributes implementing this interface won't be accepted as `group by` field
  *
@@ -139,6 +145,15 @@ abstract class AttributeDefinition
 	}
 
 	abstract public function GetEditClass();
+
+	/**
+	 * @return array Css classes
+	 * @since 3.1.0 N°3190
+	 */
+	public function GetCssClasses(): array
+	{
+		return $this->aCSSClasses;
+	}
 
 	/**
 	 * Return the search widget type corresponding to this attribute
@@ -359,6 +374,18 @@ abstract class AttributeDefinition
 	public static function IsScalar()
 	{
 		return false;
+	}
+
+	/**
+	 * Returns true if the attribute can be used in bulk modify.
+	 *
+	 * @return bool
+	 * @since 3.1.0 N°3190
+	 *
+	 */
+	public static function IsBulkModifyCompatible(): bool
+	{
+		return static::IsScalar();
 	}
 
 	/**
@@ -1417,6 +1444,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function __construct($sCode, $aParams)
 	{
 		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-set';
 	}
 
 	public static function ListExpectedParams()
@@ -1428,6 +1456,12 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetEditClass()
 	{
 		return "LinkedSet";
+	}
+
+	/** @inheritDoc */
+	public static function IsBulkModifyCompatible(): bool
+	{
+		return false;
 	}
 
 	public function IsWritable()
@@ -1447,7 +1481,26 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetValuesDef()
 	{
-		return $this->Get("allowed_values");
+		$oValSetDef = $this->Get("allowed_values");
+		if (!$oValSetDef) {
+			// Let's propose every existing value
+			$oValSetDef = new ValueSetObjects('SELECT '.LinkSetModel::GetTargetClass($this));
+		}
+
+		return $oValSetDef;
+	}
+
+	public function GetEditValue($value, $oHostObj = null)
+	{
+		/** @var ormLinkSet $value * */
+		if ($value->Count() === 0) {
+			return '';
+		}
+
+		/** Return linked objects key as string **/
+		$aValues = $value->GetValues();
+
+		return implode(' ', $aValues);
 	}
 
 	public function GetPrerequisiteAttributes($sClass = null)
@@ -1533,6 +1586,15 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/**
+	 * @return string see LINKSET_DISPLAY_STYLE_* constants
+	 * @since 3.1.0 N°3190
+	 */
+	public function GetDisplayStyle()
+	{
+		return $this->GetOptional('display_style', LINKSET_DISPLAY_STYLE_TAB);
+	}
+
+	/**
 	 * @return boolean
 	 * @since 3.1.0 N°5563
 	 */
@@ -1566,49 +1628,30 @@ class AttributeLinkedSet extends AttributeDefinition
 		return '';
 	}
 
-	/**
-	 * @param string $sValue
-	 * @param \DBObject $oHostObject
-	 * @param bool $bLocalize
-	 *
-	 * @return string|null
-	 *
-	 * @throws \CoreException
-	 */
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	/** @inheritDoc * */
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true): string
 	{
-		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
-		{
-			$sValue->Rewind();
-			$aItems = array();
-			while ($oObj = $sValue->Fetch())
-			{
-				// Show only relevant information (hide the external key to the current object)
-				$aAttributes = array();
-				foreach(MetaModel::ListAttributeDefs($this->GetLinkedClass()) as $sAttCode => $oAttDef)
-				{
-					if ($sAttCode == $this->GetExtKeyToMe())
-					{
-						continue;
-					}
-					if ($oAttDef->IsExternalField())
-					{
-						continue;
-					}
-					$sAttValue = $oObj->GetAsHTML($sAttCode);
-					if (strlen($sAttValue) > 0)
-					{
-						$aAttributes[] = $sAttValue;
-					}
-				}
-				$sAttributes = implode(', ', $aAttributes);
-				$aItems[] = $sAttributes;
+		try {
+
+			/** @var ormLinkSet $sValue */
+			if ($sValue->Count() === 0) {
+				return '';
 			}
 
-			return implode('<br/>', $aItems);
-		}
+			$oLinkSetBlock = new BlockLinksSetDisplayAsProperty($this->GetCode(), $this, $sValue);
 
-		return null;
+			return ConsoleBlockRenderer::RenderBlockTemplates($oLinkSetBlock);
+		}
+		catch (Exception $e) {
+			$sMessage = "Error while displaying attribute {$this->GetCode()}";
+			IssueLog::Error($sMessage, IssueLog::CHANNEL_DEFAULT, [
+				'host_object_class' => $this->GetHostClass(),
+				'host_object_key'   => $oHostObject->GetKey(),
+				'attribute'         => $this->GetCode(),
+			]);
+
+			return $sMessage;
+		}
 	}
 
 	/**
@@ -2361,6 +2404,13 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 
 		return $oRet;
 	}
+
+	/** @inheritDoc */
+	public static function IsBulkModifyCompatible(): bool
+	{
+		return true;
+	}
+
 }
 
 /**

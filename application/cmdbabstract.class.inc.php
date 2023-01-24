@@ -41,8 +41,12 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksViewTable;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksViewTable;
+use Combodo\iTop\Application\UI\Links\Set\LinksSetUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
+use Combodo\iTop\Service\Links\LinkSetDataTransformer;
+use Combodo\iTop\Service\Links\LinkSetModel;
 
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
@@ -663,10 +667,11 @@ HTML
 				continue;
 			}
 
-			// Display mode
-			if (!$oAttDef->IsLinkset()) {
+			// Process only link set attributes with tab display style
+			$bIsLinkSetWithDisplayStyleTab = is_a($oAttDef, AttributeLinkedSet::class) && $oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB;
+			if (!$oAttDef->IsLinkset() || !$bIsLinkSetWithDisplayStyleTab) {
 				continue;
-			} // Process only linkset attributes...
+			}
 
 			$sLinkedClass = $oAttDef->GetLinkedClass();
 
@@ -897,7 +902,8 @@ HTML
 								// the caller may override some flags if needed
 								$iFlags = $iFlags | $aExtraFlags[$sAttCode];
 							}
-							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard)) {
+							$bIsLinkSetWithDisplayStyleTab = is_a($oAttDef, AttributeLinkedSet::class) && $oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB;
+							if ((($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard) && !$bIsLinkSetWithDisplayStyleTab) {
 								$sInputId = $this->m_iFormId.'_'.$sAttCode;
 								if ($oAttDef->IsWritable()) {
 									$sInputType = '';
@@ -905,8 +911,8 @@ HTML
 										// State attribute is always read-only from the UI
 										$sHTMLValue = $this->GetAsHTML($sAttCode);
 										$val = array(
-											'label' => '<label>'.$oAttDef->GetLabel().'</label>',
-											'value' => $sHTMLValue,
+											'label'    => '<label>'.$oAttDef->GetLabel().'</label>',
+											'value'    => $sHTMLValue,
 											'input_id' => $sInputId,
 											'comments' => $sComments,
 											'infos' => $sInfos,
@@ -935,7 +941,11 @@ HTML
 										} else {
 											$sValue = $this->Get($sAttCode);
 											$sDisplayValue = $this->GetEditValue($sAttCode);
+											// transfer bulk context to components as it can be needed (linked set)
 											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
+											if (array_key_exists('bulk_context', $aExtraParams)) {
+												$aArgs['bulk_context'] = $aExtraParams['bulk_context'];
+											}
 											$sHTMLValue = "".self::GetFormElementForField(
 													$oPage, $sClass, $sAttCode, $oAttDef, $sValue,
 													$sDisplayValue, $sInputId, '', $iFlags, $aArgs,
@@ -2019,7 +2029,15 @@ HTML
 		}
 
 		$sHTMLValue = '';
-		if (!$oAttDef->IsExternalField()) {
+
+		// attributes not compatible with bulk modify
+		$bAttNotCompatibleWithBulk = array_key_exists('bulk_context', $aArgs) && !$oAttDef->IsBulkModifyCompatible();
+		if ($bAttNotCompatibleWithBulk) {
+			$oTagSetBlock = new Html('<span class="ibo-bulk--bulk-modify--incompatible-attribute">'.Dict::S('UI:Bulk:modify:IncompatibleAttribute').'</span>');
+			$sHTMLValue = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oTagSetBlock);
+		}
+
+		if (!$oAttDef->IsExternalField() && !$bAttNotCompatibleWithBulk) {
 			$bMandatory = 'false';
 			if ((!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY)) {
 				$bMandatory = 'true';
@@ -2313,17 +2331,29 @@ EOF
 					break;
 
 				case 'LinkedSet':
-					$sInputType = self::ENUM_INPUT_TYPE_LINKEDSET;
-					if ($oAttDef->IsIndirect()) {
-						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
-							$oAttDef->DuplicatesAllowed());
+					if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY) {
+						if (array_key_exists('bulk_context', $aArgs)) {
+							$oTagSetBlock = LinksSetUIBlockFactory::MakeForBulkLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['bulk_context']);
+						} else {
+							$oTagSetBlock = LinksSetUIBlockFactory::MakeForLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName);
+						}
+						$oTagSetBlock->SetName("attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}");
+						$aEventsList[] = 'validate';
+						$aEventsList[] = 'change';
+						$sHTMLValue = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oTagSetBlock);
 					} else {
-						$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix);
+						$sInputType = self::ENUM_INPUT_TYPE_LINKEDSET;
+						if ($oAttDef->IsIndirect()) {
+							$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
+								$oAttDef->DuplicatesAllowed());
+						} else {
+							$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix);
+						}
+						$aEventsList[] = 'validate';
+						$aEventsList[] = 'change';
+						$oObj = $aArgs['this'] ?? null;
+						$sHTMLValue = $oWidget->Display($oPage, $value, array(), $sFormPrefix, $oObj);
 					}
-					$aEventsList[] = 'validate';
-					$aEventsList[] = 'change';
-					$oObj = isset($aArgs['this']) ? $aArgs['this'] : null;
-					$sHTMLValue = $oWidget->Display($oPage, $value, array(), $sFormPrefix, $oObj);
 					break;
 
 				case 'Document':
@@ -3550,17 +3580,14 @@ EOF
 	protected function GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode)
 	{
 		$retVal = null;
-		if ($this->IsNew())
-		{
+		if ($this->IsNew()) {
 			$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
-		}
-		else
-		{
+		} else {
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 		}
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard))
-		{
+		$bIsLinkSetWithDisplayStyleTab = is_a($oAttDef, AttributeLinkedSet::class) && $oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB;
+		if ((($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard) && !$bIsLinkSetWithDisplayStyleTab) {
 			// First prepare the label
 			// - Attribute description
 			$sDescription = $oAttDef->GetDescription();
@@ -3989,14 +4016,17 @@ HTML;
 							foreach ($value['to_be_created'] as $aData)
 							{
 								$sSubClass = $aData['class'];
-								if (($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass)))
-								{
+								if (($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass))) {
 									$aObjData = $aData['data'];
-									$oLink = MetaModel::NewObject($sSubClass);
-									$oLink->UpdateObjectFromArray($aObjData);
-									$oLinkSet->AddItem($oLink);
+									// Avoid duplicates on bulk modify
+									if (!in_array($aObjData[$oAttDef->GetExtKeyToRemote()], $oLinkSet->GetColumnAsArray($oAttDef->GetExtKeyToRemote(), false))
+										|| $oAttDef->DuplicatesAllowed()) {
+										$oLink = MetaModel::NewObject($sSubClass);
+										$oLink->UpdateObjectFromArray($aObjData);
+										$oLinkSet->AddItem($oLink);
+									}
 								}
-							}
+						}
 						}
 						if (array_key_exists('to_be_added', $value) && (count($value['to_be_added']) > 0))
 						{
@@ -4202,28 +4232,29 @@ HTML;
 
 			case 'LinkedSet':
 				/** @var AttributeLinkedSet $oAttDef */
+				if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY) {
+					$sLinkedClass = LinkSetModel::GetLinkedClass($oAttDef);
+					$sTargetField = LinkSetModel::GetTargetField($oAttDef);
+					$aOperations = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_operations", '{}', 'raw_data'), true);
+					$value = LinkSetDataTransformer::Encode($aOperations, $sLinkedClass, $sTargetField);
+					break;
+				}
 				$aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}',
 					'raw_data'), true);
 				$aToBeCreated = array();
-				foreach($aRawToBeCreated as $aData)
-				{
+				foreach ($aRawToBeCreated as $aData) {
 					$sSubFormPrefix = $aData['formPrefix'];
 					$sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
 					$aObjData = array();
-					foreach($aData as $sKey => $value)
-					{
-						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
-						{
+					foreach ($aData as $sKey => $value) {
+						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches)) {
 							$oLinkAttDef = MetaModel::GetAttributeDef($sObjClass, $aMatches[1]);
 							// Recursing over n:n link datetime attributes
 							// Note: We might need to do it with other attribute types, like Document or redundancy setting.
-							if ($oLinkAttDef instanceof AttributeDateTime)
-							{
+							if ($oLinkAttDef instanceof AttributeDateTime) {
 								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
 									$aMatches[1], $sObjClass, $aData);
-							}
-							else
-							{
+							} else {
 								$aObjData[$aMatches[1]] = $value;
 							}
 						}
@@ -4234,25 +4265,19 @@ HTML;
 				$aRawToBeModified = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbm", '{}',
 					'raw_data'), true);
 				$aToBeModified = array();
-				foreach($aRawToBeModified as $iObjKey => $aData)
-				{
+				foreach($aRawToBeModified as $iObjKey => $aData) {
 					$sSubFormPrefix = $aData['formPrefix'];
 					$sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
 					$aObjData = array();
-					foreach($aData as $sKey => $value)
-					{
-						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
-						{
+					foreach($aData as $sKey => $value) {
+						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches)) {
 							$oLinkAttDef = MetaModel::GetAttributeDef($sObjClass, $aMatches[1]);
 							// Recursing over n:n link datetime attributes
 							// Note: We might need to do it with other attribute types, like Document or redundancy setting.
-							if ($oLinkAttDef instanceof AttributeDateTime)
-							{
+							if ($oLinkAttDef instanceof AttributeDateTime) {
 								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
 									$aMatches[1], $sObjClass, $aData);
-							}
-							else
-							{
+							} else {
 								$aObjData[$aMatches[1]] = $value;
 							}
 						}
@@ -4261,13 +4286,13 @@ HTML;
 				}
 
 				$value = array(
-					'to_be_created' => $aToBeCreated,
+					'to_be_created'  => $aToBeCreated,
 					'to_be_modified' => $aToBeModified,
-					'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]',
+					'to_be_deleted'  => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]',
 						'raw_data'), true),
-					'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]',
+					'to_be_added'    => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]',
 						'raw_data'), true),
-					'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]',
+					'to_be_removed'  => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]',
 						'raw_data'), true),
 				);
 				break;
@@ -4275,7 +4300,9 @@ HTML;
 			case 'Set':
 			case 'TagSet':
 				$sTagSetJson = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+			if ($sTagSetJson !== null) { // bulk modify, direct linked set not handled
 				$value = json_decode($sTagSetJson, true);
+			}
 				break;
 
 			default:
@@ -4896,13 +4923,12 @@ HTML
 			$sOQL = "SELECT $sClass WHERE id IN (".$sSelectedObj.")";
 			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
 
-			// Compute the distribution of the values for each field to determine which of the "scalar" fields are homogeneous
+			// Compute the distribution of the values for each field to determine which of the "scalar or linked set" fields are homogeneous
 			$aList = MetaModel::ListAttributeDefs($sClass);
 			$aValues = array();
 			foreach($aList as $sAttCode => $oAttDef)
 			{
-				if ($oAttDef->IsScalar())
-				{
+				if ($oAttDef->IsBulkModifyCompatible()) {
 					$aValues[$sAttCode] = array();
 				}
 			}
@@ -4910,26 +4936,27 @@ HTML
 			{
 				foreach($aList as $sAttCode => $oAttDef)
 				{
-					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
-					{
+					if ($oAttDef->IsBulkModifyCompatible() && $oAttDef->IsWritable()) {
 						$currValue = $oObj->Get($sAttCode);
-						if ($oAttDef instanceof AttributeCaseLog)
-						{
+						$editValue = '';
+						if ($oAttDef instanceof AttributeCaseLog) {
 							$currValue = ''; // Put a single scalar value to force caselog to mock a new entry. For more info see N°1059.
-						}
-						elseif ($currValue instanceof ormSet)
-						{
+						} elseif ($currValue instanceof ormSet) {
 							$currValue = $oAttDef->GetEditValue($currValue, $oObj);
+						} else if ($currValue instanceof ormLinkSet) {
+							$sHtmlValue = $oAttDef->GetAsHTML($currValue);
+							$editValue = $oAttDef->GetEditValue($currValue, $oObj);
+							$currValue = $sHtmlValue;
 						}
-						if (is_object($currValue))
-						{
+						if (is_object($currValue)) {
 							continue;
 						} // Skip non scalar values...
 						if (!array_key_exists($currValue, $aValues[$sAttCode]))
 						{
 							$aValues[$sAttCode][$currValue] = array(
-								'count' => 1,
-								'display' => $oObj->GetAsHTML($sAttCode),
+								'count'      => 1,
+								'display'    => $oObj->GetAsHTML($sAttCode),
+								'edit_value' => $editValue,
 							);
 						}
 						else
@@ -4971,7 +4998,7 @@ HTML
 					$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aDependents)."']";
 					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').on('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, false); } );\n");
 				}
-				if ($oAttDef->IsScalar() && $oAttDef->IsWritable()) {
+				if ($oAttDef->IsBulkModifyCompatible() && $oAttDef->IsWritable()) {
 					if ($oAttDef->GetEditClass() == 'One Way Password') {
 
 						$sTip = Dict::S('UI:Component:Field:BulkModify:UnknownValues:Tooltip');
@@ -4987,7 +5014,13 @@ HTML
 							reset($aValues[$sAttCode]);
 							$aKeys = array_keys($aValues[$sAttCode]);
 							$currValue = $aKeys[0]; // The only value is the first key
-							$oDummyObj->Set($sAttCode, $currValue);
+							if ($oAttDef->GetEditClass() == 'LinkedSet') {
+								$oOrmLinkSet = $oDummyObj->Get($sAttCode);
+								LinkSetDataTransformer::StringToOrmLinkSet($aValues[$sAttCode][$currValue]['edit_value'], $oOrmLinkSet);
+
+							} else {
+								$oDummyObj->Set($sAttCode, $currValue);
+							}
 							$aComments[$sAttCode] = '';
 							$sValueCheckbox = '';
 							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass)) {
@@ -5035,6 +5068,12 @@ HTML
 									$oTagSet->GenerateDiffFromArray($aTagCodes);
 								}
 								$oDummyObj->Set($sAttCode, $oTagSet);
+							} else if ($oAttDef->GetEditClass() == 'LinkedSet') {
+								$oOrmLinkSet = $oDummyObj->Get($sAttCode);
+								foreach ($aMultiValues as $key => $sValue) {
+									LinkSetDataTransformer::StringToOrmLinkSet($sValue['edit_value'], $oOrmLinkSet);
+								}
+
 							} else {
 								$oDummyObj->Set($sAttCode, null);
 							}
@@ -5070,15 +5109,18 @@ HTML
 
 			$aParams = array
 			(
-				'fieldsComments' => $aComments,
-				'noRelations' => true,
+				'fieldsComments'   => $aComments,
+				'noRelations'      => true,
 				'custom_operation' => $sCustomOperation,
-				'custom_button' => Dict::S('UI:Button:PreviewModifications'),
-				'selectObj' => $sSelectedObj,
-				'nbBulkObj' => $iAllowedCount,
-				'preview_mode' => true,
-				'disabled_fields' => $sDisableFields,
-				'disable_plugins' => true,
+				'custom_button'    => Dict::S('UI:Button:PreviewModifications'),
+				'selectObj'        => $sSelectedObj,
+				'nbBulkObj'        => $iAllowedCount,
+				'preview_mode'     => true,
+				'disabled_fields'  => $sDisableFields,
+				'disable_plugins'  => true,
+				'bulk_context'     => [
+					'oql' => $sOQL,
+				],
 			);
 			$aParams = $aParams + $aContextData; // merge keeping associations
 
