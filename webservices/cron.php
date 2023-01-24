@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Service\Cron\CronLog;
+
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 
@@ -92,7 +94,6 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 	$oProcess = new $TaskClass;
 	$oRefClass = new ReflectionClass(get_class($oProcess));
 	$oDateStarted = new DateTime();
-	$oDatePlanned = new DateTime($oTask->Get('next_run_date'));
 	$fStart = microtime(true);
 	$oCtx = new ContextTag('CRON:Task:'.$TaskClass);
 
@@ -101,27 +102,34 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 	try
 	{
 		// Record (when starting) that this task was started, just in case it crashes during the execution
+		if ($oTask->Get('total_exec_count') == 0) {
+			// First execution
+			$oTask->Set('first_run_date', $oDateStarted->format('Y-m-d H:i:s'));
+		}
 		$oTask->Set('latest_run_date', $oDateStarted->format('Y-m-d H:i:s'));
 		// Record the current user running the cron
 		$oTask->Set('system_user', utils::GetCurrentUserName());
 		$oTask->Set('running', 1);
-		$oTask->DBUpdate();
-		// Time in seconds allowed to the task
-		$iCurrTimeLimit = $iTimeLimit;
-		// Compute allowed time
-		if ($oRefClass->implementsInterface('iScheduledProcess') === false) 
-		{
-			// Periodic task, allow only X times ($iMaxTaskExecutionTime) its periodicity (GetPeriodicity())
-			$iMaxTaskExecutionTime = MetaModel::GetConfig()->Get('cron_task_max_execution_time');
-			$iTaskLimit = time() + $oProcess->GetPeriodicity() * $iMaxTaskExecutionTime;
-			// If our proposed time limit is less than cron limit, and cron_task_max_execution_time is > 0
-			if ($iTaskLimit < $iTimeLimit && $iMaxTaskExecutionTime > 0)
-			{
-				$iCurrTimeLimit = $iTaskLimit;
+		// Compute the next run date
+		if ($oRefClass->implementsInterface('iScheduledProcess')) {
+			// Schedules process do repeat at specific moments
+			$oPlannedStart = $oProcess->GetNextOccurrence();
+		} else {
+			// Background processes do repeat periodically
+			$oDatePlanned = new DateTime($oTask->Get('next_run_date'));
+			$oPlannedStart = clone $oDatePlanned;
+			// Let's schedule from the previous planned date of execution to avoid shift
+			$oPlannedStart->modify('+'.$oProcess->GetPeriodicity().' seconds');
+			$oNow = new DateTime();
+			while ($oPlannedStart->format('U') <= $oNow->format('U')) {
+				// Next planned start is already in the past, increase it again by a period
+				$oPlannedStart = $oPlannedStart->modify('+'.$oProcess->GetPeriodicity().' seconds');
 			}
 		}
-		$sMessage = $oProcess->Process($iCurrTimeLimit);
-		$oTask->Set('running', 0);
+		$oTask->Set('next_run_date', $oPlannedStart->format('Y-m-d H:i:s'));
+		$oTask->DBUpdate();
+
+		$sMessage = $oProcess->Process($iTimeLimit);
 	}
 	catch (MySQLHasGoneAwayException $e)
 	{
@@ -141,40 +149,12 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		{
 			$sMessage = 'Processing failed with message: '. $e->getMessage();
 		}
+	} finally {
+		$oTask->Set('running', 0);
+		$fDuration = microtime(true) - $fStart;
+		$oTask->ComputeDurations($fDuration); // does increment the counter and compute statistics
+		$oTask->DBUpdate();
 	}
-	$fDuration = microtime(true) - $fStart;
-	if ($oTask->Get('total_exec_count') == 0)
-	{
-		// First execution
-		$oTask->Set('first_run_date', $oDateStarted->format('Y-m-d H:i:s'));
-	}
-	$oTask->ComputeDurations($fDuration); // does increment the counter and compute statistics
-	
-	// Update the timestamp since we want to be able to re-order the tasks based on the time they finished
-	$oDateEnded = new DateTime();
-	$oTask->Set('latest_run_date', $oDateEnded->format('Y-m-d H:i:s'));
-
-	if ($oRefClass->implementsInterface('iScheduledProcess'))
-	{
-		// Schedules process do repeat at specific moments
-		$oPlannedStart = $oProcess->GetNextOccurrence();
-	}
-	else
-	{
-		// Background processes do repeat periodically
-		$oPlannedStart = clone $oDatePlanned;
-		// Let's schedule from the previous planned date of execution to avoid shift
-		$oPlannedStart->modify('+'.$oProcess->GetPeriodicity().' seconds');
-		$oEnd = new DateTime();
-		while ($oPlannedStart->format('U') < $oEnd->format('U'))
-		{
-			// Next planned start is already in the past, increase it again by a period
-			$oPlannedStart = $oPlannedStart->modify('+'.$oProcess->GetPeriodicity().' seconds');
-		}
-	}
-
-	$oTask->Set('next_run_date', $oPlannedStart->format('Y-m-d H:i:s'));
-	$oTask->DBUpdate();
 
 	if ($oExceptionToThrow)
 	{
@@ -187,8 +167,6 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 }
 
 /**
- * @param CLIPage|WebPage $oP
- * @param boolean $bVerbose
  *
  * @param bool $bDebug
  *
@@ -203,24 +181,32 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
  * @throws \OQLException
  * @throws \ReflectionException
  */
-function CronExec($oP, $bVerbose, $bDebug=false)
+function CronExec($bDebug)
 {
 	$iStarted = time();
 	$iMaxDuration = MetaModel::GetConfig()->Get('cron_max_execution_time');
 	$iTimeLimit = $iStarted + $iMaxDuration;
 	$iCronSleep = MetaModel::GetConfig()->Get('cron_sleep');
+	$iMaxCronProcess = max(MetaModel::GetConfig()->Get('cron.max_processes'), 1);
 
-	if ($bVerbose)
-	{
-		$oP->p("Planned duration = $iMaxDuration seconds");
-		$oP->p("Loop pause = $iCronSleep seconds");
-	}
+	// Allow a time slot for every task
+	// knowing that there are $iMaxCronProcess running in parallel for the amount of tasks
+	$oSearch = new DBObjectSearch('BackgroundTask');
+	$oSearch->AddCondition('status', 'active');
+	$oTasks = new DBObjectSet($oSearch);
+	$iCount = $oTasks->Count();
+	$iTotalAvailableTime = $iMaxDuration * $iMaxCronProcess;
+	$iTimeSlot = (int)($iTotalAvailableTime / max($iCount, 1));
 
-	ReSyncProcesses($oP, $bVerbose, $bDebug);
+	CronLog::Debug("Planned duration = $iMaxDuration seconds");
+	CronLog::Debug("Planned duration per task = $iTimeSlot seconds");
+	CronLog::Debug("Loop pause = $iCronSleep seconds");
+
+	ReSyncProcesses($bDebug);
 
 	while (time() < $iTimeLimit)
 	{
-		CheckMaintenanceMode($oP);
+		CheckMaintenanceMode();
 
 		$oNow = new DateTime();
 		$sNow = $oNow->format('Y-m-d H:i:s');
@@ -228,85 +214,88 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 		$oSearch->AddCondition('next_run_date', $sNow, '<=');
 		$oSearch->AddCondition('status', 'active');
 		$oTasks = new DBObjectSet($oSearch, ['next_run_date' => true]);
-		$bWorkDone = false;
 
-		if ($oTasks->CountExceeds(0))
-		{
-			$bWorkDone = true;
-			$aTasks = array();
-			if ($bVerbose)
-			{
-				$sCount = $oTasks->Count();
-				$oP->p("$sCount Tasks planned to run now ($sNow):");
-				$oP->p('+---------------------------+---------+---------------------+---------------------+');
-				$oP->p('| Task Class                | Status  | Last Run            | Next Run            |');
-				$oP->p('+---------------------------+---------+---------------------+---------------------+');
-			}
+		$aTasks = [];
+		if ($oTasks->CountExceeds(0)) {
+			$aDebugMessages = [];
 			while ($oTask = $oTasks->Fetch())
 			{
-				$aTasks[$oTask->Get('class_name')] = $oTask;
-				if ($bVerbose)
-				{
-					$sTaskName = $oTask->Get('class_name');
-					$sStatus = $oTask->Get('status');
-					$sLastRunDate = $oTask->Get('latest_run_date');
-					$sNextRunDate = $oTask->Get('next_run_date');
-					$oP->p(sprintf('| %1$-25.25s | %2$-7s | %3$-19s | %4$-19s |', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate));
+				$sTaskName = $oTask->Get('class_name');
+				$oTaskMutex = new iTopMutex("cron_$sTaskName");
+				if ($oTaskMutex->IsLocked()) {
+					// Already running, ignore
+					continue;
 				}
+				$aTasks[] = $oTask;
+				$sStatus = $oTask->Get('status');
+				$sLastRunDate = $oTask->Get('latest_run_date');
+				$sNextRunDate = $oTask->Get('next_run_date');
+				$aDebugMessages[] = sprintf('Task Class: %1$-25.25s Status: %2$-7s Last Run: %3$-19s Next Run: %4$-19s', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate);
 			}
-			if ($bVerbose)
-			{
-				$oP->p('+---------------------------+---------+---------------------+---------------------+');
+			$sCount = count($aDebugMessages);
+			CronLog::Debug("$sCount Tasks planned to run now ($sNow):");
+			foreach ($aDebugMessages as $sDebugMessage) {
+				CronLog::Debug($sDebugMessage);
 			}
 			$aRunTasks = [];
-			foreach ($aTasks as $oTask)
-			{
+			while (count($aTasks) > 0) {
+				$oTask = array_shift($aTasks);
+
 				$sTaskClass = $oTask->Get('class_name');
+
+				// Check if the current task is running
+				$oTaskMutex = new iTopMutex("cron_$sTaskClass");
+				if (!$oTaskMutex->TryLock()) {
+					// Task is already running, try next one
+					continue;
+				}
+
 				$aRunTasks[] = $sTaskClass;
 
 				// N°3219 for each process will use a specific CMDBChange object with a specific track info
-				// Any BackgroundProcess can overrides this as needed
+				// Any BackgroundProcess can override this as needed
 				CMDBObject::SetCurrentChangeFromParams("Background task ($sTaskClass)");
 
 				// Run the task and record its next run time
-				if ($bVerbose)
-				{
-					$oNow = new DateTime();
-					$oP->p(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Starting:%-'=49s", ' '.$sTaskClass.' '));
-				}
+				$oNow = new DateTime();
+				CronLog::Debug(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Start task:%-'=49s", ' '.$sTaskClass.' '));
 				try
 				{
-					$sMessage = RunTask($aTasks[$sTaskClass], $iTimeLimit);
+					// The limit of time for this task corresponds to the time slot allowed for every task
+					// but limited to the cron job time limit
+					$sMessage = RunTask($oTask, min($iTimeLimit, time() + $iTimeSlot));
 				} catch (MySQLHasGoneAwayException $e)
 				{
-					$oP->p("ERROR : 'MySQL has gone away' thrown when processing $sTaskClass  (error_code=".$e->getCode().")");
+					CronLog::Error("ERROR : 'MySQL has gone away' thrown when processing $sTaskClass  (error_code=".$e->getCode().")");
 					exit(EXIT_CODE_FATAL);
 				} catch (ProcessFatalException $e)
 				{
-					$oP->p("ERROR : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().")");
-					IssueLog::Error("Cron.php error : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().')');
+					CronLog::Error("ERROR : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().")");
 				}
-				if ($bVerbose)
+				finally {
+					$oTaskMutex->Unlock();
+				}
+				if (!empty($sMessage))
 				{
-					if (!empty($sMessage))
-					{
-						$oP->p("$sTaskClass: $sMessage");
-					}
-					$oEnd = new DateTime();
-					$sNextRunDate = $oTask->Get('next_run_date');
-					$oP->p("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:  %-'=42s", ' '.$sTaskClass.' ')." Next: $sNextRunDate");
+					CronLog::Debug("$sTaskClass: $sMessage");
 				}
+				$oEnd = new DateTime();
+				$sNextRunDate = $oTask->Get('next_run_date');
+				CronLog::Debug("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:    %-'=49s", ' '.$sTaskClass.' ')." Next: $sNextRunDate");
 				if (time() > $iTimeLimit)
 				{
 					break 2;
 				}
-				CheckMaintenanceMode($oP);
+				CheckMaintenanceMode();
+				if ($iMaxCronProcess > 1) {
+					// Reindex tasks every time
+					break;
+				}
 			}
 
 			// Tasks to run later
-			if ($bVerbose)
+			if (count($aTasks) == 0)
 			{
-				$oP->p('--');
 				$oSearch = new DBObjectSearch('BackgroundTask');
 				$oSearch->AddCondition('next_run_date', $sNow, '>');
 				$oSearch->AddCondition('status', 'active');
@@ -315,33 +304,25 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 				{
 					if (!in_array($oTask->Get('class_name'), $aRunTasks))
 					{
-						$oP->p(sprintf("-- Skipping task: %-'-40s", $oTask->Get('class_name').' ')." until: ".$oTask->Get('next_run_date'));
+						CronLog::Debug(sprintf("-- Skipping task: %-'-40s", $oTask->Get('class_name').' ')." until: ".$oTask->Get('next_run_date'));
 					}
 				}
 			}
 		}
-
-		if ($bVerbose && $bWorkDone)
-		{
-			$oP->p("Sleeping...\n");
+		if (count($aTasks) == 0) {
+			CronLog::Debug("sleeping...");
+			sleep($iCronSleep);
 		}
-		sleep($iCronSleep);
 	}
-	if ($bVerbose)
-	{
-		$oP->p('');
-		DisplayStatus($oP, ['next_run_date' => true]);
-		$oP->p("Reached normal execution time limit (exceeded by ".(time() - $iTimeLimit)."s)");
-	}
+	CronLog::Debug("Reached normal execution time limit (exceeded by ".(time() - $iTimeLimit)."s)");
 }
 
 /**
- * @param \WebPage $oP
  */
-function CheckMaintenanceMode(Page $oP) {
+function CheckMaintenanceMode() {
 // Verify files instead of reloading the full config each time
 	if (file_exists(MAINTENANCE_MODE_FILE) || file_exists(READONLY_MODE_FILE)) {
-		$oP->p("Maintenance detected, exiting");
+		CronLog::Info("Maintenance detected, exiting");
 		exit(EXIT_CODE_ERROR);
 	}
 }
@@ -356,7 +337,7 @@ function CheckMaintenanceMode(Page $oP) {
  * @throws \MySQLException
  * @throws \OQLException
  */
-function DisplayStatus($oP, $aTaskOrderBy = [])
+function DisplayStatus($oP = null, $aTaskOrderBy = [])
 {
 	$oSearch = new DBObjectSearch('BackgroundTask');
 	$oTasks = new DBObjectSet($oSearch, $aTaskOrderBy);
@@ -378,8 +359,6 @@ function DisplayStatus($oP, $aTaskOrderBy = [])
 }
 
 /**
- * @param $oP
- * @param $bVerbose
  * @param $bDebug
  *
  * @throws \ArchivedObjectException
@@ -391,7 +370,7 @@ function DisplayStatus($oP, $aTaskOrderBy = [])
  * @throws \OQLException
  * @throws \ReflectionException
  */
-function ReSyncProcesses($oP, $bVerbose, $bDebug)
+function ReSyncProcesses($bDebug)
 {
 	// Enumerate classes implementing BackgroundProcess
 	//
@@ -439,11 +418,8 @@ function ReSyncProcesses($oP, $bVerbose, $bDebug)
 					// Background processes do start asap, i.e. "now"
 					$oTask->Set('next_run_date', $oNow->format('Y-m-d H:i:s'));
 				}
-				if ($bVerbose)
-				{
-					$oP->p('Creating record for: '.$sTaskClass);
-					$oP->p('First execution planned at: '.$oTask->Get('next_run_date'));
-				}
+				CronLog::Debug('Creating record for: '.$sTaskClass);
+				CronLog::Debug('First execution planned at: '.$oTask->Get('next_run_date'));
 				$oTask->DBInsert();
 			}
 			else
@@ -484,16 +460,13 @@ function ReSyncProcesses($oP, $bVerbose, $bDebug)
 		}
 	}
 
-	if ($bVerbose)
+	$aDisplayProcesses = array();
+	foreach ($aProcesses as $oExecInstance)
 	{
-		$aDisplayProcesses = array();
-		foreach ($aProcesses as $oExecInstance)
-		{
-			$aDisplayProcesses[] = get_class($oExecInstance);
-		}
-		$sDisplayProcesses = implode(', ', $aDisplayProcesses);
-		$oP->p("Background processes: ".$sDisplayProcesses);
+		$aDisplayProcesses[] = get_class($oExecInstance);
 	}
+	$sDisplayProcesses = implode(', ', $aDisplayProcesses);
+	CronLog::Debug("Background processes: ".$sDisplayProcesses);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -519,7 +492,11 @@ try
 {
 	utils::UseParamFile();
 
+	// Allow verbosity on output (writing debug messages to the cron.log file is configured with log_level_min config parameter)
 	$bVerbose = utils::ReadParam('verbose', false, true /* Allow CLI */);
+	CronLog::SetDebug($oP, $bVerbose);
+
+	// Used to launch the BackgroundTask in debug mode
 	$bDebug = utils::ReadParam('debug', false, true /* Allow CLI */);
 
 	if ($bIsModeCLI)
@@ -562,7 +539,6 @@ try
 	}
 
 	require_once(APPROOT.'core/mutex.class.inc.php');
-	$oP->p("Starting: ".time().' ('.date('Y-m-d H:i:s').')');
 }
 catch (Exception $e)
 {
@@ -571,51 +547,43 @@ catch (Exception $e)
 	exit(EXIT_CODE_FATAL);
 }
 
+CronLog::Enable(APPROOT.'/log/cron.log');
 try
 {
-	$oMutex = new iTopMutex('cron');
 	if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
 	{
-		$oP->p("A maintenance is ongoing");
+		CronLog::Info("A maintenance is ongoing");
 	}
 	else
 	{
-		if ($oMutex->TryLock())
-		{
-			CronExec($oP, $bVerbose, $bDebug);
+		// Limit the number of cron process to run in parallel
+		$iMaxCronProcess = max(MetaModel::GetConfig()->Get('cron.max_processes'), 1);
+		$bCanRun = false;
+		$iProcessNumber = 0;
+		for ($i = 0; $i < $iMaxCronProcess; $i++) {
+			$oMutex = new iTopMutex("cron#$i");
+			if ($oMutex->TryLock()) {
+				$iProcessNumber = $i + 1;
+				$bCanRun = true;
+				break;
+			}
 		}
-		else
-		{
-			// Exit silently
-			$oP->p("Already running...");
+		if ($bCanRun) {
+			CronLog::$iProcessNumber = $iProcessNumber;
+			CronLog::Info('Starting: '.time().' ('.date('Y-m-d H:i:s').')');
+			CronExec($bDebug);
+		} else {
+			CronLog::$iProcessNumber = $iMaxCronProcess + 1;
+			CronLog::Debug("The limit of $iMaxCronProcess cron process running in parallel is already reached");
 		}
 	}
 }
 catch (Exception $e)
 {
-	$oP->p("ERROR: '".$e->getMessage()."'");
-	if ($bDebug)
-	{
-		// Might contain verb parameters such a password...
-		$oP->p($e->getTraceAsString());
-	}
-}
-finally
-{
-	try
-	{
-		$oMutex->Unlock();
-	}
-	catch (Exception $e)
-	{
-		$oP->p("ERROR: '".$e->getMessage()."'");
-		if ($bDebug)
-		{
-			// Might contain verb parameters such a password...
-			$oP->p($e->getTraceAsString());
-		}
-	}
+	CronLog::Error("ERROR: '".$e->getMessage()."'");
+	// Might contain verb parameters such a password...
+	CronLog::Debug($e->getTraceAsString());
 }
 
-$oP->p("Exiting: ".time().' ('.date('Y-m-d H:i:s').')');
+CronLog::Info("Exiting: ".time().' ('.date('Y-m-d H:i:s').')');
 $oP->Output();

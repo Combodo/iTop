@@ -425,6 +425,7 @@ return array(
     'Combodo\\iTop\\Renderer\\FormRenderer' => $baseDir . '/sources/Renderer/FormRenderer.php',
     'Combodo\\iTop\\Renderer\\RenderingOutput' => $baseDir . '/sources/Renderer/RenderingOutput.php',
     'Combodo\\iTop\\Router\\Router' => $baseDir . '/sources/Router/Router.php',
+    'Combodo\\iTop\\Service\\Cron\\CronLog' => $baseDir . '/sources/Service/Cron/CronLog.php',
     'Combodo\\iTop\\Service\\Events\\Description\\EventDataDescription' => $baseDir . '/sources/Application/Service/Events/Description/EventDataDescription.php',
     'Combodo\\iTop\\Service\\Events\\Description\\EventDescription' => $baseDir . '/sources/Application/Service/Events/Description/EventDescription.php',
     'Combodo\\iTop\\Service\\Events\\EventData' => $baseDir . '/sources/Application/Service/Events/EventData.php',
