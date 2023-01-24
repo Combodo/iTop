@@ -178,9 +178,7 @@ try {
 				}
 			}
 
-
-			$sConfigEscaped = utils::EscapeHtml($sConfig);
-			$sOriginalConfigEscaped = utils::EscapeHtml($sOriginalConfig);
+			// (remove EscapeHtml)  N°5914 - Wrong encoding in modules configuration editor
 			$oP->AddUiBlock(new Html('<p>'.Dict::S('config-edit-intro').'</p>'));
 
 			$oForm = new Form();
@@ -197,8 +195,8 @@ try {
 			$oForm->AddSubBlock($oSubmitButton);
 
 			//--- Config editor
-			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('prev_config', $sOriginalConfigEscaped, 'prev_config'));
-			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('new_config', $sConfigEscaped));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('prev_config', $sOriginalConfig, 'prev_config'));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('new_config', $sConfig));
 			$oForm->AddHtml("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
 			$oP->AddUiBlock($oForm);
 
