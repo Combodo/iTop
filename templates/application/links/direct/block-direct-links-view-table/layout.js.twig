@@ -1,0 +1,21 @@
+{# @copyright   Copyright (C) 2010-2022 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+let LinkSetDirectViewTable = new function(){
+
+    /**
+     * DeleteLinkedObjectCallback.
+     *
+     * @param sLinkedObjectClass
+     * @param sLinkedObjectKey
+     * @constructor
+     */
+    function DeleteLinkedObjectCallback(oTrElement){
+        oTrElement.remove();
+    }
+
+    return {
+        DeleteLinkedObjectCallback,
+    }
+};
+

@@ -10,21 +10,15 @@ let LinkSetWorker = new function(){
 	 *
 	 * @param sLinkedObjectClass
 	 * @param sLinkedObjectKey
+	 * @param oHandler
 	 * @constructor
 	 */
-	const CallAjaxDeleteLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey){
+	const CallAjaxDeleteLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, oHandler){
 		$.post(`${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_DELETE_OBJECT}`, {
 			linked_object_class: sLinkedObjectClass,
 			linked_object_key: sLinkedObjectKey,
 			transaction_id: $('#linkset_transactions_id').val()
-		}, function (data) {
-			if(data.data.success){
-				alert('Operation succeeded, todo refresh table !!');
-			}
-			else{
-				alert('Operation failed, todo feedback !!');
-			}
-		});
+		}, oHandler);
 	};
 
 	/**
@@ -33,22 +27,16 @@ let LinkSetWorker = new function(){
 	 * @param sLinkedObjectClass
 	 * @param sLinkedObjectKey
 	 * @param sExternalKeyAttCode
+	 * @param oHandler
 	 * @constructor
 	 */
-	const CallAjaxDetachLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, sExternalKeyAttCode){
+	const CallAjaxDetachLinkedObject = function(sLinkedObjectClass, sLinkedObjectKey, sExternalKeyAttCode, oHandler){
 		$.post(`${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_DETACH_OBJECT}`, {
 			linked_object_class: sLinkedObjectClass,
 			linked_object_key: sLinkedObjectKey,
 			external_key_att_code: sExternalKeyAttCode,
 			transaction_id: $('#linkset_transactions_id').val()
-		}, function (data) {
-			if(data.data.success){
-				alert('Operation succeeded, todo refresh table !!');
-			}
-			else{
-				alert('Operation failed, todo feedback !!');
-			}
-		});
+		}, oHandler);
 	};
 
 	return {

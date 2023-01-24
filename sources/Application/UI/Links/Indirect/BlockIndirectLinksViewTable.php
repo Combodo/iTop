@@ -19,7 +19,9 @@ use PHPUnit\Exception;
  */
 class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 {
-	public const BLOCK_CODE = 'ibo-block-indirect-links-view-table';
+	public const BLOCK_CODE                          = 'ibo-block-indirect-links-view-table';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH        = 'application/links/indirect/block-indirect-links-view-table/layout';
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
 
 	/** @inheritdoc */
 	public function GetTargetClass(): string
@@ -62,7 +64,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 				'label'         => 'UI:Links:ActionRow:Detach',
 				'tooltip'       => 'UI:Links:ActionRow:Detach+',
 				'icon_classes'  => 'fas fa-minus',
-				'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw']);",
+				'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw'], LinkSetIndirectViewTable.DeleteLinkedObjectCallback(oTrElement));",
 				'confirmation'  => [
 					'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
 					'message_row_data'           => "Remote/hyperlink",

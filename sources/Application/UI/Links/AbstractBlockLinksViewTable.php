@@ -6,9 +6,21 @@
 
 namespace Combodo\iTop\Application\UI\Links;
 
+use ApplicationException;
+use ArchivedObjectException;
+use AttributeLinkedSet;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use CoreException;
+use CoreWarning;
+use DBObject;
+use DictExceptionMissingString;
+use DisplayBlock;
+use Exception;
 use MetaModel;
+use MySQLException;
+use Utils;
+use WebPage;
 
 /**
  * Class AbstractBlockLinksViewTable
@@ -26,8 +38,8 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 		'js/links/link_set_worker.js',
 	];
 
-	/** @var \DBObject $oDbObject db object witch link set belongs to */
-	protected \DBObject $oDbObject;
+	/** @var DBObject $oDbObject db object witch link set belongs to */
+	protected DBObject $oDbObject;
 
 	/** @var string $sObjectClass db object class name */
 	protected string $sObjectClass;
@@ -35,8 +47,8 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	/** @var string $sAttCode db object link set attribute code */
 	protected string $sAttCode;
 
-	/** @var \AttributeLinkedSet $oAttDef attribute link set */
-	protected \AttributeLinkedSet $oAttDef;
+	/** @var AttributeLinkedSet $oAttDef attribute link set */
+	protected AttributeLinkedSet $oAttDef;
 
 	/** @var string $sTargetClass links target classname */
 	protected string $sTargetClass;
@@ -44,16 +56,16 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	/**
 	 * Constructor.
 	 *
-	 * @param \WebPage $oPage
-	 * @param \DBObject $oDbObject
+	 * @param WebPage $oPage
+	 * @param DBObject $oDbObject
 	 * @param string $sObjectClass
 	 * @param string $sAttCode
-	 * @param \AttributeLinkedSet $oAttDef
+	 * @param AttributeLinkedSet $oAttDef
 	 *
-	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws CoreException
+	 * @throws Exception
 	 */
-	public function __construct(\WebPage $oPage, \DBObject $oDbObject, string $sObjectClass, string $sAttCode, \AttributeLinkedSet $oAttDef)
+	public function __construct(WebPage $oPage, DBObject $oDbObject, string $sObjectClass, string $sAttCode, AttributeLinkedSet $oAttDef)
 	{
 		parent::__construct('', ["ibo-block-links-table"]);
 
@@ -74,7 +86,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 * Init.
 	 *
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	private function Init()
 	{
@@ -85,12 +97,12 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 * Initialize UI.
 	 *
 	 * @return void
-	 * @throws \CoreException
+	 * @throws CoreException
 	 */
-	private function InitUI(\WebPage $oPage)
+	private function InitUI(WebPage $oPage)
 	{
 		// header
-		$this->InitHeader();;
+		$this->InitHeader();
 
 		// Table
 		$this->InitTable($oPage);
@@ -100,7 +112,8 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 * InitHeader.
 	 *
 	 * @return void
-	 * @throws \CoreException
+	 * @throws CoreException
+	 * @throws \Exception
 	 */
 	private function InitHeader()
 	{
@@ -113,24 +126,24 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	/**
 	 * InitTable.
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 *
 	 * @return void
-	 * @throws \ApplicationException
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreWarning
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
+	 * @throws ApplicationException
+	 * @throws ArchivedObjectException
+	 * @throws CoreException
+	 * @throws CoreWarning
+	 * @throws DictExceptionMissingString
+	 * @throws MySQLException
 	 */
-	private function InitTable(\WebPage $oPage)
+	private function InitTable(WebPage $oPage)
 	{
 		// retrieve db object set
 		$oOrmLinkSet = $this->oDbObject->Get($this->sAttCode);
-		$oLinkSet = $oOrmLinkSet->ToDBObjectSet(\utils::ShowObsoleteData());
+		$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
 
 		// add list block
-		$oBlock = new \DisplayBlock($oLinkSet->GetFilter(), 'list', false);
+		$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'list', false);
 		$this->AddSubBlock($oBlock->GetRenderContent($oPage, $this->GetExtraParam(), 'rel_'.$this->sAttCode));
 	}
 
@@ -159,11 +172,11 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 *
 	 * Provide parameters for display block as list.
 	 *
-	 * @see \DisplayBlock::RenderList
+	 * @see DisplayBlock::RenderList
 	 *
 	 * @return array
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
+	 * @throws ArchivedObjectException
+	 * @throws CoreException
 	 */
 	abstract function GetExtraParam(): array;
 
@@ -174,7 +187,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 *
 	 * @see \Combodo\iTop\Application\UI\Base\Component\DataTable\tTableRowActions
 	 *
-	 * @return \string[][]
+	 * @return string[][]
 	 */
 	abstract function GetRowActions(): array;
 
@@ -184,7 +197,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 * Return link set target class.
 	 *
 	 * @return string
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	abstract function GetTargetClass(): string;
 }
