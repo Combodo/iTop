@@ -144,13 +144,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 		}
 
+		// Default behavor, surrond table with a panel for better display
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
-			if(!empty($oDataTable->GetInitDisplayData()) && isset($oDataTable->GetInitDisplayData()['recordsTotal'])){
-				$iCount = $oDataTable->GetInitDisplayData()['recordsTotal'];
-			} else {
-				$iCount = $oSet->Count();
-			}
-			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), '')->AddCSSClass('ibo-datatable-panel');
+			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), '')
+				->AddCSSClass('ibo-datatable-panel');
+
+			// Panel title
 			if (isset($aExtraParams['panel_title'])) {
 				if (isset($aExtraParams['panel_title_is_html']) && $aExtraParams['panel_title_is_html'] === true) {
 					$oContainer->AddTitleBlock(HtmlFactory::MakeRaw($aExtraParams['panel_title']));
@@ -159,6 +158,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				}
 			}
 
+			// Panel subtitle
+			if(!empty($oDataTable->GetInitDisplayData()) && isset($oDataTable->GetInitDisplayData()['recordsTotal'])){
+				$iCount = $oDataTable->GetInitDisplayData()['recordsTotal'];
+			} else {
+				$iCount = $oSet->Count();
+			}
 			$sCountHtml = '<span class="ibo-datatable--result-count">'.$iCount.'</span>';
 			if ($oDataTable->GetOption('select_mode') === 'multiple') {
 				$sSubTitle = Dict::Format('UI:Pagination:HeaderSelection', $sCountHtml, '<span class="ibo-datatable--selected-count">0</span>');
@@ -169,11 +174,13 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
 				$sSubTitle = '<a href="'.$sFilterListUrl.'" title="'.Dict::S('UI:Menu:FilterList').'">'.$sSubTitle.'</a>';
 			}
-
 			$oContainer->AddSubTitleBlock(new Html($sSubTitle));
-			if (isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0) {
-				$oContainer->SetIcon($aExtraParams["panel_icon"]);
+
+			// Panel icon
+			if (isset($aExtraParams['panel_icon']) && strlen($aExtraParams['panel_icon']) > 0) {
+				$oContainer->SetIcon($aExtraParams['panel_icon']);
 			}
+
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
 		} else {

@@ -38,9 +38,11 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 			'table_id'    => $this->GetTableId(),
 			'row_actions' => $this->GetRowActions(),
 			'currentId' => $this->GetTableId(),
+			'panel_title' => 'TODO: Replace with current tab label?', // TODO 3.1: What to put there: Tab label? Unlikely. Lnk class name? Unlikely. Maybe there should be a dedicated "label" property so we can define the label.
+			'panel_icon' => MetaModel::GetClassIcon($this->GetTargetClass(), false),
 		);
 
-		// - Add creation in modal if the linkset is not readonly
+		// Add creation in modal if the linkset is not readonly
 		if (!$this->oAttDef->GetReadOnly()) {
 			$aExtraParams['creation_in_modal_is_allowed'] = true;
 			$aExtraParams['creation_in_modal_js_handler'] = 'LinkSetWorker.CreateLinkedObject("'.$this->GetTableId().'");';

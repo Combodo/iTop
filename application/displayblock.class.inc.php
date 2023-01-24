@@ -1304,17 +1304,12 @@ JS
 				}
 			}
 			if (count($aAuthorizedClasses) > 0) {
-				if ($this->m_oSet->CountWithLimit(1) > 0) {
-					if (empty($aExtraParams['currentId'])) {
-						$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
-					} else {
-						$iListId = $aExtraParams['currentId'];
-					}
-					$oBlock->AddSubBlock(DataTableUIBlockFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams));
+				if (empty($aExtraParams['currentId'])) {
+					$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
 				} else {
-					// Empty set
-					$oBlock->bEmptySet = true;
+					$iListId = $aExtraParams['currentId'];
 				}
+				$oBlock->AddSubBlock(DataTableUIBlockFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams));
 			} else {
 				// Not authorized
 				$oBlock->bNotAuthorized = true;
@@ -1337,43 +1332,13 @@ JS
 			}
 
 			// The list is made of only 1 class of objects, actions on the list are possible
-			if (($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)) {
+			if (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) {
 				$oBlock->AddSubBlock(cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams));
 			} else {
 				$oBlock->bEmptySet = true;
 				$oBlock->sClass = $this->m_oFilter->GetClass();
 				$oBlock->sClassLabel = MetaModel::GetName($oBlock->sClass);
-				$bDisplayMenu = isset($aExtraParams['menu']) ? ($aExtraParams['menu'] == true) : true;
-				if ($bDisplayMenu) {
-					if ((UserRights::IsActionAllowed($oBlock->sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
-						$oBlock->sLinkTarget = '';
-						$oAppContext = new ApplicationContext();
-						$oBlock->sParams = $oAppContext->GetForLink();
-						// 1:n links, populate the target object as a default value when creating a new linked object
-						if (isset($aExtraParams['target_attr'])) {
-							$oBlock->sLinkTarget = ' target="_blank" ';
-							$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
-						}
-						if (!empty($aExtraParams['default'])) {
-							foreach ($aExtraParams['default'] as $sKey => $sValue) {
-								$oBlock->sDefault .= "&default[$sKey]=$sValue";
-							}
-						}
-						$oBlock->bCreateNew = true;
-					}
-				}
-
-				if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
-					$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
-					if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
-						$oPanel->SetIcon($aExtraParams["panel_icon"]);
-					}
-					$oPanel->AddSubBlock($oBlock);
-
-					return $oPanel;
-				}
 			}
-
 		}
 
 		return $oBlock;

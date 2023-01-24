@@ -6,6 +6,7 @@
         <div class="ibo-block-list--empty-text">{{ 'UI:NoObjectToDisplay'|dict_s }}</div>
     {% endif %}
 
+    {# TODO 3.1: This section should be removed if BlockList is no longer used as is, but always with a table #}
     {% if oUIBlock.bCreateNew %}
         <div class="ibo-block-list--create-action">
             <a{{ oUIBlock.sLinkTarget }} href="{{ oUIBlock.sAbsoluteUrlAppRoot }}pages/UI.php?operation=new&class={{ oUIBlock.sClass }}&{{ oUIBlock.sParams }}{{ oUIBlock.sDefault }}">
