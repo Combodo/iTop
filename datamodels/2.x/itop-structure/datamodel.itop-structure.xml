@@ -1012,8 +1012,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="team_id"/>
-            <attribute id="person_id"/>
+            <attribute id="person_id_friendlyname"/>
+            <attribute id="team_id_friendlyname"/>
           </attributes>
         </naming>
         <style>
@@ -1062,10 +1062,10 @@
       <presentation>
         <details>
           <items>
-            <item id="team_id">
+            <item id="person_id">
               <rank>10</rank>
             </item>
-            <item id="person_id">
+            <item id="team_id">
               <rank>20</rank>
             </item>
             <item id="role_id">
