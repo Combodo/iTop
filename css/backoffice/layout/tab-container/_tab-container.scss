@@ -154,7 +154,7 @@ $ibo-tab-container--tab-container--last--min-height: 60vh !default;
 }
 
 .ibo-tab-container--tab-container-list.ibo-is-scrollable {
-  .ibo-tab-container--tab-container:not(:only-child).ibo-tab-container--tab-container--label {
+  .ibo-tab-container--tab-container:not(:first-child:nth-last-child(2)) .ibo-tab-container--tab-container--label {
     display: block;
   }
   .ibo-tab-container--tab-container {
