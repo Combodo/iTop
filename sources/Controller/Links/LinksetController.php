@@ -10,9 +10,10 @@ use AjaxPage;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Controller\AbstractController;
+use Exception;
+use JsonPage;
 use CoreException;
 use DBObject;
-use JsonPage;
 use MetaModel;
 use UserRights;
 use utils;
@@ -58,7 +59,7 @@ class LinkSetController extends AbstractController
 					$sErrorMessage = json_encode($oDeletionPlan->GetIssues());
 				}
 			}
-			catch (\Exception $e) {
+			catch (Exception $e) {
 				$sErrorMessage = $e->getMessage();
 			}
 		} else {
@@ -102,7 +103,7 @@ class LinkSetController extends AbstractController
 				$oLinkedObject->DBWrite();
 				$bOperationSuccess = true;
 			}
-			catch (\Exception $e) {
+			catch (Exception $e) {
 				$sErrorMessage = $e->getMessage();
 			}
 		} else {

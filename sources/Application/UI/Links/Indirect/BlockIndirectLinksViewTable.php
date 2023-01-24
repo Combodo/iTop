@@ -19,7 +19,8 @@ use PHPUnit\Exception;
  */
 class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 {
-	public const BLOCK_CODE = 'ibo-block-indirect-links-view-table';
+	public const BLOCK_CODE                          = 'ibo-block-indirect-links-view-table';
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
 
 	/** @inheritdoc */
 	public function GetTargetClass(): string

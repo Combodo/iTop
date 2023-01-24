@@ -1499,6 +1499,14 @@ EOF;
 					$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
 					$aParameters['duplicates'] = $this->GetPropBoolean($oField, 'duplicates', false);
 					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style');
+					if ($sOql = $oField->GetChildText('filter')) {
+						$sEscapedOql = self::QuoteForPHP($sOql);
+						$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)";
+					} else {
+						$aParameters['allowed_values'] = 'null';
+					}
+
 				}
 				elseif ($sAttType == 'AttributeLinkedSet')
 				{
@@ -1506,6 +1514,7 @@ EOF;
 					$aParameters['ext_key_to_me'] = $this->GetMandatoryPropString($oField, 'ext_key_to_me');
 					$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
 					$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
+					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style');
 					$sEditMode = $oField->GetChildText('edit_mode');
 					if (!is_null($sEditMode))
 					{

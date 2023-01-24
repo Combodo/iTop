@@ -28,13 +28,12 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroup;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
-use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletBadge;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Set\SetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Pill\PillFactory;
@@ -407,24 +406,163 @@ $oPage->AddUiBlock(DataTableUIBlockFactory::MakeForStaticData('Static datatable'
 	), array(
     'a' => 'A3', 'b' => 'B3', 'c' => 'C3', 'd' => 'D3'
 	), array(
-	'a' => 'A4', 'b' => 'B4', 'c' => 'C4', 'd' => 'D4'
-	),array(
-		'@class' => 'ibo-is-red','a' => 'A5 (Red highlighting)', 'b' => 'B5', 'c' => 'C5', 'd' => 'D5'
-	),array(
-		'@class' => 'ibo-is-danger','a' => 'A6 (Danger highlighting)', 'b' => 'B6', 'c' => 'C6', 'd' => 'D6'
-	),array(
-		'@class' => 'ibo-is-orange','a' => 'A7 (Orange highlighting)', 'b' => 'B7', 'c' => 'C7', 'd' => 'D7'
-	),array(
-		'@class' => 'ibo-is-warning','a' => 'A8 (Warning highlighting)', 'b' => 'B8', 'c' => 'C8', 'd' => 'D8'
-	),array(
-		'@class' => 'ibo-is-blue','a' => 'A9 (Blue highlighting)', 'b' => 'B9', 'c' => 'C9', 'd' => 'D9'
-	),array(
-		'@class' => 'ibo-is-info','a' => 'A10 (Info highlighting)', 'b' => 'B10', 'c' => 'C10', 'd' => 'D10'
-	),array(
-		'@class' => 'ibo-is-green','a' => 'A11 (Green highlighting)', 'b' => 'B11', 'c' => 'C11', 'd' => 'D11'
-	),array(
-		'@class' => 'ibo-is-success','a' => 'A12 (Success highlighting)', 'b' => 'B12', 'c' => 'C12', 'd' => 'D12'
-	),
-)));
+			'a' => 'A4',
+			'b' => 'B4',
+			'c' => 'C4',
+			'd' => 'D4',
+		),
+		array(
+			'@class' => 'ibo-is-red',
+			'a'      => 'A5 (Red highlighting)',
+			'b'      => 'B5',
+			'c'      => 'C5',
+			'd'      => 'D5',
+		),
+		array(
+			'@class' => 'ibo-is-danger',
+			'a'      => 'A6 (Danger highlighting)',
+			'b'      => 'B6',
+			'c'      => 'C6',
+			'd'      => 'D6',
+		),
+		array(
+			'@class' => 'ibo-is-orange',
+			'a'      => 'A7 (Orange highlighting)',
+			'b'      => 'B7',
+			'c'      => 'C7',
+			'd'      => 'D7',
+		),
+		array(
+			'@class' => 'ibo-is-warning',
+			'a'      => 'A8 (Warning highlighting)',
+			'b'      => 'B8',
+			'c'      => 'C8',
+			'd'      => 'D8',
+		),
+		array(
+			'@class' => 'ibo-is-blue',
+			'a'      => 'A9 (Blue highlighting)',
+			'b'      => 'B9',
+			'c'      => 'C9',
+			'd'      => 'D9',
+		),
+		array(
+			'@class' => 'ibo-is-info',
+			'a'      => 'A10 (Info highlighting)',
+			'b'      => 'B10',
+			'c'      => 'C10',
+			'd'      => 'D10',
+		),
+		array(
+			'@class' => 'ibo-is-green',
+			'a'      => 'A11 (Green highlighting)',
+			'b'      => 'B11',
+			'c'      => 'C11',
+			'd'      => 'D11',
+		),
+		array(
+			'@class' => 'ibo-is-success',
+			'a'      => 'A12 (Success highlighting)',
+			'b'      => 'B12',
+			'c'      => 'C12',
+			'd'      => 'D12',
+		),
+	)));
+
+/////////
+// Set
+/////////
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Set examples', 2));
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Simple', 4));
+
+$aOptions = [
+	[
+		'label' => 'Chien',
+		'value' => 'dog',
+		'icon'  => 'fas fa-dog',
+		'group' => 'Domestique',
+	],
+	[
+		'label' => 'Chat',
+		'value' => 'cat',
+		'icon'  => 'fas fa-cat',
+		'group' => 'Domestique',
+	],
+	[
+		'label' => 'Cheval',
+		'value' => 'horse',
+		'icon'  => 'fas fa-horse',
+		'group' => 'Domestique',
+	],
+	[
+		'label' => 'Araignée',
+		'value' => 'spider',
+		'icon'  => 'fas fa-spider',
+		'class' => 'demo_set',
+		'group' => 'Sauvage',
+	],
+	[
+		'label' => 'Otarie',
+		'value' => 'otter',
+		'icon'  => 'fas fa-otter',
+		'group' => 'Sauvage',
+	],
+	[
+		'label' => 'Poisson',
+		'value' => 'fish',
+		'icon'  => 'fas fa-fish',
+		'group' => 'Domestique',
+	],
+	[
+		'label' => 'Grenouille',
+		'value' => 'frog',
+		'icon'  => 'fas fa-frog',
+		'group' => 'Sauvage',
+	],
+	[
+		'label' => 'Hippopotame',
+		'value' => 'hippo',
+		'icon'  => 'fas fa-hippo',
+		'group' => 'Sauvage',
+	],
+];
+$oPage->add_style('.demo_set{color:red;}');
+
+$oSimpleSetBlock = SetUIBlockFactory::MakeForSimple('SetSimple', $aOptions, 'label', 'value', ['label']);
+$oSimpleSetBlock->SetName('SimpleSetBlock');
+$oPage->AddUiBlock($oSimpleSetBlock);
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Add Option Button', 3));
+
+$oSimpleAddSetBlock = SetUIBlockFactory::MakeForSimple('SetWithAddOption', $aOptions, 'label', 'value', ['label']);
+$oSimpleAddSetBlock->SetName('SetWithAddOption');
+$oSimpleAddSetBlock->SetHasAddOptionButton(true);
+$oPage->AddUiBlock($oSimpleAddSetBlock);
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Renderer', 3));
+
+$oSimpleSetBlockRenderer = SetUIBlockFactory::MakeForSimple('SetRenderer', $aOptions, 'label', 'value', ['label']);
+$oSimpleSetBlockRenderer->SetName('SimpleSetBlockWithRenderer');
+$oSimpleSetBlockRenderer->SetOptionsTemplate('base/components/input/set/simple_option_renderer.html.twig');
+$oSimpleSetBlockRenderer->SetItemsTemplate('base/components/input/set/simple_option_renderer.html.twig');
+$oPage->AddUiBlock($oSimpleSetBlockRenderer);
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Grouping', 3));
+
+$oSimpleSetBlockGroup = SetUIBlockFactory::MakeForSimple('SetGroup', $aOptions, 'label', 'value', ['label'], 'group');
+$oSimpleSetBlockGroup->SetName('SimpleSetBlockWithGroup');
+$oPage->AddUiBlock($oSimpleSetBlockGroup);
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('OQL', 3));
+
+$oSimpleSetBlockOql = SetUIBlockFactory::MakeForOQL('SetOql', 'Person', 'SELECT Person');
+$oSimpleSetBlockOql->SetName('OqlSet');
+$oPage->AddUiBlock($oSimpleSetBlockOql);
+
+$oSimpleSetBlockOql2 = SetUIBlockFactory::MakeForOQL('SetOql2', 'Location', 'SELECT Location');
+$oSimpleSetBlockOql2->SetName('OqlSet2');
+$oPage->AddUiBlock($oSimpleSetBlockOql2);
 
 $oPage->output();

@@ -14,6 +14,7 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\Service\Base\ObjectRepository;
 use CoreCannotSaveObjectException;
 use DeleteException;
 use Dict;
@@ -543,4 +544,44 @@ JS;
 			'js/jquery.blockUI.js',
 		];
 	}
+
+	/**
+	 * OperationSearch.
+	 *
+	 * Search objects via an oql and a friendly name search string
+	 *
+	 * @return JsonPage
+	 */
+	public function OperationSearch(): JsonPage
+	{
+		$oPage = new JsonPage();
+
+		// Retrieve query params
+		$sObjectClass = utils::ReadParam('object_class', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
+		$sOql = utils::ReadParam('oql', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$aFieldsToLoad = json_decode(utils::ReadParam('fields_to_load', '', false, utils::ENUM_SANITIZATION_FILTER_STRING));
+		$sSearch = utils::ReadParam('search', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
+
+		// Retrieve this reference object (for OQL)
+		$sThisObjectData = utils::ReadPostedParam('this_object_data', null, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$oThisObj = ObjectRepository::GetObjectFromWizardHelperData($sThisObjectData);
+
+		// Retrieve data post processor
+		$aDataProcessor = utils::ReadParam('data_post_processor', null, false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+
+		// Search objects
+		$aResult = ObjectRepository::SearchFromOql($sObjectClass, $aFieldsToLoad, $sOql, $sSearch, $oThisObj);
+
+		// Data post processor
+		// Note: Data post processor allow you to perform actions on search result (compute object result statistics, add others information...).
+		if ($aResult !== null && $aDataProcessor !== null) {
+			$aResult = call_user_func(array($aDataProcessor['class_name'], 'Execute'), $aResult, $aDataProcessor['settings']);
+		}
+
+		return $oPage->SetData([
+			'search_data' => $aResult,
+			'success'     => $aResult !== null,
+		]);
+	}
+
 }
