@@ -1046,7 +1046,7 @@ JS
 			$sHyperlink = $aCount['link'];
 			$sCountLabel = $aCount['label'];
 			$oPill = PillFactory::MakeForState($sClass, $sStateValue);
-			//unencode label for ExternalKey attribute because friendlyname is already html encoded thanks to GetName function in GetAllowedValues function. (A fix in this function may have too much impact).
+			// N°5849 - Unencode label for ExternalKey attribute because friendlyname is already html encoded thanks to DBObject::GetName() in AttributeExternalKey::GetAllowedValues(). (A fix in this function may have too much impact).
 			if ($oAttDef instanceof AttributeExternalKey) {
 				$oPill->SetTooltip(utils::HtmlEntityDecode($sStateLabel))
 					->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".$sStateLabel."</span>");
