@@ -794,12 +794,12 @@ HTML
 				$oPage->SetCurrentTab('UI:NotificationsTab', Dict::S('UI:NotificationsTab').$sCount);
 
 				foreach ($aNotificationClasses as $sNotifClass) {
-					$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sNotifClass, false));
-					$oClassIcon->SetDescription(MetaModel::GetName($sNotifClass))->AddCSSClass('ibo-block-list--medallion');
-					$oPage->AddUiBlock($oClassIcon);
-
 					$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
-					$oBlock->Display($oPage, 'notifications_'.$sNotifClass, array('menu' => false));
+					$oBlock->Display($oPage, 'notifications_'.$sNotifClass, [
+						'menu' => false,
+						'panel_title' => MetaModel::GetName($sNotifClass),
+						'panel_icon' => MetaModel::GetClassIcon($sNotifClass),
+					]);
 				}
 			}
 		}
