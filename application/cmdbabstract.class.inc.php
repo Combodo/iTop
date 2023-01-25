@@ -722,8 +722,10 @@ HTML
 				continue;
 			}
 
+			$sTabCode = 'Class:'.$sClass.'/Attribute:'.$sAttCode;
+			$sTabDescription = utils::IsNotNullOrEmptyString($oAttDef->GetDescription()) ? $oAttDef->GetDescription() : null;
 			$sCount = ($iCount != 0) ? " ($iCount)" : "";
-			$oPage->SetCurrentTab('Class:'.$sClass.'/Attribute:'.$sAttCode, $oAttDef->GetLabel().$sCount);
+			$oPage->SetCurrentTab($sTabCode, $oAttDef->GetLabel().$sCount, $sTabDescription);
 
 			$aArgs = array('this' => $this);
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));

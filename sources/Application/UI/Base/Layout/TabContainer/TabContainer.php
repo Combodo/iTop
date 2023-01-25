@@ -117,11 +117,13 @@ class TabContainer extends UIContentBlock
 	 * @param string $sTabCode
 	 * @param string $sTitle
 	 * @param string|null $sPlaceholder
+	 * @param string|null $sDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
+	 * @since 3.1.0 N°5920 Add $sDescription argument
 	 */
-	public function AddAjaxTab(string $sTabCode, string $sTitle, ?string $sPlaceholder = null): Tab
+	public function AddAjaxTab(string $sTabCode, string $sTitle, ?string $sPlaceholder = null, ?string $sDescription = null): Tab
 	{
 		if($sPlaceholder === null){
 			$sPlaceholder = AjaxTab::DEFAULT_TAB_PLACEHOLDER;
@@ -134,13 +136,15 @@ class TabContainer extends UIContentBlock
 	/**
 	 * @param string $sTabCode
 	 * @param string $sTitle
+	 * @param string|null $sDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
+	 * @since 3.1.0 N°5920 Add $sDescription argument
 	 */
-	public function AddTab(string $sTabCode, string $sTitle): Tab
+	public function AddTab(string $sTabCode, string $sTitle, ?string $sDescription = null): Tab
 	{
-		$oTab = new Tab($sTabCode, $sTitle);
+		$oTab = new Tab($sTabCode, $sTitle, $sDescription);
 		$this->AddSubBlock($oTab);
 		return $oTab;
 	}

@@ -77,10 +77,13 @@ class AjaxTab extends Tab
 	 * @param string $sTabCode
 	 * @param string $sTitle
 	 * @param string $sPlaceholderRelPath
+	 * @param string|null $sDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
+	 *
+	 * @since 3.1.0 N°5920 Add $sDescription argument
 	 */
-	public function __construct(string $sTabCode, string $sTitle, string $sPlaceholderRelPath = AjaxTab::DEFAULT_TAB_PLACEHOLDER)
+	public function __construct(string $sTabCode, string $sTitle, string $sPlaceholderRelPath = AjaxTab::DEFAULT_TAB_PLACEHOLDER, ?string $sDescription = null)
 	{
-		parent::__construct($sTabCode, $sTitle);
+		parent::__construct($sTabCode, $sTitle, $sDescription);
 		$this->sPlaceholderRelPath = $sPlaceholderRelPath;
 	}
 

@@ -22,6 +22,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab;
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use TabManager;
+use utils;
 
 /**
  * Class Tab
@@ -41,17 +42,26 @@ class Tab extends UIContentBlock
 
 	/** @var string */
 	protected $sTitle;
+	/**
+	 * @var string|null Text description of the tab and its content, will be used to display hint to the user
+	 * @since 3.1.0 N°5920
+	 */
+	protected ?string $sDescription;
 
 	/**
 	 * Tab constructor.
 	 *
 	 * @param string $sTabCode
 	 * @param string $sTitle
+	 * @param string|null $sDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
+	 *
+	 * @since 3.1.0 N°5920 Add $sDescription argument
 	 */
-	public function __construct(string $sTabCode, string $sTitle)
+	public function __construct(string $sTabCode, string $sTitle, ?string $sDescription = null)
 	{
 		parent::__construct($sTabCode);
 		$this->sTitle = $sTitle;
+		$this->sDescription = $sDescription;
 	}
 
 	/**
@@ -68,6 +78,35 @@ class Tab extends UIContentBlock
 	public function GetTitle(): string
 	{
 		return $this->sTitle;
+	}
+
+	/**
+	 * @return string|null {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
+	 * @since 3.1.0
+	 */
+	public function GetDescription(): ?string
+	{
+		return $this->sDescription;
+	}
+
+	/**
+	 * @return bool
+	 * @since 3.1.0
+	 */
+	public function HasDescription(): bool
+	{
+		return utils::IsNotNullOrEmptyString($this->sDescription);
+	}
+
+	/**
+	 * @param string $sDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	public function SetDescription(string $sDescription)
+	{
+		$this->sDescription = $sDescription;
 	}
 
 	//-------------------------------

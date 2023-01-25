@@ -35,6 +35,8 @@ $ibo-tab-container--extra-tab-toggler--text-color: $ibo-color-grey-700 !default;
 $ibo-tab-container--extra-tab-toggler--text-color--on-hover: $ibo-color-blue-800 !default;
 $ibo-tab-container--extra-tab-toggler--background-color--on-hover: $ibo-color-grey-200 !default;
 
+$ibo-tab-container--extra-tab-toggler--tooltip-title--margin-bottom: $ibo-spacing-500 !default;
+
 $ibo-tab-container--tab-container--label--text-color: $ibo-color-grey-600 !default;
 $ibo-tab-container--tab-container--label--spacing: 20px !default;
 $ibo-tab-container--tab-container--label--margin-bottom: 20px !default;
@@ -146,6 +148,11 @@ $ibo-tab-container--tab-container--last--min-height: 60vh !default;
     color: $ibo-tab-container--extra-tab-toggler--text-color--on-hover;
     background-color: $ibo-tab-container--extra-tab-toggler--background-color--on-hover;
   }
+}
+
+.ibo-tab-container--extra-tab-toggler--tooltip-title {
+  @extend %ibo-font-weight-600;
+  margin-bottom: $ibo-tab-container--extra-tab-toggler--tooltip-title--margin-bottom;
 }
 
 .ibo-tab-container--tab-container {
