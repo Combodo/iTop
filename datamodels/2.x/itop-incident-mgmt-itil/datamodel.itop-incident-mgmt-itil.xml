@@ -1208,8 +1208,8 @@
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-		if (MetaModel::IsValidClass('KnownError'))
-		{
+    $sKnownErrorClass = 'KnownError';
+    if (MetaModel::IsValidClass($sKnownErrorClass)) {
 			//Search for known errors
 			$oPage->SetCurrentTab('Class:UserRequest:KnownErrorList');
 			$iTicketID = $this->GetKey();;
@@ -1223,7 +1223,11 @@
 			{
 				$oPage->SetCurrentTab('Class:UserRequest:KnownErrorList');
 			}
-			self::DisplaySet($oPage, $oKnownErrorSet, array ('menu' => false));
+			self::DisplaySet($oPage, $oKnownErrorSet, [
+        'menu' => false,
+        'panel_title' => Dict::S('Class:UserRequest:KnownErrorList'),
+        'panel_icon' => MetaModel::GetClassIcon($sKnownErrorClass, false),
+      ]);
 		}
 	}]]></code>
         </method>

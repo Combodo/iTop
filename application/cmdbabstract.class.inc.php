@@ -798,7 +798,7 @@ HTML
 					$oBlock->Display($oPage, 'notifications_'.$sNotifClass, [
 						'menu' => false,
 						'panel_title' => MetaModel::GetName($sNotifClass),
-						'panel_icon' => MetaModel::GetClassIcon($sNotifClass),
+						'panel_icon' => MetaModel::GetClassIcon($sNotifClass, false),
 					]);
 				}
 			}
