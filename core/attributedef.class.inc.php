@@ -1568,12 +1568,12 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/**
-	 * @deprecated 3.1.0 N°5563 this attribute is no longer used
 	 * @return string see LINKSET_EDITMODE_* constants
+	 * @since 3.1.0 N°5563 relations are edited using new attributes in details mode, but as nothing changed in edit mode we are still using edit_mode attribute
 	 */
 	public function GetEditMode()
 	{
-		return $this->GetOptional('legacy_edit_mode', LINKSET_EDITMODE_ACTIONS);
+		return $this->GetOptional('edit_mode', LINKSET_EDITMODE_ACTIONS);
 	}
 
 	/**
