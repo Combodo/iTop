@@ -11,11 +11,12 @@ use MetaModel;
  * @backupGlobals disabled
  */
 class ImportTest extends ItopDataTestCase {
+	const USE_TRANSACTION = false;
 
 	private $sUrl;
 	private $sUid;
 	private $sLogin;
-	private $sPassword = "Iuytrez9876543ç_è-(";
+	private $sPassword = "abcDEF12345##";
 	private $sTmpFile = "";
 	private $oOrg;
 
@@ -43,7 +44,7 @@ class ImportTest extends ItopDataTestCase {
 
 		if (is_object($oRestProfile) && is_object($oAdminProfile))
 		{
-			$oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
+			$oUser = $this->CreateContactlessUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
 			$this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
 		} else {
 			throw new \Exception("setup failed. test cannot work as usual");
@@ -164,13 +165,13 @@ CSVFILE;
 		$sLastline = $aOutput[sizeof($aOutput) - 1];
 		$iRes = $aRes[0];
 		$this->assertEquals(0, $iRes, $sOutput);
-		$this->assertContains("#Issues: $iExpectedIssue", $sOutput, $sOutput);
-		$this->assertContains("#Warnings: 0", $sOutput, $sOutput);
-		$this->assertContains("#Created: $iExpectedCreated", $sOutput, $sOutput);
-		$this->assertContains("#Updated: 0", $sOutput, $sOutput);
+		$this->assertStringContainsString("#Issues: $iExpectedIssue", $sOutput, $sOutput);
+		$this->assertStringContainsString("#Warnings: 0", $sOutput, $sOutput);
+		$this->assertStringContainsString("#Created: $iExpectedCreated", $sOutput, $sOutput);
+		$this->assertStringContainsString("#Updated: 0", $sOutput, $sOutput);
 		var_dump($sLastline);
 		if ($iExpectedCreated === 1) {
-			$this->assertContains("created;Person", $sLastline, $sLastline);
+			$this->assertStringContainsString("created;Person", $sLastline, $sLastline);
 		}
 
 		$iOrgId = $this->oOrg->GetKey();
@@ -178,7 +179,7 @@ CSVFILE;
 		foreach (["ORGID" => $iOrgId, "UID" => $this->sUid] as $sSearch => $sReplace){
 			$sLastLineNeedle = str_replace($sSearch, $sReplace, $sLastLineNeedle);
 		}
-		$this->assertContains($sLastLineNeedle, $sLastline, $sLastline);
+		$this->assertStringContainsString($sLastLineNeedle, $sLastline, $sLastline);
 
 		$sPattern = "/Person;(\d+);/";
 		if (preg_match($sPattern,$sLastline,$aMatches)){
