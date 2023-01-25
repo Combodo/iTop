@@ -17,6 +17,7 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
 use MetaModel;
+use utils;
 
 /**
  * Class BlockDirectLinksEditTable
@@ -113,11 +114,12 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	 */
 	private function InitUI()
 	{
-		// MedallionIcon
-		$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false));
-		$oClassIcon->SetDescription($this->oAttributeLinkedSet->GetDescription());
-		$oClassIcon->AddCSSClass('ibo-block-list--medallion');
-		$this->AddSubBlock($oClassIcon);
+		// Linkset description as an informative alert
+		$sDescription = $this->oAttributeLinkedSet->GetDescription();
+		if (utils::IsNotNullOrEmptyString($sDescription)) {
+			$oAlert = AlertUIBlockFactory::MakeForInformation('', $sDescription);
+			$this->AddSubBlock($oAlert);
+		}
 	}
 
 	/**
@@ -139,8 +141,14 @@ class BlockDirectLinksEditTable extends UIContentBlock
 			$aRowActions = $this->GetRowActions();
 			$oDatatable = DataTableUIBlockFactory::MakeForForm($this->oUILinksDirectWidget->GetInputId(), $aAttribs, $aRows, '', $aRowActions);
 			$oDatatable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
-			$aTablePanel = PanelUIBlockFactory::MakeNeutral('');
-			$aTablePanel->SetSubTitle(sprintf('Total: %d objects.', count($aRows)));
+
+			// Panel
+			$aTablePanel = PanelUIBlockFactory::MakeForClass($this->oUILinksDirectWidget->GetLinkedClass(), $this->oAttributeLinkedSet->GetLabel())
+				->SetSubTitle(sprintf('Total: %d objects.', count($aRows)))
+				->SetIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false))
+				->AddCSSClass('ibo-datatable-panel');
+
+			// Toolbar and actions
 			$oToolbar = ToolbarUIBlockFactory::MakeForButton();
 			$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
 			$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._removeSelection();");
@@ -153,6 +161,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 			$oToolbar->AddSubBlock($oActionButtonCreate);
 			$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete');
 			$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteSelection();");
+
 			$oToolbar->AddSubBlock($oActionButtonDelete);
 			$aTablePanel->AddToolbarBlock($oToolbar);
 			$aTablePanel->AddSubBlock($oDatatable);

@@ -121,6 +121,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 */
 	private function InitHeader()
 	{
+		// Linkset description as an informative alert
 		$sDescription = $this->oAttDef->GetDescription();
 		if (utils::IsNotNullOrEmptyString($sDescription)) {
 			$oAlert = AlertUIBlockFactory::MakeForInformation('', $sDescription);

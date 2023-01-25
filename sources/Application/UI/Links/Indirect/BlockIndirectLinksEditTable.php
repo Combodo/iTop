@@ -17,6 +17,7 @@ use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use MetaModel;
+use utils;
 
 /**
  * Class BlockIndirectLinksEditTable
@@ -102,15 +103,16 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	 */
 	private function InitUI()
 	{
-		// MedallionIcon
-		$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($this->oUILinksWidget->GetRemoteClass(), false));
-		$oClassIcon->SetDescription($this->oAttributeLinkedSetIndirect->GetDescription());
-		$oClassIcon->AddCSSClass('ibo-block-list--medallion');
-		$this->AddSubBlock($oClassIcon);
-
 		// To prevent adding forms inside the main form
 		$oDeferredBlock = new UIContentBlock("dlg_{$this->oUILinksWidget->GetLinkedSetId()}", ['ibo-block-indirect-links--edit--dialog']);
 		$this->AddDeferredBlock($oDeferredBlock);
+
+		// Linkset description as an informative alert
+		$sDescription = $this->oAttributeLinkedSetIndirect->GetDescription();
+		if (utils::IsNotNullOrEmptyString($sDescription)) {
+			$oAlert = AlertUIBlockFactory::MakeForInformation('', $sDescription);
+			$this->AddSubBlock($oAlert);
+		}
 	}
 
 	/**
@@ -156,7 +158,6 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	 */
 	public function InitTable(\WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $aTableConfig)
 	{
-		$this->AddSubBlock(InputUIBlockFactory::MakeForHidden("{$sFormPrefix}{$this->oUILinksWidget->GetInputId()}", '', "{$sFormPrefix}{$this->oUILinksWidget->GetInputId()}"));
 		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
 		$oValue->Rewind();
 		$aForm = array();
@@ -195,8 +196,14 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 			'select_mode'        => 'custom',
 			'disable_hyperlinks' => true,
 		]);
-		$aTablePanel = PanelUIBlockFactory::MakeNeutral('');
-		$aTablePanel->SetSubTitle(sprintf('Total: %d objects.', count($aForm)));
+
+		// Panel
+		$aTablePanel = PanelUIBlockFactory::MakeForClass($this->oUILinksWidget->GetRemoteClass(), $this->oAttributeLinkedSetIndirect->GetLabel())
+			->SetSubTitle(sprintf('Total: %d objects.', count($aForm)))
+			->SetIcon(MetaModel::GetClassIcon($this->oUILinksWidget->GetRemoteClass(), false))
+			->AddCSSClass('ibo-datatable-panel');
+
+		// Toolbar and actions
 		$oToolbar = ToolbarUIBlockFactory::MakeForButton();
 		$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
 		$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();");
@@ -208,6 +215,7 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 		$aTablePanel->AddSubBlock($oDataTable);
 
 		$this->AddSubBlock($aTablePanel);
+		$this->AddSubBlock(InputUIBlockFactory::MakeForHidden("{$sFormPrefix}{$this->oUILinksWidget->GetInputId()}", '', "{$sFormPrefix}{$this->oUILinksWidget->GetInputId()}"));
 	}
 
 	/**
