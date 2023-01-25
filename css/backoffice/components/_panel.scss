@@ -86,28 +86,27 @@ $ibo-panel--collapsible-toggler--font-size: $ibo-font-size-250 !default;
 $ibo-panel--collapsible-toggler--color: $ibo-color-grey-700 !default;
 
 /* Rules */
-
-
 .ibo-panel {
   --ibo-main-color: #{map-get($ibo-panel-colors, 'neutral')}; /* --ibo-main-color is to allow overload from custom dynamic value from the DM. The overload will be done through an additional CSS class of a particular DM class or DM attribute */
 
   position: relative;
 
   &.ibo-has-icon {
-    .ibo-panel--titles {
-      padding-left: $ibo-panel--icon--spacing;
+    // Note: Direct child selector is mandatory, otherwise a panel within a panel could be affected too when it shouldn't (eg. dashboard in an object, n:n panel)
+    > .ibo-panel--header {
+      .ibo-panel--titles {
+        padding-left: $ibo-panel--icon--spacing;
+      }
     }
 
     &.ibo-has-medallion-icon {
-      .ibo-panel--header-left {
-        position: relative;
-        z-index: 1;
-        margin-left: $ibo-panel--icon--spacing--as-medallion;
-      }
-
       // Note: Direct child selector is mandatory, otherwise a panel within a panel could be affected too when it shouldn't (eg. dashboard in an object, n:n panel)
       > .ibo-panel--header {
         .ibo-panel--header-left {
+          position: relative;
+          z-index: 1;
+          margin-left: $ibo-panel--icon--spacing--as-medallion;
+
           .ibo-panel--icon {
             position: absolute;
             bottom: $ibo-panel--icon--bottom--as-medallion;
