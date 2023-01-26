@@ -7,20 +7,20 @@
  */
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Menu:CreateMailbox' => 'Create a mailbox...~~',
-	'Menu:OAuthClient' => 'OAuth Client~~',
+	'Menu:CreateMailbox' => 'Postafiók létrehozása...',
+	'Menu:OAuthClient' => 'OAuth ügyfél',
 	'Menu:OAuthClient+' => '~~',
-	'Menu:GenerateTokens' => 'Generate access tokens...~~',
-	'Menu:RegenerateTokens' => 'Regenerate access tokens...~~',
+	'Menu:GenerateTokens' => 'Hozzáférési tokenek generálása...',
+	'Menu:RegenerateTokens' => 'Hozzáférési tokenek újragenerálása...',
 
-	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Mailbox creation~~',
+	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Postafiók létrehozás',
 
-	'itop-oauth-client:UsedForSMTP' => 'This OAuth client is used for SMTP~~',
-	'itop-oauth-client:TestSMTP' => 'Email send test~~',
-	'itop-oauth-client:MissingOAuthClient' => 'Missing Oauth client for user name %1$s~~',
-	'itop-oauth-client:Message:MissingToken' => 'Generate access token before using this OAuth client~~',
-	'itop-oauth-client:Message:TokenCreated' => 'Access token created~~',
-	'itop-oauth-client:Message:TokenRecreated' => 'Access token regenerated~~',
+	'itop-oauth-client:UsedForSMTP' => 'Ez az OAuth ügyfél SMTP-hez van használva',
+	'itop-oauth-client:TestSMTP' => 'Email tesztüzenet',
+	'itop-oauth-client:MissingOAuthClient' => 'Hiányzó Oauth ügyfél a %1$s felhasználóhoz',
+	'itop-oauth-client:Message:MissingToken' => 'Hozzáférési token generálása az OAuth ügyfél használata előtt',
+	'itop-oauth-client:Message:TokenCreated' => 'Hozzáférési token kész',
+	'itop-oauth-client:Message:TokenRecreated' => 'Hozzáférési token újragenerálva',
 ]);
 
 //
@@ -28,30 +28,30 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:OAuthClient' => 'OAuth Client~~',
-	'Class:OAuthClient/Attribute:provider' => 'Provider~~',
+	'Class:OAuthClient' => 'OAuth ügyfél',
+	'Class:OAuthClient/Attribute:provider' => 'Szolgáltató',
 	'Class:OAuthClient/Attribute:provider+' => '~~',
-	'Class:OAuthClient/Attribute:name' => 'Login~~',
+	'Class:OAuthClient/Attribute:name' => 'Bejelentkezés',
 	'Class:OAuthClient/Attribute:name+' => '~~',
-	'Class:OAuthClient/Attribute:scope' => 'Scope~~',
+	'Class:OAuthClient/Attribute:scope' => 'Hatókör',
 	'Class:OAuthClient/Attribute:scope+' => '~~',
-	'Class:OAuthClient/Attribute:description' => 'Description~~',
+	'Class:OAuthClient/Attribute:description' => 'Leírás',
 	'Class:OAuthClient/Attribute:description+' => '~~',
-	'Class:OAuthClient/Attribute:client_id' => 'Client id~~',
+	'Class:OAuthClient/Attribute:client_id' => 'Ügyfél azonosító',
 	'Class:OAuthClient/Attribute:client_id+' => '~~',
-	'Class:OAuthClient/Attribute:client_secret' => 'Client secret~~',
+	'Class:OAuthClient/Attribute:client_secret' => 'Ügyfél kulcs',
 	'Class:OAuthClient/Attribute:client_secret+' => '~~',
-	'Class:OAuthClient/Attribute:refresh_token' => 'Refresh token~~',
+	'Class:OAuthClient/Attribute:refresh_token' => 'Token frissítése',
 	'Class:OAuthClient/Attribute:refresh_token+' => '~~',
-	'Class:OAuthClient/Attribute:refresh_token_expiration' => 'Refresh token expiration~~',
+	'Class:OAuthClient/Attribute:refresh_token_expiration' => 'A token lejáratának frissítése',
 	'Class:OAuthClient/Attribute:refresh_token_expiration+' => '~~',
-	'Class:OAuthClient/Attribute:token' => 'Access token~~',
+	'Class:OAuthClient/Attribute:token' => 'Hozzáférési token',
 	'Class:OAuthClient/Attribute:token+' => '~~',
-	'Class:OAuthClient/Attribute:token_expiration' => 'Access token expiration~~',
+	'Class:OAuthClient/Attribute:token_expiration' => 'Hozzáférési token lejárata',
 	'Class:OAuthClient/Attribute:token_expiration+' => '~~',
-	'Class:OAuthClient/Attribute:redirect_url' => 'Redirect url~~',
+	'Class:OAuthClient/Attribute:redirect_url' => 'URL átirányítás',
 	'Class:OAuthClient/Attribute:redirect_url+' => '~~',
-	'Class:OAuthClient/Attribute:mailbox_list' => 'Mailbox list~~',
+	'Class:OAuthClient/Attribute:mailbox_list' => 'Postafiók lista',
 	'Class:OAuthClient/Attribute:mailbox_list+' => '~~',
 ]);
 
@@ -59,8 +59,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 // Class: OAuthClientAzure
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:OAuthClientAzure' => 'OAuth client for Microsoft Azure~~',
-	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)~~',
+	'Class:OAuthClientAzure' => 'OAuth ügyfél Microsoft Azure-hoz',
+	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 
 ]);
 
@@ -68,7 +68,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 // Class: OAuthClientGoogle
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:OAuthClientGoogle' => 'OAuth client for Google~~',
-	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)~~',
+	'Class:OAuthClientGoogle' => 'OAuth ügyfél a Google-höz',
+	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 ]);
 
