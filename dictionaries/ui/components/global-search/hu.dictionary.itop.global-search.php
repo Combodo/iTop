@@ -18,10 +18,10 @@
  */
 // Global search
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'UI:Component:GlobalSearch:Tooltip' => 'Search throughout the whole application~~',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Search...~~',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Recents~~',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'You haven\'t run any search yet~~',
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Open global search~~',
+	'UI:Component:GlobalSearch:Tooltip' => 'Keresés a teljes alkalmazásban',
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Keresés...',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Legutóbbiak',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Még nem futtatott semmilyen keresést',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'Az előzmények le lettek tiltva',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Globális keresés megnyitása',
 ));
