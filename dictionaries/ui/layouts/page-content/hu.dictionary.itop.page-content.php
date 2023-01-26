@@ -4,5 +4,4 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'UIBlock:Error:CannotGetBlocks' => 'Could not retrieve blocks from content area "%1$s" as it does seem to exists for page content "%2$s"~~',
-]);
+	'UIBlock:Error:CannotGetBlocks' => 'Nem tudta lekérni a blokkokat a "%1$s" tartalmi területről, mivel úgy tűnik, hogy létezik a "%2$s" oldal tartalmához.',
