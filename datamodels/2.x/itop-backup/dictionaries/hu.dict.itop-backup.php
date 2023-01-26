@@ -35,7 +35,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'bkp-free-disk-space' => '<b>%1$s szabad</b> a <code>%2$s</code> -ből',
 	'bkp-dir-not-writeable' => '%1$s nem írható',
 	'bkp-wrong-format-spec' => 'A fájlnevek formázására vonatkozó jelenlegi specifikáció helytelen (%1$s). Alapértelmezett specifikáció lesz érvényben: %2$s',
-	'bkp-name-sample' => 'A backup fájlok neve a DB azonosítóktól, a dátumtól és az időponttól függ. Példa: %1$s~~',
+	'bkp-name-sample' => 'A backup fájlok neve a DB azonosítóktól, a dátumtól és az időponttól függ. Példa: %1$s',
 	'bkp-week-days' => 'Backup lesz végrehajtva <b>minden %1$s  %2$s -kor</b>',
 	'bkp-retention' => 'Legfeljebb <b>%1$d backup fájl lesz megőrizve</b> a célkönyvtárban.',
 	'bkp-next-to-delete' => 'Törölve lesz a következő backup alkalmával (lásd a "retention_count" beállítást)',
