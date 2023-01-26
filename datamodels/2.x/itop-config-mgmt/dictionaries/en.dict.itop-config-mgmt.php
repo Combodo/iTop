@@ -85,6 +85,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkContactToFunctionalCI' => 'Link Contact / FunctionalCI',
 	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Functionalci',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name',
@@ -773,6 +774,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkServerToVolume' => 'Link Server / Volume',
 	'Class:lnkServerToVolume+' => '',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
 	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
 	'Class:lnkServerToVolume/Attribute:volume_name' => 'Volume name',
@@ -792,6 +794,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkVirtualDeviceToVolume' => 'Link Virtual Device / Volume',
 	'Class:lnkVirtualDeviceToVolume+' => '',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Volume name',
@@ -811,6 +814,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkSanToDatacenterDevice' => 'Link SAN / Datacenter Device',
 	'Class:lnkSanToDatacenterDevice+' => '',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN switch',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN switch name',
@@ -1021,6 +1025,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDocumentToLicence' => 'Link Document / License',
 	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'License',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
 	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'License name',
@@ -1152,6 +1157,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDocumentToPatch' => 'Link Document / Patch',
 	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
 	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Patch name',
@@ -1169,6 +1175,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Link Software Instance / Software Patch',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Software patch',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Software patch name',
@@ -1186,6 +1193,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkFunctionalCIToOSPatch' => 'Link FunctionalCI / OS patch',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'OS patch',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'OS patch name',
@@ -1203,6 +1211,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDocumentToSoftware' => 'Link Document / Software',
 	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Software',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Software name',
@@ -1264,6 +1273,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkSubnetToVLAN' => 'Link Subnet / VLAN',
 	'Class:lnkSubnetToVLAN+' => '',
+	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'Subnet IP',
@@ -1319,6 +1329,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:PhysicalInterface' => 'Physical Interface',
 	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface/Name' => '%2$s %1$s',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Device',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Device name',
@@ -1334,6 +1345,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Link PhysicalInterface / VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Physical Interface',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Physical Interface Name',
@@ -1388,6 +1400,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkConnectableCIToNetworkDevice' => 'Link ConnectableCI / NetworkDevice',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Network device',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Network device name',
@@ -1415,6 +1428,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Link ApplicationSolution / FunctionalCI',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Application solution',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Application solution name',
@@ -1432,6 +1446,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Link ApplicationSolution / BusinessProcess',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Business process',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Business process name',
@@ -1485,6 +1500,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkGroupToCI' => 'Link Group / CI',
 	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI/Name' => '%1$s / %2$s',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Group',
 	'Class:lnkGroupToCI/Attribute:group_id+' => '',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Name',
@@ -1521,6 +1537,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDocumentToFunctionalCI' => 'Link Document / FunctionalCI',
 	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functionalci',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name',

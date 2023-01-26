@@ -1013,7 +1013,7 @@
         <naming>
           <attributes>
             <attribute id="person_id_friendlyname"/>
-            <attribute id="team_id_friendlyname"/>
+            <attribute id="team_name"/>
           </attributes>
         </naming>
         <style>
@@ -1025,6 +1025,17 @@
             <attribute id="person_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="team_id"/>
+              <attribute id="person_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="team_id" xsi:type="AttributeExternalKey">
