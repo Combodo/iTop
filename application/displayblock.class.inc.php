@@ -1877,9 +1877,6 @@ class MenuBlock extends DisplayBlock
 											'url'   => "{$sRootUrl}pages/$sUIPage?route=object.modify&class=$sClass&id=$id{$sContext}#",
 										) + $aActionParams;
 								}
-								if ($bIsCreationAllowed) {
-									$this->AddNewObjectMenuAction($aRegularActions, $sClass, $sDefaultValuesAsUrlParams);
-								}
 								if ($bIsDeleteAllowed) {
 									$aRegularActions['UI:Menu:Delete'] = array(
 											'label' => Dict::S('UI:Menu:Delete'),
