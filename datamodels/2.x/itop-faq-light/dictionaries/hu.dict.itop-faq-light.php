@@ -23,23 +23,23 @@
 // Class: FAQ
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:FAQ' => 'FAQ~~',
-	'Class:FAQ+' => 'Frequently asked questions~~',
-	'Class:FAQ/Attribute:title' => 'Title~~',
+	'Class:FAQ' => 'GyIK',
+	'Class:FAQ+' => 'Gyakran Ismételt Kérdések',
+	'Class:FAQ/Attribute:title' => 'Cím',
 	'Class:FAQ/Attribute:title+' => '~~',
-	'Class:FAQ/Attribute:summary' => 'Summary~~',
+	'Class:FAQ/Attribute:summary' => 'Összefoglaló',
 	'Class:FAQ/Attribute:summary+' => '~~',
-	'Class:FAQ/Attribute:description' => 'Description~~',
+	'Class:FAQ/Attribute:description' => 'Leírás',
 	'Class:FAQ/Attribute:description+' => '~~',
-	'Class:FAQ/Attribute:category_id' => 'Category~~',
+	'Class:FAQ/Attribute:category_id' => 'Kategória',
 	'Class:FAQ/Attribute:category_id+' => '~~',
-	'Class:FAQ/Attribute:category_name' => 'Category name~~',
+	'Class:FAQ/Attribute:category_name' => 'Kategória név',
 	'Class:FAQ/Attribute:category_name+' => '~~',
-	'Class:FAQ/Attribute:error_code' => 'Error code~~',
+	'Class:FAQ/Attribute:error_code' => 'Hibakód',
 	'Class:FAQ/Attribute:error_code+' => '~~',
-	'Class:FAQ/Attribute:key_words' => 'Key words~~',
+	'Class:FAQ/Attribute:key_words' => 'Kulcsszavak',
 	'Class:FAQ/Attribute:key_words+' => '~~',
-	'Class:FAQ/Attribute:domains' => 'Domains~~',
+	'Class:FAQ/Attribute:domains' => 'Domain-ek',
 ));
 
 //
@@ -47,22 +47,22 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:FAQCategory' => 'FAQ Category~~',
+	'Class:FAQCategory' => 'GyIK kategória',
 	'Class:FAQCategory+' => 'Category for FAQ~~',
-	'Class:FAQCategory/Attribute:name' => 'Name~~',
+	'Class:FAQCategory/Attribute:name' => 'Név',
 	'Class:FAQCategory/Attribute:name+' => '~~',
-	'Class:FAQCategory/Attribute:faq_list' => 'FAQs~~',
+	'Class:FAQCategory/Attribute:faq_list' => 'GyIK-ek',
 	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
 ));
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Menu:ProblemManagement' => 'Probléma menedzsment',
+	'Menu:ProblemManagement' => 'Probléma kezelés',
 	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Shortcuts' => 'Gyorsmenü',
-	'Menu:FAQCategory' => 'FAQ categories~~',
-	'Menu:FAQCategory+' => 'All FAQ categories~~',
-	'Menu:FAQ' => 'FAQs~~',
-	'Menu:FAQ+' => 'All FAQs~~',
-	'Brick:Portal:FAQ:Menu' => 'FAQ~~',
-	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions~~',
-	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>~~',
+	'Menu:FAQCategory' => 'GyIK kategória',
+	'Menu:FAQCategory+' => 'Összes GyIK kategória',
+	'Menu:FAQ' => 'GyIK-ek',
+	'Menu:FAQ+' => 'Összes GyIK',
+	'Brick:Portal:FAQ:Menu' => 'GyIK',
+	'Brick:Portal:FAQ:Title' => 'Gyakran Ismételt kérdések',
+	'Brick:Portal:FAQ:Title+' => '<p>Elfoglalt?</p><p>Nézze meg a leggyakoribb kérdések listáját, és (talán) azonnal megtalálja a várt választ.</p>',
 ));
