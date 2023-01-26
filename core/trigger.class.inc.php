@@ -33,15 +33,16 @@ abstract class Trigger extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "description",
-			"state_attcode" => "",
-			"reconc_keys" => array('description'),
-			"db_table" => "priv_trigger",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "realclass",
-			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-conflict.svg'),
+			"category"                   => "grant_by_profile,core/cmdb",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "description",
+			"complementary_name_attcode" => array('finalclass'),
+			"state_attcode"              => "",
+			"reconc_keys"                => array('description'),
+			"db_table"                   => "priv_trigger",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "realclass",
+			'style'                      => new ormStyle(null, null, null, null, null, '../images/icons/icons8-conflict.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
