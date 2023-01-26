@@ -46,7 +46,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:KnownError/Attribute:domain+' => '',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Alkalmazás',
 	'Class:KnownError/Attribute:domain/Value:Application+' => '',
-	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Desktop',
+	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Asztali gép',
 	'Class:KnownError/Attribute:domain/Value:Desktop+' => '',
 	'Class:KnownError/Attribute:domain/Value:Network' => 'Hálózat',
 	'Class:KnownError/Attribute:domain/Value:Network+' => '',
@@ -54,7 +54,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:KnownError/Attribute:domain/Value:Server+' => '',
 	'Class:KnownError/Attribute:vendor' => 'Szállító',
 	'Class:KnownError/Attribute:vendor+' => '',
-	'Class:KnownError/Attribute:model' => 'Model',
+	'Class:KnownError/Attribute:model' => 'Modell',
 	'Class:KnownError/Attribute:model+' => '',
 	'Class:KnownError/Attribute:version' => 'Verzió',
 	'Class:KnownError/Attribute:version+' => '',
@@ -69,17 +69,17 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:lnkErrorToFunctionalCI' => 'Link Error / FunctionalCI~~',
-	'Class:lnkErrorToFunctionalCI+' => 'Infra related to a known error~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI~~',
+	'Class:lnkErrorToFunctionalCI' => 'Hiba / Funkcionális CI',
+	'Class:lnkErrorToFunctionalCI+' => 'Infra ismert hibához kapcsolódóan',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI name~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI név',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Error~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Hiba',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Error name~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Hiba név',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reason~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Hibaok',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
 ));
 
@@ -88,22 +88,22 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:lnkDocumentToError' => 'Link Documents / Errors~~',
+	'Class:lnkDocumentToError' => 'Dokumentumok / Hibák',
 	'Class:lnkDocumentToError+' => 'A link between a document and a known error~~',
-	'Class:lnkDocumentToError/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToError/Attribute:document_id' => 'Dokumentum',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToError/Attribute:document_name' => 'Document Name~~',
+	'Class:lnkDocumentToError/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkDocumentToError/Attribute:document_name+' => '~~',
-	'Class:lnkDocumentToError/Attribute:error_id' => 'Error~~',
+	'Class:lnkDocumentToError/Attribute:error_id' => 'Hiba',
 	'Class:lnkDocumentToError/Attribute:error_id+' => '~~',
-	'Class:lnkDocumentToError/Attribute:error_name' => 'Error name~~',
+	'Class:lnkDocumentToError/Attribute:error_name' => 'Hiba név',
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
-	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type~~',
+	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
 ));
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Menu:ProblemManagement' => 'Probléma menedzsment',
+	'Menu:ProblemManagement' => 'Probléma kezelés',
 	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Shortcuts' => 'Gyorsmenü',
 	'Menu:NewError' => 'Új ismert hiba',

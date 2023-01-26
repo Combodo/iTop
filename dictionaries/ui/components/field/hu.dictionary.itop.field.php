@@ -18,5 +18,5 @@
  */
 // Global search
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',
+	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Ismeretlen értékek',
 ));

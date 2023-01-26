@@ -19,5 +19,5 @@
 
 // Input
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'A jelszavak nem egyeznek',
 ));

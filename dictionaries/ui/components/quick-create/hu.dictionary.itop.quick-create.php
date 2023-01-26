@@ -18,10 +18,10 @@
  */
 // Quick create
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...~~',
-	'UI:Component:QuickCreate:Recents:Title' => 'Recents~~',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet~~',
-	'UI:Component:QuickCreate:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open quick create~~',
+	'UI:Component:QuickCreate:Tooltip' => 'Bármilyen típusú objektum gyors létrehozása',
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Objektumtípus kiválasztása...',
+	'UI:Component:QuickCreate:Recents:Title' => 'Legutóbbiak',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Még nem hozott létre objektumot',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'Az előzmények le lettek tiltva',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Gyors létrehozás megnyitása',
 ));

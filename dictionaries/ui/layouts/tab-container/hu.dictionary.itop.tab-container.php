@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'UI:Layout:TabContainer:ExtraTabsListToggler:Label' => 'Other tabs~~',
-	'UIBlock:Error:AddBlockNotTabForbidden' => 'Cannot add block %1$s to %2$s (only Tab blocks are allowed)~~',
-	'UIBlock:TabContainer:RemoteTabLoad' => 'Click to load this tab~~',
+	'UI:Layout:TabContainer:ExtraTabsListToggler:Label' => 'Egyéb táblák',
+	'UIBlock:Error:AddBlockNotTabForbidden' => 'Nem lehet %1$s blokkot hozzáadni %2$s-hoz (csak tábla blokkok engedélyezettek)',
+	'UIBlock:TabContainer:RemoteTabLoad' => 'Kattintson a tábla betöltéséhez',
 ]);
