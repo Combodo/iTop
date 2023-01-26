@@ -395,8 +395,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="ticket_id"/>
-            <attribute id="contact_id"/>
+            <attribute id="contact_name"/>
+            <attribute id="ticket_ref"/>
           </attributes>
         </naming>
         <style>
@@ -408,6 +408,17 @@
             <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="contact_id"/>
+              <attribute id="ticket_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ticket_id" xsi:type="AttributeExternalKey">
@@ -429,6 +440,10 @@
         <field id="contact_email" xsi:type="AttributeExternalField">
           <extkey_attcode>contact_id</extkey_attcode>
           <target_attcode>email</target_attcode>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
         </field>
         <field id="role" xsi:type="AttributeString">
           <sql>role</sql>
