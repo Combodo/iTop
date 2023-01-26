@@ -24,14 +24,14 @@ use utils;
  * @api
  * @since 3.1.0
  */
-class EventService
+final class EventService
 {
 	/** @var array */
-	private static $aEventListeners = [];
+	private static array $aEventListeners = [];
 	/** @var int */
-	private static $iEventIdCounter = 0;
+	private static int $iEventIdCounter = 0;
 	/** @var array */
-	private static $aEventDescriptions = [];
+	private static array $aEventDescriptions = [];
 
 	/**
 	 * Initialize the Event Service. This is called by iTop.
@@ -99,7 +99,7 @@ class EventService
 			$iTotalRegistrations += count($aEvent);
 		}
 		$sLogEventName = "$sEvent:".self::GetSourcesAsString($sEventSource);
-		EventHelper::Trace("Registering event '$sLogEventName' for '$sName' with id '$sId' (total $iTotalRegistrations)");
+		EventServiceLog::Trace("Registering event '$sLogEventName' for '$sName' with id '$sId' (total $iTotalRegistrations)");
 
 		return $sId;
 	}
@@ -125,40 +125,57 @@ class EventService
 		$sEvent = $oEventData->GetEvent();
 		if (!self::IsEventRegistered($sEvent)) {
 			$sError = "Fire event error: Event $sEvent is not registered";
-			EventHelper::Error($sError);
+			EventServiceLog::Error($sError);
 			throw new CoreException($sError);
 		}
 		$eventSource = $oEventData->GetEventSource();
 		$oKPI = new ExecutionKPI();
 		$sLogEventName = "$sEvent - ".self::GetSourcesAsString($eventSource).' '.json_encode($oEventData->GetEventData());
-		EventHelper::Trace("Fire event '$sLogEventName'");
+		EventServiceLog::Trace("Fire event '$sLogEventName'");
 		if (!isset(self::$aEventListeners[$sEvent])) {
-			EventHelper::Debug("No listener for '$sLogEventName'", $sEvent, $eventSource);
+			EventServiceLog::DebugEvent("No listener for '$sLogEventName'", $sEvent, $eventSource);
 			$oKPI->ComputeStats('FireEvent', $sEvent);
 
 			return;
 		}
 
+		$oLastException = null;
+		$sLastExceptionMessage = null;
 		foreach (self::GetListeners($sEvent, $eventSource) as $aEventCallback) {
 			if (!self::MatchContext($aEventCallback['context'])) {
 				continue;
 			}
 			$sName = $aEventCallback['name'];
-			EventHelper::Debug("Fire event '$sLogEventName' calling '$sName'", $sEvent, $eventSource);
+			EventServiceLog::DebugEvent("Fire event '$sLogEventName' calling '$sName'", $sEvent, $eventSource);
 			try {
 				$oEventData->SetCallbackData($aEventCallback['data']);
 				call_user_func($aEventCallback['callback'], $oEventData);
 			}
-			catch (Exception $e) {
-				EventHelper::Error("Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with error: ".$e->getMessage());
+			catch (EventException $e) {
+				EventServiceLog::Error("Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with blocking error: ".$e->getMessage());
 				throw $e;
 			}
+			catch (Exception $e) {
+				$sLastExceptionMessage = "Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with non-blocking error: ".$e->getMessage();
+				EventServiceLog::Error($sLastExceptionMessage);
+				$oLastException = $e;
+			}
 		}
-		EventHelper::Debug("End of event '$sLogEventName'", $sEvent, $eventSource);
+		EventServiceLog::DebugEvent("End of event '$sLogEventName'", $sEvent, $eventSource);
 		$oKPI->ComputeStats('FireEvent', $sEvent);
+
+		if (!is_null($oLastException)) {
+			throw $oLastException;
+		}
 	}
 
-	public static function GetListeners(string $sEvent, $eventSource)
+	/**
+	 * @param string $sEvent
+	 * @param $eventSource
+	 *
+	 * @return array
+	 */
+	public static function GetListeners(string $sEvent, $eventSource): array
 	{
 		$aListeners = [];
 		if (isset(self::$aEventListeners[$sEvent])) {
@@ -219,7 +236,7 @@ class EventService
 			if ($aEventCallback['id'] == $sId) {
 				$sName = self::$aEventListeners[$sEvent][$idx]['name'];
 				unset (self::$aEventListeners[$sEvent][$idx]);
-				EventHelper::Trace("Unregistered callback '$sName' id $sId' on event '$sEvent'");
+				EventServiceLog::Trace("Unregistered callback '$sName' id $sId' on event '$sEvent'");
 
 				return false;
 			}
@@ -228,7 +245,7 @@ class EventService
 		});
 
 		if (!$bRemoved) {
-			EventHelper::Trace("No registration found for callback '$sId'");
+			EventServiceLog::Trace("No registration found for callback '$sId'");
 		}
 	}
 
@@ -240,13 +257,13 @@ class EventService
 	public static function UnRegisterEventListeners(string $sEvent)
 	{
 		if (!isset(self::$aEventListeners[$sEvent])) {
-			EventHelper::Trace("No registration found for event '$sEvent'");
+			EventServiceLog::Trace("No registration found for event '$sEvent'");
 
 			return;
 		}
 
 		unset(self::$aEventListeners[$sEvent]);
-		EventHelper::Trace("Unregistered all the callbacks on event '$sEvent'");
+		EventServiceLog::Trace("Unregistered all the callbacks on event '$sEvent'");
 	}
 
 	/**
@@ -257,7 +274,7 @@ class EventService
 		self::$aEventListeners = [];
 		self::$aEventDescriptions = [];
 		self::$iEventIdCounter = 0;
-		EventHelper::Trace("Unregistered all events");
+		EventServiceLog::Trace("Unregistered all events");
 	}
 
 	/**
@@ -296,7 +313,7 @@ class EventService
 		$sModule = $oEventDescription->GetModule();
 		if (self::IsEventRegistered($sEvent)) {
 			$sPrevious = self::$aEventDescriptions[$sEvent]['module'];
-			EventHelper::Warning("The Event $sEvent defined by $sModule has already been defined in $sPrevious, check your delta");
+			EventServiceLog::Warning("The Event $sEvent defined by $sModule has already been defined in $sPrevious, check your delta");
 
 			return;
 		}
@@ -312,8 +329,11 @@ class EventService
 	 * @param string $sClass
 	 *
 	 * @return array
+	 * @throws \ReflectionException
+	 * @throws \ReflectionException
+	 * @throws \ReflectionException
 	 */
-	public static function GetEventsByClass(string $sClass)
+	public static function GetEventsByClass(string $sClass): array
 	{
 		$aRes = [];
 		$oClass = new ReflectionClass($sClass);

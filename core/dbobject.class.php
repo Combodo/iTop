@@ -3064,29 +3064,32 @@ abstract class DBObject implements iDisplay
 		}
 
 		// Prevent DBUpdate at this point (reentrance protection)
-		MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
+		MetaModel::StartReentranceProtection($this);
 
-		$this->EventCreateDone();
-		$this->AfterInsert();
+		try {
+			$this->EventCreateDone();
+			$this->AfterInsert();
 
-		// Activate any existing trigger
-		$sClass = get_class($this);
-		$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)'), array(), $aParams);
-		while ($oTrigger = $oSet->Fetch()) {
-			/** @var \Trigger $oTrigger */
-			try {
-				$oTrigger->DoActivate($this->ToArgs('this'));
+			// Activate any existing trigger
+			$sClass = get_class($this);
+			$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)'), array(), $aParams);
+			while ($oTrigger = $oSet->Fetch()) {
+				/** @var \Trigger $oTrigger */
+				try {
+					$oTrigger->DoActivate($this->ToArgs('this'));
+				}
+				catch (Exception $e) {
+					utils::EnrichRaisedException($oTrigger, $e);
+				}
 			}
-			catch (Exception $e) {
-				utils::EnrichRaisedException($oTrigger, $e);
-			}
+
+			// - TriggerOnObjectMention
+			$this->ActivateOnMentionTriggers(true);
 		}
-
-		// - TriggerOnObjectMention
-		$this->ActivateOnMentionTriggers(true);
-
-		MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
+		finally {
+			MetaModel::StopReentranceProtection($this);
+		}
 
 		if ($this->IsModified()) {
 			$this->DBUpdate();
@@ -3157,7 +3160,7 @@ abstract class DBObject implements iDisplay
 		// Protect against reentrance (e.g. cascading the update of ticket logs)
 		$sClass = get_class($this);
 		$sKey = $this->GetKey();
-		if (!MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this)) {
+		if (!MetaModel::StartReentranceProtection($this)) {
 			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
 
 			return false;
@@ -3175,7 +3178,6 @@ abstract class DBObject implements iDisplay
 			if (count($aChanges) == 0)
 			{
 				// Attempting to update an unchanged object
-				MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
 				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Aborted (no change)", LogChannels::DM_CRUD);
 
 				return $this->m_iKey;
@@ -3387,10 +3389,10 @@ abstract class DBObject implements iDisplay
 		}
 		finally
 		{
-			MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
+			MetaModel::StopReentranceProtection($this);
 		}
 
-			if ($this->IsModified() || $bModifiedByUpdateDone) {
+		if ($this->IsModified() || $bModifiedByUpdateDone) {
 			// Controlled reentrance
 			$this->DBUpdate();
 		}
