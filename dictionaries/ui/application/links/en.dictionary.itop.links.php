@@ -31,8 +31,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Links:ActionRow:Modify:Modal:Title'         => 'Modify an object',
 
 	// New
-	'UI:Links:New:Modal:Title'                      => 'Creation of a link',
-	'UI:Links:New:Button:Tooltip'                   => 'Add a new link',
+	'UI:Links:New:Modal:Title'                      => 'Creation of an object',
+	'UI:Links:New:Button:Tooltip'                   => 'Add an entry in the list',
 
 	// Bulk
 	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Link all objects',
