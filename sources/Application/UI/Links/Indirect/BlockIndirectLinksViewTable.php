@@ -53,6 +53,11 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 			'panel_title' => $this->oAttDef->GetLabel(),
 			'panel_icon' => MetaModel::GetClassIcon($this->GetTargetClass(), false),
 		);
+
+		// Description
+		if ($this->oAttDef->HasDescription()) {
+			$aExtraParams['panel_title_tooltip'] = $this->oAttDef->GetDescription();
+		}
 		
 		// Add creation in modal if the linkset is not readonly
 		if (!$this->oAttDef->GetReadOnly()) {

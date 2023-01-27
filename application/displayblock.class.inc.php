@@ -272,6 +272,8 @@ class DisplayBlock
 			'panel_title',
 			/** string true if panel title should be displayed as html */
 			'panel_title_is_html',
+			/** string Description of the panel content, displayed as a hint on the title */
+			'panel_title_tooltip',
 			/** string class for panel block style */
 			'panel_class',
 			/** string class for panel block style */

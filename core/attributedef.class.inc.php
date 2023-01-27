@@ -652,6 +652,16 @@ abstract class AttributeDefinition
 	}
 
 	/**
+	 * @return bool True if the attribute has a description {@see \AttributeDefinition::GetDescription()}
+	 * @throws \Exception
+	 * @since 3.1.0
+	 */
+	public function HasDescription(): bool
+	{
+		return utils::IsNotNullOrEmptyString($this->GetDescription());
+	}
+
+	/**
 	 * @param string|null $sDefault
 	 *
 	 * @return string

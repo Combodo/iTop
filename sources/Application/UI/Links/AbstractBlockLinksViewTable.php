@@ -113,7 +113,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	}
 
 	/**
-	 * InitHeader.
+	 * InitHeader by adding UIBlocks to the current self
 	 *
 	 * @return void
 	 * @throws CoreException
@@ -121,12 +121,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 */
 	private function InitHeader()
 	{
-		// Linkset description as an informative alert
-		$sDescription = $this->oAttDef->GetDescription();
-		if (utils::IsNotNullOrEmptyString($sDescription)) {
-			$oAlert = AlertUIBlockFactory::MakeForInformation('', $sDescription);
-			$this->AddSubBlock($oAlert);
-		}
+
 	}
 
 	/**

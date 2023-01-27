@@ -42,6 +42,11 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 			'panel_icon' => MetaModel::GetClassIcon($this->GetTargetClass(), false),
 		);
 
+		// Description
+		if ($this->oAttDef->HasDescription()) {
+			$aExtraParams['panel_title_tooltip'] = $this->oAttDef->GetDescription();
+		}
+
 		// Add creation in modal if the linkset is not readonly
 		if (!$this->oAttDef->GetReadOnly()) {
 			$aExtraParams['creation_in_modal_is_allowed'] = true;
