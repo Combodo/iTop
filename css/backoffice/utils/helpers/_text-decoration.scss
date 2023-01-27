@@ -4,6 +4,11 @@
  */
 
 /* SCSS variables */
+$ibo-has-description--content: "?" !default;
+$ibo-has-description--padding-left: $ibo-spacing-200 !default;
+$ibo-has-description--color: $ibo-color-grey-600 !default;
+$ibo-has-description--font-size: 0.7em !default; /* Font size is em on purpose as we want it to be proportional to its context */
+
 $ibo-is-code--background-color: $ibo-color-white-200 !default;
 $ibo-is-code--padding: 1.25rem 1.5rem !default;
 
@@ -31,6 +36,22 @@ $ibo-is-code--padding: 1.25rem 1.5rem !default;
 .ibo-is-broken-hyperlink {
   text-decoration: line-through;
   cursor: help;
+}
+
+/* Class to display a hint on elements that have a tooltip for further description */
+.ibo-has-description {
+  &::after {
+    content: $ibo-has-description--content;
+    padding-left: $ibo-has-description--padding-left;
+    vertical-align: top;
+
+    cursor: pointer;
+    color: $ibo-has-description--color;
+
+    /* We don't use a %ibo-font-ral-xxx-yyy as we need a specific size */
+    @extend %ibo-font-weight-700;
+    font-size: $ibo-has-description--font-size;
+  }
 }
 
 .ibo-is-code {
