@@ -134,7 +134,7 @@ abstract class DOMSanitizer extends HTMLSanitizer
 	public function DoSanitize($sHTML)
 	{
 		$this->oDoc = new DOMDocument();
-		$this->oDoc->preserveWhitespace = true;
+		$this->oDoc->preserveWhiteSpace = true;
 
 		// MS outlook implements empty lines by the mean of <p><o:p></o:p></p>
 		// We have to transform that into <p><br></p> (which is how Thunderbird implements empty lines)
@@ -402,7 +402,7 @@ class HTMLDOMSanitizer extends DOMSanitizer
 	public function LoadDoc($sHTML)
 	{
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
-		$this->oDoc->preserveWhitespace = true;
+		$this->oDoc->preserveWhiteSpace = true;
 	}
 
 	public function PrintDoc()

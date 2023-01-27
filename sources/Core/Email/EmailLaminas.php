@@ -250,7 +250,7 @@ class EMailLaminas extends Email
 	protected function EmbedInlineImages(string &$sBody)
 	{
 		$oDOMDoc = new DOMDocument();
-		$oDOMDoc->preserveWhitespace = true;
+		$oDOMDoc->preserveWhiteSpace = true;
 		@$oDOMDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sBody); // For loading HTML chunks where the character set is not specified
 
 		$oXPath = new DOMXPath($oDOMDoc);
