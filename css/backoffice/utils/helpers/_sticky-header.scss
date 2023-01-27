@@ -1,0 +1,35 @@
+/*!
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/***********************************************************************/
+/* Sticky headers                                                      */
+/*                                                                     */
+/* Used as a trigger to make an element stick to another during scroll */
+/***********************************************************************/
+
+/* SCSS variables */
+$ibo-sticky-sentinel--left: 0 !default;
+$ibo-sticky-sentinel--right: 0 !default;
+$ibo-sticky-sentinel--height: 0 !default;
+$ibo-sticky-sentinel-top--top: 0 !default;
+$ibo-sticky-sentinel-top--height: $ibo-sticky-sentinel--height !default;
+$ibo-sticky-sentinel-bottom--bottom: 0 !default;
+$ibo-sticky-sentinel-bottom--height: $ibo-sticky-sentinel--height !default;
+
+/* Rules */
+.ibo-sticky-sentinel {
+  position: absolute;
+  left: $ibo-sticky-sentinel--left;
+  right: $ibo-sticky-sentinel--right;
+  visibility: hidden;
+}
+.ibo-sticky-sentinel-top {
+  top: $ibo-sticky-sentinel-top--top;
+  height: $ibo-sticky-sentinel-top--height; /* To be overloaded by use cases */
+}
+.ibo-sticky-sentinel-bottom {
+  bottom: $ibo-sticky-sentinel-bottom--bottom;
+  height: $ibo-sticky-sentinel-bottom--height; /* To be overloaded by use cases */
+}
