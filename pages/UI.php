@@ -13,7 +13,6 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -537,8 +536,8 @@ try
 //				$sParams = utils::ReadParam('aParams', '{}', false, \utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 //				$aParams = json_decode($sParams, true);
 
-				DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat, ''); //, true, $aParams
-			break;
+				DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat); //, true, true, $aParams
+				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
