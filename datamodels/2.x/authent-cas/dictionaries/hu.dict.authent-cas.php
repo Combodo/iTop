@@ -6,7 +6,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'CAS:Error:UserNotAllowed' => 'User not allowed~~',
-	'CAS:Login:SignIn' => 'Sign in with CAS~~',
-	'CAS:Login:SignInTooltip' => 'Click here to authenticate yourself with the CAS server~~',
+	'CAS:Error:UserNotAllowed' => 'Nem engedélyezett felhasználó',
+	'CAS:Login:SignIn' => 'Bejelentkezés CAS szerverrel',
+	'CAS:Login:SignInTooltip' => 'Kattintson ide az azonosításhoz a CAS szerveren',
 ));
