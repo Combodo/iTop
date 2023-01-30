@@ -26,7 +26,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'bkp-restore-running' => 'A visszaállítás fut. Kérem várjon...',
 
 	'Menu:BackupStatus' => 'Ütemezett Backup',
-	'bkp-status-title' => 'Scheduled Backups~~',
+	'bkp-status-title' => 'Ütemezett backup-ok',
 	'bkp-status-checks' => 'Beállítás és ellenőrzés',
 	'bkp-mysqldump-ok' => 'mysqldump megvan: %1$s',
 	'bkp-mysqldump-notfound' => 'mysqldump nem található: %1$s - Győződjön meg róla, hogy telepítve van és szerepel az elérési útvonalban, vagy szerkessze a konfigurációs fájlt a mysql_bindir beállításához..',
