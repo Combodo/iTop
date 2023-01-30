@@ -165,6 +165,7 @@ final class EventService
 		$oKPI->ComputeStats('FireEvent', $sEvent);
 
 		if (!is_null($oLastException)) {
+			EventServiceLog::Error("Throwing the last exception caught: $sLastExceptionMessage");
 			throw $oLastException;
 		}
 	}
