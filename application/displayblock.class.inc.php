@@ -1047,9 +1047,19 @@ JS
 			$aCount = $aCounts[$sStateValue];
 			$sHyperlink = $aCount['link'];
 			$sCountLabel = $aCount['label'];
-			$oPill = PillFactory::MakeForState($sClass, $sStateValue)
-				->SetTooltip($sStateLabel)
-				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".utils::HtmlEntities($sStateLabel)."</span>");
+			
+			$oPill = PillFactory::MakeForState($sClass, $sStateValue);
+			// N°5849 - Unencode label for ExternalKey attribute because friendlyname is already html encoded thanks to DBObject::GetName() in AttributeExternalKey::GetAllowedValues(). (A fix in this function may have too much impact).
+			if ($oAttDef instanceof AttributeExternalKey) {
+				$sPillTooltip = utils::HtmlEntityDecode($sStateLabel);
+				$sPillLabel = $sStateLabel;
+			} else {
+				$sPillTooltip = $sStateLabel;
+				$sPillLabel = utils::HtmlEntities($sStateLabel);
+			}
+			$oPill->SetTooltip($sPillTooltip)
+				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".$sPillLabel."</span>");
+
 			if ($sHyperlink != '-') {
 				$oPill->SetUrl($sHyperlink);
 			}
