@@ -9,16 +9,12 @@ namespace Combodo\iTop\Application\UI\Links\Direct;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
 use MetaModel;
-use UILinksWidgetDirect;
 use utils;
 
 /**
@@ -75,11 +71,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 
 		// compute
 		$this->aLabels = array(
-			'delete'          => Dict::S('UI:Button:Delete'),
 			'creation_title'  => Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
-			'create'          => Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
-			'remove'          => Dict::S('UI:Button:Remove'),
-			'add'             => Dict::Format('UI:AddAnExisting_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
 			'selection_title' => Dict::Format('UI:SelectionOf_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
 		);
 		$oContext = new \ApplicationContext();
@@ -179,26 +171,26 @@ class BlockDirectLinksEditTable extends UIContentBlock
 				break;
 
 			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
-				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
+				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link', 'link', 'link_add');
 				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
 				$oToolbar->AddSubBlock($oActionButtonLink);
 				break;
 
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
-				$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral('Create');
+				$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral('Create', 'create', 'link_create');
 				$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._createRow();");
 				$oToolbar->AddSubBlock($oActionButtonCreate);
-				$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete');
+				$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete', 'delete', 'link_delete_selection');
 				$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteSelection();");
 
 				$oToolbar->AddSubBlock($oActionButtonDelete);
 				break;
 
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
-				$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
+				$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink', 'unlink', 'link_detach_selection');
 				$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._removeSelection();");
 				$oToolbar->AddSubBlock($oActionButtonUnlink);
-				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
+				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link', 'link', 'link_add');
 				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
 				$oToolbar->AddSubBlock($oActionButtonLink);
 				break;
@@ -254,6 +246,41 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	}
 
 	/**
+	 * Convert edit_mode to relation type.
+	 *
+	 * @return string|null
+	 */
+	private function ConvertEditModeToRelationType(): ?string
+	{
+		switch ($this->oAttributeLinkedSet->GetEditMode()) {
+			case LINKSET_EDITMODE_INPLACE:
+				return LINKSET_RELATIONTYPE_PROPERTY;
+			case LINKSET_EDITMODE_ADDREMOVE:
+				return LINKSET_RELATIONTYPE_LINK;
+			default:
+				return null;
+		}
+	}
+
+	/**
+	 * Convert edit_mode to read only.
+	 *
+	 * @return bool
+	 */
+	private function ConvertEditModeToReadOnly(): bool
+	{
+		switch ($this->oAttributeLinkedSet->GetEditMode()) {
+			case LINKSET_EDITMODE_NONE:
+			case LINKSET_EDITMODE_ADDONLY:
+			case LINKSET_EDITMODE_ACTIONS:
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+	/**
 	 * Return row actions.
 	 *
 	 * @return \string[][]
@@ -262,9 +289,9 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	{
 		$aRowActions = array();
 
-		if (!$this->oAttributeLinkedSet->GetReadOnly()) {
+		if (!$this->ConvertEditModeToReadOnly()) {
 
-			switch ($this->oAttributeLinkedSet->GetRelationType()) {
+			switch ($this->ConvertEditModeToRelationType()) {
 
 				case LINKSET_RELATIONTYPE_LINK:
 					$aRowActions[] = array(
