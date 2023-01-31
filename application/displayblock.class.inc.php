@@ -2172,7 +2172,7 @@ class MenuBlock extends DisplayBlock
 			if ($bIsCreationInModalAllowed === true) {
 				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
 					'fas fa-plus',
-					Dict::S('UI:Links:New:Button:Tooltip'),
+					Dict::S('UI:DisplayBlock:List:AddEntry:Tooltip'),
 					'UI:Links:New',
 					'',
 					false

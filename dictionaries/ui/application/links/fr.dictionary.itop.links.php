@@ -29,11 +29,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Links:ActionRow:Modify'                     => 'Modifier',
 	'UI:Links:ActionRow:Modify+'                    => 'Modifier cet object',
 	'UI:Links:ActionRow:Modify:Modal:Title'         => 'Modifier un object',
-
-	// New
-	'UI:Links:New:Modal:Title'                      => 'Creation d\'un objet',
-	'UI:Links:New:Button:Tooltip'                   => 'Ajouter une entrée dans la liste',
-
+	
 	// Bulk
 	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Lier à tous les objets',
 	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Détacher de tous les objets',

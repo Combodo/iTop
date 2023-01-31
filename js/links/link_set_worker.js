@@ -103,7 +103,7 @@ let LinkSetWorker = new function(){
 		let sHostObjectId = oTable.closest('[data-role="ibo-object-details"]').attr('data-object-id');
 		
 		let oOptions = {
-			title: Dict.S('UI:Links:New:Modal:Title'),
+			title: Dict.S('UI:Layout:ObjectDetails:New:Modal:Title'),
 			content: {
 				endpoint: `${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_CREATE_OBJECT}`,
 				data: {
