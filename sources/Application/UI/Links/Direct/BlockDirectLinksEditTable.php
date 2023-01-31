@@ -172,26 +172,26 @@ class BlockDirectLinksEditTable extends UIContentBlock
 
 			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
 				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link', 'link', 'link_add');
-				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
+				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('selectToAdd');");
 				$oToolbar->AddSubBlock($oActionButtonLink);
 				break;
 
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
 				$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral('Create', 'create', 'link_create');
-				$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._createRow();");
+				$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('createRow');");
 				$oToolbar->AddSubBlock($oActionButtonCreate);
 				$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete', 'delete', 'link_delete_selection');
-				$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteSelection();");
+				$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('deleteSelection');");
 
 				$oToolbar->AddSubBlock($oActionButtonDelete);
 				break;
 
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
 				$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink', 'unlink', 'link_detach_selection');
-				$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._removeSelection();");
+				$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('removeSelection');");
 				$oToolbar->AddSubBlock($oActionButtonUnlink);
 				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link', 'link', 'link_add');
-				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
+				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('selectToAdd');");
 				$oToolbar->AddSubBlock($oActionButtonLink);
 				break;
 

@@ -618,6 +618,18 @@ $(function()
 		Remove: function(oCheckbox)  // for public access
 		{
 			this._removeRow(oCheckbox);
+		},
+		selectToAdd: function(){
+			this._selectToAdd();
+		},
+		removeSelection: function(){
+			this._removeSelection();
+		},
+		createRow: function(){
+			this._createRow();
+		},
+		deleteSelection: function(){
+			this._deleteSelection();
 		}
 	});	
 });
