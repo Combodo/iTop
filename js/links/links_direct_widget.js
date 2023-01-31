@@ -105,13 +105,13 @@ $(function()
 			const oChecked = $('.selectList'+this.id+':checked', this.element);
 			switch (oChecked.length) {
 				case 0:
-					$('#link_delete_selection').prop('disabled', true);
-					$('#link_detach_selection').prop('disabled', true);
+					$('[data-role="ibo-button"][data-action="delete"]', this.element).prop('disabled', true);
+					$('[data-role="ibo-button"][data-action="detach"]', this.element).prop('disabled', true);
 					break;
 
 				default:
-					$('#link_delete_selection').prop('disabled', false);
-					$('#link_detach_selection').prop('disabled', false);
+					$('[data-role="ibo-button"][data-action="delete"]', this.element).prop('disabled', false);
+					$('[data-role="ibo-button"][data-action="detach"]', this.element).prop('disabled', false);
 					break;
 			}
 		},
@@ -148,7 +148,7 @@ $(function()
 			this.oDlg.dialog('option', {position: {my: "center", at: "center", of: window}});
 		},
 		_createRow: function () {
-			$('#link_create').prop('disabled', true);
+			$('[data-role="ibo-button"][data-action="create"]', this.element).prop('disabled', true);
 			this.indicator.html('<img src="../images/indicator.gif">');
 			oParams = this.options.submit_parameters;
 			oParams.operation = 'createObject';
@@ -187,14 +187,14 @@ $(function()
 					}
 				});
 				me.indicator.html('');
-				$('#link_create').prop('disabled', false);
+				$('[data-role="ibo-button"][data-action="create"]', this.element).prop('disabled', false);
 				me._updateDlgPosition();
 
 			});
 		},
 		_selectToAdd: function()
 		{
-			$('#link_add').prop('disabled', true);
+			$('[data-role="ibo-button"][data-action="add"]', this.element).prop('disabled', true);
 			this.indicator.html('<img src="../images/indicator.gif">');
 			oParams = this.options.submit_parameters;
 			oParams.operation = 'selectObjectsToAdd';
@@ -260,7 +260,7 @@ $(function()
 
 				});
 				me.indicator.html('');
-				$('#link_add').prop('disabled', false);
+				$('[data-role="ibo-button"][data-action="add"]', this.element).prop('disabled', false);
 				if (me.options.do_search)
 				{
 					me._onSearchToAdd();
@@ -430,7 +430,7 @@ $(function()
 
 				me._updateTable();
 				me.indicator.html('');
-				$('#link_add').prop('disabled', false);
+				$('[data-role="ibo-button"][data-action="add"]', this.element).prop('disabled', false);
 
 				me._updateTableInformation();
 			});
@@ -497,7 +497,7 @@ $(function()
 				oParams.tempId = nextIdx;
 				var me = this;
 
-				$('#link_create').prop('disabled', true);
+				$('[data-role="ibo-button"][data-action="create"]', this.element).prop('disabled', true);
 				this.indicator.html('<img src="../images/indicator.gif">');
 
 				$.post(this.options.submit_to, oParams, function (data) {
@@ -507,7 +507,7 @@ $(function()
 
 					me._updateTable();
 					me.indicator.html('');
-					$('#link_create').prop('disabled', false);
+					$('[data-role="ibo-button"][data-action="create"]', this.element).prop('disabled', false);
 				});
 			}
 		},

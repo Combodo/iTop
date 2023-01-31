@@ -6,18 +6,22 @@
 
 namespace Combodo\iTop\Application\UI\Links\Indirect;
 
+use AttributeLinkedSetIndirect;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use ConfigException;
+use CoreException;
+use DBObject;
+use Exception;
 use MetaModel;
+use UILinksWidget;
 use utils;
+use WebPage;
 
 /**
  * Class BlockIndirectLinksEditTable
@@ -31,12 +35,15 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE                   = 'ibo-block-indirect-links-edit-table';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/indirect/block-indirect-links-edit-table/layout';
+	public const DEFAULT_JS_FILES_REL_PATH    = [
+		'js/links/links_widget.js',
+	];
 
-	/** @var \UILinksWidget */
-	public \UILinksWidget $oUILinksWidget;
+	/** @var UILinksWidget $oUILinksWidget */
+	public UILinksWidget $oUILinksWidget;
 
-	/** @var \AttributeLinkedSetIndirect */
-	private \AttributeLinkedSetIndirect $oAttributeLinkedSetIndirect;
+	/** @var AttributeLinkedSetIndirect $oAttributeLinkedSetIndirect */
+	private AttributeLinkedSetIndirect $oAttributeLinkedSetIndirect;
 
 	/** @var string */
 	public string $sDuplicates;
@@ -59,13 +66,13 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	/**
 	 * Constructor.
 	 *
-	 * @param \UILinksWidget $oUILinksWidget
+	 * @param UILinksWidget $oUILinksWidget
 	 *
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws ConfigException
+	 * @throws CoreException
+	 * @throws Exception
 	 */
-	public function __construct(\UILinksWidget $oUILinksWidget)
+	public function __construct(UILinksWidget $oUILinksWidget)
 	{
 		parent::__construct("linkedset_{$oUILinksWidget->GetLinkedSetId()}", ["ibo-block-indirect-links--edit"]);
 
@@ -87,7 +94,7 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	 * Initialization.
 	 *
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	private function Init()
 	{
@@ -98,8 +105,8 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	 * Initialize UI.
 	 *
 	 * @return void
-	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws CoreException
+	 * @throws Exception
 	 */
 	private function InitUI()
 	{
@@ -116,37 +123,6 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	}
 
 	/**
-	 * CreateTableInformationAlert.
-	 *
-	 * @return iUIBlock
-	 */
-	private function CreateTableInformationAlert(): iUIBlock
-	{
-		// Selection alert
-		$oAlert = AlertUIBlockFactory::MakeNeutral('', '', "linkedset_{$this->oUILinksWidget->GetInputId()}_alert_information");
-		$oAlert->AddCSSClasses([
-			'ibo-table--alert-information',
-		]);
-		$oAlert->SetIsClosable(false);
-		$oAlert->SetIsCollapsible(false);
-		$oAlert->AddSubBlock(new Html('<span class="ibo-table--alert-information--label" data-role="ibo-datatable-selection-value"></span>'));
-
-		// Delete button
-		$oUIButton = ButtonUIBlockFactory::MakeForDestructiveAction("Détacher les {$this->oUILinksWidget->GetRemoteClass()}", 'table-selection');
-		$oUIButton->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();");
-		$oUIButton->AddCSSClass('ibo-table--alert-information--delete-button');
-		$oAlert->AddSubBlock($oUIButton);
-
-		// Add button
-		$oUIAddButton = ButtonUIBlockFactory::MakeForPrimaryAction("Attacher des {$this->oUILinksWidget->GetRemoteClass()}", 'table-selection');
-		$oUIAddButton->AddCSSClass('ibo-table--alert-information--add-button');
-		$oUIAddButton->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
-		$oAlert->AddSubBlock($oUIAddButton);
-
-		return $oAlert;
-	}
-
-	/**
 	 * @param \WebPage $oPage
 	 * @param $oValue
 	 * @param $aArgs
@@ -155,6 +131,9 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	 * @param $aTableConfig
 	 *
 	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
 	public function InitTable(\WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $aTableConfig)
 	{
@@ -198,7 +177,7 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 		]);
 
 		// Panel
-		$aTablePanel = PanelUIBlockFactory::MakeForClass($this->oUILinksWidget->GetRemoteClass(), $this->oAttributeLinkedSetIndirect->GetLabel())
+		$oTablePanel = PanelUIBlockFactory::MakeForClass($this->oUILinksWidget->GetRemoteClass(), $this->oAttributeLinkedSetIndirect->GetLabel())
 			->SetSubTitle(sprintf('Total: %d objects.', count($aForm)))
 			->SetIcon(MetaModel::GetClassIcon($this->oUILinksWidget->GetRemoteClass(), false))
 			->AddCSSClass('ibo-datatable-panel');
@@ -211,10 +190,10 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 		$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
 		$oActionButtonLink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
 		$oToolbar->AddSubBlock($oActionButtonLink);
-		$aTablePanel->AddToolbarBlock($oToolbar);
-		$aTablePanel->AddSubBlock($oDataTable);
+		$oTablePanel->AddToolbarBlock($oToolbar);
+		$oTablePanel->AddSubBlock($oDataTable);
 
-		$this->AddSubBlock($aTablePanel);
+		$this->AddSubBlock($oTablePanel);
 		$this->AddSubBlock(InputUIBlockFactory::MakeForHidden("{$sFormPrefix}{$this->oUILinksWidget->GetInputId()}", '', "{$sFormPrefix}{$this->oUILinksWidget->GetInputId()}"));
 	}
 
@@ -235,7 +214,7 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function GetFormRow(\WebPage $oP, \DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false)
+	public function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false)
 	{
 		$sPrefix = "{$this->oUILinksWidget->GetAttCode()}{$this->oUILinksWidget->GetNameSuffix()}";
 		$aRow = array();

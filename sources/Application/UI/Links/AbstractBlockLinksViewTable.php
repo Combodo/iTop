@@ -32,10 +32,12 @@ use WebPage;
 abstract class AbstractBlockLinksViewTable extends UIContentBlock
 {
 	// Overloaded constants
-	public const BLOCK_CODE                   = 'ibo-abstract-block-links-view-table';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/layout';
-	public const DEFAULT_JS_FILES_REL_PATH    = [
-		'js/links/link_set_worker.js',
+	public const BLOCK_CODE                            = 'ibo-abstract-block-links-view-table';
+	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'application/links/layout';
+	public const DEFAULT_JS_FILES_REL_PATH             = [
+		'js/links/links_view_table_widget.js',
+		'js/links/links_set_worker.js',
+		'js/objects/objects_worker.js',
 		'js/wizardhelper.js',
 	];
 
@@ -70,7 +72,7 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	 */
 	public function __construct(WebPage $oPage, DBObject $oDbObject, string $sObjectClass, string $sAttCode, AttributeLinkedSet $oAttDef)
 	{
-		parent::__construct('', ["ibo-block-links-table"]);
+		parent::__construct("links_view_table_$sAttCode", ["ibo-block-links-table"]);
 
 		// retrieve parameters
 		$this->oAttDef = $oAttDef;
@@ -209,6 +211,8 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 
 
 	/**
+	 * GetAttCode.
+	 *
 	 * @return string
 	 */
 	public function GetAttCode(): string
@@ -216,4 +220,33 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 		return $this->sAttCode;
 	}
 
+	/**
+	 * GetLinkedClass.
+	 *
+	 * @return mixed
+	 */
+	public function GetLinkedClass()
+	{
+		return $this->oAttDef->GetLinkedClass();
+	}
+
+	/**
+	 * GetExternalKeyToMe.
+	 *
+	 * @return mixed
+	 */
+	public function GetExternalKeyToMe()
+	{
+		return $this->oAttDef->GetExtKeyToMe();
+	}
+
+	/**
+	 * GetWidgetName.
+	 *
+	 * @return string
+	 */
+	public function GetWidgetName(): string
+	{
+		return "oWidget{$this->GetId()}";
+	}
 }

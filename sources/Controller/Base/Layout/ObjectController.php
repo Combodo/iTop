@@ -18,6 +18,7 @@ use Combodo\iTop\Service\Base\ObjectRepository;
 use CoreCannotSaveObjectException;
 use DeleteException;
 use Dict;
+use Exception;
 use IssueLog;
 use iTopOwnershipLock;
 use iTopWebPage;
@@ -90,6 +91,8 @@ class ObjectController extends AbstractController
 
 					/* Alerts the results */
 					sPosting.done(function(data) {
+                        // fire event
+                        oForm.trigger('itop.form.submitted', [data]);
 						if(data.success !== undefined && data.success === true) {
 							oForm.closest('[data-role="ibo-modal"]').dialog('close');
 						}
@@ -147,6 +150,7 @@ JS;
 		
 		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
+		$sFormPrefix = utils::ReadPostedParam('formPrefix', '', FILTER_SANITIZE_STRING);
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$aErrors = array();
 		$aWarnings = array();
@@ -199,7 +203,7 @@ JS;
 					$oObj->Set($sStateAttCode, $sTargetState);
 				}
 			}
-			$aErrors = $oObj->UpdateObjectFromPostedForm();
+			$aErrors = $oObj->UpdateObjectFromPostedForm($sFormPrefix);
 		}
 		if (isset($oObj) && is_object($oObj))
 		{
@@ -256,6 +260,7 @@ JS;
 					// Nothing more to do
 					if ($this->IsHandlingXmlHttpRequest()) {
 						$aResult['success'] = true;
+						$aResult['data'] = ['object' => ObjectRepository::ConvertObjectToArray($oObj, $sClass)];
 					} else {
 						ReloadAndDisplay($oPage, $oObj, 'create', $sMessage, 'ok');
 					}
@@ -539,8 +544,6 @@ JS;
 			'js/forms-json-utils.js',
 			'js/wizardhelper.js',
 			'js/wizard.utils.js',
-			'js/linkswidget.js',
-			'js/linksdirectwidget.js',
 			'js/extkeywidget.js',
 			'js/jquery.blockUI.js',
 		];
@@ -585,4 +588,33 @@ JS;
 		]);
 	}
 
+	/**
+	 * OperationGet.
+	 *
+	 * @return JsonPage
+	 */
+	public function OperationGet(): JsonPage
+	{
+		$oPage = new JsonPage();
+		$bSuccess = true;
+		$aObjectData = null;
+
+		// Retrieve query params
+		$sObjectClass = utils::ReadParam('object_class', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
+		$sObjectKey = utils::ReadParam('object_key', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
+
+		// Retrieve object
+		try {
+			$oObject = MetaModel::GetObject($sObjectClass, $sObjectKey);
+			$aObjectData = ObjectRepository::ConvertObjectToArray($oObject, $sObjectClass);
+		}
+		catch (Exception $e) {
+			$bSuccess = false;
+		}
+
+		return $oPage->SetData([
+			'object'  => $aObjectData,
+			'success' => $bSuccess,
+		]);
+	}
 }

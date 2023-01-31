@@ -26,6 +26,7 @@ use Combodo\iTop\Service\Links\LinksBulkDataPostProcessor;
 use Combodo\iTop\Service\Links\LinkSetDataTransformer;
 use Combodo\iTop\Service\Links\LinkSetModel;
 use Combodo\iTop\Service\Links\LinkSetRepository;
+use DBObject;
 use iDBObjectSetIterator;
 
 /**
@@ -46,16 +47,27 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 	 * @param AttributeLinkedSet $oAttDef Link set attribute definition
 	 * @param iDBObjectSetIterator $oDbObjectSet Link set value
 	 * @param string $sWizardHelperJsVarName Wizard helper name
+	 * @param DBObject|null $oHostDbObject Host DB object
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Set\Set
 	 */
-	public static function MakeForLinkSet(string $sId, AttributeLinkedSet $oAttDef, iDBObjectSetIterator $oDbObjectSet, string $sWizardHelperJsVarName): Set
+	public static function MakeForLinkSet(string $sId, AttributeLinkedSet $oAttDef, iDBObjectSetIterator $oDbObjectSet, string $sWizardHelperJsVarName, DBObject $oHostDbObject = null): Set
 	{
 		$sTargetClass = LinkSetModel::GetTargetClass($oAttDef);
 		$sTargetField = LinkSetModel::GetTargetField($oAttDef);
 
 		// Set UI block for OQL
 		$oSetUIBlock = SetUIBlockFactory::MakeForOQL($sId, $sTargetClass, $oAttDef->GetValuesDef()->GetFilterExpression(), $sWizardHelperJsVarName);
+
+		$oSetUIBlock->AddJsFileRelPath('js/links/links_set.js');
+
+		// Add button behaviour
+		if (in_array($oAttDef->GetEditMode(), [LINKSET_EDITMODE_ADDREMOVE, LINKSET_EDITMODE_ADDONLY, LINKSET_EDITMODE_INPLACE, LINKSET_EDITMODE_ACTIONS])
+			&& $oHostDbObject !== null) {
+			$sHostClass = get_class($oHostDbObject);
+			$oSetUIBlock->SetHasAddOptionButton(true);
+			$oSetUIBlock->SetAddOptionButtonJsOnClick("LinkSet.CreateLinkedObject('{$oAttDef->GetLinkedClass()}', '{$oAttDef->GetCode()}', '{$sHostClass}', '{$oHostDbObject->GetKey()}', '{$sTargetField}', '{$sTargetClass}', oWidget{$oSetUIBlock->GetId()} );");
+		}
 
 		// Current value
 		$aCurrentValues = LinkSetDataTransformer::Decode($oDbObjectSet, $sTargetClass, $sTargetField);
