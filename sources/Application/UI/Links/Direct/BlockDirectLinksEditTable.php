@@ -168,7 +168,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 			$this->AddSubBlock($aTablePanel);
 		}
 		catch (\Exception $e) {
-			$oAlert = AlertUIBlockFactory::MakeForDanger('error', 'error while trying to load datatable');
+			$oAlert = AlertUIBlockFactory::MakeForDanger('error', Dict::S('UI:Datatables:Language:Error'));
 			$oAlert->SetIsClosable(false);
 			$oAlert->SetIsCollapsible(false);
 			$this->AddSubBlock($oAlert);
