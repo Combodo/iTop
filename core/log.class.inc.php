@@ -757,14 +757,15 @@ class DeadLockLog extends LogAPI
 		parent::Enable($sTargetFile);
 	}
 
+	/** @noinspection PhpUnreachableStatementInspection */
 	private static function GetChannelFromMysqlErrorNo($iMysqlErrorNo)
 	{
 		switch ($iMysqlErrorNo)
 		{
-			case 1205:
+			case CMDBSource::MYSQL_ERRNO_WAIT_TIMEOUT:
 				return self::CHANNEL_WAIT_TIMEOUT;
 				break;
-			case 1213:
+			case CMDBSource::MYSQL_ERRNO_DEADLOCK:
 				return self::CHANNEL_DEADLOCK_FOUND;
 				break;
 			default:
