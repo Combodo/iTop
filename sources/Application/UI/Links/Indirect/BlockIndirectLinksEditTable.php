@@ -107,13 +107,6 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 		// To prevent adding forms inside the main form
 		$oDeferredBlock = new UIContentBlock("dlg_{$this->oUILinksWidget->GetLinkedSetId()}", ['ibo-block-indirect-links--edit--dialog']);
 		$this->AddDeferredBlock($oDeferredBlock);
-
-		// Linkset description as an informative alert
-		$sDescription = $this->oAttributeLinkedSetIndirect->GetDescription();
-		if (utils::IsNotNullOrEmptyString($sDescription)) {
-			$oAlert = AlertUIBlockFactory::MakeForInformation('', $sDescription);
-			$this->AddSubBlock($oAlert);
-		}
 	}
 
 	/**
@@ -203,6 +196,15 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 			->SetSubTitle(Dict::Format('UI:Pagination:HeaderNoSelection', count($aForm)))
 			->SetIcon(MetaModel::GetClassIcon($this->oUILinksWidget->GetRemoteClass(), false))
 			->AddCSSClass('ibo-datatable-panel');
+
+		// - Panel description
+		$sDescription = $this->oAttributeLinkedSetIndirect->GetDescription();
+		if (utils::IsNotNullOrEmptyString($sDescription)) {
+			$oTitleBlock = $aTablePanel->GetTitleBlock()
+				->AddDataAttribute('tooltip-content', $sDescription)
+				->AddDataAttribute('tooltip-max-width', 'min(600px, 90vw)') // Allow big description to be wide enough while shrinking on small screens
+				->AddCSSClass('ibo-has-description');
+		}
 
 		// Toolbar and actions
 		$oToolbar = ToolbarUIBlockFactory::MakeForButton();

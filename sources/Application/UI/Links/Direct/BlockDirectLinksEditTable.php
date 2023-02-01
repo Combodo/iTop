@@ -114,12 +114,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	 */
 	private function InitUI()
 	{
-		// Linkset description as an informative alert
-		$sDescription = $this->oAttributeLinkedSet->GetDescription();
-		if (utils::IsNotNullOrEmptyString($sDescription)) {
-			$oAlert = AlertUIBlockFactory::MakeForInformation('', $sDescription);
-			$this->AddSubBlock($oAlert);
-		}
+
 	}
 
 	/**
@@ -147,6 +142,15 @@ class BlockDirectLinksEditTable extends UIContentBlock
 				->SetSubTitle(Dict::Format('UI:Pagination:HeaderNoSelection', count($aRows)))
 				->SetIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false))
 				->AddCSSClass('ibo-datatable-panel');
+
+			// - Panel description
+			$sDescription = $this->oAttributeLinkedSet->GetDescription();
+			if (utils::IsNotNullOrEmptyString($sDescription)) {
+				$oTitleBlock = $aTablePanel->GetTitleBlock()
+					->AddDataAttribute('tooltip-content', $sDescription)
+					->AddDataAttribute('tooltip-max-width', 'min(600px, 90vw)') // Allow big description to be wide enough while shrinking on small screens
+					->AddCSSClass('ibo-has-description');
+			}
 
 			// Toolbar and actions
 			$oToolbar = ToolbarUIBlockFactory::MakeForButton();
