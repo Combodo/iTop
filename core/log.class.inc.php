@@ -735,7 +735,9 @@ class ToolsLog extends LogAPI
 
 /**
  * @see \CMDBSource::LogDeadLock()
- * @since 2.7.1
+ * @since 2.7.1 PR #139
+ *
+ * @link https://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html
  */
 class DeadLockLog extends LogAPI
 {
