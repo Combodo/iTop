@@ -16,6 +16,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Dict;
 use MetaModel;
 use utils;
 
@@ -199,7 +200,7 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 
 		// Panel
 		$aTablePanel = PanelUIBlockFactory::MakeForClass($this->oUILinksWidget->GetRemoteClass(), $this->oAttributeLinkedSetIndirect->GetLabel())
-			->SetSubTitle(sprintf('Total: %d objects.', count($aForm)))
+			->SetSubTitle(Dict::Format('UI:Pagination:HeaderNoSelection', count($aForm)))
 			->SetIcon(MetaModel::GetClassIcon($this->oUILinksWidget->GetRemoteClass(), false))
 			->AddCSSClass('ibo-datatable-panel');
 

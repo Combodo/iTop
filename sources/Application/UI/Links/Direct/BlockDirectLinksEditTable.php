@@ -144,7 +144,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 
 			// Panel
 			$aTablePanel = PanelUIBlockFactory::MakeForClass($this->oUILinksDirectWidget->GetLinkedClass(), $this->oAttributeLinkedSet->GetLabel())
-				->SetSubTitle(sprintf('Total: %d objects.', count($aRows)))
+				->SetSubTitle(Dict::Format('UI:Pagination:HeaderNoSelection', count($aRows)))
 				->SetIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false))
 				->AddCSSClass('ibo-datatable-panel');
 
