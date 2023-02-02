@@ -4,7 +4,10 @@
  */
 
 $ibo-input-set--padding-x: $ibo-spacing-300 !default;
-$ibo-input-set--padding-y: 5px !default;
+$ibo-input-set--padding-y: $ibo-spacing-0 !default;
+
+$ibo-input-set--input--height: auto !default;
+$ibo-input-set--input--min-height: $ibo-input--height !default;
 
 $ibo-input-set--input--height: 100% !default;
 
@@ -15,7 +18,7 @@ $ibo-input-set--has-items--after--right: 8px !default;
 $ibo-input-set--has-items--after--top: 5px !default;
 
 $ibo-input-set--item--siblings-spacing: 3px !default;
-$ibo-input-set--item--margin-y: $ibo-spacing-100 !default;
+$ibo-input-set--item--margin-y: 1px !default;
 $ibo-input-set--item--padding-x: 6px !default;
 $ibo-input-set--item--padding-y: $ibo-spacing-200 !default;
 $ibo-input-set--item--max-width: 120px !default;
@@ -26,6 +29,10 @@ $ibo-input-set--item--box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb
 
 
 .ibo-input-set {
+  flex-wrap: wrap;
+  height: $ibo-input-set--input--height;
+  min-height: $ibo-input-set--input--min-height;
+  
   > input {
     height: $ibo-input-set--input--height;
   }
