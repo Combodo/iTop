@@ -570,6 +570,12 @@ class LogChannels
 
 	public const CORE = 'core';
 
+	/**
+	 * @var string Everything related to the datatable component
+	 * @since 3.1.0
+	 */
+	public const DATATABLE = 'Datatable';
+
 	public const DEADLOCK = 'DeadLock';
 
 	public const INLINE_IMAGE = 'InlineImage';
@@ -577,11 +583,15 @@ class LogChannels
 	public const PORTAL       = 'portal';
 
 	/**
-	 * @var string
-	 * @since 3.1.0 specific channel for event service
+	 * @var string Everything related to the event service
+	 * @since 3.1.0
 	 */
 	public const EVENT_SERVICE = 'EventService';
 
+	/**
+	 * @var string Everything related to the datamodel CRUD
+	 * @since 3.1.0
+	 */
 	public const DM_CRUD = 'DMCRUD';
 }
 
