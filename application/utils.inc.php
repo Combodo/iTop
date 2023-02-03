@@ -2745,12 +2745,18 @@ HTML;
 					$bSkipped = true;
 				}
 				else {
-					foreach ($aExcludedPath as $sExcludedPath) {
-						// Note: We use '#' as delimiters as usual '/' is often used in paths.
-						if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
-							$bSkipped = true;
-							break;
+					$sPHPFile = self::LocalPath($sPHPFile);
+					if ($sPHPFile !== false) {
+						$sPHPFile = '/'.$sPHPFile; // for regex
+						foreach ($aExcludedPath as $sExcludedPath) {
+							// Note: We use '#' as delimiters as usual '/' is often used in paths.
+							if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
+								$bSkipped = true;
+								break;
+							}
 						}
+					} else {
+						$bSkipped = true; // file not found
 					}
 				}
 				
@@ -2788,7 +2794,7 @@ HTML;
 		$aResultPref = [];
 		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
 		// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
+		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 
 		foreach ($aShortcutClasses as $cShortcutPlugin) {
 			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();
