@@ -27,6 +27,9 @@ define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class ormCaseLog {
+	const CASE_LOG_SEPARATOR_REGEX_FIND = "\r?\n?========== \w+-\d+-\d+ \d+:\d+:\d+ : .*\s\(\d+\) ============\r?\n\r?\n";
+	const CASE_LOG_SEPARATOR_REGEX_EXTRACT = "\r?\n?========== (?<date>\w+-\d+-\d+ \d+:\d+:\d+) : (?<user_name>.*)\s\((?<user_id>\d+)\) ============\r?\n\r?\n";
+
 	protected $m_sLog;
 	protected $m_aIndex;
 	protected $m_bModified;
@@ -39,7 +42,10 @@ class ormCaseLog {
 	public function __construct($sLog = '', $aIndex = array())
 	{
 		$this->m_sLog = $sLog;
-		$this->m_aIndex = $aIndex;
+		$this->m_aIndex = $this->RebuildIndex($sLog);
+		if (count($this->m_aIndex) === 0 && count($aIndex) !== 0) {
+			$this->m_aIndex = $aIndex;
+		}
 		$this->m_bModified = false;
 	}
 	
@@ -539,17 +545,24 @@ class ormCaseLog {
 		}
 
 		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
-		$iSepLength = strlen($sSeparator);
-		$iTextlength = strlen($sText);
 		$this->m_sLog = $sSeparator.$sText.$this->m_sLog; // Latest entry printed first
-		$this->m_aIndex[] = array(
-			'user_name' => $sOnBehalfOf,
-			'user_id' => $iUserId,
-			'date' => time(),
-			'text_length' => $iTextlength,
-			'separator_length' => $iSepLength,
-			'format' => 'html',
-		);
+		$aIndex = $this->RebuildIndex($this->m_sLog);
+		if (count($aIndex) === 0) {
+			// Rebuild failed
+			$iSepLength = strlen($sSeparator);
+			$iTextLength = strlen($sText);
+			$this->m_aIndex[] = array(
+				'user_name' => $sOnBehalfOf,
+				'user_id' => $iUserId,
+				'date' => time(),
+				'text_length' => $iTextLength,
+				'separator_length' => $iSepLength,
+				'format' => 'html',
+			);
+		} else {
+			$this->m_aIndex = $aIndex;
+		}
+
 		$this->m_bModified = true;
 	}
 
@@ -615,17 +628,23 @@ class ormCaseLog {
 		$sDate = date(AttributeDateTime::GetInternalFormat(), $iDate);
 
 		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
-		$iSepLength = strlen($sSeparator);
-		$iTextlength = strlen($sText);
 		$this->m_sLog = $sSeparator.$sText.$this->m_sLog; // Latest entry printed first
-		$this->m_aIndex[] = array(
-			'user_name' => $sOnBehalfOf,	
-			'user_id' => $iUserId,	
-			'date' => $iDate,	
-			'text_length' => $iTextlength,	
-			'separator_length' => $iSepLength,
-			'format' => $sFormat,
-		);
+		$aIndex = $this->RebuildIndex($this->m_sLog);
+		if (count($aIndex) === 0) {
+			// Rebuild failed
+			$iSepLength = strlen($sSeparator);
+			$iTextLength = strlen($sText);
+			$this->m_aIndex[] = array(
+				'user_name' => $sOnBehalfOf,
+				'user_id' => $iUserId,
+				'date' => time(),
+				'text_length' => $iTextLength,
+				'separator_length' => $iSepLength,
+				'format' => 'html',
+			);
+		} else {
+			$this->m_aIndex = $aIndex;
+		}
 
 		$this->m_bModified = true;
 	}
@@ -643,7 +662,7 @@ class ormCaseLog {
 
 	/**
 	 * Get the latest entry from the log
-	 * @param string The expected output format text|html
+	 * @param string $sFormat The expected output format text|html
 	 * @return string
 	 */
 	public function GetLatestEntry($sFormat = 'text')
@@ -708,5 +727,40 @@ class ormCaseLog {
 		$sText = substr($this->m_sLog, $iPos, $this->m_aIndex[$index]['text_length']);
 		return $sText;
 	}
+
+	public function RebuildIndex($sLog): array
+	{
+		$aTexts = preg_split('/'.self::CASE_LOG_SEPARATOR_REGEX_FIND.'/', $sLog, 0, PREG_SPLIT_NO_EMPTY);
+		preg_match_all('/'.self::CASE_LOG_SEPARATOR_REGEX_FIND.'/', $sLog, $aMatches);
+
+		if (count($aTexts) != count($aMatches[0])) {
+			return [];
+		}
+
+		$aIndex = [];
+		$iPrevDate = 0;
+		for ($index = count($aTexts) - 1; $index >= 0; $index--) {
+			$sSeparator = $aMatches[0][$index];
+			preg_match('/'.self::CASE_LOG_SEPARATOR_REGEX_EXTRACT.'/', $sSeparator, $aSeparatorParts);
+
+			try {
+				$iDate = (int)AttributeDateTime::GetAsUnixSeconds($aSeparatorParts['date']);
+				$iPrevDate = $iDate + 1;
+			}
+			catch (Exception $e) {
+				$iDate = $iPrevDate;
+			}
+
+			$aIndex[] = array(
+				'user_name'        => $aSeparatorParts['user_name'],
+				'user_id'          => $aSeparatorParts['user_id'],
+				'date'             => $iDate,
+				'text_length'      => strlen($aTexts[$index]),
+				'separator_length' => strlen($sSeparator),
+				'format'           => 'html',
+			);
+		}
+
+		return $aIndex;
+	}
 }
-?>
