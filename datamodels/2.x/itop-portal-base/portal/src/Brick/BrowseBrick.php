@@ -600,7 +600,7 @@ class BrowseBrick extends PortalBrick
 									null, null, $oActionNode);
 							}
 						}
-						uasort($aLevel[$sTagName], "static::CompareActionsByRank");
+						uasort($aLevel[$sTagName], [$this, 'CompareActionsByRank']);
 					}
 					break;
 
