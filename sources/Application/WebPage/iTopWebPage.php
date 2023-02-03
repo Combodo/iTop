@@ -216,6 +216,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Modals
 		$this->add_dict_entries('UI:Modal:');
 		$this->add_dict_entries('UI:Links:');
+		$this->add_dict_entry('UI:Layout:ObjectDetails:New:Modal:Title');
 	}
 
 	/**

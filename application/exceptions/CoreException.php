@@ -6,6 +6,10 @@
 
 class CoreException extends Exception
 {
+	protected $m_sIssue;
+	protected $m_sImpact;
+	protected $m_aContextData;
+
 	/**
 	 * CoreException constructor.
 	 *

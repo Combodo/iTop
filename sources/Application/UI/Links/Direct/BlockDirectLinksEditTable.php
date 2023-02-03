@@ -123,12 +123,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	 */
 	private function InitUI()
 	{
-		// Linkset description as an informative alert
-		$sDescription = $this->oAttributeLinkedSet->GetDescription();
-		if (utils::IsNotNullOrEmptyString($sDescription)) {
-			$oAlert = AlertUIBlockFactory::MakeForInformation('', $sDescription);
-			$this->AddSubBlock($oAlert);
-		}
+
 	}
 
 	/**
@@ -152,9 +147,18 @@ class BlockDirectLinksEditTable extends UIContentBlock
 
 			// Panel
 			$oTablePanel = PanelUIBlockFactory::MakeForClass($this->oUILinksDirectWidget->GetLinkedClass(), $this->oAttributeLinkedSet->GetLabel())
-				->SetSubTitle(sprintf('Total: %d objects.', count($aRows)))
+				->SetSubTitle(Dict::Format('UI:Pagination:HeaderNoSelection', count($aRows)))
 				->SetIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false))
 				->AddCSSClass('ibo-datatable-panel');
+
+			// - Panel description
+			$sDescription = $this->oAttributeLinkedSet->GetDescription();
+			if (utils::IsNotNullOrEmptyString($sDescription)) {
+				$oTitleBlock = $aTablePanel->GetTitleBlock()
+					->AddDataAttribute('tooltip-content', $sDescription)
+					->AddDataAttribute('tooltip-max-width', 'min(600px, 90vw)') // Allow big description to be wide enough while shrinking on small screens
+					->AddCSSClass('ibo-has-description');
+			}
 
 			// Toolbar and actions
 			$oToolbar = $this->InitToolBar();
@@ -163,7 +167,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 			$this->AddSubBlock($oTablePanel);
 		}
 		catch (\Exception $e) {
-			$oAlert = AlertUIBlockFactory::MakeForDanger('error', 'error while trying to load datatable');
+			$oAlert = AlertUIBlockFactory::MakeForDanger('error', Dict::S('UI:Datatables:Language:Error'));
 			$oAlert->SetIsClosable(false);
 			$oAlert->SetIsCollapsible(false);
 			$this->AddSubBlock($oAlert);

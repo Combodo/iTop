@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-// Input
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'A jelszavak nem egyeznek',
+Dict::Add('FR FR', 'French', 'Français', array(
+	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Ajouter une entrée dans la liste',
 ));

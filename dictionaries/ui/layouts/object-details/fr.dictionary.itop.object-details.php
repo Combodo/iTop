@@ -8,4 +8,5 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Supprimer l\'objet affiché',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Créer un nouvel objet (avec la même classe que l\'objet affiché)',
 	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Enregistrer l\'objet affiché',
+	'UI:Layout:ObjectDetails:New:Modal:Title' => 'Creation d\'un objet',
 ]);

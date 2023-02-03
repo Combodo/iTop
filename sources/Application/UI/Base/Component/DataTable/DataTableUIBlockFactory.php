@@ -157,6 +157,13 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					$oContainer->SetTitle($aExtraParams['panel_title']);
 				}
 			}
+			// - Description
+			if (isset($aExtraParams['panel_title_tooltip'])) {
+				$oContainerTitleBlock = $oContainer->GetTitleBlock()
+					->AddDataAttribute('tooltip-content', $aExtraParams['panel_title_tooltip'])
+					->AddDataAttribute('tooltip-max-width', 'min(600px, 90vw)') // Allow big description to be wide enough while shrinking on small screens
+					->AddCSSClass('ibo-has-description');
+			}
 
 			// Panel subtitle
 			if(!empty($oDataTable->GetInitDisplayData()) && isset($oDataTable->GetInitDisplayData()['recordsTotal'])){

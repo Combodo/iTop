@@ -28,14 +28,14 @@
 //////////////////////////////////////////////////////////////////////
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'portal:itop-portal' => 'Standard portal~~', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => '%1$s - User portal~~',
-	'Brick:Portal:UserProfile:Title' => 'My profile~~',
-	'Brick:Portal:NewRequest:Title' => 'New request~~',
-	'Brick:Portal:NewRequest:Title+' => '<p>Need help?</p><p>Pick from the services catalog and submit your request to our support teams.</p>~~',
-	'Brick:Portal:OngoingRequests:Title' => 'Ongoing requests~~',
-	'Brick:Portal:OngoingRequests:Title+' => '<p>Follow up with your ongoing requests.</p><p>Check the progress, add comments, attach documents, acknowledge the solution.</p>~~',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Open~~',
-	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolved~~',
-	'Brick:Portal:ClosedRequests:Title' => 'Closed requests~~',
+	'portal:itop-portal' => 'Standard portál', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
+	'Page:DefaultTitle' => '%1$s - Felhasználói portál',
+	'Brick:Portal:UserProfile:Title' => 'Saját profil',
+	'Brick:Portal:NewRequest:Title' => 'Új kérelem',
+	'Brick:Portal:NewRequest:Title+' => '<p>Segíthetünk?</p><p>Válasszon a szolgáltatáskatalógusból, és küldje el kérését a támogató csapatunknak.</p>~~',
+	'Brick:Portal:OngoingRequests:Title' => 'Folyamatban lévő kérelmek',
+	'Brick:Portal:OngoingRequests:Title+' => '<p>Kövesse nyomon a folyamatban lévő kéréseit.</p><p>Ellenőrizze az előrehaladást, tegyen megjegyzéseket, csatoljon dokumentumokat, nyugtázza a megoldást.</p>~~',
+	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Nyitott',
+	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Megoldott',
+	'Brick:Portal:ClosedRequests:Title' => 'Lezárt kérelmek',
 ));

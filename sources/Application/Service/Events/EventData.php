@@ -17,10 +17,10 @@ namespace Combodo\iTop\Service\Events;
  */
 class EventData
 {
-	private $sEvent;
+	private string $sEvent;
 	private $mEventSource;
-	private $aEventData;
-	private $aCallbackData;
+	private array $aEventData;
+	private array $aCallbackData;
 
 	/**
 	 * EventServiceData constructor.
@@ -44,7 +44,7 @@ class EventData
 	 * @api
 	 * @return string Event fired.
 	 */
-	public function GetEvent()
+	public function GetEvent(): string
 	{
 		return $this->sEvent;
 	}
@@ -59,11 +59,11 @@ class EventData
 	 */
 	public function Get($sParam)
 	{
-		if (is_array($this->aEventData) && isset($this->aEventData[$sParam])) {
+		if (isset($this->aEventData[$sParam])) {
 			return $this->aEventData[$sParam];
 		}
 
-		if (is_array($this->aCallbackData) && isset($this->aCallbackData[$sParam])) {
+		if (isset($this->aCallbackData[$sParam])) {
 			return $this->aCallbackData[$sParam];
 		}
 
@@ -97,7 +97,7 @@ class EventData
 	 */
 	public function SetCallbackData($aCallbackData)
 	{
-		$this->aCallbackData = $aCallbackData;
+		$this->aCallbackData = $aCallbackData ?? [];
 	}
 
 	/**

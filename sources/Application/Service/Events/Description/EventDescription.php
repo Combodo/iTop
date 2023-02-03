@@ -102,7 +102,7 @@ class EventDescription
 	}
 
 	/**
-	 * @param \Combodo\iTop\Service\Events\Description\EventDataDescription[]s $aEventDataDescription
+	 * @param \Combodo\iTop\Service\Events\Description\EventDataDescription[] $aEventDataDescription
 	 */
 	public function SetEventDataDescription(array $aEventDataDescription): void
 	{

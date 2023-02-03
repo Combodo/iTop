@@ -19,6 +19,7 @@ class UILinksWidgetDirect
 	protected $sAttCode;
 	protected $sInputid;
 	protected $sNameSuffix;
+	protected $aZlist;
 	protected $sLinkedClass;
 
 	/**

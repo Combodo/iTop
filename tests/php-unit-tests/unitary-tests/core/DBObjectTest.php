@@ -636,7 +636,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oNewPerson = MetaModel::GetObject('Person', $oPerson->GetKey());
 		$this->assertNotEquals($oPerson->GetObjectUniqId(), $oNewPerson->GetObjectUniqId());
 
-		MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $oPerson);
+		MetaModel::StartReentranceProtection($oPerson);
 
 		$oPerson->Set('email', 'test1@combodo.com');
 		$oPerson->DBUpdate();
@@ -646,7 +646,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oNewPerson = MetaModel::GetObject('Person', $oPerson->GetKey());
 		$this->assertEquals($oPerson->GetObjectUniqId(), $oNewPerson->GetObjectUniqId());
 
-		MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $oPerson);
+		MetaModel::StopReentranceProtection($oPerson);
 	}
 
 	public function testObjectIsReadOnly()

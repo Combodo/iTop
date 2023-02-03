@@ -4463,7 +4463,7 @@ HTML;
 
 		// Protection against reentrance (e.g. cascading the update of ticket logs)
 		// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
-		if (!MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this)) {
+		if (!MetaModel::StartReentranceProtection($this)) {
 			$sClass = get_class($this);
 			$sKey = $this->GetKey();
 			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
@@ -4482,7 +4482,7 @@ HTML;
 		}
 		finally
 		{
-			MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
+			MetaModel::StopReentranceProtection($this);
 		}
 
 		$aChanges = $this->ListChanges();

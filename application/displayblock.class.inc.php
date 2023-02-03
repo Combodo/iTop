@@ -272,6 +272,8 @@ class DisplayBlock
 			'panel_title',
 			/** string true if panel title should be displayed as html */
 			'panel_title_is_html',
+			/** string Description of the panel content, displayed as a hint on the title */
+			'panel_title_tooltip',
 			/** string class for panel block style */
 			'panel_class',
 			/** string class for panel block style */
@@ -1045,9 +1047,18 @@ JS
 			$aCount = $aCounts[$sStateValue];
 			$sHyperlink = $aCount['link'];
 			$sCountLabel = $aCount['label'];
-			$oPill = PillFactory::MakeForState($sClass, $sStateValue)
-				->SetTooltip($sStateLabel)
-				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".utils::HtmlEntities($sStateLabel)."</span>");
+
+			$oPill = PillFactory::MakeForState($sClass, $sStateValue);
+			// N°5849 - Unencode label for ExternalKey attribute because friendlyname is already html encoded thanks to DBObject::GetName() in AttributeExternalKey::GetAllowedValues(). (A fix in this function may have too much impact).
+			if ($oAttDef instanceof AttributeExternalKey) {
+				$sPillTooltip = htmlspecialchars_decode($sStateLabel, ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5);
+				$sPillLabel = $sStateLabel;
+			} else {
+				$sPillTooltip = $sStateLabel;
+				$sPillLabel = utils::HtmlEntities($sStateLabel);
+			}
+			$oPill->SetTooltip($sPillTooltip)
+				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".$sPillLabel."</span>");
 			if ($sHyperlink != '-') {
 				$oPill->SetUrl($sHyperlink);
 			}
@@ -1877,9 +1888,6 @@ class MenuBlock extends DisplayBlock
 											'url'   => "{$sRootUrl}pages/$sUIPage?route=object.modify&class=$sClass&id=$id{$sContext}#",
 										) + $aActionParams;
 								}
-								if ($bIsCreationAllowed) {
-									$this->AddNewObjectMenuAction($aRegularActions, $sClass, $sDefaultValuesAsUrlParams);
-								}
 								if ($bIsDeleteAllowed) {
 									$aRegularActions['UI:Menu:Delete'] = array(
 											'label' => Dict::S('UI:Menu:Delete'),
@@ -2164,7 +2172,7 @@ class MenuBlock extends DisplayBlock
 			if ($bIsCreationInModalAllowed === true) {
 				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
 					'fas fa-plus',
-					Dict::S('UI:Links:New:Button:Tooltip'),
+					Dict::S('UI:DisplayBlock:List:AddEntry:Tooltip'),
 					'UI:Links:New',
 					'',
 					false

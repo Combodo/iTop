@@ -187,6 +187,10 @@ class LinkSetController extends AbstractController
 							oForm.closest('[data-role="ibo-modal"]').dialog('close');
 						}
 						else {
+                            /* We're not in submit anymore */
+                            window.bInSubmit = false;
+                            oForm.attr('data-form-state', 'default');
+                            /* Display error popup */
 							CombodoModal.OpenInformativeModal(data.data.error_message, 'error');
 						}
 					});

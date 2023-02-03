@@ -29,9 +29,11 @@ use ExecutionKPI;
 use Expression;
 use FieldExpression;
 use FunctionExpression;
+use IssueLog;
 use iTopExtension;
 use iTopExtensionsMap;
 use JsonPage;
+use LogChannels;
 use MetaModel;
 use ormSet;
 use RunTimeEnvironment;
@@ -78,6 +80,18 @@ class AjaxRenderController
 					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/_key_/raw"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
+
+					// N°5943 Protection against $aColumnsLoad having less class aliases than $aClassAliases, this is in case the method's consumer isn't passing data correctly
+					if (false === array_key_exists($sAlias, $aColumnsLoad)) {
+						IssueLog::Debug("Datatable: Attribute omitted as it was in \$aClassAliases but not among the loaded attributes (\$aColumnsLoad)", LogChannels::DATATABLE, [
+							'sClass' => $sClass,
+							'sAlias' => $sAlias,
+							'aClassAliases' => $aClassAliases,
+							'aColumnsLoad' => $aColumnsLoad,
+						]);
+						continue;
+					}
+
 					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
 						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
 						$bExcludeRawValue = false;

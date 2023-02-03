@@ -42,7 +42,7 @@ class TemplateStringPlaceholder
 	public function __construct($sToken)
 	{
 		$this->sToken = $sToken;
-		$this->sAttcode = '';
+		$this->sAttCode = '';
 		$this->sFunction = '';
 		$this->sParamName = '';
 		$this->bIsValid = false; // Validity may be false in general, but it can work anyway (thanks to specialization) when rendering
@@ -90,9 +90,9 @@ class TemplateString
 						$oPlaceholder->sFunction = '';
 
 						$oPlaceholder->sParamName = $sParamName;
-						$sAttcode = substr($sPlaceholder, strlen($sParamPrefix));
-						$oPlaceholder->sAttcode = $sAttcode;
-						$oPlaceholder->bIsValid = MetaModel::IsValidAttCode($sClass, $sAttcode, true /* extended */);
+						$sAttCode = substr($sPlaceholder, strlen($sParamPrefix));
+						$oPlaceholder->sAttCode = $sAttCode;
+						$oPlaceholder->bIsValid = MetaModel::IsValidAttCode($sClass, $sAttCode, true /* extended */);
 					}
 				}
 
@@ -164,7 +164,7 @@ class TemplateString
 				$oRef = $aParamValues[$oPlaceholder->sParamName];
 				try
 				{
-					$value = $oRef->Get($oPlaceholder->sAttcode);
+					$value = $oRef->Get($oPlaceholder->sAttCode);
 					$aSearch[] = '$'.$oPlaceholder->sToken.'$';
 					$aReplace[] = $value;
 					$oPlaceholder->bIsValid = true;
