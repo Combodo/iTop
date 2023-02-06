@@ -179,7 +179,7 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 		// - Panel description
 		$sDescription = $this->oAttributeLinkedSetIndirect->GetDescription();
 		if (utils::IsNotNullOrEmptyString($sDescription)) {
-			$oTitleBlock = $aTablePanel->GetTitleBlock()
+			$oTitleBlock = $oTablePanel->GetTitleBlock()
 				->AddDataAttribute('tooltip-content', $sDescription)
 				->AddDataAttribute('tooltip-max-width', 'min(600px, 90vw)') // Allow big description to be wide enough while shrinking on small screens
 				->AddCSSClass('ibo-has-description');

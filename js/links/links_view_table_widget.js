@@ -14,8 +14,8 @@ $(function()
 
 		// the constructor
 		_create: function () {
-			this.$table = $('table', this.element);
-			this.$tableSettingsDialog = $('#datatable_dlg_' + this.$table.attr('id'));
+			$Table = $('table', this.element);
+			this.$tableSettingsDialog = $('#datatable_dlg_' + $Table.attr('id'));
 		},
 
 		// the destructor
@@ -72,11 +72,14 @@ $(function()
 
 			const me = this;
 
+			// retrieve table
+			const $Table = $('table', this.element);
+
 			// retrieve context parameters
-			const sClass = this.$table.closest('[data-role="ibo-block-links-table"]').attr('data-link-class');
-			const sAttCode = this.$table.closest('[data-role="ibo-block-links-table"]').attr('data-link-attcode');
-			const sHostObjectClass = this.$table.closest('[data-role="ibo-object-details"]').attr('data-object-class');
-			const sHostObjectId = this.$table.closest('[data-role="ibo-object-details"]').attr('data-object-id');
+			const sClass = $Table.closest('[data-role="ibo-block-links-table"]').attr('data-link-class');
+			const sAttCode = $Table.closest('[data-role="ibo-block-links-table"]').attr('data-link-attcode');
+			const sHostObjectClass = $Table.closest('[data-role="ibo-object-details"]').attr('data-object-class');
+			const sHostObjectId = $Table.closest('[data-role="ibo-object-details"]').attr('data-object-id');
 
 			// link object creation
 			LinkSetWorker.CreateLinkedObject(sClass, sAttCode, sHostObjectClass, sHostObjectId, function(){

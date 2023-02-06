@@ -16,7 +16,10 @@ let LinkSet = new function () {
 	{
 		// Create link object
 		LinkSetWorker.CreateLinkedObject(sLinkedClass, sCode, sHostObjectClass, sHostObjectKey,
-			null,
+			function(){
+				$(this).find("form").remove();
+				$(this).dialog('destroy');
+			},
 			function(event, data){
 
 				// We have just create a link object, now request the remote object
