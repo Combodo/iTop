@@ -78,14 +78,14 @@ Selectize.define("combodo_multi_values_synthesis", function (aOptions) {
 				}
 				// Element exist in default selection,
 				// click allow user to switch between add or ignore states
-				if(oSelf.settings.initial.includes(sItemValue)) {
+				if(oSelf.plugins.settings.combodo_update_operations.initial.includes(sItemValue)) {
 					oSelf.listenClick($Item, sItemValue);
 				}
 				return;
 			}
 
 			// If no operation to restore
-			if(!oSelf.settings.initial.includes(sItemValue)) {
+			if(!oSelf.plugins.settings.combodo_update_operations.initial.includes(sItemValue)) {
 
 				// Element doesn't exist in initial value, we mark it as added
 				oSelf.Add($Item, sItemValue);
@@ -112,7 +112,7 @@ Selectize.define("combodo_multi_values_synthesis", function (aOptions) {
 			const $Item = oSelf.getItem(sItem);
 
 			// Element doesn't exist in default selection,
-			if(!oSelf.settings.initial.includes(sItem)) {
+			if(!oSelf.plugins.settings.combodo_update_operations.initial.includes(sItem)) {
 
 				// Remove operation
 				delete aOperations[sItem];

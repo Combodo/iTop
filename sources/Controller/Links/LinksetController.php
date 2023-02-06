@@ -10,6 +10,7 @@ use AjaxPage;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\Service\Base\ObjectRepository;
 use Exception;
 use JsonPage;
 use CoreException;
@@ -169,8 +170,8 @@ class LinkSetController extends AbstractController
 			$aPrefillParam = array('source_obj' => $oSourceObj);
 			$oObj->PrefillForm('creation_from_editinplace', $aPrefillParam);
 			// We display this form in a modal, once we submit (in ajax) we probably want to only close the modal
-			$sFormOnSubmitJsCode = 
-			<<<JS
+			$sFormOnSubmitJsCode =
+				<<<JS
 				event.preventDefault();
 				if(bOnSubmitForm === true)
 				{
@@ -180,6 +181,8 @@ class LinkSetController extends AbstractController
 
 					/* Alerts the results */
 					sPosting.done(function(data) {
+                        // fire event
+                        oForm.trigger('itop.form.submitted', [data]);
 						if(data.success !== undefined && data.success === true) {
 							oForm.closest('[data-role="ibo-modal"]').dialog('close');
 						}
@@ -195,18 +198,20 @@ class LinkSetController extends AbstractController
 JS
 			;
 			$aExtraParams = [
-				'noRelations' => true,
+				'noRelations'      => true,
 				'hide_transitions' => true,
-				'fieldsFlags' => $aFieldFlags,
-				'js_handlers' => [
-					'form_on_submit' => $sFormOnSubmitJsCode,
+				'formPrefix'       => $sAttCode,
+				'fieldsFlags'      => $aFieldFlags,
+				'js_handlers'      => [
+					'form_on_submit'         => $sFormOnSubmitJsCode,
 					'cancel_button_on_click' =>
 						<<<JS
 				function() {
 					$(this).closest('[data-role="ibo-modal"]').dialog('close');
 				};
 JS
-				]
+					,
+				],
 			];
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aExtraParams);
 		}
@@ -234,13 +239,50 @@ JS
                     return false;
 JS
 			);
-			
+
 			// - Add a select and a button to validate the form
-			$oClassForm->AddSubBlock(cmdbAbstractObject::DisplayBlockSelectClassToCreate( $sProposedRealClass, MetaModel::GetName($sProposedRealClass),   $aPossibleClasses));
+			$oClassForm->AddSubBlock(cmdbAbstractObject::DisplayBlockSelectClassToCreate($sProposedRealClass, MetaModel::GetName($sProposedRealClass), $aPossibleClasses));
 
 			$oPage->AddUiBlock($oClassForm);
 		}
 
 		return $oPage;
+	}
+
+	/**
+	 * OperationGetRemoteObject.
+	 *
+	 * @return JsonPage
+	 */
+	public function OperationGetRemoteObject(): JsonPage
+	{
+		$oPage = new JsonPage();
+		$bSuccess = true;
+		$aObjectData = null;
+
+		// Retrieve query params
+		$sObjectClass = utils::ReadParam('linked_object_class', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
+		$sObjectKey = utils::ReadParam('linked_object_key', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
+		$sRemoteClass = utils::ReadParam('remote_class', null, false, utils::ENUM_SANITIZATION_FILTER_STRING);
+		$sRemoteExtKey = utils::ReadParam('external_key_att_code', null, false, utils::ENUM_SANITIZATION_FILTER_STRING);
+
+		// Retrieve object
+		try {
+			$oObject = MetaModel::GetObject($sObjectClass, $sObjectKey);
+			$sLinkKey = $oObject->GetKey();
+			if ($sRemoteExtKey !== null) {
+				$oObject = MetaModel::GetObject($sRemoteClass, $oObject->Get($sRemoteExtKey));
+			}
+			$aObjectData = ObjectRepository::ConvertObjectToArray($oObject, $sObjectClass);
+			$aObjectData['link_keys'] = [$sObjectKey];
+		}
+		catch (Exception $e) {
+			$bSuccess = false;
+		}
+
+		return $oPage->SetData([
+			'object'  => $aObjectData,
+			'success' => $bSuccess,
+		]);
 	}
 }

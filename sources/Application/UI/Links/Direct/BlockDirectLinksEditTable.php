@@ -6,18 +6,28 @@
 
 namespace Combodo\iTop\Application\UI\Links\Direct;
 
+use ApplicationContext;
+use ArchivedObjectException;
+use AttributeLinkedSet;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use ConfigException;
+use CoreException;
+use CoreUnexpectedValue;
+use DBObjectSet;
 use Dict;
+use DictExceptionMissingString;
+use Exception;
 use MetaModel;
+use MySQLException;
+use UILinksWidgetDirect;
 use utils;
+use WebPage;
 
 /**
  * Class BlockDirectLinksEditTable
@@ -31,40 +41,43 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE                   = 'ibo-block-direct-links-edit-table';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/direct/block-direct-links-edit-table/layout';
+	public const DEFAULT_JS_FILES_REL_PATH    = [
+		'js/links/links_direct_widget.js',
+	];
 
-	/** @var \UILinksWidgetDirect */
-	public \UILinksWidgetDirect $oUILinksDirectWidget;
+	/** @var UILinksWidgetDirect $oUILinksDirectWidget */
+	public UILinksWidgetDirect $oUILinksDirectWidget;
 
-	/** @var \AttributeLinkedSet */
-	private \AttributeLinkedSet $oAttributeLinkedSet;
+	/** @var AttributeLinkedSet $oAttributeLinkedSet */
+	private AttributeLinkedSet $oAttributeLinkedSet;
 
-	/** @var string */
+	/** @var string $sInputName */
 	public string $sInputName;
 
-	/** @var array */
+	/** @var array $aLabels */
 	public array $aLabels;
 
-	/** @var string */
+	/** @var string $sSubmitUrl */
 	public string $sSubmitUrl;
 
-	/** @var string */
+	/** @var string $sWizHelper */
 	public string $sWizHelper;
 
-	/** @var string */
+	/** @var string $sJSDoSearch */
 	public string $sJSDoSearch;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \UILinksWidgetDirect $oUILinksDirectWidget
+	 * @param UILinksWidgetDirect $oUILinksDirectWidget
 	 * @param string $sId
 	 *
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \Exception
+	 * @throws ConfigException
+	 * @throws CoreException
+	 * @throws DictExceptionMissingString
+	 * @throws Exception
 	 */
-	public function __construct(\UILinksWidgetDirect $oUILinksDirectWidget, string $sId)
+	public function __construct(UILinksWidgetDirect $oUILinksDirectWidget, string $sId)
 	{
 		parent::__construct($sId, ["ibo-block-direct-links--edit-in-place"]);
 
@@ -73,18 +86,14 @@ class BlockDirectLinksEditTable extends UIContentBlock
 
 		// compute
 		$this->aLabels = array(
-			'delete'          => Dict::S('UI:Button:Delete'),
 			'creation_title'  => Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
-			'create'          => Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
-			'remove'          => Dict::S('UI:Button:Remove'),
-			'add'             => Dict::Format('UI:AddAnExisting_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
 			'selection_title' => Dict::Format('UI:SelectionOf_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
 		);
-		$oContext = new \ApplicationContext();
-		$this->sSubmitUrl = \utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?'.$oContext->GetForLink();
+		$oContext = new ApplicationContext();
+		$this->sSubmitUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?'.$oContext->GetForLink();
 
 		// Don't automatically launch the search if the table is huge
-		$bDoSearch = !\utils::IsHighCardinality($this->oUILinksDirectWidget->GetLinkedClass());
+		$bDoSearch = !utils::IsHighCardinality($this->oUILinksDirectWidget->GetLinkedClass());
 		$this->sJSDoSearch = $bDoSearch ? 'true' : 'false';
 
 		// Initialization
@@ -98,7 +107,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	 * Initialisation.
 	 *
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	private function Init()
 	{
@@ -109,8 +118,8 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	 * Initialize UI.
 	 *
 	 * @return void
-	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws CoreException
+	 * @throws Exception
 	 */
 	private function InitUI()
 	{
@@ -118,15 +127,14 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param \DBObjectSet $oValue
+	 * @param WebPage $oPage
+	 * @param DBObjectSet $oValue
 	 * @param string $sFormPrefix
 	 *
 	 * @return void
 	 */
-	public function InitTable(\WebPage $oPage, $oValue, string $sFormPrefix)
+	public function InitTable(WebPage $oPage, DBObjectSet $oValue, string $sFormPrefix)
 	{
-		/** @todo fields initialization */
 		$this->sInputName = $sFormPrefix.'attr_'.$this->oUILinksDirectWidget->GetAttCode();
 		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
 
@@ -138,7 +146,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 			$oDatatable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
 
 			// Panel
-			$aTablePanel = PanelUIBlockFactory::MakeForClass($this->oUILinksDirectWidget->GetLinkedClass(), $this->oAttributeLinkedSet->GetLabel())
+			$oTablePanel = PanelUIBlockFactory::MakeForClass($this->oUILinksDirectWidget->GetLinkedClass(), $this->oAttributeLinkedSet->GetLabel())
 				->SetSubTitle(Dict::Format('UI:Pagination:HeaderNoSelection', count($aRows)))
 				->SetIcon(MetaModel::GetClassIcon($this->oUILinksDirectWidget->GetLinkedClass(), false))
 				->AddCSSClass('ibo-datatable-panel');
@@ -146,30 +154,17 @@ class BlockDirectLinksEditTable extends UIContentBlock
 			// - Panel description
 			$sDescription = $this->oAttributeLinkedSet->GetDescription();
 			if (utils::IsNotNullOrEmptyString($sDescription)) {
-				$oTitleBlock = $aTablePanel->GetTitleBlock()
+				$oTitleBlock = $oTablePanel->GetTitleBlock()
 					->AddDataAttribute('tooltip-content', $sDescription)
 					->AddDataAttribute('tooltip-max-width', 'min(600px, 90vw)') // Allow big description to be wide enough while shrinking on small screens
 					->AddCSSClass('ibo-has-description');
 			}
 
 			// Toolbar and actions
-			$oToolbar = ToolbarUIBlockFactory::MakeForButton();
-			$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
-			$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._removeSelection();");
-			$oToolbar->AddSubBlock($oActionButtonUnlink);
-			$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
-			$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._selectToAdd();");
-			$oToolbar->AddSubBlock($oActionButtonLink);
-			$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral('Create');
-			$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._createRow();");
-			$oToolbar->AddSubBlock($oActionButtonCreate);
-			$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete');
-			$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('instance')._deleteSelection();");
-
-			$oToolbar->AddSubBlock($oActionButtonDelete);
-			$aTablePanel->AddToolbarBlock($oToolbar);
-			$aTablePanel->AddSubBlock($oDatatable);
-			$this->AddSubBlock($aTablePanel);
+			$oToolbar = $this->InitToolBar();
+			$oTablePanel->AddToolbarBlock($oToolbar);
+			$oTablePanel->AddSubBlock($oDatatable);
+			$this->AddSubBlock($oTablePanel);
 		}
 		catch (\Exception $e) {
 			$oAlert = AlertUIBlockFactory::MakeForDanger('error', Dict::S('UI:Datatables:Language:Error'));
@@ -180,17 +175,69 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	}
 
 	/**
+	 * InitToolBar.
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar
+	 */
+	private function InitToolBar(): Toolbar
+	{
+		$oToolbar = ToolbarUIBlockFactory::MakeForButton();
+
+		// until a full link set refactoring (continue using edit_mode property)
+		switch ($this->oAttributeLinkedSet->GetEditMode()) {
+			case LINKSET_EDITMODE_NONE: // The linkset is read-only
+				break;
+
+			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
+				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link', 'link');
+				$oActionButtonLink->AddDataAttribute('action', 'add');
+				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('selectToAdd');");
+				$oToolbar->AddSubBlock($oActionButtonLink);
+				break;
+
+			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
+				$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral('Create', 'create');
+				$oActionButtonCreate->AddDataAttribute('action', 'create');
+				$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('createRow');");
+				$oToolbar->AddSubBlock($oActionButtonCreate);
+				$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete', 'delete');
+				$oActionButtonDelete->AddDataAttribute('action', 'delete');
+				$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('deleteSelection');");
+				$oToolbar->AddSubBlock($oActionButtonDelete);
+				break;
+
+			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
+				$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink', 'unlink');
+				$oActionButtonUnlink->AddDataAttribute('action', 'detach');
+				$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('removeSelection');");
+				$oToolbar->AddSubBlock($oActionButtonUnlink);
+				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link', 'link');
+				$oActionButtonLink->AddDataAttribute('action', 'add');
+				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('selectToAdd');");
+				$oToolbar->AddSubBlock($oActionButtonLink);
+				break;
+
+			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
+			default:
+
+		}
+
+		return $oToolbar;
+	}
+
+
+	/**
 	 * Return table rows.
 	 *
-	 * @param \DBObjectSet $oValue
+	 * @param DBObjectSet $oValue
 	 *
 	 * @return array
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
-	 * @throws \Exception
+	 * @throws ArchivedObjectException
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws DictExceptionMissingString
+	 * @throws MySQLException
+	 * @throws Exception
 	 */
 	private function GetTableRows(\WebPage $oPage, \DBObjectSet $oValue): array
 	{
@@ -221,6 +268,41 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	}
 
 	/**
+	 * Convert edit_mode to relation type.
+	 *
+	 * @return string|null
+	 */
+	private function ConvertEditModeToRelationType(): ?string
+	{
+		switch ($this->oAttributeLinkedSet->GetEditMode()) {
+			case LINKSET_EDITMODE_INPLACE:
+				return LINKSET_RELATIONTYPE_PROPERTY;
+			case LINKSET_EDITMODE_ADDREMOVE:
+				return LINKSET_RELATIONTYPE_LINK;
+			default:
+				return null;
+		}
+	}
+
+	/**
+	 * Convert edit_mode to read only.
+	 *
+	 * @return bool
+	 */
+	private function ConvertEditModeToReadOnly(): bool
+	{
+		switch ($this->oAttributeLinkedSet->GetEditMode()) {
+			case LINKSET_EDITMODE_NONE:
+			case LINKSET_EDITMODE_ADDONLY:
+			case LINKSET_EDITMODE_ACTIONS:
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+	/**
 	 * Return row actions.
 	 *
 	 * @return \string[][]
@@ -229,9 +311,9 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	{
 		$aRowActions = array();
 
-		if (!$this->oAttributeLinkedSet->GetReadOnly()) {
+		if (!$this->ConvertEditModeToReadOnly()) {
 
-			switch ($this->oAttributeLinkedSet->GetRelationType()) {
+			switch ($this->ConvertEditModeToRelationType()) {
 
 				case LINKSET_RELATIONTYPE_LINK:
 					$aRowActions[] = array(

@@ -37,6 +37,7 @@ class Set extends AbstractInput
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/input/set/layout';
 
 	public const DEFAULT_JS_FILES_REL_PATH = [
+		'js/links/links_set_worker.js',
 		'js/selectize/plugin_combodo_add_button.js',
 		'js/selectize/plugin_combodo_auto_position.js',
 		'js/selectize/plugin_combodo_update_operations.js',
@@ -54,6 +55,9 @@ class Set extends AbstractInput
 
 	/** @var bool $bHasAddOptionButton Enable add option button */
 	private bool $bHasAddOptionButton;
+
+	/** @var string|null $sAddOptionButtonJsOnClick JS code to execute on button click */
+	private ?string $sAddOptionButtonJsOnClick;
 
 	/** @var string $sAddButtonTitle Add button title */
 	private string $sAddButtonTitle;
@@ -103,6 +107,7 @@ class Set extends AbstractInput
 		$this->iMaxOptions = null;
 		$this->bHasRemoveItemButton = true;
 		$this->bHasAddOptionButton = false;
+		$this->sAddOptionButtonJsOnClick = null;
 		$this->sAddButtonTitle = Dict::S('UI:Button:Create');
 		$this->bIsPreloadEnabled = false;
 		$this->sTemplateOptions = null;
@@ -181,6 +186,30 @@ class Set extends AbstractInput
 	public function HasRemoveItemButton(): bool
 	{
 		return $this->bHasRemoveItemButton;
+	}
+
+	/**
+	 * SetAddOptionButtonJsOnClick.
+	 *
+	 * @param string $sJsOnClick
+	 *
+	 * @return $this
+	 */
+	public function SetAddOptionButtonJsOnClick(string $sJsOnClick): Set
+	{
+		$this->sAddOptionButtonJsOnClick = $sJsOnClick;
+
+		return $this;
+	}
+
+	/**
+	 * GetAddOptionButtonJsOnClick.
+	 *
+	 * @return string
+	 */
+	public function GetAddOptionButtonJsOnClick(): string
+	{
+		return $this->sAddOptionButtonJsOnClick;
 	}
 
 	/**

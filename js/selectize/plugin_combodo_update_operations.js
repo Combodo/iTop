@@ -15,10 +15,17 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-Selectize.define("combodo_update_operations", function () {
+Selectize.define("combodo_update_operations", function (aOptions) {
 
 	// Selectize instance
 	let oSelf = this;
+
+	// Plugin options
+	aOptions = $.extend({
+			initial: [],
+		},
+		aOptions
+	);
 
 	// Plugin variables
 	oSelf.bIsInitialized = false;
@@ -88,7 +95,7 @@ Selectize.define("combodo_update_operations", function () {
 
 			// Scan items in current value and not in initial value
 			aCurrentItems.forEach(function(e){
-				if(!oSelf.settings.initial.includes(e)){
+				if(!aOptions.initial.includes(e)){
 					oSelf.operations[e] = {
 						operation: 'add',
 						data: CombodoGlobalToolbox.ExtractArrayItemsContainingThisKeyAndValue(aCurrentOptions, oSelf.settings.valueField, e)
@@ -97,7 +104,7 @@ Selectize.define("combodo_update_operations", function () {
 			});
 
 			// scan items in initial value and not in current value
-			oSelf.settings.initial.forEach(function(e){
+			aOptions.initial.forEach(function(e){
 				if(!aCurrentItems.includes(e)){
 					oSelf.operations[e] = {
 						operation: 'remove',
@@ -106,6 +113,14 @@ Selectize.define("combodo_update_operations", function () {
 				}
 			});
 
+		};
+	})();
+
+	// Declare addInitialValue function
+	oSelf.addInitialValue = (function () {
+		return function (value) {
+			aOptions.initial.push(value);
+			oSelf.updateOperationsInput();
 		};
 	})();
 

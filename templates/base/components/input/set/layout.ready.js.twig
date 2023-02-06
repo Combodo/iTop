@@ -18,7 +18,9 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     {# Remove button plugin #}
     plugins: {
         {# PLUGIN update operations  #}
-        'combodo_update_operations' : {},
+        'combodo_update_operations' : {
+            initial: {{ oUIBlock.GetValue()|raw }},
+        },
         {# PLUGIN combodo auto position  #}
         'combodo_auto_position' : {
             maxDropDownHeight: 300, {# in px #}
@@ -73,7 +75,6 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     optgroups: {{ oDataProvider.GetOptionsGroups()|json_encode()|raw  }},
 
     {# Items data #}
-    initial: {{ oUIBlock.GetValue()|raw }},
     items: {{ oUIBlock.GetValue()|raw }},
 
     inputClass: 'ibo-input ibo-input-selectize ibo-input-set attribute-set selectize-input',
@@ -197,9 +198,12 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     {# plugin combodo_add_button #}
     {% if oUIBlock.HasAddOptionButton() %}
     onAdd: function(){
-        alert('todo on add option');
+        {{ oUIBlock.GetAddOptionButtonJsOnClick()|raw }}
+
     },
     {% endif %}
+
+
 });
 
 

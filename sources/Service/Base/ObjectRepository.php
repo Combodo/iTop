@@ -140,19 +140,8 @@ class ObjectRepository
 		$oDbObjectSet->Rewind();
 		while ($oObject = $oDbObjectSet->Fetch()) {
 
-			// Prepare objet data
-			$aObjectData = [];
-
-			// Object key
-			$aObjectData['key'] = $oObject->GetKey();
-
-			// Fill loaded columns...
-			foreach ($aFieldsToLoad as $sField) {
-				$aObjectData[$sField] = $oObject->Get($sField);
-			}
-
 			// Compute others data
-			$aResult[] = ObjectRepository::ComputeOthersData($oObject, $sObjectClass, $aObjectData, $aComplementAttributeSpec, $sObjectImageAttCode);
+			$aResult[] = self::ConvertObjectToArray($oObject, $sObjectClass, $aFieldsToLoad, $aComplementAttributeSpec, $sObjectImageAttCode);
 		}
 
 		return $aResult;
@@ -198,6 +187,9 @@ class ObjectRepository
 	static public function ComputeOthersData(DBObject $oDbObject, string $sClass, array $aData, array $aComplementAttributeSpec, string $sObjectImageAttCode): array
 	{
 		try {
+
+			// object class
+			$aData['class_name'] = get_class($oDbObject);
 
 			// Obsolescence flag
 			$aData['obsolescence_flag'] = $oDbObject->IsObsolete();
@@ -258,6 +250,52 @@ class ObjectRepository
 		catch (Exception $e) {
 			return null;
 		}
+	}
+
+	/**
+	 * ConvertObjectToArray.
+	 *
+	 * @param DBObject $oObject
+	 * @param string $sObjectClass
+	 * @param array|null $aFieldsToLoad
+	 * @param array|null $aComplementAttributeSpec
+	 * @param string|null $sObjectImageAttCode
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
+	public static function ConvertObjectToArray(DBObject $oObject, string $sObjectClass, array $aFieldsToLoad = null, array $aComplementAttributeSpec = null, string $sObjectImageAttCode = null): array
+	{
+		// Retrieve friendly name complementary specification
+		if ($aComplementAttributeSpec === null) {
+			$aComplementAttributeSpec = MetaModel::GetNameSpec($sObjectClass, FriendlyNameType::COMPLEMENTARY);
+		}
+
+		// Retrieve image attribute code
+		if ($sObjectImageAttCode === null) {
+			$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sObjectClass);
+		}
+
+		// Fields to load
+		if ($aFieldsToLoad === null) {
+			$aFieldsToLoad = self::GetDefaultFieldsToLoad($aComplementAttributeSpec, $sObjectImageAttCode);
+		}
+
+		// Prepare objet data
+		$aObjectData = [];
+
+		// Object key
+		$aObjectData['key'] = $oObject->GetKey();
+
+		// Fill loaded columns...
+		foreach ($aFieldsToLoad as $sField) {
+			$aObjectData[$sField] = $oObject->Get($sField);
+		}
+
+		// Compute others data
+		return ObjectRepository::ComputeOthersData($oObject, $sObjectClass, $aObjectData, $aComplementAttributeSpec, $sObjectImageAttCode);
 	}
 
 }

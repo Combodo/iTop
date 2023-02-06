@@ -34,7 +34,6 @@ $oP->add_linked_script("../js/json.js");
 $oP->add_linked_script("../js/forms-json-utils.js");
 $oP->add_linked_script("../js/wizardhelper.js");
 $oP->add_linked_script("../js/wizard.utils.js");
-$oP->add_linked_script("../js/linkswidget.js");
 $oP->add_linked_script("../js/extkeywidget.js");
 $oP->add_linked_script("../js/jquery.blockUI.js");
 		

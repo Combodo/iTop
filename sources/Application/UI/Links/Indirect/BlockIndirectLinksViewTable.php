@@ -58,11 +58,12 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 		if ($this->oAttDef->HasDescription()) {
 			$aExtraParams['panel_title_tooltip'] = $this->oAttDef->GetDescription();
 		}
-		
+
 		// Add creation in modal if the linkset is not readonly
 		if (!$this->oAttDef->GetReadOnly()) {
+			$sHostClass = get_class($this->oDbObject);
 			$aExtraParams['creation_in_modal_is_allowed'] = true;
-			$aExtraParams['creation_in_modal_js_handler'] = 'LinkSetWorker.CreateLinkedObject("'.$this->GetTableId().'");';
+			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
 		}
 
 		return $aExtraParams;
@@ -79,7 +80,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 				'label'         => 'UI:Links:ActionRow:Detach',
 				'tooltip'       => 'UI:Links:ActionRow:Detach+',
 				'icon_classes'  => 'fas fa-minus',
-				'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw'], '{$this->GetTableId()}');",
+				'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['Link/_key_/raw'], oTrElement);",
 				'confirmation'  => [
 					'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
 					'message_row_data'           => "Remote/hyperlink",
@@ -91,7 +92,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 				'label'         => 'UI:Links:ActionRow:Modify',
 				'tooltip'       => 'UI:Links:ActionRow:Modify+',
 				'icon_classes'  => 'fas fa-pen',
-				'js_row_action' => "LinkSetWorker.ModifyLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['Link/_key_/raw'], '{$this->GetTableId()}');",
+				'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['Link/_key_/raw']);",
 			);
 
 		}

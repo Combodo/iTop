@@ -37,9 +37,9 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 			'default'     => $this->GetDefault(),
 			'table_id'    => $this->GetTableId(),
 			'row_actions' => $this->GetRowActions(),
-			'currentId' => $this->GetTableId(),
+			'currentId'   => $this->GetTableId(),
 			'panel_title' => $this->oAttDef->GetLabel(),
-			'panel_icon' => MetaModel::GetClassIcon($this->GetTargetClass(), false),
+			'panel_icon'  => MetaModel::GetClassIcon($this->GetTargetClass(), false),
 		);
 
 		// Description
@@ -50,9 +50,9 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 		// Add creation in modal if the linkset is not readonly
 		if (!$this->oAttDef->GetReadOnly()) {
 			$aExtraParams['creation_in_modal_is_allowed'] = true;
-			$aExtraParams['creation_in_modal_js_handler'] = 'LinkSetWorker.CreateLinkedObject("'.$this->GetTableId().'");';
+			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
 		}
-		
+
 		return $aExtraParams;
 	}
 
@@ -70,7 +70,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 						'label'         => 'UI:Links:ActionRow:Detach',
 						'tooltip'       => 'UI:Links:ActionRow:Detach+',
 						'icon_classes'  => 'fas fa-minus',
-						'js_row_action' => "LinkSetWorker.DetachLinkedObject('{$this->sTargetClass}', aRowData['{$this->sTargetClass}/_key_/raw'], '{$this->oAttDef->GetExtKeyToMe()}', '{$this->GetTableId()}');",
+						'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DetachLinkedObject', aRowData['{$this->sTargetClass}/_key_/raw'], oTrElement);",
 						'confirmation'  => [
 							'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
 							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
@@ -84,7 +84,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 						'label'         => 'UI:Links:ActionRow:Delete',
 						'tooltip'       => 'UI:Links:ActionRow:Delete+',
 						'icon_classes'  => 'fas fa-trash',
-						'js_row_action' => "LinkSetWorker.DeleteLinkedObject('{$this->oAttDef->GetLinkedClass()}', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], '{$this->GetTableId()}');",
+						'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement);",
 						'confirmation'  => [
 							'message'                    => 'UI:Links:ActionRow:Delete:Confirmation',
 							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
@@ -97,7 +97,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 				'label'         => 'UI:Links:ActionRow:Modify',
 				'tooltip'       => 'UI:Links:ActionRow:Modify+',
 				'icon_classes'  => 'fas fa-pen',
-				'js_row_action' => "LinkSetWorker.ModifyLinkedObject('{$this->sTargetClass}', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], '{$this->GetTableId()}');",
+				'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
 			);
 		}
 

@@ -2337,7 +2337,7 @@ EOF
 						if (array_key_exists('bulk_context', $aArgs)) {
 							$oTagSetBlock = LinksSetUIBlockFactory::MakeForBulkLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['bulk_context']);
 						} else {
-							$oTagSetBlock = LinksSetUIBlockFactory::MakeForLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName);
+							$oTagSetBlock = LinksSetUIBlockFactory::MakeForLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['this']);
 						}
 						$oTagSetBlock->SetName("attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}");
 						$aEventsList[] = 'validate';
