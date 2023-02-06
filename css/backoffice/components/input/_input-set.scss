@@ -14,8 +14,6 @@ $ibo-input-set--input--height: 100% !default;
 $ibo-input-set--remove--padding-top: 0.15em !default;
 $ibo-input-set--remove--border-left: none !default;
 
-$ibo-input-set--has-items--after--right: 8px !default;
-$ibo-input-set--has-items--after--top: 5px !default;
 
 $ibo-input-set--item--siblings-spacing: 3px !default;
 $ibo-input-set--item--margin-y: 1px !default;
@@ -43,17 +41,7 @@ $ibo-input-set--item--box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb
     border-left: $ibo-input-set--remove--border-left;
   }
 
-  &.has-items::after {
-    content: "\f067";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 600;
-    font-size: 10px;
 
-    position: absolute;
-
-    right: $ibo-input-set--has-items--after--right;
-    top: $ibo-input-set--has-items--after--top;
-  }
 }
 
 /* CSS rules from the old style, retrieved almost as is. Do not change the classes names in the markup without second thought as they are used by the portal as well */
