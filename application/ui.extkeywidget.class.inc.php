@@ -685,15 +685,15 @@ JS
 		}
 		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oBlock = new DisplayBlock($oFilter, 'search', false, $aParams);
-		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, $this->iId,
+		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, 'dtc_'.$this->iId,
 			array(
-				'menu' => false,
-				'currentId' => $this->iId,
-				'table_id' => "dr_{$this->iId}",
+				'menu'           => false,
+				'currentId'      => $this->iId,
+				'table_id'       => "dr_{$this->iId}",
 				'table_inner_id' => "{$this->iId}_results",
 				'selection_mode' => true,
 				'selection_type' => 'single',
-				'cssCount' => '#count_'.$this->iId.'_results',
+				'cssCount'       => '#count_'.$this->iId.'_results',
 			)
 		));
 		$sCancel = Dict::S('UI:Button:Cancel');
