@@ -66,7 +66,7 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 			&& $oHostDbObject !== null) {
 			$sHostClass = get_class($oHostDbObject);
 			$oSetUIBlock->SetHasAddOptionButton(true);
-			$oSetUIBlock->SetAddOptionButtonJsOnClick("LinkSet.CreateLinkedObject('{$oAttDef->GetLinkedClass()}', '{$oAttDef->GetCode()}', '{$sHostClass}', '{$oHostDbObject->GetKey()}', '{$sTargetField}', '{$sTargetClass}', oWidget{$oSetUIBlock->GetId()} );");
+			$oSetUIBlock->SetAddOptionButtonJsOnClick("CombodoLinkSet.CreateLinkedObject('{$oAttDef->GetLinkedClass()}', '{$oAttDef->GetCode()}', '{$sHostClass}', '{$oHostDbObject->GetKey()}', '{$sTargetField}', '{$sTargetClass}', oWidget{$oSetUIBlock->GetId()} );");
 		}
 
 		// Current value
