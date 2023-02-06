@@ -16,6 +16,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Service\Links\LinkSetModel;
 use ConfigException;
 use CoreException;
 use CoreUnexpectedValue;
@@ -268,41 +269,6 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	}
 
 	/**
-	 * Convert edit_mode to relation type.
-	 *
-	 * @return string|null
-	 */
-	private function ConvertEditModeToRelationType(): ?string
-	{
-		switch ($this->oAttributeLinkedSet->GetEditMode()) {
-			case LINKSET_EDITMODE_INPLACE:
-				return LINKSET_RELATIONTYPE_PROPERTY;
-			case LINKSET_EDITMODE_ADDREMOVE:
-				return LINKSET_RELATIONTYPE_LINK;
-			default:
-				return null;
-		}
-	}
-
-	/**
-	 * Convert edit_mode to read only.
-	 *
-	 * @return bool
-	 */
-	private function ConvertEditModeToReadOnly(): bool
-	{
-		switch ($this->oAttributeLinkedSet->GetEditMode()) {
-			case LINKSET_EDITMODE_NONE:
-			case LINKSET_EDITMODE_ADDONLY:
-			case LINKSET_EDITMODE_ACTIONS:
-				return true;
-
-			default:
-				return false;
-		}
-	}
-
-	/**
 	 * Return row actions.
 	 *
 	 * @return \string[][]
@@ -311,9 +277,9 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	{
 		$aRowActions = array();
 
-		if (!$this->ConvertEditModeToReadOnly()) {
+		if (!LinkSetModel::ConvertEditModeToReadOnly($this->oAttributeLinkedSet)) {
 
-			switch ($this->ConvertEditModeToRelationType()) {
+			switch (LinkSetModel::ConvertEditModeToRelationType($this->oAttributeLinkedSet)) {
 
 				case LINKSET_RELATIONTYPE_LINK:
 					$aRowActions[] = array(

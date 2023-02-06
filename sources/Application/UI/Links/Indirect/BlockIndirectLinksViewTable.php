@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Links\Indirect;
 
 use Combodo\iTop\Application\UI\Links\AbstractBlockLinksViewTable;
+use Combodo\iTop\Service\Links\LinkSetModel;
 use MetaModel;
 use PHPUnit\Exception;
 
@@ -74,7 +75,7 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 	{
 		$aRowActions = array();
 
-		if (!$this->oAttDef->GetReadOnly()) {
+		if (!LinkSetModel::ConvertEditModeToReadOnly($this->oAttDef)) {
 
 			$aRowActions[] = array(
 				'label'         => 'UI:Links:ActionRow:Detach',

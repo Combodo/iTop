@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Links\Direct;
 
 use Combodo\iTop\Application\UI\Links\AbstractBlockLinksViewTable;
+use Combodo\iTop\Service\Links\LinkSetModel;
 use MetaModel;
 
 /**
@@ -61,9 +62,9 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 	{
 		$aRowActions = array();
 
-		if (!$this->oAttDef->GetReadOnly()) {
+		if (!LinkSetModel::ConvertEditModeToReadOnly($this->oAttDef)) {
 
-			switch ($this->oAttDef->GetRelationType()) {
+			switch (LinkSetModel::ConvertEditModeToRelationType($this->oAttDef)) {
 
 				case LINKSET_RELATIONTYPE_LINK:
 					$aRowActions[] = array(

@@ -58,25 +58,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			return me.OnFormSubmit();
 		});
 
-		this.UpdateTableInformation();
+		$('#linkedset_'+me.id+' .selection').on('change', function () {
+			me.OnSelectChange();
+		});
+		me.UpdateButtons();
 	};
-
-	this.UpdateTableInformation = function(){
-
-		let nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
-		let count = $('#linkedset_'+this.id+' tbody tr').length;
-
-		$('#linkedset_'+me.iInputId+'_alert_information').toggleClass('ibo-is-information', nbChecked > 0);
-
-		if(nbChecked > 0){
-			$('#'+me.id+'_btnRemove').prop('disabled', false);
-			$('#linkedset_'+me.iInputId+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(nbChecked + ' / ' + count + ' éléments sélectionnés');
-		}
-		else{
-			$('#'+me.id+'_btnRemove').prop('disabled', true);
-			$('#linkedset_'+me.iInputId+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(count + ' éléments');
-		}
-	}
 
 	this.RemoveSelected = function () {
 		let my_id = '#'+me.id;
@@ -92,7 +78,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			$('#'+me.id+'_empty_row').show();
 		}
 
-		this.UpdateTableInformation();
+		this.UpdateButtons();
 	};
 
 	this.Remove = function(oRowElement){
@@ -115,11 +101,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				me.aAdded[iUniqueId] = null;
 			}
 
-		this.UpdateTableInformation();
+		this.UpdateButtons();
 		}
 
 	this.OnSelectChange = function () {
-		this.UpdateTableInformation();
+		this.UpdateButtons();
 	};
 
 	this.AddObjects = function () {
@@ -194,6 +180,14 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		else
 		{
 			okBtn.prop('disabled', true);
+		}
+
+		let nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
+		if(nbChecked > 0){
+			$('[data-role="ibo-button"][data-action="detach"]', $('#linkedset_'+me.id)).prop('disabled', false);
+		}
+		else{
+			$('[data-role="ibo-button"][data-action="detach"]', $('#linkedset_'+me.id)).prop('disabled', true);
 		}
 	};
 
@@ -389,7 +383,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				let iLink = oCheckbox.attr('data-link-id');
 				let iUniqueId = oCheckbox.attr('data-unique-id');
 				let sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
-				let value = $(this).val();
+				let value = $(this).val();;
 				return me.OnValueChange(iLink, iUniqueId, sAttCode, value, this);
 			}
 			return true;

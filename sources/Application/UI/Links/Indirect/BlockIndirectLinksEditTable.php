@@ -14,6 +14,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Service\Links\LinkSetModel;
 use ConfigException;
 use CoreException;
 use DBObject;
@@ -186,14 +187,19 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 		}
 
 		// Toolbar and actions
-		$oToolbar = ToolbarUIBlockFactory::MakeForButton();
-		$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
-		$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();");
-		$oToolbar->AddSubBlock($oActionButtonUnlink);
-		$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
-		$oActionButtonLink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
-		$oToolbar->AddSubBlock($oActionButtonLink);
-		$oTablePanel->AddToolbarBlock($oToolbar);
+		if (!LinkSetModel::ConvertEditModeToReadOnly($this->oAttributeLinkedSetIndirect)) {
+			$oToolbar = ToolbarUIBlockFactory::MakeForButton();
+			$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
+			$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();");
+			$oActionButtonUnlink->AddDataAttribute('action', 'detach');
+			$oToolbar->AddSubBlock($oActionButtonUnlink);
+			$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
+			$oActionButtonLink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
+			$oActionButtonLink->AddDataAttribute('action', 'add');
+			$oToolbar->AddSubBlock($oActionButtonLink);
+			$oTablePanel->AddToolbarBlock($oToolbar);
+		}
+
 		$oTablePanel->AddSubBlock($oDataTable);
 
 		$this->AddSubBlock($oTablePanel);
@@ -418,7 +424,7 @@ JS
 	{
 		$aRowActions = array();
 
-		if (!$this->oAttributeLinkedSetIndirect->GetReadOnly()) {
+		if (!LinkSetModel::ConvertEditModeToReadOnly($this->oAttributeLinkedSetIndirect)) {
 			$aRowActions[] = array(
 				'label'         => 'UI:Links:ActionRow:Detach',
 				'tooltip'       => 'UI:Links:ActionRow:Detach+',

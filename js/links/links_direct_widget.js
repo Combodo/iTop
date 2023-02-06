@@ -73,8 +73,6 @@ $(function()
 			});
 
 			this._updateButtons();
-
-			me._updateTableInformation();
 		},
 
 		// called when created, and later when changing options
@@ -115,24 +113,8 @@ $(function()
 					break;
 			}
 		},
-		_updateTableInformation: function(){
-
-			let nbChecked = $('tbody tr input:checked', this.element).length;
-			let count = $('tbody tr input', this.element).length;
-
-			$('#linkedset_'+this.id+'_alert_information').toggleClass('ibo-is-information', nbChecked > 0);
-
-			if(nbChecked > 0){
-				$('#'+this.id+'_btnRemove').prop('disabled', false);
-				$('#linkedset_'+this.id+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(nbChecked + ' / ' + count + ' éléments sélectionnés');
-			}
-			else{
-				$('#'+this.id+'_btnRemove').prop('disabled', true);
-				$('#linkedset_'+this.id+'_alert_information span[data-role="ibo-datatable-selection-value"]').text(count + ' éléments');
-			}
-		},
 		_onSelectChange: function () {
-			this._updateTableInformation();
+			this._updateButtons
 		},
 		_updateTable: function () {
 			var me = this;
@@ -431,8 +413,6 @@ $(function()
 				me._updateTable();
 				me.indicator.html('');
 				$('[data-role="ibo-button"][data-action="add"]', this.element).prop('disabled', false);
-
-				me._updateTableInformation();
 			});
 		},
 		subclassSelected: function()
@@ -552,7 +532,6 @@ $(function()
 			oRow.remove();
 			this._updateButtons();
 			this._updateTable();
-			this._updateTableInformation();
 		},
 		_removeSelection: function(){
 			var me = this;
