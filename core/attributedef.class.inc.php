@@ -180,20 +180,19 @@ abstract class AttributeDefinition
 	/** @var string */
 	protected $m_sHostClass = '!undefined!';
 
-	public function Get($sParamName)
-	{
-		return $this->m_aParams[$sParamName];
+	/**
+	 * @since 3.1.0 N°5942 new defaultValue param
+	 */
+	public function Get($sParamName, $defaultValue = null) {
+		return $this->m_aParams[$sParamName] ?? $defaultValue;
 	}
 
-	public function GetIndexLength()
-	{
+	public function GetIndexLength() {
 		$iMaxLength = $this->GetMaxSize();
-		if (is_null($iMaxLength))
-		{
+		if (is_null($iMaxLength)) {
 			return null;
 		}
-		if ($iMaxLength > static::INDEX_LENGTH)
-		{
+		if ($iMaxLength > static::INDEX_LENGTH) {
 			return static::INDEX_LENGTH;
 		}
 
@@ -8347,24 +8346,115 @@ class AttributeBlob extends AttributeDefinition
 		return array();
 	}
 
-	public function GetBasicFilterLooseOperator()
-	{
+	public function GetBasicFilterLooseOperator() {
 		return '=';
 	}
 
-	public function GetBasicFilterSQLExpr($sOpCode, $value)
-	{
+	public function GetBasicFilterSQLExpr($sOpCode, $value) {
 		return 'true';
 	}
 
-	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
-	{
-		if (is_object($value))
-		{
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true) {
+		if (is_object($value)) {
+			/** @var \ormDocument $value */
+			if ($this->IsWebImage($value->GetMimeType())) {
+				return $this->GetAsHtmlForWebImages($value, $oHostObject, $bLocalize);
+			}
+
 			return $value->GetAsHTML();
 		}
 
 		return '';
+	}
+
+	/**
+	 * @since 3.1.0 N°5942 method creation
+	 */
+	protected function IsWebImage(string $sMimeType): bool {
+		switch ($sMimeType) {
+			case 'image/bmp':
+			case 'image/gif':
+			case 'image/jpeg':
+			case 'image/png':
+			case 'image/svg+xml':
+			case 'image/webp':
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	/**
+	 * @since 3.1.0 N°5942 method creation
+	 */
+	protected function GetAsHtmlForWebImages($value, $oHostObject = null, $bLocalize = true) {
+		$sRet = '';
+		$bIsCustomImage = false;
+
+		$iMaxWidth = $this->Get('display_max_width');
+		$sMaxWidthPx = $iMaxWidth.'px';
+		$iMaxHeight = $this->Get('display_max_height');
+		$sMaxHeightPx = $iMaxHeight.'px';
+
+		$sDefaultImageUrl = $this->Get('default_image');
+		if ($sDefaultImageUrl !== null) {
+			$sRet = $this->GetHtmlForImageUrl($sDefaultImageUrl, $sMaxWidthPx, $sMaxHeightPx);
+		}
+
+		$sCustomImageUrl = $this->GetAttributeImageFileUrl($value, $oHostObject);
+		if ($sCustomImageUrl !== null) {
+			$bIsCustomImage = true;
+			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $sMaxWidthPx, $sMaxHeightPx);
+		}
+
+		$sCssClasses = 'ibo-input-image--image-view attribute-image';
+		$sCssClasses .= ' '.(($bIsCustomImage) ? 'attribute-image-custom' : 'attribute-image-default');
+
+		// Important: If you change this, mind updating edit_image.js as well
+		return '<div class="'.$sCssClasses.'" style="max-width: min('.$sMaxWidthPx.',100%); max-height: min('.$sMaxHeightPx.',100%); aspect-ratio: '.$iMaxWidth.' / '.$iMaxHeight.'">'.$sRet.'</div>';
+	}
+
+	/**
+	 * @param string $sUrl
+	 * @param int $iMaxWidthPx
+	 * @param int $iMaxHeightPx
+	 *
+	 * @return string
+	 *
+	 * @since 2.6.0 new private method
+	 * @since 2.7.0 change visibility to protected
+	 * @since 3.1.0 N°5942 pulled up from AttributeImage to AttributeBlob
+	 */
+	protected function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
+		return '<img src="'.$sUrl.'" style="max-width: min('.$iMaxWidthPx.',100%); max-height: min('.$iMaxHeightPx.',100%)">';
+	}
+
+	/**
+	 * @param \ormDocument $value
+	 * @param \DBObject $oHostObject
+	 *
+	 * @return null|string
+	 *
+	 * @since 2.6.0 new private method
+	 * @since 2.7.0 change visibility to protected
+	 * @since 3.1.0 N°5942 pulled up from AttributeImage to AttributeBlob
+	 */
+	protected function GetAttributeImageFileUrl($value, $oHostObject) {
+		if (!is_object($value)) {
+			return null;
+		}
+		if ($value->IsEmpty()) {
+			return null;
+		}
+
+		$bExistingImageModified = ($oHostObject->IsModified() && (array_key_exists($this->GetCode(), $oHostObject->ListChanges())));
+		if ($oHostObject->IsNew() || ($bExistingImageModified)) {
+			// If the object is modified (or not yet stored in the database) we must serve the content of the image directly inline
+			// otherwise (if we just give an URL) the browser will be given the wrong content... and may cache it
+			return 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
+		}
+
+		return $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
 	}
 
 	/**
@@ -8594,82 +8684,20 @@ class AttributeImage extends AttributeBlob
 	}
 
 	/**
-	 * @param \ormDocument $value
+	 * @see edit_image.js for JS generated markup in form edition
+	 *
 	 * @param \DBObject $oHostObject
 	 * @param bool $bLocalize
 	 *
+	 * @param \ormDocument $value
+	 *
 	 * @return string
 	 *
-	 * @see edit_image.js for JS generated markup in form edition
+	 * @since 3.1.0 N°5942 code moved to {@see AttributeBlob::GetAsHtmlForWebImages}
 	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		$sRet = '';
-		$bIsCustomImage = false;
-
-		$iMaxWidth = $this->Get('display_max_width');
-		$sMaxWidthPx = $iMaxWidth.'px';
-		$iMaxHeight = $this->Get('display_max_height');
-		$sMaxHeightPx = $iMaxHeight.'px';
-
-		$sDefaultImageUrl = $this->Get('default_image');
-		if ($sDefaultImageUrl !== null) {
-			$sRet = $this->GetHtmlForImageUrl($sDefaultImageUrl, $sMaxWidthPx, $sMaxHeightPx);
-		}
-
-		$sCustomImageUrl = $this->GetAttributeImageFileUrl($value, $oHostObject);
-		if ($sCustomImageUrl !== null) {
-			$bIsCustomImage = true;
-			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $sMaxWidthPx, $sMaxHeightPx);
-		}
-
-		$sCssClasses = 'ibo-input-image--image-view attribute-image';
-		$sCssClasses .= ' '.(($bIsCustomImage) ? 'attribute-image-custom' : 'attribute-image-default');
-
-		// Important: If you change this, mind updating edit_image.js as well
-		return '<div class="'.$sCssClasses.'" style="max-width: min('.$sMaxWidthPx.',100%); max-height: min('.$sMaxHeightPx.',100%); aspect-ratio: '.$iMaxWidth.' / '.$iMaxHeight.'">'.$sRet.'</div>';
-	}
-
-	/**
-	 * @param string $sUrl
-	 * @param int $iMaxWidthPx
-	 * @param int $iMaxHeightPx
-	 *
-	 * @return string
-	 *
-	 * @since 2.6.0 new private method
-	 * @since 2.7.0 change visibility to protected
-	 */
-	protected function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
-		return '<img src="'.$sUrl.'" style="max-width: min('.$iMaxWidthPx.',100%); max-height: min('.$iMaxHeightPx.',100%)">';
-	}
-
-	/**
-	 * @param \ormDocument $value
-	 * @param \DBObject $oHostObject
-	 *
-	 * @return null|string
-	 *
-	 * @since 2.6.0 new private method
-	 * @since 2.7.0 change visibility to protected
-	 */
-	protected function GetAttributeImageFileUrl($value, $oHostObject) {
-		if (!is_object($value)) {
-			return null;
-		}
-		if ($value->IsEmpty()) {
-			return null;
-		}
-
-		$bExistingImageModified = ($oHostObject->IsModified() && (array_key_exists($this->GetCode(), $oHostObject->ListChanges())));
-		if ($oHostObject->IsNew() || ($bExistingImageModified))
-		{
-			// If the object is modified (or not yet stored in the database) we must serve the content of the image directly inline
-			// otherwise (if we just give an URL) the browser will be given the wrong content... and may cache it
-			return 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
-		}
-
-		return $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
+		return $this->GetAsHtmlForWebImages($value, $oHostObject, $bLocalize);
 	}
 
 	public static function GetFormFieldClass()
