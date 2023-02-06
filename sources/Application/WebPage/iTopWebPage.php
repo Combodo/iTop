@@ -47,6 +47,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// - DisplayableGraph, impact analysis
 		'js/raphael-min.js',
 		'js/jquery.mousewheel.js',
+		/** - links widgets moved in links folder @since 3.1.0 * */
+		'js/links/links_direct_widget.js',
+		'js/links/links_widget.js',
 	];
 	/** @inheritDoc */
 	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
