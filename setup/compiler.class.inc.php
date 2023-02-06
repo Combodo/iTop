@@ -2163,14 +2163,14 @@ EOF
 			$this->CompileCommonProperty('mappings', $oField, $aParameters, $sModuleRelativeDir);
 		} elseif ($sAttType == 'AttributeBlob') {
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
+			$this->CompileCommonProperty('display_max_width', $oField, $aParameters, $sModuleRelativeDir, 128);
+			$this->CompileCommonProperty('display_max_height', $oField, $aParameters, $sModuleRelativeDir, 128);
+			$this->CompileCommonProperty('default_image', $oField, $aParameters, $sModuleRelativeDir);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeImage') {
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
-			$this->CompileCommonProperty('display_max_width', $oField, $aParameters, $sModuleRelativeDir, 128);
-			$this->CompileCommonProperty('display_max_height', $oField, $aParameters, $sModuleRelativeDir, 128);
 			$this->CompileCommonProperty('storage_max_width', $oField, $aParameters, $sModuleRelativeDir, 256);
 			$this->CompileCommonProperty('storage_max_height', $oField, $aParameters, $sModuleRelativeDir, 256);
-			$this->CompileCommonProperty('default_image', $oField, $aParameters, $sModuleRelativeDir);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeStopWatch') {
 			$this->CompileCommonProperty('states', $oField, $aParameters, $sModuleRelativeDir);
