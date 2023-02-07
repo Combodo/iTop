@@ -174,6 +174,8 @@ class UILinksWidget
 		$oBlock = new BlockObjectPickerDialog($this);
 		$oPage->AddUiBlock($oBlock);
 
+		$sLinkedSetId = $oBlock->oUILinksWidget->GetLinkedSetId();
+
 		$oDisplayBlock = new DisplayBlock($oFilter, 'search', false);
 		$oBlock->AddSubBlock($oDisplayBlock->GetDisplay($oPage, "SearchFormToAdd_{$sLinkedSetId}",
 			array(
