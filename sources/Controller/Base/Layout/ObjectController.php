@@ -154,7 +154,7 @@ JS;
 		
 		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
-		$sFormPrefix = utils::ReadPostedParam('formPrefix', '', FILTER_SANITIZE_STRING);
+		$sFormPrefix = utils::ReadPostedParam('formPrefix', '', utils::ENUM_SANITIZATION_FILTER_STRING);
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$aErrors = array();
 		$aWarnings = array();
