@@ -4021,8 +4021,16 @@ HTML;
 								if (($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass))) {
 									$aObjData = $aData['data'];
 									// Avoid duplicates on bulk modify
-									if (!in_array($aObjData[$oAttDef->GetExtKeyToRemote()], $oLinkSet->GetColumnAsArray($oAttDef->GetExtKeyToRemote(), false))
-										|| $oAttDef->DuplicatesAllowed()) {
+									$bCanLinkBeCreated = true;
+									// - Special case for n:n links
+									if (
+										($oAttDef instanceof AttributeLinkedSetIndirect)
+										&& (false === $oAttDef->DuplicatesAllowed())
+										&& in_array($aObjData[$oAttDef->GetExtKeyToRemote()], $oLinkSet->GetColumnAsArray($oAttDef->GetExtKeyToRemote(), false))
+									) {
+										$bCanLinkBeCreated = false;
+									}
+									if ($bCanLinkBeCreated) {
 										$oLink = MetaModel::NewObject($sSubClass);
 										$oLink->UpdateObjectFromArray($aObjData);
 										$oLinkSet->AddItem($oLink);
