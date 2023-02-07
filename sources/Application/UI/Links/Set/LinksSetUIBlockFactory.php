@@ -61,13 +61,16 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 
 		$oSetUIBlock->AddJsFileRelPath('js/links/links_set.js');
 
-		// Add button behaviour
-		if (in_array($oAttDef->GetEditMode(), [LINKSET_EDITMODE_ADDREMOVE, LINKSET_EDITMODE_ADDONLY, LINKSET_EDITMODE_INPLACE, LINKSET_EDITMODE_ACTIONS])
-			&& $oHostDbObject !== null) {
-			$sHostClass = get_class($oHostDbObject);
-			$oSetUIBlock->SetHasAddOptionButton(true);
-			$oSetUIBlock->SetAddOptionButtonJsOnClick("CombodoLinkSet.CreateLinkedObject('{$oAttDef->GetLinkedClass()}', '{$oAttDef->GetCode()}', '{$sHostClass}', '{$oHostDbObject->GetKey()}', '{$sTargetField}', '{$sTargetClass}', oWidget{$oSetUIBlock->GetId()} );");
-		}
+//		Remove add button for 3_1_lot1
+//		Linkset controller OperationCreateLinkedObject need the host object to exist, so if we are in creation of the host object (id=-1) the linked object creation doesn't work.
+//
+//		// Add button behaviour
+//		if (in_array($oAttDef->GetEditMode(), [LINKSET_EDITMODE_ADDREMOVE, LINKSET_EDITMODE_ADDONLY, LINKSET_EDITMODE_INPLACE, LINKSET_EDITMODE_ACTIONS])
+//			&& $oHostDbObject !== null) {
+//			$sHostClass = get_class($oHostDbObject);
+//			$oSetUIBlock->SetHasAddOptionButton(true);
+//			$oSetUIBlock->SetAddOptionButtonJsOnClick("CombodoLinkSet.CreateLinkedObject('{$oAttDef->GetLinkedClass()}', '{$oAttDef->GetCode()}', '{$sHostClass}', '{$oHostDbObject->GetKey()}', '{$sTargetField}', '{$sTargetClass}', oWidget{$oSetUIBlock->GetId()} );");
+//		}
 
 		// Current value
 		$aCurrentValues = LinkSetDataTransformer::Decode($oDbObjectSet, $sTargetClass, $sTargetField);
