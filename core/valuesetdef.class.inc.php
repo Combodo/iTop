@@ -284,46 +284,32 @@ class ValueSetObjects extends ValueSetDefinition
 
 		switch ($this->m_sOperation) {
 			case 'equals':
-				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
-				if (count($aAttributes) > 0) {
-					$sClassAlias = $oFilter->GetClassAlias();
-					$aFilters = array();
-					$oValueExpr = new ScalarExpression($this->m_sContains);
-					foreach ($aAttributes as $sAttribute) {
-						$oNewFilter = $oFilter->DeepClone();
-						$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
-						$oCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
-						$oNewFilter->AddConditionExpression($oCondition);
-						$aFilters[] = $oNewFilter;
-					}
-					// Unions are much faster than OR conditions
-					$oFilter = new DBUnionSearch($aFilters);
-				} else {
-					$oValueExpr = new ScalarExpression($this->m_sContains);
-					$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
-					$oNewCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
-					$oFilter->AddConditionExpression($oNewCondition);
-				}
-				break;
 			case 'start_with':
+				if ($this->m_sOperation === 'start_with') {
+					$this->m_sContains .= '%';
+					$sOperator = 'LIKE';
+				} else {
+					$sOperator = '=';
+				}
+
 				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
 				if (count($aAttributes) > 0) {
 					$sClassAlias = $oFilter->GetClassAlias();
 					$aFilters = array();
-					$oValueExpr = new ScalarExpression($this->m_sContains.'%');
+					$oValueExpr = new ScalarExpression($this->m_sContains);
 					foreach ($aAttributes as $sAttribute) {
 						$oNewFilter = $oFilter->DeepClone();
 						$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
-						$oCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+						$oCondition = new BinaryExpression($oNameExpr, $sOperator, $oValueExpr);
 						$oNewFilter->AddConditionExpression($oCondition);
 						$aFilters[] = $oNewFilter;
 					}
 					// Unions are much faster than OR conditions
 					$oFilter = new DBUnionSearch($aFilters);
 				} else {
-					$oValueExpr = new ScalarExpression($this->m_sContains.'%');
+					$oValueExpr = new ScalarExpression($this->m_sContains);
 					$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
-					$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+					$oNewCondition = new BinaryExpression($oNameExpr, $sOperator, $oValueExpr);
 					$oFilter->AddConditionExpression($oNewCondition);
 				}
 				break;
