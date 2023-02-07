@@ -171,15 +171,8 @@ class UILinksWidget
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 
-		$sLinkedSetId = "{$this->m_sAttCode}{$this->m_sNameSuffix}";
-
 		$oBlock = new BlockObjectPickerDialog($this);
 		$oPage->AddUiBlock($oBlock);
-
-		$oBlock->sLinkedSetId = $sLinkedSetId;
-		$oBlock->iInputId = $this->m_sInputId;
-		$oBlock->sLinkedClassName = MetaModel::GetName($this->m_sLinkedClass);
-		$oBlock->sClassName = MetaModel::GetName($this->m_sClass);
 
 		$oDisplayBlock = new DisplayBlock($oFilter, 'search', false);
 		$oBlock->AddSubBlock($oDisplayBlock->GetDisplay($oPage, "SearchFormToAdd_{$sLinkedSetId}",
