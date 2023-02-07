@@ -281,6 +281,9 @@ JS;
 					$sClassIcon = MetaModel::GetClassIcon($sClass);
 					$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 
+					// Important: This is a temporary fix for N°5951, we need to discuss the DBObject::DBInsertNoReload() sequence before going further
+					$oObj->SetKey(-1);
+
 					$oPage->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 					if (!empty($aIssues)) {
 						$oPage->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
