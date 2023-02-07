@@ -74,37 +74,4 @@ class LinkSetModel
 	}
 
 
-	/**
-	 * Convert edit_mode to relation type.
-	 *
-	 * @return string|null
-	 */
-	static public function ConvertEditModeToRelationType(AttributeLinkedSet $oAttDef): ?string
-	{
-		switch ($oAttDef->GetEditMode()) {
-			case LINKSET_EDITMODE_INPLACE:
-				return LINKSET_RELATIONTYPE_PROPERTY;
-			case LINKSET_EDITMODE_ADDREMOVE:
-				return LINKSET_RELATIONTYPE_LINK;
-			default:
-				return null;
-		}
-	}
-
-	/**
-	 * Convert edit_mode to read only.
-	 *
-	 * @return bool
-	 */
-	static public function ConvertEditModeToReadOnly(AttributeLinkedSet $oAttDef): bool
-	{
-		switch ($oAttDef->GetEditMode()) {
-			case LINKSET_EDITMODE_NONE:
-			case LINKSET_EDITMODE_ADDONLY:
-				return true;
-
-			default:
-				return false;
-		}
-	}
 }

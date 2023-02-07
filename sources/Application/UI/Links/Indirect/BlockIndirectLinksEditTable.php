@@ -187,19 +187,16 @@ class BlockIndirectLinksEditTable extends UIContentBlock
 		}
 
 		// Toolbar and actions
-		if (!LinkSetModel::ConvertEditModeToReadOnly($this->oAttributeLinkedSetIndirect)) {
-			$oToolbar = ToolbarUIBlockFactory::MakeForButton();
-			$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink');
-			$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();");
-			$oActionButtonUnlink->AddDataAttribute('action', 'detach');
-			$oToolbar->AddSubBlock($oActionButtonUnlink);
-			$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link');
-			$oActionButtonLink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
-			$oActionButtonLink->AddDataAttribute('action', 'add');
-			$oToolbar->AddSubBlock($oActionButtonLink);
-			$oTablePanel->AddToolbarBlock($oToolbar);
-		}
-
+		$oToolbar = ToolbarUIBlockFactory::MakeForButton();
+		$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Remove'));
+		$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();");
+		$oActionButtonUnlink->AddDataAttribute('action', 'detach');
+		$oToolbar->AddSubBlock($oActionButtonUnlink);
+		$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral(Dict::Format('UI:AddAnExisting_Class', MetaModel::GetName($this->oAttributeLinkedSetIndirect->GetLinkedClass())));
+		$oActionButtonLink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
+		$oActionButtonLink->AddDataAttribute('action', 'add');
+		$oToolbar->AddSubBlock($oActionButtonLink);
+		$oTablePanel->AddToolbarBlock($oToolbar);
 		$oTablePanel->AddSubBlock($oDataTable);
 
 		$this->AddSubBlock($oTablePanel);
@@ -424,14 +421,12 @@ JS
 	{
 		$aRowActions = array();
 
-		if (!LinkSetModel::ConvertEditModeToReadOnly($this->oAttributeLinkedSetIndirect)) {
-			$aRowActions[] = array(
-				'label'         => 'UI:Links:ActionRow:Detach',
-				'tooltip'       => 'UI:Links:ActionRow:Detach+',
-				'icon_classes'  => 'fas fa-minus',
-				'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
-			);
-		}
+		$aRowActions[] = array(
+			'label'         => 'UI:Links:ActionRow:Detach',
+			'tooltip'       => 'UI:Links:ActionRow:Detach+',
+			'icon_classes'  => 'fas fa-minus',
+			'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
+		);
 
 		return $aRowActions;
 	}

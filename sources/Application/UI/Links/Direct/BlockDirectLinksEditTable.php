@@ -190,35 +190,35 @@ class BlockDirectLinksEditTable extends UIContentBlock
 				break;
 
 			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
-				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link', 'link');
-				$oActionButtonLink->AddDataAttribute('action', 'add');
-				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('selectToAdd');");
-				$oToolbar->AddSubBlock($oActionButtonLink);
-				break;
-
-			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
-				$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral('Create', 'create');
+				$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral(Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())));
 				$oActionButtonCreate->AddDataAttribute('action', 'create');
 				$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('createRow');");
 				$oToolbar->AddSubBlock($oActionButtonCreate);
-				$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete', 'delete');
+				break;
+
+			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
+			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
+				$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral(Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())));
+				$oActionButtonCreate->AddDataAttribute('action', 'create');
+				$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('createRow');");
+				$oToolbar->AddSubBlock($oActionButtonCreate);
+				$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete', Dict::S('UI:Button:Delete'));
 				$oActionButtonDelete->AddDataAttribute('action', 'delete');
 				$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('deleteSelection');");
 				$oToolbar->AddSubBlock($oActionButtonDelete);
 				break;
 
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
-				$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral('Unlink', 'unlink');
-				$oActionButtonUnlink->AddDataAttribute('action', 'detach');
-				$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('removeSelection');");
-				$oToolbar->AddSubBlock($oActionButtonUnlink);
-				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral('Link', 'link');
+				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral(Dict::Format('UI:AddAnExisting_Class', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())));
 				$oActionButtonLink->AddDataAttribute('action', 'add');
 				$oActionButtonLink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('selectToAdd');");
 				$oToolbar->AddSubBlock($oActionButtonLink);
+				$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Remove'));
+				$oActionButtonUnlink->AddDataAttribute('action', 'detach');
+				$oActionButtonUnlink->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('removeSelection');");
+				$oToolbar->AddSubBlock($oActionButtonUnlink);
 				break;
 
-			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
 			default:
 
 		}
@@ -226,6 +226,23 @@ class BlockDirectLinksEditTable extends UIContentBlock
 		return $oToolbar;
 	}
 
+	private function HasCheckbox()
+	{
+		// until a full link set refactoring (continue using edit_mode property)
+		switch ($this->oAttributeLinkedSet->GetEditMode()) {
+
+			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
+			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
+				return true;
+
+			case LINKSET_EDITMODE_NONE: // The linkset is read-only
+			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
+			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
+			default:
+				return false;
+
+		}
+	}
 
 	/**
 	 * Return table rows.
@@ -277,28 +294,35 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	{
 		$aRowActions = array();
 
-		if (!LinkSetModel::ConvertEditModeToReadOnly($this->oAttributeLinkedSet)) {
+		// until a full link set refactoring (continue using edit_mode property)
+		switch ($this->oAttributeLinkedSet->GetEditMode()) {
+			case LINKSET_EDITMODE_NONE: // The linkset is read-only
+				break;
 
-			switch (LinkSetModel::ConvertEditModeToRelationType($this->oAttributeLinkedSet)) {
+			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
+				break;
 
-				case LINKSET_RELATIONTYPE_LINK:
-					$aRowActions[] = array(
-						'label'         => 'UI:Links:ActionRow:Detach',
-						'tooltip'       => 'UI:Links:ActionRow:Detach+',
-						'icon_classes'  => 'fas fa-minus',
-						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
-					);
-					break;
+			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
+			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
+				$aRowActions[] = array(
+					'label'         => 'UI:Links:ActionRow:Delete',
+					'tooltip'       => 'UI:Links:ActionRow:Delete+',
+					'icon_classes'  => 'fas fa-trash',
+					'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
+				);
+				break;
 
-				case LINKSET_RELATIONTYPE_PROPERTY:
-					$aRowActions[] = array(
-						'label'         => 'UI:Links:ActionRow:Delete',
-						'tooltip'       => 'UI:Links:ActionRow:Delete+',
-						'icon_classes'  => 'fas fa-trash',
-						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
-					);
-					break;
-			}
+			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
+				$aRowActions[] = array(
+					'label'         => 'UI:Links:ActionRow:Detach',
+					'tooltip'       => 'UI:Links:ActionRow:Detach+',
+					'icon_classes'  => 'fas fa-minus',
+					'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
+				);
+				break;
+
+			default:
+
 		}
 
 		return $aRowActions;
