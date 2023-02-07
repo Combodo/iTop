@@ -29,7 +29,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Links:ActionRow:Modify'                     => 'Modify',
 	'UI:Links:ActionRow:Modify+'                    => 'Modify this object',
 	'UI:Links:ActionRow:Modify:Modal:Title'         => 'Modify an object',
-	
+
+	// Action
+	'UI:Links:New:Modal:Title'                      => 'Create an object',
+
 	// Bulk
 	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Link all objects',
 	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Unlink all objects',
