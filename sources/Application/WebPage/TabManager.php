@@ -342,16 +342,29 @@ class TabManager
 				$oTabContainer = $this->m_aTabs[$sTabContainer];
 			}
 
+			// For title, if none given, try to fallback on a dict entry by convention (dict entry code = tab code)
 			$sTitle = ($sTabTitle !== null) ? Dict::S($sTabTitle) : Dict::S($sTabCode);
+
+			// For description, if none given, try to fallback on a dict entry by convention (dict entry code = tab code followed by a "+" sign) but only if an entry exists, otherwise it would display a tooltip with a dict entry code which is not slick (eg. "Tab:Title:Foo+")
+			$sDescription = null;
+			if ($sTabDescription !== null) {
+				$sDescription = Dict::S($sTabDescription);
+			} else {
+				$sFallbackDescriptionDictEntryCode = $sTabCode."+";
+				$sFallbackDescription = Dict::S($sFallbackDescriptionDictEntryCode);
+				if ($sFallbackDescriptionDictEntryCode !== $sFallbackDescription) {
+					$sDescription = $sFallbackDescription;
+				}
+			}
 
 			switch ($sTabType) {
 				case static::ENUM_TAB_TYPE_AJAX:
-					$oTab = $oTabContainer->AddAjaxTab($sTabCode, $sTitle, $sPlaceholder, $sTabDescription);
+					$oTab = $oTabContainer->AddAjaxTab($sTabCode, $sTitle, $sPlaceholder, $sDescription);
 					break;
 
 				case static::ENUM_TAB_TYPE_HTML:
 				default:
-					$oTab = $oTabContainer->AddTab($sTabCode, $sTitle, $sTabDescription);
+					$oTab = $oTabContainer->AddTab($sTabCode, $sTitle, $sDescription);
 					break;
 			}
 		} else {
