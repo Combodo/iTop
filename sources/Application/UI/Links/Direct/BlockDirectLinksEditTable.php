@@ -226,24 +226,6 @@ class BlockDirectLinksEditTable extends UIContentBlock
 		return $oToolbar;
 	}
 
-	private function HasCheckbox()
-	{
-		// until a full link set refactoring (continue using edit_mode property)
-		switch ($this->oAttributeLinkedSet->GetEditMode()) {
-
-			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
-			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
-				return true;
-
-			case LINKSET_EDITMODE_NONE: // The linkset is read-only
-			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
-			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
-			default:
-				return false;
-
-		}
-	}
-
 	/**
 	 * Return table rows.
 	 *
