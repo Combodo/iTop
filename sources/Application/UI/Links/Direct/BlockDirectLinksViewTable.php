@@ -49,7 +49,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 		}
 
 		// Add creation in modal if the linkset is not readonly
-		if (!$this->oAttDef->GetReadOnly()) {
+		if ($this->oAttDef->GetEditMode() != LINKSET_EDITMODE_NONE) {
 			$aExtraParams['creation_in_modal_is_allowed'] = true;
 			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
 		}
@@ -68,6 +68,12 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 				break;
 
 			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
+				$aRowActions[] = array(
+					'label'         => 'UI:Links:ActionRow:Modify',
+					'tooltip'       => 'UI:Links:ActionRow:Modify+',
+					'icon_classes'  => 'fas fa-pen',
+					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
+				);
 				break;
 
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
@@ -112,7 +118,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 				break;
 
 			default:
-
+				break;
 		}
 
 		return $aRowActions;
