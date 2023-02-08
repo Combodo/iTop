@@ -1209,24 +1209,22 @@
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
     $sKnownErrorClass = 'KnownError';
+    $sTabCode = 'Class:UserRequest:KnownErrorList';
     if (MetaModel::IsValidClass($sKnownErrorClass)) {
 			//Search for known errors
-			$oPage->SetCurrentTab('Class:UserRequest:KnownErrorList');
 			$iTicketID = $this->GetKey();;
 			$oKnownErrorSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT KnownError AS ke JOIN lnkErrorToFunctionalCI AS l1 ON l1.error_id=ke.id JOIN FunctionalCI AS ci ON l1.functionalci_id=ci.id JOIN lnkFunctionalCIToTicket AS l2 ON l2.functionalci_id=ci.id WHERE l2.ticket_id=$iTicketID"));
 			$iNumberKE=$oKnownErrorSet->count();
-			if ($iNumberKE > 0)
-			{
-				$oPage->SetCurrentTab('Class:UserRequest:KnownErrorList', Dict::S('Class:UserRequest:KnownErrorList')." ($iNumberKE)");
-			}
-			else
-			{
-				$oPage->SetCurrentTab('Class:UserRequest:KnownErrorList');
-			}
+      if ($iNumberKE > 0) {
+           $oPage->SetCurrentTab($sTabCode, Dict::S($sTabCode)." ($iNumberKE)", Dict::S($sTabCode."+"));
+      } else {
+           $oPage->SetCurrentTab($sTabCode, Dict::S($sTabCode), Dict::S($sTabCode."+"));
+      }
 			self::DisplaySet($oPage, $oKnownErrorSet, [
         'menu' => false,
-        'panel_title' => Dict::S('Class:UserRequest:KnownErrorList'),
+        'panel_title' => Dict::S($sTabCode),
         'panel_icon' => MetaModel::GetClassIcon($sKnownErrorClass, false),
+        'panel_title_tooltip' => Dict::S($sTabCode."+"),
       ]);
 		}
 	}]]></code>

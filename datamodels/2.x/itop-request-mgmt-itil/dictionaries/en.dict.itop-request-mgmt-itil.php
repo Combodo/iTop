@@ -35,6 +35,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Open requests by type',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open requests by customer',
 	'Class:UserRequest:KnownErrorList' => 'Known Errors',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket',
 ));
 
 // Dictionnay conventions
