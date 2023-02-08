@@ -20,23 +20,26 @@
 Dict::Add('FR FR', 'French', 'Français', array(
 
 	// Action row
-	'UI:Links:ActionRow:Detach'                     => 'Détacher',
-	'UI:Links:ActionRow:Detach+'                    => 'Détacher cet objet',
-	'UI:Links:ActionRow:Detach:Confirmation'        => 'Voulez-vous détacher <b>{item}</b> de l\'objet courant ?',
+	'UI:Links:ActionRow:Detach'                     => 'Enlever',
+	'UI:Links:ActionRow:Detach+'                    => 'Enlever cet objet',
+	'UI:Links:ActionRow:Detach:Confirmation'        => 'Voulez-vous Enlever <b>{item}</b> de l\'objet courant ?',
 	'UI:Links:ActionRow:Delete'                     => 'Supprimer',
 	'UI:Links:ActionRow:Delete+'                    => 'Supprimer cet objet',
 	'UI:Links:ActionRow:Delete:Confirmation'        => 'Voulez-vous supprimer <b>{item}</b> de l\'objet courant ?',
 	'UI:Links:ActionRow:Modify'                     => 'Modifier',
 	'UI:Links:ActionRow:Modify+'                    => 'Modifier cet object',
 	'UI:Links:ActionRow:Modify:Modal:Title'         => 'Modifier un object',
-	
+
+	// Action
+	'UI:Links:New:Modal:Title'                      => 'Créer un object',
+
 	// Bulk
-	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Lier à tous les objets',
-	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Détacher de tous les objets',
-	'UI:Links:Bulk:LinkWillBeCreatedFor1Object'     => 'Lier à un objet',
-	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object'    => 'Détacher de un objet',
-	'UI:Links:Bulk:LinkWillBeCreatedForXObjects'    => 'Lier à {count} objets',
-	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects'   => 'Détacher de {count} objets',
+	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Ajouter à tous les objets',
+	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Enlever de tous les objets',
+	'UI:Links:Bulk:LinkWillBeCreatedFor1Object'     => 'Ajouter à un objet',
+	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object'    => 'Enlever de un objet',
+	'UI:Links:Bulk:LinkWillBeCreatedForXObjects'    => 'Ajouter à {count} objets',
+	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects'   => 'Enlever de {count} objets',
 	'UI:Links:Bulk:LinkExistForAllObjects'          => 'Tous les objets sont déjà liés',
 	'UI:Links:Bulk:LinkExistForOneObject'           => 'Un objet est lié',
 	'UI:Links:Bulk:LinkExistForXObjects'            => '{count} objets sont liés',

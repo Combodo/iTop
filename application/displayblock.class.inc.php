@@ -2172,7 +2172,7 @@ class MenuBlock extends DisplayBlock
 			if ($bIsCreationInModalAllowed === true) {
 				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
 					'fas fa-plus',
-					Dict::S('UI:DisplayBlock:List:AddEntry:Tooltip'),
+					Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($sClass)),
 					'UI:Links:New',
 					'',
 					false
@@ -2326,9 +2326,9 @@ class MenuBlock extends DisplayBlock
 	protected function AddNewObjectMenuAction(array &$aActions, string $sClass, string $sDefaultValuesAsUrlParams = ''): void
 	{
 		$aActions['UI:Menu:New'] = [
-			'label' => Dict::S('UI:Menu:New'),
-			'url' => $this->PrepareUrlForStandardMenuAction($sClass, "operation=new&class=$sClass{$sDefaultValuesAsUrlParams}"),
-		] + $this->GetDefaultParamsForMenuAction();
+				'label' => Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($sClass)),
+				'url'   => $this->PrepareUrlForStandardMenuAction($sClass, "operation=new&class=$sClass{$sDefaultValuesAsUrlParams}"),
+			] + $this->GetDefaultParamsForMenuAction();
 	}
 
 	/**

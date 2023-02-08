@@ -49,7 +49,7 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 		}
 
 		// Add creation in modal if the linkset is not readonly
-		if (!$this->oAttDef->GetReadOnly()) {
+		if ($this->oAttDef->GetEditMode() != LINKSET_EDITMODE_NONE) {
 			$aExtraParams['creation_in_modal_is_allowed'] = true;
 			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
 		}
@@ -62,44 +62,63 @@ class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
 	{
 		$aRowActions = array();
 
-		if (!LinkSetModel::ConvertEditModeToReadOnly($this->oAttDef)) {
+		// until a full link set refactoring (continue using edit_mode property)
+		switch ($this->oAttDef->GetEditMode()) {
+			case LINKSET_EDITMODE_NONE: // The linkset is read-only
+				break;
 
-			switch (LinkSetModel::ConvertEditModeToRelationType($this->oAttDef)) {
+			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
+				$aRowActions[] = array(
+					'label'         => 'UI:Links:ActionRow:Modify',
+					'tooltip'       => 'UI:Links:ActionRow:Modify+',
+					'icon_classes'  => 'fas fa-pen',
+					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
+				);
+				break;
 
-				case LINKSET_RELATIONTYPE_LINK:
-					$aRowActions[] = array(
-						'label'         => 'UI:Links:ActionRow:Detach',
-						'tooltip'       => 'UI:Links:ActionRow:Detach+',
-						'icon_classes'  => 'fas fa-minus',
-						'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DetachLinkedObject', aRowData['{$this->sTargetClass}/_key_/raw'], oTrElement);",
-						'confirmation'  => [
-							'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
-							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
-							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
-						],
-					);
-					break;
+			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
+			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
+				$aRowActions[] = array(
+					'label'         => 'UI:Links:ActionRow:Delete',
+					'tooltip'       => 'UI:Links:ActionRow:Delete+',
+					'icon_classes'  => 'fas fa-trash',
+					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement);",
+					'confirmation'  => [
+						'message'                    => 'UI:Links:ActionRow:Delete:Confirmation',
+						'message_row_data'           => "{$this->sTargetClass}/hyperlink",
+						'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
+					],
+				);
+				$aRowActions[] = array(
+					'label'         => 'UI:Links:ActionRow:Modify',
+					'tooltip'       => 'UI:Links:ActionRow:Modify+',
+					'icon_classes'  => 'fas fa-pen',
+					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
+				);
+				break;
 
-				case LINKSET_RELATIONTYPE_PROPERTY:
-					$aRowActions[] = array(
-						'label'         => 'UI:Links:ActionRow:Delete',
-						'tooltip'       => 'UI:Links:ActionRow:Delete+',
-						'icon_classes'  => 'fas fa-trash',
-						'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement);",
-						'confirmation'  => [
-							'message'                    => 'UI:Links:ActionRow:Delete:Confirmation',
-							'message_row_data'           => "{$this->sTargetClass}/hyperlink",
-							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
-						],
-					);
-					break;
-			}
-			$aRowActions[] = array(
-				'label'         => 'UI:Links:ActionRow:Modify',
-				'tooltip'       => 'UI:Links:ActionRow:Modify+',
-				'icon_classes'  => 'fas fa-pen',
-				'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
-			);
+			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
+				$aRowActions[] = array(
+					'label'         => 'UI:Links:ActionRow:Detach',
+					'tooltip'       => 'UI:Links:ActionRow:Detach+',
+					'icon_classes'  => 'fas fa-minus',
+					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DetachLinkedObject', aRowData['{$this->sTargetClass}/_key_/raw'], oTrElement);",
+					'confirmation'  => [
+						'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
+						'message_row_data'           => "{$this->sTargetClass}/hyperlink",
+						'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
+					],
+				);
+				$aRowActions[] = array(
+					'label'         => 'UI:Links:ActionRow:Modify',
+					'tooltip'       => 'UI:Links:ActionRow:Modify+',
+					'icon_classes'  => 'fas fa-pen',
+					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
+				);
+				break;
+
+			default:
+				break;
 		}
 
 		return $aRowActions;

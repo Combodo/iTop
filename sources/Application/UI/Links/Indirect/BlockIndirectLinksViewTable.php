@@ -75,28 +75,24 @@ class BlockIndirectLinksViewTable extends AbstractBlockLinksViewTable
 	{
 		$aRowActions = array();
 
-		if (!LinkSetModel::ConvertEditModeToReadOnly($this->oAttDef)) {
+		$aRowActions[] = array(
+			'label'         => 'UI:Links:ActionRow:Detach',
+			'tooltip'       => 'UI:Links:ActionRow:Detach+',
+			'icon_classes'  => 'fas fa-minus',
+			'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['Link/_key_/raw'], oTrElement);",
+			'confirmation'  => [
+				'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
+				'message_row_data'           => "Remote/hyperlink",
+				'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
+			],
+		);
 
-			$aRowActions[] = array(
-				'label'         => 'UI:Links:ActionRow:Detach',
-				'tooltip'       => 'UI:Links:ActionRow:Detach+',
-				'icon_classes'  => 'fas fa-minus',
-				'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['Link/_key_/raw'], oTrElement);",
-				'confirmation'  => [
-					'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
-					'message_row_data'           => "Remote/hyperlink",
-					'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
-				],
-			);
-
-			$aRowActions[] = array(
-				'label'         => 'UI:Links:ActionRow:Modify',
-				'tooltip'       => 'UI:Links:ActionRow:Modify+',
-				'icon_classes'  => 'fas fa-pen',
-				'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['Link/_key_/raw']);",
-			);
-
-		}
+		$aRowActions[] = array(
+			'label'         => 'UI:Links:ActionRow:Modify',
+			'tooltip'       => 'UI:Links:ActionRow:Modify+',
+			'icon_classes'  => 'fas fa-pen',
+			'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['Link/_key_/raw']);",
+		);
 
 		return $aRowActions;
 	}
