@@ -202,8 +202,8 @@ class BlockDirectLinksEditTable extends UIContentBlock
 				$oActionButtonCreate->AddDataAttribute('action', 'create');
 				$oActionButtonCreate->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('createRow');");
 				$oToolbar->AddSubBlock($oActionButtonCreate);
-				$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral('Delete', Dict::S('UI:Button:Delete'));
-				$oActionButtonDelete->AddDataAttribute('action', 'delete');
+			$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Delete'));
+			$oActionButtonDelete->AddDataAttribute('action', 'delete');
 				$oActionButtonDelete->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('deleteSelection');");
 				$oToolbar->AddSubBlock($oActionButtonDelete);
 				break;

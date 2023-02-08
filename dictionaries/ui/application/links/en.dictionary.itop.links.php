@@ -20,9 +20,9 @@
 Dict::Add('EN US', 'English', 'English', array(
 
 	// Action row
-	'UI:Links:ActionRow:Detach'                     => 'Detach',
-	'UI:Links:ActionRow:Detach+'                    => 'Detach this object',
-	'UI:Links:ActionRow:Detach:Confirmation'        => 'Do you really want to detach <b>{item}</b> from current object ?',
+	'UI:Links:ActionRow:Detach'                     => 'Remove',
+	'UI:Links:ActionRow:Detach+'                    => 'Remove this object',
+	'UI:Links:ActionRow:Detach:Confirmation'        => 'Do you really want to remove <b>{item}</b> from current object ?',
 	'UI:Links:ActionRow:Delete'                     => 'Delete',
 	'UI:Links:ActionRow:Delete+'                    => 'Delete this object',
 	'UI:Links:ActionRow:Delete:Confirmation'        => 'Do you really want to delete <b>{item}</b> from current object ?',
