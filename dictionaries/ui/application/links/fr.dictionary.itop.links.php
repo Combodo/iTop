@@ -34,11 +34,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Links:New:Modal:Title'                      => 'Créer un object',
 
 	// Bulk
-	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Lier à tous les objets',
+	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Ajouter à tous les objets',
 	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Enlever de tous les objets',
-	'UI:Links:Bulk:LinkWillBeCreatedFor1Object'     => 'Lier à un objet',
+	'UI:Links:Bulk:LinkWillBeCreatedFor1Object'     => 'Ajouter à un objet',
 	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object'    => 'Enlever de un objet',
-	'UI:Links:Bulk:LinkWillBeCreatedForXObjects'    => 'Lier à {count} objets',
+	'UI:Links:Bulk:LinkWillBeCreatedForXObjects'    => 'Ajouter à {count} objets',
 	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects'   => 'Enlever de {count} objets',
 	'UI:Links:Bulk:LinkExistForAllObjects'          => 'Tous les objets sont déjà liés',
 	'UI:Links:Bulk:LinkExistForOneObject'           => 'Un objet est lié',

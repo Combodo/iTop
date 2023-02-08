@@ -34,12 +34,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Links:New:Modal:Title'                      => 'Create an object',
 
 	// Bulk
-	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Link all objects',
-	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Unlink all objects',
-	'UI:Links:Bulk:LinkWillBeCreatedFor1Object'     => 'Link one object',
-	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object'    => 'Unlink one object',
-	'UI:Links:Bulk:LinkWillBeCreatedForXObjects'    => 'Link {count} objects',
-	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects'   => 'Unlink {count} objects',
+	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Add to all objects',
+	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Remove from all objects',
+	'UI:Links:Bulk:LinkWillBeCreatedFor1Object'     => 'Add to one object',
+	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object'    => 'Remove from one object',
+	'UI:Links:Bulk:LinkWillBeCreatedForXObjects'    => 'Add {count} objects',
+	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects'   => 'Remove {count} objects',
 	'UI:Links:Bulk:LinkExistForAllObjects'          => 'All objets are already linked',
 	'UI:Links:Bulk:LinkExistForOneObject'           => 'One object is linked',
 	'UI:Links:Bulk:LinkExistForXObjects'            => '{count} objects are linked',
