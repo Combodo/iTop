@@ -678,6 +678,15 @@
           <duplicates/>
           <read_only>false</read_only>
         </field>
+        <field id="user_list" xsi:type="AttributeLinkedSet">
+          <linked_class>User</linked_class>
+          <ext_key_to_me>contactid</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
+        </field>
       </fields>
       <methods>
         <method id="CheckToDelete">
@@ -762,6 +771,9 @@
           <items>
             <item id="team_list">
               <rank>10</rank>
+            </item>
+            <item id="user_list">
+              <rank>20</rank>
             </item>
             <item id="col:col1">
               <rank>40</rank>

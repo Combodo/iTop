@@ -176,6 +176,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller',
+	'Class:Person/Attribute:user_list' => 'User',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Picture',
