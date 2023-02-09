@@ -1,0 +1,83 @@
+<Set>
+    <Model alias="Model" id="1">
+        <name>1050</name>
+        <brand_id>6</brand_id>
+        <brand_id_friendlyname>HPE</brand_id_friendlyname>
+        <brand_name>HPE</brand_name>
+        <type>Storage System</type>
+        <finalclass>Model</finalclass>
+        <friendlyname>1050</friendlyname>
+    </Model>
+    <Model alias="Model" id="2">
+        <name>42U NetShelter SX</name>
+        <brand_id>5</brand_id>
+        <brand_id_friendlyname>DELL</brand_id_friendlyname>
+        <brand_name>DELL</brand_name>
+        <type>Rack</type>
+        <finalclass>Model</finalclass>
+        <friendlyname>42U NetShelter SX</friendlyname>
+    </Model>
+    <Model alias="Model" id="3">
+        <name>8851</name>
+        <brand_id>4</brand_id>
+        <brand_id_friendlyname>CISCO</brand_id_friendlyname>
+        <brand_name>CISCO</brand_name>
+        <type>IP Phone</type>
+        <finalclass>Model</finalclass>
+        <friendlyname>8851</friendlyname>
+    </Model>
+    <Model alias="Model" id="4">
+        <name>AP8858EU3</name>
+        <brand_id>5</brand_id>
+        <brand_id_friendlyname>DELL</brand_id_friendlyname>
+        <brand_name>DELL</brand_name>
+        <type>PDU</type>
+        <finalclass>Model</finalclass>
+        <friendlyname>AP8858EU3</friendlyname>
+    </Model>
+    <Model alias="Model" id="5">
+        <name>DL380</name>
+        <brand_id>6</brand_id>
+        <brand_id_friendlyname>HPE</brand_id_friendlyname>
+        <brand_name>HPE</brand_name>
+        <type>Server</type>
+        <finalclass>Model</finalclass>
+        <friendlyname>DL380</friendlyname>
+    </Model>
+    <Model alias="Model" id="6">
+        <name>HP Elitebook 840 G8</name>
+        <brand_id>6</brand_id>
+        <brand_id_friendlyname>HP Inc</brand_id_friendlyname>
+        <brand_name>HP Inc</brand_name>
+        <type>PC</type>
+        <finalclass>Model</finalclass>
+        <friendlyname>HP Elitebook 840 G8</friendlyname>
+    </Model>
+    <Model alias="Model" id="7">
+        <name>HP LaserJet Enterprise 500 MFP M525dn</name>
+        <brand_id>6</brand_id>
+        <brand_id_friendlyname>HP Inc</brand_id_friendlyname>
+        <brand_name>HP Inc</brand_name>
+        <type>Printer</type>
+        <finalclass>Model</finalclass>
+        <friendlyname>HP LaserJet Enterprise 500 MFP M525dn</friendlyname>
+    </Model>
+    <Model alias="Model" id="8">
+        <name>HP Z4 G4</name>
+        <brand_id>6</brand_id>
+        <brand_id_friendlyname>HP Inc</brand_id_friendlyname>
+        <brand_name>HP Inc</brand_name>
+        <type>PC</type>
+        <finalclass>Model</finalclass>
+        <friendlyname>HP Z4 G4</friendlyname>
+    </Model>
+    <Model alias="Model" id="9">
+        <name>R550</name>
+        <brand_id>5</brand_id>
+        <brand_id_friendlyname>DELL</brand_id_friendlyname>
+        <brand_name>DELL</brand_name>
+        <type>Server</type>
+        <finalclass>Model</finalclass>
+        <friendlyname>R550</friendlyname>
+    </Model>
+</Set>
