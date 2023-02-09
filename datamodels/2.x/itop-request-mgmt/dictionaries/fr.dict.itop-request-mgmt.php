@@ -37,6 +37,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Requêtes ouvertes par type',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par organisation',
 	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
+	'Class:UserRequest:KnownErrorList+' => 'Erreurs connues liées à des éléments de configuration impactés par ce ticket',
 	'Menu:UserRequest:MyWorkOrders' => 'Tâches qui me sont assignées',
 	'Menu:UserRequest:MyWorkOrders+' => 'Tâches qui me sont assignées',
 	'Class:Problem:KnownProblemList' => 'Problèmes connus',

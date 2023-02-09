@@ -37,6 +37,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Requêtes ouvertes par type',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par client',
 	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
+	'Class:UserRequest:KnownErrorList+' => 'Erreurs connues liées à des éléments de configuration impactés par ce ticket',
 ));
 
 // Dictionnay conventions
