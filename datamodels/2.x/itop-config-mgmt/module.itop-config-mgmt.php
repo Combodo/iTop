@@ -31,7 +31,6 @@ SetupWebPage::AddModule(
 			'./data/en_us.data.itop-osversion.xml',
 		),
 		'data.sample' => array(
-			'data.sample.brand.xml',
 			'data.sample.model.xml',
 			'data.sample.osfamily.xml',
 			'data.sample.osversion.xml',
