@@ -127,6 +127,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:finalclass' => 'Sous-classe de CI',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Tickets en cours',
+	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Tickets ouverts impactant cet élément de configuration',
 ));
 
 //
@@ -1502,6 +1503,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Server:otherinfo' => 'Autres informations',
 	'Server:power' => 'Alimentation électrique',
 	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
+	'Class:Subnet/Tab:IPUsage+' => 'Utilisation des IPs de ce subnet',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
 	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
 	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',

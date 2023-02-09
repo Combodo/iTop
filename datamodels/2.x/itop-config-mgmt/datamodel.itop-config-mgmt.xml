@@ -227,10 +227,13 @@
 			foreach ($aSearches as $sSubClass => $oSearch)
 			{
 				$sBlockId = __class__.'_opened_'.$sSubClass;
-
-				$oPage->AddUiBlock(\Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory::MakeNeutral(MetaModel::GetName($sSubClass), 2));
 				$oBlock = new DisplayBlock($oSearch, 'list', false);
-				$oBlock->Display($oPage, $sBlockId, array('menu' => false));
+				$oBlock->Display($oPage, $sBlockId, array(
+				    'menu' => false,
+				    'panel_title' => MetaModel::GetName($sSubClass),
+				    'panel_icon' => MetaModel::GetClassIcon($sSubClass, false)
+				    )
+				);
 			}
 		}
 	}]]></code>
@@ -5139,7 +5142,12 @@
         $oIfFilter = DBObjectSearch::FromOQL("SELECT IPInterface AS if WHERE INET_ATON(if.ipaddress) >= INET_ATON('$sIPMin') AND INET_ATON(if.ipaddress) <= INET_ATON('$sIPMax')");
         $oIfSet = new CMDBObjectSet($oIfFilter);
         $oBlock = new DisplayBlock($oIfFilter, 'list', false);
-        $oBlock->Display($oPage, 'nwif', array('menu' => false));
+        $oBlock->Display($oPage, 'nwif', array(
+            'menu' => false,
+            'panel_title' => MetaModel::GetName('IPInterface'),
+				    'panel_icon' => MetaModel::GetClassIcon('IPInterface', false)
+            )
+        );
 
         $iCountUsed = $oIfSet->Count();
         $iCountRange = $iIPMax - $iIPMin; // On 32-bit systems the substraction will be computed using floats for values greater than PHP_MAX_INT;

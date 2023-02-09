@@ -132,6 +132,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:finalclass' => 'CI sub-class',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets',
+	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI',
 ));
 
 //
@@ -1522,6 +1523,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Server:otherinfo' => 'Other information',
 	'Server:power' => 'Power supply',
 	'Class:Subnet/Tab:IPUsage' => 'IP Usage',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet are used or not',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
 	'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
 	'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
