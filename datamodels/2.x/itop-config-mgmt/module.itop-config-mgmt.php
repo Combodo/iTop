@@ -26,6 +26,9 @@ SetupWebPage::AddModule(
 			'main.itop-config-mgmt.php',
 		),
 		'data.struct' => array(
+			'./data/en_us.data.itop-brand.xml',
+			'./data/en_us.data.itop-osfamily.xml',
+			'./data/en_us.data.itop-osversion.xml',
 		),
 		'data.sample' => array(
 			'data.sample.brand.xml',
