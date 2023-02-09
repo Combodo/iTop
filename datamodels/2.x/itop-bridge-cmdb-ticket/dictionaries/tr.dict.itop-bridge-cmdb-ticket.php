@@ -52,48 +52,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 ));
 
 //
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'İşlevsel CI / Sağlayıcı Sözleşmesi bağla',
-	'Class:lnkFunctionalCIToProviderContract+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Sağlayıcı Sözleşmesi',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Sağlayıcı Sözleşme Adı',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI Adı',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkFunctionalCIToService' => 'İşlevsel CI / servis bağla',
-	'Class:lnkFunctionalCIToService+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Servis',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Servis Adı',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI Adı',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '~~',
-));
-
-//
 // Class: FunctionalCI
 //
-
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Tedarikçi Sözleşmeleri',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Bu yapılandırma öğesi için tüm tedarikçi sözleşmeleri',
-	'Class:FunctionalCI/Attribute:services_list' => 'Hizmetler',
-	'Class:FunctionalCI/Attribute:services_list+' => 'Bu yapılandırma öğesinden etkilenen tüm hizmetler',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Çağrı Kayıtları',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Bu yapılandırma öğesi için tüm çağrı kayıtları',
 ));

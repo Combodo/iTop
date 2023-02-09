@@ -52,48 +52,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 ));
 
 //
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'väzba - Komponent / Poskytovateľská zmluva',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Poskytovateľská zmluva',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Názov poskytovateľského zmluvy',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'Zariadenie',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Názov CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:lnkFunctionalCIToService' => 'väzba - Komponent / Služba',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Služba',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Názov služby',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'Zariadenie',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'Názov CI',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
-));
-
-//
 // Class: FunctionalCI
 //
-
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Poskytovateľské zmluvy',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
-	'Class:FunctionalCI/Attribute:services_list' => 'Služby',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickety',
 	'Class:FunctionalCI/Attribute:tickets_list+' => '',
 ));
