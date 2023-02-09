@@ -103,7 +103,7 @@
         <finalclass>OS Version</finalclass>
         <friendlyname>9.1</friendlyname>
     </OSVersion>
-    <OSVersion alias="OSVersion" id="140">
+    <OSVersion alias="OSVersion" id="14">
         <name>Roling release</name>
         <osfamily_id>1</osfamily_id>
         <osfamily_id_friendlyname>Arch</osfamily_id_friendlyname>
