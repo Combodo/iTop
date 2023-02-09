@@ -186,7 +186,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => '',
 	'Class:Person/Attribute:user_list' => 'Utilisateurs',
-	'Class:Person/Attribute:user_list+' => 'Les comptes utilisateur associés à cette personne',
+	'Class:Person/Attribute:user_list+' => 'Les comptes utilisateurs associés à cette personne',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nom du manager',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Photo',
