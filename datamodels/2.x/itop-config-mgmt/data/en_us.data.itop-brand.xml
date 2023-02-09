@@ -18,25 +18,25 @@
     <Brand alias="Brand" id="6">
         <name>HP Inc</name>
     </Brand>
-    <Brand alias="Brand" id="6">
+    <Brand alias="Brand" id="7">
         <name>HPE</name>
     </Brand>
-    <Brand alias="Brand" id="7">
+    <Brand alias="Brand" id="8">
         <name>IBM</name>
     </Brand>
-    <Brand alias="Brand" id="8">
+    <Brand alias="Brand" id="9">
         <name>Lenovo</name>
     </Brand>
-    <Brand alias="Brand" id="9">
+    <Brand alias="Brand" id="10">
         <name>Razer</name>
     </Brand>
-    <Brand alias="Brand" id="10">
+    <Brand alias="Brand" id="11">
         <name>Samsung</name>
     </Brand>
-    <Brand alias="Brand" id="11">
+    <Brand alias="Brand" id="12">
         <name>Sony</name>
     </Brand>
-    <Brand alias="Brand" id="12">
+    <Brand alias="Brand" id="13">
         <name>Toshiba</name>
     </Brand>
 </Set>
