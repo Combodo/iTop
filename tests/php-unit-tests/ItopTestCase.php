@@ -175,22 +175,38 @@ class ItopTestCase extends TestCase
 
 
 	/**
+	 * @since 3.1.0
+	 */
+	public function GetNonPublicStaticProperty(string $sClass, string $sProperty)
+	{
+		return $this->GetProperty($sClass, null, $sProperty);
+	}
+
+	/**
 	 * @param object $oObject
 	 * @param string $sProperty
 	 *
 	 * @return mixed property
 	 *
-	 * @throws \ReflectionException
 	 * @since 2.7.8 3.0.3 3.1.0
 	 */
 	public function GetNonPublicProperty(object $oObject, string $sProperty)
 	{
-		$class = new \ReflectionClass(get_class($oObject));
+		return $this->GetProperty(get_class($oObject), $oObject, $sProperty);
+	}
+
+	/**
+	 * @since 3.1.0
+	 */
+	private function GetProperty(string $sClass, ?object $oObject, string $sProperty)
+	{
+		$class = new \ReflectionClass($sClass);
 		$property = $class->getProperty($sProperty);
 		$property->setAccessible(true);
 
 		return $property->getValue($oObject);
 	}
+
 
 	/**
 	 * @param object $oObject

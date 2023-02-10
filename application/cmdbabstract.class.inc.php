@@ -190,6 +190,13 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 	const MAX_UPDATE_LOOP_COUNT = 10;
 
+	/**
+	 * @var array First level classname, second level id, value number of calls done
+	 * @used-by static::RegisterLinkModification()
+	 * @since 3.1.0 N°5906
+	 */
+	protected static $aLinkModificationsStack = [];
+
 
 	/**
 	 * Constructor from a row of data (as a hash 'attcode' => value)
@@ -5747,6 +5754,7 @@ JS
 	 */
 	final protected function FireEventCreateDone(): void
 	{
+		self::CheckLinkModifications($this);
 		$this->FireEvent(EVENT_DB_CREATE_DONE);
 	}
 
@@ -5760,6 +5768,7 @@ JS
 	 */
 	final protected function FireEventUpdateDone(array $aChanges): void
 	{
+		self::CheckLinkModifications($this);
 		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
 	}
 
@@ -5782,8 +5791,46 @@ JS
 	 */
 	final protected function FireEventDeleteDone(): void
 	{
+		self::CheckLinkModifications($this);
 		$this->FireEvent(EVENT_DB_DELETE_DONE);
 	}
+
+	/**
+	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterLinkModification()}
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	final protected static function CheckLinkModifications($oItopObject): void
+	{
+		$sClass = get_class($oItopObject);
+		if (false === MetaModel::IsLinkClass($sClass)) {
+			return;
+		}
+
+		$aLnkClassExternalKeys = MetaModel::GetAttributesList($sClass, [AttributeExternalKey::class]);
+		/** @var \AttributeExternalKey $oExternalKey */
+		foreach ($aLnkClassExternalKeys as $sExternalKeyAttCode) {
+			/** @var \DBObject $oRemoteObject */
+			$sRemoteObjectId = $oItopObject->Get($sExternalKeyAttCode);
+			if ($sRemoteObjectId <= 0) {
+				continue;
+			}
+
+			$oExternalKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
+			$sRemoteClassName = $oExternalKeyAttDef->GetTargetClass();
+			static::RegisterLinkModification($sRemoteClassName, $sRemoteObjectId);
+		}
+	}
+
+	/**
+	 * @since 3.1.0 N°5906
+	 */
+	final protected static function RegisterLinkModification($sClass, $sId): void
+	{
+		// the @ get rid of undefined index warnings
+		@self::$aLinkModificationsStack[$sClass][$sId]++;
+	}
+
 
 	/**
 	 * @inheritDoc
