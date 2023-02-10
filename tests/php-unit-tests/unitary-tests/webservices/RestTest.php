@@ -268,6 +268,10 @@ JSON;
 		curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		// Force disable of certificate check as most of dev / test env have a self-signed certificate
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
 		$sJson = curl_exec($ch);
 		curl_close ($ch);
 
