@@ -4,6 +4,7 @@ namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use DateTime;
 use DBBackup;
 use utils;
 
@@ -101,5 +102,46 @@ class DBBackupTest extends ItopTestCase
 
 		}
 		$this->assertStringEndsWith('--ssl-ca='.DBBackup::EscapeShellArg($sTestCa), $sCliArgsCapathCfg);
+	}
+
+	/**
+	 * @dataProvider MakeNameProvider
+	 * @covers \DBBackup::MakeName
+	 *
+	 * @param string $sInputFormat
+	 * @param \DateTime $oBackupDateTime
+	 * @param string $sExpectedFilename
+	 *
+	 * @return void
+	 */
+	public function testMakeName(string $sInputFormat, DateTime $oBackupDateTime, string $sExpectedFilename): void
+	{
+		$oBackup = new DBBackup(utils::GetConfig());
+		$sTestedFilename = $oBackup->MakeName($sInputFormat, $oBackupDateTime);
+
+		$this->assertEquals($sExpectedFilename, $sTestedFilename, "Backup filename for '$sInputFormat' format doesn't match. Got '$sTestedFilename', expected '$sExpectedFilename'.");
+	}
+
+	public function MakeNameProvider(): array
+	{
+		$oBackupDateTime = DateTime::createFromFormat('Y-m-d H:i:s', '1985-07-30 15:30:59');
+
+		return [
+			'Default format' => [
+				'itopdb-%Y-%m-%d',
+				$oBackupDateTime,
+				'itopdb-1985-07-30',
+			],
+			'With time which is a placeholder that needs to be translated (minutes defined by "%M" when its actually "i" in the transformation matrix)' => [
+				'itopdb-%Y-%m-%d_%H:%M:%S',
+				$oBackupDateTime,
+				'itopdb-1985-07-30_15:30:59',
+			],
+			'With user defined string that would be translated if using \DateTime::format() directly' => [
+				'itopdb-%Y-%m-%d-production',
+				$oBackupDateTime,
+				'itopdb-1985-07-30-production',
+			],
+		];
 	}
 }

@@ -69,7 +69,7 @@ function Usage($oP)
 		$oP->p('auth_user: login, must be administrator');
 		$oP->p('auth_pwd: ...');
 	}
-	$oP->p('backup_file [optional]: name of the file to store the backup into. Follows the PHP strftime format spec. The following placeholders are available: __HOST__, __DB__, __SUBNAME__');
+	$oP->p('backup_file [optional]: name of the file to store the backup into. Follows the PHP strftime() format spec (https://www.php.net/manual/fr/function.strftime.php). The following placeholders are available: __HOST__, __DB__, __SUBNAME__');
 	$oP->p('simulate [optional]: set to check the name of the file that would be created');
 	$oP->p('mysql_bindir [optional]: specify the path for mysqldump');
 

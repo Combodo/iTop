@@ -424,6 +424,35 @@ class utilsTest extends ItopTestCase
 	}
 
 	/**
+	 * @dataProvider StrftimeFormatToDateTimeFormatProvider
+	 * @covers \utils::StrftimeFormatToDateTimeFormat
+	 *
+	 * @param string $sInput
+	 * @param string $sExpectedFormat
+	 *
+	 * @return void
+	 */
+	public function testStrftimeFormatToDateTimeFormat(string $sInput, string $sExpectedFormat)
+	{
+		$sTestedFormat = utils::StrftimeFormatToDateTimeFormat($sInput);
+		$this->assertEquals($sExpectedFormat, $sTestedFormat, "DateTime format transformation for '$sInput' doesn't match. Got '$sTestedFormat', expected '$sExpectedFormat'.");
+	}
+
+	public function StrftimeFormatToDateTimeFormatProvider(): array
+	{
+		return [
+			'Standard date time' => [
+				'%Y-%m-%d %H:%M:%S',
+				'Y-m-d H:i:s',
+			],
+			'All placeholders' => [
+				'%d | %m | %y | %Y | %H | %M | %S | %a | %A | %e | %j | %u | %w | %U | %V | %W | %b | %B | %h | %C | %g | %G | %k | %I | %l | %p | %P | %r | %R | %T | %X | %z | %Z | %c | %D | %F | %s | %x | %n | %t | %%',
+				'd | m | y | Y | H | i | s | D | l | j | z | N | w | %U | W | %W | M | F | M | %C | y | Y | G | h | g | A | a | h:i:s A | H:i | H:i:s | %X | O | T | %c | m/d/y | Y-m-d | U | %x | %n | %t | %',
+			],
+		];
+	}
+
+	/**
 	 * @dataProvider ToCamelCaseProvider
 	 * @covers       utils::ToCamelCase
 	 *

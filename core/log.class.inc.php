@@ -552,6 +552,12 @@ class LogChannels
 	public const NOTIFICATIONS = 'notifications';
 
 	/**
+	 * @var string Everything related to the backup / restore
+	 * @since 3.1.0
+	 */
+	public const BACKUP = 'backup';
+
+	/**
 	 * @since 3.0.0
 	 */
 	public const CLI = 'CLI';

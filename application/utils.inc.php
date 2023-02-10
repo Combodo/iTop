@@ -874,9 +874,48 @@ class utils
 	 */
 	public static function DateTimeFormatToPHP($sOldDateTimeFormat)
 	{
-		$aSearch = array('%d', '%m', '%y', '%Y', '%H', '%i', '%s');
-		$aReplacement = array('d', 'm', 'y', 'Y', 'H', 'i', 's');
+		$aSearch = ['%d', '%m', '%y', '%Y', '%H', '%i', '%s'];
+		$aReplacement = ['d', 'm', 'y', 'Y', 'H', 'i', 's'];
 		return str_replace($aSearch, $aReplacement, $sOldDateTimeFormat);
+	}
+
+	/**
+	 * Convert an old strtime() date/time format specification {@link https://www.php.net/manual/fr/function.strftime.php}
+	 * to a format compatible with \DateTime::format {@link https://www.php.net/manual/fr/datetime.format.php}
+	 *
+	 * Example: '%Y-%m-%d %H:%M:%S' => 'Y-m-d H:i:s'
+	 *
+	 * Note: Not all strftime() formats can be converted, in which case they will be present in the returned string (eg. '%U' or '%W')
+	 *
+	 * @param string $sOldStrftimeFormat
+	 *
+	 * @return string
+	 * @since 3.1.0
+	 */
+	public static function StrftimeFormatToDateTimeFormat(string $sOldStrftimeFormat): string
+	{
+		$aSearch = [
+			'%d', '%m', '%y', '%Y', '%H', '%M', '%S', // Most popular formats
+			'%a', '%A', '%e', '%j', '%u', '%w', // Day formats
+			'%U', '%V', '%W', // Week formats
+			'%b', '%B', '%h', // Month formats
+			'%C', '%g', '%G', // Year formats
+			'%k', '%I', '%l', '%p', '%P', '%r', '%R', '%T', '%X', '%z', '%Z', // Time formats
+			'%c', '%D', '%F', '%s', '%x', // Datetime formats
+			'%n', '%t', '%%', // Misc. formats
+		];
+		$aReplacement = [
+			'd', 'm', 'y', 'Y', 'H', 'i', 's',
+			'D', 'l', 'j', 'z', 'N', 'w',
+			'%U', 'W', '%W',
+			'M', 'F', 'M',
+			'%C', 'y', 'Y',
+			'G', 'h', 'g', 'A', 'a', 'h:i:s A', 'H:i', 'H:i:s', '%X', 'O', 'T',
+			'%c', 'm/d/y', 'Y-m-d', 'U', '%x',
+			'%n', '%t', '%',
+		];
+
+		return str_replace($aSearch, $aReplacement, $sOldStrftimeFormat);
 	}
 
 	/**

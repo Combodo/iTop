@@ -69,7 +69,7 @@ function Usage($oP)
 		$oP->p('auth_user: login, must be administrator');
 		$oP->p('auth_pwd: ...');
 	}
-	$oP->p('backup_file [optional]: name of the file to store the backup into. Follows the PHP strftime format spec. The following placeholders are available: __HOST__, __DB__, __SUBNAME__');
+	$oP->p('backup_file [optional]: name of the file to store the backup into. Follows the PHP strftime() (https://www.php.net/manual/fr/function.strftime.php) format spec. The following placeholders are available: __HOST__, __DB__, __SUBNAME__');
 	$oP->p('mysql_bindir [optional]: specify the path for mysql executable');
 
 	if (utils::IsModeCLI())
@@ -131,7 +131,7 @@ function ExecuteMainOperation($oP){
 		exit;
 	}
 
-// Interpret strftime specifications (like %Y) and database placeholders
+	// Interpret strftime() specifications (like %Y) and database placeholders
 	$oRestore = new MyCliRestore($oP);
 	$oRestore->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 

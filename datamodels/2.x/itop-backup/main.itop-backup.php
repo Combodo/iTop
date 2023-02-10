@@ -163,8 +163,7 @@ class BackupExec extends AbstractWeeklyScheduledProcess
 			//
 			$oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'mysql_bindir', ''));
 
-			$sBackupFileFormat = MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'file_name_format',
-				'__DB__-%Y-%m-%d_%H_%M');
+			$sBackupFileFormat = MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'file_name_format', '__DB__-%Y-%m-%d_%H_%M');
 			$sName = $oBackup->MakeName($sBackupFileFormat);
 			if ($sName == '')
 			{
