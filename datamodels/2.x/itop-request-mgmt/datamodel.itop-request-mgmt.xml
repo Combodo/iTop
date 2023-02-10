@@ -1236,6 +1236,13 @@
           </state>
         </states>
       </lifecycle>
+      <event_listeners>
+        <listener id="UpdateImpactAnalysis">
+          <event>EVENT_DB_LINKS_CHANGED</event>
+          <callback>UpdateImpactedItems</callback>
+          <rank>0</rank>
+        </listener>
+      </event_listeners>
       <methods>
         <method id="GetTicketRefFormat">
           <static>true</static>
@@ -1596,8 +1603,7 @@
           <code><![CDATA[
     protected function OnInsert()
 	{
-        parent::OnInsert();
-		$this->ComputeImpactedItems();
+    parent::OnInsert();
 
 		$this->SetIfNull('last_update', time());
 		$this->SetIfNull('start_date', time());
@@ -1610,12 +1616,8 @@
           <code><![CDATA[
    	protected function OnUpdate()
 	{
-        parent::OnUpdate();
-        $aChanges = $this->ListChanges();
-        if (array_key_exists('functionalcis_list', $aChanges))
-        {
-            $this->UpdateImpactedItems();
-        }
+    parent::OnUpdate();
+
 		$this->Set('last_update', time());
 		$this->UpdateChildRequestLog();
 	}]]></code>
