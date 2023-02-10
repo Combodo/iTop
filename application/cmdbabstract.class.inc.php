@@ -26,7 +26,6 @@ use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\JsPopoverMenuItem;
@@ -5737,7 +5736,7 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCheckToWrite(): void
+	final protected function FireEventCheckToWrite(): void
 	{
 		$this->FireEvent(EVENT_DB_CHECK_TO_WRITE);
 	}
@@ -5746,7 +5745,7 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCreateDone(): void
+	final protected function FireEventCreateDone(): void
 	{
 		$this->FireEvent(EVENT_DB_CREATE_DONE);
 	}
@@ -5759,7 +5758,7 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventUpdateDone(array $aChanges): void
+	final protected function FireEventUpdateDone(array $aChanges): void
 	{
 		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
 	}
@@ -5772,7 +5771,7 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventCheckToDelete(DeletionPlan $oDeletionPlan): void
+	final protected function FireEventCheckToDelete(DeletionPlan $oDeletionPlan): void
 	{
 		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE, ['deletion_plan' => $oDeletionPlan]);
 	}
@@ -5781,7 +5780,7 @@ JS
 	 * @inheritDoc
 	 * @since 3.1.0
 	 */
-	final protected function EventDeleteDone(): void
+	final protected function FireEventDeleteDone(): void
 	{
 		$this->FireEvent(EVENT_DB_DELETE_DONE);
 	}
@@ -5790,7 +5789,7 @@ JS
 	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventComputeValues(): void
+	final protected function FireEventComputeValues(): void
 	{
 		$this->FireEvent(EVENT_DB_COMPUTE_VALUES);
 	}
@@ -5799,7 +5798,7 @@ JS
 	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventArchive(): void
+	final protected function FireEventArchive(): void
 	{
 		$this->FireEvent(EVENT_DB_ARCHIVE);
 	}
@@ -5808,7 +5807,7 @@ JS
 	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	final protected function EventUnArchive(): void
+	final protected function FireEventUnArchive(): void
 	{
 		$this->FireEvent(EVENT_DB_UNARCHIVE);
 	}

@@ -1084,7 +1084,7 @@ abstract class DBObject implements iDisplay
 			if ($aCallInfo["function"] != "ComputeValues") continue;
 			return; //skip!
 		}
-		$this->EventComputeValues();
+		$this->FireEventComputeValues();
 		$this->ComputeValues();
 	}
 
@@ -2361,7 +2361,7 @@ abstract class DBObject implements iDisplay
 
 			// Ultimate check - ensure DB integrity
 			$this->SetReadOnly('No modification allowed during CheckToCreate');
-			$this->EventCheckToWrite();
+			$this->FireEventCheckToWrite();
 			$this->SetReadWrite();
 
 			$this->DoCheckToWrite();
@@ -3067,7 +3067,7 @@ abstract class DBObject implements iDisplay
 		MetaModel::StartReentranceProtection($this);
 
 		try {
-			$this->EventCreateDone();
+			$this->FireEventCreateDone();
 			$this->AfterInsert();
 
 			// Activate any existing trigger
@@ -3349,7 +3349,7 @@ abstract class DBObject implements iDisplay
 			$this->m_aModifiedAtt = array();
 			$bModifiedByUpdateDone = false;
 			try {
-				$this->EventUpdateDone($aChanges);
+				$this->FireEventUpdateDone($aChanges);
 				$this->AfterUpdate();
 				// Save the status as it is reset just after...
 				$bModifiedByUpdateDone = $this->IsModified();
@@ -3710,7 +3710,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		$this->EventDeleteDone();
+		$this->FireEventDeleteDone();
 		$this->AfterDelete();
 
 
@@ -4847,7 +4847,7 @@ abstract class DBObject implements iDisplay
 		}
 		// Check the node itself
 		$this->m_aDeleteIssues = array(); // Ok
-		$this->EventCheckToDelete($oDeletionPlan);
+		$this->FireEventCheckToDelete($oDeletionPlan);
 		$this->DoCheckToDelete($oDeletionPlan);
 		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
 	
@@ -5603,7 +5603,7 @@ abstract class DBObject implements iDisplay
 		$this->DBWriteArchiveFlag(true);
 		$this->m_aCurrValues['archive_flag'] = true;
 		$this->m_aOrigValues['archive_flag'] = true;
-		$this->EventArchive();
+		$this->FireEventArchive();
 	}
 
     /**
@@ -5617,7 +5617,7 @@ abstract class DBObject implements iDisplay
 		$this->m_aOrigValues['archive_flag'] = false;
 		$this->m_aCurrValues['archive_date'] = null;
 		$this->m_aOrigValues['archive_date'] = null;
-		$this->EventUnArchive();
+		$this->FireEventUnArchive();
 	}
 
 
@@ -5897,7 +5897,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCheckToWrite(): void
+	protected function FireEventCheckToWrite(): void
 	{
 	}
 
@@ -5905,7 +5905,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCreateDone(): void
+	protected function FireEventCreateDone(): void
 	{
 	}
 
@@ -5917,7 +5917,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventUpdateDone(array $aChanges): void
+	protected function FireEventUpdateDone(array $aChanges): void
 	{
 	}
 
@@ -5929,7 +5929,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventCheckToDelete(DeletionPlan $oDeletionPlan): void
+	protected function FireEventCheckToDelete(DeletionPlan $oDeletionPlan): void
 	{
 	}
 
@@ -5937,7 +5937,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventDeleteDone(): void
+	protected function FireEventDeleteDone(): void
 	{
 	}
 
@@ -5945,7 +5945,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventComputeValues(): void
+	protected function FireEventComputeValues(): void
 	{
 	}
 
@@ -5953,7 +5953,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventArchive(): void
+	protected function FireEventArchive(): void
 	{
 
 	}
@@ -5962,7 +5962,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function EventUnArchive(): void
+	protected function FireEventUnArchive(): void
 	{
 	}
 }
