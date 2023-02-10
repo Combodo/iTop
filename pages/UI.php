@@ -1561,15 +1561,16 @@ try
 			default: // Menu node rendering (templates)
 			ApplicationMenu::LoadAdditionalMenus();
 			$oMenuNode = ApplicationMenu::GetMenuNode(ApplicationMenu::GetMenuIndexById(ApplicationMenu::GetActiveNodeId()));
-			if (is_object($oMenuNode))
-			{
-				$oMenuNode->RenderContent($oP, $oAppContext->GetAsHash());
-				$oP->set_title($oMenuNode->GetLabel());
-			}
+				if (is_object($oMenuNode)) {
+					$oMenuNode->RenderContent($oP, $oAppContext->GetAsHash());
+					$oP->set_title($oMenuNode->GetLabel());
+				}
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 		}
 	}
+
+	cmdbAbstractObject::ProcessAllDeferedUpdates();
 
 	DisplayWelcomePopup($oP);
 	$oKPI->ComputeAndReport('Compute page');

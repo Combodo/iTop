@@ -5769,6 +5769,8 @@ JS
 	final protected function FireEventUpdateDone(array $aChanges): void
 	{
 		self::CheckLinkModifications($this);
+		$this->ProcessObjectDeferedUpdates();
+
 		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
 	}
 
@@ -5829,6 +5831,38 @@ JS
 	{
 		// the @ get rid of undefined index warnings
 		@self::$aLinkModificationsStack[$sClass][$sId]++;
+	}
+
+	final public function ProcessObjectDeferedUpdates()
+	{
+		$sClass = get_class($this);
+		$sId = $this->GetKey();
+		self::ProcessClassIdDeferedUpdate($sClass, $sId);
+	}
+
+	final private static function ProcessClassIdDeferedUpdate($sClass, $sId)
+	{
+		if ($sClass === self::class) {
+			return;
+		}
+		if (false === isset(self::$aLinkModificationsStack[$sClass][$sId])) {
+			self::ProcessClassIdDeferedUpdate(MetaModel::GetParentClass($sClass), $sId);
+
+			return;
+		}
+
+		unset(self::$aLinkModificationsStack[$sClass][$sId]);
+		$oObject = MetaModel::GetObject($sClass, $sId);
+		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
+	}
+
+	final public static function ProcessAllDeferedUpdates()
+	{
+		foreach (self::$aLinkModificationsStack as $sClass => $aClassInstances) {
+			foreach ($aClassInstances as $sId => $iCallsNumber) {
+				self::ProcessClassIdDeferedUpdate($sClass, $sId);
+			}
+		}
 	}
 
 

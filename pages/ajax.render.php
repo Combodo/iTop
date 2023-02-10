@@ -2556,6 +2556,9 @@ EOF
 				$oPage->p("Invalid query.");
 		}
 	}
+
+	cmdbAbstractObject::ProcessAllDeferedUpdates();
+
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
 } catch (Exception $e) {
