@@ -1394,7 +1394,10 @@ EOF
 				}
 
 				$sListenerRank = (float)($oListener->GetChildText('rank', '0'));
-				$sEvents .= "\n		Combodo\iTop\Service\Events\EventService::RegisterListener(\"$sEventName\", $sEventListener, \$this->m_sObjectUniqId, \"$sListenerId\", null, $sListenerRank, '$sModuleRelativeDir');";
+				$sEvents .= <<<PHP
+
+		Combodo\iTop\Service\Events\EventService::RegisterListener("$sEventName", $sEventListener, \$this->m_sObjectUniqId, [], null, $sListenerRank, '$sModuleRelativeDir');
+PHP;
 			}
 		}
 

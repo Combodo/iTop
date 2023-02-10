@@ -20,6 +20,7 @@ class EventData
 	private string $sEvent;
 	private $mEventSource;
 	private array $aEventData;
+	/** @var array Additional data collected by the listener : they can be set in {@see \Combodo\iTop\Service\Events\EventService::RegisterListener} */
 	private array $aCallbackData;
 
 	/**
@@ -101,13 +102,10 @@ class EventData
 	}
 
 	/**
-	 * Get the data associated with the listener.
-	 * The data were passed when registering the listener.
-	 *
 	 * @api
-	 * @return mixed The data registered with the listener.
+	 * @uses static::$aCallbackData
 	 */
-	public function GetCallbackData()
+	public function GetCallbackData(): array
 	{
 		return $this->aCallbackData;
 	}
