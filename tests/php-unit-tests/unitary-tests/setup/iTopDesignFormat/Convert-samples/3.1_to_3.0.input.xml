@@ -62,6 +62,20 @@
         </field>
       </fields>
     </class>
+    <class id="ClassWithAttributeLinkedSetDisplayStyle">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <display_style>tab</display_style>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetIndirectDisplayStyle">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSetIndirect">
+          <display_style>tab</display_style>
+        </field>
+      </fields>
+    </class>
     <class id="ClassWithEventListeners">
       <event_listeners>
         <listener id="OnUserRequestUpdateDone" _delta="define">

@@ -1126,6 +1126,11 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath('/itop_design/events');
 		$this->RemoveNodeFromXPath('/itop_design/event_listeners');
 		$this->RemoveNodeFromXPath('/itop_design/classes//class/event_listeners');
+
+		// N°3190 - Edit n:n LinkedSetIndirect in object details using a tagset-like widget
+		// - remove display style
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/display_style");
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/display_style");
 	}
 
 	/**

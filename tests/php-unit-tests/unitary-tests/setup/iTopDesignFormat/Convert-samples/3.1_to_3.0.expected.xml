@@ -48,6 +48,18 @@
         <field id="status" xsi:type="AttributeLinkedSetIndirect"/>
       </fields>
     </class>
+    <class id="ClassWithAttributeLinkedSetDisplayStyle">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet">
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetIndirectDisplayStyle">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSetIndirect">
+        </field>
+      </fields>
+    </class>
     <class id="ClassWithEventListeners">
       <methods>
         <method id="OnUpdateDone" _delta="define">
