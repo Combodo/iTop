@@ -50,14 +50,12 @@
     </class>
     <class id="ClassWithAttributeLinkedSetDisplayStyle">
       <fields>
-        <field id="status" xsi:type="AttributeLinkedSet">
-        </field>
+        <field id="status" xsi:type="AttributeLinkedSet"/>
       </fields>
     </class>
     <class id="ClassWithAttributeLinkedSetIndirectDisplayStyle">
       <fields>
-        <field id="status" xsi:type="AttributeLinkedSetIndirect">
-        </field>
+        <field id="status" xsi:type="AttributeLinkedSetIndirect"/>
       </fields>
     </class>
     <class id="ClassWithEventListeners">
