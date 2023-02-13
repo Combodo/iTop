@@ -179,7 +179,10 @@ class ItopTestCase extends TestCase
 	 */
 	public function GetNonPublicStaticProperty(string $sClass, string $sProperty)
 	{
-		return $this->GetProperty($sClass, null, $sProperty);
+		/** @noinspection OneTimeUseVariablesInspection */
+		$oProperty = $this->GetProperty($sClass, $sProperty);
+
+		return $oProperty->getValue();
 	}
 
 	/**
@@ -192,19 +195,22 @@ class ItopTestCase extends TestCase
 	 */
 	public function GetNonPublicProperty(object $oObject, string $sProperty)
 	{
-		return $this->GetProperty(get_class($oObject), $oObject, $sProperty);
+		/** @noinspection OneTimeUseVariablesInspection */
+		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
+
+		return $oProperty->getValue($oObject);
 	}
 
 	/**
 	 * @since 3.1.0
 	 */
-	private function GetProperty(string $sClass, ?object $oObject, string $sProperty)
+	private function GetProperty(string $sClass, string $sProperty): \ReflectionProperty
 	{
 		$class = new \ReflectionClass($sClass);
 		$property = $class->getProperty($sProperty);
 		$property->setAccessible(true);
 
-		return $property->getValue($oObject);
+		return $property;
 	}
 
 
@@ -213,27 +219,34 @@ class ItopTestCase extends TestCase
 	 * @param string $sProperty
 	 * @param $value
 	 *
-	 * @throws \ReflectionException
 	 * @since 2.7.8 3.0.3 3.1.0
 	 */
 	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
 	{
-		$class = new \ReflectionClass(get_class($oObject));
-		$property = $class->getProperty($sProperty);
-		$property->setAccessible(true);
-
-		$property->setValue($oObject, $value);
+		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
+		$oProperty->setValue($oObject, $value);
 	}
 
-	public function RecurseRmdir($dir) {
+	/**
+	 * @since 3.1.0
+	 */
+	public function SetNonPublicStaticProperty(string $sClass, string $sProperty, $value)
+	{
+		$oProperty = $this->GetProperty($sClass, $sProperty);
+		$oProperty->setValue($value);
+	}
+
+	public function RecurseRmdir($dir)
+	{
 		if (is_dir($dir)) {
 			$objects = scandir($dir);
 			foreach ($objects as $object) {
 				if ($object != "." && $object != "..") {
-					if (is_dir($dir.DIRECTORY_SEPARATOR.$object))
+					if (is_dir($dir.DIRECTORY_SEPARATOR.$object)) {
 						$this->RecurseRmdir($dir.DIRECTORY_SEPARATOR.$object);
-					else
+					} else {
 						unlink($dir.DIRECTORY_SEPARATOR.$object);
+					}
 				}
 			}
 			rmdir($dir);

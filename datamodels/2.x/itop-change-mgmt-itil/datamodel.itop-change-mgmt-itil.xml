@@ -1022,8 +1022,7 @@
           <code><![CDATA[
     protected function OnInsert()
 	{
-        parent::OnInsert();
-        $this->UpdateImpactedItems();
+    parent::OnInsert();
 		$this->SetIfNull('creation_date', time());
 		$this->SetIfNull('last_update', time());
 	}]]></code>
@@ -1036,11 +1035,6 @@
     protected function OnUpdate()
   	{
         parent::OnUpdate();
-        $aChanges = $this->ListChanges();
-        if (array_key_exists('functionalcis_list', $aChanges))
-        {
-            $this->UpdateImpactedItems();
-        }
   	    $this->Set('last_update', time());
   	}]]></code>
         </method>

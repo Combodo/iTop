@@ -220,6 +220,13 @@
           <read_only>false</read_only>
         </field>
       </fields>
+      <event_listeners>
+        <listener id="UpdateImpactAnalysis">
+          <event>EVENT_DB_LINKS_CHANGED</event>
+          <callback>UpdateImpactedItems</callback>
+          <rank>0</rank>
+        </listener>
+      </event_listeners>
       <methods>
         <method id="DBInsertNoReload">
           <static>false</static>

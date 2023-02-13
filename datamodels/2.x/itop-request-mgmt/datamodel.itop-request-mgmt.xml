@@ -1236,13 +1236,6 @@
           </state>
         </states>
       </lifecycle>
-      <event_listeners>
-        <listener id="UpdateImpactAnalysis">
-          <event>EVENT_DB_LINKS_CHANGED</event>
-          <callback>UpdateTicketImpactedItems</callback>
-          <rank>0</rank>
-        </listener>
-      </event_listeners>
       <methods>
         <method id="GetTicketRefFormat">
           <static>true</static>
@@ -1621,18 +1614,6 @@
 		$this->Set('last_update', time());
 		$this->UpdateChildRequestLog();
 	}]]></code>
-        </method>
-        <method id="UpdateTicketImpactedItems">
-          <comment></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>EventListener</type>
-          <code><![CDATA[
-public function UpdateTicketImpactedItems(Combodo\iTop\Service\Events\EventData $oEventData) {
-    $this->UpdateImpactedItems();
-    $this->DBWrite();
-}
-            ]]></code>
         </method>
       </methods>
       <presentation>

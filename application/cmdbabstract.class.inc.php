@@ -5820,7 +5820,7 @@ JS
 
 			$oExternalKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
 			$sRemoteClassName = $oExternalKeyAttDef->GetTargetClass();
-			static::RegisterLinkModification($sRemoteClassName, $sRemoteObjectId);
+			self::RegisterLinkModification($sRemoteClassName, $sRemoteObjectId);
 		}
 	}
 
@@ -5849,7 +5849,7 @@ JS
 			return;
 		}
 
-		unset(self::$aLinkModificationsStack[$sClass][$sId]);
+		unset(self::$aLinkModificationsStack[$sClass][$sId]); // FIXME cannot do that, we are on a leaf class
 		$oObject = MetaModel::GetObject($sClass, $sId);
 		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
 	}

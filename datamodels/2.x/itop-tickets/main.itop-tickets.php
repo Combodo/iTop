@@ -258,14 +258,17 @@ class _Ticket extends cmdbAbstractObject
                         $oContactsSet->AddItem($oNewLink);
                     }
                 }
-				break;
+					break;
 			}
 		}
-		if (MetaModel::IsValidClass('FunctionalCI'))
-		{
+		if (MetaModel::IsValidClass('FunctionalCI')) {
 			$this->Set('functionalcis_list', $oCIsSet);
 		}
 		$this->Set('contacts_list', $oContactsSet);
+
+		//FIXME the modified lnk will trigger this method again... What can we do ?? Set a flag to disable event from firing on this object ?
+		// if called withing the object CRUD stack reentrance will be protected by iTop
+		$this->DBUpdate();
 	}
 
 	private function StoreComputedObject(&$aGraphObjects, $oObj)
