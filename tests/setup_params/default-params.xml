@@ -54,6 +54,7 @@
 		<item>itop-bridge-virtualization-storage</item>
 		<item>itop-service-mgmt</item>
 		<item>itop-bridge-cmdb-ticket</item>
+    <item>itop-bridge-cmdb-services</item>
 		<item>itop-request-mgmt</item>
 		<item>itop-portal</item>
 		<item>itop-change-mgmt</item>
