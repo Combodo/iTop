@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
+    <class id="ClassWithCustomZlist">
+      <presentation>
+        <custom_presentations>
+          <custom_presentation id="my-custom-list" _delta="define">
+            <items>
+              <item id="foo">
+                <rank>10</rank>
+              </item>
+            </items>
+          </custom_presentation>
+        </custom_presentations>
+      </presentation>
+    </class>
     <class id="ClassWithAttributeLinkedSetEditModeNone">
       <fields>
         <field id="status" xsi:type="AttributeLinkedSet">
@@ -138,4 +151,13 @@
 ]]></code>
     </listener>
   </event_listeners>
+  <meta>
+    <presentation>
+      <custom_presentations>
+        <custom_presentation id="my-custom-list">
+          <description><![CDATA[Some description of the zlist]]></description>
+        </custom_presentation>
+      </custom_presentations>
+    </presentation>
+  </meta>
 </itop_design>
