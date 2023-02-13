@@ -5849,7 +5849,11 @@ JS
 			return;
 		}
 
-		unset(self::$aLinkModificationsStack[$sClass][$sId]); // FIXME cannot do that, we are on a leaf class
+		$aClassesHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);
+		foreach ($aClassesHierarchy as $sClassInHierarchy) {
+			unset(self::$aLinkModificationsStack[$sClassInHierarchy][$sId]);
+		}
+
 		$oObject = MetaModel::GetObject($sClass, $sId);
 		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
 	}
