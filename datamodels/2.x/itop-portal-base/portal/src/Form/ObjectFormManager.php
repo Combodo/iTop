@@ -1165,11 +1165,7 @@ class ObjectFormManager extends FormManager
 					'origin'    => __CLASS__.'::'.__METHOD__,
 					'obj_class' => get_class($this->oObject),
 				];
-				if ($bIsNew) {
-					$aContext['obj_key'] = 'NULL';
-				} else {
-					$aContext['obj_key'] = $this->oObject->GetKey();
-				}
+				$aContext['obj_key'] = $bIsNew ? 'NULL' : $this->oObject->GetKey();
 				ExceptionLog::LogException($e, $aContext);
 				$bExceptionLogged = true;
 
