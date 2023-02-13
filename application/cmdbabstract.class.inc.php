@@ -5829,8 +5829,11 @@ JS
 	 */
 	final protected static function RegisterLinkModification($sClass, $sId): void
 	{
-		// the @ get rid of undefined index warnings
-		@self::$aLinkModificationsStack[$sClass][$sId]++;
+		if (isset(self::$aLinkModificationsStack[$sClass][$sId])) {
+			self::$aLinkModificationsStack[$sClass][$sId]++;
+		} else {
+			self::$aLinkModificationsStack[$sClass][$sId] = 1;
+		}
 	}
 
 	final public function ProcessObjectDeferedUpdates()
