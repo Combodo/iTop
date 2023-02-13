@@ -15,6 +15,10 @@ use utils;
  */
 class DBBackupTest extends ItopTestCase
 {
+	protected const DUMMY_DB_HOST = 'localhost';
+	protected const DUMMY_DB_NAME = 'itopdb';
+	protected const DUMMY_DB_SUBNAME = 'myitop';
+
 	/**
 	 * @throws \CoreException
 	 * @throws \MySQLException
@@ -116,7 +120,14 @@ class DBBackupTest extends ItopTestCase
 	 */
 	public function testMakeName(string $sInputFormat, DateTime $oBackupDateTime, string $sExpectedFilename): void
 	{
-		$oBackup = new DBBackup(utils::GetConfig());
+		$oConfig = utils::GetConfig();
+
+		// See https://github.com/Combodo/iTop/commit/f7ee21f1d7d1c23910506e9e31b57f33311bd5e0#diff-d693fb790e3463d1aa960c2b8b293532b1bbd12c3b8f885d568d315c404f926aR131
+		$oConfig->Set('db_host', static::DUMMY_DB_HOST);
+		$oConfig->Set('db_name', static::DUMMY_DB_NAME);
+		$oConfig->Set('db_subname', static::DUMMY_DB_SUBNAME);
+
+		$oBackup = new DBBackup($oConfig);
 		$sTestedFilename = $oBackup->MakeName($sInputFormat, $oBackupDateTime);
 
 		$this->assertEquals($sExpectedFilename, $sTestedFilename, "Backup filename for '$sInputFormat' format doesn't match. Got '$sTestedFilename', expected '$sExpectedFilename'.");
@@ -128,19 +139,24 @@ class DBBackupTest extends ItopTestCase
 
 		return [
 			'Default format' => [
-				'itopdb-%Y-%m-%d',
+				'__DB__-%Y-%m-%d',
 				$oBackupDateTime,
-				'itopdb-1985-07-30',
+				static::DUMMY_DB_NAME.'-1985-07-30',
+			],
+			'With all standard DB placeholders' => [
+				'__HOST__-__DB__-__SUBNAME__-%Y-%m-%d',
+				$oBackupDateTime,
+				static::DUMMY_DB_HOST.'-'.static::DUMMY_DB_NAME.'-'.static::DUMMY_DB_SUBNAME.'-1985-07-30',
 			],
 			'With time which is a placeholder that needs to be translated (minutes defined by "%M" when its actually "i" in the transformation matrix)' => [
-				'itopdb-%Y-%m-%d_%H:%M:%S',
+				'__DB__-%Y-%m-%d_%H:%M:%S',
 				$oBackupDateTime,
-				'itopdb-1985-07-30_15:30:59',
+				static::DUMMY_DB_NAME.'-1985-07-30_15:30:59',
 			],
 			'With user defined string that would be translated if using \DateTime::format() directly' => [
-				'itopdb-%Y-%m-%d-production',
+				'__DB__-%Y-%m-%d-production',
 				$oBackupDateTime,
-				'itopdb-1985-07-30-production',
+				static::DUMMY_DB_NAME.'-1985-07-30-production',
 			],
 		];
 	}
