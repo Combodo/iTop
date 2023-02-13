@@ -61,7 +61,7 @@ class RestTest extends ItopDataTestCase
 	{
 		$this->iJsonDataMode = $iJsonDataMode;
 
-		//create ticket
+		// Create ticket
 		$description = date('dmY H:i:s');
 		$sOutputJson = $this->CreateTicketViaApi($description);
 		$this->debug("Output: '$sOutputJson'");
@@ -78,20 +78,21 @@ class RestTest extends ItopDataTestCase
 		$sUserRequestKey = $this->array_key_first($aJson['objects']);
 		$this->assertStringContainsString('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
-		$sExpectedJsonOuput=<<<JSON
+
+		$sExpectedJsonOuput = <<<JSON
 {"objects":{"UserRequest::$iId":{"code":0,"message":"created","class":"UserRequest","key":$iId,"fields":{"id":$iId}}},"code":0,"message":null}
 JSON;
-		$this->assertEquals($sExpectedJsonOuput, $sOutputJson);
+		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sOutputJson);
 
-		$sExpectedJsonOuput=<<<JSON
+		$sExpectedJsonOuput = <<<JSON
 {"objects":{"UserRequest::$iId":{"code":0,"message":"","class":"UserRequest","key":"$iId","fields":{"id":"$iId","description":"<p>$description<\/p>"}}},"code":0,"message":"Found: 1"}
 JSON;
-		$this->assertEquals($sExpectedJsonOuput, $this->GetTicketViaRest($iId));
+		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $this->GetTicketViaRest($iId));
 
 		$aCmdbChangeUserInfo = $this->GetCmdbChangeUserInfo($iId);
 		$this->assertEquals(['CMDBChangeOpCreate' => 'test'], $aCmdbChangeUserInfo);
 
-		//delete ticket
+		// Delete ticket
 		$this->DeleteTicketFromApi($iId);
 	}
 
@@ -134,20 +135,21 @@ JSON;
 		$this->assertStringContainsString('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
 
-		//update ticket
+		// Update ticket
 		$description = date('Ymd H:i:s');
-		$sExpectedJsonOuput=<<<JSON
+		$sExpectedJsonOuput = <<<JSON
 {"objects":{"UserRequest::$iId":{"code":0,"message":"updated","class":"UserRequest","key":"$iId","fields":{"description":"<p>$description<\/p>"}}},"code":0,"message":null}
 JSON;
-		$this->assertEquals($sExpectedJsonOuput, $this->UpdateTicketViaApi($iId, $description));
+		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $this->UpdateTicketViaApi($iId, $description));
 
 		$aCmdbChangeUserInfo = $this->GetCmdbChangeUserInfo($iId);
 		$this->assertEquals(['CMDBChangeOpCreate' => 'test', 'CMDBChangeOpSetAttributeHTML' => 'test'], $aCmdbChangeUserInfo);
 
 
-		//delete ticket
+		// Delete ticket
 		$this->DeleteTicketFromApi($iId);
 	}
+
 	/**
 	 * @dataProvider BasicProvider
 	 * @param int $iJsonDataMode
@@ -156,7 +158,7 @@ JSON;
 	{
 		$this->iJsonDataMode = $iJsonDataMode;
 
-		//create ticket
+		// Create ticket
 		$description = date('dmY H:i:s');
 
 		$sOuputJson = $this->CreateTicketViaApi($description);
@@ -174,16 +176,16 @@ JSON;
 		$this->assertStringContainsString('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
 
-		//delete ticket
-		$sExpectedJsonOuput=<<<JSON
-{"objects":{"UserRequest::$iId"
+		// Delete ticket
+		$sExpectedJsonOuput = <<<JSON
+"objects":{"UserRequest::$iId"
 JSON;
 		$this->assertStringContainsString($sExpectedJsonOuput, $this->DeleteTicketFromApi($iId));
 
-		$sExpectedJsonOuput=<<<JSON
+		$sExpectedJsonOuput = <<<JSON
 {"objects":null,"code":0,"message":"Found: 0"}
 JSON;
-		$this->assertEquals($sExpectedJsonOuput, $this->GetTicketViaRest($iId));
+		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $this->GetTicketViaRest($iId));
 	}
 
 	private function GetTicketViaRest($iId){
