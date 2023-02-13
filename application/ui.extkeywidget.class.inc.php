@@ -5,6 +5,7 @@
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 
@@ -904,7 +905,7 @@ JS
 	{
         // For security reasons: check that the "proposed" class is actually a subclass of the linked class
         // and that the current user is allowed to create objects of this class
-        $aSubClasses = MetaModel::EnumChildClasses($this->sTargetClass);
+        $aSubClasses = MetaModel::EnumChildClasses($this->sTargetClass, ENUM_CHILD_CLASSES_ALL);
         $aPossibleClasses = array();
         foreach($aSubClasses as $sCandidateClass)
         {

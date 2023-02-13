@@ -118,6 +118,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.bSearchMode = bSearchMode; // true if selecting a value in the context of a search form
 	this.bDoSearch = bDoSearch; // false if the search is not launched
 	this.sFormAttCode = sFormAttCode;
+	this.targetClassSelected = false;
 
 	var me = this;
 
@@ -634,7 +635,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		// will force it be of the same class as the previous call)
 		me.sTargetClass = me.sOriginalTargetClass;
 
-		me.CreateObject(oWizHelper);
+		me.CreateObject();
 	};
 
 	this.DoSelectObjectClass = function () {
@@ -646,13 +647,15 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 
 		// Setting new target class
 		me.sTargetClass = oSelectedClass.val();
-
 		// Opening real creation form
 		$('#ac_create_'+me.id).dialog('close');
-		me.CreateObject();
+		me.CreateObject(true);
 	};
 
-	this.CreateObject = function (oWizHelper) {
+	this.CreateObject = function (bTargetClassSelected) {
+		if (bTargetClassSelected) {
+			me.targetClassSelected = true;
+		}
 		if ($('#'+me.id).prop('disabled')) {
 			return;
 		} // Disabled, do nothing
@@ -670,7 +673,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			sAttCode: me.sAttCode,
 			'json': me.oWizardHelper.ToJSON(),
 			operation: 'objectCreationForm',
-			ajax_promise_id: sPromiseId
+			ajax_promise_id: sPromiseId,
+			bTargetClassSelected: bTargetClassSelected
 		};
 
 		// Make sure that we cancel any pending request before issuing another
@@ -714,6 +718,12 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#ac_create_'+me.id).dialog("destroy");
 		$('#ac_create_'+me.id).remove();
 		$('#ajax_'+me.id).html('');
+		if (me.targetClassSelected) {
+			// Resetting target class to its original value
+			// (If not done, closing the dialog and trying to create a object again
+			// will force it be of the same class as the previous call)
+			me.sTargetClass = me.sOriginalTargetClass;
+		}
 	};
 
 	this.DoCreateObject = function () {
