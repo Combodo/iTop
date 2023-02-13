@@ -659,18 +659,20 @@ EOF;
 		} // foreach module
 
 		// Register custom zlists
-		$this->sMainPHPCode .= <<<PHP
+		if (is_array($this->aCustomListsCodes)) {
+			$this->sMainPHPCode .= <<<PHP
 /**
  * Custom zlists 
  */
 PHP;
-		foreach ($this->aCustomListsCodes as $sCustomListCode) {
-			// Note: HEREDOC used to ease finding of \MetaModel::RegisterZList() method usages
-			$this->sMainPHPCode .= <<<PHP
+			foreach ($this->aCustomListsCodes as $sCustomListCode) {
+				// Note: HEREDOC used to ease finding of \MetaModel::RegisterZList() method usages
+				$this->sMainPHPCode .= <<<PHP
 MetaModel::RegisterZList('$sCustomListCode', ['description' => 'Custom zlist $sCustomListCode', 'type' => 'attributes']);
 PHP;
+			}
+			$this->sMainPHPCode .= "\n";
 		}
-		$this->sMainPHPCode .= "\n";
 
 		// Compile the dictionaries -out of the modules
 		//
