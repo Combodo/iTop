@@ -40,7 +40,7 @@ class AttributeURLTest extends ItopTestCase {
 			'Alfresco URL 2'                    => ['http://alfresco.mydomain3.org/share/page/site/books/document-details?nodeRef=workspace://SpacesStore/6274f55f-a25b-4762-a863-77f7066f2034', 1],
 			'SF URL'                            => ['https://sourceforge.net/p/itop/discussion/customizing-itop/thread/707145b859/?limit=25#f53c', 1],
 			'SF URL anchor starting with digit' => ['https://sourceforge.net/p/itop/discussion/customizing-itop/thread/b0a2d474ba/?limit=25#2b35', 1],
-			'SF URL param containing commas'    => ['http://mydomain.ptrg.com/chart.png?type=graph&width=1500&height=700&hide=2,3,6,7,8,9,10,11,12,13,14&graphstyling=showLegend%3D%271%27+baseFontSize%3D%2715%27&graphid=0&id=34759&username=portaluser&passhash=2353031973', 1],
+			'URL param containing commas'    => ['http://mydomain.ptrg.com/chart.png?type=graph&width=1500&height=700&hide=2,3,6,7,8,9,10,11,12,13,14&graphstyling=showLegend%3D%271%27+baseFontSize%3D%2715%27&graphid=0&id=34759&username=portaluser&passhash=2353031973', 1],
 		];
 	}
 }
