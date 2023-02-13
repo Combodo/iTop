@@ -5848,11 +5848,6 @@ JS
 		if ($sClass === self::class) {
 			return;
 		}
-		if (false === isset(self::$aLinkModificationsStack[$sClass][$sId])) {
-			self::ProcessClassIdDeferedUpdate(MetaModel::GetParentClass($sClass), $sId);
-
-			return;
-		}
 
 		unset(self::$aLinkModificationsStack[$sClass][$sId]);
 		$oObject = MetaModel::GetObject($sClass, $sId);
