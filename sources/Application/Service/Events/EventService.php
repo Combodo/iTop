@@ -64,7 +64,7 @@ final class EventService
 	 * @return string Id of the registration
 	 *
 	 */
-	public static function RegisterListener(string $sEvent, callable $callback, $sEventSource = null, $aCallbackData = [], $context = null, float $fPriority = 0.0, $sModuleId = ''): string
+	public static function RegisterListener(string $sEvent, callable $callback, $sEventSource = null, array $aCallbackData = [], $context = null, float $fPriority = 0.0, $sModuleId = ''): string
 	{
 		if (!is_callable($callback, false, $sName)) {
 			return false;

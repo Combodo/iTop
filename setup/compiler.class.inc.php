@@ -3784,7 +3784,7 @@ EOF;
 			$sEventSource = $aListener['source'];
 			$sContext = $aListener['context'];
 			$sRank = $aListener['rank'];
-			$sRegister .= "\nCombodo\iTop\Service\Events\EventService::RegisterListener(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sRank, '$sModuleId');";
+			$sRegister .= "\nCombodo\iTop\Service\Events\EventService::RegisterListener(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, [], $sContext, $sRank, '$sModuleId');";
 			$sCallbackFct = $aListener['content'];
 			$sMethods .= "\n    $sCallbackFct\n\n";
 		}
