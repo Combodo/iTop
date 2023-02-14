@@ -5856,6 +5856,9 @@ JS
 
 		$oObject = MetaModel::GetObject($sClass, $sId);
 		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
+
+		// The event listeners might have generated new lnk instances pointing to thi object, so removing object from stack to avoid reentrance
+		self::RemoveClassIdFromStack($sClass, $sId);
 	}
 
 	final private static function RemoveClassIdFromStack(string $sClass, string $sId): bool
