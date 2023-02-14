@@ -192,10 +192,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 	/**
 	 * @var array First level classname, second level id, value number of calls done
-	 * @used-by static::RegisterLinkModification()
+	 * @used-by static::RegisterObjectAwaitingEventDbLinksChanged()
+	 * @used-by static::RemoveObjectAwaitingEventDbLinksChanged()
 	 * @since 3.1.0 N°5906
 	 */
-	protected static $aLinkModificationsStack = [];
+	protected static array $aObjectsAwaitingEventDbLinksChanged = [];
 
 
 	/**
@@ -5754,8 +5755,8 @@ JS
 	 */
 	final protected function FireEventCreateDone(): void
 	{
-		self::CheckLinkModifications($this);
-		$this->ProcessObjectDeferedUpdates();
+		self::NotifyAttachedObjectsOnLinkClassModification($this);
+		$this->FireEventDbLinksChangedForCurrentObject();
 		$this->FireEvent(EVENT_DB_CREATE_DONE);
 	}
 
@@ -5769,8 +5770,8 @@ JS
 	 */
 	final protected function FireEventUpdateDone(array $aChanges): void
 	{
-		self::CheckLinkModifications($this);
-		$this->ProcessObjectDeferedUpdates();
+		self::NotifyAttachedObjectsOnLinkClassModification($this);
+		$this->FireEventDbLinksChangedForCurrentObject();
 
 		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
 	}
@@ -5794,16 +5795,16 @@ JS
 	 */
 	final protected function FireEventDeleteDone(): void
 	{
-		self::CheckLinkModifications($this);
+		self::NotifyAttachedObjectsOnLinkClassModification($this);
 		$this->FireEvent(EVENT_DB_DELETE_DONE);
 	}
 
 	/**
-	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterLinkModification()}
+	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterObjectAwaitingEventDbLinksChanged()}
 	 *
 	 * @since 3.1.0 N°5906
 	 */
-	final protected static function CheckLinkModifications($oItopObject): void
+	final protected static function NotifyAttachedObjectsOnLinkClassModification($oItopObject): void
 	{
 		$sClass = get_class($oItopObject);
 		if (false === MetaModel::IsLinkClass($sClass)) {
@@ -5821,36 +5822,36 @@ JS
 
 			$oExternalKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
 			$sRemoteClassName = $oExternalKeyAttDef->GetTargetClass();
-			self::RegisterLinkModification($sRemoteClassName, $sRemoteObjectId);
+			self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sRemoteObjectId);
 		}
 	}
 
 	/**
 	 * @since 3.1.0 N°5906
 	 */
-	final protected static function RegisterLinkModification($sClass, $sId): void
+	final protected static function RegisterObjectAwaitingEventDbLinksChanged($sClass, $sId): void
 	{
-		if (isset(self::$aLinkModificationsStack[$sClass][$sId])) {
-			self::$aLinkModificationsStack[$sClass][$sId]++;
+		if (isset(self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId])) {
+			self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId]++;
 		} else {
-			self::$aLinkModificationsStack[$sClass][$sId] = 1;
+			self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId] = 1;
 		}
 	}
 
-	final public function ProcessObjectDeferedUpdates()
+	final public function FireEventDbLinksChangedForCurrentObject()
 	{
 		$sClass = get_class($this);
 		$sId = $this->GetKey();
-		self::ProcessClassIdDeferedUpdate($sClass, $sId);
+		self::FireEventDbLinksChangedForClassId($sClass, $sId);
 	}
 
-	final private static function ProcessClassIdDeferedUpdate($sClass, $sId)
+	final private static function FireEventDbLinksChangedForClassId($sClass, $sId): void
 	{
 		if ($sClass === self::class) {
 			return;
 		}
 
-		$bIsClassInStack = self::RemoveClassIdFromStack($sClass, $sId);
+		$bIsClassInStack = self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 		if (false === $bIsClassInStack) {
 			return;
 		}
@@ -5859,15 +5860,15 @@ JS
 		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
 
 		// The event listeners might have generated new lnk instances pointing to thi object, so removing object from stack to avoid reentrance
-		self::RemoveClassIdFromStack($sClass, $sId);
+		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 	}
 
-	final private static function RemoveClassIdFromStack(string $sClass, string $sId): bool
+	final private static function RemoveObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): bool
 	{
 		$aClassesHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);
 		foreach ($aClassesHierarchy as $sClassInHierarchy) {
-			if (isset(self::$aLinkModificationsStack[$sClassInHierarchy][$sId])) {
-				unset(self::$aLinkModificationsStack[$sClassInHierarchy][$sId]);
+			if (isset(self::$aObjectsAwaitingEventDbLinksChanged[$sClassInHierarchy][$sId])) {
+				unset(self::$aObjectsAwaitingEventDbLinksChanged[$sClassInHierarchy][$sId]);
 
 				return true;
 			}
@@ -5876,11 +5877,11 @@ JS
 		return false;
 	}
 
-	final public static function ProcessAllDeferedUpdates()
+	final public static function FireEventDbLinksChangedForAllObjects()
 	{
-		foreach (self::$aLinkModificationsStack as $sClass => $aClassInstances) {
+		foreach (self::$aObjectsAwaitingEventDbLinksChanged as $sClass => $aClassInstances) {
 			foreach ($aClassInstances as $sId => $iCallsNumber) {
-				self::ProcessClassIdDeferedUpdate($sClass, $sId);
+				self::FireEventDbLinksChangedForClassId($sClass, $sId);
 			}
 		}
 	}

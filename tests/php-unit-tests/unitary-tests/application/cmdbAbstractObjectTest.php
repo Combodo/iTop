@@ -4,14 +4,14 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class cmdbAbstractObjectTest extends ItopDataTestCase {
 	public function testCheckLinkModifications() {
-		$aLinkModificationsStack = $this->GetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack');
+		$aLinkModificationsStack = $this->GetObjectsAwaitingFireEventDbLinksChanged();
 		$this->assertSame([], $aLinkModificationsStack);
 
 		// lnkPersonToTeam:1 is sample data with : team_id=39 ; person_id=9 ; role_id=3
 		$oLinkPersonToTeam1 = MetaModel::GetObject(lnkPersonToTeam::class, 1);
 		$oLinkPersonToTeam1->Set('role_id', 1);
 		$oLinkPersonToTeam1->DBWrite();
-		$aLinkModificationsStack = $this->GetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack');
+		$aLinkModificationsStack = $this->GetObjectsAwaitingFireEventDbLinksChanged();
 		self::assertCount(3, $aLinkModificationsStack);
 		$aExpectedLinkStack = [
 			'Team'        => ['39' => 1],
@@ -22,7 +22,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 
 		$oLinkPersonToTeam1->Set('role_id', 2);
 		$oLinkPersonToTeam1->DBWrite();
-		$aLinkModificationsStack = $this->GetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack');
+		$aLinkModificationsStack = $this->GetObjectsAwaitingFireEventDbLinksChanged();
 		self::assertCount(3, $aLinkModificationsStack);
 		$aExpectedLinkStack = [
 			'Team'        => ['39' => 2],
@@ -51,13 +51,13 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 				'0' => 1,
 			],
 		];
-		$this->SetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack', $aLinkStack);
+		$this->SetObjectsAwaitingFireEventDbLinksChanged($aLinkStack);
 
 		// Processing deferred updates for Team::39
 		/** @var \cmdbAbstractObject $oTeam39 */
 		$oTeam39 = MetaModel::GetObject(Team::class, 39);
-		$oTeam39->ProcessObjectDeferedUpdates();
-		$aLinkModificationsStack = $this->GetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack');
+		$oTeam39->FireEventDbLinksChangedForCurrentObject();
+		$aLinkModificationsStack = $this->GetObjectsAwaitingFireEventDbLinksChanged();
 		$aExpectedLinkStack = [
 			'Team'        => [],
 			'Person'      => [
@@ -83,13 +83,13 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 				'27' => 1,
 			],
 		];
-		$this->SetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack', $aLinkStack);
+		$this->SetObjectsAwaitingFireEventDbLinksChanged($aLinkStack);
 
 		// Processing deferred updates for WebServer::29
 		/** @var \cmdbAbstractObject $oLinkPersonToTeam1 */
 		$oWebServer29 = MetaModel::GetObject(WebServer::class, 29);
-		$oWebServer29->ProcessObjectDeferedUpdates();
-		$aLinkModificationsStack = $this->GetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack');
+		$oWebServer29->FireEventDbLinksChangedForCurrentObject();
+		$aLinkModificationsStack = $this->GetObjectsAwaitingFireEventDbLinksChanged();
 		$aExpectedLinkStack = [
 			'ApplicationSolution' => ['13' => 2],
 			'FunctionalCI'        => [
@@ -97,5 +97,15 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 			],
 		];
 		self::assertSame($aExpectedLinkStack, $aLinkModificationsStack);
+	}
+
+	private function GetObjectsAwaitingFireEventDbLinksChanged(): array
+	{
+		return $this->GetNonPublicStaticProperty(cmdbAbstractObject::class, 'aObjectsAwaitingEventDbLinksChanged');
+	}
+
+	private function SetObjectsAwaitingFireEventDbLinksChanged(array $aObjects): void
+	{
+		$this->SetNonPublicStaticProperty(cmdbAbstractObject::class, 'aObjectsAwaitingEventDbLinksChanged', $aObjects);
 	}
 }

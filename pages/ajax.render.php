@@ -2557,7 +2557,7 @@ EOF
 		}
 	}
 
-	cmdbAbstractObject::ProcessAllDeferedUpdates();
+	cmdbAbstractObject::FireEventDbLinksChangedForAllObjects();
 
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
