@@ -5849,13 +5849,27 @@ JS
 			return;
 		}
 
-		$aClassesHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);
-		foreach ($aClassesHierarchy as $sClassInHierarchy) {
-			unset(self::$aLinkModificationsStack[$sClassInHierarchy][$sId]);
+		$bIsClassInStack = self::RemoveClassIdFromStack($sClass, $sId);
+		if (false === $bIsClassInStack) {
+			return;
 		}
 
 		$oObject = MetaModel::GetObject($sClass, $sId);
 		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
+	}
+
+	final private static function RemoveClassIdFromStack(string $sClass, string $sId): bool
+	{
+		$aClassesHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);
+		foreach ($aClassesHierarchy as $sClassInHierarchy) {
+			if (isset(self::$aLinkModificationsStack[$sClassInHierarchy][$sId])) {
+				unset(self::$aLinkModificationsStack[$sClassInHierarchy][$sId]);
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	final public static function ProcessAllDeferedUpdates()
