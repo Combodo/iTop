@@ -5755,6 +5755,7 @@ JS
 	final protected function FireEventCreateDone(): void
 	{
 		self::CheckLinkModifications($this);
+		$this->ProcessObjectDeferedUpdates();
 		$this->FireEvent(EVENT_DB_CREATE_DONE);
 	}
 
