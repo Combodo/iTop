@@ -155,7 +155,7 @@ class ItopTestCase extends TestCase
 	/**
 	 * @param string $sObjectClass for example DBObject::class
 	 * @param string $sMethodName
-	 * @param object $oObject
+	 * @param ?object $oObject
 	 * @param array $aArgs
 	 *
 	 * @return mixed method result

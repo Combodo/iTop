@@ -34,4 +34,68 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 		];
 		self::assertSame($aExpectedLinkStack, $aLinkModificationsStack);
 	}
+
+	public function testProcessClassIdDeferedUpdate()
+	{
+		// --- Simulating modifications of :
+		// - lnkPersonToTeam:1 is sample data with : team_id=39 ; person_id=9 ; role_id=3
+		// - lnkPersonToTeam:2 is sample data with : team_id=39 ; person_id=14 ; role_id=0
+		$aLinkStack = [
+			'Team'        => ['39' => 2],
+			'Person'      => [
+				'9'  => 1,
+				'14' => 1,
+			],
+			'ContactType' => [
+				'1' => 1,
+				'0' => 1,
+			],
+		];
+		$this->SetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack', $aLinkStack);
+
+		// Processing deferred updates for Team::39
+		/** @var \cmdbAbstractObject $oTeam39 */
+		$oTeam39 = MetaModel::GetObject(Team::class, 39);
+		$oTeam39->ProcessObjectDeferedUpdates();
+		$aLinkModificationsStack = $this->GetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack');
+		$aExpectedLinkStack = [
+			'Team'        => [],
+			'Person'      => [
+				'9'  => 1,
+				'14' => 1,
+			],
+			'ContactType' => [
+				'1' => 1,
+				'0' => 1,
+			],
+		];
+		self::assertSame($aExpectedLinkStack, $aLinkModificationsStack);
+
+
+		// --- Simulating modifications of :
+		// - lnkApplicationSolutionToFunctionalCI::2 : applicationsolution_id=13 ; functionalci_id=29
+		// - lnkApplicationSolutionToFunctionalCI::8 : applicationsolution_id=13 ; functionalci_id=27
+		// The lnkApplicationSolutionToFunctionalCI points on root classes, so we can test unstacking for a leaf class
+		$aLinkStack = [
+			'ApplicationSolution' => ['13' => 2],
+			'FunctionalCI'        => [
+				'29' => 1,
+				'27' => 1,
+			],
+		];
+		$this->SetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack', $aLinkStack);
+
+		// Processing deferred updates for WebServer::29
+		/** @var \cmdbAbstractObject $oLinkPersonToTeam1 */
+		$oWebServer29 = MetaModel::GetObject(WebServer::class, 29);
+		$oWebServer29->ProcessObjectDeferedUpdates();
+		$aLinkModificationsStack = $this->GetNonPublicStaticProperty(cmdbAbstractObject::class, 'aLinkModificationsStack');
+		$aExpectedLinkStack = [
+			'ApplicationSolution' => ['13' => 2],
+			'FunctionalCI'        => [
+				'27' => 1,
+			],
+		];
+		self::assertSame($aExpectedLinkStack, $aLinkModificationsStack);
+	}
 }
