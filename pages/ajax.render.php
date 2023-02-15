@@ -2557,8 +2557,6 @@ EOF
 		}
 	}
 
-	cmdbAbstractObject::FireEventDbLinksChangedForAllObjects();
-
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
 } catch (Exception $e) {

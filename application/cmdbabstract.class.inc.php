@@ -194,9 +194,15 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 * @var array First level classname, second level id, value number of calls done
 	 * @used-by static::RegisterObjectAwaitingEventDbLinksChanged()
 	 * @used-by static::RemoveObjectAwaitingEventDbLinksChanged()
-	 * @since 3.1.0 N°5906
+	 *
 	 */
 	protected static array $aObjectsAwaitingEventDbLinksChanged = [];
+	/**
+	 * @var bool Flag to allow/block the Event when DBLink are changed
+	 * This is used to avoid sending too many events when doing mass-update
+	 * @since 3.1.0 N°5906
+	 */
+	protected static bool $bAllowEventDBLinksChanged = true;
 
 
 	/**
@@ -4433,17 +4439,21 @@ HTML;
 	 */
 	public function DBInsertNoReload()
 	{
-		$res = parent::DBInsertNoReload();
+		try {
+			$res = parent::DBInsertNoReload();
 
-		$this->SetWarningsAsSessionMessages('create');
+			$this->SetWarningsAsSessionMessages('create');
 
-		// Invoke extensions after insertion (the object must exist, have an id, etc.)
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-		{
-			$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
+			// Invoke extensions after insertion (the object must exist, have an id, etc.)
+			/** @var \iApplicationObjectExtension $oExtensionInstance */
+			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
+				$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
+			}
+		} finally {
+			if (static::IsCrudStackEmpty()) {
+				static::FireEventDbLinksChangedForAllObjects();
+			}
 		}
-
 		return $res;
 	}
 
@@ -4472,48 +4482,51 @@ HTML;
 
 	public function DBUpdate()
 	{
-		$res = parent::DBUpdate();
+		try {
+			$res = parent::DBUpdate();
 
-		$this->SetWarningsAsSessionMessages('update');
+			$this->SetWarningsAsSessionMessages('update');
 
-		// Protection against reentrance (e.g. cascading the update of ticket logs)
-		// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
-		if (!MetaModel::StartReentranceProtection($this)) {
-			$sClass = get_class($this);
-			$sKey = $this->GetKey();
-			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
-
-			return $res;
-		}
-
-		try
-		{
-			// Invoke extensions after the update (could be before)
-			/** @var \iApplicationObjectExtension $oExtensionInstance */
-			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-			{
-				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
-			}
-		}
-		finally
-		{
-			MetaModel::StopReentranceProtection($this);
-		}
-
-		$aChanges = $this->ListChanges();
-		if (count($aChanges) != 0) {
-			$this->iUpdateLoopCount++;
-			if ($this->iUpdateLoopCount > self::MAX_UPDATE_LOOP_COUNT) {
+			// Protection against reentrance (e.g. cascading the update of ticket logs)
+			// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
+			if (!MetaModel::StartReentranceProtection($this)) {
 				$sClass = get_class($this);
 				$sKey = $this->GetKey();
-				$aPlugins = [];
+				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
+
+				return $res;
+			}
+
+			try {
+				// Invoke extensions after the update (could be before)
+				/** @var \iApplicationObjectExtension $oExtensionInstance */
 				foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
-					$aPlugins[] = get_class($oExtensionInstance);
+					$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
 				}
-				$sPlugins = implode(', ', $aPlugins);
-				IssueLog::Error("CRUD: DBUpdate $sClass::$sKey Update loop detected plugins: $sPlugins", LogChannels::DM_CRUD);
-			} else {
-				return $this->DBUpdate();
+			}
+			finally {
+				MetaModel::StopReentranceProtection($this);
+			}
+
+			$aChanges = $this->ListChanges();
+			if (count($aChanges) != 0) {
+				$this->iUpdateLoopCount++;
+				if ($this->iUpdateLoopCount > self::MAX_UPDATE_LOOP_COUNT) {
+					$sClass = get_class($this);
+					$sKey = $this->GetKey();
+					$aPlugins = [];
+					foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
+						$aPlugins[] = get_class($oExtensionInstance);
+					}
+					$sPlugins = implode(', ', $aPlugins);
+					IssueLog::Error("CRUD: DBUpdate $sClass::$sKey Update loop detected plugins: $sPlugins", LogChannels::DM_CRUD);
+				} else {
+					return $this->DBUpdate();
+				}
+			}
+		} finally {
+			if (static::IsCrudStackEmpty()) {
+				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
 
@@ -4537,7 +4550,18 @@ HTML;
 		}
 	}
 
-	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
+	public function DBDelete(&$oDeletionPlan = null)
+	{
+		try {
+			parent::DBDelete($oDeletionPlan);
+		}  finally {
+			if (static::IsCrudStackEmpty()) {
+				static::FireEventDbLinksChangedForAllObjects();
+			}
+		}
+	}
+
+		protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
@@ -5205,6 +5229,9 @@ EOF
 			}
 			utils::RemoveTransaction($sTransactionId);
 		}
+
+		// Avoid too many events
+		static::SetEventDBLinksChangedAllowed(false);
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach ($aSelectedObj as $iId) {
@@ -5234,6 +5261,10 @@ EOF
 				$oObj->DBUpdate();
 			}
 		}
+		// Send all the retained events for further computations
+		static::SetEventDBLinksChangedAllowed(true);
+		static::FireEventDbLinksChangedForAllObjects();
+
 		set_time_limit(intval($iPreviousTimeLimit));
 		$oTable = DataTableUIBlockFactory::MakeForForm('BulkModify', $aHeaders, $aRows);
 		$oTable->AddOption("bFullscreen", true);
@@ -5304,13 +5335,20 @@ EOF
 	{
 		$oDeletionPlan = new DeletionPlan();
 
-		foreach($aObjects as $oObj)
-		{
-			if ($bPreview) {
-				$oObj->CheckToDelete($oDeletionPlan);
-			} else {
-				$oObj->DBDelete($oDeletionPlan);
+		// Avoid too many events
+		static::SetEventDBLinksChangedAllowed(false);
+		try {
+			foreach ($aObjects as $oObj) {
+				if ($bPreview) {
+					$oObj->CheckToDelete($oDeletionPlan);
+				} else {
+					$oObj->DBDelete($oDeletionPlan);
+				}
 			}
+		} finally {
+			// Send all the retained events for further computations
+			static::SetEventDBLinksChangedAllowed(true);
+			static::FireEventDbLinksChangedForAllObjects();
 		}
 
 		if ($bPreview) {
@@ -5868,6 +5906,10 @@ JS
 	 */
 	final public function FireEventDbLinksChangedForCurrentObject(): void
 	{
+		if (false === static::IsEventDBLinksChangedAllowed()) {
+			return;
+		}
+
 		$sClass = get_class($this);
 		$sId = $this->GetKey();
 		self::FireEventDbLinksChangedForClassId($sClass, $sId);
@@ -5883,7 +5925,7 @@ JS
 	 */
 	private static function FireEventDbLinksChangedForClassId(string $sClass, string $sId): void
 	{
-		if ($sClass === self::class) {
+		if (false === static::IsEventDBLinksChangedAllowed()) {
 			return;
 		}
 
@@ -5929,6 +5971,10 @@ JS
 	 */
 	final public static function FireEventDbLinksChangedForAllObjects()
 	{
+		if (false === static::IsEventDBLinksChangedAllowed()) {
+			return;
+		}
+
 		foreach (self::$aObjectsAwaitingEventDbLinksChanged as $sClass => $aClassInstances) {
 			foreach ($aClassInstances as $sId => $iCallsNumber) {
 				self::FireEventDbLinksChangedForClassId($sClass, $sId);
@@ -5936,6 +5982,21 @@ JS
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
+	public static function IsEventDBLinksChangedAllowed(): bool
+	{
+		return self::$bAllowEventDBLinksChanged;
+	}
+
+	/**
+	 * @param bool $bAllowEventDBLinksChanged
+	 */
+	public static function SetEventDBLinksChangedAllowed(bool $bAllowEventDBLinksChanged): void
+	{
+		self::$bAllowEventDBLinksChanged = $bAllowEventDBLinksChanged;
+	}
 
 	/**
 	 * @inheritDoc

@@ -1570,8 +1570,6 @@ try
 		}
 	}
 
-	cmdbAbstractObject::FireEventDbLinksChangedForAllObjects();
-
 	DisplayWelcomePopup($oP);
 	$oKPI->ComputeAndReport('Compute page');
 	$oP->output();

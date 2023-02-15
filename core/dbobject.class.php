@@ -6051,5 +6051,10 @@ abstract class DBObject implements iDisplay
 	{
 		array_pop(self::$m_aCrudStack);
 	}
+
+	protected function IsCrudStackEmpty(): bool
+	{
+		return count(self::$m_aCrudStack) === 0;
+	}
 }
 

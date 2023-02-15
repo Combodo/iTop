@@ -1160,136 +1160,112 @@ class BulkChange
 		}
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		foreach($this->m_aData as $iRow => $aRowData)
-		{
-			set_time_limit(intval($iLoopTimeLimit));
-			if (isset($aResult[$iRow]["__STATUS__"]))
-			{
-				// An issue at the earlier steps - skip the rest
-				continue;
-			}
-			try
-			{
-				$oReconciliationFilter = new DBObjectSearch($this->m_sClass);
-				$bSkipQuery = false;
-				foreach($this->m_aReconcilKeys as $sAttCode)
-				{
-					$valuecondition = null;
-					if (array_key_exists($sAttCode, $this->m_aExtKeys))
-					{
-						if ($this->IsNullExternalKeySpec($aRowData, $sAttCode))
-						{
-							$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-							if ($oExtKey->IsNullAllowed())
-							{
-								$valuecondition = $oExtKey->GetNullValue();
-								$aResult[$iRow][$sAttCode] = new CellStatus_Void($oExtKey->GetNullValue());
-							}
-							else
-							{
-								$aResult[$iRow][$sAttCode] = new CellStatus_NullIssue();
-							}
-						}
-						else
-						{
-							// The value has to be found or verified
 
-							/** var DBObjectSearch $oReconFilter */
-							list($oReconFilter, $aMatches) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
+		// Avoid too many events
+		cmdbAbstractObject::SetEventDBLinksChangedAllowed(false);
+		try {
+			foreach ($this->m_aData as $iRow => $aRowData) {
+				set_time_limit(intval($iLoopTimeLimit));
+				if (isset($aResult[$iRow]["__STATUS__"])) {
+					// An issue at the earlier steps - skip the rest
+					continue;
+				}
+				try {
+					$oReconciliationFilter = new DBObjectSearch($this->m_sClass);
+					$bSkipQuery = false;
+					foreach ($this->m_aReconcilKeys as $sAttCode) {
+						$valuecondition = null;
+						if (array_key_exists($sAttCode, $this->m_aExtKeys)) {
+							if ($this->IsNullExternalKeySpec($aRowData, $sAttCode)) {
+								$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+								if ($oExtKey->IsNullAllowed()) {
+									$valuecondition = $oExtKey->GetNullValue();
+									$aResult[$iRow][$sAttCode] = new CellStatus_Void($oExtKey->GetNullValue());
+								} else {
+									$aResult[$iRow][$sAttCode] = new CellStatus_NullIssue();
+								}
+							} else {
+								// The value has to be found or verified
 
-							if (count($aMatches) == 1)
-							{
-								$oRemoteObj = reset($aMatches); // first item
-								$valuecondition = $oRemoteObj->GetKey();
-								$aResult[$iRow][$sAttCode] = new CellStatus_Void($oRemoteObj->GetKey());
+								/** var DBObjectSearch $oReconFilter */
+								list($oReconFilter, $aMatches) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
+
+								if (count($aMatches) == 1) {
+									$oRemoteObj = reset($aMatches); // first item
+									$valuecondition = $oRemoteObj->GetKey();
+									$aResult[$iRow][$sAttCode] = new CellStatus_Void($oRemoteObj->GetKey());
+								} elseif (count($aMatches) == 0) {
+									$oCellStatus_SearchIssue = $this->GetCellSearchIssue($oReconFilter);
+									$aResult[$iRow][$sAttCode] = $oCellStatus_SearchIssue;
+								} else {
+									$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $oReconFilter->serialize());
+								}
 							}
-							elseif (count($aMatches) == 0)
-							{
-								$oCellStatus_SearchIssue = $this->GetCellSearchIssue($oReconFilter);
-								$aResult[$iRow][$sAttCode] = $oCellStatus_SearchIssue;
-							}
-							else
-							{
-								$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $oReconFilter->serialize());
+						} else {
+							// The value is given in the data row
+							$iCol = $this->m_aAttList[$sAttCode];
+							if ($sAttCode == 'id') {
+								$valuecondition = $aRowData[$iCol];
+							} else {
+								$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+								$valuecondition = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 							}
 						}
-					}
-					else
-					{
-						// The value is given in the data row
-						$iCol = $this->m_aAttList[$sAttCode];
-						if ($sAttCode == 'id')
-						{
-							$valuecondition = $aRowData[$iCol];
-						}
-						else
-						{
-							$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-							$valuecondition = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
+						if (is_null($valuecondition)) {
+							$bSkipQuery = true;
+						} else {
+							$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=');
 						}
 					}
-					if (is_null($valuecondition))
-					{
-						$bSkipQuery = true;
+					if ($bSkipQuery) {
+						$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Reconciliation'));
+					} else {
+						$oReconciliationSet = new CMDBObjectSet($oReconciliationFilter);
+						switch ($oReconciliationSet->Count()) {
+							case 0:
+								$oTargetObj = $this->CreateObject($aResult, $iRow, $aRowData, $oChange);
+								// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
+								$aVisited[] = $oTargetObj->GetKey();
+								break;
+							case 1:
+								$oTargetObj = $oReconciliationSet->Fetch();
+								$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
+								// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
+								if (!is_null($this->m_sSynchroScope)) {
+									$aVisited[] = $oTargetObj->GetKey();
+								}
+								break;
+							default:
+								// Found several matches, ambiguous
+								$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Ambiguous'));
+								$aResult[$iRow]["id"] = new CellStatus_Ambiguous(0, $oReconciliationSet->Count(), $oReconciliationFilter->serialize());
+								$aResult[$iRow]["finalclass"] = 'n/a';
+						}
 					}
-					else
-					{
-						$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=');
-					}
+				} catch (Exception $e) {
+					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-Internal', get_class($e), $e->getMessage()));
 				}
-				if ($bSkipQuery)
-				{
-					$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Reconciliation'));
-				}
-				else
-				{
-					$oReconciliationSet = new CMDBObjectSet($oReconciliationFilter);
-					switch($oReconciliationSet->Count())
-					{
-					case 0:
-						$oTargetObj = $this->CreateObject($aResult, $iRow, $aRowData, $oChange);
-						// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
-						$aVisited[] = $oTargetObj->GetKey();
-						break;
-					case 1:
-						$oTargetObj = $oReconciliationSet->Fetch();
-						$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
-						// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
-						if (!is_null($this->m_sSynchroScope))
-						{
-							$aVisited[] = $oTargetObj->GetKey();
-						}
-						break;
-					default:
-						// Found several matches, ambiguous
-						$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Ambiguous'));
-						$aResult[$iRow]["id"]= new CellStatus_Ambiguous(0, $oReconciliationSet->Count(), $oReconciliationFilter->serialize());
-						$aResult[$iRow]["finalclass"]= 'n/a';
+			}
+
+			if (!is_null($this->m_sSynchroScope)) {
+				// Compute the delta between the scope and visited objects
+				$oScopeSearch = DBObjectSearch::FromOQL($this->m_sSynchroScope);
+				$oScopeSet = new DBObjectSet($oScopeSearch);
+				while ($oObj = $oScopeSet->Fetch()) {
+					$iObj = $oObj->GetKey();
+					if (!in_array($iObj, $aVisited)) {
+						set_time_limit(intval($iLoopTimeLimit));
+						$iRow++;
+						$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
 					}
 				}
 			}
-			catch (Exception $e)
-			{
-				$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-Internal', get_class($e), $e->getMessage()));
-			}
+		} finally {
+			// Send all the retained events for further computations
+			cmdbAbstractObject::SetEventDBLinksChangedAllowed(true);
+			cmdbAbstractObject::FireEventDbLinksChangedForAllObjects();
 		}
 
-		if (!is_null($this->m_sSynchroScope))
-		{
-			// Compute the delta between the scope and visited objects
-			$oScopeSearch = DBObjectSearch::FromOQL($this->m_sSynchroScope);
-			$oScopeSet = new DBObjectSet($oScopeSearch);
-			while ($oObj = $oScopeSet->Fetch())
-			{
-				$iObj = $oObj->GetKey();
-				if (!in_array($iObj, $aVisited))
-				{
-					set_time_limit(intval($iLoopTimeLimit));
-					$iRow++;
-					$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
-				}
-			}
-		}
 		set_time_limit(intval($iPreviousTimeLimit));
 
 		// Fill in the blanks - the result matrix is expected to be 100% complete
