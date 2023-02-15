@@ -104,17 +104,21 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 				// The bare minimum
 				array('"blah"', 'blah'),
 				array('"\\\\"', '\\'),
+
 				// Arithmetics
 				array('2+2', 4),
 				array('2+2-2', 2),
 				array('2*(3+4)', 14),
 				array('(2*3)+4', 10),
 				array('2*3+4', 10),
+
 				// Strings
 				array("CONCAT('hello', 'world')", 'helloworld'),
+
 				// Not yet parsed - array("CONCAT_WS(' ', 'hello', 'world')", 'hello world'),
 				array("SUBSTR('abcdef', 2, 3)", 'bcd'),
 				array("TRIM(' Sin dolor  ')", 'Sin dolor'),
+
 				// Comparison operators
 				array('1 = 1', 1),
 				array('1 != 1', 0),
@@ -141,6 +145,7 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 				array('"2020-06-12 17:35:13" > "2020-06-12"', 1),
 				array('"2020-06-12 17:35:13" < "2020-06-12"', 0),
 				array('"2020-06-12 00:00:00" = "2020-06-12"', 0),
+
 				// Logical operators
 				array('0 AND 0', 0),
 				array('1 AND 0', 0),
@@ -151,12 +156,14 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 				array('1 OR 0', 1),
 				array('1 OR 1', 1),
 				array('1 AND 0 OR 1', 1),
+
 				// Casting
 				array('1 AND "blah"', 0),
 				array('1 AND "1"', 1),
 				array('1 AND "2"', 1),
 				array('1 AND "0"', 0),
 				array('1 AND "-1"', 1),
+
 				// Null
 				array('NULL', null),
 				array('1 AND NULL', null),
@@ -165,12 +172,14 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 				array('COALESCE(321, 123)', 321),
 				array('ISNULL(NULL)', 1),
 				array('ISNULL(123)', 0),
+
 				// Date functions
 				array("DATE('2020-03-12 13:18:30')", '2020-03-12'),
 				array("DATE_FORMAT('2009-10-04 22:23:00', '%Y %m %d %H %i %s')", '2009 10 04 22 23 00'),
 				array("DATE(NOW()) = CURRENT_DATE()", 1), // Could fail if executed around midnight!
 				array("TO_DAYS('2020-01-02')", 737791),
 				array("FROM_DAYS(737791)", '2020-01-02'),
+				array("FROM_DAYS(TO_DAYS('2020-01-02'))", '2020-01-02'), // Back and forth conversion to ensure it returns the same
 				array("YEAR('2020-05-03')", 2020),
 				array("MONTH('2020-05-03')", 5),
 				array("DAY('2020-05-03')", 3),
@@ -178,6 +187,7 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 				array("DATE_ADD('2020-02-28 18:00:00', INTERVAL 1 DAY)", '2020-02-29 18:00:00'),
 				array("DATE_SUB('2020-03-01 18:00:00', INTERVAL 1 HOUR)", '2020-03-01 17:00:00'),
 				array("DATE_SUB('2020-03-01 18:00:00', INTERVAL 1 DAY)", '2020-02-29 18:00:00'),
+
 				// Misc. functions
 				array('IF(1, 123, 567)', 123),
 				array('IF(0, 123, 567)', 567),
@@ -187,6 +197,11 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 				array('INET_ATON("128.0.0.1")', 2147483649),
 				array('INET_NTOA(2147483649)', '128.0.0.1'),
 			);
+
+			// N°5985 - Test bidirectional conversion across the centuries to ensure that it works on PHP 7.4 => 8.2+ even though the bug has been fixed in PHP 8.1 but still exists in PHP 7.4 => 8.1
+			for ($iUpperYearBound = 1600; $iUpperYearBound <= 2100; $iUpperYearBound = $iUpperYearBound + 25) {
+				$aExpressions[] = array("FROM_DAYS(TO_DAYS('$iUpperYearBound-01-02'))", "$iUpperYearBound-01-02");
+			}
 		}
 
 		// Build a comprehensive index

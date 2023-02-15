@@ -2860,9 +2860,26 @@ class FunctionExpression extends Expression
 				{
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
+
+				// N°5985 - Since PHP 8.1+, a bug fix on \DateTimeInterval for a date anterior to "1937-05-23" now returns a different number of days. The workaround below aim at making the code work with PHP 7.4 => 8.2+
+				//
+				// $oDate = new DateTimeImmutable('2020-01-02');
+				// $oZero = new DateTimeImmutable('1937-05-22');
+				// $iRet = (int) $oDate->diff($oZero)->format('%a');
+				// echo $iRet."\n"; // 30174 (PHP 8.0) vs 30175 (PHP 8.1+)
+				//
+				// $oDate = new DateTimeImmutable('2020-01-02');
+				// $oZero = new DateTimeImmutable('1937-05-23');
+				// $iRet = (int) $oDate->diff($oZero)->format('%a');
+				// echo $iRet."\n"; // 30174 (PHP 8.0) vs 30174 (PHP 8.1+)
+				//
+				// To work around that we take 1970-01-01 as "zero date" and we offset it with the number of days between 1582-01-01 and 1970-01-01.
+				// Note that as the "target" date could be between 1582-01-01 and 1970-01-01 we have to format the interval with the "-"/"+" sign in order to correct the number of days.
+
 				$oDate = new DateTime($this->m_aArgs[0]->Evaluate($aArgs));
-				$oZero = new DateTime('1582-01-01');
-				$iRet = (int) $oDate->diff($oZero)->format('%a') + 577815;
+				$oZero = new DateTime('1970-01-01');
+				$iDaysBetween19700101And15800101 = 141713;
+				$iRet = (int) $oZero->diff($oDate)->format('%R%a') + 577815 + $iDaysBetween19700101And15800101;
 				return $iRet;
 
 			case 'FROM_DAYS':
