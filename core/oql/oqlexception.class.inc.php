@@ -26,6 +26,37 @@
 
 class OQLException extends CoreException
 {
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $m_MyIssue;
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $m_sInput;
+	/**
+	 * @var int
+	 * @since 3.1.0
+	 */
+	protected $m_iLine;
+	/**
+	 * @var int
+	 * @since 3.1.0
+	 */
+	protected $m_iCol;
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $m_sUnexpected;
+	/**
+	 * @var array|null string
+	 * @since 3.1.0
+	 */
+	protected $m_aExpecting;
+
 	public function __construct($sIssue, $sInput, $iLine, $iCol, $sUnexpected, $aExpecting = null)
 	{
 		$this->m_MyIssue = $sIssue;
