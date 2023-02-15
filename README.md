@@ -3,9 +3,9 @@
 </a></p>
 
 
-iTop stands for IT Operations Portal. It is a complete open source and web based IT service management platform including a fully customizable CMDB, a helpdesk system and a document management tool. It is ITIL compliant and easily customizable and extensible thanks to a high number of adds-on and web services to integrate with your IT.
+iTop stands for IT Operations Portal. It is a complete open source and web-based IT service management platform, including a fully customizable CMDB, a helpdesk system, and a document management tool. It is ITIL compliant and easily customizable and extensible thanks to a high number of add-ons and web services to integrate with your IT.
 
-iTop also offers mass import tools to help you being even more efficient.
+iTop also offers mass import tools to help you become even more efficient.
 
 ## Features
 - Fully configurable [Configuration Management (CMDB)][10]
@@ -65,7 +65,7 @@ iTop also offers mass import tools to help you being even more efficient.
 
 ## About Us
 
-iTop development is sponsored, led and supported by [Combodo][0].
+iTop development is sponsored, led, and supported by [Combodo][0].
 
 [0]: https://www.combodo.com
 
