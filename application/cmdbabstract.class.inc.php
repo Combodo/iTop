@@ -5881,7 +5881,7 @@ JS
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	final private static function FireEventDbLinksChangedForClassId(string $sClass, string $sId): void
+	private static function FireEventDbLinksChangedForClassId(string $sClass, string $sId): void
 	{
 		if ($sClass === self::class) {
 			return;
@@ -5906,7 +5906,7 @@ JS
 	 * @return bool true if the object [class, id] was present in the list
 	 * @throws \CoreException
 	 */
-	final private static function RemoveObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): bool
+	private static function RemoveObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): bool
 	{
 		$bFlagRemoved = false;
 		$aClassesHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);
