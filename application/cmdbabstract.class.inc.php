@@ -5741,7 +5741,9 @@ JS
 	///
 
 	/**
-	 * @inheritDoc
+	 * @return void
+	 * @throws \CoreException
+	 *
 	 * @since 3.1.0
 	 */
 	final protected function FireEventCheckToWrite(): void
@@ -5750,7 +5752,9 @@ JS
 	}
 
 	/**
-	 * @inheritDoc
+	 * @return void
+	 * @throws \CoreException
+	 *
 	 * @since 3.1.0
 	 */
 	final protected function FireEventCreateDone(): void
@@ -5765,7 +5769,11 @@ JS
 	///
 
 	/**
-	 * @inheritDoc
+	 * @param array $aChanges
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 * @since 3.1.0
 	 */
 	final protected function FireEventUpdateDone(array $aChanges): void
@@ -5781,7 +5789,10 @@ JS
 	///
 
 	/**
-	 * @inheritDoc
+	 * @param \DeletionPlan $oDeletionPlan
+	 *
+	 * @return void
+	 * @throws \CoreException
 	 * @since 3.1.0
 	 */
 	final protected function FireEventCheckToDelete(DeletionPlan $oDeletionPlan): void
@@ -5790,7 +5801,9 @@ JS
 	}
 
 	/**
-	 * @inheritDoc
+	 * @return void
+	 * @throws \CoreException
+	 *
 	 * @since 3.1.0
 	 */
 	final protected function FireEventDeleteDone(): void
@@ -5802,9 +5815,15 @@ JS
 	/**
 	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterObjectAwaitingEventDbLinksChanged()}
 	 *
+	 * @param \cmdbAbstractObject $oItopObject
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Exception
+	 *
 	 * @since 3.1.0 N°5906
 	 */
-	final protected static function NotifyAttachedObjectsOnLinkClassModification($oItopObject): void
+	final protected static function NotifyAttachedObjectsOnLinkClassModification(cmdbAbstractObject $oItopObject): void
 	{
 		$sClass = get_class($oItopObject);
 		if (false === MetaModel::IsLinkClass($sClass)) {
@@ -5812,14 +5831,13 @@ JS
 		}
 
 		$aLnkClassExternalKeys = MetaModel::GetAttributesList($sClass, [AttributeExternalKey::class]);
-		/** @var \AttributeExternalKey $oExternalKey */
 		foreach ($aLnkClassExternalKeys as $sExternalKeyAttCode) {
-			/** @var \DBObject $oRemoteObject */
 			$sRemoteObjectId = $oItopObject->Get($sExternalKeyAttCode);
 			if ($sRemoteObjectId <= 0) {
 				continue;
 			}
 
+			/** @var \AttributeExternalKey $oExternalKeyAttDef */
 			$oExternalKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
 			$sRemoteClassName = $oExternalKeyAttDef->GetTargetClass();
 			self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sRemoteObjectId);
@@ -5827,9 +5845,12 @@ JS
 	}
 
 	/**
+	 * @param string $sClass
+	 * @param string $sId
+	 *
 	 * @since 3.1.0 N°5906
 	 */
-	final protected static function RegisterObjectAwaitingEventDbLinksChanged($sClass, $sId): void
+	final protected static function RegisterObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): void
 	{
 		if (isset(self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId])) {
 			self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId]++;
@@ -5838,14 +5859,29 @@ JS
 		}
 	}
 
-	final public function FireEventDbLinksChangedForCurrentObject()
+	/**
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	final public function FireEventDbLinksChangedForCurrentObject(): void
 	{
 		$sClass = get_class($this);
 		$sId = $this->GetKey();
 		self::FireEventDbLinksChangedForClassId($sClass, $sId);
 	}
 
-	final private static function FireEventDbLinksChangedForClassId($sClass, $sId): void
+	/**
+	 * @param string $sClass
+	 * @param string $sId
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	final private static function FireEventDbLinksChangedForClassId(string $sClass, string $sId): void
 	{
 		if ($sClass === self::class) {
 			return;
@@ -5859,24 +5895,38 @@ JS
 		$oObject = MetaModel::GetObject($sClass, $sId);
 		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
 
-		// The event listeners might have generated new lnk instances pointing to thi object, so removing object from stack to avoid reentrance
+		// The event listeners might have generated new lnk instances pointing to this object, so removing object from stack to avoid reentrance
 		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 	}
 
+	/**
+	 * @param string $sClass
+	 * @param string $sId
+	 *
+	 * @return bool true if the object [class, id] was present in the list
+	 * @throws \CoreException
+	 */
 	final private static function RemoveObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): bool
 	{
+		$bFlagRemoved = false;
 		$aClassesHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);
 		foreach ($aClassesHierarchy as $sClassInHierarchy) {
 			if (isset(self::$aObjectsAwaitingEventDbLinksChanged[$sClassInHierarchy][$sId])) {
 				unset(self::$aObjectsAwaitingEventDbLinksChanged[$sClassInHierarchy][$sId]);
-
-				return true;
+				$bFlagRemoved = true;
 			}
 		}
 
-		return false;
+		return $bFlagRemoved;
 	}
 
+	/**
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0 N°5906
+	 */
 	final public static function FireEventDbLinksChangedForAllObjects()
 	{
 		foreach (self::$aObjectsAwaitingEventDbLinksChanged as $sClass => $aClassInstances) {
