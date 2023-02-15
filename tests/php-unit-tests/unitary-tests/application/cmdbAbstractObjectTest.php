@@ -2,46 +2,79 @@
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class cmdbAbstractObjectTest extends ItopDataTestCase {
+	const USE_TRANSACTION = true;
+	const CREATE_TEST_ORG = true;
+
 	public function testCheckLinkModifications() {
 		$aLinkModificationsStack = $this->GetObjectsAwaitingFireEventDbLinksChanged();
 		$this->assertSame([], $aLinkModificationsStack);
 
-		// lnkPersonToTeam:1 is sample data with : team_id=39 ; person_id=9 ; role_id=3
-		$oLinkPersonToTeam1 = MetaModel::GetObject(lnkPersonToTeam::class, 1);
-		$oLinkPersonToTeam1->Set('role_id', 1);
-		$oLinkPersonToTeam1->DBWrite();
+		// retain events
+		cmdbAbstractObject::SetEventDBLinksChangedAllowed(false);
+
+		// Create the person
+		$oPerson = $this->CreatePerson(1);
+		$this->assertIsObject($oPerson);
+		// Create the team
+		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeam1', 'org_id' => $this->getTestOrgId()]);
+		$oTeam->DBInsert();
+		// contact types
+		$oContactType1 = MetaModel::NewObject(ContactType::class, ['name' => 'test_'.rand(10000, 99999)]);
+		$oContactType1->DBInsert();
+		$oContactType2 = MetaModel::NewObject(ContactType::class, ['name' => 'test_'.rand(10000, 99999)]);
+		$oContactType2->DBInsert();
+
+		// Prepare the link for the insertion with the team
+
+		$aValues = [
+			'person_id' => $oPerson->GetKey(),
+			'role_id' => $oContactType1->GetKey(),
+			'team_id' => $oTeam->GetKey(),
+		];
+		$oLinkPersonToTeam1 = MetaModel::NewObject(lnkPersonToTeam::class, $aValues);
+		$oLinkPersonToTeam1->DBInsert();
+
 		$aLinkModificationsStack = $this->GetObjectsAwaitingFireEventDbLinksChanged();
 		self::assertCount(3, $aLinkModificationsStack);
 		$aExpectedLinkStack = [
-			'Team'        => ['39' => 1],
-			'Person'      => ['9' => 1],
-			'ContactType' => ['1' => 1],
+			'Team'        => [$oTeam->GetKey() => 1],
+			'Person'      => [$oPerson->GetKey() => 1],
+			'ContactType' => [$oContactType1->GetKey() => 1],
 		];
 		self::assertSame($aExpectedLinkStack, $aLinkModificationsStack);
 
-		$oLinkPersonToTeam1->Set('role_id', 2);
+		$oLinkPersonToTeam1->Set('role_id', $oContactType2->GetKey());
 		$oLinkPersonToTeam1->DBWrite();
 		$aLinkModificationsStack = $this->GetObjectsAwaitingFireEventDbLinksChanged();
 		self::assertCount(3, $aLinkModificationsStack);
 		$aExpectedLinkStack = [
-			'Team'        => ['39' => 2],
-			'Person'      => ['9' => 2],
+			'Team'        => [$oTeam->GetKey() => 2],
+			'Person'      => [$oPerson->GetKey() => 2],
 			'ContactType' => [
-				'1' => 1,
-				'2' => 1,
+				$oContactType1->GetKey() => 1,
+				$oContactType2->GetKey() => 1,
 			],
 		];
 		self::assertSame($aExpectedLinkStack, $aLinkModificationsStack);
 	}
 
-	public function testProcessClassIdDeferedUpdate()
+	public function testProcessClassIdDeferredUpdate()
 	{
+		// Create the team
+		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeam1', 'org_id' => $this->getTestOrgId()]);
+		$oTeam->DBInsert();
+
 		// --- Simulating modifications of :
 		// - lnkPersonToTeam:1 is sample data with : team_id=39 ; person_id=9 ; role_id=3
 		// - lnkPersonToTeam:2 is sample data with : team_id=39 ; person_id=14 ; role_id=0
 		$aLinkStack = [
-			'Team'        => ['39' => 2],
+			'Team'        => [$oTeam->GetKey() => 2],
 			'Person'      => [
 				'9'  => 1,
 				'14' => 1,
@@ -53,10 +86,8 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 		];
 		$this->SetObjectsAwaitingFireEventDbLinksChanged($aLinkStack);
 
-		// Processing deferred updates for Team::39
-		/** @var \cmdbAbstractObject $oTeam39 */
-		$oTeam39 = MetaModel::GetObject(Team::class, 39);
-		$oTeam39->FireEventDbLinksChangedForCurrentObject();
+		// Processing deferred updates for Team
+		$oTeam->FireEventDbLinksChangedForCurrentObject();
 		$aLinkModificationsStack = $this->GetObjectsAwaitingFireEventDbLinksChanged();
 		$aExpectedLinkStack = [
 			'Team'        => [],
