@@ -5799,7 +5799,7 @@ JS
 	 */
 	final protected function FireEventCreateDone(): void
 	{
-		self::NotifyAttachedObjectsOnLinkClassModification($this);
+		$this->NotifyAttachedObjectsOnLinkClassModification();
 		//$this->FireEventDbLinksChangedForCurrentObject();
 		$this->FireEvent(EVENT_DB_CREATE_DONE);
 	}
@@ -5818,7 +5818,7 @@ JS
 	 */
 	final protected function FireEventUpdateDone(array $aChanges): void
 	{
-		self::NotifyAttachedObjectsOnLinkClassModification($this);
+		$this->NotifyAttachedObjectsOnLinkClassModification();
 		//$this->FireEventDbLinksChangedForCurrentObject();
 
 		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
@@ -5848,14 +5848,13 @@ JS
 	 */
 	final protected function FireEventDeleteDone(): void
 	{
-		self::NotifyAttachedObjectsOnLinkClassModification($this);
+		$this->NotifyAttachedObjectsOnLinkClassModification();
 		$this->FireEvent(EVENT_DB_DELETE_DONE);
 	}
 
 	/**
 	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterObjectAwaitingEventDbLinksChanged()}
 	 *
-	 * @param \cmdbAbstractObject $oItopObject
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -5863,24 +5862,30 @@ JS
 	 *
 	 * @since 3.1.0 N°5906
 	 */
-	final protected static function NotifyAttachedObjectsOnLinkClassModification(cmdbAbstractObject $oItopObject): void
+	final protected function NotifyAttachedObjectsOnLinkClassModification(): void
 	{
-		$sClass = get_class($oItopObject);
+		$sClass = get_class($this);
 		if (false === MetaModel::IsLinkClass($sClass)) {
 			return;
 		}
+		// previous values in case of link change
+		$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
 
 		$aLnkClassExternalKeys = MetaModel::GetAttributesList($sClass, [AttributeExternalKey::class]);
 		foreach ($aLnkClassExternalKeys as $sExternalKeyAttCode) {
-			$sRemoteObjectId = $oItopObject->Get($sExternalKeyAttCode);
-			if ($sRemoteObjectId <= 0) {
-				continue;
-			}
-
 			/** @var \AttributeExternalKey $oExternalKeyAttDef */
 			$oExternalKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
 			$sRemoteClassName = $oExternalKeyAttDef->GetTargetClass();
-			self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sRemoteObjectId);
+
+			$sRemoteObjectId = $this->Get($sExternalKeyAttCode);
+			if ($sRemoteObjectId > 0) {
+				self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sRemoteObjectId);
+			}
+
+			$sPreviousRemoteObjectId = $aPreviousValues[$sExternalKeyAttCode] ?? 0;
+			if ($sPreviousRemoteObjectId > 0) {
+				self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sPreviousRemoteObjectId);
+			}
 		}
 	}
 
