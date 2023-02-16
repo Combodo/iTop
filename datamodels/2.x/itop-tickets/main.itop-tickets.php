@@ -265,9 +265,6 @@ class _Ticket extends cmdbAbstractObject
 			$this->Set('functionalcis_list', $oCIsSet);
 		}
 		$this->Set('contacts_list', $oContactsSet);
-
-		// if called withing the object CRUD stack reentrance will be protected by iTop
-		$this->DBUpdate();
 	}
 
 	private function StoreComputedObject(&$aGraphObjects, $oObj)

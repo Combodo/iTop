@@ -4456,6 +4456,8 @@ HTML;
 			}
 		} finally {
 			if (static::IsCrudStackEmpty()) {
+				// Avoid signaling the current object that links were modified
+				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
@@ -4531,6 +4533,8 @@ HTML;
 			}
 		} finally {
 			if (static::IsCrudStackEmpty()) {
+				// Avoid signaling the current object that links were modified
+				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
@@ -4561,6 +4565,8 @@ HTML;
 			parent::DBDelete($oDeletionPlan);
 		}  finally {
 			if (static::IsCrudStackEmpty()) {
+				// Avoid signaling the current object that links were modified
+				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
@@ -5965,7 +5971,7 @@ JS
 	 * @return bool true if the object [class, id] was present in the list
 	 * @throws \CoreException
 	 */
-	private static function RemoveObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): bool
+	final protected static function RemoveObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): bool
 	{
 		$bFlagRemoved = false;
 		$aClassesHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);
