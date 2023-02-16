@@ -1369,6 +1369,7 @@ class LogFileRotationProcess implements iScheduledProcess
 	 * files that haven't modifications since {@see \LogAPI::ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS}
 	 *
 	 * @return array process feedback
+	 * @since 3.1.0
 	 */
 	public function PurgeLogs(): array
 	{
