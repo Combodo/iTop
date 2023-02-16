@@ -2,7 +2,6 @@
 
 namespace Combodo\iTop\Test\UnitTest\Webservices;
 
-use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
@@ -12,11 +11,12 @@ use MetaModel;
  * @backupGlobals disabled
  */
 class ImportTest extends ItopDataTestCase {
+	const USE_TRANSACTION = false;
 
 	private $sUrl;
 	private $sUid;
 	private $sLogin;
-	private $sPassword = "Iuytrez9876543ç_è-(";
+	private $sPassword = "abcDEF12345##";
 	private $sTmpFile = "";
 	private $oOrg;
 

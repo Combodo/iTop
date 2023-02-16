@@ -23,7 +23,7 @@ class BulkChangeTest extends ItopDataTestCase {
 
 	//bug 2888: csv import / data synchro issue with password validation
 	public function testPasswordBulkChangeIssue() {
-		/** @var Personn $oPerson */
+		/** @var \Person $oPerson */
 		$oPerson = $this->createObject('Person', array(
 			'first_name' => 'isaac',
 			'name' => 'asimov',
@@ -145,7 +145,7 @@ class BulkChangeTest extends ItopDataTestCase {
 				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
 				["org_id" => ["name" => 0]],
 				["id"],
-				[ "org_id" => "invalid value for attribute", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
+				[ "org_id" => "Invalid value for attribute", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
 			],
 			"Case 6 : Unexpected value" => [
 				[["Demo", "Server1", "1", "<svg onclick\"alert(1)\">", ""]],
@@ -351,7 +351,7 @@ class BulkChangeTest extends ItopDataTestCase {
 				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
 				["org_id" => ["name" => 0]],
 				["id"],
-				[ 0 => "",  "org_id" => "invalid value for attribute", 1 => "ServerTest", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)",
+				[ 0 => "",  "org_id" => "Invalid value for attribute", 1 => "ServerTest", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)",
 					"__ERRORS__" => "Null not allowed",
 				],
 			],

@@ -180,7 +180,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		);
 
 		$this->performBulkChangeTest(
-			"invalid value for attribute",
+			"Invalid value for attribute",
 			"Ambiguous: found 2 objects",
 			null,
 			$bIsRackReconKey,
@@ -206,7 +206,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		$aCsvData = [["UnexistingRackDescription"]];
 		$aExtKeys = ["org_id" => ["name" => 0], "rack_id" => ["name" => 1, "description" => 3]];
 
-		$sSearchLinkUrl = 'UI.php?operation=search&filter=%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%28%60Rack%60.%60name%60+%3D+%3Aname%29+AND+%28%60Rack%60.%60description%60+%3D+%3Adescription%29%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%2C%22description%22%3A%22UnexistingRackDescription%22%7D%2C%5B%5D%5D'
+		$sSearchLinkUrl = 'UI.php?operation=search&filter=%255B%2522SELECT%2B%2560Rack%2560%2BFROM%2BRack%2BAS%2B%2560Rack%2560%2BWHERE%2B%2528%2528%2560Rack%2560.%2560name%2560%2B%253D%2B%253Aname%2529%2BAND%2B%2528%2560Rack%2560.%2560description%2560%2B%253D%2B%253Adescription%2529%2529%2522%252C%257B%2522name%2522%253A%2522UnexistingRack%2522%252C%2522description%2522%253A%2522UnexistingRackDescription%2522%257D%252C%255B%255D%255D'
 ;
 		$this->performBulkChangeTest(
 			"No match for value 'UnexistingRack UnexistingRackDescription'",
@@ -238,7 +238,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	public function performBulkChangeTest($sExpectedDisplayableValue, $sExpectedDescription, $oOrg, $bIsRackReconKey,
 		$aAdditionalCsvData=null, $aExtKeys=null, $sSearchLinkUrl=null, $sError="Object not found") {
 		if ($sSearchLinkUrl===null){
-			$sSearchLinkUrl = 'UI.php?operation=search&filter=%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%60Rack%60.%60name%60+%3D+%3Aname%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%7D%2C%5B%5D%5D';
+			$sSearchLinkUrl = 'UI.php?operation=search&filter=%255B%2522SELECT%2B%2560Rack%2560%2BFROM%2BRack%2BAS%2B%2560Rack%2560%2BWHERE%2B%2528%2560Rack%2560.%2560name%2560%2B%253D%2B%253Aname%2529%2522%252C%257B%2522name%2522%253A%2522UnexistingRack%2522%257D%252C%255B%255D%255D';
 		}
 		if (is_null($oOrg)){
 			$iOrgId = $this->getTestOrgId();
