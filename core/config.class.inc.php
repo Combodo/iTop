@@ -129,7 +129,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_purge_enable'                   => [
+		'log_purge_enabled'                   => [
 			'type'                => 'bool',
 			'description'         => 'Optional purge activation.',
 			'default'             => false,
