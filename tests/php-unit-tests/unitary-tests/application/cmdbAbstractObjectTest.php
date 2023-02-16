@@ -16,7 +16,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 		$this->assertSame([], $aLinkModificationsStack);
 
 		// retain events
-		cmdbAbstractObject::SetEventDBLinksChangedAllowed(false);
+		cmdbAbstractObject::SetEventDBLinksChangedBlocked(true);
 
 		// Create the person
 		$oPerson = $this->CreatePerson(1);

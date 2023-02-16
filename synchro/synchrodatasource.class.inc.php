@@ -3536,7 +3536,7 @@ class SynchroExecution
 		}
 
 		// Avoid too many events
-		cmdbAbstractObject::SetEventDBLinksChangedAllowed(false);
+		cmdbAbstractObject::SetEventDBLinksChangedBlocked(true);
 		try {
 			$iLastReplicaProcessed = -1;
 			/** @var \SynchroReplica $oReplica */
@@ -3551,7 +3551,7 @@ class SynchroExecution
 			}
 		} finally {
 			// Send all the retained events for further computations
-			cmdbAbstractObject::SetEventDBLinksChangedAllowed(true);
+			cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
 			cmdbAbstractObject::FireEventDbLinksChangedForAllObjects();
 		}
 

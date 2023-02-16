@@ -197,12 +197,17 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 *
 	 */
 	protected static array $aObjectsAwaitingEventDbLinksChanged = [];
+
 	/**
 	 * @var bool Flag to allow/block the Event when DBLink are changed
 	 * This is used to avoid sending too many events when doing mass-update
+	 *
+	 * When this flag is set to true, the object registration for links modification is done
+	 * but the event is not fired.
+	 *
 	 * @since 3.1.0 N°5906
 	 */
-	protected static bool $bAllowEventDBLinksChanged = true;
+	protected static bool $bBlockEventDBLinksChanged = false;
 
 
 	/**
@@ -5233,7 +5238,7 @@ EOF
 		}
 
 		// Avoid too many events
-		static::SetEventDBLinksChangedAllowed(false);
+		static::SetEventDBLinksChangedBlocked(true);
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach ($aSelectedObj as $iId) {
@@ -5264,7 +5269,7 @@ EOF
 			}
 		}
 		// Send all the retained events for further computations
-		static::SetEventDBLinksChangedAllowed(true);
+		static::SetEventDBLinksChangedBlocked(false);
 		static::FireEventDbLinksChangedForAllObjects();
 
 		set_time_limit(intval($iPreviousTimeLimit));
@@ -5338,7 +5343,7 @@ EOF
 		$oDeletionPlan = new DeletionPlan();
 
 		// Avoid too many events
-		static::SetEventDBLinksChangedAllowed(false);
+		static::SetEventDBLinksChangedBlocked(true);
 		try {
 			foreach ($aObjects as $oObj) {
 				if ($bPreview) {
@@ -5349,7 +5354,7 @@ EOF
 			}
 		} finally {
 			// Send all the retained events for further computations
-			static::SetEventDBLinksChangedAllowed(true);
+			static::SetEventDBLinksChangedBlocked(false);
 			static::FireEventDbLinksChangedForAllObjects();
 		}
 
@@ -5854,7 +5859,7 @@ JS
 
 	/**
 	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterObjectAwaitingEventDbLinksChanged()}
-	 *
+	 * If an external key was modified, register also the previous object that the link was modified.
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -5890,6 +5895,8 @@ JS
 	}
 
 	/**
+	 * Register one object for later EVENT_DB_LINKS_CHANGED event.
+	 *
 	 * @param string $sClass
 	 * @param string $sId
 	 *
@@ -5905,6 +5912,8 @@ JS
 	}
 
 	/**
+	 * Fire the EVENT_DB_LINKS_CHANGED event if current object is registered
+	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -5913,7 +5922,7 @@ JS
 	 */
 	final public function FireEventDbLinksChangedForCurrentObject(): void
 	{
-		if (false === static::IsEventDBLinksChangedAllowed()) {
+		if (true === static::IsEventDBLinksChangedBlocked()) {
 			return;
 		}
 
@@ -5923,6 +5932,8 @@ JS
 	}
 
 	/**
+	 * Fire the EVENT_DB_LINKS_CHANGED event if given object is registered, and unregister it
+	 *
 	 * @param string $sClass
 	 * @param string $sId
 	 *
@@ -5932,12 +5943,12 @@ JS
 	 */
 	private static function FireEventDbLinksChangedForClassId(string $sClass, string $sId): void
 	{
-		if (false === static::IsEventDBLinksChangedAllowed()) {
+		if (true === static::IsEventDBLinksChangedBlocked()) {
 			return;
 		}
 
-		$bIsClassInStack = self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
-		if (false === $bIsClassInStack) {
+		$bIsObjectAwaitingEventDbLinksChanged = self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
+		if (false === $bIsObjectAwaitingEventDbLinksChanged) {
 			return;
 		}
 
@@ -5949,6 +5960,8 @@ JS
 	}
 
 	/**
+	 * Remove the registration of an object concerning the EVENT_DB_LINKS_CHANGED event
+	 *
 	 * @param string $sClass
 	 * @param string $sId
 	 *
@@ -5968,7 +5981,10 @@ JS
 
 		return $bFlagRemoved;
 	}
+
 	/**
+	 * Fire the EVENT_DB_LINKS_CHANGED event to all the registered objects
+	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -5977,7 +5993,7 @@ JS
 	 */
 	final public static function FireEventDbLinksChangedForAllObjects()
 	{
-		if (false === static::IsEventDBLinksChangedAllowed()) {
+		if (true === static::IsEventDBLinksChangedBlocked()) {
 			return;
 		}
 
@@ -5989,19 +6005,23 @@ JS
 	}
 
 	/**
+	 * Check if the event EVENT_DB_LINKS_CHANGED is blocked or not (for bulk operations)
+	 *
 	 * @return bool
 	 */
-	public static function IsEventDBLinksChangedAllowed(): bool
+	public static function IsEventDBLinksChangedBlocked(): bool
 	{
-		return self::$bAllowEventDBLinksChanged;
+		return self::$bBlockEventDBLinksChanged;
 	}
 
 	/**
-	 * @param bool $bAllowEventDBLinksChanged
+	 * Block/unblock the event EVENT_DB_LINKS_CHANGED (the registration of objects on links modifications continue to work)
+	 *
+	 * @param bool $bBlockEventDBLinksChanged
 	 */
-	public static function SetEventDBLinksChangedAllowed(bool $bAllowEventDBLinksChanged): void
+	public static function SetEventDBLinksChangedBlocked(bool $bBlockEventDBLinksChanged): void
 	{
-		self::$bAllowEventDBLinksChanged = $bAllowEventDBLinksChanged;
+		self::$bBlockEventDBLinksChanged = $bBlockEventDBLinksChanged;
 	}
 
 	/**

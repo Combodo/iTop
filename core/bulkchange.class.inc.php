@@ -1162,7 +1162,7 @@ class BulkChange
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 
 		// Avoid too many events
-		cmdbAbstractObject::SetEventDBLinksChangedAllowed(false);
+		cmdbAbstractObject::SetEventDBLinksChangedBlocked(true);
 		try {
 			foreach ($this->m_aData as $iRow => $aRowData) {
 				set_time_limit(intval($iLoopTimeLimit));
@@ -1262,7 +1262,7 @@ class BulkChange
 			}
 		} finally {
 			// Send all the retained events for further computations
-			cmdbAbstractObject::SetEventDBLinksChangedAllowed(true);
+			cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
 			cmdbAbstractObject::FireEventDbLinksChangedForAllObjects();
 		}
 

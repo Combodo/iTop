@@ -158,6 +158,12 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * @var array List all the CRUD stack in progress
+	 *
+	 * The array contains instances of
+	 * ['type' => 'type of CRUD operation (INSERT, UPDATE, DELETE)',
+	 *  'class' => 'class of the object in the CRUD process',
+	 *  'id' => 'id of the object in the CRUD process']
+	 *
 	 * @since 3.1.0 N°5906
 	 */
 	protected static array $m_aCrudStack = [];
@@ -5998,10 +6004,17 @@ abstract class DBObject implements iDisplay
 	//////////////
 	/// CRUD stack in progress
 	///
+
 	/**
+	 * Check if an object is currently involved in CRUD operation
+	 *
+	 * @param string $sClass
+	 * @param string|null $sId
+	 *
+	 * @return bool
 	 * @since 3.1.0 N°5609
 	 */
-	public static function IsObjectCurrentlyInCrud(string $sClass, ?string $sId): bool
+	final public static function IsObjectCurrentlyInCrud(string $sClass, ?string $sId): bool
 	{
 		// during insert key is reset from -1 to null
 		// so we need to handle null values (will give empty string after conversion)
@@ -6018,9 +6031,14 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Check if an object of the given class  is currently involved in CRUD operation
+	 *
+	 * @param string $sClass
+	 *
+	 * @return bool
 	 * @since 3.1.0 N°5609
 	 */
-	public static function IsClassCurrentlyInCrud(string $sClass): bool
+	final public static function IsClassCurrentlyInCrud(string $sClass): bool
 	{
 		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
 			if ($sClass === $aCrudStackEntry['class']) {
@@ -6031,7 +6049,15 @@ abstract class DBObject implements iDisplay
 		return false;
 	}
 
-	protected function AddCurrentObjectInCrudStack(string $sCrudType): void
+	/**
+	 * Add the current object to the CRUD stack
+	 *
+	 * @param string $sCrudType
+	 *
+	 * @return void
+	 * @since 3.1.0 N°5609
+	 */
+	private function AddCurrentObjectInCrudStack(string $sCrudType): void
 	{
 		self::$m_aCrudStack[] = [
 			'type'  => $sCrudType,
@@ -6040,19 +6066,38 @@ abstract class DBObject implements iDisplay
 		];
 	}
 
-	protected function UpdateCurrentObjectInCrudStack(): void
+	/**
+	 * Update the last entry of the CRUD stack with the information of the current object
+	 * This is calls during DBInsert since the object id changes
+	 *
+	 * @return void
+	 * @since 3.1.0 N°5609
+	 */
+	private function UpdateCurrentObjectInCrudStack(): void
 	{
 		$aCurrentCrudStack = array_pop(self::$m_aCrudStack);
 		$aCurrentCrudStack['id'] = (string)$this->GetKey();
 		self::$m_aCrudStack[] = $aCurrentCrudStack;
 	}
 
-	protected function RemoveCurrentObjectInCrudStack(): void
+	/**
+	 * Remove the last entry of the CRUD stack
+	 *
+	 * @return void
+	 * @since 3.1.0 N°5609
+	 */
+	private function RemoveCurrentObjectInCrudStack(): void
 	{
 		array_pop(self::$m_aCrudStack);
 	}
 
-	protected function IsCrudStackEmpty(): bool
+	/**
+	 * Check if there are objects in the CRUD stack
+	 *
+	 * @return bool
+	 * @since 3.1.0 N°5609
+	 */
+	final protected function IsCrudStackEmpty(): bool
 	{
 		return count(self::$m_aCrudStack) === 0;
 	}
