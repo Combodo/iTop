@@ -4559,6 +4559,8 @@ HTML;
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
+
+		return $oDeletionPlan;
 	}
 
 		protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
@@ -5798,7 +5800,7 @@ JS
 	final protected function FireEventCreateDone(): void
 	{
 		self::NotifyAttachedObjectsOnLinkClassModification($this);
-		$this->FireEventDbLinksChangedForCurrentObject();
+		//$this->FireEventDbLinksChangedForCurrentObject();
 		$this->FireEvent(EVENT_DB_CREATE_DONE);
 	}
 
@@ -5817,7 +5819,7 @@ JS
 	final protected function FireEventUpdateDone(array $aChanges): void
 	{
 		self::NotifyAttachedObjectsOnLinkClassModification($this);
-		$this->FireEventDbLinksChangedForCurrentObject();
+		//$this->FireEventDbLinksChangedForCurrentObject();
 
 		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
 	}
@@ -5961,7 +5963,6 @@ JS
 
 		return $bFlagRemoved;
 	}
-
 	/**
 	 * @return void
 	 * @throws \ArchivedObjectException

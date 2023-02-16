@@ -94,12 +94,8 @@ final class EventService
 		});
 		self::$aEventListeners[$sEvent] = $aEventCallbacks;
 
-		$iTotalRegistrations = 0;
-		foreach (self::$aEventListeners as $aEvent) {
-			$iTotalRegistrations += count($aEvent);
-		}
-		$sLogEventName = "$sEvent:".self::GetSourcesAsString($sEventSource);
-		EventServiceLog::Trace("Registering event '$sLogEventName' for '$sName' with id '$sId' (total $iTotalRegistrations)");
+		$sSource = self::GetSourcesAsString($sEventSource);
+		EventServiceLog::Debug("Registering Listener '$sName' for event '$sEvent' source '$sSource' from '$sModuleId'");
 
 		return $sId;
 	}
@@ -133,7 +129,6 @@ final class EventService
 		$sLogEventName = "$sEvent - ".self::GetSourcesAsString($eventSource).' '.json_encode($oEventData->GetEventData());
 		EventServiceLog::Trace("Fire event '$sLogEventName'");
 		if (!isset(self::$aEventListeners[$sEvent])) {
-			EventServiceLog::DebugEvent("No listener for '$sLogEventName'", $sEvent, $eventSource);
 			$oKPI->ComputeStats('FireEvent', $sEvent);
 
 			return;
@@ -141,12 +136,14 @@ final class EventService
 
 		$oLastException = null;
 		$sLastExceptionMessage = null;
+		$bEventFired = false;
 		foreach (self::GetListeners($sEvent, $eventSource) as $aEventCallback) {
 			if (!self::MatchContext($aEventCallback['context'])) {
 				continue;
 			}
 			$sName = $aEventCallback['name'];
-			EventServiceLog::DebugEvent("Fire event '$sLogEventName' calling '$sName'", $sEvent, $eventSource);
+			EventServiceLog::Debug("Fire event '$sLogEventName' calling '$sName'");
+			$bEventFired = true;
 			try {
 				$oEventData->SetCallbackData($aEventCallback['data']);
 				call_user_func($aEventCallback['callback'], $oEventData);
@@ -161,7 +158,9 @@ final class EventService
 				$oLastException = $e;
 			}
 		}
-		EventServiceLog::DebugEvent("End of event '$sLogEventName'", $sEvent, $eventSource);
+		if ($bEventFired) {
+			EventServiceLog::Debug("End of event '$sLogEventName'");
+		}
 		$oKPI->ComputeStats('FireEvent', $sEvent);
 
 		if (!is_null($oLastException)) {
