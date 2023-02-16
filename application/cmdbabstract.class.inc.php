@@ -5805,7 +5805,6 @@ JS
 	final protected function FireEventCreateDone(): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
-		//$this->FireEventDbLinksChangedForCurrentObject();
 		$this->FireEvent(EVENT_DB_CREATE_DONE);
 	}
 
@@ -5824,8 +5823,6 @@ JS
 	final protected function FireEventUpdateDone(array $aChanges): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
-		//$this->FireEventDbLinksChangedForCurrentObject();
-
 		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
 	}
 
@@ -5859,7 +5856,7 @@ JS
 
 	/**
 	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterObjectAwaitingEventDbLinksChanged()}
-	 * If an external key was modified, register also the previous object that the link was modified.
+	 * If an external key was modified, register also the previous object that was linked previously.
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -5902,7 +5899,7 @@ JS
 	 *
 	 * @since 3.1.0 N°5906
 	 */
-	final protected static function RegisterObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): void
+	private static function RegisterObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): void
 	{
 		if (isset(self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId])) {
 			self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId]++;
@@ -5920,7 +5917,7 @@ JS
 	 *
 	 * @since 3.1.0 N°5906
 	 */
-	final public function FireEventDbLinksChangedForCurrentObject(): void
+	final protected function FireEventDbLinksChangedForCurrentObject(): void
 	{
 		if (true === static::IsEventDBLinksChangedBlocked()) {
 			return;
@@ -6009,17 +6006,17 @@ JS
 	 *
 	 * @return bool
 	 */
-	public static function IsEventDBLinksChangedBlocked(): bool
+	final public static function IsEventDBLinksChangedBlocked(): bool
 	{
 		return self::$bBlockEventDBLinksChanged;
 	}
 
 	/**
-	 * Block/unblock the event EVENT_DB_LINKS_CHANGED (the registration of objects on links modifications continue to work)
+	 * Block/unblock the event EVENT_DB_LINKS_CHANGED (the registration of objects on links modifications continues to work)
 	 *
 	 * @param bool $bBlockEventDBLinksChanged
 	 */
-	public static function SetEventDBLinksChangedBlocked(bool $bBlockEventDBLinksChanged): void
+	final public static function SetEventDBLinksChangedBlocked(bool $bBlockEventDBLinksChanged): void
 	{
 		self::$bBlockEventDBLinksChanged = $bBlockEventDBLinksChanged;
 	}
