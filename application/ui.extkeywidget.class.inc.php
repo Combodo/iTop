@@ -324,7 +324,7 @@ EOF
 EOF
 			);
 			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
-			$sHTMLValue .= "	<a class=\"ibo-input-select--action-button ibo-input-select--action-button--clear ibo-is-hidden\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\" data-tooltip-content='".Dict::S('UI:Button:Clear')."'><i class=\"fas fa-times\"></i></a>";
+			$sHTMLValue .= "	<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--clear ibo-is-hidden\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\" data-tooltip-content='".Dict::S('UI:Button:Clear')."'><i class=\"fas fa-times\"></i></a>";
 		}
 		if ($bCreate && $bExtensions) {
 			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
