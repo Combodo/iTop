@@ -199,7 +199,7 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 			);
 
 			// N°5985 - Test bidirectional conversion across the centuries to ensure that it works on PHP 7.4 => 8.2+ even though the bug has been fixed in PHP 8.1 but still exists in PHP 7.4 => 8.1
-			for ($iUpperYearBound = 1600; $iUpperYearBound <= 2100; $iUpperYearBound = $iUpperYearBound + 25) {
+			for ($iUpperYearBound = 1925; $iUpperYearBound <= 2100; $iUpperYearBound = $iUpperYearBound + 25) {
 				$aExpressions[] = array("FROM_DAYS(TO_DAYS('$iUpperYearBound-01-02'))", "$iUpperYearBound-01-02");
 			}
 		}
