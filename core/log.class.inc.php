@@ -1366,7 +1366,7 @@ class LogFileRotationProcess implements iScheduledProcess
 	 * PurgeLogs.
 	 *
 	 * Purge test last modification time of file in log folder and delete
-	 * files that haven't modifications since ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS
+	 * files that haven't modifications since {@see \LogAPI::ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS}
 	 *
 	 * @return array process feedback
 	 */
