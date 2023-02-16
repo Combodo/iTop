@@ -1357,7 +1357,7 @@ class LogFileRotationProcess implements iScheduledProcess
 		}
 
 		// Purge logs if purge enabled
-		if (MetaModel::GetConfig()->Get(LogAPI::ENUM_CONFIG_PARAM_PURGE_ENABLE)) {
+		if (MetaModel::GetConfig()->Get(LogAPI::ENUM_CONFIG_PARAM_PURGE_ENABLED)) {
 			$this->PurgeLogs();
 		}
 	}
