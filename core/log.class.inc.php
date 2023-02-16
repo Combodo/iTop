@@ -647,7 +647,7 @@ abstract class LogAPI
 	 *
 	 * @since 3.1.0
 	 */
-	public const ENUM_CONFIG_PARAM_PURGE_ENABLE = 'log_purge_enable';
+	public const ENUM_CONFIG_PARAM_PURGE_ENABLED = 'log_purge_enabled';
 
 	/**
 	 * Parameter to define day we want to keep old log files.
