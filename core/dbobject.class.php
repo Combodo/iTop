@@ -157,6 +157,18 @@ abstract class DBObject implements iDisplay
 	protected $m_oLinkHostObject = null;
 
 	/**
+	 * @var array List all the CRUD stack in progress
+	 *
+	 * The array contains instances of
+	 * ['type' => 'type of CRUD operation (INSERT, UPDATE, DELETE)',
+	 *  'class' => 'class of the object in the CRUD process',
+	 *  'id' => 'id of the object in the CRUD process']
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	protected static array $m_aCrudStack = [];
+
+	/**
      * DBObject constructor.
      *
      * You should preferably use MetaModel::NewObject() instead of this constructor.
@@ -2952,148 +2964,161 @@ abstract class DBObject implements iDisplay
 	public function DBInsertNoReload()
 	{
 		$sClass = get_class($this);
-        if (MetaModel::DBIsReadOnly())
-        {
-            $sErrorMessage = "Cannot Insert object of class '$sClass' because of an ongoing maintenance: the database is in ReadOnly mode";
 
-            IssueLog::Error("$sErrorMessage\n".MyHelpers::get_callstack_text(1));
-            throw new CoreException("$sErrorMessage (see the log for more information)");
-        }
-
-		if ($this->m_bIsInDB) {
-			throw new CoreException('The object already exists into the Database, you may want to use the clone function');
-		}
-
-		$sClass = get_class($this);
-		$sRootClass = MetaModel::GetRootClass($sClass);
-
-		// Ensure the update of the values (we are accessing the data directly)
-		$this->DoComputeValues();
-		$this->OnInsert();
-
-		// If not automatically computed, then check that the key is given by the caller
-		if (!MetaModel::IsAutoIncrementKey($sRootClass)) {
-			if (empty($this->m_iKey)) {
-				throw new CoreWarning('Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber', array('class' => $sRootClass));
-			}
-		}
-
-		list($bRes, $aIssues) = $this->CheckToWrite(false);
-		if (!$bRes) {
-			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
-		}
-
-		if ($this->m_iKey < 0) {
-			// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
-			$this->m_iKey = null;
-		}
-
-		$this->ComputeStopWatchesDeadline(true);
-
-		$iTransactionRetry = 1;
-		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-		if ($bIsTransactionEnabled) {
-			// TODO Deep clone this object before the transaction (to use it in case of rollback)
-			// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
-			$iTransactionRetryCount = 1;
-			$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
-			$iTransactionRetry = $iTransactionRetryCount;
-		}
-		while ($iTransactionRetry > 0) {
-			try {
-				$iTransactionRetry--;
-				if ($bIsTransactionEnabled) {
-					CMDBSource::Query('START TRANSACTION');
-				}
-
-				// First query built upon on the root class, because the ID must be created first
-				$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
-
-				// Then do the leaf class, if different from the root class
-				if ($sClass != $sRootClass) {
-					$this->DBInsertSingleTable($sClass);
-				}
-
-				// Then do the other classes
-				foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
-					if ($sParentClass == $sRootClass) {
-						continue;
-					}
-					$this->DBInsertSingleTable($sParentClass);
-				}
-
-				$this->OnObjectKeyReady();
-
-				$this->DBWriteLinks();
-				$this->WriteExternalAttributes();
-
-				// Write object creation history within the transaction
-				$this->RecordObjCreation();
-
-				if ($bIsTransactionEnabled) {
-					CMDBSource::Query('COMMIT');
-				}
-				break;
-			}
-			catch (Exception $e) {
-				IssueLog::Error($e->getMessage());
-				if ($bIsTransactionEnabled) {
-					CMDBSource::Query('ROLLBACK');
-					if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e)) {
-						// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
-						if ($iTransactionRetry > 0) {
-							// wait and retry
-							IssueLog::Error('Insert TRANSACTION Retrying...');
-							usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
-							continue;
-						} else {
-							IssueLog::Error('Insert Deadlock TRANSACTION prevention failed.');
-						}
-					}
-				}
-				throw $e;
-			}
-		}
-
-		$this->m_bIsInDB = true;
-		$this->m_bDirty = false;
-		foreach ($this->m_aCurrValues as $sAttCode => $value) {
-			if (is_object($value)) {
-				$value = clone $value;
-			}
-			$this->m_aOrigValues[$sAttCode] = $value;
-		}
-
-		// Prevent DBUpdate at this point (reentrance protection)
-		MetaModel::StartReentranceProtection($this);
+		$this->AddCurrentObjectInCrudStack('INSERT');
 
 		try {
-			$this->FireEventCreateDone();
-			$this->AfterInsert();
+	        if (MetaModel::DBIsReadOnly())
+	        {
+	            $sErrorMessage = "Cannot Insert object of class '$sClass' because of an ongoing maintenance: the database is in ReadOnly mode";
 
-			// Activate any existing trigger
+	            IssueLog::Error("$sErrorMessage\n".MyHelpers::get_callstack_text(1));
+	            throw new CoreException("$sErrorMessage (see the log for more information)");
+	        }
+
+			if ($this->m_bIsInDB) {
+				throw new CoreException('The object already exists into the Database, you may want to use the clone function');
+			}
+
 			$sClass = get_class($this);
-			$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)'), array(), $aParams);
-			while ($oTrigger = $oSet->Fetch()) {
-				/** @var \Trigger $oTrigger */
-				try {
-					$oTrigger->DoActivate($this->ToArgs('this'));
-				}
-				catch (Exception $e) {
-					utils::EnrichRaisedException($oTrigger, $e);
+			$sRootClass = MetaModel::GetRootClass($sClass);
+
+			// Ensure the update of the values (we are accessing the data directly)
+			$this->DoComputeValues();
+			$this->OnInsert();
+			if ($this->m_iKey < 0) {
+				// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
+				$this->m_iKey = null;
+				$this->UpdateCurrentObjectInCrudStack();
+			}
+			// If not automatically computed, then check that the key is given by the caller
+			if (!MetaModel::IsAutoIncrementKey($sRootClass)) {
+				if (empty($this->m_iKey)) {
+					throw new CoreWarning('Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber', array('class' => $sRootClass));
 				}
 			}
 
-			// - TriggerOnObjectMention
-			$this->ActivateOnMentionTriggers(true);
+			list($bRes, $aIssues) = $this->CheckToWrite(false);
+			if (!$bRes) {
+				throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
+			}
+
+			if ($this->m_iKey < 0) {
+				// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
+				$this->m_iKey = null;
+			}
+
+			$this->ComputeStopWatchesDeadline(true);
+
+			$iTransactionRetry = 1;
+			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
+			if ($bIsTransactionEnabled) {
+				// TODO Deep clone this object before the transaction (to use it in case of rollback)
+				// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+				$iTransactionRetryCount = 1;
+				$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+				$iTransactionRetry = $iTransactionRetryCount;
+			}
+			while ($iTransactionRetry > 0) {
+				try {
+					$iTransactionRetry--;
+					if ($bIsTransactionEnabled) {
+						CMDBSource::Query('START TRANSACTION');
+					}
+
+					// First query built upon on the root class, because the ID must be created first
+					$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
+
+					// Then do the leaf class, if different from the root class
+					if ($sClass != $sRootClass) {
+						$this->DBInsertSingleTable($sClass);
+					}
+
+					// Then do the other classes
+					foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
+						if ($sParentClass == $sRootClass) {
+							continue;
+						}
+						$this->DBInsertSingleTable($sParentClass);
+					}
+
+					$this->OnObjectKeyReady();
+					$this->UpdateCurrentObjectInCrudStack();
+
+					$this->DBWriteLinks();
+					$this->WriteExternalAttributes();
+
+					// Write object creation history within the transaction
+					$this->RecordObjCreation();
+
+					if ($bIsTransactionEnabled) {
+						CMDBSource::Query('COMMIT');
+					}
+					break;
+				}
+				catch (Exception $e) {
+					IssueLog::Error($e->getMessage());
+					if ($bIsTransactionEnabled) {
+						CMDBSource::Query('ROLLBACK');
+						if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e)) {
+							// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
+							if ($iTransactionRetry > 0) {
+								// wait and retry
+								IssueLog::Error('Insert TRANSACTION Retrying...');
+								usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
+								continue;
+							} else {
+								IssueLog::Error('Insert Deadlock TRANSACTION prevention failed.');
+							}
+						}
+					}
+					throw $e;
+				}
+			}
+
+			$this->m_bIsInDB = true;
+			$this->m_bDirty = false;
+			foreach ($this->m_aCurrValues as $sAttCode => $value) {
+				if (is_object($value)) {
+					$value = clone $value;
+				}
+				$this->m_aOrigValues[$sAttCode] = $value;
+			}
+
+			// Prevent DBUpdate at this point (reentrance protection)
+			MetaModel::StartReentranceProtection($this);
+
+			try {
+				$this->FireEventCreateDone();
+				$this->AfterInsert();
+
+				// Activate any existing trigger
+				$sClass = get_class($this);
+				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)'), array(), $aParams);
+				while ($oTrigger = $oSet->Fetch()) {
+					/** @var \Trigger $oTrigger */
+					try {
+						$oTrigger->DoActivate($this->ToArgs('this'));
+					}
+					catch (Exception $e) {
+						utils::EnrichRaisedException($oTrigger, $e);
+					}
+				}
+
+				// - TriggerOnObjectMention
+				$this->ActivateOnMentionTriggers(true);
+			}
+			finally {
+				MetaModel::StopReentranceProtection($this);
+			}
+
+			if ($this->IsModified()) {
+				$this->DBUpdate();
+			}
 		}
 		finally {
-			MetaModel::StopReentranceProtection($this);
-		}
-
-		if ($this->IsModified()) {
-			$this->DBUpdate();
+			$this->RemoveCurrentObjectInCrudStack();
 		}
 
 		return $this->m_iKey;
@@ -3167,8 +3192,9 @@ abstract class DBObject implements iDisplay
 			return false;
 		}
 
-		try
-		{
+		$this->AddCurrentObjectInCrudStack('UPDATE');
+
+		try {
 			$this->DoComputeValues();
 			$this->ComputeStopWatchesDeadline(false);
 			$this->OnUpdate();
@@ -3391,6 +3417,7 @@ abstract class DBObject implements iDisplay
 		finally
 		{
 			MetaModel::StopReentranceProtection($this);
+			$this->RemoveCurrentObjectInCrudStack();
 		}
 
 		if ($this->IsModified() || $bModifiedByUpdateDone) {
@@ -3781,7 +3808,14 @@ abstract class DBObject implements iDisplay
 				if ($oToDelete->m_bIsInDB)
 				{
 					set_time_limit(intval($iLoopTimeLimit));
-					$oToDelete->DBDeleteSingleObject();
+
+					$oToDelete->AddCurrentObjectInCrudStack('DELETE');
+					try {
+						$oToDelete->DBDeleteSingleObject();
+					}
+					finally {
+						$oToDelete->RemoveCurrentObjectInCrudStack();
+					}
 				}
 			}
 		}
@@ -5965,6 +5999,107 @@ abstract class DBObject implements iDisplay
 	 */
 	protected function FireEventUnArchive(): void
 	{
+	}
+
+	//////////////
+	/// CRUD stack in progress
+	///
+
+	/**
+	 * Check if an object is currently involved in CRUD operation
+	 *
+	 * @param string $sClass
+	 * @param string|null $sId
+	 *
+	 * @return bool
+	 * @since 3.1.0 N°5609
+	 */
+	final public static function IsObjectCurrentlyInCrud(string $sClass, ?string $sId): bool
+	{
+		// during insert key is reset from -1 to null
+		// so we need to handle null values (will give empty string after conversion)
+		$sConvertedId = (string)$sId;
+
+		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
+			if (($sClass === $aCrudStackEntry['class'])
+				&& ($sConvertedId === $aCrudStackEntry['id'])) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if an object of the given class  is currently involved in CRUD operation
+	 *
+	 * @param string $sClass
+	 *
+	 * @return bool
+	 * @since 3.1.0 N°5609
+	 */
+	final public static function IsClassCurrentlyInCrud(string $sClass): bool
+	{
+		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
+			if ($sClass === $aCrudStackEntry['class']) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Add the current object to the CRUD stack
+	 *
+	 * @param string $sCrudType
+	 *
+	 * @return void
+	 * @since 3.1.0 N°5609
+	 */
+	private function AddCurrentObjectInCrudStack(string $sCrudType): void
+	{
+		self::$m_aCrudStack[] = [
+			'type'  => $sCrudType,
+			'class' => get_class($this),
+			'id'    => (string)$this->GetKey(), // GetKey() doesn't have type hinting, so forcing type to avoid getting an int
+		];
+	}
+
+	/**
+	 * Update the last entry of the CRUD stack with the information of the current object
+	 * This is calls during DBInsert since the object id changes
+	 *
+	 * @return void
+	 * @since 3.1.0 N°5609
+	 */
+	private function UpdateCurrentObjectInCrudStack(): void
+	{
+		$aCurrentCrudStack = array_pop(self::$m_aCrudStack);
+		$aCurrentCrudStack['id'] = (string)$this->GetKey();
+		self::$m_aCrudStack[] = $aCurrentCrudStack;
+	}
+
+	/**
+	 * Remove the last entry of the CRUD stack
+	 *
+	 * @return void
+	 * @since 3.1.0 N°5609
+	 */
+	private function RemoveCurrentObjectInCrudStack(): void
+	{
+		array_pop(self::$m_aCrudStack);
+	}
+
+	/**
+	 * Check if there are objects in the CRUD stack
+	 *
+	 * @return bool
+	 * @since 3.1.0 N°5609
+	 */
+	final protected function IsCrudStackEmpty(): bool
+	{
+		return count(self::$m_aCrudStack) === 0;
 	}
 }
 

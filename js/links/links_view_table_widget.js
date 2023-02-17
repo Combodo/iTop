@@ -36,7 +36,7 @@ $(function()
 			// link object deletion
 			CombodoLinkSetWorker.DeleteLinkedObject(this.options.link_class, sLinkedObjectKey, function (data) {
 				if (data.data.success === true) {
-					oTrElement.remove();
+					me.$tableSettingsDialog.DataTableSettings('DoRefresh');
 				} else {
 					CombodoModal.OpenInformativeModal(data.data.error_message, 'error');
 				}
@@ -57,7 +57,7 @@ $(function()
 			// link object unlink
 			CombodoLinkSetWorker.DetachLinkedObject(this.options.link_class, sLinkedObjectKey, this.options.external_key_to_me,  function (data) {
 				if (data.data.success === true) {
-					oTrElement.remove();
+					me.$tableSettingsDialog.DataTableSettings('DoRefresh');
 				} else {
 					CombodoModal.OpenInformativeModal(data.data.error_message, 'error');
 				}

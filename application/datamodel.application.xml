@@ -371,6 +371,22 @@
         </event_datum>
       </event_data>
     </event>
+    <event id="EVENT_DB_LINKS_CHANGED" _delta="define">
+      <description>At least one link class was changed</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
+          <description>The object where the link is or was pointing to</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
     <event id="EVENT_DB_OBJECT_RELOAD" _delta="define">
       <description>An object has been re-loaded from the database</description>
       <sources>

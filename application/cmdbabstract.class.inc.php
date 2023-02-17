@@ -190,6 +190,25 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 	const MAX_UPDATE_LOOP_COUNT = 10;
 
+	/**
+	 * @var array First level classname, second level id, value number of calls done
+	 * @used-by static::RegisterObjectAwaitingEventDbLinksChanged()
+	 * @used-by static::RemoveObjectAwaitingEventDbLinksChanged()
+	 *
+	 */
+	protected static array $aObjectsAwaitingEventDbLinksChanged = [];
+
+	/**
+	 * @var bool Flag to allow/block the Event when DBLink are changed
+	 * This is used to avoid sending too many events when doing mass-update
+	 *
+	 * When this flag is set to true, the object registration for links modification is done
+	 * but the event is not fired.
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	protected static bool $bBlockEventDBLinksChanged = false;
+
 
 	/**
 	 * Constructor from a row of data (as a hash 'attcode' => value)
@@ -4425,17 +4444,23 @@ HTML;
 	 */
 	public function DBInsertNoReload()
 	{
-		$res = parent::DBInsertNoReload();
+		try {
+			$res = parent::DBInsertNoReload();
 
-		$this->SetWarningsAsSessionMessages('create');
+			$this->SetWarningsAsSessionMessages('create');
 
-		// Invoke extensions after insertion (the object must exist, have an id, etc.)
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-		{
-			$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
+			// Invoke extensions after insertion (the object must exist, have an id, etc.)
+			/** @var \iApplicationObjectExtension $oExtensionInstance */
+			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
+				$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
+			}
+		} finally {
+			if (static::IsCrudStackEmpty()) {
+				// Avoid signaling the current object that links were modified
+				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
+				static::FireEventDbLinksChangedForAllObjects();
+			}
 		}
-
 		return $res;
 	}
 
@@ -4464,48 +4489,53 @@ HTML;
 
 	public function DBUpdate()
 	{
-		$res = parent::DBUpdate();
+		try {
+			$res = parent::DBUpdate();
 
-		$this->SetWarningsAsSessionMessages('update');
+			$this->SetWarningsAsSessionMessages('update');
 
-		// Protection against reentrance (e.g. cascading the update of ticket logs)
-		// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
-		if (!MetaModel::StartReentranceProtection($this)) {
-			$sClass = get_class($this);
-			$sKey = $this->GetKey();
-			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
-
-			return $res;
-		}
-
-		try
-		{
-			// Invoke extensions after the update (could be before)
-			/** @var \iApplicationObjectExtension $oExtensionInstance */
-			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-			{
-				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
-			}
-		}
-		finally
-		{
-			MetaModel::StopReentranceProtection($this);
-		}
-
-		$aChanges = $this->ListChanges();
-		if (count($aChanges) != 0) {
-			$this->iUpdateLoopCount++;
-			if ($this->iUpdateLoopCount > self::MAX_UPDATE_LOOP_COUNT) {
+			// Protection against reentrance (e.g. cascading the update of ticket logs)
+			// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
+			if (!MetaModel::StartReentranceProtection($this)) {
 				$sClass = get_class($this);
 				$sKey = $this->GetKey();
-				$aPlugins = [];
+				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
+
+				return $res;
+			}
+
+			try {
+				// Invoke extensions after the update (could be before)
+				/** @var \iApplicationObjectExtension $oExtensionInstance */
 				foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
-					$aPlugins[] = get_class($oExtensionInstance);
+					$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
 				}
-				$sPlugins = implode(', ', $aPlugins);
-				IssueLog::Error("CRUD: DBUpdate $sClass::$sKey Update loop detected plugins: $sPlugins", LogChannels::DM_CRUD);
-			} else {
-				return $this->DBUpdate();
+			}
+			finally {
+				MetaModel::StopReentranceProtection($this);
+			}
+
+			$aChanges = $this->ListChanges();
+			if (count($aChanges) != 0) {
+				$this->iUpdateLoopCount++;
+				if ($this->iUpdateLoopCount > self::MAX_UPDATE_LOOP_COUNT) {
+					$sClass = get_class($this);
+					$sKey = $this->GetKey();
+					$aPlugins = [];
+					foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
+						$aPlugins[] = get_class($oExtensionInstance);
+					}
+					$sPlugins = implode(', ', $aPlugins);
+					IssueLog::Error("CRUD: DBUpdate $sClass::$sKey Update loop detected plugins: $sPlugins", LogChannels::DM_CRUD);
+				} else {
+					return $this->DBUpdate();
+				}
+			}
+		} finally {
+			if (static::IsCrudStackEmpty()) {
+				// Avoid signaling the current object that links were modified
+				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
+				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
 
@@ -4529,7 +4559,22 @@ HTML;
 		}
 	}
 
-	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
+	public function DBDelete(&$oDeletionPlan = null)
+	{
+		try {
+			parent::DBDelete($oDeletionPlan);
+		}  finally {
+			if (static::IsCrudStackEmpty()) {
+				// Avoid signaling the current object that links were modified
+				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
+				static::FireEventDbLinksChangedForAllObjects();
+			}
+		}
+
+		return $oDeletionPlan;
+	}
+
+		protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
@@ -5197,6 +5242,9 @@ EOF
 			}
 			utils::RemoveTransaction($sTransactionId);
 		}
+
+		// Avoid too many events
+		static::SetEventDBLinksChangedBlocked(true);
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach ($aSelectedObj as $iId) {
@@ -5226,6 +5274,10 @@ EOF
 				$oObj->DBUpdate();
 			}
 		}
+		// Send all the retained events for further computations
+		static::SetEventDBLinksChangedBlocked(false);
+		static::FireEventDbLinksChangedForAllObjects();
+
 		set_time_limit(intval($iPreviousTimeLimit));
 		$oTable = DataTableUIBlockFactory::MakeForForm('BulkModify', $aHeaders, $aRows);
 		$oTable->AddOption("bFullscreen", true);
@@ -5296,13 +5348,20 @@ EOF
 	{
 		$oDeletionPlan = new DeletionPlan();
 
-		foreach($aObjects as $oObj)
-		{
-			if ($bPreview) {
-				$oObj->CheckToDelete($oDeletionPlan);
-			} else {
-				$oObj->DBDelete($oDeletionPlan);
+		// Avoid too many events
+		static::SetEventDBLinksChangedBlocked(true);
+		try {
+			foreach ($aObjects as $oObj) {
+				if ($bPreview) {
+					$oObj->CheckToDelete($oDeletionPlan);
+				} else {
+					$oObj->DBDelete($oDeletionPlan);
+				}
 			}
+		} finally {
+			// Send all the retained events for further computations
+			static::SetEventDBLinksChangedBlocked(false);
+			static::FireEventDbLinksChangedForAllObjects();
 		}
 
 		if ($bPreview) {
@@ -5733,7 +5792,9 @@ JS
 	///
 
 	/**
-	 * @inheritDoc
+	 * @return void
+	 * @throws \CoreException
+	 *
 	 * @since 3.1.0
 	 */
 	final protected function FireEventCheckToWrite(): void
@@ -5742,11 +5803,14 @@ JS
 	}
 
 	/**
-	 * @inheritDoc
+	 * @return void
+	 * @throws \CoreException
+	 *
 	 * @since 3.1.0
 	 */
 	final protected function FireEventCreateDone(): void
 	{
+		$this->NotifyAttachedObjectsOnLinkClassModification();
 		$this->FireEvent(EVENT_DB_CREATE_DONE);
 	}
 
@@ -5755,11 +5819,16 @@ JS
 	///
 
 	/**
-	 * @inheritDoc
+	 * @param array $aChanges
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 * @since 3.1.0
 	 */
 	final protected function FireEventUpdateDone(array $aChanges): void
 	{
+		$this->NotifyAttachedObjectsOnLinkClassModification();
 		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
 	}
 
@@ -5768,7 +5837,10 @@ JS
 	///
 
 	/**
-	 * @inheritDoc
+	 * @param \DeletionPlan $oDeletionPlan
+	 *
+	 * @return void
+	 * @throws \CoreException
 	 * @since 3.1.0
 	 */
 	final protected function FireEventCheckToDelete(DeletionPlan $oDeletionPlan): void
@@ -5777,12 +5849,182 @@ JS
 	}
 
 	/**
-	 * @inheritDoc
+	 * @return void
+	 * @throws \CoreException
+	 *
 	 * @since 3.1.0
 	 */
 	final protected function FireEventDeleteDone(): void
 	{
+		$this->NotifyAttachedObjectsOnLinkClassModification();
 		$this->FireEvent(EVENT_DB_DELETE_DONE);
+	}
+
+	/**
+	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterObjectAwaitingEventDbLinksChanged()}
+	 * If an external key was modified, register also the previous object that was linked previously.
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Exception
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	final protected function NotifyAttachedObjectsOnLinkClassModification(): void
+	{
+		$sClass = get_class($this);
+		if (false === MetaModel::IsLinkClass($sClass)) {
+			return;
+		}
+		// previous values in case of link change
+		$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
+
+		$aLnkClassExternalKeys = MetaModel::GetAttributesList($sClass, [AttributeExternalKey::class]);
+		foreach ($aLnkClassExternalKeys as $sExternalKeyAttCode) {
+			/** @var \AttributeExternalKey $oExternalKeyAttDef */
+			$oExternalKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
+			$sRemoteClassName = $oExternalKeyAttDef->GetTargetClass();
+
+			$sRemoteObjectId = $this->Get($sExternalKeyAttCode);
+			if ($sRemoteObjectId > 0) {
+				self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sRemoteObjectId);
+			}
+
+			$sPreviousRemoteObjectId = $aPreviousValues[$sExternalKeyAttCode] ?? 0;
+			if ($sPreviousRemoteObjectId > 0) {
+				self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sPreviousRemoteObjectId);
+			}
+		}
+	}
+
+	/**
+	 * Register one object for later EVENT_DB_LINKS_CHANGED event.
+	 *
+	 * @param string $sClass
+	 * @param string|int|null $sId
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	private static function RegisterObjectAwaitingEventDbLinksChanged(string $sClass, $sId): void
+	{
+		if (isset(self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId])) {
+			self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId]++;
+		} else {
+			self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId] = 1;
+		}
+	}
+
+	/**
+	 * Fire the EVENT_DB_LINKS_CHANGED event if current object is registered
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	final protected function FireEventDbLinksChangedForCurrentObject(): void
+	{
+		if (true === static::IsEventDBLinksChangedBlocked()) {
+			return;
+		}
+
+		$sClass = get_class($this);
+		$sId = $this->GetKey();
+		self::FireEventDbLinksChangedForClassId($sClass, $sId);
+	}
+
+	/**
+	 * Fire the EVENT_DB_LINKS_CHANGED event if given object is registered, and unregister it
+	 *
+	 * @param string $sClass
+	 * @param string|int|null $sId
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	private static function FireEventDbLinksChangedForClassId(string $sClass, $sId): void
+	{
+		if (true === static::IsEventDBLinksChangedBlocked()) {
+			return;
+		}
+
+		$bIsObjectAwaitingEventDbLinksChanged = self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
+		if (false === $bIsObjectAwaitingEventDbLinksChanged) {
+			return;
+		}
+
+		$oObject = MetaModel::GetObject($sClass, $sId);
+		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
+
+		// The event listeners might have generated new lnk instances pointing to this object, so removing object from stack to avoid reentrance
+		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
+	}
+
+	/**
+	 * Remove the registration of an object concerning the EVENT_DB_LINKS_CHANGED event
+	 *
+	 * @param string $sClass
+	 * @param string|int|null $sId
+	 *
+	 * @return bool true if the object [class, id] was present in the list
+	 * @throws \CoreException
+	 */
+	final protected static function RemoveObjectAwaitingEventDbLinksChanged(string $sClass, $sId): bool
+	{
+		$bFlagRemoved = false;
+		$aClassesHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);
+		foreach ($aClassesHierarchy as $sClassInHierarchy) {
+			if (isset(self::$aObjectsAwaitingEventDbLinksChanged[$sClassInHierarchy][$sId])) {
+				unset(self::$aObjectsAwaitingEventDbLinksChanged[$sClassInHierarchy][$sId]);
+				$bFlagRemoved = true;
+			}
+		}
+
+		return $bFlagRemoved;
+	}
+
+	/**
+	 * Fire the EVENT_DB_LINKS_CHANGED event to all the registered objects
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	final public static function FireEventDbLinksChangedForAllObjects()
+	{
+		if (true === static::IsEventDBLinksChangedBlocked()) {
+			return;
+		}
+
+		foreach (self::$aObjectsAwaitingEventDbLinksChanged as $sClass => $aClassInstances) {
+			foreach ($aClassInstances as $sId => $iCallsNumber) {
+				self::FireEventDbLinksChangedForClassId($sClass, $sId);
+			}
+		}
+	}
+
+	/**
+	 * Check if the event EVENT_DB_LINKS_CHANGED is blocked or not (for bulk operations)
+	 *
+	 * @return bool
+	 */
+	final public static function IsEventDBLinksChangedBlocked(): bool
+	{
+		return self::$bBlockEventDBLinksChanged;
+	}
+
+	/**
+	 * Block/unblock the event EVENT_DB_LINKS_CHANGED (the registration of objects on links modifications continues to work)
+	 *
+	 * @param bool $bBlockEventDBLinksChanged
+	 */
+	final public static function SetEventDBLinksChangedBlocked(bool $bBlockEventDBLinksChanged): void
+	{
+		self::$bBlockEventDBLinksChanged = $bBlockEventDBLinksChanged;
 	}
 
 	/**

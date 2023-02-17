@@ -155,7 +155,7 @@ class ItopTestCase extends TestCase
 	/**
 	 * @param string $sObjectClass for example DBObject::class
 	 * @param string $sMethodName
-	 * @param object $oObject
+	 * @param ?object $oObject
 	 * @param array $aArgs
 	 *
 	 * @return mixed method result
@@ -175,49 +175,78 @@ class ItopTestCase extends TestCase
 
 
 	/**
+	 * @since 3.1.0
+	 */
+	public function GetNonPublicStaticProperty(string $sClass, string $sProperty)
+	{
+		/** @noinspection OneTimeUseVariablesInspection */
+		$oProperty = $this->GetProperty($sClass, $sProperty);
+
+		return $oProperty->getValue();
+	}
+
+	/**
 	 * @param object $oObject
 	 * @param string $sProperty
 	 *
 	 * @return mixed property
 	 *
-	 * @throws \ReflectionException
 	 * @since 2.7.8 3.0.3 3.1.0
 	 */
 	public function GetNonPublicProperty(object $oObject, string $sProperty)
 	{
-		$class = new \ReflectionClass(get_class($oObject));
+		/** @noinspection OneTimeUseVariablesInspection */
+		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
+
+		return $oProperty->getValue($oObject);
+	}
+
+	/**
+	 * @since 3.1.0
+	 */
+	private function GetProperty(string $sClass, string $sProperty): \ReflectionProperty
+	{
+		$class = new \ReflectionClass($sClass);
 		$property = $class->getProperty($sProperty);
 		$property->setAccessible(true);
 
-		return $property->getValue($oObject);
+		return $property;
 	}
+
 
 	/**
 	 * @param object $oObject
 	 * @param string $sProperty
 	 * @param $value
 	 *
-	 * @throws \ReflectionException
 	 * @since 2.7.8 3.0.3 3.1.0
 	 */
 	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
 	{
-		$class = new \ReflectionClass(get_class($oObject));
-		$property = $class->getProperty($sProperty);
-		$property->setAccessible(true);
-
-		$property->setValue($oObject, $value);
+		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
+		$oProperty->setValue($oObject, $value);
 	}
 
-	public function RecurseRmdir($dir) {
+	/**
+	 * @since 3.1.0
+	 */
+	public function SetNonPublicStaticProperty(string $sClass, string $sProperty, $value)
+	{
+		$oProperty = $this->GetProperty($sClass, $sProperty);
+		$oProperty->setValue($value);
+	}
+
+	public function RecurseRmdir($dir)
+	{
 		if (is_dir($dir)) {
 			$objects = scandir($dir);
 			foreach ($objects as $object) {
 				if ($object != "." && $object != "..") {
-					if (is_dir($dir.DIRECTORY_SEPARATOR.$object))
+					if (is_dir($dir.DIRECTORY_SEPARATOR.$object)) {
 						$this->RecurseRmdir($dir.DIRECTORY_SEPARATOR.$object);
-					else
+					} else {
 						unlink($dir.DIRECTORY_SEPARATOR.$object);
+					}
 				}
 			}
 			rmdir($dir);

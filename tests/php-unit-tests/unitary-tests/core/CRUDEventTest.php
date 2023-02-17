@@ -11,6 +11,7 @@ use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ContactType;
 use CoreException;
+use DBObject;
 use DBObjectSet;
 use DBSearch;
 use lnkPersonToTeam;
@@ -440,6 +441,45 @@ class CRUDEventTest extends ItopDataTestCase
 			}
 		}
 	}
+
+	public function testCrudStack()
+	{
+		$oEventReceiver = new CRUDEventReceiver();
+		// Modify the person's function
+		$oEventReceiver->AddCallback(EVENT_DB_COMPUTE_VALUES, Person::class, 'CheckCrudStack');
+		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_COMPUTE_VALUES);
+		$oPerson1 = $this->CreatePerson(1);
+		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
+		$oEventReceiver->CleanCallbacks();
+
+		$oEventReceiver->AddCallback(EVENT_DB_CHECK_TO_WRITE, Person::class, 'CheckCrudStack');
+		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_CHECK_TO_WRITE);
+		$this->CreatePerson(2);
+		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
+		$oEventReceiver->CleanCallbacks();
+
+		$oEventReceiver->AddCallback(EVENT_DB_CREATE_DONE, Person::class, 'CheckCrudStack');
+		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_CREATE_DONE);
+		$this->CreatePerson(3);
+		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
+		$oEventReceiver->CleanCallbacks();
+
+		// Insert a Team with new lnkPersonToTeam - in the lnkPersonToTeam event we check that Team CRUD operation is ongoing
+		$oEventReceiver->AddCallback(EVENT_DB_CREATE_DONE, Person::class, 'CheckUpdateInLnk');
+		$sLinkedClass = lnkPersonToTeam::class;
+		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_CREATE_DONE, $sLinkedClass);
+		// Prepare the link for the insertion with the team
+		$aLinkedObjectsArray = [];
+		$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
+		$oLinkSet = new ormLinkSet(Team::class, 'persons_list', $oSet);
+		$oLink = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson1->GetKey()]);
+		$oLinkSet->AddItem($oLink);
+		// Create the team
+		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeamWithLinkToAPerson', 'persons_list' => $oLinkSet, 'org_id' => $this->getTestOrgId()]);
+		$oTeam->DBInsert();
+		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
+	}
+
 }
 
 
@@ -472,12 +512,19 @@ class CRUDEventReceiver extends ClassesWithDebug
 {
 	private $aCallbacks = [];
 
+	public static $bIsObjectInCrudStack;
+
 	public function AddCallback(string $sEvent, string $sClass, string $sFct, int $iCount = 1): void
 	{
 		$this->aCallbacks[$sEvent][$sClass] = [
 			'callback' => [$this, $sFct],
 			'count' => $iCount,
 		];
+	}
+
+	public function CleanCallbacks()
+	{
+		$this->aCallbacks = [];
 	}
 
 	// Event callbacks
@@ -499,7 +546,7 @@ class CRUDEventReceiver extends ClassesWithDebug
 		}
 	}
 
-	public function RegisterCRUDListeners(string $sEvent = null)
+	public function RegisterCRUDListeners(string $sEvent = null, $mEventSource = null)
 	{
 		$this->Debug('Registering Test event listeners');
 		if (is_null($sEvent)) {
@@ -512,7 +559,7 @@ class CRUDEventReceiver extends ClassesWithDebug
 
 			return;
 		}
-		EventService::RegisterListener($sEvent, [$this, 'OnEvent']);
+		EventService::RegisterListener($sEvent, [$this, 'OnEvent'], $mEventSource);
 	}
 
 	/**
@@ -547,4 +594,14 @@ class CRUDEventReceiver extends ClassesWithDebug
 		$oObject->Set('first_name', 'CRUD_first_name_'.rand());
 	}
 
+	private function CheckCrudStack(DBObject $oObject): void
+	{
+		self::$bIsObjectInCrudStack = DBObject::IsObjectCurrentlyInCrud(get_class($oObject), $oObject->GetKey());
+	}
+
+	private function CheckUpdateInLnk(lnkPersonToTeam $oLnkPersonToTeam)
+	{
+		$iTeamId = $oLnkPersonToTeam->Get('team_id');
+		self::$bIsObjectInCrudStack = DBObject::IsObjectCurrentlyInCrud(Team::class, $iTeamId);
+	}
 }
