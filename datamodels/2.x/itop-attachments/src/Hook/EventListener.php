@@ -67,6 +67,7 @@ class EventListener implements iEventServiceSetup
 			'attachment->file_name' => $oDocument->GetFileName(),
 			'attachment->downloads_count' => $oDocument->GetDownloadsCount(),
 			'attachment->data' => $oDocument->GetData(),
+			'attachment->data_as_base64' => base64_encode($oDocument->GetData()),
 		];
 		$aTriggerParams = array('class_list' => MetaModel::EnumParentClasses($oAttachment->Get('item_class'), ENUM_PARENT_CLASSES_ALL));
 		$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sTriggerClass AS t WHERE t.target_class IN (:class_list)"), [], $aTriggerParams);
