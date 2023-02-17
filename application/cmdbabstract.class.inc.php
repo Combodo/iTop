@@ -5901,11 +5901,11 @@ JS
 	 * Register one object for later EVENT_DB_LINKS_CHANGED event.
 	 *
 	 * @param string $sClass
-	 * @param string $sId
+	 * @param string|int|null $sId
 	 *
 	 * @since 3.1.0 N°5906
 	 */
-	private static function RegisterObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): void
+	private static function RegisterObjectAwaitingEventDbLinksChanged(string $sClass, $sId): void
 	{
 		if (isset(self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId])) {
 			self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId]++;
@@ -5938,13 +5938,13 @@ JS
 	 * Fire the EVENT_DB_LINKS_CHANGED event if given object is registered, and unregister it
 	 *
 	 * @param string $sClass
-	 * @param string $sId
+	 * @param string|int|null $sId
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	private static function FireEventDbLinksChangedForClassId(string $sClass, string $sId): void
+	private static function FireEventDbLinksChangedForClassId(string $sClass, $sId): void
 	{
 		if (true === static::IsEventDBLinksChangedBlocked()) {
 			return;
@@ -5966,12 +5966,12 @@ JS
 	 * Remove the registration of an object concerning the EVENT_DB_LINKS_CHANGED event
 	 *
 	 * @param string $sClass
-	 * @param string $sId
+	 * @param string|int|null $sId
 	 *
 	 * @return bool true if the object [class, id] was present in the list
 	 * @throws \CoreException
 	 */
-	final protected static function RemoveObjectAwaitingEventDbLinksChanged(string $sClass, string $sId): bool
+	final protected static function RemoveObjectAwaitingEventDbLinksChanged(string $sClass, $sId): bool
 	{
 		$bFlagRemoved = false;
 		$aClassesHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);

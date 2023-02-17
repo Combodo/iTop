@@ -175,7 +175,7 @@ final class EventService
 	 *
 	 * @return array
 	 */
-	public static function GetListeners(string $sEvent, $eventSource): array
+	public static function GetListeners(string $sEvent, $eventSource = null): array
 	{
 		$aListeners = [];
 		if (isset(self::$aEventListeners[$sEvent])) {
