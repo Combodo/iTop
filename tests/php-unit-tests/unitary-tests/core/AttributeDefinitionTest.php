@@ -11,7 +11,7 @@ use MetaModel;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class AttributeDefTest extends ItopDataTestCase {
+class AttributeDefinitionTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;
 
 	protected function setUp(): void {
