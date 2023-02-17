@@ -67,6 +67,7 @@ class AttributeBlobEventListener implements iEventServiceSetup
 			'file->file_name' => $oDocument->GetFileName(),
 			'file->downloads_count' => $oDocument->GetDownloadsCount(),
 			'file->data' => $oDocument->GetData(),
+			'file->data_as_base64' => base64_encode($oDocument->GetData()),
 		);
 		$aTriggerParams = array('class_list' => MetaModel::EnumParentClasses(get_class($oObject), ENUM_PARENT_CLASSES_ALL));
 		$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sTriggerClass AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerParams);
