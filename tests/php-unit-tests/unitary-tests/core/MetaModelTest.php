@@ -64,25 +64,48 @@ class MetaModelTest extends ItopDataTestCase
 	{
 	    $sTitle = static::$sDefaultUserRequestTitle;
 
-	    $aParams = array();
+	    $aParams = [
+			'simple' => 'I am simple',
+		    'foo->bar' => 'I am bar', // N°2889 - Placeholder with an arrow that is not an object
+	    ];
 
-		return array(
-		    'Object string attribute (text format)' => array(
+		return [
+			'Simple placeholder' => [
+				'Result: $simple$',
+				$aParams,
+				'Result: I am simple',
+			],
+			'Placeholder with an arrow but that is not an object (text format)' => [
+				'Result: $foo->bar$',
+				$aParams,
+				'Result: I am bar',
+			],
+			'Placeholder with an arrow but that is not an object (html format)' => [
+				'Result: $foo-&gt;bar$',
+				$aParams,
+				'Result: I am bar',
+			],
+			'Placeholder with an arrow url-encoded but that is not an object (html format)' => [
+				'Result: <a href="http://foo.bar/%24foo-&gt;bar%24">Hyperlink</a>',
+				$aParams,
+				'Result: <a href="http://foo.bar/I am bar">Hyperlink</a>',
+			],
+			'Placeholder for an object string attribute (text format)' => [
 		        'Title: $this->title$',
                 $aParams,
                 'Title: '.$sTitle,
-            ),
-            'Object string attribute (html format)' => array(
+			],
+			'Placeholder for an object string attribute (html format)' => [
                 'Title: <p>$this-&gt;title$</p>',
                 $aParams,
                 'Title: <p>'.$sTitle.'</p>',
-            ),
-            'Object string attribute urlencoded (html format)' => array(
+			],
+			'Placeholder for an object string attribute url-encoded (html format)' => [
                 'Title: <a href="http://foo.bar/%24this-&gt;title%24">Hyperlink</a>',
                 $aParams,
                 'Title: <a href="http://foo.bar/'.$sTitle.'">Hyperlink</a>',
-            ),
-		);
+			],
+		];
 	}
 
 	/**

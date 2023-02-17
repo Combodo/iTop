@@ -7382,15 +7382,23 @@ abstract class MetaModel
 				}
 			} else {
 				$aRegExps = array(
-					'/(\$)'.$sSearch.'\$/',   // Support for regular placeholders (eg. $APP_URL$)
-					'/(%24)'.$sSearch.'%24/', // Support for urlencoded in HTML attributes (eg. %24APP_URL%24)
+					'/(\$)'.$sSearch.'\$/',   // Regular placeholders (eg. $APP_URL$) or placeholders with an arrow in plain text (eg. $foo->bar$)
+					'/(%24)'.$sSearch.'%24/', // Regular placeholders url-encoded in HTML attributes (eg. %24APP_URL%24)
+
+					'/(\$)'.utils::EscapeHtml($sSearch).'\$/',      // Placeholders with an arrow in HTML (eg. $foo-&gt;bar$)
+					'/(%24)'.utils::EscapeHtml($sSearch).'%24/',    // Placeholders with an arrow url-encoded in HTML attributes (eg. %24-&gt;bar%24)
 				);
 				foreach ($aRegExps as $sRegExp) {
 					if (preg_match_all($sRegExp, $sInput, $aMatches)) {
 						foreach ($aMatches[1] as $idx => $sDelimiter) {
 							try {
-								$aReplacements[] = (string)$replace;
+								// Regular or plain text
+								$aReplacements[] = (string) $replace;
 								$aSearches[] = $aMatches[1][$idx].$sSearch.$aMatches[1][$idx];
+
+								// With an arrow in HTML
+								$aReplacements[] = (string) $replace;
+								$aSearches[] = $aMatches[1][$idx].utils::EscapeHtml($sSearch).$aMatches[1][$idx];
 							}
 							catch (Exception $e) {
 								IssueLog::Debug(
