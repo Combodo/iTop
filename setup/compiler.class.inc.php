@@ -31,7 +31,7 @@ class DOMFormatException extends Exception
     /**
      * Overrides the Exception default constructor to automatically add informations about the concerned node (path and
      * line number)
-     * 
+     *
      * @param string $message
      * @param $code
      * @param $previous
@@ -49,7 +49,7 @@ class DOMFormatException extends Exception
 
 /**
  * Compiler class
- */ 
+ */
 class MFCompiler
 {
 	const DATA_PRECOMPILED_FOLDER = 'data'.DIRECTORY_SEPARATOR.'precompiled_styles'.DIRECTORY_SEPARATOR;
@@ -107,6 +107,8 @@ class MFCompiler
 	protected $sEnvironment;
 	protected $sCompilationTimeStamp;
 
+	private static $bUseLegacyMenuCompilation = true;
+
 	public function __construct($oModelFactory, $sEnvironment)
 	{
 		$this->oFactory = $oModelFactory;
@@ -125,6 +127,10 @@ class MFCompiler
 		$this->aSnippets = array();
 		$this->aRelations = array();
 		$this->aClassesCSSRules = [];
+	}
+
+	public static function UseEnhancementMenuCompilation(){
+		static::$bUseLegacyMenuCompilation=false;
 	}
 
 	protected function Log($sText)
@@ -274,7 +280,11 @@ class MFCompiler
 
 		try
 		{
-			$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
+			if (static::$bUseLegacyMenuCompilation){
+				$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
+			} else {
+				$this->DoNewCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
+			}
 		}
 		catch (Exception $e)
 		{
@@ -315,7 +325,7 @@ class MFCompiler
 			apc_clear_cache();
 		}
 	}
-	
+
 
 	/**
 	 * Perform the actual "Compilation" of all modules
@@ -418,7 +428,7 @@ class MFCompiler
 					$sCompiledCode .= $this->CompileConstant($oConstant)."\n";
 				}
 			}
-			
+
 			if (array_key_exists($sModuleName, $this->aSnippets))
 			{
 				foreach( $this->aSnippets[$sModuleName]['before'] as $aSnippet)
@@ -581,7 +591,7 @@ EOF;
 					$sCompiledCode .= $aSnippet['content']."\n";
 				}
 			}
-			
+
 			// Create (overwrite if existing) the compiled file
 			//
 			if (strlen($sCompiledCode) > 0)
@@ -625,7 +635,7 @@ EOF;
 				$aWebservicesFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
 			}
 		} // foreach module
-		
+
 		// Compile the dictionaries -out of the modules
 		//
 		$sDictDir = $sTempTargetDir.'/dictionaries';
@@ -654,7 +664,7 @@ EOF;
 				$this->sMainPHPCode .= $aSnippet['content']."\n";
 			}
 		}
-		
+
 		// Compile the portals
 		$oPortalsNode = $this->oFactory->GetNodes('/itop_design/portals')->item(0);
 		$this->CompilePortals($oPortalsNode, $sTempTargetDir, $sFinalTargetDir);
@@ -666,7 +676,7 @@ EOF;
 		// Compile the XML parameters
 		$oParametersNode = $this->oFactory->GetNodes('/itop_design/module_parameters')->item(0);
 		$this->CompileParameters($oParametersNode, $sTempTargetDir, $sFinalTargetDir);
-		
+
 		if (array_key_exists('_core_', $this->aSnippets))
 		{
 			foreach( $this->aSnippets['_core_']['after'] as $aSnippet)
@@ -700,7 +710,7 @@ EOF;
 		$sCurrDate = date(DATE_ISO8601);
 		// Autoload
 		$sPHPFile = $sTempTargetDir.'/autoload.php';
-		$sPHPFileContent = 
+		$sPHPFileContent =
 <<<EOF
 <?php
 //
@@ -709,7 +719,7 @@ EOF;
 //
 EOF
 		;
-		
+
 		$sPHPFileContent .= "\nMetaModel::IncludeModule(MODULESROOT.'/core/main.php');\n";
 		$sPHPFileContent .= implode("\n", $aDataModelFiles);
 		$sPHPFileContent .= implode("\n", $aWebservicesFiles);
@@ -717,14 +727,507 @@ EOF
 		$sModulesInfo = str_replace("'".$sRelFinalTargetDir."/", "\$sCurrEnv.'/", $sModulesInfo);
 		$sPHPFileContent .= "\nfunction GetModulesInfo()\n{\n\$sCurrEnv = 'env-'.utils::GetCurrentEnvironment();\nreturn ".$sModulesInfo.";\n}\n";
 		file_put_contents($sPHPFile, $sPHPFileContent);
-		
+
 	} // DoCompile()
+
+	/**
+	 * @since 3.0.x N°4762
+	 * Perform the enhanced "Compilation" of all modules
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 * @param Page $oP
+	 * @param bool $bUseSymbolicLinks
+	 * @throws Exception
+	 */
+	protected function DoNewCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks = false)
+	{
+		$aAllClasses = []; // flat list of classes
+		$aModulesInfo = []; // Hash array of module_name => array('version' => string, 'root_dir' => string)
+
+		// Determine the target modules for the MENUS
+		//
+		$aMenuNodes = [];
+		$aMenusByModule = [];
+		foreach ($this->oFactory->GetNodes('menus/menu') as $oMenuNode)
+		{
+			$sMenuId = $oMenuNode->getAttribute('id');
+			$aMenuNodes[$sMenuId] = $oMenuNode;
+
+			$sModuleMenu = $oMenuNode->getAttribute('_created_in');
+			$aMenusByModule[$sModuleMenu][] = $sMenuId;
+		}
+
+		// Determine the target module (exactly one!) for USER RIGHTS
+		// This used to be based solely on the module which created the user_rights node first
+		// Unfortunately, our sample extension was delivered with the xml structure, resulting in the new module to be the recipient of the compilation
+		// Then model.itop-profiles-itil would not exist... resulting in an error after the compilation (and the actual product of the compiler would never be included
+		// The bullet proof implementation would be to compile in a separate directory as it has been done with the dictionaries... that's another story
+		$aModules = $this->oFactory->GetLoadedModules();
+		$sUserRightsModule = '';
+		foreach ($aModules as $foo => $oModule) {
+			if ($oModule->GetName() == 'itop-profiles-itil') {
+				$sUserRightsModule = 'itop-profiles-itil';
+				break;
+			}
+		}
+		$oUserRightsNode = $this->oFactory->GetNodes('user_rights')->item(0);
+		if ($oUserRightsNode && ($sUserRightsModule == '')) {
+			// Legacy algorithm (itop <= 2.0.3)
+			$sUserRightsModule = $oUserRightsNode->getAttribute('_created_in');
+		}
+		$this->Log("User Rights module found: '$sUserRightsModule'");
+
+		// List root classes
+		//
+		$this->aRootClasses = [];
+		foreach ($this->oFactory->ListRootClasses() as $oClass) {
+			$this->Log("Root class (with child classes): ".$oClass->getAttribute('id'));
+			$this->aRootClasses[$oClass->getAttribute('id')] = $oClass;
+		}
+
+		$this->LoadSnippets();
+
+		// Compile, module by module
+		//
+		$aModules = $this->oFactory->GetLoadedModules();
+		$aDataModelFiles = [];
+		$aWebservicesFiles = [];
+		$iStart = strlen(realpath(APPROOT));
+		$sRelFinalTargetDir = substr($sFinalTargetDir, strlen(APPROOT));
+
+		$this->WriteStaticOnlyHtaccess($sTempTargetDir);
+		$this->WriteStaticOnlyWebConfig($sTempTargetDir);
+
+		static::SetUseSymbolicLinksFlag($bUseSymbolicLinks);
+
+		$aParentMenus = [];
+		$aParentMenuNodes = [];
+		foreach ($aModules as $foo => $oModule) {
+			$sModuleName = $oModule->GetName();
+			$sModuleVersion = $oModule->GetVersion();
+
+			$sModuleRootDir = $oModule->GetRootDir();
+			if ($sModuleRootDir != '') {
+				$sModuleRootDir = realpath($sModuleRootDir);
+				$sRelativeDir = basename($sModuleRootDir);
+				if ($bUseSymbolicLinks) {
+					$sRealRelativeDir = substr($sModuleRootDir, $iStart);
+				} else {
+					$sRealRelativeDir = $sRelFinalTargetDir.'/'.$sRelativeDir;
+				}
+
+				// Push the other module files
+				SetupUtils::copydir($sModuleRootDir, $sTempTargetDir.'/'.$sRelativeDir, $bUseSymbolicLinks);
+			} else {
+				$sRelativeDir = $sModuleName;
+				$sRealRelativeDir = $sModuleName;
+			}
+			$aModulesInfo[$sModuleName] = array('root_dir' => $sRealRelativeDir, 'version' => $sModuleVersion);
+
+			$sCompiledCode = '';
+
+			$oConstants = $this->oFactory->ListConstants($sModuleName);
+			if ($oConstants->length > 0)
+			{
+				foreach($oConstants as $oConstant)
+				{
+					$sCompiledCode .= $this->CompileConstant($oConstant)."\n";
+				}
+			}
+
+			if (array_key_exists($sModuleName, $this->aSnippets))
+			{
+				foreach( $this->aSnippets[$sModuleName]['before'] as $aSnippet)
+				{
+					$sCompiledCode .= "\n";
+					$sCompiledCode .= "/**\n";
+					$sCompiledCode .= " * Snippet: {$aSnippet['snippet_id']}\n";
+					$sCompiledCode .= " */\n";
+					$sCompiledCode .= $aSnippet['content']."\n";
+				}
+			}
+
+
+			$oClasses = $this->oFactory->ListClasses($sModuleName);
+			$iClassCount = $oClasses->length;
+			if ($iClassCount == 0)
+			{
+				$this->Log("Found module without classes declared: $sModuleName");
+			}
+			else
+			{
+				/** @var \MFElement $oClass */
+				foreach($oClasses as $oClass)
+				{
+					$sClass = $oClass->getAttribute("id");
+					$aAllClasses[] = $sClass;
+					try
+					{
+						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
+					}
+					catch (DOMFormatException $e)
+					{
+						$sMessage = "Failed to process class '$sClass', ";
+						if (!empty($sModuleRootDir)) {
+							$sMessage .= "from '$sModuleRootDir': ";
+						}
+						$sMessage .= $e->getMessage();
+						throw new Exception($sMessage);
+					}
+				}
+			}
+
+			if (!array_key_exists($sModuleName, $aMenusByModule))
+			{
+				$this->Log("Found module without menus declared: $sModuleName");
+			}
+			else
+			{
+				$sMenuCreationClass = 'MenuCreation_'.preg_replace('/[^A-Za-z0-9_]/', '_', $sModuleName);
+				$sCompiledCode .=
+					<<<EOF
+
+//
+// Menus
+//
+class $sMenuCreationClass extends ModuleHandlerAPI
+{
+	public static function OnMenuCreation()
+	{
+		global \$__comp_menus__; // ensure that the global variable is indeed global !
+
+EOF;
+				// Preliminary: determine parent menus not defined within the current module
+				$aMenusToLoad = array();
+				foreach($aMenusByModule[$sModuleName] as $sMenuId)
+				{
+					$oMenuNode = $aMenuNodes[$sMenuId];
+					if ($sParent = $oMenuNode->GetChildText('parent', null))
+					{
+						$aMenusToLoad[] = $sParent;
+						if (!array_key_exists($sParent, $aParentMenus)){
+							$aParentMenus[$sParent] = $sModuleRootDir;
+						}
+					}
+					$aMenusToLoad[] = $sMenuId;
+				}
+				$aMenusToLoad = array_unique($aMenusToLoad);
+				$aMenuLinesForAll = [];
+				$aMenuLinesForAdmins = [];
+				$aAdminMenus = [];
+				foreach($aMenusToLoad as $sMenuId)
+				{
+					$oMenuNode = $aMenuNodes[$sMenuId];
+					if (is_null($oMenuNode))
+					{
+						throw new Exception("Module '{$oModule->GetId()}' (location : '$sModuleRootDir') contains an unknown menuId :  '$sMenuId'");
+					}
+					if ($oMenuNode->getAttribute("xsi:type") == 'MenuGroup' || array_key_exists($sMenuId, $aParentMenus))
+					{
+						$aParentMenuNodes[$sMenuId] = $oMenuNode;
+						$sParent = $oMenuNode->GetChildText('parent', null);
+						if (($oMenuNode->GetChildText('enable_admin_only') == '1') || isset($aAdminMenus[$sParent]))
+						{
+							$aAdminMenus[$sMenuId] = true;
+						}
+						continue;
+
+						// Note: this algorithm is wrong
+						// 1 - the module may appear empty in the current module, while children are defined in other modules
+						// 2 - check recursively that child nodes are not empty themselves
+						// Future algorithm:
+						// a- browse the modules and build the menu tree
+						// b- browse the tree and blacklist empty menus
+						// c- before compiling, discard if blacklisted
+						/*if (!in_array($oMenuNode->getAttribute("id"), $aParentMenus))
+						{
+							// Discard empty menu groups
+							continue;
+						}*/
+					}
+					try
+					{
+						$aMenuLines = $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
+					}
+					catch (DOMFormatException $e)
+					{
+						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
+					}
+					$sParent = $oMenuNode->GetChildText('parent', null);
+					if (($oMenuNode->GetChildText('enable_admin_only') == '1') || isset($aAdminMenus[$sParent]))
+					{
+						$aMenuLinesForAdmins = array_merge($aMenuLinesForAdmins, $aMenuLines);
+						$aAdminMenus[$oMenuNode->getAttribute("id")] = true;
+					}
+					else
+					{
+						$aMenuLinesForAll = array_merge($aMenuLinesForAll, $aMenuLines);
+					}
+				}
+				$sIndent = "\t\t";
+				foreach ($aMenuLinesForAll as $sPHPLine)
+				{
+					$sCompiledCode .= $sIndent.$sPHPLine."\n";
+				}
+				if (count($aMenuLinesForAdmins) > 0)
+				{
+					$sCompiledCode .= $sIndent."if (UserRights::IsAdministrator())\n";
+					$sCompiledCode .= $sIndent."{\n";
+					foreach ($aMenuLinesForAdmins as $sPHPLine)
+					{
+						$sCompiledCode .= $sIndent."\t".$sPHPLine."\n";
+					}
+					$sCompiledCode .= $sIndent."}\n";
+				}
+				$sCompiledCode .=
+					<<<EOF
+	}
+} // class $sMenuCreationClass
+
+EOF;
+			}
+
+			// User rights
+			//
+			if ($sModuleName == $sUserRightsModule)
+			{
+				$sCompiledCode .= $this->CompileUserRights($oUserRightsNode);
+			}
+
+			if (array_key_exists($sModuleName, $this->aSnippets))
+			{
+				foreach( $this->aSnippets[$sModuleName]['after'] as $aSnippet)
+				{
+					$sCompiledCode .= "\n";
+					$sCompiledCode .= "/**\n";
+					$sCompiledCode .= " * Snippet: {$aSnippet['snippet_id']}\n";
+					$sCompiledCode .= " */\n";
+					$sCompiledCode .= $aSnippet['content']."\n";
+				}
+			}
+
+			// Create (overwrite if existing) the compiled file
+			//
+			if (strlen($sCompiledCode) > 0)
+			{
+				// We have compiled something: write the code somewhere
+				//
+				if (strlen($sModuleRootDir) > 0)
+				{
+					// Write the code into the given module as model.<module>.php
+					//
+					$sResultFile = $sTempTargetDir.'/'.$sRelativeDir.'/model.'.$sModuleName.'.php';
+					$this->WritePHPFile($sResultFile, $sModuleName, $sModuleVersion, $sCompiledCode);
+				}
+				else
+				{
+					// Write the code into core/main.php
+					//
+					$this->sMainPHPCode .=
+						<<<EOF
+/**
+ * Data model from the delta file
+ */
+
+EOF;
+					$this->sMainPHPCode .= $sCompiledCode;
+				}
+			}
+			else
+			{
+				$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
+			}
+
+			// files to include (PHP datamodels)
+			foreach($oModule->GetFilesToInclude('business') as $sRelFileName)
+			{
+				$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+			}
+			// files to include (PHP webservices providers)
+			foreach($oModule->GetFilesToInclude('webservices') as $sRelFileName)
+			{
+				$aWebservicesFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+			}
+		} // foreach module
+
+		// Compile the dictionaries -out of the modules
+		//
+		$sDictDir = $sTempTargetDir.'/dictionaries';
+		if (!is_dir($sDictDir))
+		{
+			$this->Log("Creating directory $sDictDir");
+			mkdir($sDictDir, 0777, true);
+		}
+
+		$oDictionaries = $this->oFactory->GetNodes('dictionaries/dictionary');
+		$this->CompileDictionaries($oDictionaries, $sTempTargetDir, $sFinalTargetDir);
+
+		// Compile the branding
+		//
+		$oBrandingNode = $this->oFactory->GetNodes('branding')->item(0);
+		$this->CompileBranding($oBrandingNode, $sTempTargetDir, $sFinalTargetDir);
+
+		if (array_key_exists('_core_', $this->aSnippets))
+		{
+			foreach( $this->aSnippets['_core_']['before'] as $aSnippet)
+			{
+				$this->sMainPHPCode .= "\n";
+				$this->sMainPHPCode .= "/**\n";
+				$this->sMainPHPCode .= " * Snippet: {$aSnippet['snippet_id']}\n";
+				$this->sMainPHPCode .= " */\n";
+				$this->sMainPHPCode .= $aSnippet['content']."\n";
+			}
+		}
+
+		// Compile the portals
+		$oPortalsNode = $this->oFactory->GetNodes('/itop_design/portals')->item(0);
+		$this->CompilePortals($oPortalsNode, $sTempTargetDir, $sFinalTargetDir);
+
+		// Create module design XML files
+		$oModuleDesignsNode = $this->oFactory->GetNodes('/itop_design/module_designs')->item(0);
+		$this->CompileModuleDesigns($oModuleDesignsNode, $sTempTargetDir, $sFinalTargetDir);
+
+		// Compile the XML parameters
+		$oParametersNode = $this->oFactory->GetNodes('/itop_design/module_parameters')->item(0);
+		$this->CompileParameters($oParametersNode, $sTempTargetDir, $sFinalTargetDir);
+
+		if (array_key_exists('_core_', $this->aSnippets))
+		{
+			foreach( $this->aSnippets['_core_']['after'] as $aSnippet)
+			{
+				$this->sMainPHPCode .= "\n";
+				$this->sMainPHPCode .= "/**\n";
+				$this->sMainPHPCode .= " * Snippet: {$aSnippet['snippet_id']}\n";
+				$this->sMainPHPCode .= " */\n";
+				$this->sMainPHPCode .= $aSnippet['content']."\n";
+			}
+		}
+
+		if (count($this->aRelations) > 0)
+		{
+			$this->sMainPHPCode .= "\n";
+			$this->sMainPHPCode .= "/**\n";
+			$this->sMainPHPCode .= " * Relations\n";
+			$this->sMainPHPCode .= " */\n";
+			foreach($this->aRelations as $sRelationCode => $aData)
+			{
+				$sRelCodeSafe = addslashes($sRelationCode);
+				$this->sMainPHPCode .= "MetaModel::RegisterRelation('$sRelCodeSafe');\n";
+			}
+		}
+
+		// Write core/main.php
+		SetupUtils::builddir($sTempTargetDir.'/core');
+		$sPHPFile = $sTempTargetDir.'/core/main.php';
+		file_put_contents($sPHPFile, $this->sMainPHPCode);
+
+		$this->GenerateMenuNodePhpCode($aParentMenus, $aParentMenuNodes, $aAdminMenus, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
+
+		$sCurrDate = date(DATE_ISO8601);
+		// Autoload
+		$sPHPFile = $sTempTargetDir.'/autoload.php';
+		$sPHPFileContent =
+			<<<EOF
+<?php
+//
+// File generated on $sCurrDate
+// Please do not edit manually
+//
+EOF
+		;
+
+		$sPHPFileContent .= "\nMetaModel::IncludeModule(MODULESROOT.'/core/parent_menus.php');\n";
+		$sPHPFileContent .= "MetaModel::IncludeModule(MODULESROOT.'/core/main.php');\n";
+
+		$sPHPFileContent .= implode("\n", $aDataModelFiles);
+		$sPHPFileContent .= implode("\n", $aWebservicesFiles);
+		$sModulesInfo = var_export($aModulesInfo, true);
+		$sModulesInfo = str_replace("'".$sRelFinalTargetDir."/", "\$sCurrEnv.'/", $sModulesInfo);
+		$sPHPFileContent .= "\nfunction GetModulesInfo()\n{\n\$sCurrEnv = 'env-'.utils::GetCurrentEnvironment();\nreturn ".$sModulesInfo.";\n}\n";
+		file_put_contents($sPHPFile, $sPHPFileContent);
+
+	} // DoNewCompile()
+
+	/**
+	 * @since 3.0.x N°4762
+	 */
+	private function GenerateMenuNodePhpCode(array $aParentMenus, array $aParentMenuNodes, array $aAdminMenus,
+		string $sTempTargetDir, string $sFinalTargetDir, string $sRelativeDir, ?Page $oP = null) : void
+	{
+		$aMenuLinesForAdmins = [];
+		$aMenuLinesForAll = [];
+
+		//Handle menu nodes
+		foreach ($aParentMenus as $sMenuId => $sModuleRootDir) {
+			try {
+				if (! array_key_exists($sMenuId, $aParentMenuNodes)){
+					throw new Exception("Failed to process parent menu '$sMenuId' that is referenced by a child but not defined");
+				}
+				$oMenuNode = $aParentMenuNodes[$sMenuId];
+				$aMenuLines = $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
+			} catch (DOMFormatException $e) {
+				throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
+			}
+			$sParent = $oMenuNode->GetChildText('parent', null);
+			if (($oMenuNode->GetChildText('enable_admin_only') == '1') || isset($aAdminMenus[$sParent])) {
+				$aMenuLinesForAdmins = array_merge($aMenuLinesForAdmins, $aMenuLines);
+				$aAdminMenus[$oMenuNode->getAttribute("id")] = true;
+			} else {
+				$aMenuLinesForAll = array_merge($aMenuLinesForAll, $aMenuLines);
+			}
+		}
+
+		$sCurrDate = date(DATE_ISO8601);
+		$sCompiledCode =
+			<<<PHP
+<?php
+//
+// File generated on $sCurrDate
+// Please do not edit manually
+//
+//
+// Menus
+//
+class ParentMenusCreation extends ModuleHandlerAPI
+{
+	public static function OnMenuCreation()
+	{
+		global \$__comp_menus__; // ensure that the global variable is indeed global !
+
+PHP;
+
+		$sIndent = "\t\t";
+		foreach ($aMenuLinesForAll as $sPHPLine)
+		{
+			$sCompiledCode .= $sIndent.$sPHPLine."\n";
+		}
+		if (count($aMenuLinesForAdmins) > 0)
+		{
+			$sCompiledCode .= $sIndent."if (UserRights::IsAdministrator())\n";
+			$sCompiledCode .= $sIndent."{\n";
+			foreach ($aMenuLinesForAdmins as $sPHPLine)
+			{
+				$sCompiledCode .= $sIndent."\t".$sPHPLine."\n";
+			}
+			$sCompiledCode .= $sIndent."}\n";
+		}
+
+		$sCompiledCode .= <<<PHP
+
+	}
+} // class ParentMenusCreation
+PHP;
+
+
+		$sPHPFile = $sTempTargetDir.'/core/parent_menus.php';
+		file_put_contents($sPHPFile, $sCompiledCode);
+	}
 
 	/**
 	 * Helper to form a valid ZList from the array built by GetNodeAsArrayOfItems()
 	 *
 	 * @param array $aItems
-	 */	 	
+	 */
 	protected function ArrayOfItemsToZList(&$aItems)
 	{
 		// Note: $aItems can be null in some cases so we have to protect it otherwise a PHP warning will be thrown during the foreach
@@ -756,7 +1259,7 @@ EOF
 	 * Helper to format the flags for an attribute, in a given state
 	 * @param object $oAttNode DOM node containing the information to build the flags
 	 * Returns string PHP flags, based on the OPT_ATT_ constants, or empty (meaning 0, can be omitted)
-	 */ 
+	 */
 	protected function FlagsToPHP($oAttNode)
 	{
 		static $aNodeAttributeToFlag = array(
@@ -766,7 +1269,7 @@ EOF
 			'must_change' => 'OPT_ATT_MUSTCHANGE',
 			'hidden' => 'OPT_ATT_HIDDEN',
 		);
-	
+
 		$aFlags = array();
 		foreach ($aNodeAttributeToFlag as $sNodeAttribute => $sFlag)
 		{
@@ -778,7 +1281,7 @@ EOF
 		}
 		if (empty($aFlags))
 		{
-			$aFlags[] = 'OPT_ATT_NORMAL'; // When no flag is defined, reset the state to "normal"	
+			$aFlags[] = 'OPT_ATT_NORMAL'; // When no flag is defined, reset the state to "normal"
 		}
 		$sRes = implode(' | ', $aFlags);
 		return $sRes;
@@ -800,7 +1303,7 @@ EOF
 			'details' => 'LINKSET_TRACKING_DETAILS',
 			'all' => 'LINKSET_TRACKING_ALL',
 		);
-	
+
 		static $aXmlToPHP_Others = array(
 			'none' => 'ATTRIBUTE_TRACKING_NONE',
 			'all' => 'ATTRIBUTE_TRACKING_ALL',
@@ -841,7 +1344,7 @@ EOF
 			'in_place' => 'LINKSET_EDITMODE_INPLACE',
 			'add_remove' => 'LINKSET_EDITMODE_ADDREMOVE',
 		);
-	
+
 		if (!array_key_exists($sEditMode, $aXmlToPHP))
 		{
 			throw new DOMFormatException("Edit mode: unknown value '$sEditMode'");
@@ -849,10 +1352,10 @@ EOF
 		return $aXmlToPHP[$sEditMode];
 	}
 
-	
+
 	/**
 	 * Format a path (file or url) as an absolute path or relative to the module or the app
-	 */ 
+	 */
 	protected function PathToPHP($sPath, $sModuleRelativeDir, $bIsUrl = false)
 	{
 		if ($sPath == '')
@@ -945,7 +1448,7 @@ EOF
 		else
 		{
 			throw new DOMFormatException("missing (or empty) mandatory tag '$sTag' under the tag '".$oNode->nodeName."'");
-		}	
+		}
 	}
 
 	/**
@@ -1049,7 +1552,7 @@ EOF
 
 	/**
 	 * Adds quotes and escape characters
-	 */	 	
+	 */
 	protected function QuoteForPHP($sStr, $bSimpleQuotes = false)
 	{
 		if ($bSimpleQuotes)
@@ -1084,7 +1587,7 @@ EOF
 				$sScalar = (string)(int)$sText;
 			}
 			break;
-		
+
 		case 'float':
 			if (is_null($sText))
 			{
@@ -1096,7 +1599,7 @@ EOF
 				$sScalar = (string)(float)$sText;
 			}
 			break;
-		
+
 		case 'bool':
 			if (is_null($sText))
 			{
@@ -1328,7 +1831,7 @@ EOF
 				// $oField
 				$sAttCode = $oField->getAttribute('id');
 				$sAttType = $oField->getAttribute('xsi:type');
-		
+
 				$aDependencies = array();
 				$oDependencies = $oField->GetOptionalElement('dependencies');
 				if (!is_null($oDependencies))
@@ -1340,9 +1843,9 @@ EOF
 					}
 				}
 				$sDependencies = 'array('.implode(', ', $aDependencies).')';
-		
+
 				$aParameters = array();
-		
+
 				if ($sAttType == 'AttributeLinkedSetIndirect')
 				{
 					$aParameters['linked_class'] = $this->GetMandatoryPropString($oField, 'linked_class');
@@ -2512,11 +3015,11 @@ CSS;
 				case '1':
 				$sSearchFormOpen = 'true';
 				break;
-				
+
 				case '0':
 				$sSearchFormOpen = 'false';
 				break;
-				
+
 				default:
 				$sSearchFormOpen = 'true';
 			}
@@ -2605,7 +3108,7 @@ CSS;
 				foreach($this->oFactory->ListFields($oClass) as $oField)
 				{
 					$sAttType = $oField->getAttribute('xsi:type');
-		
+
 					if (($sAttType == 'AttributeExternalKey') || ($sAttType == 'AttributeHierarchicalKey'))
 					{
 						$sOnTargetDel = $oField->GetChildText('on_target_delete');
@@ -2631,7 +3134,7 @@ CSS;
 			$oClasses = $oGroup->GetUniqueElement('classes');
 			foreach($oClasses->getElementsByTagName('class') as $oClass)
 			{
-				
+
 				$sClass = $oClass->getAttribute("id");
 				$aClasses[] = $sClass;
 
@@ -2649,7 +3152,7 @@ CSS;
 		$aProfiles[1] = array(
 			'name' => 'Administrator',
 			'description' => 'Has the rights on everything (bypassing any control)',
-		); 
+		);
 
 		$aGrants = array();
 		$oProfiles = $oUserRightsNode->GetUniqueElement('profiles');
@@ -2681,7 +3184,7 @@ CSS;
 					}
 					$sGrant = $oAction->GetText();
 					$bGrant = ($sGrant == 'allow');
-					
+
 					if ($sGroupId == '*')
 					{
 						$aGrantClasses = array('*');
@@ -2920,7 +3423,7 @@ Dict::SetLanguagesList(
 $sLanguagesDump
 );
 EOF;
-		
+
 		file_put_contents($sLanguagesFile, $sLanguagesFileContent);
 	}
 
@@ -2957,7 +3460,7 @@ EOF;
 				{
 					throw new DOMFormatException('Could not find the file with ref '.$sFileId);
 				}
-	
+
 				$sName = $oNodes->item(0)->GetChildText('name');
 				$sData = base64_decode($oNodes->item(0)->GetChildText('data'));
 				$aPathInfo = pathinfo($sName);
@@ -2971,7 +3474,7 @@ EOF;
 				}
 				$oParentNode = $oFileRef->parentNode;
 				$oParentNode->removeChild($oFileRef);
-				
+
 				$oTextNode = $oParentNode->ownerDocument->createTextNode($sRelativePath.'/images/'.$sFile);
 				$oParentNode->appendChild($oTextNode);
 			}
@@ -3284,8 +3787,8 @@ EOF;
 			{
 				SetupUtils::rrmdir($sTempTargetDir.'/branding/images');
 			}
-			
-			// Compile themes 
+
+			// Compile themes
 			$this->CompileThemes($oBrandingNode, $sTempTargetDir);
 		}
 	}
@@ -3326,11 +3829,11 @@ EOF;
 					{
 						$aPortalsConfig[$sPortalId]['deny'][] = $oProfile->getAttribute('id');
 					}
-				}	
+				}
 			}
-			
+
 			uasort($aPortalsConfig, array(get_class($this), 'SortOnRank'));
-			
+
 			$this->sMainPHPCode .= "\n";
 			$this->sMainPHPCode .= "/**\n";
 			$this->sMainPHPCode .= " * Portal(s) definition(s) extracted from the XML definition at compile time\n";
@@ -3373,7 +3876,7 @@ EOF;
 				$oParamsReader = new MFParameters($oParams);
 				$aParametersConfig[$sModuleId] = $oParamsReader->GetAll();
 			}
-			
+
 			$this->sMainPHPCode .= "\n";
 			$this->sMainPHPCode .= "/**\n";
 			$this->sMainPHPCode .= " * Modules parameters extracted from the XML definition at compile time\n";
