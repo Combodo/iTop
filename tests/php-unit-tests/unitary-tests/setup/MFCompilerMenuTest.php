@@ -9,6 +9,7 @@ use MFCompiler;
 use RunTimeEnvironment;
 
 /**
+ * @group menu_compilation
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
