@@ -333,6 +333,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'set_menu_compilation_algorithm' => [
+			'type' => 'string',
+			'description' => 'setup menu compilation algorithm version (N°4762)',
+			'default' => 'v1',
+			'value' => 'v1',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'allow_target_creation' => [
 			'type' => 'bool',
 			'description' => 'Displays the + button on external keys to create target objects',
