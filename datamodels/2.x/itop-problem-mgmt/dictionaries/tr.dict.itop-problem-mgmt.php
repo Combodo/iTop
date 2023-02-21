@@ -132,7 +132,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Problem/Attribute:resolution_date' => 'Çözülme tarihi',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Bilinen Hatalar',
-	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:knownerrors_list+' => 'All the known errors that are linked to this problem~~',
 	'Class:Problem/Attribute:related_request_list' => 'İlgili Talepler',
 	'Class:Problem/Attribute:related_request_list+' => 'Bu problemle ilgili tüm talepler',
 	'Class:Problem/Attribute:related_incident_list' => 'İlişkili Olaylar',

@@ -1466,7 +1466,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Group/Attribute:parent_name' => 'Nome',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'CIs collegati',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent Group~~',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 ));

@@ -58,11 +58,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:private_log' => 'Journal privé',
 	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => 'Contacts',
-	'Class:Ticket/Attribute:contacts_list+' => '',
+	'Class:Ticket/Attribute:contacts_list+' => 'Tous les contacts liés à ce ticket',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Tous les éléments de configuration impactés par ce ticket. Les éléments marqués comme "Calculés" sont le résultat du calcul de l\'analyse d\'impact. Les éléments marqués comme "Non impactés" sont exclus de cette analyse.',
 	'Class:Ticket/Attribute:workorders_list' => 'Tâches',
-	'Class:Ticket/Attribute:workorders_list+' => '',
+	'Class:Ticket/Attribute:workorders_list+' => 'Toutes les tâches de ce ticket',
 	'Class:Ticket/Attribute:finalclass' => 'Sous-classe de Ticket',
 	'Class:Ticket/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:Ticket/Attribute:operational_status' => 'Statut opérationnel',
@@ -241,7 +241,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document/Attribute:contracts_list' => 'Contrats',
-	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:contracts_list+' => 'Tous les contrats liés à ce document',
 	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => '',
+	'Class:Document/Attribute:services_list+' => 'Tous les services liés à ce document',
 ));

@@ -56,5 +56,5 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 //
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
 ));

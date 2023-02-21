@@ -56,5 +56,5 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:FunctionalCI/Attribute:tickets_list' => 'チケット',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
 ));

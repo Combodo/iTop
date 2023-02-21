@@ -202,7 +202,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Referencia na zmenu',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Podriadené požiadavky',
-	'Class:UserRequest/Attribute:related_request_list+' => '',
+	'Class:UserRequest/Attribute:related_request_list+' => 'All the requests that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:public_log' => 'Verejný záznam',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Spokojnosť užívateľa',

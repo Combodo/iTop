@@ -122,13 +122,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:FunctionalCI/Attribute:move2production' => 'Datum uvedení do produkce',
 	'Class:FunctionalCI/Attribute:move2production+' => '',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Kontakty',
-	'Class:FunctionalCI/Attribute:contacts_list+' => '',
+	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contacts for this configuration item~~',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Dokumenty',
-	'Class:FunctionalCI/Attribute:documents_list+' => '',
+	'Class:FunctionalCI/Attribute:documents_list+' => 'All the documents linked to this configuration item~~',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Aplikační řešení',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Všechna aplikační řešení závisející na této konfigurační položce',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
-	'Class:FunctionalCI/Attribute:softwares_list+' => '',
+	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the softwares installed on this configuration item~~',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Typ konfigurační položky',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Aktivní tikety',
@@ -183,9 +183,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Rack/Attribute:nb_u' => 'Velikost (U)',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Zařízení',
-	'Class:Rack/Attribute:device_list+' => '',
+	'Class:Rack/Attribute:device_list+' => 'All the physical devices racked into this rack~~',
 	'Class:Rack/Attribute:enclosure_list' => 'Šasi',
-	'Class:Rack/Attribute:enclosure_list+' => '',
+	'Class:Rack/Attribute:enclosure_list+' => 'All the enclosures in this rack~~',
 ));
 
 //
@@ -247,9 +247,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ConnectableCI' => 'Připojitelná konfigurační položka',
 	'Class:ConnectableCI+' => '',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Síťové prvky',
-	'Class:ConnectableCI/Attribute:networkdevice_list+' => '',
+	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device~~',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Síťová rozhraní',
-	'Class:ConnectableCI/Attribute:physicalinterface_list+' => '',
+	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'All the physical network interfaces~~',
 ));
 
 //
@@ -280,9 +280,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'Název napájecího zdroje B',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC porty',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'All the fiber channel interfaces for this device~~',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SAN switche',
-	'Class:DatacenterDevice/Attribute:san_list+' => '',
+	'Class:DatacenterDevice/Attribute:san_list+' => 'All the SAN switches connected to this device~~',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundance',
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Zařízení je v provozu, pokud je funkční alespoň jeden zdroj',
 	// Unused yet
@@ -302,7 +302,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Název typu zařízení',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Zařízení',
-	'Class:NetworkDevice/Attribute:connectablecis_list+' => '',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'All the devices connected to this network device~~',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'Verze IOS',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'Název verze IOS',
@@ -335,7 +335,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Server/Attribute:ram' => 'RAM',
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logické svazky',
-	'Class:Server/Attribute:logicalvolumes_list+' => '',
+	'Class:Server/Attribute:logicalvolumes_list+' => 'All the logical volumes connected to this server~~',
 ));
 
 //

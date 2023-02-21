@@ -56,5 +56,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'Tous les tickets de cet élément de configuration',
 ));

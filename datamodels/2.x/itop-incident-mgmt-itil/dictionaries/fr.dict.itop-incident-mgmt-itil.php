@@ -201,7 +201,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Attribute:related_request_list' => 'Requêtes filles',
 	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Incidents fils',
-	'Class:Incident/Attribute:child_incidents_list+' => '',
+	'Class:Incident/Attribute:child_incidents_list+' => 'Tous les incidents fils lié à celui-ci',
 	'Class:Incident/Attribute:public_log' => 'Journal public',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Satisfaction client',

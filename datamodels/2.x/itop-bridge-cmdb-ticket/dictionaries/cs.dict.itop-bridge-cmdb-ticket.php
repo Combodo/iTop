@@ -56,5 +56,5 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tikety',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
 ));

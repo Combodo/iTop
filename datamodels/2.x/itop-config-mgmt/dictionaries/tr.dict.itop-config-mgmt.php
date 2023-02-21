@@ -1473,7 +1473,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Group/Attribute:parent_name' => 'Adı',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'Bağlantılı Konfigürasyon Kalemleri (KK)',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Ana Grup',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 ));

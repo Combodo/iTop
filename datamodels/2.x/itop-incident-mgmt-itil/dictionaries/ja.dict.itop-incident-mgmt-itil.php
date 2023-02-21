@@ -194,7 +194,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Attribute:related_request_list' => 'Child requests~~',
 	'Class:Incident/Attribute:related_request_list+' => '~~',
 	'Class:Incident/Attribute:child_incidents_list' => '子インシデント',
-	'Class:Incident/Attribute:child_incidents_list+' => '',
+	'Class:Incident/Attribute:child_incidents_list+' => 'All the child incidents related to this incident~~',
 	'Class:Incident/Attribute:public_log' => 'パブリックログ',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'ユーザ満足度',

@@ -55,7 +55,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FAQCategory/Attribute:name' => 'Name',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
 ));
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ProblemManagement' => 'Problem Management',

@@ -96,9 +96,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Contract/Attribute:organization_name' => 'Organisations navn',
 	'Class:Contract/Attribute:organization_name+' => '',
 	'Class:Contract/Attribute:contacts_list' => 'Kontakter',
-	'Class:Contract/Attribute:contacts_list+' => '',
+	'Class:Contract/Attribute:contacts_list+' => 'All the contacts for this customer contract~~',
 	'Class:Contract/Attribute:documents_list' => 'Dokumenter',
-	'Class:Contract/Attribute:documents_list+' => '',
+	'Class:Contract/Attribute:documents_list+' => 'All the documents for this customer contract~~',
 	'Class:Contract/Attribute:description' => 'Beskrivelse',
 	'Class:Contract/Attribute:description+' => '',
 	'Class:Contract/Attribute:start_date' => 'Startdato',
@@ -145,11 +145,11 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:CustomerContract' => 'Kundekontrakt',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Ydelser',
-	'Class:CustomerContract/Attribute:services_list+' => '',
+	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract~~',
 	'Class:CustomerContract/Attribute:functionalcis_list' => 'CIs',
-	'Class:CustomerContract/Attribute:functionalcis_list+' => '',
+	'Class:CustomerContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract~~',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Leverandørkontrakter',
-	'Class:CustomerContract/Attribute:providercontracts_list+' => '',
+	'Class:CustomerContract/Attribute:providercontracts_list+' => 'All the provider contracts to deliver the services for this contract (underpinning contract)~~',
 ));
 
 //
@@ -160,7 +160,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ProviderContract' => 'Leverandørkontrakt',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
-	'Class:ProviderContract/Attribute:functionalcis_list+' => '',
+	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this provider contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => '',
 	'Class:ProviderContract/Attribute:coverage' => 'Servicetider',
@@ -230,7 +230,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Ydelser',
-	'Class:ServiceFamily/Attribute:services_list+' => '',
+	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
 ));
 
 //
@@ -253,9 +253,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Service/Attribute:servicefamily_name' => 'Ydelses familie navn',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Dokument',
-	'Class:Service/Attribute:documents_list+' => '',
+	'Class:Service/Attribute:documents_list+' => 'All the documents linked to the service~~',
 	'Class:Service/Attribute:contacts_list' => 'Kontakt',
-	'Class:Service/Attribute:contacts_list+' => '',
+	'Class:Service/Attribute:contacts_list+' => 'All the contacts for this service~~',
 	'Class:Service/Attribute:status' => 'Status',
 	'Class:Service/Attribute:status+' => '',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implementering',
@@ -267,9 +267,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Service/Attribute:icon' => 'Icon~~',
 	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Kundekontrakt',
-	'Class:Service/Attribute:customercontracts_list+' => '',
+	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service~~',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Ydelses underkategorier',
-	'Class:Service/Attribute:servicesubcategories_list+' => '',
+	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
 ));
 
 //
@@ -355,9 +355,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SLA/Attribute:organization_name' => 'Organisations navn',
 	'Class:SLA/Attribute:organization_name+' => '',
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
-	'Class:SLA/Attribute:slts_list+' => '',
+	'Class:SLA/Attribute:slts_list+' => 'All the service level targets for this SLA~~',
 	'Class:SLA/Attribute:customercontracts_list' => 'Kundekontrakt',
-	'Class:SLA/Attribute:customercontracts_list+' => '',
+	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA~~',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
 ));
 
@@ -500,9 +500,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:DeliveryModel/Attribute:description' => 'Beskrivelse',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakt',
-	'Class:DeliveryModel/Attribute:contacts_list+' => '',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Kunde',
-	'Class:DeliveryModel/Attribute:customers_list+' => '',
+	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 ));
 
 //

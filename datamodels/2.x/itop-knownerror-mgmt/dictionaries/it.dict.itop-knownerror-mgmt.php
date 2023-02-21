@@ -86,9 +86,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:KnownError/Attribute:version' => 'Versione',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
-	'Class:KnownError/Attribute:ci_list+' => '',
+	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Documenti',
-	'Class:KnownError/Attribute:document_list+' => '',
+	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
 ));
 
 //
