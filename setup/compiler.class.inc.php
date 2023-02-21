@@ -107,8 +107,6 @@ class MFCompiler
 	protected $sEnvironment;
 	protected $sCompilationTimeStamp;
 
-	private static $bUseLegacyMenuCompilation = true;
-
 	public function __construct($oModelFactory, $sEnvironment)
 	{
 		$this->oFactory = $oModelFactory;
@@ -127,10 +125,6 @@ class MFCompiler
 		$this->aSnippets = array();
 		$this->aRelations = array();
 		$this->aClassesCSSRules = [];
-	}
-
-	public static function UseEnhancementMenuCompilation(){
-		static::$bUseLegacyMenuCompilation=false;
 	}
 
 	protected function Log($sText)
@@ -280,7 +274,7 @@ class MFCompiler
 
 		try
 		{
-			if (static::$bUseLegacyMenuCompilation){
+			if ($oConfig->Get('setup_legacy_menu_compilation')){
 				$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
 			} else {
 				$this->DoNewCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);

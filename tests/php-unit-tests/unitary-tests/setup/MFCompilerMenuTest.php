@@ -7,6 +7,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use MetaModel;
 use MFCompiler;
 use RunTimeEnvironment;
+use Config;
 
 /**
  * @group menu_compilation
@@ -22,7 +23,6 @@ class MFCompilerMenuTest extends ItopTestCase {
 		parent::setUp();
 		$this->RequireOnceItopFile('setup/compiler.class.inc.php');
 		$this->RequireOnceItopFile('setup/modelfactory.class.inc.php');
-		//$this->SetNonPublicProperty($oFactory, 'oDOMDocument', $oInitialDocument);
 	}
 
 	public function tearDown(): void {
@@ -40,9 +40,21 @@ class MFCompilerMenuTest extends ItopTestCase {
 	 */
 	public function testCompileMenus($sEnv){
 		if(\utils::GetCurrentEnvironment() != $sEnv) {
-			MFCompiler::UseEnhancementMenuCompilation();
+			$sConfigFilePath = \utils::GetConfigFilePath($sEnv);
+
+			//copy conf from production to phpunit context
+			$sDirPath = dirname($sConfigFilePath);
+			if (! is_dir($sDirPath)){
+				mkdir($sDirPath);
+			}
+			$oConfig = new Config(\utils::GetConfigFilePath());
+			$oConfig->WriteToFile($sConfigFilePath);
+
+			$oConfig = new Config($sConfigFilePath);
+			$oConfig->Set('setup_legacy_menu_compilation', false);
 			$oRunTimeEnvironment = new RunTimeEnvironment($sEnv);
 			$oRunTimeEnvironment->CompileFrom(\utils::GetCurrentEnvironment());
+			$oConfig->Set('setup_legacy_menu_compilation', true);
 		}
 		$this->RequireOnceItopFile('application/utils.inc.php');
 
