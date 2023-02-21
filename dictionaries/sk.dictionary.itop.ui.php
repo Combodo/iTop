@@ -13,7 +13,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:AuditCategory/Attribute:definition_set' => 'Definícia nastavená',
 	'Class:AuditCategory/Attribute:definition_set+' => '',
 	'Class:AuditCategory/Attribute:rules_list' => 'Pravidlá auditu',
-	'Class:AuditCategory/Attribute:rules_list+' => '',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category~~',
 ));
 
 //
@@ -100,9 +100,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:User/Attribute:language/Value:FR FR' => 'Francúzština',
 	'Class:User/Attribute:language/Value:FR FR+' => '',
 	'Class:User/Attribute:profile_list' => 'Profily',
-	'Class:User/Attribute:profile_list+' => '',
+	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person~~',
 	'Class:User/Attribute:allowed_org_list' => 'Povolené organizácie',
-	'Class:User/Attribute:allowed_org_list+' => '',
+	'Class:User/Attribute:allowed_org_list+' => 'The end user is allowed to see data belonging to the following organizations. If no organization is specified, there is no restriction.~~',
 	'Class:User/Attribute:status' => 'Status~~',
 	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.~~',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled~~',

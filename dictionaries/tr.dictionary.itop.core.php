@@ -572,7 +572,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Trigger/Attribute:description' => 'Tanımlama',
 	'Class:Trigger/Attribute:description+' => 'tek satır tanımlama',
 	'Class:Trigger/Attribute:action_list' => 'Tetiklenen işlemler',
-	'Class:Trigger/Attribute:action_list+' => '',
+	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated~~',
 	'Class:Trigger/Attribute:finalclass' => 'Tip',
 	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Context~~',

@@ -91,9 +91,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contrats fournisseur',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Tous les contrats fournisseurs pour cet élément de configuration',
 	'Class:FunctionalCI/Attribute:services_list' => 'Services',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
+	'Class:FunctionalCI/Attribute:services_list+' => 'Tous les services impactés par cet élément de configuration',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'Tous les tickets de cet élément de configuration',
 ));

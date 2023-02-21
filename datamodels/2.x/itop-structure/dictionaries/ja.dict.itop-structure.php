@@ -87,9 +87,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Location/Attribute:country' => '国',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'デバイス',
-	'Class:Location/Attribute:physicaldevice_list+' => '',
+	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => '連絡先',
-	'Class:Location/Attribute:person_list+' => '',
+	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
 ));
 
 //
@@ -124,7 +124,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Contact/Attribute:function' => '機能',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'CI',
-	'Class:Contact/Attribute:cis_list+' => '',
+	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => '連絡先タイプ',
 	'Class:Contact/Attribute:finalclass+' => '',
 ));
@@ -153,9 +153,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Person/Attribute:manager_name' => 'マネージャ名',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'チーム',
-	'Class:Person/Attribute:team_list+' => '',
+	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'チケット',
-	'Class:Person/Attribute:tickets_list+' => '',
+	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'マネージャーフレンドリ名',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Picture~~',
@@ -174,9 +174,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Team' => 'チーム',
 	'Class:Team+' => '',
 	'Class:Team/Attribute:persons_list' => 'メンバー',
-	'Class:Team/Attribute:persons_list+' => '',
+	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
 	'Class:Team/Attribute:tickets_list' => 'チケット',
-	'Class:Team/Attribute:tickets_list+' => '',
+	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
 ));
 
 //
@@ -209,7 +209,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Document/Attribute:status/Value:published' => '公開済み',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CI',
-	'Class:Document/Attribute:cis_list+' => '',
+	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => '文書タイプ',
 	'Class:Document/Attribute:finalclass+' => '',
 ));

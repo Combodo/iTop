@@ -62,9 +62,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:KnownError/Attribute:version' => 'Version',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
-	'Class:KnownError/Attribute:ci_list+' => '',
+	'Class:KnownError/Attribute:ci_list+' => 'Tous les éléments de configuration liés à cette erreur connue',
 	'Class:KnownError/Attribute:document_list' => 'Documents',
-	'Class:KnownError/Attribute:document_list+' => '',
+	'Class:KnownError/Attribute:document_list+' => 'Tous les documents liés à cette erreur connue',
 ));
 
 //

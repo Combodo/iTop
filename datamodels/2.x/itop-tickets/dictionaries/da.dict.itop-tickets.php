@@ -56,11 +56,11 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Ticket/Attribute:private_log' => 'Privat Log',
 	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => 'Kontakt',
-	'Class:Ticket/Attribute:contacts_list+' => '',
+	'Class:Ticket/Attribute:contacts_list+' => 'All the contacts linked to this ticket~~',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
-	'Class:Ticket/Attribute:functionalcis_list+' => '',
+	'Class:Ticket/Attribute:functionalcis_list+' => 'All the configuration items impacted by this ticket. Items marked as "Computed" have been automatically marked as impacted. Items marked as "Not impacted" are excluded from the impact.~~',
 	'Class:Ticket/Attribute:workorders_list' => 'Arbejdsordre',
-	'Class:Ticket/Attribute:workorders_list+' => '',
+	'Class:Ticket/Attribute:workorders_list+' => 'All the work orders for this ticket~~',
 	'Class:Ticket/Attribute:finalclass' => 'Type',
 	'Class:Ticket/Attribute:finalclass+' => '',
 	'Class:Ticket/Attribute:operational_status' => 'Operational status~~',
@@ -237,7 +237,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Document/Attribute:contracts_list' => 'Kontrakter',
-	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
 	'Class:Document/Attribute:services_list' => 'Ydelser',
-	'Class:Document/Attribute:services_list+' => '',
+	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
 ));

@@ -107,7 +107,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Problem/Attribute:resolution_date' => 'Data di risoluzione',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Errori Conosciuti',
-	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:knownerrors_list+' => 'All the known errors that are linked to this problem~~',
 	'Class:Problem/Attribute:related_request_list' => 'Richiesta collegata',
 	'Class:Problem/Attribute:related_request_list+' => 'Tutte le richieste collegate a questo problema',
 	'Class:Problem/Attribute:related_incident_list' => 'Incidenti collegati',

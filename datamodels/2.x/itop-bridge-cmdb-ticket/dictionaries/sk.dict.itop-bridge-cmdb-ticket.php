@@ -91,9 +91,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Poskytovateľské zmluvy',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'All the provider contracts for this configuration item~~',
 	'Class:FunctionalCI/Attribute:services_list' => 'Služby',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
+	'Class:FunctionalCI/Attribute:services_list+' => 'All the services impacted by this configuration item~~',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickety',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
 ));

@@ -53,7 +53,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:FAQCategory/Attribute:name' => 'Navn',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
 ));
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:ProblemManagement' => 'Problem Management',

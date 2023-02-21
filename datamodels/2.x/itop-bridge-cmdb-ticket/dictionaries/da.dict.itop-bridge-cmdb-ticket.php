@@ -91,9 +91,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Leverandør kontrakter',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'All the provider contracts for this configuration item~~',
 	'Class:FunctionalCI/Attribute:services_list' => 'Ydelser',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
+	'Class:FunctionalCI/Attribute:services_list+' => 'All the services impacted by this configuration item~~',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
 ));

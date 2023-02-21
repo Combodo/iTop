@@ -252,7 +252,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Document/Attribute:contracts_list' => 'Smlouvy',
-	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
 	'Class:Document/Attribute:services_list' => 'Služby',
-	'Class:Document/Attribute:services_list+' => '',
+	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
 ));
