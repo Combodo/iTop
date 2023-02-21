@@ -66,6 +66,8 @@ class MFCompilerMenuTest extends ItopTestCase {
 
 		if (! is_null(static::$aPreviousEnvMenus)){
 			$this->assertEquals(static::$aPreviousEnvMenus, $aMenuGroups);
+		} else {
+			$this->assertNotEquals([], $aMenuGroups);
 		}
 		static::$aPreviousEnvMenus = $aMenuGroups;
 
