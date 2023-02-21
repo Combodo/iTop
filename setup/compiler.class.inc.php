@@ -24,7 +24,7 @@ use Combodo\iTop\DesignElement;
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
 require_once(APPROOT.'core/moduledesign.class.inc.php');
-
+require_once(APPROOT.'setup/parentmenunodecompiler.class.inc.php');
 
 class DOMFormatException extends Exception
 {
@@ -274,10 +274,10 @@ class MFCompiler
 
 		try
 		{
-			if ($oConfig->Get('setup_legacy_menu_compilation')){
-				$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
-			} else {
+			if ($oConfig->Get('set_menu_compilation_algorithm') === 'v2'){
 				$this->DoNewCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
+			} else {
+				$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
 			}
 		}
 		catch (Exception $e)
@@ -794,7 +794,7 @@ EOF
 
 		static::SetUseSymbolicLinksFlag($bUseSymbolicLinks);
 
-		$aParentMenus = [];
+		$aParentModuleRootDirs = [];
 		$aParentMenuNodes = [];
 		foreach ($aModules as $foo => $oModule) {
 			$sModuleName = $oModule->GetName();
@@ -899,10 +899,11 @@ EOF;
 					if ($sParent = $oMenuNode->GetChildText('parent', null))
 					{
 						$aMenusToLoad[] = $sParent;
-						if (!array_key_exists($sParent, $aParentMenus)){
-							$aParentMenus[$sParent] = $sModuleRootDir;
+						if (!array_key_exists($sParent, $aParentModuleRootDirs)){
+							$aParentModuleRootDirs[$sParent] = $sModuleRootDir;
 						}
 					}
+					// Note: the order matters: the parents must be defined BEFORE
 					$aMenusToLoad[] = $sMenuId;
 				}
 				$aMenusToLoad = array_unique($aMenusToLoad);
@@ -916,7 +917,7 @@ EOF;
 					{
 						throw new Exception("Module '{$oModule->GetId()}' (location : '$sModuleRootDir') contains an unknown menuId :  '$sMenuId'");
 					}
-					if ($oMenuNode->getAttribute("xsi:type") == 'MenuGroup' || array_key_exists($sMenuId, $aParentMenus))
+					if ($oMenuNode->getAttribute("xsi:type") == 'MenuGroup' || array_key_exists($sMenuId, $aParentModuleRootDirs))
 					{
 						$aParentMenuNodes[$sMenuId] = $oMenuNode;
 						$sParent = $oMenuNode->GetChildText('parent', null);
@@ -933,11 +934,6 @@ EOF;
 						// a- browse the modules and build the menu tree
 						// b- browse the tree and blacklist empty menus
 						// c- before compiling, discard if blacklisted
-						/*if (!in_array($oMenuNode->getAttribute("id"), $aParentMenus))
-						{
-							// Discard empty menu groups
-							continue;
-						}*/
 					}
 					try
 					{
@@ -1115,7 +1111,7 @@ EOF;
 		$sPHPFile = $sTempTargetDir.'/core/main.php';
 		file_put_contents($sPHPFile, $this->sMainPHPCode);
 
-		$this->GenerateMenuNodePhpCode($aParentMenus, $aParentMenuNodes, $aAdminMenus, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
+		$this->GenerateMenuNodePhpCode($aParentModuleRootDirs, $aParentMenuNodes, $aAdminMenus, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
 
 		$sCurrDate = date(DATE_ISO8601);
 		// Autoload
@@ -1145,31 +1141,19 @@ EOF
 	/**
 	 * @since 3.0.x N°4762
 	 */
-	private function GenerateMenuNodePhpCode(array $aParentMenus, array $aParentMenuNodes, array $aAdminMenus,
+	private function GenerateMenuNodePhpCode(array $aParentModuleRootDirs, array $aParentMenuNodes, array $aAdminMenus,
 		string $sTempTargetDir, string $sFinalTargetDir, string $sRelativeDir, ?Page $oP = null) : void
 	{
-		$aMenuLinesForAdmins = [];
-		$aMenuLinesForAll = [];
+		$oCompileParentMenuNode = new ParentMenuNodeCompiler($this, $aParentModuleRootDirs, $aParentMenuNodes, $aAdminMenus,
+			$sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
 
 		//Handle menu nodes
-		foreach ($aParentMenus as $sMenuId => $sModuleRootDir) {
-			try {
-				if (! array_key_exists($sMenuId, $aParentMenuNodes)){
-					throw new Exception("Failed to process parent menu '$sMenuId' that is referenced by a child but not defined");
-				}
-				$oMenuNode = $aParentMenuNodes[$sMenuId];
-				$aMenuLines = $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
-			} catch (DOMFormatException $e) {
-				throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
-			}
-			$sParent = $oMenuNode->GetChildText('parent', null);
-			if (($oMenuNode->GetChildText('enable_admin_only') == '1') || isset($aAdminMenus[$sParent])) {
-				$aMenuLinesForAdmins = array_merge($aMenuLinesForAdmins, $aMenuLines);
-				$aAdminMenus[$oMenuNode->getAttribute("id")] = true;
-			} else {
-				$aMenuLinesForAll = array_merge($aMenuLinesForAll, $aMenuLines);
-			}
+		foreach ($aParentModuleRootDirs as $sMenuId => $sModuleRootDir) {
+			$oCompileParentMenuNode->CompileParentMenuNode($sMenuId);
 		}
+
+		$aMenuLinesForAdmins = $oCompileParentMenuNode->GetMenuLinesForAdmins();
+		$aMenuLinesForAll = $oCompileParentMenuNode->GetMenuLinesForAll();
 
 		$sCurrDate = date(DATE_ISO8601);
 		$sCompiledCode =
@@ -2913,7 +2897,7 @@ CSS;
 	 * @return array
 	 * @throws \DOMFormatException
 	 */
-	protected function CompileMenu($oMenu, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, $oP)
+	public function CompileMenu($oMenu, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, $oP)
 	{
 		$this->CompileFiles($oMenu, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, $sModuleRelativeDir);
 
