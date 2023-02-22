@@ -35,7 +35,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'Egyszeri jelszó',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'A felhasználó nem változtathat jelszót.',
-	'Class:UserLocal/Attribute:password_renewed_date' => 'Jelszó megújítás',
+    'Class:UserLocal/Attribute:password_renewed_date' => 'Jelszó megújítás ideje',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'A jelszó legutóbbi módosításának időpontja',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'A jelszónak legalább 8 karakterből kell állnia, és tartalmaznia kell nagybetűket, kisbetűket, numerikus és speciális karaktereket.',

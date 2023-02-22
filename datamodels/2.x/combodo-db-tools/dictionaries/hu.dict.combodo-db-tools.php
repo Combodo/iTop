@@ -49,7 +49,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'DBTools:Inconsistencies' => 'Adatbázis inkonzisztenciák',
 	'DBTools:DetailedErrorTitle' => '%2$s hiba a %1$s osztályban: %3$s',
 
-	'DBAnalyzer-Integrity-OrphanRecord' => 'Elárvult rekord a `%1$s` -ban, kell hogy legyen megfelelője a `%2$s` táblázatban',
+    'DBAnalyzer-Integrity-OrphanRecord' => 'Árva rekord a `%1$s` -ban, kell hogy legyen megfelelője a `%2$s` táblázatban',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Érvénytelen a %1$s  külső kulcs (oszlop: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Hiányzik a %1$s külső külcs (oszlop: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-InvalidValue' => '%1$s értéke érvénytelen (oszlop: `%2$s.%3$s`)~~',

@@ -22,7 +22,7 @@
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
-	'Menu:ConfigEditor' => 'Konfiguráció',
+    'Menu:ConfigEditor' => 'Konfiguráció szerkesztő',
 	'config-edit-title' => 'Konfigurációs fájl szerkesztő',
 	'config-edit-intro' => 'Legyen nagyon óvatos a konfiguráció szerkesztésénél!',
 	'config-apply' => 'Alkalmaz',

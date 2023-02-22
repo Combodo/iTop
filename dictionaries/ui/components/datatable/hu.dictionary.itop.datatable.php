@@ -20,12 +20,12 @@
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Datatables:Language:Processing'        => 'Kérem várjon...',
 	'UI:Datatables:Language:LengthMenu'        => '_MENU_ oldalanként',
-	'UI:Datatables:Language:ZeroRecords'       => 'No result~~',
+    'UI:Datatables:Language:ZeroRecords'       => 'Nincs eredmény',
 	'UI:Datatables:Language:Info'              => '_TOTAL_ elem',
 	'UI:Datatables:Language:InfoEmpty'         => 'Nincs információ',
 	'UI:Datatables:Language:EmptyTable'        => 'Ebben a táblában nincsenek adatok',
-	'UI:Datatables:Language:Error'             => 'An error occured while running the query',
+    'UI:Datatables:Language:Error'             => 'Hiba történt a lekérdezéskor',
 	'UI:Datatables:Language:DisplayLength:All' => 'Összes',
-	'UI:Datatables:Language:Sort:Ascending'    => 'engedélyezi a növekvő rendezést',
-	'UI:Datatables:Language:Sort:Descending'   => 'engedélyezi a csökkenő rendezést',
+    'UI:Datatables:Language:Sort:Ascending'    => 'Növekvő rendezés',
+    'UI:Datatables:Language:Sort:Descending'   => 'Csökkenő rendezés',
 ));

@@ -22,8 +22,10 @@
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	// Errors
-	'FilesInformation:Error:MissingFile' => 'Hiányzó Fájl: %1$s',
-	'FilesInformation:Error:CorruptedFile' => 'A %1$s fájl sérült',
+	'FilesInformation:Error:MissingFile' => 'Hiányzó fájl: %1$s',
+	'FilesInformation:Error:CorruptedFile' => 'A %1$s fájl megsérült',
 	'FilesInformation:Error:ListCorruptedFile' => 'Sérült fájl(ok): %1$s',
-	'FilesInformation:Error:CantWriteToFile' => 'A %1$s fájl nem írható',
+	'FilesInformation:Error:CantWriteToFile' => 'A %1$s nem írható',
 ));
+
+
