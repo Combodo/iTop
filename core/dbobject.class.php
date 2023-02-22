@@ -6094,7 +6094,7 @@ abstract class DBObject implements iDisplay
 	 * @return bool
 	 * @since 3.1.0 N°5609
 	 */
-	final protected function IsCrudStackEmpty(): bool
+	final protected static function IsCrudStackEmpty(): bool
 	{
 		return count(self::$m_aCrudStack) === 0;
 	}
