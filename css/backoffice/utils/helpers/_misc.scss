@@ -159,6 +159,16 @@ body.ibo-has-fullscreen-descendant {
     border-spacing: 2px;
   }
 
+  /*
+   * N°5317 - Handle overlapping tables when table cells have fixed widths
+   * Force table cell NOT to have a fixed width and to wrap when necessary
+   */
+  td {
+    width: unset !important;
+    word-break: break-word !important;
+    white-space: unset !important;
+  }
+
   /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */
   & > code,
   code:not(.hljs)  {
