@@ -333,11 +333,11 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'setup_legacy_menu_compilation' => [
-			'type' => 'bool',
-			'description' => 'if false switch to latest menu compilation algo (N°4762)',
-			'default' => true,
-			'value' => true,
+		'set_menu_compilation_algorithm' => [
+			'type' => 'string',
+			'description' => 'setup menu compilation algorithm version (N°4762)',
+			'default' => 'v1',
+			'value' => 'v1',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],

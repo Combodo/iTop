@@ -4,16 +4,17 @@ namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use ApplicationMenu;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Config;
 use MetaModel;
 use MFCompiler;
 use RunTimeEnvironment;
-use Config;
 
 /**
  * @group menu_compilation
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
+ * @since 3.0.x N°4762
  * @covers \MFCompiler::UseLatestPrecompiledFile
  */
 class MFCompilerMenuTest extends ItopTestCase {
@@ -51,10 +52,12 @@ class MFCompilerMenuTest extends ItopTestCase {
 			$oConfig->WriteToFile($sConfigFilePath);
 
 			$oConfig = new Config($sConfigFilePath);
-			$oConfig->Set('setup_legacy_menu_compilation', false);
+			$oConfig->Set('set_menu_compilation_algorithm', 'v2', 'test', true);
+			$oConfig->WriteToFile();
 			$oRunTimeEnvironment = new RunTimeEnvironment($sEnv);
 			$oRunTimeEnvironment->CompileFrom(\utils::GetCurrentEnvironment());
-			$oConfig->Set('setup_legacy_menu_compilation', true);
+			$oConfig->Set('set_menu_compilation_algorithm', 'v1', 'test', true);
+			$oConfig->WriteToFile();
 		}
 		$this->RequireOnceItopFile('application/utils.inc.php');
 
