@@ -32,8 +32,6 @@ SetupWebPage::AddModule(
 		),
 		'data.sample' => array(
 			'data.sample.model.xml',
-			'data.sample.osfamily.xml',
-			'data.sample.osversion.xml',
 			'data.sample.networkdevicetype.xml',
 			'data.sample.servers.xml',
 			'data.sample.nw-devices.xml',
