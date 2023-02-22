@@ -71,3 +71,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:FunctionalCI/Attribute:services_list' => 'Szolgáltatások',
 	'Class:FunctionalCI/Attribute:services_list+' => 'All the services impacted by this configuration item~~',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:Document/Attribute:contracts_list' => 'Szerződések',
+	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
+	'Class:Document/Attribute:services_list' => 'Szolgáltatások',
+	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
+));

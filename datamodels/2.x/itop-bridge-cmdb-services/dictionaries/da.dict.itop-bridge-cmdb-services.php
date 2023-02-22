@@ -71,3 +71,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:FunctionalCI/Attribute:services_list' => 'Ydelser',
 	'Class:FunctionalCI/Attribute:services_list+' => '',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:Document/Attribute:contracts_list' => 'Kontrakter',
+	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
+	'Class:Document/Attribute:services_list' => 'Ydelser',
+	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
+));

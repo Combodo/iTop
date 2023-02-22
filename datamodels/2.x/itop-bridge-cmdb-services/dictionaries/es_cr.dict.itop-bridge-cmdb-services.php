@@ -71,3 +71,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FunctionalCI/Attribute:services_list' => 'Servicios',
 	'Class:FunctionalCI/Attribute:services_list+' => 'Servicios',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Document/Attribute:contracts_list' => 'Contratos',
+	'Class:Document/Attribute:contracts_list+' => 'Contratos Referenciados con este Documento',
+	'Class:Document/Attribute:services_list' => 'Servicios',
+	'Class:Document/Attribute:services_list+' => 'Servicios Referenciados con este Documento',
+));

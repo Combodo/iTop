@@ -71,3 +71,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:FunctionalCI/Attribute:services_list' => 'Services',
 	'Class:FunctionalCI/Attribute:services_list+' => 'Alle services die impact hebben op dit configuratie-item',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:Document/Attribute:contracts_list' => 'Contracten',
+	'Class:Document/Attribute:contracts_list+' => 'Alle contracten gerelateerd aan dit document',
+	'Class:Document/Attribute:services_list' => 'Services',
+	'Class:Document/Attribute:services_list+' => 'Alle services gerelateerd aan dit document.',
+));

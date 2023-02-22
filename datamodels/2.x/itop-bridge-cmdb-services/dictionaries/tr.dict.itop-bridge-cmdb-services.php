@@ -71,3 +71,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:FunctionalCI/Attribute:services_list' => 'Hizmetler',
 	'Class:FunctionalCI/Attribute:services_list+' => 'Bu yapılandırma öğesinden etkilenen tüm hizmetler',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:Document/Attribute:contracts_list' => 'Contracts~~',
+	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
+	'Class:Document/Attribute:services_list' => 'Services~~',
+	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
+));

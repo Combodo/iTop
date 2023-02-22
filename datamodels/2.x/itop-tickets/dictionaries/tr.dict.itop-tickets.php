@@ -248,13 +248,3 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'TTR tipi  bir SLT\'ye dayalı hedef',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Document/Attribute:contracts_list' => 'Contracts~~',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
-	'Class:Document/Attribute:services_list' => 'Services~~',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
-));

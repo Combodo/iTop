@@ -231,13 +231,3 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Goal based on a SLT of type TTR~~',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:Document/Attribute:contracts_list' => 'Kontrakter',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
-	'Class:Document/Attribute:services_list' => 'Ydelser',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
-));

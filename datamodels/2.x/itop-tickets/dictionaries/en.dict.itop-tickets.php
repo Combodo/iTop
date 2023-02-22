@@ -250,13 +250,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Goal based on a SLT of type TTR',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:Document/Attribute:contracts_list' => 'Contracts',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document',
-));

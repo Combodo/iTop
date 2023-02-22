@@ -71,3 +71,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:FunctionalCI/Attribute:services_list' => 'Služby',
 	'Class:FunctionalCI/Attribute:services_list+' => '',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:Document/Attribute:contracts_list' => 'Zmluvy',
+	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
+	'Class:Document/Attribute:services_list' => 'Služby',
+	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
+));

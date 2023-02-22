@@ -71,3 +71,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FunctionalCI/Attribute:services_list' => 'Serviços',
 	'Class:FunctionalCI/Attribute:services_list+' => 'Todos os serviços impactados por esse item de configuração',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:Document/Attribute:contracts_list' => 'Contratos',
+	'Class:Document/Attribute:contracts_list+' => 'Todos os contratos associados a este documento',
+	'Class:Document/Attribute:services_list' => 'Services',
+	'Class:Document/Attribute:services_list+' => 'Todos os serviços associados a este documento',
+));

@@ -71,3 +71,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:FunctionalCI/Attribute:services_list' => 'Услуги',
 	'Class:FunctionalCI/Attribute:services_list+' => 'Связанные услуги',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:Document/Attribute:contracts_list' => 'Договоры',
+	'Class:Document/Attribute:contracts_list+' => 'Связанные договоры',
+	'Class:Document/Attribute:services_list' => 'Услуги',
+	'Class:Document/Attribute:services_list+' => 'Связанные услуги',
+));

@@ -230,13 +230,3 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Goal based on a SLT of type TTR~~',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:Document/Attribute:contracts_list' => 'Szerződések',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
-	'Class:Document/Attribute:services_list' => 'Szolgáltatások',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
-));

@@ -71,3 +71,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:services_list' => 'Services',
 	'Class:FunctionalCI/Attribute:services_list+' => '',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Document/Attribute:contracts_list' => 'Contrats',
+	'Class:Document/Attribute:contracts_list+' => 'Tous les contrats liés à ce document',
+	'Class:Document/Attribute:services_list' => 'Services',
+	'Class:Document/Attribute:services_list+' => 'Tous les services liés à ce document',
+));

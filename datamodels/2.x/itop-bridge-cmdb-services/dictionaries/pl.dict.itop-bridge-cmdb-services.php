@@ -71,3 +71,14 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:FunctionalCI/Attribute:services_list' => 'Usługi',
 	'Class:FunctionalCI/Attribute:services_list+' => 'Wszystkie usługi, na które ma wpływ tą konfigurację',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Class:Document/Attribute:contracts_list' => 'Umowy',
+	'Class:Document/Attribute:contracts_list+' => 'Wszystkie umowy powiązane z tym dokumentem',
+	'Class:Document/Attribute:services_list' => 'Usługi',
+	'Class:Document/Attribute:services_list+' => 'Wszystkie usługi powiązane z tym dokumentem',
+));
