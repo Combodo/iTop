@@ -8,7 +8,6 @@ use Config;
 use MetaModel;
 use MFCompiler;
 use RunTimeEnvironment;
-use Config;
 
 /**
  * @group menu_compilation
