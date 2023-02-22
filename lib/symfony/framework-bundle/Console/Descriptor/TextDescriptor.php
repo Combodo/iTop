@@ -315,7 +315,7 @@ class TextDescriptor extends Descriptor
                 if ($factory[0] instanceof Reference) {
                     $tableRows[] = ['Factory Service', $factory[0]];
                 } elseif ($factory[0] instanceof Definition) {
-                    throw new \InvalidArgumentException('Factory is not describable.');
+                    $tableRows[] = ['Factory Service', sprintf('inline factory service (%s)', $factory[0]->getClass() ?? 'class not configured')];
                 } else {
                     $tableRows[] = ['Factory Class', $factory[0]];
                 }
@@ -614,7 +614,7 @@ class TextDescriptor extends Descriptor
             if (str_contains($r->name, '{closure}')) {
                 return 'Closure()';
             }
-            if ($class = $r->getClosureScopeClass()) {
+            if ($class = \PHP_VERSION_ID >= 80111 ? $r->getClosureCalledClass() : $r->getClosureScopeClass()) {
                 return sprintf('%s::%s()', $class->name, $r->name);
             }
 
