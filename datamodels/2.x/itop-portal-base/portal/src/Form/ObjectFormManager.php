@@ -32,6 +32,7 @@ use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
+use CoreCannotSaveObjectException;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
@@ -1131,6 +1132,9 @@ class ObjectFormManager extends FormManager
 			try
 			{
 				$this->oObject->DBWrite();
+			}
+			catch (CoreCannotSaveObjectException $e) {
+				throw new Exception($e->getHtmlMessage());
 			}
 			catch (Exception $e) {
 				if ($bIsNew) {
