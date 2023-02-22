@@ -151,7 +151,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 			var sString = "$('#"+aRefreshed[i]+"').trigger('change').trigger('update');";
 			window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
 		}
-		if($('.blockUI').length == 0) {
+		if($('[data-field-status="blocked"]').length === 0) {
 			$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');
 		}
 	};
@@ -181,9 +181,11 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 		   { operation: 'wizard_helper', json_obj: this.ToJSON() },
 			function(html){
 				$('#ajax_content').html(html);
-				$('.blockUI').parent().unblock();
+				$('[data-field-status="blocked"]')
+					.attr('data-field-status', 'ready')
+					.unblock();
 
-				if($('.blockUI').length == 0) {
+				if($('[data-field-status="blocked"]').length === 0) {
 					$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');
 				}
 				//console.log('data received:', oWizardHelper);
@@ -229,16 +231,18 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 			sFieldId = this.GetFieldId(sAttCode);
 			if (sFieldId !== undefined) {
 				$('#fstatus_' + sFieldId).html('<img src="../images/indicator.gif" />');
-				$('#field_' + sFieldId).find('div').block({
-					message: '',
-					overlayCSS: {backgroundColor: '#f1f1f1', opacity: 0.3}
+				$('#field_' + sFieldId).find('div')
+					.attr('data-field-status', 'blocked')
+					.block({
+						message: '',
+						overlayCSS: {backgroundColor: '#f1f1f1', opacity: 0.3}
 				});
 				fieldForm = $('#field_' + sFieldId).closest('form');
 				this.RequestAllowedValues(sAttCode);
 			}
 			index++;
 		}
-		if ((fieldForm !== null) && ($('.blockUI').length > 0)) {
+		if ((fieldForm !== null) && ($('[data-field-status="blocked"]').length > 0)) {
 			fieldForm.find('button[type=submit]:not(:disabled)').prop("disabled", true).addClass('disabledDuringFieldLoading');
 		}
 		this.AjaxQueryServer();
