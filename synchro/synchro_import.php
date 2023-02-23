@@ -255,7 +255,7 @@ if (utils::IsModeCLI())
 {
 	// Next steps:
 	//   specific arguments: 'csvfile'
-	//   
+	//
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
 	$sCsvFile = ReadMandatoryParam($oP, 'csvfile', 'raw_data');
@@ -282,6 +282,9 @@ if (utils::IsModeCLI())
 else
 {
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
+
+	//N°6022 - Make synchro scripts work by http via token authentication with SYNCHRO scopes
+	$oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
