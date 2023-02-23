@@ -1051,7 +1051,7 @@ JS
 			$oPill = PillFactory::MakeForState($sClass, $sStateValue);
 			// N°5849 - Unencode label for ExternalKey attribute because friendlyname is already html encoded thanks to DBObject::GetName() in AttributeExternalKey::GetAllowedValues(). (A fix in this function may have too much impact).
 			if ($oAttDef instanceof AttributeExternalKey) {
-				$sPillTooltip = htmlspecialchars_decode($sStateLabel, ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5);
+				$sPillTooltip = utils::EscapedHtmlDecode($sStateLabel);
 				$sPillLabel = $sStateLabel;
 			} else {
 				$sPillTooltip = $sStateLabel;
