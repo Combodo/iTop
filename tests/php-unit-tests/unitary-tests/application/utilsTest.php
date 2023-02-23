@@ -679,10 +679,38 @@ class utilsTest extends ItopTestCase
 			'good context_param'      => ['context_param', '%dssD25_=%:+-', '%dssD25_=%:+-'],
 			'bad context_param'       => ['context_param', '%dssD,25_=%:+-', null],
 			'good element_identifier' => ['element_identifier', 'AD05nb', 'AD05nb'],
-			'bad element_identifier' => ['element_identifier', 'AD05nb+', 'AD05nb'],
-			'good url' => ['url', 'https://www.w3schools.com', 'https://www.w3schools.com'],
-			'bad url' => ['url', 'https://www.w3schoo��ls.co�m', 'https://www.w3schools.com'],
-			'raw_data' => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
+			'bad element_identifier'  => ['element_identifier', 'AD05nb+', 'AD05nb'],
+			'good url'                => ['url', 'https://www.w3schools.com', 'https://www.w3schools.com'],
+			'bad url'                 => ['url', 'https://www.w3schoo��ls.co�m', 'https://www.w3schools.com'],
+			'raw_data'                => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
+		];
+	}
+
+	/**
+	 * @return void
+	 *
+	 * @dataProvider escapeHtmlProvider
+	 */
+	public function testEscapeHtml($sInput, $sExpectedEscaped)
+	{
+		if (is_null($sExpectedEscaped)) {
+			$sExpectedEscaped = $sInput;
+		}
+
+		$sEscaped = utils::EscapeHtml($sInput);
+		self::assertSame($sExpectedEscaped, $sEscaped);
+
+		$sEscapedDecoded = utils::EscapedHtmlDecode($sEscaped);
+		self::assertSame($sInput, $sEscapedDecoded);
+	}
+
+	public function escapeHtmlProvider()
+	{
+		return [
+			'no escape' => ['abcdefghijklmnop', null],
+			'&amp;'     => ['abcdefghijklmnop&0123456789', 'abcdefghijklmnop&amp;0123456789'],
+			['"double quotes"', '&quot;double quotes&quot;'],
+			["'simple quotes'", '&apos;simple quotes&apos;'],
 		];
 	}
 }
