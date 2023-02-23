@@ -36,7 +36,7 @@ abstract class HTMLSanitizer
 	 * Sanitize an HTML string with the configured sanitizer, falling back to HTMLDOMSanitizer in case of Exception or invalid configuration
 	 *
 	 * @param string $sHTML
-	 * @param string $sConfigKey
+	 * @param string $sConfigKey eg. 'html_sanitizer', 'svg_sanitizer'
 	 *
 	 * @return string
 	 */
