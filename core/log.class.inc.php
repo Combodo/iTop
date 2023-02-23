@@ -578,6 +578,18 @@ class LogChannels
 	public const DEADLOCK = 'DeadLock';
 
 	/**
+	 * @var string Everything related to the datamodel CRUD
+	 * @since 3.1.0
+	 */
+	public const DM_CRUD = 'DMCRUD';
+
+	/**
+	 * @var string Everything related to the event service
+	 * @since 3.1.0
+	 */
+	public const EVENT_SERVICE = 'EventService';
+
+	/**
 	 * @var string
 	 * @since 2.7.9 3.0.3 3.1.0 N°5588
 	 */
@@ -593,18 +605,6 @@ class LogChannels
 	public const NOTIFICATIONS = 'notifications';
 
 	public const PORTAL       = 'portal';
-
-	/**
-	 * @var string Everything related to the event service
-	 * @since 3.1.0
-	 */
-	public const EVENT_SERVICE = 'EventService';
-
-	/**
-	 * @var string Everything related to the datamodel CRUD
-	 * @since 3.1.0
-	 */
-	public const DM_CRUD = 'DMCRUD';
 }
 
 
