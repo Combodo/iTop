@@ -50,7 +50,7 @@ class CheckResult
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
-	const PHP_MIN_VERSION = '7.0.8'; // 7.0 for embedded libs, see N°3129
+	const PHP_MIN_VERSION = '7.1.3'; // 7.1 for embedded libs, see N°6019
 	const MYSQL_MIN_VERSION = '5.6.0'; // 5.6 to have fulltext on InnoDB for Tags fields (N°931)
 	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
 
