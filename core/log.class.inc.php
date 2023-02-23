@@ -545,13 +545,6 @@ class LogChannels
 	public const APC = 'apc';
 
 	/**
-	 * @var string
-	 * @since 3.0.1 N°4849
-	 * @since 2.7.7 N°4635
-	 */
-	public const NOTIFICATIONS = 'notifications';
-
-	/**
 	 * @since 3.0.0
 	 */
 	public const CLI = 'CLI';
@@ -577,8 +570,15 @@ class LogChannels
 	 * @since 2.7.9 3.0.3 3.1.0 N°5588
 	 */
 	public const EXPORT = 'export';
-	
+
 	public const INLINE_IMAGE = 'InlineImage';
+
+	/**
+	 * @var string
+	 * @since 3.0.1 N°4849
+	 * @since 2.7.7 N°4635
+	 */
+	public const NOTIFICATIONS = 'notifications';
 
 	public const PORTAL = 'portal';
 }
