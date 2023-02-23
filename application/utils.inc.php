@@ -2052,19 +2052,36 @@ SQL;
 	}
 
 	/**
+	 * @param string $sValue value encoded with {@see self::EscapeHtml()}
+	 *
+	 * @return string decoded value
+	 *
+	 * @uses \htmlspecialchars_decode()
+	 * @link https://www.php.net/manual/en/function.htmlspecialchars-decode.php
+	 * @since 3.0.3 3.1.0 N°6020 method creation
+	 */
+	public static function EscapedHtmlDecode($sValue)
+	{
+		return htmlspecialchars_decode(
+			$sValue,
+			ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5
+		);
+	}
+
+	/**
 	 * Convert a string containing some (valid) HTML markup to plain text
+	 *
 	 * @param string $sHtml
+	 *
 	 * @return string
 	 */
 	public static function HtmlToText($sHtml)
 	{
-		try
-		{
+		try {
 			//return '<?xml encoding="UTF-8">'.$sHtml;
 			return \Html2Text\Html2Text::convert('<?xml encoding="UTF-8">'.$sHtml);
 		}
-		catch(Exception $e)
-		{
+		catch (Exception $e) {
 			return $e->getMessage();
 		}
 	}
