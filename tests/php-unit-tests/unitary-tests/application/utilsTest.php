@@ -834,4 +834,32 @@ class utilsTest extends ItopTestCase
 			'raw_data' => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
 		];
 	}
+
+	/**
+	 * @return void
+	 *
+	 * @dataProvider escapeHtmlProvider
+	 */
+	public function testEscapeHtml($sInput, $sExpectedEscaped)
+	{
+		if (is_null($sExpectedEscaped)) {
+			$sExpectedEscaped = $sInput;
+		}
+
+		$sEscaped = utils::EscapeHtml($sInput);
+		self::assertSame($sExpectedEscaped, $sEscaped);
+
+		$sEscapedDecoded = utils::EscapedHtmlDecode($sEscaped);
+		self::assertSame($sInput, $sEscapedDecoded);
+	}
+
+	public function escapeHtmlProvider()
+	{
+		return [
+			'no escape' => ['abcdefghijklmnop', null],
+			'&amp;'     => ['abcdefghijklmnop&0123456789', 'abcdefghijklmnop&amp;0123456789'],
+			['"double quotes"', '&quot;double quotes&quot;'],
+			["'simple quotes'", '&apos;simple quotes&apos;'],
+		];
+	}
 }
