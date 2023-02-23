@@ -251,7 +251,7 @@ abstract class TriggerOnObject extends Trigger
 	 */
 	public function IsTargetObject($iObjectId, $aChanges = array())
 	{
-		$sFilter = trim($this->Get('filter'));
+		$sFilter = trim($this->Get('filter') ?? '');
 		if (strlen($sFilter) > 0)
 		{
 			$oSearch = DBObjectSearch::FromOQL($sFilter);
