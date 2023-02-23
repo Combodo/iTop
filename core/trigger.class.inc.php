@@ -284,7 +284,7 @@ abstract class TriggerOnObject extends Trigger
 	 */
 	public function LogException($oException, $oObject)
 	{
-		$sObjectKey = ($oObject->IsNew()) ? 'N/A' : $oObject->GetKey();
+		$sObjectKey = $oObject->GetKey(); // if object wasn't persisted yet, then we'll have a negative value
 
 		$aContext = [
 			'exception.class'      => get_class($oException),
