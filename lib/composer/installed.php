@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'd997e36de0f7ad4a820dbae8851c60f55fcd1c25',
+        'reference' => '4af0b9ab30a243b26bbebddcf190363ea6f28c83',
         'name' => 'combodo/itop',
         'dev' => true,
     ),
@@ -25,7 +25,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'd997e36de0f7ad4a820dbae8851c60f55fcd1c25',
+            'reference' => '4af0b9ab30a243b26bbebddcf190363ea6f28c83',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -44,12 +44,12 @@
             ),
         ),
         'firebase/php-jwt' => array(
-            'pretty_version' => 'v6.3.0',
-            'version' => '6.3.0.0',
+            'pretty_version' => 'v6.4.0',
+            'version' => '6.4.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../firebase/php-jwt',
             'aliases' => array(),
-            'reference' => '018dfc4e1da92ad8a1b90adc4893f476a3b41cb8',
+            'reference' => '4dd1e007f22a927ac77da5a3fbb067b42d3bc224',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(

@@ -14,6 +14,7 @@
     "ext-soap": "*",
     "apereo/phpcas" : "~1.6.0",
     "combodo/tcpdf": "~6.4.4",
+    "firebase/php-jwt": "~6.4.0",
     "guzzlehttp/guzzle": "^7.4.5",
     "laminas/laminas-mail": "^2.11",
     "laminas/laminas-servicemanager": "^3.5",
