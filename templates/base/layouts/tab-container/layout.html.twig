@@ -26,7 +26,7 @@
                                     {% if oTab.HasDescription() == true %}
                                         data-tooltip-content="{{ oTab.GetDescription() }}"
                                         {# Delay display to avoid having all tooltips appearing when mouse is just passing through the tabs #}
-                                        data-tooltip-show-delay="300"
+                                        data-tooltip-show-delay="500"
                                     {% endif %}>
                                     <a href="#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                                        class="ibo-tab-container--tab-toggler" data-role="ibo-tab-container--tab-toggler">
