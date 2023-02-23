@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core\Sanitizer;
 
+use HTMLSanitizer;
 use SVGDOMSanitizer;
 
 
@@ -22,7 +23,7 @@ class SVGDOMSanitizerTest extends AbstractDOMSanitizerTest
 		$sOutputHtml = $this->RemoveNewLines($sOutputHtml);
 
 		$oSanitizer = new SVGDOMSanitizer();
-		$sRes = $oSanitizer->DoSanitize($sInputHtml);
+		$sResFromSvgSanitizer = $oSanitizer->DoSanitize($sInputHtml);
 
 		// Removing newlines as the parser gives different results depending on the PHP version
 		// Didn't manage to get it right :
@@ -30,19 +31,22 @@ class SVGDOMSanitizerTest extends AbstractDOMSanitizerTest
 		// - playing with the parser preserveWhitespace/formatOutput parser options didn't help
 		// So we're removing new lines on both sides :/
 		$sOutputHtml = $this->RemoveNewLines($sOutputHtml);
-		$sRes = $this->RemoveNewLines($sRes);
+		$sResFromSvgSanitizer = $this->RemoveNewLines($sResFromSvgSanitizer);
 
-		$this->debug($sRes);
-		$this->assertEquals($sOutputHtml, $sRes);
+		$this->debug($sResFromSvgSanitizer);
+		$this->assertEquals($sOutputHtml, $sResFromSvgSanitizer);
+
+		// N°6023 checking call through the factory is working as well
+		$sResFromSanitizerFactory = HTMLSanitizer::Sanitize($sInputHtml, 'svg_sanitizer');
+		$sResFromSanitizerFactory = $this->RemoveNewLines($sResFromSanitizerFactory);
+		$this->assertEquals($sOutputHtml, $sResFromSanitizerFactory);
 	}
 
 	public function DoSanitizeProvider()
 	{
-		return array(
-			array(
-				'scripts.svg',
-			),
-		);
+		return [
+			['scripts.svg'],
+		];
 	}
 }
 
