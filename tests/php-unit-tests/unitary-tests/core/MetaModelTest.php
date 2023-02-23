@@ -23,6 +23,7 @@ class MetaModelTest extends ItopDataTestCase
     protected static $iDefaultUserCallerId = 1;
     protected static $sDefaultUserRequestTitle = 'Unit test title';
     protected static $sDefaultUserRequestDescription = 'Unit test description';
+    protected static $sDefaultUserRequestDescriptionAsHtml = '<p>Unit test description</p>';
 
 	protected function setUp(): void
 	{
@@ -49,7 +50,7 @@ class MetaModelTest extends ItopDataTestCase
                 'org_id' => static::$iDefaultUserOrgId,
                 'caller_id' => static::$iDefaultUserCallerId,
                 'title' => static::$sDefaultUserRequestTitle,
-                'description' => static::$sDefaultUserRequestDescription,
+                'description' => static::$sDefaultUserRequestDescriptionAsHtml,
             )
         );
 
@@ -104,6 +105,21 @@ class MetaModelTest extends ItopDataTestCase
                 'Title: <a href="http://foo.bar/%24this-&gt;title%24">Hyperlink</a>',
                 $aParams,
                 'Title: <a href="http://foo.bar/'.$sTitle.'">Hyperlink</a>',
+			],
+			'Placeholder for an object HTML attribute as its default format' => [
+				'$this->description$',
+				$aParams,
+				static::$sDefaultUserRequestDescriptionAsHtml,
+			],
+			'Placeholder for an object HTML attribute as plain text' => [
+				'$this->text(description)$',
+				$aParams,
+				static::$sDefaultUserRequestDescription,
+			],
+			'Placeholder for an object HTML attribute as HTML' => [
+				'$this->html(description)$',
+				$aParams,
+				'<div class="HTML ibo-is-html-content" ><p>Unit test description</p></div>', // As the AttributeText::GetForHTML() called by AttributeDefinition::GetForTemplate() adds this markup, we have to mock it here as well
 			],
 		];
 	}
