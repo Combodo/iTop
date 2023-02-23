@@ -31,7 +31,7 @@ class MissingDependencyException extends CoreException
 
 	/**
 	 * @return string HTML to print to the user the modules impacted
-	 * @since 2.7.7 3.0.2 3.1.0 PR #280
+	 * @since 2.7.7 3.0.2 3.1.0 N°5090 PR #280
 	 */
 	public function getHtmlDesc($sHighlightHtmlBegin = null, $sHighlightHtmlEnd = null)
 	{
@@ -254,10 +254,10 @@ class ModuleDiscovery
 			foreach($aDependencies as $sId => $aDeps)
 			{
 				$aModule = $aModules[$sId];
-				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on ".implode(' + ', $aDeps);
+				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on: ".implode(' + ', $aDeps);
 				$aModulesInfo[$sId] = array('module' => $aModule, 'dependencies' => $aDeps);
 			}
-			$sMessage = "The following modules have unmet dependencies: ".implode(', ', $aModuleDeps);
+			$sMessage = "The following modules have unmet dependencies:\n".implode(",\n", $aModuleDeps);
 			$oException = new MissingDependencyException($sMessage);
 			$oException->aModulesInfo = $aModulesInfo;
 			throw $oException;
