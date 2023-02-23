@@ -7318,9 +7318,14 @@ abstract class MetaModel
 	/**
 	 * Replaces all the parameters by the values passed in the hash array
 	 *
-	 * @param string $sInput
-	 * @param array $aParams
+	 * @param string $sInput Can be plain text or HTML. Note that some part may be url-encoded if a placeholder is used in an URL.
+	 * @param array $aParams Placeholder descriptor as key, replacement as value. Possible placeholders can be of the forms:
+	 *   * foo_bar : Static placeholder
+	 *   * foo->bar : Another static placeholder
+	 *   * foo->object() : Will be developed into a set of placeholders depending on the attribute of the given \DBObject and their corresponding transformation methods {@see \AttributeDefinition::GetForTemplate()}
+	 *                     Example: foo->hyperlink(), foo->name, foo->html(name), foo->head(log), foo->head_html(log), ...
 	 *
+	 * @link https://www.itophub.io/wiki/page?id=latest:admin:placeholders
 	 * @return string
 	 *
 	 * @throws \Exception
