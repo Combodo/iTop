@@ -41,6 +41,7 @@ class AttributeURLTest extends ItopTestCase {
 			'SF URL'                            => ['https://sourceforge.net/p/itop/discussion/customizing-itop/thread/707145b859/?limit=25#f53c', 1],
 			'SF URL anchor starting with digit' => ['https://sourceforge.net/p/itop/discussion/customizing-itop/thread/b0a2d474ba/?limit=25#2b35', 1],
 			'URL param containing commas'       => ['http://mydomain.prtg.com/chart.png?type=graph&width=1500&height=700&hide=2,3,6,7,8,9,10,11,12,13,14&graphstyling=showLegend%3D%271%27+baseFontSize%3D%2715%27&graphid=0&id=34759&username=portaluser&passhash=2353031973', 1],
+			// 'iTop anchors'                      => ['https://itsm-designer.combodo.com/pages/UI.php?operation=details&class=MigrationAuditCheckXPath&id=106&#ObjectProperties=tab_UIPropertiesTab', 1], // N°5121
 		];
 	}
 }
