@@ -572,6 +572,12 @@ class LogChannels
 
 	public const DEADLOCK = 'DeadLock';
 
+	/**
+	 * @var string
+	 * @since 2.7.9 3.0.3 3.1.0 N°5588
+	 */
+	public const EXPORT = 'export';
+	
 	public const INLINE_IMAGE = 'InlineImage';
 
 	public const PORTAL = 'portal';
