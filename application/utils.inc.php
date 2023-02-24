@@ -168,7 +168,7 @@ class utils
 			self::$m_aParamsFromFile = array();
 		}
 
-		$aParamLines = explode("\n", $sParams);
+		$aParamLines = explode("\n", $sParams ?? '');
 		foreach ($aParamLines as $sLine)
 		{
 			$sLine = trim($sLine);
@@ -1874,7 +1874,7 @@ SQL;
 			// If cURL is available, let's use it, since it provides a greater control over the various HTTP/SSL options
 			// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
 			// by setting the SSLVERSION to 3 as done below.
-			$aHeaders = explode("\n", $sOptionnalHeaders);
+			$aHeaders = explode("\n", $sOptionnalHeaders ?? '');
 			// N°3267 - Webservices: Fix optional headers not being taken into account
 			//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
 			$aHTTPHeaders = array();
@@ -2596,7 +2596,7 @@ SQL;
 		$aCleanHeaders = array();
 		foreach( $aHeaders as $sKey => $sValue )
 		{
-			$aTokens = explode(':', $sValue, 2);
+			$aTokens = explode(':', $sValue ?? '', 2);
 			if(isset($aTokens[1]))
 			{
 				$aCleanHeaders[trim($aTokens[0])] = trim($aTokens[1]);
@@ -3011,7 +3011,7 @@ HTML;
 				$sKey = isset($aShortcutPrefs[$aShortcutKey['id']]) ? $aShortcutPrefs[$aShortcutKey['id']] : $aShortcutKey['key'];
 
 				// Format key for display
-				$aKeyParts = explode('+', $sKey);
+				$aKeyParts = explode('+', $sKey ?? '');
 				$aFormattedKeyParts = [];
 				foreach ($aKeyParts as $sKeyPart) {
 					$aFormattedKeyParts[] = ucfirst(trim($sKeyPart));
