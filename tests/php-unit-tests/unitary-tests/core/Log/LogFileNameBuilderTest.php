@@ -70,7 +70,7 @@ class LogFileNameBuilderTest extends ItopTestCase
 		$sRotatedLogFile = $oFileBuilder->GetRotatedFileName($oLogFileLastModified);
 		$oFileBuilder->CheckAndRotateLogFile();
 		$this->assertFileExists($sLogFile, 'Test log file modification date is today, original file still exists after rotation call');
-		$this->assertFileNotExists($sRotatedLogFile, 'No rotation occurred yet');
+		$this->assertFileDoesNotExist($sRotatedLogFile, 'No rotation occurred yet');
 
 		$oTimeYesterday = new DateTime('yesterday');
 		$sRotatedLogFile = $oFileBuilder->GetRotatedFileName($oTimeYesterday);
@@ -79,12 +79,12 @@ class LogFileNameBuilderTest extends ItopTestCase
 		// changing modification date, but do not reset cached filebuilder date => no change
 		$oFileBuilder->CheckAndRotateLogFile();
 		$this->assertFileExists($sLogFile, 'Test log file modification date is yesterday but filebuilder use its cache, original file still exists after rotation call');
-		$this->assertFileNotExists($sRotatedLogFile, 'No rotation occurred yet');
+		$this->assertFileDoesNotExist($sRotatedLogFile, 'No rotation occurred yet');
 
 		// changing modification date AND resetting filebuilder date cache
 		$oFileBuilder->ResetLastModifiedDateForFile();
 		$oFileBuilder->CheckAndRotateLogFile();
-		$this->assertFileNotExists($sLogFile, 'Test log file modification date is yesterday, file rotated !');
+		$this->assertFileDoesNotExist($sLogFile, 'Test log file modification date is yesterday, file rotated !');
 		$this->assertFileExists($sRotatedLogFile, 'Rotation was not done');
 
 		// file cleanup will be done in tearDown !

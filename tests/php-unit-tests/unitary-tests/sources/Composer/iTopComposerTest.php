@@ -71,7 +71,7 @@ class iTopComposerTest extends ItopTestCase
 
 		foreach ($aDirs as $sDir) {
 			$sDirName = basename($sDir);
-			$this->assertRegExp(iTopComposer::TEST_DIR_REGEXP, $sDirName, "Directory not matching test dir : $sDir");
+			$this->assertMatchesRegularExpression(iTopComposer::TEST_DIR_REGEXP, $sDirName, "Directory not matching test dir : $sDir");
 		}
 
 	}
