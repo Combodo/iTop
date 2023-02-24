@@ -1567,11 +1567,6 @@
     protected function OnUpdate()
 	{
         parent::OnUpdate();
-        $aChanges = $this->ListChanges();
-        if (array_key_exists('functionalcis_list', $aChanges))
-        {
-            $this->UpdateImpactedItems();
-        }
 		$this->Set('last_update', time());
 		$this->UpdateChildRequestLog();
 	}]]></code>

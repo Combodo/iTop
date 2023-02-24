@@ -195,8 +195,8 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 		$oTeam->DBInsert();
 		$this->assertIsObject($oTeam);
 
-		// 3 links added to person (the Team side is ignored)
-		$this->assertEquals(3, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
+		// 3 links added to person  + 1 for the Team
+		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
 	}
 
 	/**

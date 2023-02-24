@@ -4533,8 +4533,6 @@ HTML;
 			}
 		} finally {
 			if (static::IsCrudStackEmpty()) {
-				// Avoid signaling the current object that links were modified
-				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
@@ -5811,6 +5809,7 @@ JS
 	final protected function FireEventCreateDone(): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
+		$this->FireEventDbLinksChangedForCurrentObject();
 		$this->FireEvent(EVENT_DB_CREATE_DONE);
 	}
 
@@ -5829,6 +5828,7 @@ JS
 	final protected function FireEventUpdateDone(array $aChanges): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
+		$this->FireEventDbLinksChangedForCurrentObject();
 		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
 	}
 
@@ -5857,6 +5857,7 @@ JS
 	final protected function FireEventDeleteDone(): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
+		$this->FireEventDbLinksChangedForCurrentObject();
 		$this->FireEvent(EVENT_DB_DELETE_DONE);
 	}
 
@@ -5955,11 +5956,24 @@ JS
 			return;
 		}
 
-		$oObject = MetaModel::GetObject($sClass, $sId);
+		// First we are disabling firing the event to avoid reentrance
+		// For example on a Ticket :
+		// - in the Ticket CRUD stack, DBWriteLinks will generate lnkApplicationSolutionToFunctionalCI instances
+		// - therefore the $aObjectsAwaitingEventDbLinksChanged attribute will contain our Ticket
+		// - we have a EVENT_DB_LINKS_CHANGED listener on Ticket that will update impacted items, so it will create new lnkApplicationSolutionToFunctionalCI
+		// We want to avoid launching the listener twice, first here, and secondly after saving the Ticket in the listener
+		// By disabling the event to be fired, we can remove the current object from the attribute !
+		/** @noinspection PhpRedundantOptionalArgumentInspection */
+		$oObject = MetaModel::GetObject($sClass, $sId, true);
+		self::SetEventDBLinksChangedBlocked(true);
+		MetaModel::StartReentranceProtection($oObject);
 		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
-
-		// The event listeners might have generated new lnk instances pointing to this object, so removing object from stack to avoid reentrance
+		MetaModel::StopReentranceProtection($oObject);
+		if ($oObject->IsModified()) {
+			$oObject->DBUpdate();
+		}
 		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
+		cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
 	}
 
 	/**
