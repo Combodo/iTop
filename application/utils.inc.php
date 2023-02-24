@@ -2449,7 +2449,7 @@ SQL;
 				$aParams = array();
 				foreach(explode('&', $sQuery) as $sChunk)
 				{
-					$aParts = explode('=', $sChunk);
+					$aParts = explode('=', $sChunk ?? '');
 					if (count($aParts) != 2) continue;
 					$aParams[$aParts[0]] = urldecode($aParts[1]);
 				}
