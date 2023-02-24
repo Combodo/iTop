@@ -274,7 +274,7 @@ class MFCompiler
 
 		try
 		{
-			if ($oConfig->Get('set_menu_compilation_algorithm') === 'v2'){
+			if (! is_null($oConfig) && $oConfig->Get('set_menu_compilation_algorithm') === 'v2'){
 				$this->DoNewCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
 			} else {
 				$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
