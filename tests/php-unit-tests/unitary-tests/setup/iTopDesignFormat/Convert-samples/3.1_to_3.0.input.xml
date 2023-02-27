@@ -91,11 +91,11 @@
     </class>
     <class id="ClassWithEventListeners">
       <event_listeners>
-        <listener id="OnUserRequestUpdateDone" _delta="define">
+        <event_listener id="OnUserRequestUpdateDone" _delta="define">
           <event>EVENT_DB_UPDATE_DONE</event>
           <callback>OnUpdateDone</callback>
           <rank>0</rank>
-        </listener>
+        </event_listener>
       </event_listeners>
       <methods>
         <method id="OnUpdateDone" _delta="define">
@@ -133,7 +133,7 @@
     </event>
   </events>
   <event_listeners>
-    <listener id="GlobalFAQRead" _delta="define">
+    <event_listener id="GlobalFAQRead" _delta="define">
       <event>EVENT_SERVICE_DISPLAY_OBJECT_DETAILS</event>
       <filters>
         <filter>FAQ</filter>
@@ -149,7 +149,7 @@
         IssueLog::Info("FAQ: '{$sFaqTitle}' (id:{$sId}) was read by {$sUser}");
       }
 ]]></code>
-    </listener>
+    </event_listener>
   </event_listeners>
   <meta>
     <presentation>

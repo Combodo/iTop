@@ -1390,7 +1390,7 @@ EOF
 		$sMethods = '';
 		$oHooks = $oClass->GetOptionalElement('event_listeners');
 		if ($oHooks) {
-			foreach ($oHooks->getElementsByTagName('listener') as $oListener) {
+			foreach ($oHooks->getElementsByTagName('event_listener') as $oListener) {
 				/** @var DesignElement $oListener */
 				$oEventNode = $oListener->GetUniqueElement('event');
 				/** @var DesignElement $oEventNode $oEventNode */
@@ -3724,7 +3724,7 @@ EOF;
 		if (!array_key_exists($sModuleId, $this->aSnippets)) {
 			$this->aSnippets[$sModuleId] = ['before' => [], 'after' => []];
 		}
-		$oEventListeners = $this->oFactory->GetNodes('/itop_design/event_listeners/listener');
+		$oEventListeners = $this->oFactory->GetNodes('/itop_design/event_listeners/event_listener');
 		$aEventListeners = [];
 		foreach ($oEventListeners as $oListener) {
 			/** @var \DOMElement $oListener */
