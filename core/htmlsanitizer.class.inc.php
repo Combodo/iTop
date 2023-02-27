@@ -44,7 +44,7 @@ abstract class HTMLSanitizer
 	{
 		$sSanitizerClass = utils::GetConfig()->Get($sConfigKey);
 		if (!class_exists($sSanitizerClass)) {
-			IssueLog::Warning('The configured "html_sanitizer" class "'.$sSanitizerClass.'" is not a valid class. Will use HTMLDOMSanitizer as the default sanitizer.');
+			IssueLog::Warning('The configured "'.$sConfigKey.'" class "'.$sSanitizerClass.'" is not a valid class. Will use HTMLDOMSanitizer as the default sanitizer.');
 			$sSanitizerClass = 'HTMLDOMSanitizer';
 		} else if (!is_subclass_of($sSanitizerClass, 'HTMLSanitizer')) {
 			if ($sConfigKey === 'html_sanitizer') {
