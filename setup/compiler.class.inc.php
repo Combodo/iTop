@@ -24,7 +24,6 @@ use Combodo\iTop\DesignElement;
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
 require_once(APPROOT.'core/moduledesign.class.inc.php');
-require_once(APPROOT.'setup/parentmenunodecompiler.class.inc.php');
 
 class DOMFormatException extends Exception
 {
