@@ -3094,11 +3094,12 @@ abstract class DBObject implements iDisplay
 				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
 				$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)'), array(), $aParams);
 				while ($oTrigger = $oSet->Fetch()) {
-					/** @var \Trigger $oTrigger */
+					/** @var \TriggerOnObjectCreate $oTrigger */
 					try {
 						$oTrigger->DoActivate($this->ToArgs('this'));
 					}
 					catch (Exception $e) {
+						$oTrigger->LogException($e, $this);
 						utils::EnrichRaisedException($oTrigger, $e);
 					}
 				}
@@ -3396,6 +3397,7 @@ abstract class DBObject implements iDisplay
 						$oTrigger->DoActivate($this->ToArgs());
 					}
 					catch (Exception $e) {
+						$oTrigger->LogException($e, $this);
 						utils::EnrichRaisedException($oTrigger, $e);
 					}
 				}
@@ -3634,13 +3636,13 @@ abstract class DBObject implements iDisplay
 			$aParams);
 		while ($oTrigger = $oSet->Fetch())
 		{
-			/** @var \Trigger $oTrigger */
+			/** @var \TriggerOnObjectDelete $oTrigger */
 			try
 			{
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
-			catch(Exception $e)
-			{
+			catch(Exception $e) {
+				$oTrigger->LogException($e, $this);
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
@@ -4046,6 +4048,7 @@ abstract class DBObject implements iDisplay
 					$oTrigger->DoActivate($this->ToArgs('this'));
 				}
 				catch (Exception $e) {
+					$oTrigger->LogException($e, $this);
 					utils::EnrichRaisedException($oTrigger, $e);
 				}
 			}
@@ -4057,6 +4060,7 @@ abstract class DBObject implements iDisplay
 					$oTrigger->DoActivate($this->ToArgs('this'));
 				}
 				catch (Exception $e) {
+					$oTrigger->LogException($e, $this);
 					utils::EnrichRaisedException($oTrigger, $e);
 				}
 			}
