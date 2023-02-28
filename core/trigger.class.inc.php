@@ -250,20 +250,47 @@ abstract class TriggerOnObject extends Trigger
 	public function IsTargetObject($iObjectId, $aChanges = array())
 	{
 		$sFilter = trim($this->Get('filter'));
-		if (strlen($sFilter) > 0)
-		{
+		if (strlen($sFilter) > 0) {
 			$oSearch = DBObjectSearch::FromOQL($sFilter);
 			$oSearch->AddCondition('id', $iObjectId, '=');
 			$oSearch->AllowAllData();
 			$oSet = new DBObjectSet($oSearch);
 			$bRet = ($oSet->Count() > 0);
-		}
-		else
-		{
+		} else {
 			$bRet = true;
 		}
 
 		return $bRet;
+	}
+
+	/**
+	 * @param Exception $oException
+	 * @param \DBObject $oObject
+	 *
+	 * @return void
+	 *
+	 * @uses \IssueLog::Error()
+	 *
+	 * @since 2.7.9 3.0.3 3.1.0 N°5893
+	 */
+	public function LogException($oException, $oObject)
+	{
+		$sObjectKey = $oObject->GetKey(); // if object wasn't persisted yet, then we'll have a negative value
+
+		$aContext = [
+			'exception.class'      => get_class($oException),
+			'exception.message'    => $oException->getMessage(),
+			'trigger.class'        => get_class($this),
+			'trigger.id'           => $this->GetKey(),
+			'trigger.friendlyname' => $this->GetRawName(),
+			'object.class'         => get_class($oObject),
+			'object.id'            => $sObjectKey,
+			'object.friendlyname'  => $oObject->GetRawName(),
+			'current_user'         => UserRights::GetUser(),
+			'exception.stack'      => $oException->getTraceAsString(),
+		];
+
+		IssueLog::Error('A trigger did throw an exception', null, $aContext);
 	}
 }
 
