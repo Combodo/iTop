@@ -603,7 +603,7 @@ class BulkChange
 			$iFlags = ($oTargetObj->IsNew())
 				? $oTargetObj->GetInitialStateAttributeFlags($sAttCode, $aReasons)
 				: $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
-			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) ) {
+			if ((($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ($oTargetObj->Get($sAttCode) != $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues))) {
 				$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Readonly', $sAttCode, $oTargetObj->Get($sAttCode), $aRowData[$iCol]);
 			}
 			else if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
@@ -1214,7 +1214,7 @@ class BulkChange
 						if (is_null($valuecondition)) {
 							$bSkipQuery = true;
 						} else {
-							$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=');
+							$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=', true);
 						}
 					}
 					if ($bSkipQuery) {
