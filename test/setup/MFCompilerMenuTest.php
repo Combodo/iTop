@@ -19,11 +19,14 @@ use RunTimeEnvironment;
  */
 class MFCompilerMenuTest extends ItopTestCase {
 	private static $aPreviousEnvMenus;
+	private static $aPreviousEnvMenuCount;
 
 	public function setUp(): void {
 		parent::setUp();
 		require_once(APPROOT.'setup/compiler.class.inc.php');
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
+		require_once(APPROOT.'application/utils.inc.php');
+
 	}
 
 	public function tearDown(): void {
@@ -32,40 +35,37 @@ class MFCompilerMenuTest extends ItopTestCase {
 
 	public function CompileMenusProvider(){
 		return [
-			'production' => ['production'],
-			'phpunit' => ['phpunit'],
+			'legacy_algo' => [ 'sEnv' => 'legacy_algo', 'bLegacyMenuCompilation' => true ],
+			'menu_compilation_fix' => [ 'sEnv' => 'menu_compilation_fix', 'bLegacyMenuCompilation' => false ],
 		];
 	}
 	/**
 	 * @dataProvider CompileMenusProvider
 	 */
-	public function testCompileMenus($sEnv){
-		if(\utils::GetCurrentEnvironment() != $sEnv) {
-			$sConfigFilePath = \utils::GetConfigFilePath($sEnv);
+	public function testCompileMenus($sEnv, $bLegacyMenuCompilation){
+		$sConfigFilePath = \utils::GetConfigFilePath($sEnv);
 
-			//copy conf from production to phpunit context
-			$sDirPath = dirname($sConfigFilePath);
-			if (! is_dir($sDirPath)){
-				mkdir($sDirPath);
-			}
-			$oConfig = new Config(\utils::GetConfigFilePath());
-			$oConfig->WriteToFile($sConfigFilePath);
-
-			$oConfig = new Config($sConfigFilePath);
-			$oConfig->Set('set_menu_compilation_algorithm', 'v2', 'test', true);
-			$oConfig->WriteToFile();
-			$oRunTimeEnvironment = new RunTimeEnvironment($sEnv);
-			$oRunTimeEnvironment->CompileFrom(\utils::GetCurrentEnvironment());
-			$oConfig->Set('set_menu_compilation_algorithm', 'v1', 'test', true);
-			$oConfig->WriteToFile();
+		//copy conf from production to phpunit context
+		$sDirPath = dirname($sConfigFilePath);
+		if (! is_dir($sDirPath)){
+			mkdir($sDirPath);
 		}
+		$oConfig = new Config(\utils::GetConfigFilePath());
+		$oConfig->WriteToFile($sConfigFilePath);
+
+		$oConfig = new Config($sConfigFilePath);
+		if ($bLegacyMenuCompilation){
+			MFCompiler::UseLegacyMenuCompilation();
+		}
+		$oConfig->WriteToFile();
+		$oRunTimeEnvironment = new RunTimeEnvironment($sEnv);
+		$oRunTimeEnvironment->CompileFrom(\utils::GetCurrentEnvironment());
+		$oConfig->WriteToFile();
 
 		$sConfigFile = APPCONF.\utils::GetCurrentEnvironment().'/'.ITOP_CONFIG_FILE;
 		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
 
 		$aMenuGroups = ApplicationMenu::GetMenuGroups();
-		$this->assertNotEquals([], $aMenuGroups);
-
 		if (! is_null(static::$aPreviousEnvMenus)){
 			$this->assertEquals(static::$aPreviousEnvMenus, $aMenuGroups);
 		} else {
@@ -73,6 +73,13 @@ class MFCompilerMenuTest extends ItopTestCase {
 		}
 		static::$aPreviousEnvMenus = $aMenuGroups;
 
-		//$this->InvokeNonPublicMethod(MFCompiler::class, 'CompileThemes', $this->oMFCompiler, [$oBrandingNode, $this->sTmpDir]);
+		$aMenuCount = ApplicationMenu::GetMenusCount();
+
+		if (! is_null(static::$aPreviousEnvMenuCount)){
+			$this->assertEquals(static::$aPreviousEnvMenuCount, $aMenuCount);
+		} else {
+			$this->assertNotEquals([], $aMenuCount);
+		}
+		static::$aPreviousEnvMenuCount = $aMenuCount;
 	}
 }
