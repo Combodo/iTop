@@ -2792,12 +2792,6 @@ abstract class DBObject implements iDisplay
 		$this->DoComputeValues();
 		$this->OnInsert();
 
-		if ($this->m_iKey < 0)
-		{
-			// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
-			$this->m_iKey = null; 
-		}
-
 		// If not automatically computed, then check that the key is given by the caller
 		if (!MetaModel::IsAutoIncrementKey($sRootClass))
 		{
@@ -2812,6 +2806,12 @@ abstract class DBObject implements iDisplay
 		if (!$bRes)
 		{
 			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
+		}
+
+		if ($this->m_iKey < 0)
+		{
+			// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
+			$this->m_iKey = null;
 		}
 
 		// Stop watches
