@@ -6,6 +6,10 @@
 $ibo-datamodel-viewer--parent--spacer--padding-y: $ibo-spacing-0 !default;
 $ibo-datamodel-viewer--parent--spacer--padding-x: $ibo-spacing-300 !default;
 
+$ibo-datamodel-viewer--classes-list--selectize-input--background-color: $ibo-color-white-100 !default;
+$ibo-datamodel-viewer--classes-list--selectize-input--color: $ibo-color-grey-800 !default;
+$ibo-datamodel-viewer--classes-list--selectize-input--border-color: $ibo-color-grey-500 !default;
+
 $ibo-datamodel-viewer--attributes-table--first-column--width: 3px !default;
 
 $ibo-datamodel-viewer--origin-cell--diameter: 8px !default;
@@ -43,6 +47,15 @@ $ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default
 
 .ibo-datamodel-viewer--parent--spacer{
   padding: $ibo-datamodel-viewer--parent--spacer--padding-y $ibo-datamodel-viewer--parent--spacer--padding-x;
+}
+
+// Overwrite selectize rules with !important
+.ibo-datamodel-viewer--classes-list .selectize-input{
+  background-color: $ibo-datamodel-viewer--classes-list--selectize-input--background-color !important;
+  background-image: none !important;
+  color: $ibo-datamodel-viewer--classes-list--selectize-input--color;
+  box-shadow: none !important;
+  border-color: $ibo-datamodel-viewer--classes-list--selectize-input--border-color !important;
 }
 
 #ibo-datamodel-viewer--attributes-table{
