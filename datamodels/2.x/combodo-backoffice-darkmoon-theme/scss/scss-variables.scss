@@ -50,8 +50,8 @@ $text    : $ibo-color-grey-100;
 $text-invert: $ibo-color-grey-800;
 $text-light : $ibo-color-grey-200;
 $text-strong: inherit;
-$code: $ibo-color-primary-800;
-$code-background: $ibo-color-grey-300;
+$code: $ibo-color-primary-400;
+$code-background: $ibo-color-grey-700;
 $pre-background: $ibo-color-grey-600;
 
 $ibo-scrollbar--scrollbar-track-background-color: $ibo-color-grey-700;
@@ -191,6 +191,8 @@ $ibo-activity-panel--tab-toggler--is-active--background-color: $ibo-color-grey-2
 $ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color;
 $ibo-caselog-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color;
 $ibo-object-details--tag--separator--background-color: $ibo-color-grey-300;
+
+$ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200;
 
 $ibo-activity-panel--tab-toolbar--text-color: $ibo-color-grey-800;
 $ibo-activity-panel--tab-toolbar-action--color: $ibo-color-grey-800;
