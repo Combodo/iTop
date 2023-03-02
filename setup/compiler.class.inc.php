@@ -23,6 +23,7 @@ use Combodo\iTop\DesignElement;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
+require_once(APPROOT.'setup/parentmenunodecompiler.class.inc.php');
 require_once(APPROOT.'core/moduledesign.class.inc.php');
 
 class DOMFormatException extends Exception
@@ -90,8 +91,6 @@ class MFCompiler
 	 */
 	const REBUILD_HKEYS_NEVER = APPROOT.'data/.setup-rebuild-hkeys-never';
 
-	public static $bUseLegacyMenuCompilation = false;
-
 	/** @var \ModelFactory */
 	protected $oFactory;
 
@@ -126,10 +125,6 @@ class MFCompiler
 		$this->aSnippets = array();
 		$this->aRelations = array();
 		$this->aClassesCSSRules = [];
-	}
-
-	public static function UseLegacyMenuCompilation(){
-		self::$bUseLegacyMenuCompilation = true;
 	}
 
 	protected function Log($sText)
@@ -332,21 +327,16 @@ class MFCompiler
 	 */
 	protected function DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks = false)
 	{
-		$aAllClasses = array(); // flat list of classes
-		$aModulesInfo = array(); // Hash array of module_name => array('version' => string, 'root_dir' => string)
+		$aAllClasses = []; // flat list of classes
+		$aModulesInfo = []; // Hash array of module_name => array('version' => string, 'root_dir' => string)
 
 		// Determine the target modules for the MENUS
-		//
-		$aMenuNodes = array();
-		$aMenusByModule = array();
-		foreach ($this->oFactory->GetNodes('menus/menu') as $oMenuNode)
-		{
-			$sMenuId = $oMenuNode->getAttribute('id');
-			$aMenuNodes[$sMenuId] = $oMenuNode;
 
-			$sModuleMenu = $oMenuNode->getAttribute('_created_in');
-			$aMenusByModule[$sModuleMenu][] = $sMenuId;
-		}
+		/**
+		 * @since 3.1 N°4762
+		 */
+		$oParentMenuNodeCompiler = new ParentMenuNodeCompiler($this);
+		$oParentMenuNodeCompiler->LoadXmlMenus($this->oFactory);
 
 		// Determine the target module (exactly one!) for USER RIGHTS
 		// This used to be based solely on the module which created the user_rights node first
@@ -391,6 +381,7 @@ class MFCompiler
 
 		static::SetUseSymbolicLinksFlag($bUseSymbolicLinks);
 
+		$oParentMenuNodeCompiler->LoadModuleMenuInfo($aModules);
 		foreach ($aModules as $foo => $oModule) {
 			$sModuleName = $oModule->GetName();
 			$sModuleVersion = $oModule->GetVersion();
@@ -466,7 +457,7 @@ class MFCompiler
 				}
 			}
 
-			if (!array_key_exists($sModuleName, $aMenusByModule))
+			if (is_null($oParentMenuNodeCompiler->GetMenusByModule($sModuleName)))
 			{
 				$this->Log("Found module without menus declared: $sModuleName");
 			}
@@ -486,75 +477,19 @@ class $sMenuCreationClass extends ModuleHandlerAPI
 		global \$__comp_menus__; // ensure that the global variable is indeed global !
 
 EOF;
-				// Preliminary: determine parent menus not defined within the current module
-				$aMenusToLoad = array();
-				$aParentMenus = array();
-				foreach($aMenusByModule[$sModuleName] as $sMenuId)
-				{
-					$oMenuNode = $aMenuNodes[$sMenuId];
-					if ($sParent = $oMenuNode->GetChildText('parent', null))
-					{
-						$aMenusToLoad[] = $sParent;
-						$aParentMenus[] = $sParent;
-					}
-					// Note: the order matters: the parents must be defined BEFORE
-					$aMenusToLoad[] = $sMenuId;
-				}
-				$aMenusToLoad = array_unique($aMenusToLoad);
-				$aMenuLinesForAll = array();
-				$aMenuLinesForAdmins = array();
-				$aAdminMenus = array();
-				foreach($aMenusToLoad as $sMenuId)
-				{
-					$oMenuNode = $aMenuNodes[$sMenuId];
-					if (is_null($oMenuNode))
-					{
-						throw new Exception("Module '{$oModule->GetId()}' (location : '$sModuleRootDir') contains an unknown menuId :  '$sMenuId'");
-					}
-					if (self::$bUseLegacyMenuCompilation && $oMenuNode->getAttribute("xsi:type") == 'MenuGroup')
-					{
-						// Note: this algorithm is wrong
-						// 1 - the module may appear empty in the current module, while children are defined in other modules
-						// 2 - check recursively that child nodes are not empty themselves
-						// Future algorithm:
-						// a- browse the modules and build the menu tree
-						// b- browse the tree and blacklist empty menus
-						// c- before compiling, discard if blacklisted
-						if (!in_array($oMenuNode->getAttribute("id"), $aParentMenus))
-						{
-							// Discard empty menu groups
-							continue;
-						}
-					}
-					try
-					{
-						$aMenuLines = $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
-					}
-					catch (DOMFormatException $e)
-					{
-						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
-					}
-					$sParent = $oMenuNode->GetChildText('parent', null);
-					if (($oMenuNode->GetChildText('enable_admin_only') == '1') || isset($aAdminMenus[$sParent]))
-					{
-						$aMenuLinesForAdmins = array_merge($aMenuLinesForAdmins, $aMenuLines);
-						$aAdminMenus[$oMenuNode->getAttribute("id")] = true;
-					}
-					else
-					{
-						$aMenuLinesForAll = array_merge($aMenuLinesForAll, $aMenuLines);
-					}
-				}
+
+				$oParentMenuNodeCompiler->CompileModuleMenus($oModule, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
+
 				$sIndent = "\t\t";
-				foreach ($aMenuLinesForAll as $sPHPLine)
+				foreach ($oParentMenuNodeCompiler->GetMenuLinesForAll() as $sPHPLine)
 				{
 					$sCompiledCode .= $sIndent.$sPHPLine."\n";
 				}
-				if (count($aMenuLinesForAdmins) > 0)
+				if (count($oParentMenuNodeCompiler->GetMenuLinesForAdmins()) > 0)
 				{
 					$sCompiledCode .= $sIndent."if (UserRights::IsAdministrator())\n";
 					$sCompiledCode .= $sIndent."{\n";
-					foreach ($aMenuLinesForAdmins as $sPHPLine)
+					foreach ($oParentMenuNodeCompiler->GetMenuLinesForAdmins() as $sPHPLine)
 					{
 						$sCompiledCode .= $sIndent."\t".$sPHPLine."\n";
 					}
