@@ -25,6 +25,7 @@ class MFCompilerMenuTest extends ItopTestCase {
 		parent::setUp();
 		$this->RequireOnceItopFile('setup/compiler.class.inc.php');
 		$this->RequireOnceItopFile('setup/modelfactory.class.inc.php');
+		$this->RequireOnceItopFile('application/utils.inc.php');
 	}
 
 	public function tearDown(): void {
@@ -33,8 +34,8 @@ class MFCompilerMenuTest extends ItopTestCase {
 
 	public function CompileMenusProvider(){
 		return [
+			'legacy_algo' => [ 'sEnv' => 'legacy_algo', 'bLegacyMenuCompilation' => true ],
 			'menu_compilation_fix' => [ 'sEnv' => 'menu_compilation_fix', 'bLegacyMenuCompilation' => false ],
-			//'legacy_algo' => [ 'sEnv' => 'legacy_algo', 'bLegacyMenuCompilation' => true ],
 		];
 	}
 	/**
@@ -59,8 +60,6 @@ class MFCompilerMenuTest extends ItopTestCase {
 		$oRunTimeEnvironment = new RunTimeEnvironment($sEnv);
 		$oRunTimeEnvironment->CompileFrom(\utils::GetCurrentEnvironment());
 		$oConfig->WriteToFile();
-
-		$this->RequireOnceItopFile('application/utils.inc.php');
 
 		$sConfigFile = APPCONF.\utils::GetCurrentEnvironment().'/'.ITOP_CONFIG_FILE;
 		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
