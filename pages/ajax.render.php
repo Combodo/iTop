@@ -416,9 +416,10 @@ try
 				$iInputId = utils::ReadParam('iInputId', '');
 				$sAttCode = utils::ReadParam('sAttCode', '');
 				$sJson = utils::ReadParam('json', '', false, 'raw_data');
-				// Building form, if target class is abstract we ask the user for the desired leaf class
+	            $bTargetClassSelected = utils::ReadParam('bTargetClassSelected', '', false, 'raw_data');
+	            // Building form, if target class has child classes we ask the user for the desired leaf class, unless we've already done just that
 				$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, false);
-				if (MetaModel::IsAbstract($sTargetClass)) {
+	            if(!$bTargetClassSelected && MetaModel::HasChildrenClasses($sTargetClass)){
 					$oWidget->GetClassSelectionForm($oPage);
 				} else {
 					$aPrefillFormParam = array();
