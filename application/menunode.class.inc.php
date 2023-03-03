@@ -9,6 +9,7 @@ use Combodo\iTop\Application\Helper\WebResourcesHelper;
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/template.class.inc.php');
 require_once(APPROOT."/application/user.dashboard.class.inc.php");
+require_once(APPROOT."/setup/parentmenunodecompiler.class.inc.php");
 
 
 /**
@@ -274,7 +275,7 @@ class ApplicationMenu
 			}
 
 			$aSubMenuNodes = static::GetSubMenuNodes($sMenuGroupIdx, $aExtraParams);
-			if (! MFCompiler::$bUseLegacyMenuCompilation && !($oMenuNode instanceof ShortcutMenuNode)){
+			if (! ParentMenuNodeCompiler::$bUseLegacyMenuCompilation && !($oMenuNode instanceof ShortcutMenuNode)){
 				if (is_array($aSubMenuNodes) && 0 === sizeof($aSubMenuNodes)){
 					IssueLog::Error('Empty menu node not displayed', LogChannels::CONSOLE, [
 						'menu_node_class' => get_class($oMenuNode),
