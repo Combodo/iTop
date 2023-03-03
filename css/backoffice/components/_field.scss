@@ -253,3 +253,6 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
   margin-left: $ibo-field--enable-bulk--checkbox--margin-left;
 }
 
+.ibo-input-select--action-buttons a  {
+  @extend %ibo-hyperlink-inherited-colors;
+}
