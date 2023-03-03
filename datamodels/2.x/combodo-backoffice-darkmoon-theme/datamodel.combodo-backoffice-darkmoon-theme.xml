@@ -12,6 +12,7 @@
         <stylesheets>
           <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
           <stylesheet id="editor">combodo-backoffice-darkmoon-theme/scss/editor.scss</stylesheet>
+          <stylesheet id="ace_editor">combodo-backoffice-darkmoon-theme/scss/ace_editor.scss</stylesheet>
         </stylesheets>
         <precompiled_stylesheet>combodo-backoffice-darkmoon-theme/precompiled-themes/main.css</precompiled_stylesheet>
       </theme>
