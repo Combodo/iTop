@@ -8218,7 +8218,7 @@ class AttributeBlob extends AttributeDefinition
 		}
 
 		// Empty file (no content, just a filename) are supported since PR {@link https://github.com/Combodo/combodo-email-synchro/pull/17}, so we check for both empty content and empty filename to determine that a document has no value
-		return utils::IsNullOrEmptyString($proposedValue->GetData()) && utils::IsNullOrEmptyString($proposedValue->GetFileName());
+		return utils::IsNotNullOrEmptyString($proposedValue->GetData()) && utils::IsNotNullOrEmptyString($proposedValue->GetFileName());
 	}
 
 
