@@ -77,25 +77,25 @@ class SetupPage extends NiceWebPage
 
 	public function info($sText, $sTextForLog = null)
 	{
-		$this->add("<p class=\"info\">$sText</p>\n");
+		$this->add("<p class=\"info ibo-is-html-content\">$sText</p>\n");
 		SetupLog::Info($sTextForLog ?? $sText);
 	}
 
 	public function ok($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-valid\"><span class=\"message-title\">Success:</span>$sText</div>");
+		$this->add("<div class=\"message message-valid ibo-is-html-content\"><span class=\"message-title\">Success:</span>$sText</div>");
 		SetupLog::Ok($sTextForLog ?? $sText);
 	}
 
 	public function warning($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-warning\"><span class=\"message-title\">Warning:</span>$sText</div>");
+		$this->add("<div class=\"message message-warning ibo-is-html-content\"><span class=\"message-title\">Warning:</span>$sText</div>");
 		SetupLog::Warning($sTextForLog ?? $sText);
 	}
 
 	public function error($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-error\">$sText</div>");
+		$this->add("<div class=\"message message-error ibo-is-html-content\">$sText</div>");
 		SetupLog::Error($sTextForLog ?? $sText);
 	}
 
