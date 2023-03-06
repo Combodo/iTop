@@ -22,10 +22,16 @@
   color: $ibo-color-red-600 !important;
 }
 .ace-eclipse .ace_marker-layer .ace_active-line {
-  background: $ibo-color-grey-600 !important;
+  &:only-child {
+    background: $ibo-color-grey-600 !important;
+  }
+
+  &:not(:only-child) {
+    background: $ibo-color-grey-700 !important;
+  }
 }
 .ace-eclipse .ace_marker-layer .ace_selection {
-  background: $ibo-color-grey-600 !important;
+  background: $ibo-color-grey-500 !important;
 }
 .ace-eclipse.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px $ibo-color-grey-800 !important;
