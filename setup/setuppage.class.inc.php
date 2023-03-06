@@ -75,28 +75,28 @@ class SetupPage extends NiceWebPage
 		return '';
 	}
 
-	public function info($sText)
+	public function info($sText, $sTextForLog = null)
 	{
 		$this->add("<p class=\"info\">$sText</p>\n");
-		SetupLog::Info($sText);
+		SetupLog::Info($sTextForLog ?? $sText);
 	}
 
-	public function ok($sText)
+	public function ok($sText, $sTextForLog = null)
 	{
 		$this->add("<div class=\"message message-valid\"><span class=\"message-title\">Success:</span>$sText</div>");
-		SetupLog::Ok($sText);
+		SetupLog::Ok($sTextForLog ?? $sText);
 	}
 
-	public function warning($sText)
+	public function warning($sText, $sTextForLog = null)
 	{
 		$this->add("<div class=\"message message-warning\"><span class=\"message-title\">Warning:</span>$sText</div>");
-		SetupLog::Warning($sText);
+		SetupLog::Warning($sTextForLog ?? $sText);
 	}
 
-	public function error($sText)
+	public function error($sText, $sTextForLog = null)
 	{
 		$this->add("<div class=\"message message-error\">$sText</div>");
-		SetupLog::Error($sText);
+		SetupLog::Error($sTextForLog ?? $sText);
 	}
 
 	public function form($aData)
