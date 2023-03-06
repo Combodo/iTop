@@ -711,9 +711,10 @@ abstract class AttributeDefinition
 	 * @return bool True if $proposedValue is an actual value set in the attribute, false is the attribute remains "empty"
 	 * @since 3.0.3, 3.1.0 N°5784
 	 */
-	public function HasAValue(mixed $proposedValue): bool
+	public function HasAValue($proposedValue): bool
 	{
-		return utils::IsNotNullOrEmptyString($proposedValue);
+		// Default implementation, we don't really know what type $proposedValue will be
+		return is_null($proposedValue);
 	}
 
 	/**
@@ -1394,6 +1395,15 @@ class AttributeDashboard extends AttributeDefinition
 	public function GetValue($oHostObject)
 	{
 		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Always return false for now, we don't consider a custom version of a dashboard
+		return false;
 	}
 }
 
@@ -2251,6 +2261,13 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function HasAValue($proposedValue): bool
 	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormLinkSet))
+		{
+			return parent::HasAValue($proposedValue);
+		}
+
+		// We test if there is at least 1 item in the linkset (new or existing), not if an item is being added to it.
 		return $proposedValue->Count() > 0;
 	}
 }
@@ -2634,6 +2651,14 @@ class AttributeInteger extends AttributeDBField
 		return is_null($proposedValue);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return utils::IsNotNullOrEmptyString($proposedValue);
+	}
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
@@ -2938,6 +2963,14 @@ class AttributeDecimal extends AttributeDBField
 	public function IsNull($proposedValue)
 	{
 		return is_null($proposedValue);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return utils::IsNotNullOrEmptyString($proposedValue);
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -3349,6 +3382,14 @@ class AttributeString extends AttributeDBField
 	public function IsNull($proposedValue)
 	{
 		return ($proposedValue == '');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return utils::IsNotNullOrEmptyString($proposedValue);
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -4513,12 +4554,12 @@ class AttributeCaseLog extends AttributeLongText
 	public function HasAValue($proposedValue): bool
 	{
 		// Protection against wrong value type
-		if (! ($proposedValue instanceof ormCaseLog)) {
+		if (false === ($proposedValue instanceof ormCaseLog)) {
 			return parent::HasAValue($proposedValue);
 		}
 
-		// TODO: What do we want to do? Check if there is a new entry or if the entire log is empty?
-		return utils::IsNotNullOrEmptyString($proposedValue->GetLatestEntry());
+		// We test if there is at least 1 entry in the log, not if the user is adding one
+		return $proposedValue->GetEntryCount() > 0;
 	}
 
 
@@ -7582,6 +7623,16 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->IsNull($proposedValue);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+
+		return $oExtAttDef->HasAValue($proposedValue);
+	}
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
@@ -8162,12 +8213,11 @@ class AttributeBlob extends AttributeDefinition
 	 */
 	public function HasAValue($proposedValue): bool
 	{
-		if (!($proposedValue instanceof ormDocument)) {
+		if (false === ($proposedValue instanceof ormDocument)) {
 			return parent::HasAValue($proposedValue);
 		}
 
-		/** @var \ormDocument $proposedValue */
-		// TODO: How do we implement this? Keep in mind the example of the "empty file" PR on combodo-email-synchro
+		// Empty file (no content, just a filename) are supported since PR {@link https://github.com/Combodo/combodo-email-synchro/pull/17}, so we check for both empty content and empty filename to determine that a document has no value
 		return utils::IsNullOrEmptyString($proposedValue->GetData()) && utils::IsNullOrEmptyString($proposedValue->GetFileName());
 	}
 
@@ -9204,8 +9254,8 @@ class AttributeStopWatch extends AttributeDefinition
 	 */
 	public function HasAValue($proposedValue): bool
 	{
-		// TODO: How to implement this?
-		return parent::HasAValue($proposedValue);
+		// A stopwatch always has a value
+		return true;
 	}
 
 
@@ -9692,6 +9742,19 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 	{
 		// Don't display anything in "group by" reports
 		return '*****';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormPassword)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		return $proposedValue->IsEmpty() !== false;
 	}
 
 }
@@ -10278,11 +10341,10 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 */
 	public function HasAValue($proposedValue): bool
 	{
-		if (!($proposedValue instanceof ormSet)) {
+		if (false === ($proposedValue instanceof ormSet)) {
 			return parent::HasAValue($proposedValue);
 		}
 
-		/** @var \ormSet $proposedValue */
 		return $proposedValue->Count() > 0;
 	}
 
@@ -12999,8 +13061,12 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function HasAValue($proposedValue): bool
 	{
-		// TODO: How to implement this?
-		return parent::HasAValue($proposedValue);
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormCustomFieldsValue)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		return count($proposedValue->GetValues()) > 0;
 	}
 
 
