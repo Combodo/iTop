@@ -8,6 +8,11 @@
             {% if oUIBlock.GetSubmitOnChange() %} onChange="this.form.submit();" {% endif %}
             {% if oUIBlock.IsMultiple() %} multiple {% endif %}
             class="{% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}{% if oUIBlock.GetAdditionalCSSClassesAsString() %} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}"
+            {% if oUIBlock.GetDataAttributes() %}
+                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                    data-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
     >
         {% for oSubBlock in oUIBlock.GetSubBlocks() %}
             {{ render_block(oSubBlock, {aPage: aPage}) }}
