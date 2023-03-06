@@ -6975,6 +6975,23 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oRet;
 	}
 
+	/**
+	 * Return the deletion option for the target attribute
+	 * i.e. should the target object be deleted when the host object is deleted
+	 *
+	 * @return int  DEL_AUTO (yes explicit), DEL_SILENT (yes implicit), DEL_MANUAL (no = default)
+	 *
+	 * @since 3.1.0
+	 */
+	public function GetDeletionOptionForTargetObject()
+	{
+		if ($this->IsParam('on_host_delete')) {
+			return $this->Get('on_host_delete');
+		}
+
+		return $this->GetOptional('on_host_delete', DEL_MANUAL);
+	}
+
 	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SelectObjectField';

@@ -4876,6 +4876,18 @@ abstract class DBObject implements iDisplay
 		}
 		$aVisited[$sClass] = $iThisId;
 
+		// Delete possible target objects
+		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+			if ($oAttDef instanceof AttributeExternalKey && $oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) {
+				$iOption = $oAttDef->GetDeletionOptionForTargetObject();
+				if ($iOption == DEL_SILENT || $iOption == DEL_AUTO) {
+					// Delete target object
+					$oTargetObject = MetaModel::GetObject($oAttDef->GetTargetClass(), $this->Get($sAttCode));
+					$oTargetObject->MakeDeletionPlan($oDeletionPlan, $aVisited, $iOption);
+				}
+			}
+		}
+
 		if ($iDeleteOption == DEL_MANUAL)
 		{
 			// Stop the recursion here
@@ -4889,13 +4901,13 @@ abstract class DBObject implements iDisplay
 	
 		$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);
 
-		// Getting and setting time limit are not symetric:
+		// Getting and setting time limit are not symmetric:
 		// www.php.net/manual/fr/function.set-time-limit.php#72305
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 
-		foreach ($aDependentObjects as $sRemoteClass => $aPotentialDeletes)
+		foreach ($aDependentObjects as $aPotentialDeletes)
 		{
-			foreach ($aPotentialDeletes as $sRemoteExtKey => $aData)
+			foreach ($aPotentialDeletes as $aData)
 			{
 				set_time_limit(intval($iLoopTimeLimit));
 
