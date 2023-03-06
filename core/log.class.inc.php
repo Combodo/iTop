@@ -612,12 +612,12 @@ abstract class LogAPI
 {
 	public const CHANNEL_DEFAULT = '';
 
-	public const LEVEL_ERROR = 'Error';
+	public const LEVEL_ERROR   = 'Error';
 	public const LEVEL_WARNING = 'Warning';
-	public const LEVEL_INFO = 'Info';
-	public const LEVEL_OK = 'Ok';
-	public const LEVEL_DEBUG = 'Debug';
-	public const LEVEL_TRACE = 'Trace';
+	public const LEVEL_INFO    = 'Info';
+	public const LEVEL_OK      = 'Ok';
+	public const LEVEL_DEBUG   = 'Debug';
+	public const LEVEL_TRACE   = 'Trace';
 
 	/**
 	 * @see     GetMinLogLevel
@@ -645,7 +645,22 @@ abstract class LogAPI
 	);
 
 	public const ENUM_CONFIG_PARAM_FILE = 'log_level_min';
-	public const ENUM_CONFIG_PARAM_DB = 'log_level_min.write_in_db';
+	public const ENUM_CONFIG_PARAM_DB   = 'log_level_min.write_in_db';
+
+
+	/**
+	 * Parameter to enable log purge.
+	 *
+	 * @since 3.1.0
+	 */
+	public const ENUM_CONFIG_PARAM_PURGE_ENABLED = 'log_purge.enabled';
+
+	/**
+	 * Parameter to define day we want to keep old log files.
+	 *
+	 * @since 3.1.0
+	 */
+	public const ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS = 'log_purge.max_keep_days';
 
 	/**
 	 * @var \Config attribute allowing to mock config in the tests
@@ -1336,8 +1351,7 @@ class LogFileRotationProcess implements iScheduledProcess
 	{
 		$sLogFileNameBuilder = $this->GetLogFileNameBuilderClassName();
 
-		foreach (self::LOGFILES_TO_ROTATE as $sLogFileName)
-		{
+		foreach (self::LOGFILES_TO_ROTATE as $sLogFileName) {
 			$sLogFileFullPath = APPROOT
 				.DIRECTORY_SEPARATOR.'log'
 				.DIRECTORY_SEPARATOR.$sLogFileName;
@@ -1347,6 +1361,77 @@ class LogFileRotationProcess implements iScheduledProcess
 			$oLogFileNameBuilder->ResetLastModifiedDateForFile();
 			$oLogFileNameBuilder->CheckAndRotateLogFile();
 		}
+
+		// Purge logs if purge enabled
+		if (MetaModel::GetConfig()->Get(LogAPI::ENUM_CONFIG_PARAM_PURGE_ENABLED)) {
+			$this->PurgeLogs();
+		}
+	}
+
+	/**
+	 * PurgeLogs.
+	 *
+	 * Purge test last modification time of file in log folder and delete
+	 * files that haven't modifications since {@see \LogAPI::ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS}
+	 *
+	 * @return array process feedback
+	 * @since 3.1.0
+	 */
+	public function PurgeLogs(): array
+	{
+		// result
+		$aFilesResult = array();
+
+		// Max keep days
+		$iMaxDays = MetaModel::GetConfig()->Get(LogAPI::ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS);
+
+		// Files iterator (*.*)
+		$oIterator = new \GlobIterator(APPROOT.'log'.DIRECTORY_SEPARATOR.'/*.*');
+		$aLogFiles = iterator_to_array($oIterator);
+
+		// Reference date
+		$oDateNow = new DateTime('now');
+
+		// Iterate throw files...
+		foreach ($aLogFiles as $oLogFile) {
+
+			// File real path
+			$sFileRealPath = $oLogFile->getRealPath();
+
+			// Compute number of days since last modification
+			$oDateFileLastModification = new DateTime();
+			$oDateFileLastModification->setTimestamp($oLogFile->getMTime());
+			$iDays = intval($oDateFileLastModification->diff($oDateNow)->format('%a'));
+
+			// File process status
+			$aFileResult = [
+				'file_name'                    => $sFileRealPath,
+				'days_since_last_modification' => $iDays,
+				'deleted'                      => false,
+				'error'                        => null,
+			];
+
+			// Delete file older than max last modified in days
+			if ($iDays > $iMaxDays) {
+
+				// unlink file
+				if (!is_writable($sFileRealPath)) {
+					$aFileResult['error'] = Dict::S('itop-log-mgmt:UI:Error:file_read_only');
+				} // unlink OK
+				else if (unlink($sFileRealPath)) {
+					$aFileResult['deleted'] = true;
+				} // unlink KO
+				else {
+					$aFileResult['error'] = Dict::S('itop-log-mgmt:UI:Error:unknown_error');
+				}
+
+			}
+
+			// append result
+			$aFilesResult[] = $aFileResult;
+		}
+
+		return $aFilesResult;
 	}
 
 	/**
@@ -1354,12 +1439,10 @@ class LogFileRotationProcess implements iScheduledProcess
 	 */
 	public function GetNextOccurrence()
 	{
-		try
-		{
+		try {
 			$sLogFileNameBuilder = $this->GetLogFileNameBuilderClassName();
 		}
-		catch (ProcessException $e)
-		{
+		catch (ProcessException $e) {
 			return new DateTime('3000-01-01');
 		}
 
