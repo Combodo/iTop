@@ -647,14 +647,14 @@ abstract class LogAPI
 	 *
 	 * @since 3.1.0
 	 */
-	public const ENUM_CONFIG_PARAM_PURGE_ENABLED = 'log_purge_enabled';
+	public const ENUM_CONFIG_PARAM_PURGE_ENABLED = 'log_purge.enabled';
 
 	/**
 	 * Parameter to define day we want to keep old log files.
 	 *
 	 * @since 3.1.0
 	 */
-	public const ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS = 'log_purge_max_keep_days';
+	public const ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS = 'log_purge.max_keep_days';
 
 	/**
 	 * @var \Config attribute allowing to mock config in the tests

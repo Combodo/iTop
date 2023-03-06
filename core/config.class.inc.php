@@ -129,7 +129,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_purge_enabled'                   => [
+		'log_purge.enabled'       => [
 			'type'                => 'bool',
 			'description'         => 'Optional purge activation.',
 			'default'             => false,
@@ -137,7 +137,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_purge_max_keep_days'            => [
+		'log_purge.max_keep_days' => [
 			'type'                => 'integer',
 			'description'         => 'Optional purge number of days to keep logs.',
 			'default'             => 365,
