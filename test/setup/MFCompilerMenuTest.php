@@ -24,9 +24,9 @@ class MFCompilerMenuTest extends ItopTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->RequireOnceItopFile('setup/compiler.class.inc.php');
-		$this->RequireOnceItopFile('setup/modelfactory.class.inc.php');
-		$this->RequireOnceItopFile('application/utils.inc.php');
+		require_once APPROOT . 'setup/compiler.class.inc.php';
+		require_once APPROOT . 'setup/modelfactory.class.inc.php';
+		require_once APPROOT . 'application/utils.inc.php';
 	}
 
 	public function tearDown(): void {
