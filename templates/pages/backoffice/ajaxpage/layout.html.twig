@@ -35,55 +35,99 @@
         {% set sId = oLayout.GetId() | sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
         {% block iboPageJsFiles %}
             <script type="text/javascript">
-            window['{{ sPromiseId }}'] = new Promise(function (resolve, reject) {
-                let fInlineOnDomReadyScript{{ sId }} = function () {
-                    {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-                    {{ sJsInlineOnDomReady|raw }}
+                window['{{ sPromiseId }}'] = new Promise(function (resolve, reject) {
+                    let fInlineOnDomReadyScript{{ sId }} = function () {
+                        {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+                            {{ sJsInlineOnDomReady|raw }}
+                        {% endfor %}
+                        resolve();
+                    }
+
+                    /**
+                     * @type {Array} aJsFilesToLoad Files required by the current \AjaxPage
+                     *
+                     * For each file:
+                     * - "id": Used as an identifier to check if file is already being handled
+                     * - "url" is the URL that will be use for loading. It should include any relevant query args, including the cache buster
+                     *
+                     * ```
+                     * [
+                     *  {"id": "https://itop/js/foo.js", "url": "https://itop/js/foo.js?cache_buster=123},
+                     *  {"id": "https://itop/js/bar.js", "url": "https://itop/js/bar.js?a=b&cache_buster=123"},
+                     *  ...
+                     * ]
+                     * ```
+                     */
+                    let aJsFilesToLoad = [];
+                    /**
+                     * @type {Array} aJsFilesToLoadByOtherRequests Files required by the current \AjaxPage but that are already being handled by another request (done or ongoing)
+                     */
+                    let aJsFilesToLoadByOtherRequests = [];
+
+                    {% for sJsFile in aPage.aJsFiles %}
+                        aJsFilesToLoad.push({
+                            "id": "{{ sJsFile|raw }}",
+                            "url": "{{ sJsFile|add_itop_version|raw }}"
+                        });
+
+                        // If file is already present in the register (see it declaration in \WebPage TWIG template), let its original requester load it
+                        if (aLoadedJsFilesRegister.has("{{ sJsFile|raw }}") === true) {
+                            aJsFilesToLoadByOtherRequests.push("{{ sJsFile|raw }}");
+                        }
+                        // Otherwise add it to register and initialize corresponding promise
+                        else {
+                            aLoadedJsFilesRegister.set("{{ sJsFile|raw }}", new Promise(function(fJsFileResolve) {
+                                aLoadedJsFilesResolveCallbacks.set("{{ sJsFile|raw }}", fJsFileResolve);
+                            }));
+                        }
                     {% endfor %}
-                    resolve();
-                }
 
-                let aFilesToLoad{{ sId }} = [];
+                    let iCurrentIdx = 0;
+                    let iFilesToLoadCount = aJsFilesToLoad.length;
+                    if (iFilesToLoadCount > 0)
+                    {
+                        let fLoadScript{{ sId }} = function () {
+                            let sCurrentFileId = aJsFilesToLoad[iCurrentIdx]["id"];
+                            let sCurrentFileUrl = aJsFilesToLoad[iCurrentIdx]["url"];
 
-                {% for sJsFile in aPage.aJsFiles %}
-                if ($.inArray('{{ sJsFile|raw }}', aListJsFiles) === -1)
-                {
-                    aFilesToLoad{{ sId }}.push('{{ sJsFile|add_itop_version|raw }}');
-                    aListJsFiles.push("{{ sJsFile|raw }}");
-                }
-                {% endfor %}
+                            /** @type {Promise} oPromise Promise to use once file is loaded */
+                            let oPromise = null;
+                            // If file is handled by another request, retrieve the existing promise
+                            if ($.inArray(sCurrentFileId, aJsFilesToLoadByOtherRequests) !== -1) {
+                                oPromise = aLoadedJsFilesRegister.get(sCurrentFileId)
+                            }
+                            // Otherwise create its own promise to load it
+                            else {
+                                oPromise = $.when(
+                                        $.ajax({
+                                            url: sCurrentFileUrl,
+                                            dataType: 'script',
+                                            cache: true
+                                        }),
+                                        aLoadedJsFilesResolveCallbacks.get(sCurrentFileId)()
+                                );
+                            }
 
-                let iCurrentIdx{{ sId }} = 0;
-                let iFilesToLoadCount{{ sId }} = aFilesToLoad{{ sId }}.length;
-                if (iFilesToLoadCount{{ sId }} > 0)
-                {
-                    let fLoadScript{{ sId }} = function () {
-                        $.when(
-                                $.ajax({
-                                    url: aFilesToLoad{{ sId }}[iCurrentIdx{{ sId }}],
-                                    dataType: 'script',
-                                    cache: true
-                                })
-                                )
-                                .then(function () {
-                                    iCurrentIdx{{ sId }}++;
-                                    if (iCurrentIdx{{ sId }} !== iFilesToLoadCount{{ sId }})
-                                    {
-                                        fLoadScript{{ sId }}();
-                                    }
-                                    else
-                                    {
-                                        fInlineOnDomReadyScript{{ sId }}();
-                                    }
-                                });
-                    };
-                    fLoadScript{{ sId }}();
-                }
-                else
-                {
-                    fInlineOnDomReadyScript{{ sId }}();
-                }
-            });
+                            // Only once file is loaded (by the request or another), proceed to next step
+                            oPromise.then(function () {
+                                iCurrentIdx++;
+                                if (iCurrentIdx !== iFilesToLoadCount)
+                                {
+                                    fLoadScript{{ sId }}();
+                                }
+                                else
+                                {
+                                    fInlineOnDomReadyScript{{ sId }}();
+                                }
+                            });
+                        };
+                        fLoadScript{{ sId }}();
+                    }
+                    else
+                    {
+                        fInlineOnDomReadyScript{{ sId }}();
+                    }
+                });
             </script>
         {% endblock %}
     {% else %}
