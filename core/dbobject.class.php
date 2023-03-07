@@ -4002,6 +4002,20 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @param string $sAttCode
+	 *
+	 * @return bool True if $sAttCode has an actual value set, false is the attribute remains "empty"
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.0.3, 3.1.0 N°5784
+	 */
+	public function HasAValue(string $sAttCode): bool
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		return $oAttDef->HasAValue($this->Get($sAttCode));
+	}
+
+	/**
 	 * Helper to recover the default value (aka when an object is being created)
      * Suitable for use as a lifecycle action
      *
