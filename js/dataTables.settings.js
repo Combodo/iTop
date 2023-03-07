@@ -89,11 +89,11 @@ $(function () {
 					aOptions = $.extend(aOptions, JSON.parse(data));
 					if (aOptions.js_files) {
 						$.each(aOptions.js_files, function (i, item) {
-							if ($.inArray(item, aListJsFiles) === -1)
+							if ($.inArray(item, aLoadedJsFilesRegister) === -1)
 							{
 								sFileUrl = CombodoGlobalToolbox.AddParameterToUrl(item, aOptions.js_files_param, aOptions.js_files_value);
 								$.ajax({url:sFileUrl, dataType: 'script', cache: true });
-								aListJsFiles.push(item);
+								aLoadedJsFilesRegister.push(item);
 							}
 						});
 					}
