@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('APPROOT'))
 {
 	if (file_exists(__DIR__.'/../../approot.inc.php'))

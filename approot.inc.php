@@ -1,6 +1,6 @@
 <?php
 
-define('APPROOT', dirname(__FILE__).'/');
+define('APPROOT', __DIR__.'/');
 define('APPCONF', APPROOT.'conf/');
 
 /**

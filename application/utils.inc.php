@@ -1753,7 +1753,6 @@ SQL;
 	 * it at all (losing the direct access to the page) :
 	 *
 	 * ```php
-	 * if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 	 * require_once(__DIR__.'/../../approot.inc.php');
 	 * ```
 	 *

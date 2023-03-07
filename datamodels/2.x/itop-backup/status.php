@@ -27,9 +27,6 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 
-if (!defined('__DIR__')) {
-	define('__DIR__', dirname(__FILE__));
-}
 if (!defined('APPROOT')) {
 	require_once(__DIR__.'/../../approot.inc.php');
 }
