@@ -99,7 +99,10 @@ class DataSynchroTest extends ItopDataTestCase
 
 
 		$sUrl = \MetaModel::GetConfig()->Get('app_root_url').'/synchro/synchro_import.php?login_mode=form';
-		$sResult = utils::DoPostRequest($sUrl, $aParams, null, $aResponseHeaders, []);
+		$sResult = utils::DoPostRequest($sUrl, $aParams, null, $aResponseHeaders, [
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_SSL_VERIFYHOST => 0,
+		]);
 		// Read the status code from the last line
 		$aLines = explode("\n", trim(strip_tags($sResult)));
 		//$sLastLine = array_pop($aLines);
