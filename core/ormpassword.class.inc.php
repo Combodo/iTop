@@ -66,7 +66,7 @@ class ormPassword
 
 	public function IsEmpty()
 	{
-		return ($this->m_sHashed == null);
+		return utils::IsNullOrEmptyString($this->m_sHashed);
 	}
 	
 	public function GetHash()
