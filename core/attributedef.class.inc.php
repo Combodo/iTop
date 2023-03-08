@@ -9762,10 +9762,14 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 	{
 		// Protection against wrong value type
 		if (false === ($proposedValue instanceof ormPassword)) {
+			// On object creation, the attribute value is "" instead of an ormPassword...
+			if (is_string($proposedValue)) {
+				return utils::IsNotNullOrEmptyString($proposedValue);
+			}
 			return parent::HasAValue($proposedValue);
 		}
 
-		return $proposedValue->IsEmpty() !== false;
+		return $proposedValue->IsEmpty() === false;
 	}
 
 }
