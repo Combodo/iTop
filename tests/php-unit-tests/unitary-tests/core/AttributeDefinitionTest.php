@@ -86,7 +86,7 @@ PHP,
 				<<<PHP
 /** @var \ormLinkSet \$ormLinkset */
 \$ormLinkset = \$oObject->Get('contacts_list');
-\$ormLinkset->AddItem(MetaModel::NewObject('Person', []));
+\$ormLinkset->AddItem(MetaModel::NewObject('lnkContactToTicket', []));
 \$oObject->Set('contacts_list', \$ormLinkset);
 PHP,
 				false,
@@ -164,7 +164,7 @@ PHP,
 				'UserLocal',
 				'password',
 				<<<PHP
-$/** @var \ormPassword \$ormPassword */
+/** @var \ormPassword \$ormPassword */
 \$ormPassword = new ormPassword('somehash', 'somesalt');
 \$oObject->Set('password', \$ormPassword);
 PHP,
