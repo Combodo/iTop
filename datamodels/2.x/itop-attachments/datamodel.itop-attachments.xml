@@ -102,6 +102,20 @@
         </field>
       </fields>
       <methods>
+        <method id="DBInsertNoReload">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+    public function DBInsertNoReload()
+    {
+        $this->SetCurrentDateIfNull('creation_date');
+        $this->SetIfNull('user_id', CMDBChange::GetCurrentUserId());
+
+        return parent::DBInsertNoReload();
+    }
+        ]]></code>
+        </method>
         <method id="MapContextParam">
           <comment><![CDATA[/**
 	 * Maps the given context parameter name to the appropriate filter/search code for this class
