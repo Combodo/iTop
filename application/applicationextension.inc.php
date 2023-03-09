@@ -1644,6 +1644,32 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 }
 
 /**
+ * Implement this interface to register a new field renderer mapping to either:
+ * - Add the rendering of a new attribute type
+ * - Overload the default rendering of an attribute type
+ *
+ * @since 3.1.0 N°6041
+ */
+interface iFieldRendererMappingsExtension
+{
+	/**
+	 * @return array {string, string, string}  List of field renderer mapping: FQCN field class, FQCN Form Renderer class, FQCN Field Renderer class
+	 *
+	 * Example:
+	 *
+	 * ```php
+	 * [
+	 *  ['FQCN\FieldA', 'Combodo\iTop\Renderer\Console\ConsoleFormRenderer', 'FQCN\FieldRendererA'],
+	 *  ['FQCN\FieldB', 'Combodo\iTop\Renderer\Console\ConsoleFormRenderer', 'FQCN\FieldRendererB'],
+	 *  ['FQCN\FieldA', 'Combodo\iTop\Renderer\Bootstrap\BsFormRenderer', 'FQCN\FieldRendererA'],
+	 *  ['FQCN\FieldB', 'Combodo\iTop\Renderer\Bootstrap\BsFormRenderer', 'FQCN\FieldRendererB'],
+	 * ]
+	 * ```
+	 */
+	public static function RegisterSupportedFields(): array;
+}
+
+/**
  * Implement this interface to add new operations to the REST/JSON web service
  *
  * @api
