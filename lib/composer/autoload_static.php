@@ -793,6 +793,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Renderer\\Bootstrap\\FieldRenderer\\BsSimpleFieldRenderer' => __DIR__ . '/../..' . '/sources/Renderer/Bootstrap/FieldRenderer/BsSimpleFieldRenderer.php',
         'Combodo\\iTop\\Renderer\\Bootstrap\\FieldRenderer\\BsSubFormFieldRenderer' => __DIR__ . '/../..' . '/sources/Renderer/Bootstrap/FieldRenderer/BsSubFormFieldRenderer.php',
         'Combodo\\iTop\\Renderer\\Console\\ConsoleBlockRenderer' => __DIR__ . '/../..' . '/sources/Renderer/Console/ConsoleBlockRenderer.php',
+        'Combodo\\iTop\\Renderer\\Console\\ConsoleFieldRendererMappings' => __DIR__ . '/../..' . '/sources/Renderer/Console/ConsoleFieldRendererMappings.php',
         'Combodo\\iTop\\Renderer\\Console\\ConsoleFormRenderer' => __DIR__ . '/../..' . '/sources/Renderer/Console/ConsoleFormRenderer.php',
         'Combodo\\iTop\\Renderer\\Console\\FieldRenderer\\ConsoleSelectObjectFieldRenderer' => __DIR__ . '/../..' . '/sources/Renderer/Console/FieldRenderer/ConsoleSelectObjectFieldRenderer.php',
         'Combodo\\iTop\\Renderer\\Console\\FieldRenderer\\ConsoleSimpleFieldRenderer' => __DIR__ . '/../..' . '/sources/Renderer/Console/FieldRenderer/ConsoleSimpleFieldRenderer.php',
