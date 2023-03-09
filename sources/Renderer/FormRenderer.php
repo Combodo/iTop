@@ -23,6 +23,8 @@ namespace Combodo\iTop\Renderer;
 use Exception;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Field\Field;
+use iFieldRendererMappingsExtension;
+use utils;
 
 /**
  * Description of FormRenderer
@@ -52,8 +54,21 @@ abstract class FormRenderer
 		{
 			$this->oForm = $oForm;
 		}
+		$this->aSupportedFields = [];
 		$this->sBaseLayout = '';
 		$this->InitOutputs();
+
+		/** @var \iFieldRendererMappingsExtension $sImplementingClass */
+		foreach (utils::GetClassesForInterface(iFieldRendererMappingsExtension::class, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']) as $sImplementingClass) {
+			$aFieldRendererMappings = $sImplementingClass::RegisterSupportedFields();
+			foreach ($aFieldRendererMappings as list($sFieldClass, $sFormRendererClass, $sFieldRendererClass)) {
+				if ($sFormRendererClass !== static::class) {
+					continue;
+				}
+
+				$this->AddSupportedField($sFieldClass, $sFieldRendererClass);
+			}
+		}
 	}
 
 	/**
