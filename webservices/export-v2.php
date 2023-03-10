@@ -182,7 +182,7 @@ $('#export-form').on('submit', function() {
 		var sOQL = $('#textarea_oql').val();
 		if (sOQL == '')
 		{
-			alert($sJSEmptyOQL);
+			CombodoModal.OpenInformativeModal($sJSEmptyOQL, 'error');
 			return false;
 		}
 	}
@@ -191,7 +191,7 @@ $('#export-form').on('submit', function() {
 		var sQueryId = $('#select_phrasebook').val();
 		if (sQueryId == '')
 		{
-			alert($sJSEmptyQueryId);
+			CombodoModal.OpenInformativeModal($sJSEmptyQueryId, 'error');
 			return false;
 		}
 	}

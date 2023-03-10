@@ -553,7 +553,7 @@ function ExportInitButton(sSelector) {
 				var aMessages = $('#export-form').data('validation_messages');
 
 				if (aMessages.length > 0) {
-					alert(aMessages.join(''));
+					CombodoModal.OpenInformativeModal(aMessages.join(''), 'error');
 					return;
 				}
 				if ($(this).hasClass('ui-button')) {

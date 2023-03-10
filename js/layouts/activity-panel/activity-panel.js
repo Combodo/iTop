@@ -953,13 +953,11 @@ $(function()
 					'json'
 					)
 					.fail(function (oXHR, sStatus, sErrorThrown) {
-						// TODO 3.0.0: Maybe we could have a centralized dialog to display error messages?
-						alert(sErrorThrown);
+						CombodoModal.OpenInformativeModal(sErrorThrown, 'error');
 					})
 					.done(function (oData) {
 						if (false === oData.data.success) {
-							// TODO 3.0.0: Same comment as the fail() callback
-							alert(oData.data.error_message);
+							CombodoModal.OpenInformativeModal(oData.data.error_message, 'error');
 							return false;
 						}
 
@@ -1142,8 +1140,7 @@ $(function()
 									sNewLockStatus = me.enums.lock_status.locked_by_someone_else;
 								} else if ('expired' === oData.operation) {
 									sNewLockStatus = me.enums.lock_status.unknown;
-									// TODO 3.0.0: Maybe we could use a centralized dialog to display error message?
-									alert(oData.popup_message);
+									CombodoModal.OpenInformativeModal(oData.popup_message, 'error');
 								}
 							} else {
 								sNewLockStatus = me.enums.lock_status.locked_by_myself;
@@ -1392,13 +1389,11 @@ $(function()
 					'json'
 					)
 					.fail(function (oXHR, sStatus, sErroThrown) {
-						// TODO 3.0.0: Maybe we could have a centralized dialog to display error messages?
-						alert(sErrorThrown);
+						CombodoModal.OpenInformativeModal(sErrorThrown, 'error');
 					})
 					.done(function (oData) {
 						if (false === oData.data.success) {
-							// TODO 3.0.0: Same comment as the fail() callback
-							alert(oData.data.error_message);
+							CombodoModal.OpenInformativeModal(oData.data.error_message, 'error');
 							return false;
 						}
 

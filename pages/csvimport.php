@@ -1052,16 +1052,16 @@ EOF
 		});
 		if (!bMappingOk)
 		{
-			alert("$sAlertIncompleteMapping");
+			CombodoModal.OpenInformativeModal('$sAlertIncompleteMapping', 'error');
 		}
 		if (bMultipleMapping)
 		{
-			alert("$sAlertMultipleMapping");
+			CombodoModal.OpenInformativeModal('$sAlertMultipleMapping', 'error');
 		}
 		if (!bSearchOk)
 		{
 				bResult = false; 
-				alert("$sAlertNoSearchCriteria");
+				CombodoModal.OpenInformativeModal('$sAlertNoSearchCriteria', 'error');
 		}
 		
 		if (bResult)
