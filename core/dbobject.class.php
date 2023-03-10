@@ -2744,10 +2744,13 @@ abstract class DBObject implements iDisplay
 		if ($bIsTransactionEnabled)
 		{
 			// TODO Deep clone this object before the transaction (to use it in case of rollback)
-			// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
-			$iTransactionRetryCount = 1;
-			$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+			$oConfig = MetaModel::GetConfig();
+			if (is_null($oConfig)) {
+				throw new ConfigException('Cannot load config');
+			}
+			$iTransactionRetryCount = $oConfig->Get('db_core_transactions_retry_count');
 			$iTransactionRetry = $iTransactionRetryCount;
+			$iTransactionRetryDelay = $oConfig->Get('db_core_transactions_retry_delay_ms');
 		}
 		while ($iTransactionRetry > 0) {
 			try {
@@ -2794,6 +2797,7 @@ abstract class DBObject implements iDisplay
 						{
 							// wait and retry
 							IssueLog::Error("Insert TRANSACTION Retrying...");
+							/** @noinspection PhpUndefinedVariableInspection */
 							usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
 							continue;
 						}
@@ -3178,13 +3182,15 @@ abstract class DBObject implements iDisplay
 
 			$iTransactionRetry = 1;
 			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-			if ($bIsTransactionEnabled)
-			{
+			if ($bIsTransactionEnabled) {
 				// TODO Deep clone this object before the transaction (to use it in case of rollback)
-				// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
-				$iTransactionRetryCount = 1;
-				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+				$oConfig = MetaModel::GetConfig();
+				if (is_null($oConfig)) {
+					throw new ConfigException('Cannot load config');
+				}
+				$iTransactionRetryCount = $oConfig->Get('db_core_transactions_retry_count');
 				$iTransactionRetry = $iTransactionRetryCount;
+				$iTransactionRetryDelay = $oConfig->Get('db_core_transactions_retry_delay_ms');
 			}
 			while ($iTransactionRetry > 0)
 			{
@@ -3276,7 +3282,7 @@ abstract class DBObject implements iDisplay
 							{
 								// wait and retry
 								IssueLog::Error("Update TRANSACTION Retrying...");
-								usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
+								usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
 								continue;
 							}
 							else
@@ -3520,13 +3526,15 @@ abstract class DBObject implements iDisplay
 		}
 		$iTransactionRetry = 1;
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-		if ($bIsTransactionEnabled)
-		{
+		if ($bIsTransactionEnabled) {
 			// TODO Deep clone this object before the transaction (to use it in case of rollback)
-			// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
-			$iTransactionRetryCount = 1;
-			$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+			$oConfig = MetaModel::GetConfig();
+			if (is_null($oConfig)) {
+				throw new ConfigException('Cannot load config');
+			}
+			$iTransactionRetryCount = $oConfig->Get('db_core_transactions_retry_count');
 			$iTransactionRetry = $iTransactionRetryCount;
+			$iTransactionRetryDelay = $oConfig->Get('db_core_transactions_retry_delay_ms');
 		}
 		while ($iTransactionRetry > 0)
 		{
@@ -3560,6 +3568,7 @@ abstract class DBObject implements iDisplay
 						{
 							// wait and retry
 							IssueLog::Error("Delete TRANSACTION Retrying...");
+							/** @noinspection PhpUndefinedVariableInspection */
 							usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
 							continue;
 						}
