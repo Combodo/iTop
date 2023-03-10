@@ -7076,12 +7076,8 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	 *
 	 * @since 3.1.0
 	 */
-	public function GetDeletionOptionForTargetObject()
+	public function GetDeletionOptionForTargetObject(): int
 	{
-		if ($this->IsParam('on_host_delete')) {
-			return $this->Get('on_host_delete');
-		}
-
 		return $this->GetOptional('on_host_delete', DEL_MANUAL);
 	}
 

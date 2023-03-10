@@ -4894,7 +4894,7 @@ abstract class DBObject implements iDisplay
 		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 			if ($oAttDef instanceof AttributeExternalKey && $oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) {
 				$iOption = $oAttDef->GetDeletionOptionForTargetObject();
-				if ($iOption == DEL_SILENT || $iOption == DEL_AUTO) {
+				if ($iOption === DEL_SILENT || $iOption === DEL_AUTO) {
 					// Delete target object
 					$oTargetObject = MetaModel::GetObject($oAttDef->GetTargetClass(), $this->Get($sAttCode));
 					$oTargetObject->MakeDeletionPlan($oDeletionPlan, $aVisited, $iOption);

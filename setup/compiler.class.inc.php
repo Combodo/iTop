@@ -112,10 +112,23 @@ class MFCompiler
 	protected $sEnvironment;
 	protected $sCompilationTimeStamp;
 
-	/** @var array dynamic attributes definition
+	/** @var array<string, array{
+	 *     properties: array<string, array{
+	 *     	    php_param: string,
+	 *          mandatory: bool,
+	 *          type: string,
+	 *          default: string
+	 * }}}> dynamic attributes definition
 	 * @since 3.1.0
 	 */
 	protected array $aDynamicAttributeDefinitions;
+	/** @var array<string, array{
+	 *     	php_param: string,
+	 *      mandatory: bool,
+	 *      type: string,
+	 *      default: string
+	 * }> dynamic attribute property definition */
+	protected array $aDynamicPropertyDefinitions;
 
 	public function __construct($oModelFactory, $sEnvironment)
 	{
@@ -142,6 +155,66 @@ class MFCompiler
 	protected function Log($sText)
 	{
 		$this->aLog[] = $sText;
+	}
+
+	/**
+	 * @param $sPropertyName
+	 * @param null $aProperty
+	 * @param \DOMElement $oField
+	 * @param array $aParameters
+	 *
+	 * @return array
+	 * @throws \DOMFormatException
+	 */
+	public function CompileDynamicProperty($sPropertyName, $aProperty, DOMElement $oField, array $aParameters): array
+	{
+		$sPHPParam = $aProperty['php_param'] ?? $sPropertyName;
+		$bMandatory = $aProperty['mandatory'] ?? false;
+		$sType = $aProperty['type'] ?? 'string';
+		$sDefault = $aProperty['default'] ?? null;
+		switch ($sType) {
+			case 'string':
+				if ($bMandatory) {
+					$aParameters[$sPHPParam] = $this->GetMandatoryPropString($oField, $sPropertyName);
+				} else {
+					$aParameters[$sPHPParam] = $this->GetPropString($oField, $sPropertyName, $sDefault);
+				}
+				break;
+			case 'boolean':
+				if ($bMandatory) {
+					$aParameters[$sPHPParam] = $this->GetMandatoryPropBoolean($oField, $sPropertyName);
+				} else {
+					$aParameters[$sPHPParam] = $this->GetPropBoolean($oField, $sPropertyName, is_null($sDefault) ? null : $sDefault === 'true');
+				}
+				break;
+			case 'number':
+				if ($bMandatory) {
+					$aParameters[$sPHPParam] = $this->GetMandatoryPropNumber($oField, $sPropertyName);
+				} else {
+					$aParameters[$sPHPParam] = $this->GetPropNumber($oField, $sPropertyName, is_null($sDefault) ? null : (int)$sDefault);
+				}
+				break;
+			case 'php':
+				$sValue = $oField->GetChildText($sPropertyName);
+				if ($bMandatory && is_null($sValue)) {
+					throw new DOMFormatException("missing (or empty) mandatory tag '$sPropertyName' under the tag '".$oField->nodeName."'");
+				}
+				$aParameters[$sPHPParam] = $sValue ?? 'null';
+				break;
+			case 'oql':
+				if ($sOql = $oField->GetChildText($sPropertyName)) {
+					$sEscapedOql = self::QuoteForPHP($sOql);
+					$aParameters[$sPHPParam] = "$sEscapedOql";
+				} else {
+					$aParameters[$sPHPParam] = 'null';
+				}
+				break;
+			case 'null':
+				$aParameters[$sPHPParam] = 'null';
+				break;
+		}
+
+		return $aParameters;
 	}
 
 	protected function DumpLog($oPage)
@@ -2022,7 +2095,7 @@ EOF
 
 		// Check dynamic attribute definition first
 		if ($this->HasDynamicAttributeDefinition($sAttType)) {
-			$this->CompileDynamicAttribute($sAttType, $oField, $aParameters, $sModuleRelativeDir, $sClass, $sCss, $sDependencies);
+			$this->CompileDynamicAttribute($sAttType, $oField, $aParameters, $sModuleRelativeDir, $sDependencies);
 		} elseif ($sAttType == 'AttributeLinkedSetIndirect') {
 			$this->CompileCommonProperty('linked_class', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('ext_key_to_me', $oField, $aParameters, $sModuleRelativeDir);
@@ -2044,7 +2117,7 @@ EOF
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeExternalKey') {
-			$this->CompileCommonProperty('target_class', $oField, $aParameters, $sModuleRelativeDir, '');
+			$this->CompileCommonProperty('target_class', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('sql', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
@@ -2283,6 +2356,8 @@ EOF
 	 * @param string $sPropertyName
 	 * @param \DOMElement $oField
 	 * @param array $aParameters
+	 * @param string $sModuleRelativeDir
+	 *
 	 * @param mixed $default
 	 *
 	 * @return bool true if the property was found and compiled
@@ -2290,169 +2365,115 @@ EOF
 	 */
 	protected function CompileCommonProperty(string $sPropertyName, DOMElement $oField, array &$aParameters, string $sModuleRelativeDir, $default = null): bool
 	{
-		switch ($sPropertyName) {
-			case 'linked_class':
-			case 'ext_key_to_me':
-			case 'ext_key_to_remote':
-			case 'sql':
-			case 'class_attcode':
-			case 'extkey_attcode':
-			case 'target_attcode':
-			case 'item_code':
-			case 'relation_code':
-			case 'from_class':
-			case 'neighbour_id':
-			case 'enabled_mode':
-			case 'min_up_mode':
-			case 'min_up_type':
-			case 'handler_class':
-			case 'class_field':
-			case 'query_field':
-				$aParameters[$sPropertyName] = $this->GetMandatoryPropString($oField, $sPropertyName);
-				break;
-			case 'display_style':
-			case 'target':
-			case 'default_value':
-			case 'attribute_definition_list':
-			case 'attribute_definition_exclusion_list':
-				$aParameters[$sPropertyName] = $this->GetPropString($oField, $sPropertyName, $default);
-				break;
-			case 'min_up':
-				$aParameters[$sPropertyName] = $this->GetMandatoryPropNumber($oField, $sPropertyName);
-				break;
-			case 'count_min':
-			case 'count_max':
-			case 'max_combo_length':
-			case 'min_autocomplete_chars':
-			case 'display_max_width':
-			case 'display_max_height':
-			case 'storage_max_width':
-			case 'storage_max_height':
-			case 'max_items':
-			case 'tag_code_max_len':
-				$aParameters[$sPropertyName] = $this->GetPropNumber($oField, $sPropertyName, $default);
-				break;
-			case 'enabled':
-				$aParameters[$sPropertyName] = $this->GetMandatoryPropBoolean($oField, $sPropertyName);
-				break;
-			case 'duplicates':
-			case 'is_null_allowed':
-			case 'allow_target_creation':
-			case 'is_user_editable':
-				$aParameters[$sPropertyName] = $this->GetPropBoolean($oField, $sPropertyName, $default);
-				break;
-			case 'on_target_delete':
-				$aParameters[$sPropertyName] = $oField->GetChildText($sPropertyName);
-				break;
-			case 'allowed_values':
-				$aParameters[$sPropertyName] = 'null';
-				break;
-			case 'filter':
-				if ($sOql = $oField->GetChildText('filter')) {
-					$sEscapedOql = self::QuoteForPHP($sOql);
-					$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)"; // or "new ValueSetObjects('SELECT xxxx')"
-				} else {
-					$aParameters['allowed_values'] = 'null';
-				}
-				break;
-			case 'edit_mode':
-				$sEditMode = $oField->GetChildText('edit_mode');
-				if (!is_null($sEditMode)) {
-					$aParameters['edit_mode'] = $this->EditModeToPHP($sEditMode);
-				}
-				break;
-			case 'target_class':
-				$aParameters['targetclass'] = $this->GetPropString($oField, 'target_class', $default);
-				break;
-			case 'mappings':
-				$oMappings = $oField->GetUniqueElement('mappings');
-				$oMappingNodes = $oMappings->getElementsByTagName('mapping');
-				$aMapping = array();
-				foreach ($oMappingNodes as $oMapping) {
-					$sMappingId = $oMapping->getAttribute('id');
-					$sMappingAttCode = $oMapping->GetChildText('attcode');
-					$aMapping[$sMappingId]['attcode'] = $sMappingAttCode;
-					$aMapping[$sMappingId]['values'] = array();
-					$oMetaValues = $oMapping->GetUniqueElement('metavalues');
-					foreach ($oMetaValues->getElementsByTagName('metavalue') as $oMetaValue) {
-						$sMetaValue = $oMetaValue->getAttribute('id');
-						$oValues = $oMetaValue->GetUniqueElement('values');
-						foreach ($oValues->getElementsByTagName('value') as $oValue) {
-							$sValue = $oValue->getAttribute('id');
-							$aMapping[$sMappingId]['values'][$sValue] = $sMetaValue;
-						}
-
+		if ($this->HasDynamicPropertyDefinition($sPropertyName)) {
+			$aProperty = $this->aDynamicPropertyDefinitions[$sPropertyName];
+			if (!is_null($default)) {
+				$aProperty['default'] = $default;
+			}
+			$aParameters = $this->CompileDynamicProperty($sPropertyName, $aProperty, $oField, $aParameters);
+		} else {
+			/* Properties too specific to be defined in XML */
+			switch ($sPropertyName) {
+				case 'allowed_values':
+					$aParameters[$sPropertyName] = 'null';
+					break;
+				case 'filter':
+					if ($sOql = $oField->GetChildText('filter')) {
+						$sEscapedOql = self::QuoteForPHP($sOql);
+						$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)"; // or "new ValueSetObjects('SELECT xxxx')"
+					} else {
+						$aParameters['allowed_values'] = 'null';
 					}
-				}
-				$aParameters['mapping'] = var_export($aMapping, true);
-				break;
-			case 'default_image':
-				if (($sDefault = $oField->GetChildText('default_image')) && (strlen($sDefault) > 0)) {
-					$aParameters['default_image'] = "utils::GetAbsoluteUrlModulesRoot().'$sModuleRelativeDir/$sDefault'";
-				} else {
-					$aParameters['default_image'] = 'null';
-				}
-				break;
-			case 'states':
-				$oStates = $oField->GetUniqueElement('states');
-				$oStateNodes = $oStates->getElementsByTagName('state');
-				$aStates = array();
-				foreach ($oStateNodes as $oState) {
-					$aStates[] = '"'.$oState->GetAttribute('id').'"';
-				}
-				$aParameters['states'] = 'array('.implode(', ', $aStates).')';
-				break;
-			case 'goal':
-				$aParameters['goal_computing'] = $this->GetPropString($oField, 'goal', $default); // Optional, no deadline by default
-				break;
-			case 'working_time':
-				$aParameters['working_time_computing'] = $this->GetPropString($oField, 'working_time', $default); // Blank (different than DefaultWorkingTimeComputer)
-				break;
-			case 'thresholds':
-				$oThresholds = $oField->GetUniqueElement('thresholds');
-				$oThresholdNodes = $oThresholds->getElementsByTagName('threshold');
-				$aThresholds = array();
-				foreach ($oThresholdNodes as $oThreshold) {
-					$iPercent = (int)$oThreshold->getAttribute('id');
-
-					$oHighlight = $oThreshold->GetUniqueElement('highlight', false);
-					$sHighlight = '';
-					if ($oHighlight) {
-						$sCode = $oHighlight->GetChildText('code');
-						$sPersistent = $this->GetPropBoolean($oHighlight, 'persistent', false);
-						$sHighlight = "'highlight' => array('code' => '$sCode', 'persistent' => $sPersistent), ";
+					break;
+				case 'edit_mode':
+					$sEditMode = $oField->GetChildText('edit_mode');
+					if (!is_null($sEditMode)) {
+						$aParameters['edit_mode'] = $this->EditModeToPHP($sEditMode);
 					}
-
-					$oActions = $oThreshold->GetUniqueElement('actions');
-					$oActionNodes = $oActions->getElementsByTagName('action');
-					$aActions = array();
-					foreach ($oActionNodes as $oAction) {
-						$oParams = $oAction->GetOptionalElement('params');
-						$aActionParams = array();
-						if ($oParams) {
-							$oParamNodes = $oParams->getElementsByTagName('param');
-							foreach ($oParamNodes as $oParam) {
-								$sParamType = $oParam->getAttribute('xsi:type');
-								if ($sParamType == '') {
-									$sParamType = 'string';
-								}
-								$aActionParams[] = "array('type' => '$sParamType', 'value' => ".self::QuoteForPHP($oParam->textContent).')';
+					break;
+				case 'mappings':
+					$oMappings = $oField->GetUniqueElement('mappings');
+					$oMappingNodes = $oMappings->getElementsByTagName('mapping');
+					$aMapping = array();
+					foreach ($oMappingNodes as $oMapping) {
+						$sMappingId = $oMapping->getAttribute('id');
+						$sMappingAttCode = $oMapping->GetChildText('attcode');
+						$aMapping[$sMappingId]['attcode'] = $sMappingAttCode;
+						$aMapping[$sMappingId]['values'] = array();
+						$oMetaValues = $oMapping->GetUniqueElement('metavalues');
+						foreach ($oMetaValues->getElementsByTagName('metavalue') as $oMetaValue) {
+							$sMetaValue = $oMetaValue->getAttribute('id');
+							$oValues = $oMetaValue->GetUniqueElement('values');
+							foreach ($oValues->getElementsByTagName('value') as $oValue) {
+								$sValue = $oValue->getAttribute('id');
+								$aMapping[$sMappingId]['values'][$sValue] = $sMetaValue;
 							}
+
 						}
-						$sActionParams = 'array('.implode(', ', $aActionParams).')';
-						$sVerb = $this->GetPropString($oAction, 'verb');
-						$aActions[] = "array('verb' => $sVerb, 'params' => $sActionParams)";
 					}
-					$sActions = 'array('.implode(', ', $aActions).')';
-					$aThresholds[] = $iPercent." => array('percent' => $iPercent, $sHighlight 'actions' => $sActions)";
-				}
-				$aParameters['thresholds'] = 'array('.implode(', ', $aThresholds).')';
-				break;
+					$aParameters['mapping'] = var_export($aMapping, true);
+					break;
+				case 'default_image':
+					if (($sDefault = $oField->GetChildText('default_image')) && (strlen($sDefault) > 0)) {
+						$aParameters['default_image'] = "utils::GetAbsoluteUrlModulesRoot().'$sModuleRelativeDir/$sDefault'";
+					} else {
+						$aParameters['default_image'] = 'null';
+					}
+					break;
+				case 'states':
+					$oStates = $oField->GetUniqueElement('states');
+					$oStateNodes = $oStates->getElementsByTagName('state');
+					$aStates = array();
+					foreach ($oStateNodes as $oState) {
+						$aStates[] = '"'.$oState->GetAttribute('id').'"';
+					}
+					$aParameters['states'] = 'array('.implode(', ', $aStates).')';
+					break;
+				case 'thresholds':
+					$oThresholds = $oField->GetUniqueElement('thresholds');
+					$oThresholdNodes = $oThresholds->getElementsByTagName('threshold');
+					$aThresholds = array();
+					foreach ($oThresholdNodes as $oThreshold) {
+						$iPercent = (int)$oThreshold->getAttribute('id');
 
-			default:
-				return false;
+						$oHighlight = $oThreshold->GetUniqueElement('highlight', false);
+						$sHighlight = '';
+						if ($oHighlight) {
+							$sCode = $oHighlight->GetChildText('code');
+							$sPersistent = $this->GetPropBoolean($oHighlight, 'persistent', false);
+							$sHighlight = "'highlight' => array('code' => '$sCode', 'persistent' => $sPersistent), ";
+						}
+
+						$oActions = $oThreshold->GetUniqueElement('actions');
+						$oActionNodes = $oActions->getElementsByTagName('action');
+						$aActions = array();
+						foreach ($oActionNodes as $oAction) {
+							$oParams = $oAction->GetOptionalElement('params');
+							$aActionParams = array();
+							if ($oParams) {
+								$oParamNodes = $oParams->getElementsByTagName('param');
+								foreach ($oParamNodes as $oParam) {
+									$sParamType = $oParam->getAttribute('xsi:type');
+									if ($sParamType == '') {
+										$sParamType = 'string';
+									}
+									$aActionParams[] = "array('type' => '$sParamType', 'value' => ".self::QuoteForPHP($oParam->textContent).')';
+								}
+							}
+							$sActionParams = 'array('.implode(', ', $aActionParams).')';
+							$sVerb = $this->GetPropString($oAction, 'verb');
+							$aActions[] = "array('verb' => $sVerb, 'params' => $sActionParams)";
+						}
+						$sActions = 'array('.implode(', ', $aActions).')';
+						$aThresholds[] = $iPercent." => array('percent' => $iPercent, $sHighlight 'actions' => $sActions)";
+					}
+					$aParameters['thresholds'] = 'array('.implode(', ', $aThresholds).')';
+					break;
+
+				default:
+					return false;
+			}
 		}
-
 		return true;
 	}
 
@@ -2460,56 +2481,23 @@ EOF
 	 * @param string $sAttType
 	 * @param \DOMElement $oField
 	 * @param array $aParameters
+	 * @param string $sModuleRelativeDir
 	 * @param string $sDependencies
 	 *
 	 * @throws \DOMFormatException
 	 * @since 3.1.0
 	 */
-	protected function CompileDynamicAttribute(string $sAttType, DOMElement $oField, array &$aParameters, string $sModuleRelativeDir, string $sClass, string &$sCss, string $sDependencies): void
+	protected function CompileDynamicAttribute(string $sAttType, DOMElement $oField, array &$aParameters, string $sModuleRelativeDir, string $sDependencies): void
 	{
 		foreach ($this->GetPropertiesForDynamicAttributeDefinition($sAttType) as $sPropertyName => $aProperty) {
-			if (!$this->CompileCommonProperty($sPropertyName, $oField, $aParameters, $sModuleRelativeDir)) {
-				$sPHPParam = $aProperty['php_param'];
-				$bMandatory = $aProperty['mandatory'];
-				$sType = $aProperty['type'];
-				$sDefault = $aProperty['default'];
-				switch ($sType) {
-					case 'string':
-						if ($bMandatory) {
-							$aParameters[$sPHPParam] = $this->GetMandatoryPropString($oField, $sPropertyName);
-						} else {
-							$aParameters[$sPHPParam] = $this->GetPropString($oField, $sPropertyName, $sDefault);
-						}
-						break;
-					case 'boolean':
-						if ($bMandatory) {
-							$aParameters[$sPHPParam] = $this->GetMandatoryPropBoolean($oField, $sPropertyName);
-						} else {
-							$aParameters[$sPHPParam] = $this->GetPropBoolean($oField, $sPropertyName, $sDefault === 'true');
-						}
-						break;
-					case 'number':
-						if ($bMandatory) {
-							$aParameters[$sPHPParam] = $this->GetMandatoryPropNumber($oField, $sPropertyName);
-						} else {
-							$aParameters[$sPHPParam] = $this->GetPropNumber($oField, $sPropertyName, (int)$sDefault);
-						}
-						break;
-					case 'php':
-						$sValue = $oField->GetChildText($sPropertyName);
-						if ($bMandatory && is_null($sValue)) {
-							throw new DOMFormatException("missing (or empty) mandatory tag '$sPropertyName' under the tag '".$oField->nodeName."'");
-						}
-						$aParameters[$sPHPParam] = $sValue ?? 'null';
-						break;
-					case 'oql':
-						if ($sOql = $oField->GetChildText($sPropertyName)) {
-							$sEscapedOql = self::QuoteForPHP($sOql);
-							$aParameters[$sPHPParam] = "$sEscapedOql";
-						} else {
-							$aParameters[$sPHPParam] = 'null';
-						}
-						break;
+			if ($this->HasDynamicPropertyDefinition($sPropertyName)) {
+				// Attribute can rewrite common properties definition
+				$aProperty = array_merge($this->aDynamicPropertyDefinitions[$sPropertyName], $aProperty);
+				$aParameters = $this->CompileDynamicProperty($sPropertyName, $aProperty, $oField, $aParameters);
+			} else {
+				if (!$this->CompileCommonProperty($sPropertyName, $oField, $aParameters, $sModuleRelativeDir)) {
+					/* new property specific to that attribute */
+					$aParameters = $this->CompileDynamicProperty($sPropertyName, $aProperty, $oField, $aParameters);
 				}
 			}
 		}
@@ -3903,6 +3891,33 @@ PHP;
 		}
 	}
 
+	/**
+	 * @param string $sPropertyName
+	 * @param \Combodo\iTop\DesignElement $oProperty
+	 *
+	 * @return array{php_param: string, mandatory: bool, type: string, default: string}
+	 * @throws \DOMFormatException
+	 */
+	private function LoadDynamicPropertyDefinition(DesignElement $oProperty): array
+	{
+		$aDefinition = [];
+
+		if ($oNode = $oProperty->GetOptionalElement('php_param')) {
+			$aDefinition['php_param'] = $oNode->GetText();
+		}
+		if ($oNode = $oProperty->GetOptionalElement('mandatory')) {
+			$aDefinition['mandatory'] = $oNode->GetText('false') === 'true';
+		}
+		if ($oNode = $oProperty->GetOptionalElement('type')) {
+			$aDefinition['type'] = $oNode->GetText();
+		}
+		if ($oNode = $oProperty->GetOptionalElement('default')) {
+			$aDefinition['default'] = $oNode->GetText();
+		}
+
+		return $aDefinition;
+	}
+
 
 	/**
 	 * @throws \DOMFormatException
@@ -3910,6 +3925,13 @@ PHP;
 	 */
 	protected function LoadDynamicAttributeDefinitions(): void
 	{
+		$oNodes = $this->oFactory->GetNodes('meta/attribute_properties_definition/properties/property');
+		foreach ($oNodes as $oProperty) {
+			/** @var \Combodo\iTop\DesignElement $oProperty */
+			$sPropertyName = $oProperty->getAttribute('id');
+			$this->aDynamicPropertyDefinitions[$sPropertyName] = $this->LoadDynamicPropertyDefinition($oProperty);
+		}
+
 		/* Load dynamic attribute definitions */
 		$oNodes = $this->oFactory->GetNodes('meta/attribute_definitions/attribute_definition');
 		foreach ($oNodes as $oNode) {
@@ -3920,16 +3942,7 @@ PHP;
 			foreach ($oProperties as $oProperty) {
 				/** @var \Combodo\iTop\DesignElement $oProperty */
 				$sPropertyName = $oProperty->getAttribute('id');
-				$sPHPParamName = $oProperty->GetChildText('php_param', $sPropertyName);
-				$bMandatory = $oProperty->GetChildText('mandatory', 'false') === 'true';
-				$sType = $oProperty->GetChildText('type', 'string');
-				$sDefault = $oProperty->GetChildText('default');
-				$aAttributeDefinition[$sPropertyName] = [
-					'php_param' => $sPHPParamName,
-					'mandatory' => $bMandatory,
-					'type'      => $sType,
-					'default'   => $sDefault,
-				];
+				$aAttributeDefinition[$sPropertyName] = $this->LoadDynamicPropertyDefinition($oProperty);
 			}
 			$this->aDynamicAttributeDefinitions[$sAttributeDefinitionName]['properties'] = $aAttributeDefinition;
 		}
@@ -3944,6 +3957,17 @@ PHP;
 	protected function HasDynamicAttributeDefinition(string $sAttributeName): bool
 	{
 		return array_key_exists($sAttributeName, $this->aDynamicAttributeDefinitions);
+	}
+
+	/**
+	 * @param string $sPropertyName
+	 *
+	 * @return bool
+	 * @since 3.1.0
+	 */
+	protected function HasDynamicPropertyDefinition(string $sPropertyName): bool
+	{
+		return array_key_exists($sPropertyName, $this->aDynamicPropertyDefinitions);
 	}
 
 	/**
