@@ -76,17 +76,21 @@ class TransactionsTest extends ItopTestCase
 	{
 		// Create a UserRequest with 2 contacts
 		$oTicket = MetaModel::NewObject('UserRequest', [
-			'ref' => 'Test Ticket',
-			'title' => 'Create OK',
+			'ref'         => 'Test Ticket',
+			'title'       => 'Create OK',
 			'description' => 'Create OK',
-			'caller_id' => 15,
-			'org_id' => 3,
+			'caller_id'   => 15,
+			'org_id'      => 3,
 		]);
 		$oLinkSet = $oTicket->Get('contacts_list');
 		$oLinkSet->AddItem(MetaModel::NewObject('lnkContactToTicket', ['contact_id' => 6]));
 		$oLinkSet->AddItem(MetaModel::NewObject('lnkContactToTicket', ['contact_id' => 7]));
 
 		$this->oMySQLiMock->SetFailAt($iFailAt);
+		// we don't want to retry !
+		$oConfig = MetaModel::GetConfig();
+		$oConfig->Set('db_core_transactions_retry_count', 1);
+
 		$this->debug("---> DBInsert()");
 		try {
 			$oTicket->DBWrite();
@@ -201,6 +205,10 @@ class TransactionsTest extends ItopTestCase
 
 		// Provoke an error during the update
 		$this->oMySQLiMock->SetFailAt($iFailAt);
+		// we don't want to retry !
+		$oConfig = MetaModel::GetConfig();
+		$oConfig->Set('db_core_transactions_retry_count', 1);
+
 		$this->debug("---> DBUpdate()");
 		try {
 			$oTicket->DBWrite();
