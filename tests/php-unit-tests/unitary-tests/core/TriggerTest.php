@@ -109,14 +109,14 @@ class TriggerTest extends ItopDataTestCase
 
 			$sTestLogFileContent = file_get_contents($sTestLogPath);
 
-			$this->assertContains('A trigger did throw an exception', $sTestLogFileContent);
+			$this->assertStringContainsString('A trigger did throw an exception', $sTestLogFileContent);
 
-			$this->assertContains($oPerson1->GetKey(), $sTestLogFileContent);
+			$this->assertStringContainsString($oPerson1->GetKey(), $sTestLogFileContent);
 			/** @noinspection GetClassUsageInspection */
-			$this->assertContains(get_class($oPerson1), $sTestLogFileContent);
-			$this->assertContains($oPerson1->GetRawName(), $sTestLogFileContent);
+			$this->assertStringContainsString(get_class($oPerson1), $sTestLogFileContent);
+			$this->assertStringContainsString($oPerson1->GetRawName(), $sTestLogFileContent);
 
-			$this->assertContains($sExceptionMessage, $sTestLogFileContent);
+			$this->assertStringContainsString($sExceptionMessage, $sTestLogFileContent);
 		}
 		finally {
 			IssueLog::Enable(APPROOT.'log/error.log');
