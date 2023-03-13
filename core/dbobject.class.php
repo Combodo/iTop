@@ -2744,6 +2744,7 @@ abstract class DBObject implements iDisplay
 		if ($bIsTransactionEnabled)
 		{
 			// TODO Deep clone this object before the transaction (to use it in case of rollback)
+			// using MetaModel instead of utils method as we need the config related to the loaded datamodel
 			$oConfig = MetaModel::GetConfig();
 			if (is_null($oConfig)) {
 				throw new ConfigException('Cannot load config');
@@ -3184,6 +3185,7 @@ abstract class DBObject implements iDisplay
 			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 			if ($bIsTransactionEnabled) {
 				// TODO Deep clone this object before the transaction (to use it in case of rollback)
+				// using MetaModel instead of utils method as we need the config related to the loaded datamodel
 				$oConfig = MetaModel::GetConfig();
 				if (is_null($oConfig)) {
 					throw new ConfigException('Cannot load config');
@@ -3528,6 +3530,7 @@ abstract class DBObject implements iDisplay
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 		if ($bIsTransactionEnabled) {
 			// TODO Deep clone this object before the transaction (to use it in case of rollback)
+			// using MetaModel instead of utils method as we need the config related to the loaded datamodel
 			$oConfig = MetaModel::GetConfig();
 			if (is_null($oConfig)) {
 				throw new ConfigException('Cannot load config');
