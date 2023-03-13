@@ -1653,16 +1653,22 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 interface iFieldRendererMappingsExtension
 {
 	/**
-	 * @return array {string, string, string}  List of field renderer mapping: FQCN field class, FQCN Form Renderer class, FQCN Field Renderer class
+	 * @return array {
+	 *              array: {
+	 *                  field: string,
+	 *                  form_renderer: string,
+	 *                  field_renderer: string
+	 *              }
+	 *          }  List of field renderer mapping: FQCN field class, FQCN Form Renderer class, FQCN Field Renderer class
 	 *
 	 * Example:
 	 *
 	 * ```php
 	 * [
-	 *  ['FQCN\FieldA', 'Combodo\iTop\Renderer\Console\ConsoleFormRenderer', 'FQCN\FieldRendererA'],
-	 *  ['FQCN\FieldB', 'Combodo\iTop\Renderer\Console\ConsoleFormRenderer', 'FQCN\FieldRendererB'],
-	 *  ['FQCN\FieldA', 'Combodo\iTop\Renderer\Bootstrap\BsFormRenderer', 'FQCN\FieldRendererA'],
-	 *  ['FQCN\FieldB', 'Combodo\iTop\Renderer\Bootstrap\BsFormRenderer', 'FQCN\FieldRendererB'],
+	 *  ['field' => 'FQCN\FieldA', 'form_renderer' => 'Combodo\iTop\Renderer\Console\ConsoleFormRenderer', 'field_renderer' => 'FQCN\FieldRendererA'],
+	 *  ['field' => 'FQCN\FieldB', 'form_renderer' => 'Combodo\iTop\Renderer\Console\ConsoleFormRenderer', 'field_renderer' => 'FQCN\FieldRendererB'],
+	 *  ['field' => 'FQCN\FieldA', 'form_renderer' => 'Combodo\iTop\Renderer\Bootstrap\BsFormRenderer', 'field_renderer' => 'FQCN\FieldRendererA'],
+	 *  ['field' => 'FQCN\FieldB', 'form_renderer' => 'Combodo\iTop\Renderer\Bootstrap\BsFormRenderer', 'field_renderer' => 'FQCN\FieldRendererB'],
 	 * ]
 	 * ```
 	 */

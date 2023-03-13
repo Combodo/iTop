@@ -61,8 +61,14 @@ abstract class FormRenderer
 		/** @var \iFieldRendererMappingsExtension $sImplementingClass */
 		foreach (utils::GetClassesForInterface(iFieldRendererMappingsExtension::class, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']) as $sImplementingClass) {
 			$aFieldRendererMappings = $sImplementingClass::RegisterSupportedFields();
-			foreach ($aFieldRendererMappings as list($sFieldClass, $sFormRendererClass, $sFieldRendererClass)) {
-				if ($sFormRendererClass !== static::class) {
+			// For each mapping we need to check if it can be registered for the current form renderer or not
+			foreach ($aFieldRendererMappings as $aFieldRendererMapping) {
+				$sFieldClass = $aFieldRendererMapping['field'];
+				$sFormRendererClass = $aFieldRendererMapping['form_renderer'];
+				$sFieldRendererClass = $aFieldRendererMapping['field_renderer'];
+
+				// Mapping not concerning current form renderer, skip it
+				if (false === is_a(static::class, $sFormRendererClass, true)) {
 					continue;
 				}
 
