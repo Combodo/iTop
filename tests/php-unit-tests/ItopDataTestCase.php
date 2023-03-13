@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2017 Combodo SARL
+// Copyright (c) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -42,10 +42,12 @@ use lnkFunctionalCIToTicket;
 use MetaModel;
 use Person;
 use Server;
+use SetupUtils;
 use TagSetFieldData;
 use Ticket;
 use URP_UserProfile;
 use User;
+use utils;
 use VirtualHost;
 use VirtualMachine;
 
@@ -55,6 +57,8 @@ define('TAG_CLASS', 'FAQ');
 define('TAG_ATTCODE', 'domains');
 
 /**
+ * Class ItopDataTestCase
+ *
  * Helper class to extend for tests needing access to iTop's metamodel
  *
  * **⚠ Warning** Each class extending this one needs to add the following annotations :
@@ -66,7 +70,7 @@ define('TAG_ATTCODE', 'domains');
  * @since 2.7.7 3.0.1 3.1.0 N°4624 processIsolation is disabled by default and must be enabled in each test needing it (basically all tests using
  * iTop datamodel)
  */
-class ItopDataTestCase extends ItopTestCase
+abstract class ItopDataTestCase extends ItopTestCase
 {
 	private $iTestOrgId;
 	// For cleanup
@@ -81,12 +85,8 @@ class ItopDataTestCase extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->RequireOnceItopFile('application/startup.inc.php');
-		$this->RequireOnceItopFile('application/utils.inc.php');
 
-		$sEnv = 'production';
-		$sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
-		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
+		$this->PrepareEnvironment();
 
 		if (static::USE_TRANSACTION)
 		{
@@ -126,6 +126,51 @@ class ItopDataTestCase extends ItopTestCase
 		}
 
 		parent::tearDown();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function LoadRequiredFiles(): void
+	{
+		$this->RequireOnceItopFile('application/startup.inc.php');
+		$this->RequireOnceItopFile('application/utils.inc.php');
+	}
+
+	/**
+	 * @return string Environment in the test will run
+	 * @since 2.7.9 3.0.4 3.1.0
+	 */
+	protected function GetTestEnvironment(): string
+	{
+		return 'production';
+	}
+
+	/**
+	 * @return string Absolute path of the configuration file used for the test
+	 * @since 2.7.9 3.0.4 3.1.0
+	 */
+	protected function GetConfigFileAbsPath(): string
+	{
+		return utils::GetConfigFilePath($this->GetTestEnvironment());
+	}
+
+	/**
+	 * Prepare the iTop environment for test to run
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
+	 * @since 2.7.9 3.0.4 3.1.0
+	 */
+	protected function PrepareEnvironment(): void
+	{
+		$sEnv = $this->GetTestEnvironment();
+		$sConfigFile = $this->GetConfigFileAbsPath();
+
+		// Start MetaModel for the prepared environment
+		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
 	}
 
 	/**

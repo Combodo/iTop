@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,12 +18,6 @@
  */
 
 namespace Combodo\iTop\Test\UnitTest;
-/**
- * Created by PhpStorm.
- * User: Eric
- * Date: 20/11/2017
- * Time: 11:21
- */
 
 use CMDBSource;
 use MySQLTransactionNotClosedException;
@@ -32,7 +26,15 @@ use SetupUtils;
 
 define('DEBUG_UNIT_TEST', true);
 
-class ItopTestCase extends TestCase
+/**
+ * Class ItopTestCase
+ *
+ * Helper class to extend for tests that DO NOT need to access the DataModel or the Database
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Test\UnitTest
+ */
+abstract class ItopTestCase extends TestCase
 {
 	const TEST_LOG_DIR = 'test';
 
@@ -49,6 +51,8 @@ class ItopTestCase extends TestCase
 
 			$sAppRootRelPath = $sDepthSeparator.$sAppRootRelPath;
 		}
+
+		$this->LoadRequiredFiles();
 	}
 
 	/**
@@ -63,6 +67,17 @@ class ItopTestCase extends TestCase
 			// Nested transactions were opened but not finished !
 			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
 		}
+	}
+
+	/**
+	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceItopFile()} and {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceUnitTestFile()}
+	 *
+	 * @return void
+	 * @since 2.7.9 3.0.4 3.1.0
+	 */
+	protected function LoadRequiredFiles(): void
+	{
+		// Empty until we actually need to require some files in the class
 	}
 
 	/**
