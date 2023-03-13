@@ -12,28 +12,23 @@ use DBSearch;
 use MetaModel;
 
 /**
- * Tests of the DBSearch class.
- * <ul>
- * <li>MakeGroupByQuery</li>
- * </ul>
- *
- * @runTestsInSeparateProcesses
+ * @runTestsInSeparateProcesseszzz
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class TestGLATest extends ItopCustomDatamodelTestCase
+class TestGLA2Test extends ItopCustomDatamodelTestCase
 {
 	/**
 	 * @inheritDoc
 	 */
 	public function GetDatamodelDeltaAbsPath(): string
 	{
-		return APPROOT.'tests/php-unit-tests/unitary-tests/core/TestGLATest.delta.xml';
+		return APPROOT.'tests/php-unit-tests/unitary-tests/core/TestGLA/TestGLA2Test.delta.xml';
 	}
 
 	public function testFoo()
 	{
-		static::assertFalse(MetaModel::IsValidAttCode('Person', 'non_existing_attribute'));
-		static::assertTrue(MetaModel::IsValidAttCode('Person', 'tested_attribute'));
+		static::assertFalse(MetaModel::IsValidAttCode('Person', 'non_existing_attribute2'));
+		static::assertTrue(MetaModel::IsValidAttCode('Person', 'tested_attribute2'));
 	}
 }

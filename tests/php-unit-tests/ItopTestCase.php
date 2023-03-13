@@ -52,7 +52,8 @@ abstract class ItopTestCase extends TestCase
 			$sAppRootRelPath = $sDepthSeparator.$sAppRootRelPath;
 		}
 
-		$this->LoadRequiredFiles();
+		$this->LoadRequiredItopFiles();
+		$this->LoadRequiredTestFiles();
 	}
 
 	/**
@@ -70,12 +71,23 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
-	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceItopFile()} and {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceUnitTestFile()}
+	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceItopFile()}
 	 *
 	 * @return void
 	 * @since 2.7.9 3.0.4 3.1.0
 	 */
-	protected function LoadRequiredFiles(): void
+	protected function LoadRequiredItopFiles(): void
+	{
+		// Empty until we actually need to require some files in the class
+	}
+
+	/**
+	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceUnitTestFile()}
+	 *
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.0
+	 */
+	protected function LoadRequiredTestFiles(): void
 	{
 		// Empty until we actually need to require some files in the class
 	}

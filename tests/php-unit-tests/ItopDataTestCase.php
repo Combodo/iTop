@@ -131,9 +131,10 @@ abstract class ItopDataTestCase extends ItopTestCase
 	/**
 	 * @inheritDoc
 	 */
-	protected function LoadRequiredFiles(): void
+	protected function LoadRequiredItopFiles(): void
 	{
-		$this->RequireOnceItopFile('application/startup.inc.php');
+		parent::LoadRequiredItopFiles();
+
 		$this->RequireOnceItopFile('application/utils.inc.php');
 	}
 
