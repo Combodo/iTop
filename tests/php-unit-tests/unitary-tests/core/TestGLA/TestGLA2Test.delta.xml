@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <classes>
+    <class id="Person">
+      <fields>
+        <field id="tested_attribute2" xsi:type="AttributeString" _delta="define">
+          <sql>tested_attribute2</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+    </class>
+  </classes>
+</itop_design>

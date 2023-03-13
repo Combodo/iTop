@@ -7,3 +7,4 @@ require_once 'vendor/autoload.php';
 // - Custom test case PHP classes
 require_once 'ItopTestCase.php';
 require_once 'ItopDataTestCase.php';
+require_once 'ItopCustomDatamodelTestCase.php';
