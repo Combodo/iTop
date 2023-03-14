@@ -1018,7 +1018,7 @@ EOF
 			}
 			else
 			{
-				$sPHP = "dirname(__FILE__).'/$sPath'";
+				$sPHP = "__DIR__.'/$sPath'";
 			}
 		}
 		return $sPHP;

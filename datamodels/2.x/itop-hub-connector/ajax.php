@@ -22,9 +22,6 @@
  * @copyright Copyright (C) 2010-2021 Combodo SARL
  * @license http://opensource.org/licenses/AGPL-3.0
  */
-if (!defined('__DIR__')) {
-	define('__DIR__', dirname(__FILE__));
-}
 
 require_once(APPROOT.'application/utils.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');

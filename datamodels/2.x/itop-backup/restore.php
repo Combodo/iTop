@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('APPROOT'))
 {
 	if (file_exists(__DIR__.'/../../approot.inc.php'))
@@ -32,7 +31,7 @@ if (!defined('APPROOT'))
 require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
-require_once(dirname(__FILE__).'/dbrestore.class.inc.php');
+require_once(__DIR__.'/dbrestore.class.inc.php');
 
 /**
  * @since 3.0.0 N°4227 new class to handle iTop restore manually via a CLI command
@@ -146,4 +145,4 @@ function ExecuteMainOperation($oP){
 	}
 }
 
-require_once(dirname(__FILE__).'/common.cli-execution.php');
+require_once(__DIR__.'/common.cli-execution.php');

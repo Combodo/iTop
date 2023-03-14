@@ -9,7 +9,7 @@ require_once('approot.inc.php');
  * Check that the configuration file exists and has the appropriate access rights
  * If the file does not exist, launch the configuration wizard to create it
  */  
-if (file_exists(dirname(__FILE__).'/'.$sConfigFile))
+if (file_exists(APPROOT.$sConfigFile))
 {
 	if (!is_readable($sConfigFile))
 	{
