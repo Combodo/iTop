@@ -16,7 +16,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-virtualization-mgmt/3.0.2',
+	'itop-virtualization-mgmt/3.0.3',
 	array(
 		// Identification
 		//
