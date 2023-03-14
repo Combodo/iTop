@@ -177,13 +177,14 @@ try
 	$oQueryTextArea->AddCSSClasses(['ibo-input-text', 'ibo-query-oql', 'ibo-is-code']);
 	$oQueryForm->AddSubBlock($oQueryTextArea);
 
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
-	$oP->add_ready_script(<<<EOF
+	$oP->add_ready_script(<<<JS
 $("#expression").select();
-$("#expression").on("keydown", null, "ctrl+return", function() {
-	$(this).closest("form").submit();
+$("#expression").on('keyup', function (oEvent) {
+    if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.key === 'Enter') {
+        $(this).closest('form').trigger('submit');
+    }
 });
-EOF
+JS
 	);
 
 	if (count($aArgs) > 0) {

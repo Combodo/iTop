@@ -1,6 +1,12 @@
 /*jslint browser: true*/
 /*jslint jquery: true*/
 
+
+/**
+ * @deprecated 3.1.0 use JQuery event keys instead
+ * @link https://github.com/Combodo/iTop/pull/345 Ctrl+Enter shortcut added in iTop object forms
+ */
+
 /*
  * jQuery Hotkeys Plugin
  * Copyright 2010, John Resig

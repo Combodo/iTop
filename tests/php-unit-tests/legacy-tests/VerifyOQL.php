@@ -158,13 +158,14 @@ try
 	$oP->add("<form method=\"post\">\n");
 	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
 	$oP->add("<textarea cols=\"120\" rows=\"8\" id=\"expression\" name=\"expression\">".utils::EscapeHtml($sExpression)."</textarea>\n");
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
-	$oP->add_ready_script(<<<EOF
+	$oP->add_ready_script(<<<JS
 $("#expression").select();
-$("#expression").on("keydown", null, "ctrl+return", function() {
-	$(this).closest("form").submit();
+$("#expression").on('keyup', function (oEvent) {
+    if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.key === 'Enter') {
+        $(this).closest('form').trigger('submit');
+    }
 });
-EOF
+JS
 	);
 
 	if (count($aArgs) > 0)
