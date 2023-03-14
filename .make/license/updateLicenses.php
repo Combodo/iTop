@@ -19,17 +19,25 @@
  * The target license file path is in `$xmlFilePath`
  */
 
-$iTopFolder = __DIR__ . "/../../" ;
-$xmlFilePath = $iTopFolder . "setup/licenses/community-licenses.xml";
+$iTopFolder = __DIR__."/../../";
+$xmlFilePath = $iTopFolder."setup/licenses/community-licenses.xml";
+
+$jqExec = shell_exec("jq --help"); // --help param is mandatory otherwise the script will freeze
+if ((null === $jqExec) || (false === $jqExec)) {
+	echo "/!\ JQ is required but cannot be launched :( \n";
+	echo "Check this script PHPDoc block for instructions\n";
+	die - 1;
+}
+
 
 function get_scope($product_node)
 {
 	$scope = $product_node->getAttribute("scope");
 
-	if ($scope === "")
-	{   //put iTop first
+	if ($scope === "") {   //put iTop first
 		return "aaaaaaaaa";
 	}
+
 	return $scope;
 }
 
