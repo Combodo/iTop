@@ -464,13 +464,14 @@ abstract class DBObject implements iDisplay
 		foreach($aAttList as $sAttCode=>$oAttDef)
 		{
 			// Skip links (could not be loaded by the mean of this query)
+			/** @var \AttributeDefinition $oAttDef */
 			if ($oAttDef->IsLinkSet()) continue;
 
 			if (!$oAttDef->LoadInObject()) continue;
 
 			unset($value);
 			$bIsDefined = false;
-			if ($oAttDef->LoadFromDB())
+			if ($oAttDef->LoadFromClassTables())
 			{
 				// Note: we assume that, for a given attribute, if it can be loaded,
 				// then one column will be found with an empty suffix, the others have a suffix
@@ -496,8 +497,7 @@ abstract class DBObject implements iDisplay
 			}
 			else
 			{
-				/** @var \AttributeCustomFields $oAttDef */
-				$value = $oAttDef->ReadValue($this);
+				$value = $oAttDef->ReadExternalValues($this);
 				$bIsDefined = true;
 			}
 
@@ -2674,11 +2674,9 @@ abstract class DBObject implements iDisplay
 		foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 		{
 			if (!$oAttDef->LoadInObject()) continue;
-			if ($oAttDef->LoadFromDB()) continue;
 			if (!array_key_exists($sAttCode, $this->m_aTouchedAtt)) continue;
-			if (array_key_exists($sAttCode, $this->m_aModifiedAtt) && ($this->m_aModifiedAtt[$sAttCode] == false)) continue;
-			/** @var \AttributeCustomFields $oAttDef */
-			$oAttDef->WriteValue($this, $this->m_aCurrValues[$sAttCode]);
+			if (array_key_exists($sAttCode, $this->m_aModifiedAtt) && ($this->m_aModifiedAtt[$sAttCode] === false)) continue;
+			$oAttDef->WriteExternalValues($this);
 		}
 	}
 
@@ -3676,11 +3674,7 @@ abstract class DBObject implements iDisplay
 				}
 				MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
 			}
-			elseif (!$oAttDef->LoadFromDB())
-			{
-				/** @var \AttributeCustomFields $oAttDef */
-				$oAttDef->DeleteValue($this);
-			}
+			$oAttDef->DeleteExternalValues($this);
 		}
 		$iTransactionRetry = 1;
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
@@ -4889,18 +4883,6 @@ abstract class DBObject implements iDisplay
 			}
 		}
 		$aVisited[$sClass] = $iThisId;
-
-		// Delete possible target objects
-		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
-			if ($oAttDef instanceof AttributeExternalKey && $oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) {
-				$iOption = $oAttDef->GetDeletionOptionForTargetObject();
-				if ($iOption === DEL_SILENT || $iOption === DEL_AUTO) {
-					// Delete target object
-					$oTargetObject = MetaModel::GetObject($oAttDef->GetTargetClass(), $this->Get($sAttCode));
-					$oTargetObject->MakeDeletionPlan($oDeletionPlan, $aVisited, $iOption);
-				}
-			}
-		}
 
 		if ($iDeleteOption == DEL_MANUAL)
 		{

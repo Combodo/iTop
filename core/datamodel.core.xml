@@ -371,25 +371,25 @@
           <php_param>target</php_param>
           <mandatory>false</mandatory>
           <type>string</type>
-          <default>''</default>
+          <default/>
         </property>
         <property id="default_value">
           <php_param>default_value</php_param>
           <mandatory>false</mandatory>
           <type>string</type>
-          <default>''</default>
+          <default/>
         </property>
         <property id="attribute_definition_list">
           <php_param>attribute_definition_list</php_param>
           <mandatory>false</mandatory>
           <type>string</type>
-          <default>''</default>
+          <default/>
         </property>
         <property id="attribute_definition_exclusion_list">
           <php_param>attribute_definition_exclusion_list</php_param>
           <mandatory>false</mandatory>
           <type>string</type>
-          <default>''</default>
+          <default/>
         </property>
         <property id="min_up">
           <php_param>min_up</php_param>
@@ -502,7 +502,7 @@
           <php_param>working_time_computing</php_param>
           <mandatory>false</mandatory>
           <type>string</type>
-          <default>''</default>
+          <default/>
         </property>
       </properties>
     </attribute_properties_definition>

@@ -3914,7 +3914,11 @@ PHP;
 			$aDefinition['type'] = $oNode->GetText();
 		}
 		if ($oNode = $oProperty->GetOptionalElement('default')) {
-			$aDefinition['default'] = $oNode->GetText();
+			if ($aDefinition['type'] === 'string') {
+				$aDefinition['default'] = $oNode->GetText('');
+			} else {
+				$aDefinition['default'] = $oNode->GetText();
+			}
 		}
 
 		return $aDefinition;

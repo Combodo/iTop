@@ -453,9 +453,47 @@ abstract class AttributeDefinition
 	/**
 	 * @return bool true if the attribute value comes from the database in one way or another
 	 */
-	public static function LoadFromDB()
+	public static function LoadFromClassTables()
 	{
 		return true;
+	}
+
+	/**
+	 * Write attribute values outside the current class tables
+	 *
+	 * @param \DBObject $oHostObject
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	public function WriteExternalValues(DBObject $oHostObject): void
+	{
+	}
+
+	/**
+	 * Read the data from where it has been stored (outside the current class tables).
+	 * This verb must be implemented as soon as LoadFromClassTables returns false and LoadInObject returns true
+	 *
+	 * @param DBObject $oHostObject
+	 *
+	 * @return mixed|null
+	 * @since 3.1.0
+	 */
+	public function ReadExternalValues(DBObject $oHostObject)
+	{
+		return null;
+	}
+
+	/**
+	 * Cleanup data upon object deletion (outside the current class tables)
+	 * object id still available here
+	 *
+	 * @param \DBObject $oHostObject
+	 *
+	 * @since 3.1.0
+	 */
+	public function DeleteExternalValues(DBObject $oHostObject): void
+	{
 	}
 
 	/**
@@ -7068,19 +7106,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oRet;
 	}
 
-	/**
-	 * Return the deletion option for the target attribute
-	 * i.e. should the target object be deleted when the host object is deleted
-	 *
-	 * @return int  DEL_AUTO (yes explicit), DEL_SILENT (yes implicit), DEL_MANUAL (no = default)
-	 *
-	 * @since 3.1.0
-	 */
-	public function GetDeletionOptionForTargetObject(): int
-	{
-		return $this->GetOptional('on_host_delete', DEL_MANUAL);
-	}
-
 	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SelectObjectField';
@@ -12827,7 +12852,7 @@ class AttributeCustomFields extends AttributeDefinition
 		return true;
 	}
 
-	public static function LoadFromDB()
+	public static function LoadFromClassTables()
 	{
 		return false;
 	} // See ReadValue...
@@ -12970,14 +12995,15 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	/**
-	 * Read the data from where it has been stored. This verb must be implemented as soon as LoadFromDB returns false
+	 * Read the data from where it has been stored. This verb must be implemented as soon as LoadFromClassTables returns false
 	 * and LoadInObject returns true
 	 *
-	 * @param $oHostObject
+	 * @param DBObject $oHostObject
 	 *
-	 * @return ormCustomFieldsValue
+	 * @return mixed|null
+	 * @since 3.1.0
 	 */
-	public function ReadValue($oHostObject)
+	public function ReadExternalValues(DBObject $oHostObject)
 	{
 		try
 		{
@@ -12997,11 +13023,13 @@ class AttributeCustomFields extends AttributeDefinition
 	 * It is assumed that the data has been checked prior to calling Write()
 	 *
 	 * @param DBObject $oHostObject
-	 * @param ormCustomFieldsValue|null $oValue (null is the default value)
+	 *
+	 * @since 3.1.0
 	 */
-	public function WriteValue(DBObject $oHostObject, ormCustomFieldsValue $oValue = null)
+	public function WriteExternalValues(DBObject $oHostObject): void
 	{
-		if (is_null($oValue))
+		$oValue = $oHostObject->Get($this->GetCode());
+		if (!($oValue instanceof ormCustomFieldsValue))
 		{
 			$oHandler = $this->GetHandler();
 			$aValues = array();
@@ -13015,7 +13043,7 @@ class AttributeCustomFields extends AttributeDefinition
 			$aValues = $oForm->GetCurrentValues();
 		}
 
-		return $oHandler->WriteValues($oHostObject, $aValues);
+		$oHandler->WriteValues($oHostObject, $aValues);
 	}
 
 	/**
@@ -13074,15 +13102,15 @@ class AttributeCustomFields extends AttributeDefinition
 	 *
 	 * @param DBObject $oHostObject
 	 *
-	 * @return
 	 * @throws \CoreException
+	 * @since 3.1.0
 	 */
-	public function DeleteValue(DBObject $oHostObject)
+	public function DeleteExternalValues(DBObject $oHostObject): void
 	{
 		$oValue = $oHostObject->Get($this->GetCode());
 		$oHandler = $this->GetHandler($oValue->GetValues());
 
-		return $oHandler->DeleteValues($oHostObject);
+		$oHandler->DeleteValues($oHostObject);
 	}
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
