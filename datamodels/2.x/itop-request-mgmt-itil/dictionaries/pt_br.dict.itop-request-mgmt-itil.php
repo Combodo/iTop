@@ -18,8 +18,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:SearchUserRequests+' => 'Pesquisar por solicitações',
 	'Menu:UserRequest:Shortcuts' => 'Atalhos',
 	'Menu:UserRequest:Shortcuts+' => '',
-	'Menu:UserRequest:MyRequests' => 'Solicitações abertas por mim',
-	'Menu:UserRequest:MyRequests+' => 'Solicitações abertas por mim (como Agente)',
+	'Menu:UserRequest:MyRequests' => 'Solicitações atribuídas a mim',
+	'Menu:UserRequest:MyRequests+' => 'Solicitações atribuídas a mim (como Agente)',
 	'Menu:UserRequest:MySupportRequests' => 'Minhas solicitações de suporte',
 	'Menu:UserRequest:MySupportRequests+' => 'Minhas solicitações de suporte',
 	'Menu:UserRequest:EscalatedRequests' => 'Solicitações escalonados',
@@ -243,8 +243,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Não é possível atribuir a solicitação pai a própria solicitação',
 
-	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a solução a pedidos filhos (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de solução',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (resolver solicitações filhas)',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a solução a solicitações filhas (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de solução',
 ));
 
 

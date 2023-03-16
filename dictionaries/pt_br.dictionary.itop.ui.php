@@ -65,7 +65,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Query/Attribute:name' => 'Nome',
 	'Class:Query/Attribute:name+' => 'Identificação da consulta',
 	'Class:Query/Attribute:description' => 'Descrição',
-	'Class:Query/Attribute:description+' => 'Descrição longa para a consulta (finalidade, uso, etc.)',
+	'Class:Query/Attribute:description+' => 'Descrição longa para a consulta (finalidade, uso etc.)',
 	'Class:Query/Attribute:is_template' => 'Template para campos OQL',
 	'Class:Query/Attribute:is_template+' => 'Utilizável como origem para o Destinatário OQL em Notificações',
 	'Class:Query/Attribute:is_template/Value:yes' => 'Sim',
@@ -98,7 +98,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:User/Attribute:org_id+' => 'Organização à qual esse usuário pertence',
 	'Class:User/Attribute:last_name' => 'Sobrenome',
 	'Class:User/Attribute:last_name+' => 'Último nome do usuário correspondente',
-	'Class:User/Attribute:first_name' => 'Primeiro nome',
+	'Class:User/Attribute:first_name' => 'Nome',
 	'Class:User/Attribute:first_name+' => 'Primeiro nome do usuário correspondente',
 	'Class:User/Attribute:email' => 'E-mail',
 	'Class:User/Attribute:email+' => 'Endereço de e-mail do usuário correspondente',
@@ -110,18 +110,18 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:User/Attribute:language/Value:EN US+' => 'Inglês (E.U.A.)',
 	'Class:User/Attribute:language/Value:FR FR' => 'Francês',
 	'Class:User/Attribute:language/Value:FR FR+' => 'Francês (França)',
-	'Class:User/Attribute:profile_list' => 'Perfil',
+	'Class:User/Attribute:profile_list' => 'Perfis',
 	'Class:User/Attribute:profile_list+' => 'Permissões de acesso para esse usuário',
 	'Class:User/Attribute:allowed_org_list' => 'Organizações permitidas',
 	'Class:User/Attribute:allowed_org_list+' => 'O usuário tem permissão de ver as informações para a(s) organização(ões) abaixo. Se nenhuma organização for especificada, não há restrição',
 	'Class:User/Attribute:status' => 'Status',
 	'Class:User/Attribute:status+' => 'Se a conta de usuário está habilitada ou desabilitada',
 	'Class:User/Attribute:status/Value:enabled' => 'Ativa',
-	'Class:User/Attribute:status/Value:disabled' => 'Desativada',
+	'Class:User/Attribute:status/Value:disabled' => 'Inativa',
 
-	'Class:User/Error:LoginMustBeUnique' => 'Login é único - "%1s" já está ativo',
+	'Class:User/Error:LoginMustBeUnique' => 'Login deve ser único - "%1s" já existe',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Pelo menos um perfil deve ser atribuído a esse usuário',
-	'Class:User/Error:ProfileNotAllowed' => 'O perfil "%1$s" não pode ser adicionado, ele negará o acesso ao backoffice',
+	'Class:User/Error:ProfileNotAllowed' => 'O perfil "%1$s" não pôde ser adicionado, ele negará o acesso ao backoffice',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Alterar o status da conta não é permitido para o seu próprio usuário',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'As organizações permitidas devem conter apenas usuários pertencentes a organização',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'A lista atual de perfis não fornece permissões de acesso suficientes (os usuários não são mais modificáveis)',
@@ -170,7 +170,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_UserProfile' => 'Perfil de Usuário',
 	'Class:URP_UserProfile+' => 'Perfil de Usuário',
-	'Class:URP_UserProfile/Name' => 'Link entre %1$s e %2$s',
+	'Class:URP_UserProfile/Name' => 'Relação entre %1$s e %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Usuário',
 	'Class:URP_UserProfile/Attribute:userid+' => 'Conta de usuário',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -191,7 +191,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_UserOrg' => 'Organização do usuário',
 	'Class:URP_UserOrg+' => 'Organizações permitidas',
-	'Class:URP_UserOrg/Name' => 'Link entre %1$s e %2$s',
+	'Class:URP_UserOrg/Name' => 'Relação entre %1$s e %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Usuário',
 	'Class:URP_UserOrg/Attribute:userid+' => 'Conta de usuário',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -233,9 +233,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimensão',
-	'Class:URP_ClassProjection/Attribute:dimensionid+' => 'Dimensão aplicação',
+	'Class:URP_ClassProjection/Attribute:dimensionid+' => 'Dimensão de aplicação',
 	'Class:URP_ClassProjection/Attribute:dimension' => 'Dimensão',
-	'Class:URP_ClassProjection/Attribute:dimension+' => 'Dimensão aplicação',
+	'Class:URP_ClassProjection/Attribute:dimension+' => 'Dimensão de aplicação',
 	'Class:URP_ClassProjection/Attribute:class' => 'Classe',
 	'Class:URP_ClassProjection/Attribute:class+' => 'Classe alvo',
 	'Class:URP_ClassProjection/Attribute:value' => 'Expressão de valor',
@@ -355,8 +355,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 	'UI:WelcomeMenu:RightBlock' => '<p>O '.ITOP_APPLICATION_SHORT.' é orientado para o provedor de serviços, ele permite que os especialistas de TI gerenciem facilmente vários clientes ou organizações.
 <ul>O '.ITOP_APPLICATION_SHORT.' oferece um conjunto rico em recursos de processos de negócios que:
-<li>Melhora a eficácia do gerenciamento de TI</li> 
-<li>Impulsiona o desempenho das operações de TI</li> 
+<li>Melhora a eficácia do gerenciamento de TI</li>
+<li>Impulsiona o desempenho das operações de TI</li>
 <li>Melhora a satisfação do cliente e fornece aos executivos insights sobre o desempenho dos negócios.</li>
 </ul>
 </p>
@@ -472,7 +472,7 @@ Esperamos que você goste desta versão tanto quanto gostamos de imaginá-la e c
 	'UI:Error:MaintenanceTitle' => 'Manutenção',
 	'UI:Error:InvalidToken' => 'Erro: A operação solicitada já foi executada (token CSRF não encontrado)',
 
-	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+	'UI:Error:SMTP:UnknownVendor' => 'O provedor de autenticação SMTP OAuth %1$s não existe (email_transport_smtp.oauth.provider)',
 
 	'UI:GroupBy:Count' => 'Número',
 	'UI:GroupBy:Count+' => 'Número de elementos',
@@ -555,7 +555,7 @@ Esperamos que você goste desta versão tanto quanto gostamos de imaginá-la e c
 	'UI:ResetPwd-EmailBody' => '<body><p>Você solicitou a alteração da senha do '.ITOP_APPLICATION_SHORT.'.</p><p>Por favor, siga este link (passo simples) para <a href="%1$s">digitar a nova senha</a></p>.',
 
 	'UI:ResetPwd-Title' => 'Alterar senha',
-	'UI:ResetPwd-Error-InvalidToken' => 'Desculpe, a senha já foi alterada, ou você deve ter recebido múltiplos e-mails. Por favor, certifique-se que você acessou o link fornecido no último e-mail recebido',
+	'UI:ResetPwd-Error-InvalidToken' => 'Desculpe, a senha já foi alterada ou você deve ter recebido múltiplos e-mails. Por favor, certifique-se que você acessou o link fornecido no último e-mail recebido',
 	'UI:ResetPwd-Error-EnterPassword' => 'Digite a nova senha para a conta \'%1$s\'',
 	'UI:ResetPwd-Ready' => 'A senha foi alterada com sucesso',
 	'UI:ResetPwd-Login' => 'Clique para entrar...',
@@ -644,9 +644,9 @@ Esperamos que você goste desta versão tanto quanto gostamos de imaginá-la e c
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Selecione a classe para pesquisar: ',
 
 	'UI:CSVReport-Value-Modified' => 'Modificado',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
-	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
-	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
+	'UI:CSVReport-Value-SetIssue' => 'valor inválido para o atributo',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' é um valor inválido',
+	'UI:CSVReport-Value-NoMatch' => 'Nenhuma correspondência para o valor \'%1$s\'',
 	'UI:CSVReport-Value-Missing' => 'Faltando valor obrigatório',
 	'UI:CSVReport-Value-Ambiguous' => 'Ambíguo: encontrado %1$s objeto(s)',
 	'UI:CSVReport-Row-Unchanged' => 'inalterado',
@@ -807,7 +807,7 @@ Esperamos que você goste desta versão tanto quanto gostamos de imaginá-la e c
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Gerenciar vínculo de objetos de %1$s com %2$s: %3$s',
 	'UI:AddLinkedObjectsOf_Class' => 'Associar %1$s...',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Desassociar objeto(s) selecionado(s)',
-	'UI:Message:EmptyList:UseAdd' => 'A lista está vazia, use o botão "Associar..." para adicionar elementos',
+	'UI:Message:EmptyList:UseAdd' => 'A lista está vazia. Use o botão "Associar..." para adicionar elementos',
 	'UI:Message:EmptyList:UseSearchForm' => 'Use o formulário de busca acima para procurar objeto(s) a ser(em) adicionado(s)',
 	'UI:Wizard:FinalStepTitle' => 'Passo final: confirmação',
 	'UI:Title:DeletionOf_Object' => 'Excluindo de %1$s',
@@ -878,7 +878,7 @@ Esperamos que você goste desta versão tanto quanto gostamos de imaginá-la e c
 	'UI:BulkDeletePageTitle' => 'Exclusão em massa',
 	'UI:BulkDeleteTitle' => 'Selecione o(s) objeto(s) que você deseja excluir:',
 	'UI:PageTitle:ObjectCreated' => 'Objeto criado',
-	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s criado(a)',
+	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s criado(a) com sucesso',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Aplicando %1$s no objeto: %2$s com status %3$s para o status alvo: %4$s',
 	'UI:ObjectCouldNotBeWritten' => 'O objeto não pode ser gravado: %1$s',
 	'UI:PageTitle:FatalError' => 'Erro fatal',

@@ -196,7 +196,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Attribute:related_request_list' => 'Solicitações filhas',
 	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Incidentes filhos',
-	'Class:Incident/Attribute:child_incidents_list+' => 'Todos os subincidentes associados a este incidente',
+	'Class:Incident/Attribute:child_incidents_list+' => 'Todos os Subincidentes associados à este Incidente',
 	'Class:Incident/Attribute:public_log' => 'Log público',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Satisfação do usuário',

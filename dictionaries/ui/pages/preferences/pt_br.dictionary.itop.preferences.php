@@ -31,7 +31,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Preferences:ActivityPanel:Title'                               => 'Painel de atividades',
 	'UI:Preferences:ActivityPanel:EntryFormOpened'                     => 'Formulário de adicionar nova entrada aberto por padrão',
 	'UI:Preferences:ActivityPanel:EntryFormOpened+'                    => 'Se o formulário de adicionar nova entrada será aberto automaticamente ao abrir o Painel de Atividades. Se desmarcado, você ainda poderá abri-lo clicando no botão de "adicionar"',
-	'UI:Preferences:PersonalizeKeyboardShortcuts:Title'                => 'Atalhos de teclado de aplicativo',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Title'                => 'Atalhos de teclado do aplicativo',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint'           => 'Pressione um atalho de teclado',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip'       => 'Grave um atalho de teclado',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset'         => 'Redefinir',

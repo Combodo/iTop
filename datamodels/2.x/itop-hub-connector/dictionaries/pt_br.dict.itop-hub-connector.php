@@ -26,8 +26,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:iTopHub:Register' => 'Conectar ao iTop Hub',
 	'Menu:iTopHub:Register+' => 'Vá para o iTop Hub para atualizar sua instância '.ITOP_APPLICATION_SHORT,
 	'Menu:iTopHub:Register:Description' => '<p>Obtenha acesso à sua plataforma da comunidade iTop Hub!</br>Encontre todos os conteúdos e informações necessárias, gerencie suas instâncias '.ITOP_APPLICATION_SHORT.' por meio de ferramentas personalizadas & instale mais extensões.</br><br/>Ao conectar-se ao iTop hub a partir desta página, você enviará informações da sua instância '.ITOP_APPLICATION_SHORT.' ao iTop Hub.</p>',
-	'Menu:iTopHub:MyExtensions' => 'Extensões Implantadas',
-	'Menu:iTopHub:MyExtensions+' => 'Veja a lista de extensões implantadas nesta instância do '.ITOP_APPLICATION_SHORT,
+	'Menu:iTopHub:MyExtensions' => 'Extensões Instaladas',
+	'Menu:iTopHub:MyExtensions+' => 'Veja a lista de extensões instaladas nesta instância do '.ITOP_APPLICATION_SHORT,
 	'Menu:iTopHub:BrowseExtensions' => 'Obter Extensões do iTop Hub',
 	'Menu:iTopHub:BrowseExtensions+' => 'Navegue por mais extensões no iTop Hub',
 	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Visite a loja do iTop Hub, seu único lugar para encontrar extensões maravilhosas do '.ITOP_APPLICATION_SHORT.' !</br>Encontre as extensões que irão ajudá-lo a personalizar e adaptar o '.ITOP_APPLICATION_SHORT.' aos seus processos.</br><br/>Ao conectar-se ao iTop hub a partir desta página, você enviará informações da sua instância '.ITOP_APPLICATION_SHORT.' ao iTop Hub.</p>',
@@ -82,5 +82,3 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopHub:InstallationStatus:Installed' => 'Instalado',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Versão %1$s <b>NÃO</b> instalada',
 ));
-
-

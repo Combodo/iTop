@@ -38,7 +38,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Data da última alteração de senha',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Quando a senha foi alterada anteriormente',
 
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'A senha deve ter no mínimo 8 caracteres e incluir letras maiúsculas, minúsculas, números e símbolos',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'A senha deve conter no mínimo 8 caracteres e incluir letras maiúsculas, minúsculas, números e símbolos',
 
 	'UserLocal:password:expiration' => 'O campo abaixo requer uma extensão',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Definir a expiração da senha para One-Time Password (OTP) não é permitido para o seu próprio usuário',

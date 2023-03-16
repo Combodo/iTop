@@ -31,7 +31,7 @@
 // Class: lnkFunctionalCIToTicket
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToTicket' => 'Link IC / Solicitação',
+	'Class:lnkFunctionalCIToTicket' => 'Relação entre IC / Solicitação',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Solicitação',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
@@ -56,5 +56,5 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Solicitações',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'Todos as solicitações para este item de configuração',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'Todas as Solicitações associadas à este Item de Configuração (IC)',
 ));

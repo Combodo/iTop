@@ -86,9 +86,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:version' => 'Versão',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'ICs',
-	'Class:KnownError/Attribute:ci_list+' => 'Todos os itens de configuração associados a este erro conhecido',
+	'Class:KnownError/Attribute:ci_list+' => 'Todos os Itens de Configuração (ICs) associados à este Erro conhecido',
 	'Class:KnownError/Attribute:document_list' => 'Documentos',
-	'Class:KnownError/Attribute:document_list+' => 'Todos os documentos associados a este erro conhecido',
+	'Class:KnownError/Attribute:document_list+' => 'Todos os Documentos associados à este Erro conhecido',
 ));
 
 //
@@ -96,8 +96,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkErrorToFunctionalCI' => 'Link Erro Conhecido / IC',
-	'Class:lnkErrorToFunctionalCI+' => 'Infraestrutura associada a este erro conhecido',
+	'Class:lnkErrorToFunctionalCI' => 'Relação entre Erro conhecido / IC',
+	'Class:lnkErrorToFunctionalCI+' => 'Itens de configuração (IC) associados à este Erro conhecido',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
@@ -115,7 +115,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkDocumentToError' => 'Link Documentos / Erros',
+	'Class:lnkDocumentToError' => 'Relação entre Documento / Erro',
 	'Class:lnkDocumentToError+' => 'Uma ligação entre um documento e um erro conhecido',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Documento',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
