@@ -157,66 +157,6 @@ class MFCompiler
 		$this->aLog[] = $sText;
 	}
 
-	/**
-	 * @param $sPropertyName
-	 * @param null $aProperty
-	 * @param \DOMElement $oField
-	 * @param array $aParameters
-	 *
-	 * @return array
-	 * @throws \DOMFormatException
-	 */
-	public function CompileDynamicProperty($sPropertyName, $aProperty, DOMElement $oField, array $aParameters): array
-	{
-		$sPHPParam = $aProperty['php_param'] ?? $sPropertyName;
-		$bMandatory = $aProperty['mandatory'] ?? false;
-		$sType = $aProperty['type'] ?? 'string';
-		$sDefault = $aProperty['default'] ?? null;
-		switch ($sType) {
-			case 'string':
-				if ($bMandatory) {
-					$aParameters[$sPHPParam] = $this->GetMandatoryPropString($oField, $sPropertyName);
-				} else {
-					$aParameters[$sPHPParam] = $this->GetPropString($oField, $sPropertyName, $sDefault);
-				}
-				break;
-			case 'boolean':
-				if ($bMandatory) {
-					$aParameters[$sPHPParam] = $this->GetMandatoryPropBoolean($oField, $sPropertyName);
-				} else {
-					$aParameters[$sPHPParam] = $this->GetPropBoolean($oField, $sPropertyName, is_null($sDefault) ? null : $sDefault === 'true');
-				}
-				break;
-			case 'number':
-				if ($bMandatory) {
-					$aParameters[$sPHPParam] = $this->GetMandatoryPropNumber($oField, $sPropertyName);
-				} else {
-					$aParameters[$sPHPParam] = $this->GetPropNumber($oField, $sPropertyName, is_null($sDefault) ? null : (int)$sDefault);
-				}
-				break;
-			case 'php':
-				$sValue = $oField->GetChildText($sPropertyName);
-				if ($bMandatory && is_null($sValue)) {
-					throw new DOMFormatException("missing (or empty) mandatory tag '$sPropertyName' under the tag '".$oField->nodeName."'");
-				}
-				$aParameters[$sPHPParam] = $sValue ?? 'null';
-				break;
-			case 'oql':
-				if ($sOql = $oField->GetChildText($sPropertyName)) {
-					$sEscapedOql = self::QuoteForPHP($sOql);
-					$aParameters[$sPHPParam] = "$sEscapedOql";
-				} else {
-					$aParameters[$sPHPParam] = 'null';
-				}
-				break;
-			case 'null':
-				$aParameters[$sPHPParam] = 'null';
-				break;
-		}
-
-		return $aParameters;
-	}
-
 	protected function DumpLog($oPage)
 	{
 		foreach ($this->aLog as $sText) {
@@ -2076,8 +2016,9 @@ EOF
 	 * @return array
 	 * @throws \DOMException
 	 * @throws \DOMFormatException
+	 * @since 3.1.0 N°6040
 	 */
-	public function CompileAttribute(string $sAttType, DOMElement $oField, string $sModuleRelativeDir, string $sClass, string $sAttCode, string &$sCss, array &$aTagFieldsInfo, string $sTempTargetDir): array
+	protected function CompileAttribute(string $sAttType, DOMElement $oField, string $sModuleRelativeDir, string $sClass, string $sAttCode, string &$sCss, array &$aTagFieldsInfo, string $sTempTargetDir): array
 	{
 		$aParameters = [];
 
@@ -2475,6 +2416,67 @@ EOF
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * @param string $sPropertyName
+	 * @param array $aProperty
+	 * @param \DOMElement $oField
+	 * @param array $aParameters
+	 *
+	 * @return array
+	 * @throws \DOMFormatException
+	 * @since 3.1.0 N°6040
+	 */
+	protected function CompileDynamicProperty(string $sPropertyName, array $aProperty, DOMElement $oField, array $aParameters): array
+	{
+		$sPHPParam = $aProperty['php_param'] ?? $sPropertyName;
+		$bMandatory = $aProperty['mandatory'] ?? false;
+		$sType = $aProperty['type'] ?? 'string';
+		$sDefault = $aProperty['default'] ?? null;
+		switch ($sType) {
+			case 'string':
+				if ($bMandatory) {
+					$aParameters[$sPHPParam] = $this->GetMandatoryPropString($oField, $sPropertyName);
+				} else {
+					$aParameters[$sPHPParam] = $this->GetPropString($oField, $sPropertyName, $sDefault);
+				}
+				break;
+			case 'boolean':
+				if ($bMandatory) {
+					$aParameters[$sPHPParam] = $this->GetMandatoryPropBoolean($oField, $sPropertyName);
+				} else {
+					$aParameters[$sPHPParam] = $this->GetPropBoolean($oField, $sPropertyName, is_null($sDefault) ? null : $sDefault === 'true');
+				}
+				break;
+			case 'number':
+				if ($bMandatory) {
+					$aParameters[$sPHPParam] = $this->GetMandatoryPropNumber($oField, $sPropertyName);
+				} else {
+					$aParameters[$sPHPParam] = $this->GetPropNumber($oField, $sPropertyName, is_null($sDefault) ? null : (int)$sDefault);
+				}
+				break;
+			case 'php':
+				$sValue = $oField->GetChildText($sPropertyName);
+				if ($bMandatory && is_null($sValue)) {
+					throw new DOMFormatException("missing (or empty) mandatory tag '$sPropertyName' under the tag '".$oField->nodeName."'");
+				}
+				$aParameters[$sPHPParam] = $sValue ?? 'null';
+				break;
+			case 'oql':
+				if ($sOql = $oField->GetChildText($sPropertyName)) {
+					$sEscapedOql = self::QuoteForPHP($sOql);
+					$aParameters[$sPHPParam] = "$sEscapedOql";
+				} else {
+					$aParameters[$sPHPParam] = 'null';
+				}
+				break;
+			case 'null':
+				$aParameters[$sPHPParam] = 'null';
+				break;
+		}
+
+		return $aParameters;
 	}
 
 	/**
@@ -3892,13 +3894,13 @@ PHP;
 	}
 
 	/**
-	 * @param string $sPropertyName
 	 * @param \Combodo\iTop\DesignElement $oProperty
 	 *
 	 * @return array{php_param: string, mandatory: bool, type: string, default: string}
 	 * @throws \DOMFormatException
+	 * @since 3.1.0 N°6040
 	 */
-	private function LoadDynamicPropertyDefinition(DesignElement $oProperty): array
+	protected function LoadDynamicPropertyDefinition(DesignElement $oProperty): array
 	{
 		$aDefinition = [];
 
@@ -3921,7 +3923,7 @@ PHP;
 
 	/**
 	 * @throws \DOMFormatException
-	 * @since 3.1.0
+	 * @since 3.1.0 N°6040
 	 */
 	protected function LoadDynamicAttributeDefinitions(): void
 	{
@@ -3952,7 +3954,7 @@ PHP;
 	 * @param string $sAttributeName
 	 *
 	 * @return bool
-	 * @since 3.1.0
+	 * @since 3.1.0 N°6040
 	 */
 	protected function HasDynamicAttributeDefinition(string $sAttributeName): bool
 	{
@@ -3963,7 +3965,7 @@ PHP;
 	 * @param string $sPropertyName
 	 *
 	 * @return bool
-	 * @since 3.1.0
+	 * @since 3.1.0 N°6040
 	 */
 	protected function HasDynamicPropertyDefinition(string $sPropertyName): bool
 	{
