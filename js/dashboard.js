@@ -345,7 +345,7 @@ $(function()
 			oParams.dashletid = sTempDashletId;
 
 			$.post(this.options.new_dashletid_endpoint, oParams, function(data) {
-				var sFinalDashletId = data;
+				var sFinalDashletId = data.trim();
 				me.add_dashlet_prepare(options, sFinalDashletId);
 			});
 		},
