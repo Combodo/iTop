@@ -2899,7 +2899,7 @@ HTML;
 	 * @param string $sClassNameFilter
 	 * @param array $aExcludedPath Reg. exp. of the paths to exclude. Note that backslashes (typically for Windows env.) need to be 4 backslashes, 2 for the escaping backslash, 2 for the actual backslash 😅
 	 *
-	 * @return array
+	 * @return array classes are returned in the same order as the module dependency tree, so core classes on top
 	 * @since 3.0.0
 	 */
 	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = []): array
