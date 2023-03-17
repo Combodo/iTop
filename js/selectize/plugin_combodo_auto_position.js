@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2022 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
