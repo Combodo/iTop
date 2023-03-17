@@ -323,7 +323,7 @@ $(function()
 			oParams.dashletid = sTempDashletId;
 
 			$.post(this.options.new_dashletid_endpoint, oParams, function (data) {
-				me.add_dashlet_prepare(options, data);
+				me.add_dashlet_prepare(options, data.trim());
 			});
 		},
 		add_dashlet_ajax: function (options, sDashletId) {
