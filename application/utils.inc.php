@@ -1942,10 +1942,10 @@ SQL;
 			$fp = @fopen($sUrl, 'rb', false, $ctx);
 			if (!$fp)
 			{
-				global $php_errormsg;
-				if (isset($php_errormsg))
+				$aError = error_get_last();
+				if (is_array($aError))
 				{
-					throw new Exception("Wrong URL: $sUrl, $php_errormsg");
+					throw new Exception("Wrong URL: $sUrl, ".$aError['message']);
 				}
 				elseif ((strtolower(substr($sUrl, 0, 5)) == 'https') && !extension_loaded('openssl'))
 				{
