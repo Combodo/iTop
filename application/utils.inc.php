@@ -1959,7 +1959,9 @@ SQL;
 			$response = @stream_get_contents($fp);
 			if ($response === false)
 			{
-				throw new Exception("Problem reading data from $sUrl, $php_errormsg");
+				$aError = error_get_last();
+				if (is_array($aError)) throw new Exception("Problem reading data from $sUrl, ".$aError['message']);
+				else throw new Exception("Problem reading data from $sUrl");
 			}
 			if (is_array($aResponseHeaders))
 			{
