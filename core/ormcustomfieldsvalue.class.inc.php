@@ -50,10 +50,11 @@ class ormCustomFieldsValue
 	 * Wrapper used when the only thing you have is the value...
 	 * @return \Combodo\iTop\Form\Form
 	 */
-	public function GetForm()
+	public function GetForm($sFormPrefix = null)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		return $oAttDef->GetForm($this->oHostObject);
+
+		return $oAttDef->GetForm($this->oHostObject, $sFormPrefix);
 	}
 
 	public function GetAsHTML($bLocalize = true)

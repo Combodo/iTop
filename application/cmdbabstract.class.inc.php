@@ -2508,6 +2508,7 @@ HTML;
 					$sHTMLValue .= '<div>'.$sReloadSpan.'</div>'; // No validation span for this one: it does handle its own validation!
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
 
+					/** @var \ormCustomFieldsValue $value */
 					$oForm = $value->GetForm($sFormPrefix);
 					$oPredefQueryRenderer = new ConsoleFormRenderer($oForm);
 					$aRenderRes = $oPredefQueryRenderer->Render();
