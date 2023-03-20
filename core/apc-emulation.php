@@ -97,6 +97,24 @@ function apc_delete($key)
 	return $bRet1 || $bRet2;
 }
 
+/**
+ * Checks if APCu emulation key exists
+ * @param string|string[] $keys A string, or an array of strings, that contain keys.
+ * @return bool|string[] Returns TRUE if the key exists, otherwise FALSE
+ * Or if an array was passed to keys, then an array is returned that
+ * contains all existing keys, or an empty array if none exist.
+ */
+function apc_exists($keys)
+{
+	if (is_array($keys)) {
+		$aExistingKeys = [];
+		foreach ($keys as $sKey) {
+			if (apcFile::ExistsOneFile($sKey)) $aExistingKeys[] = $sKey;
+		}
+		return $aExistingKeys;
+	} else return apcFile::ExistsOneFile($keys);
+}
+
 class apcFile
 {
 	// Check only once per request
@@ -181,6 +199,16 @@ class apcFile
 
 		self::ResetFileCount();
 		return true;
+	}
+
+	/**
+	 * Check if cache key exists
+	 * @param $sKey
+	 * @return bool
+	 */
+	static public function ExistsOneFile($sKey) {
+		if (is_file(self::GetCacheFileName('-'.$sKey))) return true;
+		else return is_file(self::GetCacheFileName($sKey));
 	}
 
 	/** Get one cache entry content.
