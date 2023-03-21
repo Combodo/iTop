@@ -16,7 +16,6 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Combodo\iTop\Service\Links\LinkSetModel;
 use ConfigException;
 use CoreException;
 use CoreUnexpectedValue;
@@ -24,6 +23,7 @@ use DBObjectSet;
 use Dict;
 use DictExceptionMissingString;
 use Exception;
+use iDBObjectSetIterator;
 use MetaModel;
 use MySQLException;
 use UILinksWidgetDirect;
@@ -134,7 +134,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	 *
 	 * @return void
 	 */
-	public function InitTable(WebPage $oPage, DBObjectSet $oValue, string $sFormPrefix)
+	public function InitTable(WebPage $oPage, iDBObjectSetIterator $oValue, string $sFormPrefix)
 	{
 		$this->sInputName = $sFormPrefix.'attr_'.$this->oUILinksDirectWidget->GetAttCode();
 		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
@@ -239,7 +239,7 @@ class BlockDirectLinksEditTable extends UIContentBlock
 	 * @throws MySQLException
 	 * @throws Exception
 	 */
-	private function GetTableRows(\WebPage $oPage, \DBObjectSet $oValue): array
+	private function GetTableRows(\WebPage $oPage, iDBObjectSetIterator $oValue): array
 	{
 		// result data
 		$aRows = array();

@@ -1660,7 +1660,12 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function GetDisplayStyle()
 	{
-		return $this->GetOptional('display_style', LINKSET_DISPLAY_STYLE_TAB);
+		$sDisplayStyle = $this->GetOptional('display_style', LINKSET_DISPLAY_STYLE_TAB);
+		if ($sDisplayStyle === '') {
+			$sDisplayStyle = LINKSET_DISPLAY_STYLE_TAB;
+		}
+
+		return $sDisplayStyle;
 	}
 
 	/**
