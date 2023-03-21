@@ -2,7 +2,6 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
@@ -76,7 +75,8 @@ class AttributeDefinitionTest extends ItopDataTestCase {
 \$ormLinkset = \$oObject->Get('workorders_list');
 \$ormLinkset->AddItem(MetaModel::NewObject('WorkOrder', []));
 \$oObject->Set('workorders_list', \$ormLinkset);
-PHP,
+PHP
+				,
 				false,
 				true,
 			],
@@ -88,7 +88,8 @@ PHP,
 \$ormLinkset = \$oObject->Get('contacts_list');
 \$ormLinkset->AddItem(MetaModel::NewObject('lnkContactToTicket', []));
 \$oObject->Set('contacts_list', \$ormLinkset);
-PHP,
+PHP
+				,
 				false,
 				true,
 			],
@@ -97,7 +98,8 @@ PHP,
 				'value',
 				<<<PHP
 \$oObject->Set('value', 100);
-PHP,
+PHP
+				,
 				false,
 				true,
 			],
@@ -106,7 +108,8 @@ PHP,
 				'speed',
 				<<<PHP
 \$oObject->Set('speed', 1024.5);
-PHP,
+PHP
+				,
 				false,
 				true,
 			],
@@ -115,7 +118,8 @@ PHP,
 				'title',
 				<<<PHP
 \$oObject->Set('title', 'Some title');
-PHP,
+PHP
+				,
 				false,
 				true,
 			],
@@ -124,7 +128,8 @@ PHP,
 				'item_id',
 				<<<PHP
 \$oObject->Set('item_id', 12);
-PHP,
+PHP
+				,
 				false,
 				true,
 			],
@@ -133,7 +138,8 @@ PHP,
 				'org_id',
 				<<<PHP
 \$oObject->Set('org_id', 3);
-PHP,
+PHP
+				,
 				false,
 				true,
 			],
@@ -142,7 +148,8 @@ PHP,
 				'file',
 				<<<PHP
 \$oObject->Set('file', new ormDocument('something', 'text/plain', 'something.txt'));
-PHP,
+PHP
+				,
 				false,
 				true,
 			],
@@ -167,7 +174,8 @@ PHP,
 /** @var \ormPassword \$ormPassword */
 \$ormPassword = new ormPassword('somehash', 'somesalt');
 \$oObject->Set('password', \$ormPassword);
-PHP,
+PHP
+				,
 				false,
 				true,
 			],
