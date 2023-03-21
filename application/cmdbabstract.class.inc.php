@@ -2554,31 +2554,31 @@ JS
 
 				case 'Set':
 				case 'TagSet':
-				$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
-				$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
-				$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-				$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
+					$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
+					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
 
-				$oPage->add_dict_entry('Core:AttributeSet:placeholder');
+					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
-				/** @var \ormSet $value */
-				$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
-				$sEscapedJson = utils::EscapeHtml($sJson);
-				$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
+					/** @var \ormSet $value */
+					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
+					$sEscapedJson = utils::EscapeHtml($sJson);
+					$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
 
-				// handle form validation
-				$aEventsList[] = 'change';
-				$aEventsList[] = 'validate';
-				$sNullValue = '';
-				$sFieldToValidateId = $sFieldToValidateId.AttributeSet::EDITABLE_INPUT_ID_SUFFIX;
+					// handle form validation
+					$aEventsList[] = 'change';
+					$aEventsList[] = 'validate';
+					$sNullValue = '';
+					$sFieldToValidateId = $sFieldToValidateId.AttributeSet::EDITABLE_INPUT_ID_SUFFIX;
 
-				// generate form HTML output
-				$sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$sFieldToValidateId}\"></span>";
-				$sHTMLValue = '<div class="field_input_zone field_input_set ibo-input-wrapper ibo-input-tagset-wrapper" data-validation="untouched"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
-				$sScript = "$('#$iId').set_widget({inputWidgetIdSuffix: '".AttributeSet::EDITABLE_INPUT_ID_SUFFIX."'});";
-				$oPage->add_ready_script($sScript);
+					// generate form HTML output
+					$sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$sFieldToValidateId}\"></span>";
+					$sHTMLValue = '<div class="field_input_zone field_input_set ibo-input-wrapper ibo-input-tagset-wrapper" data-validation="untouched"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
+					$sScript = "$('#$iId').set_widget({inputWidgetIdSuffix: '".AttributeSet::EDITABLE_INPUT_ID_SUFFIX."'});";
+					$oPage->add_ready_script($sScript);
 
-				break;
+					break;
 
 				case 'String':
 				default:
