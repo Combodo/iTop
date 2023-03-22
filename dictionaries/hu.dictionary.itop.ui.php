@@ -1175,7 +1175,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
     'UI:AutoApplyConfirmationMessage' => 'Néhány változtatás még nem került alkalmazásra. Szeretné, ha az iTop figyelembe venné őket?',
     'UI:Create_Class_InState' => '%1$s létrehozása: ',
     'UI:OrderByHint_Values' => 'Rendezési sorrend: %1$s',
-    'UI:Menu:AddToDashboard' => 'Hozzáadás a vezérlőpulthoz...',
+    'UI:Menu:AddToDashboard' => 'Hozzáadás a műszerfalhoz...',
     'UI:Button:Refresh' => 'Frissítés',
     'UI:Button:GoPrint' => 'Nyomtatás...',
     'UI:ExplainPrintable' => 'Kattintson a %1$s ikonra az elemek elrejtéséhez a nyomtatásból.<br/>A nyomtatás előtti előnézet megtekintéséhez használja a böngésző "nyomtatási előnézet" funkcióját.<br/>Figyelem: ez a fejléc és a többi hangolási vezérlőelem nem kerül kinyomtatásra.',
