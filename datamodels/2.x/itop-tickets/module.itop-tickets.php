@@ -94,10 +94,10 @@ class TicketsInstaller extends ModuleInstallerAPI
 				$sLang = str_replace(' ', '_', strtolower($oConfiguration->GetDefaultLanguage()));
 			}
 
-			$sFileName = __DIR__."/data/{$sLang}.data.itop-tickets.xml";
+			$sFileName = dirname(__FILE__)."/data/{$sLang}.data.itop-tickets.xml";
 			SetupLog::Info("Searching file: $sFileName");
 			if (!file_exists($sFileName)) {
-				$sFileName = __DIR__."/data/en_us.data.itop-tickets.xml";
+				$sFileName = dirname(__FILE__)."/data/en_us.data.itop-tickets.xml";
 			}
 			SetupLog::Info("Loading file: $sFileName");
 			$oDataLoader->StartSession($oMyChange);
