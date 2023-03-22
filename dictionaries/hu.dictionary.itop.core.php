@@ -28,14 +28,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Core:UnknownObjectLabel' => 'Objektum nem található (osztály: %1$s, id: %2$d)',
     'Core:UnknownObjectTip' => 'Az objektumott nem sikerült megtalálni. Lehet, hogy már törölték egy ideje, és a naplót azóta törölték.',
 
-    'Core:UniquenessDefaultError' => 'Egyediségi szabály \'%1$s\' hibás',
+    'Core:UniquenessDefaultError' => 'Egyediségi szabály %1$s hibás',
     'Core:CheckConsistencyError' => 'A következetességi szabályok be nem tartása: %1$s',
-    'Core:CheckValueError' => 'A \'%1$s\' (%2$s) attribútum nem várt értéke : %3$s',
+    'Core:CheckValueError' => 'A %1$s (%2$s) attribútum nem várt értéke : %3$s',
 
     'Core:AttributeLinkedSet' => 'Objektumtömbök',
     'Core:AttributeLinkedSet+' => 'Az azonos osztályba vagy alosztályba tartozó objektumok bármely fajtája',
 
-    'Core:AttributeLinkedSetDuplicatesFound' => 'Duplikátumok a \'%1$s\' mezőben : %2$s',
+    'Core:AttributeLinkedSetDuplicatesFound' => 'Duplikátumok a %1$s mezőben : %2$s',
 
     'Core:AttributeDashboard' => 'Műszerfal',
     'Core:AttributeDashboard+' => '',
@@ -202,8 +202,8 @@ Operátorok:<br/>
     'Core:AttributeFriendlyName' => 'Barátságos név',
     'Core:AttributeFriendlyName+' => 'Automatikusan létrehozott attribútum ; a barátságos név több attribútum után kerül kiszámításra.',
 
-    'Core:FriendlyName-Label' => 'Teljes név',
-    'Core:FriendlyName-Description' => 'Teljes név',
+    'Core:FriendlyName-Label' => 'Név',
+    'Core:FriendlyName-Description' => 'Név',
 
     'Core:AttributeTag' => 'Címkék',
     'Core:AttributeTag+' => '',
@@ -260,7 +260,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:CMDBChangeOp/Attribute:objclass+' => 'Annak az objektumnak az osztályneve, amelyen a változtatás történt',
     'Class:CMDBChangeOp/Attribute:objkey' => 'Objektum azonosító',
     'Class:CMDBChangeOp/Attribute:objkey+' => 'Azon objektum azonosítója amelyen a változtatás történt',
-    'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp sub-class',
+    'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp al-osztály',
     'Class:CMDBChangeOp/Attribute:finalclass+' => 'A végrehajtott változtatás típusa',
 ));
 
@@ -311,7 +311,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Change:ObjectDeleted' => 'Objektum törölve',
     'Change:ObjectModified' => 'Objektum módosítva',
     'Change:TwoAttributesChanged' => 'Szerkesztve %1$s és %2$s',
-    'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other',
+    'Change:ThreeAttributesChanged' => 'Szerkesztve %1$s, %2$s és 1 másik',
     'Change:FourOrMoreAttributesChanged' => 'Szerkesztve %1$s, %2$s és %3$s egyéb',
     'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => 'A %1$s beállítva %2$s -re (előző érték: %3$s)',
     'Change:AttName_SetTo' => 'A %1$s beállítva %2$s -re',
@@ -360,7 +360,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:Event/Attribute:date+' => 'A változások rögzítésének dátuma és időpontja',
     'Class:Event/Attribute:userinfo' => 'Felhasználó infó',
     'Class:Event/Attribute:userinfo+' => 'Annak a felhasználónak az azonosítása, aki az eseményt kiváltó műveletet végrehajtotta.',
-    'Class:Event/Attribute:finalclass' => 'Esemény sub-class',
+    'Class:Event/Attribute:finalclass' => 'Esemény al-osztály',
     'Class:Event/Attribute:finalclass+' => 'A végleges osztály neve: a bekövetkezett esemény fajtáját határozza meg.',
 ));
 
@@ -435,8 +435,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:EventWebService/Attribute:verb' => 'Művelet',
     'Class:EventWebService/Attribute:verb+' => 'A művelet neve',
     'Class:EventWebService/Attribute:result' => 'Eredmény',
-    'Class:EventWebService/Attribute:result+' => 'Álltalánosságban siker/hiba',
-    'Class:EventWebService/Attribute:log_info' => 'Info napló',
+    'Class:EventWebService/Attribute:result+' => 'Általánosságban siker/hiba',
+    'Class:EventWebService/Attribute:log_info' => 'Infó napló',
     'Class:EventWebService/Attribute:log_info+' => 'A kapott eredmények naplója',
     'Class:EventWebService/Attribute:log_warning' => 'Figyelmeztetés napló',
     'Class:EventWebService/Attribute:log_warning+' => 'A kapott figyelmeztetések naplója',
@@ -474,7 +474,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:EventLoginUsage/Attribute:user_id+' => '',
     'Class:EventLoginUsage/Attribute:contact_name' => 'Kapcsolattartó név',
     'Class:EventLoginUsage/Attribute:contact_name+' => '',
-    'Class:EventLoginUsage/Attribute:contact_email' => 'Kapcsolattartó Email cím',
+    'Class:EventLoginUsage/Attribute:contact_email' => 'Kapcsolattartó email cím',
     'Class:EventLoginUsage/Attribute:contact_email+' => 'A felhasználó email címe',
 ));
 
@@ -499,7 +499,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:Action/Attribute:status/Value:disabled+' => '',
     'Class:Action/Attribute:trigger_list' => 'Kapcsolódó eseményindítók',
     'Class:Action/Attribute:trigger_list+' => 'Eseményindítók amik ehhez a művelethez vannak rendelve',
-    'Class:Action/Attribute:finalclass' => 'Művelet sub-class',
+    'Class:Action/Attribute:finalclass' => 'Művelet al-osztály',
     'Class:Action/Attribute:finalclass+' => 'A végleges osztály neve',
     'Action:WarningNoTriggerLinked' => 'Figyelmeztetés, nincs a művelethez kapcsolódó eseményindító. Addig nem lesz aktív, amíg legalább 1 nem lesz.',
 ));
@@ -520,7 +520,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:ActionEmail' => 'Email értesítés',
     'Class:ActionEmail+' => '',
-    'Class:ActionEmail/Attribute:status+' => 'Ez a státusz határozza meg, hogy ki kapjon értesítést: csak a teszt címzettje, mindenki (Címzett, cc és Bcc) vagy senki.',
+    'Class:ActionEmail/Attribute:status+' => 'Ez az állapot határozza meg, hogy ki kapjon értesítést: csak a teszt címzettje, mindenki (Címzett, cc és Bcc) vagy senki.',
     'Class:ActionEmail/Attribute:status/Value:test+' => 'Csak a teszteléshez használt címzett kap értesítést',
     'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Minden Címzett, Cc és Bcc email értesítést fog kapni',
     'Class:ActionEmail/Attribute:status/Value:disabled+' => 'Az email értesítés nem lesz elküldve',
@@ -565,7 +565,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:Trigger/Attribute:description+' => 'Egysoros leírás',
     'Class:Trigger/Attribute:action_list' => 'Elindított műveletek',
     'Class:Trigger/Attribute:action_list+' => 'Az eseményindító aktiválásakor végrehajtott műveletek',
-    'Class:Trigger/Attribute:finalclass' => 'Eseményindító sub-class',
+    'Class:Trigger/Attribute:finalclass' => 'Eseményindító al-osztály',
     'Class:Trigger/Attribute:finalclass+' => 'A végleges osztály neve',
     'Class:Trigger/Attribute:context' => 'Kontextus',
     'Class:Trigger/Attribute:context+' => 'Kontextus, amely lehetővé teszi az eseményindító elindítását',
@@ -583,7 +583,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:TriggerOnObject/Attribute:filter' => 'Szűrő',
     'Class:TriggerOnObject/Attribute:filter+' => 'Korlátozza az objektumlistát (a célosztályból), amely aktiválja az eseményindítót.',
     'TriggerOnObject:WrongFilterQuery' => 'Helytelen szűrőkérdés: %1$s',
-    'TriggerOnObject:WrongFilterClass' => 'A szűrő lekérdezésnek "%1$s" osztályú objektumokat kell visszaadnia.',
+    'TriggerOnObject:WrongFilterClass' => 'A szűrő lekérdezésnek %1$s osztályú objektumokat kell visszaadnia.',
 ));
 
 //
@@ -912,13 +912,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
     // Explain working time computing
-    'Core:ExplainWTC:ElapsedTime' => 'Eltelt idő (tárolva mint "%1$s")',
-    'Core:ExplainWTC:StopWatch-TimeSpent' => '"%1$s" ráfordított ideje',
-    'Core:ExplainWTC:StopWatch-Deadline' => '"%1$s" határideje %2$d%% -kor',
+    'Core:ExplainWTC:ElapsedTime' => 'Eltelt idő (tárolva mint %1$s)',
+    'Core:ExplainWTC:StopWatch-TimeSpent' => '%1$s ráfordított ideje',
+    'Core:ExplainWTC:StopWatch-Deadline' => '%1$s határideje %2$d%% -kor',
 
     // Bulk export
-    'Core:BulkExport:MissingParameter_Param' => '"%1$s" paramétere hiányzik',
-    'Core:BulkExport:InvalidParameter_Query' => 'A "query" paraméter értéke érvénytelen. Nincs lekérdezés gyűjtemény ehhez az azonosítóhoz: "%1$s".',
+    'Core:BulkExport:MissingParameter_Param' => '%1$s paramétere hiányzik',
+    'Core:BulkExport:InvalidParameter_Query' => 'A query paraméter értéke érvénytelen. Nincs lekérdezés gyűjtemény ehhez az azonosítóhoz: %1$s.',
     'Core:BulkExport:ExportFormatPrompt' => 'Export formátum:',
     'Core:BulkExportOf_Class' => '%1$s exportálás',
     'Core:BulkExport:ClickHereToDownload_FileName' => 'Kattintson a %1$s letöltéséhez',
@@ -1006,10 +1006,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:TagSetFieldData/Attribute:obj_attcode' => 'Mezőkód',
 
     'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'A felhasznált címkék nem törölhetők',
-    'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'A címkekódoknak egyedinek kell lenniee',
+    'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'A címkekódoknak egyedinek kell lennie',
     'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'A címkekódnak 3 és %1$d közötti, betűvel kezdődő alfanumerikus karaktereket kell tartalmaznia.',
     'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'A választott címkekód egy foglalt szóval egyezik',
-    'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'A címkék felirata nem tartalmazhat \'%1$s\' és nem lehet üres.',
+    'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'A címkék felirata nem tartalmazhat %1$s -et és nem lehet üres.',
     'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'A címkekód nem változtatható, ha használatban van',
     'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Az "Object Class" címkék nem módosíthatók',
     'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Az "Attribútumkód" címkék nem módosíthatók',
@@ -1091,8 +1091,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:AsyncTask/Attribute:last_error+' => '',
     'Class:AsyncTask/Attribute:last_attempt' => 'Utolsó próbálkozás',
     'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Érvénytelen formátum az "async_task_retries[%1$s]" konfigurációhoz. A következő kulcsokkal rendelkező tömböt vár: %2$s',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Az "async_task_retries[%1$s]" konfigurációjának érvénytelen formátuma: "%2$s" váratlan kulcs. Csak a következő kulcsokat várja: %3$s',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Érvénytelen formátum az async_task_retries[%1$s] konfigurációhoz. A következő kulcsokkal rendelkező tömböt vár: %2$s',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Az async_task_retries[%1$s] konfigurációjának érvénytelen formátuma: %2$s váratlan kulcs. Csak a következő kulcsokat várja: %3$s',
 ));
 
 //
