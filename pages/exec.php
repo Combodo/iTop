@@ -71,20 +71,26 @@ $oKPI->ComputeAndReport("Session Start");
 $sEnvFullPath = APPROOT.'env-'.$sEnvironment;
 $sPageRelativePath = $sModule.'/'.$sPage;
 $sPageEnvFullPath = $sEnvFullPath.'/'.$sPageRelativePath;
-if (is_link($sPageEnvFullPath)) {
-	$oConfig = utils::GetConfig();
-	$sSourceDir = $oConfig->Get('source_dir'); // generated at compile time, works for legacy build with datamodels/1.x
-	// in case module was compiled to symlink, we need to check against real linked path as symlink is resolved
-	$aPossibleBasePaths = [
-		APPROOT.$sSourceDir,
-		APPROOT.'extensions',
-		APPROOT.'data/'.$sEnvironment.'-modules',
-		APPROOT.'data/downloaded-extensions', // Hub connector
-	];
+if (utils::IsDevelopmentEnvironment()) {
+	// disable checks on dev env
+	$sTargetPage = $sPageEnvFullPath;
 } else {
-	$aPossibleBasePaths = [$sEnvFullPath];
+	// not a dev env : we must check there are no path traversal attack !
+	if (is_link($sPageEnvFullPath)) {
+		$oConfig = utils::GetConfig();
+		$sSourceDir = $oConfig->Get('source_dir'); // generated at compile time, works for legacy build with datamodels/1.x
+		// in case module was compiled to symlink, we need to check against real linked path as symlink is resolved
+		$aPossibleBasePaths = [
+			APPROOT.$sSourceDir,
+			APPROOT.'extensions',
+			APPROOT.'data/'.$sEnvironment.'-modules',
+			APPROOT.'data/downloaded-extensions', // Hub connector
+		];
+	} else {
+		$aPossibleBasePaths = [$sEnvFullPath];
+	}
+	$sTargetPage = CheckPageExists($sPageEnvFullPath, $aPossibleBasePaths);
 }
-$sTargetPage = CheckPageExists($sPageEnvFullPath, $aPossibleBasePaths);
 
 if ($sTargetPage === false) {
 	// Do not recall the page parameters (security takes precedence)
