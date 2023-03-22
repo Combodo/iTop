@@ -1649,6 +1649,8 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
  * - Overload the default rendering of an attribute type
  *
  * @since 3.1.0 N°6041
+ *
+ * @experimental Form / Field / Renderer should be used in more places in next iTop releases, which may introduce major API changes
  */
 interface iFieldRendererMappingsExtension
 {
