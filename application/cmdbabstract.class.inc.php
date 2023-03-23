@@ -2516,6 +2516,7 @@ HTML;
 						/** @var \Combodo\iTop\Form\Field\Field $sFormFieldClass */
 						$sFormFieldClass = $oAttDef::GetFormFieldClass();
 						$oAttDefField = new $sFormFieldClass($sAttCode.'_field');
+						$oAttDefField->SetCurrentValue($value); // value transformation might be delegated in a custom FieldRenderer
 						$oForm->AddField($oAttDefField);
 					}
 
@@ -4273,6 +4274,7 @@ HTML;
 				break;
 
 			case 'CustomFields':
+			case 'FormField':
 				$value = $oAttDef->ReadValueFromPostedForm($this, $sFormPrefix);
 				break;
 
