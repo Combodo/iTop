@@ -2076,8 +2076,8 @@ HTML
 			$sWizardHelperJsVarName = "oWizardHelper{$sFormPrefix}";
 			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode);
 
-			switch ($oAttDef->GetEditClass())
-			{
+			$sAttDefEditClass = $oAttDef->GetEditClass();
+			switch ($sAttDefEditClass) {
 				case 'Date':
 					$sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
 					$aEventsList[] = 'validate';
@@ -2502,37 +2502,52 @@ HTML;
 					break;
 
 				case 'CustomFields':
+				case 'FormField':
+					if ($sAttDefEditClass === 'CustomFields') {
+						/** @var \ormCustomFieldsValue $value */
+						$oForm = $value->GetForm($sFormPrefix);
+					} else if ($sAttDefEditClass === 'FormField') {
+						$sFormId = 'ff_'.$oAttDef->GetCode();
+						if (false === is_null($sFormPrefix)) {
+							$sFormId = $sFormPrefix.$sFormId;
+						}
+
+						$oForm = new Combodo\iTop\Form\Form($sFormId);
+						/** @var \Combodo\iTop\Form\Field\Field $sFormFieldClass */
+						$sFormFieldClass = $oAttDef::GetFormFieldClass();
+						$oAttDefField = new $sFormFieldClass($sAttCode.'_field');
+						$oForm->AddField($oAttDefField);
+					}
+
+					$oFormRenderer = new ConsoleFormRenderer($oForm);
+					$aFormRenderedContent = $oFormRenderer->Render();
+
+					$aFieldSetOptions = array(
+						'field_identifier_attr' => 'data-field-id',
+						// convention: fields are rendered into a div and are identified by this attribute
+						'fields_list'           => $aFormRenderedContent,
+						'fields_impacts'        => $oForm->GetFieldsImpacts(),
+						'form_path'             => $oForm->GetId(),
+					);
+					$sFieldSetOptions = json_encode($aFieldSetOptions);
+					$aFormHandlerOptions = array(
+						'wizard_helper_var_name' => 'oWizardHelper'.$sFormPrefix,
+						'custom_field_attcode'   => $sAttCode,
+					);
+					$sFormHandlerOptions = json_encode($aFormHandlerOptions);
+
 					$sHTMLValue .= '<div id="'.$iId.'_console_form">';
 					$sHTMLValue .= '<div id="'.$iId.'_field_set">';
 					$sHTMLValue .= '</div></div>';
 					$sHTMLValue .= '<div>'.$sReloadSpan.'</div>'; // No validation span for this one: it does handle its own validation!
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
-
-					/** @var \ormCustomFieldsValue $value */
-					$oForm = $value->GetForm($sFormPrefix);
-					$oPredefQueryRenderer = new ConsoleFormRenderer($oForm);
-					$aRenderRes = $oPredefQueryRenderer->Render();
-
-					$aFieldSetOptions = array(
-						'field_identifier_attr' => 'data-field-id',
-						// convention: fields are rendered into a div and are identified by this attribute
-						'fields_list' => $aRenderRes,
-						'fields_impacts' => $oForm->GetFieldsImpacts(),
-						'form_path' => $oForm->GetId(),
-					);
-					$sFieldSetOptions = json_encode($aFieldSetOptions);
-					$aFormHandlerOptions = array(
-						'wizard_helper_var_name' => 'oWizardHelper'.$sFormPrefix,
-						'custom_field_attcode' => $sAttCode,
-					);
-					$sFormHandlerOptions = json_encode($aFormHandlerOptions);
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_handler.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/console_form_handler.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_set.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_field.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/subform_field.js');
 					$oPage->add_ready_script(
-<<<JS
+						<<<JS
 $('#{$iId}_field_set').field_set($sFieldSetOptions);
 
 $('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);
@@ -2549,7 +2564,8 @@ $('#{$iId}').on('validate', function(evt, sFormId) {
     return ValidateCustomFields('$iId', sFormId); // Custom validation function
 });
 JS
-);
+					);
+
 					break;
 
 				case 'Set':

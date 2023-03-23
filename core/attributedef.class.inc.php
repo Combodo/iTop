@@ -13122,6 +13122,7 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		try
 		{
+			/** @var \ormCustomFieldsValue $value */
 			$sRet = $value->GetAsHTML($bLocalize);
 		} catch (Exception $e)
 		{
