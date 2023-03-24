@@ -151,7 +151,10 @@ class StaticTable extends UIContentBlock
 		return "$.post('".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=refreshDashletList', ".json_encode($aParams).", 
 					function (data) {
 						$('#".$this->sId."').DataTable().clear();
-	                    $('#".$this->sId."').dataTable().fnAddData(data);
+						if (data.length>0)
+	                    {
+			                    $('#".$this->sId."').dataTable().fnAddData(data);
+						}
 					});";
 	}
 
