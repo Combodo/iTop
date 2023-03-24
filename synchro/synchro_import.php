@@ -449,6 +449,7 @@ try
 		if ($sInputColumn === 'primary_key')
 		{
 			$iPrimaryKeyCol = $iFieldId;
+			$aIsBinaryToTransform[$iFieldId] = false;
 			continue;
 		}
 		if (!array_key_exists($sInputColumn, $aColumns))
