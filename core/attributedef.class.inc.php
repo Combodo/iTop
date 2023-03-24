@@ -1325,6 +1325,62 @@ abstract class AttributeDefinition
 		return $sResult;
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @param mixed $original
+	 * @param mixed $value
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException if cannot create object
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 *
+	 * @uses GetChangeRecordAdditionalData
+	 * @uses GetChangeRecordClassName
+	 *
+	 * @since 3.1.0 N°6042
+	 */
+	public function RecordAttChange(DBObject $oObject, $original, $value): void
+	{
+		/** @var CMDBChangeOp $oMyChangeOp */
+		$oMyChangeOp = MetaModel::NewObject($this->GetChangeRecordClassName());
+		$oMyChangeOp->Set("objclass", get_class($oObject));
+		$oMyChangeOp->Set("objkey", $oObject->GetKey());
+		$oMyChangeOp->Set("attcode", $this->GetCode());
+
+		$this->GetChangeRecordAdditionalData($oMyChangeOp, $oObject, $original, $value);
+
+		$oMyChangeOp->DBInsertNoReload();
+	}
+
+	/**
+	 * Add attribute specific information in the {@link \CMDBChangeOp} instance
+	 *
+	 * @param \CMDBChangeOp $oMyChangeOp
+	 * @param \DBObject $oObject
+	 * @param $original
+	 * @param $value
+	 *
+	 * @return void
+	 * @used-by RecordAttChange
+	 */
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		$oMyChangeOp->Set("oldvalue", $original);
+		$oMyChangeOp->Set("newvalue", $value);
+	}
+
+	/**
+	 * @return string name of the children of {@link \CMDBChangeOp} class to use for the history record
+	 * @used-by RecordAttChange
+	 */
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeScalar::class;
+	}
 
 	/**
 	 * Parses a string to find some smart search patterns and build the corresponding search/OQL condition
@@ -3398,6 +3454,16 @@ class AttributeBoolean extends AttributeInteger
 
 		return $value;
 	}
+
+	public function RecordAttChange(DBObject $oObject, $original, $value): void
+	{
+		parent::RecordAttChange($oObject, $original ? 1 : 0, $value ? 1 : 0);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeScalar::class;
+	}
 }
 
 /**
@@ -4186,6 +4252,21 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 
 		return $aValues;
 	}
+
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		if (is_null($original)) {
+			$original = '';
+		}
+		$oMyChangeOp->Set("prevstring", $original);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeEncrypted::class;
+	}
+
+
 }
 
 
@@ -4611,6 +4692,22 @@ class AttributeText extends AttributeString
 					$bConvertToPlainText);
 		}
 	}
+
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		/** @noinspection PhpConditionCheckedByNextConditionInspection */
+		if (false === is_null($original) && ($original instanceof ormCaseLog)) {
+			$original = $original->GetText();
+		}
+		$oMyChangeOp->Set("prevdata", $original);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return ($this->GetFormat() === 'html')
+			? CMDBChangeOpSetAttributeHTML::class
+			: CMDBChangeOpSetAttributeText::class;
+	}
 }
 
 /**
@@ -4647,6 +4744,13 @@ class AttributeLongText extends AttributeText
 		// Is there a way to know the current limitation for mysql?
 		// See mysql_field_len()
 		return 65535 * 1024; // Limited... still 64 MB!
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return ($this->GetFormat() === 'html')
+			? CMDBChangeOpSetAttributeHTML::class
+			: CMDBChangeOpSetAttributeLongText::class;
 	}
 }
 
@@ -5084,6 +5188,17 @@ class AttributeCaseLog extends AttributeLongText
 		$oFormField->SetEntries($oObject->Get($this->GetCode())->GetAsArray());
 
 		return $oFormField;
+	}
+
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		/** @var \ormCaseLog $value */
+		$oMyChangeOp->Set("lastentry", $value->GetLatestEntryIndex());
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeCaseLog::class;
 	}
 }
 
@@ -8000,8 +8115,7 @@ class AttributeURL extends AttributeString
 	 */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -8010,6 +8124,11 @@ class AttributeURL extends AttributeString
 		$oFormField->SetTarget($this->Get('target'));
 
 		return $oFormField;
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeURL::class;
 	}
 }
 
@@ -8388,7 +8507,18 @@ class AttributeBlob extends AttributeDefinition
 		return utils::IsNotNullOrEmptyString($proposedValue->GetData()) && utils::IsNotNullOrEmptyString($proposedValue->GetFileName());
 	}
 
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		if (is_null($original)) {
+			$original = new ormDocument();
+		}
+		$oMyChangeOp->Set("prevdata", $original);
+	}
 
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeBlob::class;
+	}
 }
 
 /**
@@ -9429,7 +9559,27 @@ class AttributeStopWatch extends AttributeDefinition
 		return true;
 	}
 
+	public function RecordAttChange(DBObject $oObject, $original, $value): void
+	{
+		// Stop watches - record changes for sub items only (they are visible, the rest is not visible)
+		//
+		foreach ($this->ListSubItems() as $sSubItemAttCode => $oSubItemAttDef) {
+			$item_value = $this->GetSubItemValue($oSubItemAttDef->Get('item_code'), $value, $oObject);
+			$item_original = $this->GetSubItemValue($oSubItemAttDef->Get('item_code'), $original, $oObject);
 
+			if ($item_value != $item_original) {
+				$oMyChangeOp = MetaModel::NewObject(CMDBChangeOpSetAttributeScalar::class);
+				$oMyChangeOp->Set("objclass", get_class($oObject));
+				$oMyChangeOp->Set("objkey", $oObject->GetKey());
+				$oMyChangeOp->Set("attcode", $sSubItemAttCode);
+
+				$oMyChangeOp->Set("oldvalue", $item_original);
+				$oMyChangeOp->Set("newvalue", $item_value);
+
+				$oMyChangeOp->DBInsertNoReload();
+			}
+		}
+	}
 }
 
 /**
@@ -9926,12 +10076,25 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 			if (is_string($proposedValue)) {
 				return utils::IsNotNullOrEmptyString($proposedValue);
 			}
+
 			return parent::HasAValue($proposedValue);
 		}
 
 		return $proposedValue->IsEmpty() === false;
 	}
 
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		if (is_null($original)) {
+			$original = '';
+		}
+		$oMyChangeOp->Set("prev_pwd", $original);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeOneWayPassword::class;
+	}
 }
 
 // Indexed array having two dimensions
@@ -10703,6 +10866,21 @@ HTML;
 	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SetField';
+	}
+
+	public function RecordAttChange(DBObject $oObject, $original, $value): void
+	{
+		/** @var \ormSet $original */
+		/** @var \ormSet $value */
+		parent::RecordAttChange($oObject,
+			implode(' ', $original->GetValues()),
+			implode(' ', $value->GetValues())
+		);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeTagSet::class;
 	}
 }
 
@@ -13255,7 +13433,15 @@ class AttributeCustomFields extends AttributeDefinition
 		return count($proposedValue->GetValues()) > 0;
 	}
 
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		$oMyChangeOp->Set("prevdata", json_encode($original->GetValues()));
+	}
 
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeCustomFields::class;
+	}
 }
 
 class AttributeArchiveFlag extends AttributeBoolean

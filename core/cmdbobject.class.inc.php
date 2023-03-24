@@ -344,211 +344,25 @@ abstract class CMDBObject extends DBObject
 	 * @param $original Original value
 	 * @param $value Current value
 	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @throws \Exception
+	 * @since 3.1.0 N°6042 now delegates history record creation to AttributeDefinition
+	 *
+	 * @uses \AttributeDefinition::RecordAttChange()
 	 */
 	protected function RecordAttChange($sAttCode, $original, $value)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		if ($oAttDef->IsExternalField()) return;
-		if ($oAttDef->IsLinkSet()) return;
-		if ($oAttDef->GetTrackingLevel() == ATTRIBUTE_TRACKING_NONE) return;
+		if ($oAttDef::IsExternalField()) {
+			return;
+		}
+		if ($oAttDef::IsLinkSet()) {
+			return;
+		}
+		if ($oAttDef->GetTrackingLevel() === ATTRIBUTE_TRACKING_NONE) {
+			return;
+		}
 
-		if ($oAttDef instanceOf AttributeOneWayPassword)
-		{
-			// One Way encrypted passwords' history is stored -one way- encrypted
-			$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeOneWayPassword");
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-
-			if (is_null($original))
-			{
-				$original = '';
-			}
-			$oMyChangeOp->Set("prev_pwd", $original);
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
-		elseif ($oAttDef instanceOf AttributeEncryptedString)
-		{
-			// Encrypted string history is stored encrypted
-			$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeEncrypted");
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-
-			if (is_null($original))
-			{
-				$original = '';
-			}
-			$oMyChangeOp->Set("prevstring", $original);
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
-		elseif ($oAttDef instanceOf AttributeBlob)
-		{
-			// Data blobs
-			$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeBlob");
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-
-			if (is_null($original))
-			{
-				$original = new ormDocument();
-			}
-			$oMyChangeOp->Set("prevdata", $original);
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
-		elseif ($oAttDef instanceOf AttributeStopWatch)
-		{
-			// Stop watches - record changes for sub items only (they are visible, the rest is not visible)
-			//
-			foreach ($oAttDef->ListSubItems() as $sSubItemAttCode => $oSubItemAttDef)
-			{
-				$item_value = $oAttDef->GetSubItemValue($oSubItemAttDef->Get('item_code'), $value, $this);
-				$item_original = $oAttDef->GetSubItemValue($oSubItemAttDef->Get('item_code'), $original, $this);
-
-				if ($item_value != $item_original)
-				{
-					$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
-					$oMyChangeOp->Set("objclass", get_class($this));
-					$oMyChangeOp->Set("objkey", $this->GetKey());
-					$oMyChangeOp->Set("attcode", $sSubItemAttCode);
-
-					$oMyChangeOp->Set("oldvalue", $item_original);
-					$oMyChangeOp->Set("newvalue", $item_value);
-					$iId = $oMyChangeOp->DBInsertNoReload();
-				}
-			}
-		}
-		elseif ($oAttDef instanceOf AttributeCaseLog)
-		{
-			$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeCaseLog");
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-
-			$oMyChangeOp->Set("lastentry", $value->GetLatestEntryIndex());
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
-		elseif ($oAttDef instanceOf AttributeLongText)
-		{
-			// Data blobs
-			if ($oAttDef->GetFormat() == 'html')
-			{
-				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeHTML");
-			}
-			else
-			{
-				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeLongText");
-			}
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-
-			if (!is_null($original) && ($original instanceof ormCaseLog))
-			{
-				$original = $original->GetText();
-			}
-			$oMyChangeOp->Set("prevdata", $original);
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
-		elseif ($oAttDef instanceOf AttributeText)
-		{
-			// Data blobs
-			if ($oAttDef->GetFormat() == 'html')
-			{
-				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeHTML");
-			}
-			else
-			{
-				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeText");
-			}
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-
-			if (!is_null($original) && ($original instanceof ormCaseLog))
-			{
-				$original = $original->GetText();
-			}
-			$oMyChangeOp->Set("prevdata", $original);
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
-		elseif ($oAttDef instanceOf AttributeBoolean)
-		{
-			$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-			$oMyChangeOp->Set("oldvalue", $original ? 1 : 0);
-			$oMyChangeOp->Set("newvalue", $value ? 1 : 0);
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
-		elseif ($oAttDef instanceOf AttributeHierarchicalKey)
-		{
-			// Hierarchical keys
-			//
-			$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-			$oMyChangeOp->Set("oldvalue", $original);
-			$oMyChangeOp->Set("newvalue", $value);
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
-		elseif ($oAttDef instanceOf AttributeCustomFields)
-		{
-			// Custom fields
-			//
-			$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeCustomFields");
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-			$oMyChangeOp->Set("prevdata", json_encode($original->GetValues()));
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
-		elseif ($oAttDef instanceOf AttributeURL)
-		{
-			// URLs
-			//
-			$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeURL");
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-			$oMyChangeOp->Set("oldvalue", $original);
-			$oMyChangeOp->Set("newvalue", $value);
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
-        elseif ($oAttDef instanceOf AttributeSet)
-        {
-            // Tag Set
-            //
-            $oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeTagSet");
-            $oMyChangeOp->Set("objclass", get_class($this));
-            $oMyChangeOp->Set("objkey", $this->GetKey());
-            $oMyChangeOp->Set("attcode", $sAttCode);
-            $oMyChangeOp->Set("oldvalue", implode(' ', $original->GetValues()));
-            $oMyChangeOp->Set("newvalue", implode(' ', $value->GetValues()));
-            $iId = $oMyChangeOp->DBInsertNoReload();
-        }
-        else
-		{
-			// Scalars
-			//
-			$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
-			$oMyChangeOp->Set("objclass", get_class($this));
-			$oMyChangeOp->Set("objkey", $this->GetKey());
-			$oMyChangeOp->Set("attcode", $sAttCode);
-			$oMyChangeOp->Set("oldvalue", $original);
-			$oMyChangeOp->Set("newvalue", $value);
-			$iId = $oMyChangeOp->DBInsertNoReload();
-		}
+		$oAttDef->RecordAttChange($this, $original, $value);
 	}
 
 	/**
