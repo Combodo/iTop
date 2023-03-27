@@ -149,7 +149,7 @@ abstract class BulkExport
 		$this->oSearch = null;
 		$this->iChunkSize = 0;
 		$this->sFormatCode = null;
-		$this->aStatusInfo = array();
+		$this->aStatusInfo = ['show_obsolete_data' => utils::ShowObsoleteData()];
 		$this->oBulkExportResult = null;
 		$this->sTmpFile = '';
 		$this->bLocalizeOutput = false;
@@ -203,15 +203,17 @@ abstract class BulkExport
 		if ($oInfo && ($oInfo->Get('user_id') == UserRights::GetUserId()))
 		{
 			$sFormatCode = $oInfo->Get('format');
-			$oSearch = DBObjectSearch::unserialize($oInfo->Get('search'));
+			$aInfos = json_decode($oInfo->Get('status_info'),true);
 
+			$oSearch = DBObjectSearch::unserialize($oInfo->Get('search'));
+			$oSearch->SetShowObsoleteData($aInfos['show_obsolete_data']);
 			$oBulkExporter = self::FindExporter($sFormatCode, $oSearch);
 			if ($oBulkExporter)
 			{
 				$oBulkExporter->SetFormat($sFormatCode);
 				$oBulkExporter->SetObjectList($oSearch);
 				$oBulkExporter->SetChunkSize($oInfo->Get('chunk_size'));
-				$oBulkExporter->SetStatusInfo(json_decode($oInfo->Get('status_info'), true));
+				$oBulkExporter->SetStatusInfo($aInfos);
 
                 $oBulkExporter->SetLocalizeOutput($oInfo->Get('localize_output'));
 
@@ -289,6 +291,7 @@ abstract class BulkExport
 	 */
 	public function SetObjectList(DBSearch $oSearch)
 	{
+		$oSearch->SetShowObsoleteData($this->aStatusInfo['show_obsolete_data']);
 		$this->oSearch = $oSearch;
 	}
 	
