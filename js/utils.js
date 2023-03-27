@@ -794,8 +794,12 @@ const CombodoTooltip = {
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
 		const oOptions = {};
 
-		// First, check if the tooltip isn't already instantiated
-		if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
+		// First, check if the jQuery element actually represent DOM elements
+		if (oElem.length === 0) {
+			return false;
+		}
+		// Then, check if the tooltip isn't already instantiated
+		else if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
 			return false;
 		}
 		else if((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === true) && (oElem[0]._tippy !== undefined)){
