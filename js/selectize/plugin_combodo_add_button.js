@@ -28,7 +28,7 @@ Selectize.define("combodo_add_button", function (aOptions) {
 			label: "+",
 			html: function () {
 				return (
-					'<a class="' + this.className + ' fas fa-plus" title="' + this.title + '"></a>'
+					'<a class="' + this.className + '"><i class="fas fa-plus" title="' + this.title + '"/></a>'
 				);
 			},
 		},

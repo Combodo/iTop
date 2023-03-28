@@ -704,80 +704,12 @@ try
 				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
-
+			
+			/** @deprecated 3.1.0 Use the "object.new" route instead */
+			// Kept for backward compatibility
 			case 'new': // Form to create a new object
-				$oP->DisableBreadCrumb();
-				$sClass = utils::ReadParam('class', '', false, 'class');
-				$sStateCode = utils::ReadParam('state', '');
-				$bCheckSubClass = utils::ReadParam('checkSubclass', true);
-				if ( empty($sClass) )
-				{
-					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
-				}
-
-	/*
-				$aArgs = utils::ReadParam('default', array(), false, 'raw_data');
-				$aContext = $oAppContext->GetAsHash();
-				foreach( $oAppContext->GetNames() as $key)
-				{
-					$aArgs[$key] = $oAppContext->GetCurrentValue($key);
-				}
-	*/
-				// If the specified class has subclasses, ask the user an instance of which class to create
-				$aSubClasses = MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
-				$aPossibleClasses = array();
-				$sRealClass = '';
-				if ($bCheckSubClass)
-				{
-					foreach($aSubClasses as $sCandidateClass)
-					{
-						if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
-						{
-							$aPossibleClasses[$sCandidateClass] = MetaModel::GetName($sCandidateClass);
-						}
-					}
-					// Only one of the subclasses can be instantiated...
-					if (count($aPossibleClasses) == 1)
-					{
-						$aKeys = array_keys($aPossibleClasses);
-						$sRealClass = $aKeys[0];
-					}
-				}
-				else
-				{
-					$sRealClass = $sClass;
-				}
-
-				if (!empty($sRealClass))
-				{
-					// Set all the default values in an object and clone this "default" object
-					$oObjToClone = MetaModel::NewObject($sRealClass);
-					// 1st - set context values
-					$oAppContext->InitObjectFromContext($oObjToClone);
-					// 2nd - set values from the page argument 'default'
-					$oObjToClone->UpdateObjectFromArg('default');
-					$aPrefillFormParam = array(
-						'user' => Session::Get('auth_user'),
-						'context' => $oAppContext->GetAsHash(),
-						'default' => utils::ReadParam('default', array(), '', 'raw_data'),
-						'origin' => 'console',
-					);
-					// 3rd - prefill API
-					$oObjToClone->PrefillForm('creation_from_0', $aPrefillFormParam);
-
-					// Display the creation form
-					$sClassLabel = MetaModel::GetName($sRealClass);
-					$sClassIcon = MetaModel::GetClassIcon($sRealClass);
-					$sObjectTmpKey = $oObjToClone->GetKey();
-					$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
-					// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
-					$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
-					cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1, 'keep_source_object' => true)); // wizard_container: Display the title above the form
-				} else {
-					// Select the derived class to create
-					cmdbAbstractObject::DisplaySelectClassToCreate($sClass, $oP, $oAppContext, $aPossibleClasses,['state' => $sStateCode]);
-				}
+				$oController = new ObjectController();
+				$oP = $oController->OperationNew();
 			break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////

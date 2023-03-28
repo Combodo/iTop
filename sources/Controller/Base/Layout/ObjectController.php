@@ -7,9 +7,11 @@
 namespace Combodo\iTop\Controller\Base\Layout;
 
 use AjaxPage;
+use ApplicationContext;
 use ApplicationException;
 use cmdbAbstractObject;
 use CMDBObjectSet;
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -40,6 +42,161 @@ class ObjectController extends AbstractController
 {
 	public const ROUTE_NAMESPACE = 'object';
 
+	/**
+	 * @throws \CoreException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \MySQLException
+	 * @throws \DictExceptionMissingString
+	 * @throws \CoreUnexpectedValue
+	 * @throws \ConfigException
+	 * @throws \ApplicationException
+	 * @throws \MissingQueryArgument
+	 */
+	public function OperationNew()
+	{
+		$bPrintable = utils::ReadParam('printable', '0') === '1';
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$sStateCode = utils::ReadParam('state', '');
+		$bCheckSubClass = utils::ReadParam('checkSubclass', true);
+		$oAppContext = new ApplicationContext();
+		
+		if ($this->IsHandlingXmlHttpRequest()) {
+			$oPage = new AjaxPage('');
+		} else {
+			$oPage = new iTopWebPage('', $bPrintable);
+			$oPage->DisableBreadCrumb();
+			$this->AddRequiredForModificationJsFilesToPage($oPage);
+		}
+
+
+		if (empty($sClass))
+		{
+			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
+		}
+		
+		// If the specified class has subclasses, ask the user an instance of which class to create
+		$aSubClasses = MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
+		$aPossibleClasses = array();
+		$sRealClass = '';
+		if ($bCheckSubClass)
+		{
+			foreach($aSubClasses as $sCandidateClass)
+			{
+				if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
+				{
+					$aPossibleClasses[$sCandidateClass] = MetaModel::GetName($sCandidateClass);
+				}
+			}
+			// Only one of the subclasses can be instantiated...
+			if (count($aPossibleClasses) === 1)
+			{
+				$aKeys = array_keys($aPossibleClasses);
+				$sRealClass = $aKeys[0];
+			}
+		}
+		else
+		{
+			$sRealClass = $sClass;
+		}
+
+		if (!empty($sRealClass))
+		{
+			// Set all the default values in an object and clone this "default" object
+			$oObjToClone = MetaModel::NewObject($sRealClass);
+			// 1st - set context values
+			$oAppContext->InitObjectFromContext($oObjToClone);
+			// 2nd - set values from the page argument 'default'
+			$oObjToClone->UpdateObjectFromArg('default');
+			$aPrefillFormParam = array(
+				'user' => Session::Get('auth_user'),
+				'context' => $oAppContext->GetAsHash(),
+				'default' => utils::ReadParam('default', array(), '', 'raw_data'),
+				'origin' => 'console',
+			);
+			// 3rd - prefill API
+			$oObjToClone->PrefillForm('creation_from_0', $aPrefillFormParam);
+
+			// Display the creation form
+			$sClassLabel = MetaModel::GetName($sRealClass);
+			$sClassIcon = MetaModel::GetClassIcon($sRealClass);
+			$sObjectTmpKey = $oObjToClone->GetKey();
+			$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
+			// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
+
+			$aFormExtraParams = array('wizard_container' => 1, 'keep_source_object' => true);
+			
+			if ($this->IsHandlingXmlHttpRequest()) {
+				$aFormExtraParams['js_handlers'] = [];
+				$aFormExtraParams['noRelations'] = true;
+				$aFormExtraParams['hide_transitions'] = true;
+				// Add a random prefix to avoid ID collision for form elements
+				$aFormExtraParams['formPrefix'] = utils::Sanitize(uniqid('', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER).'_';
+				// We display this form in a modal, once we submit (in ajax) we probably want to only close the modal 
+				$aFormExtraParams['js_handlers']['form_on_submit'] =
+					<<<JS
+				event.preventDefault();
+				if(bOnSubmitForm === true)
+				{
+					let oForm = $(this);
+					let sUrl = oForm.attr('action');
+					let sPosting = $.post( sUrl, oForm.serialize());
+
+					/* Alerts the results */
+					sPosting.done(function(data) {
+                        // fire event
+                        oForm.trigger('itop.form.submitted', [data]);
+						if(data.success !== undefined && data.success === true) {
+							oForm.closest('[data-role="ibo-modal"]').dialog('close');
+						}
+						else {
+                            /* We're not in submit anymore */
+                            window.bInSubmit = false;
+                            oForm.attr('data-form-state', 'default');
+                            /* Display error popup */
+							CombodoModal.OpenInformativeModal(data.data.error_message, 'error');
+						}
+					});
+				}
+JS;
+
+
+				$aFormExtraParams['js_handlers']['cancel_button_on_click'] =
+					<<<JS
+				function() {
+					$(this).closest('[data-role="ibo-modal"]').dialog('close');
+				};
+JS;
+			} else {
+				$oPage->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
+				$oPage->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
+			}
+			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObjToClone, array(), $aFormExtraParams);
+		} else {
+			if ($this->IsHandlingXmlHttpRequest()) {
+				$oClassForm = cmdbAbstractObject::DisplayFormBlockSelectClassToCreate($sClass, MetaModel::GetName($sClass), $oAppContext, $aPossibleClasses, ['state' => $sStateCode]);
+				$sCurrentUrl = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php?route=object.new';
+				$oClassForm->SetOnSubmitJsCode(
+					<<<JS
+					let me = this;
+					let aParam = {};
+					aParam['class'] = $(this).find('[name="class"]').val();
+					let sPosting = $.post('$sCurrentUrl', aParam);
+					sPosting.done(function(data){
+                        $(me).closest('[data-role="ibo-modal"]').html(data);
+                       	$(me).closest('[data-role="ibo-modal"]').dialog({ position: { my: "center", at: "center", of: window }});;
+					});
+                    return false;
+JS
+				);
+				$oPage->AddUiBlock($oClassForm);
+			}
+			else{
+				cmdbAbstractObject::DisplaySelectClassToCreate($sClass, $oPage, $oAppContext, $aPossibleClasses,['state' => $sStateCode]);
+			}
+		}
+		return $oPage;
+	}
+	
 	/**
 	 * @return \iTopWebPage|\AjaxPage Object edit form in its webpage
 	 * @throws \ApplicationException
@@ -603,7 +760,7 @@ JS;
 
 		// Retrieve query params
 		$sObjectClass = utils::ReadParam('object_class', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
-		$sObjectKey = utils::ReadParam('object_key', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
+		$sObjectKey = utils::ReadParam('object_key', 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 
 		// Retrieve object
 		try {

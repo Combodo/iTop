@@ -270,7 +270,7 @@ JS
 		try {
 			$oObject = MetaModel::GetObject($sObjectClass, $sObjectKey);
 			$sLinkKey = $oObject->GetKey();
-			if ($sRemoteExtKey !== null) {
+			if (!utils::IsNullOrEmptyString($sRemoteExtKey)) {
 				$oObject = MetaModel::GetObject($sRemoteClass, $oObject->Get($sRemoteExtKey));
 			}
 			$aObjectData = ObjectRepository::ConvertObjectToArray($oObject, $sObjectClass);

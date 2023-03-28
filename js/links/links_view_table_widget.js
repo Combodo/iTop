@@ -34,7 +34,7 @@ $(function()
 			const me = this;
 
 			// link object deletion
-			CombodoLinkSetWorker.DeleteLinkedObject(this.options.link_class, sLinkedObjectKey, function (data) {
+			iTopLinkSetWorker.DeleteLinkedObject(this.options.link_class, sLinkedObjectKey, function (data) {
 				if (data.data.success === true) {
 					me.$tableSettingsDialog.DataTableSettings('DoRefresh');
 				} else {
@@ -55,7 +55,7 @@ $(function()
 			const me = this;
 
 			// link object unlink
-			CombodoLinkSetWorker.DetachLinkedObject(this.options.link_class, sLinkedObjectKey, this.options.external_key_to_me,  function (data) {
+			iTopLinkSetWorker.DetachLinkedObject(this.options.link_class, sLinkedObjectKey, this.options.external_key_to_me,  function (data) {
 				if (data.data.success === true) {
 					me.$tableSettingsDialog.DataTableSettings('DoRefresh');
 				} else {
@@ -82,7 +82,7 @@ $(function()
 			const sHostObjectId = $Table.closest('[data-role="ibo-object-details"]').attr('data-object-id');
 
 			// link object creation
-			CombodoLinkSetWorker.CreateLinkedObject(sClass, sAttCode, sHostObjectClass, sHostObjectId, function(){
+			iTopLinkSetWorker.CreateLinkedObject(sClass, sAttCode, sHostObjectClass, sHostObjectId, function(){
 				$(this).find("form").remove();
 				$(this).dialog('destroy');
 			},function (event, data) {
@@ -102,7 +102,7 @@ $(function()
 			const me = this;
 
 			// link object modification
-			ObjectWorker.ModifyObject(this.options.link_class, sLinkedObjectKey, function () {
+			iTopObjectWorker.ModifyObject(this.options.link_class, sLinkedObjectKey, function () {
 				$(this).find("form").remove();
 				$(this).dialog('destroy');
 			}, function(event, data){
