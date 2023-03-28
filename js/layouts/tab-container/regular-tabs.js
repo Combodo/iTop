@@ -124,5 +124,15 @@ $.widget( "itop.regulartabs", $.ui.tabs, {
 			this._off( prevPanels.not( this.panels ) );
 		}
 	},
-
+	// JQuery UI overload
+	disable: function(index){
+		let panel = this._getPanelForTab( index );
+		panel.css({display: 'none'});
+		this._super( index );        
+	},
+	enable: function(index) {
+		let panel = this._getPanelForTab( index );
+		panel.css({display: 'block'});
+		this._super( index );  
+	},
 });
