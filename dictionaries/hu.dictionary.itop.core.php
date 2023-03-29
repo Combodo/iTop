@@ -26,7 +26,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Core:DeletedObjectTip' => 'A %1$s objektum törölve (%2$s)',
 
     'Core:UnknownObjectLabel' => 'Objektum nem található (osztály: %1$s, id: %2$d)',
-    'Core:UnknownObjectTip' => 'Az objektumott nem sikerült megtalálni. Lehet, hogy már törölték egy ideje, és a naplót azóta törölték.',
+    'Core:UnknownObjectTip' => 'Az objektumot nem sikerült megtalálni. Lehet, hogy már törölték egy ideje, és a naplót azóta törölték.',
 
     'Core:UniquenessDefaultError' => 'Egyediségi szabály %1$s hibás',
     'Core:CheckConsistencyError' => 'A következetességi szabályok be nem tartása: %1$s',
@@ -493,7 +493,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:Action/Attribute:status+' => 'Ez az állapot határozza meg az akció viselkedését',
     'Class:Action/Attribute:status/Value:test' => 'Tesztelés alatt',
     'Class:Action/Attribute:status/Value:test+' => '',
-    'Class:Action/Attribute:status/Value:enabled' => 'Használatban',
+    'Class:Action/Attribute:status/Value:enabled' => 'Bevezetve',
     'Class:Action/Attribute:status/Value:enabled+' => '',
     'Class:Action/Attribute:status/Value:disabled' => 'Inaktív',
     'Class:Action/Attribute:status/Value:disabled+' => '',
@@ -824,7 +824,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:SynchroDataSource' => 'Szinkron adatforrás',
     'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Megvalósítás',
     'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Elavult',
-    'Class:SynchroDataSource/Attribute:status/Value:production' => 'Használatban',
+    'Class:SynchroDataSource/Attribute:status/Value:production' => 'Bevezetve',
     'Class:SynchroDataSource/Attribute:scope_restriction' => 'Tartalomszűkítés',
     'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Használja az attribútumokat',
     'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Használja a primary_key mezőt',
@@ -992,7 +992,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 // Class: TagSetFieldData
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-    'Class:TagSetFieldData' => '%2$s az %1$s osztályhoz',
+    'Class:TagSetFieldData' => '%2$s a %1$s osztályhoz',
     'Class:TagSetFieldData+' => '',
 
     'Class:TagSetFieldData/Attribute:code' => 'Kód',
