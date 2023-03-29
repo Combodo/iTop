@@ -247,6 +247,26 @@ class DBBackup
 			SetupUtils::copydir($sExtraDir, $sFile);
 			$aRet[] = $sFile;
 		}
+		$aExtraFiles = MetaModel::GetModuleSetting('itop-backup', 'extra_files', []);
+		foreach($aExtraFiles as $sExtraFileOrDir)
+		{
+			$sExtraFullPath = APPROOT.'/'.$sExtraFileOrDir;
+			if (is_dir($sExtraFullPath))
+			{
+				$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
+				$this->LogInfo("backup: adding directory '$sExtraFileOrDir'");
+				SetupUtils::copydir($sExtraFullPath, $sFile);
+				$aRet[] = $sFile;
+			}
+			elseif (file_exists($sExtraFullPath))
+			{
+				$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
+				$this->LogInfo("backup: adding file '$sExtraFileOrDir'");
+				@mkdir(dirname($sFile), 0755, true);
+				copy($sExtraFullPath, $sFile);
+				$aRet[] = $sFile;
+			}
+		}
 		$sDataFile = $sTmpFolder.'/itop-dump.sql';
 		$this->DoBackup($sDataFile);
 		$aRet[] = $sDataFile;
