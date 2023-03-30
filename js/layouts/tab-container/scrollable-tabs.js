@@ -379,13 +379,14 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 	},
 	// JQuery UI overload
 	disable: function(index){
-		let panel = this._getPanelForTab( this.tabs[index] );
-		panel.css({display: 'none'});
+		const panel = this._getPanelForTab( this.tabs[index] );
+		panel.hide();
 		this._super( index );        
 	},
+	// JQuery UI overload
 	enable: function(index) {
-		let panel = this._getPanelForTab( this.tabs[index] );
-		panel.css({display: 'block'});
+		const panel = this._getPanelForTab( this.tabs[index] );
+		panel.show();
 		this._super( index );  
 	},
 });
