@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @since 3.1 N°4762
+ * @since 3.1.0 N°4762
  */
 class ParentMenuNodeCompiler
 {
@@ -10,65 +10,37 @@ class ParentMenuNodeCompiler
 
 	public static $bUseLegacyMenuCompilation = false;
 
-	/**
-	 * @var MFCompiler
-	 */
+	/** @var MFCompiler */
 	private $oMFCompiler;
 
-	/**
-	 * admin menus declaration lines: result of module menu compilation
-	 * @var array
-	 */
+	/** @var array Admin menus declaration lines: result of module menu compilation */
 	private $aMenuLinesForAdmins = [];
 
-	/**
-	 * non-admin menus declaration lines: result of module menu compilation
-	 * @var array
-	 */
+	/** @var array Non-admin menus declaration lines: result of module menu compilation */
 	private $aMenuLinesForAll = [];
 
-	/**
-	 * use to handle menu group compilation recurring algorithm
-	 * @var array
-	 */
+	/** @var array Use to handle menu group compilation recurring algorithm */
 	private $aMenuProcessStatus = [];
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	private $aMenuNodes = [];
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	private $aMenusByModule = [];
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	private $aMenusToLoadByModule = [];
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	private $aParentMenusByModule = [];
 
-	/**
-	 * used by overall algo
-	 * @var array
-	 */
+	/** @var array Used by overall algo */
 	private $aParentMenuNodes = [];
 
-	/**
-	 * used by new algo
-	 * @var array
-	 */
+	/** @var array Used by new algo */
 	private $aParentAdminMenus = [];
 
-	/**
-	 * used by overall algo
-	 * @var array
-	 */
+	/** @var array Used by overall algo */
 	private $aParentModuleRootDirs = [];
 
 	public function __construct(MFCompiler $oMFCompiler) {
@@ -80,11 +52,11 @@ class ParentMenuNodeCompiler
 	}
 
 	/**
-	 * @param \ModelFactory $oFactory
 	 * Initialize menu nodes arrays
+	 * @param \ModelFactory $oFactory
 	 * @return void
 	 */
-	public function LoadXmlMenus(\ModelFactory $oFactory) : void {
+	public function LoadXmlMenus(\ModelFactory $oFactory): void {
 		foreach ($oFactory->GetNodes('menus/menu') as $oMenuNode) {
 			$sMenuId = $oMenuNode->getAttribute('id');
 			$this->aMenuNodes[$sMenuId] = $oMenuNode;
@@ -95,11 +67,11 @@ class ParentMenuNodeCompiler
 	}
 
 	/**
-	 * @param $aModules
 	 * Initialize arrays related to parent/child menus
+	 * @param $aModules
 	 * @return void
 	 */
-	public function LoadModuleMenuInfo($aModules) : void
+	public function LoadModuleMenuInfo($aModules): void
 	{
 		foreach ($aModules as $foo => $oModule) {
 			$sModuleRootDir = $oModule->GetRootDir();
@@ -155,7 +127,7 @@ class ParentMenuNodeCompiler
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function CompileModuleMenus(MFModule $oModule, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP = null) : void
+	public function CompileModuleMenus(MFModule $oModule, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP = null): void
 	{
 		$this->aMenuLinesForAdmins = [];
 		$this->aMenuLinesForAll = [];
@@ -229,7 +201,7 @@ class ParentMenuNodeCompiler
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function CompileParentMenuNode(string $sMenuId, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP = null) : void
+	public function CompileParentMenuNode(string $sMenuId, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP = null): void
 	{
 		$oMenuNode = $this->aParentMenuNodes[$sMenuId];
 		$sStatus = array_key_exists($sMenuId, $this->aMenuProcessStatus) ? $this->aMenuProcessStatus[$sMenuId] : null;
@@ -268,7 +240,7 @@ class ParentMenuNodeCompiler
 		$this->aMenuProcessStatus[$sMenuId] = self::COMPILED;
 	}
 
-	public function GetMenusByModule(string $sModuleName) : ?array
+	public function GetMenusByModule(string $sModuleName): ?array
 	{
 		if (array_key_exists($sModuleName, $this->aMenusByModule)) {
 			return $this->aMenusByModule[$sModuleName];
