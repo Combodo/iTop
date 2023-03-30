@@ -953,11 +953,11 @@ $(function()
 					'json'
 					)
 					.fail(function (oXHR, sStatus, sErrorThrown) {
-						CombodoModal.OpenInformativeModal(sErrorThrown, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+						CombodoModal.OpenErrorModal(sErrorThrown);
 					})
 					.done(function (oData) {
 						if (false === oData.data.success) {
-							CombodoModal.OpenInformativeModal(oData.data.error_message, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+							CombodoModal.OpenErrorModal(oData.data.error_message);
 							return false;
 						}
 
@@ -1140,7 +1140,7 @@ $(function()
 									sNewLockStatus = me.enums.lock_status.locked_by_someone_else;
 								} else if ('expired' === oData.operation) {
 									sNewLockStatus = me.enums.lock_status.unknown;
-									CombodoModal.OpenInformativeModal(oData.popup_message, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+									CombodoModal.OpenErrorModal(oData.popup_message);
 								}
 							} else {
 								sNewLockStatus = me.enums.lock_status.locked_by_myself;
@@ -1389,11 +1389,11 @@ $(function()
 					'json'
 					)
 					.fail(function (oXHR, sStatus, sErroThrown) {
-						CombodoModal.OpenInformativeModal(sErrorThrown, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+						CombodoModal.OpenErrorModal(sErrorThrown);
 					})
 					.done(function (oData) {
 						if (false === oData.data.success) {
-							CombodoModal.OpenInformativeModal(oData.data.error_message, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+							CombodoModal.OpenErrorModal(oData.data.error_message);
 							return false;
 						}
 

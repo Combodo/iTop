@@ -553,7 +553,7 @@ function ExportInitButton(sSelector) {
 				var aMessages = $('#export-form').data('validation_messages');
 
 				if (aMessages.length > 0) {
-					CombodoModal.OpenInformativeModal(aMessages.join(''), CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+					CombodoModal.OpenErrorModal(aMessages.join(''));
 					return;
 				}
 				if ($(this).hasClass('ui-button')) {
@@ -1423,5 +1423,41 @@ let CombodoModal = {
 	OpenInformativeModal: function(sMessage,sSeverity, oOptions) {
 		// Meant for overlaoding
 		CombodoJSConsole.Debug('CombodoModal.OpenInformativeModal not implemented');
-	}
+	},
+
+	/**
+	 * Open a standard informative modal for success messages.
+	 *
+	 * @param sMessage string Informative success message to be displayed in the modal
+	 */
+	OpenSuccessModal: function(sMessage) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_SUCCESS);
+	},
+
+	/**
+	 * Open a standard informative modal for information messages.
+	 *
+	 * @param sMessage string Informative information success to be displayed in the modal
+	 */
+	OpenInformationModal: function(sMessage) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_INFORMATION);
+	},
+
+	/**
+	 * Open a standard informative modal for warning messages.
+	 *
+	 * @param sMessage string Informative warning message to be displayed in the modal
+	 */
+	OpenWarningModal: function(sMessage) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_WARNING);
+	},
+
+	/**
+	 * Open a standard informative error modal for success messages.
+	 *
+	 * @param sMessage string Informative error message to be displayed in the modal
+	 */
+	OpenErrorModal: function(sMessage) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+	},
 };

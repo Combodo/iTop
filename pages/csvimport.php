@@ -1052,16 +1052,16 @@ EOF
 		});
 		if (!bMappingOk)
 		{
-			CombodoModal.OpenInformativeModal('$sAlertIncompleteMapping', CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+			CombodoModal.OpenErrorModal('$sAlertIncompleteMapping');
 		}
 		if (bMultipleMapping)
 		{
-			CombodoModal.OpenInformativeModal('$sAlertMultipleMapping', CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+			CombodoModal.OpenErrorModal('$sAlertMultipleMapping');
 		}
 		if (!bSearchOk)
 		{
 				bResult = false; 
-				CombodoModal.OpenInformativeModal('$sAlertNoSearchCriteria', CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+				CombodoModal.OpenErrorModal('$sAlertNoSearchCriteria');
 		}
 		
 		if (bResult)

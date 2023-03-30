@@ -182,7 +182,7 @@ $('#export-form').on('submit', function() {
 		var sOQL = $('#textarea_oql').val();
 		if (sOQL == '')
 		{
-			CombodoModal.OpenInformativeModal($sJSEmptyOQL, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+			CombodoModal.OpenErrorModal($sJSEmptyOQL);
 			return false;
 		}
 	}
@@ -191,7 +191,7 @@ $('#export-form').on('submit', function() {
 		var sQueryId = $('#select_phrasebook').val();
 		if (sQueryId == '')
 		{
-			CombodoModal.OpenInformativeModal($sJSEmptyQueryId, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+			CombodoModal.OpenErrorModal($sJSEmptyQueryId);
 			return false;
 		}
 	}
