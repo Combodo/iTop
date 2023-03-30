@@ -6045,6 +6045,8 @@ JS
 	 * Check if the event EVENT_DB_LINKS_CHANGED is blocked or not (for bulk operations)
 	 *
 	 * @return bool
+	 *
+	 * @since 3.1.0 N°5906
 	 */
 	final public static function IsEventDBLinksChangedBlocked(): bool
 	{
@@ -6055,6 +6057,8 @@ JS
 	 * Block/unblock the event EVENT_DB_LINKS_CHANGED (the registration of objects on links modifications continues to work)
 	 *
 	 * @param bool $bBlockEventDBLinksChanged
+	 *
+	 * @since 3.1.0 N°5906
 	 */
 	final public static function SetEventDBLinksChangedBlocked(bool $bBlockEventDBLinksChanged): void
 	{

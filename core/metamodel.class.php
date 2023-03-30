@@ -7631,6 +7631,8 @@ abstract class MetaModel
 	 * @param \DBObject $oObject
 	 *
 	 * @return bool true if reentry possible
+	 *
+	 * @since 3.1.0 N°4756
 	 */
 	public static function StartReentranceProtection(DBObject $oObject)
 	{
@@ -7638,9 +7640,17 @@ abstract class MetaModel
 			return false;
 		}
 		self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()] = $oObject;
+
 		return true;
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 *
+	 * @return void
+	 *
+	 * @since 3.1.0 N°4756
+	 */
 	public static function StopReentranceProtection(DBObject $oObject)
 	{
 		if (isset(self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()])) {

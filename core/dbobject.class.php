@@ -5809,12 +5809,20 @@ abstract class DBObject implements iDisplay
 		return $oExpression->Evaluate($aArgs);
 	}
 
-	final public function SetReadOnly($sMessage) {
+	/**
+	 * @since 3.1.0 N°4756
+	 */
+	final public function SetReadOnly($sMessage)
+	{
 		$this->m_bIsReadOnly = true;
 		$this->m_sReadOnlyMessage = $sMessage;
 	}
 
-	final public function SetReadWrite() {
+	/**
+	 * @since 3.1.0 N°4756
+	 */
+	final public function SetReadWrite()
+	{
 		$this->m_bIsReadOnly = false;
 		$this->m_sReadOnlyMessage = '';
 	}
