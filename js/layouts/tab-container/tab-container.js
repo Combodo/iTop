@@ -253,9 +253,9 @@ $(function()
 		        // Prevent anchor default behaviour
 		        oEvent.preventDefault();
 
-		        if (oExtraTabTogglerElem.attr('aria-disabled') === true) {
+		        if (oExtraTabTogglerElem.attr('aria-disabled') === 'true') {
 		            // Corresponding tab is disabled, do nothing			
-		            oEvent.preventStopPropagation();
+		            oEvent.stopPropagation();
 		            return;
 		        }			
 		        // Trigger click event on real tab toggler (the hidden one)
