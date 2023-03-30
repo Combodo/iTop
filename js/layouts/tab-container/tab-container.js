@@ -305,7 +305,7 @@ $(function()
 
                 // Disabled tabs should be disabled in the ExtraTabs list as well
                 let bIsDisabled = false;
-                if (oTabHeaderElem.attr('aria-disabled') == 'true') {
+                if (oTabHeaderElem.attr('aria-disabled') === 'true') {
                     bIsDisabled = true;
                 }
             	// Manually check if the tab header is visible if the info isn't passed
@@ -358,9 +358,19 @@ $(function()
 
 		        return oTabElem.length === 0 ? 0 : oTabElem.prevAll().length;
 	        },
+            /**
+             * @param sId {string} The [data-tab-id] of the tab
+             * @return {Object} The jQuery object representing the tab element
+             *
+             * @private
+             */
             _getTabElementFromTabId: function(sId) {
                 return this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header+'[data-tab-id="'+sId+'"]');
             },
+            /**
+             * @param sId {string} The [data-tab-id] of the tab
+             * @return {Object} The jQuery object representing the tab element
+             */
             disableTab: function(sId){
                const tabsWidget = this.GetTabsWidget();
                const iIdx = this._getTabIndexFromTabId(sId);
@@ -368,6 +378,10 @@ $(function()
                const tabElement = this._getTabElementFromTabId(sId);
                this._updateTabHeaderDisplay(tabElement); 
             },
+            /**
+             * @param sId {string} The [data-tab-id] of the tab
+             * @return {Object} The jQuery object representing the tab element
+             */
             enableTab: function(sId){
                const tabsWidget = this.GetTabsWidget();
                const iIdx = this._getTabIndexFromTabId(sId);
