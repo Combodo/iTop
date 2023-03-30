@@ -15,6 +15,7 @@ $(function()
             css_classes:
             {
             	is_hidden: 'ibo-is-hidden',
+            	is_disabled: 'ibo-is-disabled',
 	            is_transparent: 'ibo-is-transparent',
 	            is_opaque: 'ibo-is-opaque',
 	            is_scrollable: 'ibo-is-scrollable',
@@ -252,6 +253,11 @@ $(function()
 		        // Prevent anchor default behaviour
 		        oEvent.preventDefault();
 
+		        if (oExtraTabTogglerElem.attr('aria-disabled') === true) {
+		            // Corresponding tab is disabled, do nothing			
+		            oEvent.preventStopPropagation();
+		            return;
+		        }			
 		        // Trigger click event on real tab toggler (the hidden one)
 		        const sTargetTabId = oExtraTabTogglerElem.attr('href').replace(/#/, '');
 		        this.element.find(this.js_selectors.tab_header+'[data-tab-id="'+sTargetTabId+'"] '+this.js_selectors.tab_toggler).trigger('click');
@@ -297,21 +303,30 @@ $(function()
             	const sTabId = oTabHeaderElem.attr('data-tab-id');
             	const oMatchingExtraTabElem = this.element.find(this.js_selectors.extra_tab_toggler+'[href="#'+sTabId+'"]');
 
-                // Disabled tabs are never added to the ExtraTabs list
+                // Disabled tabs should be disabled in the ExtraTabs list as well
+                let bIsDisabled = false;
                 if (oTabHeaderElem.attr('aria-disabled') == 'true') {
-                    bIsVisible = true;
+                    bIsDisabled = true;
                 }
             	// Manually check if the tab header is visible if the info isn't passed
             	if (bIsVisible === null) {
-            		bIsVisible = CombodoGlobalToolbox.IsElementVisibleToTheUser(oTabHeaderElem[0], true, 2);
-	            }
+                    bIsVisible = CombodoGlobalToolbox.IsElementVisibleToTheUser(oTabHeaderElem[0], true, 2);
+            	}
 
             	// Hide/show the corresponding extra tab element
-	            if (bIsVisible) {
-		            oMatchingExtraTabElem.addClass(this.css_classes.is_hidden);
-	            } else {
-		            oMatchingExtraTabElem.removeClass(this.css_classes.is_hidden);
-	            }
+            	if (bIsVisible) {
+                    oMatchingExtraTabElem.addClass(this.css_classes.is_hidden);
+            	} else {
+                    oMatchingExtraTabElem.removeClass(this.css_classes.is_hidden);
+            	}
+            	// Enable/disable the corresponding extra tab element
+            	if (bIsDisabled) {
+                    oMatchingExtraTabElem.attr('aria-disabled', 'true');
+                    oMatchingExtraTabElem.addClass(this.css_classes.is_disabled);
+            	} else {
+                    oMatchingExtraTabElem.attr('aria-disabled', 'false');
+                     oMatchingExtraTabElem.removeClass(this.css_classes.is_disabled);
+            	}
             },
 	        // - Update extra tabs list
 	        _updateExtraTabsList: function () {
@@ -343,19 +358,21 @@ $(function()
 
 		        return oTabElem.length === 0 ? 0 : oTabElem.prevAll().length;
 	        },
-            _getTabElementFromTabIndex: function(iIdx) {
-                return this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header).eq(iIdx);
+            _getTabElementFromTabId: function(sId) {
+                return this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header+'[data-tab-id="'+sId+'"]');
             },
-            disableTab: function(iIdx){
-               let tabsWidget = this.GetTabsWidget();
+            disableTab: function(sId){
+               const tabsWidget = this.GetTabsWidget();
+               const iIdx = this._getTabIndexFromTabId(sId);
                tabsWidget.disable(iIdx);
-               let tabElement = this._getTabElementFromTabIndex(iIdx);
-               this._updateTabHeaderDisplay(tabElement);
+               const tabElement = this._getTabElementFromTabId(sId);
+               this._updateTabHeaderDisplay(tabElement); 
             },
-            enableTab: function(iIdx){
-               let tabsWidget = this.GetTabsWidget();
+            enableTab: function(sId){
+               const tabsWidget = this.GetTabsWidget();
+               const iIdx = this._getTabIndexFromTabId(sId);
                tabsWidget.enable(iIdx);
-               let tabElement = this._getTabElementFromTabIndex(iIdx);
+               const tabElement = this._getTabElementFromTabId(sId);
                this._updateTabHeaderDisplay(tabElement);                
             }
         });
