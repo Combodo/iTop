@@ -90,7 +90,7 @@ class ParentMenuNodeCompiler
 							$aParentMenus[] = $sParent;
 						}
 					} else {
-						if ($oMenuNode->getAttribute("xsi:type") == 'MenuGroup') {
+						if ($oMenuNode->getAttribute("xsi:type") === 'MenuGroup') {
 							$this->aParentModuleRootDirs[$sMenuId] = $sModuleRootDir;
 						}
 
@@ -146,7 +146,7 @@ class ParentMenuNodeCompiler
 			}
 
 			if (self::$bUseLegacyMenuCompilation) {
-				if ($oMenuNode->getAttribute("xsi:type") == 'MenuGroup') {
+				if ($oMenuNode->getAttribute("xsi:type") === 'MenuGroup') {
 					// Note: this algorithm is wrong
 					// 1 - the module may appear empty in the current module, while children are defined in other modules
 					// 2 - check recursively that child nodes are not empty themselves
