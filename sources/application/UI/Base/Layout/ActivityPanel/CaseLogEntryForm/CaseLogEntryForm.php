@@ -5,6 +5,7 @@
  */
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm;
 
+use AttributeCaseLog;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -103,6 +104,15 @@ class CaseLogEntryForm extends UIContentBlock
 	public function GetAttCode(): string
 	{
 		return $this->sAttCode;
+	}
+
+	/**
+	 * @return string
+	 * @since 3.0.4 3.1.0 N°6139
+	 */
+	public function GetAttType(): string
+	{
+		return AttributeCaseLog::class;
 	}
 
 	/**
