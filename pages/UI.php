@@ -1415,7 +1415,7 @@ try
 								$sSeverity = 'info';
 							}
 							$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten',$sIssues);
-							$oP->add_ready_script("CombodoModal.OpenInformativeModal('".addslashes($sIssueDesc)."', 'error);");
+							$oP->add_ready_script("CombodoModal.OpenInformativeModal('".addslashes($sIssueDesc)."', CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);");
 						}
 						else
 						{

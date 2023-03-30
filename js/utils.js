@@ -553,7 +553,7 @@ function ExportInitButton(sSelector) {
 				var aMessages = $('#export-form').data('validation_messages');
 
 				if (aMessages.length > 0) {
-					CombodoModal.OpenInformativeModal(aMessages.join(''), 'error');
+					CombodoModal.OpenInformativeModal(aMessages.join(''), CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
 					return;
 				}
 				if ($(this).hasClass('ui-button')) {
@@ -1206,6 +1206,12 @@ const CombodoInlineImage = {
  * @since 3.1.0
  */
 let CombodoModal = {
+
+	INFORMATIVE_MODAL_SEVERITY_SUCCESS : 'error',
+	INFORMATIVE_MODAL_SEVERITY_INFORMATION : 'information',
+	INFORMATIVE_MODAL_SEVERITY_WARNING : 'warning',
+	INFORMATIVE_MODAL_SEVERITY_ERROR : 'error',
+	
 	/**
 	 * Close all opened modals on the page
 	 *
