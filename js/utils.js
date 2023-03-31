@@ -1429,35 +1429,39 @@ let CombodoModal = {
 	 * Open a standard informative modal for success messages.
 	 *
 	 * @param sMessage string Informative success message to be displayed in the modal
+	 * @param oOptions array @see CombodoModal.OpenModal
 	 */
-	OpenSuccessModal: function(sMessage) {
-		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_SUCCESS);
+	OpenSuccessModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_SUCCESS, oOptions);
 	},
 
 	/**
 	 * Open a standard informative modal for information messages.
 	 *
 	 * @param sMessage string Informative information success to be displayed in the modal
+	 * @param oOptions array @see CombodoModal.OpenModal
 	 */
-	OpenInformationModal: function(sMessage) {
-		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_INFORMATION);
+	OpenInformationModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_INFORMATION, oOptions);
 	},
 
 	/**
 	 * Open a standard informative modal for warning messages.
 	 *
 	 * @param sMessage string Informative warning message to be displayed in the modal
+	 * @param oOptions array @see CombodoModal.OpenModal
 	 */
-	OpenWarningModal: function(sMessage) {
-		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_WARNING);
+	OpenWarningModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_WARNING, oOptions);
 	},
 
 	/**
 	 * Open a standard informative error modal for success messages.
 	 *
 	 * @param sMessage string Informative error message to be displayed in the modal
+	 * @param oOptions array @see CombodoModal.OpenModal
 	 */
-	OpenErrorModal: function(sMessage) {
-		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR);
+	OpenErrorModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR, oOptions);
 	},
 };
