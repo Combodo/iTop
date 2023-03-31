@@ -1428,7 +1428,7 @@ class DisplayableGraph extends SimpleGraph
 	 */
 	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
 	{
-		list($aExcludedByClass, $aAdditionalContexts) = $this->DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $bLazyLoading);
+		list($aExcludedByClass, $aAdditionalContexts) = $this->GetFiltering($sContextKey, $aContextParams, $aExcludedObjects);
 
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 
@@ -1563,22 +1563,24 @@ EOF
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 *
+	 * @deprecated 3.1.0
 	 */
 	public function DisplayFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects, WebPage $oP, array $aResults, bool $bLazyLoading = false): array
 	{
-		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
-		$aExcludedByClass = array();
-		foreach ($aExcludedObjects as $oObj) {
-			if (!array_key_exists(get_class($oObj), $aExcludedByClass)) {
-				$aExcludedByClass[get_class($oObj)] = array();
-			}
-			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
-		}
+		$oP->Add($this->DisplayFilterBox($oP, $aResults, $bLazyLoading));
+
+		return $this->GetFiltering($sContextKey, $aContextParams, $aExcludedObjects);
+	}
+
+	public function DisplayFilterBox(WebPage $oP, array $aResults, bool $bLazyLoading = false)
+	{
 		$sSftShort = Dict::S('UI:ElementsDisplayed');
-		$oP->add("<div class=\"not-printable\">\n");
+		$oBlock = \Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory::MakeStandard(null, ['not-printable']);
 		$oUiSearchBlock = new Panel($sSftShort, [], Panel::ENUM_COLOR_SCHEME_CYAN, 'dh_flash');
 		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
 		$oUiSearchBlock->SetIsCollapsible(true);
+		$oUiSearchBlock->GetTitleBlock()->SetCSSClasses(['ibo-panel--subtitle']);
 		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
 			<<<EOF
 		
@@ -1626,11 +1628,23 @@ EOF
 			$oUiHtmlBlock->AddHtml("<button type=\"button\" id=\"ReloadMovieBtn\" class=\"ibo-button ibo-is-neutral ibo-is-regular\" onClick=\"$sOnCLick\">".Dict::S('UI:Button:Refresh')."</button></div></form>");
 		}
 		$oUiHtmlBlock->AddHtml("</div>\n");
-		$oUiHtmlBlock->AddHtml("</div>\n"); // class="not-printable"
 
 		$oUiSearchBlock->AddSubBlock($oUiHtmlBlock);
-		$oP->AddUiBlock($oUiSearchBlock);
+		$oBlock->AddSubBlock($oUiSearchBlock);
 
+		return $oBlock;
+	}
+
+	public function GetFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects): array
+	{
+		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
+		$aExcludedByClass = array();
+		foreach ($aExcludedObjects as $oObj) {
+			if (!array_key_exists(get_class($oObj), $aExcludedByClass)) {
+				$aExcludedByClass[get_class($oObj)] = array();
+			}
+			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
+		}
 		$aAdditionalContexts = array();
 		foreach ($aContextDefs as $sKey => $aDefinition) {
 			$aAdditionalContexts[] = array('key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql'], 'default' => (array_key_exists('default', $aDefinition) && ($aDefinition['default'] == 'yes')));
