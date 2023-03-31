@@ -353,11 +353,11 @@ CombodoModal._CenterModalInViewport = function (oModalElem) {
 };
 
 /**
- * Open a standard confirmation modal and put the content into it.
+ * @override
+ * @inheritDoc
  *
  * @param oOptions array @see CombodoModal.OpenModal + {do_not_show_again_pref_key: string, callback_on_confirm: function, callback_on_cancel}
  * @param aData data passed to callbacks
- * @returns object The jQuery object of the modal element
  */
 CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 
@@ -433,11 +433,8 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 }
 
 /**
- * Open a standard informative modal. 
- *
- * @param sMessage string Informative message to be displayed in the modal
- * @param sSeverity string Severity of the information. Default values are success, information, warning, error.
- * @param oOptions array @see CombodoModal.OpenModal
+ * @override
+ * @inheritDoc
  */
 CombodoModal.OpenInformativeModal = function(sMessage, sSeverity, oOptions) {
 	let sFirstLetterUppercaseSeverity = sSeverity.charAt(0).toUpperCase() + sSeverity.slice(1);

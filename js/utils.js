@@ -1211,9 +1211,13 @@ const CombodoInlineImage = {
  */
 let CombodoModal = {
 
+	/** @var {String} */
 	INFORMATIVE_MODAL_SEVERITY_SUCCESS : 'success',
+	/** @var {String} */
 	INFORMATIVE_MODAL_SEVERITY_INFORMATION : 'information',
+	/** @var {String} */
 	INFORMATIVE_MODAL_SEVERITY_WARNING : 'warning',
+	/** @var {String} */
 	INFORMATIVE_MODAL_SEVERITY_ERROR : 'error',
 	
 	/**
@@ -1415,14 +1419,13 @@ let CombodoModal = {
 		// Meant for overlaoding
 		CombodoJSConsole.Debug('CombodoModal.OpenConfirmationModal not implemented');
 	},
-
-
 	/**
-	 * Open a standard informative modal.
+	 * Open a standard informative modal, should only be extended to created your own modal method to prepare a custom informative modal
+	 * In most cases you should prefer {@see CombodoModal.OpenSuccessModal}, {@see CombodoModal.OpenInformativeModal}, {@see CombodoModal.OpenWarningModal}, {@see CombodoModal.OpenErrorModal}
 	 *
-	 * @param sMessage string Informative message to be displayed in the modal
-	 * @param sSeverity string Severity of the information. Default values are success, information, warning, error.
-	 * @param oOptions array @see CombodoModal.OpenModal
+	 * @param sMessage {String} Informative message to be displayed in the modal
+	 * @param sSeverity {String} Severity of the information. Default values are success, information, warning, error.
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
 	 */
 	OpenInformativeModal: function(sMessage,sSeverity, oOptions) {
 		// Meant for overlaoding
@@ -1432,38 +1435,35 @@ let CombodoModal = {
 	/**
 	 * Open a standard informative modal for success messages.
 	 *
-	 * @param sMessage string Informative success message to be displayed in the modal
-	 * @param oOptions array @see CombodoModal.OpenModal
+	 * @param sMessage {String} Informative success message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
 	 */
 	OpenSuccessModal: function(sMessage, oOptions) {
 		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_SUCCESS, oOptions);
 	},
-
 	/**
 	 * Open a standard informative modal for information messages.
 	 *
-	 * @param sMessage string Informative information success to be displayed in the modal
-	 * @param oOptions array @see CombodoModal.OpenModal
+	 * @param sMessage {String} Informative information success to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
 	 */
 	OpenInformationModal: function(sMessage, oOptions) {
 		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_INFORMATION, oOptions);
 	},
-
 	/**
 	 * Open a standard informative modal for warning messages.
 	 *
-	 * @param sMessage string Informative warning message to be displayed in the modal
-	 * @param oOptions array @see CombodoModal.OpenModal
+	 * @param sMessage {String} Informative warning message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
 	 */
 	OpenWarningModal: function(sMessage, oOptions) {
 		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_WARNING, oOptions);
 	},
-
 	/**
 	 * Open a standard informative error modal for success messages.
 	 *
-	 * @param sMessage string Informative error message to be displayed in the modal
-	 * @param oOptions array @see CombodoModal.OpenModal
+	 * @param sMessage {String} Informative error message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
 	 */
 	OpenErrorModal: function(sMessage, oOptions) {
 		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR, oOptions);
