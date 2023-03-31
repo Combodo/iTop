@@ -59,8 +59,43 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 		else
 		{
 			$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
-			$oBlock->AddDataAttribute("input-id",$this->oField->GetGlobalId());
-			$oBlock->AddDataAttribute("input-type",$sFieldClass);
+			$oBlock->SetAttLabel($this->oField->GetLabel())
+				->AddDataAttribute("input-id",$this->oField->GetGlobalId())
+				->AddDataAttribute("input-type",$sFieldClass);
+
+			// Propagate data attribute from Field to UIBlock
+			// Note: This might no longer be necessary after the upcoming attributes rework project
+			foreach ($this->oField->GetMetadata() as $sMetadataKey => $sMetadataValue) {
+				switch ($sMetadataKey) {
+					// Important: Only some data attributes can be overloaded, this is done on purpose (eg. "input-type" set previously by an AttributeCustomFields)
+					case 'attribute-code':
+					case 'attribute-type':
+					case 'input-type':
+						if (utils::IsNotNullOrEmptyString($sMetadataValue)) {
+							switch ($sMetadataKey) {
+								case 'attribute-code':
+									$oBlock->SetAttCode($sMetadataValue);
+									break;
+
+								case 'attribute-type':
+									$oBlock->SetAttType($sMetadataValue ?? '');
+									break;
+
+								case 'input-type':
+									$oBlock->AddDataAttribute($sMetadataKey, $sMetadataValue ?? '');
+									break;
+							}
+						}
+						break;
+
+					default:
+						if (false === $oBlock->HasDataAttribute($sMetadataKey)) {
+							$oBlock->AddDataAttribute($sMetadataKey, $sMetadataValue ?? '');
+						}
+						break;
+		       }
+			}
+
 			switch ($sFieldClass)
 			{
 				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':

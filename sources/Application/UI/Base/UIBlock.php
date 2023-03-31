@@ -600,6 +600,18 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
+	 * @param string $sName Name of the data attribute
+	 *
+	 * @return bool True if $sName is already defined (even as a null value) in the UIBLock data attributes, false otherwise
+	 * @see static::$aDataAttributes
+	 * @since 3.0.4 3.1.0 N°6140
+	 */
+	public function HasDataAttribute(string $sName): bool
+	{
+		return array_key_exists($sName, $this->aDataAttributes);
+	}
+
+	/**
 	 * @return bool
 	 * @see static::$aDataAttributes
 	 */
