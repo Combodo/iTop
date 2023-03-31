@@ -1074,17 +1074,20 @@ abstract class AttributeDefinition
 	 * $oFormField is passed, MakeFormField behave more like a Prepare.
 	 *
 	 * @param \DBObject $oObject
-	 * @param \Combodo\iTop\Form\Field\Field $oFormField
+	 * @param \Combodo\iTop\Form\Field\Field|null $oFormField
 	 *
-	 * @return null
+	 * @return \Combodo\iTop\Form\Field\Field
 	 * @throws \CoreException
 	 * @throws \Exception
+	 *
+	 * @noinspection PhpMissingReturnTypeInspection
+	 * @noinspection PhpMissingParamTypeInspection
+	 * @noinspection ReturnTypeCanBeDeclaredInspection
 	 */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
 		// This is a fallback in case the AttributeDefinition subclass has no overloading of this function.
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 			//$oFormField->SetReadOnly(true);
@@ -1094,22 +1097,17 @@ abstract class AttributeDefinition
 
 		// Attributes flags
 		// - Retrieving flags for the current object
-		if ($oObject->IsNew())
-		{
+		if ($oObject->IsNew()) {
 			$iFlags = $oObject->GetInitialStateAttributeFlags($this->GetCode());
-		}
-		else
-		{
+		} else {
 			$iFlags = $oObject->GetAttributeFlags($this->GetCode());
 		}
 
 		// - Comparing flags
-		if ($this->IsWritable() && (!$this->IsNullAllowed() || (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY)))
-		{
+		if ($this->IsWritable() && (!$this->IsNullAllowed() || (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY))) {
 			$oFormField->SetMandatory(true);
 		}
-		if ((!$oObject->IsNew() || !$oFormField->GetMandatory()) && (($iFlags & OPT_ATT_READONLY) === OPT_ATT_READONLY))
-		{
+		if ((!$oObject->IsNew() || !$oFormField->GetMandatory()) && (($iFlags & OPT_ATT_READONLY) === OPT_ATT_READONLY)) {
 			$oFormField->SetReadOnly(true);
 		}
 
@@ -1117,15 +1115,13 @@ abstract class AttributeDefinition
 		$oFormField->SetCurrentValue($oObject->Get($this->GetCode()));
 
 		// Validation pattern
-		if ($this->GetValidationPattern() !== '')
-		{
+		if ($this->GetValidationPattern() !== '') {
 			$oFormField->AddValidator(new Validator($this->GetValidationPattern()));
 		}
 
 		// Description
 		$sAttDescription = $this->GetDescription();
-		if(!empty($sAttDescription))
-		{
+		if (!empty($sAttDescription)) {
 			$oFormField->SetDescription($this->GetDescription());
 		}
 
@@ -1135,11 +1131,9 @@ abstract class AttributeDefinition
 		$oFormField->AddMetadata('attribute-label', $this->GetLabel());
 		// - Attribute flags
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
-		foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
-		{
+		foreach ($aPossibleAttFlags as $sFlagCode => $iFlagValue) {
 			// Note: Skip normal flag as we don't need it.
-			if($sFlagCode === 'normal')
-			{
+			if ($sFlagCode === 'normal') {
 				continue;
 			}
 			$sFormattedFlagCode = str_ireplace('_', '-', $sFlagCode);
@@ -1147,9 +1141,8 @@ abstract class AttributeDefinition
 			$oFormField->AddMetadata('attribute-flag-'.$sFormattedFlagCode, $sFormattedFlagValue);
 		}
 		// - Value raw
-		if ($this::IsScalar())
-		{
-			$oFormField->AddMetadata('value-raw', (string) $oObject->Get($this->GetCode()));
+		if ($this::IsScalar()) {
+			$oFormField->AddMetadata('value-raw', (string)$oObject->Get($this->GetCode()));
 		}
 
 		return $oFormField;
@@ -1161,10 +1154,10 @@ abstract class AttributeDefinition
 	public function EnumTemplateVerbs()
 	{
 		return array(
-			'' => 'Plain text (unlocalized) representation',
-			'html' => 'HTML representation',
+			''      => 'Plain text (unlocalized) representation',
+			'html'  => 'HTML representation',
 			'label' => 'Localized representation',
-			'text' => 'Plain text representation (without any markup)',
+			'text'  => 'Plain text representation (without any markup)',
 		);
 	}
 

@@ -2011,7 +2011,7 @@ HTML
 	 * @param string $iId
 	 * @param string $sNameSuffix
 	 * @param int $iFlags
-	 * @param array $aArgs
+	 * @param array{this: \DBObject, formPrefix: string} $aArgs
 	 * @param bool $bPreserveCurrentValue Preserve the current value even if not allowed
 	 * @param string $sInputType type of rendering used, see ENUM_INPUT_TYPE_* const
 	 *
@@ -2028,6 +2028,7 @@ HTML
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 * @throws \Exception
 	 */
 	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true, &$sInputType = '')
 	{
@@ -2513,10 +2514,15 @@ HTML;
 						}
 
 						$oForm = new Combodo\iTop\Form\Form($sFormId);
-						/** @var \Combodo\iTop\Form\Field\Field $sFormFieldClass */
+
+						// creating manually the field, as we need a specific id for the JS to work (send data back to the server)
 						$sFormFieldClass = $oAttDef::GetFormFieldClass();
 						$oAttDefField = new $sFormFieldClass($sAttCode.'_field');
-						$oAttDefField->SetCurrentValue($value); // value transformation might be delegated in a custom FieldRenderer
+
+						$oAttDef->MakeFormField($aArgs['this'], $oAttDefField);
+						// Remove label generated in MakeFormField : the current method should return the field only, as the label is already generated in the caller GetBareProperties()
+						$oAttDefField->SetLabel('');
+
 						$oForm->AddField($oAttDefField);
 					}
 
