@@ -36,8 +36,8 @@ abstract class AbstractBlockLinksViewTable extends UIContentBlock
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'application/links/layout';
 	public const DEFAULT_JS_FILES_REL_PATH             = [
 		'js/links/links_view_table_widget.js',
-		'js/links/links_set_worker.js',
-		'js/objects/objects_worker.js',
+		'js/links/links-set-worker.js',
+		'js/object/object-worker.js',
 		'js/wizardhelper.js',
 	];
 

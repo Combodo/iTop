@@ -1,4 +1,4 @@
-let CombodoLinkSetWorker = new function(){
+const iTopLinkSetWorker = new function(){
 
 	// defines
 	const ROUTER_BASE_URL = '../pages/ajax.render.php';

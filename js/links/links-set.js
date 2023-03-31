@@ -1,4 +1,4 @@
-let CombodoLinkSet = new function () {
+const iTopLinkSet = new function () {
 
 	/**
 	 * Create a new link object and add it to set widget.
@@ -12,18 +12,17 @@ let CombodoLinkSet = new function () {
 	 * @param oWidget
 	 * @constructor
 	 */
-	const CallCreateLinkedObject = function(sLinkedClass, sCode, sHostObjectClass, sHostObjectKey, sRemoteExtKey, sRemoteClass, oWidget)
+	const CallCreateLinkedObject = function(sLinkedClass, oWidget)
 	{
 		// Create link object
-		CombodoLinkSetWorker.CreateLinkedObject(sLinkedClass, sCode, sHostObjectClass, sHostObjectKey,
-			function(){
+		iTopObjectWorker.CreateObject(sLinkedClass, function(){
 				$(this).find("form").remove();
 				$(this).dialog('destroy');
 			},
 			function(event, data){
 
 				// We have just create a link object, now request the remote object
-				CombodoLinkSetWorker.GetRemoteObject(data.data.object.class_name, data.data.object.key, sRemoteExtKey, sRemoteClass, function(data){
+				iTopObjectWorker.GetObject(data.data.object.class_name, data.data.object.key, function(data){
 
 					// Add the new remote object in widget set options list
 					const selectize = oWidget[0].selectize;
@@ -32,9 +31,6 @@ let CombodoLinkSet = new function () {
 
 					// Select the new remote object
 					selectize.addItem(data.data.object.key);
-
-					// Add to initial values, to handle remove action
-					selectize.addInitialValue(data.data.object.key);
 				});
 			});
 	}

@@ -33,15 +33,19 @@ $ibo-vendors-selectize--input-error--border: 1px solid $ibo-color-red-600 !defau
   display: flex;
 
   .selectize-add-option {
-    position: absolute;
-    right: $ibo-vendors-selectize-control--plugin-add-button--add-option--right;
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    
+    position: absolute;
+    right: $ibo-vendors-selectize-control--plugin-add-button--add-option--right;
+    
     height: $ibo-vendors-selectize-control--plugin-add-button--add-option--height;
     width: $ibo-vendors-selectize-control--plugin-add-button--add-option--width;
     z-index: 1;
+    
     color: $ibo-vendors-selectize-control--plugin-add-button--add-option--color;
+    @extend %ibo-font-size-100;
   }
 }
 

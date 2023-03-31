@@ -3113,10 +3113,22 @@ EOF
 		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
 		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)
 			->SetIcon($sClassIconUrl);
+		$oPanel->AddMainBlock(self::DisplayFormBlockSelectClassToCreate($sClass, $sClassLabel, $oAppContext, $aPossibleClasses, $aHiddenFields));
 
+		$oP->AddSubBlock($oPanel);
+	}
 
+	/**
+	 * @param string $sClass
+	 * @param string $sClassLabel
+	 * @param array $aPossibleClasses
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Form\Form
+	 * @throws \CoreException
+	 */
+	public static function DisplayFormBlockSelectClassToCreate( string $sClass, string $sClassLabel, ApplicationContext $oAppContext, array $aPossibleClasses, array $aHiddenFields): Form
+	{
 		$oClassForm = FormUIBlockFactory::MakeStandard();
-		$oPanel->AddMainBlock($oClassForm);
 
 		$oClassForm->AddHtml($oAppContext->GetForForm())
 			->AddSubBlock(InputUIBlockFactory::MakeForHidden('checkSubclass', '0'))
@@ -3149,10 +3161,8 @@ EOF
 		}
 
 		$oClassForm->AddSubBlock(self::DisplayBlockSelectClassToCreate($sClass, $sClassLabel, $aPossibleClasses));
-
-		$oP->AddSubBlock($oPanel);
+		return $oClassForm;
 	}
-
 	/**
 	 * @param string $sClassLabel
 	 * @param array $aPossibleClasses
