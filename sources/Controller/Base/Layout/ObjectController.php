@@ -178,12 +178,11 @@ JS;
 				$oClassForm->SetOnSubmitJsCode(
 					<<<JS
 					let me = this;
-					let aParam = {};
+					let aParam = $(this).serialize();
 					aParam['class'] = $(this).find('[name="class"]').val();
 					let sPosting = $.post('$sCurrentUrl', aParam);
 					sPosting.done(function(data){
-                        $(me).closest('[data-role="ibo-modal"]').html(data);
-                       	$(me).closest('[data-role="ibo-modal"]').dialog({ position: { my: "center", at: "center", of: window }});;
+                        $(me).closest('[data-role="ibo-modal"]').html(data).dialog({ position: { my: "center", at: "center", of: window }});
 					});
                     return false;
 JS
