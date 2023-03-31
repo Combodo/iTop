@@ -38,7 +38,7 @@ $(function()
 				if (data.data.success === true) {
 					me.$tableSettingsDialog.DataTableSettings('DoRefresh');
 				} else {
-					CombodoModal.OpenInformativeModal(data.data.error_message, 'error');
+					CombodoModal.OpenErrorModal(data.data.error_message);
 				}
 			});
 		},
@@ -59,7 +59,7 @@ $(function()
 				if (data.data.success === true) {
 					me.$tableSettingsDialog.DataTableSettings('DoRefresh');
 				} else {
-					CombodoModal.OpenInformativeModal(data.data.error_message, 'error');
+					CombodoModal.OpenErrorModal(data.data.error_message);
 				}
 			});
 		},

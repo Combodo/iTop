@@ -1541,7 +1541,7 @@ class DisplayableGraph extends SimpleGraph
 		}
 		catch(err)
 		{
-			alert(err);
+			CombodoModal.OpenErrorModal(err);
 		}
 	}
 EOF

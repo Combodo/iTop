@@ -191,7 +191,7 @@ class LinkSetController extends AbstractController
                             window.bInSubmit = false;
                             oForm.attr('data-form-state', 'default');
                             /* Display error popup */
-							CombodoModal.OpenInformativeModal(data.data.error_message, 'error');
+							CombodoModal.OpenErrorModal(data.data.error_message);
 						}
 					});
 				}

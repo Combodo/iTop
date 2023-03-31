@@ -406,7 +406,7 @@ $(function()
 					{
 						if(data.result.error !== '')
 						{
-							alert(data.result.error);
+							CombodoModal.OpenErrorModal(data.result.error);
 							me.element.dialog('close');
 						}
 						else

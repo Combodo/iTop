@@ -769,7 +769,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					$('#fstatus_'+me.id).html('');
 					if (data.id == 0) {
 						$('#label_'+me.id).removeClass('ac_dlg_loading');
-						alert(data.error);
+						CombodoModal.OpenErrorModal(data.error);
 					} else if (me.bSelectMode) {
 						// Add the newly created object to the drop-down list and select it
 						/*$('<option/>', { value : data.id }).html(data.name).appendTo('#'+me.id);

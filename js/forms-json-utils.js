@@ -155,7 +155,7 @@ function CheckFields(sFormId, bDisplayAlert)
 // if some fields are in wait, no submit is allowed
 	if ($('#'+sFormId+' .blockMsg').length>0)
 	{
-		alert(Dict.S('UI:Button:Wait'));
+		CombodoModal.OpenWarningModal(Dict.S('UI:Button:Wait'));
 		return false;
 	}
 
@@ -178,7 +178,7 @@ function CheckFields(sFormId, bDisplayAlert)
 		if (bDisplayAlert)
 		{
 			activateFirstTabWithError(sFormId);
-			alert(Dict.S('UI:FillAllMandatoryFields'));
+			CombodoModal.OpenErrorModal(Dict.S('UI:FillAllMandatoryFields'));
 		}
 		$('#'+sFormId+' :submit').prop('disable', false);
 		$('#'+sFormId+' :button[type=submit]').prop('disable', false);
