@@ -40,16 +40,6 @@
       <presentation/>
       <methods/>
     </class>
-    <class id="ResourceLogMenu" _delta="define">
-      <parent>AbstractResource</parent>
-      <properties>
-        <comment>/* Logs menu access control. */</comment>
-        <abstract>true</abstract>
-        <category>grant_by_profile</category>
-      </properties>
-      <presentation/>
-      <methods/>
-    </class>
   </classes>
   <portals>
     <portal id="backoffice" _delta="define">
