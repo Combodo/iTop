@@ -2509,7 +2509,7 @@ HTML;
 						$oForm = $value->GetForm($sFormPrefix);
 					} else if ($sAttDefEditClass === 'FormField') {
 						$sFormId = 'ff_'.$oAttDef->GetCode();
-						if (false === utils::IsNotNullOrEmptyString($sFormPrefix)) {
+						if (utils::IsNotNullOrEmptyString($sFormPrefix)) {
 							$sFormId = $sFormPrefix.$sFormId;
 						}
 
