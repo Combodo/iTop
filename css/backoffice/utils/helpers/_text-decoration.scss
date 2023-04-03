@@ -38,6 +38,10 @@ $ibo-is-code--padding: 1.25rem 1.5rem !default;
   cursor: help;
 }
 
+.ibo-is-disabled {
+  cursor: not-allowed !important; /* Note: !important is necessary as it needs to overload any standard rules */
+}
+
 /* Class to display a hint on elements that have a tooltip for further description */
 .ibo-has-description {
   &::after {
