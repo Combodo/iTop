@@ -205,11 +205,12 @@ class DBBackup
 	 *
 	 * @param string $sSourceConfigFile
 	 * @param string $sTmpFolder
+	 * @param bool $bSkipSQLDumpForTesting 
 	 *
 	 * @return array list of files to archive
 	 * @throws \Exception
 	 */
-	protected function PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder)
+	protected function PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder, $bSkipSQLDumpForTesting = false)
 	{
 		$aRet = array();
 		if (is_dir($sTmpFolder))
@@ -250,7 +251,11 @@ class DBBackup
 		$aExtraFiles = MetaModel::GetModuleSetting('itop-backup', 'extra_files', []);
 		foreach($aExtraFiles as $sExtraFileOrDir)
 		{
-			$sExtraFullPath = APPROOT.'/'.$sExtraFileOrDir;
+			$sExtraFullPath = realpath(APPROOT.'/'.$sExtraFileOrDir);
+			if (strncmp(APPROOT, $sExtraFullPath, strlen(APPROOT)) !== 0)
+			{
+				throw new Exception("Backup: Aborting, resource '$sExtraFileOrDir'. Considered as UNSAFE because not inside the iTop directory.");
+			}
 			if (is_dir($sExtraFullPath))
 			{
 				$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
@@ -267,9 +272,12 @@ class DBBackup
 				$aRet[] = $sFile;
 			}
 		}
-		$sDataFile = $sTmpFolder.'/itop-dump.sql';
-		$this->DoBackup($sDataFile);
-		$aRet[] = $sDataFile;
+		if (!$bSkipSQLDumpForTesting)
+		{
+			$sDataFile = $sTmpFolder.'/itop-dump.sql';
+			$this->DoBackup($sDataFile);
+			$aRet[] = $sDataFile;
+		}
 
 		return $aRet;
 	}

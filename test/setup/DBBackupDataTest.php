@@ -18,7 +18,7 @@ class DBBackupDataTest extends ItopDataTestCase
 	/**
 	 * @dataProvider prepareFilesToBackupProvider
 	 */
-	public function testPrepareFilesToBackup($aExtraFiles)
+	public function testPrepareFilesToBackup(array $aExtraFiles, bool $bUnsafeFileException)
 	{
 		$sTmpDir = sys_get_temp_dir().'/testPrepareFilesToBackup-'.time();
 		$oBackup = new DBBackup(MetaModel::GetConfig());
@@ -33,11 +33,14 @@ class DBBackupDataTest extends ItopDataTestCase
 			}
 		}
 		
-		$aFiles = $this->InvokeNonPublicMethod('DBBackup', 'PrepareFilesToBackup', $oBackup, [APPROOT.'/conf/production/config-itop.php', $sTmpDir]);
+		if ($bUnsafeFileException)
+		{
+			$this->expectExceptionMessage("Backup: Aborting, resource '$sExtraFile'. Considered as UNSAFE because not inside the iTop directory.");
+		}
+		$aFiles = $this->InvokeNonPublicMethod('DBBackup', 'PrepareFilesToBackup', $oBackup, [APPROOT.'/conf/production/config-itop.php', $sTmpDir, true]);
 		SetupUtils::rrmdir($sTmpDir);
 		$aExpectedFiles = [
 			$sTmpDir.'/config-itop.php',
-			$sTmpDir.'/itop-dump.sql',
 		];
 		foreach($aExtraFiles as $sRelFile => $bExists)
 		{
@@ -59,9 +62,19 @@ class DBBackupDataTest extends ItopDataTestCase
 			}
 		}
 	}
+	
+	function prepareFilesToBackupProvider()
+	{
+		return [
+			'no_extra_file' => ['aExtraFiles' => [], false],
+			'one_extra_file' => ['aExtraFiles' => ['foo.txt' => true], false],
+			'three_extra_file_and_dir' => ['aExtraFiles' => ['foo.txt' => true, 'gabu/zomeu.xml' => true, 'meuh.html' => true], false],
+			'one_unsafe_file' => ['aExtraFiles' => ['../foo.txt' => true], true],
+		];
+	}
 
 	/**
-	 * @dataProvider prepareFilesToBackupProvider
+	 * @dataProvider restoreListExtraFilesProvider
 	 */
 	function testRestoreListExtraFiles($aFilesToCreate, $aExpectedRelativeExtraFiles)
 	{
@@ -93,7 +106,7 @@ class DBBackupDataTest extends ItopDataTestCase
 		SetupUtils::rrmdir($sTmpDir);
 	}
 
-	function prepareFilesToBackupProvider()
+	function restoreListExtraFilesProvider()
 	{
 		return [
 			'no extra file' => ['aFilesToCreate' => ['config-itop.php', 'itop-dump.sql', 'delta.xml'], 'aExpectedExtraFiles' => []],
