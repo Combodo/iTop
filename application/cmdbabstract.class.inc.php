@@ -3058,7 +3058,10 @@ EOF
 
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
-		$sState = $this->GetState();
+		$sState = '';
+		if (MetaModel::HasLifecycle($sClass)) {
+			$sState = $this->GetState();
+		}
 		$sSessionStorageKey = $sClass.'_'.$iKey;
 		$sTempId = utils::GetUploadTempId($iTransactionId);
 		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
