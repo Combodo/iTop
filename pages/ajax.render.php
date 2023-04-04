@@ -2447,6 +2447,7 @@ EOF
 					$oWizardHelper = WizardHelper::FromJSON($sJson);
 					$oObj = $oWizardHelper->GetTargetObject();
 
+					/** @var \ormCustomFieldsValue $oOrmCustomFieldValue */
 					$oOrmCustomFieldValue = $oObj->Get($sAttCode);
 					$oForm = $oOrmCustomFieldValue->GetForm();
 					$oSubForm = $oForm->FindSubForm($sRequestedFieldsFormPath);
