@@ -465,50 +465,46 @@ try
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'search_oql': // OQL query
+				$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 				$sOQLClass = utils::ReadParam('oql_class', '', false, 'class');
 				$sBaseClass = utils::ReadParam('base_class', $sOQLClass, false, 'class');
 				$sOQLClause = utils::ReadParam('oql_clause', '', false, 'raw_data');
 				$sFormat = utils::ReadParam('format', '');
 				$bSearchForm = utils::ReadParam('search_form', true);
 				$sTitle = utils::ReadParam('title', 'UI:SearchResultsPageTitle');
-				if (empty($sOQLClass))
-				{
+				if (empty($sOQLClass)) {
 					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'oql_class'));
 				}
 				$oP->set_title(Dict::S($sTitle));
 				$oP->add('<h1>'.Dict::S($sTitle).'</h1>');
 				$sOQL = "SELECT $sOQLClass $sOQLClause";
-				try
-				{
+				try {
 					$oFilter = DBObjectSearch::FromOQL($sOQL);
 					DisplaySearchSet($oP, $oFilter, $bSearchForm, $sBaseClass, $sFormat);
 				}
-				catch(CoreException $e)
-				{
+				catch(CoreException $e) {
 					$oFilter = new DBObjectSearch($sOQLClass);
 					$oSet = new DBObjectSet($oFilter);
-					if ($bSearchForm)
-					{
+					if ($bSearchForm) {
 						$oBlock = new DisplayBlock($oFilter, 'search', false);
 						$oBlock->Display($oP, 0, array('table_id' => 'search-widget-result-outer'));
 					}
 					$oP->add('<div id="search-widget-result-outer"><p><b>'.Dict::Format('UI:Error:IncorrectOQLQuery_Message', $e->getHtmlDesc()).'</b></p></div>');
 				}
-				catch(Exception $e)
-				{
+				catch(Exception $e) {
 					$oP->P('<b>'.Dict::Format('UI:Error:AnErrorOccuredWhileRunningTheQuery_Message', $e->getMessage()).'</b>');
 				}
-			break;
+				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'search_form': // Search form
+				$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 				$sClass = utils::ReadParam('class', '', false, 'class');
 				$sFormat = utils::ReadParam('format', 'html');
 				$bSearchForm = utils::ReadParam('search_form', true);
 				$bDoSearch = utils::ReadParam('do_search', true);
-				if (empty($sClass))
-				{
+				if (empty($sClass)) {
 					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 				}
 				$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));

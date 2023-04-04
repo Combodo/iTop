@@ -98,6 +98,8 @@ try
 
 	if (!empty($oFilter))
 	{
+		$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
+
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$aExtraParams = $oAppContext->GetAsHash();
