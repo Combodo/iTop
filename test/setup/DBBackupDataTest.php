@@ -69,6 +69,7 @@ class DBBackupDataTest extends ItopDataTestCase
 			'no_extra_file' => ['aExtraFiles' => [], false],
 			'one_extra_file' => ['aExtraFiles' => ['foo.txt' => true], false],
 			'three_extra_file_and_dir' => ['aExtraFiles' => ['foo.txt' => true, 'gabu/zomeu.xml' => true, 'meuh.html' => true], false],
+			'two_extra_file_but_only_one_exists' => ['aExtraFiles' => ['foo.txt' => true, 'meuh.html' => false], false],
 			'one_unsafe_file' => ['aExtraFiles' => ['../foo.txt' => true], true],
 		];
 	}
