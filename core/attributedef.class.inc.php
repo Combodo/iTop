@@ -13155,7 +13155,7 @@ class AttributeCustomFields extends AttributeDefinition
 		try {
 			$oValue = $oHostObject->Get($this->GetCode());
 			$oHandler = $this->GetHandler($oValue->GetValues());
-			$sFormId = is_null($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
+			$sFormId = utils::IsNullOrEmptyString($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
 			$oHandler->BuildForm($oHostObject, $sFormId);
 			$oForm = $oHandler->GetForm();
 		}
