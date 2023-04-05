@@ -167,7 +167,9 @@ class ormDocument
 			$data = $this->GetData();
 			$sSize = utils::BytesToFriendlyFormat(strlen($data));
 			$iDownloadsCount = $this->GetDownloadsCount();
-			$sResult = utils::EscapeHtml($this->GetFileName()).' ('.$sSize.' / '.$iDownloadsCount.' <i class="fas fa-cloud-download-alt"></i>)<br/>';
+			$sDownloadsCountForHtml = utils::HtmlEntities(Dict::Format('Core:ormValue:ormDocument:DownloadsCount', $iDownloadsCount));
+			$sDownloadsCountTooltipForHtml = utils::HtmlEntities(Dict::Format('Core:ormValue:ormDocument:DownloadsCount+', $iDownloadsCount));
+			$sResult = utils::EscapeHtml($this->GetFileName()).' ('.$sSize.' / '.$sDownloadsCountForHtml.' <i class="fas fa-cloud-download-alt" data-tooltip-content="'.$sDownloadsCountTooltipForHtml.'"></i>)<br/>';
 		}
 		return $sResult;
 	}
