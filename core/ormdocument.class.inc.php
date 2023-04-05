@@ -282,6 +282,7 @@ class ormDocument
 				if($sContentDisposition === static::ENUM_CONTENT_DISPOSITION_ATTACHMENT) {
 					$oDocument->IncreaseDownloadsCount();
 					$oObj->Set($sAttCode, $oDocument);
+					$oObj->AllowWrite();
 					$oObj->DBUpdate();
 				}
 			}
