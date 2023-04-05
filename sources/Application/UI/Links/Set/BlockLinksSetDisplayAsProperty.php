@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Application\UI\Links\Indirect;
+namespace Combodo\iTop\Application\UI\Links\Set;
 
 use ApplicationContext;
 use AttributeLinkedSet;
