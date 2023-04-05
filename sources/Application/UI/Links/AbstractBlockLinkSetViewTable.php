@@ -23,20 +23,20 @@ use Utils;
 use WebPage;
 
 /**
- * Class AbstractBlockLinksViewTable
+ * Class AbstractBlockLinkSetViewTable
  *
  * @internal
  * @since 3.1.0
  * @package Combodo\iTop\Application\UI\Links
  */
-abstract class AbstractBlockLinksViewTable extends UIContentBlock
+abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 {
 	// Overloaded constants
-	public const BLOCK_CODE                            = 'ibo-abstract-block-links-view-table';
+	public const BLOCK_CODE                            = 'ibo-abstract-block-linkset-view-table';
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'application/links/layout';
 	public const DEFAULT_JS_FILES_REL_PATH             = [
 		'js/links/links_view_table_widget.js',
-		'js/links/links-set-worker.js',
+		'js/links/linkset-worker.js',
 		'js/object/object-worker.js',
 		'js/wizardhelper.js',
 	];

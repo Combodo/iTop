@@ -26,17 +26,17 @@ use utils;
 use WebPage;
 
 /**
- * Class BlockIndirectLinksEditTable
+ * Class BlockIndirectLinkSetEditTable
  *
  * @internal
  * @since 3.1.0
  * @package Combodo\iTop\Application\UI\Links\Indirect
  */
-class BlockIndirectLinksEditTable extends UIContentBlock
+class BlockIndirectLinkSetEditTable extends UIContentBlock
 {
 	// Overloaded constants
-	public const BLOCK_CODE                   = 'ibo-block-indirect-links-edit-table';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/indirect/block-indirect-links-edit-table/layout';
+	public const BLOCK_CODE                   = 'ibo-block-indirect-linkset-edit-table';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/indirect/block-indirect-linkset-edit-table/layout';
 	public const DEFAULT_JS_FILES_REL_PATH    = [
 		'js/links/links_widget.js',
 	];

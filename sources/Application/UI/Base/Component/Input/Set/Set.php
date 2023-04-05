@@ -37,7 +37,7 @@ class Set extends AbstractInput
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/input/set/layout';
 
 	public const DEFAULT_JS_FILES_REL_PATH = [
-		'js/links/links-set-worker.js',
+		'js/links/linkset-worker.js',
 		'js/object/object-worker.js',
 		'js/selectize/plugin_combodo_add_button.js',
 		'js/selectize/plugin_combodo_auto_position.js',

@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksEditTable;
+use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetEditTable;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
@@ -82,7 +82,7 @@ class UILinksWidgetDirect
 	 */
 	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj)
 	{
-		$oBlock = new BlockDirectLinksEditTable($this, $this->sInputid);
+		$oBlock = new BlockDirectLinkSetEditTable($this, $this->sInputid);
 		$oBlock->InitTable($oPage, $oValue, $sFormPrefix);
 
 		return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);

@@ -5,7 +5,7 @@
  */
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockLinksSetDisplayAsProperty;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockLinkSetDisplayAsProperty;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
@@ -1761,7 +1761,7 @@ class AttributeLinkedSet extends AttributeDefinition
 				return '';
 			}
 
-			$oLinkSetBlock = new BlockLinksSetDisplayAsProperty($this->GetCode(), $this, $sValue);
+			$oLinkSetBlock = new BlockLinkSetDisplayAsProperty($this->GetCode(), $this, $sValue);
 
 			return ConsoleBlockRenderer::RenderBlockTemplates($oLinkSetBlock);
 		}

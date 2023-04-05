@@ -2081,7 +2081,7 @@ abstract class MetaModel
 	 * @return string[] attcodes to display, containing aliases
 	 * @throws \CoreException
 	 *
-	 * @since 3.0.0 N°2334 added code for n-n relations in {@see BlockIndirectLinksViewTable::GetAttCodesToDisplay}
+	 * @since 3.0.0 N°2334 added code for n-n relations in {@see BlockIndirectLinkSetViewTable::GetAttCodesToDisplay}
 	 * @since 3.1.0 N°3200 method creation so that it can be used elsewhere
 	 */
 	public static function GetAttributeLinkedSetIndirectDatatableAttCodesToDisplay(string $sObjectClass, string $sObjectLinkedSetIndirectAttCode, string $sRemoteClass, string $sLnkExternalKeyToRemoteClassAttCode):array

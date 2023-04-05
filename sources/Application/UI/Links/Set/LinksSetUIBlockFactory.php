@@ -30,14 +30,14 @@ use DBObject;
 use iDBObjectSetIterator;
 
 /**
- * Class LinksSetUIBlockFactory
+ * Class LinkSetUIBlockFactory
  *
  * @api
  *
  * @since 3.1.0
  * @package Combodo\iTop\Application\UI\Links\Set
  */
-class LinksSetUIBlockFactory extends SetUIBlockFactory
+class LinkSetUIBlockFactory extends SetUIBlockFactory
 {
 
 	/**
@@ -59,7 +59,7 @@ class LinksSetUIBlockFactory extends SetUIBlockFactory
 		// Set UI block for OQL
 		$oSetUIBlock = SetUIBlockFactory::MakeForOQL($sId, $sTargetClass, $oAttDef->GetValuesDef()->GetFilterExpression(), $sWizardHelperJsVarName);
 
-		$oSetUIBlock->AddJsFileRelPath('js/links/links-set.js');
+		$oSetUIBlock->AddJsFileRelPath('js/links/linkset.js');
 
 		// Add button behaviour
 		if (in_array($oAttDef->GetEditMode(), [LINKSET_EDITMODE_ADDREMOVE, LINKSET_EDITMODE_ADDONLY, LINKSET_EDITMODE_INPLACE, LINKSET_EDITMODE_ACTIONS])

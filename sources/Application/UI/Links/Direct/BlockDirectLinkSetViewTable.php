@@ -6,20 +6,20 @@
 
 namespace Combodo\iTop\Application\UI\Links\Direct;
 
-use Combodo\iTop\Application\UI\Links\AbstractBlockLinksViewTable;
+use Combodo\iTop\Application\UI\Links\AbstractBlockLinkSetViewTable;
 use Combodo\iTop\Service\Links\LinkSetModel;
 use MetaModel;
 
 /**
- * Class BlockDirectLinksViewTable
+ * Class BlockDirectLinkSetViewTable
  *
  * @internal
  * @since 3.1.0
  * @package Combodo\iTop\Application\UI\Links\Direct
  */
-class BlockDirectLinksViewTable extends AbstractBlockLinksViewTable
+class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 {
-	public const BLOCK_CODE                          = 'ibo-block-direct-links-view-table';
+	public const BLOCK_CODE                          = 'ibo-block-direct-linkset-view-table';
 	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
 
 	/** @inheritdoc */

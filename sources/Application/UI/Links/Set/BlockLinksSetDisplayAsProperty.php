@@ -19,13 +19,13 @@ use Twig\Environment;
 use utils;
 
 /**
- * Class BlockLinksSetDisplayAsProperty
+ * Class BlockLinkSetDisplayAsProperty
  *
  * @internal
  * @since 3.1.0
  * @package Combodo\iTop\Application\UI\Links\Indirect
  */
-class BlockLinksSetDisplayAsProperty extends UIContentBlock
+class BlockLinkSetDisplayAsProperty extends UIContentBlock
 {
 	public const BLOCK_CODE = 'ibo-block-links-set-as-property';
 

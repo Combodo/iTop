@@ -38,9 +38,9 @@ use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
-use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksViewTable;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksViewTable;
-use Combodo\iTop\Application\UI\Links\Set\LinksSetUIBlockFactory;
+use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetViewTable;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinkSetViewTable;
+use Combodo\iTop\Application\UI\Links\Set\LinkSetUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
@@ -756,11 +756,11 @@ HTML
 				$oPage->add($sHTMLValue);
 			} else {
 				if ($oAttDef->IsIndirect()) {
-					$oBlockLinkViewTable = new BlockIndirectLinksViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
+					$oBlockLinkSetViewTable = new BlockIndirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
 				} else {
-					$oBlockLinkViewTable = new BlockDirectLinksViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
+					$oBlockLinkSetViewTable = new BlockDirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
 				}
-				$oPage->AddUiBlock($oBlockLinkViewTable);
+				$oPage->AddUiBlock($oBlockLinkSetViewTable);
 			}
 			if (array_key_exists($sAttCode, $aRedundancySettings)) {
 				foreach ($aRedundancySettings[$sAttCode] as $oRedundancyAttDef) {
@@ -2354,9 +2354,9 @@ EOF
 				case 'LinkedSet':
 					if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY) {
 						if (array_key_exists('bulk_context', $aArgs)) {
-							$oTagSetBlock = LinksSetUIBlockFactory::MakeForBulkLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['bulk_context']);
+							$oTagSetBlock = LinkSetUIBlockFactory::MakeForBulkLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['bulk_context']);
 						} else {
-							$oTagSetBlock = LinksSetUIBlockFactory::MakeForLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['this']);
+							$oTagSetBlock = LinkSetUIBlockFactory::MakeForLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['this']);
 						}
 						$oTagSetBlock->SetName("attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}");
 						$aEventsList[] = 'validate';
