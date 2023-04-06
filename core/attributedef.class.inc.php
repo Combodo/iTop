@@ -5888,14 +5888,32 @@ class AttributeEnum extends AttributeString
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
 		$aRawValues = parent::GetAllowedValues($aArgs, $sContains);
-		if (is_null($aRawValues))
-		{
+		if (is_null($aRawValues)) {
 			return null;
 		}
-		$aLocalizedValues = array();
-		foreach($aRawValues as $sKey => $sValue)
-		{
-			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
+		$aLocalizedValues = [];
+		$aSortedValues = [];
+		//bHaveSortedValues : some values have rank in xml
+		$bHaveSortedValues = false;
+		foreach ($aRawValues as $sKey => $sValue) {
+			$aKey = explode('::', $sKey);
+			if (count($aKey) == 1) {
+				$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
+			} else {
+				$aSortedValues[$aKey[1]] = $aKey[0];
+				$bHaveSortedValues = true;
+			}
+		}
+		asort($aLocalizedValues);
+		
+		if ($bHaveSortedValues) {
+			asort($aLocalizedValues);
+			asort($aSortedValues);
+			$aLocalizedSortedValues = [];
+			foreach ($aSortedValues as $sKey => $sValue) {
+				$aLocalizedSortedValues[$sKey] = $this->GetValueLabel($sKey);
+			}
+			$aLocalizedValues = array_merge($aLocalizedSortedValues, $aLocalizedValues);
 		}
 
 		return $aLocalizedValues;

@@ -2102,7 +2102,12 @@ EOF
 			foreach ($oValueNodes as $oValue) {
 				// New in 3.0 the format of values changed
 				$sCode = $this->GetMandatoryPropString($oValue, 'code', false);
-				$aValues[] = $sCode;
+				$iRank = $oValue->GetChildText('rank');
+				if ($iRank) {
+					$aValues[] = $iRank.'::'.$sCode;
+				} else {
+					$aValues[] = $sCode;
+				}
 				$oStyleNode = $oValue->GetOptionalElement('style');
 				if ($oStyleNode) {
 					$aEnumStyleData = $this->GenerateStyleDataFromNode($oStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode, $sCode);
