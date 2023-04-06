@@ -3108,6 +3108,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'iWorkingTimeComputer' => __DIR__ . '/../..' . '/core/computing.inc.php',
         'lnkTriggerAction' => __DIR__ . '/../..' . '/core/trigger.class.inc.php',
         'ormCaseLog' => __DIR__ . '/../..' . '/core/ormcaselog.class.inc.php',
+        'ormCaseLogService' => __DIR__ . '/../..' . '/core/ormcaselogservice.class.inc.php',
         'ormCustomFieldsValue' => __DIR__ . '/../..' . '/core/ormcustomfieldsvalue.class.inc.php',
         'ormDocument' => __DIR__ . '/../..' . '/core/ormdocument.class.inc.php',
         'ormLinkSet' => __DIR__ . '/../..' . '/core/ormlinkset.class.inc.php',

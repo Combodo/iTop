@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -19,36 +19,34 @@
 define('CASELOG_VISIBLE_ITEMS', 2);
 define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\n\n");
 
+require_once('ormcaselogservice.inc.php');
 
 /**
  * Class to store a "case log" in a structured way, keeping track of its successive entries
- *  
+ *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class ormCaseLog {
-	const CASE_LOG_SEPARATOR_REGEX_FIND = "\r?\n?========== \w+-\d+-\d+ \d+:\d+:\d+ : .*\s\(\d+\) ============\r?\n\r?\n";
-	const CASE_LOG_SEPARATOR_REGEX_EXTRACT = "\r?\n?========== (?<date>\w+-\d+-\d+ \d+:\d+:\d+) : (?<user_name>.*)\s\((?<user_id>\d+)\) ============\r?\n\r?\n";
-
 	protected $m_sLog;
 	protected $m_aIndex;
 	protected $m_bModified;
-	
+	protected \ormCaseLogService $oOrmCaseLogService;
+
 	/**
 	 * Initializes the log with the first (initial) entry
 	 * @param $sLog string The text of the whole case log
 	 * @param $aIndex array The case log index
 	 */
-	public function __construct($sLog = '', $aIndex = array())
+	public function __construct($sLog = '', $aIndex = [], \ormCaseLogService $oOrmCaseLogService=null)
 	{
 		$this->m_sLog = $sLog;
-		$this->m_aIndex = $this->RebuildIndex($sLog);
-		if (count($this->m_aIndex) === 0 && count($aIndex) !== 0) {
-			$this->m_aIndex = $aIndex;
-		}
+		$this->m_aIndex = $aIndex;
 		$this->m_bModified = false;
+		$this->oOrmCaseLogService = (is_null($oOrmCaseLogService)) ? new \ormCaseLogService() : $oOrmCaseLogService;
+		$this->RebuildIndex();
 	}
-	
+
 	public function GetText($bConvertToPlainText = false)
 	{
 		if ($bConvertToPlainText)
@@ -61,7 +59,7 @@ class ormCaseLog {
 			return $this->m_sLog;
 		}
 	}
-	
+
 	public static function FromJSON($oJson)
 	{
 		if (!isset($oJson->items))
@@ -77,8 +75,8 @@ class ormCaseLog {
 	}
 
 	/**
-	 * Return a value that will be further JSON encoded	
-	 */	
+	 * Return a value that will be further JSON encoded
+	 */
 	public function GetForJSON()
 	{
 		// Order by ascending date
@@ -188,9 +186,9 @@ class ormCaseLog {
 			$sSeparator = sprintf(CASELOG_SEPARATOR, $aData['date'], $aData['user_login'], $aData['user_id']);
 			$sPlainText .= $sSeparator.$aData['message'];
 		}
-		return $sPlainText;	
+		return $sPlainText;
 	}
-	
+
 	public function GetIndex()
 	{
 		return $this->m_aIndex;
@@ -207,7 +205,7 @@ class ormCaseLog {
     {
         return ($this->m_sLog === null);
     }
-	
+
 	public function ClearModifiedFlag()
 	{
 		$this->m_bModified = false;
@@ -215,7 +213,7 @@ class ormCaseLog {
 
 	/**
 	 * Produces an HTML representation, aimed at being used within an email
-	 */	 	
+	 */
 	public function GetAsEmailHtml()
 	{
 		$sStyleCaseLogHeader = '';
@@ -296,10 +294,10 @@ class ormCaseLog {
 		$sHtml .= '</td></tr></table>';
 		return $sHtml;
 	}
-	
+
 	/**
 	 * Produces an HTML representation, aimed at being used to produce a PDF with TCPDF (no table)
-	 */	 	
+	 */
 	public function GetAsSimpleHtml($aTransfoHandler = null)
 	{
 		$sStyleCaseLogEntry = '';
@@ -328,7 +326,7 @@ class ormCaseLog {
 					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry, true /* wiki "links" only */);
 				}
 				$sTextEntry = InlineImage::FixUrls($sTextEntry);
-			}			
+			}
 			$iPos += $aIndex[$index]['text_length'];
 
 			$sEntry = '<li>';
@@ -390,7 +388,7 @@ class ormCaseLog {
 
 	/**
 	 * Produces an HTML representation, aimed at being used within the iTop framework
-	 */	 	
+	 */
 	public function GetAsHTML(WebPage $oP = null, $bEditMode = false, $aTransfoHandler = null)
 	{
 		$bPrintableVersion = (utils::ReadParam('printable', '0') == '1');
@@ -510,11 +508,11 @@ class ormCaseLog {
 		$sHtml .= '</td></tr></table>';
 		return $sHtml;
 	}
-	
+
 	/**
-	 * Add a new entry to the log or merge the given text into the currently modified entry 
+	 * Add a new entry to the log or merge the given text into the currently modified entry
 	 * and updates the internal index
-	 * @param $sText string The text of the new entry 
+	 * @param $sText string The text of the new entry
 	 */
 	public function AddLogEntry($sText, $sOnBehalfOf = '')
 	{
@@ -546,23 +544,18 @@ class ormCaseLog {
 
 		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
 		$this->m_sLog = $sSeparator.$sText.$this->m_sLog; // Latest entry printed first
-		$aIndex = $this->RebuildIndex($this->m_sLog);
-		if (count($aIndex) === 0) {
-			// Rebuild failed
-			$iSepLength = strlen($sSeparator);
-			$iTextLength = strlen($sText);
-			$this->m_aIndex[] = array(
-				'user_name' => $sOnBehalfOf,
-				'user_id' => $iUserId,
-				'date' => time(),
-				'text_length' => $iTextLength,
-				'separator_length' => $iSepLength,
-				'format' => 'html',
-			);
-		} else {
-			$this->m_aIndex = $aIndex;
-		}
-
+		// Rebuild failed
+		$iSepLength = strlen($sSeparator);
+		$iTextLength = strlen($sText);
+		$this->m_aIndex[] = array(
+			'user_name' => $sOnBehalfOf,
+			'user_id' => $iUserId,
+			'date' => time(),
+			'text_length' => $iTextLength,
+			'separator_length' => $iSepLength,
+			'format' => 'html',
+		);
+		$this->RebuildIndex();
 		$this->m_bModified = true;
 	}
 
@@ -599,7 +592,7 @@ class ormCaseLog {
 			$iUserId = UserRights::GetUserId();
 			$sOnBehalfOf = UserRights::GetUserFriendlyName();
 		}
-		
+
 		if (isset($oJson->date))
 		{
 			$oDate = new DateTime($oJson->date);
@@ -629,23 +622,18 @@ class ormCaseLog {
 
 		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
 		$this->m_sLog = $sSeparator.$sText.$this->m_sLog; // Latest entry printed first
-		$aIndex = $this->RebuildIndex($this->m_sLog);
-		if (count($aIndex) === 0) {
-			// Rebuild failed
-			$iSepLength = strlen($sSeparator);
-			$iTextLength = strlen($sText);
-			$this->m_aIndex[] = array(
-				'user_name' => $sOnBehalfOf,
-				'user_id' => $iUserId,
-				'date' => time(),
-				'text_length' => $iTextLength,
-				'separator_length' => $iSepLength,
-				'format' => 'html',
-			);
-		} else {
-			$this->m_aIndex = $aIndex;
-		}
-
+		// Rebuild failed
+		$iSepLength = strlen($sSeparator);
+		$iTextLength = strlen($sText);
+		$this->m_aIndex[] = array(
+			'user_name' => $sOnBehalfOf,
+			'user_id' => $iUserId,
+			'date' => time(),
+			'text_length' => $iTextLength,
+			'separator_length' => $iSepLength,
+			'format' => 'html',
+		);
+		$this->RebuildIndex();
 		$this->m_bModified = true;
 	}
 
@@ -682,7 +670,7 @@ class ormCaseLog {
 				$sRes = utils::HtmlToText($sRaw);
 			}
 			break;
-			
+
 			case 'html':
 			if ($aLastEntry['format'] == 'text')
 			{
@@ -707,7 +695,7 @@ class ormCaseLog {
 		$iLast = end($aKeys); // Strict standards: the parameter passed to 'end' must be a variable since it is passed by reference
 		return $iLast;
 	}
-	
+
 	/**
 	 * Get the text string corresponding to the given entry in the log (zero based index, older entries first)
 	 * @param integer $iIndex
@@ -728,39 +716,12 @@ class ormCaseLog {
 		return $sText;
 	}
 
-	public function RebuildIndex($sLog): array
+	public function RebuildIndex(): void
 	{
-		$aTexts = preg_split('/'.self::CASE_LOG_SEPARATOR_REGEX_FIND.'/', $sLog, 0, PREG_SPLIT_NO_EMPTY);
-		preg_match_all('/'.self::CASE_LOG_SEPARATOR_REGEX_FIND.'/', $sLog, $aMatches);
-
-		if (count($aTexts) != count($aMatches[0])) {
-			return [];
+		$aIndex = $this->oOrmCaseLogService->RebuildIndex($this->m_sLog, $this->m_aIndex);
+		if (count($aIndex) !== 0) {
+			//index rebuild required
+			$this->m_aIndex = $aIndex;
 		}
-
-		$aIndex = [];
-		$iPrevDate = 0;
-		for ($index = count($aTexts) - 1; $index >= 0; $index--) {
-			$sSeparator = $aMatches[0][$index];
-			preg_match('/'.self::CASE_LOG_SEPARATOR_REGEX_EXTRACT.'/', $sSeparator, $aSeparatorParts);
-
-			try {
-				$iDate = (int)AttributeDateTime::GetAsUnixSeconds($aSeparatorParts['date']);
-				$iPrevDate = $iDate + 1;
-			}
-			catch (Exception $e) {
-				$iDate = $iPrevDate;
-			}
-
-			$aIndex[] = array(
-				'user_name'        => $aSeparatorParts['user_name'],
-				'user_id'          => $aSeparatorParts['user_id'],
-				'date'             => $iDate,
-				'text_length'      => strlen($aTexts[$index]),
-				'separator_length' => strlen($sSeparator),
-				'format'           => 'html',
-			);
-		}
-
-		return $aIndex;
 	}
 }

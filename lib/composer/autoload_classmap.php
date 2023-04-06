@@ -2740,6 +2740,7 @@ return array(
     'iWorkingTimeComputer' => $baseDir . '/core/computing.inc.php',
     'lnkTriggerAction' => $baseDir . '/core/trigger.class.inc.php',
     'ormCaseLog' => $baseDir . '/core/ormcaselog.class.inc.php',
+    'ormCaseLogService' => $baseDir . '/core/ormcaselogservice.class.inc.php',
     'ormCustomFieldsValue' => $baseDir . '/core/ormcustomfieldsvalue.class.inc.php',
     'ormDocument' => $baseDir . '/core/ormdocument.class.inc.php',
     'ormLinkSet' => $baseDir . '/core/ormlinkset.class.inc.php',
