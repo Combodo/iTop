@@ -5907,7 +5907,6 @@ class AttributeEnum extends AttributeString
 		asort($aLocalizedValues);
 		
 		if ($bHaveSortedValues) {
-			asort($aLocalizedValues);
 			asort($aSortedValues);
 			$aLocalizedSortedValues = [];
 			foreach ($aSortedValues as $sKey => $sValue) {
