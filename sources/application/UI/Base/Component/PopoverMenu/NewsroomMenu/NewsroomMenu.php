@@ -70,7 +70,7 @@ class NewsroomMenu extends PopoverMenu
 	/**
 	 * Check if there is any Newsroom provider configured
 	 * @since 3.1.0 N°5619
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function HasProviders(): bool
 	{
