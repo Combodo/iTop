@@ -5896,11 +5896,11 @@ class AttributeEnum extends AttributeString
 		//bHaveSortedValues : some values have rank in xml
 		$bHaveSortedValues = false;
 		foreach ($aRawValues as $sKey => $sValue) {
-			$aKey = explode('::', $sKey);
-			if (count($aKey) == 1) {
-				$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
+			$aVal = explode('::', $sValue);
+			if (count($aVal) == 1) {
+				$aLocalizedValues[$sValue] = $this->GetValueLabel($sValue);
 			} else {
-				$aSortedValues[$aKey[1]] = $aKey[0];
+				$aSortedValues[$aVal[1]] = $aVal[0];
 				$bHaveSortedValues = true;
 			}
 		}

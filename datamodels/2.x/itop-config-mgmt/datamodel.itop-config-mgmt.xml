@@ -315,15 +315,19 @@
           <values>
             <value id="production">
               <code>production</code>
+              <rank>1</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>5</rank>
             </value>
             <value id="stock">
               <code>stock</code>
+              <rank>2</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>4</rank>
             </value>
           </values>
           <sql>status</sql>

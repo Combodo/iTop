@@ -476,7 +476,12 @@ class ValueSetEnum extends ValueSetDefinition
 			foreach (explode(",", $this->m_values) as $sVal)
 			{
 				$sVal = trim($sVal);
-				$sKey = $sVal; 
+				$aKey = explode("::", $sVal);
+				if (count($aKey) > 1) {
+					$sKey = $aKey[1];
+				} else {
+					$sKey = $sVal;
+				}
 				$aValues[$sKey] = $sVal;
 			}
 		}

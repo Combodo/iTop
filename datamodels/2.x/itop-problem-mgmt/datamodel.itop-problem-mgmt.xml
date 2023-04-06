@@ -123,12 +123,15 @@
           <values>
             <value id="1">
               <code>1</code>
+              <rank>1</rank>
             </value>
             <value id="2">
               <code>2</code>
+              <rank>2</rank>
             </value>
             <value id="3">
               <code>3</code>
+              <rank>3</rank>
             </value>
           </values>
           <sql>impact</sql>
@@ -140,15 +143,19 @@
           <values>
             <value id="1">
               <code>1</code>
+              <rank>1</rank>
             </value>
             <value id="2">
               <code>2</code>
+              <rank>2</rank>
             </value>
             <value id="3">
               <code>3</code>
+              <rank>3</rank>
             </value>
             <value id="4">
               <code>4</code>
+              <rank>4</rank>
             </value>
           </values>
           <sql>urgency</sql>
@@ -160,15 +167,19 @@
           <values>
             <value id="1">
               <code>1</code>
+              <rank>1</rank>
             </value>
             <value id="2">
               <code>2</code>
+              <rank>2</rank>
             </value>
             <value id="3">
               <code>3</code>
+              <rank>3</rank>
             </value>
             <value id="4">
               <code>4</code>
+              <rank>4</rank>
             </value>
           </values>
           <sql>priority</sql>
