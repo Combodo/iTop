@@ -62,7 +62,11 @@ $ibo-input-set--item--box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb
   color: $ibo-color-grey-900;
   text-shadow: none;
   @extend %ibo-text-truncated-with-ellipsis;
-
+  /* - Guaranty that if a set item has html sub-node, they correctly display ellipsis (eg. Link set set items) */
+  > * {
+    @extend %ibo-text-truncated-with-ellipsis;
+  }
+  
   &:not(:first-child) {
     margin-left: $ibo-input-set--item--siblings-spacing;
   }
