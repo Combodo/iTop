@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\NavigationMenu;
 
 
 use ApplicationContext;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\NewsroomMenu\NewsroomMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\NewsroomMenu\NewsroomMenuFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuFactory;
 use MetaModel;
@@ -48,7 +49,7 @@ class NavigationMenuFactory
 	{
 		
 		$oNewsroomMenu = null;
-		if (MetaModel::GetConfig()->Get('newsroom_enabled') && NewsroomMenuFactory::HasProviders())
+		if (MetaModel::GetConfig()->Get('newsroom_enabled') && NewsroomMenu::HasProviders())
 		{
 			$oNewsroomMenu = NewsroomMenuFactory::MakeNewsroomMenuForNavigationMenu();
 		}

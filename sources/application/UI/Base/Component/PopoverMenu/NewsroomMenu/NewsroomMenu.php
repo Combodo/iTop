@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\NewsroomMenu;
 
 
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use MetaModel;
 
 /**
  * Class NewsroomMenu
@@ -64,5 +65,16 @@ class NewsroomMenu extends PopoverMenu
 	public function GetParamsAsJson(): string
 	{
 		return json_encode($this->aParams);
+	}
+	
+	/**
+	 * Check if there is any Newsroom provider configured
+	 * @since 3.1.0 N°5619
+	 * @return boolean
+	 */
+	public static function HasProviders(): bool
+	{
+		$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
+		return count($aProviders) > 0;
 	}
 }
