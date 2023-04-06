@@ -5,7 +5,7 @@
  */
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockLinkSetDisplayAsProperty;
+use Combodo\iTop\Application\UI\Links\Set\BlockLinkSetDisplayAsProperty;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
