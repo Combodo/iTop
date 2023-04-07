@@ -1112,10 +1112,10 @@ EOF
 				}
 				$sJSColumns = json_encode($aColumns);
 				$sJSNames = json_encode($aNames);
-				$iNbLineToAddForName = 0;
-				if( count($aNames)>50) {
-					//increase size of the graph in order to have a maximum of 5 columns of legend
-					$iNbLineToAddForName = ceil ( count($aNames) / 5) - 10;
+				$iNbLinesToAddForName = 0;
+				if (count($aNames) > 50) {
+					// Increase size of the graph in order to have a maximum of 5 columns of legend
+					$iNbLinesToAddForName = ceil(count($aNames) / 5) - 10;
 				}
 				$oPage->add_ready_script(
 <<<EOF
