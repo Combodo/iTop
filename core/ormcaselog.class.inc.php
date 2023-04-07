@@ -516,8 +516,11 @@ class ormCaseLog {
 	 */
 	public function AddLogEntry($sText, $sOnBehalfOf = '')
 	{
-		$sText = HTMLSanitizer::Sanitize($sText);
+		//date/time ops moved here for test stability
+		$iNow = time();
 		$sDate = date(AttributeDateTime::GetInternalFormat());
+
+		$sText = HTMLSanitizer::Sanitize($sText);
 		if ($sOnBehalfOf == '')
 		{
 			$sOnBehalfOf = UserRights::GetUserFriendlyName();
@@ -550,7 +553,7 @@ class ormCaseLog {
 		$this->m_aIndex[] = array(
 			'user_name' => $sOnBehalfOf,
 			'user_id' => $iUserId,
-			'date' => time(),
+			'date' => $iNow,
 			'text_length' => $iTextLength,
 			'separator_length' => $iSepLength,
 			'format' => 'html',
@@ -562,6 +565,9 @@ class ormCaseLog {
 
 	public function AddLogEntryFromJSON($oJson, $bCheckUserId = true)
 	{
+		//date/time ops moved here for test stability
+		$iNow = time();
+
 		if (isset($oJson->user_id))
 		{
 			if (!UserRights::IsAdministrator())
@@ -600,7 +606,7 @@ class ormCaseLog {
 		}
 		else
 		{
-			$iDate = time();
+			$iDate = $iNow;
 		}
 		if (isset($oJson->format))
 		{
@@ -628,7 +634,7 @@ class ormCaseLog {
 		$this->m_aIndex[] = array(
 			'user_name' => $sOnBehalfOf,
 			'user_id' => $iUserId,
-			'date' => time(),
+			'date' => $iNow,
 			'text_length' => $iTextLength,
 			'separator_length' => $iSepLength,
 			'format' => 'html',

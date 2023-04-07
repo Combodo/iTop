@@ -221,6 +221,11 @@ class ormCaseLogTest extends ItopDataTestCase
 		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
 		$sExpectedLog = $sSeparator."<p>$sLog</p>";
 
+		$aRebuiltIndex = ['c' => 'd'];
+		$aReturnedIndex= $bRebuild ? $aRebuiltIndex : [];
+
+		$oOrmCaseLogService = $this->createMock(\ormCaseLogService::class);
+
 		$aExpectedIndex = [
 			[
 				'user_name' => $sOnBehalfOf,
@@ -231,11 +236,6 @@ class ormCaseLogTest extends ItopDataTestCase
 				'format' => 'html',
 			]
 		];
-
-		$aRebuiltIndex = ['c' => 'd'];
-		$aReturnedIndex= $bRebuild ? $aRebuiltIndex : [];
-
-		$oOrmCaseLogService = $this->createMock(\ormCaseLogService::class);
 		$oOrmCaseLogService->expects($this->exactly(2))
 			->method('RebuildIndex')
 			->withConsecutive(['', []], [$sExpectedLog, $aExpectedIndex])
@@ -266,6 +266,18 @@ class ormCaseLogTest extends ItopDataTestCase
 		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
 		$sExpectedLog = $sSeparator."<p>$sLog</p>";
 
+		$aRebuiltIndex = ['c' => 'd'];
+		$aReturnedIndex= $bRebuild ? $aRebuiltIndex : [];
+
+		$sJson = json_encode(
+			[
+				'user_login' => 'gabuzmeu',
+				'message' => $sLog,
+			]
+		);
+		$oJson = json_decode($sJson);
+		
+		$oOrmCaseLogService = $this->createMock(\ormCaseLogService::class);
 		$aExpectedIndex = [
 			[
 				'user_name' => $sOnBehalfOf,
@@ -276,24 +288,12 @@ class ormCaseLogTest extends ItopDataTestCase
 				'format' => 'html',
 			]
 		];
-
-		$aRebuiltIndex = ['c' => 'd'];
-		$aReturnedIndex= $bRebuild ? $aRebuiltIndex : [];
-
-		$oOrmCaseLogService = $this->createMock(\ormCaseLogService::class);
 		$oOrmCaseLogService->expects($this->exactly(2))
 			->method('RebuildIndex')
 			->withConsecutive(['', []], [$sExpectedLog, $aExpectedIndex])
 			->willReturnOnConsecutiveCalls([], $aReturnedIndex);
 
 		$oLog = new ormCaseLog('', [], $oOrmCaseLogService);
-		$sJson = json_encode(
-			[
-				'user_login' => 'gabuzmeu',
-				'message' => $sLog,
-			]
-		);
-		$oJson = json_decode($sJson);
 		$oLog->AddLogEntryFromJSON($oJson, false);
 		$this->assertEquals($sExpectedLog, $oLog->GetText());
 		if ($bRebuild){
