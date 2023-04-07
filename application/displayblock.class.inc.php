@@ -1010,6 +1010,7 @@ EOF
 				$aValues = array();
 				$aURLs = array();
 				$iMaxNbCharsInLabel = 0;
+				
 				foreach ($aRes as $iRow => $aRow)
 				{
 					$sValue = $aRow['grouped_by_1'];
@@ -1017,6 +1018,7 @@ EOF
 					$aGroupBy[(int)$iRow] = (int) $aRow[$sFctVar];
 					$iTotalCount += $aRow['_itop_count_'];
 					$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int) $aRow[$sFctVar]);
+
 					if ($iMaxNbCharsInLabel < mb_strlen($sValue)) {
 						$iMaxNbCharsInLabel = mb_strlen($sValue);
 					}
@@ -1043,9 +1045,9 @@ EOF
 				$sJson = json_encode($aValues);
 				$oPage->add_ready_script(
 <<<EOF
-//calculate height of chart : 200px (height of the chart) + 6*iMaxNbCharsInLabel for the legend
-var iHeightOfChar = (200 + 6 * $iMaxNbCharsInLabel);
-$('#my_chart_$sId').height(iHeightOfChar + 'px');
+// Calculate height of chart : 200px (height of the chart) + 6*iMaxNbCharsInLabel for the legend
+var iChartHeight = (200 + 6 * $iMaxNbCharsInLabel);
+$('#my_chart_$sId').height(iChartHeight + 'px');
 var chart = c3.generate({
     bindto: d3.select('#my_chart_$sId'),
     data: {
@@ -1121,7 +1123,7 @@ EOF
 				}
 				$oPage->add_ready_script(
 <<<EOF
-//calculate height of graph : 200px (minimum height for the chart) + 20*iNbLinesToAddForName for the legend
+// Calculate height of graph : 200px (minimum height for the chart) + 20*iNbLinesToAddForName for the legend
 var iChartHeight = (200 + 20 * $iNbLinesToAddForName);
 $('#my_chart_$sId').height(iChartHeight + 'px');
 var chart = c3.generate({
