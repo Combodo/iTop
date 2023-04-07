@@ -1009,7 +1009,7 @@ EOF
 				$iTotalCount = 0;
 				$aValues = array();
 				$aURLs = array();
-				$iMaxNbCharInLabel = 0;
+				$iMaxNbCharsInLabel = 0;
 				foreach ($aRes as $iRow => $aRow)
 				{
 					$sValue = $aRow['grouped_by_1'];
