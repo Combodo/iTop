@@ -1017,8 +1017,8 @@ EOF
 					$aGroupBy[(int)$iRow] = (int) $aRow[$sFctVar];
 					$iTotalCount += $aRow['_itop_count_'];
 					$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int) $aRow[$sFctVar]);
-					if ($iMaxNbCharsInLabel < strlen($sValue)) {
-						$iMaxNbCharsInLabel = strlen($sValue);
+					if ($iMaxNbCharsInLabel < mb_strlen($sValue)) {
+						$iMaxNbCharsInLabel = mb_strlen($sValue);
 					}
 
 					// Build the search for this subset
@@ -1043,8 +1043,9 @@ EOF
 				$sJson = json_encode($aValues);
 				$oPage->add_ready_script(
 <<<EOF
-var iSizeOfChar = (200 + 6 * $iMaxNbCharInLabel);
-$('#my_chart_$sId').height(iSizeOfChar + 'px');
+//calculate height of chart : 200px (height of the chart) + 6*iMaxNbCharsInLabel for the legend
+var iHeightOfChar = (200 + 6 * $iMaxNbCharsInLabel);
+$('#my_chart_$sId').height(iHeightOfChar + 'px');
 var chart = c3.generate({
     bindto: d3.select('#my_chart_$sId'),
     data: {
@@ -1114,11 +1115,13 @@ EOF
 				$sJSNames = json_encode($aNames);
 				$iNbLinesToAddForName = 0;
 				if (count($aNames) > 50) {
-					// Increase size of the graph in order to have a maximum of 5 columns of legend
+					// Calculation of the number of legends line add to the height of the graph to have a maximum of 5 legend columns
+					// 10 corresponds to the number of lines already included in the chart height
 					$iNbLinesToAddForName = ceil(count($aNames) / 5) - 10;
 				}
 				$oPage->add_ready_script(
 <<<EOF
+//calculate height of graph : 200px (minimum height for the chart) + 20*iNbLinesToAddForName for the legend
 var iChartHeight = (200 + 20 * $iNbLinesToAddForName);
 $('#my_chart_$sId').height(iChartHeight + 'px');
 var chart = c3.generate({
