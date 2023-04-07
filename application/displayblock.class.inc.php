@@ -1119,8 +1119,8 @@ EOF
 				}
 				$oPage->add_ready_script(
 <<<EOF
-var iSizeOfChar = (200 + 20 * $iNbLineToAddForName);
-$('#my_chart_$sId').height(iSizeOfChar + 'px');
+var iChartHeight = (200 + 20 * $iNbLinesToAddForName);
+$('#my_chart_$sId').height(iChartHeight + 'px');
 var chart = c3.generate({
     bindto: d3.select('#my_chart_$sId'),
     data: {
