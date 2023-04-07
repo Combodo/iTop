@@ -1017,8 +1017,8 @@ EOF
 					$aGroupBy[(int)$iRow] = (int) $aRow[$sFctVar];
 					$iTotalCount += $aRow['_itop_count_'];
 					$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int) $aRow[$sFctVar]);
-					if ($iMaxNbCharInLabel < strlen($sValue)) {
-						$iMaxNbCharInLabel = strlen($sValue);
+					if ($iMaxNbCharsInLabel < strlen($sValue)) {
+						$iMaxNbCharsInLabel = strlen($sValue);
 					}
 
 					// Build the search for this subset
