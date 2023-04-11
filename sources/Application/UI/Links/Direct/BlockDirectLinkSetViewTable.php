@@ -79,9 +79,16 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
 			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
 				$aRowActions[] = array(
+					'label'         => 'UI:Links:ActionRow:Modify',
+					'tooltip'       => 'UI:Links:ActionRow:Modify+',
+					'icon_classes'  => 'fas fa-pen',
+					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
+				);
+				$aRowActions[] = array(
 					'label'         => 'UI:Links:ActionRow:Delete',
 					'tooltip'       => 'UI:Links:ActionRow:Delete+',
 					'icon_classes'  => 'fas fa-trash',
+					'color'         => 'danger',
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement);",
 					'confirmation'  => [
 						'message'                    => 'UI:Links:ActionRow:Delete:Confirmation',
@@ -89,15 +96,15 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 						'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 					],
 				);
+				break;
+
+			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
 				$aRowActions[] = array(
 					'label'         => 'UI:Links:ActionRow:Modify',
 					'tooltip'       => 'UI:Links:ActionRow:Modify+',
 					'icon_classes'  => 'fas fa-pen',
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
 				);
-				break;
-
-			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
 				$aRowActions[] = array(
 					'label'         => 'UI:Links:ActionRow:Detach',
 					'tooltip'       => 'UI:Links:ActionRow:Detach+',
@@ -108,12 +115,6 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 						'message_row_data'           => "{$this->sTargetClass}/hyperlink",
 						'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 					],
-				);
-				$aRowActions[] = array(
-					'label'         => 'UI:Links:ActionRow:Modify',
-					'tooltip'       => 'UI:Links:ActionRow:Modify+',
-					'icon_classes'  => 'fas fa-pen',
-					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw']);",
 				);
 				break;
 

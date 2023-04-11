@@ -76,6 +76,13 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		$aRowActions = array();
 
 		$aRowActions[] = array(
+			'label'         => 'UI:Links:ActionRow:Modify',
+			'tooltip'       => 'UI:Links:ActionRow:Modify+',
+			'icon_classes'  => 'fas fa-pen',
+			'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['Link/_key_/raw']);",
+		);
+
+		$aRowActions[] = array(
 			'label'         => 'UI:Links:ActionRow:Detach',
 			'tooltip'       => 'UI:Links:ActionRow:Detach+',
 			'icon_classes'  => 'fas fa-minus',
@@ -85,13 +92,6 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 				'message_row_data'           => "Remote/hyperlink",
 				'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 			],
-		);
-
-		$aRowActions[] = array(
-			'label'         => 'UI:Links:ActionRow:Modify',
-			'tooltip'       => 'UI:Links:ActionRow:Modify+',
-			'icon_classes'  => 'fas fa-pen',
-			'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['Link/_key_/raw']);",
 		);
 
 		return $aRowActions;
