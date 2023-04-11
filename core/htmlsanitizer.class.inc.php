@@ -49,10 +49,9 @@ abstract class HTMLSanitizer
 			$sSanitizerClass = 'HTMLDOMSanitizer';
 		} else if (false === is_subclass_of($sSanitizerClass, HTMLSanitizer::class)) {
 			if ($sConfigKey === 'html_sanitizer') {
-				IssueLog::Warning('The configured "'.$sConfigKey.'" class "'.$sSanitizerClass.'" is not a subclass of HTMLSanitizer. Will use HTMLDOMSanitizer as the default sanitizer.');
+				IssueLog::Warning('The configured "'.$sConfigKey.'" class "'.$sSanitizerClass.'" is not a subclass of '.HTMLSanitizer::class.'. Will use HTMLDOMSanitizer as the default sanitizer.');
 				$sSanitizerClass = 'HTMLDOMSanitizer';
-			}
-			if ($sConfigKey === 'svg_sanitizer') {
+			} else {
 				IssueLog::Error('The configured "'.$sConfigKey.'" class "'.$sSanitizerClass.'" is not a subclass of '.HTMLSanitizer::class.' ! Won\'t sanitize string.');
 
 				return $sHTML;
