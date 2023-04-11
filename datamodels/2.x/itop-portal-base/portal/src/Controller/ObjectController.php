@@ -1106,6 +1106,12 @@ class ObjectController extends BrickController
 			$oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, true, true);
 			$sHostClass = $oAttachment->Get('item_class');
 			$sHostId = $oAttachment->Get('item_id');
+			
+			// Attachments could be linked to host objects without an org_id. Retrieving the attachment would fail if enforced silos are based on org_id
+			if($oAttachment->Get('item_org_id') === 0 && ($sHostId > 0) && $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostClass, $sHostId)) {
+				$bCheckSecurity = false;
+			}
+			
 		}
 		else
 		{
