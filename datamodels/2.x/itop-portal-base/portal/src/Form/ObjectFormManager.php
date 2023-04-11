@@ -40,6 +40,7 @@ use Dict;
 use DOMDocument;
 use DOMXPath;
 use Exception;
+use ExceptionLog;
 use InlineImage;
 use IssueLog;
 use MetaModel;
@@ -1142,6 +1143,7 @@ class ObjectFormManager extends FormManager
 
 		$sObjectClass = get_class($this->oObject);
 
+		$bExceptionLogged = false;
 		try {
 			// modification flags
 			$bIsNew = $this->oObject->IsNew();
@@ -1163,6 +1165,14 @@ class ObjectFormManager extends FormManager
 				throw new Exception($e->getHtmlMessage());
 			}
 			catch (Exception $e) {
+				$aContext = [
+					'origin'    => __CLASS__.'::'.__METHOD__,
+					'obj_class' => get_class($this->oObject),
+					'obj_key' => $this->oObject->GetKey(),
+				];
+				ExceptionLog::LogException($e, $aContext);
+				$bExceptionLogged = true;
+
 				if ($bIsNew) {
 					throw new Exception(Dict::S('Portal:Error:ObjectCannotBeCreated'));
 				}
@@ -1222,11 +1232,12 @@ class ObjectFormManager extends FormManager
 				}
 			}
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			$aData['valid'] = false;
 			$aData['messages']['error'] += array('_main' => array($e->getMessage()));
-			IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
+			if (false === $bExceptionLogged) {
+				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
+			}
 		}
 
 		return $aData;
