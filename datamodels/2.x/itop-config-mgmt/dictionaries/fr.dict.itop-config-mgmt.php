@@ -419,7 +419,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:PowerConnection' => 'Connection Electrique',
+	'Class:PowerConnection' => 'Connexion électrique',
 	'Class:PowerConnection+' => '',
 ));
 
