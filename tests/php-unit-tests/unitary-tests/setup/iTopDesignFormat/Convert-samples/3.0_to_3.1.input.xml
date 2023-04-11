@@ -48,5 +48,56 @@
         <field id="status" xsi:type="AttributeLinkedSetIndirect"/>
       </fields>
     </class>
+    <class id="OtherClass">
+      <fields>
+        <field id="status" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="new">
+              <code>new</code>
+            </value>
+            <value id="assigned">
+              <code>assigned</code>
+            </value>
+          </values>
+          <sql>status</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="operational_status" xsi:type="AttributeMetaEnum">
+          <values>
+            <value id="ongoing">
+              <code>ongoing</code>
+            </value>
+            <value id="resolved">
+              <code>resolved</code>
+            </value>
+            <value id="closed">
+              <code>closed</code>
+            </value>
+          </values>
+          <sql>operational_status</sql>
+          <default_value>ongoing</default_value>
+          <mappings>
+            <mapping id="Ticket">
+              <attcode>status</attcode>
+              <metavalues>
+                <metavalue id="resolved">
+                  <values>
+                    <value id="resolved"/>
+                  </values>
+                </metavalue>
+                <metavalue id="closed">
+                  <values>
+                    <value id="closed"/>
+                    <value id="rejected"/>
+                  </values>
+                </metavalue>
+              </metavalues>
+            </mapping>
+          </mappings>
+        </field>
+      </fields>
+    </class>
   </classes>
 </itop_design>

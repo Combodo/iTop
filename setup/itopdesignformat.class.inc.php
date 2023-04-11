@@ -1102,6 +1102,24 @@ class iTopDesignFormat
 				$oNode->appendChild($oReadOnlyNode);
 			}
 		}
+
+		// N°1646 - Enum: logical ordering defined in datamodel (dashlet, list, transition menu...)
+		// - fill rank to keep actual order
+		$oAttributeEnumNodes = $oXPath->query("/itop_design/classes//class/fields/field/values");
+		foreach ($oAttributeEnumNodes as $oNode) {
+			$oValueNodes = $oNode->getElementsByTagName('value');
+			$aCodes = [];
+			foreach ($oValueNodes as $oNode) {
+				$aCodes [] = $oNode->getElementsByTagName('code')->item(0)->textContent;
+			}
+			sort($aCodes);
+			foreach ($oValueNodes as $oNode) {
+				$sCode = $oNode->getElementsByTagName('code')->item(0)->textContent;
+				$iRankValue = array_search($sCode, $aCodes);
+				$oRank = $oNode->ownerDocument->createElement("rank", $iRankValue);
+				$oNode->appendChild($oRank);
+			}
+		}
 	}
 	/**
 	 * Downgrade the format from version 3.1 to 3.0
@@ -1135,6 +1153,10 @@ class iTopDesignFormat
 		// N°2783 Custom zlists
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/presentation/custom_presentations");
 		$this->RemoveNodeFromXPath("/itop_design/meta/presentation/custom_presentations");
+
+		// N°1646 - Enum: logical ordering defined in datamodel (dashlet, list, transition menu...)
+		// - fill rank to keep actual order
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/values/value/rank");
 	}
 
 	/**
