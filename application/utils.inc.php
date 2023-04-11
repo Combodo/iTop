@@ -1848,11 +1848,11 @@ SQL;
 	}
 	
 	/**
-	 * Helper to execute an HTTP POST request
+	 * Helper to execute an HTTP POST request, uses CURL PHP extension
+	 *
 	 * Source: http://netevil.org/blog/2006/nov/http-post-from-php-without-curl
-	 *         originaly named after do_post_request
-	 * Does not require cUrl but requires openssl for performing https POSTs.
-	 * 
+	 *         originally named after do_post_request
+	 *
 	 * @param string $sUrl The URL to POST the data to
 	 * @param array $aData The data to POST as an array('param_name' => value)
 	 * @param string $sOptionnalHeaders Additional HTTP headers as a string with newlines between headers
@@ -1863,117 +1863,63 @@ SQL;
 	 *
 	 * @return string The result of the POST request
 	 * @throws Exception with a specific error message depending on the cause
-	 */ 
+	 *
+	 * @noinspection PhpComposerExtensionStubsInspection we don't want the "white screen of death" on production (N°6146)
+	 *
+	 * @since 3.1.0 N°6172 as curl ext is now mandatory, removes the extension detection + fallback
+	 */
 	public static function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = array())
 	{
-		// $sOptionnalHeaders is a string containing additional HTTP headers that you would like to send in your request.
-	
-		if (function_exists('curl_init'))
-		{
-			// If cURL is available, let's use it, since it provides a greater control over the various HTTP/SSL options
-			// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
-			// by setting the SSLVERSION to 3 as done below.
-			$aHeaders = explode("\n", $sOptionnalHeaders ?? '');
-			// N°3267 - Webservices: Fix optional headers not being taken into account
-			//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
-			$aHTTPHeaders = array();
-			foreach($aHeaders as $sHeaderString)
-			{
-				$aHTTPHeaders[] = trim($sHeaderString);
-			}
-			// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
-			$aOptions = array(
-				CURLOPT_RETURNTRANSFER	=> true,     // return the content of the request
-				CURLOPT_HEADER			=> false,    // don't return the headers in the output
-				CURLOPT_FOLLOWLOCATION	=> true,     // follow redirects
-				CURLOPT_ENCODING		=> "",       // handle all encodings
-				CURLOPT_USERAGENT		=> "spider", // who am i
-				CURLOPT_AUTOREFERER		=> true,     // set referer on redirect
-				CURLOPT_CONNECTTIMEOUT	=> 120,      // timeout on connect
-				CURLOPT_TIMEOUT			=> 120,      // timeout on response
-				CURLOPT_MAXREDIRS		=> 10,       // stop after 10 redirects
-				CURLOPT_SSL_VERIFYPEER	=> false,    // Disabled SSL Cert checks
-				// SSLV3 (CURL_SSLVERSION_SSLv3 = 3) is now considered as obsolete/dangerous: http://disablessl3.com/#why
-				// but it used to be a MUST to prevent a strange SSL error: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
-				// CURLOPT_SSLVERSION		=> 3,
-				CURLOPT_POST			=> count($aData),
-				CURLOPT_POSTFIELDS		=> http_build_query($aData),
-				CURLOPT_HTTPHEADER		=> $aHTTPHeaders,
-			);
-			
-			$aAllOptions = $aCurlOptions + $aOptions;
-			$ch = curl_init($sUrl);
-			curl_setopt_array($ch, $aAllOptions);
-			$response = curl_exec($ch);
-			$iErr = curl_errno($ch);
-			$sErrMsg = curl_error( $ch );
-			$aHeaders = curl_getinfo( $ch );
-			if ($iErr !== 0)
-			{
-				throw new Exception("Problem opening URL: $sUrl, $sErrMsg");
-			}
-			if (is_array($aResponseHeaders))
-			{
-				$aHeaders = curl_getinfo($ch);
-				foreach($aHeaders as $sCode => $sValue)
-				{
-					$sName = str_replace(' ' , '-', ucwords(str_replace('_', ' ', $sCode))); // Transform "content_type" into "Content-Type"
-					$aResponseHeaders[$sName] = $sValue;
-				}
-			}
-			curl_close( $ch );
+		// CURL PHP extension is mandatory since 3.1.0 (N°5270)
+		// it provides a greater control over the various HTTP/SSL options
+		// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
+		// by setting the SSLVERSION to 3 as done below.
+		$aHeaders = explode("\n", $sOptionnalHeaders ?? '');
+		// N°3267 - Webservices: Fix optional headers not being taken into account
+		//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
+		$aHTTPHeaders = array();
+		foreach ($aHeaders as $sHeaderString) {
+			$aHTTPHeaders[] = trim($sHeaderString);
 		}
-		else
-		{
-			// cURL is not available let's try with streams and fopen...
-			
-			$sData = http_build_query($aData);
-			$aParams = array('http' => array(
-									'method' => 'POST',
-									'content' => $sData,
-									'header'=> "Content-type: application/x-www-form-urlencoded\r\nContent-Length: ".strlen($sData)."\r\n",
-									));
-			if ($sOptionnalHeaders !== null)
-			{
-				$aParams['http']['header'] .= $sOptionnalHeaders;
-			}
-			$ctx = stream_context_create($aParams);
-		
-			$fp = @fopen($sUrl, 'rb', false, $ctx);
-			if (!$fp)
-			{
-				global $php_errormsg;
-				if (isset($php_errormsg))
-				{
-					throw new Exception("Wrong URL: $sUrl, $php_errormsg");
-				}
-				elseif ((strtolower(substr($sUrl, 0, 5)) == 'https') && !extension_loaded('openssl'))
-				{
-					throw new Exception("Cannot connect to $sUrl: missing module 'openssl'");
-				}
-				else
-				{
-					throw new Exception("Wrong URL: $sUrl");
-				}
-			}
-			$response = @stream_get_contents($fp);
-			if ($response === false)
-			{
-				throw new Exception("Problem reading data from $sUrl, $php_errormsg");
-			}
-			if (is_array($aResponseHeaders))
-			{
-				$aMeta = stream_get_meta_data($fp);
-				$aHeaders = $aMeta['wrapper_data'];
-				foreach($aHeaders as $sHeaderString)
-				{
-					if(preg_match('/^([^:]+): (.+)$/', $sHeaderString, $aMatches))
-					{
-						$aResponseHeaders[$aMatches[1]] = trim($aMatches[2]);
-					}
-				}
+		// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
+		$aOptions = array(
+			CURLOPT_RETURNTRANSFER => true,     // return the content of the request
+			CURLOPT_HEADER         => false,    // don't return the headers in the output
+			CURLOPT_FOLLOWLOCATION => true,     // follow redirects
+			CURLOPT_ENCODING       => "",       // handle all encodings
+			CURLOPT_USERAGENT      => "spider", // who am i
+			CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+			CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
+			CURLOPT_TIMEOUT        => 120,      // timeout on response
+			CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+			CURLOPT_SSL_VERIFYPEER => false,    // Disabled SSL Cert checks
+			// SSLV3 (CURL_SSLVERSION_SSLv3 = 3) is now considered as obsolete/dangerous: http://disablessl3.com/#why
+			// but it used to be a MUST to prevent a strange SSL error: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
+			// CURLOPT_SSLVERSION		=> 3,
+			CURLOPT_POST           => count($aData),
+			CURLOPT_POSTFIELDS     => http_build_query($aData),
+			CURLOPT_HTTPHEADER     => $aHTTPHeaders,
+		);
+
+		$aAllOptions = $aCurlOptions + $aOptions;
+		$ch = curl_init($sUrl);
+		curl_setopt_array($ch, $aAllOptions);
+		$response = curl_exec($ch);
+		$iErr = curl_errno($ch);
+		$sErrMsg = curl_error($ch);
+		$aHeaders = curl_getinfo($ch);
+		if ($iErr !== 0) {
+			throw new Exception("Problem opening URL: $sUrl, $sErrMsg");
+		}
+		if (is_array($aResponseHeaders)) {
+			$aHeaders = curl_getinfo($ch);
+			foreach ($aHeaders as $sCode => $sValue) {
+				$sName = str_replace(' ', '-', ucwords(str_replace('_', ' ', $sCode))); // Transform "content_type" into "Content-Type"
+				$aResponseHeaders[$sName] = $sValue;
 			}
 		}
+		curl_close($ch);
+
 		return $response;
 	}
 
