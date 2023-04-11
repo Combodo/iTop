@@ -335,8 +335,8 @@ abstract class AbstractPreferencesExtension implements iPreferencesExtension
  * A recommended pattern is to cache data by the mean of static members.
  *
  * @api
+ * @deprecated  3.1.0 N°4756 use the new event service instead, see {@see DBObject::FireEvent()} method
  * @package     UIExtensibilityAPI
- * @deprecated
  */
 interface iApplicationUIExtension
 {
