@@ -4,6 +4,8 @@
  */
 
 /* SCSS variables */
+$ibo-modal--max-height: 90vh !default;
+$ibo-modal--max-width: 90vw !default;
 $ibo-modal-option--do-not-show-again--margin-top: $ibo-spacing-500 !default;
 
 $ibo-modal--is-informative--min-width: $ibo-size-700 !default;
@@ -12,6 +14,13 @@ $ibo-modal--is-informative--is-error--highlight--background-color: $ibo-color-re
 $ibo-modal--is-informative--is-warning--highlight--background-color: $ibo-color-orange-600 !default;
 $ibo-modal--is-informative--is-information--highlight--background-color: $ibo-color-blue-600 !default;
 $ibo-modal--is-informative--is-success--highlight--background-color: $ibo-color-green-600 !default;
+
+/* Avoid modals bigger than window size 
+!important in order to overload jQueryUI max-height:none being put on dialog elements */
+.ibo-modal{
+  max-height: $ibo-modal--max-height !important;
+  max-width: $ibo-modal--max-width !important;
+}
 
 // Modal Option - Do not show again
 .ibo-modal-option--do-not-show-again{

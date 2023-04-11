@@ -294,7 +294,13 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 
 	// Show modal
 	oModalElem.dialog(oJQueryOptions);
-
+	
+	// - When resizing a window, center it
+	// TODO 3.1 move this to a BindEvents function
+	oModalElem.on('resize', function(){
+		$(this).dialog("option", "position", {my: "center", at: "center", of: window});
+	});
+	
 	// TODO 3.1 : Cleanup
 	// {
 	// 	height: 'auto',
