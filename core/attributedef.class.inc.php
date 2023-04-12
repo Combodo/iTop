@@ -1773,7 +1773,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetImportColumns()
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'TEXT';
+		$aColumns[$this->GetCode()] = 'MEDIUMTEXT';
 
 		return $aColumns;
 	}
