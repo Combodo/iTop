@@ -123,6 +123,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	protected static function RenderDataTable(DataTable $oDataTable, string $sStyle, WebPage $oPage, string $sListId, DBObjectSet $oSet, array $aExtraParams)
 	{
+		// Filter this list action
+		$sFilterListUrl = utils::GetDataTableSearchUrl($oSet->GetFilter(), $aExtraParams);
+		if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
+			$aExtraParams['filter_this_list_url'] = $sFilterListUrl;
+		}
+
 		if (!isset($aExtraParams['menu']) || $aExtraParams['menu']) {
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
 			$aExtraParams['refresh_action'] = $oDataTable->GetJSRefresh();
@@ -177,7 +183,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			} else {
 				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection', $sCountHtml);
 			}
-			$sFilterListUrl = utils::GetDataTableSearchUrl($oSet->GetFilter(), $aExtraParams);
+
 			if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
 				$sSubTitle = '<a href="'.$sFilterListUrl.'" title="'.Dict::S('UI:Menu:FilterList').'">'.$sSubTitle.'</a>';
 			}
