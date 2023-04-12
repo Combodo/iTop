@@ -56,7 +56,7 @@ class DeadLockInjection
 			if ($this->iRequestCount == $this->iFailAt) {
 				echo "Generating a FAKE DEADLOCK\n";
 				IssueLog::Trace("Generating a FAKE DEADLOCK", 'cmdbsource');
-				throw new MySQLException("FAKE DEADLOCK", [], new Exception("FAKE DEADLOCK", 1213));
+				throw new MySQLException("FAKE DEADLOCK", [], new Exception("FAKE DEADLOCK", CMDBSource::MYSQL_ERRNO_DEADLOCK));
 			}
 		}
 	}
