@@ -86,23 +86,26 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 		return $oField;
 	}
 
-	public static function MakeLarge(string $sLabel, string $sValueHtml = '')
+	public static function MakeLarge(string $sLabel, string $sValueHtml = '', string $sTooltip = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
+		$oField->SetTooltip($sTooltip);
 		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_LARGE);
 		return $oField;
 	}
 
-	public static function MakeSmall(string $sLabel, string $sValueHtml = '')
+	public static function MakeSmall(string $sLabel, string $sValueHtml = '', string $sTooltip = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
+		$oField->SetTooltip($sTooltip);
 		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_SMALL);
 		return $oField;
 	}
 
-	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null)
+	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null, string $sTooltip = '')
 	{
 		$oField = new Field($sLabel, null, $sId);
+		$oField->SetTooltip($sTooltip);
 		$oField->SetLayout($sLayout);
 		return $oField;
 
