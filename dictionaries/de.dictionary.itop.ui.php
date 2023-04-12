@@ -445,7 +445,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => 'Entfernen >>',
 	'UI:Button:FilterList' => 'Filter...',
 	'UI:Button:Create' => 'Erstellen',
-	'UI:Button:Delete' => 'Löschen!',
+	'UI:Button:Delete' => 'Löschen',
 	'UI:Button:Rename' => 'Umbenennen...',
 	'UI:Button:ChangePassword' => 'Passwort ändern',
 	'UI:Button:ResetPassword' => 'Passwort zurücksetzen',

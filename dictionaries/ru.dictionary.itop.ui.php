@@ -417,7 +417,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:RemoveFromList' => ' Удалить >> ',
 	'UI:Button:FilterList' => ' Фильтр... ',
 	'UI:Button:Create' => ' Создать ',
-	'UI:Button:Delete' => ' Удалить ! ',
+	'UI:Button:Delete' => ' Удалить ',
 	'UI:Button:Rename' => ' Переименовать...',
 	'UI:Button:ChangePassword' => ' Изменить пароль ',
 	'UI:Button:ResetPassword' => ' Сбросить пароль ',

@@ -405,7 +405,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => '削除 >> ',
 	'UI:Button:FilterList' => ' フィルタ... ',
 	'UI:Button:Create' => ' 作成 ',
-	'UI:Button:Delete' => ' 削除! ',
+	'UI:Button:Delete' => ' 削除 ',
 	'UI:Button:Rename' => ' 名前変更',
 	'UI:Button:ChangePassword' => ' パスワード変更 ',
 	'UI:Button:ResetPassword' => 'パスワードリセット ',

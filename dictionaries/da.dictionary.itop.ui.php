@@ -405,7 +405,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Fjern >> ',
 	'UI:Button:FilterList' => ' Filter... ',
 	'UI:Button:Create' => ' Opret ',
-	'UI:Button:Delete' => ' Slet! ',
+	'UI:Button:Delete' => ' Slet ',
 	'UI:Button:Rename' => ' Omdøb... ',
 	'UI:Button:ChangePassword' => ' Skift Password ',
 	'UI:Button:ResetPassword' => ' Reset Password ',

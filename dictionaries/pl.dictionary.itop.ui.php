@@ -417,7 +417,7 @@ Mamy nadzieję, że spodoba ci się ta wersja tak samo, jak nam się podobało j
 	'UI:Button:RemoveFromList' => ' Usuń >> ',
 	'UI:Button:FilterList' => ' Filtruj... ',
 	'UI:Button:Create' => ' Utwórz ',
-	'UI:Button:Delete' => ' Usuń ! ',
+	'UI:Button:Delete' => ' Usuń ',
 	'UI:Button:Rename' => ' Zmień nazwę... ',
 	'UI:Button:ChangePassword' => ' Zmień hasło ',
 	'UI:Button:ResetPassword' => ' Reset hasła ',

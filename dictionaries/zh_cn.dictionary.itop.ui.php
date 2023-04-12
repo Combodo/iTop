@@ -421,7 +421,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:RemoveFromList' => '移除 >>',
 	'UI:Button:FilterList' => '过滤...',
 	'UI:Button:Create' => '创建',
-	'UI:Button:Delete' => '删除!',
+	'UI:Button:Delete' => '删除',
 	'UI:Button:Rename' => '重命名...',
 	'UI:Button:ChangePassword' => '修改密码',
 	'UI:Button:ResetPassword' => '重置密码',

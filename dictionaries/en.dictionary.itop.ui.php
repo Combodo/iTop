@@ -472,7 +472,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList'       => ' Remove >> ',
 	'UI:Button:FilterList'           => ' Filter... ',
 	'UI:Button:Create'               => ' Create ',
-	'UI:Button:Delete'               => ' Delete ! ',
+	'UI:Button:Delete'               => ' Delete ',
 	'UI:Button:Rename'               => ' Rename... ',
 	'UI:Button:ChangePassword'       => ' Change Password ',
 	'UI:Button:ResetPassword'        => ' Reset Password ',
