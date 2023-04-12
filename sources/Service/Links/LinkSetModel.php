@@ -28,7 +28,7 @@ class LinkSetModel
 	 *
 	 * @return string
 	 */
-	static public function GetTargetClass(AttributeLinkedSet $oAttDef): string
+	public static function GetTargetClass(AttributeLinkedSet $oAttDef): string
 	{
 		try {
 			if ($oAttDef instanceof AttributeLinkedSetIndirect) {
@@ -52,7 +52,7 @@ class LinkSetModel
 	 *
 	 * @return string
 	 */
-	static public function GetLinkedClass(AttributeLinkedSet $oAttDef): string
+	public static function GetLinkedClass(AttributeLinkedSet $oAttDef): string
 	{
 		return $oAttDef->GetLinkedClass();
 	}
@@ -64,7 +64,7 @@ class LinkSetModel
 	 *
 	 * @return string|null
 	 */
-	static public function GetTargetField(AttributeLinkedSet $oAttDef): ?string
+	public static function GetTargetField(AttributeLinkedSet $oAttDef): ?string
 	{
 		if ($oAttDef instanceof AttributeLinkedSetIndirect) {
 			return $oAttDef->GetExtKeyToRemote();
@@ -73,5 +73,21 @@ class LinkSetModel
 		}
 	}
 
+	/**
+	 * Return true if we're allowed to create a remote object from this linkset.
+	 *
+	 * @param AttributeLinkedSet $oAttDef
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public static function IsRemoteCreationAllowed(AttributeLinkedSet $oAttDef): bool
+	{
+		if ($oAttDef instanceof AttributeLinkedSetIndirect) {
+			return MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $oAttDef->GetExtKeyToRemote())->AllowTargetCreation();
+		} else {
+			return in_array($oAttDef->GetEditMode(), [LINKSET_EDITMODE_ADDREMOVE, LINKSET_EDITMODE_ADDONLY, LINKSET_EDITMODE_INPLACE, LINKSET_EDITMODE_ACTIONS], true);
+		}
+	}
 
 }
