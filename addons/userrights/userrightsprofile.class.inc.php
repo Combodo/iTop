@@ -34,14 +34,15 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights,grant_by_profile,filter",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_profiles",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
+			"category"                   => "addon/userrights,grant_by_profile,filter",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "name",
+			"complementary_name_attcode" => array('description'),
+			"state_attcode"              => "",
+			"reconc_keys"                => array(),
+			"db_table"                   => "priv_urp_profiles",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
