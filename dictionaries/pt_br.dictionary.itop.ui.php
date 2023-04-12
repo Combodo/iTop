@@ -416,7 +416,7 @@ Esperamos que você goste desta versão tanto quanto gostamos de imaginá-la e c
 	'UI:Button:RemoveFromList' => ' Excluir >> ',
 	'UI:Button:FilterList' => ' Filtrar... ',
 	'UI:Button:Create' => ' Criar ',
-	'UI:Button:Delete' => ' Excluir ! ',
+	'UI:Button:Delete' => ' Excluir ',
 	'UI:Button:Rename' => ' Renomear... ',
 	'UI:Button:ChangePassword' => ' Alterar senha ',
 	'UI:Button:ResetPassword' => ' Redefinir senha ',

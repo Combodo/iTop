@@ -416,7 +416,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Sil >> ',
 	'UI:Button:FilterList' => ' Filtreleme... ',
 	'UI:Button:Create' => ' Yarat ',
-	'UI:Button:Delete' => ' Sil ! ',
+	'UI:Button:Delete' => ' Sil ',
 	'UI:Button:Rename' => ' Yeniden adlandır... ',
 	'UI:Button:ChangePassword' => ' Şifre değiştir ',
 	'UI:Button:ResetPassword' => ' Şifreyi sıfırla ',

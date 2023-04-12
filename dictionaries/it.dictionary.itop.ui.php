@@ -416,7 +416,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Rimuovi >> ~~',
 	'UI:Button:FilterList' => ' Filtra... ~~',
 	'UI:Button:Create' => ' Crea ~~',
-	'UI:Button:Delete' => ' Cancella ! ~~',
+	'UI:Button:Delete' => ' Cancella ~~',
 	'UI:Button:Rename' => ' Rename... ~~',
 	'UI:Button:ChangePassword' => ' Cambia Password ~~',
 	'UI:Button:ResetPassword' => ' Resetta Password ~~',

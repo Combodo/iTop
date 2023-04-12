@@ -416,7 +416,7 @@ We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben ge
 	'UI:Button:RemoveFromList' => ' Verwijder >> ',
 	'UI:Button:FilterList' => ' Filter... ',
 	'UI:Button:Create' => ' Maak aan ',
-	'UI:Button:Delete' => ' Verwijder ! ',
+	'UI:Button:Delete' => ' Verwijder ',
 	'UI:Button:Rename' => ' Hernoem... ',
 	'UI:Button:ChangePassword' => ' Verander wachtwoord ',
 	'UI:Button:ResetPassword' => ' Stel wachtwoord opnieuw in ',
