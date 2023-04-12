@@ -105,12 +105,14 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 	 * @api
 	 * @param string $sLabel
 	 * @param string $sValueHtml
+	 * @param string $sTooltip
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
 	 */
-	public static function MakeLarge(string $sLabel, string $sValueHtml = '')
+	public static function MakeLarge(string $sLabel, string $sValueHtml = '', string $sTooltip = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
+		$oField->SetTooltip($sTooltip);
 		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_LARGE);
 		return $oField;
 	}
@@ -119,12 +121,14 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 	 * @api
 	 * @param string $sLabel
 	 * @param string $sValueHtml
+	 * @param string $sTooltip
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
 	 */
-	public static function MakeSmall(string $sLabel, string $sValueHtml = '')
+	public static function MakeSmall(string $sLabel, string $sValueHtml = '', string $sTooltip = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
+		$oField->SetTooltip($sTooltip);
 		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_SMALL);
 		return $oField;
 	}
@@ -134,12 +138,14 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sLabel
 	 * @param string $sLayout
 	 * @param string|null $sId
+	 * @param string $sTooltip
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
 	 */
-	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null)
+	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null, string $sTooltip = '')
 	{
 		$oField = new Field($sLabel, null, $sId);
+		$oField->SetTooltip($sTooltip);
 		$oField->SetLayout($sLayout);
 		return $oField;
 

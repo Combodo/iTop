@@ -46,6 +46,8 @@ class Field extends UIContentBlock
 	/** @var string */
 	protected $sLabel;
 	/** @var string */
+	protected $sTooltip = '';
+	/** @var string */
 	protected $sValueId;
 
 	/** @var string */
@@ -353,5 +355,29 @@ class Field extends UIContentBlock
 		$this->AddDataAttribute('input-type', $sInputType);
 
 		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetTooltip(): string
+	{
+		return $this->sTooltip;
+	}
+
+	/**
+	 * @param string $sTooltip
+	 *
+	 * @return $this
+	 */
+	public function SetTooltip(string $sTooltip)
+	{
+		$this->sTooltip = $sTooltip;
+		return $this;
+	}
+
+	public function HasTooltip() : bool
+	{
+		return $this->GetTooltip() !== '';
 	}
 }
