@@ -6,8 +6,8 @@
 
 namespace Combodo\iTop\Application\UI\Links\Direct;
 
+use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Links\AbstractBlockLinkSetViewTable;
-use Combodo\iTop\Service\Links\LinkSetModel;
 use MetaModel;
 
 /**
@@ -88,7 +88,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 					'label'         => 'UI:Links:ActionRow:Delete',
 					'tooltip'       => 'UI:Links:ActionRow:Delete+',
 					'icon_classes'  => 'fas fa-trash',
-					'color'         => 'danger',
+					'color'         => Button::ENUM_COLOR_SCHEME_DESTRUCTIVE,
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement);",
 					'confirmation'  => [
 						'message'                    => 'UI:Links:ActionRow:Delete:Confirmation',
