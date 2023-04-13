@@ -1124,9 +1124,10 @@ EOF
 				}
 				$oPage->add_ready_script(
 <<<EOF
+// Calculate height of graph : 200px (minimum height for the chart) + 20*iNbLinesToAddForName for the legend
 var iChartDefaultHeight = 200,
       iChartLegendHeight = 20 * $iNbLinesToAddForName,
-      iChartTotalHeight = (200 + iChartLegendHeight);
+      iChartTotalHeight = (iChartDefaultHeight + iChartLegendHeight);
 $('#my_chart_$sId').height(iChartTotalHeight + 'px');
 var chart = c3.generate({
     bindto: d3.select('#my_chart_$sId'),
