@@ -1045,9 +1045,10 @@ EOF
 				$sJson = json_encode($aValues);
 				$oPage->add_ready_script(
 <<<EOF
-// Calculate height of chart : 200px (height of the chart) + 6*iMaxNbCharsInLabel for the legend
-var iChartHeight = (200 + 6 * $iMaxNbCharsInLabel);
-$('#my_chart_$sId').height(iChartHeight + 'px');
+var iChartDefaultHeight = 200,
+      iChartLegendHeight = 6 * $iMaxNbCharsInLabel,
+      iChartTotalHeight = iChartDefaultHeight + iChartLegendHeight;
+$('#my_chart_$sId').height(iChartTotalHeight+ 'px');
 var chart = c3.generate({
     bindto: d3.select('#my_chart_$sId'),
     data: {
