@@ -297,9 +297,13 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 	
 	// - When resizing a window, center it
 	// TODO 3.1 move this to a BindEvents function
-	oModalElem.on('resize', function(){
-		$(this).dialog("option", "position", {my: "center", at: "center", of: window});
-	});
+
+	if(window.ResizeObserver) {
+		const oModalObs = new ResizeObserver(function(){
+			oModalElem.dialog("option", "position", {my: "center", at: "center", of: window});
+		});
+		oModalObs.observe(oModalElem[0]);
+	}
 	
 	// TODO 3.1 : Cleanup
 	// {
