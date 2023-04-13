@@ -1009,6 +1009,8 @@ EOF
 				$iTotalCount = 0;
 				$aValues = array();
 				$aURLs = array();
+				$iMaxNbCharsInLabel = 0;
+				
 				foreach ($aRes as $iRow => $aRow)
 				{
 					$sValue = $aRow['grouped_by_1'];
@@ -1016,7 +1018,11 @@ EOF
 					$aGroupBy[(int)$iRow] = (int) $aRow[$sFctVar];
 					$iTotalCount += $aRow['_itop_count_'];
 					$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int) $aRow[$sFctVar]);
-					
+
+					if ($iMaxNbCharsInLabel < mb_strlen($sValue)) {
+						$iMaxNbCharsInLabel = mb_strlen($sValue);
+					}
+
 					// Build the search for this subset
 					$oSubsetSearch = $this->m_oFilter->DeepClone();
 					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
@@ -1039,7 +1045,10 @@ EOF
 				$sJson = json_encode($aValues);
 				$oPage->add_ready_script(
 <<<EOF
-
+var iChartDefaultHeight = 200,
+      iChartLegendHeight = 6 * $iMaxNbCharsInLabel,
+      iChartTotalHeight = iChartDefaultHeight + iChartLegendHeight;
+$('#my_chart_$sId').height(iChartTotalHeight+ 'px');
 var chart = c3.generate({
     bindto: d3.select('#my_chart_$sId'),
     data: {
@@ -1107,8 +1116,19 @@ EOF
 				}
 				$sJSColumns = json_encode($aColumns);
 				$sJSNames = json_encode($aNames);
+				$iNbLinesToAddForName = 0;
+				if (count($aNames) > 50) {
+					// Calculation of the number of legends line add to the height of the graph to have a maximum of 5 legend columns
+					$iNbLinesIncludedInChartHeight = 10;
+					$iNbLinesToAddForName = ceil(count($aNames) / 5) - $iNbLinesIncludedInChartHeight;
+				}
 				$oPage->add_ready_script(
 <<<EOF
+// Calculate height of graph : 200px (minimum height for the chart) + 20*iNbLinesToAddForName for the legend
+var iChartDefaultHeight = 200,
+      iChartLegendHeight = 20 * $iNbLinesToAddForName,
+      iChartTotalHeight = (iChartDefaultHeight + iChartLegendHeight);
+$('#my_chart_$sId').height(iChartTotalHeight + 'px');
 var chart = c3.generate({
     bindto: d3.select('#my_chart_$sId'),
     data: {
