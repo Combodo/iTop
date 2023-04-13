@@ -3375,13 +3375,10 @@ EOF
 				}
 			}
 		} else {
-			foreach ($this->FlattenZList(MetaModel::GetZListItems($sClass, 'details')) as $sAttCode) {
-				$aAttributes[$sAttCode] = true;
-			}
+			$aList = $this->FlattenZList(MetaModel::GetZListItems($sClass, 'details'));
+
 			foreach (MetaModel::GetAttributesList($sClass) as $sAttCode) {
-				if (!array_key_exists($sAttCode, $aAttributes)) {
-					$aAttributes[$sAttCode] = true;
-				}
+				$aAttributes[$sAttCode] = true;
 			}
 			// Order the fields based on their dependencies, set the fields for which there is only one possible value
 			// and perform this in the order of dependencies to avoid dead-ends
@@ -3389,7 +3386,14 @@ EOF
 			foreach ($aAttributes as $sAttCode => $trash) {
 				$aDeps[$sAttCode] = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
 			}
-			$aList = $this->OrderDependentFields($aDeps);
+			$aListOrdered = $this->OrderDependentFields($aDeps);
+
+			//merge of the two list
+			foreach ($aListOrdered as $sAttCode) {
+				if (!in_array($sAttCode, $aList)) {
+					$aList[] = $sAttCode;
+				}
+			}
 		}
 
 		$bExistFieldToDisplay = false;
