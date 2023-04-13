@@ -300,7 +300,9 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 
 	if(window.ResizeObserver) {
 		const oModalObs = new ResizeObserver(function(){
-			oModalElem.dialog("option", "position", {my: "center", at: "center", of: window});
+			if(oModalElem.dialog('instance') !== undefined){
+				oModalElem.dialog("option", "position", {my: "center", at: "center", of: window});
+			}
 		});
 		oModalObs.observe(oModalElem[0]);
 	}
