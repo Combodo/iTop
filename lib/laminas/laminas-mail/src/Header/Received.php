@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Header;
 
 use Laminas\Mail\Headers;
@@ -80,7 +74,7 @@ class Received implements HeaderInterface, MultipleHeadersInterface
     {
         $strings = [$this->toString()];
         foreach ($headers as $header) {
-            if (! $header instanceof Received) {
+            if (! $header instanceof self) {
                 throw new Exception\RuntimeException(
                     'The Received multiple header implementation can only accept an array of Received headers'
                 );

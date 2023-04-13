@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -110,7 +110,7 @@ class Dict
 	 *
 	 * @param string $sStringCode The code identifying the dictionary entry
 	 * @param string $sDefault Default value if there is no match in the dictionary
-	 * @param bool $bUserLanguageOnly True to allow the use of the default language as a fallback, false otherwise
+	 * @param bool $bUserLanguageOnly False to allow the use of the default language as a fallback, true otherwise
 	 *
 	 * @return string
 	 */
@@ -174,7 +174,7 @@ class Dict
 	 *
 	 * @return string
 	 */
-	public static function Format($sFormatCode /*, ... arguments ....*/)
+	public static function Format($sFormatCode /*, ... arguments ... */)
 	{
 		$sLocalizedFormat = self::S($sFormatCode);
 		$aArguments = func_get_args();

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -119,7 +119,7 @@ class SearchForm
 		}
 
 		$sContext = $oAppContext->GetForLink();
-		$sJsonExtraParams = htmlentities(json_encode($aListParams), ENT_QUOTES);
+		$sJsonExtraParams = utils::EscapeHtml(json_encode($aListParams));
 		$sOuterSelector = $aExtraParams['result_list_outer_selector'];
 
 		if (isset($aExtraParams['search_header_force_dropdown'])) {

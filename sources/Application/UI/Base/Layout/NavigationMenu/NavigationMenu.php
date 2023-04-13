@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,7 +18,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\NavigationMenu;
-
 
 use ApplicationContext;
 use ApplicationMenu;
@@ -86,6 +85,9 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	protected $bIsExpanded;
 	/** @var bool Whether the hint on how the menu filter works shoudl be displayed or not */
 	protected $bShowMenuFilterHint;
+	/** @var bool */
+	protected $bShowMenusCount;
+
 
 	/**
 	 * NavigationMenu constructor.
@@ -106,10 +108,13 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	) {
 		parent::__construct($sId);
 
+		$oConfig = MetaModel::GetConfig();
+
 		$this->sAppRevisionNumber = utils::GetAppRevisionNumber();
 		$this->sAppSquareIconUrl = Branding::GetCompactMainLogoAbsoluteUrl();
 		$this->sAppFullIconUrl = Branding::GetFullMainLogoAbsoluteUrl();
-		$this->sAppIconLink = MetaModel::GetConfig()->Get('app_icon_url');
+		$this->sAppIconLink = $oConfig->Get('app_icon_url');
+		$this->SetShowMenusCount($oConfig->Get('navigation_menu.show_menus_count'));
 		$this->aSiloSelection = array();
 		$this->aMenuGroups = ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash());
 		$this->oUserMenu = $oUserMenu;
@@ -196,7 +201,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		}
 		return '';
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -282,12 +287,20 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 
 		// Try if a custom URL was set in the configuration file
 		if(MetaModel::GetConfig()->IsCustomValue($sPropCode)) {
-			$this->sAppIconLink = MetaModel::GetConfig()->Get('app_icon_url');
+			$this->sAppIconLink = MetaModel::GetConfig()->Get($sPropCode);
 		}
 		// Otherwise use the home page
 		else {
-			$this->sAppIconLink = MetaModel::GetConfig()->Get('app_root_url');
+			$this->sAppIconLink = utils::GetAbsoluteUrlAppRoot();
 		}
+	}
+
+	/**
+	 * @return True if the silo selection is enabled, false otherwise
+	 * @since 3.1.0
+	 */
+	public function IsSiloSelectionEnabled() : bool {
+		return MetaModel::GetConfig()->Get('navigation_menu.show_organization_filter');
 	}
 
 	/**
@@ -300,6 +313,10 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	{
 		$this->bHasSiloSelected = false;
 		$this->sSiloLabel = null;
+
+		if (! $this->IsSiloSelectionEnabled()){
+			return;
+		}
 
 		//TODO 3.0 Use components if we have the time to build select/autocomplete components before release
 		// List of visible Organizations
@@ -343,7 +360,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 				$this->aSiloSelection['html'] = '<form data-role="ibo-navigation-menu--silo-selection--form" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
 
 				$oPage = new \CaptureWebPage();
-				
+
 				$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
 				$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
 				$this->aSiloSelection['html'] .= $oWidget->DisplaySelect($oPage, $iMaxComboLength, false, Dict::S('UI:Layout:NavigationMenu:Silo:Label'), $oSet, $iCurrentOrganization, false, 'c[org_id]', '',
@@ -376,7 +393,7 @@ $sAddClearButton
 JS;
 		}
 	}
-	
+
 	/**
 	 * Compute if the menu is expanded or collapsed
 	 *
@@ -479,4 +496,21 @@ JS;
 	{
 		return "[data-role='".static::BLOCK_CODE."']";
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetShowMenusCount(): bool
+	{
+		return $this->bShowMenusCount;
+	}
+
+	/**
+	 * @param bool $bShowMenusCount
+	 */
+	public function SetShowMenusCount(bool $bShowMenusCount): void
+	{
+		$this->bShowMenusCount = $bShowMenusCount;
+	}
+
 }

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -85,9 +85,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Location/Attribute:country' => 'Land',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'List Fysiske Enheder',
-	'Class:Location/Attribute:physicaldevice_list+' => '',
+	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => 'List Kontakter',
-	'Class:Location/Attribute:person_list+' => '',
+	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
 ));
 
 //
@@ -122,7 +122,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Contact/Attribute:function' => 'Funktion',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'CIs',
-	'Class:Contact/Attribute:cis_list+' => '',
+	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => 'Type',
 	'Class:Contact/Attribute:finalclass+' => '',
 ));
@@ -151,9 +151,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Person/Attribute:manager_name' => 'Manager-Navn',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'List Teams',
-	'Class:Person/Attribute:team_list+' => '',
+	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'List Tickets',
-	'Class:Person/Attribute:tickets_list+' => '',
+	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager Friendly Name',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Picture~~',
@@ -172,9 +172,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
 	'Class:Team/Attribute:persons_list' => 'List Medlemmer',
-	'Class:Team/Attribute:persons_list+' => '',
+	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
 	'Class:Team/Attribute:tickets_list' => 'List Tickets',
-	'Class:Team/Attribute:tickets_list+' => '',
+	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
 ));
 
 //
@@ -207,7 +207,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Document/Attribute:status/Value:published' => 'Offentlig',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs',
-	'Class:Document/Attribute:cis_list+' => '',
+	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Dokumenttype',
 	'Class:Document/Attribute:finalclass+' => '',
 ));

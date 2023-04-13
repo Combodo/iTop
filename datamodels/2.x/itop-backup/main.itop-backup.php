@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014-2021 Combodo SARL
+// Copyright (C) 2014-2023 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -163,8 +163,7 @@ class BackupExec extends AbstractWeeklyScheduledProcess
 			//
 			$oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'mysql_bindir', ''));
 
-			$sBackupFileFormat = MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'file_name_format',
-				'__DB__-%Y-%m-%d_%H_%M');
+			$sBackupFileFormat = MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'file_name_format', '__DB__-%Y-%m-%d_%H_%M');
 			$sName = $oBackup->MakeName($sBackupFileFormat);
 			if ($sName == '')
 			{

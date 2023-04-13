@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:User/Attribute:language/Value:FR FR' => 'French',
 	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
 	'Class:User/Attribute:profile_list' => 'Profily/role',
-	'Class:User/Attribute:profile_list+' => '',
+	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person~~',
 	'Class:User/Attribute:allowed_org_list' => 'Přístupné organizace',
 	'Class:User/Attribute:allowed_org_list+' => 'Uživatel má oprávnění přistupovat k údajům následujících organizací. Pokud není zvolena žádná organizace, neuplatňují se žádná omezení.',
 	'Class:User/Attribute:status' => 'Stav',
@@ -416,7 +416,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Odebrat >> ',
 	'UI:Button:FilterList' => ' Filtrovat... ',
 	'UI:Button:Create' => ' Vytvořit ',
-	'UI:Button:Delete' => ' Odstranit ! ',
+	'UI:Button:Delete' => ' Odstranit ',
 	'UI:Button:Rename' => ' Přejmenovat... ',
 	'UI:Button:ChangePassword' => ' Změnit heslo ',
 	'UI:Button:ResetPassword' => ' Obnovit heslo ',
@@ -644,9 +644,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Vyberte třídu pro hledání: ',
 
 	'UI:CSVReport-Value-Modified' => 'Upraveno',
-	'UI:CSVReport-Value-SetIssue' => 'Nemůže být změněno - důvod: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Nemůže být změněno na %1$s - důvod: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Žádná shoda',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Chybí povinná hodnota',
 	'UI:CSVReport-Value-Ambiguous' => 'Nejednoznačné: nalezeno %1$s objektů',
 	'UI:CSVReport-Row-Unchanged' => 'nezměněn',

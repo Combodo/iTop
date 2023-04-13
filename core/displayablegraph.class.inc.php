@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@ use Combodo\iTop\Renderer\BlockRenderer;
 /**
  * Special kind of Graph for producing some nice output
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -459,11 +459,10 @@ class DisplayableNode extends GraphNode
 			{
 				$aContext = $aContextDefs[$key];
 				$aRootCauses = array();
-				foreach($aObjects as $oRootCause)
-				{
+				foreach ($aObjects as $oRootCause) {
 					$aRootCauses[] = $oRootCause->GetHyperlink();
 				}
-				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" class="ibo-class-icon ibo-is-small" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.htmlentities(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
+				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" class="ibo-class-icon ibo-is-small" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.utils::EscapeHtml(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
 			}
 			$sHtml .= '<hr/>';
 		}
@@ -1335,18 +1334,17 @@ class DisplayableGraph extends SimpleGraph
 		}
 		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3*$fPadding, $yMax - $yMin, 'D');
 
-		if ($sComments != '')
-		{
+		if ($sComments != '') {
 			// Draw the comment text (surrounded by a rectangle)
-			$xPos = $xMin + $fMaxWidth + $fIconSize + 4*$fPadding;
-			$w = $xMax - $xPos - 2*$fPadding;
+			$xPos = $xMin + $fMaxWidth + $fIconSize + 4 * $fPadding;
+			$w = $xMax - $xPos - 2 * $fPadding;
 			$iNbLines = 1;
-			$sText = '<p>'.str_replace("\n", '<br/>', htmlentities($sComments, ENT_QUOTES, 'UTF-8'), $iNbLines).'</p>';
+			$sText = '<p>'.str_replace("\n", '<br/>', utils::EscapeHtml($sComments), $iNbLines).'</p>';
 			$fLineHeight = $oPdf->getStringHeight($w, $sText);
-			$h = (1+$iNbLines) * $fLineHeight;
-			$yPos = $yMax - 2*$fPadding - $h;
+			$h = (1 + $iNbLines) * $fLineHeight;
+			$yPos = $yMax - 2 * $fPadding - $h;
 			$oPdf->writeHTMLCell($w, $h, $xPos + $fPadding, $yPos + $fPadding, $sText, 0 /* border */, 1 /* ln */);
-			$oPdf->Rect($xPos, $yPos, $w + 2*$fPadding, $h + 2*$fPadding, 'D');
+			$oPdf->Rect($xPos, $yPos, $w + 2 * $fPadding, $h + 2 * $fPadding, 'D');
 			$yMax = $yPos - $fPadding;
 		}
 
@@ -1543,7 +1541,7 @@ class DisplayableGraph extends SimpleGraph
 		}
 		catch(err)
 		{
-			alert(err);
+			CombodoModal.OpenErrorModal(err);
 		}
 	}
 EOF

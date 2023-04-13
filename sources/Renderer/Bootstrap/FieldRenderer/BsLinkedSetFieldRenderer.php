@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -54,7 +54,7 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 		$aItemIds = array();
 		$this->PrepareItems($aItems, $aItemIds);
 		$sItemsAsJson = json_encode($aItems);
-        $sItemIdsAsJson = htmlentities(json_encode(array('current' => $aItemIds)), ENT_QUOTES, 'UTF-8');
+		$sItemIdsAsJson = utils::EscapeHtml(json_encode(array('current' => $aItemIds)));
 
         if (!$this->oField->GetHidden())
 		{
@@ -115,14 +115,14 @@ EOF
 
 			// Rendering table widget
 			// - Vars
-			$sEmptyTableLabel = htmlentities(Dict::S(($this->oField->GetReadOnly()) ? 'Portal:Datatables:Language:EmptyTable' : 'UI:Message:EmptyList:UseAdd'), ENT_QUOTES, 'UTF-8');
-			$sLabelGeneralCheckbox = htmlentities(Dict::S('Core:BulkExport:CheckAll') . ' / ' . Dict::S('Core:BulkExport:UncheckAll'), ENT_QUOTES, 'UTF-8');
+			$sEmptyTableLabel = utils::EscapeHtml(Dict::S(($this->oField->GetReadOnly()) ? 'Portal:Datatables:Language:EmptyTable' : 'UI:Message:EmptyList:UseAdd'));
+			$sLabelGeneralCheckbox = utils::EscapeHtml(Dict::S('Core:BulkExport:CheckAll').' / '.Dict::S('Core:BulkExport:UncheckAll'));
 			$sSelectionOptionHtml = ($this->oField->GetReadOnly()) ? 'false' : '{"style": "multi"}';
-			$sSelectionInputGlobalHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" id="' . $this->oField->GetGlobalId() . '_check_all" name="' . $this->oField->GetGlobalId() . '_check_all" title="' . $sLabelGeneralCheckbox . '" /></span>';
-			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="' . $this->oField->GetGlobalId() . '" /></span>';
+			$sSelectionInputGlobalHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" id="'.$this->oField->GetGlobalId().'_check_all" name="'.$this->oField->GetGlobalId().'_check_all" title="'.$sLabelGeneralCheckbox.'" /></span>';
+			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="'.$this->oField->GetGlobalId().'" /></span>';
 			// - Output
 			$oOutput->AddJs(
-<<<JS
+				<<<JS
 				// Collapse handlers
 				// - Collapsing by default to optimize form space
 				// It would be better to be able to construct the widget as collapsed, but in this case, datatables thinks the container is very small and therefore renders the table as if it was in microbox.
@@ -249,7 +249,7 @@ EOF
 								oEvent.stopPropagation();
 								
 								// Note : This could be better if we check for an existing modal first instead of always creating a new one
-								CombodoPortalToolbox.OpenModal({
+								CombodoModal.OpenModal({
 									content: {
 										endpoint: $(this).attr('href'),
 									},
@@ -527,7 +527,7 @@ EOF
 								'selector': '.modal[data-source-element="{$sButtonAddId}"]:first'
 							};
 						}
-						CombodoPortalToolbox.OpenModal(oOptions);
+						CombodoModal.OpenModal(oOptions);
 					});
 JS
 				);

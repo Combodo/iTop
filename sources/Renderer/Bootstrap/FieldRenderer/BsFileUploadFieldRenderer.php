@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -189,6 +189,7 @@ JS
 			'{{sAttachmentMeta}}',
 			'{{sFileSize}}',
 			'{{iFileSizeRaw}}',
+			'{{iFileDownloadsCount}}',
 			'{{sAttachmentDate}}',
 			'{{iAttachmentDateRaw}}',
 			$bIsDeleteAllowed
@@ -250,6 +251,7 @@ JS
 							{search: "{{sFileName}}", replace: data.result.msg },
 							{search: "{{sAttachmentMeta}}", replace:sAttachmentMeta },
 							{search: "{{sFileSize}}", replace:data.result.file_size },
+							{search: "{{iFileDownloadsCount}}", replace:data.result.downloads_count },
 							{search: "{{sAttachmentDate}}", replace:data.result.creation_date },
 						];
 						var sAttachmentRow = attachmentRowTemplate   ;
@@ -397,14 +399,13 @@ HTML
 
 				/** @var \ormDocument $oDoc */
 				$oDoc = $oAttachment->Get('contents');
-				$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
+				$sFileName = utils::EscapeHtml($oDoc->GetFileName());
 
 				$sDocDownloadUrl = str_replace('-sAttachmentId-', $iAttId, $this->oField->GetDownloadEndpoint());
 
 				$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 				$bHasPreview = false;
-				if ($oDoc->IsPreviewAvailable())
-				{
+				if ($oDoc->IsPreviewAvailable()) {
 					$bHasPreview = true;
 					$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', AbstractAttachmentsRenderer::DEFAULT_MAX_SIZE_FOR_PREVIEW);
 					if ($oDoc->GetSize() <= $iMaxSizeForPreview)
@@ -415,6 +416,7 @@ HTML
 
 				$iFileSizeRaw = $oDoc->GetSize();
 				$sFileSize = $oDoc->GetFormattedSize();
+				$iFileDownloadsCount = $oDoc->GetDownloadsCount();
 
 				$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 				$sAttachmentDate = '';
@@ -435,6 +437,7 @@ HTML
 					$sAttachmentMeta,
 					$sFileSize,
 					$iFileSizeRaw,
+					$iFileDownloadsCount,
 					$sAttachmentDate,
 					$iAttachmentDateRaw,
 					$bIsDeleteAllowed
@@ -461,6 +464,7 @@ HTML
 		$sTitleFileName = Dict::S('Attachments:File:Name');
 		$sTitleFileSize = Dict::S('Attachments:File:Size');
 		$sTitleFileDate = Dict::S('Attachments:File:Date');
+		$sTitleFileDownloadsCount = Dict::S('Attachments:File:DownloadsCount');
 
 		// Optional column
 		$sDeleteHeaderAsHtml = ($bIsDeleteAllowed) ? '<th role="delete" data-priority="1"></th>' : '';
@@ -471,6 +475,7 @@ HTML
 		<th role="filename" data-priority="1">$sTitleFileName</th>
 		<th role="formatted-size">$sTitleFileSize</th>
 		<th role="upload-date">$sTitleFileDate</th>
+		<th role="downloads-count">$sTitleFileDownloadsCount</th>
 		$sDeleteHeaderAsHtml
 	</thead>
 HTML;
@@ -495,7 +500,7 @@ HTML;
 	 */
 	protected static function GetAttachmentTableRow(
 		$iAttId, $sLineStyle, $sDocDownloadUrl, $bHasPreview, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
-		$iFileSizeRaw, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
+		$iFileSizeRaw, $iFileDownloadsCount, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
 	) {
 		$sDeleteCell = '';
 		if ($bIsDeleteAllowed)
@@ -512,10 +517,11 @@ HTML;
 		}
 
 		$sHtml .=  <<<HTML
-	 <td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
-	  <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
-	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>
-	  $sDeleteCell
+		<td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
+	    <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
+	    <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>
+	    <td role="downloads-count">$iFileDownloadsCount</td>
+	    $sDeleteCell
 	</tr>
 HTML;
 		return $sHtml;

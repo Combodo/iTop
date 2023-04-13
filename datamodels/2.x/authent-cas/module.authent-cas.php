@@ -24,7 +24,8 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.authent-cas.php',
-			'main.php'
+			'vendor/autoload.php',
+			'src/CASLoginExtension.php',
 		),
 		'webservice' => array(
 			
@@ -50,6 +51,7 @@ SetupWebPage::AddModule(
 			'cas_port' => '',
 			'cas_context' => '',
 			'cas_version' => '',
+			'service_base_url' => '',
 		),
 	)
 );

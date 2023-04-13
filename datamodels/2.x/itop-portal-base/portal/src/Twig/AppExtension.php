@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -22,15 +22,16 @@ namespace Combodo\iTop\Portal\Twig;
 use Combodo\iTop\Application\TwigBase\Twig\Extension;
 use Twig\Extension\AbstractExtension;
 
+
 /**
  * Class AppExtension
  *
  * Automatically loaded by portal's Symfony configuration to register TWIG extensions.
  * The class must be kept by it is using the factorized filters/functions of the iTop core.
  *
- * @package Combodo\iTop\Portal\Twig
  * @since   2.7.0
  * @author  Bruno Da Silva <bruno.dasilva@combodo.com>
+ * @deprected 3.1.0 N°4287
  */
 class AppExtension extends AbstractExtension
 {
@@ -49,6 +50,4 @@ class AppExtension extends AbstractExtension
 	{
 		return Extension::GetFunctions();
 	}
-
-
 }

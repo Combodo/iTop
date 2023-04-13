@@ -1,8 +1,10 @@
 {
+  "name": "combodo/itop",
+  "description": "IT Operations Portal",
   "type": "project",
-  "license": "AGPLv3",
+  "license": "AGPL-3.0-only",
   "require": {
-    "php": ">=7.2.5 <8.0.0",
+    "php": ">=7.4.0 <8.2.0",
     "ext-ctype": "*",
     "ext-dom": "*",
     "ext-gd": "*",
@@ -10,18 +12,22 @@
     "ext-json": "*",
     "ext-mysqli": "*",
     "ext-soap": "*",
+    "apereo/phpcas" : "~1.6.0",
     "combodo/tcpdf": "~6.4.4",
-    "guzzlehttp/guzzle": "^6.5.8",
+    "firebase/php-jwt": "~6.4.0",
+    "guzzlehttp/guzzle": "^7.4.5",
     "laminas/laminas-mail": "^2.11",
     "laminas/laminas-servicemanager": "^3.5",
     "league/oauth2-google": "^3.0",
     "nikic/php-parser": "~4.14.0",
     "pear/archive_tar": "~1.4.14",
-    "pelago/emogrifier": "~3.1.0",
+    "pelago/emogrifier": "^6.0.0",
     "scssphp/scssphp": "^1.10.3",
     "symfony/console": "5.4.*",
     "symfony/dotenv": "5.4.*",
     "symfony/framework-bundle": "5.4.*",
+    "symfony/http-foundation": "5.4.*",
+    "symfony/http-kernel": "5.4.*",
     "symfony/twig-bundle": "5.4.*",
     "symfony/yaml": "5.4.*",
     "thenetworg/oauth2-azure": "^2.0"
@@ -40,7 +46,7 @@
   },
   "config": {
     "platform": {
-      "php": "7.2.5"
+      "php": "7.4.0"
     },
     "vendor-dir": "lib",
     "preferred-install": {
@@ -57,12 +63,6 @@
       "sources"
     ],
     "exclude-from-classmap": [
-      "core/dbobjectsearch.class.php",
-      "core/legacy/dbobjectsearchlegacy.class.php",
-      "core/querybuildercontext.class.inc.php",
-      "core/legacy/querybuildercontextlegacy.class.inc.php",
-      "core/querybuilderexpressions.class.inc.php",
-      "core/legacy/querybuilderexpressionslegacy.class.inc.php",
       "application/twigextension.class.inc.php",
       "core/oql/build/PHP/",
       "core/apc-emulation.php",

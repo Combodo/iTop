@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -44,7 +44,7 @@ define('ACCESS_READONLY', 0);
 /**
  * Configuration read/write
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -113,54 +113,86 @@ class Config
 	 * @since 2.7.0 export_pdf_font param
 	 */
 	protected $m_aSettings = [
-		'log_level_min' => [
-			'type' => 'array',
-			'description' => 'Optional min log level, per channel.',
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+		'log_level_min'                      => [
+			'type'                => 'array',
+			'description'         => 'Optional min log level, per channel.',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_level_min.write_in_db' => [
-			'type' => 'array',
-			'description' => 'Optional min log level IN DB, per channel.',
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+		'log_level_min.write_in_db'          => [
+			'type'                => 'array',
+			'description'         => 'Optional min log level IN DB, per channel.',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'app_env_label' => [
-			'type' => 'string',
-			'description' => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+		'log_purge.enabled'       => [
+			'type'                => 'bool',
+			'description'         => 'Optional purge activation.',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'app_root_url' => [
-			'type' => 'string',
-			'description' => 'Root URL used for navigating within the application, or from an email to the application (you can put $SERVER_NAME$ as a placeholder for the server\'s name)',
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+		'log_purge.max_keep_days' => [
+			'type'                => 'integer',
+			'description'         => 'Optional purge number of days to keep logs.',
+			'default'             => 365,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'event_service.debug.filter_events'  => [
+			'type'                => 'array',
+			'description'         => 'List of events name to filter Event Service debug messages',
+			'default'             => [],
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'event_service.debug.filter_sources' => [
+			'type'                => 'array',
+			'description'         => 'List of event sources to filter Event Service debug messages',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'app_env_label'                      => [
+			'type'                => 'string',
+			'description'         => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'app_root_url'                       => [
+			'type'                => 'string',
+			'description'         => 'Root URL used for navigating within the application, or from an email to the application (you can put $SERVER_NAME$ as a placeholder for the server\'s name)',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'app_icon_url' => [
-			'type' => 'string',
-			'description' => 'Hyperlink to redirect the user when clicking on the application icon (in the main window, or login/logoff pages)',
-			'default' => 'http://www.combodo.com/itop',
-			'value' => '',
-			'source_of_value' => '',
+		'app_icon_url'                       => [
+			'type'                => 'string',
+			'description'         => 'Hyperlink to redirect the user when clicking on the application icon (in the main window, or login/logoff pages)',
+			'default'             => 'http://www.combodo.com/itop',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_host' => [
-			'type' => 'string',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_host'                            => [
+			'type'                => 'string',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_user' => [
+		'db_user'                            => [
 			'type' => 'string',
 			'default' => null,
 			'value' => '',
@@ -326,11 +358,11 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'allow_menu_on_linkset' => [
-			'type' => 'bool',
-			'description' => 'Display Action menus in view mode on any LinkedSet with edit_mode != none',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+			'type'                => 'bool',
+			'description'         => 'Display Action menus in view mode on any LinkedSet with edit_mode != none',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'allow_target_creation' => [
@@ -530,7 +562,7 @@ class Config
 		],
 		'email_transport' => [
 			'type' => 'string',
-			'description' => 'Mean to send emails: PHPMail (uses the function mail()) or SMTP (implements the client protocol)',
+			'description' => 'Mean to send emails: PHPMail (uses the function mail()), SMTP (implements the client protocol) or SMTP_OAuth (connect to the server using OAuth 2.0)',
 			'default' => "PHPMail",
 			'value' => "PHPMail",
 			'source_of_value' => '',
@@ -576,12 +608,28 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_css'                                => [
-			'type'                => 'string',
-			'description'         => 'CSS that will override the standard stylesheet used for the notifications',
-			'default'             => "",
-			'value'               => "",
+		'email_transport_smtp.allow_self_signed' => array(
+			'type'                => 'bool',
+			'description'         => 'Allow self signed peer certificates',
+			'default'             => false,
+			'value'               => false,
 			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		),
+		'email_transport_smtp.verify_peer' => array(
+			'type'                => 'bool',
+			'description'         => 'Verify peer certificate',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		),
+		'email_css' => [
+			'type' => 'string',
+			'description' => 'CSS that will override the standard stylesheet used for the notifications',
+			'default' => "",
+			'value' => "",
+			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
 		'email_default_sender_address' => [
@@ -883,16 +931,11 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'url_validation_pattern' => [
-			'type' => 'string',
-			'description' => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
-			'default' => /** @lang RegExp */
-			'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z0-9_.-][a-zA-Z0-9+\$_.-]*)?',
-			// SCHEME....... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH......................... GET............................................ ANCHOR..........................
-			// Example: http://User:passWord@127.0.0.1:8888/patH/Page.php?arrayArgument[2]=something:blah20#myAnchor
-			// RegExp source: http://www.php.net/manual/fr/function.preg-match.php#93824
-			// Update with N°4515
-			'value' => '',
-			'source_of_value' => '',
+			'type'                => 'string',
+			'description'         => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
+			'default'             => AttributeURL::DEFAULT_VALIDATION_PATTERN,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
 		'email_validation_pattern' => [
@@ -1238,6 +1281,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'navigation_menu.show_organization_filter' => [
+			'type' => 'bool',
+			'description' => 'Display organization filter in menu',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'quick_create.enabled' => [
 			'type' => 'bool',
 			'description' => 'Whether or not the quick create is enabled',
@@ -1456,14 +1507,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'use_legacy_dbsearch' => [
-			'type'                => 'bool',
-			'description'         => 'Deprecated since 3.1.0, there is now only one dbsearch method.',
-			'default'             => false,
-			'value'               => false,
-			'source_of_value'     => '',
-			'show_in_conf_sample' => false,
-		],
 		'query_cache_enabled' => [
 			'type' => 'bool',
 			'description' => 'If set, DBSearch will use cache for query generation',
@@ -1513,11 +1556,11 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'security.hide_administrators' => [
-			'type' => 'bool',
-			'description' => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+			'type'                => 'bool',
+			'description'         => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'behind_reverse_proxy' => [
@@ -1556,6 +1599,14 @@ class Config
 			'type'                => 'bool',
 			'description'         => 'If true displays in the Application Upgrade screen a button allowing to launch the setup in a single click (no more manual config file permission change needed)',
 			'default'             => null,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'audit.enable_selection_landing_page' => [
+			'type'                => 'bool',
+			'description'         => 'If true audit categories must be selected before results are computed (use this setting in case of a lot of audit categories)',
+			'default'             => false,
 			'value'               => false,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
@@ -1877,9 +1928,9 @@ class Config
 		}
 		if (strlen($sNoise) > 0)
 		{
-			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack) 
+			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack)
 			throw new ConfigException('Syntax error in configuration file',
-				array('file' => $sConfigFile, 'error' => '<tt>'.htmlentities($sNoise, ENT_QUOTES, 'UTF-8').'</tt>'));
+				array('file' => $sConfigFile, 'error' => '<tt>'.utils::EscapeHtml($sNoise, ENT_QUOTES).'</tt>'));
 		}
 
 		if (!isset($MySettings) || !is_array($MySettings))
@@ -2262,7 +2313,7 @@ class Config
 		$oHandle = null;
 		$sConfig = null;
 
-		if (is_file($this->m_sFile))
+		if ($this->m_sFile !== null && is_file($this->m_sFile))
 		{
 			$oHandle = fopen($this->m_sFile, 'r');
 			$index = 0;
@@ -2437,9 +2488,14 @@ class Config
 	/**
 	 * Helper function to initialize a configuration from the page arguments
 	 *
+	 * @see \Parameters::GetParamForConfigArray() to get aParamValues from {@see Parameters} object hierarchy in setup
+	 * @see \WizardController::GetParamForConfigArray() to get aParamValues from {@see \WizardController} object hierarchy in setup
+	 *
 	 * @param array $aParamValues
-	 * @param string|null $sModulesDir
+	 * @param ?string $sModulesDir
 	 * @param bool $bPreserveModuleSettings
+	 *
+	 * @return void The current object is modified directly
 	 *
 	 * @throws \Exception
 	 * @throws \CoreException
@@ -2687,7 +2743,7 @@ class ConfigPlaceholdersResolver
 		}
 
 		$sPattern = '/\%(env|server)\((\w+)\)(?:\?:(\w*))?\%/'; //3 capturing groups, ie `%env(HTTP_PORT)?:8080%` produce: `env` `HTTP_PORT` and `8080`.
-		
+
 		if (! preg_match_all($sPattern, $rawValue, $aMatchesCollection, PREG_SET_ORDER))
 		{
 			return $rawValue;

@@ -3,7 +3,7 @@
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *

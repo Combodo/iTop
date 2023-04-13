@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
@@ -405,7 +405,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => '削除 >> ',
 	'UI:Button:FilterList' => ' フィルタ... ',
 	'UI:Button:Create' => ' 作成 ',
-	'UI:Button:Delete' => ' 削除! ',
+	'UI:Button:Delete' => ' 削除 ',
 	'UI:Button:Rename' => ' 名前変更',
 	'UI:Button:ChangePassword' => ' パスワード変更 ',
 	'UI:Button:ResetPassword' => 'パスワードリセット ',
@@ -633,9 +633,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => '検索するクラスを選択してください。',
 
 	'UI:CSVReport-Value-Modified' => '修正済み',
-	'UI:CSVReport-Value-SetIssue' => '変更出来ません - 理由: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => '%1$s へ変更出来ません - 理由: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'マッチしません',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => '必須の値がありません',
 	'UI:CSVReport-Value-Ambiguous' => 'あいまいな値:  %1$s オブジェクト',
 	'UI:CSVReport-Row-Unchanged' => '未変更',
@@ -794,7 +794,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s にリンクされた%1$sオブジェクトを追加：%3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => '%1$s オブジェクトを%2$sとのリンクに追加',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s にリンクされた%1$sオブジェクトの管理: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => '%1$s を追加...',
+	'UI:AddLinkedObjectsOf_Class' => '%1$s を追加',
 	'UI:RemoveLinkedObjectsOf_Class' => '選択されたオブジェクトを削除',
 	'UI:Message:EmptyList:UseAdd' => 'リストは空です。"追加..."ボタンを利用して要素を追加してください。',
 	'UI:Message:EmptyList:UseSearchForm' => '上の検索フォームを使って追加するオブジェクトを検索してください。',

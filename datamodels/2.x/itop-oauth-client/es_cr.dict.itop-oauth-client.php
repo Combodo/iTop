@@ -28,7 +28,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', [
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', [
-	'Class:OAuthClient' => 'Oauth Client~~',
+	'Class:OAuthClient' => 'OAuth Client~~',
 	'Class:OAuthClient/Attribute:provider' => 'Provider~~',
 	'Class:OAuthClient/Attribute:provider+' => '~~',
 	'Class:OAuthClient/Attribute:name' => 'Login~~',

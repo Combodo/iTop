@@ -1,6 +1,6 @@
 <?php
 /**
- *  @copyright   Copyright (C) 2010-2022 Combodo SARL
+ *  @copyright   Copyright (C) 2010-2023 Combodo SARL
  *  @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -17,8 +17,7 @@ if (version_compare(ITOP_DESIGN_LATEST_VERSION , '3.0') >= 0) {
 }
 
 $oUpdateController = new AjaxOauthClientController($sTemplates, 'itop-oauth-client');
-$oUpdateController->AllowOnlyAdmin();
-$oUpdateController->SetDefaultOperation('CreateMailbox');
+$oUpdateController->SetMenuId('OAuthClient');
 $oUpdateController->HandleOperation();
 
 

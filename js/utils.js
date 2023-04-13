@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -389,11 +389,13 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle) {
 		var oColumns = $('#'+sDataTableName).DataTable().ajax.params()['columns'];
 		for (var j in oColumns) {
 			if (oColumns[j]['data']) {
-				var sCode = oColumns[j]['data'].split("/");
-				if (sCode[1] == '_key_') {
-					sCode[1] = 'id';
+				if (oColumns[j]['data']!='id') {
+					var sCode = oColumns[j]['data'].split("/");
+					if (sCode[1] == '_key_') {
+						sCode[1] = 'id';
+					}
+					aFields.push(sCode[0]+'.'+sCode[1]);
 				}
-				aFields.push(sCode[0]+'.'+sCode[1]);
 			} else {
 				for (var k in oColumns[j]) {
 					if (oColumns[j][k].checked) {
@@ -551,7 +553,7 @@ function ExportInitButton(sSelector) {
 				var aMessages = $('#export-form').data('validation_messages');
 
 				if (aMessages.length > 0) {
-					alert(aMessages.join(''));
+					CombodoModal.OpenErrorModal(aMessages.join(''));
 					return;
 				}
 				if ($(this).hasClass('ui-button')) {
@@ -757,6 +759,105 @@ const CombodoGlobalToolbox = {
 			oCurrentDate = new Date();
 		}
 		while ((oCurrentDate - oDate) < iDuration);
+	},
+
+	/**
+	 * Render a template and inject data into it.
+	 *
+	 * This rendering engine is aimed to produce client side template rendering.
+	 *
+	 * markups with attributes:
+	 *  data-template-attr-{title|name|for}: set dom element attribute with corresponding datavalue
+	 *  data-template-text: set dom element text with corresponding data value
+	 *  data-template-condition: set dom element visibility depending on data value
+	 *  data-template-css-{background-image}: set dom element css property with corresponding data value
+	 *  data-template-add-class: add class to dom element with corresponding data value
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param sTemplateId
+	 * @param aData
+	 * @param sTemplateClass
+	 * @returns {*|jQuery|HTMLElement|JQuery<HTMLElement>}
+	 * @constructor
+	 */
+	RenderTemplate: function(sTemplateId, aData, sTemplateClass = null)
+	{
+		let sHtml = '<div>' + $(sTemplateId).html() + '</div>';
+
+		// Create element
+		let oElement = $(sHtml);
+		if(sTemplateClass !== null){
+			oElement.addClass(sTemplateClass);
+		}
+
+		// Attribute replacement
+		let aAttrElements = ['title', 'name', 'for'];
+		aAttrElements.forEach(function(e){
+			$(`[data-template-attr-${e}]`, oElement).each(function(){
+				$(this).attr(e, aData[$(this).attr(`data-template-attr-${e}`)]);
+			})
+		});
+
+		// CSS replacement
+		let aCssElements = ['background-image'];
+		aCssElements.forEach(function(e){
+			$(`[data-template-css-${e}]`, oElement).each(function(){
+				$(this).css(e, aData[$(this).attr(`data-template-css-${e}`)]);
+			})
+		});
+
+		// Text replacement
+		$('[data-template-text]', oElement).each(function(){
+			$(this).text(aData[$(this).attr('data-template-text')]);
+		})
+
+		// Condition
+		$('[data-template-condition]', oElement).each(function(){
+			$(this).toggle(aData[$(this).attr('data-template-condition')]);
+		})
+
+		// Add classes
+		$('[data-template-add-class]', oElement).each(function(){
+			$(this).addClass(aData[$(this).attr('data-template-add-class')]);
+		})
+
+		return oElement;
+	},
+
+	/**
+	 * ExtractArrayItemsContainingThisKeyAndValue.
+	 *
+	 * This function extract item(s) of an array witch include the key value pair.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param aArrayToSearchIn Array to search in
+	 * @param sKey Key to search
+	 * @param sValue Value to search
+	 * @returns {*|*[]|null}
+	 * @constructor
+	 */
+	ExtractArrayItemsContainingThisKeyAndValue: function(aArrayToSearchIn, sKey, sValue)
+	{
+		let aResult = [];
+
+		// Iterate throw items...
+		for(let i = 0 ; i < aArrayToSearchIn.length ; i++){
+			if(aArrayToSearchIn[i][sKey] === sValue){
+				aResult.push(aArrayToSearchIn[i]);
+			}
+		}
+
+		// Return result
+		switch(aResult.length){
+			case 0:
+				return null;
+			case 1:
+				return aResult[0];
+			default:
+				return aResult;
+		}
 	}
 };
 
@@ -780,8 +881,12 @@ const CombodoTooltip = {
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
 		const oOptions = {};
 
-		// First, check if the tooltip isn't already instantiated
-		if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
+		// First, check if the jQuery element actually represent DOM elements
+		if (oElem.length === 0) {
+			return false;
+		}
+		// Then, check if the tooltip isn't already instantiated
+		else if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
 			return false;
 		}
 		else if((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === true) && (oElem[0]._tippy !== undefined)){
@@ -807,8 +912,10 @@ const CombodoTooltip = {
 		oOptions['content'] = sContent;
 
 		// Interaction (selection, click, ...) have to be enabled manually
-		// Important: When set to true, if "data-tooltip-append-to" is not specified, tooltip will be append to the parent element instead of the body
-		const bInteractive = oElem.attr('data-tooltip-interaction-enabled') === 'true';
+		// Important: When set to true, if "data-tooltip-append-to" is not specified, tooltip will be appended to the parent element instead of the body
+		// Note: Defaults to true if it contains hyperlink
+		let bDefaultInteractive = (bEnableHTML && sContent.indexOf("<a ") > -1)
+		const bInteractive = oElem.attr('data-tooltip-interaction-enabled') !== undefined ? oElem.attr('data-tooltip-interaction-enabled') === 'true' : bDefaultInteractive;
 		oOptions['interactive'] = bInteractive;
 
 		// Element to append the tooltip to
@@ -1094,4 +1201,271 @@ const CombodoInlineImage = {
 			$(this).addClass('inline-image').attr('href', $(this).attr('src'));
 		}).magnificPopup({type: 'image', closeOnContentClick: true });
 	}
-}
+};
+
+/**
+ * Abstract wrapper to manage modal dialogs in iTop.
+ * Implementations for the various GUIs may vary but APIs are the same.
+ *
+ * @since 3.1.0
+ */
+let CombodoModal = {
+
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_SUCCESS : 'success',
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_INFORMATION : 'information',
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_WARNING : 'warning',
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_ERROR : 'error',
+	
+	/**
+	 * Close all opened modals on the page
+	 *
+	 * @return {void}
+	 */
+	CloseAllModals: function() {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.CloseAllModals not implemented');
+	},
+	/**
+	 * Open a standard modal and put the content of the URL in it.
+	 *
+	 * @param sTargetUrl {String}
+	 * @param bCloseOtherModals {String}
+	 * @param callbackOnContentLoaded {function}
+	 * @return {Object} The jQuery object representing the modal element
+	 * @api
+	 */
+	OpenUrlInModal: function(sTargetUrl, bCloseOtherModals, callbackOnContentLoaded) {
+		// Set default values
+		if(bCloseOtherModals === undefined)
+		{
+			bCloseOtherModals = false;
+		}
+
+		// Close other modals if necessary
+		if(bCloseOtherModals)
+		{
+			CombodoModal.CloseAllModals();
+		}
+
+		// Prepare options
+		let oOptions = {
+			content: {
+				endpoint: sTargetUrl,
+			}
+		};
+
+		if (callbackOnContentLoaded !== undefined) {
+			oOptions.callback_on_content_loaded = callbackOnContentLoaded;
+		}
+
+		// Opening modal
+		return CombodoModal.OpenModal(oOptions);
+	},
+	/**
+	 * Generic function to create and open a modal, used by high-level functions such as "CombodoModal.OpenUrlInModal()".
+	 * When developing extensions, you should use them instead.
+	 *
+	 * @param oOptions {Object} TODO: Document
+	 * @returns {(Object | null)} The jQuery object of the modal element or null if the modal could not be opened
+	 * @internal
+	 */
+	OpenModal: function(oOptions) {
+		// Set default options
+		oOptions = $.extend(
+			true,
+			{
+				id: null,           // ID of the created modal
+				attributes: {},     // HTML attributes
+				classes: {}, // Classes for the created modal elements
+				base_modal: {
+					usage: 'clone',                                 // Either 'clone' or 'replace'
+					selector: this._GetDefaultBaseModalSelector()   // Either a selector of the modal element used to base this one on or the modal element itself
+				},
+				title: undefined,   // Title of the modal
+				content: undefined, // Either a string, an object containing the endpoint / data or undefined to keep base modal content as-is
+				buttons: null,
+				size: 'auto',       // Either 'auto' / 'xs' / 'sm' / 'md' / 'lg' or specific height & width via {width: '80px', height: '100px'}
+				auto_open: true,    // true for the modal to open automatically on instantiation
+				callback_on_content_loaded: null, // Callback to call once the content is loaded. Arguments will be oModalElem (the jQuery object representing the modal) callback_on_content_loaded
+				extra_options: {},  // Extra options to pass to the modal lib directly if they are not handled by the CombodoModal widget yet
+			},
+			oOptions
+		);
+
+		// Compute modal selector
+		let oSelectorElem = null;
+		switch(typeof oOptions.base_modal.selector) {
+			case 'string':
+				oSelectorElem = $(oOptions.base_modal.selector);
+				if (oSelectorElem.length === 0) {
+					CombodoJSConsole.Error('Could not open modal dialog as the selector option did not return any element: ' + oOptions.base_modal.selector);
+					return null;
+				}
+				break;
+
+			case 'object':
+				oSelectorElem = oOptions.base_modal.selector;
+				break;
+
+			default:
+				CombodoJSConsole.Warn('Could not open modal dialog as the selector option was malformed: '+oOptions.base_modal.selector);
+				return null;
+		}
+
+		// Get modal element by either
+		let oModalElem = null;
+		// - Create a new modal from template
+		//   Note : This could be better if we check for an existing modal first instead of always creating a new one
+		if (oOptions.base_modal.usage === 'clone') {
+			// Clone modal using a real template
+			if (oSelectorElem[0].tagName === 'TEMPLATE') {
+				oModalElem = $(oSelectorElem.html());
+			}
+			// Clone modal using an existing element
+			else {
+				oModalElem = oSelectorElem.clone();
+			}
+
+			// Force modal to have an HTML ID, otherwise it can lead to complications, especially with the portal_leave_handle.js
+			// See N°3469
+			let sModalID = (oOptions.id !== null) ? oOptions.id : 'modal-with-generated-id-'+Date.now();
+			oModalElem.attr('id', sModalID);
+		}
+		// - Get an existing modal in the DOM
+		else {
+			oModalElem = oSelectorElem;
+		}
+
+		// Set attributes
+		for (let sProp in oOptions.attributes) {
+			oModalElem.attr(sProp, oOptions.attributes[sProp]);
+		}
+
+		if (false === this._InstantiateModal(oModalElem, oOptions)) {
+			return null;
+		}
+
+		return oModalElem;
+	},
+	/**
+	 * @return {String} The JS selector to the default base modal to use either for display or as a template ("clone" usage)
+	 * @private
+	 * @internal
+	 */
+	_GetDefaultBaseModalSelector: function() {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._GetDefaultBaseModalSelector not implemented');
+	},
+	/**
+	 * Instantiate the oModal modal regarding the oOptions
+	 *
+	 * @param oModalElem {Object} The jQuery object representing the modal element
+	 * @param oOptions {Object}
+	 * @return {boolean} True if the modal could be instantiated, false otherwise
+	 * @private
+	 * @internal
+	 */
+	_InstantiateModal: function(oModalElem, oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._InstantiateModal not implemented');
+		return false;
+	},
+	/**
+	 * Center the modal in the current viewport
+	 *
+	 * @param oModalElem {Object} The jQuery representation of the modale element
+	 * @return {void}
+	 * @private
+	 * @internal
+	 */
+	_CenterModalInViewport: function (oModalElem) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._CenterModalInViewport not implemented');
+	},
+	/**
+	 * Callback called when the content of the modal has been loaded.
+	 *
+	 * @param oModalElem {object} The jQuery object representing the modal element
+	 * @param callback {(string | function)} The callback to be executed. Can be either a string representing a function declared in the window object or an anonymous function
+	 * @private
+	 * @return {void}
+	 */
+	_OnContentLoaded: function (oModalElem, callback) {
+		if (callback !== undefined) {
+			if (typeof callback === 'string') {
+				if (window[callback] === undefined) {
+					CombodoJSConsole.Error('Could not call _OnContentLoaded callback "' + callback + '" as it is not defined in the window object.');
+					return;
+				}
+				window[callback](oModalElem);
+			}
+			else if (typeof callback === 'function') {
+				callback(oModalElem);
+			}
+		}
+	},
+
+	/**
+	 * Open a standard confirmation modal and put the content into it.
+	 *
+	 * @param oOptions
+	 * @returns object The jQuery object of the modal element
+	 */
+	OpenConfirmationModal: function(oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.OpenConfirmationModal not implemented');
+	},
+	/**
+	 * Open a standard informative modal, should only be extended to created your own modal method to prepare a custom informative modal
+	 * In most cases you should prefer {@see CombodoModal.OpenSuccessModal}, {@see CombodoModal.OpenInformativeModal}, {@see CombodoModal.OpenWarningModal}, {@see CombodoModal.OpenErrorModal}
+	 *
+	 * @param sMessage {String} Informative message to be displayed in the modal
+	 * @param sSeverity {String} Severity of the information. Default values are success, information, warning, error.
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenInformativeModal: function(sMessage,sSeverity, oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.OpenInformativeModal not implemented');
+	},
+
+	/**
+	 * Open a standard informative modal for success messages.
+	 *
+	 * @param sMessage {String} Informative success message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenSuccessModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_SUCCESS, oOptions);
+	},
+	/**
+	 * Open a standard informative modal for information messages.
+	 *
+	 * @param sMessage {String} Informative information success to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenInformationModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_INFORMATION, oOptions);
+	},
+	/**
+	 * Open a standard informative modal for warning messages.
+	 *
+	 * @param sMessage {String} Informative warning message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenWarningModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_WARNING, oOptions);
+	},
+	/**
+	 * Open a standard informative error modal for success messages.
+	 *
+	 * @param sMessage {String} Informative error message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenErrorModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR, oOptions);
+	},
+};

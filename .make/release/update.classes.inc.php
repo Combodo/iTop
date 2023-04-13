@@ -125,16 +125,31 @@ class iTopVersionFileUpdater extends AbstractSingleFileVersionUpdater
 
 abstract class AbstractGlobFileVersionUpdater extends FileVersionUpdater
 {
-	protected $sGlobPattern;
+	/** @var array|string glob patterns to seek for files to modify */
+	protected $globPattern;
 
-	public function __construct($sGlobPattern)
+	public function __construct($globPattern)
 	{
-		$this->sGlobPattern = $sGlobPattern;
+		$this->globPattern = $globPattern;
 	}
 
 	public function GetFiles()
 	{
-		return glob($this->sGlobPattern);
+		$aGlobPatterns = (is_array($this->globPattern))
+			? $this->globPattern
+			: [$this->globPattern];
+
+		$aFiles = [];
+		foreach ($aGlobPatterns as $sGlobPattern) {
+			$result = glob($sGlobPattern);
+			if (false === $result) {
+				continue;
+			}
+			/** @noinspection SlowArrayOperationsInLoopInspection */
+			$aFiles = array_merge($aFiles, $result);
+		}
+
+		return $aFiles;
 	}
 }
 
@@ -166,7 +181,11 @@ class DatamodelsXmlFiles extends AbstractGlobFileVersionUpdater
 {
 	public function __construct()
 	{
-		parent::__construct(APPROOT.'datamodels/2.x/*/datamodel.*.xml');
+		parent::__construct([
+			APPROOT.'datamodels/2.x/*/datamodel.*.xml',
+			APPROOT.'application/*.xml',
+			APPROOT.'core/*.xml',
+		]);
 	}
 
 	/**
@@ -174,10 +193,40 @@ class DatamodelsXmlFiles extends AbstractGlobFileVersionUpdater
 	 */
 	public function UpdateFileContent($sVersionLabel, $sFileContent, $sFileFullPath)
 	{
-		return preg_replace(
-			'/(<itop_design .* version=")[^"]+(">)/',
-			'${1}'.$sVersionLabel.'${2}',
-			$sFileContent
-		);
+		require_once APPROOT.'setup/itopdesignformat.class.inc.php';
+		$oFileXml = new DOMDocument();
+		/** @noinspection PhpComposerExtensionStubsInspection */
+		libxml_clear_errors();
+		$oFileXml->formatOutput = true;
+		$oFileXml->preserveWhiteSpace = false;
+		$oFileXml->loadXML($sFileContent);
+
+		$oFileItopFormat = new iTopDesignFormat($oFileXml);
+
+		$sDesignVersionToSet = static::GetDesignVersionToSet($oFileItopFormat->GetVersion());
+		if (false === is_null($sDesignVersionToSet)) {
+			// N°5779 if same as target version, we will try to convert from version below
+			$oFileItopFormat->GetITopDesignNode()->setAttribute('version', $sDesignVersionToSet);
+		}
+
+		$bConversionResult = $oFileItopFormat->Convert($sVersionLabel);
+
+		if (false === $bConversionResult) {
+			throw new Exception("Error when converting $sFileFullPath");
+		}
+
+		return $oFileItopFormat->GetXmlAsString();
+	}
+
+	/**
+	 * @return ?string version to use : if file version is same as current version then return previous version, else return null
+	 * @since 3.1.0 N°5779
+	 */
+	protected static function GetDesignVersionToSet($sFileDesignVersion):?string {
+		if ($sFileDesignVersion !== ITOP_DESIGN_LATEST_VERSION) {
+			return null;
+		}
+
+		return iTopDesignFormat::GetPreviousDesignVersion(ITOP_DESIGN_LATEST_VERSION);
 	}
 }

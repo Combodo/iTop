@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
@@ -116,9 +116,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Location/Attribute:country' => 'Pays',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'Matériels',
-	'Class:Location/Attribute:physicaldevice_list+' => '',
+	'Class:Location/Attribute:physicaldevice_list+' => 'Tous les matériels dans ce lieu',
 	'Class:Location/Attribute:person_list' => 'Contacts',
-	'Class:Location/Attribute:person_list+' => '',
+	'Class:Location/Attribute:person_list+' => 'Tous les contacts situés dans ce lieu',
 ));
 
 //
@@ -153,7 +153,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Contact/Attribute:function' => 'Fonction',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'CIs',
-	'Class:Contact/Attribute:cis_list+' => '',
+	'Class:Contact/Attribute:cis_list+' => 'Tous les éléments de configuration liés à ce contact',
 	'Class:Contact/Attribute:finalclass' => 'Sous-classe de Contact',
 	'Class:Contact/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
@@ -182,10 +182,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Person/Attribute:manager_name' => 'Nom Manager',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'Equipes',
-	'Class:Person/Attribute:team_list+' => '',
+	'Class:Person/Attribute:team_list+' => 'Toutes les équipes dont fait partie cette personne',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
-	'Class:Person/Attribute:tickets_list+' => '',
-	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name',
+	'Class:Person/Attribute:tickets_list+' => 'Tous les tickets dont cette personne est le bénéficiaire',
+	'Class:Person/Attribute:user_list' => 'Utilisateurs',
+	'Class:Person/Attribute:user_list+' => 'Les comptes utilisateurs associés à cette personne',
+	'Class:Person/Attribute:manager_id_friendlyname' => 'Nom du manager',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Photo',
 	'Class:Person/Attribute:picture+' => '',
@@ -204,9 +206,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Team' => 'Equipe',
 	'Class:Team+' => '',
 	'Class:Team/Attribute:persons_list' => 'Membres',
-	'Class:Team/Attribute:persons_list+' => '',
+	'Class:Team/Attribute:persons_list+' => 'Toutes les personnes appartenant à cette équipe',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
-	'Class:Team/Attribute:tickets_list+' => '',
+	'Class:Team/Attribute:tickets_list+' => 'Tous les tickets assignés à cette équipe',
 ));
 
 //
@@ -239,7 +241,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document/Attribute:status/Value:published' => 'Publié',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs',
-	'Class:Document/Attribute:cis_list+' => '',
+	'Class:Document/Attribute:cis_list+' => 'Tous les éléments de configuration liés à ce document',
 	'Class:Document/Attribute:finalclass' => 'Sous-classe de Document',
 	'Class:Document/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
@@ -316,15 +318,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkPersonToTeam' => 'Lien Personne / Equipe',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Equipe',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => 'Une équipe à laquelle appartient la personne',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Nom Equipe',
 	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
 	'Class:lnkPersonToTeam/Attribute:person_id' => 'Personne',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => 'Un membre de l\'équipe',
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Nom Personne',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Rôle',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => 'Un rôle parmi une typologie de rôles possibles',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Nom Role',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
 ));

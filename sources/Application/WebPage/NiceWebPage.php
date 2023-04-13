@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -90,7 +90,7 @@ class NiceWebPage extends WebPage
 		$sAppContext = addslashes($this->GetApplicationContext());
 
 		$this->add_script(
-			<<<EOF
+			<<<JS
 function GetAbsoluteUrlAppRoot()
 {
 	return '$sAbsURLAppRoot';
@@ -111,7 +111,7 @@ function GetAbsoluteUrlModulePage(sModule, sPage, aArguments)
 	{
 		if (aArguments.hasOwnProperty(sArgName))
 		{
-			sUrl = sUrl + '&'+sArgName+'='+aArguments[sArgname];
+			sUrl = sUrl + '&'+sArgName+'='+aArguments[sArgName];
 		}
 	}
 	return sUrl;
@@ -130,7 +130,7 @@ function AddAppContext(sURL)
 	}
 	return sURL;
 }
-EOF
+JS
 		);
 	}
 
@@ -227,8 +227,7 @@ EOF
 		foreach($aChoices as $sKey => $sValue)
 		{
 			$sSelected = ($sKey == $sDefaultValue) ? " SELECTED" : "";
-			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"".htmlspecialchars($sKey)."\"$sSelected>".htmlentities($sValue,
-					ENT_QUOTES, self::PAGES_CHARSET)."</option>");
+			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"".htmlspecialchars($sKey)."\"$sSelected>".utils::EscapeHtml($sValue)."</option>");
 		}
 		$this->add("</select>");
 	}

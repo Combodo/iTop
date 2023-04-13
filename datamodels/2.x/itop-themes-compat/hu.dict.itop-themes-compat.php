@@ -7,5 +7,5 @@
  */
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'theme:light-grey' => 'Light Grey (deprecated)~~',
+	'theme:light-grey' => 'Világosszürke (elavult)',
 ));

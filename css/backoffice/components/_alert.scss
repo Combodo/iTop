@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,9 +8,6 @@ $ibo-alert--padding-y: 18px !default;
 $ibo-alert--padding-x: 20px !default;
 $ibo-alert--min-height: 30px !default;
 $ibo-alert--border-radius: $ibo-border-radius-300 !default;
-
-$ibo-alert--title--highlight--width: 4px !default;
-$ibo-alert--title--highlight--height: 100% !default;
 
 $ibo-alert--body--margin-top: $ibo-spacing-200 !default;
 
@@ -68,14 +65,7 @@ $ibo-alert-colors: (
 	@extend %ibo-font-size-150;
 
 	&::before {
-		display: block;
-		position: absolute;
-		top: 0;
-		left: 0;
-		content: '';
-
-		width: $ibo-alert--title--highlight--width;
-		height: $ibo-alert--title--highlight--height;
+    @include ibo-vertical-highlight;
 	}
 	
 	.ibo-alert--title {

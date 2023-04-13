@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -21,6 +21,7 @@ use DataTableConfig;
 class DataTable extends UIContentBlock
 {
 	use tJSRefreshCallback;
+	use tTableRowActions;
 
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-datatable';
@@ -39,6 +40,7 @@ class DataTable extends UIContentBlock
 		'js/dataTables.main.js',
 		'js/dataTables.settings.js',
 		'js/dataTables.pipeline.js',
+		'js/dataTables.row-actions.js',
 	];
 
 	protected $aOptions;//list of specific options for display datatable
@@ -46,10 +48,21 @@ class DataTable extends UIContentBlock
 	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
+	/**
+	 * @var string
+	 */
+	protected $sJsonData;
 	/*
 	 * array of data to display the first page
 	 */
 	protected $aInitDisplayData;
+	/**
+	 * @var string JS Handler to be called when "open_creation_modal.object.itop" is fired on the table
+	 */
+	protected string $sModalCreationHandler;
+
+	public const DEFAULT_ACTION_ROW_CONFIRMATION = true;
+
 
 	/**
 	 * Panel constructor.
@@ -64,6 +77,7 @@ class DataTable extends UIContentBlock
 		$this->aOptions = [];
 		$this->aResultColumns = [];
 		$this->sJsonData = '';
+		$this->sModalCreationHandler = '';
 	}
 
 	/**
@@ -250,4 +264,23 @@ class DataTable extends UIContentBlock
 
 		return [];
 	}
+
+	/**
+	 * @return string
+	 */
+	public function GetModalCreationHandler(): string
+	{
+		return $this->sModalCreationHandler;
+	}
+
+	/**
+	 * @param string $sModalCreationHandler
+	 * @return $this
+	 */
+	public function SetModalCreationHandler(string $sModalCreationHandler)
+	{
+		$this->sModalCreationHandler = $sModalCreationHandler;
+		return $this;
+	}
+
 }

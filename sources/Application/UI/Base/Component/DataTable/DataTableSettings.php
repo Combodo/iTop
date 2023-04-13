@@ -12,12 +12,35 @@ use Dict;
 use Metamodel;
 use Serializable;
 
-class DataTableSettings implements Serializable
+/**
+ * Class DataTableSettings
+ *
+ * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\DataTable
+ * @since 3.0.0
+ */
+class DataTableSettings
 {
+	/**
+	 * @var array
+	 */
     public $aClassAliases;
+	/**
+	 * @var null|string
+	 */
     public $sTableId;
+	/**
+	 * @var int
+	 */
     public $iDefaultPageSize;
+	/**
+	 * @var array
+	 */
     public $aColumns;
+	/**
+	 * @var array
+	 */
+	public $aSortOrder;
 
 
     /**
@@ -33,6 +56,32 @@ class DataTableSettings implements Serializable
         $this->iDefaultPageSize = 10;
         $this->aColumns = array();
     }
+
+	/**
+	 * @return string
+	 * @since 3.1.0
+	 */
+	public function __serialize() {
+		return serialize([
+			$this->aClassAliases,
+			$this->sTableId,
+			$this->iDefaultPageSize,
+			$this->aColumns
+			]);
+	}
+
+	/**
+	 * @param $data
+	 * @since 3.1.0
+	 */
+	public function __unserialize($data) {
+		list(
+			$this->aClassAliases,
+			$this->sTableId,
+			$this->iDefaultPageSize,
+			$this->aColumns
+			) = unserialize($data);
+	}
 
     /**
      * @param $iDefaultPageSize

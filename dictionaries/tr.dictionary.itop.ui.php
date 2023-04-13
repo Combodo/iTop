@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -416,7 +416,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Sil >> ',
 	'UI:Button:FilterList' => ' Filtreleme... ',
 	'UI:Button:Create' => ' Yarat ',
-	'UI:Button:Delete' => ' Sil ! ',
+	'UI:Button:Delete' => ' Sil ',
 	'UI:Button:Rename' => ' Yeniden adlandır... ',
 	'UI:Button:ChangePassword' => ' Şifre değiştir ',
 	'UI:Button:ResetPassword' => ' Şifreyi sıfırla ',
@@ -661,9 +661,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Aranacak sınıfı seçiniz: ',
 
 	'UI:CSVReport-Value-Modified' => 'Değiştiridi',
-	'UI:CSVReport-Value-SetIssue' => 'Değiştirilemedi - Sebep: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => '%1$s olarak değiştirilemedi - Sebep: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Eşleşme yok',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Eksik Zorunlu Değer',
 	'UI:CSVReport-Value-Ambiguous' => 'Belirsiz: %1$s nesnelerini buldum',
 	'UI:CSVReport-Row-Unchanged' => 'Değiştirilmedi',
@@ -822,7 +822,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s: %3$s ile ilişkideki %1$s nesnelerini Ekle ',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => '%2$s ile %1$s arasında yeni bağlantı oluştur ',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s: %3$s ile bağlantılı %1$s nesnelerini yönet ',
-	'UI:AddLinkedObjectsOf_Class' => '%1$s nesnelerini ekle...',
+	'UI:AddLinkedObjectsOf_Class' => '%1$s nesnelerini ekle',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Seçili nesnleri sil',
 	'UI:Message:EmptyList:UseAdd' => 'Liste boş, Yeni nesne ekleme için "Yeni..." seçiniz.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Eklemek istediğiniz nesneleri bulmak için yukarıdaki arama formunu kullanınız.',

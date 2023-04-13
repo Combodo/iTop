@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
@@ -55,11 +55,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Ticket/Attribute:private_log' => '個人ログ',
 	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => '連絡先',
-	'Class:Ticket/Attribute:contacts_list+' => '',
+	'Class:Ticket/Attribute:contacts_list+' => 'All the contacts linked to this ticket~~',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CI',
-	'Class:Ticket/Attribute:functionalcis_list+' => '',
+	'Class:Ticket/Attribute:functionalcis_list+' => 'All the configuration items impacted by this ticket. Items marked as "Computed" have been automatically marked as impacted. Items marked as "Not impacted" are excluded from the impact.~~',
 	'Class:Ticket/Attribute:workorders_list' => '作業指示',
-	'Class:Ticket/Attribute:workorders_list+' => '',
+	'Class:Ticket/Attribute:workorders_list+' => 'All the work orders for this ticket~~',
 	'Class:Ticket/Attribute:finalclass' => 'タイプ',
 	'Class:Ticket/Attribute:finalclass+' => '',
 	'Class:Ticket/Attribute:operational_status' => 'Operational status~~',
@@ -230,13 +230,3 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Goal based on a SLT of type TTR~~',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:Document/Attribute:contracts_list' => '契約',
-	'Class:Document/Attribute:contracts_list+' => '',
-	'Class:Document/Attribute:services_list' => 'サービス',
-	'Class:Document/Attribute:services_list+' => '',
-));

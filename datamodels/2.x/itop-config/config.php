@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -13,9 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
 use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
 
-require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
-require_once(APPROOT.'application/loginwebpage.class.inc.php');
 
 
 /**
@@ -170,7 +168,8 @@ try {
 							$iEditorTopMargin += 5*$iWarnings;
 
 							$sOriginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
-						} catch (Exception $e) {
+						}
+						catch (Exception $e) {
 							$oAlert = AlertUIBlockFactory::MakeForDanger('', $e->getMessage());
 							$iEditorTopMargin += 5;
 							$oP->AddUiBlock($oAlert);
@@ -179,9 +178,7 @@ try {
 				}
 			}
 
-
-			$sConfigEscaped = htmlentities($sConfig, ENT_QUOTES, 'UTF-8');
-			$sOriginalConfigEscaped = htmlentities($sOriginalConfig, ENT_QUOTES, 'UTF-8');
+			// (remove EscapeHtml)  N°5914 - Wrong encoding in modules configuration editor
 			$oP->AddUiBlock(new Html('<p>'.Dict::S('config-edit-intro').'</p>'));
 
 			$oForm = new Form();
@@ -198,8 +195,8 @@ try {
 			$oForm->AddSubBlock($oSubmitButton);
 
 			//--- Config editor
-			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('prev_config', $sOriginalConfigEscaped, 'prev_config'));
-			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('new_config', $sConfigEscaped));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('prev_config', $sOriginalConfig, 'prev_config'));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('new_config', $sConfig));
 			$oForm->AddHtml("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
 			$oP->AddUiBlock($oForm);
 

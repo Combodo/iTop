@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -177,13 +177,14 @@ try
 	$oQueryTextArea->AddCSSClasses(['ibo-input-text', 'ibo-query-oql', 'ibo-is-code']);
 	$oQueryForm->AddSubBlock($oQueryTextArea);
 
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
-	$oP->add_ready_script(<<<EOF
+	$oP->add_ready_script(<<<JS
 $("#expression").select();
-$("#expression").on("keydown", null, "ctrl+return", function() {
-	$(this).closest("form").submit();
+$("#expression").on('keyup', function (oEvent) {
+    if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.key === 'Enter') {
+        $(this).closest('form').trigger('submit');
+    }
 });
-EOF
+JS
 	);
 
 	if (count($aArgs) > 0) {
@@ -265,7 +266,7 @@ EOF
 
 		$aOrderBy = MetaModel::GetOrderByDefault($sMainClass);
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
+		if ($oFilter instanceof DBObjectSearch) {
 			// OQL Developed for Count
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
@@ -280,7 +281,7 @@ EOF
 		$oCountResultQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($sSQL));
 		$aMoreInfoBlocks[] = $oCountResultQuerySet;
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
+		if ($oFilter instanceof DBObjectSearch) {
 			// OQL Developed
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Header;
 
 use Laminas\Mail\Headers;
@@ -47,7 +41,7 @@ abstract class IdentificationField implements HeaderInterface
         $value = HeaderWrap::mimeDecodeValue($value);
 
         $messageIds = array_map(
-            [IdentificationField::class, "trimMessageId"],
+            [self::class, "trimMessageId"],
             explode(" ", $value)
         );
 
@@ -127,7 +121,7 @@ abstract class IdentificationField implements HeaderInterface
             }
         }
 
-        $this->messageIds = array_map([IdentificationField::class, "trimMessageId"], $ids);
+        $this->messageIds = array_map([self::class, "trimMessageId"], $ids);
         return $this;
     }
 

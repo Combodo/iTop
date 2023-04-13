@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2018 Combodo SARL
+// Copyright (c) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //

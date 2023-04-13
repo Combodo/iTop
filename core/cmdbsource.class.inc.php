@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * DB Server abstraction
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -157,7 +157,7 @@ class CMDBSource
 		$iPort = null;
 		self::InitServerAndPort($sDbHost, $sServer, $iPort);
 
-		$iFlags = null;
+		$iFlags = 0;
 
 		// *some* errors (like connection errors) will throw mysqli_sql_exception instead of generating warnings printed to the output
 		// but some other errors will still cause the query() method to return false !!!
@@ -166,7 +166,6 @@ class CMDBSource
 		try
 		{
 			$oMysqli = new mysqli();
-			$oMysqli->init();
 
 			if ($bTlsEnabled)
 			{
@@ -1611,5 +1610,23 @@ class CMDBSource
 		}
 
 		return 'ALTER DATABASE'.CMDBSource::GetSqlStringColumnDefinition().';';
+	}
+
+	/**
+	 * Check which mysql client option (--ssl or --ssl-mode) to be used for encrypted connection
+	 *
+	 * @return bool true if --ssl-mode should be used, false otherwise
+	 * @throws \MySQLException
+	 *
+	 * @link https://dev.mysql.com/doc/refman/5.7/en/connection-options.html#encrypted-connection-options "Command Options for Encrypted Connections"
+	 */
+	public static function IsSslModeDBVersion()
+	{
+		if (static::GetDBVendor() === static::ENUM_DB_VENDOR_MYSQL)
+		{
+			//Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
+			return version_compare(static::GetDBVersion(), '5.7.11', '>=');
+		}
+		return false;
 	}
 }

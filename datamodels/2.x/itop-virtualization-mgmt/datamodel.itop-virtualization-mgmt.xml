@@ -16,9 +16,11 @@
           </attributes>
         </naming>
         <fields_semantic>
-            <state_attribute>status</state_attribute>
+          <state_attribute>status</state_attribute>
         </fields_semantic>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -59,6 +61,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>volume_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -151,7 +154,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -168,6 +173,8 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -436,6 +443,8 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="redundancy" xsi:type="AttributeRedundancySettings">
           <sql>redundancy</sql>
@@ -626,6 +635,8 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>property</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="managementip" xsi:type="AttributeIPAddress">
           <sql>managementip</sql>
@@ -901,7 +912,7 @@
               <dashlet id="38" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:virtualization</title>
-                  <icon>../images/icons/icons8-old-vmware-logo.svg</icon>
+                <icon>../images/icons/icons8-old-vmware-logo.svg</icon>
               </dashlet>
               <dashlet id="39" xsi:type="DashletBadge">
                 <rank>1</rank>

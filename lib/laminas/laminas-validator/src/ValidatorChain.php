@@ -1,17 +1,22 @@
-<?php
-
-/**
- * @see       https://github.com/laminas/laminas-validator for the canonical source repository
- * @copyright https://github.com/laminas/laminas-validator/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-validator/blob/master/LICENSE.md New BSD License
- */
+<?php // phpcs:disable SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 
 namespace Laminas\Validator;
 
 use Countable;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\PriorityQueue;
+use ReturnTypeWillChange;
 
+use function array_replace;
+use function assert;
+use function count;
+use function rsort;
+
+use const SORT_NUMERIC;
+
+/**
+ * @psalm-type QueueElement = array{instance: ValidatorInterface, breakChainOnFailure: bool}
+ */
 class ValidatorChain implements
     Countable,
     ValidatorInterface
@@ -19,24 +24,22 @@ class ValidatorChain implements
     /**
      * Default priority at which validators are added
      */
-    const DEFAULT_PRIORITY = 1;
+    public const DEFAULT_PRIORITY = 1;
 
-    /**
-     * @var ValidatorPluginManager
-     */
+    /** @var ValidatorPluginManager<ValidatorInterface>|null */
     protected $plugins;
 
     /**
      * Validator chain
      *
-     * @var PriorityQueue
+     * @var PriorityQueue<QueueElement, int>
      */
     protected $validators;
 
     /**
      * Array of validation failure messages
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $messages = [];
 
@@ -45,6 +48,7 @@ class ValidatorChain implements
      */
     public function __construct()
     {
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $this->validators = new PriorityQueue();
     }
 
@@ -53,6 +57,7 @@ class ValidatorChain implements
      *
      * @return int
      */
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->validators);
@@ -61,12 +66,12 @@ class ValidatorChain implements
     /**
      * Get plugin manager instance
      *
-     * @return ValidatorPluginManager
+     * @return ValidatorPluginManager<ValidatorInterface>
      */
     public function getPluginManager()
     {
         if (! $this->plugins) {
-            $this->setPluginManager(new ValidatorPluginManager(new ServiceManager));
+            $this->setPluginManager(new ValidatorPluginManager(new ServiceManager()));
         }
         return $this->plugins;
     }
@@ -75,6 +80,7 @@ class ValidatorChain implements
      * Set plugin manager instance
      *
      * @param  ValidatorPluginManager $plugins Plugin manager
+     * @psalm-assert ValidatorPluginManager $this->plugins
      * @return $this
      */
     public function setPluginManager(ValidatorPluginManager $plugins)
@@ -86,11 +92,15 @@ class ValidatorChain implements
     /**
      * Retrieve a validator by name
      *
-     * @param  string     $name    Name of validator to return
-     * @param  null|array $options Options to pass to validator constructor (if not already instantiated)
+     * @param string|class-string<ValidatorInterface> $name    Name of validator to return
+     * @param null|array                              $options Options to pass to validator constructor
+     *                                                         (if not already instantiated)
      * @return ValidatorInterface
+     * @template T of ValidatorInterface
+     * @psalm-param string|class-string<T> $name
+     * @psalm-return ValidatorInterface
      */
-    public function plugin($name, array $options = null)
+    public function plugin($name, ?array $options = null)
     {
         $plugins = $this->getPluginManager();
         return $plugins->get($name, $options);
@@ -98,24 +108,21 @@ class ValidatorChain implements
 
     /**
      * Attach a validator to the end of the chain
-     *
      * If $breakChainOnFailure is true, then if the validator fails, the next validator in the chain,
      * if one exists, will not be executed.
      *
-     * @param  ValidatorInterface $validator
-     * @param  bool               $breakChainOnFailure
-     * @param  int                $priority            Priority at which to enqueue validator; defaults to
-     *                                                          1 (higher executes earlier)
-     *
-     * @throws Exception\InvalidArgumentException
-     *
+     * @param bool $breakChainOnFailure
+     * @param int  $priority            Priority at which to enqueue validator; defaults to
+     *                                  1 (higher executes earlier)
      * @return $this
+     * @throws Exception\InvalidArgumentException
      */
     public function attach(
         ValidatorInterface $validator,
         $breakChainOnFailure = false,
         $priority = self::DEFAULT_PRIORITY
     ) {
+        /** @psalm-suppress RedundantCastGivenDocblockType */
         $this->validators->insert(
             [
                 'instance'            => $validator,
@@ -131,7 +138,7 @@ class ValidatorChain implements
      * Proxy to attach() to keep BC
      *
      * @deprecated Please use attach()
-     * @param  ValidatorInterface      $validator
+     *
      * @param  bool                 $breakChainOnFailure
      * @param  int                  $priority
      * @return ValidatorChain Provides a fluent interface
@@ -150,7 +157,6 @@ class ValidatorChain implements
      * If $breakChainOnFailure is true, then if the validator fails, the next validator in the chain,
      * if one exists, will not be executed.
      *
-     * @param  ValidatorInterface      $validator
      * @param  bool                 $breakChainOnFailure
      * @return $this Provides a fluent interface
      */
@@ -164,6 +170,7 @@ class ValidatorChain implements
             $priority = $extractedNodes[0] + 1;
         }
 
+        /** @psalm-suppress RedundantCastGivenDocblockType */
         $this->validators->insert(
             [
                 'instance'            => $validator,
@@ -177,10 +184,10 @@ class ValidatorChain implements
     /**
      * Use the plugin manager to add a validator by name
      *
-     * @param  string $name
-     * @param  array $options
-     * @param  bool $breakChainOnFailure
-     * @param  int $priority
+     * @param  string|class-string<ValidatorInterface> $name
+     * @param  array                                   $options
+     * @param  bool                                    $breakChainOnFailure
+     * @param  int                                     $priority
      * @return $this
      */
     public function attachByName($name, $options = [], $breakChainOnFailure = false, $priority = self::DEFAULT_PRIORITY)
@@ -202,6 +209,7 @@ class ValidatorChain implements
      * Proxy to attachByName() to keep BC
      *
      * @deprecated Please use attachByName()
+     *
      * @param  string $name
      * @param  array  $options
      * @param  bool   $breakChainOnFailure
@@ -215,9 +223,9 @@ class ValidatorChain implements
     /**
      * Use the plugin manager to prepend a validator by name
      *
-     * @param  string $name
-     * @param  array  $options
-     * @param  bool   $breakChainOnFailure
+     * @param  string|class-string<ValidatorInterface> $name
+     * @param  array                                   $options
+     * @param  bool                                    $breakChainOnFailure
      * @return $this
      */
     public function prependByName($name, $options = [], $breakChainOnFailure = false)
@@ -242,12 +250,13 @@ class ValidatorChain implements
         $result         = true;
         foreach ($this->validators as $element) {
             $validator = $element['instance'];
+            assert($validator instanceof ValidatorInterface);
             if ($validator->isValid($value, $context)) {
                 continue;
             }
             $result         = false;
             $messages       = $validator->getMessages();
-            $this->messages = array_replace_recursive($this->messages, $messages);
+            $this->messages = array_replace($this->messages, $messages);
             if ($element['breakChainOnFailure']) {
                 break;
             }
@@ -258,7 +267,6 @@ class ValidatorChain implements
     /**
      * Merge the validator chain with the one given in parameter
      *
-     * @param ValidatorChain $validatorChain
      * @return $this
      */
     public function merge(ValidatorChain $validatorChain)
@@ -273,7 +281,7 @@ class ValidatorChain implements
     /**
      * Returns array of validation failure messages
      *
-     * @return array
+     * @return array<string, string>
      */
     public function getMessages()
     {
@@ -283,7 +291,7 @@ class ValidatorChain implements
     /**
      * Get all the validators
      *
-     * @return array
+     * @return list<QueueElement>
      */
     public function getValidators()
     {

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('FR FR', 'French', 'Français', array(
@@ -481,25 +481,25 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Action' => 'Action',
-	'Class:Action+' => 'Action spécifique',
-	'Class:Action/Attribute:name' => 'Nom',
-	'Class:Action/Attribute:name+' => 'Label',
-	'Class:Action/Attribute:description' => 'Description',
-	'Class:Action/Attribute:description+' => '',
-	'Class:Action/Attribute:status' => 'Etat',
-	'Class:Action/Attribute:status+' => '',
-	'Class:Action/Attribute:status/Value:test' => 'En test',
-	'Class:Action/Attribute:status/Value:test+' => '',
-	'Class:Action/Attribute:status/Value:enabled' => 'En production',
-	'Class:Action/Attribute:status/Value:enabled+' => '',
-	'Class:Action/Attribute:status/Value:disabled' => 'Inactive',
+	'Class:Action'                                  => 'Action',
+	'Class:Action+'                                 => 'Action spécifique',
+	'Class:Action/Attribute:name'                   => 'Nom',
+	'Class:Action/Attribute:name+'                  => 'Label',
+	'Class:Action/Attribute:description'            => 'Description',
+	'Class:Action/Attribute:description+'           => '',
+	'Class:Action/Attribute:status'                 => 'Etat',
+	'Class:Action/Attribute:status+'                => '',
+	'Class:Action/Attribute:status/Value:test'      => 'En test',
+	'Class:Action/Attribute:status/Value:test+'     => '',
+	'Class:Action/Attribute:status/Value:enabled'   => 'En production',
+	'Class:Action/Attribute:status/Value:enabled+'  => '',
+	'Class:Action/Attribute:status/Value:disabled'  => 'Inactive',
 	'Class:Action/Attribute:status/Value:disabled+' => '',
-	'Class:Action/Attribute:trigger_list' => 'Déclencheurs liés',
-	'Class:Action/Attribute:trigger_list+' => '',
-	'Class:Action/Attribute:finalclass' => 'Sous-classe d\'Action',
-	'Class:Action/Attribute:finalclass+' => 'Nom de la classe instanciable',
-	'Action:WarningNoTriggerLinked' => 'Attention, aucun déclencheur n\'est associé à l\'action. Elle ne sera pas active tant qu\'elle n\'en aura pas au moins 1.',
+	'Class:Action/Attribute:trigger_list'           => 'Déclencheurs liés',
+	'Class:Action/Attribute:trigger_list+'          => 'Déclencheurs à l\'origine de cette action',
+	'Class:Action/Attribute:finalclass'             => 'Sous-classe d\'Action',
+	'Class:Action/Attribute:finalclass+'            => 'Nom de la classe instanciable',
+	'Action:WarningNoTriggerLinked'                 => 'Attention, aucun déclencheur n\'est associé à l\'action. Elle ne sera pas active tant qu\'elle n\'en aura pas au moins 1.',
 ));
 
 //
@@ -516,40 +516,63 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ActionEmail' => 'Notification par mél',
-	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'Cet état définit qui va être notifié: le \'Destinataire de test\', tous les destinataires (A, Copie and Copie Cachée) ou personne',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Seul le destinataire de test est notifié ',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Tous les destinataires (A, Copie and Copie Cachée) sont notifiés',
+	'Class:ActionEmail'                                  => 'Notification par mél',
+	'Class:ActionEmail+'                                 => '',
+	'Class:ActionEmail/Attribute:status+'                => 'Cet état définit qui va être notifié: 
+- En test : le Destinataire de test uniquement,
+- En production : tous les destinataires (A, Copie and Copie Cachée),
+- Inactive : personne.',
+	'Class:ActionEmail/Attribute:status/Value:test+'     => 'Seul le destinataire de test est notifié ',
+	'Class:ActionEmail/Attribute:status/Value:enabled+'  => 'Tous les destinataires (A, Copie and Copie Cachée) sont notifiés',
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'La notification n\'est pas envoyée',
-	'Class:ActionEmail/Attribute:test_recipient' => 'Destinataire de test',
-	'Class:ActionEmail/Attribute:test_recipient+' => '',
-	'Class:ActionEmail/Attribute:from' => 'De (mél)',
-	'Class:ActionEmail/Attribute:from+' => 'Adresse mél qui sera affichés en expéditeur de la notification',
-	'Class:ActionEmail/Attribute:from_label' => 'De (libellé)',
-	'Class:ActionEmail/Attribute:from_label+' => 'Le nom de l\'expéditeur sera inclus dans l\'entête du mél',
-	'Class:ActionEmail/Attribute:reply_to' => 'Répondre à (mél)',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Adresse mèl qui sera affichée dans le répondre à de la notification',
-	'Class:ActionEmail/Attribute:reply_to_label' => 'Répondre à (libellé)',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Le nom du destinataire en cas de réponse sera inclus dans l\'entête du mél.',
-	'Class:ActionEmail/Attribute:to' => 'A',
-	'Class:ActionEmail/Attribute:to+' => '',
-	'Class:ActionEmail/Attribute:cc' => 'Copie',
-	'Class:ActionEmail/Attribute:cc+' => '',
-	'Class:ActionEmail/Attribute:bcc' => 'Copie Cachée',
-	'Class:ActionEmail/Attribute:bcc+' => '',
-	'Class:ActionEmail/Attribute:subject' => 'Sujet',
-	'Class:ActionEmail/Attribute:subject+' => '',
-	'Class:ActionEmail/Attribute:body' => 'Message',
-	'Class:ActionEmail/Attribute:body+' => '',
-	'Class:ActionEmail/Attribute:importance' => 'Importance',
-	'Class:ActionEmail/Attribute:importance+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:low' => 'Basse',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normale',
+	'Class:ActionEmail/Attribute:test_recipient'         => 'Destinataire de test',
+	'Class:ActionEmail/Attribute:test_recipient+'        => 'Adresse mél utilisée en remplacement des A, Copie et Copie Cachée, lorsque la notification est \'En test\'',
+	'Class:ActionEmail/Attribute:from'                   => 'De (mél)',
+	'Class:ActionEmail/Attribute:from+'                  => 'Soit une adresse mél en clair, soit un mot clé comme $this->agent_id->email$.
+Ce dernier pourrait ne pas être accepté par certains serveurs de mél.',
+	'Class:ActionEmail/Attribute:from_label'             => 'De (libellé)',
+	'Class:ActionEmail/Attribute:from_label+'            => 'Le nom de l\'expéditeur en dur ou un mot clé comme $this->agent_id->friendlyname$. 
+Il sera inclus dans l\'entête du mél',
+	'Class:ActionEmail/Attribute:reply_to'               => 'Répondre à (mél)',
+	'Class:ActionEmail/Attribute:reply_to+'              => 'Adresse mèl en clair ou un mot clé comme $this->team_id->email$.
+Il sera affichée dans le \'répondre à\' de la notification.
+Si ce champ n\'est pas rempli, la valeur de \'De (mél)\' sera utilisée',
+	'Class:ActionEmail/Attribute:reply_to_label'         => 'Répondre à (libellé)',
+	'Class:ActionEmail/Attribute:reply_to_label+'        => 'Le nom du destinataire en dur ou un mot clé comme $this->agent_id->friendlyname$.
+En cas de réponse, il sera inclus dans l\'entête du mél.
+Si ce champ n\'est pas rempli, la valeur de \'De (libellé)\' sera utilisée',
+	'Class:ActionEmail/Attribute:to'                     => 'A',
+	'Class:ActionEmail/Attribute:to+'                    => 'A : une requête OQL retournant des objets ayant un attribut mél.
+En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
+	'Class:ActionEmail/Attribute:cc'                     => 'Copie',
+	'Class:ActionEmail/Attribute:cc+'                    => 'Copie : une requête OQL retournant des objets ayant un attribut mél.
+En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
+	'Class:ActionEmail/Attribute:bcc'                      => 'Copie Cachée',
+	'Class:ActionEmail/Attribute:bcc+'                   => 'Copie Cachée : une requête OQL retournant des objets ayant un attribut mél.
+En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
+	'Class:ActionEmail/Attribute:subject'                  => 'Sujet',
+	'Class:ActionEmail/Attribute:subject+'                 => 'Sujet du mél. Peut contenir des mots-clés comme $this->attribute_code$',
+	'Class:ActionEmail/Attribute:body'                     => 'Message',
+	'Class:ActionEmail/Attribute:body+'                    => 'Contenu du mél. Peut contenir des mots-clés:
+- $this->attribute_code$ un attribut de l\'objet qui a déclenché la notification,
+- $this->html(attribute_code)$ idem mais affiché en html au lieu de texte simple,
+- $this->hyperlink()$ hyperlien vers l\'objet déclencheur dans la console,
+- $this->hyperlink(portal)$ hyperlien vers l\'objet déclencheur dans le portail utilisateur,
+- $this->head_html(case_log_attribute)$ dernière réponse en format html d\'un journal,
+- $this->attribute_external_key->attribute$ syntaxe récursive pour afficher un attribut distant,
+- $current_contact->attribute$ attribut de la Personne qui a déclenché la notification',
+	'Class:ActionEmail/Attribute:importance'               => 'Importance',
+	'Class:ActionEmail/Attribute:importance+'              => 'Sera mis en propriété du mél envoyé',
+	'Class:ActionEmail/Attribute:importance/Value:low'     => 'Basse',
+	'Class:ActionEmail/Attribute:importance/Value:low+'    => '',
+	'Class:ActionEmail/Attribute:importance/Value:normal'  => 'Normale',
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:high' => 'Haute',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:high'    => 'Haute',
+	'Class:ActionEmail/Attribute:importance/Value:high+'   => '',
+	'ActionEmail:main'                                     => 'Message',
+	'ActionEmail:trigger'                                  => 'Conditions de déclenchement',
+	'ActionEmail:recipients'                               => 'Contacts',
+
 ));
 
 //
@@ -562,7 +585,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Trigger/Attribute:description' => 'Description',
 	'Class:Trigger/Attribute:description+' => '',
 	'Class:Trigger/Attribute:action_list' => 'Actions déclenchées',
-	'Class:Trigger/Attribute:action_list+' => '',
+	'Class:Trigger/Attribute:action_list+' => 'Actions effectuées quand le déclencheur est activé',
 	'Class:Trigger/Attribute:finalclass' => 'Sous-classe de Déclencheur',
 	'Class:Trigger/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:Trigger/Attribute:context' => 'Contexte',
@@ -660,6 +683,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnObjectMention+' => 'Déclencheur sur un objet mentionné (@xxx) de la classe choisie (ou de ses filles) dans un attribut de type journal',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Objets mentionnés',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Permet de limiter la liste des objets mentionnés pour lesquels le déclencheur s\'activera. Si vide, n\'importe quel objet mentionné (de n\'importe quelle classe) l\'activera.',
+));
+
+//
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Déclencheur sur le téléchargement d\'un document d\'un objet',
+	'Class:TriggerOnAttributeBlobDownload+' => '',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Attributs cible',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
 ));
 
 //

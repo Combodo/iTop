@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -40,7 +40,7 @@ trait tJSRefreshCallback
 	public function GetJSRefreshCallback(): string
 	{
 		$sJSRefresh = $this->GetJSRefresh();
-		tJSRefreshCallback::GetRecursiveJSRefresh($this, $sJSRefresh);
+		self::GetRecursiveJSRefresh($this, $sJSRefresh);
 
 		return $sJSRefresh;
 	}
@@ -60,7 +60,7 @@ trait tJSRefreshCallback
 			if ($usingTrait && $oSubBlock->GetJSRefresh() != "") {
 				$sJSRefresh = $oSubBlock->GetJSRefresh()."\n".$sJSRefresh;
 			}
-			tJSRefreshCallback::GetRecursiveJSRefresh($oSubBlock, $sJSRefresh);
+			self::GetRecursiveJSRefresh($oSubBlock, $sJSRefresh);
 		}
 
 		return $sJSRefresh;

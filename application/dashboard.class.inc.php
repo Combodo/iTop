@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1547,6 +1547,29 @@ JS
 	public function GetDefinitionFile()
 	{
 		return $this->sDefinitionFile;
+	}
+
+	/**
+	 * @param string $sDashboardFileRelative can also be an absolute path (compatibility with old URL)
+	 *
+	 * @return string full path to the Dashboard file
+	 * @throws \SecurityException if path isn't under approot
+	 * @uses utils::RealPath()
+	 * @since 2.7.8 3.0.3 3.1.0 N°4449 remove FPD
+	 */
+	public static function GetDashboardFileFromRelativePath($sDashboardFileRelative)
+	{
+		if (utils::RealPath($sDashboardFileRelative, APPROOT)) {
+			// compatibility with old URL containing absolute path !
+			return $sDashboardFileRelative;
+		}
+
+		$sDashboardFile = APPROOT.$sDashboardFileRelative;
+		if (false === utils::RealPath($sDashboardFile, APPROOT)) {
+			throw new SecurityException('Invalid dashboard file !');
+		}
+
+		return $sDashboardFile;
 	}
 
 	/**

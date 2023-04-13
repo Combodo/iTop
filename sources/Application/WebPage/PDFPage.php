@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -142,7 +142,6 @@ EOF
 	/**
 	 * Generates the PDF document and returns the PDF content as a string
 	 *
-	 * @return string
 	 * @see WebPage::output()
 	 */
 	public function output()

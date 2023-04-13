@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
@@ -70,7 +70,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Attribute:status/Value:new+' => '',
 	'Class:Incident/Attribute:status/Value:escalated_tto' => 'Escalade tto',
 	'Class:Incident/Attribute:status/Value:escalated_tto+' => '',
-	'Class:Incident/Attribute:status/Value:assigned' => 'Assignée',
+	'Class:Incident/Attribute:status/Value:assigned' => 'Assigné',
 	'Class:Incident/Attribute:status/Value:assigned+' => '',
 	'Class:Incident/Attribute:status/Value:escalated_ttr' => 'Escalate ttr',
 	'Class:Incident/Attribute:status/Value:escalated_ttr+' => '',
@@ -78,9 +78,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Attribute:status/Value:waiting_for_approval+' => '',
 	'Class:Incident/Attribute:status/Value:pending' => 'En attente',
 	'Class:Incident/Attribute:status/Value:pending+' => '',
-	'Class:Incident/Attribute:status/Value:resolved' => 'Résolue',
+	'Class:Incident/Attribute:status/Value:resolved' => 'Résolu',
 	'Class:Incident/Attribute:status/Value:resolved+' => '',
-	'Class:Incident/Attribute:status/Value:closed' => 'Fermée',
+	'Class:Incident/Attribute:status/Value:closed' => 'Fermé',
 	'Class:Incident/Attribute:status/Value:closed+' => '',
 	'Class:Incident/Attribute:impact' => 'Impact',
 	'Class:Incident/Attribute:impact+' => '',
@@ -112,6 +112,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => 'basse',
 	'Class:Incident/Attribute:origin' => 'Origine',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'en personne',
+	'Class:Incident/Attribute:origin/Value:in_person+' => '',
+	'Class:Incident/Attribute:origin/Value:chat' => 'chat',
+	'Class:Incident/Attribute:origin/Value:chat+' => '',
 	'Class:Incident/Attribute:origin/Value:mail' => 'email',
 	'Class:Incident/Attribute:origin/Value:mail+' => 'email',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'supervision',
@@ -197,7 +201,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Attribute:related_request_list' => 'Requêtes filles',
 	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Incidents fils',
-	'Class:Incident/Attribute:child_incidents_list+' => '',
+	'Class:Incident/Attribute:child_incidents_list+' => 'Tous les incidents fils lié à celui-ci',
 	'Class:Incident/Attribute:public_log' => 'Journal public',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Satisfaction client',
@@ -228,13 +232,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Stimulus:ev_autoclose+' => '',
 	'Class:Incident/Stimulus:ev_resolve' => 'Marquer comme résolu',
 	'Class:Incident/Stimulus:ev_resolve+' => '',
-	'Class:Incident/Stimulus:ev_close' => 'Clore cette requête',
+	'Class:Incident/Stimulus:ev_close' => 'Clore cet incident',
 	'Class:Incident/Stimulus:ev_close+' => '',
 	'Class:Incident/Stimulus:ev_reopen' => 'Ré-ouvrir',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
-	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'L\'Incident parent ne peut pas être assigné à lui même',
+	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'L\'incident parent ne peut pas être lui-même',
 
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution du ticket (ev_autoresolve) vers les requêtes et incidents fils, et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
-	'Tickets:Related:OpenIncidents' => 'Open incidents',
+	'Tickets:Related:OpenIncidents' => 'Incidents ouverts',
 ));

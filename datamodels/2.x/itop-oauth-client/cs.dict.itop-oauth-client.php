@@ -28,7 +28,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 //
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'Class:OAuthClient' => 'Oauth Client~~',
+	'Class:OAuthClient' => 'OAuth Client~~',
 	'Class:OAuthClient/Attribute:provider' => 'Provider~~',
 	'Class:OAuthClient/Attribute:provider+' => '~~',
 	'Class:OAuthClient/Attribute:name' => 'Login~~',

@@ -19,7 +19,7 @@
 
 # composer reserver directory, from sources, populate/update using "composer install"
 vendor/*
-test/vendor/*
+tests/*/vendor/*
 
 # all conf but listing prevention
 /conf/**
@@ -46,11 +46,12 @@ test/vendor/*
 !/log/web.config
 
 # PHPUnit cache file
-/test/.phpunit.result.cache
+/tests/php-unit-tests/.phpunit.result.cache
 
 
 # Jetbrains
 /.idea/**
+!/.idea/IntelliLang.xml
 
 # doc. generation
 /.doc/vendor
@@ -145,3 +146,10 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+

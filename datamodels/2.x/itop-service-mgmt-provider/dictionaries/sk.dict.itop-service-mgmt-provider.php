@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -105,9 +105,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Contract/Attribute:organization_name' => 'Meno zákazníka',
 	'Class:Contract/Attribute:organization_name+' => '',
 	'Class:Contract/Attribute:contacts_list' => 'Kontakty',
-	'Class:Contract/Attribute:contacts_list+' => '',
+	'Class:Contract/Attribute:contacts_list+' => 'All the contacts for this customer contract~~',
 	'Class:Contract/Attribute:documents_list' => 'Zoznam dokumentov',
-	'Class:Contract/Attribute:documents_list+' => '',
+	'Class:Contract/Attribute:documents_list+' => 'All the documents for this customer contract~~',
 	'Class:Contract/Attribute:description' => 'Popis',
 	'Class:Contract/Attribute:description+' => '',
 	'Class:Contract/Attribute:start_date' => 'Dátum začiatku',
@@ -154,7 +154,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:CustomerContract' => 'Zákaznícka zmluva',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Služby',
-	'Class:CustomerContract/Attribute:services_list+' => '',
+	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract~~',
 	'Class:CustomerContract/Attribute:functionalcis_list' => 'CIs~~',
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract~~',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Provider contracts~~',
@@ -169,7 +169,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ProviderContract' => 'Poskytovateľská zmluva',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'Zariadenia',
-	'Class:ProviderContract/Attribute:functionalcis_list+' => '',
+	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this provider contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => '',
 	'Class:ProviderContract/Attribute:coverage' => 'Časy pokrytia',
@@ -239,7 +239,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
 	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Služby',
-	'Class:ServiceFamily/Attribute:services_list+' => '',
+	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
 ));
 
 //
@@ -262,9 +262,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Service/Attribute:servicefamily_name' => 'Názov rodiny služieb',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Dokumenty',
-	'Class:Service/Attribute:documents_list+' => '',
+	'Class:Service/Attribute:documents_list+' => 'All the documents linked to the service~~',
 	'Class:Service/Attribute:contacts_list' => 'Kontakty',
-	'Class:Service/Attribute:contacts_list+' => '',
+	'Class:Service/Attribute:contacts_list+' => 'All the contacts for this service~~',
 	'Class:Service/Attribute:status' => 'Stav',
 	'Class:Service/Attribute:status+' => '',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implementácia',
@@ -276,9 +276,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Service/Attribute:icon' => 'Icon~~',
 	'Class:Service/Attribute:icon+' => '~~',
 	'Class:Service/Attribute:customercontracts_list' => 'Zákaznícke zmluvy',
-	'Class:Service/Attribute:customercontracts_list+' => '',
+	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service~~',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Podkategórie služieb',
-	'Class:Service/Attribute:servicesubcategories_list+' => '',
+	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
 ));
 
 //
@@ -364,9 +364,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:SLA/Attribute:organization_name' => 'Názov organizácie poskytovateľa',
 	'Class:SLA/Attribute:organization_name+' => '',
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
-	'Class:SLA/Attribute:slts_list+' => '',
+	'Class:SLA/Attribute:slts_list+' => 'All the service level targets for this SLA~~',
 	'Class:SLA/Attribute:customercontracts_list' => 'Zákaznícke zmluvy',
-	'Class:SLA/Attribute:customercontracts_list+' => '',
+	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA~~',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
 ));
 
@@ -509,9 +509,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:DeliveryModel/Attribute:description' => 'Popis',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakty',
-	'Class:DeliveryModel/Attribute:contacts_list+' => '',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Zákazníci',
-	'Class:DeliveryModel/Attribute:customers_list+' => '',
+	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 ));
 
 //

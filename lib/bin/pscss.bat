@@ -1,5 +1,4 @@
 @ECHO OFF
 setlocal DISABLEDELAYEDEXPANSION
-SET BIN_TARGET=%~dp0/pscss
-SET COMPOSER_RUNTIME_BIN_DIR=%~dp0
+SET BIN_TARGET=%~dp0/../scssphp/scssphp/bin/pscss
 php "%BIN_TARGET%" %*

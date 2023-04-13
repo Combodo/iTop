@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Mail\Header;
@@ -50,7 +44,7 @@ final class HeaderLocator implements HeaderLocatorInterface
     public function get(string $name, ?string $default = null): ?string
     {
         $name = $this->normalizeName($name);
-        return isset($this->plugins[$name]) ? $this->plugins[$name] : $default;
+        return $this->plugins[$name] ?? $default;
     }
 
     public function has(string $name): bool

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2021 Combodo SARL
+// Copyright (c) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -44,6 +44,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'DBTools:Inconsistencies' => 'Incohérences de base de données',
 	'DBTools:DetailedErrorTitle' => '%2$s erreur(s) dans la classe %1$s : %3$s',
+	'DBTools:DetailedErrorLimit' => 'Liste limitée à %1$s erreurs',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Enregistrement orphelin dans `%1$s`, il devrait avoir son équivalent dans la table `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Clé externe invalide %1$s (colonne: `%2$s.%3$s`)',

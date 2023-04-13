@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,7 +8,9 @@
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
+use Combodo\iTop\Application\UI\Base\Component\Modal\DoNotShowAgainOptionBlock;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Template\TemplateUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu;
@@ -45,6 +47,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// - DisplayableGraph, impact analysis
 		'js/raphael-min.js',
 		'js/jquery.mousewheel.js',
+		/** - links widgets moved in links folder @since 3.1.0 * */
+		'js/links/links_direct_widget.js',
+		'js/links/links_widget.js',
 	];
 	/** @inheritDoc */
 	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
@@ -210,6 +215,12 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_dict_entry('UI:DisconnectedDlgTitle');
 		$this->add_dict_entry('UI:LoginAgain');
 		$this->add_dict_entry('UI:StayOnThePage');
+
+		// Modals
+		$this->add_dict_entries('UI:Modal:');
+		$this->add_dict_entries('UI:Links:');
+		$this->add_dict_entries('UI:Object:');
+		$this->add_dict_entry('UI:Layout:ObjectDetails:New:Modal:Title');
 	}
 
 	/**
@@ -529,9 +540,9 @@ JS
 	 */
 	public function SetContentLayout(PageContent $oLayout)
 	{
-		$oPrevContentLayout=$this->oContentLayout;
+		$oPrevContentLayout = $this->oContentLayout;
 		$this->oContentLayout = $oLayout;
-		foreach ($oPrevContentLayout->GetSubBlocks() as $oBlock){
+		foreach ($oPrevContentLayout->GetSubBlocks() as $oBlock) {
 			$this->AddUiBlock($oBlock);
 		}
 
@@ -891,6 +902,9 @@ HTML;
 		// - Prepare content
 		$aData['aLayouts']['oPageContent'] = $this->GetContentLayout();
 		$aData['aDeferredBlocks']['oPageContent'] = $this->GetDeferredBlocks($this->GetContentLayout());
+		// - Prepare generic templates
+		$aData['aTemplates'] = array();
+		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-modal-option--do-not-show-again-template', new DoNotShowAgainOptionBlock());
 
 		// - Retrieve layouts linked files
 		//   Note: Adding them now instead of in the template allow us to remove duplicates and lower the browser parsing time
@@ -1026,10 +1040,13 @@ EOF
 
 	/**
 	 * @inheritDoc
+	 *
+	 * @param string|null $sTabDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
+	 * @since 3.1.0 N°5920 Add $sTabDescription argument
 	 */
-	public function SetCurrentTab($sTabCode = '', $sTabTitle = null)
+	public function SetCurrentTab($sTabCode = '', $sTabTitle = null, ?string $sTabDescription = null)
 	{
-		return $this->m_oTabs->SetCurrentTab($sTabCode, $sTabTitle);
+		return $this->m_oTabs->SetCurrentTab($sTabCode, $sTabTitle, $sTabDescription);
 	}
 
 	/**
@@ -1241,4 +1258,5 @@ EOF
 
 		return parent::SetBlockParam($sKey, $value);
 	}
+
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -105,10 +105,13 @@ class AjaxPage extends WebPage implements iTabbedPage
 
 	/**
 	 * @inheritDoc
+	 *
+	 * @param string|null $sTabDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
+	 * @since 3.1.0 N°5920 Add $sTabDescription argument
 	 */
-	public function SetCurrentTab($sTabCode = '', $sTabTitle = null)
+	public function SetCurrentTab($sTabCode = '', $sTabTitle = null, ?string $sTabDescription = null)
 	{
-		return $this->m_oTabs->SetCurrentTab($sTabCode, $sTabTitle);
+		return $this->m_oTabs->SetCurrentTab($sTabCode, $sTabTitle, $sTabDescription);
 	}
 
 	/**

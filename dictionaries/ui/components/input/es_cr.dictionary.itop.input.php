@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,5 +19,5 @@
 
 // Input
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
+	'UI:Component:Input:Password:DoesNotMatch' => 'No coincide la contraseña',
 ));

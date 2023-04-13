@@ -7,7 +7,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
@@ -285,6 +285,8 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -674,6 +676,16 @@
           <count_max>0</count_max>
           <ext_key_to_remote>team_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
+        </field>
+        <field id="user_list" xsi:type="AttributeLinkedSet">
+          <linked_class>User</linked_class>
+          <ext_key_to_me>contactid</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods>
@@ -759,6 +771,9 @@
           <items>
             <item id="team_list">
               <rank>10</rank>
+            </item>
+            <item id="user_list">
+              <rank>55</rank>
             </item>
             <item id="col:col1">
               <rank>40</rank>
@@ -921,6 +936,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>person_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -1008,17 +1024,30 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="team_id"/>
-            <attribute id="person_id"/>
+            <attribute id="person_id_friendlyname"/>
+            <attribute id="team_name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="team_id"/>
             <attribute id="person_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="team_id"/>
+              <attribute id="person_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="team_id" xsi:type="AttributeExternalKey">
@@ -1056,10 +1085,10 @@
       <presentation>
         <details>
           <items>
-            <item id="team_id">
+            <item id="person_id">
               <rank>10</rank>
             </item>
-            <item id="person_id">
+            <item id="team_id">
               <rank>20</rank>
             </item>
             <item id="role_id">
@@ -1109,7 +1138,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1633,7 +1664,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1680,7 +1713,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1874,11 +1909,11 @@
       </theme>
     </themes>
     <themes_common>
-        <variables>
+      <variables>
         </variables>
-        <imports>
+      <imports>
         </imports>
-        <stylesheets>
+      <stylesheets>
         </stylesheets>
     </themes_common>
   </branding>
@@ -1888,4 +1923,5 @@
     <profiles>
     </profiles>
   </user_rights>
+  <constants/>
 </itop_design>

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2021 Combodo SARL
+* @copyright     Copyright (C) 2023 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
@@ -197,7 +197,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:related_request_list' => 'Kind-Requests',
 	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Abgeleitete Incidents',
-	'Class:Incident/Attribute:child_incidents_list+' => '',
+	'Class:Incident/Attribute:child_incidents_list+' => 'All the child incidents related to this incident~~',
 	'Class:Incident/Attribute:public_log' => 'Öffentliches Log',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Benutzerzufriedenheit',

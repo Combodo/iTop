@@ -1,21 +1,8 @@
 <?php
-// Copyright (C) 2015-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 /**
  * A union of DBObjectSearches
@@ -24,7 +11,7 @@
  * For clarity purpose, since only the constructor vary between DBObjectSearch and DBUnionSearch, all the API is documented on the common ancestor: DBSearch
  * Please refer to DBSearch's documentation
  *
- * @copyright   Copyright (C) 2015-2021 Combodo SARL
+ * @copyright   Copyright (C) 2015-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  *
@@ -34,7 +21,6 @@
  * @see DBSearch
  * @see DBObjectSearch
  */
- 
 class DBUnionSearch extends DBSearch
 {
 	protected $aSearches; // source queries
@@ -676,26 +662,6 @@ class DBUnionSearch extends DBSearch
 		return $oSQLQuery;
 	}
 
-	function GetExpectedArguments()
-	{
-		$aVariableCriteria = array();
-		foreach ($this->aSearches as $oSearch)
-		{
-			$aVariableCriteria = array_merge($aVariableCriteria, $oSearch->GetExpectedArguments());
-		}
-
-		return $aVariableCriteria;
-	}
-	/**
-	 * @return \Expression
-	 */
-	public function GetCriteria()
-	{
-		// We're at the limit here
-		$oSearch = reset($this->aSearches);
-		return $oSearch->GetCriteria();
-	}
-
 	protected function IsDataFiltered()
 	{
 		$bIsAllDataFiltered = true;
@@ -738,13 +704,14 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
-	public function ListParameters()
+	function GetExpectedArguments(): array
 	{
-		$aParameters = array();
+		$aVariableCriteria = array();
 		foreach ($this->aSearches as $oSearch)
 		{
-			$aParameters = array_merge($aParameters, $oSearch->ListParameters());
+			$aVariableCriteria = array_merge($aVariableCriteria, $oSearch->GetExpectedArguments());
 		}
-		return $aParameters;
+
+		return $aVariableCriteria;
 	}
 }

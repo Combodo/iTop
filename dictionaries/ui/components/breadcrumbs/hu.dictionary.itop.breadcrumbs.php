@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,5 +19,5 @@
 
 // Global search
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Previous pages~~',
+	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Előző oldalak',
 ));

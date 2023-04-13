@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -98,13 +98,11 @@ try
 					$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));
 					$oAttachment->Set('temp_id', $sTempId);
 					$oAttachment->Set('item_class', $sClass);
-					$oAttachment->Set('creation_date', time());
-					$oAttachment->Set('user_id', UserRights::GetUserObject());
 					$oAttachment->SetDefaultOrgId();
 					$oAttachment->Set('contents', $oDoc);
 					$iAttId = $oAttachment->DBInsert();
 
-					$aResult['msg'] = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
+					$aResult['msg'] = utils::EscapeHtml($oDoc->GetFileName());
 					$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
 					$aResult['att_id'] = $iAttId;
 					$aResult['preview'] = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
@@ -138,9 +136,8 @@ try
 
 	$oPage->output();
 }
-catch (Exception $e)
-{
+catch (Exception $e) {
 	// note: transform to cope with XSS attacks
-	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
+	echo utils::EscapeHtml($e->GetMessage());
 	IssueLog::Error($e->getMessage());
 }

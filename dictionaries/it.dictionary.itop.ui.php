@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -416,7 +416,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Rimuovi >> ~~',
 	'UI:Button:FilterList' => ' Filtra... ~~',
 	'UI:Button:Create' => ' Crea ~~',
-	'UI:Button:Delete' => ' Cancella ! ~~',
+	'UI:Button:Delete' => ' Cancella ~~',
 	'UI:Button:Rename' => ' Rename... ~~',
 	'UI:Button:ChangePassword' => ' Cambia Password ~~',
 	'UI:Button:ResetPassword' => ' Resetta Password ~~',
@@ -644,9 +644,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Seleziona la classe per la ricerca: ',
 
 	'UI:CSVReport-Value-Modified' => 'Modified~~',
-	'UI:CSVReport-Value-SetIssue' => 'Could not be changed - reason: %1$s~~',
-	'UI:CSVReport-Value-ChangeIssue' => 'Could not be changed to %1$s - reason: %2$s~~',
-	'UI:CSVReport-Value-NoMatch' => 'No match~~',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Missing mandatory value~~',
 	'UI:CSVReport-Value-Ambiguous' => 'Ambiguous: found %1$s objects~~',
 	'UI:CSVReport-Row-Unchanged' => 'unchanged~~',
@@ -805,7 +805,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Aggiungi l\'oggeto %1$s collegato con %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Aggiungi l\'oggeto %1$s al collegamento con %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Gestisci l\'oggetto %1$s collegato con %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Aggiungi %1$s...',
+	'UI:AddLinkedObjectsOf_Class' => 'Aggiungi %1$s',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Rimuovi gli oggetti selezionati',
 	'UI:Message:EmptyList:UseAdd' => 'La lista è vuota, utilizzare il pulsante "Aggiungi ..." per aggiungere elementi.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Utilizza il modulo di ricerca qui sopra per cercare oggetti da aggiungere.',

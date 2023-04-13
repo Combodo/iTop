@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -27,7 +27,6 @@
 // - not outputing xml when a wrong input is given (class, attribute names)
 //
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
@@ -46,7 +45,7 @@ function UsageAndExit($oP)
 	}
 	else
 	{
-		$oP->p("The parameter 'data_sources' is mandatory, and must contain a comma separated list of data sources\n");		
+		$oP->p("The parameter 'data_sources' is mandatory, and must contain a comma separated list of data sources\n");
 	}
 	$oP->output();
 	exit -2;
@@ -105,6 +104,9 @@ if (utils::IsModeCLI())
 else
 {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+
+	//N°6022 - Make synchro scripts work by http via token authentication with SYNCHRO scopes
+	$oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 }
 
@@ -166,7 +168,7 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 		}
 		catch(Exception $e)
 		{
-			$oP->add($e->getMessage());		
+			$oP->add($e->getMessage());
 			if ($bSimulate)
 			{
 				CMDBSource::Query('ROLLBACK');

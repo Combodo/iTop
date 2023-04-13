@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
-	<classes>
-		<class id="Ticket">
-			<methods>
-				<method id="CreateFromServiceSubcategory" _delta="define">
-					<comment>/**
+  <classes>
+    <class id="Ticket">
+      <methods>
+        <method id="CreateFromServiceSubcategory" _delta="define">
+          <comment>/**
 						* Instanciate an object of the relevant class, depending on the request type
 						* @return DBObject
 						*/</comment>
-					<static>true</static>
-					<access>public</access>
-					<type>Factory</type>
-					<code><![CDATA[	static public function CreateFromServiceSubcategory($oServiceSubcategory)
+          <static>true</static>
+          <access>public</access>
+          <type>Factory</type>
+          <code><![CDATA[	static public function CreateFromServiceSubcategory($oServiceSubcategory)
 	{
         $sType = $oServiceSubcategory->Get('request_type');
         if ($sType == 'incident')
@@ -32,43 +32,43 @@
         }
         return $oRet;
 	}]]></code>
-				</method>
-			</methods>
-		</class>
-	</classes>
-	<module_designs>
-		<module_design id="itop-portal">
-			<bricks>
-				<brick id="services">
-					<levels>
-						<level id="1">
-							<levels>
-								<level id="1">
-									<levels>
-										<level id="1">
-											<actions>
-												<action id="create_from_this">
-													<class _delta="delete" />
-													<factory_method _delta="define"><![CDATA[\Ticket::CreateFromServiceSubcategory]]></factory_method>
-												</action>
-											</actions>
-										</level>
-									</levels>
-								</level>
-							</levels>
-						</level>
-					</levels>
-				</brick>
-			</bricks>
-			<classes>
-				<class id="ServiceSubcategory">
-					<scopes>
-						<scope id="all">
-							<oql_view _delta="redefine"><![CDATA[SELECT ServiceSubcategory WHERE status != 'obsolete']]></oql_view>
-						</scope>
-					</scopes>
-				</class>
-			</classes>
-		</module_design>
-	</module_designs>
+        </method>
+      </methods>
+    </class>
+  </classes>
+  <module_designs>
+    <module_design id="itop-portal">
+      <bricks>
+        <brick id="services">
+          <levels>
+            <level id="1">
+              <levels>
+                <level id="1">
+                  <levels>
+                    <level id="1">
+                      <actions>
+                        <action id="create_from_this">
+                          <class _delta="delete"/>
+                          <factory_method _delta="define"><![CDATA[\Ticket::CreateFromServiceSubcategory]]></factory_method>
+                        </action>
+                      </actions>
+                    </level>
+                  </levels>
+                </level>
+              </levels>
+            </level>
+          </levels>
+        </brick>
+      </bricks>
+      <classes>
+        <class id="ServiceSubcategory">
+          <scopes>
+            <scope id="all">
+              <oql_view _delta="redefine"><![CDATA[SELECT ServiceSubcategory WHERE status != 'obsolete']]></oql_view>
+            </scope>
+          </scopes>
+        </class>
+      </classes>
+    </module_design>
+  </module_designs>
 </itop_design>

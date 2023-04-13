@@ -1,0 +1,5 @@
+<div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-dialog" title="" style="display: none">
+    {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+        {{ render_block(oSubBlock, {aPage: aPage}) }}
+    {% endfor %}
+</div>

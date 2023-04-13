@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,9 +15,9 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
  * Class SelectUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Input
+ * @package UIBlockAPI
+ * @api
  * @since 3.0.0
- * @internal
  */
 class SelectUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -29,6 +29,7 @@ class SelectUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Create a default Select input
 	 *
+	 * @api
 	 * @param string $sName {@see Select::$sName}
 	 * @param string|null $sId {@see UIBlock::$sId}
 	 *
@@ -47,6 +48,7 @@ class SelectUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * If you need to have a real field with a label, you might use a {@link Field} component instead
 	 *
+	 * @api
 	 * @param string $sName {@see Select::$sName}
 	 * @param string $sLabel {@see Select::$sLabel}
 	 * @param string|null $sId {@see UIBlock::$sId}

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2023 Combodo SARL
 //
 // This file is part of iTop.
 //
@@ -19,12 +19,9 @@
 /**
  * Handles various ajax requests - called through pages/exec.php
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license http://opensource.org/licenses/AGPL-3.0
  */
-if (!defined('__DIR__')) {
-	define('__DIR__', dirname(__FILE__));
-}
 
 require_once(APPROOT.'application/utils.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');

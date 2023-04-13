@@ -1,16 +1,19 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
+use Combodo\iTop\Application\UI\Links\Set\BlockLinkSetDisplayAsProperty;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use Combodo\iTop\Service\Links\LinkSetModel;
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
@@ -89,8 +92,15 @@ define('LINKSET_EDITMODE_ACTIONS', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITMODE_INPLACE', 3); // The "linked" objects can be created/modified/deleted in place
 define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/removed in place
 
+define('LINKSET_RELATIONTYPE_PROPERTY', 'property');
+define('LINKSET_RELATIONTYPE_LINK', 'link');
+
+define('LINKSET_DISPLAY_STYLE_PROPERTY', 'property');
+define('LINKSET_DISPLAY_STYLE_TAB', 'tab');
+
 /**
  * Attributes implementing this interface won't be accepted as `group by` field
+ *
  * @since 2.7.4 N°3473
  */
 interface iAttributeNoGroupBy
@@ -135,6 +145,15 @@ abstract class AttributeDefinition
 	}
 
 	abstract public function GetEditClass();
+
+	/**
+	 * @return array Css classes
+	 * @since 3.1.0 N°3190
+	 */
+	public function GetCssClasses(): array
+	{
+		return $this->aCSSClasses;
+	}
 
 	/**
 	 * Return the search widget type corresponding to this attribute
@@ -358,6 +377,18 @@ abstract class AttributeDefinition
 	}
 
 	/**
+	 * Returns true if the attribute can be used in bulk modify.
+	 *
+	 * @return bool
+	 * @since 3.1.0 N°3190
+	 *
+	 */
+	public static function IsBulkModifyCompatible(): bool
+	{
+		return static::IsScalar();
+	}
+
+	/**
 	 * Returns true if the attribute value is a set of related objects (1-N or N-N)
 	 *
 	 * @return bool
@@ -422,9 +453,47 @@ abstract class AttributeDefinition
 	/**
 	 * @return bool true if the attribute value comes from the database in one way or another
 	 */
-	public static function LoadFromDB()
+	public static function LoadFromClassTables()
 	{
 		return true;
+	}
+
+	/**
+	 * Write attribute values outside the current class tables
+	 *
+	 * @param \DBObject $oHostObject
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	public function WriteExternalValues(DBObject $oHostObject): void
+	{
+	}
+
+	/**
+	 * Read the data from where it has been stored (outside the current class tables).
+	 * This verb must be implemented as soon as LoadFromClassTables returns false and LoadInObject returns true
+	 *
+	 * @param DBObject $oHostObject
+	 *
+	 * @return mixed|null
+	 * @since 3.1.0
+	 */
+	public function ReadExternalValues(DBObject $oHostObject)
+	{
+		return null;
+	}
+
+	/**
+	 * Cleanup data upon object deletion (outside the current class tables)
+	 * object id still available here
+	 *
+	 * @param \DBObject $oHostObject
+	 *
+	 * @since 3.1.0
+	 */
+	public function DeleteExternalValues(DBObject $oHostObject): void
+	{
 	}
 
 	/**
@@ -621,6 +690,16 @@ abstract class AttributeDefinition
 	}
 
 	/**
+	 * @return bool True if the attribute has a description {@see \AttributeDefinition::GetDescription()}
+	 * @throws \Exception
+	 * @since 3.1.0
+	 */
+	public function HasDescription(): bool
+	{
+		return utils::IsNotNullOrEmptyString($this->GetDescription());
+	}
+
+	/**
 	 * @param string|null $sDefault
 	 *
 	 * @return string
@@ -702,6 +781,18 @@ abstract class AttributeDefinition
 
 	public function IsNull($proposedValue)
 	{
+		return is_null($proposedValue);
+	}
+
+	/**
+	 * @param mixed $proposedValue
+	 *
+	 * @return bool True if $proposedValue is an actual value set in the attribute, false is the attribute remains "empty"
+	 * @since 3.0.3, 3.1.0 N°5784
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Default implementation, we don't really know what type $proposedValue will be
 		return is_null($proposedValue);
 	}
 
@@ -884,11 +975,13 @@ abstract class AttributeDefinition
 
 	/**
 	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
 	 *
-	 * @param $value
+	 * @see FromJSONToValue for the reverse operation
 	 *
-	 * @return string
+	 * @param mixed $value field value
+	 *
+	 * @return string JSON encoded string of the value
+	 *
 	 */
 	public function GetForJSON($value)
 	{
@@ -898,11 +991,12 @@ abstract class AttributeDefinition
 
 	/**
 	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
 	 *
-	 * @param $json
+	 * @param string $json JSON encoded value
 	 *
-	 * @return mixed
+	 * @return mixed JSON decoded data
+	 *
+	 * @see GetForJSON for the reverse operation
 	 */
 	public function FromJSONToValue($json)
 	{
@@ -983,17 +1077,20 @@ abstract class AttributeDefinition
 	 * $oFormField is passed, MakeFormField behave more like a Prepare.
 	 *
 	 * @param \DBObject $oObject
-	 * @param \Combodo\iTop\Form\Field\Field $oFormField
+	 * @param \Combodo\iTop\Form\Field\Field|null $oFormField
 	 *
-	 * @return null
+	 * @return \Combodo\iTop\Form\Field\Field
 	 * @throws \CoreException
 	 * @throws \Exception
+	 *
+	 * @noinspection PhpMissingReturnTypeInspection
+	 * @noinspection PhpMissingParamTypeInspection
+	 * @noinspection ReturnTypeCanBeDeclaredInspection
 	 */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
 		// This is a fallback in case the AttributeDefinition subclass has no overloading of this function.
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 			//$oFormField->SetReadOnly(true);
@@ -1003,22 +1100,17 @@ abstract class AttributeDefinition
 
 		// Attributes flags
 		// - Retrieving flags for the current object
-		if ($oObject->IsNew())
-		{
+		if ($oObject->IsNew()) {
 			$iFlags = $oObject->GetInitialStateAttributeFlags($this->GetCode());
-		}
-		else
-		{
+		} else {
 			$iFlags = $oObject->GetAttributeFlags($this->GetCode());
 		}
 
 		// - Comparing flags
-		if ($this->IsWritable() && (!$this->IsNullAllowed() || (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY)))
-		{
+		if ($this->IsWritable() && (!$this->IsNullAllowed() || (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY))) {
 			$oFormField->SetMandatory(true);
 		}
-		if ((!$oObject->IsNew() || !$oFormField->GetMandatory()) && (($iFlags & OPT_ATT_READONLY) === OPT_ATT_READONLY))
-		{
+		if ((!$oObject->IsNew() || !$oFormField->GetMandatory()) && (($iFlags & OPT_ATT_READONLY) === OPT_ATT_READONLY)) {
 			$oFormField->SetReadOnly(true);
 		}
 
@@ -1026,15 +1118,13 @@ abstract class AttributeDefinition
 		$oFormField->SetCurrentValue($oObject->Get($this->GetCode()));
 
 		// Validation pattern
-		if ($this->GetValidationPattern() !== '')
-		{
+		if ($this->GetValidationPattern() !== '') {
 			$oFormField->AddValidator(new Validator($this->GetValidationPattern()));
 		}
 
 		// Description
 		$sAttDescription = $this->GetDescription();
-		if(!empty($sAttDescription))
-		{
+		if (!empty($sAttDescription)) {
 			$oFormField->SetDescription($this->GetDescription());
 		}
 
@@ -1044,11 +1134,9 @@ abstract class AttributeDefinition
 		$oFormField->AddMetadata('attribute-label', $this->GetLabel());
 		// - Attribute flags
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
-		foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
-		{
+		foreach ($aPossibleAttFlags as $sFlagCode => $iFlagValue) {
 			// Note: Skip normal flag as we don't need it.
-			if($sFlagCode === 'normal')
-			{
+			if ($sFlagCode === 'normal') {
 				continue;
 			}
 			$sFormattedFlagCode = str_ireplace('_', '-', $sFlagCode);
@@ -1056,9 +1144,8 @@ abstract class AttributeDefinition
 			$oFormField->AddMetadata('attribute-flag-'.$sFormattedFlagCode, $sFormattedFlagValue);
 		}
 		// - Value raw
-		if ($this::IsScalar())
-		{
-			$oFormField->AddMetadata('value-raw', (string) $oObject->Get($this->GetCode()));
+		if ($this::IsScalar()) {
+			$oFormField->AddMetadata('value-raw', (string)$oObject->Get($this->GetCode()));
 		}
 
 		return $oFormField;
@@ -1070,10 +1157,10 @@ abstract class AttributeDefinition
 	public function EnumTemplateVerbs()
 	{
 		return array(
-			'' => 'Plain text (unlocalized) representation',
-			'html' => 'HTML representation',
+			''      => 'Plain text (unlocalized) representation',
+			'html'  => 'HTML representation',
 			'label' => 'Localized representation',
-			'text' => 'Plain text representation (without any markup)',
+			'text'  => 'Plain text representation (without any markup)',
 		);
 	}
 
@@ -1234,6 +1321,62 @@ abstract class AttributeDefinition
 		return $sResult;
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @param mixed $original
+	 * @param mixed $value
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException if cannot create object
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 *
+	 * @uses GetChangeRecordAdditionalData
+	 * @uses GetChangeRecordClassName
+	 *
+	 * @since 3.1.0 N°6042
+	 */
+	public function RecordAttChange(DBObject $oObject, $original, $value): void
+	{
+		/** @var CMDBChangeOp $oMyChangeOp */
+		$oMyChangeOp = MetaModel::NewObject($this->GetChangeRecordClassName());
+		$oMyChangeOp->Set("objclass", get_class($oObject));
+		$oMyChangeOp->Set("objkey", $oObject->GetKey());
+		$oMyChangeOp->Set("attcode", $this->GetCode());
+
+		$this->GetChangeRecordAdditionalData($oMyChangeOp, $oObject, $original, $value);
+
+		$oMyChangeOp->DBInsertNoReload();
+	}
+
+	/**
+	 * Add attribute specific information in the {@link \CMDBChangeOp} instance
+	 *
+	 * @param \CMDBChangeOp $oMyChangeOp
+	 * @param \DBObject $oObject
+	 * @param $original
+	 * @param $value
+	 *
+	 * @return void
+	 * @used-by RecordAttChange
+	 */
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		$oMyChangeOp->Set("oldvalue", $original);
+		$oMyChangeOp->Set("newvalue", $value);
+	}
+
+	/**
+	 * @return string name of the children of {@link \CMDBChangeOp} class to use for the history record
+	 * @used-by RecordAttChange
+	 */
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeScalar::class;
+	}
 
 	/**
 	 * Parses a string to find some smart search patterns and build the corresponding search/OQL condition
@@ -1389,6 +1532,15 @@ class AttributeDashboard extends AttributeDefinition
 	{
 		return '';
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Always return false for now, we don't consider a custom version of a dashboard
+		return false;
+	}
 }
 
 /**
@@ -1413,6 +1565,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function __construct($sCode, $aParams)
 	{
 		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-set';
 	}
 
 	public static function ListExpectedParams()
@@ -1424,6 +1577,12 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetEditClass()
 	{
 		return "LinkedSet";
+	}
+
+	/** @inheritDoc */
+	public static function IsBulkModifyCompatible(): bool
+	{
+		return false;
 	}
 
 	public function IsWritable()
@@ -1443,7 +1602,26 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetValuesDef()
 	{
-		return $this->Get("allowed_values");
+		$oValSetDef = $this->Get("allowed_values");
+		if (!$oValSetDef) {
+			// Let's propose every existing value
+			$oValSetDef = new ValueSetObjects('SELECT '.LinkSetModel::GetTargetClass($this));
+		}
+
+		return $oValSetDef;
+	}
+
+	public function GetEditValue($value, $oHostObj = null)
+	{
+		/** @var ormLinkSet $value * */
+		if ($value->Count() === 0) {
+			return '';
+		}
+
+		/** Return linked objects key as string **/
+		$aValues = $value->GetValues();
+
+		return implode(' ', $aValues);
 	}
 
 	public function GetPrerequisiteAttributes($sClass = null)
@@ -1510,9 +1688,45 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $this->GetOptional('tracking_level', MetaModel::GetConfig()->Get('tracking_level_linked_set_default'));
 	}
 
+	/**
+	 * @return string see LINKSET_EDITMODE_* constants
+	 * @since 3.1.0 N°5563 relations are edited using new attributes in details mode, but as nothing changed in edit mode we are still using edit_mode attribute
+	 */
 	public function GetEditMode()
 	{
 		return $this->GetOptional('edit_mode', LINKSET_EDITMODE_ACTIONS);
+	}
+
+	/**
+	 * @return string see LINKSET_RELATIONTYPE_* constants
+	 * @since 3.1.0 N°5563
+	 */
+	public function GetRelationType()
+	{
+		return $this->GetOptional('relation_type', LINKSET_RELATIONTYPE_LINK);
+	}
+
+	/**
+	 * @return string see LINKSET_DISPLAY_STYLE_* constants
+	 * @since 3.1.0 N°3190
+	 */
+	public function GetDisplayStyle()
+	{
+		$sDisplayStyle = $this->GetOptional('display_style', LINKSET_DISPLAY_STYLE_TAB);
+		if ($sDisplayStyle === '') {
+			$sDisplayStyle = LINKSET_DISPLAY_STYLE_TAB;
+		}
+
+		return $sDisplayStyle;
+	}
+
+	/**
+	 * @return boolean
+	 * @since 3.1.0 N°5563
+	 */
+	public function GetReadOnly()
+	{
+		return $this->GetOptional('read_only', false);
 	}
 
 	public function GetLinkedClass()
@@ -1540,49 +1754,30 @@ class AttributeLinkedSet extends AttributeDefinition
 		return '';
 	}
 
-	/**
-	 * @param string $sValue
-	 * @param \DBObject $oHostObject
-	 * @param bool $bLocalize
-	 *
-	 * @return string|null
-	 *
-	 * @throws \CoreException
-	 */
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	/** @inheritDoc * */
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true): string
 	{
-		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
-		{
-			$sValue->Rewind();
-			$aItems = array();
-			while ($oObj = $sValue->Fetch())
-			{
-				// Show only relevant information (hide the external key to the current object)
-				$aAttributes = array();
-				foreach(MetaModel::ListAttributeDefs($this->GetLinkedClass()) as $sAttCode => $oAttDef)
-				{
-					if ($sAttCode == $this->GetExtKeyToMe())
-					{
-						continue;
-					}
-					if ($oAttDef->IsExternalField())
-					{
-						continue;
-					}
-					$sAttValue = $oObj->GetAsHTML($sAttCode);
-					if (strlen($sAttValue) > 0)
-					{
-						$aAttributes[] = $sAttValue;
-					}
-				}
-				$sAttributes = implode(', ', $aAttributes);
-				$aItems[] = $sAttributes;
+		try {
+
+			/** @var ormLinkSet $sValue */
+			if ($sValue->Count() === 0) {
+				return '';
 			}
 
-			return implode('<br/>', $aItems);
-		}
+			$oLinkSetBlock = new BlockLinkSetDisplayAsProperty($this->GetCode(), $this, $sValue);
 
-		return null;
+			return ConsoleBlockRenderer::RenderBlockTemplates($oLinkSetBlock);
+		}
+		catch (Exception $e) {
+			$sMessage = "Error while displaying attribute {$this->GetCode()}";
+			IssueLog::Error($sMessage, IssueLog::CHANNEL_DEFAULT, [
+				'host_object_class' => $this->GetHostClass(),
+				'host_object_key'   => $oHostObject->GetKey(),
+				'attribute'         => $this->GetCode(),
+			]);
+
+			return $sMessage;
+		}
 	}
 
 	/**
@@ -1690,7 +1885,7 @@ class AttributeLinkedSet extends AttributeDefinition
 					{
 						if ($sObjClass == $this->GetLinkedClass())
 						{
-							// Simplify the output if the exact class could be determined implicitely 
+							// Simplify the output if the exact class could be determined implicitely
 							continue;
 						}
 					}
@@ -1987,13 +2182,9 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
+	 * @inheritDoc
 	 *
 	 * @param \ormLinkSet $value
-	 *
-	 * @return array
-	 * @throws \CoreException
 	 */
 	public function GetForJSON($value)
 	{
@@ -2012,7 +2203,7 @@ class AttributeLinkedSet extends AttributeDefinition
 					{
 						if ($sObjClass == $this->GetLinkedClass())
 						{
-							// Simplify the output if the exact class could be determined implicitely 
+							// Simplify the output if the exact class could be determined implicitely
 							continue;
 						}
 					}
@@ -2043,10 +2234,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
-	 *
-	 * @param $json
+	 * @inheritDoc
 	 *
 	 * @return \DBObjectSet
 	 * @throws \CoreException
@@ -2238,6 +2426,22 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		return false;
 	}
+
+	/**
+	 * @inheritDoc
+	 * @param \ormLinkSet $proposedValue
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormLinkSet))
+		{
+			return parent::HasAValue($proposedValue);
+		}
+
+		// We test if there is at least 1 item in the linkset (new or existing), not if an item is being added to it.
+		return $proposedValue->Count() > 0;
+	}
 }
 
 /**
@@ -2289,6 +2493,15 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 		return $this->GetOptional("duplicates", false);
 	} // The same object may be linked several times... or not...
 
+	/**
+	 * @return boolean
+	 * @since 3.1.0 N°5563
+	 */
+	public function GetReadOnly()
+	{
+		return $this->GetOptional('read_only', false);
+	}
+
 	public function GetTrackingLevel()
 	{
 		return $this->GetOptional('tracking_level',
@@ -2326,6 +2539,13 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 
 		return $oRet;
 	}
+
+	/** @inheritDoc */
+	public static function IsBulkModifyCompatible(): bool
+	{
+		return true;
+	}
+
 }
 
 /**
@@ -2417,7 +2637,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return false;
 	}
 
-	// 
+	//
 	protected function ScalarToSQL($value)
 	{
 		return $value;
@@ -2619,6 +2839,14 @@ class AttributeInteger extends AttributeDBField
 		return is_null($proposedValue);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return utils::IsNotNullOrEmptyString($proposedValue);
+	}
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
@@ -2716,6 +2944,14 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 	public function IsNull($proposedValue)
 	{
 		return ($proposedValue == 0);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return ((int) $proposedValue) !== 0;
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -2915,6 +3151,14 @@ class AttributeDecimal extends AttributeDBField
 	public function IsNull($proposedValue)
 	{
 		return is_null($proposedValue);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return utils::IsNotNullOrEmptyString($proposedValue);
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -3145,14 +3389,6 @@ class AttributeBoolean extends AttributeInteger
 		}
 	}
 
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 *
-	 * @param $value
-	 *
-	 * @return bool
-	 */
 	public function GetForJSON($value)
 	{
 		return (bool)$value;
@@ -3198,6 +3434,16 @@ class AttributeBoolean extends AttributeInteger
 		}
 
 		return $value;
+	}
+
+	public function RecordAttChange(DBObject $oObject, $original, $value): void
+	{
+		parent::RecordAttChange($oObject, $original ? 1 : 0, $value ? 1 : 0);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeScalar::class;
 	}
 }
 
@@ -3326,6 +3572,14 @@ class AttributeString extends AttributeDBField
 	public function IsNull($proposedValue)
 	{
 		return ($proposedValue == '');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return utils::IsNotNullOrEmptyString($proposedValue);
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -3690,14 +3944,6 @@ class AttributeFinalClass extends AttributeString
 		return MetaModel::GetName($sValue);
 	}
 
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 *
-	 * @param $value
-	 *
-	 * @return string
-	 */
 	public function GetForJSON($value)
 	{
 		// JSON values are NOT localized
@@ -3979,6 +4225,21 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 
 		return $aValues;
 	}
+
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		if (is_null($original)) {
+			$original = '';
+		}
+		$oMyChangeOp->Set("prevstring", $original);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeEncrypted::class;
+	}
+
+
 }
 
 
@@ -4179,20 +4440,21 @@ class AttributeText extends AttributeString
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		if ($this->GetFormat() == 'text')
-		{
-			if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
-			{
-				foreach($aAllMatches as $iPos => $aMatches)
-				{
+		// N°4517 - PHP 8.1 compatibility: str_replace call with null cause deprecated message
+		if ($sValue == null) {
+			return '';
+		}
+
+		if ($this->GetFormat() == 'text') {
+			if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER)) {
+				foreach ($aAllMatches as $iPos => $aMatches) {
 					$sClass = trim($aMatches[1]);
 					$sName = trim($aMatches[2]);
 					$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
-					if (MetaModel::IsValidClass($sClass))
-					{
+					if (MetaModel::IsValidClass($sClass)) {
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sReplacement = "[[$sClassLabel:$sName" . (!empty($sLabel) ? " | $sLabel" : "") . "]]";
+						$sReplacement = "[[$sClassLabel:$sName".(!empty($sLabel) ? " | $sLabel" : "")."]]";
 						$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 					}
 				}
@@ -4229,31 +4491,31 @@ class AttributeText extends AttributeString
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$sValue = $proposedValue;
-		switch ($this->GetFormat())
-		{
+
+		// N°4517 - PHP 8.1 compatibility: str_replace call with null cause deprecated message
+		if ($sValue == null) {
+			return '';
+		}
+
+		switch ($this->GetFormat()) {
 			case 'html':
-				if (($sValue !== null) && ($sValue !== ''))
-				{
+				if (($sValue !== null) && ($sValue !== '')) {
 					$sValue = HTMLSanitizer::Sanitize($sValue);
 				}
 				break;
 
 			case 'text':
 			default:
-				if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
-				{
-					foreach($aAllMatches as $iPos => $aMatches)
-					{
+				if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER)) {
+					foreach ($aAllMatches as $iPos => $aMatches) {
 						$sClassLabel = trim($aMatches[1]);
 						$sName = trim($aMatches[2]);
-                        $sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
+						$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
-						if (!MetaModel::IsValidClass($sClassLabel))
-						{
+						if (!MetaModel::IsValidClass($sClassLabel)) {
 							$sClass = MetaModel::GetClassFromLabel($sClassLabel);
-							if ($sClass)
-							{
-                                $sReplacement = "[[$sClassLabel:$sName" . (!empty($sLabel) ? " | $sLabel" : "") . "]]";
+							if ($sClass) {
+								$sReplacement = "[[$sClassLabel:$sName".(!empty($sLabel) ? " | $sLabel" : "")."]]";
 								$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 							}
 						}
@@ -4403,6 +4665,22 @@ class AttributeText extends AttributeString
 					$bConvertToPlainText);
 		}
 	}
+
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		/** @noinspection PhpConditionCheckedByNextConditionInspection */
+		if (false === is_null($original) && ($original instanceof ormCaseLog)) {
+			$original = $original->GetText();
+		}
+		$oMyChangeOp->Set("prevdata", $original);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return ($this->GetFormat() === 'html')
+			? CMDBChangeOpSetAttributeHTML::class
+			: CMDBChangeOpSetAttributeText::class;
+	}
 }
 
 /**
@@ -4439,6 +4717,13 @@ class AttributeLongText extends AttributeText
 		// Is there a way to know the current limitation for mysql?
 		// See mysql_field_len()
 		return 65535 * 1024; // Limited... still 64 MB!
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return ($this->GetFormat() === 'html')
+			? CMDBChangeOpSetAttributeHTML::class
+			: CMDBChangeOpSetAttributeLongText::class;
 	}
 }
 
@@ -4482,6 +4767,22 @@ class AttributeCaseLog extends AttributeLongText
 
 		return ($proposedValue->GetText() == '');
 	}
+
+	/**
+	 * @inheritDoc
+	 * @param \ormCaseLog $proposedValue
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormCaseLog)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		// We test if there is at least 1 entry in the log, not if the user is adding one
+		return $proposedValue->GetEntryCount() > 0;
+	}
+
 
 	public function ScalarToSQL($value)
 	{
@@ -4592,7 +4893,13 @@ class AttributeCaseLog extends AttributeLongText
 			{
 				if (strlen($proposedValue) > 0)
 				{
-					$oCaseLog->AddLogEntry($proposedValue);
+					//N°5135 - add impersonation information in caselog
+					if (UserRights::IsImpersonated()){
+						$sOnBehalfOf = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUserFriendlyName(), UserRights::GetUserFriendlyName());
+						$oCaseLog->AddLogEntry($proposedValue, $sOnBehalfOf, UserRights::GetConnectedUserId());
+					} else {
+						$oCaseLog->AddLogEntry($proposedValue);
+					}
 				}
 			}
 			$ret = $oCaseLog;
@@ -4778,19 +5085,11 @@ class AttributeCaseLog extends AttributeLongText
 		}
 	}
 
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 */
 	public function GetForJSON($value)
 	{
 		return $value->GetForJSON();
 	}
 
-	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
-	 */
 	public function FromJSONToValue($json)
 	{
 		if (is_string($json))
@@ -4854,6 +5153,17 @@ class AttributeCaseLog extends AttributeLongText
 		$oFormField->SetEntries($oObject->Get($this->GetCode())->GetAsArray());
 
 		return $oFormField;
+	}
+
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		/** @var \ormCaseLog $value */
+		$oMyChangeOp->Set("lastentry", $value->GetLatestEntryIndex());
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeCaseLog::class;
 	}
 }
 
@@ -5399,7 +5709,7 @@ class AttributeEnum extends AttributeString
 	{
 		if (is_null($sValue))
 		{
-			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label		
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
 			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
 				Dict::S('Enum:Undefined'));
 		}
@@ -5421,7 +5731,7 @@ class AttributeEnum extends AttributeString
 	{
 		if (is_null($sValue))
 		{
-			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label		
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
 			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
 				Dict::S('Enum:Undefined'));
 		}
@@ -5538,10 +5848,6 @@ class AttributeEnum extends AttributeString
 		}
 	}
 
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 */
 	public function GetForJSON($value)
 	{
 		return $value;
@@ -6015,7 +6321,9 @@ class AttributeDateTime extends AttributeDBField
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		// null value will be replaced by the current date, if not already set, in DoComputeValues
+		if (!$this->IsNullAllowed()) {
+			return date($this->GetInternalFormat());
+		}
 		return $this->GetNullValue();
 	}
 
@@ -6797,6 +7105,14 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return ($proposedValue == 0);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return ((int) $proposedValue) !== 0;
+	}
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
@@ -7218,7 +7534,7 @@ class AttributeExternalField extends AttributeDefinition
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
-		// throw new CoreException("external attribute: does it make any sense to request its type ?");  
+		// throw new CoreException("external attribute: does it make any sense to request its type ?");
 		$oExtAttDef = $this->GetExtAttDef();
 
 		return $oExtAttDef->GetSQLCol($bFullSpec);
@@ -7529,6 +7845,16 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->IsNull($proposedValue);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+
+		return $oExtAttDef->HasAValue($proposedValue);
+	}
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
@@ -7664,6 +7990,17 @@ class AttributeExternalField extends AttributeDefinition
 class AttributeURL extends AttributeString
 {
 	/**
+	 * @var string
+	 * SCHEME....... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH......................... GET............................................ ANCHOR..........................
+	 * Example: http://User:passWord@127.0.0.1:8888/patH/Page.php?arrayArgument[2]=something:blah20#myAnchor
+	 * @link http://www.php.net/manual/fr/function.preg-match.php#93824 regexp source
+	 * @since 3.0.1 N°4515 handle Alfresco and Sharepoint URLs
+	 * @since 3.0.3 moved from Config to AttributeURL constant
+	 */
+	public const DEFAULT_VALIDATION_PATTERN = /** @lang RegExp */
+		'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.,-]*)?(#[a-zA-Z0-9_.-][a-zA-Z0-9+\$_.-]*)?';
+
+	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
@@ -7739,8 +8076,7 @@ class AttributeURL extends AttributeString
 	 */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -7749,6 +8085,11 @@ class AttributeURL extends AttributeString
 		$oFormField->SetTarget($this->Get('target'));
 
 		return $oFormField;
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeURL::class;
 	}
 }
 
@@ -7805,7 +8146,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		return "";
+		return new ormDocument('', '', '');
 	}
 
 	public function IsNullAllowed(DBObject $oHostObject = null)
@@ -7864,34 +8205,38 @@ class AttributeBlob extends AttributeDefinition
 		$aColumns[''] = $sPrefix.'_mimetype';
 		$aColumns['_data'] = $sPrefix.'_data';
 		$aColumns['_filename'] = $sPrefix.'_filename';
+		$aColumns['_downloads_count'] = $sPrefix.'_downloads_count';
 
 		return $aColumns;
 	}
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		if (!array_key_exists($sPrefix, $aCols))
-		{
+		if (!array_key_exists($sPrefix, $aCols)) {
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
 		}
 		$sMimeType = isset($aCols[$sPrefix]) ? $aCols[$sPrefix] : '';
 
-		if (!array_key_exists($sPrefix.'_data', $aCols))
-		{
+		if (!array_key_exists($sPrefix.'_data', $aCols)) {
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_data' from {$sAvailable}");
 		}
 		$data = isset($aCols[$sPrefix.'_data']) ? $aCols[$sPrefix.'_data'] : null;
 
-		if (!array_key_exists($sPrefix.'_filename', $aCols))
-		{
+		if (!array_key_exists($sPrefix.'_filename', $aCols)) {
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_filename' from {$sAvailable}");
 		}
 		$sFileName = isset($aCols[$sPrefix.'_filename']) ? $aCols[$sPrefix.'_filename'] : '';
 
-		$value = new ormDocument($data, $sMimeType, $sFileName);
+		if (!array_key_exists($sPrefix.'_downloads_count', $aCols)) {
+			$sAvailable = implode(', ', array_keys($aCols));
+			throw new MissingColumnException("Missing column '".$sPrefix."_downloads_count' from {$sAvailable}");
+		}
+		$iDownloadsCount = isset($aCols[$sPrefix.'_downloads_count']) ? $aCols[$sPrefix.'_downloads_count'] : ormDocument::DEFAULT_DOWNLOADS_COUNT;
+
+		$value = new ormDocument($data, $sMimeType, $sFileName, $iDownloadsCount);
 
 		return $value;
 	}
@@ -7917,6 +8262,7 @@ class AttributeBlob extends AttributeDefinition
 			}
 			$aValues[$this->GetCode().'_mimetype'] = $value->GetMimeType();
 			$aValues[$this->GetCode().'_filename'] = $value->GetFileName();
+			$aValues[$this->GetCode().'_downloads_count'] = $value->GetDownloadsCount();
 		}
 		else
 		{
@@ -7924,6 +8270,7 @@ class AttributeBlob extends AttributeDefinition
 			$aValues[$this->GetCode().'_data'] = '';
 			$aValues[$this->GetCode().'_mimetype'] = '';
 			$aValues[$this->GetCode().'_filename'] = '';
+			$aValues[$this->GetCode().'_downloads_count'] = ''; // Note: Should this be set to \ormDocument::DEFAULT_DOWNLOADS_COUNT ?
 		}
 
 		return $aValues;
@@ -7935,6 +8282,7 @@ class AttributeBlob extends AttributeDefinition
 		$aColumns[$this->GetCode().'_data'] = 'LONGBLOB'; // 2^32 (4 Gb)
 		$aColumns[$this->GetCode().'_mimetype'] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
 		$aColumns[$this->GetCode().'_filename'] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
+		$aColumns[$this->GetCode().'_downloads_count'] = 'INT(11) UNSIGNED';
 
 		return $aColumns;
 	}
@@ -8004,21 +8352,19 @@ class AttributeBlob extends AttributeDefinition
 		$sRet = '';
 		if (is_object($value))
 		{
+			/** @var \ormDocument $value */
 			if (!$value->IsEmpty())
 			{
 				$sRet = '<mimetype>'.$value->GetMimeType().'</mimetype>';
 				$sRet .= '<filename>'.$value->GetFileName().'</filename>';
 				$sRet .= '<data>'.base64_encode($value->GetData()).'</data>';
+				$sRet .= '<downloads_count>'.$value->GetDownloadsCount().'</downloads_count>';
 			}
 		}
 
 		return $sRet;
 	}
 
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 */
 	public function GetForJSON($value)
 	{
 		if ($value instanceOf ormDocument)
@@ -8027,6 +8373,7 @@ class AttributeBlob extends AttributeDefinition
 			$aValues['data'] = base64_encode($value->GetData());
 			$aValues['mimetype'] = $value->GetMimeType();
 			$aValues['filename'] = $value->GetFileName();
+			$aValues['downloads_count'] = $value->GetDownloadsCount();
 		}
 		else
 		{
@@ -8036,16 +8383,12 @@ class AttributeBlob extends AttributeDefinition
 		return $aValues;
 	}
 
-	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
-	 */
 	public function FromJSONToValue($json)
 	{
 		if (isset($json->data))
 		{
 			$data = base64_decode($json->data);
-			$value = new ormDocument($data, $json->mimetype, $json->filename);
+			$value = new ormDocument($data, $json->mimetype, $json->filename, $json->downloads_count);
 		}
 		else
 		{
@@ -8104,6 +8447,31 @@ class AttributeBlob extends AttributeDefinition
 		return $oFormField;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		if (false === ($proposedValue instanceof ormDocument)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		// Empty file (no content, just a filename) are supported since PR {@link https://github.com/Combodo/combodo-email-synchro/pull/17}, so we check for both empty content and empty filename to determine that a document has no value
+		return utils::IsNotNullOrEmptyString($proposedValue->GetData()) && utils::IsNotNullOrEmptyString($proposedValue->GetFileName());
+	}
+
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		if (is_null($original)) {
+			$original = new ormDocument();
+		}
+		$oMyChangeOp->Set("prevdata", $original);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeBlob::class;
+	}
 }
 
 /**
@@ -8152,6 +8520,11 @@ class AttributeImage extends AttributeBlob
 
 		// The validation of the MIME Type is done by CheckFormat below
 		return $oDoc;
+	}
+
+	public function GetDefaultValue(DBObject $oHostObject = null)
+	{
+		return new ormDocument('', '', '');
 	}
 
 	/**
@@ -9129,6 +9502,37 @@ class AttributeStopWatch extends AttributeDefinition
 
 		return $sRet;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// A stopwatch always has a value
+		return true;
+	}
+
+	public function RecordAttChange(DBObject $oObject, $original, $value): void
+	{
+		// Stop watches - record changes for sub items only (they are visible, the rest is not visible)
+		//
+		foreach ($this->ListSubItems() as $sSubItemAttCode => $oSubItemAttDef) {
+			$item_value = $this->GetSubItemValue($oSubItemAttDef->Get('item_code'), $value, $oObject);
+			$item_original = $this->GetSubItemValue($oSubItemAttDef->Get('item_code'), $original, $oObject);
+
+			if ($item_value != $item_original) {
+				$oMyChangeOp = MetaModel::NewObject(CMDBChangeOpSetAttributeScalar::class);
+				$oMyChangeOp->Set("objclass", get_class($oObject));
+				$oMyChangeOp->Set("objkey", $oObject->GetKey());
+				$oMyChangeOp->Set("attcode", $sSubItemAttCode);
+
+				$oMyChangeOp->Set("oldvalue", $item_original);
+				$oMyChangeOp->Set("newvalue", $item_value);
+
+				$oMyChangeOp->DBInsertNoReload();
+			}
+		}
+	}
 }
 
 /**
@@ -9266,7 +9670,7 @@ class AttributeSubItem extends AttributeDefinition
 		return $res;
 	}
 
-	// 
+	//
 //	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
@@ -9614,6 +10018,36 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 		return '*****';
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormPassword)) {
+			// On object creation, the attribute value is "" instead of an ormPassword...
+			if (is_string($proposedValue)) {
+				return utils::IsNotNullOrEmptyString($proposedValue);
+			}
+
+			return parent::HasAValue($proposedValue);
+		}
+
+		return $proposedValue->IsEmpty() === false;
+	}
+
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		if (is_null($original)) {
+			$original = '';
+		}
+		$oMyChangeOp->Set("prev_pwd", $original);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeOneWayPassword::class;
+	}
 }
 
 // Indexed array having two dimensions
@@ -9662,6 +10096,15 @@ class AttributeTable extends AttributeDBField
 	{
 		return (count($proposedValue) == 0);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return count($proposedValue) > 0;
+	}
+
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
@@ -10185,6 +10628,18 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		if (false === ($proposedValue instanceof ormSet)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		return $proposedValue->Count() > 0;
+	}
+
+	/**
 	 * To be overloaded for localized enums
 	 *
 	 * @param $sValue
@@ -10364,6 +10819,21 @@ HTML;
 	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SetField';
+	}
+
+	public function RecordAttChange(DBObject $oObject, $original, $value): void
+	{
+		/** @var \ormSet $original */
+		/** @var \ormSet $value */
+		parent::RecordAttChange($oObject,
+			implode(' ', $original->GetValues()),
+			implode(' ', $value->GetValues())
+		);
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeTagSet::class;
 	}
 }
 
@@ -11345,6 +11815,13 @@ class AttributeTagSet extends AttributeSet
 		return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 	}
 
+	public function GetDefaultValue(DBObject $oHostObject = null)
+	{
+		$oTagSet =  new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		$oTagSet->SetValues([]);
+		return $oTagSet;
+	}
+
 	public function IsNull($proposedValue)
 	{
 		if (is_null($proposedValue))
@@ -11707,8 +12184,7 @@ HTML;
 	}
 
 	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
+	 * @inheritDoc
 	 *
 	 * @param \ormTagSet $value
 	 *
@@ -11726,10 +12202,7 @@ HTML;
 	}
 
 	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
-	 *
-	 * @param $json
+	 * @inheritDoc
 	 *
 	 * @return \ormTagSet
 	 * @throws \CoreException
@@ -12511,7 +12984,7 @@ class AttributeCustomFields extends AttributeDefinition
 		return true;
 	}
 
-	public static function LoadFromDB()
+	public static function LoadFromClassTables()
 	{
 		return false;
 	} // See ReadValue...
@@ -12638,7 +13111,7 @@ class AttributeCustomFields extends AttributeDefinition
 		try {
 			$oValue = $oHostObject->Get($this->GetCode());
 			$oHandler = $this->GetHandler($oValue->GetValues());
-			$sFormId = is_null($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
+			$sFormId = utils::IsNullOrEmptyString($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
 			$oHandler->BuildForm($oHostObject, $sFormId);
 			$oForm = $oHandler->GetForm();
 		}
@@ -12654,14 +13127,15 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	/**
-	 * Read the data from where it has been stored. This verb must be implemented as soon as LoadFromDB returns false
+	 * Read the data from where it has been stored. This verb must be implemented as soon as LoadFromClassTables returns false
 	 * and LoadInObject returns true
 	 *
-	 * @param $oHostObject
+	 * @param DBObject $oHostObject
 	 *
-	 * @return ormCustomFieldsValue
+	 * @return mixed|null
+	 * @since 3.1.0
 	 */
-	public function ReadValue($oHostObject)
+	public function ReadExternalValues(DBObject $oHostObject)
 	{
 		try
 		{
@@ -12681,11 +13155,13 @@ class AttributeCustomFields extends AttributeDefinition
 	 * It is assumed that the data has been checked prior to calling Write()
 	 *
 	 * @param DBObject $oHostObject
-	 * @param ormCustomFieldsValue|null $oValue (null is the default value)
+	 *
+	 * @since 3.1.0
 	 */
-	public function WriteValue(DBObject $oHostObject, ormCustomFieldsValue $oValue = null)
+	public function WriteExternalValues(DBObject $oHostObject): void
 	{
-		if (is_null($oValue))
+		$oValue = $oHostObject->Get($this->GetCode());
+		if (!($oValue instanceof ormCustomFieldsValue))
 		{
 			$oHandler = $this->GetHandler();
 			$aValues = array();
@@ -12699,7 +13175,7 @@ class AttributeCustomFields extends AttributeDefinition
 			$aValues = $oForm->GetCurrentValues();
 		}
 
-		return $oHandler->WriteValues($oHostObject, $aValues);
+		$oHandler->WriteValues($oHostObject, $aValues);
 	}
 
 	/**
@@ -12758,25 +13234,26 @@ class AttributeCustomFields extends AttributeDefinition
 	 *
 	 * @param DBObject $oHostObject
 	 *
-	 * @return
 	 * @throws \CoreException
+	 * @since 3.1.0
 	 */
-	public function DeleteValue(DBObject $oHostObject)
+	public function DeleteExternalValues(DBObject $oHostObject): void
 	{
 		$oValue = $oHostObject->Get($this->GetCode());
 		$oHandler = $this->GetHandler($oValue->GetValues());
 
-		return $oHandler->DeleteValues($oHostObject);
+		$oHandler->DeleteValues($oHostObject);
 	}
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		try
 		{
+			/** @var \ormCustomFieldsValue $value */
 			$sRet = $value->GetAsHTML($bLocalize);
 		} catch (Exception $e)
 		{
-			$sRet = 'Custom field error: '.htmlentities($e->getMessage(), ENT_QUOTES, 'UTF-8');
+			$sRet = 'Custom field error: '.utils::EscapeHtml($e->getMessage());
 		}
 
 		return $sRet;
@@ -12784,26 +13261,36 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		try
-		{
+		try {
 			$sRet = $value->GetAsXML($bLocalize);
-		} catch (Exception $e)
-		{
+		}
+		catch (Exception $e) {
 			$sRet = Str::pure2xml('Custom field error: '.$e->getMessage());
 		}
 
 		return $sRet;
 	}
 
+	/**
+	 * @param \ormCustomFieldsValue $value
+	 * @param string $sSeparator
+	 * @param string $sTextQualifier
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 * @param bool $bConvertToPlainText
+	 *
+	 * @return string
+	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
+	 */
 	public function GetAsCSV(
 		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
 		$bConvertToPlainText = false
-	) {
-		try
-		{
+	)
+	{
+		try {
 			$sRet = $value->GetAsCSV($sSeparator, $sTextQualifier, $bLocalize, $bConvertToPlainText);
-		} catch (Exception $e)
-		{
+		}
+		catch (Exception $e) {
 			$sFrom = array("\r\n", $sTextQualifier);
 			$sTo = array("\n", $sTextQualifier.$sTextQualifier);
 			$sEscaped = str_replace($sFrom, $sTo, 'Custom field error: '.$e->getMessage());
@@ -12854,12 +13341,13 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
+	 * @inheritDoc
 	 *
-	 * @param $value
+	 * @param \ormCustomFieldsValue $value
 	 *
-	 * @return string
+	 * @return array
+	 *
+	 * @since 3.1.0 N°1150 now returns the value (was always returning null before)
 	 */
 	public function GetForJSON($value)
 	{
@@ -12867,12 +13355,9 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
+	 * @inheritDoc
 	 *
-	 * @param string $json
-	 *
-	 * @return array
+	 * @return ?\ormCustomFieldsValue
 	 */
 	public function FromJSONToValue($json)
 	{
@@ -12890,6 +13375,29 @@ class AttributeCustomFields extends AttributeDefinition
 		}
 
 		return $bEquals;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormCustomFieldsValue)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		return count($proposedValue->GetValues()) > 0;
+	}
+
+	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
+	{
+		$oMyChangeOp->Set("prevdata", json_encode($original->GetValues()));
+	}
+
+	protected function GetChangeRecordClassName(): string
+	{
+		return CMDBChangeOpSetAttributeCustomFields::class;
 	}
 }
 
@@ -13076,7 +13584,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		return $this->MakeRealValue("", $oHostObject);
+		return $this->MakeRealValue(false, $oHostObject);
 	}
 
 	public function IsNullAllowed()

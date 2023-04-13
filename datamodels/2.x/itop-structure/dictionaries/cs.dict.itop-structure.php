@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * @author      Benjamin Planque <benjamin.planque@combodo.com>
  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -217,7 +217,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Document/Attribute:status/Value:published' => 'Publikovaný',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'Konfigurační položky',
-	'Class:Document/Attribute:cis_list+' => '',
+	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Typ dokumentu',
 	'Class:Document/Attribute:finalclass+' => '',
 ));

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
@@ -14,6 +14,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AuditCategory/Attribute:definition_set+' => 'OQL-Ausdrücke, die den Umfang der zu auditierenden Objekte festlegen',
 	'Class:AuditCategory/Attribute:rules_list' => 'Audit-Regeln',
 	'Class:AuditCategory/Attribute:rules_list+' => 'Audit-Regeln für diese Kategorie',
+	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Fehlertoleranz  (OK)',
+	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Erlaubter prozentualer Anteil ungültiger Objekte, bei dem das Ergebnis noch als in Ordnung (grün) dargestellt wird',
+	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Fehlertoleranz (Warnung)',
+	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Erlaubter prozentualer Anteil ungültiger Objekte, bei dem das Ergebnis noch als Warnung (orange) dargestellt wird.',
+	'Class:AuditCategory/Attribute:domains_list' => 'Domänen',
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domänen, die dieser Kategorie zugeordnet sind',
 ));
 
 //
@@ -42,6 +48,40 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AuditRule/Attribute:category_id+' => 'Kategorie für diese Regel',
 	'Class:AuditRule/Attribute:category_name' => 'Kategorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Kategoriename für diese Regel',
+));
+
+//
+// Class: AuditDomain
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:AuditDomain' => 'Audit-Domäne',
+	'Class:AuditDomain+' => '',
+	'Class:AuditDomain/Attribute:name' => 'Name',
+	'Class:AuditDomain/Attribute:name+' => '',
+	'Class:AuditDomain/Attribute:description' => 'Beschreibung',
+	'Class:AuditDomain/Attribute:description+' => '',
+	'Class:AuditDomain/Attribute:icon' => 'Icon',
+	'Class:AuditDomain/Attribute:icon+' => '',
+	'Class:AuditDomain/Attribute:categories_list' => 'Audit-Kategorien',
+	'Class:AuditDomain/Attribute:categories_list+' => 'Verknüpfte Audit-Kategorien',
+));
+
+//
+// Class: lnkAuditCategoryToAuditDomain
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:lnkAuditCategoryToAuditDomain' => 'Verknüpfung Audit-Kategorie / Audit-Domäne',
+	'Class:lnkAuditCategoryToAuditDomain+' => '',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Audit-Kategorie',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+' => '',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name' => 'Audit-Kategorienname',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name+' => '',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id' => 'Audit-Domäne',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => '',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Audit-Domänenname',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => '',
 ));
 
 //
@@ -405,7 +445,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => 'Entfernen >>',
 	'UI:Button:FilterList' => 'Filter...',
 	'UI:Button:Create' => 'Erstellen',
-	'UI:Button:Delete' => 'Löschen!',
+	'UI:Button:Delete' => 'Löschen',
 	'UI:Button:Rename' => 'Umbenennen...',
 	'UI:Button:ChangePassword' => 'Passwort ändern',
 	'UI:Button:ResetPassword' => 'Passwort zurücksetzen',
@@ -633,9 +673,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Wählen Sie für die Suche die Klasse aus: ',
 
 	'UI:CSVReport-Value-Modified' => 'Modifiziert',
-	'UI:CSVReport-Value-SetIssue' => 'Konnte nicht geändert werden - Grund: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Konnte nicht zu %1$s  geändert werden - Grund: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Kein Treffer',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Pflichtfeld fehlt',
 	'UI:CSVReport-Value-Ambiguous' => 'Doppeldeutig: %1$s Objekte gefunden',
 	'UI:CSVReport-Row-Unchanged' => 'Unverändert',
@@ -794,7 +834,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Fügen Sie %1$s Objekte verbunden mit %2$s hinzu: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Fügen Sie %1$s Objekte verbunden mit %2$s hinzu',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Verwalten Sie %1$s Objekte verbunden mit %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => ' %1$s hinzufügen...',
+	'UI:AddLinkedObjectsOf_Class' => ' %1$s hinzufügen',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Entferne ausgewählte Objekte',
 	'UI:Message:EmptyList:UseAdd' => 'Die Liste ist leer, benutzten Sie "Hinzufügen..." um Elemente hinzuzufügen.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Benutzen Sie das Suchformular oben, um nach hinzufügbaren Objekten zu suchen.',

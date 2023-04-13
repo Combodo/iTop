@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -14,7 +14,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class FormUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Form
+ * @package UIBlockAPI
  * @since 3.0.0
  * @api
  */
@@ -26,6 +26,7 @@ class FormUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = Form::class;
 
 	/**
+	 * @api
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Form\Form An HTML form in which you can add UIBlocks

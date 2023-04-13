@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,5 +18,5 @@
  */
 // Global search
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',
+	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Valores desconhecidos',
 ));

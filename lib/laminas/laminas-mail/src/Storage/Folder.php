@@ -1,14 +1,9 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Storage;
 
 use RecursiveIterator;
+use ReturnTypeWillChange;
 
 class Folder implements RecursiveIterator
 {
@@ -58,10 +53,11 @@ class Folder implements RecursiveIterator
      *
      * @return bool current element has children
      */
+    #[ReturnTypeWillChange]
     public function hasChildren()
     {
         $current = $this->current();
-        return $current && $current instanceof Folder && ! $current->isLeaf();
+        return $current && $current instanceof self && ! $current->isLeaf();
     }
 
     /**
@@ -69,6 +65,7 @@ class Folder implements RecursiveIterator
      *
      * @return \Laminas\Mail\Storage\Folder same as self::current()
      */
+    #[ReturnTypeWillChange]
     public function getChildren()
     {
         return $this->current();
@@ -79,6 +76,7 @@ class Folder implements RecursiveIterator
      *
      * @return bool check if there's a current element
      */
+    #[ReturnTypeWillChange]
     public function valid()
     {
         return key($this->folders) !== null;
@@ -87,6 +85,7 @@ class Folder implements RecursiveIterator
     /**
      * implements Iterator::next()
      */
+    #[ReturnTypeWillChange]
     public function next()
     {
         next($this->folders);
@@ -97,6 +96,7 @@ class Folder implements RecursiveIterator
      *
      * @return string key/local name of current element
      */
+    #[ReturnTypeWillChange]
     public function key()
     {
         return key($this->folders);
@@ -107,6 +107,7 @@ class Folder implements RecursiveIterator
      *
      * @return \Laminas\Mail\Storage\Folder current folder
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         return current($this->folders);
@@ -115,6 +116,7 @@ class Folder implements RecursiveIterator
     /**
      * implements Iterator::rewind()
      */
+    #[ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->folders);
@@ -142,7 +144,7 @@ class Folder implements RecursiveIterator
      * @param string $name local name of subfolder
      * @param \Laminas\Mail\Storage\Folder $folder instance for new subfolder
      */
-    public function __set($name, Folder $folder)
+    public function __set($name, self $folder)
     {
         $this->folders[$name] = $folder;
     }

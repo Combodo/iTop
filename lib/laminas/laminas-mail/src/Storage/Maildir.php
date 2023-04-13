@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Storage;
 
 use Laminas\Mail;
@@ -112,12 +106,12 @@ class Maildir extends AbstractStorage
     {
         if ($id !== null) {
             $filedata = $this->getFileData($id);
-            return isset($filedata['size']) ? $filedata['size'] : filesize($filedata['filename']);
+            return $filedata['size'] ?? filesize($filedata['filename']);
         }
 
         $result = [];
         foreach ($this->files as $num => $data) {
-            $result[$num + 1] = isset($data['size']) ? $data['size'] : filesize($data['filename']);
+            $result[$num + 1] = $data['size'] ?? filesize($data['filename']);
         }
 
         return $result;
@@ -215,26 +209,31 @@ class Maildir extends AbstractStorage
      * Supported parameters are:
      *   - dirname dirname of mbox file
      *
-     * @param  $params array mail reader specific parameters
+     * @param $params array|object Array, iterable object, or stdClass object
+     *     with reader specific parameters
      * @throws Exception\InvalidArgumentException
      */
     public function __construct($params)
     {
-        if (is_array($params)) {
-            $params = (object) $params;
+        $params = ParamsNormalizer::normalizeParams($params);
+
+        if (! isset($params['dirname'])) {
+            throw new Exception\InvalidArgumentException('no dirname provided in params');
         }
 
-        if (! isset($params->dirname) || ! is_dir($params->dirname)) {
-            throw new Exception\InvalidArgumentException('no valid dirname given in params');
+        $dirname = (string) $params['dirname'] ;
+
+        if (! is_dir($dirname)) {
+            throw new Exception\InvalidArgumentException(sprintf('Maildir "%s" is not a directory', $dirname));
         }
 
-        if (! $this->isMaildir($params->dirname)) {
+        if (! $this->isMaildir($dirname)) {
             throw new Exception\InvalidArgumentException('invalid maildir given');
         }
 
         $this->has['top'] = true;
         $this->has['flags'] = true;
-        $this->openMaildir($params->dirname);
+        $this->openMaildir($dirname);
     }
 
     /**
@@ -300,21 +299,35 @@ class Maildir extends AbstractStorage
                 continue;
             }
 
-            ErrorHandler::start(E_NOTICE);
-            list($uniq, $info) = explode(':', $entry, 2);
-            list(, $size) = explode(',', $uniq, 2);
-            ErrorHandler::stop();
-            if ($size && $size[0] == 'S' && $size[1] == '=') {
+            if (false !== strpos($entry, ':')) {
+                list($uniq, $info) = explode(':', $entry, 2);
+            } else {
+                $uniq = $entry;
+                $info = '';
+            }
+
+            if (false !== strpos($uniq, ',')) {
+                list(, $size) = explode(',', $uniq, 2);
+            } else {
+                $size = '';
+            }
+
+            if (strlen($size) >= 2 && $size[0] === 'S' && $size[1] === '=') {
                 $size = substr($size, 2);
             }
+
             if (! ctype_digit($size)) {
                 $size = null;
             }
 
-            ErrorHandler::start(E_NOTICE);
-            list($version, $flags) = explode(',', $info, 2);
-            ErrorHandler::stop();
-            if ($version != 2) {
+            if (false !== strpos($info, ',')) {
+                list($version, $flags) = explode(',', $info, 2);
+            } else {
+                $version = $info;
+                $flags   = '';
+            }
+
+            if ($version !== '2') {
                 $flags = '';
             }
 
@@ -322,21 +335,22 @@ class Maildir extends AbstractStorage
             $length = strlen($flags);
             for ($i = 0; $i < $length; ++$i) {
                 $flag = $flags[$i];
-                $namedFlags[$flag] = isset(static::$knownFlags[$flag]) ? static::$knownFlags[$flag] : $flag;
+                $namedFlags[$flag] = static::$knownFlags[$flag] ?? $flag;
             }
 
             $data = [
                 'uniq'       => $uniq,
                 'flags'      => $namedFlags,
                 'flaglookup' => array_flip($namedFlags),
-                'filename'   => $dirname . $entry
+                'filename'   => $dirname . $entry,
             ];
             if ($size !== null) {
                 $data['size'] = (int) $size;
             }
             $this->files[] = $data;
         }
-        \usort($this->files, function ($a, $b) {
+
+        \usort($this->files, function ($a, $b): int {
             return \strcmp($a['filename'], $b['filename']);
         });
     }

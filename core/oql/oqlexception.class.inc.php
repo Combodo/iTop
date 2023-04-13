@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,13 +19,44 @@
 /**
  * Special handling for OQL syntax errors
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
 class OQLException extends CoreException
 {
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $m_MyIssue;
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $m_sInput;
+	/**
+	 * @var int
+	 * @since 3.1.0
+	 */
+	protected $m_iLine;
+	/**
+	 * @var int
+	 * @since 3.1.0
+	 */
+	protected $m_iCol;
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $m_sUnexpected;
+	/**
+	 * @var array|null string
+	 * @since 3.1.0
+	 */
+	protected $m_aExpecting;
+
 	public function __construct($sIssue, $sInput, $iLine, $iCol, $sUnexpected, $aExpecting = null)
 	{
 		$this->m_MyIssue = $sIssue;
@@ -58,22 +89,19 @@ class OQLException extends CoreException
 
 	public function getHtmlDesc($sHighlightHtmlBegin = '<span style="font-weight: bolder">', $sHighlightHtmlEnd = '</span>')
 	{
-		$sRet = htmlentities($this->m_MyIssue.", found '".$this->m_sUnexpected."' in: ", ENT_QUOTES, 'UTF-8');
-		$sRet .= htmlentities(substr($this->m_sInput, 0, $this->m_iCol), ENT_QUOTES, 'UTF-8');
-		$sRet .= $sHighlightHtmlBegin.htmlentities(substr($this->m_sInput, $this->m_iCol, strlen($this->m_sUnexpected)), ENT_QUOTES, 'UTF-8').$sHighlightHtmlEnd;
-		$sRet .= htmlentities(substr($this->m_sInput, $this->m_iCol + strlen($this->m_sUnexpected)), ENT_QUOTES, 'UTF-8');
+		$sRet = utils::EscapeHtml($this->m_MyIssue.", found '".$this->m_sUnexpected."' in: ");
+		$sRet .= utils::EscapeHtml(substr($this->m_sInput, 0, $this->m_iCol));
+		$sRet .= $sHighlightHtmlBegin.utils::EscapeHtml(substr($this->m_sInput, $this->m_iCol, strlen($this->m_sUnexpected))).$sHighlightHtmlEnd;
+		$sRet .= utils::EscapeHtml(substr($this->m_sInput, $this->m_iCol + strlen($this->m_sUnexpected)));
 
-		if (!is_null($this->m_aExpecting) && (count($this->m_aExpecting) > 0))
-		{
-			if (count($this->m_aExpecting) < 30)
-			{
+		if (!is_null($this->m_aExpecting) && (count($this->m_aExpecting) > 0)) {
+			if (count($this->m_aExpecting) < 30) {
 				$sExpectations = '{'.implode(', ', $this->m_aExpecting).'}';
-				$sRet .= ", expecting ".htmlentities($sExpectations, ENT_QUOTES, 'UTF-8');
-			} 
+				$sRet .= ", expecting ".utils::EscapeHtml($sExpectations);
+			}
 			$sSuggest = self::FindClosestString($this->m_sUnexpected, $this->m_aExpecting);
-			if (strlen($sSuggest) > 0)
-			{
-				$sRet .= ", I would suggest to use '$sHighlightHtmlBegin".htmlentities($sSuggest, ENT_QUOTES, 'UTF-8')."$sHighlightHtmlEnd'";
+			if (strlen($sSuggest) > 0) {
+				$sRet .= ", I would suggest to use '$sHighlightHtmlBegin".utils::EscapeHtml($sSuggest)."$sHighlightHtmlEnd'";
 			}
 		}
 

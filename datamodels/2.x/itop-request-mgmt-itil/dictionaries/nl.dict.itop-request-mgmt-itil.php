@@ -1,11 +1,11 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /*
  * @author Hipska (2018, 2019)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:RequestManagement' => 'Helpdesk',
@@ -113,6 +113,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Laag',
 	'Class:UserRequest/Attribute:origin' => 'Oorsprong',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'Persoonlijk',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Mondeling, in persoon',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Chat',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'E-mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'E-mail',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoring',

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Storage;
 
 use Laminas\Mail\Exception as MailException;
@@ -60,8 +54,12 @@ class Pop3 extends AbstractStorage
         $bodyLines = 0;
         $message = $this->protocol->top($id, $bodyLines, true);
 
-        return new $this->messageClass(['handler' => $this, 'id' => $id, 'headers' => $message,
-                                              'noToplines' => $bodyLines < 1]);
+        return new $this->messageClass([
+            'handler' => $this,
+            'id' => $id,
+            'headers' => $message,
+            'noToplines' => $bodyLines < 1,
+        ]);
     }
 
     /*
@@ -117,16 +115,13 @@ class Pop3 extends AbstractStorage
      *   - port port for POP3 server [optional, default = 110]
      *   - ssl 'SSL' or 'TLS' for secure sockets
      *
-     * @param  array|Protocol\Pop3 $params mail reader specific parameters or configured Pop3 protocol object
+     * @param  array|object|Protocol\Pop3 $params mail reader specific
+     *     parameters or configured Pop3 protocol object
      * @throws \Laminas\Mail\Storage\Exception\InvalidArgumentException
      * @throws \Laminas\Mail\Protocol\Exception\RuntimeException
      */
     public function __construct($params)
     {
-        if (is_array($params)) {
-            $params = (object) $params;
-        }
-
         $this->has['fetchPart'] = false;
         $this->has['top']       = null;
         $this->has['uniqueid']  = null;
@@ -136,23 +131,33 @@ class Pop3 extends AbstractStorage
             return;
         }
 
-        if (! isset($params->user)) {
+        $params = ParamsNormalizer::normalizeParams($params);
+
+        if (! isset($params['user'])) {
             throw new Exception\InvalidArgumentException('need at least user in params');
         }
 
-        $host     = isset($params->host) ? $params->host : 'localhost';
-        $password = isset($params->password) ? $params->password : '';
-        $port     = isset($params->port) ? $params->port : null;
-        $ssl      = isset($params->ssl) ? $params->ssl : false;
+        $host     = $params['host'] ?? 'localhost';
+        $password = $params['password'] ?? '';
+        $port     = $params['port'] ?? null;
+        $ssl      = $params['ssl'] ?? false;
+
+        if (null !== $port) {
+            $port = (int) $port;
+        }
+
+        if (! is_string($ssl)) {
+            $ssl = (bool) $ssl;
+        }
 
         $this->protocol = new Protocol\Pop3();
 
-        if (isset($params->novalidatecert)) {
-            $this->protocol->setNoValidateCert((bool)$params->novalidatecert);
+        if (array_key_exists('novalidatecert', $params)) {
+            $this->protocol->setNoValidateCert((bool) $params['novalidatecert']);
         }
 
-        $this->protocol->connect($host, $port, $ssl);
-        $this->protocol->login($params->user, $password);
+        $this->protocol->connect((string) $host, $port, $ssl);
+        $this->protocol->login((string) $params['user'], (string) $password);
     }
 
     /**

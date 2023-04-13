@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2022 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -207,7 +207,7 @@ Operators:<br/>
 
 	'Core:AttributeTag' => 'Tags',
 	'Core:AttributeTag+' => '',
-	
+
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
@@ -372,9 +372,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventNotification' => 'Notification event',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
-	'Class:EventNotification/Attribute:trigger_id+' => 'user account',
-	'Class:EventNotification/Attribute:action_id' => 'user',
-	'Class:EventNotification/Attribute:action_id+' => 'user account',
+	'Class:EventNotification/Attribute:trigger_id+' => '',
+	'Class:EventNotification/Attribute:action_id' => 'Action',
+	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => 'Object id',
 	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)',
 ));
@@ -483,18 +483,19 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:Action' => 'Custom Action',
-	'Class:Action+' => 'User defined action',
-	'Class:Action/Attribute:name' => 'Name',
-	'Class:Action/Attribute:name+' => '',
-	'Class:Action/Attribute:description' => 'Description',
-	'Class:Action/Attribute:description+' => '',
-	'Class:Action/Attribute:status' => 'Status',
-	'Class:Action/Attribute:status+' => 'This status drives the action behavior',
-	'Class:Action/Attribute:status/Value:test' => 'Being tested',
-	'Class:Action/Attribute:status/Value:test+' => '',
-	'Class:Action/Attribute:status/Value:enabled' => 'In production',
-	'Class:Action/Attribute:status/Value:enabled+' => '',
+	'Class:Action'                                  => 'Custom Action',
+	'Class:Action+'                                 => 'User defined action',
+	'Class:Action/ComplementaryName'                => '%1$s: %2$s',
+	'Class:Action/Attribute:name'                   => 'Name',
+	'Class:Action/Attribute:name+'                  => '',
+	'Class:Action/Attribute:description'            => 'Description',
+	'Class:Action/Attribute:description+'           => '',
+	'Class:Action/Attribute:status'                 => 'Status',
+	'Class:Action/Attribute:status+'                => 'This status drives the action behavior',
+	'Class:Action/Attribute:status/Value:test'      => 'Being tested',
+	'Class:Action/Attribute:status/Value:test+'     => '',
+	'Class:Action/Attribute:status/Value:enabled'   => 'In production',
+	'Class:Action/Attribute:status/Value:enabled+'  => '',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inactive',
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Related Triggers',
@@ -518,40 +519,59 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ActionEmail' => 'Email notification',
-	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent',
-	'Class:ActionEmail/Attribute:test_recipient' => 'Test recipient',
-	'Class:ActionEmail/Attribute:test_recipient+' => 'Destination email used when notification is being tested',
-	'Class:ActionEmail/Attribute:from' => 'From (email)',
-	'Class:ActionEmail/Attribute:from+' => 'Sender email address will be sent into the email header',
-	'Class:ActionEmail/Attribute:from_label' => 'From (label)',
-	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header',
-	'Class:ActionEmail/Attribute:reply_to' => 'Reply to (email)',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Reply to email address Will be sent into the email header',
-	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header',
-	'Class:ActionEmail/Attribute:to' => 'To',
-	'Class:ActionEmail/Attribute:to+' => 'Destination of the email',
-	'Class:ActionEmail/Attribute:cc' => 'Cc',
-	'Class:ActionEmail/Attribute:cc+' => 'Carbon Copy',
-	'Class:ActionEmail/Attribute:bcc' => 'Bcc',
-	'Class:ActionEmail/Attribute:bcc+' => 'Blind Carbon Copy',
-	'Class:ActionEmail/Attribute:subject' => 'Subject',
-	'Class:ActionEmail/Attribute:subject+' => 'Title of the email',
-	'Class:ActionEmail/Attribute:body' => 'Body',
-	'Class:ActionEmail/Attribute:body+' => 'Contents of the email',
-	'Class:ActionEmail/Attribute:importance' => 'importance',
-	'Class:ActionEmail/Attribute:importance+' => 'Importance flag',
-	'Class:ActionEmail/Attribute:importance/Value:low' => 'low',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
+	'Class:ActionEmail'                                    => 'Email notification',
+	'Class:ActionEmail+'                                   => '',
+	'Class:ActionEmail/Attribute:status+'                  => 'This status drives who will be notified: 
+- Being tested: just the Test recipient, 
+- In production: all (To, cc and Bcc) 
+- Inactive: no-one',
+	'Class:ActionEmail/Attribute:status/Value:test+'       => 'Only the Test recipient is notified',
+	'Class:ActionEmail/Attribute:status/Value:enabled+'    => 'All To, Cc and Bcc emails are notified',
+	'Class:ActionEmail/Attribute:status/Value:disabled+'   => 'The email notification will not be sent',
+	'Class:ActionEmail/Attribute:test_recipient'           => 'Test recipient',
+	'Class:ActionEmail/Attribute:test_recipient+'          => 'Destination email address used instead of To, Cc and Bcc when notification is being tested',
+	'Class:ActionEmail/Attribute:from'                     => 'From (email)',
+	'Class:ActionEmail/Attribute:from+'                    => 'Either a static email address or a placeholder like $this->agent_id->email$.
+The latest may not be accepted by some email servers.',
+	'Class:ActionEmail/Attribute:from_label'               => 'From (label)',
+	'Class:ActionEmail/Attribute:from_label+'              => 'Either a static label or a placeholder like $this->agent_id->friendlyname$',
+	'Class:ActionEmail/Attribute:reply_to'                 => 'Reply to (email)',
+	'Class:ActionEmail/Attribute:reply_to+'                => 'Either a static email address or a placeholder like $this->team_id->email$.
+If omitted the From (email) is used.',
+	'Class:ActionEmail/Attribute:reply_to_label'           => 'Reply to (label)',
+	'Class:ActionEmail/Attribute:reply_to_label+'          => 'Either a static label or a placeholder like $this->team_id->friendlyname$.
+If omitted the From (label) is used.',
+	'Class:ActionEmail/Attribute:to'                       => 'To',
+	'Class:ActionEmail/Attribute:to+'                      => 'To: an OQL query returning objects having an email field.
+While editing, click on the magnifier to get pertinent examples',
+	'Class:ActionEmail/Attribute:cc'                       => 'Cc',
+	'Class:ActionEmail/Attribute:cc+'                      => 'Carbon Copy: an OQL query returning objects having an email field.
+While editing, click on the magnifier to get pertinent examples',
+	'Class:ActionEmail/Attribute:bcc'                      => 'Bcc',
+	'Class:ActionEmail/Attribute:bcc+'                     => 'Blind Carbon Copy: an OQL query returning objects having an email field. 
+While editing, click on the magnifier to get pertinent examples',
+	'Class:ActionEmail/Attribute:subject'                  => 'Subject',
+	'Class:ActionEmail/Attribute:subject+'                 => 'Title of the email. Can contain placeholders like $this->attribute_code$',
+	'Class:ActionEmail/Attribute:body'                     => 'Body',
+	'Class:ActionEmail/Attribute:body+'                    => 'Contents of the email. Can contain placeholders like:
+- $this->attribute_code$ any attribute of the object triggering the notification,
+- $this->html(attribute_code)$ same as above but displayed in html format,
+- $this->hyperlink()$ hyperlink in the console to the object triggering the notification,
+- $this->hyperlink(portal)$ hyperlink in the portal to the object triggering the notification,
+- $this->head_html(case_log_attribute)$ last reply in html format of a caselog attribute,
+- $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
+- $current_contact->attribute$ attribute of the Person who triggered the notification',
+	'Class:ActionEmail/Attribute:importance'               => 'importance',
+	'Class:ActionEmail/Attribute:importance+'              => 'Importance flag set on the generated email',
+	'Class:ActionEmail/Attribute:importance/Value:low'     => 'Low',
+	'Class:ActionEmail/Attribute:importance/Value:low+'    => '',
+	'Class:ActionEmail/Attribute:importance/Value:normal'  => 'Normal',
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:high' => 'high',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:high'    => 'High',
+	'Class:ActionEmail/Attribute:importance/Value:high+'   => '',
+	'ActionEmail:main'                                     => 'Message',
+	'ActionEmail:trigger'                                  => 'Triggers',
+	'ActionEmail:recipients'                               => 'Contacts',
 ));
 
 //
@@ -662,6 +682,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.',
+));
+
+//
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
 ));
 
 //

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
@@ -200,7 +200,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
 	'Class:UserRequest/Attribute:related_request_list' => '子要求',
-	'Class:UserRequest/Attribute:related_request_list+' => '',
+	'Class:UserRequest/Attribute:related_request_list+' => 'All the requests that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:public_log' => '公開ログ',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'ユーザ満足度',

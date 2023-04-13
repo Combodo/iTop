@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExtension
@@ -304,6 +291,8 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 				// Remove attachments that are no longer attached to the current object
 				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
 				{
+					$aData = ['target_object' => $oObject];
+					$oAttachment->FireEvent(EVENT_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
 					$oAttachment->DBDelete();
 					$aActions[] = self::GetActionChangeOp($oAttachment, false /* false => deletion */);
 				}
@@ -332,6 +321,8 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 						$oAttachment->DBUpdate();
 						// temporary attachment confirmed, list it in the history
 						$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
+						$aData = ['target_object' => $oObject];
+						$oAttachment->FireEvent(EVENT_ADD_ATTACHMENT_TO_OBJECT, $aData);
 					}
 				}
 			}
@@ -679,13 +670,12 @@ class CMDBChangeOpAttachmentAdded extends CMDBChangeOp
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
 		$sTargetObjectClass = 'Attachment';
 		$iTargetObjectKey = $this->Get('attachment_id');
-		$sFilename = htmlentities($this->Get('filename'), ENT_QUOTES, 'UTF-8');
+		$sFilename = utils::EscapeHtml($this->Get('filename'));
 		$oTargetSearch = new DBObjectSearch($sTargetObjectClass);
 		$oTargetSearch->AddCondition('id', $iTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if ($oMonoObjectSet->Count() > 0)
-		{
+		if ($oMonoObjectSet->Count() > 0) {
 			$oAttachment = $oMonoObjectSet->Fetch();
 			$oDoc = $oAttachment->Get('contents');
 			$sPreview = $oDoc->IsPreviewAvailable() ? 'data-preview="true"' : '';
@@ -739,9 +729,40 @@ class CMDBChangeOpAttachmentRemoved extends CMDBChangeOp
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
 		$sResult = Dict::Format('Attachments:History_File_Removed',
-			'<span class="attachment-history-deleted">'.htmlentities($this->Get('filename'), ENT_QUOTES, 'UTF-8').'</span>');
+			'<span class="attachment-history-deleted">'.utils::EscapeHtml($this->Get('filename')).'</span>');
 
 		return $sResult;
+	}
+}
+
+/**
+ * Class TriggerOnAttachmentDownload
+ *
+ * @since 3.1.0
+ */
+class TriggerOnAttachmentDownload extends TriggerOnAttributeBlobDownload
+{
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "grant_by_profile,core/cmdb,application",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"state_attcode" => "",
+			"reconc_keys" => array('description'),
+			"db_table" => "priv_trigger_onattdownload",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
 	}
 }
 

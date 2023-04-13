@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Storage\Part;
 
 use Laminas\Mail\Headers;
@@ -48,7 +42,7 @@ class File extends Part
             fseek($this->fh, $params['startPos']);
         }
         $header = '';
-        $endPos = isset($params['endPos']) ? $params['endPos'] : null;
+        $endPos = $params['endPos'] ?? null;
         while (($endPos === null || ftell($this->fh) < $endPos) && trim($line = fgets($this->fh))) {
             $header .= $line;
         }
@@ -151,7 +145,10 @@ class File extends Part
             throw new Exception\RuntimeException('part not found');
         }
 
-        return new static(['file' => $this->fh, 'startPos' => $this->partPos[$num][0],
-                              'endPos' => $this->partPos[$num][1]]);
+        return new static([
+            'file' => $this->fh,
+            'startPos' => $this->partPos[$num][0],
+            'endPos' => $this->partPos[$num][1],
+        ]);
     }
 }

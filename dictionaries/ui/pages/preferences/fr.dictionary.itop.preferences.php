@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -21,7 +21,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Preferences:Title'                                             => 'Préférences',
 	'UI:Preferences:UserInterface:Title'                               => 'Interface utilisateur',
 	'UI:Preferences:General:Title'                                     => 'Général',
-	'UI:Preferences:General:Theme'                                     => 'Thême',
+	'UI:Preferences:General:Theme'                                     => 'Thème',
 	'UI:Preferences:General:Theme:DefaultThemeLabel'                   => '%1$s (défaut)',
 	'UI:Preferences:Lists:Title'                                       => 'Listes',
 	'UI:Preferences:RichText:Title'                                    => 'Éditeur texte riche',

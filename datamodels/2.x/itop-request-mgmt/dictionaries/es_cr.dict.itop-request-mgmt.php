@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  */
@@ -15,8 +15,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:UserRequest:Overview+' => 'Resumen de Requerimientos',
 	'Menu:NewUserRequest' => 'Nuevo Requerimiento',
 	'Menu:NewUserRequest+' => 'Nuevo Requerimiento',
-	'Menu:SearchUserRequests' => 'Búsqueda de Requerimientos de Usuario',
-	'Menu:SearchUserRequests+' => 'Búsqueda de Requerimientos de Usuario',
+	'Menu:SearchUserRequests' => 'Búsqueda de Requerimientos',
+	'Menu:SearchUserRequests+' => 'Búsqueda de Requerimientos',
 	'Menu:UserRequest:Shortcuts' => 'Acceso Rápido',
 	'Menu:UserRequest:Shortcuts+' => 'Acceso Rápido',
 	'Menu:UserRequest:MyRequests' => 'Requerimientos Asignados a Mí',

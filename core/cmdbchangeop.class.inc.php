@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Persistent classes (internal) : cmdbChangeOp and derived
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -78,7 +78,7 @@ class CMDBChangeOp extends DBObject implements iCMDBChangeOp
 	}
 
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
+	 * @inheritDoc
 	 */
 	public function GetDescription()
 	{
@@ -350,20 +350,30 @@ class CMDBChangeOpSetAttributeURL extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt_url",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt_url",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeURL("oldvalue", array("allowed_values"=>null, "sql"=>"oldvalue", "target" => '_blank', "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeURL("newvalue", array("allowed_values"=>null, "sql"=>"newvalue", "target" => '_blank', "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		
+
+		// N°4910 (oldvalue), N°5423 (newvalue)
+		// We cannot have validation here, as AttributeUrl validation is field dependant.
+		// The validation will be done when editing the iTop object, it isn't the history API responsibility
+		//
+		// Pattern is retrieved using this order :
+		// 1.  try to get the pattern from the field definition (datamodel)
+		// 2. from the iTop config
+		// 3. config parameter default value
+		// see \AttributeURL::GetValidationPattern
+		MetaModel::Init_AddAttribute(new AttributeURL("oldvalue", array("allowed_values" => null, "sql" => "oldvalue", "target" => '_blank', "default_value" => null, "is_null_allowed" => true, "depends_on" => array(), "validation_pattern" => '.*')));
+		MetaModel::Init_AddAttribute(new AttributeURL("newvalue", array("allowed_values" => null, "sql" => "newvalue", "target" => '_blank', "default_value" => null, "is_null_allowed" => true, "depends_on" => array(), "validation_pattern" => '.*')));
+
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for a list
@@ -462,7 +472,7 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 				$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
 				$sDisplayUrl = $oPrevDoc->GetDisplayURL(get_class($this), $this->GetKey(), 'prevdata');
 
-				$sDownloadLabel = Dict::Format('UI:DownloadDocument_');
+				$sDownloadLabel = Dict::S('UI:DownloadDocument_');
 				$sDownloadUrl = $oPrevDoc->GetDownloadURL(get_class($this), $this->GetKey(), 'prevdata');
 
 				$sDocView = <<<HTML
@@ -875,7 +885,7 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 	 */
 	protected function ToHtml($sRawText)
 	{
-		return str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sRawText, ENT_QUOTES, 'UTF-8'));
+		return str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sRawText));
 	}
 }
 
@@ -1167,9 +1177,8 @@ class CMDBChangeOpSetAttributeCustomFields extends CMDBChangeOpSetAttribute
 					$oHandler = $oAttDef->GetHandler($aValues);
 					$sValueDesc = $oHandler->GetAsHTML($aValues);
 				}
-				catch (Exception $e)
-				{
-					$sValueDesc = 'Custom field error: '.htmlentities($e->getMessage(), ENT_QUOTES, 'UTF-8');
+				catch (Exception $e) {
+					$sValueDesc = 'Custom field error: '.utils::EscapeHtml($e->getMessage());
 				}
 				$sTextView = '<div>'.$sValueDesc.'</div>';
 

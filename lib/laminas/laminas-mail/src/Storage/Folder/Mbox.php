@@ -1,15 +1,10 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Storage\Folder;
 
 use Laminas\Mail\Storage;
 use Laminas\Mail\Storage\Exception;
+use Laminas\Mail\Storage\ParamsNormalizer;
 use Laminas\Stdlib\ErrorHandler;
 
 class Mbox extends Storage\Mbox implements FolderInterface
@@ -43,27 +38,33 @@ class Mbox extends Storage\Mbox implements FolderInterface
      * - dirname rootdir of mbox structure
      * - folder initial selected folder, default is 'INBOX'
      *
-     * @param  $params array mail reader specific parameters
+     * @param $params array|object Array, iterable object, or stdClass object
+     *     with reader specific parameters
      * @throws Exception\InvalidArgumentException
      */
     public function __construct($params)
     {
-        if (is_array($params)) {
-            $params = (object) $params;
-        }
+        $params = ParamsNormalizer::normalizeParams($params);
 
-        if (isset($params->filename)) {
+        if (isset($params['filename'])) {
             throw new Exception\InvalidArgumentException(sprintf('use %s for a single file', Storage\Mbox::class));
         }
 
-        if (! isset($params->dirname) || ! is_dir($params->dirname)) {
-            throw new Exception\InvalidArgumentException('no valid dirname given in params');
+        if (! isset($params['dirname'])) {
+            throw new Exception\InvalidArgumentException('no dirname provided in params');
         }
 
-        $this->rootdir = rtrim($params->dirname, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $dirname = (string) $params['dirname'];
+
+        if (! is_dir($dirname)) {
+            throw new Exception\InvalidArgumentException('$dirname provided in params is not a directory');
+        }
+
+        $this->rootdir = rtrim($dirname, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $folder = $params['folder'] ?? 'INBOX';
 
         $this->buildFolderTree($this->rootdir);
-        $this->selectFolder(! empty($params->folder) ? $params->folder : 'INBOX');
+        $this->selectFolder((string) $folder);
         $this->has['top']      = true;
         $this->has['uniqueid'] = false;
     }
@@ -130,10 +131,15 @@ class Mbox extends Storage\Mbox implements FolderInterface
         $currentFolder = $this->rootFolder;
         $subname = trim($rootFolder, DIRECTORY_SEPARATOR);
         while ($currentFolder) {
-            ErrorHandler::start(E_NOTICE);
-            list($entry, $subname) = explode(DIRECTORY_SEPARATOR, $subname, 2);
-            ErrorHandler::stop();
+            if (false !== strpos($subname, DIRECTORY_SEPARATOR)) {
+                list($entry, $subname) = explode(DIRECTORY_SEPARATOR, $subname, 2);
+            } else {
+                $entry   = $subname;
+                $subname = null;
+            }
+
             $currentFolder = $currentFolder->$entry;
+
             if (! $subname) {
                 break;
             }

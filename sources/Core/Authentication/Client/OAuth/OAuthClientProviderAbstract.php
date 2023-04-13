@@ -8,15 +8,8 @@ use OAuthClient;
 
 abstract class OAuthClientProviderAbstract implements IOAuthClientProvider
 {
-//	/** @var string */
-//	static protected $sVendorName = '';
-//	/** @var array */
-//	static protected $sVendorColors = ['', '', '', ''];
-//	/** @var string */
-//	static protected $sVendorIcon = '';
-//	static protected $sRequiredSMTPScope = '';
-//	static protected $sRequiredIMAPScope = '';
-//	static protected $sRequiredPOPScope = '';
+	/** @var string */
+	static protected $sVendorName = '';
 
 	/** @var \League\OAuth2\Client\Provider\GenericProvider */
 	protected $oVendorProvider;
@@ -67,6 +60,14 @@ abstract class OAuthClientProviderAbstract implements IOAuthClientProvider
 	public function GetScope()
 	{
 		return $this->oOauthClient->GetScope();
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function GetVendorName()
+	{
+		return self::$sVendorName;
 	}
 
 }

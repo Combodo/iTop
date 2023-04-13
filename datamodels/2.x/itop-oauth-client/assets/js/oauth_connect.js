@@ -1,5 +1,5 @@
 /**
- * @copyright   Copyright (C) 2010-2022 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -77,11 +77,10 @@ const oOpenSignInWindow = function (url, name) {
 };
 
 
-const OAuthConnect = function(sClass, sId, sAjaxUri, sReturnUri) {
+const OAuthConnect = function(sClass, sId, sAjaxUri) {
 	sOAuthAjaxURI = sAjaxUri;
 	sOAuthObjClass = sClass;
 	sOAuthObjKey = sId;
-	sOAuthReturnURI = sReturnUri;
 
 	$.post(
 		sOAuthAjaxURI,

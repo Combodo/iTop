@@ -1,217 +1,219 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @license    http://opensource.org/licenses/AGPL-3.0
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Core:DeletedObjectLabel' => '%1s (deleted)~~',
-	'Core:DeletedObjectTip'   => 'The object has been deleted on %1$s (%2$s)~~',
+    'Core:DeletedObjectLabel' => '%1s (törölve)',
+    'Core:DeletedObjectTip' => 'A %1$s objektum törölve (%2$s)',
 
-	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)~~',
-	'Core:UnknownObjectTip'   => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
+    'Core:UnknownObjectLabel' => 'Objektum nem található (osztály: %1$s, id: %2$d)',
+    'Core:UnknownObjectTip' => 'Az objektumot nem sikerült megtalálni. Lehet, hogy már törölték egy ideje, és a naplót azóta törölték.',
 
-	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
-	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
-	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
+    'Core:UniquenessDefaultError' => 'Egyediségi szabály %1$s hibás',
+    'Core:CheckConsistencyError' => 'A következetességi szabályok be nem tartása: %1$s',
+    'Core:CheckValueError' => 'A %1$s (%2$s) attribútum nem várt értéke : %3$s',
 
-	'Core:AttributeLinkedSet'  => 'Objektum tömbök',
-	'Core:AttributeLinkedSet+' => '',
+    'Core:AttributeLinkedSet' => 'Objektumtömbök',
+    'Core:AttributeLinkedSet+' => 'Az azonos osztályba vagy alosztályba tartozó objektumok bármely fajtája',
 
-	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+    'Core:AttributeLinkedSetDuplicatesFound' => 'Duplikátumok a %1$s mezőben : %2$s',
 
-	'Core:AttributeDashboard'  => 'Dashboard~~',
-	'Core:AttributeDashboard+' => '',
+    'Core:AttributeDashboard' => 'Műszerfal',
+    'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber'  => 'Phone number~~',
-	'Core:AttributePhoneNumber+' => '',
+    'Core:AttributePhoneNumber' => 'Telefonszám',
+    'Core:AttributePhoneNumber+' => '',
 
-	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate+' => '',
+    'Core:AttributeObsolescenceDate' => 'Elavulás dátuma',
+    'Core:AttributeObsolescenceDate+' => '',
 
-	'Core:AttributeTagSet' => 'List of tags~~',
-	'Core:AttributeTagSet+' => '',
-	'Core:AttributeSet:placeholder' => 'click to add~~',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+    'Core:AttributeTagSet' => 'Címkelista',
+    'Core:AttributeTagSet+' => '',
+    'Core:AttributeSet:placeholder' => 'Kattintson a hozzáadáshoz',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s a %3$s -ból)',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s gyermekosztályokból)',
 
-	'Core:AttributeCaseLog' => 'Log~~',
-	'Core:AttributeCaseLog+' => '',
+    'Core:AttributeCaseLog' => 'Napló',
+    'Core:AttributeCaseLog+' => '',
 
-	'Core:AttributeMetaEnum' => 'Computed enum~~',
-	'Core:AttributeMetaEnum+' => '',
+    'Core:AttributeMetaEnum' => 'Generált enum',
+    'Core:AttributeMetaEnum+' => '',
 
-	'Core:AttributeLinkedSetIndirect' => 'Objektum tömbök (N-N)',
-	'Core:AttributeLinkedSetIndirect+' => '',
+    'Core:AttributeLinkedSetIndirect' => 'Objektumok tömbjei (N-N)',
+    'Core:AttributeLinkedSetIndirect+' => 'Bármilyen objektum [alosztály] ugyanabból az osztályból',
 
-	'Core:AttributeInteger' => 'Integer',
-	'Core:AttributeInteger+' => '',
+    'Core:AttributeInteger' => 'Egész szám',
+    'Core:AttributeInteger+' => 'Numerikus érték (lehet negatív is)',
 
-	'Core:AttributeDecimal' => 'Decimal',
-	'Core:AttributeDecimal+' => '',
+    'Core:AttributeDecimal' => 'Decimális',
+    'Core:AttributeDecimal+' => 'Decimális érték (lehet negatív is)',
 
-	'Core:AttributeBoolean' => 'Boolean',
-	'Core:AttributeBoolean+' => '',
-	'Core:AttributeBoolean/Value:null' => '',
-	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
-	'Core:AttributeBoolean/Value:no' => 'No~~',
+    'Core:AttributeBoolean' => 'Logikai',
+    'Core:AttributeBoolean+' => '',
+    'Core:AttributeBoolean/Value:null' => '',
+    'Core:AttributeBoolean/Value:yes' => 'Igen',
+    'Core:AttributeBoolean/Value:no' => 'Nem',
 
-	'Core:AttributeArchiveFlag' => 'Archive flag~~',
-	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
-	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
-	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
-	'Core:AttributeArchiveFlag/Label' => 'Archived~~',
-	'Core:AttributeArchiveFlag/Label+' => '',
-	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
-	'Core:AttributeArchiveDate/Label+' => '',
+    'Core:AttributeArchiveFlag' => 'Archív jelölő',
+    'Core:AttributeArchiveFlag/Value:yes' => 'Igen',
+    'Core:AttributeArchiveFlag/Value:yes+' => 'Ez az objektum csak archív módban látható',
+    'Core:AttributeArchiveFlag/Value:no' => 'Nem',
+    'Core:AttributeArchiveFlag/Label' => 'Archivált',
+    'Core:AttributeArchiveFlag/Label+' => '',
+    'Core:AttributeArchiveDate/Label' => 'Archiválás dátuma',
+    'Core:AttributeArchiveDate/Label+' => '',
 
-	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
-	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
-	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
-	'Core:AttributeObsolescenceFlag/Value:no' => 'No~~',
-	'Core:AttributeObsolescenceFlag/Label' => 'Obsolete~~',
-	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
-	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
+    'Core:AttributeObsolescenceFlag' => 'Elavulás jelölő',
+    'Core:AttributeObsolescenceFlag/Value:yes' => 'Igen',
+    'Core:AttributeObsolescenceFlag/Value:yes+' => 'Ez az objektum ki van zárva a hatáselemzésből, és el van rejtve a keresési eredményekből.',
+    'Core:AttributeObsolescenceFlag/Value:no' => 'Nem',
+    'Core:AttributeObsolescenceFlag/Label' => 'Elavult',
+    'Core:AttributeObsolescenceFlag/Label+' => 'Egyéb attribútumok alapján dinamikusan kiszámított',
+    'Core:AttributeObsolescenceDate/Label' => 'Elavulás dátuma',
+    'Core:AttributeObsolescenceDate/Label+' => 'Az objektum elavultnak minősítésének hozzávetőleges dátuma',
 
-	'Core:AttributeString' => 'String',
-	'Core:AttributeString+' => '',
+    'Core:AttributeString' => 'Karakterlánc',
+    'Core:AttributeString+' => 'Alfanumerikus karakterlánc',
 
-	'Core:AttributeClass' => 'Class',
-	'Core:AttributeClass+' => '',
+    'Core:AttributeClass' => 'Osztály',
+    'Core:AttributeClass+' => '',
 
-	'Core:AttributeApplicationLanguage' => 'Alkalmazás nyelve',
-	'Core:AttributeApplicationLanguage+' => '',
+    'Core:AttributeApplicationLanguage' => 'Felhasználó nyelve',
+    'Core:AttributeApplicationLanguage+' => 'Nyelv és országkód (HU HU)',
 
-	'Core:AttributeFinalClass' => 'Class (auto)',
-	'Core:AttributeFinalClass+' => '',
+    'Core:AttributeFinalClass' => 'Osztály (automatikus)',
+    'Core:AttributeFinalClass+' => 'Az objektum valódi osztálya (a rendszer automatikusan létrehozza)',
 
-	'Core:AttributePassword' => 'Jelszó',
-	'Core:AttributePassword+' => '',
+    'Core:AttributePassword' => 'Jelszó',
+    'Core:AttributePassword+' => 'A külső eszköz jelszava',
 
-	'Core:AttributeEncryptedString' => 'Encrypted string',
-	'Core:AttributeEncryptedString+' => '',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+    'Core:AttributeEncryptedString' => 'Titkosított karakterlánc',
+    'Core:AttributeEncryptedString+' => 'Helyi kulccsal titkosított karakterlánc',
+    'Core:AttributeEncryptUnknownLibrary' => 'A megadott (%1$s) titkosítási könyvtár ismeretlen',
+    'Core:AttributeEncryptFailedToDecrypt' => '** Titkosítási hiba **',
 
-	'Core:AttributeText' => 'Text',
-	'Core:AttributeText+' => '',
+    'Core:AttributeText' => 'Szöveg',
+    'Core:AttributeText+' => 'Többsoros karakterlánc',
 
-	'Core:AttributeHTML' => 'HTML',
-	'Core:AttributeHTML+' => '',
+    'Core:AttributeHTML' => 'HTML',
+    'Core:AttributeHTML+' => 'HTML karakterlánc',
 
-	'Core:AttributeEmailAddress' => 'E-mail cím',
-	'Core:AttributeEmailAddress+' => '',
+    'Core:AttributeEmailAddress' => 'Email cím',
+    'Core:AttributeEmailAddress+' => 'Email cím',
 
-	'Core:AttributeIPAddress' => 'IP cím',
-	'Core:AttributeIPAddress+' => '',
+    'Core:AttributeIPAddress' => 'IP cím',
+    'Core:AttributeIPAddress+' => 'IP cím',
 
-	'Core:AttributeOQL' => 'OQL',
-	'Core:AttributeOQL+' => '',
+    'Core:AttributeOQL' => 'OQL',
+    'Core:AttributeOQL+' => 'Objektum lekérdező nyelvi (OQL) kifejezés',
 
-	'Core:AttributeEnum' => 'Enum',
-	'Core:AttributeEnum+' => '',
+    'Core:AttributeEnum' => 'Enum',
+    'Core:AttributeEnum+' => 'Előre definiált alfanumerikus karakterláncok listája',
 
-	'Core:AttributeTemplateString' => 'Sablon szöveg',
-	'Core:AttributeTemplateString+' => '',
+    'Core:AttributeTemplateString' => 'Karakterlánc sablon',
+    'Core:AttributeTemplateString+' => 'Helyőrzőket tartalmazó karakterlánc',
 
-	'Core:AttributeTemplateText' => 'Sablon szöveg',
-	'Core:AttributeTemplateText+' => '',
+    'Core:AttributeTemplateText' => 'Szövegsablon',
+    'Core:AttributeTemplateText+' => 'Helyőrzőket tartalmazó szöveg',
 
-	'Core:AttributeTemplateHTML' => 'Sablon HTML',
-	'Core:AttributeTemplateHTML+' => '',
+    'Core:AttributeTemplateHTML' => 'HTML sablon',
+    'Core:AttributeTemplateHTML+' => 'Helyőrzőket tartalmazó HTML kód',
 
-	'Core:AttributeDateTime' => 'Date/time',
-	'Core:AttributeDateTime+' => '',
-	'Core:AttributeDateTime?SmartSearch' => '
+    'Core:AttributeDateTime' => 'Dátum/idő',
+    'Core:AttributeDateTime+' => 'Dátum és idő (Év-hónap-nap óó:pp:mp)',
+    'Core:AttributeDateTime?SmartSearch' => '
 <p>
-	Date format:<br/>
-	<b>%1$s</b><br/>
-	Example: %2$s
+    Dátumformátum:<br/>
+    <b>%1$s</b><br/>
+    Példa: %2$s
 </p>
 <p>
-Operators:<br/>
-	<b>&gt;</b><em>date</em><br/>
-	<b>&lt;</b><em>date</em><br/>
-	<b>[</b><em>date</em>,<em>date</em><b>]</b>
+Operátorok:<br/>
+    <b>&gt;</b><em>dátum</em><br/>
+    <b>&lt;</b><em>dátum</em><br/>
+    <b>[</b><em>dátum</em>,<em>dátum</em><b>]</b>
 </p>
 <p>
-If the time is omitted, it defaults to 00:00:00
-</p>~~',
+Ha az időpontot nem adja meg, akkor az alapértelmezett értéke 00:00:00
+</p>',
 
-	'Core:AttributeDate' => 'Date',
-	'Core:AttributeDate+' => '',
-	'Core:AttributeDate?SmartSearch' => '
+    'Core:AttributeDate' => 'Dátum',
+    'Core:AttributeDate+' => 'Dátum (év-hónap-nap)',
+    'Core:AttributeDate?SmartSearch' => '
 <p>
-	Date format:<br/>
-	<b>%1$s</b><br/>
-	Example: %2$s
+    Dátumformátum:<br/>
+    <b>%1$s</b><br/>
+    Példa: %2$s
 </p>
 <p>
-Operators:<br/>
-	<b>&gt;</b><em>date</em><br/>
-	<b>&lt;</b><em>date</em><br/>
-	<b>[</b><em>date</em>,<em>date</em><b>]</b>
-</p>~~',
+Operátorok:<br/>
+    <b>&gt;</b><em>dátum</em><br/>
+    <b>&lt;</b><em>dátum</em><br/>
+    <b>[</b><em>dátum</em>,<em>dátum</em><b>]</b>
+</p>',
 
-	'Core:AttributeDeadline' => 'Határidő',
-	'Core:AttributeDeadline+' => '',
+    'Core:AttributeDeadline' => 'Határidő',
+    'Core:AttributeDeadline+' => 'Dátum, ami az aktuális időhöz viszonyítva jelenik meg',
 
-	'Core:AttributeExternalKey' => 'Külső kulcs',
-	'Core:AttributeExternalKey+' => '',
+    'Core:AttributeExternalKey' => 'Külső kulcs',
+    'Core:AttributeExternalKey+' => 'Külső (vagy idegen) kulcs',
 
-	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
-	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
+    'Core:AttributeHierarchicalKey' => 'Hierarchikus kulcs',
+    'Core:AttributeHierarchicalKey+' => 'Külső (vagy idegen) kulcs a szülőhöz',
 
-	'Core:AttributeExternalField' => 'Külső mező',
-	'Core:AttributeExternalField+' => '',
+    'Core:AttributeExternalField' => 'Külső mező',
+    'Core:AttributeExternalField+' => 'Külső kulcshoz rendelt mező',
 
-	'Core:AttributeURL' => 'URL',
-	'Core:AttributeURL+' => '',
+    'Core:AttributeURL' => 'URL',
+    'Core:AttributeURL+' => 'Abszolút vagy relatív URL szöveges karakterláncként',
 
-	'Core:AttributeBlob' => 'Blob',
-	'Core:AttributeBlob+' => '',
+    'Core:AttributeBlob' => 'Blob',
+    'Core:AttributeBlob+' => 'Bármilyen bináris tartalom (dokumentum)',
 
-	'Core:AttributeOneWayPassword' => 'One way password',
-	'Core:AttributeOneWayPassword+' => '',
+    'Core:AttributeOneWayPassword' => 'Egyirányú jelszó',
+    'Core:AttributeOneWayPassword+' => 'Egyirányú titkosított (hashed) jelszó',
 
-	'Core:AttributeTable' => 'Table',
-	'Core:AttributeTable+' => '',
+    'Core:AttributeTable' => 'Táblázat',
+    'Core:AttributeTable+' => 'Indexelt kétdimenziós tömb',
 
-	'Core:AttributePropertySet' => 'Tulajdonságok',
-	'Core:AttributePropertySet+' => '',
+    'Core:AttributePropertySet' => 'Tulajdonságok',
+    'Core:AttributePropertySet+' => 'A nem tipizált tulajdonságok listája (név és érték)',
 
-	'Core:AttributeFriendlyName' => 'Friendly name~~',
-	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes~~',
+    'Core:AttributeFriendlyName' => 'Barátságos név',
+    'Core:AttributeFriendlyName+' => 'Automatikusan létrehozott attribútum ; a barátságos név több attribútum után kerül kiszámításra.',
 
-	'Core:FriendlyName-Label' => 'Friendly name~~',
-	'Core:FriendlyName-Description' => 'Friendly name~~',
+    'Core:FriendlyName-Label' => 'Név',
+    'Core:FriendlyName-Description' => 'Név',
 
-	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => '',
-	
-	'Core:Context=REST/JSON' => 'REST~~',
-	'Core:Context=Synchro' => 'Synchro~~',
-	'Core:Context=Setup' => 'Setup~~',
-	'Core:Context=GUI:Console' => 'Console~~',
-	'Core:Context=CRON' => 'cron~~',
-	'Core:Context=GUI:Portal' => 'Portal~~',
+    'Core:AttributeTag' => 'Címkék',
+    'Core:AttributeTag+' => '',
+    
+    'Core:Context=REST/JSON' => 'REST',
+    'Core:Context=Synchro' => 'Synchro',
+    'Core:Context=Setup' => 'Setup',
+    'Core:Context=GUI:Console' => 'Console',
+    'Core:Context=CRON' => 'cron',
+    'Core:Context=GUI:Portal' => 'Portál',
 ));
 
 
@@ -225,20 +227,20 @@ Operators:<br/>
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:CMDBChange' => 'Változás',
-	'Class:CMDBChange+' => '',
-	'Class:CMDBChange/Attribute:date' => 'Dátum',
-	'Class:CMDBChange/Attribute:date+' => '',
-	'Class:CMDBChange/Attribute:userinfo' => 'Egyéb információ',
-	'Class:CMDBChange/Attribute:userinfo+' => '',
-	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
-	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
+    'Class:CMDBChange' => 'Változás',
+    'Class:CMDBChange+' => 'Változások nyomonkövetése',
+    'Class:CMDBChange/Attribute:date' => 'Dátum',
+    'Class:CMDBChange/Attribute:date+' => 'A változások rögzítésének dátuma és időpontja',
+    'Class:CMDBChange/Attribute:userinfo' => 'Egyéb infó',
+    'Class:CMDBChange/Attribute:userinfo+' => 'Kérelmező által meghatározott információk',
+    'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Felhasználói interakció a grafikus felületen',
+    'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import szkript',
+    'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import a grafikus felületen',
+    'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email feldolgozás',
+    'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Szinkron adatforrás',
+    'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webszolgáltatás',
+    'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webszolgáltatás',
+    'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Bővítmény által',
 ));
 
 //
@@ -246,20 +248,20 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:CMDBChangeOp' => 'Változtatás művelet',
-	'Class:CMDBChangeOp+' => '',
-	'Class:CMDBChangeOp/Attribute:change' => 'Válktozás',
-	'Class:CMDBChangeOp/Attribute:change+' => '',
-	'Class:CMDBChangeOp/Attribute:date' => 'Dátum',
-	'Class:CMDBChangeOp/Attribute:date+' => '',
-	'Class:CMDBChangeOp/Attribute:userinfo' => 'Felhasználó',
-	'Class:CMDBChangeOp/Attribute:userinfo+' => '',
-	'Class:CMDBChangeOp/Attribute:objclass' => 'Objektum osztály',
-	'Class:CMDBChangeOp/Attribute:objclass+' => '',
-	'Class:CMDBChangeOp/Attribute:objkey' => 'Objektum azonosító',
-	'Class:CMDBChangeOp/Attribute:objkey+' => '',
-	'Class:CMDBChangeOp/Attribute:finalclass' => 'Típus',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
+    'Class:CMDBChangeOp' => 'Változás művelet',
+    'Class:CMDBChangeOp+' => 'Egyetlen személy által, egyetlen időpontban, egyetlen tárgyon végrehajtott változtatás.',
+    'Class:CMDBChangeOp/Attribute:change' => 'Változás',
+    'Class:CMDBChangeOp/Attribute:change+' => '',
+    'Class:CMDBChangeOp/Attribute:date' => 'Dátum',
+    'Class:CMDBChangeOp/Attribute:date+' => 'A változás dátuma és ideje',
+    'Class:CMDBChangeOp/Attribute:userinfo' => 'Felhasználó',
+    'Class:CMDBChangeOp/Attribute:userinfo+' => 'Aki a változtatást végbevitte',
+    'Class:CMDBChangeOp/Attribute:objclass' => 'Objektum osztály',
+    'Class:CMDBChangeOp/Attribute:objclass+' => 'Annak az objektumnak az osztályneve, amelyen a változtatás történt',
+    'Class:CMDBChangeOp/Attribute:objkey' => 'Objektum azonosító',
+    'Class:CMDBChangeOp/Attribute:objkey+' => 'Azon objektum azonosítója amelyen a változtatás történt',
+    'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp al-osztály',
+    'Class:CMDBChangeOp/Attribute:finalclass+' => 'A végrehajtott változtatás típusa',
 ));
 
 //
@@ -267,8 +269,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:CMDBChangeOpCreate' => 'Objektum létrehozás',
-	'Class:CMDBChangeOpCreate+' => '',
+    'Class:CMDBChangeOpCreate' => 'Objektum létrehozás	',
+    'Class:CMDBChangeOpCreate+' => 'Objektum létrehozás nyomonkövetése',
 ));
 
 //
@@ -276,8 +278,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:CMDBChangeOpDelete' => 'Objektum törlés',
-	'Class:CMDBChangeOpDelete+' => '',
+    'Class:CMDBChangeOpDelete' => 'Objektum törlés',
+    'Class:CMDBChangeOpDelete+' => 'Objektum törlés nyomonkövetése',
 ));
 
 //
@@ -285,10 +287,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:CMDBChangeOpSetAttribute' => 'Objektum változtatás',
-	'Class:CMDBChangeOpSetAttribute+' => '',
-	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribútum',
-	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => '',
+    'Class:CMDBChangeOpSetAttribute' => 'Objektum változás',
+    'Class:CMDBChangeOpSetAttribute+' => 'Objektumtulajdonságok változáskövetése',
+    'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribútum',
+    'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'A módosított tulajdonság kódja',
 ));
 
 //
@@ -296,31 +298,31 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:CMDBChangeOpSetAttributeScalar' => 'Tulajdonság változtatás',
-	'Class:CMDBChangeOpSetAttributeScalar+' => '',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Előző érték',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Új érték',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '',
+    'Class:CMDBChangeOpSetAttributeScalar' => 'Tulajdonságváltozás',
+    'Class:CMDBChangeOpSetAttributeScalar+' => 'Objektum skalár tulajdonságok változáskövetése',
+    'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Előző érték',
+    'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'Az attribútum korábbi értéke',
+    'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Új érték',
+    'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Az attribútum új értéke',
 ));
 // Used by CMDBChangeOp... & derived classes
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Change:ObjectCreated' => 'Objektum létrehozva',
-	'Change:ObjectDeleted' => 'Objektum törölve',
-	'Change:ObjectModified' => 'Objektum módosítva',
-	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
-	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
-	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
-	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s új értéke: %2$s (előző értéke: %3$s)',
-	'Change:AttName_SetTo' => '%1$s új értéke %2$s',
-	'Change:Text_AppendedTo_AttName' => '%1$s hozzáfűzve %2$s',
-	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s módosítva, előző érték: %2$s',
-	'Change:AttName_Changed' => '%1$s módosítva',
-	'Change:AttName_EntryAdded' => '%1$s módosítva, új bejegyzés hozzáadva.',
-	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
-	'Change:LinkSet:Added' => 'added %1$s~~',
-	'Change:LinkSet:Removed' => 'removed %1$s~~',
-	'Change:LinkSet:Modified' => 'modified %1$s~~',
+    'Change:ObjectCreated' => 'Objektum létrehozva',
+    'Change:ObjectDeleted' => 'Objektum törölve',
+    'Change:ObjectModified' => 'Objektum módosítva',
+    'Change:TwoAttributesChanged' => 'Szerkesztve %1$s és %2$s',
+    'Change:ThreeAttributesChanged' => 'Szerkesztve %1$s, %2$s és 1 másik',
+    'Change:FourOrMoreAttributesChanged' => 'Szerkesztve %1$s, %2$s és %3$s egyéb',
+    'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => 'A %1$s beállítva %2$s -re (előző érték: %3$s)',
+    'Change:AttName_SetTo' => 'A %1$s beállítva %2$s -re',
+    'Change:Text_AppendedTo_AttName' => 'A %1$s hozzáfűzve %2$s -hez',
+    'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s módosítva, előző érték: %2$s',
+    'Change:AttName_Changed' => '%1$s módosítva',
+    'Change:AttName_EntryAdded' => '%1$s módosítva, új bejegyzés hozzáadva: %2$s',
+    'Change:State_Changed_NewValue_OldValue' => 'Változtatva %2$s -ről %1$s -re',
+    'Change:LinkSet:Added' => '%1$s hozzáadva',
+    'Change:LinkSet:Removed' => '%1$s eltávolítva',
+    'Change:LinkSet:Modified' => '%1$s módosítva',
 ));
 
 //
@@ -328,10 +330,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:CMDBChangeOpSetAttributeBlob' => 'Módosítás dátuma',
-	'Class:CMDBChangeOpSetAttributeBlob+' => '',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Előző adat',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '',
+    'Class:CMDBChangeOpSetAttributeBlob' => 'Adatváltozás',
+    'Class:CMDBChangeOpSetAttributeBlob+' => 'Adatváltozás nyomonkövetése',
+    'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Előző adat',
+    'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'Az attribútum korábbi tartalma',
 ));
 
 //
@@ -339,10 +341,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:CMDBChangeOpSetAttributeText' => 'Szöveg változás',
-	'Class:CMDBChangeOpSetAttributeText+' => '',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Előző adat',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '',
+    'Class:CMDBChangeOpSetAttributeText' => 'Szövegváltozás',
+    'Class:CMDBChangeOpSetAttributeText+' => 'Szövegváltozás nyomonkövetése',
+    'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Előző adat',
+    'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'Az attribútum korábbi tartalma',
 ));
 
 //
@@ -350,16 +352,16 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:Event' => 'Napló esemény',
-	'Class:Event+' => '',
-	'Class:Event/Attribute:message' => 'Üzenet',
-	'Class:Event/Attribute:message+' => '',
-	'Class:Event/Attribute:date' => 'Dátum',
-	'Class:Event/Attribute:date+' => '',
-	'Class:Event/Attribute:userinfo' => 'Felhasználói információ',
-	'Class:Event/Attribute:userinfo+' => '',
-	'Class:Event/Attribute:finalclass' => 'Típus',
-	'Class:Event/Attribute:finalclass+' => '',
+    'Class:Event' => 'Naplóesemény',
+    'Class:Event+' => 'Egy alkalmazás belső esemény',
+    'Class:Event/Attribute:message' => 'Üzenet',
+    'Class:Event/Attribute:message+' => 'Az esemény rövid leírása',
+    'Class:Event/Attribute:date' => 'Dátum',
+    'Class:Event/Attribute:date+' => 'A változások rögzítésének dátuma és időpontja',
+    'Class:Event/Attribute:userinfo' => 'Felhasználó infó',
+    'Class:Event/Attribute:userinfo+' => 'Annak a felhasználónak az azonosítása, aki az eseményt kiváltó műveletet végrehajtotta.',
+    'Class:Event/Attribute:finalclass' => 'Esemény al-osztály',
+    'Class:Event/Attribute:finalclass+' => 'A végleges osztály neve: a bekövetkezett esemény fajtáját határozza meg.',
 ));
 
 //
@@ -367,14 +369,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:EventNotification' => 'Értesítés esemény',
-	'Class:EventNotification+' => '',
-	'Class:EventNotification/Attribute:trigger_id' => 'Kiváltó ok',
-	'Class:EventNotification/Attribute:trigger_id+' => '',
-	'Class:EventNotification/Attribute:action_id' => 'Felhasználó',
-	'Class:EventNotification/Attribute:action_id+' => '',
-	'Class:EventNotification/Attribute:object_id' => 'Objektum azonosító',
-	'Class:EventNotification/Attribute:object_id+' => '',
+    'Class:EventNotification' => 'Értesítési esemény',
+    'Class:EventNotification+' => 'Az elküldött értesítések nyomonkövetése',
+    'Class:EventNotification/Attribute:trigger_id' => 'Eseményindító',
+    'Class:EventNotification/Attribute:trigger_id+' => '',
+    'Class:EventNotification/Attribute:action_id' => 'Művelet',
+    'Class:EventNotification/Attribute:action_id+' => '',
+    'Class:EventNotification/Attribute:object_id' => 'Objektum azonosító',
+    'Class:EventNotification/Attribute:object_id+' => 'Objektum azonosítója (eseményindító határozza meg az osztályt ?)',
 ));
 
 //
@@ -382,22 +384,22 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:EventNotificationEmail' => 'E-mail küldés esemény',
-	'Class:EventNotificationEmail+' => '',
-	'Class:EventNotificationEmail/Attribute:to' => 'Címzett',
-	'Class:EventNotificationEmail/Attribute:to+' => '',
-	'Class:EventNotificationEmail/Attribute:cc' => 'Másolatot kap',
-	'Class:EventNotificationEmail/Attribute:cc+' => '',
-	'Class:EventNotificationEmail/Attribute:bcc' => 'Titkos másolatot kap',
-	'Class:EventNotificationEmail/Attribute:bcc+' => '',
-	'Class:EventNotificationEmail/Attribute:from' => 'Feladó',
-	'Class:EventNotificationEmail/Attribute:from+' => '',
-	'Class:EventNotificationEmail/Attribute:subject' => 'Tárgy',
-	'Class:EventNotificationEmail/Attribute:subject+' => '',
-	'Class:EventNotificationEmail/Attribute:body' => 'Szöveg',
-	'Class:EventNotificationEmail/Attribute:body+' => '',
-	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments~~',
-	'Class:EventNotificationEmail/Attribute:attachments+' => '',
+    'Class:EventNotificationEmail' => 'Email küldés esemény',
+    'Class:EventNotificationEmail+' => 'A kiküldött email-ek nyomonkövetése',
+    'Class:EventNotificationEmail/Attribute:to' => 'Címzett',
+    'Class:EventNotificationEmail/Attribute:to+' => '',
+    'Class:EventNotificationEmail/Attribute:cc' => 'Másolatot kap',
+    'Class:EventNotificationEmail/Attribute:cc+' => '',
+    'Class:EventNotificationEmail/Attribute:bcc' => 'Titkos másolatot kap',
+    'Class:EventNotificationEmail/Attribute:bcc+' => '',
+    'Class:EventNotificationEmail/Attribute:from' => 'Feladó',
+    'Class:EventNotificationEmail/Attribute:from+' => 'Az üzenet küldője',
+    'Class:EventNotificationEmail/Attribute:subject' => 'Tárgy',
+    'Class:EventNotificationEmail/Attribute:subject+' => '',
+    'Class:EventNotificationEmail/Attribute:body' => 'Levéltörzs',
+    'Class:EventNotificationEmail/Attribute:body+' => '',
+    'Class:EventNotificationEmail/Attribute:attachments' => 'Mellékletek',
+    'Class:EventNotificationEmail/Attribute:attachments+' => '',
 ));
 
 //
@@ -405,22 +407,22 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:EventIssue' => 'Kérés esemény',
-	'Class:EventIssue+' => '',
-	'Class:EventIssue/Attribute:issue' => 'Kérés',
-	'Class:EventIssue/Attribute:issue+' => '',
-	'Class:EventIssue/Attribute:impact' => 'Hatás',
-	'Class:EventIssue/Attribute:impact+' => '',
-	'Class:EventIssue/Attribute:page' => 'Oldal',
-	'Class:EventIssue/Attribute:page+' => '',
-	'Class:EventIssue/Attribute:arguments_post' => 'Kérés részletei',
-	'Class:EventIssue/Attribute:arguments_post+' => '',
-	'Class:EventIssue/Attribute:arguments_get' => 'URL ',
-	'Class:EventIssue/Attribute:arguments_get+' => '',
-	'Class:EventIssue/Attribute:callstack' => 'Híváslista',
-	'Class:EventIssue/Attribute:callstack+' => '',
-	'Class:EventIssue/Attribute:data' => 'Dátum',
-	'Class:EventIssue/Attribute:data+' => '',
+    'Class:EventIssue' => 'Probléma esemény',
+    'Class:EventIssue+' => 'Egy probléma (figyelmeztetés, hiba, stb. nyomonkövetése)',
+    'Class:EventIssue/Attribute:issue' => 'Probléma',
+    'Class:EventIssue/Attribute:issue+' => 'Mi történt',
+    'Class:EventIssue/Attribute:impact' => 'Hatása',
+    'Class:EventIssue/Attribute:impact+' => 'Mik a következmények',
+    'Class:EventIssue/Attribute:page' => 'Oldal',
+    'Class:EventIssue/Attribute:page+' => 'HTTP belépési pont',
+    'Class:EventIssue/Attribute:arguments_post' => 'Kiküldött bizonyítékok',
+    'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST bizonyítékok',
+    'Class:EventIssue/Attribute:arguments_get' => 'URL bizonyítékok',
+    'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET bizonyítékok',
+    'Class:EventIssue/Attribute:callstack' => 'Híváscsomag',
+    'Class:EventIssue/Attribute:callstack+' => '',
+    'Class:EventIssue/Attribute:data' => 'Adat',
+    'Class:EventIssue/Attribute:data+' => 'További információ',
 ));
 
 //
@@ -428,37 +430,37 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:EventWebService' => 'Web szolgáltatás esemény',
-	'Class:EventWebService+' => '',
-	'Class:EventWebService/Attribute:verb' => 'Kérés',
-	'Class:EventWebService/Attribute:verb+' => '',
-	'Class:EventWebService/Attribute:result' => 'Eredmény',
-	'Class:EventWebService/Attribute:result+' => '',
-	'Class:EventWebService/Attribute:log_info' => 'Info napló',
-	'Class:EventWebService/Attribute:log_info+' => '',
-	'Class:EventWebService/Attribute:log_warning' => 'Warning napló',
-	'Class:EventWebService/Attribute:log_warning+' => '',
-	'Class:EventWebService/Attribute:log_error' => 'Error napló',
-	'Class:EventWebService/Attribute:log_error+' => '',
-	'Class:EventWebService/Attribute:data' => 'Adat',
-	'Class:EventWebService/Attribute:data+' => '',
+    'Class:EventWebService' => 'Webszolgáltatás esemény',
+    'Class:EventWebService+' => 'Webszolgáltatás hívás nyomonkövetése',
+    'Class:EventWebService/Attribute:verb' => 'Művelet',
+    'Class:EventWebService/Attribute:verb+' => 'A művelet neve',
+    'Class:EventWebService/Attribute:result' => 'Eredmény',
+    'Class:EventWebService/Attribute:result+' => 'Általánosságban siker/hiba',
+    'Class:EventWebService/Attribute:log_info' => 'Infó napló',
+    'Class:EventWebService/Attribute:log_info+' => 'A kapott eredmények naplója',
+    'Class:EventWebService/Attribute:log_warning' => 'Figyelmeztetés napló',
+    'Class:EventWebService/Attribute:log_warning+' => 'A kapott figyelmeztetések naplója',
+    'Class:EventWebService/Attribute:log_error' => 'Hibanapló',
+    'Class:EventWebService/Attribute:log_error+' => 'A kapott hibák naplója ',
+    'Class:EventWebService/Attribute:data' => 'Adat',
+    'Class:EventWebService/Attribute:data+' => 'A kapott adatok',
 ));
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:EventRestService' => 'REST/JSON call~~',
-	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
-	'Class:EventRestService/Attribute:operation' => 'Operation~~',
-	'Class:EventRestService/Attribute:operation+' => 'Argument \'operation\'~~',
-	'Class:EventRestService/Attribute:version' => 'Version~~',
-	'Class:EventRestService/Attribute:version+' => 'Argument \'version\'~~',
-	'Class:EventRestService/Attribute:json_input' => 'Input~~',
-	'Class:EventRestService/Attribute:json_input+' => 'Argument \'json_data\'~~',
-	'Class:EventRestService/Attribute:code' => 'Code~~',
-	'Class:EventRestService/Attribute:code+' => 'Result code~~',
-	'Class:EventRestService/Attribute:json_output' => 'Response~~',
-	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)~~',
-	'Class:EventRestService/Attribute:provider' => 'Provider~~',
-	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation~~',
+    'Class:EventRestService' => 'REST/JSON hívás',
+    'Class:EventRestService+' => 'REST/JSON szolgáltatáshívás nyomonkövetése',
+    'Class:EventRestService/Attribute:operation' => 'Művelet',
+    'Class:EventRestService/Attribute:operation+' => 'Argumentum \'művelet\'',
+    'Class:EventRestService/Attribute:version' => 'Verzió',
+    'Class:EventRestService/Attribute:version+' => 'Argumentum \'verzió\'',
+    'Class:EventRestService/Attribute:json_input' => 'Bemenet',
+    'Class:EventRestService/Attribute:json_input+' => 'Argumentum \'json_data\'',
+    'Class:EventRestService/Attribute:code' => 'Kód',
+    'Class:EventRestService/Attribute:code+' => 'Eredménykód',
+    'Class:EventRestService/Attribute:json_output' => 'Válasz',
+    'Class:EventRestService/Attribute:json_output+' => 'HTTP válasz (json)',
+    'Class:EventRestService/Attribute:provider' => 'Szolgáltató',
+    'Class:EventRestService/Attribute:provider+' => 'A várt műveletet végrehajtó PHP osztály',
 ));
 
 //
@@ -466,14 +468,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:EventLoginUsage' => 'Belépés esemény',
-	'Class:EventLoginUsage+' => '',
-	'Class:EventLoginUsage/Attribute:user_id' => 'Felhasználó név',
-	'Class:EventLoginUsage/Attribute:user_id+' => '',
-	'Class:EventLoginUsage/Attribute:contact_name' => 'Felhasználó neve',
-	'Class:EventLoginUsage/Attribute:contact_name+' => '',
-	'Class:EventLoginUsage/Attribute:contact_email' => 'Felhasználó e-mail',
-	'Class:EventLoginUsage/Attribute:contact_email+' => '',
+    'Class:EventLoginUsage' => 'Belépések',
+    'Class:EventLoginUsage+' => 'Kapcsolódások az alkalmazáshoz',
+    'Class:EventLoginUsage/Attribute:user_id' => 'Felhasználónév',
+    'Class:EventLoginUsage/Attribute:user_id+' => '',
+    'Class:EventLoginUsage/Attribute:contact_name' => 'Kapcsolattartó név',
+    'Class:EventLoginUsage/Attribute:contact_name+' => '',
+    'Class:EventLoginUsage/Attribute:contact_email' => 'Kapcsolattartó email cím',
+    'Class:EventLoginUsage/Attribute:contact_email+' => 'A felhasználó email címe',
 ));
 
 //
@@ -481,25 +483,25 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:Action' => 'Egyedi akciók',
-	'Class:Action+' => '',
-	'Class:Action/Attribute:name' => 'Neve',
-	'Class:Action/Attribute:name+' => '',
-	'Class:Action/Attribute:description' => 'Leírás',
-	'Class:Action/Attribute:description+' => '',
-	'Class:Action/Attribute:status' => 'Státusz',
-	'Class:Action/Attribute:status+' => '',
-	'Class:Action/Attribute:status/Value:test' => 'Tesztelés alatt',
-	'Class:Action/Attribute:status/Value:test+' => '',
-	'Class:Action/Attribute:status/Value:enabled' => 'Éles üzemeben',
-	'Class:Action/Attribute:status/Value:enabled+' => '',
-	'Class:Action/Attribute:status/Value:disabled' => 'Inaktív',
-	'Class:Action/Attribute:status/Value:disabled+' => '',
-	'Class:Action/Attribute:trigger_list' => 'Kapcsolódó kiváltó okok',
-	'Class:Action/Attribute:trigger_list+' => '',
-	'Class:Action/Attribute:finalclass' => 'Típus',
-	'Class:Action/Attribute:finalclass+' => '',
-	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
+    'Class:Action' => 'Egyéni művelet',
+    'Class:Action+' => 'A felhasználó által meghatározott művelet',
+    'Class:Action/Attribute:name' => 'Név',
+    'Class:Action/Attribute:name+' => '',
+    'Class:Action/Attribute:description' => 'Leírás',
+    'Class:Action/Attribute:description+' => '',
+    'Class:Action/Attribute:status' => 'Állapot',
+    'Class:Action/Attribute:status+' => 'Ez az állapot határozza meg az akció viselkedését',
+    'Class:Action/Attribute:status/Value:test' => 'Tesztelés alatt',
+    'Class:Action/Attribute:status/Value:test+' => '',
+    'Class:Action/Attribute:status/Value:enabled' => 'Bevezetve',
+    'Class:Action/Attribute:status/Value:enabled+' => '',
+    'Class:Action/Attribute:status/Value:disabled' => 'Inaktív',
+    'Class:Action/Attribute:status/Value:disabled+' => '',
+    'Class:Action/Attribute:trigger_list' => 'Kapcsolódó eseményindítók',
+    'Class:Action/Attribute:trigger_list+' => 'Eseményindítók amik ehhez a művelethez vannak rendelve',
+    'Class:Action/Attribute:finalclass' => 'Művelet al-osztály',
+    'Class:Action/Attribute:finalclass+' => 'A végleges osztály neve',
+    'Action:WarningNoTriggerLinked' => 'Figyelmeztetés, nincs a művelethez kapcsolódó eseményindító. Addig nem lesz aktív, amíg legalább 1 nem lesz.',
 ));
 
 //
@@ -507,8 +509,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:ActionNotification' => 'Értesítés',
-	'Class:ActionNotification+' => '',
+    'Class:ActionNotification' => 'Értesítés',
+    'Class:ActionNotification+' => 'Értesítés (absztrakt)',
 ));
 
 //
@@ -516,40 +518,40 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:ActionEmail' => 'E-mail értesítés',
-	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
-	'Class:ActionEmail/Attribute:test_recipient' => 'Teszt címzett',
-	'Class:ActionEmail/Attribute:test_recipient+' => '',
-	'Class:ActionEmail/Attribute:from' => 'Feladó~~',
-	'Class:ActionEmail/Attribute:from+' => '',
-	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
-	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
-	'Class:ActionEmail/Attribute:reply_to' => 'Válasz~~',
-	'Class:ActionEmail/Attribute:reply_to+' => '',
-	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
-	'Class:ActionEmail/Attribute:to' => 'Címzett',
-	'Class:ActionEmail/Attribute:to+' => '',
-	'Class:ActionEmail/Attribute:cc' => 'Másolatot kap',
-	'Class:ActionEmail/Attribute:cc+' => '',
-	'Class:ActionEmail/Attribute:bcc' => 'Titkos másolatot kap',
-	'Class:ActionEmail/Attribute:bcc+' => '',
-	'Class:ActionEmail/Attribute:subject' => 'Tárgy',
-	'Class:ActionEmail/Attribute:subject+' => '',
-	'Class:ActionEmail/Attribute:body' => 'Szöveg',
-	'Class:ActionEmail/Attribute:body+' => '',
-	'Class:ActionEmail/Attribute:importance' => 'Fontosság',
-	'Class:ActionEmail/Attribute:importance+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:low' => 'Nem fontos',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normál',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
-	'Class:ActionEmail/Attribute:importance/Value:high' => 'Fontos',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+    'Class:ActionEmail' => 'Email értesítés',
+    'Class:ActionEmail+' => '',
+    'Class:ActionEmail/Attribute:status+' => 'Ez az állapot határozza meg, hogy ki kapjon értesítést: csak a teszt címzettje, mindenki (Címzett, cc és Bcc) vagy senki.',
+    'Class:ActionEmail/Attribute:status/Value:test+' => 'Csak a teszteléshez használt címzett kap értesítést',
+    'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Minden Címzett, Cc és Bcc email értesítést fog kapni',
+    'Class:ActionEmail/Attribute:status/Value:disabled+' => 'Az email értesítés nem lesz elküldve',
+    'Class:ActionEmail/Attribute:test_recipient' => 'Teszt címzett',
+    'Class:ActionEmail/Attribute:test_recipient+' => 'Az értesítés tesztelésekor használt cél email cím',
+    'Class:ActionEmail/Attribute:from' => 'Feladó (email)',
+    'Class:ActionEmail/Attribute:from+' => 'A feladó email címe ami bekerül az email fejlécébe.',
+    'Class:ActionEmail/Attribute:from_label' => 'Feladó (címke)',
+    'Class:ActionEmail/Attribute:from_label+' => 'A feladó neve ami bekerül az email fejlécébe.',
+    'Class:ActionEmail/Attribute:reply_to' => 'Válaszcím (email)',
+    'Class:ActionEmail/Attribute:reply_to+' => 'A válasz az email cím ami bekerül az email fejlécébe.',
+    'Class:ActionEmail/Attribute:reply_to_label' => 'Válaszadó (címke)',
+    'Class:ActionEmail/Attribute:reply_to_label+' => 'A válaszadó a megjelenített neve ami az email fejlécébe kerül.',
+    'Class:ActionEmail/Attribute:to' => 'Címzett',
+    'Class:ActionEmail/Attribute:to+' => 'Az email címzettje',
+    'Class:ActionEmail/Attribute:cc' => 'Cc',
+    'Class:ActionEmail/Attribute:cc+' => 'Másolat',
+    'Class:ActionEmail/Attribute:bcc' => 'Bcc',
+    'Class:ActionEmail/Attribute:bcc+' => 'Titkos másolat',
+    'Class:ActionEmail/Attribute:subject' => 'Tárgy',
+    'Class:ActionEmail/Attribute:subject+' => 'Az email tárgya',
+    'Class:ActionEmail/Attribute:body' => 'Levéltörzs',
+    'Class:ActionEmail/Attribute:body+' => 'Az email tartalma',
+    'Class:ActionEmail/Attribute:importance' => 'Fontosság',
+    'Class:ActionEmail/Attribute:importance+' => 'Fontosság jelölő',
+    'Class:ActionEmail/Attribute:importance/Value:low' => 'Nem sürgős',
+    'Class:ActionEmail/Attribute:importance/Value:low+' => '',
+    'Class:ActionEmail/Attribute:importance/Value:normal' => 'Átlagos',
+    'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
+    'Class:ActionEmail/Attribute:importance/Value:high' => 'Sürgős',
+    'Class:ActionEmail/Attribute:importance/Value:high+' => '',
 ));
 
 //
@@ -557,16 +559,16 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:Trigger' => 'Kiváltó ok',
-	'Class:Trigger+' => '',
-	'Class:Trigger/Attribute:description' => 'Leírás',
-	'Class:Trigger/Attribute:description+' => '',
-	'Class:Trigger/Attribute:action_list' => 'Kiváltott akció',
-	'Class:Trigger/Attribute:action_list+' => '',
-	'Class:Trigger/Attribute:finalclass' => 'Típus',
-	'Class:Trigger/Attribute:finalclass+' => '',
-	'Class:Trigger/Attribute:context' => 'Context~~',
-	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+    'Class:Trigger' => 'Eseményindító',
+    'Class:Trigger+' => 'Egyéni eseménykezelés',
+    'Class:Trigger/Attribute:description' => 'Leírás',
+    'Class:Trigger/Attribute:description+' => 'Egysoros leírás',
+    'Class:Trigger/Attribute:action_list' => 'Elindított műveletek',
+    'Class:Trigger/Attribute:action_list+' => 'Az eseményindító aktiválásakor végrehajtott műveletek',
+    'Class:Trigger/Attribute:finalclass' => 'Eseményindító al-osztály',
+    'Class:Trigger/Attribute:finalclass+' => 'A végleges osztály neve',
+    'Class:Trigger/Attribute:context' => 'Kontextus',
+    'Class:Trigger/Attribute:context+' => 'Kontextus, amely lehetővé teszi az eseményindító elindítását',
 ));
 
 //
@@ -574,14 +576,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TriggerOnObject' => 'Kiváltó ok (osztály függő)',
-	'Class:TriggerOnObject+' => '',
-	'Class:TriggerOnObject/Attribute:target_class' => 'Cél osztály',
-	'Class:TriggerOnObject/Attribute:target_class+' => '',
-	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
-	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \\"%1$s\\"~~',
+    'Class:TriggerOnObject' => 'Eseményindító (osztályfüggő)',
+    'Class:TriggerOnObject+' => 'Az objektumok egy adott osztályára történő eseményindítás',
+    'Class:TriggerOnObject/Attribute:target_class' => 'Cél osztály',
+    'Class:TriggerOnObject/Attribute:target_class+' => '',
+    'Class:TriggerOnObject/Attribute:filter' => 'Szűrő',
+    'Class:TriggerOnObject/Attribute:filter+' => 'Korlátozza az objektumlistát (a célosztályból), amely aktiválja az eseményindítót.',
+    'TriggerOnObject:WrongFilterQuery' => 'Helytelen szűrőkérdés: %1$s',
+    'TriggerOnObject:WrongFilterClass' => 'A szűrő lekérdezésnek %1$s osztályú objektumokat kell visszaadnia.',
 ));
 
 //
@@ -589,8 +591,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TriggerOnPortalUpdate' => 'Trigger (when updated from the portal)~~',
-	'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal~~',
+    'Class:TriggerOnPortalUpdate' => 'Eseményindító (amikor a portálról frissül)',
+    'Class:TriggerOnPortalUpdate+' => 'Eseményindító egy végfelhasználó által a portálon történő frissítéskor',
 ));
 
 //
@@ -598,10 +600,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TriggerOnStateChange' => 'Kiváltó ok (állapot változás)',
-	'Class:TriggerOnStateChange+' => '',
-	'Class:TriggerOnStateChange/Attribute:state' => 'Állapot',
-	'Class:TriggerOnStateChange/Attribute:state+' => '',
+    'Class:TriggerOnStateChange' => 'Eseményindító (állapotváltozásnál)',
+    'Class:TriggerOnStateChange+' => 'Eseményindító egy objektum állapotának változásakor',
+    'Class:TriggerOnStateChange/Attribute:state' => 'Állapot',
+    'Class:TriggerOnStateChange/Attribute:state+' => '',
 ));
 
 //
@@ -609,8 +611,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TriggerOnStateEnter' => 'Kiváltó ok (állapotba belépés)',
-	'Class:TriggerOnStateEnter+' => '',
+    'Class:TriggerOnStateEnter' => 'Eseményindító (állapot felvételekor)',
+    'Class:TriggerOnStateEnter+' => 'Az objektum állapotváltozásba lépéskor elinduló eseményindító',
 ));
 
 //
@@ -618,8 +620,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TriggerOnStateLeave' => 'Kiváltó ok (állapot elhagyás)',
-	'Class:TriggerOnStateLeave+' => '',
+    'Class:TriggerOnStateLeave' => 'Eseményindító (állapot elhagyáskor)',
+    'Class:TriggerOnStateLeave+' => 'Az objektum állapotváltozás elhagyásakor elinduló eseményindító',
 ));
 
 //
@@ -627,8 +629,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TriggerOnObjectCreate' => 'Kiváltó ok (objektum létrehozás)',
-	'Class:TriggerOnObjectCreate+' => '',
+    'Class:TriggerOnObjectCreate' => 'Eseményindító (objektum létrehozáskor)',
+    'Class:TriggerOnObjectCreate+' => 'Az adott osztály [egy gyermekosztálya] objektumának létrehozásakor elinduló eseményindító.',
 ));
 
 //
@@ -636,8 +638,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
-	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
+    'Class:TriggerOnObjectDelete' => 'Eseményindító (objektum törléskor)',
+    'Class:TriggerOnObjectDelete+' => 'Az adott osztály [egy gyermekosztálya] objektumának törlésekor elinduló eseményindító.',
 ));
 
 //
@@ -645,10 +647,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
-	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
+    'Class:TriggerOnObjectUpdate' => 'Eseményindító (objektum frissítéskor)',
+    'Class:TriggerOnObjectUpdate+' => 'Az adott osztály [egy gyermekosztálya] objektumának frissítésekor elinduló eseményindító',
+    'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Célmezők',
+    'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //
@@ -656,10 +658,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
-	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
+    'Class:TriggerOnObjectMention' => 'Eseményindító (objektumra hivatkozáskor)',
+    'Class:TriggerOnObjectMention+' => 'Az adott osztály [egy gyermekosztálya] objektumára (@xxx) hivatkozáskor egy naplóattribútumban',
+    'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Hivatkozás szűrő',
+    'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'A hivatkozott objektumok listájának korlátozása, amelyek aktiválják az eseményindítót. Ha üres, akkor bármelyik említett objektum (bármely osztályból) aktiválja azt.',
 ));
 
 //
@@ -667,12 +669,12 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TriggerOnThresholdReached' => 'Trigger (on threshold)~~',
-	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached~~',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch~~',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Threshold~~',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
+    'Class:TriggerOnThresholdReached' => 'Eseményindító (küszöbértéknél)',
+    'Class:TriggerOnThresholdReached+' => 'Eseményindító egy időzítő küszöbértékének elérésekor',
+    'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Időzítő',
+    'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
+    'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Küszöbérték',
+    'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
 ));
 
 //
@@ -680,417 +682,417 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:lnkTriggerAction' => 'Akció / Kiváltó ok',
-	'Class:lnkTriggerAction+' => '',
-	'Class:lnkTriggerAction/Attribute:action_id' => 'Akció',
-	'Class:lnkTriggerAction/Attribute:action_id+' => '',
-	'Class:lnkTriggerAction/Attribute:action_name' => 'Akció',
-	'Class:lnkTriggerAction/Attribute:action_name+' => '',
-	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Kiváltó ok',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
-	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Kiváltó ok',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
-	'Class:lnkTriggerAction/Attribute:order' => 'Sorrend',
-	'Class:lnkTriggerAction/Attribute:order+' => '',
+    'Class:lnkTriggerAction' => 'Művelet/Eseményindító',
+    'Class:lnkTriggerAction+' => 'Kapcsolat egy eseményindító és egy művelet között',
+    'Class:lnkTriggerAction/Attribute:action_id' => 'Művelet',
+    'Class:lnkTriggerAction/Attribute:action_id+' => 'A végrehajtandó művelet',
+    'Class:lnkTriggerAction/Attribute:action_name' => 'Művelet név',
+    'Class:lnkTriggerAction/Attribute:action_name+' => '',
+    'Class:lnkTriggerAction/Attribute:trigger_id' => 'Eseményindító',
+    'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
+    'Class:lnkTriggerAction/Attribute:trigger_name' => 'Eseményindító név',
+    'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
+    'Class:lnkTriggerAction/Attribute:order' => 'Sorrend',
+    'Class:lnkTriggerAction/Attribute:order+' => 'A műveletek végrehajtási sorrendje',
 ));
 
 //
 // Synchro Data Source
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:SynchroDataSource/Attribute:name' => 'Neve',
-	'Class:SynchroDataSource/Attribute:name+' => '',
-	'Class:SynchroDataSource/Attribute:description' => 'Leírás',
-	'Class:SynchroDataSource/Attribute:status' => 'Státusz',
-	'Class:SynchroDataSource/Attribute:scope_class' => 'Cél osztály',
-	'Class:SynchroDataSource/Attribute:user_id' => 'Felhasználó',
-	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contact to notify~~',
-	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact to notify in case of error~~',
-	'Class:SynchroDataSource/Attribute:url_icon' => 'Ikonok URL-je',
-	'Class:SynchroDataSource/Attribute:url_icon+' => '',
-	'Class:SynchroDataSource/Attribute:url_application' => 'Alkalmazások URL-je',
-	'Class:SynchroDataSource/Attribute:url_application+' => '',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Egyeztetési szabály',
-	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Teljesen feltöltött intervallum',
-	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => '',
-	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Action on zero',
-	'Class:SynchroDataSource/Attribute:action_on_zero+' => '',
-	'Class:SynchroDataSource/Attribute:action_on_one' => 'Action on one',
-	'Class:SynchroDataSource/Attribute:action_on_one+' => '',
-	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Action on many',
-	'Class:SynchroDataSource/Attribute:action_on_multiple+' => '',
-	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Engedélyezett felhasználók',
-	'Class:SynchroDataSource/Attribute:user_delete_policy+' => '',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Senki',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Csak adminisztrátorok',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'Tíltott felhasználók',
-	'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Szabályok frissítése',
-	'Class:SynchroDataSource/Attribute:delete_policy_update+' => '',
-	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Késleltetés időtartama',
-	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => '',
-	'Class:SynchroDataSource/Attribute:database_table_name' => 'Data table~~',
-	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Name of the table to store the synchronization data. If left empty, a default name will be computed.~~',
-	'SynchroDataSource:Description' => 'Leírás',
-	'SynchroDataSource:Reconciliation' => 'Keresés &amp; rekponsziliálás',
-	'SynchroDataSource:Deletion' => 'Törlés szabályai',
-	'SynchroDataSource:Status' => 'Státusz',
-	'SynchroDataSource:Information' => 'Információ',
-	'SynchroDataSource:Definition' => 'Meghatározás',
-	'Core:SynchroAttributes' => 'Attribútumok',
-	'Core:SynchroStatus' => 'Státusz',
-	'Core:Synchro:ErrorsLabel' => 'Hibák',
-	'Core:Synchro:CreatedLabel' => 'Létrehozva',
-	'Core:Synchro:ModifiedLabel' => 'Módosítva',
-	'Core:Synchro:UnchangedLabel' => 'Változatlan',
-	'Core:Synchro:ReconciledErrorsLabel' => 'Hibák',
-	'Core:Synchro:ReconciledLabel' => 'Rekonsziliált',
-	'Core:Synchro:ReconciledNewLabel' => 'Létrehozva',
-	'Core:SynchroReconcile:Yes' => 'Igen',
-	'Core:SynchroReconcile:No' => 'Nem',
-	'Core:SynchroUpdate:Yes' => 'Igen',
-	'Core:SynchroUpdate:No' => 'Nem',
-	'Core:Synchro:LastestStatus' => 'Utolsó státusz',
-	'Core:Synchro:History' => 'Szinkronizáció történet',
-	'Core:Synchro:NeverRun' => 'Ez a szinkronizáció még soha nem futott. Nincs még napló bejegyzés.',
-	'Core:Synchro:SynchroEndedOn_Date' => 'Az utolsó szinkronizáció lefutásának időpontja: %1$s.',
-	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Az szinkronizáció elindut %1$s, de még fut.',
-	'Menu:DataSources' => 'Szinkronizált adatforrások', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Core:Synchro:label_repl_ignored' => 'Figyelmen kívül hagyott (%1$s)',
-	'Core:Synchro:label_repl_disappeared' => 'Elveszett (%1$s)',
-	'Core:Synchro:label_repl_existing' => 'Létező (%1$s)',
-	'Core:Synchro:label_repl_new' => 'Új (%1$s)',
-	'Core:Synchro:label_obj_deleted' => 'Törölt (%1$s)',
-	'Core:Synchro:label_obj_obsoleted' => 'Elavult (%1$s)',
-	'Core:Synchro:label_obj_disappeared_errors' => 'Hibák (%1$s)',
-	'Core:Synchro:label_obj_disappeared_no_action' => 'Beavatkozás nem szükséges (%1$s)',
-	'Core:Synchro:label_obj_unchanged' => 'Változatan (%1$s)',
-	'Core:Synchro:label_obj_updated' => 'Frisített (%1$s)',
-	'Core:Synchro:label_obj_updated_errors' => 'Hibák (%1$s)',
-	'Core:Synchro:label_obj_new_unchanged' => 'Változatlan (%1$s)',
-	'Core:Synchro:label_obj_new_updated' => 'Frissített (%1$s)',
-	'Core:Synchro:label_obj_created' => 'Létrehozott (%1$s)',
-	'Core:Synchro:label_obj_new_errors' => 'Hibák (%1$s)',
-	'Core:SynchroLogTitle' => '%1$s - %2$s',
-	'Core:Synchro:Nb_Replica' => 'Másolat elkészítve: %1$s',
-	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
-	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Egyeztetéshez legalább egy kulcsot meg kell adni, egyébként az egyeztetés az elsődleges kulcs alapján történik.',
-	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A törlés késleltetésének időtartamát meg kell adni, egyébként az objektum törölve lesz annak elavulttá minősítése után.',
-	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Lejárt objektumok frissítése nem tud megtörténni.',
-	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.~~',
-	'Core:SynchroReplica:PublicData' => 'Publikus adatok',
-	'Core:SynchroReplica:PrivateDetails' => 'Privát adatok',
-	'Core:SynchroReplica:BackToDataSource' => 'Vissza a következő szinkron adatforráshoz: %1$s',
-	'Core:SynchroReplica:ListOfReplicas' => 'Másolatok listája',
-	'Core:SynchroAttExtKey:ReconciliationById' => 'Azonosító (Elsődleges kulcs)',
-	'Core:SynchroAtt:attcode' => 'Attribútum',
-	'Core:SynchroAtt:attcode+' => '',
-	'Core:SynchroAtt:reconciliation' => 'Egyeztetés?',
-	'Core:SynchroAtt:reconciliation+' => '',
-	'Core:SynchroAtt:update' => 'Frissített?',
-	'Core:SynchroAtt:update+' => '',
-	'Core:SynchroAtt:update_policy' => 'Frissítési szabály',
-	'Core:SynchroAtt:update_policy+' => '',
-	'Core:SynchroAtt:reconciliation_attcode' => 'Egyeztetés kulcsa',
-	'Core:SynchroAtt:reconciliation_attcode+' => '',
-	'Core:SyncDataExchangeComment' => '(DataExchange)',
-	'Core:Synchro:ListOfDataSources' => 'Adatforrások listája',
-	'Core:Synchro:LastSynchro' => 'Utolsó szimkronizáció',
-	'Core:Synchro:ThisObjectIsSynchronized' => 'Az objektum szinkronizálva a külső adatforrással.',
-	'Core:Synchro:TheObjectWasCreatedBy_Source' => 'Objektum <b>létrehozva</b> a következő adatforrásban: %1$s',
-	'Core:Synchro:TheObjectCanBeDeletedBy_Source' => 'Objektum <b>törölhető</b> a következő külső adatforrásból: %1$s',
-	'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => '<b>Objektum nem törölhető</b> mert egy másik adatforrás (%1$s) tulajdona',
-	'TitleSynchroExecution' => 'Szinkronizáció végrehajtás',
-	'Class:SynchroDataSource:DataTable' => 'Adatbázis tábla: %1$s',
-	'Core:SyncDataSourceObsolete' => 'Az adatforrás elvalultnak van jelölve. Művelet visszavonva.',
-	'Core:SyncDataSourceAccessRestriction' => 'Csak az adminisztrátor vagy speciális jogokkal rendelkező felhasználó futtathatja a műveletet. Művelet visszavonva.',
-	'Core:SyncTooManyMissingReplicas' => 'Import során az összes másolat elveszett. Az import valóban lefutott? Művelet visszavonva.',
-	'Core:SyncSplitModeCLIOnly' => 'The synchronization can be executed in chunks only if run in mode CLI~~',
-	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s replicas, %2$s error(s), %3$s warning(s).~~',
-	'Core:SynchroReplica:TargetObject' => 'Synchronized Object: %1$s~~',
-	'Class:AsyncSendEmail' => 'E-mail (aszinkron)',
-	'Class:AsyncSendEmail/Attribute:to' => 'Címzett',
-	'Class:AsyncSendEmail/Attribute:subject' => 'Tárgy',
-	'Class:AsyncSendEmail/Attribute:body' => 'Szöveg',
-	'Class:AsyncSendEmail/Attribute:header' => 'Fejléc',
-	'Class:CMDBChangeOpSetAttributeOneWayPassword' => 'Titkosított jelszó',
-	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd' => 'Előző érték',
-	'Class:CMDBChangeOpSetAttributeEncrypted' => 'Titkosított mező',
-	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Előző érték',
-	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Esemény napló',
-	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Utolsó bejegyzés',
-	'Class:SynchroDataSource' => 'Szinkron adatforrás',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Megvalósított',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Elavult',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Éles üzemben',
-	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Tartalom szűkítés',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'A következő attribútum használata',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Elsődleges kulcs használata',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Létrehozás',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Hiba',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Hiba',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Firssítés',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Létrehozás',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Hiba',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Take the first one (véletlen?)',
-	'Class:SynchroDataSource/Attribute:delete_policy' => 'Törlési szabály',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Törlés',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Figyelmen kívül hagyás',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Frissítés',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Frissítés után törlés',
-	'Class:SynchroDataSource/Attribute:attribute_list' => 'Attribútum lista',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Csak rendszergazdák',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Mindenkinek engedélyezett az objektumok törlése',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Senki',
-	'Class:SynchroAttribute' => 'Szinkron attribútumok',
-	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Szinkron adatforrás',
-	'Class:SynchroAttribute/Attribute:attcode' => 'Kód',
-	'Class:SynchroAttribute/Attribute:update' => 'Frissítés',
-	'Class:SynchroAttribute/Attribute:reconcile' => 'Egyeztetés',
-	'Class:SynchroAttribute/Attribute:update_policy' => 'Frissítési irányelv',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'Locked',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'Unlocked',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Inicializálás ha üres',
-	'Class:SynchroAttribute/Attribute:finalclass' => 'Osztály',
-	'Class:SynchroAttExtKey' => 'Szinkron attribútum (ExtKey)',
-	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Egyeztetés attribútuma',
-	'Class:SynchroAttLinkSet' => 'Szinkron attribútum (Linkset)',
-	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Sor elválasztó',
-	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Attribútum elválasztó',
-	'Class:SynchroLog' => 'Szinkron napló',
-	'Class:SynchroLog/Attribute:sync_source_id' => 'Szinkron adatforrás',
-	'Class:SynchroLog/Attribute:start_date' => 'Kezdés dátuma',
-	'Class:SynchroLog/Attribute:end_date' => 'Befejezés dátuma',
-	'Class:SynchroLog/Attribute:status' => 'Státusz',
-	'Class:SynchroLog/Attribute:status/Value:completed' => 'Hibátlanul lefutott',
-	'Class:SynchroLog/Attribute:status/Value:error' => 'Hibás',
-	'Class:SynchroLog/Attribute:status/Value:running' => 'Még fut',
-	'Class:SynchroLog/Attribute:stats_nb_replica_seen' => 'Nb replikáció létrejött',
-	'Class:SynchroLog/Attribute:stats_nb_replica_total' => 'Nb replikáció összesen',
-	'Class:SynchroLog/Attribute:stats_nb_obj_deleted' => 'Nb objektumok törölve',
-	'Class:SynchroLog/Attribute:stats_nb_obj_deleted_errors' => 'Nb hibái törlés közben',
-	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted' => 'Nb objketumok elavultak',
-	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => 'Nb hibák elavulás közben',
-	'Class:SynchroLog/Attribute:stats_nb_obj_created' => 'Nb objketumok létrehozva',
-	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => 'Nb hibák létrehozás közben',
-	'Class:SynchroLog/Attribute:stats_nb_obj_updated' => 'Nb objektum frissítve',
-	'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => 'Nb hibák firssítés közben',
-	'Class:SynchroLog/Attribute:stats_nb_replica_reconciled_errors' => 'Nb hibák rekonsziliálás közben',
-	'Class:SynchroLog/Attribute:stats_nb_replica_disappeared_no_action' => 'Nb replikáció eltűnt',
-	'Class:SynchroLog/Attribute:stats_nb_obj_new_updated' => 'Nb objketumok frissítve',
-	'Class:SynchroLog/Attribute:stats_nb_obj_new_unchanged' => 'Nb objketumok változatlanok',
-	'Class:SynchroLog/Attribute:last_error' => 'Utolsó hiba',
-	'Class:SynchroLog/Attribute:traces' => 'Trace',
-	'Class:SynchroReplica' => 'Szinkron másolat',
-	'Class:SynchroReplica/Attribute:sync_source_id' => 'Szinkron adatforrás',
-	'Class:SynchroReplica/Attribute:dest_id' => 'Cél objektum azonosító',
-	'Class:SynchroReplica/Attribute:dest_class' => 'Cél típusa',
-	'Class:SynchroReplica/Attribute:status_last_seen' => 'Utolsó megtekintett',
-	'Class:SynchroReplica/Attribute:status' => 'Státusz',
-	'Class:SynchroReplica/Attribute:status/Value:modified' => 'Módosított',
-	'Class:SynchroReplica/Attribute:status/Value:new' => 'Új',
-	'Class:SynchroReplica/Attribute:status/Value:obsolete' => 'Elavult',
-	'Class:SynchroReplica/Attribute:status/Value:orphan' => 'Árva',
-	'Class:SynchroReplica/Attribute:status/Value:synchronized' => 'Szinkronizált',
-	'Class:SynchroReplica/Attribute:status_dest_creator' => 'Objektum létrehozott?',
-	'Class:SynchroReplica/Attribute:status_last_error' => 'Utolsó hiba',
-	'Class:SynchroReplica/Attribute:status_last_warning' => 'Warnings~~',
-	'Class:SynchroReplica/Attribute:info_creation_date' => 'Létrehozás dátuma',
-	'Class:SynchroReplica/Attribute:info_last_modified' => 'Utolsó módosítás dátuma',
-	'Class:appUserPreferences' => 'Felhasználói beállítások',
-	'Class:appUserPreferences/Attribute:userid' => 'Felhasználó',
-	'Class:appUserPreferences/Attribute:preferences' => 'Beállítások',
-	'Core:ExecProcess:Code1' => 'Wrong command or command finished with errors (e.g. wrong script name)~~',
-	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)~~',
+    'Class:SynchroDataSource/Attribute:name' => 'Név',
+    'Class:SynchroDataSource/Attribute:name+' => '',
+    'Class:SynchroDataSource/Attribute:description' => 'Leírás',
+    'Class:SynchroDataSource/Attribute:status' => 'Állapot',
+    'Class:SynchroDataSource/Attribute:scope_class' => 'Célosztály',
+    'Class:SynchroDataSource/Attribute:user_id' => 'Felhasználónév',
+    'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Értesítési kapcsolattartó',
+    'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Hiba esetén az értesítendő kapcsolattartó',
+    'Class:SynchroDataSource/Attribute:url_icon' => 'Ikon URL',
+    'Class:SynchroDataSource/Attribute:url_icon+' => 'Hiperhivatkozás egy (kis) képre, amely azt az alkalmazást ábrázolja, amellyel a '.ITOP_APPLICATION_SHORT.' szinkronizálva van.',
+    'Class:SynchroDataSource/Attribute:url_application' => 'Alkalmazás URL',
+    'Class:SynchroDataSource/Attribute:url_application+' => 'Hiperhivatkozás a '.ITOP_APPLICATION_SHORT.' objektumra abban a külső alkalmazásban, amellyel a '.ITOP_APPLICATION_SHORT.' szinkronizálva van (ha van ilyen). Lehetséges helyörzők: $this->attribute$ és $replica->primary_key$',
+    'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Egyeztetési szabály',
+    'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Teljes betöltés időköze',
+    'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Az összes adat teljes újratöltésének legalább az itt megadott gyakorisággal kell megtörténnie.',
+    'Class:SynchroDataSource/Attribute:action_on_zero' => 'Művelet nulla esetén',
+    'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Művelet, amikor a keresés nem ad vissza objektumot',
+    'Class:SynchroDataSource/Attribute:action_on_one' => 'Művelet egy esetén',
+    'Class:SynchroDataSource/Attribute:action_on_one+' => 'Művelet, amikor a keresés pontosan egy objektumot ad vissza',
+    'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Művelet több esetén',
+    'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Művelet, ha a keresés egynél több objektumot ad vissza',
+    'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Engedélyezett felhasználók',
+    'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Akik törölhetik a szinkronizált objektumokat',
+    'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Senki',
+    'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Csak rendszergazdák',
+    'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'Minden engedélyezett felhasználó',
+    'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Frissítési szabályok',
+    'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Szintaxis: mezo_nev:ertek; ...',
+    'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Megtartási idő',
+    'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Mennyi ideig tartanak meg egy elavult objektumot törlés előtt.',
+    'Class:SynchroDataSource/Attribute:database_table_name' => 'Adattábla',
+    'Class:SynchroDataSource/Attribute:database_table_name+' => 'A szinkronizálási adatok tárolására szolgáló tábla neve. Ha üresen hagyja, akkor egy alapértelmezett név lesz generálva.',
+    'SynchroDataSource:Description' => 'Leírás',
+    'SynchroDataSource:Reconciliation' => 'Keresés &amp; egyeztetés',
+    'SynchroDataSource:Deletion' => 'Törlési szabályok',
+    'SynchroDataSource:Status' => 'Állapot',
+    'SynchroDataSource:Information' => 'Információ',
+    'SynchroDataSource:Definition' => 'Definíció',
+    'Core:SynchroAttributes' => 'Attribútumok',
+    'Core:SynchroStatus' => 'Állapot',
+    'Core:Synchro:ErrorsLabel' => 'Hibák',
+    'Core:Synchro:CreatedLabel' => 'Létrehozva',
+    'Core:Synchro:ModifiedLabel' => 'Módosítva',
+    'Core:Synchro:UnchangedLabel' => 'Változatlan',
+    'Core:Synchro:ReconciledErrorsLabel' => 'Hibák',
+    'Core:Synchro:ReconciledLabel' => 'Egyeztetve',
+    'Core:Synchro:ReconciledNewLabel' => 'Létrehozva',
+    'Core:SynchroReconcile:Yes' => 'Igen',
+    'Core:SynchroReconcile:No' => 'Nem',
+    'Core:SynchroUpdate:Yes' => 'Igen',
+    'Core:SynchroUpdate:No' => 'Nem',
+    'Core:Synchro:LastestStatus' => 'Utóbbi állapot',
+    'Core:Synchro:History' => 'Szinkronizáció előzmények',
+    'Core:Synchro:NeverRun' => 'Még nem futott szinkronizálás. Nincs naplóbejegyzés.',
+    'Core:Synchro:SynchroEndedOn_Date' => 'A legutóbbi szinkronizáció befejezésének ideje %1$s.',
+    'Core:Synchro:SynchroRunningStartedOn_Date' => 'A szinkronizálás %1$s -kor elindult és még fut...',
+    'Menu:DataSources' => 'Szinkronizációs adatforrások', // Duplicated into itop-welcome-itil (will be removed from here...)
+    'Menu:DataSources+' => 'Minden szinkronizációs adatforrás', // Duplicated into itop-welcome-itil (will be removed from here...)
+    'Core:Synchro:label_repl_ignored' => 'Figyelmen kívül hagyott (%1$s)',
+    'Core:Synchro:label_repl_disappeared' => 'Eltűnt (%1$s)',
+    'Core:Synchro:label_repl_existing' => 'Létező (%1$s)',
+    'Core:Synchro:label_repl_new' => 'Új (%1$s)',
+    'Core:Synchro:label_obj_deleted' => 'Törölt (%1$s)',
+    'Core:Synchro:label_obj_obsoleted' => 'Elavult (%1$s)',
+    'Core:Synchro:label_obj_disappeared_errors' => 'Hibák (%1$s)',
+    'Core:Synchro:label_obj_disappeared_no_action' => 'Nincs művelet (%1$s)',
+    'Core:Synchro:label_obj_unchanged' => 'Változatlan (%1$s)',
+    'Core:Synchro:label_obj_updated' => 'Frissített (%1$s)',
+    'Core:Synchro:label_obj_updated_errors' => 'Hibák (%1$s)',
+    'Core:Synchro:label_obj_new_unchanged' => 'Változatlan (%1$s)',
+    'Core:Synchro:label_obj_new_updated' => 'Frissített (%1$s)',
+    'Core:Synchro:label_obj_created' => 'Létrehozott (%1$s)',
+    'Core:Synchro:label_obj_new_errors' => 'Hibák (%1$s)',
+    'Core:SynchroLogTitle' => '%1$s - %2$s',
+    'Core:Synchro:Nb_Replica' => 'Feldolgozott replika: %1$s',
+    'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
+    'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Legalább egy egyeztetési kulcsot meg kell adni, vagy az egyeztetési szabálynak az elsődleges kulcsot kell használnia.',
+    'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Meg kell adni a törlési megőrzési időszakot, mivel az objektumokat az elavultként való megjelölés után törölni kell.',
+    'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Az elavult objektumokat frissíteni kell, de nincs megadva frissítés.',
+    'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'A %1$s tábla már létezik az adatbázisban. Kérjük, használjon másik nevet a szinkronizálási adattáblához.',
+    'Core:SynchroReplica:PublicData' => 'Nyilvános adat',
+    'Core:SynchroReplica:PrivateDetails' => 'Személyi adatok',
+    'Core:SynchroReplica:BackToDataSource' => 'Visszatérés a szinkronizációs adatforráshoz: %1$s',
+    'Core:SynchroReplica:ListOfReplicas' => 'Replikák listája',
+    'Core:SynchroAttExtKey:ReconciliationById' => 'Azonosító (Elsődleges kulcs)',
+    'Core:SynchroAtt:attcode' => 'Attribútum',
+    'Core:SynchroAtt:attcode+' => 'Az objektum mezője',
+    'Core:SynchroAtt:reconciliation' => 'Egyeztetés ?',
+    'Core:SynchroAtt:reconciliation+' => 'Kereséshez használható',
+    'Core:SynchroAtt:update' => 'Frissítés ?',
+    'Core:SynchroAtt:update+' => 'Objektum frissítéshez használható',
+    'Core:SynchroAtt:update_policy' => 'Frissítési szabály',
+    'Core:SynchroAtt:update_policy+' => 'A frissített mező viselkedése',
+    'Core:SynchroAtt:reconciliation_attcode' => 'Egyeztető kulcs',
+    'Core:SynchroAtt:reconciliation_attcode+' => 'Attribútumkód a külső kulcs egyeztetéséhez',
+    'Core:SyncDataExchangeComment' => '(Adat szinkron)',
+    'Core:Synchro:ListOfDataSources' => 'Adatforrások listája:',
+    'Core:Synchro:LastSynchro' => 'Utolsó szinkronizálás:',
+    'Core:Synchro:ThisObjectIsSynchronized' => 'Ez az objektum egy külső adatforrással van szinkronizálva.',
+    'Core:Synchro:TheObjectWasCreatedBy_Source' => 'Az objektumot a %1$s külső adatforrás <b>létrehozta</b>',
+    'Core:Synchro:TheObjectCanBeDeletedBy_Source' => 'Az objektum <b>törölhető</b> a %1$s külső adatforrás által.',
+    'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => 'Az objektumot <b>nem lehet törölni</b>, mert az a %1$s külső adatforrás tulajdonában van',
+    'TitleSynchroExecution' => 'Szinkronizálás végrehajtása',
+    'Class:SynchroDataSource:DataTable' => 'Adatbázis tábla: %1$s',
+    'Core:SyncDataSourceObsolete' => 'Az adatforrás elavultnak van jelölve. A művelet törlésre került.',
+    'Core:SyncDataSourceAccessRestriction' => 'Ezt a műveletet csak a rendszergazdák vagy az adatforrásban megadott felhasználó végezheti el. A művelet törlésre került.',
+    'Core:SyncTooManyMissingReplicas' => 'Az összes rekordot egy ideje nem használta senki (az összes objektumot törölni lehet). Ellenőrizze, hogy a szinkronizációs táblába író folyamat még mindig fut-e. A művelet törlődött.',
+    'Core:SyncSplitModeCLIOnly' => 'A szinkronizálás csak akkor hajtható végre darabokban, ha CLI üzemmódban fut.',
+    'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s replika, %2$s hiba, %3$s figyelmeztetés.',
+    'Core:SynchroReplica:TargetObject' => 'Szinkronizált objektum: %1$s',
+    'Class:AsyncSendEmail' => 'Email (aszinkron)',
+    'Class:AsyncSendEmail/Attribute:to' => 'Címzett',
+    'Class:AsyncSendEmail/Attribute:subject' => 'Tárgy',
+    'Class:AsyncSendEmail/Attribute:body' => 'Levéltörzs',
+    'Class:AsyncSendEmail/Attribute:header' => 'Fejléc',
+    'Class:CMDBChangeOpSetAttributeOneWayPassword' => 'Titkosított jelszó',
+    'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd' => 'Előző érték',
+    'Class:CMDBChangeOpSetAttributeEncrypted' => 'Titkosított mező',
+    'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Előző érték',
+    'Class:CMDBChangeOpSetAttributeCaseLog' => 'Esetnapló',
+    'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Utolsó bejegyzés',
+    'Class:SynchroDataSource' => 'Szinkron adatforrás',
+    'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Megvalósítás',
+    'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Elavult',
+    'Class:SynchroDataSource/Attribute:status/Value:production' => 'Bevezetve',
+    'Class:SynchroDataSource/Attribute:scope_restriction' => 'Tartalomszűkítés',
+    'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Használja az attribútumokat',
+    'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Használja a primary_key mezőt',
+    'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Létrehozás',
+    'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Hiba',
+    'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Hiba',
+    'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Frissítés',
+    'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Létrehozás',
+    'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Hiba',
+    'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Vegye az elsőt (random?)',
+    'Class:SynchroDataSource/Attribute:delete_policy' => 'Szabály törlése',
+    'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Törlés',
+    'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Figyelmen kívül hagyás',
+    'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Frissítés',
+    'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Frissítés és törlés',
+    'Class:SynchroDataSource/Attribute:attribute_list' => 'Attribútum lista',
+    'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Csak rendszergazdák',
+    'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Mindenki törölhet ilyen objektumokat',
+    'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Senki',
+    'Class:SynchroAttribute' => 'Szinkron attribútum',
+    'Class:SynchroAttribute/Attribute:sync_source_id' => 'Szinkronizációs adatforrás',
+    'Class:SynchroAttribute/Attribute:attcode' => 'Attribútumkód',
+    'Class:SynchroAttribute/Attribute:update' => 'Frissítés',
+    'Class:SynchroAttribute/Attribute:reconcile' => 'Egyeztetés',
+    'Class:SynchroAttribute/Attribute:update_policy' => 'Frissítési szabály',
+    'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'Zárolva',
+    'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'Feloldva',
+    'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Inicializálás, ha üres',
+    'Class:SynchroAttribute/Attribute:finalclass' => 'Osztály',
+    'Class:SynchroAttExtKey' => 'Szinkron attribútum (ExtKey)',
+    'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Egyeztető attribútum',
+    'Class:SynchroAttLinkSet' => 'Szinkron attribútum (Linkset)',
+    'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Sorelválasztó',
+    'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Elválasztó attribútumok',
+    'Class:SynchroLog' => 'Szinkron napló',
+    'Class:SynchroLog/Attribute:sync_source_id' => 'Szinkronizációs adatforrás',
+    'Class:SynchroLog/Attribute:start_date' => 'Kezdés dátuma',
+    'Class:SynchroLog/Attribute:end_date' => 'Befejezés dátuma',
+    'Class:SynchroLog/Attribute:status' => 'Állapot',
+    'Class:SynchroLog/Attribute:status/Value:completed' => 'Befejezett',
+    'Class:SynchroLog/Attribute:status/Value:error' => 'Hiba',
+    'Class:SynchroLog/Attribute:status/Value:running' => 'Még fut',
+    'Class:SynchroLog/Attribute:stats_nb_replica_seen' => 'Nb talált replika',
+    'Class:SynchroLog/Attribute:stats_nb_replica_total' => 'Nb összes replika',
+    'Class:SynchroLog/Attribute:stats_nb_obj_deleted' => 'Nb törölt objektum',
+    'Class:SynchroLog/Attribute:stats_nb_obj_deleted_errors' => 'Nb hiba törléskor',
+    'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted' => 'Nb elavult objektum',
+    'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => 'Nb hiba elavuláskor',
+    'Class:SynchroLog/Attribute:stats_nb_obj_created' => 'Nb létrehozott objektum',
+    'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => 'Nb hiba létrehozáskor',
+    'Class:SynchroLog/Attribute:stats_nb_obj_updated' => 'Nb objektum létrehozva',
+    'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => 'Nb hiba frissítéskor',
+    'Class:SynchroLog/Attribute:stats_nb_replica_reconciled_errors' => 'Nb hiba egyeztetéskor',
+    'Class:SynchroLog/Attribute:stats_nb_replica_disappeared_no_action' => 'Nb replika eltűnt',
+    'Class:SynchroLog/Attribute:stats_nb_obj_new_updated' => 'Nb objektum frissítve',
+    'Class:SynchroLog/Attribute:stats_nb_obj_new_unchanged' => 'Nb objektum változatlan',
+    'Class:SynchroLog/Attribute:last_error' => 'Utolsó hiba',
+    'Class:SynchroLog/Attribute:traces' => 'Nyomok',
+    'Class:SynchroReplica' => 'Szinkron replika',
+    'Class:SynchroReplica/Attribute:sync_source_id' => 'Szinkronizációs adatforrás',
+    'Class:SynchroReplica/Attribute:dest_id' => 'Célobjektum (ID)',
+    'Class:SynchroReplica/Attribute:dest_class' => 'Cél típus',
+    'Class:SynchroReplica/Attribute:status_last_seen' => 'Utolsó előfordulás',
+    'Class:SynchroReplica/Attribute:status' => 'Állapot',
+    'Class:SynchroReplica/Attribute:status/Value:modified' => 'Módosítva',
+    'Class:SynchroReplica/Attribute:status/Value:new' => 'Új',
+    'Class:SynchroReplica/Attribute:status/Value:obsolete' => 'Elavult',
+    'Class:SynchroReplica/Attribute:status/Value:orphan' => 'Árva',
+    'Class:SynchroReplica/Attribute:status/Value:synchronized' => 'Szinkronizált',
+    'Class:SynchroReplica/Attribute:status_dest_creator' => 'Objektum létrehozva ?',
+    'Class:SynchroReplica/Attribute:status_last_error' => 'Utolsó hiba',
+    'Class:SynchroReplica/Attribute:status_last_warning' => 'Figyelmeztetések',
+    'Class:SynchroReplica/Attribute:info_creation_date' => 'Létrehozás dátuma',
+    'Class:SynchroReplica/Attribute:info_last_modified' => 'Utolsó módosítás dátuma',
+    'Class:appUserPreferences' => 'Felhasználói beállítások',
+    'Class:appUserPreferences/Attribute:userid' => 'Felhasználónév',
+    'Class:appUserPreferences/Attribute:preferences' => 'Beállítások',
+    'Core:ExecProcess:Code1' => 'Helytelen parancs vagy hibásan befejezett parancs (pl. helytelen szkriptnév)',
+    'Core:ExecProcess:Code255' => 'PHP hiba (parsing, vagy runtime)',
 
-	// Attribute Duration
-	'Core:Duration_Seconds' => '%1$sds',
-	'Core:Duration_Minutes_Seconds' => '%1$sdmin %2$sds',
-	'Core:Duration_Hours_Minutes_Seconds' => '%1$sdh %2$sdmin %3$sds',
-	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$sdh %3$sdmin %4$ds',
+    // Attribute Duration
+    'Core:Duration_Seconds' => '%1$ds',
+    'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
+    'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
+    'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
-	// Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \\"%1$s\\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \\"%1$s\\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \\"%1$s\\" at %2$d%%~~',
+    // Explain working time computing
+    'Core:ExplainWTC:ElapsedTime' => 'Eltelt idő (tárolva mint %1$s)',
+    'Core:ExplainWTC:StopWatch-TimeSpent' => '%1$s ráfordított ideje',
+    'Core:ExplainWTC:StopWatch-Deadline' => '%1$s határideje %2$d%% -kor',
 
-	// Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \\"%1$s\\"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \\"query\\". There is no Query Phrasebook corresponding to the id: \\"%1$s\\".~~',
-	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
-	'Core:BulkExportOf_Class' => '%1$s Export~~',
-	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
-	'Core:BulkExport:ExportResult' => 'Result of the export:~~',
-	'Core:BulkExport:RetrievingData' => 'Retrieving data...~~',
-	'Core:BulkExport:HTMLFormat' => 'Web Page (*.html)~~',
-	'Core:BulkExport:CSVFormat' => 'Comma Separated Values (*.csv)~~',
-	'Core:BulkExport:XLSXFormat' => 'Excel 2007 or newer (*.xlsx)~~',
-	'Core:BulkExport:PDFFormat' => 'PDF Document (*.pdf)~~',
-	'Core:BulkExport:DragAndDropHelp' => 'Drag and drop the columns\' headers to arrange the columns. Preview of %1$s lines. Total number of lines to export: %2$s.~~',
-	'Core:BulkExport:EmptyPreview' => 'Select the columns to be exported from the list above~~',
-	'Core:BulkExport:ColumnsOrder' => 'Columns order~~',
-	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Available columns from %1$s~~',
-	'Core:BulkExport:NoFieldSelected' => 'Select at least one column to be exported~~',
-	'Core:BulkExport:CheckAll' => 'Check All~~',
-	'Core:BulkExport:UncheckAll' => 'Uncheck All~~',
-	'Core:BulkExport:ExportCancelledByUser' => 'Export cancelled by the user~~',
-	'Core:BulkExport:CSVOptions' => 'CSV Options~~',
-	'Core:BulkExport:CSVLocalization' => 'Localization~~',
-	'Core:BulkExport:PDFOptions' => 'PDF Options~~',
-	'Core:BulkExport:PDFPageFormat' => 'Page Format~~',
-	'Core:BulkExport:PDFPageSize' => 'Page Size:~~',
-	'Core:BulkExport:PageSize-A4' => 'A4~~',
-	'Core:BulkExport:PageSize-A3' => 'A3~~',
-	'Core:BulkExport:PageSize-Letter' => 'Letter~~',
-	'Core:BulkExport:PDFPageOrientation' => 'Page Orientation:~~',
-	'Core:BulkExport:PageOrientation-L' => 'Landscape~~',
-	'Core:BulkExport:PageOrientation-P' => 'Portrait~~',
-	'Core:BulkExport:XMLFormat' => 'XML file (*.xml)~~',
-	'Core:BulkExport:XMLOptions' => 'XML Options~~',
-	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
-	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
-	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
-	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
-	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
-	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
-	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
-	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',
-	'Core:BulkExportMessageEmptyOQL' => 'Please enter a valid OQL query.~~',
-	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.~~',
-	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...~~',
-	'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
-	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
-	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
-	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
-	'Core:BulkExport:DateTimeFormat' => 'Date and Time format~~',
-	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
-	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
-	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
-	'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D~~', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM~~', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M~~', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY~~', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY~~', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh~~', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h~~', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh~~', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h~~', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm~~', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM~~', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm~~', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss~~', // seconds, 2 digits 00..59
-	'Core:Validator:Default' => 'Wrong format~~',
-	'Core:Validator:Mandatory' => 'Please, fill this field~~',
-	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
-	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+    // Bulk export
+    'Core:BulkExport:MissingParameter_Param' => '%1$s paramétere hiányzik',
+    'Core:BulkExport:InvalidParameter_Query' => 'A query paraméter értéke érvénytelen. Nincs lekérdezés gyűjtemény ehhez az azonosítóhoz: %1$s.',
+    'Core:BulkExport:ExportFormatPrompt' => 'Export formátum:',
+    'Core:BulkExportOf_Class' => '%1$s exportálás',
+    'Core:BulkExport:ClickHereToDownload_FileName' => 'Kattintson a %1$s letöltéséhez',
+    'Core:BulkExport:ExportResult' => 'Exportálás eredménye:',
+    'Core:BulkExport:RetrievingData' => 'Adatlekérés...',
+    'Core:BulkExport:HTMLFormat' => 'Weblap (*.html)',
+    'Core:BulkExport:CSVFormat' => 'Vesszővel elválasztott értékek (*.csv)',
+    'Core:BulkExport:XLSXFormat' => 'Excel 2007 vagy újabb (*.xlsx)',
+    'Core:BulkExport:PDFFormat' => 'PDF dokumentum (*.pdf)',
+    'Core:BulkExport:DragAndDropHelp' => 'Húzza az oszlopok fejléceit az oszlopok elrendezéséhez. A %1$s sorok előnézete. Az exportálandó sorok száma: %2$s.',
+    'Core:BulkExport:EmptyPreview' => 'Válassza ki az exportálandó oszlopokat a fenti listából.',
+    'Core:BulkExport:ColumnsOrder' => 'Oszlopsorrend',
+    'Core:BulkExport:AvailableColumnsFrom_Class' => 'Elérhető oszlopok %1$s -tól',
+    'Core:BulkExport:NoFieldSelected' => 'Válasszon ki legalább egy exportálandó oszlopot',
+    'Core:BulkExport:CheckAll' => 'Összes bejelölése',
+    'Core:BulkExport:UncheckAll' => 'Bejelölések megszüntetése',
+    'Core:BulkExport:ExportCancelledByUser' => 'Az exportálást a felhasználó megszakította',
+    'Core:BulkExport:CSVOptions' => 'CSV beállítások',
+    'Core:BulkExport:CSVLocalization' => 'Lokalizáció',
+    'Core:BulkExport:PDFOptions' => 'PDF beállítások',
+    'Core:BulkExport:PDFPageFormat' => 'Oldalformátum',
+    'Core:BulkExport:PDFPageSize' => 'Oldalméret:',
+    'Core:BulkExport:PageSize-A4' => 'A4',
+    'Core:BulkExport:PageSize-A3' => 'A3',
+    'Core:BulkExport:PageSize-Letter' => 'Letter',
+    'Core:BulkExport:PDFPageOrientation' => 'Tájolás:',
+    'Core:BulkExport:PageOrientation-L' => 'Vízszintes',
+    'Core:BulkExport:PageOrientation-P' => 'Függőleges',
+    'Core:BulkExport:XMLFormat' => 'XML fájl (*.xml)',
+    'Core:BulkExport:XMLOptions' => 'XML beállítások',
+    'Core:BulkExport:SpreadsheetFormat' => 'Táblázat HTML formátumban (*.html)',
+    'Core:BulkExport:SpreadsheetOptions' => 'Táblázat beállítások',
+    'Core:BulkExport:OptionNoLocalize' => 'Címke helyett kód exportálása',
+    'Core:BulkExport:OptionLinkSets' => 'Kapcsolódó objektumok bevonása',
+    'Core:BulkExport:OptionFormattedText' => 'Szövegformázás megtartása',
+    'Core:BulkExport:ScopeDefinition' => 'Az exportálandó objektumok meghatározása',
+    'Core:BulkExportLabelOQLExpression' => 'OQL lekérdezés:',
+    'Core:BulkExportLabelPhrasebookEntry' => 'Lekérdezés gyűjtemény bejegyzés:',
+    'Core:BulkExportMessageEmptyOQL' => 'Érvényes OQL lekérdezést adjon meg.',
+    'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Érvényes lekérdezés gyűjtemény bejegyzést adjon meg.',
+    'Core:BulkExportQueryPlaceholder' => 'Ide írja az OQL lekérdezést...',
+    'Core:BulkExportCanRunNonInteractive' => 'Kattintson ide az exportálás nem interaktív módban történő futtatásához.',
+    'Core:BulkExportLegacyExport' => 'Kattintson ide a régebbi típusú exportálás eléréséhez.',
+    'Core:BulkExport:XLSXOptions' => 'Excel beállítások',
+    'Core:BulkExport:TextFormat' => 'HTML jelölést tartalmazó szöveges mezők',
+    'Core:BulkExport:DateTimeFormat' => 'Dátum és időformátum',
+    'Core:BulkExport:DateTimeFormatDefault_Example' => 'Alapértelmezett formátum (%1$s), Pl. %2$s',
+    'Core:BulkExport:DateTimeFormatCustom_Format' => 'Egyéni formátum: %1$s',
+    'Core:BulkExport:PDF:PageNumber' => '%1$s oldal',
+    'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
+    'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
+    'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
+    'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
+    'Core:DateTime:Placeholder_Y' => 'YYYY', // Year on 4 digits
+    'Core:DateTime:Placeholder_y' => 'YY', // Year on 2 digits
+    'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
+    'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
+    'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
+    'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
+    'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
+    'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
+    'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
+    'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
+    'Core:Validator:Default' => 'Helytelen formátum',
+    'Core:Validator:Mandatory' => 'Töltse ki ezt a mezőt',
+    'Core:Validator:MustBeInteger' => 'Egész számnak kell lennie',
+    'Core:Validator:MustSelectOne' => 'Egyet válasszon',
 ));
 
 //
 // Class: TagSetFieldData
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
-	'Class:TagSetFieldData+' => '',
+    'Class:TagSetFieldData' => '%2$s a %1$s osztályhoz',
+    'Class:TagSetFieldData+' => '',
 
-	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
-	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
-	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
-	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
-	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+    'Class:TagSetFieldData/Attribute:code' => 'Kód',
+    'Class:TagSetFieldData/Attribute:code+' => 'Belső kód. Legalább 3 alfanumerikus karaktert kell tartalmaznia.',
+    'Class:TagSetFieldData/Attribute:label' => 'Címke',
+    'Class:TagSetFieldData/Attribute:label+' => 'Megjelenített címke',
+    'Class:TagSetFieldData/Attribute:description' => 'Leírás',
+    'Class:TagSetFieldData/Attribute:description+' => '',
+    'Class:TagSetFieldData/Attribute:finalclass' => 'Címke típus',
+    'Class:TagSetFieldData/Attribute:obj_class' => 'Objektum osztály',
+    'Class:TagSetFieldData/Attribute:obj_attcode' => 'Mezőkód',
 
-	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
-	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
-	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
-	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
-	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
-	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed~~',
-	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
-	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
-	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
+    'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'A felhasznált címkék nem törölhetők',
+    'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'A címkekódoknak egyedinek kell lennie',
+    'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'A címkekódnak 3 és %1$d közötti, betűvel kezdődő alfanumerikus karaktereket kell tartalmaznia.',
+    'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'A választott címkekód egy foglalt szóval egyezik',
+    'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'A címkék felirata nem tartalmazhat %1$s -et és nem lehet üres.',
+    'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'A címkekód nem változtatható, ha használatban van',
+    'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Az "Object Class" címkék nem módosíthatók',
+    'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Az "Attribútumkód" címkék nem módosíthatók',
+    'Core:TagSetFieldData:WhereIsThisTagTab' => 'Címkehasználat (%1$d)',
+    'Core:TagSetFieldData:NoEntryFound' => 'Nincs bejegyzés ehhez a címkéhez',
 ));
 
 //
 // Class: DBProperty
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:DBProperty' => 'DB property~~',
-	'Class:DBProperty+' => '',
-	'Class:DBProperty/Attribute:name' => 'Name~~',
-	'Class:DBProperty/Attribute:name+' => '',
-	'Class:DBProperty/Attribute:description' => 'Description~~',
-	'Class:DBProperty/Attribute:description+' => '',
-	'Class:DBProperty/Attribute:value' => 'Value~~',
-	'Class:DBProperty/Attribute:value+' => '',
-	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
-	'Class:DBProperty/Attribute:change_date+' => '',
-	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
-	'Class:DBProperty/Attribute:change_comment+' => '',
+    'Class:DBProperty' => 'DB tulajdonságok',
+    'Class:DBProperty+' => '',
+    'Class:DBProperty/Attribute:name' => 'Név',
+    'Class:DBProperty/Attribute:name+' => '',
+    'Class:DBProperty/Attribute:description' => 'Leírás',
+    'Class:DBProperty/Attribute:description+' => '',
+    'Class:DBProperty/Attribute:value' => 'Érték',
+    'Class:DBProperty/Attribute:value+' => '',
+    'Class:DBProperty/Attribute:change_date' => 'Változás dátuma',
+    'Class:DBProperty/Attribute:change_date+' => '',
+    'Class:DBProperty/Attribute:change_comment' => 'Megjegyzés',
+    'Class:DBProperty/Attribute:change_comment+' => '',
 ));
 
 //
 // Class: BackgroundTask
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:BackgroundTask' => 'Background task~~',
-	'Class:BackgroundTask+' => '',
-	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
-	'Class:BackgroundTask/Attribute:class_name+' => '',
-	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '',
-	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
-	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '',
-	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
-	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
-	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
-	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
-	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
-	'Class:BackgroundTask/Attribute:running' => 'Running~~',
-	'Class:BackgroundTask/Attribute:running+' => '',
-	'Class:BackgroundTask/Attribute:status' => 'Status~~',
-	'Class:BackgroundTask/Attribute:status+' => '',
+    'Class:BackgroundTask' => 'Háttérfeladat',
+    'Class:BackgroundTask+' => '',
+    'Class:BackgroundTask/Attribute:class_name' => 'Osztálynév',
+    'Class:BackgroundTask/Attribute:class_name+' => '',
+    'Class:BackgroundTask/Attribute:first_run_date' => 'Első futás dátuma',
+    'Class:BackgroundTask/Attribute:first_run_date+' => '',
+    'Class:BackgroundTask/Attribute:latest_run_date' => 'Utolsó futás dátuma',
+    'Class:BackgroundTask/Attribute:latest_run_date+' => '',
+    'Class:BackgroundTask/Attribute:next_run_date' => 'Következő futás ideje',
+    'Class:BackgroundTask/Attribute:next_run_date+' => '',
+    'Class:BackgroundTask/Attribute:total_exec_count' => 'Futások száma',
+    'Class:BackgroundTask/Attribute:total_exec_count+' => '',
+    'Class:BackgroundTask/Attribute:latest_run_duration' => 'Utolsó futás időtartama',
+    'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
+    'Class:BackgroundTask/Attribute:min_run_duration' => 'Legrövidebb futási idő',
+    'Class:BackgroundTask/Attribute:min_run_duration+' => '',
+    'Class:BackgroundTask/Attribute:max_run_duration' => 'Leghosszabb futási idő',
+    'Class:BackgroundTask/Attribute:max_run_duration+' => '',
+    'Class:BackgroundTask/Attribute:average_run_duration' => 'Átlagos futási idő',
+    'Class:BackgroundTask/Attribute:average_run_duration+' => '',
+    'Class:BackgroundTask/Attribute:running' => 'Fut',
+    'Class:BackgroundTask/Attribute:running+' => '',
+    'Class:BackgroundTask/Attribute:status' => 'Állapot',
+    'Class:BackgroundTask/Attribute:status+' => '',
 ));
 
 //
 // Class: AsyncTask
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:AsyncTask' => 'Async. task~~',
-	'Class:AsyncTask+' => '',
-	'Class:AsyncTask/Attribute:created' => 'Created~~',
-	'Class:AsyncTask/Attribute:created+' => '',
-	'Class:AsyncTask/Attribute:started' => 'Started~~',
-	'Class:AsyncTask/Attribute:started+' => '',
-	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
-	'Class:AsyncTask/Attribute:planned+' => '',
-	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
-	'Class:AsyncTask/Attribute:event_id+' => '',
-	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
-	'Class:AsyncTask/Attribute:finalclass+' => '',
-	'Class:AsyncTask/Attribute:status' => 'Status~~',
-	'Class:AsyncTask/Attribute:status+' => '',
-	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '',
-	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
-	'Class:AsyncTask/Attribute:last_error_code+' => '',
-	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
-	'Class:AsyncTask/Attribute:last_error+' => '',
-	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
-	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+    'Class:AsyncTask' => 'Aszinkron feladat',
+    'Class:AsyncTask+' => '',
+    'Class:AsyncTask/Attribute:created' => 'Létrehozva',
+    'Class:AsyncTask/Attribute:created+' => '',
+    'Class:AsyncTask/Attribute:started' => 'Elindítva',
+    'Class:AsyncTask/Attribute:started+' => '',
+    'Class:AsyncTask/Attribute:planned' => 'Betervezve',
+    'Class:AsyncTask/Attribute:planned+' => '',
+    'Class:AsyncTask/Attribute:event_id' => 'Esemény',
+    'Class:AsyncTask/Attribute:event_id+' => '',
+    'Class:AsyncTask/Attribute:finalclass' => 'Végleges osztály',
+    'Class:AsyncTask/Attribute:finalclass+' => '',
+    'Class:AsyncTask/Attribute:status' => 'Állapot',
+    'Class:AsyncTask/Attribute:status+' => '',
+    'Class:AsyncTask/Attribute:remaining_retries' => 'Maradék próbálkozás',
+    'Class:AsyncTask/Attribute:remaining_retries+' => '',
+    'Class:AsyncTask/Attribute:last_error_code' => 'Utolsó hibakód',
+    'Class:AsyncTask/Attribute:last_error_code+' => '',
+    'Class:AsyncTask/Attribute:last_error' => 'Utolsó hiba',
+    'Class:AsyncTask/Attribute:last_error+' => '',
+    'Class:AsyncTask/Attribute:last_attempt' => 'Utolsó próbálkozás',
+    'Class:AsyncTask/Attribute:last_attempt+' => '',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Érvénytelen formátum az async_task_retries[%1$s] konfigurációhoz. A következő kulcsokkal rendelkező tömböt vár: %2$s',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Az async_task_retries[%1$s] konfigurációjának érvénytelen formátuma: %2$s váratlan kulcs. Csak a következő kulcsokat várja: %3$s',
 ));
 
 //
@@ -1098,8 +1100,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '',
+    'Class:AbstractResource' => 'Absztrakt erőforrás',
+    'Class:AbstractResource+' => '',
 ));
 
 //
@@ -1107,8 +1109,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '',
+    'Class:ResourceAdminMenu' => 'Erőforrás admin menü',
+    'Class:ResourceAdminMenu+' => '',
 ));
 
 //
@@ -1116,8 +1118,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
-	'Class:ResourceRunQueriesMenu+' => '',
+    'Class:ResourceRunQueriesMenu' => 'Erőforrás lekérdezések futtatása menü',
+    'Class:ResourceRunQueriesMenu+' => '',
 ));
 
 //
@@ -1125,8 +1127,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
-	'Class:ResourceSystemMenu+' => '',
+    'Class:ResourceSystemMenu' => 'Erőforrás rendszer menü',
+    'Class:ResourceSystemMenu+' => '',
 ));
 
 

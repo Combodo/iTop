@@ -51,7 +51,7 @@ class Inline
      * Converts a YAML string to a PHP value.
      *
      * @param string $value      A YAML string
-     * @param int    $flags      A bit field of PARSE_* constants to customize the YAML parser behavior
+     * @param int    $flags      A bit field of Yaml::PARSE_* constants to customize the YAML parser behavior
      * @param array  $references Mapping of variable names to values
      *
      * @return mixed
@@ -68,7 +68,7 @@ class Inline
             return '';
         }
 
-        if (2 /* MB_OVERLOAD_STRING */ & (int) ini_get('mbstring.func_overload')) {
+        if (2 /* MB_OVERLOAD_STRING */ & (int) \ini_get('mbstring.func_overload')) {
             $mbEncoding = mb_internal_encoding();
             mb_internal_encoding('ASCII');
         }
@@ -86,7 +86,7 @@ class Inline
                     ++$i;
                     break;
                 default:
-                    $result = self::parseScalar($value, $flags, null, $i, null === $tag, $references);
+                    $result = self::parseScalar($value, $flags, null, $i, true, $references);
             }
 
             // some comments are allowed at the end
@@ -657,7 +657,6 @@ class Inline
                 }
 
                 return octdec($value);
-            // Optimize for returning strings.
             case \in_array($scalar[0], ['+', '-', '.'], true) || is_numeric($scalar[0]):
                 if (Parser::preg_match('{^[+-]?[0-9][0-9_]*$}', $scalar)) {
                     $scalar = str_replace('_', '', $scalar);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -174,6 +174,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 		$oKpi->ComputeAndReport(get_class($this).' output');
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+		ExecutionKPI::ReportStats();
 	}
 	
 	/**

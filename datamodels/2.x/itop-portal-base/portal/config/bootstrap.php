@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -56,7 +56,7 @@ if (file_exists(dirname(__DIR__).'/.env.local.php')) {
 
 	// load all the .env files
 	if (method_exists($oDotenv, 'loadEnv')) {
-		$oDotenv->loadEnv($sPath);
+		$oDotenv->loadEnv($sPath, null, 'prod');
 	} else {
 		// fallback code in case your Dotenv component is not 4.2 or higher (when loadEnv() was added)
 
@@ -83,12 +83,6 @@ if (file_exists(dirname(__DIR__).'/.env.local.php')) {
 			$oDotenv->load($sPathDist);
 		}
 	}
-}
-
-// Set debug mode only when necessary
-if (utils::ReadParam('debug', 'false') === 'true')
-{
-	$_SERVER['APP_DEBUG'] = true;
 }
 
 $_SERVER += $_ENV;
@@ -145,6 +139,7 @@ if (!defined('PORTAL_ID'))
 // Env. vars to be used in templates and others
 $_ENV['COMBODO_CURRENT_ENVIRONMENT'] = utils::GetCurrentEnvironment();
 $_ENV['COMBODO_ABSOLUTE_URL'] = utils::GetAbsoluteUrlAppRoot();
+$_ENV['COMBODO_CONF_APP_ICON_URL'] = MetaModel::GetConfig()->Get('app_icon_url');
 $_ENV['COMBODO_MODULES_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot();
 $_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot().'itop-portal-base/portal/public/';
 $_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = MODULESROOT.'/itop-portal-base/portal/public/';

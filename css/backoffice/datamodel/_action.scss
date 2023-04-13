@@ -1,0 +1,89 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+// Class itself
+$ibo-dm-class--Action--main-color: $ibo-color-blue-grey-600 !default;
+$ibo-dm-class--Action--complementary-color: $ibo-color-white-100 !default;
+
+:root {
+  --ibo-dm-class--Action--main-color: #{$ibo-dm-class--Action--main-color};
+  --ibo-dm-class--Action--complementary-color: #{$ibo-dm-class--Action--complementary-color};
+}
+
+.ibo-dm-class--Action {
+  --ibo-main-color: #{$ibo-dm-class--Action--main-color};
+  --ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-class--Action--main-color, $ibo-color-base-lightness-100), $ibo-color-base-opacity-for-lightness-100)};
+  --ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-class--Action--main-color, $ibo-color-base-lightness-900), $ibo-color-base-opacity-for-lightness-900)};
+  --ibo-complementary-color: #{$ibo-dm-class--Action--complementary-color};
+}
+
+.ibo-dm-class-alt--Action {
+  --ibo-main-color: #{$ibo-dm-class--Action--complementary-color};
+  --ibo-complementary-color: #{$ibo-dm-class--Action--main-color};
+}
+
+// State attribute, "enabled" value
+$ibo-dm-enum--Action-status-enabled--main-color: $ibo-lifecycle-active-state-primary-color !default;
+$ibo-dm-enum--Action-status-enabled--complementary-color: $ibo-lifecycle-active-state-secondary-color !default;
+
+:root {
+  --ibo-dm-enum--Action-status-enabled--main-color: #{$ibo-dm-enum--Action-status-enabled--main-color};
+  --ibo-dm-enum--Action-status-enabled--complementary-color: #{$ibo-dm-enum--Action-status-enabled--complementary-color};
+}
+
+.ibo-dm-enum--Action-status-enabled {
+  --ibo-main-color: #{$ibo-dm-enum--Action-status-enabled--main-color};
+  --ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-enum--Action-status-enabled--main-color, $ibo-color-base-lightness-100), $ibo-color-base-opacity-for-lightness-100)};
+  --ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-enum--Action-status-enabled--main-color, $ibo-color-base-lightness-900), $ibo-color-base-opacity-for-lightness-900)};
+  --ibo-complementary-color: #{$ibo-dm-enum--Action-status-enabled--complementary-color};
+}
+
+.ibo-dm-enum-alt--Action-status-enabled {
+  --ibo-main-color: #{$ibo-dm-enum--Action-status-enabled--complementary-color};
+  --ibo-complementary-color: #{$ibo-dm-enum--Action-status-enabled--main-color};
+}
+
+// State attribute, "disabled" value
+$ibo-dm-enum--Action-status-disabled--main-color: $ibo-lifecycle-frozen-state-primary-color !default;
+$ibo-dm-enum--Action-status-disabled--complementary-color: $ibo-lifecycle-frozen-state-secondary-color !default;
+
+:root {
+  --ibo-dm-enum--Action-status-disabled--main-color: #{$ibo-dm-enum--Action-status-disabled--main-color};
+  --ibo-dm-enum--Action-status-disabled--complementary-color: #{$ibo-dm-enum--Action-status-disabled--complementary-color};
+}
+
+.ibo-dm-enum--Action-status-disabled {
+  --ibo-main-color: #{$ibo-dm-enum--Action-status-disabled--main-color};
+  --ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-enum--Action-status-disabled--main-color, $ibo-color-base-lightness-100), $ibo-color-base-opacity-for-lightness-100)};
+  --ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-enum--Action-status-disabled--main-color, $ibo-color-base-lightness-900), $ibo-color-base-opacity-for-lightness-900)};
+  --ibo-complementary-color: #{$ibo-dm-enum--Action-status-disabled--complementary-color};
+}
+
+.ibo-dm-enum-alt--Action-status-disabled {
+  --ibo-main-color: #{$ibo-dm-enum--Action-status-disabled--complementary-color};
+  --ibo-complementary-color: #{$ibo-dm-enum--Action-status-disabled--main-color};
+}
+
+
+// State attribute, "test" value
+$ibo-dm-enum--Action-status-test--main-color: $ibo-lifecycle-inactive-state-primary-color !default;
+$ibo-dm-enum--Action-status-test--complementary-color: $ibo-lifecycle-inactive-state-secondary-color !default;
+
+:root {
+  --ibo-dm-enum--Action-status-test--main-color: #{$ibo-dm-enum--Action-status-test--main-color};
+  --ibo-dm-enum--Action-status-test--complementary-color: #{$ibo-dm-enum--Action-status-test--complementary-color};
+}
+
+.ibo-dm-enum--Action-status-test {
+  --ibo-main-color: #{$ibo-dm-enum--Action-status-test--main-color};
+  --ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-enum--Action-status-test--main-color, $ibo-color-base-lightness-100), $ibo-color-base-opacity-for-lightness-100)};
+  --ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($ibo-dm-enum--Action-status-test--main-color, $ibo-color-base-lightness-900), $ibo-color-base-opacity-for-lightness-900)};
+  --ibo-complementary-color: #{$ibo-dm-enum--Action-status-test--complementary-color};
+}
+
+.ibo-dm-enum-alt--Action-status-test {
+  --ibo-main-color: #{$ibo-dm-enum--Action-status-test--complementary-color};
+  --ibo-complementary-color: #{$ibo-dm-enum--Action-status-test--main-color};
+}

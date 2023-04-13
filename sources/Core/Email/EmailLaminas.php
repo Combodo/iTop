@@ -1,35 +1,18 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Send an email (abstraction for synchronous/asynchronous modes)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-@include APPROOT."/core/oauth.php";
 
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use Laminas\Mail\Header\ContentType;
 use Laminas\Mail\Message;
+use Laminas\Mail\Protocol\Smtp\Auth\Oauth;
 use Laminas\Mail\Transport\File;
 use Laminas\Mail\Transport\FileOptions;
+use Laminas\Mail\Transport\Sendmail;
 use Laminas\Mail\Transport\Smtp;
 use Laminas\Mail\Transport\SmtpOptions;
 use Laminas\Mime\Mime;
@@ -45,25 +28,21 @@ class EMailLaminas extends Email
 	// Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
 	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
 
-	protected static $m_oConfig = null;
 	protected $m_aData; // For storing data to serialize
-
-	public static function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
-	{
-		if (is_null(self::$m_oConfig)) {
-			self::$m_oConfig = new Config($sConfigFile);
-		}
-	}
 
 	protected $m_oMessage;
 
-	/** @noinspection PhpMissingParentConstructorInspection */
+	/**
+	 * @noinspection PhpMissingParentConstructorInspection
+	 * @noinspection MagicMethodsValidityInspection
+	 */
 	public function __construct()
 	{
 		$this->m_aData = array();
 		$this->m_oMessage = new Message();
 		$this->m_oMessage->setEncoding('UTF-8');
-		$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
+
+		$this->InitRecipientFrom();
 	}
 
 	/**
@@ -83,9 +62,6 @@ class EMailLaminas extends Email
 	 * @param string $sSerializedMessage The serialized representation of the message
 	 *
 	 * @return \EMail
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
 	 */
 	public static function UnSerializeV2($sSerializedMessage)
 	{
@@ -172,20 +148,28 @@ class EMailLaminas extends Email
 				$sEncryption = self::$m_oConfig->Get('email_transport_smtp.encryption');
 				$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
 				$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
+				$bVerifyPeer = static::$m_oConfig->Get('email_transport_smtp.verify_peer');
 
 				$oTransport = new Smtp();
-				$aOptions = [
-					'host'              => $sHost,
-					'port'              => $sPort,
-					'connection_class'  => 'login',
-					'connection_config' => [
-						'ssl' => $sEncryption,
-					],
-				];
-				if (strlen($sUserName) > 0) {
-					$aOptions['connection_config']['username'] = $sUserName;
-					$aOptions['connection_config']['password'] = $sPassword;
+				$aOptions = [];
+				$aConnectionConfig = [];
+
+				$aOptions['host'] = $sHost;
+				$aOptions['port'] = $sPort;
+
+				$aConnectionConfig['ssl'] = $sEncryption;
+				$aConnectionConfig['novalidatecert'] = !$bVerifyPeer;
+
+				if (strlen($sPassword) > 0) {
+					$aConnectionConfig['username'] = $sUserName;
+					$aConnectionConfig['password'] = $sPassword;
+					$aOptions['connection_class'] = 'login';
+				} else {
+					$aOptions['connection_class'] = 'smtp';
 				}
+
+				$aOptions['connection_config'] = $aConnectionConfig;
+
 				$oOptions = new SmtpOptions($aOptions);
 				$oTransport->setOptions($oOptions);
 				break;
@@ -211,7 +195,7 @@ class EMailLaminas extends Email
 				$oOptions = new SmtpOptions($aOptions);
 				$oTransport->setOptions($oOptions);
 
-				\Laminas\Mail\Protocol\Smtp\Auth\Oauth::setProvider(OAuthClientProviderFactory::GetProviderForSMTP());
+				Oauth::setProvider(OAuthClientProviderFactory::GetProviderForSMTP());
 				break;
 
 			case 'Null':
@@ -228,7 +212,7 @@ class EMailLaminas extends Email
 
 			case 'PHPMail':
 			default:
-				$oTransport = new Smtp();
+				$oTransport = new Sendmail();
 		}
 
 		$oKPI = new ExecutionKPI();
@@ -240,8 +224,8 @@ class EMailLaminas extends Email
 			return EMAIL_SEND_OK;
 		}
 		catch (Laminas\Mail\Transport\Exception\RuntimeException $e) {
-			IssueLog::Warning('Email sending failed: Some recipients were invalid');
-			$aIssues = array('Some recipients were invalid.');
+			IssueLog::Warning('Email sending failed: '.$e->getMessage());
+			$aIssues = array($e->getMessage());
 			$oKPI->ComputeStats('Email Sent', 'Error received');
 
 			return EMAIL_SEND_ERROR;
@@ -266,7 +250,7 @@ class EMailLaminas extends Email
 	protected function EmbedInlineImages(string &$sBody)
 	{
 		$oDOMDoc = new DOMDocument();
-		$oDOMDoc->preserveWhitespace = true;
+		$oDOMDoc->preserveWhiteSpace = true;
 		@$oDOMDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sBody); // For loading HTML chunks where the character set is not specified
 
 		$oXPath = new DOMXPath($oDOMDoc);
@@ -319,7 +303,8 @@ class EMailLaminas extends Email
 		if ($bForceSynchronous) {
 			return $this->SendSynchronous($aIssues, $oLog);
 		} else {
-			$bConfigASYNC = MetaModel::GetConfig()->Get('email_asynchronous');
+			$oConfig = $this->LoadConfig();
+			$bConfigASYNC = $oConfig->Get('email_asynchronous');
 			if ($bConfigASYNC) {
 				return $this->SendAsynchronous($aIssues, $oLog);
 			} else {
@@ -376,12 +361,12 @@ class EMailLaminas extends Email
 	 *
 	 * @param $sBody
 	 * @param string $sMimeType
-	 * @param $sCustomStyles
+	 * @param null $sCustomStyles
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
+	 * @throws \Symfony\Component\CssSelector\Exception\ParseException
 	 */
 	public function SetBody($sBody, $sMimeType = Mime::TYPE_HTML, $sCustomStyles = null)
 	{

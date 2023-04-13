@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -9,14 +9,15 @@ namespace Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator;
 
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 
 /**
  * Class ToolbarSeparatorUIBlockFactory
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator
- * @since 3.0.0
+ * @package UIBlockAPI
  * @api
+ * @since 3.0.0
  */
 class ToolbarSeparatorUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -26,6 +27,7 @@ class ToolbarSeparatorUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = Toolbar::class;
 
 	/**
+	 * @api
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\VerticalSeparator

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -165,7 +165,7 @@ abstract class Controller
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
-			$sMethodName = 'Operation'.$this->m_sOperation;
+			$sMethodName = 'Operation'.utils::ToCamelCase($this->m_sOperation);
 			$oKPI = new ExecutionKPI();
 			$oKPI->ComputeAndReport('Starting operation '.$this->m_sOperation);
 			if (method_exists($this, $sMethodName))
@@ -174,7 +174,7 @@ abstract class Controller
 			}
 			else
 			{
-				$this->DisplayPageNotFound();
+				$this->DisplayBadRequest();
 			}
 		}
 		catch (Exception $e)
@@ -182,7 +182,7 @@ abstract class Controller
 			http_response_code(500);
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
-			$oP->add(get_class($e).' : '.htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8'));
+			$oP->add(get_class($e).' : '.utils::EscapeHtml($e->GetMessage()));
 			$oP->output();
 
 			IssueLog::Error($e->getMessage());
@@ -201,7 +201,7 @@ abstract class Controller
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
-			$sMethodName = 'Operation'.$this->m_sOperation;
+			$sMethodName = 'Operation'.utils::ToCamelCase($this->m_sOperation);
 			if (method_exists($this, $sMethodName))
 			{
 				$this->$sMethodName();
@@ -217,6 +217,15 @@ abstract class Controller
 			$aResponse = array('sError' => $e->getMessage());
 			echo json_encode($aResponse);
 		}
+	}
+
+	/**
+	 * Overridable "page not found" which is more an "operation not found"
+	 */
+	public function DisplayBadRequest()
+	{
+		http_response_code(400);
+		die('Operation not found');
 	}
 
 	/**

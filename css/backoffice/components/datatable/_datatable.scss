@@ -1,0 +1,153 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-datatable--toolbar--padding-x: 6px !default;
+$ibo-datatable--toolbar--padding-y: $ibo-spacing-0 !default;
+$ibo-datatable--toolbar--text-color: $ibo-color-grey-800 !default;
+$ibo-datatable--toolbar--elements-spacing: 1rem !default;
+$ibo-datatable--toolbar--table-spacing: 18px !default;
+
+$ibo-datatable-header--text-color: $ibo-base-variable--text-color !default;
+
+$ibo-datatable-panel--table-spacing: $ibo-spacing-800 !default;
+$ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top $ibo-spacing-0 $ibo-panel--body--padding-bottom !default;
+
+$ibo-datatable--row--background-color--is-hover: $ibo-color-primary-200 !default;
+$ibo-datatable--row--background-color--is-selected: $ibo-color-primary-300 !default;
+
+$ibo-datatable--selection-validation-buttons-toolbar--margin-top: 10px !default;
+$ibo-list-column--max-height: 150px !default;
+
+$ibo-datatable--sort-order--color: $ibo-color-primary-600 !default;
+
+$ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
+
+
+/* CSS variables (can be changed directly from the browser) */
+:root {
+  --ibo-datatable-panel--table-spacing: #{$ibo-datatable-panel--table-spacing};
+}
+
+/* Rules */
+.ibo-datatable--toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $ibo-datatable--toolbar--padding-y $ibo-datatable--toolbar--padding-x;
+
+  color: $ibo-datatable--toolbar--text-color;
+  @extend %ibo-font-size-100;
+
+  /* Above the table */
+  &:first-child {
+    margin-bottom: $ibo-datatable--toolbar--table-spacing;
+  }
+
+  /* below the table */
+  &:not(:first-child) {
+    margin-top: $ibo-datatable--toolbar--table-spacing;
+  }
+}
+
+.ibo-datatable--toolbar-left,
+.ibo-datatable--toolbar-right {
+  @extend %ibo-fully-centered-content;
+
+  > *:not(:first-child) {
+    margin-left: $ibo-datatable--toolbar--elements-spacing;
+  }
+}
+
+.ibo-datatable-header {
+  color: $ibo-datatable-header--text-color;
+}
+
+/* TODO 3.0.0: The lines below need to be refactored / placed in the right places (integrations, dedicated block / page, ...) */
+.ibo-datatable-panel > .ibo-panel--body {
+  padding: $ibo-datatable-panel--body--padding;
+}
+
+// For cancel / OK / next... selection validation buttons
+.ibo-datatable--selection-validation-buttons-toolbar {
+  clear: both;
+  margin-top: $ibo-datatable--selection-validation-buttons-toolbar--margin-top;
+}
+
+.ibo-list-column {
+  max-height: $ibo-list-column--max-height;
+  overflow-y: auto;
+}
+
+// Datatables configure this list dialog
+// Could be in a separate component, but is only used in datatables as of now
+
+.ibo-sort-order{
+  &::after{
+    @extend %fa-solid-base;
+    color: $ibo-datatable--sort-order--color;
+  }
+  &.ibo-is-descending::after{
+    content: '\f0dd';
+  }
+  &.ibo-is-ascending::after{
+    content: '\f0de';
+  }
+
+  &.ibo-is-none::after{
+    content: '\f0dc';
+  }
+}
+
+.itop-fieldsorter{
+  >.selected{
+    background-color: $ibo-fieldsorter--selected--background-color;
+  }
+}
+
+
+.ibo-datatable {
+  tbody > tr {
+    transition: background-color 300ms linear;
+
+    &:hover, &.selected:hover {
+      cursor: pointer;
+      background-color: $ibo-datatable--row--background-color--is-hover;
+    }
+
+    &.selected {
+      background-color: $ibo-datatable--row--background-color--is-selected;
+    }
+
+    .ibo-datatable--row-actions-toolbar{
+      justify-content: end;
+    }
+  }
+}
+
+.ibo-datatable--selected-count, .ibo-datatable--result-count{
+  padding-right: 0.2em;
+  padding-left: 0.1em;
+}
+
+//
+.ibo-datatable[data-status="loading"]{
+  margin-top: $ibo-datatable--toolbar--table-spacing;
+  td, th {
+    position: relative;
+    padding: $ibo-vendors-datatables--cell--padding-y $ibo-vendors-datatables--cell--padding-x;
+  }
+  td{
+    @extend %ibo-font-ral-med-100;
+  }
+  tr:nth-child(even){
+    background-color: $ibo-vendors-datatables--row--background-color--is-even;
+  }
+  th {
+     @extend %ibo-font-ral-sembol-100;
+    border-bottom: $ibo-vendors-datatables--columns-header--border-bottom;
+   }
+}
+
+

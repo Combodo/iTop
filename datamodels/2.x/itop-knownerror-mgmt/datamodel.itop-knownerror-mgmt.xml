@@ -121,6 +121,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
         <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkDocumentToError</linked_class>
@@ -129,6 +130,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -246,15 +248,29 @@
         <db_key_field>link_id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <attributes/>
+          <attributes id="error_name"/>
+          <attributes id="functionalci_name"/>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="functionalci_id"/>
             <attribute id="error_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="error_id"/>
+              <attribute id="functionalci_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="functionalci_id" xsi:type="AttributeExternalKey">
@@ -287,10 +303,10 @@
       <presentation>
         <details>
           <items>
-            <item id="functionalci_id">
+            <item id="error_id">
               <rank>10</rank>
             </item>
-            <item id="error_id">
+            <item id="functionalci_id">
               <rank>20</rank>
             </item>
             <item id="reason">
@@ -338,16 +354,30 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="link_type"/>
+            <attribute id="document_name"/>
+            <attribute id="error_name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="document_id"/>
             <attribute id="error_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="document_id"/>
+              <attribute id="error_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="document_id" xsi:type="AttributeExternalKey">
@@ -410,9 +440,9 @@
   <menus>
     <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>42</rank>
-	    <style>
-		    <decoration_classes>fas fa-question</decoration_classes>
-	    </style>
+      <style>
+        <decoration_classes>fas fa-question</decoration_classes>
+      </style>
     </menu>
     <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
       <rank>5</rank>

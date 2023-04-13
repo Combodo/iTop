@@ -28,7 +28,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:OAuthClient' => 'Oauth Client~~',
+	'Class:OAuthClient' => 'OAuth Client~~',
 	'Class:OAuthClient/Attribute:provider' => 'Provider~~',
 	'Class:OAuthClient/Attribute:provider+' => '~~',
 	'Class:OAuthClient/Attribute:name' => 'Login~~',

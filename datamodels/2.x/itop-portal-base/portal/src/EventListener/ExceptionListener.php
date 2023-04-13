@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -117,9 +117,13 @@ class ExceptionListener implements ContainerAwareInterface
 		$oResponse->setStatusCode($iStatusCode);
 
 		// HttpExceptionInterface is a special type of exception that holds status code and header details
-		if ($oException instanceof HttpExceptionInterface)
-		{
+		if ($oException instanceof HttpExceptionInterface) {
 			$oResponse->headers->replace($oException->getHeaders());
+		}
+
+		// display original error page when app debug is on
+		if (($_SERVER['APP_DEBUG'] == 1)) {
+			return;
 		}
 
 		// Send the modified response object to the event

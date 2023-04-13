@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Authent Local
  * User authentication Module, password stored in the local database
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -100,11 +100,12 @@ class UserLocal extends UserInternal
 			array(
 				'col:col1' =>
 					array(
-						'fieldset:UserLocal:info' =>  array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'profile_list', 'allowed_org_list',)
+						'fieldset:UserLocal:info' => array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'allowed_org_list',),
 					),
 				'col:col2' =>
 					array(
-						'fieldset:UserLocal:password:expiration' =>  array('expiration', 'password_renewed_date',),
+						'fieldset:UserLocal:profiles'            => array('profile_list',),
+						'fieldset:UserLocal:password:expiration' => array('expiration', 'password_renewed_date',),
 					),
 			)
 

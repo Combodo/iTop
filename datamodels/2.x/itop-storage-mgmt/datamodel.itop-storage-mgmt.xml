@@ -34,6 +34,8 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>property</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -285,6 +287,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>datacenterdevice_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -533,6 +536,8 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>property</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -781,6 +786,8 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>property</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -1381,6 +1388,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>server_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
         <field id="virtualdevices_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkVirtualDeviceToVolume</linked_class>
@@ -1389,6 +1397,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>virtualdevice_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -1476,16 +1485,30 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="volume_id"/>
+            <attribute id="server_name"/>
+            <attribute id="volume_name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="volume_id"/>
             <attribute id="server_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="server_id"/>
+              <attribute id="volume_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="volume_id" xsi:type="AttributeExternalKey">
@@ -1518,10 +1541,10 @@
       <presentation>
         <details>
           <items>
-            <item id="volume_id">
+            <item id="server_id">
               <rank>10</rank>
             </item>
-            <item id="server_id">
+            <item id="volume_id">
               <rank>20</rank>
             </item>
             <item id="size_used">
@@ -1541,10 +1564,10 @@
         </search>
         <list>
           <items>
-            <item id="volume_id">
+            <item id="server_id">
               <rank>10</rank>
             </item>
-            <item id="server_id">
+            <item id="volume_id">
               <rank>20</rank>
             </item>
             <item id="size_used">
@@ -1566,16 +1589,30 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="san_id"/>
+            <attribute id="san_name"/>
+            <attribute id="datacenterdevice_name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="san_id"/>
             <attribute id="datacenterdevice_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="san_id"/>
+              <attribute id="datacenterdevice_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="san_id" xsi:type="AttributeExternalKey">

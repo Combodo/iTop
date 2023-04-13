@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /**
@@ -417,7 +417,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:RemoveFromList' => ' Удалить >> ',
 	'UI:Button:FilterList' => ' Фильтр... ',
 	'UI:Button:Create' => ' Создать ',
-	'UI:Button:Delete' => ' Удалить ! ',
+	'UI:Button:Delete' => ' Удалить ',
 	'UI:Button:Rename' => ' Переименовать...',
 	'UI:Button:ChangePassword' => ' Изменить пароль ',
 	'UI:Button:ResetPassword' => ' Сбросить пароль ',
@@ -645,9 +645,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Выбор класса для поиска: ',
 
 	'UI:CSVReport-Value-Modified' => 'Изменен',
-	'UI:CSVReport-Value-SetIssue' => 'Не может быть изменен - причина: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Не может быть изменен %1$s - причина: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Нет совпадений',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Отсутствует обязательное значение',
 	'UI:CSVReport-Value-Ambiguous' => 'Неоднозначное сопоставление: найдено %1$s объектов',
 	'UI:CSVReport-Row-Unchanged' => 'без изменений',
@@ -806,7 +806,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Добавить %1$s объекты связанные с %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Добавление объектов %1$s для связи с объектом %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Управление %1$s объектами связанными с %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Добавить объект %1$s...',
+	'UI:AddLinkedObjectsOf_Class' => 'Добавить объект %1$s',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Удалить выбранные объекты',
 	'UI:Message:EmptyList:UseAdd' => 'Список пуст, используйте кнопку "Добавить ..." для добавления новых элементов.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Используйте форму поиска выше для поиска объектов, которые будут добавлены.',

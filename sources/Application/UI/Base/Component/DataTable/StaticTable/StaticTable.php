@@ -2,12 +2,13 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable;
 
+use Combodo\iTop\Application\UI\Base\Component\DataTable\tTableRowActions;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 use utils;
 
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -18,12 +19,13 @@ use utils;
 class StaticTable extends UIContentBlock
 {
 	use tJSRefreshCallback;
+	use tTableRowActions;
 
 	// Overloaded constants
-	public const BLOCK_CODE = 'ibo-datatable';
-	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/static/layout';
+	public const BLOCK_CODE                            = 'ibo-datatable';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH        = 'base/components/datatable/static/layout';
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/datatable/static/layout';
-	public const DEFAULT_JS_FILES_REL_PATH = [
+	public const DEFAULT_JS_FILES_REL_PATH             = [
 		'node_modules/datatables.net/js/jquery.dataTables.min.js',
 		'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js',
 		'node_modules/datatables.net-responsive/js/dataTables.responsive.min.js',
@@ -34,6 +36,7 @@ class StaticTable extends UIContentBlock
 		'js/dataTables.main.js',
 		'js/dataTables.settings.js',
 		'js/dataTables.pipeline.js',
+		'js/dataTables.row-actions.js',
 	];
 
 	/**
@@ -59,7 +62,7 @@ class StaticTable extends UIContentBlock
 	private $aExtraParams;
 	/*@var string $sUrlForRefresh*/
 	private $sFilter;
-	/** @var array $aOptions 
+	/** @var array $aOptions
 	 * List of specific options for display datatable
 	 */
 	private $aOptions;
@@ -79,6 +82,17 @@ class StaticTable extends UIContentBlock
 	public function GetColumns(): array
 	{
 		return $this->aColumns;
+	}
+
+	/**
+	 * Return columns count.
+	 *
+	 * @return int
+	 * @since 3.1.0
+	 */
+	public function GetColumnsCount(): int
+	{
+		return count($this->aColumns);
 	}
 
 	/**
@@ -129,8 +143,8 @@ class StaticTable extends UIContentBlock
 	{
 		//$('#".$this->sId."').DataTable().clear().rows.add(data).draw()
 		$aParams = [
-			'style' => 'list',
-			'filter' => $this->sFilter,
+			'style'        => 'list',
+			'filter'       => $this->sFilter,
 			'extra_params' => $this->aExtraParams,
 		];
 
@@ -140,7 +154,7 @@ class StaticTable extends UIContentBlock
 	                    $('#".$this->sId."').dataTable().fnAddData(data);
 					});";
 	}
-	
+
 	/**
 	 * @return mixed
 	 */
@@ -149,6 +163,7 @@ class StaticTable extends UIContentBlock
 		if (isset($this->aOptions[$sOption])) {
 			return $this->aOptions[$sOption];
 		}
+
 		return null;
 	}
 

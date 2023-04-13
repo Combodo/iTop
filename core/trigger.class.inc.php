@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -33,20 +33,22 @@ abstract class Trigger extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "description",
-			"state_attcode" => "",
-			"reconc_keys" => array('description'),
-			"db_table" => "priv_trigger",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "realclass",
-			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-conflict.svg'),
+			"category"                   => "grant_by_profile,core/cmdb",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "description",
+			"complementary_name_attcode" => array('finalclass'),
+			"state_attcode"              => "",
+			"reconc_keys"                => array('description'),
+			"db_table"                   => "priv_trigger",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "realclass",
+			'style'                      => new ormStyle(null, null, null, null, null, '../images/icons/icons8-conflict.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("action_list", array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "trigger_id", "ext_key_to_remote" => "action_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("action_list",
+			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "trigger_id", "ext_key_to_remote" => "action_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
 		$aTags = ContextTag::GetTags();
 		MetaModel::Init_AddAttribute( new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
 
@@ -249,21 +251,48 @@ abstract class TriggerOnObject extends Trigger
 	 */
 	public function IsTargetObject($iObjectId, $aChanges = array())
 	{
-		$sFilter = trim($this->Get('filter'));
-		if (strlen($sFilter) > 0)
-		{
+		$sFilter = trim($this->Get('filter') ?? '');
+		if (strlen($sFilter) > 0) {
 			$oSearch = DBObjectSearch::FromOQL($sFilter);
 			$oSearch->AddCondition('id', $iObjectId, '=');
 			$oSearch->AllowAllData();
 			$oSet = new DBObjectSet($oSearch);
 			$bRet = ($oSet->Count() > 0);
-		}
-		else
-		{
+		} else {
 			$bRet = true;
 		}
 
 		return $bRet;
+	}
+
+	/**
+	 * @param Exception $oException
+	 * @param \DBObject $oObject
+	 *
+	 * @return void
+	 *
+	 * @uses \IssueLog::Error()
+	 *
+	 * @since 2.7.9 3.0.3 3.1.0 N°5893
+	 */
+	public function LogException($oException, $oObject)
+	{
+		$sObjectKey = $oObject->GetKey(); // if object wasn't persisted yet, then we'll have a negative value
+
+		$aContext = [
+			'exception.class'      => get_class($oException),
+			'exception.message'    => $oException->getMessage(),
+			'trigger.class'        => get_class($this),
+			'trigger.id'           => $this->GetKey(),
+			'trigger.friendlyname' => $this->GetRawName(),
+			'object.class'         => get_class($oObject),
+			'object.id'            => $sObjectKey,
+			'object.friendlyname'  => $oObject->GetRawName(),
+			'current_user'         => UserRights::GetUser(),
+			'exception.stack'      => $oException->getTraceAsString(),
+		];
+
+		IssueLog::Error('A trigger did throw an exception', null, $aContext);
 	}
 }
 
@@ -634,6 +663,37 @@ class TriggerOnObjectMention extends TriggerOnObject
 		}
 
 		return $bRet;
+	}
+}
+
+/**
+ * Class TriggerOnAttributeBlobDownload
+ *
+ * @since 3.1.0
+ */
+class TriggerOnAttributeBlobDownload extends TriggerOnObject
+{
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "grant_by_profile,core/cmdb,application",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"state_attcode" => "",
+			"reconc_keys" => array('description'),
+			"db_table" => "priv_trigger_onattblobdownload",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
 	}
 }
 

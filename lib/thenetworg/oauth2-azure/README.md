@@ -46,7 +46,7 @@ $provider = new TheNetworg\OAuth2\Client\Provider\Azure([
     'clientSecret'      => '{azure-client-secret}',
     'redirectUri'       => 'https://example.com/callback-url',
     //Optional
-    'scopes'            => 'openid',
+    'scopes'            => ['openid'],
     //Optional
     'defaultEndPointVersion' => '2.0'
 ]);

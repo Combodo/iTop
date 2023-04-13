@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -89,11 +89,11 @@ $(function () {
 					aOptions = $.extend(aOptions, JSON.parse(data));
 					if (aOptions.js_files) {
 						$.each(aOptions.js_files, function (i, item) {
-							if ($.inArray(item, aListJsFiles) === -1)
+							if ($.inArray(item, aLoadedJsFilesRegister) === -1)
 							{
 								sFileUrl = CombodoGlobalToolbox.AddParameterToUrl(item, aOptions.js_files_param, aOptions.js_files_value);
 								$.ajax({url:sFileUrl, dataType: 'script', cache: true });
-								aListJsFiles.push(item);
+								aLoadedJsFilesRegister.push(item);
 							}
 						});
 					}
@@ -110,6 +110,13 @@ $(function () {
 							aOptions["columns"][i]["createdCell"] = new Function("td, cellData, rowData, row, col", aOptions["columns"][i]["createdCell"]);
 						}
 					});
+
+					// Append row actions column
+					if (me.options.bHasRowActions) {
+						sThead += "<th></th>";
+						let iColumnCount = aOptions['columns'].length;
+						aOptions["columns"][iColumnCount] = getRowActionsColumnDefinition(oParams.list_id);
+					}
 
 					parentElt.append("<table id=\""+me.options.sListId+"\" width=\"100%\" class=\"ibo-datatable\">"+
 						"<thead><tr>"+sThead+"</tr></thead></table>");

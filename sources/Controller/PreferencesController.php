@@ -1,12 +1,13 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Controller;
 
 use appUserPreferences;
+use CoreUnexpectedValue;
 use Exception;
 use MetaModel;
 use ormDocument;
@@ -21,7 +22,7 @@ use utils;
  * @since 3.0.0
  * @package Combodo\iTop\Controller
  */
-class PreferencesController
+class PreferencesController extends AbstractController
 {
 	/**
 	 * @return string[]
@@ -30,7 +31,7 @@ class PreferencesController
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	public static function SetUserPicture(): array
+	public function SetUserPicture(): array
 	{
 		$sImageFilename = utils::ReadPostedParam('image_filename', null, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 
@@ -38,9 +39,14 @@ class PreferencesController
 		appUserPreferences::SetPref('user_picture_placeholder', $sImageFilename);
 
 		$sUserPicturesFolder = 'images/user-pictures/';
-		$sImageAbsPath = APPROOT.$sUserPicturesFolder.$sImageFilename;
+		$sImageAbsPath = utils::RealPath(APPROOT.$sUserPicturesFolder.$sImageFilename, APPROOT.$sUserPicturesFolder);
 		$sImageAbsUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.$sImageFilename;
-
+		
+		// Check if we're still in the right folder
+		if($sImageAbsPath === false){
+			throw new CoreUnexpectedValue('Error while updating user image, invalid image path "'.$sUserPicturesFolder.$sImageFilename.'"');
+		}
+		
 		// Check file can be read
 		$sImageData = file_get_contents($sImageAbsPath);
 		if (false === $sImageData) {

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -26,7 +26,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
  * of the previous screens. The WizardController also maintains from page
  * to page a list of "parameters" to be dispayed/edited by each of the steps.
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -75,15 +75,37 @@ class WizardController
 	 */
 	public function GetParameter($sParamCode, $defaultValue = '')
 	{
-		if (array_key_exists($sParamCode, $this->aParameters))
-		{
+		if (array_key_exists($sParamCode, $this->aParameters)) {
 			return $this->aParameters[$sParamCode];
 		}
+
 		return $defaultValue;
 	}
 
 	/**
+	 * @return array Allow to update config using {@see Config::UpdateFromParams()}
+	 *
+	 * @since 3.1.0 N°2013
+	 */
+	public function GetParamForConfigArray(): array
+	{
+		/** @noinspection PhpUnnecessaryLocalVariableInspection */
+		$aParamValues = array(
+			'db_server'      => $this->GetParameter('db_server', ''),
+			'db_user'        => $this->GetParameter('db_user', ''),
+			'db_pwd'         => $this->GetParameter('db_pwd', ''),
+			'db_name'        => $this->GetParameter('db_name', ''),
+			'db_prefix'      => $this->GetParameter('db_prefix', ''),
+			'db_tls_enabled' => $this->GetParameter('db_tls_enabled', false),
+			'db_tls_ca'      => $this->GetParameter('db_tls_ca', ''),
+		);
+
+		return $aParamValues;
+	}
+
+	/**
 	 * Stores a "persistent" parameter in the wizard's context
+	 *
 	 * @param string $sParamCode The code identifying this parameter
 	 * @param mixed $value The value to store
 	 */
@@ -201,25 +223,22 @@ HTML;
 		$oPage->add('<div class="ibo-setup--wizard--content">');
 		$oStep->Display($oPage);
 		$oPage->add('</div>');
-		
+
 		// Add the back / next buttons and the hidden form
 		// to store the parameters
 		$oPage->add('<input type="hidden" id="_class" name="_class" value="'.get_class($oStep).'"/>');
 		$oPage->add('<input type="hidden" id="_state" name="_state" value="'.$oStep->GetState().'"/>');
-		foreach($this->aParameters as $sCode => $value)
-		{
-			$oPage->add('<input type="hidden" name="_params['.$sCode.']" value="'.htmlentities($value, ENT_QUOTES, 'UTF-8').'"/>');
+		foreach ($this->aParameters as $sCode => $value) {
+			$oPage->add('<input type="hidden" name="_params['.$sCode.']" value="'.utils::EscapeHtml($value).'"/>');
 		}
 
-		$oPage->add('<input type="hidden" name="_steps" value="'.htmlentities(json_encode($this->aSteps), ENT_QUOTES, 'UTF-8').'"/>');
+		$oPage->add('<input type="hidden" name="_steps" value="'.utils::EscapeHtml(json_encode($this->aSteps)).'"/>');
 		$oPage->add('<table style="width:100%;" class="ibo-setup--wizard--buttons-container"><tr>');
-		if ((count($this->aSteps) > 0) && ($oStep->CanMoveBackward()))
-		{
+		if ((count($this->aSteps) > 0) && ($oStep->CanMoveBackward())) {
 			$oPage->add('<td style="text-align: left"><button id="btn_back" class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="back"><span class="ibo-button--label">Back</span></button></td>');
 		}
-		if ($oStep->CanMoveForward())
-		{
-			$oPage->add('<td style="text-align:right;"><button id="btn_next" class="default ibo-button ibo-is-regular ibo-is-primary" type="submit" name="operation" value="next"><span class="ibo-button--label">'.htmlentities($oStep->GetNextButtonLabel(), ENT_QUOTES, 'UTF-8').'</span></button></td>');
+		if ($oStep->CanMoveForward()) {
+			$oPage->add('<td style="text-align:right;"><button id="btn_next" class="default ibo-button ibo-is-regular ibo-is-primary" type="submit" name="operation" value="next"><span class="ibo-button--label">'.utils::EscapeHtml($oStep->GetNextButtonLabel()).'</span></button></td>');
 		}
 		$oPage->add('</tr></table>');
 		$oPage->add("</form>");
@@ -352,7 +371,7 @@ on the page's parameters
  * If a step needs to maintain an internal "state" (for complex steps)
  * then it's up to the derived class to implement the behavior based on
  * the internal 'sCurrentState' variable.
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

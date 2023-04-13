@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -477,10 +477,13 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 	transition-duration: 0.1s;
 	transition-timing-function: linear;
 
-	> .ibo-navigation-menu--menu-group-icon,
-	> .ibo-navigation-menu--menu-group-title{
+	> .ibo-navigation-menu--menu-group-icon{
 		display: flex; /* To avoid end space due to display:inline-block */
 	}
+  .ibo-navigation-menu--menu-group-title{
+    flex-grow: 1;
+    /* Note that display property is not set to flex on purpose so its text has an ellipsis on overflow */
+  }
 
 	&:not(:last-child){
 		margin-bottom: $ibo-navigation-menu--middle-part--elements-spacing;
@@ -661,8 +664,8 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 .ibo-navigation-menu--menu-nodes-title{
 	margin-top: $ibo-navigation-menu--menu-nodes-title--margin-top;
 	margin-bottom: $ibo-navigation-menu--menu-nodes-title--margin-bottom;
+  word-break: break-word; /* Ensure that long words wrap instead of being clipped */
 	@extend %ibo-font-ral-nor-350;
-	@extend %ibo-text-truncated-with-ellipsis;
 }
 /* - Menu node */
 .ibo-navigation-menu--menu-node-title{

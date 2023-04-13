@@ -1,10 +1,22 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 // WARNING: This code cannot be placed directly within the page as CKEditor could not be loaded yet.
 // As it can be loaded from an XHR call (several times), we need to ensure it will be called when necessary (see PHP WebResourcesHelper)
+
+CKEDITOR.on('instanceReady', function (oEvent) {
+	// Keyboard listener
+	oEvent.editor.on('key', function(oKeyEvent){
+		const oKeyboardEvent = oKeyEvent.data.domEvent.$;
+
+		// Submit value on "Ctrl + Enter" or "Meta (Cmd) + Enter" keyboard shortcut
+		if ((oKeyboardEvent.ctrlKey || oKeyboardEvent.metaKey) && oKeyboardEvent.key === 'Enter') {
+			$('#'+ oEvent.editor.name).closest('form').trigger('submit');
+		}
+	});
+});
 
 // For disabling the CKEditor at init time when the corresponding textarea is disabled !
 if ((CKEDITOR !== undefined) && (CKEDITOR.plugins.registered['disabler'] === undefined)) {
@@ -24,8 +36,15 @@ if ((CKEDITOR !== undefined) && (CKEDITOR.plugins.registered['disabler'] === und
 
 // Rewrite the CKEditor Mentions plugin regexp to make it suitable for all Unicode alphabets.
 if (CKEDITOR !== undefined && CKEDITOR.plugins.registered['mentions']) {
-	// from https://github.com/ckeditor/ckeditor4/blob/a3786007fb979d7d7bff3d10c34a2d422935baed/plugins/mentions/plugin.js#L147
+	// From https://github.com/ckeditor/ckeditor4/blob/a3786007fb979d7d7bff3d10c34a2d422935baed/plugins/mentions/plugin.js#L147
 	function createPattern(marker, minChars) {
+		// Escape marker if it's a regex token
+		// https://github.com/tc39/proposal-regex-escaping/blob/main/EscapedChars.md#syntaxcharacter-proposal
+		const regexTokens = ['^', '$', '\\', '.', '*', '+', '?', '(', ')', '[', ']', '{', '}', '|'];
+		if (regexTokens.indexOf(marker) >= 0) {
+			marker = '\\' + marker;
+		}
+
 		let pattern = marker + '[\\p{L}\\p{N}_-]';
 		if ( minChars ) {
 			pattern += '{' + minChars + ',}';

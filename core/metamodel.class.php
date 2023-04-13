@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2021 Combodo SARL
+// Copyright (c) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -40,7 +40,7 @@ require_once APPROOT.'application/loginurl.class.inc.php';
 /**
  * Metamodel
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -127,6 +127,18 @@ abstract class MetaModel
 	private static $m_aClassToFile = array();
 	/** @var string */
 	protected static $m_sEnvironment = 'production';
+
+	/**
+	 * Objects currently created/updated.
+	 *
+	 * if an object is already being updated, then this method will return this object instead of recreating a new one.
+	 * At this point the method DBUpdate of a new object with the same class and id won't do anything due to reentrance protection,
+	 * so to ensure that the potential modifications are correctly saved, the object currently being updated is returned.
+	 * DBUpdate() method then will take care that all the modifications will be saved.
+	 *
+	 * [class][key] -> object
+	 */
+	protected static array $m_aReentranceProtection = [];
 
 	/**
 	 * MetaModel constructor.
@@ -338,7 +350,7 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 
-		return $sClass::GetClassName($sClass);
+		return call_user_func([$sClass, 'GetClassName'], $sClass);
 	}
 
 	/**
@@ -422,7 +434,7 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 
-		return $sClass::GetClassDescription($sClass);
+		return call_user_func([$sClass, 'GetClassDescription'], $sClass);
 	}
 
 	/**
@@ -461,13 +473,13 @@ abstract class MetaModel
 			$oStyle = self::$m_aClassParams[$sClass]['style'];
 			$sIcon = $oStyle->GetIconAsAbsUrl();
 		}
-		if (utils::StrLen($sIcon) == 0) {
+		if (utils::IsNullOrEmptyString($sIcon)) {
 			$sParentClass = self::GetParentPersistentClass($sClass);
 			if (strlen($sParentClass) > 0) {
 				return self::GetClassIcon($sParentClass, $bImgTag, $sMoreStyles);
 			}
 		}
-		$sIcon = str_replace('/modules/', '/env-'.self::$m_sEnvironment.'/', $sIcon); // Support of pre-2.0 modules
+		$sIcon = str_replace('/modules/', '/env-'.self::$m_sEnvironment.'/', $sIcon ?? ''); // Support of pre-2.0 modules
 		if ($bImgTag && ($sIcon != '')) {
 			$sIcon = "<img src=\"$sIcon\" style=\"vertical-align:middle;$sMoreStyles\"/>";
 		}
@@ -494,7 +506,7 @@ abstract class MetaModel
 			$oStyle = new ormStyle("ibo-class-style--$sClass", "ibo-class-style-alt--$sClass");
 		}
 
-		if ((utils::StrLen($oStyle->GetMainColor()) > 0) && (utils::StrLen($oStyle->GetComplementaryColor()) > 0) && (utils::StrLen($oStyle->GetIconAsRelPath()) > 0)) {
+		if (utils::IsNotNullOrEmptyString($oStyle->GetMainColor()) && utils::IsNotNullOrEmptyString($oStyle->GetComplementaryColor()) && utils::IsNotNullOrEmptyString($oStyle->GetIconAsRelPath())) {
 			// all the parameters are set, no need to search in the parent classes
 			return $oStyle;
 		}
@@ -504,18 +516,18 @@ abstract class MetaModel
 		while (strlen($sParentClass) > 0) {
 			$oParentStyle = self::GetClassStyle($sParentClass);
 			if (!is_null($oParentStyle)) {
-				if (utils::StrLen($oStyle->GetMainColor()) == 0) {
+				if (utils::IsNullOrEmptyString($oStyle->GetMainColor())) {
 					$oStyle->SetMainColor($oParentStyle->GetMainColor());
 					$oStyle->SetStyleClass($oParentStyle->GetStyleClass());
 				}
-				if (utils::StrLen($oStyle->GetComplementaryColor()) == 0) {
+				if (utils::IsNullOrEmptyString($oStyle->GetComplementaryColor())) {
 					$oStyle->SetComplementaryColor($oParentStyle->GetComplementaryColor());
 					$oStyle->SetAltStyleClass($oParentStyle->GetAltStyleClass());
 				}
-				if (utils::StrLen($oStyle->GetIconAsRelPath()) == 0) {
+				if (utils::IsNullOrEmptyString($oStyle->GetIconAsRelPath())) {
 					$oStyle->SetIcon($oParentStyle->GetIconAsRelPath());
 				}
-				if ((utils::StrLen($oStyle->GetMainColor()) > 0) && (utils::StrLen($oStyle->GetComplementaryColor()) > 0) && (utils::StrLen($oStyle->GetIconAsRelPath()) > 0)) {
+				if (utils::IsNotNullOrEmptyString($oStyle->GetMainColor()) && utils::IsNotNullOrEmptyString($oStyle->GetComplementaryColor()) && utils::IsNotNullOrEmptyString($oStyle->GetIconAsRelPath())) {
 					// all the parameters are set, no need to search in the parent classes
 					return $oStyle;
 				}
@@ -523,7 +535,7 @@ abstract class MetaModel
 			$sParentClass = self::GetParentPersistentClass($sParentClass);
 		}
 
-		if ((utils::StrLen($oStyle->GetMainColor()) == 0) && (utils::StrLen($oStyle->GetComplementaryColor()) == 0) && (utils::StrLen($oStyle->GetIconAsRelPath()) == 0)) {
+		if (utils::IsNullOrEmptyString($oStyle->GetMainColor()) && utils::IsNullOrEmptyString($oStyle->GetComplementaryColor()) && utils::IsNullOrEmptyString($oStyle->GetIconAsRelPath())) {
 			return null;
 		}
 
@@ -2061,6 +2073,43 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @param string $sObjectClass class of the object containing the AttributeLinkedSetIndirect (eg: Team)
+	 * @param string $sObjectLinkedSetIndirectAttCode code of the AttributeLinkedSetIndirect in the sObjectClass (eg: persons_list in the Team class, pointing to lnkPersonToTeam lnk class)
+	 * @param string $sRemoteClass remote class pointed by the lnk class (eg: Person pointed by lnkPersonToTeam)
+	 * @param string $sLnkExternalKeyToRemoteClassAttCode in the lnk class, external key to the remote class (eg: person_id in lnkPersonToTeam, pointing to a Person instance)
+	 *
+	 * @return string[] attcodes to display, containing aliases
+	 * @throws \CoreException
+	 *
+	 * @since 3.0.0 N°2334 added code for n-n relations in {@see BlockIndirectLinkSetViewTable::GetAttCodesToDisplay}
+	 * @since 3.1.0 N°3200 method creation so that it can be used elsewhere
+	 */
+	public static function GetAttributeLinkedSetIndirectDatatableAttCodesToDisplay(string $sObjectClass, string $sObjectLinkedSetIndirectAttCode, string $sRemoteClass, string $sLnkExternalKeyToRemoteClassAttCode):array
+	{
+		$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sObjectClass, $sObjectLinkedSetIndirectAttCode);
+		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($sRemoteClass);
+		$aLnkAttCodesToDisplay = array_map(
+			function ($oLnkAttDef) {
+				return ormLinkSet::LINK_ALIAS.'.'.$oLnkAttDef->GetCode();
+			},
+			$aLnkAttDefsToDisplay
+		);
+		if (!in_array(ormLinkSet::LINK_ALIAS.'.'.$sLnkExternalKeyToRemoteClassAttCode, $aLnkAttCodesToDisplay)) {
+			// we need to display a link to the remote class instance !
+			$aLnkAttCodesToDisplay[] = ormLinkSet::LINK_ALIAS.'.'.$sLnkExternalKeyToRemoteClassAttCode;
+		}
+		$aRemoteAttCodesToDisplay = array_map(
+			function ($oRemoteAttDef) {
+				return ormLinkSet::REMOTE_ALIAS.'.'.$oRemoteAttDef->GetCode();
+			},
+			$aRemoteAttDefsToDisplay
+		);
+		$aAttCodesToDisplay = array_merge($aLnkAttCodesToDisplay, $aRemoteAttCodesToDisplay);
+
+		return $aAttCodesToDisplay;
+	}
+
+	/**
 	 * @param string $sClass
 	 * @param string $sListCode
 	 * @param string $sAttCodeOrFltCode
@@ -2246,17 +2295,14 @@ abstract class MetaModel
 				$aNeighbourData['sFromClass'] = $aNeighbourData['sDefinedInClass'];
 				try
 				{
-					if (strlen($aNeighbourData['sQueryDown']) == 0)
-					{
+					if (Utils::StrLen($aNeighbourData['sQueryDown']) == 0) {
 						$oAttDef = self::GetAttributeDef($sClass, $aNeighbourData['sAttribute']);
-						if ($oAttDef instanceof AttributeExternalKey)
-						{
+						if ($oAttDef instanceof AttributeExternalKey) {
 							$sTargetClass = $oAttDef->GetTargetClass();
 							$aNeighbourData['sToClass'] = $sTargetClass;
 							$aNeighbourData['sQueryDown'] = 'SELECT '.$sTargetClass.' AS o WHERE o.id = :this->'.$aNeighbourData['sAttribute'];
 							$aNeighbourData['sQueryUp'] = 'SELECT '.$aNeighbourData['sFromClass'].' AS o WHERE o.'.$aNeighbourData['sAttribute'].' = :this->id';
-						}
-						elseif ($oAttDef instanceof AttributeLinkedSet)
+						} elseif ($oAttDef instanceof AttributeLinkedSet)
 						{
 							$sLinkedClass = $oAttDef->GetLinkedClass();
 							$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
@@ -5002,27 +5048,23 @@ abstract class MetaModel
 	 */
 	public static function DBShowApplyForm($sRepairUrl, $sSQLStatementArgName, $aSQLFixes)
 	{
-		if (empty($sRepairUrl))
-		{
+		if (empty($sRepairUrl)) {
 			return;
 		}
 
 		// By design, some queries might be blank, we have to ignore them
 		$aCleanFixes = array();
-		foreach($aSQLFixes as $sSQLFix)
-		{
-			if (!empty($sSQLFix))
-			{
+		foreach ($aSQLFixes as $sSQLFix) {
+			if (!empty($sSQLFix)) {
 				$aCleanFixes[] = $sSQLFix;
 			}
 		}
-		if (count($aCleanFixes) == 0)
-		{
+		if (count($aCleanFixes) == 0) {
 			return;
 		}
 
 		echo "<form action=\"$sRepairUrl\" method=\"POST\">\n";
-		echo "   <input type=\"hidden\" name=\"$sSQLStatementArgName\" value=\"".htmlentities(implode("##SEP##", $aCleanFixes), ENT_QUOTES, 'UTF-8')."\">\n";
+		echo "   <input type=\"hidden\" name=\"$sSQLStatementArgName\" value=\"".utils::EscapeHtml(implode("##SEP##", $aCleanFixes))."\">\n";
 		echo "   <input type=\"submit\" value=\" Apply changes (".count($aCleanFixes)." queries) \">\n";
 		echo "</form>\n";
 	}
@@ -5086,9 +5128,9 @@ abstract class MetaModel
 
 		if (!empty(self::$m_sTablePrefix))
 		{
-			foreach(CMDBSource::EnumTables() as $sTable)
+			foreach(self::DBEnumTables() as $sTable)
 			{
-				// perform a case insensitive test because on Windows the table names become lowercase :-(
+				// perform a case-insensitive test because on Windows the table names become lowercase :-(
 				if (strtolower(substr($sTable, 0, strlen(self::$m_sTablePrefix))) == strtolower(self::$m_sTablePrefix))
 				{
 					CMDBSource::DropTable($sTable);
@@ -5268,24 +5310,21 @@ abstract class MetaModel
 		$sRes = '';
 
 		$sRes .= "// Dictionnay conventions\n";
-		$sRes .= htmlentities("// Class:<class_name>\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>+\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>+\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Stimulus:<stimulus_code>\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Stimulus:<stimulus_code>+\n", ENT_QUOTES, 'UTF-8');
+		$sRes .= utils::EscapeHtml("// Class:<class_name>\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>+\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Attribute:<attribute_code>\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Attribute:<attribute_code>+\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Stimulus:<stimulus_code>\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Stimulus:<stimulus_code>+\n");
 		$sRes .= "\n";
 
 		// Note: I did not use EnumCategories(), because a given class maybe found in several categories
 		// Need to invent the "module", to characterize the origins of a class
-		if (strlen($sModules) == 0)
-		{
+		if (strlen($sModules) == 0) {
 			$aModules = array('bizmodel', 'core/cmdb', 'gui', 'application', 'addon/userrights');
-		}
-		else
-		{
+		} else {
 			$aModules = explode(', ', $sModules);
 		}
 
@@ -5293,17 +5332,14 @@ abstract class MetaModel
 		$sRes .= "// Note: The classes have been grouped by categories: ".implode(', ', $aModules)."\n";
 		$sRes .= "//////////////////////////////////////////////////////////////////////\n";
 
-		foreach($aModules as $sCategory)
-		{
+		foreach ($aModules as $sCategory) {
 			$sRes .= "//////////////////////////////////////////////////////////////////////\n";
 			$sRes .= "// Classes in '<em>$sCategory</em>'\n";
 			$sRes .= "//////////////////////////////////////////////////////////////////////\n";
 			$sRes .= "//\n";
 			$sRes .= "\n";
-			foreach(self::GetClasses($sCategory) as $sClass)
-			{
-				if (!self::HasTable($sClass))
-				{
+			foreach (self::GetClasses($sCategory) as $sClass) {
+				if (!self::HasTable($sClass)) {
 					continue;
 				}
 
@@ -6800,6 +6836,19 @@ abstract class MetaModel
 			}
 			$sClass = $aRow[$sClassAlias."finalclass"];
 		}
+
+		// if an object is already being updated, then this method will return this object instead of recreating a new one.
+		// At this point the method DBUpdate of a new object with the same class and id won't do anything due to reentrance protection,
+		// so to ensure that the potential modifications are correctly saved, the object currently being updated is returned.
+		// DBUpdate() method then will take care that all the modifications will be saved.
+		if (array_key_exists($sClassAlias.'id', $aRow)) {
+			$iKey = $aRow[$sClassAlias."id"];
+			$oObject = self::GetReentranceObject($sClass, $iKey);
+			if ($oObject !== false) {
+				return $oObject;
+			}
+		}
+
 		return new $sClass($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 	}
 
@@ -7027,30 +7076,26 @@ abstract class MetaModel
 	 */
 	public static function GetHyperLink($sTargetClass, $iKey)
 	{
-		if ($iKey < 0)
-		{
+		if ($iKey < 0) {
 			return "$sTargetClass: $iKey (invalid value)";
 		}
 		$oObj = self::GetObject($sTargetClass, $iKey, false);
-		if (is_null($oObj))
-		{
+		if (is_null($oObj)) {
 			// Whatever we are looking for, the root class is the key to search for
 			$sRootClass = self::GetRootClass($sTargetClass);
 			$oSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOpDelete WHERE objclass = :objclass AND objkey = :objkey', array('objclass' => $sRootClass, 'objkey' => $iKey));
 			$oSet = new DBObjectSet($oSearch);
 			$oRecord = $oSet->Fetch();
 			// An empty fname is obtained with iTop < 2.0
-			if (is_null($oRecord) || (strlen(trim($oRecord->Get('fname'))) == 0))
-			{
+			if (is_null($oRecord) || (strlen(trim($oRecord->Get('fname'))) == 0)) {
 				$sName = Dict::Format('Core:UnknownObjectLabel', $sTargetClass, $iKey);
 				$sTitle = Dict::S('Core:UnknownObjectTip');
-			}
-			else
-			{
+			} else {
 				$sName = $oRecord->Get('fname');
 				$sTitle = Dict::Format('Core:DeletedObjectTip', $oRecord->Get('date'), $oRecord->Get('userinfo'));
 			}
-			return '<span class="itop-deleted-object" title="'.htmlentities($sTitle, ENT_QUOTES, 'UTF-8').'">'.htmlentities($sName, ENT_QUOTES, 'UTF-8').'</span>';
+
+			return '<span class="itop-deleted-object" title="'.utils::EscapeHtml($sTitle).'">'.utils::EscapeHtml($sName).'</span>';
 		}
 		return $oObj->GetHyperLink();
 	}
@@ -7275,9 +7320,14 @@ abstract class MetaModel
 	/**
 	 * Replaces all the parameters by the values passed in the hash array
 	 *
-	 * @param string $sInput
-	 * @param array $aParams
+	 * @param string $sInput Can be plain text or HTML. Note that some part may be url-encoded if a placeholder is used in an URL.
+	 * @param array $aParams Placeholder descriptor as key, replacement as value. Possible placeholders can be of the forms:
+	 *   * foo_bar : Static placeholder
+	 *   * foo->bar : Another static placeholder
+	 *   * foo->object() : Will be developed into a set of placeholders depending on the attribute of the given \DBObject and their corresponding transformation methods {@see \AttributeDefinition::GetForTemplate()}
+	 *                     Example: foo->hyperlink(), foo->name, foo->html(name), foo->head(log), foo->head_html(log), ...
 	 *
+	 * @link https://www.itophub.io/wiki/page?id=latest:admin:placeholders
 	 * @return string
 	 *
 	 * @throws \Exception
@@ -7292,14 +7342,11 @@ abstract class MetaModel
 
 		$aSearches = array();
 		$aReplacements = array();
-		foreach ($aParams as $sSearch => $replace)
-		{
+		foreach ($aParams as $sSearch => $replace) {
 			// Some environment parameters are objects, we just need scalars
-			if (is_object($replace))
-			{
+			if (is_object($replace)) {
 				$iPos = strpos($sSearch, '->object()');
-				if ($iPos !== false)
-				{
+				if ($iPos !== false) {
 					// Expand the parameters for the object
 					$sName = substr($sSearch, 0, $iPos);
 					// Note: Capturing
@@ -7307,63 +7354,75 @@ abstract class MetaModel
 					// 2 - The arrow
 					// 3 - The attribute code
 					$aRegExps = array(
-                        '/(\\$)'.$sName.'-(>|&gt;)([^\\$]+)\\$/', // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
-                        '/(%24)'.$sName.'-(>|&gt;)([^%24]+)%24/', // Support for urlencoded in HTML attributes (%20this-&gt;xxx%20)
-                    );
-					foreach($aRegExps as $sRegExp)
-                    {
-                        if(preg_match_all($sRegExp, $sInput, $aMatches))
-                        {
-                            foreach($aMatches[3] as $idx => $sPlaceholderAttCode)
-                            {
-                                try
-                                {
-                                    $sReplacement = $replace->GetForTemplate($sPlaceholderAttCode);
-                                    if($sReplacement !== null)
-                                    {
-                                        $aReplacements[] = $sReplacement;
-                                        $aSearches[] = $aMatches[1][$idx] . $sName . '-' . $aMatches[2][$idx] . $sPlaceholderAttCode . $aMatches[1][$idx];
-                                    }
-                                }
-                                catch(Exception $e)
-                                {
-                                    // No replacement will occur
-                                }
-                            }
-                        }
-                    }
-				}
-				else
-				{
+						'/(\\$)'.$sName.'-(>|&gt;)([^\\$]+)\\$/', // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
+						'/(%24)'.$sName.'-(>|&gt;)([^%24]+)%24/', // Support for urlencoded in HTML attributes (%20this-&gt;xxx%20)
+					);
+					foreach ($aRegExps as $sRegExp) {
+						if (preg_match_all($sRegExp, $sInput, $aMatches)) {
+							foreach ($aMatches[3] as $idx => $sPlaceholderAttCode) {
+								try {
+									$sReplacement = $replace->GetForTemplate($sPlaceholderAttCode);
+									if ($sReplacement !== null) {
+										$aReplacements[] = $sReplacement;
+										$aSearches[] = $aMatches[1][$idx].$sName.'-'.$aMatches[2][$idx].$sPlaceholderAttCode.$aMatches[1][$idx];
+									}
+								}
+								catch (Exception $e) {
+									$aContext = [
+										'placeholder'   => $sPlaceholderAttCode,
+										'replace class' => get_class($replace),
+									];
+									if ($replace instanceof DBObject) {
+										$aContext['replace id'] = $replace->GetKey();
+									}
+									IssueLog::Debug(
+										'Invalid placeholder in notification, no replacement will occur!',
+										LogChannels::NOTIFICATIONS,
+										$aContext
+									);
+								}
+							}
+						}
+					}
+				} else {
 					continue; // Ignore this non-scalar value
 				}
-			}
-			else
-			{
+			} else {
 				$aRegExps = array(
-					'/(\$)'.$sSearch.'\$/',   // Support for regular placeholders (eg. $APP_URL$)
-					'/(%24)'.$sSearch.'%24/', // Support for urlencoded in HTML attributes (eg. %24APP_URL%24)
+					'/(\$)'.$sSearch.'\$/',   // Regular placeholders (eg. $APP_URL$) or placeholders with an arrow in plain text (eg. $foo->bar$)
+					'/(%24)'.$sSearch.'%24/', // Regular placeholders url-encoded in HTML attributes (eg. %24APP_URL%24)
+
+					'/(\$)'.utils::EscapeHtml($sSearch).'\$/',      // Placeholders with an arrow in HTML (eg. $foo-&gt;bar$)
+					'/(%24)'.utils::EscapeHtml($sSearch).'%24/',    // Placeholders with an arrow url-encoded in HTML attributes (eg. %24-&gt;bar%24)
 				);
-				foreach($aRegExps as $sRegExp)
-				{
-					if(preg_match_all($sRegExp, $sInput, $aMatches))
-					{
-						foreach($aMatches[1] as $idx => $sDelimiter)
-						{
-							try
-							{
+				foreach ($aRegExps as $sRegExp) {
+					if (preg_match_all($sRegExp, $sInput, $aMatches)) {
+						foreach ($aMatches[1] as $idx => $sDelimiter) {
+							try {
+								// Regular or plain text
 								$aReplacements[] = (string) $replace;
-								$aSearches[] = $aMatches[1][$idx] . $sSearch . $aMatches[1][$idx];
+								$aSearches[] = $aMatches[1][$idx].$sSearch.$aMatches[1][$idx];
+
+								// With an arrow in HTML
+								$aReplacements[] = (string) $replace;
+								$aSearches[] = $aMatches[1][$idx].utils::EscapeHtml($sSearch).$aMatches[1][$idx];
 							}
-							catch(Exception $e)
-							{
-								// No replacement will occur
+							catch (Exception $e) {
+								IssueLog::Debug(
+									'Invalid placeholder in notification, no replacement will occur !',
+									LogChannels::NOTIFICATIONS,
+									[
+										'placeholder' => $sPlaceholderAttCode,
+										'replace'     => $replace,
+									]
+								);
 							}
 						}
 					}
 				}
 			}
 		}
+
 		return str_replace($aSearches, $aReplacements, $sInput);
 	}
 
@@ -7560,6 +7619,45 @@ abstract class MetaModel
 
 		/** @var AttributeEnum $oAttDef */
 		return $oAttDef->GetStyle($sValue);
+	}
+
+	protected static function GetReentranceObject($sClass, $sKey)
+	{
+		if (isset(self::$m_aReentranceProtection[$sClass][$sKey])) {
+			return self::$m_aReentranceProtection[$sClass][$sKey];
+		}
+		return false;
+	}
+
+	/**
+	 * @param \DBObject $oObject
+	 *
+	 * @return bool true if reentry possible
+	 *
+	 * @since 3.1.0 N°4756
+	 */
+	public static function StartReentranceProtection(DBObject $oObject)
+	{
+		if (isset(self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()])) {
+			return false;
+		}
+		self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()] = $oObject;
+
+		return true;
+	}
+
+	/**
+	 * @param \DBObject $oObject
+	 *
+	 * @return void
+	 *
+	 * @since 3.1.0 N°4756
+	 */
+	public static function StopReentranceProtection(DBObject $oObject)
+	{
+		if (isset(self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()])) {
+			unset(self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()]);
+		}
 	}
 }
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
  /**
  * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
@@ -29,8 +29,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:Incident:Overview+' => 'Resumen de Incidentes',
 	'Menu:NewIncident' => 'Nuevo Incidente',
 	'Menu:NewIncident+' => 'Crear Ticket de Incidente',
-	'Menu:SearchIncidents' => 'Búsqueda por Incidentes',
-	'Menu:SearchIncidents+' => 'Búsqueda por tickets de Incidente',
+	'Menu:SearchIncidents' => 'Búsqueda de Incidentes',
+	'Menu:SearchIncidents+' => 'Búsqueda de tickets de Incidente',
 	'Menu:Incident:Shortcuts' => 'Accesos Rápidos',
 	'Menu:Incident:Shortcuts+' => 'Accesos Rápidos',
 	'Menu:Incident:MyIncidents' => 'Incidentes Asignados a Mí',

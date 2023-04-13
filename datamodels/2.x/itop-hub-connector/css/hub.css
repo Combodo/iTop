@@ -129,18 +129,11 @@
 }
 #hub-installation-feedback {
 	display: none;
-	-moz-box-shadow: 5px 5px 10px 0px #656565;
-	-webkit-box-shadow: 5px 5px 10px 0px #656565;
-	-o-box-shadow: 5px 5px 10px 0px #656565;
-	box-shadow: 5px 5px 10px 0px #656565;
 	filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=134, Strength=10);
 	padding-bottom: 1em;
 	background-color: #FFF;
 	padding-top: 1em;
-	position: absolute;
-	top: 50px;
-	left: 190px;
-	width: 400px;
+	width: 100%
 }
 #hub-installation-progress-text {
 	text-align: center;
@@ -167,6 +160,8 @@
 	width: 100%;
 }
 #hub_launch_content button {
+	display: inline-flex;
+	align-items: center;
 	cursor: pointer;
 	font-weight: bold;
 	box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px rgba(34, 36, 38, 0.15) inset;
@@ -201,7 +196,6 @@
 	box-sizing: revert;
 	width: 16px;
 	height: 16px;
-	vertical-align: middle;
 	padding: 12px;
 	background-color: rgba(0, 0, 0, 0.1);
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -156,6 +156,7 @@ abstract class Query extends cmdbAbstractObject
 		// last export information
 		$this->Set('export_last_date', date(AttributeDateTime::GetSQLFormat()));
 		$this->Set('export_last_user_id', UserRights::GetUserObject());
+		$this->AllowWrite(true);
 		$this->DBUpdate();
 
 		// increment usage counter

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -405,7 +405,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Fjern >> ',
 	'UI:Button:FilterList' => ' Filter... ',
 	'UI:Button:Create' => ' Opret ',
-	'UI:Button:Delete' => ' Slet! ',
+	'UI:Button:Delete' => ' Slet ',
 	'UI:Button:Rename' => ' Omdøb... ',
 	'UI:Button:ChangePassword' => ' Skift Password ',
 	'UI:Button:ResetPassword' => ' Reset Password ',
@@ -633,9 +633,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Vælg klasse at søge efter: ',
 
 	'UI:CSVReport-Value-Modified' => 'Ændret',
-	'UI:CSVReport-Value-SetIssue' => 'Kunne ikke ændres - årsag: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Kunne ikke ændres til %1$s - årsag: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'No match',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Mangler obligatorisk værdi',
 	'UI:CSVReport-Value-Ambiguous' => 'Tvetydig: fandt %1$s objekter',
 	'UI:CSVReport-Row-Unchanged' => 'Uændret',
@@ -794,7 +794,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Tilføj %1$s objekter kædet til %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Tilføj %1$s objekter til kæden til %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Administrer %1$s objekter kædet til %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Tilføj %1$s objekter...',
+	'UI:AddLinkedObjectsOf_Class' => 'Tilføj %1$s objekter',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Fjern valgte objekter',
 	'UI:Message:EmptyList:UseAdd' => 'Listen er tom, brug "Tilføj..." knappen for at tilføje elementer.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Brug søgeformularen ovenfor, til søgning efter objekters som skal tilføjes.',

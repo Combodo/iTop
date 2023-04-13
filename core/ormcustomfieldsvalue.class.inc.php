@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Base class to hold the value managed by CustomFieldsHandler
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -50,10 +50,11 @@ class ormCustomFieldsValue
 	 * Wrapper used when the only thing you have is the value...
 	 * @return \Combodo\iTop\Form\Form
 	 */
-	public function GetForm()
+	public function GetForm($sFormPrefix = null)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		return $oAttDef->GetForm($this->oHostObject);
+
+		return $oAttDef->GetForm($this->oHostObject, $sFormPrefix);
 	}
 
 	public function GetAsHTML($bLocalize = true)

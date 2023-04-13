@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /*
@@ -634,7 +634,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		// will force it be of the same class as the previous call)
 		me.sTargetClass = me.sOriginalTargetClass;
 
-		me.CreateObject(oWizHelper);
+		me.CreateObject();
 	};
 
 	this.DoSelectObjectClass = function () {
@@ -646,13 +646,12 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 
 		// Setting new target class
 		me.sTargetClass = oSelectedClass.val();
-
 		// Opening real creation form
+		me.CreateObject(true);
 		$('#ac_create_'+me.id).dialog('close');
-		me.CreateObject();
 	};
 
-	this.CreateObject = function (oWizHelper) {
+	this.CreateObject = function (bTargetClassSelected) {
 		if ($('#'+me.id).prop('disabled')) {
 			return;
 		} // Disabled, do nothing
@@ -670,7 +669,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			sAttCode: me.sAttCode,
 			'json': me.oWizardHelper.ToJSON(),
 			operation: 'objectCreationForm',
-			ajax_promise_id: sPromiseId
+			ajax_promise_id: sPromiseId,
+			bTargetClassSelected: bTargetClassSelected
 		};
 
 		// Make sure that we cancel any pending request before issuing another
@@ -678,6 +678,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.StopPendingRequest();
 
 		// Run the query and get the result back directly in HTML
+		var sLocalTargetClass = me.sTargetClass; // Remember the target class since it will be reset when closing the dialog
 		me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 			function (data) {
 				$('#ajax_'+me.id).html(data);
@@ -687,6 +688,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					// Modify the action of the cancel button
 					$('#ac_create_'+me.id+' button.cancel').off('click').on('click', me.CloseCreateObject);
 					me.ajax_request = null;
+					me.sTargetClass = sLocalTargetClass;
 					// Adjust the dialog's size to fit into the screen
 					if ($('#ac_create_'+me.id).width() > ($(window).width()-40)) {
 						$('#ac_create_'+me.id).width($(window).width()-40);
@@ -714,6 +716,10 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#ac_create_'+me.id).dialog("destroy");
 		$('#ac_create_'+me.id).remove();
 		$('#ajax_'+me.id).html('');
+		// Resetting target class to its original value
+		// (If not done, closing the dialog and trying to create a object again
+		// will force it be of the same class as the previous call)
+		me.sTargetClass = me.sOriginalTargetClass;
 	};
 
 	this.DoCreateObject = function () {
@@ -763,7 +769,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					$('#fstatus_'+me.id).html('');
 					if (data.id == 0) {
 						$('#label_'+me.id).removeClass('ac_dlg_loading');
-						alert(data.error);
+						CombodoModal.OpenErrorModal(data.error);
 					} else if (me.bSelectMode) {
 						// Add the newly created object to the drop-down list and select it
 						/*$('<option/>', { value : data.id }).html(data.name).appendTo('#'+me.id);

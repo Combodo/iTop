@@ -1,17 +1,18 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
-use ApplicationException;
 use ApplicationContext;
+use ApplicationException;
 use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
@@ -19,8 +20,10 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Template\TemplateUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Controller\AjaxRenderController;
 use DBObjectSet;
@@ -35,9 +38,9 @@ use WebPage;
  * Class DataTableUIBlockFactory
  *
  * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\DataTable
- * @since 3.0.0
+ * @package UIBlockAPI
  * @api
+ * @since 3.0.0
  */
 class DataTableUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -47,6 +50,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = DataTable::class;
 
 	/**
+	 * @api
 	 * @param \WebPage $oPage
 	 * @param string $sListId
 	 * @param \DBObjectSet $oSet
@@ -71,6 +75,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
+	 * @api
 	 * @param \WebPage $oPage
 	 * @param string $sListId
 	 * @param DBObjectSet $oSet
@@ -118,6 +123,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	protected static function RenderDataTable(DataTable $oDataTable, string $sStyle, WebPage $oPage, string $sListId, DBObjectSet $oSet, array $aExtraParams)
 	{
+		// Filter this list action
+		$sFilterListUrl = utils::GetDataTableSearchUrl($oSet->GetFilter(), $aExtraParams);
+		if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
+			$aExtraParams['filter_this_list_url'] = $sFilterListUrl;
+		}
+
 		if (!isset($aExtraParams['menu']) || $aExtraParams['menu']) {
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
 			$aExtraParams['refresh_action'] = $oDataTable->GetJSRefresh();
@@ -132,7 +143,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				$bToolkitMenu = false;
 			}
 			if ($bToolkitMenu) {
-				$aExtraParams['selection_mode'] = true;
 				$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
 				$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
 			} else {
@@ -140,33 +150,50 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 		}
 
+		// Default behavor, surrond table with a panel for better display
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
+			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), '')
+				->AddCSSClass('ibo-datatable-panel');
+
+			// Panel title
+			if (isset($aExtraParams['panel_title'])) {
+				if (isset($aExtraParams['panel_title_is_html']) && $aExtraParams['panel_title_is_html'] === true) {
+					$oContainer->AddTitleBlock(HtmlFactory::MakeRaw($aExtraParams['panel_title']));
+				} else {
+					$oContainer->SetTitle($aExtraParams['panel_title']);
+				}
+			}
+			// - Description
+			if (isset($aExtraParams['panel_title_tooltip'])) {
+				$oContainerTitleBlock = $oContainer->GetTitleBlock()
+					->AddDataAttribute('tooltip-content', $aExtraParams['panel_title_tooltip'])
+					->AddDataAttribute('tooltip-max-width', 'min(600px, 90vw)') // Allow big description to be wide enough while shrinking on small screens
+					->AddCSSClass('ibo-has-description');
+			}
+
+			// Panel subtitle
 			if(!empty($oDataTable->GetInitDisplayData()) && isset($oDataTable->GetInitDisplayData()['recordsTotal'])){
 				$iCount = $oDataTable->GetInitDisplayData()['recordsTotal'];
 			} else {
 				$iCount = $oSet->Count();
 			}
-			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), '')->AddCSSClass('ibo-datatable-panel');
-			if(isset($aExtraParams['panel_title'])){
-				if(isset($aExtraParams['panel_title_is_html']) && $aExtraParams['panel_title_is_html'] === true) {
-					$oContainer->AddTitleBlock(HtmlFactory::MakeRaw($aExtraParams['panel_title']));
-				}
-				else {
-					$oContainer->SetTitle($aExtraParams['panel_title']);
-				}
+			$sCountHtml = '<span class="ibo-datatable--result-count">'.$iCount.'</span>';
+			if ($oDataTable->GetOption('select_mode') === 'multiple') {
+				$sSubTitle = Dict::Format('UI:Pagination:HeaderSelection', $sCountHtml, '<span class="ibo-datatable--selected-count">0</span>');
+			} else {
+				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection', $sCountHtml);
 			}
-			if ($oDataTable->GetOption("select_mode") == 'multiple')
-			{
-				$sSubTitle =Dict::Format('UI:Pagination:HeaderSelection',  '<span class="ibo-datatable--result-count">'.$iCount.'</span>', '<span class="ibo-datatable--selected-count">0</span>');
-			}
-			else
-			{
-				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection',  '<span class="ibo-datatable--result-count">'.$iCount.'</span>');
+
+			if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
+				$sSubTitle = '<a href="'.$sFilterListUrl.'" title="'.Dict::S('UI:Menu:FilterList').'">'.$sSubTitle.'</a>';
 			}
 			$oContainer->AddSubTitleBlock(new Html($sSubTitle));
-			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
-				$oContainer->SetIcon($aExtraParams["panel_icon"]);
+
+			// Panel icon
+			if (isset($aExtraParams['panel_icon']) && strlen($aExtraParams['panel_icon']) > 0) {
+				$oContainer->SetIcon($aExtraParams['panel_icon']);
 			}
+
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
 		} else {
@@ -181,8 +208,52 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
+	 * Make a row actions toolbar template.
+	 *
+	 * @param iUIBlock $oTable datatable object that needs to use tTableRowActions trait
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Template\Template
+	 * @throws \Exception
+	 * @since 3.1.0
+	 */
+	public static function MakeActionRowToolbarTemplate(iUIBlock $oTable)
+	{
+		// test trait
+		$sTableClass = get_class($oTable);
+		if (!utils::IsTraitUsedByClass(tTableRowActions::class, $sTableClass)) {
+			throw new \Exception("DataTableUIBlockFactory::MakeActionRowToolbarTemplate: {$sTableClass} iUIBlock needs tTableRowActions trait");
+		}
+
+		// row actions template
+		$oTemplate = TemplateUIBlockFactory::MakeStandard($oTable->GetId().'_actions_buttons_template');
+
+		// row actions toolbar container
+		$oToolbar = ToolbarUIBlockFactory::MakeStandard();
+		$oToolbar->AddCSSClass('ibo-datatable--row-actions-toolbar');
+
+		// for each action...create an icon button
+		foreach ($oTable->GetRowActions() as $iKey => $aAction) {
+			$oButton = ButtonUIBlockFactory::MakeIconAction(
+				array_key_exists('icon_classes', $aAction) ? $aAction['icon_classes'] : 'fas fa-question',
+				array_key_exists('tooltip', $aAction) ? Dict::S($aAction['tooltip']) : '',
+				array_key_exists('name', $aAction) ? $aAction['name'] : 'undefined'
+			);
+			if (array_key_exists('color', $aAction)) {
+				$oButton->SetColor($aAction['color']);
+			}
+			$oButton->SetDataAttributes(['label' => Dict::S($aAction['label']), 'action-id' => $iKey, 'table-id' => $oTable->GetId()]);
+			$oToolbar->AddSubBlock($oButton);
+		}
+
+		$oTemplate->AddSubBlock($oToolbar);
+
+		return $oTemplate;
+	}
+
+	/**
 	 * Make a basis Panel component
 	 *
+	 * @api
 	 * @param string $sListId
 	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams
@@ -457,9 +528,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		} else {
 			$aOptions['sSelectedRows'] = '[]';
 		}
-		$aExtraParams['table_id']=$sTableId;
-		$aExtraParams['list_id']=$sListId;
-
+		$aExtraParams['table_id'] = $sTableId;
+		$aExtraParams['list_id'] = $sListId;
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
@@ -475,10 +545,20 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
 		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
 
+		// row actions
+		if (isset($aExtraParams['row_actions'])) {
+			$oDataTable->SetRowActions($aExtraParams['row_actions']);
+		}
+
+		if (isset($aExtraParams['creation_in_modal_js_handler'])){
+			$oDataTable->SetModalCreationHandler($aExtraParams['creation_in_modal_js_handler']);
+		}
+		
 		return $oDataTable;
 	}
 
 	/**
+	 * @api
 	 * @param string $sListId
 	 * @param DBObjectSet $oSet
 	 * @param array $aExtraParams
@@ -695,6 +775,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		$aOptions['sTableId'] = $sTableId;
+		$aOptions['sListId'] = $sListId;
 		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
 		$aOptions['bViewLink'] = $bViewLink;
 		$aOptions['oClassAliases'] = json_encode($aClassAliases);
@@ -713,6 +794,16 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
 		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
 
+		// row actions
+		if (isset($aExtraParams['row_actions'])) {
+			$oDataTable->SetRowActions($aExtraParams['row_actions']);
+		}
+
+		if (isset($aExtraParams['creation_in_modal_js_handler'])){
+			$oDataTable->SetModalCreationHandler($aExtraParams['creation_in_modal_js_handler']);
+		}
+		
+
 		return $oDataTable;
 	}
 
@@ -721,7 +812,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sSelectMode
 	 * @param string $sFilter
 	 * @param int $iLength
+	 * @param array $aClassAliases
 	 * @param array $aExtraParams
+	 * @param string $sTableId
 	 *
 	 * @return array
 	 * @throws \Exception
@@ -822,7 +915,7 @@ JS;
 						];
 						$aColumnDefinition["createdCell"] = <<<JS
 						$(td).attr('data-object-class', '$sClassName');
-						$(td).attr('data-attribute-label', '$sAttrLabel');
+						$(td).attr('data-attribute-label', '$sAttLabel');
 						$(td).attr('data-attribute-code', '$sAttCode');
 						$(td).attr('data-attribute-type', '$sAttDefClass');
 						if (rowData["$sClassAlias/$sAttCode/raw"]) {
@@ -901,6 +994,7 @@ JS;
 	}
 
 	/**
+	 * @api
 	 * @param string $sTitle
 	 * @param array $aColumns
 	 * @param array $aData
@@ -908,6 +1002,7 @@ JS;
 	 * @param array $aExtraParams
 	 * @param string $sFilter
 	 * @param array $aOptions
+	 * @param array $aRowActions @since 3.1.0
 	 * *
 	 * $aColumns =[
 	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],
@@ -917,7 +1012,7 @@ JS;
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
-	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [])
+	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [], array $aRowActions = null)
 	{
 		$oBlock = new UIContentBlock();
 		if ($sTitle != "") {
@@ -925,6 +1020,13 @@ JS;
 			$oBlock->AddSubBlock($oTitle);
 		}
 		$oTable = new StaticTable($sId, [], $aExtraParams);
+		if ($aRowActions != null) {
+			$oTable->SetRowActions($aRowActions);
+			$aColumns['actions'] = [
+				'label'       => Dict::S('UI:Datatables:Column:RowActions:Label'),
+				'description' => Dict::S('UI:Datatables:Column:RowActions:Description'),
+			];
+		}
 		$oTable->SetColumns($aColumns);
 		$oTable->SetData($aData);
 		$oTable->SetFilter($sFilter);
@@ -936,10 +1038,12 @@ JS;
 	}
 
 	/**
+	 * @api
 	 * @param string $sRef
 	 * @param array $aColumns
 	 * @param array $aData
 	 * @param string $sFilter
+	 * @param array $aRowActions @since 3.1.0
 	 *
 	 * $aColumns =[
 	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],
@@ -949,10 +1053,17 @@ JS;
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable
 	 */
-	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = '')
+	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = '', array $aRowActions = null)
 	{
 		$oTable = new FormTable("datatable_".$sRef);
 		$oTable->SetRef($sRef);
+		if ($aRowActions != null) {
+			$oTable->SetRowActions($aRowActions);
+			$aColumns['actions'] = [
+				'label'       => Dict::S('UI:Datatables:Column:RowActions:Label'),
+				'description' => Dict::S('UI:Datatables:Column:RowActions:Description'),
+			];
+		}
 		$oTable->SetColumns($aColumns);
 		$oTable->SetFilter($sFilter);
 
@@ -970,24 +1081,48 @@ JS;
 	public static function GetAllowedParams(): array
 	{
 		return [
-			'surround_with_panel',  /** bool embed table into a Panel */
-			'menu',                 /** bool display table menu */
-			'view_link',            /** bool display the friendlyname column with links to the objects details */
-			'link_attr',            /** string link att code */
-			'object_id',            /** int Id of the object linked */
-			'target_attr',          /** string target att code of the link */
-			'selection_mode',       /** bool activate selection */
-			'selection_type',       /** string 'multiple' or 'single' */
-			'extra_fields',         /** string comma separated list of link att code to display ('alias.attcode')*/
-			'zlist',                /** string name of the zlist to display when 'extra_fields' is not set */
-			'display_limit',        /** bool if true pagination is used (default = true)  */
-			'table_id',             /** string datatable id */
-			'cssCount',             /** string external counter (input hidden) js selector */
-			'selected_rows',        /** array list of Ids already selected when displaying the datatable */
-			'display_aliases',      /** string comma separated list of class aliases to display */
-			'list_id',              /** string list outer id */
-			'selection_enabled',    	/** list of id in witch select is allowed, if not exists all lines are selectable */
-			'id_for_select', /**give definition of id for select checkbox*/
+			'surround_with_panel',
+			/** bool embed table into a Panel */
+			'menu',
+			/** bool display table menu */
+			'view_link',
+			/** bool display the friendlyname column with links to the objects details */
+			'link_attr',
+			/** string link att code */
+			'object_id',
+			/** int Id of the object linked */
+			'target_attr',
+			/** string target att code of the link */
+			'selection_mode',
+			/** bool activate selection */
+			'selection_type',
+			/** string 'multiple' or 'single' */
+			'extra_fields',
+			/** string comma separated list of link att code to display ('alias.attcode')*/
+			'zlist',
+			/** string name of the zlist to display when 'extra_fields' is not set */
+			'display_limit',
+			/** bool if true pagination is used (default = true)  */
+			'table_id',
+			/** string datatable id */
+			'cssCount',
+			/** string external counter (input hidden) js selector */
+			'selected_rows',
+			/** array list of Ids already selected when displaying the datatable */
+			'display_aliases',
+			/** string comma separated list of class aliases to display */
+			'list_id',
+			/** string list outer id */
+			'selection_enabled',
+			/** list of id in witch select is allowed, if not exists all lines are selectable */
+			'id_for_select',
+			/**give definition of id for select checkbox*/
+			'row_actions',
+			/** array of blocks displayed on every row */
+			'creation_in_modal_is_allowed',
+			/** bool to allow a creation of a new object of this type in a modal */	
+			'creation_in_modal_js_handler',
+			/** Handler to call when trying to create a new object in modal */
 		];
 	}
 }

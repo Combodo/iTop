@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -11,18 +11,4 @@ $ibo-input--spacing-left--with-label: $ibo-spacing-300 !default;
 select + label, label + select, label > select,
 input + label, label + input, label > input {
   margin-left: $ibo-input--spacing-left--with-label;
-}
-
-.ibo-input-with-label--label {
-  &.ibo-has-description {
-    &::after {
-      content: $ibo-field--label--description--content;
-      padding-left: $ibo-field--label--description--padding-left;
-      vertical-align: top;
-
-      cursor: pointer;
-      color: $ibo-field--label--description--color;
-      @extend %ibo-font-ral-bol-50;
-    }
-  }
 }

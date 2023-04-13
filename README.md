@@ -3,9 +3,9 @@
 </a></p>
 
 
-iTop stands for IT Operations Portal. It is a complete open source and web based IT service management platform including a fully customizable CMDB, a helpdesk system and a document management tool. It is ITIL compliant and easily customizable and extensible thanks to a high number of adds-on and web services to integrate with your IT.
+iTop stands for IT Operations Portal. It is a complete open source and web-based IT service management platform, including a fully customizable CMDB, a helpdesk system, and a document management tool. It is ITIL compliant and easily customizable and extensible thanks to a high number of add-ons and web services to integrate with your IT.
 
-iTop also offers mass import tools to help you being even more efficient.
+iTop also offers mass import tools to help you become even more efficient.
 
 ## Features
 - Fully configurable [Configuration Management (CMDB)][10]
@@ -37,17 +37,19 @@ iTop also offers mass import tools to help you being even more efficient.
  - [iTop Forums][1]: community support
  - [iTop Tickets][2]: for feature requests and bug reports
  - [Releases download][3]
- - [Software requirements][4]
+ - [iTop requirements][4]
  - [Documentation][5] covering both iTop and its official extensions
  - [iTop Hub][6] : discover and install extensions !
+ - [iTop versions history][7]
 
 
 [1]: https://sourceforge.net/p/itop/discussion/
 [2]: https://sourceforge.net/p/itop/tickets/
 [3]: https://sourceforge.net/projects/itop/files/itop/
-[4]: https://www.itophub.io/wiki/page?id=latest:install:upgrading_itop
+[4]: https://www.itophub.io/wiki/page?id=latest:install:requirements
 [5]: https://www.itophub.io/wiki
 [6]: https://store.itophub.io/en_US/
+[7]: .doc/itop-version-history.md
 
 [10]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#configuration_management_cmdb
 [11]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#ticketing
@@ -63,7 +65,7 @@ iTop also offers mass import tools to help you being even more efficient.
 
 ## About Us
 
-iTop development is sponsored, led and supported by [Combodo][0].
+iTop development is sponsored, led, and supported by [Combodo][0].
 
 [0]: https://www.combodo.com
 
@@ -98,8 +100,11 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Lucas, Jonathan
 - Malik, Remie
 - Mindêllo de Andrade, Lucas (a.k.a [@rokam](https://www.github.com/rokam))
+- Mozart de Oliveira, Eduardo (a.k.a [@eduardomozart](https://github.com/eduardomozart))
 - Raenker, Martin
+- Roháč, Richard (a.k.a [@RohacRichard](https://github.com/RohacRichard))
 - Rosenke, Stephan
+- Rudner, Björn (a.k.a [@rudnerbjoern](https://github.com/rudnerbjoern))
 - Seki, Shoji
 - Shilov, Vladimir
 - Stukalov, Ilya (a.k.a [@ilya](https://www.github.com/ilya)-stukalov)
@@ -113,6 +118,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - DudekArtur
 - Karkoff1212
 - Laura
+- nv35
 - Purple Grape
 - Schlobinux
 - theBigOne

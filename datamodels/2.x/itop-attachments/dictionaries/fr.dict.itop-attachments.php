@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -68,6 +68,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:File:Uploader' => 'Chargé par',
 	'Attachments:File:Size' => 'Taille',
 	'Attachments:File:MimeType' => 'Type',
+	'Attachments:File:DownloadsCount' => 'Téléchargements',
 ));
 //
 // Class: Attachment
@@ -80,4 +81,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Contact',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:TriggerOnAttachmentDownload' => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
+	'Class:TriggerOnAttachmentDownload+' => '',
 ));

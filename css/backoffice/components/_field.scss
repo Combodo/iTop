@@ -1,14 +1,10 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
 $ibo-field--value--color: $ibo-color-grey-800 !default;
-
-$ibo-field--label--description--content: "?" !default;
-$ibo-field--label--description--padding-left: $ibo-spacing-200 !default;
-$ibo-field--label--description--color: $ibo-color-grey-600 !default;
 
 $ibo-field--background-color--is-fullscreen: $ibo-color-white-100 !default;
 
@@ -54,6 +50,8 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
     [data-attribute-type="AttributeCustomFields"],
     [data-attribute-type="AttributeTagSet"],
     [data-attribute-type="AttributeEnumSet"],
+    [data-attribute-type="AttributeLinkedSet"],
+    [data-attribute-type="AttributeLinkedSetIndirect"],
     [data-attribute-type="AttributeClassAttCodeSet"],
     [data-attribute-type="AttributeQueryAttCodeSet"],
     .ibo-input-file-select--container
@@ -94,6 +92,7 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
     max-width: 145px;
     width: 30%;
   }
+
   .ibo-field--value {
     margin-top: $ibo-field--value--margin-top--for-large; /* Mostly used to have a clear separation from elements in .ibo-field--comments */
   }
@@ -161,18 +160,6 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
   width: 30%;
   word-break: break-word; /* We want labels to wrap if it is very long if it has no spaces */
   @extend %ibo-font-weight-600;
-
-  > .ibo-has-description {
-    &::after {
-      content: $ibo-field--label--description--content;
-      padding-left: $ibo-field--label--description--padding-left;
-      vertical-align: top;
-
-      cursor: pointer;
-      color: $ibo-field--label--description--color;
-      @extend %ibo-font-ral-bol-50;
-    }
-  }
 }
 .ibo-field--label-small .ibo-field--label{
   width: 20em;
@@ -252,3 +239,6 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
   margin-left: $ibo-field--enable-bulk--checkbox--margin-left;
 }
 
+.ibo-input-select--action-buttons a  {
+  @extend %ibo-hyperlink-inherited-colors;
+}

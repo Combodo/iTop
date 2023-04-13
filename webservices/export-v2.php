@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -14,12 +14,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
-if (!defined('__DIR__')) {
-	define('__DIR__', dirname(__FILE__));
-}
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/excelexporter.class.inc.php');
@@ -27,19 +23,15 @@ require_once(APPROOT.'/core/bulkexport.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-
-
 const EXIT_CODE_ERROR = -1;
 const EXIT_CODE_FATAL = -2;
-
-
 
 function ReportErrorAndExit($sErrorMessage)
 {
 	if (utils::IsModeCLI())
 	{
 		$oP = new CLIPage("iTop - Export");
-		$oP->p('ERROR: '.$sErrorMessage);
+		$oP->p('ERROR: '.utils::HtmlEntities($sErrorMessage));
 		$oP->output();
 		exit(EXIT_CODE_ERROR);
 	}
@@ -47,7 +39,7 @@ function ReportErrorAndExit($sErrorMessage)
 	{
 		$oP = new WebPage("iTop - Export");
 		$oP->add_xframe_options();
-		$oP->p('ERROR: '.$sErrorMessage);
+		$oP->p('ERROR: '.utils::HtmlEntities($sErrorMessage));
 		$oP->output();
 		exit(EXIT_CODE_ERROR);
 	}
@@ -134,7 +126,7 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oPanel->AddSubBlock(InputUIBlockFactory::MakeForHidden('interactive', '1'));
 
 	$oFieldQuery = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label>');
-	$oTextArea = new TextArea('expression', htmlentities($sExpression, ENT_QUOTES, 'UTF-8'), "textarea_oql", 70, 8);
+	$oTextArea = new TextArea('expression', utils::EscapeHtml($sExpression), "textarea_oql", 70, 8);
 	$oTextArea->SetPlaceholder(Dict::S('Core:BulkExportQueryPlaceholder'));
 	$oTextArea->AddCSSClasses(["ibo-input-text", "ibo-query-oql", "ibo-is-code"]);
 	$oFieldQuery->AddSubBlock($oTextArea);
@@ -187,7 +179,7 @@ $('#export-form').on('submit', function() {
 		var sOQL = $('#textarea_oql').val();
 		if (sOQL == '')
 		{
-			alert($sJSEmptyOQL);
+			CombodoModal.OpenErrorModal($sJSEmptyOQL);
 			return false;
 		}
 	}
@@ -196,7 +188,7 @@ $('#export-form').on('submit', function() {
 		var sQueryId = $('#select_phrasebook').val();
 		if (sQueryId == '')
 		{
-			alert($sJSEmptyQueryId);
+			CombodoModal.OpenErrorModal($sJSEmptyQueryId);
 			return false;
 		}
 	}
@@ -267,14 +259,14 @@ EOF
 	}
 
 	if ($sExpression !== '') {
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", htmlentities($sExpression, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", $sExpression));
 		$oExportSearch = DBObjectSearch::FromOQL($sExpression);
 		$oExportSearch->UpdateContextFromUser();
 	} else {
 		$oQuery = MetaModel::GetObject('QueryOQL', $sQueryId);
 		$oExportSearch = DBObjectSearch::FromOQL($oQuery->Get('oql'));
 		$oExportSearch->UpdateContextFromUser();
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", htmlentities($sQueryId, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", $sQueryId));
 	}
 	$aFormPartsByFormat = array();
 	$aAllFormParts = array();
@@ -302,7 +294,7 @@ EOF
 
 	} else {
 		// One specific format was chosen
-		$oSelect = InputUIBlockFactory::MakeForHidden("format", htmlentities($sFormat, ENT_QUOTES, 'UTF-8'));
+		$oSelect = InputUIBlockFactory::MakeForHidden("format", utils::EscapeHtml($sFormat));
 		$oForm->AddSubBlock($oSelect);
 
 		$oExporter = BulkExport::FindExporter($sFormat, $oExportSearch);
@@ -362,7 +354,7 @@ function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
 {
 	if ($sMode == 'dialog') {
 		$sExportBtnLabel = json_encode(Dict::S('UI:Button:Export'));
-		$sJSTitle = json_encode(htmlentities(utils::ReadParam('dialog_title', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8'));
+		$sJSTitle = json_encode(utils::EscapeHtml(utils::ReadParam('dialog_title', '', false, 'raw_data')));
 		$oP = new AjaxPage($sJSTitle);
 		$oP->add('<div id="interactive_export_dlg">');
 		$oP->add_ready_script(
@@ -711,7 +703,7 @@ try
 			}
 			$oP->add_style("body { overflow: auto; }");
 		} else {
-			$oP = new AjaxPage('iTop export');
+			$oP = new DownloadPage('iTop export');
 			$oP->SetContentType($oExporter->GetMimeType());
 		}
 		DoExport($oP, $oExporter, false);

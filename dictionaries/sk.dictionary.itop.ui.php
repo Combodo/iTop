@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
@@ -13,7 +13,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:AuditCategory/Attribute:definition_set' => 'Definícia nastavená',
 	'Class:AuditCategory/Attribute:definition_set+' => '',
 	'Class:AuditCategory/Attribute:rules_list' => 'Pravidlá auditu',
-	'Class:AuditCategory/Attribute:rules_list+' => '',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category~~',
 ));
 
 //
@@ -100,9 +100,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:User/Attribute:language/Value:FR FR' => 'Francúzština',
 	'Class:User/Attribute:language/Value:FR FR+' => '',
 	'Class:User/Attribute:profile_list' => 'Profily',
-	'Class:User/Attribute:profile_list+' => '',
+	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person~~',
 	'Class:User/Attribute:allowed_org_list' => 'Povolené organizácie',
-	'Class:User/Attribute:allowed_org_list+' => '',
+	'Class:User/Attribute:allowed_org_list+' => 'The end user is allowed to see data belonging to the following organizations. If no organization is specified, there is no restriction.~~',
 	'Class:User/Attribute:status' => 'Status~~',
 	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.~~',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled~~',
@@ -406,7 +406,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Odstrániť >> ',
 	'UI:Button:FilterList' => ' Filter... ',
 	'UI:Button:Create' => ' Vytvoriť ',
-	'UI:Button:Delete' => ' Vymazať ! ',
+	'UI:Button:Delete' => ' Vymazať ',
 	'UI:Button:Rename' => ' Premenovať... ',
 	'UI:Button:ChangePassword' => ' Zmeniť heslo ',
 	'UI:Button:ResetPassword' => ' Reset hesla ',
@@ -634,9 +634,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Vyberte triedu na vyhľadávanie: ',
 
 	'UI:CSVReport-Value-Modified' => 'Upravený',
-	'UI:CSVReport-Value-SetIssue' => 'Nemožno zmeniť - dôvod: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Nemožno zmeniť na %1$s - dôvod: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Žiadna zhoda',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Chýbajúca povinná hodnota',
 	'UI:CSVReport-Value-Ambiguous' => 'Nejednoznačné: nájdených %1$s objektov',
 	'UI:CSVReport-Row-Unchanged' => 'Nezmený',
@@ -795,7 +795,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Pridať %1$s objektov prepojených s %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Pridať %1$s objektov na prepojenie s %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Manažovať %1$s objektov prpojených s %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Pridať %1$ss...',
+	'UI:AddLinkedObjectsOf_Class' => 'Pridať %1$ss',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Odstrániť zvolené objekty',
 	'UI:Message:EmptyList:UseAdd' => 'Zoznam je prázdny, použite "Pridať..." tlačidlo na pridanie prvkov.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Použite vyhľadávaciu formu vyššie na vyhľadávanie objektov, ktoré budú pridané.',

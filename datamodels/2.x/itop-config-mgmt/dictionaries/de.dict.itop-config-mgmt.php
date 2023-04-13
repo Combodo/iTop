@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2021 Combodo SARL
+* @copyright     Copyright (C) 2023 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *
 */
@@ -117,13 +117,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FunctionalCI/Attribute:move2production' => 'Go-Live-Datum',
 	'Class:FunctionalCI/Attribute:move2production+' => 'Datum, an dem in Produktivbetrieb gegangen wird/wurde',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Kontakte',
-	'Class:FunctionalCI/Attribute:contacts_list+' => '',
+	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contacts for this configuration item~~',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Dokumente',
-	'Class:FunctionalCI/Attribute:documents_list+' => '',
+	'Class:FunctionalCI/Attribute:documents_list+' => 'All the documents linked to this configuration item~~',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Anwendungslösungen',
-	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
+	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'All the application solutions depending on this configuration item~~',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
-	'Class:FunctionalCI/Attribute:softwares_list+' => '',
+	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the softwares installed on this configuration item~~',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Typ',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Offene Tickets',
@@ -178,9 +178,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Rack/Attribute:nb_u' => 'Höheneinheiten',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Devices',
-	'Class:Rack/Attribute:device_list+' => '',
+	'Class:Rack/Attribute:device_list+' => 'All the physical devices racked into this rack~~',
 	'Class:Rack/Attribute:enclosure_list' => 'Enclosures',
-	'Class:Rack/Attribute:enclosure_list+' => '',
+	'Class:Rack/Attribute:enclosure_list+' => 'All the enclosures in this rack~~',
 ));
 
 //
@@ -242,9 +242,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ConnectableCI' => 'Verknüpfbares CI',
 	'Class:ConnectableCI+' => 'Physisches CI',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Netzwerkgeräte',
-	'Class:ConnectableCI/Attribute:networkdevice_list+' => '',
+	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device~~',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Netzwerkinterfaces',
-	'Class:ConnectableCI/Attribute:physicalinterface_list+' => '',
+	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'All the physical network interfaces~~',
 ));
 
 //
@@ -275,9 +275,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'Strom-B-Quellenname',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC-Ports',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'All the fiber channel interfaces for this device~~',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
-	'Class:DatacenterDevice/Attribute:san_list+' => '',
+	'Class:DatacenterDevice/Attribute:san_list+' => 'All the SAN switches connected to this device~~',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundanz',
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Das Gerät läuft, wenn mindestens eine der Stromversorgungen (A oder B) läuft.',
 	// Unused yet
@@ -297,7 +297,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Netzwerk-Typname',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Geräte',
-	'Class:NetworkDevice/Attribute:connectablecis_list+' => '',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'All the devices connected to this network device~~',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOS Version',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOS-Versionsname',
@@ -330,7 +330,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Server/Attribute:ram' => 'RAM',
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logische Volumes',
-	'Class:Server/Attribute:logicalvolumes_list+' => '',
+	'Class:Server/Attribute:logicalvolumes_list+' => 'All the logical volumes connected to this server~~',
 ));
 
 //
@@ -341,7 +341,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:StorageSystem' => 'Storage-System',
 	'Class:StorageSystem+' => '',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logische Volumes',
-	'Class:StorageSystem/Attribute:logicalvolume_list+' => '',
+	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system~~',
 ));
 
 //
@@ -352,7 +352,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SANSwitch' => 'SAN-Switch',
 	'Class:SANSwitch+' => '',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Geräte',
-	'Class:SANSwitch/Attribute:datacenterdevice_list+' => '',
+	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'All the devices connected to this SAN switch~~',
 ));
 
 //
@@ -363,7 +363,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TapeLibrary' => 'Tape-Library',
 	'Class:TapeLibrary+' => '',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Tapes',
-	'Class:TapeLibrary/Attribute:tapes_list+' => '',
+	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library~~',
 ));
 
 //
@@ -374,7 +374,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Dateisysteme',
-	'Class:NAS/Attribute:nasfilesystem_list+' => '',
+	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS~~',
 ));
 
 //
@@ -430,7 +430,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PowerSource' => 'Stromquelle',
 	'Class:PowerSource+' => '',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
-	'Class:PowerSource/Attribute:pdus_list+' => '',
+	'Class:PowerSource/Attribute:pdus_list+' => 'All the PDUs using this power source~~',
 ));
 
 //
@@ -473,7 +473,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Enclosure/Attribute:nb_u' => 'Höheneinheiten',
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'Geräte',
-	'Class:Enclosure/Attribute:device_list+' => '',
+	'Class:Enclosure/Attribute:device_list+' => 'All the devices in this enclosure~~',
 ));
 
 //
@@ -484,9 +484,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ApplicationSolution' => 'Anwendungslösung',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
-	'Class:ApplicationSolution/Attribute:functionalcis_list+' => '',
+	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution~~',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Business-Prozesse',
-	'Class:ApplicationSolution/Attribute:businessprocess_list+' => '',
+	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'All the business processes depending on this application solution~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'aktiv',
@@ -507,7 +507,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:BusinessProcess' => 'Business-Prozess',
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Anwendungslösungen',
-	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => '',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'All the application solutions that impact this business process~~',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'aktiv',
@@ -553,7 +553,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware-Instanzen',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => '',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware~~',
 ));
 
 //
@@ -564,7 +564,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:DBServer' => 'DB Server',
 	'Class:DBServer+' => '',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB Schemata',
-	'Class:DBServer/Attribute:dbschema_list+' => '',
+	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server~~',
 ));
 
 //
@@ -575,7 +575,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:WebServer' => 'Web Server',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Webapplikationen',
-	'Class:WebServer/Attribute:webapp_list+' => '',
+	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server~~',
 ));
 
 //
@@ -656,7 +656,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Lager',
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => '',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logical Volumes',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => '',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'All the logical volumes used by this device~~',
 ));
 
 //
@@ -667,7 +667,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:VirtualHost' => 'Host',
 	'Class:VirtualHost+' => '',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuelle Maschinen',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => '',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host~~',
 ));
 
 //
@@ -695,7 +695,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Farm' => 'Farm',
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisoren',
-	'Class:Farm/Attribute:hypervisor_list+' => '',
+	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm~~',
 	'Class:Farm/Attribute:redundancy' => 'Hochverfügbarkeit',
 	'Class:Farm/Attribute:redundancy/disabled' => 'Die Farm läuft, wenn alle Hypervisoren laufen.',
 	'Class:Farm/Attribute:redundancy/count' => 'Die Farm läuft, wenn mindestens %1$s Hypervisor(en) läuft/laufen.',
@@ -732,7 +732,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:VirtualMachine/Attribute:managementip' => 'Management-IP',
 	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Netzwerk-Interfaces',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => '',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces~~',
 ));
 
 //
@@ -757,9 +757,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Storage-Systemname',
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
 	'Class:LogicalVolume/Attribute:servers_list' => 'Server',
-	'Class:LogicalVolume/Attribute:servers_list+' => '',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'All the servers using this volume~~',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuelle Geräte',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => '',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'All the virtual devices using this volume~~',
 ));
 
 //
@@ -875,7 +875,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Software/Attribute:version' => 'Version',
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Dokumente',
-	'Class:Software/Attribute:documents_list+' => '',
+	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software~~',
 	'Class:Software/Attribute:type' => 'Typ',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB-Server',
@@ -889,11 +889,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Software/Attribute:type/Value:WebServer' => 'Webserver',
 	'Class:Software/Attribute:type/Value:WebServer+' => '',
 	'Class:Software/Attribute:softwareinstance_list' => 'Software-Instanzen',
-	'Class:Software/Attribute:softwareinstance_list+' => '',
+	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software~~',
 	'Class:Software/Attribute:softwarepatch_list' => 'Software-Patches',
-	'Class:Software/Attribute:softwarepatch_list+' => '',
+	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software~~',
 	'Class:Software/Attribute:softwarelicence_list' => 'Softwarelizenzen',
-	'Class:Software/Attribute:softwarelicence_list+' => '',
+	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software~~',
 ));
 
 //
@@ -906,7 +906,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Patch/Attribute:name' => 'Name',
 	'Class:Patch/Attribute:name+' => '',
 	'Class:Patch/Attribute:documents_list' => 'Dokumente',
-	'Class:Patch/Attribute:documents_list+' => '',
+	'Class:Patch/Attribute:documents_list+' => 'All the documents linked to this patch~~',
 	'Class:Patch/Attribute:description' => 'Beschreibung',
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Typ',
@@ -921,7 +921,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:OSPatch' => 'OS-Patch',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Geräte',
-	'Class:OSPatch/Attribute:functionalcis_list+' => '',
+	'Class:OSPatch/Attribute:functionalcis_list+' => 'All the systems where this patch is installed~~',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS Version',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS-Versionsname',
@@ -940,7 +940,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SoftwarePatch/Attribute:software_name' => 'Software-Name',
 	'Class:SoftwarePatch/Attribute:software_name+' => '',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Software-Instanzen',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => '',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'All the systems where this software patch is installed~~',
 ));
 
 //
@@ -953,7 +953,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Licence/Attribute:name' => 'Name',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Dokumente',
-	'Class:Licence/Attribute:documents_list+' => '',
+	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this license~~',
 	'Class:Licence/Attribute:org_id' => 'Besitzer',
 	'Class:Licence/Attribute:org_id+' => '',
 	'Class:Licence/Attribute:organization_name' => 'Organisationsname',
@@ -990,9 +990,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:OSLicence/Attribute:osversion_name' => 'OS-Versionsname',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuelle Maschinen',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => '',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this license is used~~',
 	'Class:OSLicence/Attribute:servers_list' => 'Server',
-	'Class:OSLicence/Attribute:servers_list+' => '',
+	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this license is used~~',
 ));
 
 //
@@ -1007,7 +1007,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SoftwareLicence/Attribute:software_name' => 'Software-Name',
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software-Instanzen',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => '',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this license is used~~',
 ));
 
 //
@@ -1057,7 +1057,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Brand' => 'Marke',
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physische Geräte',
-	'Class:Brand/Attribute:physicaldevices_list+' => '',
+	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand~~',
 	'Class:Brand/UniquenessRule:name+' => 'Der Name muss eindeutig sein',
 	'Class:Brand/UniquenessRule:name' => 'Diese Marke existiert bereits',
 ));
@@ -1112,7 +1112,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Model/Attribute:type/Value:Phone' => 'Telefon',
 	'Class:Model/Attribute:type/Value:Phone+' => '',
 	'Class:Model/Attribute:physicaldevices_list' => 'Physische Geräte',
-	'Class:Model/Attribute:physicaldevices_list+' => '',
+	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model~~',
 	'Class:Model/UniquenessRule:name_brand+' => 'Der Modellname für eine Marke muss eindeutig sein',
 	'Class:Model/UniquenessRule:name_brand' => 'Es existiert bereits ein Modell mit diesem Namen für diese Marke',
 ));
@@ -1125,7 +1125,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:NetworkDeviceType' => 'Netzwerkgerätetyp',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Netzwerkgeräte',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => '',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type~~',
 ));
 
 //
@@ -1469,7 +1469,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Group/Attribute:parent_name' => 'Name',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'Verbundene CIs',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent-Gruppe',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
 ));
