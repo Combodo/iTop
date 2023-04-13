@@ -27,11 +27,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Links:ActionRow:Delete+'                    => 'Supprimer cet objet',
 	'UI:Links:ActionRow:Delete:Confirmation'        => 'Voulez-vous supprimer <b>{item}</b> de l\'objet courant ?',
 	'UI:Links:ActionRow:Modify'                     => 'Modifier',
-	'UI:Links:ActionRow:Modify+'                    => 'Modifier cet object',
-	'UI:Links:ActionRow:Modify:Modal:Title'         => 'Modifier un object',
+	'UI:Links:ActionRow:Modify+'                    => 'Modifier cet objet',
+	'UI:Links:ActionRow:Modify:Modal:Title'         => 'Modifier un objet',
 
 	// Action
-	'UI:Links:New:Modal:Title'                      => 'Créer un object',
+	'UI:Links:New:Modal:Title'                      => 'Créer un objet',
 
 	// Bulk
 	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Ajouter à tous les objets',
