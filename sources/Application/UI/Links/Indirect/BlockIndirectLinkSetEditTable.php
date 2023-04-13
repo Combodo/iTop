@@ -194,7 +194,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 		$oToolbar->AddSubBlock($oActionButtonUnlink);
 		
 		$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Add'));
-		$oActionButtonLink->SetTooltip(Dict::Format('UI:AddAnExisting_Class', MetaModel::GetName($this->oAttributeLinkedSetIndirect->GetLinkedClass())))
+		$oActionButtonLink->SetTooltip(Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->oAttributeLinkedSetIndirect->GetLinkedClass())))
 							->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();")
 							->AddDataAttribute('action', 'add');
 		$oToolbar->AddSubBlock($oActionButtonLink);

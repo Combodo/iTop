@@ -794,7 +794,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s にリンクされた%1$sオブジェクトを追加：%3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => '%1$s オブジェクトを%2$sとのリンクに追加',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s にリンクされた%1$sオブジェクトの管理: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => '%1$s を追加...',
+	'UI:AddLinkedObjectsOf_Class' => '%1$s を追加',
 	'UI:RemoveLinkedObjectsOf_Class' => '選択されたオブジェクトを削除',
 	'UI:Message:EmptyList:UseAdd' => 'リストは空です。"追加..."ボタンを利用して要素を追加してください。',
 	'UI:Message:EmptyList:UseSearchForm' => '上の検索フォームを使って追加するオブジェクトを検索してください。',

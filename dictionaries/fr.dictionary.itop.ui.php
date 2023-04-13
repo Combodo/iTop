@@ -823,7 +823,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Ajouter des objets de type %1$s liés à %3$s (%2$s)',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Ajouter des objets de type %1$s à lier à cet objet de type %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Gérer les objets de type %1$s liés à %3$s (%2$s)',
-	'UI:AddLinkedObjectsOf_Class' => 'Ajouter des objets de type %1$s...',
+	'UI:AddLinkedObjectsOf_Class' => 'Ajouter des %1$s',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Enlever les objets sélectionnés',
 	'UI:Message:EmptyList:UseAdd' => 'La liste est vide, utilisez le bouton "Ajouter..." pour ajouter des objets.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Utilisez le formulaire de recherche ci-dessus pour trouver les objets à ajouter.',

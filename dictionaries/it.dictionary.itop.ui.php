@@ -805,7 +805,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Aggiungi l\'oggeto %1$s collegato con %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Aggiungi l\'oggeto %1$s al collegamento con %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Gestisci l\'oggetto %1$s collegato con %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Aggiungi %1$s...',
+	'UI:AddLinkedObjectsOf_Class' => 'Aggiungi %1$s',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Rimuovi gli oggetti selezionati',
 	'UI:Message:EmptyList:UseAdd' => 'La lista è vuota, utilizzare il pulsante "Aggiungi ..." per aggiungere elementi.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Utilizza il modulo di ricerca qui sopra per cercare oggetti da aggiungere.',

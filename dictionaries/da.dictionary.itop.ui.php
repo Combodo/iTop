@@ -794,7 +794,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Tilføj %1$s objekter kædet til %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Tilføj %1$s objekter til kæden til %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Administrer %1$s objekter kædet til %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Tilføj %1$s objekter...',
+	'UI:AddLinkedObjectsOf_Class' => 'Tilføj %1$s objekter',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Fjern valgte objekter',
 	'UI:Message:EmptyList:UseAdd' => 'Listen er tom, brug "Tilføj..." knappen for at tilføje elementer.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Brug søgeformularen ovenfor, til søgning efter objekters som skal tilføjes.',

@@ -213,7 +213,7 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
 				$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Add'));
-				$oActionButtonLink->SetTooltip(Dict::Format('UI:AddAnExisting_Class', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())))
+				$oActionButtonLink->SetTooltip(Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())))
 									->AddDataAttribute('action', 'add')
 									->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('selectToAdd');");
 				$oToolbar->AddSubBlock($oActionButtonLink);

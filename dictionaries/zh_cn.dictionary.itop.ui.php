@@ -810,7 +810,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => '添加 %1$s 个对象, 链接 %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => ' %1$s ',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => '管理 %1$s 个对象, 链接 %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => '添加 %1$s...',
+	'UI:AddLinkedObjectsOf_Class' => '添加 %1$s',
 	'UI:RemoveLinkedObjectsOf_Class' => '移除对象',
 	'UI:Message:EmptyList:UseAdd' => '列表为空, 请使用 "添加..." 按扭来添加元素.',
 	'UI:Message:EmptyList:UseSearchForm' => '使用上面的搜索表单, 以搜索要添加的对象.',

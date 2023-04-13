@@ -806,7 +806,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Добавить %1$s объекты связанные с %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Добавление объектов %1$s для связи с объектом %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Управление %1$s объектами связанными с %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Добавить объект %1$s...',
+	'UI:AddLinkedObjectsOf_Class' => 'Добавить объект %1$s',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Удалить выбранные объекты',
 	'UI:Message:EmptyList:UseAdd' => 'Список пуст, используйте кнопку "Добавить ..." для добавления новых элементов.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Используйте форму поиска выше для поиска объектов, которые будут добавлены.',
