@@ -40,6 +40,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Le mot de passe doit contenir au moins 8 caractères, avec minuscule, majuscule, nombre et caractère spécial.',
 
+	'UserLocal:profiles' => 'Profils (minimum un)',
 	'UserLocal:password:expiration' => 'Les champs ci-dessous nécessitent une extension',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Impossible de mettre "Usage unique" comme validité du mot de passe pour son propre utilisateur.',
 ));

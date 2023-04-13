@@ -516,39 +516,39 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ActionEmail'                                    => 'Notification par mél',
-	'Class:ActionEmail+'                                   => '',
-	'Class:ActionEmail/Attribute:status+'                  => 'Cet état définit qui va être notifié: 
+	'Class:ActionEmail'                                  => 'Notification par mél',
+	'Class:ActionEmail+'                                 => '',
+	'Class:ActionEmail/Attribute:status+'                => 'Cet état définit qui va être notifié: 
 - En test : le Destinataire de test uniquement,
 - En production : tous les destinataires (A, Copie and Copie Cachée),
 - Inactive : personne.',
-	'Class:ActionEmail/Attribute:status/Value:test+'       => 'Seul le destinataire de test est notifié ',
-	'Class:ActionEmail/Attribute:status/Value:enabled+'    => 'Tous les destinataires (A, Copie and Copie Cachée) sont notifiés',
-	'Class:ActionEmail/Attribute:status/Value:disabled+'   => 'La notification n\'est pas envoyée',
-	'Class:ActionEmail/Attribute:test_recipient'           => 'Destinataire de test',
-	'Class:ActionEmail/Attribute:test_recipient+'          => 'Adresse mél utilisé en remplacement des A, Copie et Copie Cachée, lorsque la notification est \'En test\'',
-	'Class:ActionEmail/Attribute:from'                     => 'De (mél)',
-	'Class:ActionEmail/Attribute:from+'                    => 'Soit une adresse mél en clair, soit un mot clé comme $this->agent_id->email$.
+	'Class:ActionEmail/Attribute:status/Value:test+'     => 'Seul le destinataire de test est notifié ',
+	'Class:ActionEmail/Attribute:status/Value:enabled+'  => 'Tous les destinataires (A, Copie and Copie Cachée) sont notifiés',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'La notification n\'est pas envoyée',
+	'Class:ActionEmail/Attribute:test_recipient'         => 'Destinataire de test',
+	'Class:ActionEmail/Attribute:test_recipient+'        => 'Adresse mél utilisée en remplacement des A, Copie et Copie Cachée, lorsque la notification est \'En test\'',
+	'Class:ActionEmail/Attribute:from'                   => 'De (mél)',
+	'Class:ActionEmail/Attribute:from+'                  => 'Soit une adresse mél en clair, soit un mot clé comme $this->agent_id->email$.
 Ce dernier pourrait ne pas être accepté par certains serveurs de mél.',
-	'Class:ActionEmail/Attribute:from_label'               => 'De (libellé)',
-	'Class:ActionEmail/Attribute:from_label+'              => 'Le nom de l\'expéditeur en dur ou un mot clé comme $this->agent_id->friendlyname$. 
+	'Class:ActionEmail/Attribute:from_label'             => 'De (libellé)',
+	'Class:ActionEmail/Attribute:from_label+'            => 'Le nom de l\'expéditeur en dur ou un mot clé comme $this->agent_id->friendlyname$. 
 Il sera inclus dans l\'entête du mél',
-	'Class:ActionEmail/Attribute:reply_to'                 => 'Répondre à (mél)',
-	'Class:ActionEmail/Attribute:reply_to+'                => 'Adresse mèl en clair ou un mot clé comme $this->team_id->email$.
+	'Class:ActionEmail/Attribute:reply_to'               => 'Répondre à (mél)',
+	'Class:ActionEmail/Attribute:reply_to+'              => 'Adresse mèl en clair ou un mot clé comme $this->team_id->email$.
 Il sera affichée dans le \'répondre à\' de la notification.
 Si ce champ n\'est pas rempli, la valeur de \'De (mél)\' sera utilisée',
-	'Class:ActionEmail/Attribute:reply_to_label'           => 'Répondre à (libellé)',
-	'Class:ActionEmail/Attribute:reply_to_label+'          => 'Le nom du destinataire en dur ou un mot clé comme $this->agent_id->friendlyname$.
+	'Class:ActionEmail/Attribute:reply_to_label'         => 'Répondre à (libellé)',
+	'Class:ActionEmail/Attribute:reply_to_label+'        => 'Le nom du destinataire en dur ou un mot clé comme $this->agent_id->friendlyname$.
 En cas de réponse, il sera inclus dans l\'entête du mél.
 Si ce champ n\'est pas rempli, la valeur de \'De (libellé)\' sera utilisée',
-	'Class:ActionEmail/Attribute:to'                       => 'A',
-	'Class:ActionEmail/Attribute:to+'                      => 'A: une requête OQL retournant des objets ayant un attribut mél.
+	'Class:ActionEmail/Attribute:to'                     => 'A',
+	'Class:ActionEmail/Attribute:to+'                    => 'A : une requête OQL retournant des objets ayant un attribut mél.
 En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
-	'Class:ActionEmail/Attribute:cc'                       => 'Copie',
-	'Class:ActionEmail/Attribute:cc+'                      => 'Copie: une requête OQL retournant des objets ayant un attribut mél.
+	'Class:ActionEmail/Attribute:cc'                     => 'Copie',
+	'Class:ActionEmail/Attribute:cc+'                    => 'Copie : une requête OQL retournant des objets ayant un attribut mél.
 En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 	'Class:ActionEmail/Attribute:bcc'                      => 'Copie Cachée',
-	'Class:ActionEmail/Attribute:bcc+'                     => 'Copie Cachée: une requête OQL retournant des objets ayant un attribut mél.
+	'Class:ActionEmail/Attribute:bcc+'                   => 'Copie Cachée : une requête OQL retournant des objets ayant un attribut mél.
 En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 	'Class:ActionEmail/Attribute:subject'                  => 'Sujet',
 	'Class:ActionEmail/Attribute:subject+'                 => 'Sujet du mél. Peut contenir des mots-clés comme $this->attribute_code$',

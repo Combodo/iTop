@@ -247,7 +247,7 @@ abstract class User extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'status', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'email', 'language', 'status', 'org_id')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('default_search', array('login', 'contactid', 'org_id')); // Default criteria of the search banner
+		MetaModel::Init_SetZListItems('default_search', array('login', 'contactid', 'status', 'org_id')); // Default criteria of the search banner
 	}
 
 	abstract public function CheckCredentials($sPassword);

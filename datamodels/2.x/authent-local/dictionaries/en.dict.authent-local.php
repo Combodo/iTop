@@ -56,6 +56,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.',
 
+	'UserLocal:profiles' => 'Profiles (minimum one)',
 	'UserLocal:password:expiration' => 'The fields below require an extension',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User',
 ));
