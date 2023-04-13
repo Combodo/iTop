@@ -207,30 +207,24 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 		title: oOptions.title,
 		buttons: this._ConvertButtonDefinition(oOptions.buttons)
 	};
+	
+	let aSizeMap = {
+		'xs': 'extra-small',
+		's': 'small',
+		'md': 'medium',
+		'lg': 'large',
+	};
 
 	// Resize to desired size
 	switch (typeof oOptions.size) {
 		case 'string':
-			switch (oOptions.size) {
-				case 'xs':
-					oJQueryOptions.width = Math.min(window.innerWidth * 0.2, '200px');
-					oJQueryOptions.height = Math.min(window.innerHeight * 0.2, '150px');
-					break;
-
-				case 'sm':
-					oJQueryOptions.width = Math.min(window.innerWidth * 0.6, '800px');
-					oJQueryOptions.height = Math.min(window.innerHeight * 0.6, '400px');
-					break;
-
-				case 'md':
-					oJQueryOptions.width = Math.min(window.innerWidth * 0.75, '1200px');
-					oJQueryOptions.height = Math.min(window.innerHeight * 0.75, '600px');
-					break;
-
-				case 'lg':
-					oJQueryOptions.width = Math.min(window.innerWidth * 0.9, '1800px');
-					oJQueryOptions.height = Math.min(window.innerHeight * 0.9, '900px');
-					break;
+			if(aSizeMap[oOptions.size] !== undefined) {
+				let sSize = 'ibo-is-' + aSizeMap[oOptions.size];
+				if (oJQueryOptions.classes['ui-dialog-content'] !== undefined) {
+					oJQueryOptions.classes['ui-dialog-content'] += ' ' + sSize;
+				} else {
+					oJQueryOptions.classes['ui-dialog-content'] = sSize;
+				}
 			}
 			break;
 
