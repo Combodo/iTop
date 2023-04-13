@@ -1119,8 +1119,8 @@ EOF
 				$iNbLinesToAddForName = 0;
 				if (count($aNames) > 50) {
 					// Calculation of the number of legends line add to the height of the graph to have a maximum of 5 legend columns
-					// 10 corresponds to the number of lines already included in the chart height
-					$iNbLinesToAddForName = ceil(count($aNames) / 5) - 10;
+					$iNbLinesIncludedInChartHeight = 10;
+					$iNbLinesToAddForName = ceil(count($aNames) / 5) - $iNbLinesIncludedInChartHeight;
 				}
 				$oPage->add_ready_script(
 <<<EOF
