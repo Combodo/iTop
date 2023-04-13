@@ -349,7 +349,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Person:info' => 'Genel Bilgi',
-	'UserLocal:info' => 'Genel Bilgi',
+	'User:info' => 'Genel Bilgi',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Bildirim',
 ));

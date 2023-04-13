@@ -379,7 +379,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Person:info' => 'Informations générales',
-	'UserLocal:info' => 'Informations générales',
+	'User:info' => 'Informations générales',
+	'User:profiles' => 'Profils (minimum un)',
 	'Person:personal_info' => 'Informations personnelles',
 	'Person:notifiy' => 'Notification',
 ));

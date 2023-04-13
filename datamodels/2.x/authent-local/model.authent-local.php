@@ -100,15 +100,15 @@ class UserLocal extends UserInternal
 			array(
 				'col:col1' =>
 					array(
-						'fieldset:UserLocal:info' => array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'allowed_org_list',),
+						'fieldset:User:info' => array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status'),
 					),
 				'col:col2' =>
 					array(
-						'fieldset:UserLocal:profiles'            => array('profile_list',),
+						'fieldset:User:profiles'                 => array('profile_list',),
 						'fieldset:UserLocal:password:expiration' => array('expiration', 'password_renewed_date',),
 					),
+				'allowed_org_list',
 			)
-
 		); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria

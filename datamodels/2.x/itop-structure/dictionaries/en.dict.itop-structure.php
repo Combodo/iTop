@@ -371,7 +371,8 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Person:info' => 'General information',
-	'UserLocal:info' => 'General information',
+	'User:info' => 'General information',
+	'User:profiles' => 'Profiles (minimum one)',
 	'Person:personal_info' => 'Personal information',
 	'Person:notifiy' => 'Notification',
 ));

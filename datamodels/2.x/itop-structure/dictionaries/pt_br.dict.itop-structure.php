@@ -348,7 +348,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Person:info' => 'Informações gerais',
-	'UserLocal:info' => 'Informações gerais',
+	'User:info' => 'Informações gerais',
 	'Person:personal_info' => 'Informações pessoais',
 	'Person:notifiy' => 'Notificações',
 ));

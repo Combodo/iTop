@@ -355,8 +355,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Person:info' => 'Obecné informace',
-	'UserLocal:info' => 'General information~~',
-	'Person:personal_info' => 'Personal information~~',
+	'User:info' => 'Obecné informace',
+	'Person:personal_info' => 'Osobní informace',
 	'Person:notifiy' => 'Upozornění',
 ));
 

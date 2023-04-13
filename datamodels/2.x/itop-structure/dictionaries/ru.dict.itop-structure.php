@@ -335,7 +335,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Person:info' => 'Основная информация',
-	'UserLocal:info' => 'Основная информация',
+	'User:info' => 'Основная информация',
 	'Person:personal_info' => 'Личная информация',
 	'Person:notifiy' => 'Уведомления',
 ));
