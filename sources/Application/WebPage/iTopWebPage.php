@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Base\Component\Modal\DoNotShowAgainOptionBlock;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Spinner\SpinnerUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Template\TemplateUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
@@ -904,6 +905,27 @@ HTML;
 		$aData['aDeferredBlocks']['oPageContent'] = $this->GetDeferredBlocks($this->GetContentLayout());
 		// - Prepare generic templates
 		$aData['aTemplates'] = array();
+		
+		// TODO 3.1 Replace hardcoded 'Please wait' with dict entries
+		
+		// - Modal template with loader
+		$oModalTemplateContentBlock = new UIContentBlock();
+		$oModalTemplateContentBlock->AddCSSClass('ibo-modal')
+			->AddDataAttribute('role', 'ibo-modal')
+			->AddSubBlock(SpinnerUIBlockFactory::MakeMedium(null, 'Please wait'));
+		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-modal-template', $oModalTemplateContentBlock);
+		
+		// - Small loader template
+		$oSmallLoaderTemplateContentBlock = new UIContentBlock();
+		$oSmallLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeSmall(null , 'Please wait'));
+		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-small-loading-placeholder-template', $oSmallLoaderTemplateContentBlock);
+
+		// - Large loader template
+		$oLargeLoaderTemplateContentBlock = new UIContentBlock();
+		$oLargeLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeLarge(null , 'Please wait'));
+		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-large-loading-placeholder-template', $oLargeLoaderTemplateContentBlock);
+
+		// - Do not show again template
 		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-modal-option--do-not-show-again-template', new DoNotShowAgainOptionBlock());
 
 		// - Retrieve layouts linked files
