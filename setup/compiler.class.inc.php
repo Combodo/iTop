@@ -2095,6 +2095,13 @@ EOF
 			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeEnum') {
+			$oSortOrder = $oField->GetOptionalElement('sort_order');
+			if ($oSortOrder != null) {
+				$aParameters['sort_order'] = "'".$oField->GetChildText('sort_order')."'";
+			} else {
+				$aParameters['sort_order'] = "'code'";
+			}
+
 			$oValues = $oField->GetUniqueElement('values');
 			$oValueNodes = $oValues->getElementsByTagName('value');
 			$aValues = [];
@@ -2102,9 +2109,13 @@ EOF
 			foreach ($oValueNodes as $oValue) {
 				// New in 3.0 the format of values changed
 				$sCode = $this->GetMandatoryPropString($oValue, 'code', false);
-				$iRank = $oValue->GetChildText('rank');
-				if ($iRank) {
-					$aValues[] = $iRank.'::'.$sCode;
+				if ($aParameters['sort_order'] === "'rank'") {
+					$iRank = $oValue->GetChildText('rank');
+					if ($iRank) {
+						$aValues[] = $iRank.'::'.$sCode;
+					} else {
+						$aValues[] = $sCode;
+					}
 				} else {
 					$aValues[] = $sCode;
 				}

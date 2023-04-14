@@ -5504,6 +5504,7 @@ class AttributeTemplateHTML extends AttributeText
 class AttributeEnum extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+	public $m_sSortOrder = 'code'; // Encryption library used for all encrypted fields
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -5520,6 +5521,19 @@ class AttributeEnum extends AttributeString
 	public function __construct($sCode, $aParams)
 	{
 		parent::__construct($sCode, $aParams);
+		if ($this->IsParam('sort_order')) {
+			$this->m_sSortOrder = $this->Get("sort_order");
+		} else {
+			$this->m_sSortOrder = 'code';
+		}
+	}
+
+	/**
+	 * @return mixed|string
+	 */
+	public function GetSortOrder()
+	{
+		return $this->m_sSortOrder;
 	}
 
 	public static function ListExpectedParams()
@@ -5859,28 +5873,47 @@ class AttributeEnum extends AttributeString
 		if (is_null($aRawValues)) {
 			return null;
 		}
+		IssueLog::Error($this->GetCode().'TRI'.$this->GetSortOrder());
 		$aLocalizedValues = [];
-		$aSortedValues = [];
-		//bHaveSortedValues : some values have rank in xml
-		$bHaveSortedValues = false;
-		foreach ($aRawValues as $sKey => $sValue) {
-			$aVal = explode('::', $sValue);
-			if (count($aVal) == 1) {
-				$aLocalizedValues[$sValue] = $this->GetValueLabel($sValue);
-			} else {
-				$aSortedValues[$aVal[1]] = $aVal[0];
-				$bHaveSortedValues = true;
-			}
-		}
-		asort($aLocalizedValues);
-		
-		if ($bHaveSortedValues) {
-			asort($aSortedValues);
-			$aLocalizedSortedValues = [];
-			foreach ($aSortedValues as $sKey => $sValue) {
-				$aLocalizedSortedValues[$sKey] = $this->GetValueLabel($sKey);
-			}
-			$aLocalizedValues = array_merge($aLocalizedSortedValues, $aLocalizedValues);
+		switch ($this->GetSortOrder()) {
+			case 'label':
+
+				foreach ($aRawValues as $sKey => $sValue) {
+					$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
+				}
+				asort($aLocalizedValues);
+				break;
+
+			case 'rank':
+				$aSortedValues = [];
+				//bHaveSortedValues : some values have rank in xml
+				$bHaveSortedValues = false;
+				foreach ($aRawValues as $sKey => $sValue) {
+					IssueLog::Error($sValue);
+					$aVal = explode('::', $sValue);
+					if (count($aVal) == 1) {
+						$aLocalizedValues[$sValue] = $this->GetValueLabel($sValue);
+					} else {
+						$aSortedValues[$aVal[1]] = $aVal[0];
+						$bHaveSortedValues = true;
+					}
+				}
+				asort($aLocalizedValues);
+
+				if ($bHaveSortedValues) {
+					asort($aSortedValues);
+					$aLocalizedSortedValues = [];
+					foreach ($aSortedValues as $sKey => $sValue) {
+						$aLocalizedSortedValues[$sKey] = $this->GetValueLabel($sKey);
+					}
+					$aLocalizedValues = array_merge($aLocalizedSortedValues, $aLocalizedValues);
+				}
+
+				break;
+			default://='code'
+				foreach ($aRawValues as $sKey => $sValue) {
+					$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
+				}
 		}
 
 		return $aLocalizedValues;
