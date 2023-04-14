@@ -414,7 +414,7 @@ JS
 			$bCanBeDeletedByTask = false;
 			$bCanBeDeletedByUser = true;
 			$aMasterSources = array();
-			$aSyncData = $this->GetSynchroData(true);
+			$aSyncData = $this->GetSynchroData(MetaModel::GetConfig()->Get('synchro_obsolete_replica_locks_object'));
 			if (count($aSyncData) > 0) {
 				foreach ($aSyncData as $iSourceId => $aSourceData) {
 					$oDataSource = $aSourceData['source'];

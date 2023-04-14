@@ -4937,11 +4937,11 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetSynchroData($bWithoutObsolete = false)
+	public function GetSynchroData($bIncludeObsolete = true)
 	{
 		if (is_null($this->m_aSynchroData)) {
 			$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE replica.dest_class = :dest_class AND replica.dest_id = :dest_id";
-			if ($bWithoutObsolete) {
+			if (!$bIncludeObsolete) {
 				$sOQL .= " AND replica.status != 'obsolete'";
 			}
 			$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_class' => get_class($this), 'dest_id' => $this->GetKey()));
@@ -4986,7 +4986,7 @@ abstract class DBObject implements iDisplay
 	public function GetSynchroReplicaFlags($sAttCode, &$aReason)
 	{
 		$iFlags = OPT_ATT_NORMAL;
-		foreach ($this->GetSynchroData(true) as $iSourceId => $aSourceData) {
+		foreach ($this->GetSynchroData(MetaModel::GetConfig()->Get('synchro_obsolete_replica_locks_object')) as $iSourceId => $aSourceData) {
 			if ($iSourceId == SynchroExecution::GetCurrentTaskId()) {
 				// Ignore the current task (check to write => ok)
 				continue;
@@ -4994,8 +4994,7 @@ abstract class DBObject implements iDisplay
 			// Assumption: one replica - take the first one!
 			$oReplica = reset($aSourceData['replica']);
 			$oSource = $aSourceData['source'];
-			if (array_key_exists($sAttCode, $aSourceData['attributes']))
-			{
+			if (array_key_exists($sAttCode, $aSourceData['attributes'])) {
 				/** @var \DBObject $oSyncAttr */
 				$oSyncAttr = $aSourceData['attributes'][$sAttCode];
 				if (($oSyncAttr->Get('update') == 1) && ($oSyncAttr->Get('update_policy') == 'master_locked'))
