@@ -529,7 +529,7 @@ $(function()
 			}
 			// Now remove the row from the table
 			oRow = oCheckbox.closest('tr');
-			oRow.remove();
+			this.datatable.DataTable().row(oRow).remove().draw();
 			this._updateButtons();
 			this._updateTable();
 		},
@@ -566,7 +566,7 @@ $(function()
 			}
 			// Now remove the row from the table
 			oRow = oCheckbox.closest('tr');
-			oRow.remove();
+			this.datatable.DataTable().row(oRow).remove().draw();
 			this._updateButtons();
 			this._updateTable();
 		},
