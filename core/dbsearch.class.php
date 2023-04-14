@@ -1,49 +1,15 @@
 <?php
-/**
- * Copyright (C) 2013-2023 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 /**
- * An object search
- *
- * DBSearch provides an API that leverage the possibility to construct a search against iTop's persisted objects.
- * In order to do so, it let you declare the classes you want to fetch, the conditions you want to apply, ...
- *
- * Note: in the ancient times of iTop, a search was named after DBObjectSearch.
- * When the UNION has been introduced, it has been decided to:
- *   * declare a hierarchy of search classes : `DBObjectSearch` & `DBUnionSearch`
- *     * DBObjectSearch cope with single query (A JOIN B... WHERE...)
- *     * DBUnionSearch cope with several queries (query1 UNION query2)
- *   * in order to preserve forward/backward compatibility of the existing modules
- *     * keep the name of DBObjectSearch even if it a little bit confusing
- *     * do not provide a type-hint for function parameters defined in the modules
- *     * leave the statements DBObjectSearch::FromOQL in the modules, though DBSearch is more relevant
- *
- * @copyright   Copyright (C) 2015-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- *
- *
  * @package     iTopORM
  * @api
  * @see DBObjectSearch::__construct()
  * @see DBUnionSearch::__construct()
  */
- 
 abstract class DBSearch
 {
 	/** @internal */
@@ -1017,11 +983,6 @@ abstract class DBSearch
 		return $sRes;
 	}
 
-	function GetExpectedArguments()
-	{
-		return $this->GetCriteria()->ListParameters();
-	}
-
 	/**
 	 * Generate a SQL query from the current search
 	 *
@@ -1265,18 +1226,6 @@ abstract class DBSearch
 	public abstract function GetSQLQueryStructure(
 		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null
 	);
-
-	/**
-     * Get the current search conditions
-     *
-     * @internal
-     * @see DBSearch $m_oSearchCondition
-     *
-	 * @return \Expression
-	 */
-	public abstract function GetCriteria();
-
-	public abstract function ListParameters();
 
     /**
      * Shortcut to add efficient IN condition
@@ -1719,4 +1668,21 @@ abstract class DBSearch
 	{
 		return $this->ToOQL(true);
 	}
+
+	/**
+	 * @return array{\VariableExpression}
+	 *
+	 * @deprecated use DBSearch::GetExpectedArguments() instead
+	 */
+	public function ListParameters(): array
+	{
+		return $this->GetExpectedArguments();
+	}
+
+	/**
+	 * Get parameters from the condition expression(s)
+	 *
+	 * @return array{\VariableExpression}
+	 */
+	abstract function GetExpectedArguments(): array;
 }

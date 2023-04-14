@@ -184,6 +184,9 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         this.toggleErrorClass(this.settings.hasError);
     },
 
+    onDropdownOpen: function (oDropdownElem) {
+        oDropdownElem.addClass('set-dropdown');
+    },
 
     {# On item add #}
     onItemAdd: function(value, $item){
@@ -202,7 +205,6 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
 
     },
     {% endif %}
-
 
 });
 

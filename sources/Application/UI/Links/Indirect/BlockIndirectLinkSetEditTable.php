@@ -189,13 +189,16 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 		// Toolbar and actions
 		$oToolbar = ToolbarUIBlockFactory::MakeForButton();
 		$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Remove'));
-		$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();");
-		$oActionButtonUnlink->AddDataAttribute('action', 'detach');
+		$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();")
+							->AddDataAttribute('action', 'detach');
 		$oToolbar->AddSubBlock($oActionButtonUnlink);
-		$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral(Dict::Format('UI:AddAnExisting_Class', MetaModel::GetName($this->oAttributeLinkedSetIndirect->GetLinkedClass())));
-		$oActionButtonLink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();");
-		$oActionButtonLink->AddDataAttribute('action', 'add');
+		
+		$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Add'));
+		$oActionButtonLink->SetTooltip(Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->oAttributeLinkedSetIndirect->GetLinkedClass())))
+							->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();")
+							->AddDataAttribute('action', 'add');
 		$oToolbar->AddSubBlock($oActionButtonLink);
+		
 		$oTablePanel->AddToolbarBlock($oToolbar);
 		$oTablePanel->AddSubBlock($oDataTable);
 

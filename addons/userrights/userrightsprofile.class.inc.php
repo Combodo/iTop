@@ -34,14 +34,15 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights,grant_by_profile,filter",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_profiles",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
+			"category"                   => "addon/userrights,grant_by_profile,filter",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "name",
+			"complementary_name_attcode" => array('description'),
+			"state_attcode"              => "",
+			"reconc_keys"                => array(),
+			"db_table"                   => "priv_urp_profiles",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -219,24 +220,25 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights,grant_by_profile,filter",
-			"key_type" => "autoincrement",
-			"name_attcode" => array("userlogin", "profile"),
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_userprofile",
-			"db_key_field" => "id",
+			"category"            => "addon/userrights,grant_by_profile,filter",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => array("userlogin", "profile"),
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_urp_userprofile",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass" => "User", "jointype" => "", "allowed_values" => null, "sql" => "userid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", array("allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login")));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid",
+			array("targetclass" => "URP_Profiles", "jointype" => "", "allowed_values" => null, "sql" => "profileid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array(), "allow_target_creation" => false)));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values" => null, "extkey_attcode" => 'profileid', "target_attcode" => "name")));
 
-		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('userid', 'profileid', 'reason')); // Attributes to be displayed for the complete details

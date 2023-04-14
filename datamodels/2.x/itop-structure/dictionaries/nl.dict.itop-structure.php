@@ -354,7 +354,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Person:info' => 'Globale informatie',
-	'UserLocal:info' => 'Globale informatie',
+	'User:info' => 'Globale informatie',
 	'Person:personal_info' => 'Persoonlijke informatie',
 	'Person:notifiy' => 'Notificeer',
 ));

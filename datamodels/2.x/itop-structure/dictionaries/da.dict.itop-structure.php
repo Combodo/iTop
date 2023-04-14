@@ -345,7 +345,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Person:info' => 'Almindelig Information',
-	'UserLocal:info' => 'General information~~',
+	'User:info' => 'Almindelig Information',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Underretning',
 ));

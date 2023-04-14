@@ -22,4 +22,5 @@
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserLDAP' => 'Utilisateur LDAP',
 	'Class:UserLDAP+' => 'Utilisateur authentifié par un serveur LDAP',
+	'UserLDAP:server' => 'Champs spécifiques pour LDAP',
 ));

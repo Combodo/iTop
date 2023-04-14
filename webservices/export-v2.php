@@ -259,14 +259,14 @@ EOF
 	}
 
 	if ($sExpression !== '') {
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", utils::EscapeHtml($sExpression)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", $sExpression));
 		$oExportSearch = DBObjectSearch::FromOQL($sExpression);
 		$oExportSearch->UpdateContextFromUser();
 	} else {
 		$oQuery = MetaModel::GetObject('QueryOQL', $sQueryId);
 		$oExportSearch = DBObjectSearch::FromOQL($oQuery->Get('oql'));
 		$oExportSearch->UpdateContextFromUser();
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", utils::EscapeHtml($sQueryId)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", $sQueryId));
 	}
 	$aFormPartsByFormat = array();
 	$aAllFormParts = array();

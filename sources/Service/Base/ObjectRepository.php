@@ -196,6 +196,7 @@ class ObjectRepository
 
 			// Additional fields
 			if (count($aComplementAttributeSpec[1]) > 0) {
+				$aData['has_additional_field'] = true;
 				$aArguments = [];
 				foreach ($aComplementAttributeSpec[1] as $sAdditionalField) {
 					$aArguments[] = $oDbObject->Get($sAdditionalField);

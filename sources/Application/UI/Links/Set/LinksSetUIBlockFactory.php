@@ -62,8 +62,7 @@ class LinkSetUIBlockFactory extends SetUIBlockFactory
 		$oSetUIBlock->AddJsFileRelPath('js/links/linkset.js');
 
 		// Add button behaviour
-		if (in_array($oAttDef->GetEditMode(), [LINKSET_EDITMODE_ADDREMOVE, LINKSET_EDITMODE_ADDONLY, LINKSET_EDITMODE_INPLACE, LINKSET_EDITMODE_ACTIONS])
-			&& $oHostDbObject !== null) {
+		if (LinkSetModel::IsRemoteCreationAllowed($oAttDef) && $oHostDbObject !== null) {
 			$oSetUIBlock->SetHasAddOptionButton(true);
 			$oSetUIBlock->SetAddOptionButtonJsOnClick("iTopLinkSet.CreateLinkedObject('{$sTargetClass}', oWidget{$oSetUIBlock->GetId()} );");
 		}

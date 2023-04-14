@@ -341,7 +341,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Person:info' => 'Información General',
-	'UserLocal:info' => 'Información General',
+	'User:info' => 'Información General',
 	'Person:personal_info' => 'Información Personal',
 	'Person:notifiy' => 'Notificación',
 ));

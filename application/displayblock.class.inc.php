@@ -1781,6 +1781,14 @@ class MenuBlock extends DisplayBlock
 				$this->AddNewObjectMenuAction($aRegularActions, $sClass, $sDefaultValuesAsUrlParams);
 			}
 
+			// Filter this list (provided by extra params has it need filter param)
+			if (array_key_exists('filter_this_list_url', $aExtraParams)) {
+				$aToolkitActions[] = [
+					'label' => Dict::S('UI:Menu:FilterList'),
+					'url'   => $aExtraParams['filter_this_list_url'],
+				];
+			}
+
 			// Any style actions
 			// - Bulk actions on objects set
 			if ($iSetCount > 1) {

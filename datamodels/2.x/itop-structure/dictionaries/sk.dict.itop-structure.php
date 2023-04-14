@@ -347,7 +347,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Person:info' => 'Všeobecné informácie',
-	'UserLocal:info' => 'General information~~',
+	'User:info' => 'Všeobecné informácie',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Upozornenie',
 ));

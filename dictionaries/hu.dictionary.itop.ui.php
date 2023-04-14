@@ -405,7 +405,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:Button:RemoveFromList' => ' Eltávolítás >> ',
     'UI:Button:FilterList' => ' Szűrés... ',
     'UI:Button:Create' => ' Létrehozás',
-    'UI:Button:Delete' => ' Törlés !',
+    'UI:Button:Delete' => ' Törlés',
     'UI:Button:Rename' => ' Átnevezés... ',
     'UI:Button:ChangePassword' => ' Jelszó változtatás',
     'UI:Button:ResetPassword' => ' Jelszó visszaállítás',

@@ -19,7 +19,7 @@ $ibo-input-set--item--siblings-spacing: 3px !default;
 $ibo-input-set--item--margin-y: 1px !default;
 $ibo-input-set--item--padding-x: 6px !default;
 $ibo-input-set--item--padding-y: $ibo-spacing-200 !default;
-$ibo-input-set--item--max-width: 120px !default;
+$ibo-input-set--item--max-width: 360px !default;
 $ibo-input-set--item--background-color: $ibo-color-white-100 !default;
 $ibo-input-set--item--border: none !default;
 $ibo-input-set--item--border-radius: $ibo-border-radius-300 !default;
@@ -62,7 +62,11 @@ $ibo-input-set--item--box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb
   color: $ibo-color-grey-900;
   text-shadow: none;
   @extend %ibo-text-truncated-with-ellipsis;
-
+  /* - Guaranty that if a set item has html sub-node, they correctly display ellipsis (eg. Link set set items) */
+  > * {
+    @extend %ibo-text-truncated-with-ellipsis;
+  }
+  
   &:not(:first-child) {
     margin-left: $ibo-input-set--item--siblings-spacing;
   }

@@ -347,7 +347,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Person:info' => 'Általános információk',
-    'UserLocal:info' => 'Általános információk',
+    'User:info' => 'Általános információk',
     'Person:personal_info' => 'Személyes információk',
     'Person:notifiy' => 'Értesítés',
 ));

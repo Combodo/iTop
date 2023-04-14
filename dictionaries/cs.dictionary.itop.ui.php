@@ -416,7 +416,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Odebrat >> ',
 	'UI:Button:FilterList' => ' Filtrovat... ',
 	'UI:Button:Create' => ' Vytvořit ',
-	'UI:Button:Delete' => ' Odstranit ! ',
+	'UI:Button:Delete' => ' Odstranit ',
 	'UI:Button:Rename' => ' Přejmenovat... ',
 	'UI:Button:ChangePassword' => ' Změnit heslo ',
 	'UI:Button:ResetPassword' => ' Obnovit heslo ',

@@ -35,4 +35,49 @@ class SpinnerUIBlockFactory extends AbstractUIBlockFactory
 	{
 		return new Spinner($sId);
 	}
+
+	/**
+	 * @api
+	 *
+	 * @param string|null $sId
+	 * @param string $sDescription
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Spinner\Spinner
+	 */
+	public static function MakeSmall(?string $sId = null, string $sDescription = '')
+	{
+		$oSpinner = new Spinner($sId, $sDescription);
+		$oSpinner->SetSize(Spinner::ENUM_SPINNER_SIZE_SMALL);
+		return $oSpinner;
+	}
+	
+	/**
+	 * @api
+	 *
+	 * @param string|null $sId
+	 * @param string $sDescription
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Spinner\Spinner
+	 */
+	public static function MakeMedium(?string $sId = null, string $sDescription = '')
+	{
+		$oSpinner = new Spinner($sId, $sDescription);
+		$oSpinner->SetSize(Spinner::ENUM_SPINNER_SIZE_MEDIUM);
+		return $oSpinner;
+	}
+
+	/**
+	 * @api
+	 *
+	 * @param string|null $sId
+	 * @param string $sDescription
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Spinner\Spinner
+	 */
+	public static function MakeLarge(?string $sId = null, string $sDescription = '')
+	{
+		$oSpinner = new Spinner($sId, $sDescription);
+		$oSpinner->SetSize(Spinner::ENUM_SPINNER_SIZE_LARGE);
+		return $oSpinner;
+	}
 }

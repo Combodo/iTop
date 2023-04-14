@@ -37,24 +37,36 @@ class UserExternal extends User
 	{
 		$aParams = array
 		(
-			"category" => "addon/authentication,grant_by_profile,silo",
-			"key_type" => "autoincrement",
-			"name_attcode" => "login",
-			"state_attcode" => "",
-			"reconc_keys" => array('login'),
-			"db_table" => "",
-			"db_key_field" => "id",
+			"category"            => "addon/authentication,grant_by_profile,silo",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "login",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('login'),
+			"db_table"            => "",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details',
+			array(
+				'col:col1' =>
+					array(
+						'fieldset:User:info' => array('contactid', 'org_id', 'email', 'login', 'language', 'status'),
+					),
+				'col:col2' =>
+					array(
+						'fieldset:User:profiles' => array('profile_list'),
+					),
+				'allowed_org_list',
+			)
+		); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login', 'status')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the advanced search form
 	}
 
 	/**

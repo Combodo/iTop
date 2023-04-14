@@ -123,6 +123,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	protected static function RenderDataTable(DataTable $oDataTable, string $sStyle, WebPage $oPage, string $sListId, DBObjectSet $oSet, array $aExtraParams)
 	{
+		// Filter this list action
+		$sFilterListUrl = utils::GetDataTableSearchUrl($oSet->GetFilter(), $aExtraParams);
+		if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
+			$aExtraParams['filter_this_list_url'] = $sFilterListUrl;
+		}
+
 		if (!isset($aExtraParams['menu']) || $aExtraParams['menu']) {
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
 			$aExtraParams['refresh_action'] = $oDataTable->GetJSRefresh();
@@ -177,7 +183,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			} else {
 				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection', $sCountHtml);
 			}
-			$sFilterListUrl = utils::GetDataTableSearchUrl($oSet->GetFilter(), $aExtraParams);
+
 			if (utils::IsNotNullOrEmptyString($sFilterListUrl)) {
 				$sSubTitle = '<a href="'.$sFilterListUrl.'" title="'.Dict::S('UI:Menu:FilterList').'">'.$sSubTitle.'</a>';
 			}
@@ -232,6 +238,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				array_key_exists('tooltip', $aAction) ? Dict::S($aAction['tooltip']) : '',
 				array_key_exists('name', $aAction) ? $aAction['name'] : 'undefined'
 			);
+			if (array_key_exists('color', $aAction)) {
+				$oButton->SetColor($aAction['color']);
+			}
 			$oButton->SetDataAttributes(['label' => Dict::S($aAction['label']), 'action-id' => $iKey, 'table-id' => $oTable->GetId()]);
 			$oToolbar->AddSubBlock($oButton);
 		}

@@ -347,7 +347,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Person:info' => '情報',
-	'UserLocal:info' => 'General information~~',
+	'User:info' => '情報',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => '通知',
 ));

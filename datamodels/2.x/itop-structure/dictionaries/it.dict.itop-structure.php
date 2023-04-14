@@ -347,7 +347,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Person:info' => 'General information~~',
-	'UserLocal:info' => 'General information~~',
+	'User:info' => 'General information~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Notification~~',
 ));

@@ -5,7 +5,7 @@
  */
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockLinkSetDisplayAsProperty;
+use Combodo\iTop\Application\UI\Links\Set\BlockLinkSetDisplayAsProperty;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
@@ -975,11 +975,13 @@ abstract class AttributeDefinition
 
 	/**
 	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
 	 *
-	 * @param $value
+	 * @see FromJSONToValue for the reverse operation
 	 *
-	 * @return string
+	 * @param mixed $value field value
+	 *
+	 * @return string JSON encoded string of the value
+	 *
 	 */
 	public function GetForJSON($value)
 	{
@@ -989,11 +991,12 @@ abstract class AttributeDefinition
 
 	/**
 	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
 	 *
-	 * @param $json
+	 * @param string $json JSON encoded value
 	 *
-	 * @return mixed
+	 * @return mixed JSON decoded data
+	 *
+	 * @see GetForJSON for the reverse operation
 	 */
 	public function FromJSONToValue($json)
 	{
@@ -2179,13 +2182,9 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
+	 * @inheritDoc
 	 *
 	 * @param \ormLinkSet $value
-	 *
-	 * @return array
-	 * @throws \CoreException
 	 */
 	public function GetForJSON($value)
 	{
@@ -2235,10 +2234,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
-	 *
-	 * @param $json
+	 * @inheritDoc
 	 *
 	 * @return \DBObjectSet
 	 * @throws \CoreException
@@ -3393,14 +3389,6 @@ class AttributeBoolean extends AttributeInteger
 		}
 	}
 
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 *
-	 * @param $value
-	 *
-	 * @return bool
-	 */
 	public function GetForJSON($value)
 	{
 		return (bool)$value;
@@ -3956,14 +3944,6 @@ class AttributeFinalClass extends AttributeString
 		return MetaModel::GetName($sValue);
 	}
 
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 *
-	 * @param $value
-	 *
-	 * @return string
-	 */
 	public function GetForJSON($value)
 	{
 		// JSON values are NOT localized
@@ -5105,19 +5085,11 @@ class AttributeCaseLog extends AttributeLongText
 		}
 	}
 
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 */
 	public function GetForJSON($value)
 	{
 		return $value->GetForJSON();
 	}
 
-	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
-	 */
 	public function FromJSONToValue($json)
 	{
 		if (is_string($json))
@@ -5876,10 +5848,6 @@ class AttributeEnum extends AttributeString
 		}
 	}
 
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 */
 	public function GetForJSON($value)
 	{
 		return $value;
@@ -8414,10 +8382,6 @@ class AttributeBlob extends AttributeDefinition
 		return $sRet;
 	}
 
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 */
 	public function GetForJSON($value)
 	{
 		if ($value instanceOf ormDocument)
@@ -8436,10 +8400,6 @@ class AttributeBlob extends AttributeDefinition
 		return $aValues;
 	}
 
-	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
-	 */
 	public function FromJSONToValue($json)
 	{
 		if (isset($json->data))
@@ -12241,8 +12201,7 @@ HTML;
 	}
 
 	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
+	 * @inheritDoc
 	 *
 	 * @param \ormTagSet $value
 	 *
@@ -12260,10 +12219,7 @@ HTML;
 	}
 
 	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
-	 *
-	 * @param $json
+	 * @inheritDoc
 	 *
 	 * @return \ormTagSet
 	 * @throws \CoreException
@@ -13322,26 +13278,36 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		try
-		{
+		try {
 			$sRet = $value->GetAsXML($bLocalize);
-		} catch (Exception $e)
-		{
+		}
+		catch (Exception $e) {
 			$sRet = Str::pure2xml('Custom field error: '.$e->getMessage());
 		}
 
 		return $sRet;
 	}
 
+	/**
+	 * @param \ormCustomFieldsValue $value
+	 * @param string $sSeparator
+	 * @param string $sTextQualifier
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 * @param bool $bConvertToPlainText
+	 *
+	 * @return string
+	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
+	 */
 	public function GetAsCSV(
 		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
 		$bConvertToPlainText = false
-	) {
-		try
-		{
+	)
+	{
+		try {
 			$sRet = $value->GetAsCSV($sSeparator, $sTextQualifier, $bLocalize, $bConvertToPlainText);
-		} catch (Exception $e)
-		{
+		}
+		catch (Exception $e) {
 			$sFrom = array("\r\n", $sTextQualifier);
 			$sTo = array("\n", $sTextQualifier.$sTextQualifier);
 			$sEscaped = str_replace($sFrom, $sTo, 'Custom field error: '.$e->getMessage());
@@ -13392,12 +13358,13 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
+	 * @inheritDoc
 	 *
-	 * @param $value
+	 * @param \ormCustomFieldsValue $value
 	 *
-	 * @return string
+	 * @return array
+	 *
+	 * @since 3.1.0 N°1150 now returns the value (was always returning null before)
 	 */
 	public function GetForJSON($value)
 	{
@@ -13405,12 +13372,9 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
+	 * @inheritDoc
 	 *
-	 * @param string $json
-	 *
-	 * @return array
+	 * @return ?\ormCustomFieldsValue
 	 */
 	public function FromJSONToValue($json)
 	{

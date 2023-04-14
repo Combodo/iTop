@@ -50,6 +50,8 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
     [data-attribute-type="AttributeCustomFields"],
     [data-attribute-type="AttributeTagSet"],
     [data-attribute-type="AttributeEnumSet"],
+    [data-attribute-type="AttributeLinkedSet"],
+    [data-attribute-type="AttributeLinkedSetIndirect"],
     [data-attribute-type="AttributeClassAttCodeSet"],
     [data-attribute-type="AttributeQueryAttCodeSet"],
     .ibo-input-file-select--container
