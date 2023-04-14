@@ -58,7 +58,6 @@ abstract class Action extends cmdbAbstractObject
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values" => null, "sql" => "name", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
-//		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values" => new ValueSetEnum(array('test' => 'Being tested', 'enabled' => 'In production', 'disabled' => 'Inactive')), "sql" => "status", "default_value" => "test", "is_null_allowed" => false, "depends_on" => array())));
 
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array(
 			"allowed_values"  => new ValueSetEnum(array('test' => 'Being tested', 'enabled' => 'In production', 'disabled' => 'Inactive')),
@@ -83,10 +82,9 @@ abstract class Action extends cmdbAbstractObject
 		// - Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status'));
 		// Search criteria
-		// - Criteria of the std search form
+		// - Default criteria of the search form
 		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status'));
-		// - Criteria of the advanced search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
+
 	}
 
 	/**
@@ -205,8 +203,8 @@ abstract class ActionNotification extends Action
 		// Search criteria
 		// - Criteria of the std search form
 //		MetaModel::Init_SetZListItems('standard_search', array('name'));
-		// - Criteria of the advanced search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
+		// - Default criteria of the search form
+//		MetaModel::Init_SetZListItems('default_search', array('name'));
 	}
 }
 
@@ -262,8 +260,6 @@ class ActionEmail extends ActionNotification
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'test_recipient', 'from', 'from_label', 'reply_to', 'reply_to_label', 'to', 'cc', 'bcc', 'subject', 'body', 'importance', 'trigger_list'));
-
 		MetaModel::Init_SetZListItems('details', array(
 			'col:col1' => array(
 				'fieldset:ActionEmail:main'    => array(
@@ -272,7 +268,7 @@ class ActionEmail extends ActionNotification
 					2 => 'status',
 					3 => 'subject',
 					4 => 'body',
-					5 => 'importance',
+					// 5 => 'importance', not handled when sending the mail, better hide it then
 				),
 				'fieldset:ActionEmail:trigger' => array(
 					0 => 'trigger_list',
@@ -295,10 +291,10 @@ class ActionEmail extends ActionNotification
 		// - Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'to', 'subject'));
 		// Search criteria
-		// - Criteria of the std search form
+		// - Standard criteria of the search
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'status', 'subject'));
-		// - Criteria of the advanced search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
+		// - Default criteria for the search
+		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status', 'subject'));
 	}
 
 	// count the recipients found
