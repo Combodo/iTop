@@ -1,0 +1,78 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-object-summary--header--margin-y: $ibo-panel--highlight--height!default;
+$ibo-object-summary--header--margin-x: (-$ibo-panel--body--padding-x) !default;
+
+$ibo-object-summary--header--padding-y: $ibo-spacing-300 !default;
+$ibo-object-summary--header--padding-x: $ibo-spacing-0 !default;
+
+$ibo-object-summary--header--background-color: $ibo-tab-container--tabs-list--background-color !default;
+$ibo-object-summary--header--border: solid 1px $ibo-color-grey-400 !default;
+
+$ibo-object-summary--icon--background-color--as-medallion: $ibo-panel--icon--background-color--as-medallion !default;
+$ibo-object-summary--icon--border--as-medallion: 1px solid $ibo-color-blue-grey-300;
+$ibo-object-summary--icon--border-radius--as-medallion: $ibo-panel--icon--border-radius--as-medallion !default;
+
+$ibo-object-summary--titles--padding-left: $ibo-panel--icon--spacing !default;
+
+$ibo-object-summary--header-left--margin-left: $ibo-panel--icon--spacing--as-medallion !default;
+
+$ibo-object-summary--header-right--margin-right: $ibo-panel--icon--spacing--as-medallion !default;
+$ibo-object-summary--header-right--margin-left: $ibo-spacing-300 !default;
+
+$ibo-object-summary--panel--padding-top: $ibo-spacing-0 !default;
+$ibo-object-summary--panel--padding-box-shadow: $ibo-elevation-300 !default;
+
+$ibo-object-summary--content--attributes--width: 100% !default;
+$ibo-object-summary--content--attributes--margin-top: $ibo-spacing-500 !default;
+
+$ibo-object-summary--content--attributes--code--padding-right: $ibo-spacing-500 !default;
+
+.ibo-object-summary--header{
+  margin: $ibo-object-summary--header--margin-y $ibo-object-summary--header--margin-x;
+  padding: $ibo-object-summary--header--padding-y $ibo-object-summary--header--padding-x;
+  background-color: $ibo-object-summary--header--background-color;
+  border-bottom:  $ibo-object-summary--header--border;
+  @extend .ibo-panel--header;
+  .ibo-panel--icon {
+    overflow: hidden;
+    background-color: $ibo-panel--icon--background-color--as-medallion;
+    border: $ibo-object-summary--icon--border--as-medallion;
+    border-radius: $ibo-panel--icon--border-radius--as-medallion;
+  }
+  // We duplicate this rule from _panel.scss as a protection was added and disallow titles and header that are not direct child of panel
+  .ibo-panel--titles {
+    padding-left: $ibo-object-summary--titles--padding-left;
+  }
+  // We duplicate this rule from _panel.scss as a protection was added and disallow titles and header that are not direct child of panel
+  .ibo-panel--header-left{
+    margin-left: $ibo-object-summary--header-left--margin-left;
+  }
+  .ibo-panel--header-right{
+    align-self: start;
+    margin-right: $ibo-object-summary--header-right--margin-right;
+    margin-left: $ibo-object-summary--header-right--margin-left;
+  }
+}
+
+.ibo-object-summary > .ibo-panel--body{
+  padding-top: $ibo-object-summary--panel--padding-top;
+  box-shadow: $ibo-object-summary--panel--padding-box-shadow;
+}
+
+.ibo-object-summary--content--attributes {
+  display: table;
+  width: 100%;
+  margin-top: $ibo-object-summary--content--attributes--margin-top;
+}
+
+.ibo-object-summary--content--attributes--code, .ibo-object-summary--content--attributes--value {
+  display: table-cell;
+}
+
+.ibo-object-summary--content--attributes--code{
+  @extend .ibo-font-ral-bol-150;
+}

@@ -20,6 +20,7 @@ use CMDBObjectSet;
 use CMDBSource;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
 use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
@@ -247,7 +248,7 @@ class AjaxRenderController
 		$oPage->SetData($aResult);
 	}
 
-	/**
+		/**
 	 * @param string $sFilter
 	 *
 	 * @return array

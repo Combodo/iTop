@@ -870,6 +870,15 @@ const CombodoGlobalToolbox = {
  * @since 3.0.0
  */
 const CombodoTooltip = {
+	
+	/**
+	 * Tooltips remote content once fetched from the server will be cached in this array
+	 * associated to their URL to avoid fetching the same content multiple times
+	 * @var aTooltipsRemoteContent {Object}
+	 * @since 3.1.0
+	 */
+	aTooltipsRemoteContent: {},
+	
 	/**
 	 * Instantiate a tooltip on oElem from its data attributes
 	 *
@@ -968,6 +977,48 @@ const CombodoTooltip = {
 			(typeof sShowDelay === 'undefined') ? 200 : parseInt(sShowDelay),
 			(typeof sHideDelay === 'undefined') ? null : parseInt(sHideDelay),
 		];
+		
+		// - If the content is asynchronous, bind methods to retrieve its content and cache it
+		const bRemoteContent = oElem.attr('data-tooltip-is-async') === 'true'
+		if(bRemoteContent) {
+			oOptions['onCreate'] = function(instance) {
+				instance._isFetching = false;
+				instance._isLoaded = null;
+			};
+			oOptions['onShow'] = function(instance) {
+					if (instance._isFetching || instance._isLoaded || instance._error) {
+						return;
+					}
+					instance._isFetching = true;
+					let sRemoteUrl = oOptions['content'];
+					if(CombodoTooltip.aTooltipsRemoteContent[sRemoteUrl] !== undefined){
+						instance.setContent(CombodoTooltip.aTooltipsRemoteContent[sRemoteUrl]);
+					}
+					else {
+						instance.setContent('Loading...');
+						$.ajax(sRemoteUrl)
+							.done(function (html) {
+								instance.setContent(html);
+								
+								// - Ugly hack to include JS scripts as it doesn't work with tippy when adding multiple nodes
+								$(html).each(function( index ) {
+									if($(this).is('script')){
+										$('body').append($(this));
+									}
+								});
+								
+								CombodoTooltip.aTooltipsRemoteContent[sRemoteUrl] = html;
+								instance._isLoaded = true;
+							})
+							.fail(function () {
+								instance.setContent(`Request failed.`);
+							})
+							.always(function () {
+								instance._isFetching = false;
+							});
+					}
+				};
+		}
 
 		oOptions['theme'] = oElem.attr('data-tooltip-theme') ?? '';
 

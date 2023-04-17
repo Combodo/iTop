@@ -7,7 +7,7 @@
     data-object-id="{{ oUIBlock.GetObjectId() }}"
     data-object-mode="{{ oUIBlock.GetObjectMode() }}"
     {% if oUIBlock.HasStatus() %}data-object-state="{{ oUIBlock.GetStatusCode() }}"{% endif %}
-    data-role="ibo-object-details"
+    data-role="{{ oUIBlock.GetBlockCode() }}"
 {% endblock %}
 
 {% block iboPanelSubTitle %}

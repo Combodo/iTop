@@ -558,6 +558,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:OtherActions' => 'Other Actions',
 	'UI:Menu:Transitions' => 'Transitions',
 	'UI:Menu:OtherTransitions' => 'Other Transitions',
+	'UI:Menu:View' => 'View this object',
 	'UI:Menu:New' => 'New...',
 	'UI:Menu:Add' => 'Add...',
 	'UI:Menu:Manage' => 'Manage...',

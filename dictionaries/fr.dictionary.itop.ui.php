@@ -502,6 +502,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Menu:OtherActions'             => 'Autres Actions',
 	'UI:Menu:Transitions'              => 'Transitions',
 	'UI:Menu:OtherTransitions' => 'Autres Transitions',
+	'UI:Menu:View' => 'Voir cet objet',
 	'UI:Menu:New' => 'Créer...',
 	'UI:Menu:Add' => 'Ajouter...',
 	'UI:Menu:Manage' => 'Gérer...',
