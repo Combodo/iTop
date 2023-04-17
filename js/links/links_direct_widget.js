@@ -464,7 +464,7 @@ $(function()
 				for (k in this.toBeCreated) {
 					nextIdx++;
 				}
-				nextIdx++;
+				oValues['id'] = -nextIdx; // we stored temp id to allow removal with _CreatedArrayRemove function
 				this.toBeCreated[nextIdx] = oValues;
 				this.inputToBeCreated.val(JSON.stringify(this.toBeCreated));
 				this.oDlg.dialog('close');
@@ -524,7 +524,7 @@ $(function()
 			else
 			{
 				// Object to be created, just remove it from the "to be created" list
-				this.toBeCreated = this._ArrayRemove(this.toBeCreated, iObjKey);
+				this.toBeCreated = this._CreatedArrayRemove(iObjKey);
 				this.inputToBeCreated.val(JSON.stringify(this.toBeCreated));
 			}
 			// Now remove the row from the table
@@ -542,7 +542,7 @@ $(function()
 		_removeRow: function(oCheckbox)
 		{
 			var iObjKey = parseInt(oCheckbox.val(), 10); // Number in base 10
-			
+
 			if (iObjKey > 0)
 			{
 				// Existing objet: add it to the "to be removed" list
@@ -561,7 +561,7 @@ $(function()
 			else
 			{
 				// Object to be created, just remove it from the "to be created" list
-				this.toBeCreated = this._ArrayRemove(this.toBeCreated, iObjKey);
+				this.toBeCreated = this._CreatedArrayRemove(iObjKey);
 				this.inputToBeCreated.val(JSON.stringify(this.toBeCreated));
 			}
 			// Now remove the row from the table
@@ -590,6 +590,18 @@ $(function()
 				if (aArrayToFilter[k] != needle)
 				{
 					aRes.push(aArrayToFilter[k]);
+				}
+			}
+			return aRes;
+		},
+		_CreatedArrayRemove: function(needle)
+		{
+			aRes = [];
+			for(k in this.toBeCreated)
+			{
+				if (this.toBeCreated[k].id != needle)
+				{
+					aRes.push(this.toBeCreated[k]);
 				}
 			}
 			return aRes;
