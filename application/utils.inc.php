@@ -20,7 +20,6 @@
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
 use ScssPhp\ScssPhp\ValueConverter;
@@ -1863,14 +1862,20 @@ SQL;
 	 * have precedence over the default ones. Example: CURLOPT_SSLVERSION => CURL_SSLVERSION_SSLv3
 	 *
 	 * @return string The result of the POST request
+	 *
 	 * @throws Exception with a specific error message depending on the cause
+	 * @throws ApplicationException if CURL PHP extension isn't available
 	 *
 	 * @noinspection PhpComposerExtensionStubsInspection we don't want the "white screen of death" on production (N°6146)
 	 *
-	 * @since 3.1.0 N°6172 as curl ext is now mandatory, removes the extension detection + fallback
+	 * @since 3.1.0 N°6172 as curl ext is now mandatory, method will crash with a ApplicationException this PHP extension isn't available
 	 */
 	public static function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = array())
 	{
+		if (false === function_exists('curl_init')) {
+			throw new ApplicationException('\utils::DoPostRequest method called whereas the CURL PHP extension isn\'t available !');
+		}
+
 		// CURL PHP extension is mandatory since 3.1.0 (N°5270)
 		// it provides a greater control over the various HTTP/SSL options
 		// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
