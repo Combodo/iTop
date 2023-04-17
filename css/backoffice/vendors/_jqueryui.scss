@@ -198,6 +198,11 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 	text-indent: -9999px;
 	white-space: nowrap;
 }
+.ui-draggable {
+  .ui-dialog-titlebar {
+    cursor: move;
+  }
+}
 .ui-dialog-title{
 	@extend %ibo-font-ral-nor-250;
 }
