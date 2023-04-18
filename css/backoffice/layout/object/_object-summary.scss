@@ -33,6 +33,23 @@ $ibo-object-summary--content--attributes--margin: $ibo-spacing-500 $ibo-panel--b
 
 $ibo-object-summary--content--attributes--code--padding-right: $ibo-spacing-500 !default;
 
+.ibo-object-summary{
+  // We duplicate this rule from _panel.scss as a protection was added and disallow titles and header that are not direct child of panel
+  &.ibo-has-medallion-icon{
+    .ibo-panel--titles{
+      padding-left: $ibo-object-summary--titles--padding-left;
+    }
+  }
+
+  > .ibo-panel--body{
+    display: flex;
+    flex-direction: column;
+    padding: $ibo-object-summary--panel--body--padding;
+    max-height: $ibo-object-summary--panel--body--max-height;
+    box-shadow: $ibo-object-summary--panel--body--padding-box-shadow;
+  }
+}
+
 .ibo-object-summary--header{
   margin: $ibo-object-summary--header--margin-y $ibo-object-summary--header--margin-x;
   padding: $ibo-object-summary--header--padding-y $ibo-object-summary--header--padding-x;
@@ -55,19 +72,6 @@ $ibo-object-summary--content--attributes--code--padding-right: $ibo-spacing-500 
     margin-right: $ibo-object-summary--header-right--margin-right;
     margin-left: $ibo-object-summary--header-right--margin-left;
   }
-}
-
-// We duplicate this rule from _panel.scss as a protection was added and disallow titles and header that are not direct child of panel
-.ibo-object-summary.ibo-has-medallion-icon .ibo-panel--titles{
-  padding-left: $ibo-object-summary--titles--padding-left;
-}
-
-.ibo-object-summary > .ibo-panel--body{
-  display: flex;
-  flex-direction: column;
-  padding: $ibo-object-summary--panel--body--padding;
-  max-height: $ibo-object-summary--panel--body--max-height;
-  box-shadow: $ibo-object-summary--panel--body--padding-box-shadow;
 }
 
 .ibo-object-summary--body{
