@@ -1868,7 +1868,7 @@ SQL;
 	 *
 	 * @noinspection PhpComposerExtensionStubsInspection we don't want the "white screen of death" on production (N°6146)
 	 *
-	 * @since 3.1.0 N°6172 as curl ext is now mandatory, method will crash with a ApplicationException this PHP extension isn't available
+	 * @since 3.1.0 N°6172 as curl ext is now mandatory, method will crash with a ApplicationException if this PHP extension isn't available
 	 */
 	public static function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = array())
 	{
