@@ -63,7 +63,6 @@ if (!function_exists('json_last_error_msg')) {
 //
 // Main
 //
-$oP = new AjaxPage('rest');
 $oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
@@ -256,19 +255,19 @@ if ($sResponse === false)
 	$sResponse = json_encode($oJsonIssue);
 }
 
-$oP->add_header('Access-Control-Allow-Origin: *');
 
 $sCallback = utils::ReadParam('callback', null);
 if ($sCallback == null)
 {
-	$oP->SetContentType('application/json');
-	$oP->add($sResponse);
+	$oP = new JsonPage();
+	$oP->SetOutputDataOnly(true);
 }
 else
 {
-	$oP->SetContentType('application/javascript');
-	$oP->add($sCallback.'('.$sResponse.')');
+	$oP = new JsonPPage($sCallback);
 }
+$oP->add_header('Access-Control-Allow-Origin: *');
+$oP->SetData(json_decode($sResponse, true));
 $oP->Output();
 
 // Log usage
