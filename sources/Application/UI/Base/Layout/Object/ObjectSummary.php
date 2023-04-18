@@ -5,12 +5,18 @@ namespace Combodo\iTop\Application\UI\Base\Layout\Object;
 use ApplicationContext;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\tUIContentAreas;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use DBObject;
 use Dict;
 use MetaModel;
+use URLPopupMenuItem;
+use UserRights;
+use utils;
 
 /**
 * Class ObjectSummary
@@ -93,12 +99,36 @@ class ObjectSummary extends ObjectDetails
 	 */
 	private function ComputeActions()
 	{
-		$oDetailsButton = ButtonUIBlockFactory::MakeLinkNeutral(
-			ApplicationContext::MakeObjectUrl($this->sClassName, $this->sObjectId),
-			Dict::S('UI:Menu:View'),
-			'fas fa-external-link-alt',
-			'_blank',
-		);
+		$oDetailsButton = null;
+		if(UserRights::IsActionAllowed($this->sClassName, UR_ACTION_MODIFY)) {
+			$sRootUrl = utils::GetAbsoluteUrlAppRoot();
+			$oPopoverMenu = new PopoverMenu();
+			
+			$oDetailsAction = new URLPopupMenuItem(
+				'UI:Menu:View',
+				Dict::S('UI:Menu:View'),
+				ApplicationContext::MakeObjectUrl($this->sClassName, $this->sObjectId),
+				'_blank'
+			); 
+			$oModifyButton = ButtonUIBlockFactory::MakeLinkNeutral(
+				$sRootUrl.'pages/UI.php?route=object.modify&class='.$this->sClassName.'&id='.$this->sObjectId,
+				Dict::S('UI:Menu:Modify'),
+				'fas fa-external-link-alt',
+				'_blank',
+			);
+			
+			$oPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oDetailsAction))->SetContainer(PopoverMenu::ENUM_CONTAINER_PARENT);
+			
+			$oDetailsButton = ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu($oModifyButton, $oPopoverMenu);
+		}
+		else {
+			$oDetailsButton = ButtonUIBlockFactory::MakeLinkNeutral(
+				ApplicationContext::MakeObjectUrl($this->sClassName, $this->sObjectId),
+				Dict::S('UI:Menu:View'),
+				'fas fa-external-link-alt',
+				'_blank',
+			);
+		}
 		
 		$this->oActions = $oDetailsButton;
 		$this->AddToolbarBlock($oDetailsButton);
