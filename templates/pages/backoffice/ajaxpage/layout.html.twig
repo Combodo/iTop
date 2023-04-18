@@ -2,6 +2,7 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
     {% set sId = oLayout.GetId() | sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
+    {% set bHasOnInitOrOnDomReadyScripts = aPage.aJsInlineOnInit is not empty or aPage.aJsInlineOnDomReady is not empty %}
     {% if bEscapeContent %}
         {{ render_block(oLayout, {aPage: aPage})|escape }}
     {% else %}
@@ -25,19 +26,21 @@
             </script>
         {% endfor %}
     {% endblock %}
-    
-    <script type="text/javascript">
-        let fOnJsFilesLoaded{{ sId }} = function (fResolve) {
-            {% for sJsInline in aPage.aJsInlineOnInit %}
-            {{ sJsInline|raw }}
-            {% endfor %}
 
-            {% for sJsInline in aPage.aJsInlineOnDomReady %}
-            {{ sJsInline|raw }}
-            {% endfor %}
-            fResolve();
-        }
-    </script>
+    {% if bHasOnInitOrOnDomReadyScripts %}
+        <script type="text/javascript">
+            let fOnJsFilesLoaded{{ sId }} = function (fResolve) {
+                {% for sJsInline in aPage.aJsInlineOnInit %}
+                {{ sJsInline|raw }}
+                {% endfor %}
+    
+                {% for sJsInline in aPage.aJsInlineOnDomReady %}
+                {{ sJsInline|raw }}
+                {% endfor %}
+                fResolve();
+            }
+        </script>
+    {% endif %}
     
     {% set sPromiseId = aPage.sPromiseId %}
 	{% if aPage.aJsFiles is not empty %}
@@ -132,13 +135,15 @@
             </script>
         {% endblock %}
     {% else %}
-        {% block iboPageJsInlineOnDomReady %}
-            <script type="text/javascript">
-                window['{{ sPromiseId }}'] = new Promise(function (fNoJsFileResolve, fNoJsFileReject) {
-                    fOnJsFilesLoaded{{ sId }}(fNoJsFileResolve);
-                });
-            </script>
-        {% endblock %}
+        {% if bHasOnInitOrOnDomReadyScripts %}
+            {% block iboPageJsInlineOnDomReady %}
+                <script type="text/javascript">
+                    window['{{ sPromiseId }}'] = new Promise(function (fNoJsFileResolve, fNoJsFileReject) {
+                        fOnJsFilesLoaded{{ sId }}(fNoJsFileResolve);
+                    });
+                </script>
+            {% endblock %}
+        {% endif %}
     {% endif %}
 
     {% if aDeferredBlocks is not empty %}
