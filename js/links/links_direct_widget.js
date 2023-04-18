@@ -482,7 +482,7 @@ $(function()
 
 				$.post(this.options.submit_to, oParams, function (data) {
 					// From data variable we get data entry and insert the first (and only) one
-					me.datatable.DataTable().row.add(data.data[0]).draw();
+					me.datatable.DataTable().row.add(data).draw();
 					$('#datatable_'+me.id+' .dataTables_empty').hide();
 
 					me._updateTable();
