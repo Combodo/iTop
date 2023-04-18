@@ -2508,22 +2508,7 @@ HTML;
 						/** @var \ormCustomFieldsValue $value */
 						$oForm = $value->GetForm($sFormPrefix);
 					} else if ($sAttDefEditClass === 'FormField') {
-						$sFormId = 'ff_'.$oAttDef->GetCode();
-						if (utils::IsNotNullOrEmptyString($sFormPrefix)) {
-							$sFormId = $sFormPrefix.$sFormId;
-						}
-
-						$oForm = new Combodo\iTop\Form\Form($sFormId);
-
-						// creating manually the field, as we need a specific id for the JS to work (send data back to the server)
-						$sFormFieldClass = $oAttDef::GetFormFieldClass();
-						$oAttDefField = new $sFormFieldClass($sAttCode.'_field');
-
-						$oAttDef->MakeFormField($aArgs['this'], $oAttDefField);
-						// Remove label generated in MakeFormField : the current method should return the field only, as the label is already generated in the caller GetBareProperties()
-						$oAttDefField->SetLabel('');
-
-						$oForm->AddField($oAttDefField);
+						$oForm = $oAttDef->GetForm($aArgs['this'], $sFormPrefix);
 					}
 
 					$oFormRenderer = new ConsoleFormRenderer($oForm);
