@@ -156,6 +156,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Person' => 'Person',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Last Name',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'First Name',
@@ -195,6 +196,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Members',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',

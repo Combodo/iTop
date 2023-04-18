@@ -291,6 +291,25 @@
       </fields>
       <methods/>
       <presentation>
+        <summary>
+          <items>
+            <item id="address">
+              <rank>10</rank>
+            </item>
+            <item id="postal_code">
+              <rank>20</rank>
+            </item>
+            <item id="city">
+              <rank>30</rank>
+            </item>
+            <item id="country">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="name">
@@ -580,6 +599,10 @@
             <attribute id="first_name"/>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="email"></attribute>
+            <attribute id="org_id_friendlyname"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <image_attribute>picture</image_attribute>
@@ -767,6 +790,25 @@
         </method>
       </methods>
       <presentation>
+        <summary>
+          <items>
+            <item id="function">
+              <rank>10</rank>
+            </item>
+            <item id="phone">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="team_list">
@@ -915,6 +957,11 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="function"></attribute>
+            <attribute id="org_id_friendlyname"></attribute>
+          </complementary_attributes>
+
         </naming>
         <style>
           <icon>../../images/icons/icons8-team.svg</icon>
@@ -941,6 +988,22 @@
       </fields>
       <methods/>
       <presentation>
+        <summary>
+          <items>
+            <item id="function">
+              <rank>10</rank>
+            </item>
+            <item id="phone">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="name">
