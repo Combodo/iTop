@@ -4,6 +4,8 @@ namespace Combodo\iTop\Test\UnitTest\Webservices;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Exception;
+use MetaModel;
+use utils;
 
 
 /**
@@ -19,14 +21,16 @@ class RestTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
 
-	const MODE = [ 'JSONDATA_AS_STRING' => 0, 'JSONDATA_AS_FILE' => 1 , 'NO_JSONDATA' => 2 ];
+	const ENUM_JSONDATA_AS_STRING = 0;
+	const ENUM_JSONDATA_AS_FILE = 1;
+	const ENUM_JSONDATA_NONE = 2;
 
 	private $sTmpFile = "";
 	private $sUrl;
 	private $sLogin;
 	private $sPassword = "Iuytrez9876543ç_è-(";
 	/** @var int $iJsonDataMode */
-	private int $iJsonDataMode;
+	private int $iJsonDataMode = self::ENUM_JSONDATA_AS_STRING;
 
 	/**
      * @throws Exception
@@ -42,16 +46,38 @@ class RestTest extends ItopDataTestCase
 		    unlink($this->sTmpFile);
 	    }
 
-	    $this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
+	    $this->sUrl = MetaModel::GetConfig()->Get('app_root_url');
 
-	    $oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
-	    $oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
+	    $oRestProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
+	    $oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
 
 	    if (is_object($oRestProfile) && is_object($oAdminProfile)) {
 		    $oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
 		    $this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
 	    }
     }
+
+	public function testJSONPCallback()
+	{
+		$sCallbackName = 'fooCallback';
+		$sJsonData = <<<JSON
+{
+   "operation": "list_operations"   
+}
+JSON;
+
+		// Test regular JSON result
+		$sJSONResult =  $this->CallRestApi($sJsonData);
+		// - Try to decode JSON to array to check if it is well-formed
+		$aJSONResultAsArray = json_decode($sJSONResult, true);
+		if (false === is_array($aJSONResultAsArray)) {
+			$this->fail('JSON result could not be decoded as array, it might be malformed');
+		}
+
+		// Test JSONP with callback by checking that it is the same as the regular JSON but within the JS callback
+		$sJSONPResult =  $this->CallRestApi($sJsonData, $sCallbackName);
+		$this->assertEquals($sCallbackName.'('.$sJSONResult.');', $sJSONPResult, 'JSONP response callback does not match expected result');
+	}
 
 	/**
 	 * @dataProvider BasicProvider
@@ -68,7 +94,7 @@ class RestTest extends ItopDataTestCase
 		$aJson = json_decode($sOutputJson, true);
 		$this->assertNotNull($aJson, "Cannot decode returned JSON : $sOutputJson");
 
-		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
+		if ($this->iJsonDataMode === static::ENUM_JSONDATA_NONE){
 			$this->assertStringContainsString("3", "".$aJson['code'], $sOutputJson);
 			$this->assertStringContainsString("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOutputJson);
 			return;
@@ -124,7 +150,7 @@ JSON;
 		$aJson = json_decode($sOuputJson, true);
 		$this->assertNotNull($aJson, 'json_decode() on the REST API response returned null :(');
 
-		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
+		if ($this->iJsonDataMode === static::ENUM_JSONDATA_NONE){
 			$this->assertStringContainsString("3", "".$aJson['code'], $sOuputJson);
 			$this->assertStringContainsString("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
 			return;
@@ -165,7 +191,7 @@ JSON;
 		$aJson = json_decode($sOuputJson, true);
 		$this->assertNotNull($aJson, 'json_decode() on the REST API response returned null :(');
 
-		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
+		if ($this->iJsonDataMode === static::ENUM_JSONDATA_NONE){
 			$this->assertStringContainsString("3", "".$aJson['code'], $sOuputJson);
 			$this->assertStringContainsString("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
 			return;
@@ -203,9 +229,9 @@ JSON;
 
 	public function BasicProvider(){
 		return [
-			'call rest call' => [ 'sJsonDataMode' => self::MODE['JSONDATA_AS_STRING']],
-			'pass json_data as file' => [ 'sJsonDataMode' => self::MODE['JSONDATA_AS_FILE']],
-			'no json data' => [ 'sJsonDataMode' => self::MODE['NO_JSONDATA']]
+			'call rest call' => [ 'sJsonDataMode' => static::ENUM_JSONDATA_AS_STRING],
+			'pass json_data as file' => [ 'sJsonDataMode' => static::ENUM_JSONDATA_AS_FILE],
+			'no json data' => [ 'sJsonDataMode' => static::ENUM_JSONDATA_NONE]
 		];
 	}
 
@@ -251,7 +277,7 @@ JSON;
 
 	}
 
-	private function CallRestApi($sJsonDataContent){
+	private function CallRestApi(string $sJsonDataContent, string $sCallbackName = null){
 		$ch = curl_init();
 		$aPostFields = [
 			'version' => '1.3',
@@ -259,14 +285,18 @@ JSON;
 			'auth_pwd' => $this->sPassword,
 		];
 
-		if ($this->iJsonDataMode === self::MODE['JSONDATA_AS_STRING']){
+		if ($this->iJsonDataMode === static::ENUM_JSONDATA_AS_STRING) {
 			$this->sTmpFile = tempnam(sys_get_temp_dir(), 'jsondata_');
 			file_put_contents($this->sTmpFile, $sJsonDataContent);
 
 			$oCurlFile = curl_file_create($this->sTmpFile);
 			$aPostFields['json_data'] = $oCurlFile;
-		}else if ($this->iJsonDataMode === self::MODE['JSONDATA_AS_FILE']){
+		} else if ($this->iJsonDataMode === static::ENUM_JSONDATA_AS_FILE) {
 			$aPostFields['json_data'] = $sJsonDataContent;
+		}
+
+		if (utils::IsNotNullOrEmptyString($sCallbackName)) {
+			$aPostFields['callback'] = $sCallbackName;
 		}
 
 		curl_setopt($ch, CURLOPT_URL, "$this->sUrl/webservices/rest.php");

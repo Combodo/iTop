@@ -260,7 +260,6 @@ $sCallback = utils::ReadParam('callback', null);
 if ($sCallback == null)
 {
 	$oP = new JsonPage();
-	$oP->SetOutputDataOnly(true);
 }
 else
 {
@@ -268,6 +267,7 @@ else
 }
 $oP->add_header('Access-Control-Allow-Origin: *');
 $oP->SetData(json_decode($sResponse, true));
+$oP->SetOutputDataOnly(true);
 $oP->Output();
 
 // Log usage
