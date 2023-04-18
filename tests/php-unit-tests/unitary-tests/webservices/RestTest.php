@@ -27,7 +27,7 @@ class RestTest extends ItopDataTestCase
 
 	private $sTmpFile = "";
 	/** @var int $iJsonDataMode */
-	private $iJsonDataMode;
+	private $iJsonDataMode = self::ENUM_JSONDATA_AS_STRING;
 	private $sUrl;
 	private $sLogin;
 	private $sPassword = "Iuytrez9876543ç_è-(";
@@ -56,6 +56,28 @@ class RestTest extends ItopDataTestCase
 		    $this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
 	    }
     }
+
+	public function testJSONPCallback()
+	{
+		$sCallbackName = 'fooCallback';
+		$sJsonData = <<<JSON
+{
+   "operation": "list_operations"   
+}
+JSON;
+
+		// Test regular JSON result
+		$sJSONResult =  $this->CallRestApi($sJsonData);
+		// - Try to decode JSON to array to check if it is well-formed
+		$aJSONResultAsArray = json_decode($sJSONResult, true);
+		if (false === is_array($aJSONResultAsArray)) {
+			$this->fail('JSON result could not be decoded as array, it might be malformed');
+		}
+
+		// Test JSONP with callback by checking that it is the same as the regular JSON but within the JS callback
+		$sJSONPResult =  $this->CallRestApi($sJsonData, $sCallbackName);
+		$this->assertEquals($sCallbackName.'('.$sJSONResult.')', $sJSONPResult, 'JSONP response callback does not match expected result');
+	}
 
 	/**
 	 * @dataProvider BasicProvider
@@ -250,7 +272,7 @@ JSON;
 
 	}
 
-	private function CallRestApi($sJsonDataContent){
+	private function CallRestApi(string $sJsonDataContent, string $sCallbackName = null){
 		$ch = curl_init();
 		$aPostFields = [
 			'version' => '1.3',
@@ -266,6 +288,10 @@ JSON;
 			$aPostFields['json_data'] = $oCurlFile;
 		} else if ($this->iJsonDataMode === static::ENUM_JSONDATA_AS_FILE) {
 			$aPostFields['json_data'] = $sJsonDataContent;
+		}
+
+		if (utils::IsNotNullOrEmptyString($sCallbackName)) {
+			$aPostFields['callback'] = $sCallbackName;
 		}
 
 		curl_setopt($ch, CURLOPT_URL, "$this->sUrl/webservices/rest.php");
