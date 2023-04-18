@@ -2435,7 +2435,7 @@ EOF
 				break;
 
 			case 'custom_fields_update':
-				$oPage->SetContentType('application/json');
+				$oPage = new JsonPage();
 				$sAttCode = utils::ReadParam('attcode', '');
 				$aRequestedFields = utils::ReadParam('requested_fields', array());
 				$sRequestedFieldsFormPath = utils::ReadParam('form_path', '');
@@ -2459,7 +2459,8 @@ EOF
 				catch (Exception $e) {
 					$aResult['error'] = $e->getMessage();
 				}
-				$oPage->add(json_encode($aResult));
+				$oPage->SetData($aResult);
+				$oPage->SetOutputDataOnly(true);
 				break;
 
 			//--------------------------------
