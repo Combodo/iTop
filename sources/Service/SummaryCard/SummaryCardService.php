@@ -35,7 +35,7 @@ data-tooltip-html-enabled="true"
 data-tooltip-sanitizer-skipped="false" 
 data-tooltip-show-delay="800" 
 data-tooltip-hide-delay="500" 
-data-tooltip-max-width="600" 
+data-tooltip-max-width="600px" 
 data-tooltip-theme="object-summary" 
 data-tooltip-append-to="body"
 HTML;
