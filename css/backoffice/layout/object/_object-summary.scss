@@ -43,10 +43,7 @@ $ibo-object-summary--content--attributes--code--padding-right: $ibo-spacing-500 
     border: $ibo-object-summary--icon--border--as-medallion;
     border-radius: $ibo-panel--icon--border-radius--as-medallion;
   }
-  // We duplicate this rule from _panel.scss as a protection was added and disallow titles and header that are not direct child of panel
-  .ibo-panel--titles {
-    padding-left: $ibo-object-summary--titles--padding-left;
-  }
+
   // We duplicate this rule from _panel.scss as a protection was added and disallow titles and header that are not direct child of panel
   .ibo-panel--header-left{
     margin-left: $ibo-object-summary--header-left--margin-left;
@@ -56,6 +53,11 @@ $ibo-object-summary--content--attributes--code--padding-right: $ibo-spacing-500 
     margin-right: $ibo-object-summary--header-right--margin-right;
     margin-left: $ibo-object-summary--header-right--margin-left;
   }
+}
+
+// We duplicate this rule from _panel.scss as a protection was added and disallow titles and header that are not direct child of panel
+.ibo-object-summary.ibo-has-medallion-icon .ibo-panel--titles{
+  padding-left: $ibo-object-summary--titles--padding-left;
 }
 
 .ibo-object-summary > .ibo-panel--body{
