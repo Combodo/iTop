@@ -18,21 +18,34 @@
 
 
 /**
- * Base class to hold the value managed by CustomFieldsHandler
+ * Base class to hold the value managed by {@see CustomFieldsHandler} and {@see AttributeCustomFields}
  *
  * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 class ormCustomFieldsValue
 {
+	/** @var \DBObject|null $oHostObject */
 	protected $oHostObject;
+	/** @var string $sAttCode */
 	protected $sAttCode;
+	/** @var array{
+	 *          legacy: int,
+	 *          extradata_id: string,
+	 *          _template_name: string,
+	 *          template_id: string,
+	 *          template_data: string,
+	 *          user_data: string,
+	 *          current_template_id: string,
+	 *          current_template_data: string,
+	 *     } $aCurrentValues Containing JSON encoded strings in template_data/current_template_data, user_data
+	 */
 	protected $aCurrentValues;
 
 	/**
-	 * @param DBObject $oHostObject
-	 * @param $sAttCode
+	 * @param \DBObject|null $oHostObject
+	 * @param string $sAttCode
+	 * @param array $aCurrentValues
 	 */
 	public function __construct(DBObject $oHostObject, $sAttCode, $aCurrentValues = null)
 	{
