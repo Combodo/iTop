@@ -59,36 +59,50 @@ class ormCustomFieldsValue
 
 	public function GetAsHTML($bLocalize = true)
 	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->GetValues());
-		return $oHandler->GetAsHTML($this->aCurrentValues, $bLocalize);
+		return $this->GetHandler()->GetAsHTML($this->aCurrentValues, $bLocalize);
 	}
 
 	public function GetAsXML($bLocalize = true)
 	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->GetValues());
-		return $oHandler->GetAsXML($this->aCurrentValues, $bLocalize);
+		return $this->GetHandler()->GetAsXML($this->aCurrentValues, $bLocalize);
 	}
 
 	public function GetAsCSV($sSeparator = ',', $sTextQualifier = '"', $bLocalize = true)
 	{
+		return $this->GetHandler()->GetAsCSV($this->aCurrentValues, $sSeparator, $sTextQualifier, $bLocalize);
+	}
+
+	/**
+	 * @return string|array
+	 * @throws \Exception
+	 * @since 3.1.0 N°1150 Method creation
+	 */
+	public function GetForJSON()
+	{
+		return $this->GetHandler()->GetAsJSON($this->aCurrentValues);
+	}
+
+	/**
+	 * @return \CustomFieldsHandler
+	 * @throws \Exception
+	 * @since 3.1.0 N°1150 Method creation
+	 */
+	final protected function GetHandler()
+	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->GetValues());
-		return $oHandler->GetAsCSV($this->aCurrentValues, $sSeparator, $sTextQualifier, $bLocalize);
+
+		return $oAttDef->GetHandler($this->GetValues());
 	}
 
 	/**
 	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
-	 * @param $value mixed The current value of the field
+	 *
 	 * @param $sVerb string The verb specifying the representation of the value
 	 * @param $bLocalize bool Whether or not to localize the value
 	 */
 	public function GetForTemplate($sVerb, $bLocalize = true)
 	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->GetValues());
-		return $oHandler->GetForTemplate($this->aCurrentValues, $sVerb, $bLocalize);
+		return $this->GetHandler()->GetForTemplate($this->aCurrentValues, $sVerb, $bLocalize);
 	}
 
 	/**

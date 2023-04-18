@@ -980,7 +980,7 @@ abstract class AttributeDefinition
 	 *
 	 * @param mixed $value field value
 	 *
-	 * @return string JSON encoded string of the value
+	 * @return string|array PHP struct that can be properly encoded
 	 *
 	 */
 	public function GetForJSON($value)
@@ -13345,13 +13345,20 @@ class AttributeCustomFields extends AttributeDefinition
 	 *
 	 * @param \ormCustomFieldsValue $value
 	 *
-	 * @return array
+	 * @return string|array
 	 *
 	 * @since 3.1.0 N°1150 now returns the value (was always returning null before)
 	 */
 	public function GetForJSON($value)
 	{
-		return null;
+		try {
+			$sRet = $value->GetForJSON();
+		}
+		catch (Exception $e) {
+			$sRet = 'Custom field error: '.$e->getMessage();
+		}
+
+		return $sRet;
 	}
 
 	/**
