@@ -4,6 +4,8 @@ namespace Combodo\iTop\Test\UnitTest\Webservices;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Exception;
+use MetaModel;
+use utils;
 
 
 /**
@@ -19,11 +21,13 @@ class RestTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
 
-	const MODE = [ 'JSONDATA_AS_STRING' => 0, 'JSONDATA_AS_FILE' => 1 , 'NO_JSONDATA' => 2 ];
+	const ENUM_JSONDATA_AS_STRING = 0;
+	const ENUM_JSONDATA_AS_FILE = 1;
+	const ENUM_JSONDATA_NONE = 2;
 
 	private $sTmpFile = "";
 	/** @var int $iJsonDataMode */
-	private $sJsonDataMode;
+	private $iJsonDataMode;
 	private $sUrl;
 	private $sLogin;
 	private $sPassword = "Iuytrez9876543ç_è-(";
@@ -42,10 +46,10 @@ class RestTest extends ItopDataTestCase
 		    unlink($this->sTmpFile);
 	    }
 
-	    $this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
+	    $this->sUrl = MetaModel::GetConfig()->Get('app_root_url');
 
-	    $oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
-	    $oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
+	    $oRestProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
+	    $oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
 
 	    if (is_object($oRestProfile) && is_object($oAdminProfile)) {
 		    $oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
@@ -67,7 +71,7 @@ class RestTest extends ItopDataTestCase
 		$aJson = json_decode($sOuputJson, true);
 		$this->assertNotNull($aJson, "Cannot decode returned JSON : $sOuputJson");
 
-		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
+		if ($this->iJsonDataMode === static::ENUM_JSONDATA_NONE){
 			$this->assertStringContainsString("3", "".$aJson['code'], $sOuputJson);
 			$this->assertStringContainsString("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
 			return;
@@ -121,7 +125,7 @@ JSON;
 		$sOuputJson = $this->CreateTicketViaApi($description);
 		$aJson = json_decode($sOuputJson, true);
 
-		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
+		if ($this->iJsonDataMode === static::ENUM_JSONDATA_NONE){
 			$this->assertStringContainsString("3", "".$aJson['code'], $sOuputJson);
 			$this->assertStringContainsString("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
 			return;
@@ -160,7 +164,7 @@ JSON;
 		$sOuputJson = $this->CreateTicketViaApi($description);
 		$aJson = json_decode($sOuputJson, true);
 
-		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
+		if ($this->iJsonDataMode === static::ENUM_JSONDATA_NONE){
 			$this->assertStringContainsString("3", "".$aJson['code'], $sOuputJson);
 			$this->assertStringContainsString("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
 			return;
@@ -198,9 +202,9 @@ JSON;
 
 	public function BasicProvider(){
 		return [
-			'call rest call' => [ 'sJsonDataMode' => self::MODE['JSONDATA_AS_STRING']],
-			'pass json_data as file' => [ 'sJsonDataMode' => self::MODE['JSONDATA_AS_FILE']],
-			'no json data' => [ 'sJsonDataMode' => self::MODE['NO_JSONDATA']]
+			'call rest call' => [ 'sJsonDataMode' => static::ENUM_JSONDATA_AS_STRING],
+			'pass json_data as file' => [ 'sJsonDataMode' => static::ENUM_JSONDATA_AS_FILE],
+			'no json data' => [ 'sJsonDataMode' => static::ENUM_JSONDATA_NONE]
 		];
 	}
 
@@ -254,13 +258,13 @@ JSON;
 			'auth_pwd' => $this->sPassword,
 		];
 
-		if ($this->iJsonDataMode === self::MODE['JSONDATA_AS_STRING']){
+		if ($this->iJsonDataMode === static::ENUM_JSONDATA_AS_STRING) {
 			$this->sTmpFile = tempnam(sys_get_temp_dir(), 'jsondata_');
 			file_put_contents($this->sTmpFile, $sJsonDataContent);
 
 			$oCurlFile = curl_file_create($this->sTmpFile);
 			$aPostFields['json_data'] = $oCurlFile;
-		}else if ($this->iJsonDataMode === self::MODE['JSONDATA_AS_FILE']){
+		} else if ($this->iJsonDataMode === static::ENUM_JSONDATA_AS_FILE) {
 			$aPostFields['json_data'] = $sJsonDataContent;
 		}
 
