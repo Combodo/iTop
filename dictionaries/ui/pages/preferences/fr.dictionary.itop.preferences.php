@@ -23,6 +23,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Preferences:General:Title'                                     => 'Général',
 	'UI:Preferences:General:Theme'                                     => 'Thème',
 	'UI:Preferences:General:Theme:DefaultThemeLabel'                   => '%1$s (défaut)',
+	'UI:Favorites:General:ShowSummaryCards'                            => 'Afficher un aperçu sur les liens',
+	'UI:Favorites:General:ShowSummaryCards+'                           => 'Quand la souris passe sur un lien vers un objet, une vue synthètique est affichée si elle existe pour cette classe d\'objets',
 	'UI:Preferences:Lists:Title'                                       => 'Listes',
 	'UI:Preferences:RichText:Title'                                    => 'Éditeur texte riche',
 	'UI:Preferences:RichText:ToolbarState'                             => 'Affichage par défaut de la barre d\'outil',
