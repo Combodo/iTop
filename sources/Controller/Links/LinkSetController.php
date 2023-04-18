@@ -8,6 +8,7 @@ namespace Combodo\iTop\Controller\Links;
 
 use AjaxPage;
 use cmdbAbstractObject;
+use Combodo\iTop\Application\Helper\LegacyFormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Service\Base\ObjectRepository;
@@ -213,6 +214,10 @@ JS
 					,
 				],
 			];
+
+			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
+			LegacyFormHelper::DisableAttributeBlobInputs($sRealClass, $aExtraParams);
+
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aExtraParams);
 		}
 		else

@@ -4,8 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\LegacyFormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 
@@ -968,15 +968,16 @@ JS
 	<div id="dcr_{$this->iId}">
 HTML
 		);
-		$aFieldsFlags = array();
-		$aFieldsComments = array();
-		foreach (MetaModel::ListAttributeDefs($this->sTargetClass) as $sAttCode => $oAttDef) {
-			if (($oAttDef instanceof AttributeBlob) || (false)) {
-				$aFieldsFlags[$sAttCode] = OPT_ATT_READONLY;
-				$aFieldsComments[$sAttCode] = '&nbsp;<img src="../images/transp-lock.png" style="vertical-align:middle" title="'.utils::EscapeHtml(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
-			}
-		}
-		cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));
+
+		$aFormExtraParams = array(
+			'formPrefix'  => $this->iId,
+			'noRelations' => true,
+		);
+
+		// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
+		LegacyFormHelper::DisableAttributeBlobInputs($this->sTargetClass, $aFormExtraParams);
+
+		cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), $aFormExtraParams);
 		$oPage->add(<<<HTML
 	</div>
 </div>

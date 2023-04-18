@@ -190,6 +190,7 @@ return array(
     'CheckableExpression' => $baseDir . '/core/oql/oqlquery.class.inc.php',
     'Combodo\\iTop\\Application\\Branding' => $baseDir . '/sources/Application/Branding.php',
     'Combodo\\iTop\\Application\\EventRegister\\ApplicationEvents' => $baseDir . '/sources/Application/EventRegister/ApplicationEvents.php',
+    'Combodo\\iTop\\Application\\Helper\\LegacyFormHelper' => $baseDir . '/sources/Application/Helper/LegacyFormHelper.php',
     'Combodo\\iTop\\Application\\Helper\\Session' => $baseDir . '/sources/Application/Helper/Session.php',
     'Combodo\\iTop\\Application\\Helper\\WebResourcesHelper' => $baseDir . '/sources/Application/Helper/WebResourcesHelper.php',
     'Combodo\\iTop\\Application\\Search\\AjaxSearchException' => $baseDir . '/sources/Application/Search/ajaxsearchexception.class.inc.php',

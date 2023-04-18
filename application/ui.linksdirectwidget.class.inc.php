@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\LegacyFormHelper;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetEditTable;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
@@ -118,15 +119,23 @@ class UILinksWidgetDirect
 			$sRealClass = $aKeys[0];
 		}
 
-		if ($sRealClass != '')
-		{
+		if ($sRealClass != '') {
 			$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
-			$aFieldFlags = array( $sExtKeyToMe => OPT_ATT_HIDDEN);
+			$aFieldsFlags = array($sExtKeyToMe => OPT_ATT_HIDDEN);
 			$oObj = DBObject::MakeDefaultInstance($sRealClass);
 			$aPrefillParam = array('source_obj' => $oSourceObj);
 			$oObj->PrefillForm('creation_from_editinplace', $aPrefillParam);
-		 	cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), array('formPrefix' => $this->sInputid, 'noRelations' => true, 'fieldsFlags' => $aFieldFlags));
+			$aFormExtraParams = array(
+				'formPrefix'  => $this->sInputid,
+				'noRelations' => true,
+				'fieldsFlags' => $aFieldsFlags,
+			);
+
+			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
+			LegacyFormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
+
+			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aFormExtraParams);
 		}
 		else
 		{
