@@ -1566,7 +1566,7 @@ JS;
 	 */
 	protected function output_dict_entries($bReturnOutput = false)
 	{
-		if ($this->sContentType != 'text/plain' && $this->sContentType != 'application/json') {
+		if ($this->sContentType != 'text/plain' && $this->sContentType != 'application/json' && $this->sContentType != 'application/javascript') {
 			/** @var \iBackofficeDictEntriesExtension $oExtensionInstance */
 			foreach (MetaModel::EnumPlugins('iBackofficeDictEntriesExtension') as $oExtensionInstance) {
 				foreach ($oExtensionInstance->GetDictEntries() as $sDictEntry) {
