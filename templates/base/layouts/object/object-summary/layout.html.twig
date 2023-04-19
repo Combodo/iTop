@@ -11,13 +11,14 @@
         {{ parent() }}
     {% endblock %}
     </div>
-    <div class="ibo-object-summary--content--attributes">
-
-    {% for attcode,attval in oUIBlock.GetDisplayValues() %}
-        <div class="ibo-object-summary--content--attribute ibo-field ibo-field-small">
-            <span class="ibo-object-summary--content--attributes--code ibo-field--label">{{ attcode|raw }}</span>
-            <span class="ibo-object-summary--content--attributes--value ibo-field--value">{{ attval|raw }}</span>
+    <div class="ibo-object-summary--body">
+        <div class="ibo-object-summary--content--attributes">
+        {% for attcode,attval in oUIBlock.GetDisplayValues() %}
+            <div class="ibo-object-summary--content--attribute ibo-field ibo-field-small">
+                <span class="ibo-object-summary--content--attributes--code ibo-field--label">{{ attcode|raw }}</span>
+                <span class="ibo-object-summary--content--attributes--value ibo-field--value">{{ attval|raw }}</span>
+            </div>
+        {% endfor %}
         </div>
-    {% endfor %}
     </div>
 {% endblock %}
