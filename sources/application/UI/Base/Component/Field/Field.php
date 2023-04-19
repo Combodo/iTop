@@ -9,6 +9,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Field;
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use utils;
 
 /**
  * @since 3.0.0
@@ -45,8 +46,11 @@ class Field extends UIContentBlock
 	protected $sValueRaw;
 	/** @var string */
 	protected $sLabel;
-	/** @var string */
-	protected $sTooltip = '';
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $sDescription = '';
 	/** @var string */
 	protected $sValueId;
 
@@ -359,25 +363,31 @@ class Field extends UIContentBlock
 
 	/**
 	 * @return string
+	 * @since 3.1.0
 	 */
-	public function GetTooltip(): string
+	public function GetDescription(): string
 	{
-		return $this->sTooltip;
+		return $this->sDescription;
 	}
 
 	/**
-	 * @param string $sTooltip
+	 * @param string $sDescription
 	 *
 	 * @return $this
+	 * @since 3.1.0
 	 */
-	public function SetTooltip(string $sTooltip)
+	public function SetDescription(string $sDescription)
 	{
-		$this->sTooltip = $sTooltip;
+		$this->sDescription = $sDescription;
 		return $this;
 	}
 
-	public function HasTooltip() : bool
+	/*
+	 * @return bool
+	 * @since 3.1.0
+	 */
+	public function HasDescription(): bool
 	{
-		return $this->GetTooltip() !== '';
+		return utils::IsNotNullOrEmptyString($this->GetDescription());
 	}
 }

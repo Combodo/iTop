@@ -90,14 +90,14 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 	 * @api
 	 * @param string $sLabel
 	 * @param string $sValueHtml
-	 * @param string $sTooltip
+	 * @param string $sDescription
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
 	 */
-	public static function MakeLarge(string $sLabel, string $sValueHtml = '', string $sTooltip = '')
+	public static function MakeLarge(string $sLabel, string $sValueHtml = '', string $sDescription = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
-		$oField->SetTooltip($sTooltip);
+		$oField->SetDescription($sDescription);
 		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_LARGE);
 		return $oField;
 	}
@@ -106,14 +106,14 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 	 * @api
 	 * @param string $sLabel
 	 * @param string $sValueHtml
-	 * @param string $sTooltip
+	 * @param string $sDescription
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
 	 */
-	public static function MakeSmall(string $sLabel, string $sValueHtml = '', string $sTooltip = '')
+	public static function MakeSmall(string $sLabel, string $sValueHtml = '', string $sDescription = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
-		$oField->SetTooltip($sTooltip);
+		$oField->SetDescription($sDescription);
 		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_SMALL);
 		return $oField;
 	}
@@ -123,14 +123,14 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sLabel
 	 * @param string $sLayout
 	 * @param string|null $sId
-	 * @param string $sTooltip
+	 * @param string $sDescription
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
 	 */
-	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null, string $sTooltip = '')
+	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null, string $sDescription = '')
 	{
 		$oField = new Field($sLabel, null, $sId);
-		$oField->SetTooltip($sTooltip);
+		$oField->SetDescription($sDescription);
 		$oField->SetLayout($sLayout);
 		return $oField;
 
