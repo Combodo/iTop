@@ -710,15 +710,26 @@ class lnkTriggerAction extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb,application",
-			"key_type" => "autoincrement",
-			"name_attcode" => "",
-			"state_attcode" => "",
-			"reconc_keys" => array('action_id', 'trigger_id'),
-			"db_table" => "priv_link_action_trigger",
-			"db_key_field" => "link_id",
+			"category"            => "grant_by_profile,core/cmdb,application",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('action_id', 'trigger_id'),
+			"db_table"            => "priv_link_action_trigger",
+			"db_key_field"        => "link_id",
 			"db_finalclass_field" => "",
-			"is_link" => true,
+			"is_link"             => true,
+			'uniqueness_rules'    => array(
+				'no_duplicate' => array(
+					'attributes'  => array(
+						0 => 'action_id',
+						1 => 'trigger_id',
+					),
+					'filter'      => '',
+					'disabled'    => false,
+					'is_blocking' => true,
+				),
+			),
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("action_id", array("targetclass" => "Action", "jointype" => '', "allowed_values" => null, "sql" => "action_id", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array())));

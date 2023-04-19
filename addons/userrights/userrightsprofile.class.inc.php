@@ -228,6 +228,17 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 			"db_table"            => "priv_urp_userprofile",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
+			'uniqueness_rules'    => array(
+				'no_duplicate' => array(
+					'attributes'  => array(
+						0 => 'userid',
+						1 => 'profileid',
+					),
+					'filter'      => '',
+					'disabled'    => false,
+					'is_blocking' => true,
+				),
+			),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
