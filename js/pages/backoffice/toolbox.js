@@ -208,7 +208,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 		buttons: this._ConvertButtonDefinition(oOptions.buttons)
 	};
 	
-	let aSizeMap = {
+	const aSizeMap = {
 		'xs': 'extra-small',
 		's': 'small',
 		'md': 'medium',
@@ -218,7 +218,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 	// Resize to desired size
 	switch (typeof oOptions.size) {
 		case 'string':
-			if(aSizeMap[oOptions.size] !== undefined) {
+			if(aSizeMap[oOptions.size] !== undefined && aSizeMap[oOptions.size] !== 'auto') {
 				let sSize = 'ibo-is-' + aSizeMap[oOptions.size];
 				if (oJQueryOptions.classes['ui-dialog-content'] !== undefined) {
 					oJQueryOptions.classes['ui-dialog-content'] += ' ' + sSize;

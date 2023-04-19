@@ -109,14 +109,15 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 	// Resize to desired size
 	switch (typeof oOptions.size) {
 		case 'string':
-			oModalElem.find('.modal-dialog')
-				.removeClass('modal-lg')
-				.addClass('modal-' + oOptions.size);
+			if(oOptions.size !== undefined && oOptions.size !== 'auto') {
+				oModalElem.find('.modal-dialog')
+					.removeClass('modal-lg')
+					.addClass('modal-'+oOptions.size);
+			}
 			break;
 
 		case 'object':
-			CombodoJSConsole.Error('Could not open modal dialog as portal modals only support "xs", "sm", "md", "lg" sizes. Not specific width/height yet.');
-			return false;
+			CombodoJSConsole.Warn('Specifying a specific width / height on a modal dialog is not supported yet in the portal. Only "xs", "sm", "md", "lg" sizes are supported.');
 	}
 
 	// Load content
