@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\Router;
 
+use Combodo\iTop\Router\Exception\RouteNotFoundException;
 use ReflectionClass;
 use ReflectionMethod;
 use utils;
@@ -87,6 +88,37 @@ class Router
 	private function __construct()
 	{
 		// Don't do anything, we don't want to be initialized
+	}
+
+	/**
+	 * @param string $sRoute Code of the route to generate the URL for (eg. "object.modify" => "https://itop/pages/UI.php?route=object.modify")
+	 * @param array $aParams Parameters to add to the URL query string, they will be URL-encoded automatically.
+	 *      Note that only scalars and arrays are supported.
+	 *      (eg. ["foo" => "bar", "some_array" => [1, 2, 3]] will be append to the URL as "&foo=bar&some_array[]=1&some_array[]=2&some_array[]=3")
+	 * @param bool $bAbsoluteUrl Whether the URL should be absolute (include the app root URL) or not
+	 *
+	 * @return string Absolute or relative URL to access $sRoute
+	 * @throws \Exception
+	 */
+	public function GenerateUrl(string $sRoute, array $aParams = [], bool $bAbsoluteUrl = true): string
+	{
+		// Stop if route cannot be found, it will ease DX and troubleshooting
+		if (false === $this->CanDispatchRoute($sRoute)) {
+			throw new RouteNotFoundException('Could not find route "'.$sRoute.'"');
+		}
+
+		// Prepare base URL
+		$sUrl = $bAbsoluteUrl ? utils::GetAbsoluteUrlAppRoot() : '';
+
+		// Add route URL
+		$sUrl .=  'pages/UI.php?route=' . $sRoute;
+
+		// Add parameters and url encode them
+		if (count($aParams) > 0) {
+			$sUrl .= '&' . http_build_query($aParams);
+		}
+
+		return $sUrl;
 	}
 
 	/**

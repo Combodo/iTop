@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\Popov
 use Combodo\iTop\Application\UI\Base\tUIContentAreas;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+use Combodo\iTop\Router\Router;
 use DBObject;
 use Dict;
 use MetaModel;
@@ -99,6 +100,7 @@ class ObjectSummary extends ObjectDetails
 	 */
 	private function ComputeActions()
 	{
+		$oRouter = Router::GetInstance();
 		$oDetailsButton = null;
 		if(UserRights::IsActionAllowed($this->sClassName, UR_ACTION_MODIFY)) {
 			$sRootUrl = utils::GetAbsoluteUrlAppRoot();
@@ -111,7 +113,7 @@ class ObjectSummary extends ObjectDetails
 				'_blank'
 			); 
 			$oModifyButton = ButtonUIBlockFactory::MakeLinkNeutral(
-				$sRootUrl.'pages/UI.php?route=object.modify&class='.$this->sClassName.'&id='.$this->sObjectId,
+				$oRouter->GenerateUrl('object.modify', ['class' => $this->sClassName, 'id' => $this->sObjectId]),
 				Dict::S('UI:Menu:Modify'),
 				'fas fa-external-link-alt',
 				'_blank',

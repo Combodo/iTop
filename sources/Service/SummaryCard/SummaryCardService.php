@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+use Combodo\iTop\Router\Router;
 
 /**
  * Class SummaryCardService
@@ -25,7 +26,8 @@ class SummaryCardService {
 	 */
 	public static function GetHyperlinkMarkup(string $sObjClass, $sObjKey): string
 	{
-		$sRoute = utils::GetAbsoluteUrlAppRoot()."/pages/ajax.render.php?route=object.summary&obj_key=$sObjKey&obj_class=$sObjClass";
+		$oRouter = Router::GetInstance();
+		$sRoute = $oRouter->GenerateUrl("object.summary", ["obj_class" => $sObjClass, "obj_key" => $sObjKey]);
 		return 
 	<<<HTML
 data-tooltip-content="$sRoute" 

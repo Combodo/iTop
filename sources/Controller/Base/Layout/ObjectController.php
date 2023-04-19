@@ -18,6 +18,7 @@ use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\Router\Router;
 use Combodo\iTop\Service\Base\ObjectRepository;
 use CoreCannotSaveObjectException;
 use DeleteException;
@@ -62,6 +63,7 @@ class ObjectController extends AbstractController
 		$sStateCode = utils::ReadParam('state', '');
 		$bCheckSubClass = utils::ReadParam('checkSubclass', true);
 		$oAppContext = new ApplicationContext();
+		$oRouter = Router::GetInstance();
 		
 		if ($this->IsHandlingXmlHttpRequest()) {
 			$oPage = new AjaxPage('');
@@ -181,7 +183,7 @@ JS;
 		} else {
 			if ($this->IsHandlingXmlHttpRequest()) {
 				$oClassForm = cmdbAbstractObject::DisplayFormBlockSelectClassToCreate($sClass, MetaModel::GetName($sClass), $oAppContext, $aPossibleClasses, ['state' => $sStateCode]);
-				$sCurrentUrl = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php?route=object.new';
+				$sCurrentUrl = $oRouter->GenerateUrl('object.new');
 				$oClassForm->SetOnSubmitJsCode(
 					<<<JS
 					let me = this;

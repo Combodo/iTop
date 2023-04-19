@@ -4,8 +4,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Test\UnitTest\useCombodo\iTop\Router;
+
+use Combodo\iTop\Router\Exception\RouteNotFoundException;
 use Combodo\iTop\Router\Router;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use utils;
 
 /**
  * Class RouterTest
@@ -16,6 +20,101 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  */
 class RouterTest extends ItopTestCase
 {
+	/**
+	 * @covers \Combodo\iTop\Router\Router::GenerateUrl
+	 * @dataProvider GenerateUrlProvider
+	 *
+	 * @param string $sExpectedUrl URL contains a <APP_ROOT_URL> placeholder that will be replaced with the real app root url at run time
+	 * @param bool $bValid
+	 * @param string $sRoute
+	 * @param array $aParams
+	 * @param bool $bAbsoluteUrl
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function testGenerateUrl(string $sExpectedUrl, bool $bValid, string $sRoute, array $aParams, bool $bAbsoluteUrl = true): void
+	{
+		$oRouter = Router::GetInstance();
+
+		if (false === $bValid) {
+			$this->expectException(RouteNotFoundException::class);
+		}
+		$sTestedUrl = $oRouter->GenerateUrl($sRoute, $aParams, $bAbsoluteUrl);
+		$sExpectedUrl = str_ireplace('<APP_ROOT_URL>', utils::GetAbsoluteUrlAppRoot(), $sExpectedUrl);
+
+		$this->assertEquals($sTestedUrl, $sExpectedUrl, 'Generated URL does not match');
+	}
+
+	public function GenerateUrlProvider(): array
+	{
+		return [
+			'invalid route' => [
+				'',
+				false,
+				'foo.bar',
+				[],
+				true,
+			],
+			'relative route with no params' => [
+				'pages/UI.php?route=object.modify',
+				true,
+				'object.modify',
+				[],
+				false,
+			],
+			'absolute route with no params' => [
+				'<APP_ROOT_URL>pages/UI.php?route=object.modify',
+				true,
+				'object.modify',
+				[],
+				true,
+			],
+			'absolute route with scalar params' => [
+				'<APP_ROOT_URL>pages/UI.php?route=object.modify&class=Person&id=123',
+				true,
+				'object.modify',
+				[
+					'class' => 'Person',
+					'id' => 123
+				],
+				true,
+			],
+			'absolute route with 1 dimension array params' => [
+				'<APP_ROOT_URL>pages/UI.php?route=object.modify&class=Person&id=123&default%5Bname%5D=Castor&default%5Bfirst_name%5D=P%C3%A8re',
+				true,
+				'object.modify',
+				[
+					'class' => 'Person',
+					'id' => 123,
+					'default' => [
+						'name' => 'Castor',
+						'first_name' => 'Père',
+					],
+				],
+				true,
+			],
+			'absolute route with 2 dimensions array params' => [
+				'<APP_ROOT_URL>pages/UI.php?route=object.modify&class=Person&id=123&default%5Bname%5D=Castor&default%5Bfirst_name%5D=P%C3%A8re&foo%5Bfirst%5D%5B0%5D=10&foo%5Bfirst%5D%5B1%5D=20&foo%5Bsecond%5D%5B0%5D=30&foo%5Bsecond%5D%5B1%5D=40',
+				true,
+				'object.modify',
+				[
+					'class' => 'Person',
+					'id' => 123,
+					'default' => [
+						'name' => 'Castor',
+						'first_name' => 'Père',
+					],
+					'foo' => [
+						'first' => ['10', '20'],
+						'second' => ['30', '40'],
+					],
+				],
+				true,
+			],
+		];
+	}
+
 	/**
 	 * @dataProvider CanDispatchRouteProvider
 	 * @covers \Combodo\iTop\Router\Router::CanDispatchRoute
