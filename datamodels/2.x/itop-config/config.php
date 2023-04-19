@@ -184,15 +184,12 @@ try {
 
 			if (DBPasswordInNewConfigIsOk($sConfig)) {
 				$oAlert = AlertUIBlockFactory::MakeForSuccess('', Dict::S('config-saved'));
-				$iEditorTopMargin += 5;
 			} else {
 				$oAlert = AlertUIBlockFactory::MakeForInformation('', Dict::S('config-saved-warning-db-password'));
-				$iEditorTopMargin += 5;
 			}
 			$oP->AddUiBlock($oAlert);
 
 			$iWarnings = CheckAsyncTasksRetryConfig($oTempConfig, $oP);
-			$iEditorTopMargin += 5 * $iWarnings;
 
 			// Read the config from disk after save
 			$sConfigContent = file_get_contents($sConfigFile);
@@ -203,7 +200,6 @@ try {
 	}
 	catch (Exception $e) {
 		$oAlert = GetAlertFromException($e);
-		$iEditorTopMargin += 5;
 		$oP->AddUiBlock($oAlert);
 	}
 
@@ -211,7 +207,7 @@ try {
 	$oP->AddUiBlock(new Html('<p>'.Dict::S('config-edit-intro').'</p>'));
 
 	$oForm = new Form();
-	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'save'));
+	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'save', 'operation'));
 	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
 	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('checksum', $sConfigChecksum));
 
@@ -225,6 +221,7 @@ try {
 	$oForm->AddSubBlock($oSubmitButton);
 
 	//--- Config editor
+	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('prev_config', $sOriginalConfig, 'prev_config'));
 	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('new_config', $sOriginalConfig));
 	$oForm->AddHtml("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
 	$oP->AddUiBlock($oForm);
@@ -348,16 +345,11 @@ JS
 	$oP->add_script(<<<JS
 function ResetConfig()
 {
-    var editor = ace.edit("new_config");
 	$("#operation").attr('value', 'revert');
-	var prevConfig = $('#prev_config');
-	if (editor.getValue() != prevConfig.val())
+	if (confirm('$sConfirmCancel'))
 	{
-		if (confirm('$sConfirmCancel'))
-		{
-			$('input[name="new_config"]').val(prevConfig.val());
-			return true;
-		}
+		$('input[name="new_config"]').val(prevConfig.val());
+		return true;
 	}
 	return false;
 }
