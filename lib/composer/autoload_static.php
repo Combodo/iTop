@@ -803,6 +803,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Renderer\\FieldRenderer' => __DIR__ . '/../..' . '/sources/Renderer/FieldRenderer.php',
         'Combodo\\iTop\\Renderer\\FormRenderer' => __DIR__ . '/../..' . '/sources/Renderer/FormRenderer.php',
         'Combodo\\iTop\\Renderer\\RenderingOutput' => __DIR__ . '/../..' . '/sources/Renderer/RenderingOutput.php',
+        'Combodo\\iTop\\Router\\Exception\\RouteNotFoundException' => __DIR__ . '/../..' . '/sources/Router/Exception/RouteNotFoundException.php',
+        'Combodo\\iTop\\Router\\Exception\\RouterException' => __DIR__ . '/../..' . '/sources/Router/Exception/RouterException.php',
         'Combodo\\iTop\\Router\\Router' => __DIR__ . '/../..' . '/sources/Router/Router.php',
         'Combodo\\iTop\\Service\\Base\\ObjectRepository' => __DIR__ . '/../..' . '/sources/Service/Base/ObjectRepository.php',
         'Combodo\\iTop\\Service\\Base\\iDataPostProcessor' => __DIR__ . '/../..' . '/sources/Service/Base/iDataPostProcessor.php',

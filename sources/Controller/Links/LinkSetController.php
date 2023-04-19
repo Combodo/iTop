@@ -11,6 +11,7 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\Helper\LegacyFormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\Router\Router;
 use Combodo\iTop\Service\Base\ObjectRepository;
 use Exception;
 use JsonPage;
@@ -131,7 +132,8 @@ class LinkSetController extends AbstractController
 		if (!$this->IsHandlingXmlHttpRequest()) {
 			throw new CoreException('LinksetController can only be called in ajax.');
 		}
-		
+
+		$oRouter = Router::GetInstance();
 		$oPage = new AjaxPage('');
 
 		$sProposedRealClass = utils::ReadParam('class', '', false, 'class');
@@ -231,7 +233,7 @@ JS
 				'att_code' => $sAttCode,
 				'host_class' => $sClass,
 				'host_id' => $sId]);
-			$sCurrentUrl = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php?route=linkset.create_linked_object';
+			$sCurrentUrl = $oRouter->GenerateUrl('linkset.create_linked_object');
 			$oClassForm->SetOnSubmitJsCode(
 				<<<JS
 					let me = this;

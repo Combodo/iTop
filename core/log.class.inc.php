@@ -605,6 +605,12 @@ class LogChannels
 	public const NOTIFICATIONS = 'notifications';
 
 	public const PORTAL       = 'portal';
+
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ROUTER = 'router';
 }
 
 

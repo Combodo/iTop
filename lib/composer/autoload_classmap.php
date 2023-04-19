@@ -438,6 +438,8 @@ return array(
     'Combodo\\iTop\\Renderer\\FieldRenderer' => $baseDir . '/sources/Renderer/FieldRenderer.php',
     'Combodo\\iTop\\Renderer\\FormRenderer' => $baseDir . '/sources/Renderer/FormRenderer.php',
     'Combodo\\iTop\\Renderer\\RenderingOutput' => $baseDir . '/sources/Renderer/RenderingOutput.php',
+    'Combodo\\iTop\\Router\\Exception\\RouteNotFoundException' => $baseDir . '/sources/Router/Exception/RouteNotFoundException.php',
+    'Combodo\\iTop\\Router\\Exception\\RouterException' => $baseDir . '/sources/Router/Exception/RouterException.php',
     'Combodo\\iTop\\Router\\Router' => $baseDir . '/sources/Router/Router.php',
     'Combodo\\iTop\\Service\\Base\\ObjectRepository' => $baseDir . '/sources/Service/Base/ObjectRepository.php',
     'Combodo\\iTop\\Service\\Base\\iDataPostProcessor' => $baseDir . '/sources/Service/Base/iDataPostProcessor.php',

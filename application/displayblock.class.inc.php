@@ -24,6 +24,7 @@ use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxBars\BlockChartAjaxBa
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxPie\BlockChartAjaxPie;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockCsv\BlockCsv;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockList\BlockList;
+use Combodo\iTop\Router\Router;
 
 require_once(APPROOT.'/application/utils.inc.php');
 
@@ -1722,6 +1723,7 @@ class MenuBlock extends DisplayBlock
 	 */
 	public function GetRenderContent(WebPage $oPage, array $aExtraParams, string $sId)
 	{
+		$oRouter = Router::GetInstance();
 		$oRenderBlock = new UIContentBlock();
 
 		if ($this->m_sStyle == 'popup') // popup is a synonym of 'list' for backward compatibility
@@ -1893,7 +1895,7 @@ class MenuBlock extends DisplayBlock
 								if ($bIsModifyAllowed) {
 									$aRegularActions['UI:Menu:Modify'] = array(
 											'label' => Dict::S('UI:Menu:Modify'),
-											'url'   => "{$sRootUrl}pages/$sUIPage?route=object.modify&class=$sClass&id=$id{$sContext}#",
+											'url'   => $oRouter->GenerateUrl('object.modify', ['class' => $sClass, 'id' => $id]) . "{$sContext}#",
 										) + $aActionParams;
 								}
 								if ($bIsDeleteAllowed) {
