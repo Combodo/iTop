@@ -159,6 +159,6 @@ class BlockLinkSetDisplayAsProperty extends UIContentBlock
 		return ' href="'
 			.utils::GetAbsoluteUrlAppRoot()
 			."pages/$this->sUIPage?operation=details&class=$this->sTargetClass&id=$id&$this->sAppContext"
-			.'" target="_blank"';
+			.'" target="_self"';
 	}
 }
