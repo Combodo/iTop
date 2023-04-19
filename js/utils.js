@@ -1399,6 +1399,7 @@ let CombodoModal = {
 		if (false === this._InstantiateModal(oModalElem, oOptions)) {
 			return null;
 		}
+		this._BindEvents(oModalElem);
 
 		return oModalElem;
 	},
@@ -1423,6 +1424,19 @@ let CombodoModal = {
 	_InstantiateModal: function(oModalElem, oOptions) {
 		// Meant for overlaoding
 		CombodoJSConsole.Debug('CombodoModal._InstantiateModal not implemented');
+		return false;
+	},
+	/**
+	 * Bind event on the modal
+	 *
+	 * @param oModalElem {Object} The jQuery object representing the modal element
+	 * @returns {boolean}
+	 * @private
+	 * @internal
+	 */
+	_BindEvents: function(oModalElem) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._BindEvents not implemented');
 		return false;
 	},
 	/**

@@ -288,40 +288,23 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 
 	// Show modal
 	oModalElem.dialog(oJQueryOptions);
-	
-	// - When resizing a window, center it
-	// TODO 3.1 move this to a BindEvents function
 
+	return true;
+};
+
+/**
+ * @override
+ */
+CombodoModal._BindEvents = function (oModalElem) {
+	const me = this;
+
+	// Center modal on resize
 	if(window.ResizeObserver) {
 		const oModalObs = new ResizeObserver(function(){
-			if(oModalElem.dialog('instance') !== undefined){
-				oModalElem.dialog("option", "position", {my: "center", at: "center", of: window});
-			}
+			me._CenterModalInViewport(oModalElem);
 		});
 		oModalObs.observe(oModalElem[0]);
 	}
-	
-	// TODO 3.1 : Cleanup
-	// {
-	// 	height: 'auto',
-	// 		width: 'auto',
-	// 	modal: true,
-	// 	title: '$sDialogTitle',
-	// 	buttons: [
-	// 	{ text: "$sOkButtonLabel", click: function() {
-	// 			if ($('#$sDialogId .ui-state-error').length == 0)
-	// 			{
-	// 				var aTargetsSelect = [];
-	//
-	// 			}
-	// 		} },
-	// 	{ text: "$sCancelButtonLabel", click: function() {
-	// 			$(this).dialog( "close" );
-	// 		} },
-	// ],
-	// }
-
-	return true;
 };
 
 /**
@@ -331,7 +314,7 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
  * @returns {*[]}
  * @constructor
  */
-CombodoModal._ConvertButtonDefinition = function(aButtonsDefinitions){
+CombodoModal._ConvertButtonDefinition = function (aButtonsDefinitions) {
 	const aConverted = [];
 	if(aButtonsDefinitions === null) {
 		return aConverted
@@ -346,13 +329,18 @@ CombodoModal._ConvertButtonDefinition = function(aButtonsDefinitions){
 			}
 	);
 	return aConverted;
-}
+};
 
 /**
  * @override
  * @inheritDoc
  */
 CombodoModal._CenterModalInViewport = function (oModalElem) {
+	if(oModalElem.dialog('instance') === undefined){
+		CombodoJSConsole.Error('CombodoModal._CenterModalInViewport: Cannot center modal as it is not a jQuery UI dialog widget');
+		return false;
+	}
+
 	oModalElem.dialog('option', {
 		position: {my: 'center', at: 'center', of: window},
 	});
