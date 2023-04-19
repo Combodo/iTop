@@ -9,6 +9,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Field;
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use utils;
 
 /**
  * @since 3.0.0
@@ -45,6 +46,11 @@ class Field extends UIContentBlock
 	protected $sValueRaw;
 	/** @var string */
 	protected $sLabel;
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $sDescription = '';
 	/** @var string */
 	protected $sValueId;
 
@@ -353,5 +359,35 @@ class Field extends UIContentBlock
 		$this->AddDataAttribute('input-type', $sInputType);
 
 		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @since 3.1.0
+	 */
+	public function GetDescription(): string
+	{
+		return $this->sDescription;
+	}
+
+	/**
+	 * @param string $sDescription
+	 *
+	 * @return $this
+	 * @since 3.1.0
+	 */
+	public function SetDescription(string $sDescription)
+	{
+		$this->sDescription = $sDescription;
+		return $this;
+	}
+
+	/*
+	 * @return bool
+	 * @since 3.1.0
+	 */
+	public function HasDescription(): bool
+	{
+		return utils::IsNotNullOrEmptyString($this->GetDescription());
 	}
 }
