@@ -1477,10 +1477,18 @@ let CombodoModal = {
 	/**
 	 * Open a standard confirmation modal and put the content into it.
 	 *
-	 * @param oOptions
-	 * @returns object The jQuery object of the modal element
+	 * @param oOptions {Object} {@see CombodoModal.OpenModal} +
+	 *      ```
+	 *      {
+	 *          do_not_show_again_pref_key: string,
+	 *          callback_on_confirm: function,
+	 *          callback_on_cancel: function
+ *          }
+	 *      ```
+	 * @param aData {Array} Array of arguments to pass to the callbacks
+	 * @return {Object} The jQuery object of the modal element
 	 */
-	OpenConfirmationModal: function(oOptions) {
+	OpenConfirmationModal: function(oOptions, aData) {
 		// Meant for overlaoding
 		CombodoJSConsole.Debug('CombodoModal.OpenConfirmationModal not implemented');
 	},

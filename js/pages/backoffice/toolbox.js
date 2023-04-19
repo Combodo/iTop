@@ -180,7 +180,14 @@ const CombodoBackofficeToolbox = {
  * @inheritDoc
  */
 CombodoModal.CloseAllModals = function() {
-	// TODO: Implement
+	$('.ui-dialog .ui-dialog-content').each(function () {
+		// Don't try to close dialog if not instantiated yet
+		if ($(this).dialog('instance') === undefined) {
+			return false;
+		}
+
+		$(this).dialog('close');
+	});
 };
 /**
  * @override
@@ -291,9 +298,9 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 
 	return true;
 };
-
 /**
  * @override
+ * @inheritDoc
  */
 CombodoModal._BindEvents = function (oModalElem) {
 	const me = this;
@@ -306,13 +313,12 @@ CombodoModal._BindEvents = function (oModalElem) {
 		oModalObs.observe(oModalElem[0]);
 	}
 };
-
 /**
  * Convert generic buttons definitions to jquery ui dialog definitions.
  *
  * @param aButtonsDefinitions
  * @returns {*[]}
- * @constructor
+ * @private
  */
 CombodoModal._ConvertButtonDefinition = function (aButtonsDefinitions) {
 	const aConverted = [];
@@ -330,7 +336,6 @@ CombodoModal._ConvertButtonDefinition = function (aButtonsDefinitions) {
 	);
 	return aConverted;
 };
-
 /**
  * @override
  * @inheritDoc
@@ -345,13 +350,9 @@ CombodoModal._CenterModalInViewport = function (oModalElem) {
 		position: {my: 'center', at: 'center', of: window},
 	});
 };
-
 /**
  * @override
  * @inheritDoc
- *
- * @param oOptions array @see CombodoModal.OpenModal + {do_not_show_again_pref_key: string, callback_on_confirm: function, callback_on_cancel}
- * @param aData data passed to callbacks
  */
 CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 
@@ -425,7 +426,6 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 	// Open modal
 	CombodoModal.OpenModal(oOptions);
 }
-
 /**
  * @override
  * @inheritDoc
