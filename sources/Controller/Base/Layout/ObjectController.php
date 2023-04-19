@@ -278,6 +278,9 @@ JS;
 				};
 JS;
 
+			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
+			LegacyFormHelper::DisableAttributeBlobInputs($sClass, $aFormExtraParams);
+
 		} else {
 			$oPage = new iTopWebPage('', $bPrintable);
 			$oPage->DisableBreadCrumb();
@@ -287,9 +290,6 @@ JS;
 		foreach (static::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sJsFileRelPath);
 		}
-
-		// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
-		LegacyFormHelper::DisableAttributeBlobInputs($sClass, $aFormExtraParams);
 
 		// Note: Code duplicated to the case 'apply_modify' in UI.php when a data integrity issue has been found
 		$oObj->DisplayModifyForm($oPage, $aFormExtraParams); // wizard_container: Display the title above the form
