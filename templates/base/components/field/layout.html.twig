@@ -23,8 +23,8 @@
         {% endif %}
 >
     <div class="ibo-field--label">{{ oUIBlock.GetLabel()|raw }}
-        {% if oUIBlock.HasTooltip() %}
-            <span class="ibo-has-description" data-tooltip-content="{{ oUIBlock.GetTooltip() }}" data-tooltip-max-width="600px" ></span>
+        {% if oUIBlock.HasDescription() %}
+            <span class="ibo-has-description" data-tooltip-content="{{ oUIBlock.GetDescription() }}" data-tooltip-max-width="600px" ></span>
         {% endif %}
         {% if oUIBlock.GetLayout() == constant("Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\Field::ENUM_FIELD_LAYOUT_LARGE") %}
             {% if oUIBlock.GetComments() %}
