@@ -18,7 +18,7 @@ use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\Router\Router;
+use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Service\Base\ObjectRepository;
 use CoreCannotSaveObjectException;
 use DeleteException;

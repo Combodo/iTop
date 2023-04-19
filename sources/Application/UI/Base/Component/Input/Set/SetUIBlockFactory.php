@@ -85,7 +85,7 @@ class SetUIBlockFactory extends AbstractUIBlockFactory
 	 * If a group field is provided, options will be grouped according to this setting.
 	 *
 	 * @param string $sId Block identifier
-	 * @param string $sAjaxRoute Ajax route @see \Combodo\iTop\Router\Router
+	 * @param string $sAjaxRoute Ajax route @see \Combodo\iTop\Service\Router\Router
 	 * @param array $aAjaxRouteParams Url query parameters
 	 * @param string $sLabelFields Field used for label
 	 * @param string $sValueField Field used for value

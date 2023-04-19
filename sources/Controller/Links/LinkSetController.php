@@ -11,7 +11,7 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\Helper\LegacyFormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\Router\Router;
+use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Service\Base\ObjectRepository;
 use Exception;
 use JsonPage;

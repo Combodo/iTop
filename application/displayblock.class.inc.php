@@ -24,7 +24,7 @@ use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxBars\BlockChartAjaxBa
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxPie\BlockChartAjaxPie;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockCsv\BlockCsv;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockList\BlockList;
-use Combodo\iTop\Router\Router;
+use Combodo\iTop\Service\Router\Router;
 
 require_once(APPROOT.'/application/utils.inc.php');
 

@@ -31,7 +31,7 @@ class AjaxDataProvider extends SimpleDataProvider
 	const DEFAULT_MAX_RESULTS = 25;
 
 	/**
-	 * @see \Combodo\iTop\Router\Router
+	 * @see \Combodo\iTop\Service\Router\Router
 	 * @var string $sAjaxRoute Router route name
 	 */
 	private string $sRoute;

@@ -15,7 +15,7 @@ use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Controller\PreferencesController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
-use Combodo\iTop\Router\Router;
+use Combodo\iTop\Service\Router\Router;
 
 require_once('../approot.inc.php');
 

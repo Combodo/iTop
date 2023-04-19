@@ -11,7 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\Popov
 use Combodo\iTop\Application\UI\Base\tUIContentAreas;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
-use Combodo\iTop\Router\Router;
+use Combodo\iTop\Service\Router\Router;
 use DBObject;
 use Dict;
 use MetaModel;
