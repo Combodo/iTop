@@ -641,44 +641,43 @@ JS;
 				}
 			}
 		}
-		if ($bDisplayDetails)
-		{
-			$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey()); //Workaround: reload the object so that the linkedset are displayed properly
-			$sNextAction = utils::ReadPostedParam('next_action', '');
-			if (!empty($sNextAction))
-			{
-				try
-				{
-					ApplyNextAction($oPage, $oObj, $sNextAction);
-				}
-				catch (ApplicationException $e)
-				{
-					$sMessage = $e->getMessage();
-					$sSeverity = 'info';
-					ReloadAndDisplay($oPage, $oObj, 'update', $sMessage, $sSeverity);
-				}
-			}
-			else
-			{
-				// Nothing more to do
-				$sMessage = isset($sMessage) ? $sMessage : '';
-				$sSeverity = isset($sSeverity) ? $sSeverity : null;
-				if ($this->IsHandlingXmlHttpRequest()) {
-					;
-				} else{
-					ReloadAndDisplay($oPage, $oObj, 'update', $sMessage, $sSeverity);
-				}
-			}
+		if ($bDisplayDetails) {
+			$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey(), false); //Workaround: reload the object so that the linkedset are displayed properly
 
-			$bLockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
-			if ($bLockEnabled)
-			{
-				// Release the concurrent lock, if any
-				$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
-				if ($sOwnershipToken !== null)
-				{
-					// We're done, let's release the lock
-					iTopOwnershipLock::ReleaseLock(get_class($oObj), $oObj->GetKey(), $sOwnershipToken);
+			if ($oObj === null) {
+				// N°6201 - Change a CI role to "computed" in pop-up freeze the screen
+				// Here, the Object might have been removed by impact analysis, we consider this transaction as succeeded.
+				$aResult['success'] = true;
+			} else {
+				$sNextAction = utils::ReadPostedParam('next_action', '');
+				if (!empty($sNextAction)) {
+					try {
+						ApplyNextAction($oPage, $oObj, $sNextAction);
+					}
+					catch (ApplicationException $e) {
+						$sMessage = $e->getMessage();
+						$sSeverity = 'info';
+						ReloadAndDisplay($oPage, $oObj, 'update', $sMessage, $sSeverity);
+					}
+				} else {
+					// Nothing more to do
+					$sMessage = isset($sMessage) ? $sMessage : '';
+					$sSeverity = isset($sSeverity) ? $sSeverity : null;
+					if ($this->IsHandlingXmlHttpRequest()) {
+						;
+					} else {
+						ReloadAndDisplay($oPage, $oObj, 'update', $sMessage, $sSeverity);
+					}
+				}
+
+				$bLockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
+				if ($bLockEnabled) {
+					// Release the concurrent lock, if any
+					$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
+					if ($sOwnershipToken !== null) {
+						// We're done, let's release the lock
+						iTopOwnershipLock::ReleaseLock(get_class($oObj), $oObj->GetKey(), $sOwnershipToken);
+					}
 				}
 			}
 		}
