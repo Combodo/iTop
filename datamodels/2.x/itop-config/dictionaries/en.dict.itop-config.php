@@ -36,4 +36,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'config-parse-error' => 'Line %2$d: %1$s.<br/>The file has NOT been updated.',
 	'config-current-line' => 'Editing line: %1$s',
 	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.',
+	'config-error-transaction' => 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.',
+	'config-error-file-changed' => 'Error: The configuration was changed on the server, the configuration has not been saved',
+	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the configuration file cannot be edited.',
+	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT." interactive edition of the configuration as been disabled. See <code>'config_editor' => 'disabled'</code> in the configuration file.",
 ));
