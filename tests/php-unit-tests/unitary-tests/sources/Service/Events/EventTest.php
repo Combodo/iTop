@@ -1,6 +1,10 @@
 <?php
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
-namespace Combodo\iTop\Test\UnitTest\Application\Service;
+namespace Combodo\iTop\Test\UnitTest\Service\Events;
 
 use Combodo\iTop\Service\Events\Description\EventDescription;
 use Combodo\iTop\Service\Events\EventData;
@@ -96,8 +100,8 @@ class EventTest extends ItopTestCase
 
 		return array(
 			'method'  => array(array($oReceiver, 'OnEvent1')),
-			'static'  => array('Combodo\iTop\Test\UnitTest\Application\Service\TestEventReceiver::OnStaticEvent1'),
-			'static2' => array(array('Combodo\iTop\Test\UnitTest\Application\Service\TestEventReceiver', 'OnStaticEvent1')),
+			'static'  => array('Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver::OnStaticEvent1'),
+			'static2' => array(array('Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver', 'OnStaticEvent1')),
 		);
 	}
 
@@ -137,13 +141,13 @@ class EventTest extends ItopTestCase
 		$oReceiver = new TestEventReceiver();
 		EventService::RegisterListener('event_a', array($oReceiver, 'OnEvent1'));
 		EventService::RegisterListener('event_a', array($oReceiver, 'OnEvent2'));
-		EventService::RegisterListener('event_a', array('Combodo\iTop\Test\UnitTest\Application\Service\TestEventReceiver', 'OnStaticEvent1'));
-		EventService::RegisterListener('event_a', 'Combodo\iTop\Test\UnitTest\Application\Service\TestEventReceiver::OnStaticEvent2');
+		EventService::RegisterListener('event_a', array('Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver', 'OnStaticEvent1'));
+		EventService::RegisterListener('event_a', 'Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver::OnStaticEvent2');
 
 		EventService::RegisterListener('event_b', array($oReceiver, 'OnEvent1'));
 		EventService::RegisterListener('event_b', array($oReceiver, 'OnEvent2'));
-		EventService::RegisterListener('event_b', array('Combodo\iTop\Test\UnitTest\Application\Service\TestEventReceiver', 'OnStaticEvent1'));
-		EventService::RegisterListener('event_b', 'Combodo\iTop\Test\UnitTest\Application\Service\TestEventReceiver::OnStaticEvent2');
+		EventService::RegisterListener('event_b', array('Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver', 'OnStaticEvent1'));
+		EventService::RegisterListener('event_b', 'Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver::OnStaticEvent2');
 
 		self::$iEventCalls = 0;
 		EventService::FireEvent(new EventData('event_a'));
@@ -234,10 +238,10 @@ class EventTest extends ItopTestCase
 		$oReceiver = new TestEventReceiver();
 		EventService::RegisterListener('event1', [$oReceiver, 'OnEvent1'], 'A', [], null, 0);
 		EventService::RegisterListener('event1', [$oReceiver, 'OnEvent2'], 'A', [], null, 1);
-		EventService::RegisterListener('event1', 'Combodo\iTop\Test\UnitTest\Application\Service\TestEventReceiver::OnStaticEvent1', null, [], null, 2);
+		EventService::RegisterListener('event1', 'Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver::OnStaticEvent1', null, [], null, 2);
 
 		EventService::RegisterListener('event2', [$oReceiver, 'OnEvent1'], 'A', [], null, 1);
-		EventService::RegisterListener('event2', 'Combodo\iTop\Test\UnitTest\Application\Service\TestEventReceiver::OnStaticEvent1', null, [], null, 2);
+		EventService::RegisterListener('event2', 'Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver::OnStaticEvent1', null, [], null, 2);
 		EventService::RegisterListener('event2', [$oReceiver, 'OnEvent2'], 'B', [], null, 0);
 
 		self::$iEventCalls = 0;

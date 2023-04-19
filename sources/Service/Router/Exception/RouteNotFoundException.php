@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Router\Exception;
+namespace Combodo\iTop\Service\Router\Exception;
 
 /**
  * Class RouteNotFoundException
@@ -12,7 +12,7 @@ namespace Combodo\iTop\Router\Exception;
  * Means that a said route (eg. "object.modify") could not be found
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Router\Exception
+ * @package Combodo\iTop\Service\Router\Exception
  * @since 3.1.0
  * @internal
  */

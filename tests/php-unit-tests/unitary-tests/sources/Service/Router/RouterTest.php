@@ -4,10 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Test\UnitTest\useCombodo\iTop\Router;
+namespace Combodo\iTop\Test\UnitTest\Service\Router;
 
-use Combodo\iTop\Router\Exception\RouteNotFoundException;
-use Combodo\iTop\Router\Router;
+use Combodo\iTop\Service\Router\Exception\RouteNotFoundException;
+use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use utils;
 
@@ -16,12 +16,12 @@ use utils;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since 3.1.0
- * @covers \Combodo\iTop\Router\Router
+ * @covers \Combodo\iTop\Service\Router\Router
  */
 class RouterTest extends ItopTestCase
 {
 	/**
-	 * @covers \Combodo\iTop\Router\Router::GenerateUrl
+	 * @covers \Combodo\iTop\Service\Router\Router::GenerateUrl
 	 * @dataProvider GenerateUrlProvider
 	 *
 	 * @param string $sExpectedUrl URL contains a <APP_ROOT_URL> placeholder that will be replaced with the real app root url at run time
@@ -117,7 +117,7 @@ class RouterTest extends ItopTestCase
 
 	/**
 	 * @dataProvider CanDispatchRouteProvider
-	 * @covers \Combodo\iTop\Router\Router::CanDispatchRoute
+	 * @covers \Combodo\iTop\Service\Router\Router::CanDispatchRoute
 	 *
 	 * @param string $sRoute
 	 * @param $bExpectedResult
@@ -168,7 +168,7 @@ class RouterTest extends ItopTestCase
 
 	/**
 	 * @dataProvider GetRouteNamespaceProvider
-	 * @covers \Combodo\iTop\Router\Router::GetRouteNamespace
+	 * @covers \Combodo\iTop\Service\Router\Router::GetRouteNamespace
 	 *
 	 * @param string $sRoute
 	 * @param string|null $sExpectedNamespace
@@ -203,7 +203,7 @@ class RouterTest extends ItopTestCase
 
 	/**
 	 * @dataProvider GetRouteOperationProvider
-	 * @covers \Combodo\iTop\Router\Router::GetRouteOperation
+	 * @covers \Combodo\iTop\Service\Router\Router::GetRouteOperation
 	 *
 	 * @param string $sRoute
 	 * @param string|null $sExpectedOperation
@@ -238,7 +238,7 @@ class RouterTest extends ItopTestCase
 
 	/**
 	 * @dataProvider FindControllerFromRouteNamespaceProvider
-	 * @covers \Combodo\iTop\Router\Router::FindControllerFromRouteNamespace
+	 * @covers \Combodo\iTop\Service\Router\Router::FindControllerFromRouteNamespace
 	 *
 	 * @param string $sRouteNamespace
 	 * @param string $sExpectedControllerFQCN
@@ -271,7 +271,7 @@ class RouterTest extends ItopTestCase
 
 	/**
 	 * @dataProvider GetOperationMethodNameFromRouteOperationProvider
-	 * @covers \Combodo\iTop\Router\Router::MakeOperationMethodNameFromOperation
+	 * @covers \Combodo\iTop\Service\Router\Router::MakeOperationMethodNameFromOperation
 	 *
 	 * @param string $sRoute
 	 * @param string $sExpectedMethodName

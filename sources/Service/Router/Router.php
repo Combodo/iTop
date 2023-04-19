@@ -4,9 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Router;
+namespace Combodo\iTop\Service\Router;
 
-use Combodo\iTop\Router\Exception\RouteNotFoundException;
+use Combodo\iTop\Service\Router\Exception\RouteNotFoundException;
 use ReflectionClass;
 use ReflectionMethod;
 use utils;
@@ -17,13 +17,13 @@ use utils;
  * Service to find the corresponding controller / method for a given "route" parameter
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Router
+ * @package Combodo\iTop\Service\Router
  * @since 3.1.0
  * @internal
  */
 class Router
 {
-	/** @var \Combodo\iTop\Router\Router|null Singleton instance */
+	/** @var \Combodo\iTop\Service\Router\Router|null Singleton instance */
 	protected static ?Router $oSingleton = null;
 
 	/**
@@ -81,7 +81,7 @@ class Router
 	/**********************/
 
 	/**
-	 * Singleton pattern, can't use the constructor. Use {@see \Combodo\iTop\Router\Router::GetInstance()} instead.
+	 * Singleton pattern, can't use the constructor. Use {@see \Combodo\iTop\Service\Router\Router::GetInstance()} instead.
 	 *
 	 * @return void
 	 */

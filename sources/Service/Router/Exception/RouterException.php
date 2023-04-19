@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Router\Exception;
+namespace Combodo\iTop\Service\Router\Exception;
 
 use Exception;
 
@@ -14,7 +14,7 @@ use Exception;
  * Base router exception class in case we need to catch all kind of router exceptions (see derived exceptions)
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Router\Exception
+ * @package Combodo\iTop\Service\Router\Exception
  * @since 3.1.0
  * @internal
  */

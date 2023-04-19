@@ -6,7 +6,7 @@
 
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
-use Combodo\iTop\Router\Router;
+use Combodo\iTop\Service\Router\Router;
 
 /**
  * Class SummaryCardService

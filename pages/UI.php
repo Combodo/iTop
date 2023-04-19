@@ -19,7 +19,7 @@ use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
-use Combodo\iTop\Router\Router;
+use Combodo\iTop\Service\Router\Router;
 
 /**
  * Displays a popup welcome message, once per session at maximum
