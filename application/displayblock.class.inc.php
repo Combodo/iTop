@@ -304,7 +304,7 @@ class DisplayBlock
 			}
 		}
 	}
-	
+
 	public function GetFilter()
 	{
 		return $this->m_oFilter;
@@ -1045,7 +1045,7 @@ JS
 			$aCount = $aCounts[$sStateValue];
 			$sHyperlink = $aCount['link'];
 			$sCountLabel = $aCount['label'];
-			
+
 			$oPill = PillFactory::MakeForState($sClass, $sStateValue);
 			// N°5849 - Unencode label for ExternalKey attribute because friendlyname is already html encoded thanks to DBObject::GetName() in AttributeExternalKey::GetAllowedValues(). (A fix in this function may have too much impact).
 			if ($oAttDef instanceof AttributeExternalKey) {
@@ -1611,6 +1611,8 @@ JS
 
 			$iTotalCount = 0;
 			$aURLs = array();
+			$iMaxNbCharsInLabel = 0;
+
 			foreach ($aRes as $iRow => $aRow) {
 				$sValue = $aRow['grouped_by_1'];
 				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
@@ -1620,6 +1622,10 @@ JS
 					'label_html' => $sHtmlValue,
 					'value' => (float)$aRow[$sFctVar],
 				);
+
+				if ($iMaxNbCharsInLabel < mb_strlen($sValue)) {
+					$iMaxNbCharsInLabel = mb_strlen($sValue);
+				}
 
 				// Build the search for this subset
 				$oSubsetSearch = $this->m_oFilter->DeepClone();
