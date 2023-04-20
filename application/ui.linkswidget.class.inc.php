@@ -100,15 +100,18 @@ class UILinksWidget
 	 * @param array $aArgs Extra context arguments
 	 * @param DBObject $oCurrentObj The object to which all the elements of the linked set refer to
 	 * @param int $iUniqueId A unique identifier of new links
-	 * @param boolean $bReadOnly Display link as editable or read-only. Default is false (editable)
+	 * @param bool $bReadOnly Display link as editable or read-only. Default is false (editable)
+	 * @param bool $bAllowRemoteExtKeyEdit If true, the ext. key to the remote object can be edited, otherwise it will be read-only
 	 *
 	 * @return array The HTML fragment of the one-row form
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
+	 *
+	 * @since 3.1.0 3.0.4 3.0.3-1 N°6124 - Workaround performance problem on the modification of an object with an n:n relation having a large volume
 	 */
-	protected function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false)
+	protected function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false, $bAllowRemoteExtKeyEdit = true)
 	{
 		$sPrefix = "$this->m_sAttCode{$this->m_sNameSuffix}";
 		$aRow = array();
@@ -139,8 +142,11 @@ class UILinksWidget
 				$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$iKey\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$iKey\">";
 				foreach ($this->m_aEditableFields as $sFieldCode)
 				{
+					// N°6124 - Force remote ext. key as read-only if too many items in the linkset
+					$bReadOnlyField = ($sFieldCode === $this->m_sExtKeyToRemote) && (false === $bAllowRemoteExtKeyEdit);
+
 					$sSafeFieldId = $this->GetFieldId($linkObjOrId->GetKey(), $sFieldCode);
-					$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $linkObjOrId, $oP, $sNameSuffix, $sSafeFieldId);
+					$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $linkObjOrId, $oP, $sNameSuffix, $sSafeFieldId, $bReadOnlyField);
 					$aFieldsMap[$sFieldCode] = $sSafeFieldId;
 				}
 			}
@@ -255,11 +261,24 @@ JS
 		return $aRow;
 	}
 
-	private function AddRowForFieldCode(&$aRow, $sFieldCode, &$aArgs, $oLnk, $oP, $sNameSuffix, $sSafeFieldId): void
+	/**
+	 * @param $aRow
+	 * @param $sFieldCode
+	 * @param $aArgs
+	 * @param $oLnk
+	 * @param $oP
+	 * @param $sNameSuffix
+	 * @param $sSafeFieldId
+	 * @param bool $bReadOnlyField If true, the field will be read-only, otherwise it can be edited
+	 *
+	 * @return void
+	 * @since 3.1.0 3.0.4 3.0.3-1 N°6124 - Workaround performance problem on the modification of an object with an n:n relation having a large volume
+	 */
+	private function AddRowForFieldCode(&$aRow, $sFieldCode, &$aArgs, $oLnk, $oP, $sNameSuffix, $sSafeFieldId, $bReadOnlyField = false): void
 	{
 		if (($sFieldCode === $this->m_sExtKeyToRemote))
 		{
-			// current field is the lnk extkey to the remote class
+			// Current field is the lnk extkey to the remote class
 			$aArgs['replaceDependenciesByRemoteClassFields'] = true;
 			$sRowFieldCode = 'static::key';
 			$aArgs['wizHelperRemote'] = $aArgs['wizHelper'].'_remote';
@@ -281,20 +300,31 @@ JS
 		$sDisplayValue = $oLnk->GetEditValue($sFieldCode);
 		$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
 
-		$aRow[$sRowFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'
-			.cmdbAbstractObject::GetFormElementForField(
-				$oP,
-				$this->m_sLinkedClass,
-				$sFieldCode,
-				$oAttDef,
-				$sValue,
-				$sDisplayValue,
-				$sSafeFieldId,
-				$sNameSuffix,
-				0,
-				$aArgs
-			)
-			.'</div></div></div>';
+		if ($bReadOnlyField) {
+			$sFieldForHtml = $sDisplayValue;
+		} else {
+			$sFieldForHtml = cmdbAbstractObject::GetFormElementForField(
+					$oP,
+					$this->m_sLinkedClass,
+					$sFieldCode,
+					$oAttDef,
+					$sValue,
+					$sDisplayValue,
+					$sSafeFieldId,
+					$sNameSuffix,
+					0,
+					$aArgs
+				);
+		}
+
+		$aRow[$sRowFieldCode] = <<<HTML
+<div class="field_container" style="border:none;">
+	<div class="field_data">
+		<div class="field_value">$sFieldForHtml</div>
+	</div>
+</div>
+HTML
+		;
 	}
 
 	private function GetFieldId($iLnkId, $sFieldCode, $bSafe = true)
@@ -374,6 +404,7 @@ JS
 		$oBlock->sRemoteClass = $this->m_sRemoteClass;
 
 		$oValue->Rewind();
+		$bAllowRemoteExtKeyEdit = $oValue->Count() <= utils::GetConfig()->Get('link_set_max_edit_ext_key');
 		$aForm = array();
 		$iMaxAddedId = 0;
 		$iAddedId = -1; // Unique id for new links
@@ -398,7 +429,7 @@ JS
 			}
 
 			$iMaxAddedId = max($iMaxAddedId, $key);
-			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
+			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly, $bAllowRemoteExtKeyEdit);
 		}
 		$oBlock->iMaxAddedId = (int) $iMaxAddedId;
 
