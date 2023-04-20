@@ -480,6 +480,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
+		'link_set_max_edit_ext_key' => [
+			'type'                => 'integer',
+			'description'         => 'Maximum number of items in the link that allow editing the remote external key. Above that limit, remote external key cannot be edited. Mind that setting this limit too high can have a negative impact on performances.',
+			'default'             => 50,
+			'value'               => 50,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
 		'tag_set_item_separator' => [
 			'type' => 'string',
 			'description' => 'Tag set from string: tag label separator',
