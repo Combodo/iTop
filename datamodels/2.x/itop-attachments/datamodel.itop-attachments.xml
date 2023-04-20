@@ -186,36 +186,25 @@
           <type>Overload-ExNihilo</type>
           <code><![CDATA[	public function SetDefaultOrgId()
 	{
-		// First check that the organization CAN be fetched from the target class
-		//
-		$sClass = $this->Get('item_class');
-		$aCallSpec = array($sClass, 'MapContextParam');
-		if (is_callable($aCallSpec))
-		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
-			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
-				// Second: check that the organization CAN be fetched from the current user
-				//
-				if (MetaModel::IsValidClass('Person'))
-				{
-					$aCallSpec = array('Person', 'MapContextParam');
-					if (is_callable($aCallSpec))
-					{
-						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
-						if (MetaModel::IsValidAttCode('Person', $sAttCode))
-						{
-							// OK - try it
-							//
-							$oCurrentPerson = MetaModel::GetObject('Person', UserRights::GetContactId(), false);
-							if ($oCurrentPerson)
-							{
-						 		$this->Set('item_org_id', $oCurrentPerson->Get($sAttCode));
-						 	}
-						}
-					}
-				}
-			}
+    // Check that the organization CAN be fetched from the current user
+    //
+    if (MetaModel::IsValidClass('Person'))
+    {
+      $aCallSpec = array('Person', 'MapContextParam');
+      if (is_callable($aCallSpec))
+      {
+        $sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
+        if (MetaModel::IsValidAttCode('Person', $sAttCode))
+        {
+          // OK - try it
+          //
+          $oCurrentPerson = MetaModel::GetObject('Person', UserRights::GetContactId(), false);
+          if ($oCurrentPerson)
+          {
+            $this->Set('item_org_id', $oCurrentPerson->Get($sAttCode));
+          }
+        }
+      }
 		}
 	}]]></code>
         </method>

@@ -256,7 +256,19 @@ class ormDocument
 			$oObj = MetaModel::GetObject($sClass, $id, false, false);
 			if (!is_object($oObj))
 			{
-				throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
+				// If access to the document is not granted, check if the access to the host object is allowed
+				$oObj = MetaModel::GetObject($sClass, $id, false, true);
+				if ($oObj instanceof Attachment) {
+					$sItemClass = $oObj->Get('item_class');
+					$sItemId = $oObj->Get('item_id');
+					$oHost = MetaModel::GetObject($sItemClass, $sItemId, false, false);
+					if (!is_object($oHost)) {
+						$oObj = null;
+					}
+				}
+				if (!is_object($oObj)) {
+					throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
+				}
 			}
 			if (($sSecretField != null) && ($oObj->Get($sSecretField) != $sSecretValue))
 			{
@@ -286,6 +298,7 @@ class ormDocument
 					$oObj->Set($sAttCode, $oDocument);
 					// $oObj can be a \DBObject or \cmdbAbstractObject so we ahve to protect it
 					if (method_exists($oObj, 'AllowWrite')) {
+						// AllowWrite method is implemented in cmdbAbstractObject, but $oObject could be a DBObject or CMDBObject
 						$oObj->AllowWrite();
 					}
 					$oObj->DBUpdate();

@@ -280,11 +280,11 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		if (!is_null($sTransactionId))
 		{
 			$aActions = array();
-			$aAttachmentIds = utils::ReadParam('attachments', array());
 			$aRemovedAttachmentIds = utils::ReadParam('removed_attachments', array());
 
 			// Get all current attachments
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
+			$oSearch->AllowAllData();
 			$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
 			while ($oAttachment = $oSet->Fetch())
 			{
@@ -304,26 +304,24 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 			// for this object, but deleting the "new" ones that were already removed from the form
 			$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
-			foreach ($aAttachmentIds as $iAttachmentId)
+			$oSearch->AllowAllData();
+			$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
+			while ($oAttachment = $oSet->Fetch())
 			{
-				$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
-				while ($oAttachment = $oSet->Fetch())
+				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
 				{
-					if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
-					{
-						$oAttachment->DBDelete();
-						// temporary attachment removed, don't even mention it in the history
-					}
-					else
-					{
-						$oAttachment->SetItem($oObject);
-						$oAttachment->Set('temp_id', '');
-						$oAttachment->DBUpdate();
-						// temporary attachment confirmed, list it in the history
-						$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
-						$aData = ['target_object' => $oObject];
-						$oAttachment->FireEvent(EVENT_ADD_ATTACHMENT_TO_OBJECT, $aData);
-					}
+					$oAttachment->DBDelete();
+					// temporary attachment removed, don't even mention it in the history
+				}
+				else
+				{
+					$oAttachment->SetItem($oObject);
+					$oAttachment->Set('temp_id', '');
+					$oAttachment->DBUpdate();
+					// temporary attachment confirmed, list it in the history
+					$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
+					$aData = ['target_object' => $oObject];
+					$oAttachment->FireEvent(EVENT_ADD_ATTACHMENT_TO_OBJECT, $aData);
 				}
 			}
 			if (count($aActions) > 0)

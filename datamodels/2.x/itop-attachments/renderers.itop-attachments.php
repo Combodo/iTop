@@ -117,9 +117,11 @@ abstract class AbstractAttachmentsRenderer
 		$this->sTransactionId = $sTransactionId;
 
 		$oSearch = DBObjectSearch::FromOQL('SELECT Attachment WHERE item_class = :class AND item_id = :item_id');
+		$oSearch->AllowAllData();
 		$this->oAttachmentsSet = new DBObjectSet($oSearch, array(), array('class' => $sObjClass, 'item_id' => $iObjKey));
 
 		$oSearchTemp = DBObjectSearch::FromOQL('SELECT Attachment WHERE temp_id = :temp_id');
+		$oSearchTemp->AllowAllData();
 		$this->oTempAttachmentsSet = new DBObjectSet($oSearchTemp, array(), array('temp_id' => $this->sTransactionId));
 	}
 
