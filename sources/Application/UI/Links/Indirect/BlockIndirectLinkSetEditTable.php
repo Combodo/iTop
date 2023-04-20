@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Links\Indirect;
 
 use AttributeLinkedSetIndirect;
+use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
@@ -134,6 +135,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	{
 		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
 		$oValue->Rewind();
+		$bAllowRemoteExtKeyEdit = $oValue->Count() <= utils::GetConfig()->Get('link_set_max_edit_ext_key');
 		$aForm = array();
 		$iMaxAddedId = 0;
 		$iAddedId = -1; // Unique id for new links
@@ -158,7 +160,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 				}
 
 				$iMaxAddedId = max($iMaxAddedId, $key);
-				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
+				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly, $bAllowRemoteExtKeyEdit);
 			}
 		}
 		$this->iMaxAddedId = (int)$iMaxAddedId;
@@ -215,15 +217,17 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	 * @param array $aArgs Extra context arguments
 	 * @param DBObject $oCurrentObj The object to which all the elements of the linked set refer to
 	 * @param int $iUniqueId A unique identifier of new links
-	 * @param boolean $bReadOnly Display link as editable or read-only. Default is false (editable)
+	 * @param bool $bReadOnly Display link as editable or read-only. Default is false (editable)
+	 * @param bool $bAllowRemoteExtKeyEdit If true, the ext. key to the remote object can be edited, otherwise it will be read-only
 	 *
 	 * @return array The HTML fragment of the one-row form
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
+	 * @since 3.1.0 3.0.4 3.0.3-1 N°6124 - Workaround performance problem on the modification of an object with an n:n relation having a large volume
 	 */
-	public function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false)
+	public function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false, $bAllowRemoteExtKeyEdit = true)
 	{
 		$sPrefix = "{$this->oUILinksWidget->GetAttCode()}{$this->oUILinksWidget->GetNameSuffix()}";
 		$aRow = array();
@@ -248,8 +252,11 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 			} else {
 				$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$iKey\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget{$this->oUILinksWidget->GetInputId()}.OnSelectChange();\" value=\"$iKey\">";
 				foreach ($this->oUILinksWidget->GetEditableFields() as $sFieldCode) {
+					// N°6124 - Force remote ext. key as read-only if too many items in the linkset
+					$bReadOnlyField = ($sFieldCode === $this->oUILinksWidget->GetExternalKeyToRemote()) && (false === $bAllowRemoteExtKeyEdit);
+
 					$sSafeFieldId = $this->GetFieldId($linkObjOrId->GetKey(), $sFieldCode);
-					$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $linkObjOrId, $oP, $sNameSuffix, $sSafeFieldId);
+					$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $linkObjOrId, $oP, $sNameSuffix, $sSafeFieldId, $bReadOnlyField);
 					$aFieldsMap[$sFieldCode] = $sSafeFieldId;
 				}
 			}
@@ -352,10 +359,23 @@ JS
 		return $aRow;
 	}
 
-	private function AddRowForFieldCode(&$aRow, $sFieldCode, &$aArgs, $oLnk, $oP, $sNameSuffix, $sSafeFieldId): void
+	/**
+	 * @param $aRow
+	 * @param $sFieldCode
+	 * @param $aArgs
+	 * @param $oLnk
+	 * @param $oP
+	 * @param $sNameSuffix
+	 * @param $sSafeFieldId
+	 * @param bool $bReadOnlyField If true, the field will be read-only, otherwise it can be edited
+	 *
+	 * @return void
+	 * @since 3.1.0 3.0.4 3.0.3-1 N°6124 - Workaround performance problem on the modification of an object with an n:n relation having a large volume
+	 */
+	private function AddRowForFieldCode(&$aRow, $sFieldCode, &$aArgs, $oLnk, $oP, $sNameSuffix, $sSafeFieldId, $bReadOnlyField = false): void
 	{
 		if (($sFieldCode === $this->oUILinksWidget->GetExternalKeyToRemote())) {
-			// current field is the lnk extkey to the remote class
+			// Current field is the lnk extkey to the remote class
 			$aArgs['replaceDependenciesByRemoteClassFields'] = true;
 			$sRowFieldCode = 'static::key';
 			$aArgs['wizHelperRemote'] = $aArgs['wizHelper'].'_remote';
@@ -375,20 +395,31 @@ JS
 		$sDisplayValue = $oLnk->GetEditValue($sFieldCode);
 		$oAttDef = MetaModel::GetAttributeDef($this->oUILinksWidget->GetLinkedClass(), $sFieldCode);
 
-		$aRow[$sRowFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'
-			.\cmdbAbstractObject::GetFormElementForField(
-				$oP,
-				$this->oUILinksWidget->GetLinkedClass(),
-				$sFieldCode,
-				$oAttDef,
-				$sValue,
-				$sDisplayValue,
-				$sSafeFieldId,
-				$sNameSuffix,
-				0,
-				$aArgs
-			)
-			.'</div></div></div>';
+		if ($bReadOnlyField) {
+			$sFieldForHtml = $sDisplayValue;
+		} else {
+			$sFieldForHtml = cmdbAbstractObject::GetFormElementForField(
+					$oP,
+					$this->oUILinksWidget->GetLinkedClass(),
+					$sFieldCode,
+					$oAttDef,
+					$sValue,
+					$sDisplayValue,
+					$sSafeFieldId,
+					$sNameSuffix,
+					0,
+					$aArgs
+				);
+		}
+
+		$aRow[$sRowFieldCode] = <<<HTML
+<div class="field_container" style="border:none;">
+	<div class="field_data">
+		<div class="field_value">$sFieldForHtml</div>
+	</div>
+</div>
+HTML
+		;
 	}
 
 	private function GetFieldId($iLnkId, $sFieldCode, $bSafe = true)

@@ -307,7 +307,7 @@ class DisplayBlock
 			}
 		}
 	}
-	
+
 	public function GetFilter()
 	{
 		return $this->m_oFilter;
@@ -1579,6 +1579,8 @@ JS
 
 			$iTotalCount = 0;
 			$aURLs = array();
+			$iMaxNbCharsInLabel = 0;
+
 			foreach ($aRes as $iRow => $aRow) {
 				$sValue = $aRow['grouped_by_1'];
 				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
@@ -1588,6 +1590,10 @@ JS
 					'label_html' => $sHtmlValue,
 					'value' => (float)$aRow[$sFctVar],
 				);
+
+				if ($iMaxNbCharsInLabel < mb_strlen($sValue)) {
+					$iMaxNbCharsInLabel = mb_strlen($sValue);
+				}
 
 				// Build the search for this subset
 				$oSubsetSearch = $this->m_oFilter->DeepClone();
