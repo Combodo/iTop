@@ -560,6 +560,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Login:NewPasswordPrompt' => 'New password',
 	'UI:Login:RetypeNewPasswordPrompt' => 'Retype new password',
 	'UI:Login:IncorrectOldPassword' => 'Error: the old password is incorrect',
+	'UI:PowerMenu' => 'Open user menu',
 	'UI:LogOffMenu' => 'Log off',
 	'UI:LogOff:ThankYou' => 'Thank you for using '.ITOP_APPLICATION,
 	'UI:LogOff:ClickHereToLoginAgain' => 'Click here to login again...',

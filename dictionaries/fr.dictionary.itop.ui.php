@@ -543,6 +543,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:NewPasswordPrompt' => 'Nouveau mot de passe',
 	'UI:Login:RetypeNewPasswordPrompt' => 'Resaisir le nouveau mot de passe',
 	'UI:Login:IncorrectOldPassword' => 'Erreur: l\'ancien mot de passe est incorrect',
+	'UI:PowerMenu' => 'Ouvre le menu utilisateur',
 	'UI:LogOffMenu' => 'Déconnexion',
 	'UI:LogOff:ThankYou' => 'Merci d\'avoir utilisé iTop',
 	'UI:LogOff:ClickHereToLoginAgain' => 'Cliquez ici pour vous reconnecter...',

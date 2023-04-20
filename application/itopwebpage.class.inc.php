@@ -1219,7 +1219,7 @@ EOF;
 			{
 				$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);
 			}
-			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><i class=\"top-right-icon icon-additional-arrow fas fa-power-off\"></i><ul>";
+			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li aria-label=\"" . Dict::S("UI:PowerMenu") . "\"><i class=\"top-right-icon icon-additional-arrow fas fa-power-off\"></i><ul>";
 			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
 			$aActions = array();
 
