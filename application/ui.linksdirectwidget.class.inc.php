@@ -130,6 +130,15 @@ class UILinksWidgetDirect
 				'formPrefix'  => $this->sInputid,
 				'noRelations' => true,
 				'fieldsFlags' => $aFieldsFlags,
+				'js_handlers'      => [
+					'cancel_button_on_click' =>
+						<<<JS
+				function() {
+// Do nothing, already handled by linksdirectwidget.js
+				};
+JS
+					,
+				],
 			);
 
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
