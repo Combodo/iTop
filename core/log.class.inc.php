@@ -1066,7 +1066,14 @@ class DeadLockLog extends LogAPI
 
 
 /**
- * @since 3.0.0 N°3731
+ * Starting with the WARNING level we will log in a dedicated file (/log/deprecated-calls.log) :
+ * - iTop deprecated files or code
+ * - protected trigger_error calls with E_DEPRECATED or E_USER_DEPRECATED
+ *
+ * For the last category, if {@see utils::IsDevelopmentEnvironment()} is true we will do a trigger_error()
+ *
+ * @since 3.0.0 N°3731 first implementation
+ * @link https://www.itophub.io/wiki/page?id=latest:admin:log:channels#deprecated_calls channel used
  */
 class DeprecatedCallsLog extends LogAPI
 {
