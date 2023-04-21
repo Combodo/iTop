@@ -3054,7 +3054,16 @@ EOF
 
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
 		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_form&class='.$sClass.'&'.$oAppContext->GetForLink();
-		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').on('click', function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)} );");
+
+		$sCancelButtonOnClickScript = "let fOnClick{$this->m_iFormId}CancelButton = ";
+		if(isset($aExtraParams['js_handlers']['cancel_button_on_click'])){
+			$sCancelButtonOnClickScript .= $aExtraParams['js_handlers']['cancel_button_on_click'];
+		} else {
+			$sCancelButtonOnClickScript .= "function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)};";
+		}
+		$sCancelButtonOnClickScript .= "$('#form_{$this->m_iFormId} button.cancel').on('click', fOnClick{$this->m_iFormId}CancelButton);";
+		$oPage->add_ready_script($sCancelButtonOnClickScript);
+		
 
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);

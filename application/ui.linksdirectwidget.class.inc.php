@@ -211,7 +211,23 @@ class UILinksWidgetDirect
 			$oObj = DBObject::MakeDefaultInstance($sRealClass);
 			$aPrefillParam = array('source_obj' => $oSourceObj);
 			$oObj->PrefillForm('creation_from_editinplace', $aPrefillParam);
-		 	cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), array('formPrefix' => $this->sInputid, 'noRelations' => true, 'fieldsFlags' => $aFieldFlags));
+			$aFormExtraParams = array(
+				'formPrefix'  => $this->sInputid,
+				'noRelations' => true,
+				'fieldsFlags' => $aFieldFlags,
+				'js_handlers'      => [
+					'cancel_button_on_click' =>
+						<<<JS
+				function() {
+// Do nothing, already handled by linksdirectwidget.js
+				};
+JS
+					,
+				],
+			);
+
+
+			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aFormExtraParams);
 		}
 		else
 		{
