@@ -178,6 +178,24 @@ class DisplayBlock
 				'refresh_action',
 				/**to add refresh button in datatable*/
 			], DataTableUIBlockFactory::GetAllowedParams()),
+			'listInObject' => array_merge([
+				'update_history',
+				/** bool add breadcrumb entry */
+				'default',
+				/** array of default attribute values */
+				'menu_actions_target',
+				/** string html link target */
+				'toolkit_menu',
+				/** bool add toolkit menu */
+				'selectionMode',
+				/**positive or negative*/
+				'max_height',
+				/** string Max. height of the list, if not specified will occupy all the available height no matter the pagination */
+				'localize_values',
+				/** param for export.php */
+				'refresh_action',
+				/**to add refresh button in datatable*/
+			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',
 				/** bool add breadcrumb entry */
@@ -680,6 +698,7 @@ class DisplayBlock
 				break;
 
 			case 'list':
+			case 'listInObject':
 				$oBlock = $this->RenderList($aExtraParams, $oPage);
 			break;
 
@@ -1308,50 +1327,46 @@ JS
 		$oBlock->sFilter = $this->m_oFilter->ToOQL();
 
 
-		if (count($aClasses) > 1) {
-			// Check the classes that can be read (i.e authorized) by this user...
-			foreach ($aClasses as $sAlias => $sClassName) {
-				if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $this->m_oSet) != UR_ALLOWED_NO) {
-					$aAuthorizedClasses[$sAlias] = $sClassName;
-				}
-			}
-			if (count($aAuthorizedClasses) > 0) {
-				if (empty($aExtraParams['currentId'])) {
-					$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
-				} else {
-					$iListId = $aExtraParams['currentId'];
-				}
-				$oBlock->AddSubBlock(DataTableUIBlockFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams));
-			} else {
-				// Not authorized
-				$oBlock->bNotAuthorized = true;
-			}
-		} else {
-			if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history']) {
-				$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
-				// Limit the size of the URL (N°1585 - request uri too long)
-				if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH) {
-					$oBlock->sEventAttachedData = json_encode(array(
-						'filter' => $sSearchFilter,
-						'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
-						'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
-						'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
-						'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
-						'breadcrumb_icon' => 'fas fa-search',
-						'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
-					));
-				}
-			}
-
-			// The list is made of only 1 class of objects, actions on the list are possible
-			if (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) {
-				$oBlock->AddSubBlock(cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams));
-			} else {
-				$oBlock->bEmptySet = true;
-				$oBlock->sClass = $this->m_oFilter->GetClass();
-				$oBlock->sClassLabel = MetaModel::GetName($oBlock->sClass);
+		// Check the classes that can be read (i.e authorized) by this user...
+		foreach ($aClasses as $sAlias => $sClassName) {
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $this->m_oSet) != UR_ALLOWED_NO) {
+				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
+
+		if (count($aAuthorizedClasses) === 0) {
+			// Not authorized
+			$oBlock->bNotAuthorized = true;
+			$oBlock->bEmptySet = true;
+			$oBlock->sClass = $this->m_oFilter->GetClass();
+			$oBlock->sClassLabel = MetaModel::GetName($oBlock->sClass);
+
+			return $oBlock;
+		}
+
+		if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history']) {
+			$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
+			// Limit the size of the URL (N°1585 - request uri too long)
+			if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH) {
+				$oBlock->sEventAttachedData = json_encode(array(
+					'filter' => $sSearchFilter,
+					'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
+					'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
+					'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
+					'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
+					'breadcrumb_icon' => 'fas fa-search',
+					'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
+				));
+			}
+		}
+
+		$iListId = utils::IsNullOrEmptyString($aExtraParams['currentId']) ? utils::GetUniqueId() /* Works only if not in an Ajax page !! */ : $aExtraParams['currentId'];
+		// Note: Method calls not factorized into a single call with method name as a variable to keep track of DataTableUIBlockFactory calls as it is a critical / unstable component.
+		$oBlock->AddSubBlock(
+			$this->m_sStyle === 'listInObject' ?
+			DataTableUIBlockFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams) :
+			DataTableUIBlockFactory::MakeForResult($oPage, $iListId, $this->m_oSet, $aExtraParams)
+		);
 
 		return $oBlock;
 	}
@@ -1464,18 +1479,28 @@ JS
 	}
 
 	/**
+	 * @deprecated 3.1.0 N°5957
+	 *
 	 * @param \WebPage $oPage
 	 * @param array $aExtraParams
-	 * @param string $sHtml
 	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Html\Html|\Combodo\iTop\Application\UI\Base\Layout\UIContentBlock|string
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
 	 */
 	protected function RenderLinks(WebPage $oPage, array $aExtraParams)
 	{
+		// Note: No deprecation ticket yet as we want to wait and see if people / code actually use this method, in which case we might keep it.
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('This method is most likely not used throughout the application and will be removed soon. If you ever see this message, please inform us.');
+
 		$oBlock = null;
 		if (($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)) {
 			$oBlock = cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams);
@@ -1687,7 +1712,6 @@ JS
 		$oBlock->sJsonParams = json_encode($aParamsToPost);
 		return $oBlock;
 	}
-
 }
 
 /**
@@ -1871,7 +1895,7 @@ class MenuBlock extends DisplayBlock
 				}
 			}
 
-			// NOT "listInObject" style actions
+			// NOT "listInObject" (linksets) style actions
 			if ($this->m_sStyle !== 'listInObject') {
 				switch ($iSetCount) {
 					case 1:
