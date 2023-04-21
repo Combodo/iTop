@@ -100,7 +100,14 @@ $(function()
 		ModifyLinkedObject: function (sLinkedObjectKey) {
 
 			const me = this;
-
+			
+			// Specify that external key to host object will be readonly
+			let aReadOnlyParams = {
+				'readonly': {
+				}
+			}
+			aReadOnlyParams['readonly'][this.options.external_key_to_me] = 1;
+			
 			// link object modification
 			iTopObjectWorker.ModifyObject(this.options.link_class, sLinkedObjectKey, function () {
 				$(this).find("form").remove();
@@ -109,7 +116,8 @@ $(function()
 				if(data.success) {
 					me.$tableSettingsDialog.DataTableSettings('DoRefresh');
 				}
-			});
+			},
+				aReadOnlyParams);
 		},
 
 	});

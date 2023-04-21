@@ -242,6 +242,8 @@ JS
 
 		// Prepare web page (should more likely be some kind of response object like for Symfony)
 		$aFormExtraParams = array('wizard_container' => 1);
+		FormHelper::UpdateFlagsFromContext($oObj, $aFormExtraParams);
+
 		if ($this->IsHandlingXmlHttpRequest()) {
 			$oPage = new AjaxPage('');
 			$aFormExtraParams['js_handlers'] = [];

@@ -5,16 +5,29 @@ const iTopObjectWorker = new function(){
 	const ROUTE_CREATE_OBJECT = 'object.new';
 	const ROUTE_MODIFY_OBJECT = 'object.modify';
 	const ROUTE_GET_OBJECT = 'object.get';
-
-	const CallAjaxCreateObject = function(sClass, oOnModalCloseCallback = null, oOnFormSubmittedCallback = null){
+	
+	/**
+	 * CallAjaxCreateObject.
+	 *
+	 * @param {string} sClass
+	 * @param oOnModalCloseCallback
+	 * @param oOnFormSubmittedCallback
+	 * @param {Object} aAdditionalData
+	 * @constructor
+	 */
+	const CallAjaxCreateObject = function(sClass, oOnModalCloseCallback = null, oOnFormSubmittedCallback = null, aAdditionalData = []){
+		let aData = $.extend(
+			{
+				class: sClass,
+			},
+			aAdditionalData
+		);
 
 		let oOptions = {
 			title: Dict.S('UI:Object:Modal:Title'),
 			content: {
 				endpoint: `${ROUTER_BASE_URL}?route=${ROUTE_CREATE_OBJECT}`,
-				data: {
-					class: sClass,
-				}
+				data: aData
 			},
 			extra_options: {
 				callback_on_modal_close: oOnModalCloseCallback
@@ -34,18 +47,23 @@ const iTopObjectWorker = new function(){
 	 * @param {string} sObjectKey
 	 * @param oOnModalCloseCallback
 	 * @param oOnFormSubmittedCallback
+	 * @param {Object} aAdditionalData
 	 * @constructor
 	 */
-	const CallAjaxModifyObject = function(sObjectClass, sObjectKey, oOnModalCloseCallback, oOnFormSubmittedCallback){
-
+	const CallAjaxModifyObject = function(sObjectClass, sObjectKey, oOnModalCloseCallback, oOnFormSubmittedCallback, aAdditionalData = []){
+		let aData = $.extend(
+			{
+				class: sObjectClass,
+				id: sObjectKey,
+			},
+			aAdditionalData
+		);
+		
 		let oOptions = {
 			title: Dict.S('UI:Links:ActionRow:Modify:Modal:Title'),
 			content: {
 				endpoint: `${ROUTER_BASE_URL}?route=${ROUTE_MODIFY_OBJECT}`,
-				data: {
-					class: sObjectClass,
-					id: sObjectKey,
-				},
+				data: aData,
 			},
 			extra_options: {
 				callback_on_modal_close: oOnModalCloseCallback
@@ -64,14 +82,19 @@ const iTopObjectWorker = new function(){
 	 * @param {string} sObjectClass
 	 * @param {string} sObjectId
 	 * @param oOnResponseCallback
+	 * @param {Object} aAdditionalData
 	 * @constructor
 	 */
-	const CallAjaxGetObject = function(sObjectClass, sObjectId, oOnResponseCallback){
-
-		$.post(`${ROUTER_BASE_URL}?route=${ROUTE_GET_OBJECT}`, {
-			object_class: sObjectClass,
-			object_key: sObjectId,
-		}, oOnResponseCallback);
+	const CallAjaxGetObject = function(sObjectClass, sObjectId, oOnResponseCallback, aAdditionalData = []){
+		let aData = $.extend(
+			{
+				object_class: sObjectClass,
+				object_key: sObjectId,
+			},
+			aAdditionalData
+		)
+		
+		$.post(`${ROUTER_BASE_URL}?route=${ROUTE_GET_OBJECT}`, aData, oOnResponseCallback);
 	};
 
 
