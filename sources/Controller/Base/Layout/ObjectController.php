@@ -11,7 +11,7 @@ use ApplicationContext;
 use ApplicationException;
 use cmdbAbstractObject;
 use CMDBObjectSet;
-use Combodo\iTop\Application\Helper\LegacyFormHelper;
+use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
@@ -130,6 +130,9 @@ class ObjectController extends AbstractController
 
 			$aFormExtraParams = array('wizard_container' => 1, 'keep_source_object' => true);
 			
+			// - Update flags with parameters set in URL
+			FormHelper::UpdateFlagsFromContext($oObjToClone, $aFormExtraParams);
+			
 			if ($this->IsHandlingXmlHttpRequest()) {
 				$aFormExtraParams['js_handlers'] = [];
 				$aFormExtraParams['noRelations'] = true;
@@ -177,7 +180,7 @@ JS;
 			}
 
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
-			LegacyFormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
+			FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
 
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObjToClone, array(), $aFormExtraParams);
 		} else {
@@ -281,7 +284,7 @@ JS;
 JS;
 
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
-			LegacyFormHelper::DisableAttributeBlobInputs($sClass, $aFormExtraParams);
+			FormHelper::DisableAttributeBlobInputs($sClass, $aFormExtraParams);
 
 		} else {
 			$oPage = new iTopWebPage('', $bPrintable);

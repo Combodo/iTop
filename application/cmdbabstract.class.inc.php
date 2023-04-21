@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\Search\SearchForm;
@@ -917,11 +918,7 @@ HTML
 						if ($bEditMode) {
 							$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
 							$sInfos = '';
-							$iFlags = $this->GetFormAttributeFlags($sAttCode);
-							if (array_key_exists($sAttCode, $aExtraFlags)) {
-								// the caller may override some flags if needed
-								$iFlags = $iFlags | $aExtraFlags[$sAttCode];
-							}
+							$iFlags = FormHelper::GetAttributeFlagsForObject($this, $sAttCode, $aExtraFlags);
 							$bIsLinkSetWithDisplayStyleTab = is_a($oAttDef, AttributeLinkedSet::class) && $oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB;
 							if ((($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard) && !$bIsLinkSetWithDisplayStyleTab) {
 								$sInputId = $this->m_iFormId.'_'.$sAttCode;
@@ -3009,6 +3006,17 @@ EOF
 		}
 
 		$oPage->SetCurrentTab('');
+
+		// Add as hidden inputs values that we want displayed if they're readonly
+		if(isset($aExtraParams['forceFieldsSubmission'])){
+			$aExtraFlags = $aExtraParams['fieldsFlags'] ?? [];
+			foreach ($aExtraParams['forceFieldsSubmission'] as $sAttCode) {
+					if(FormHelper::GetAttributeFlagsForObject($this, $sAttCode, $aExtraFlags) & OPT_ATT_READONLY) {
+						$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('attr_'.$sPrefix.$sAttCode, $this->Get($sAttCode)));
+					}
+			}
+		}
+		
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 		foreach ($aExtraParams as $sName => $value) {

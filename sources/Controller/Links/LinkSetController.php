@@ -8,7 +8,7 @@ namespace Combodo\iTop\Controller\Links;
 
 use AjaxPage;
 use cmdbAbstractObject;
-use Combodo\iTop\Application\Helper\LegacyFormHelper;
+use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Service\Router\Router;
@@ -164,7 +164,7 @@ class LinkSetController extends AbstractController
 		if ($sRealClass != '') {
 			$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
-			$aFieldFlags = array(); // TODO 3.1 array($sExtKeyToMe => OPT_ATT_READONLY);
+			$aFieldFlags = array($sExtKeyToMe => OPT_ATT_READONLY);
 			$oObj = DBObject::MakeDefaultInstance($sRealClass);
 
 			$oSourceObj = MetaModel::GetObject($sClass, $sId);
@@ -205,6 +205,9 @@ JS
 				'hide_transitions' => true,
 				'formPrefix'       => $sAttCode,
 				'fieldsFlags'      => $aFieldFlags,
+				'forceFieldsSubmission' => [
+					$sExtKeyToMe
+				],
 				'js_handlers'      => [
 					'form_on_submit'         => $sFormOnSubmitJsCode,
 					'cancel_button_on_click' =>
@@ -218,7 +221,7 @@ JS
 			];
 
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
-			LegacyFormHelper::DisableAttributeBlobInputs($sRealClass, $aExtraParams);
+			FormHelper::DisableAttributeBlobInputs($sRealClass, $aExtraParams);
 
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aExtraParams);
 		}
