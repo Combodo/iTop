@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\Helper;
 
 use AttributeBlob;
+use DBObject;
 use Dict;
 use MetaModel;
 use utils;
@@ -59,13 +60,13 @@ class FormHelper
 	 * Update flags to be sent to form with url parameters
 	 * For now only supports "readonly" param
 	 * 
-	 * @param $oObject
+	 * @param \DBObject $oObject
 	 * @param array $aExtraParams
 	 *
 	 * @return void
 	 * @throws \Exception
 	 */
-	public static function UpdateFlagsFromContext($oObject, array &$aExtraParams): void
+	public static function UpdateFlagsFromContext(DBObject $oObject, array &$aExtraParams): void
 	{
 		$aRawValues = utils::ReadParam('readonly', [], '', 'raw_data');
 		$sObjectClass = get_class($oObject);
@@ -92,13 +93,13 @@ class FormHelper
 	/**
 	 * Get attribute flag for an object allowing to cross-check with extra flags present in a form
 	 * 
-	 * @param $oObject
-	 * @param $sAttCode
+	 * @param \DBObject $oObject
+	 * @param string $sAttCode
 	 * @param array $aExtraFlags
 	 *
-	 * @return int|mixed
+	 * @return int
 	 */
-	public static function GetAttributeFlagsForObject($oObject, $sAttCode, array $aExtraFlags = []) {
+	public static function GetAttributeFlagsForObject(DBObject $oObject, string $sAttCode, array $aExtraFlags = []): int {
 		$iFlags = $oObject->GetFormAttributeFlags($sAttCode);
 		if (array_key_exists($sAttCode, $aExtraFlags)) {
 			// the caller may override some flags if needed
