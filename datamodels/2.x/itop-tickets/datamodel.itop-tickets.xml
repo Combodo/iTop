@@ -265,6 +265,62 @@
         }
         ]]></code>
         </method>
+        <method id="AddCurrentUserToContacts" _revision_id="294" _delta="define">
+          <comment>/**
+            *
+            * Add the current contact associated Person to the contacts_list of this Ticket
+            * No error if there is no associated Person or if the Person is already in the list
+            * @return bool Return true on success
+            */
+          </comment>
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[	public function AddCurrentUserToContacts()
+    {
+        $iPersonId = UserRights::GetContactId();
+        if ($iPersonId > 0) {
+            $oContactsSet = $this->Get('contacts_list');
+            if (!in_array($iPersonId, $oContactsSet->GetColumnAsArray('contact_id'))) {
+                $oLnk = MetaModel::NewObject('lnkContactToTicket');
+                $oLnk->Set('contact_id', $iPersonId);
+                $oLnk->Set('ticket_id', $this->GetKey());
+                $oContactsSet->AddItem($oLnk);
+                $this->Set('contacts_list', $oContactsSet);
+                $this->DBUpdate();
+            }
+	      }
+		    return true;
+	  }]]></code>
+          <arguments/>
+        </method>
+        <method id="RemoveCurrentUserFromContacts" _revision_id="296" _delta="define">
+          <comment>/**
+            *
+            * Remove the current user associated Person from the contacts_list of this Ticket
+            * No error if there is no associated Person or if the Person is not in the list
+            * @return bool Return true
+            */
+          </comment>
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[	public function RemoveCurrentUserFromContacts()
+	  {
+        $iPersonId = UserRights::GetContactId();
+        if ($iPersonId > 0) {
+            $oContactsSet = $this->Get('contacts_list');
+            foreach ($oContactsSet as $oLnk) {
+                if ($oLnk->Get('contact_id') == $iPersonId) {
+                    $oContactsSet->RemoveItem($oLnk->GetKey());
+                    $this->Set('contacts_list', $oContactsSet);
+                    $this->DBUpdate();
+                    return true;
+                }
+            }
+        }
+      return true;
+	  }]]></code>
+          <arguments/>
+        </method>
       </methods>
       <presentation>
         <details>
