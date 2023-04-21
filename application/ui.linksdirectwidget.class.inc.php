@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\Helper\LegacyFormHelper;
+use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetEditTable;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
@@ -133,7 +133,7 @@ class UILinksWidgetDirect
 			);
 
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
-			LegacyFormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
+			FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
 
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aFormExtraParams);
 		}

@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\Helper\LegacyFormHelper;
+use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
@@ -975,7 +975,7 @@ HTML
 		);
 
 		// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
-		LegacyFormHelper::DisableAttributeBlobInputs($this->sTargetClass, $aFormExtraParams);
+		FormHelper::DisableAttributeBlobInputs($this->sTargetClass, $aFormExtraParams);
 
 		cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), $aFormExtraParams);
 		$oPage->add(<<<HTML
