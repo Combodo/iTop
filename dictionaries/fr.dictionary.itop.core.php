@@ -580,16 +580,19 @@ En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Trigger' => 'Déclencheur',
-	'Class:Trigger+' => '',
-	'Class:Trigger/Attribute:description' => 'Description',
-	'Class:Trigger/Attribute:description+' => '',
-	'Class:Trigger/Attribute:action_list' => 'Actions déclenchées',
-	'Class:Trigger/Attribute:action_list+' => 'Actions effectuées quand le déclencheur est activé',
-	'Class:Trigger/Attribute:finalclass' => 'Sous-classe de Déclencheur',
-	'Class:Trigger/Attribute:finalclass+' => 'Nom de la classe instanciable',
-	'Class:Trigger/Attribute:context' => 'Contexte',
-	'Class:Trigger/Attribute:context+' => 'Contexte de déclenchement',
+	'Class:Trigger'                             => 'Déclencheur',
+	'Class:Trigger+'                            => '',
+	'Class:Trigger/ComplementaryName'           => '%1$s, limité à la classe : %2$s',
+	'Class:Trigger/Attribute:description'       => 'Description',
+	'Class:Trigger/Attribute:description+'      => '',
+	'Class:Trigger/Attribute:action_list'       => 'Actions déclenchées',
+	'Class:Trigger/Attribute:action_list+'      => 'Actions effectuées quand le déclencheur est activé',
+	'Class:Trigger/Attribute:finalclass'        => 'Sous-classe de Déclencheur',
+	'Class:Trigger/Attribute:finalclass+'       => 'Nom de la classe instanciable',
+	'Class:Trigger/Attribute:context'           => 'Contexte',
+	'Class:Trigger/Attribute:context+'          => 'Contexte de déclenchement',
+	'Class:Trigger/Attribute:triggering_class'  => 'Classe concernée',
+	'Class:Trigger/Attribute:triggering_class+' => 'Classe concernée par ce déclencheur',
 ));
 
 //
@@ -597,14 +600,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:TriggerOnObject' => 'Déclencheur sur modification de données',
-	'Class:TriggerOnObject+' => '',
-	'Class:TriggerOnObject/Attribute:target_class' => 'Classe cible',
-	'Class:TriggerOnObject/Attribute:target_class+' => '',
-	'Class:TriggerOnObject/Attribute:filter' => 'Filtre',
-	'Class:TriggerOnObject/Attribute:filter+' => 'Permet de limiter la liste des objets (de la classe cible) pour lesquels le déclencheur s\'activera',
-	'TriggerOnObject:WrongFilterQuery' => 'Requête de filtrage incorrecte: %1$s',
-	'TriggerOnObject:WrongFilterClass' => 'La requête de filtrage doit retourner des objets de la classe "%1$s"',
+	'Class:TriggerOnObject'                         => 'Déclencheur sur modification de données',
+	'Class:TriggerOnObject+'                        => '',
+	'Class:TriggerOnObject/Attribute:target_class'  => 'Classe cible',
+	'Class:TriggerOnObject/Attribute:target_class+' => 'Classe d\'objets allant activer ce déclencheur',
+	'Class:TriggerOnObject/Attribute:filter'        => 'Filtre',
+	'Class:TriggerOnObject/Attribute:filter+'       => 'Permet de limiter la liste des objets (de la classe cible) activant le déclencheur',
+	'TriggerOnObject:WrongFilterQuery'              => 'Requête de filtrage incorrecte: %1$s',
+	'TriggerOnObject:WrongFilterClass'              => 'La requête de filtrage doit retourner des objets de la classe "%1$s"',
 ));
 
 //

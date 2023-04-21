@@ -199,7 +199,7 @@ abstract class ActionNotification extends Action
 		// - Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'trigger_list'));
 		// - Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'description', 'status'));
 		// Search criteria
 		// - Criteria of the std search form
 //		MetaModel::Init_SetZListItems('standard_search', array('name'));
@@ -289,7 +289,7 @@ class ActionEmail extends ActionNotification
 		));
 
 		// - Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'to', 'subject'));
+		MetaModel::Init_SetZListItems('list', array('status', 'to', 'subject'));
 		// Search criteria
 		// - Standard criteria of the search
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'status', 'subject'));

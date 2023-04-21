@@ -36,7 +36,7 @@ abstract class Trigger extends cmdbAbstractObject
 			"category"                   => "grant_by_profile,core/cmdb",
 			"key_type"                   => "autoincrement",
 			"name_attcode"               => "description",
-			"complementary_name_attcode" => array('finalclass'),
+			"complementary_name_attcode" => array('finalclass', 'triggering_class'),
 			"state_attcode"              => "",
 			"reconc_keys"                => array('description'),
 			"db_table"                   => "priv_trigger",
@@ -50,11 +50,13 @@ abstract class Trigger extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("action_list",
 			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "trigger_id", "ext_key_to_remote" => "action_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
 		$aTags = ContextTag::GetTags();
-		MetaModel::Init_AddAttribute( new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
+		MetaModel::Init_AddAttribute(new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
+		// "triggering_class" is a computed field, fed by TriggerOnObject::ComputeValues, so it can be displayed in complementary_name
+		MetaModel::Init_AddAttribute(new AttributeString("triggering_class", array("allowed_values" => null, "sql" => "triggering_class", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('finalclass', 'description', 'context', 'action_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('finalclass', 'description', 'context', 'action_list', 'triggering_class')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'triggering_class')); // Attributes to be displayed for a list
 		// Search criteria
 		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
@@ -199,6 +201,17 @@ abstract class TriggerOnObject extends Trigger
 			}
 		}
 	}
+
+	/**
+	 * @throws \CoreException
+	 */
+	public function ComputeValues()
+	{
+		parent::ComputeValues();
+		// Copy the "triggering class name" in parent field, so it can be used in complementary_name of Trigger
+		$this->Set('triggering_class', $this->Get('target_class'));
+	}
+
 
 	/**
 	 * Check whether the given object is in the scope of this trigger
