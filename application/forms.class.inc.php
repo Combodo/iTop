@@ -60,7 +60,7 @@ class DesignerForm
 		$this->sHierarchySelector = '';
 		$this->StartFieldSet($this->sCurrentFieldSet);
 		$this->bDisplayed = true;
-		$this->aDefaultvalues = array();
+		$this->aDefaultValues = array();
 	}
 	
 	public function AddField(DesignerFormField $oField)
