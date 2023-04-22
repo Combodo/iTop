@@ -36,6 +36,72 @@ require_once(APPROOT.'/application/utils.inc.php');
  */
 class DisplayBlock
 {
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_COUNT = 'count';
+
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_JOIN = 'join';
+
+	/**
+	 * @var string For regular list (objects or static data)
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_LIST = 'list';
+
+	/**
+	 * @var string For search results
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_LIST_SEARCH = 'list_search';
+
+	/**
+	 * @var string For objects list in other objects (direct / indirect linksets)
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_LIST_IN_OBJECT = 'listInObject';
+
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_ACTIONS = 'actions';
+
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_SUMMARY = 'summary';
+
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_CSV = 'csv';
+
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_SEARCH = 'search';
+
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_CHART = 'chart';
+
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ENUM_STYLE_CHART_AJAX = 'chart_ajax';
+
 	const TAG_BLOCK = 'itopblock';
 	/** @var \DBSearch */
 	protected $m_oFilter;
@@ -69,7 +135,7 @@ class DisplayBlock
 	 *
 	 * @throws \ApplicationException
 	 */
-	public function __construct(DBSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
+	public function __construct(DBSearch $oFilter, $sStyle = self::ENUM_STYLE_LIST, $bAsynchronous = false, $aParams = array(), $oSet = null)
 	{
 		$this->m_oFilter = $oFilter->DeepClone();
 		$this->m_aConditions = array();
@@ -96,13 +162,13 @@ class DisplayBlock
 	protected function GetAllowedParams(string $sStyle): array
 	{
 		$aAllowedParams = [
-			'actions' => [
+			static::ENUM_STYLE_ACTIONS => [
 				'context_filter',
 				/** int if != 0 filter with user context */
 				'display_limit',
 				/** for dashlet*/
 			],
-			'chart' => [
+			static::ENUM_STYLE_CHART => [
 				'chart_type',
 				/** string 'pie' or 'bars'  */
 				'group_by',
@@ -125,7 +191,7 @@ class DisplayBlock
 				/** string title */
 				'display_limit',
 			],
-			'chart_ajax' => [
+			static::ENUM_STYLE_CHART_AJAX => [
 				'chart_type',       /** string 'pie' or 'bars'  */
 				'group_by',         /** string group by att code */
 				'group_by_expr',    /** string group by expression */
@@ -136,7 +202,7 @@ class DisplayBlock
 				'order_by',         /** string either 'attribute' group_by attcode or 'function' aggregation_function value */
 				'order_direction',  /** string order direction 'asc' or 'desc' */
 			],
-			'count' => [
+			static::ENUM_STYLE_COUNT => [
 				'group_by',         /** string group by att code */
 				'group_by_expr',    /** string group by expression */
 				'group_by_label',   /** string aggregation column name */
@@ -152,15 +218,15 @@ class DisplayBlock
 				/** string order direction 'asc' or 'desc' */
 				'display_limit',
 			],
-			'csv' => [],
-			'join' => array_merge([
+			static::ENUM_STYLE_CSV => [],
+			static::ENUM_STYLE_JOIN => array_merge([
 				'display_aliases',
 				/** string comma separated list of class aliases to display */
 				'group_by',
 				/** string group by att code */
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'links' => DataTableUIBlockFactory::GetAllowedParams(),
-			'list' => array_merge([
+			static::ENUM_STYLE_LIST => array_merge([
 				'update_history',
 				/** bool add breadcrumb entry */
 				'default',
@@ -178,7 +244,7 @@ class DisplayBlock
 				'refresh_action',
 				/**to add refresh button in datatable*/
 			], DataTableUIBlockFactory::GetAllowedParams()),
-			'listInObject' => array_merge([
+			static::ENUM_STYLE_LIST_IN_OBJECT => array_merge([
 				'update_history',
 				/** bool add breadcrumb entry */
 				'default',
@@ -196,7 +262,7 @@ class DisplayBlock
 				'refresh_action',
 				/**to add refresh button in datatable*/
 			], DataTableUIBlockFactory::GetAllowedParams()),
-			'list_search' => array_merge([
+			static::ENUM_STYLE_LIST_SEARCH => array_merge([
 				'update_history',
 				/** bool add breadcrumb entry */
 				'result_list_outer_selector',
@@ -219,7 +285,7 @@ class DisplayBlock
 				'search_header_force_dropdown', /** Html for <select> to choose the class to search  */
 				'this',
 			], DataTableUIBlockFactory::GetAllowedParams()),
-			'search' => array_merge([
+			static::ENUM_STYLE_SEARCH => array_merge([
 				'baseClass',
 				/** string search root class */
 				'open',
@@ -241,7 +307,7 @@ class DisplayBlock
 				'class',
 				/** string class searched */
 			], DataTableUIBlockFactory::GetAllowedParams()),
-			'summary' => [
+			static::ENUM_STYLE_SUMMARY => [
 				'status[block]',
 				/** string object 'status' att code */
 				'status_codes[block]',
@@ -517,7 +583,7 @@ class DisplayBlock
 			 ');
 		}
 
-		if ($this->m_sStyle == 'list') // Search form need to extract result list extra data, the simplest way is to expose this configuration
+		if ($this->m_sStyle == static::ENUM_STYLE_LIST) // Search form need to extract result list extra data, the simplest way is to expose this configuration
 		{
 			$listJsonExtraParams = json_encode(json_encode($aExtraParams));
 			$oPage->add_ready_script("
@@ -584,7 +650,7 @@ class DisplayBlock
 		if ($this->m_oSet == null) {
 
 			// In case of search, the context filtering is done by the search itself
-			if (($this->m_sStyle != 'links') && ($this->m_sStyle != 'search') && ($this->m_sStyle != 'list_search')) {
+			if (($this->m_sStyle != 'links') && ($this->m_sStyle != static::ENUM_STYLE_SEARCH) && ($this->m_sStyle != static::ENUM_STYLE_LIST_SEARCH)) {
 				$oAppContext = new ApplicationContext();
 				$sClass = $this->m_oFilter->GetClass();
 				$aFilterCodes = MetaModel::GetFiltersList($sClass);
@@ -671,8 +737,8 @@ class DisplayBlock
 		$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 
 		switch($this->m_sStyle) {
-			case 'list_search':
-			case 'list':
+			case static::ENUM_STYLE_LIST_SEARCH:
+			case static::ENUM_STYLE_LIST:
 				break;
 			default:
 				// N°3473: except for 'list_search' and 'list' (which have more granularity, see the other switch below),
@@ -685,20 +751,20 @@ class DisplayBlock
 		}
 
 		switch ($this->m_sStyle) {
-			case 'count':
+			case static::ENUM_STYLE_COUNT:
 				$oBlock = $this->RenderCount($aExtraParams);
 				break;
 
-			case 'join':
+			case static::ENUM_STYLE_JOIN:
 				$oBlock = $this->RenderJoin($aExtraParams, $oPage);
 				break;
 
-			case 'list_search':
+			case static::ENUM_STYLE_LIST_SEARCH:
 				$oBlock = $this->RenderListSearch($aExtraParams, $oPage);
 				break;
 
-			case 'list':
-			case 'listInObject':
+			case static::ENUM_STYLE_LIST:
+			case static::ENUM_STYLE_LIST_IN_OBJECT:
 				$oBlock = $this->RenderList($aExtraParams, $oPage);
 			break;
 
@@ -706,27 +772,27 @@ class DisplayBlock
 				$oBlock = $this->RenderLinks($oPage, $aExtraParams);
 				break;
 
-			case 'actions':
+			case static::ENUM_STYLE_ACTIONS:
 				$oBlock = $this->RenderActions($aExtraParams);
 				break;
 
-			case 'summary':
+			case static::ENUM_STYLE_SUMMARY:
 				$oBlock = $this->RenderSummary($aExtraParams);
 				break;
 
-			case 'csv':
+			case static::ENUM_STYLE_CSV:
 				$oBlock = $this->RenderCsv($oAppContext);
 				break;
 
-			case 'search':
+			case static::ENUM_STYLE_SEARCH:
 				$oBlock = $this->RenderSearch($oPage, $aExtraParams);
 				break;
 
-			case 'chart':
+			case static::ENUM_STYLE_CHART:
 				$oBlock = $this->RenderChart($sId, $aQueryParams, $aExtraParams);
 				break;
 			
-			case 'chart_ajax':
+			case static::ENUM_STYLE_CHART_AJAX:
 				$oBlock = $this->RenderChartAjax($aExtraParams);
 				break;
 			
@@ -770,7 +836,7 @@ class DisplayBlock
 					}
 			}
 		}
-		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
+		if (($bAutoReload) && ($this->m_sStyle != static::ENUM_STYLE_SEARCH)) // Search form do NOT auto-reload
 		{
 			// Used either for asynchronous or auto_reload
 			// does a json_encode twice to get a string usable as function parameter
@@ -1363,7 +1429,7 @@ JS
 		$iListId = utils::IsNullOrEmptyString($aExtraParams['currentId']) ? utils::GetUniqueId() /* Works only if not in an Ajax page !! */ : $aExtraParams['currentId'];
 		// Note: Method calls not factorized into a single call with method name as a variable to keep track of DataTableUIBlockFactory calls as it is a critical / unstable component.
 		$oBlock->AddSubBlock(
-			$this->m_sStyle === 'listInObject' ?
+			$this->m_sStyle === static::ENUM_STYLE_LIST_IN_OBJECT ?
 			DataTableUIBlockFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams) :
 			DataTableUIBlockFactory::MakeForResult($oPage, $iListId, $this->m_oSet, $aExtraParams)
 		);
@@ -1758,7 +1824,7 @@ class MenuBlock extends DisplayBlock
 
 		if ($this->m_sStyle == 'popup') // popup is a synonym of 'list' for backward compatibility
 		{
-			$this->m_sStyle = 'list';
+			$this->m_sStyle = static::ENUM_STYLE_LIST;
 		}
 
 		$sClass = $this->GetFilter()->GetClass();
@@ -1896,7 +1962,7 @@ class MenuBlock extends DisplayBlock
 			}
 
 			// NOT "listInObject" (linksets) style actions
-			if ($this->m_sStyle !== 'listInObject') {
+			if ($this->m_sStyle !== static::ENUM_STYLE_LIST_IN_OBJECT) {
 				switch ($iSetCount) {
 					case 1:
 						$oObj = $oSet->Fetch();
@@ -2037,7 +2103,7 @@ class MenuBlock extends DisplayBlock
 				}
 			});
 
-			if (empty($sRefreshAction) && $this->m_sStyle == 'list') {
+			if (empty($sRefreshAction) && $this->m_sStyle == static::ENUM_STYLE_LIST) {
 				//for the detail page this var is defined way beyond this line
 				$sRefreshAction = "window.location.reload();";
 			}
@@ -2053,8 +2119,8 @@ class MenuBlock extends DisplayBlock
 		// New extensions based on iPopupMenuItem interface
 		$oPopupMenuItemsBlock = new UIContentBlock();
 		switch ($this->m_sStyle) {
-			case 'list':
-			case 'listInObject':
+			case static::ENUM_STYLE_LIST:
+			case static::ENUM_STYLE_LIST_IN_OBJECT:
 				$oSet->Rewind();
 				$param = $oSet;
 
@@ -2220,7 +2286,7 @@ class MenuBlock extends DisplayBlock
 
 				// - If we are used in a Datatable, 'datatable_' will be prefixed to our $sId, so we do the same here
 				$sRealId = $sId;
-				if(in_array($this->m_sStyle, ['list', 'links', 'listInObject'])){
+				if(in_array($this->m_sStyle, [static::ENUM_STYLE_LIST, 'links', static::ENUM_STYLE_LIST_IN_OBJECT])){
 					$sRealId = 'datatable_' . $sId;
 				}
 				$oAddLinkActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button'])
