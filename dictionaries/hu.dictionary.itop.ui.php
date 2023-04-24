@@ -13,7 +13,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:AuditCategory/Attribute:definition_set' => 'Definíciókészlet',
     'Class:AuditCategory/Attribute:definition_set+' => '',
     'Class:AuditCategory/Attribute:rules_list' => 'Auditszabályok',
-    'Class:AuditCategory/Attribute:rules_list+' => '',
+    'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category~~',
 ));
 
 //
@@ -50,19 +50,19 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:Query' => 'Lekérdezés',
-    'Class:Query+' => '',
+    'Class:Query+' => 'A query is a data set defined in a dynamic way~~',
     'Class:Query/Attribute:name' => 'Név',
-    'Class:Query/Attribute:name+' => '',
+    'Class:Query/Attribute:name+' => 'Identifies the query~~',
     'Class:Query/Attribute:description' => 'Leírás',
-    'Class:Query/Attribute:description+' => '',
+    'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)~~',
     'Class:Query/Attribute:is_template' => 'OQL mező sablonok',
-    'Class:Query/Attribute:is_template+' => '',
+    'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
     'Class:Query/Attribute:is_template/Value:yes' => 'Igen',
     'Class:Query/Attribute:is_template/Value:no' => 'Nem',
     'Class:QueryOQL/Attribute:fields' => 'Mezők',
-    'Class:QueryOQL/Attribute:fields+' => '',
+    'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
     'Class:QueryOQL' => 'OQL lekérdezés',
-    'Class:QueryOQL+' => '',
+    'Class:QueryOQL+' => 'A query based on the Object Query Language~~',
     'Class:QueryOQL/Attribute:oql' => 'Kifejezés',
     'Class:QueryOQL/Attribute:oql+' => 'OQL kifejezés',
 ));
@@ -100,11 +100,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:User/Attribute:language/Value:FR FR' => 'Francia',
     'Class:User/Attribute:language/Value:FR FR+' => '',
     'Class:User/Attribute:profile_list' => 'Profil',
-    'Class:User/Attribute:profile_list+' => '',
+    'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person~~',
     'Class:User/Attribute:allowed_org_list' => 'Engedélyezett szervezeti egységek',
-    'Class:User/Attribute:allowed_org_list+' => '',
+    'Class:User/Attribute:allowed_org_list+' => 'The end user is allowed to see data belonging to the following organizations. If no organization is specified, there is no restriction.~~',
     'Class:User/Attribute:status' => 'Állapot',
-    'Class:User/Attribute:status+' => '',
+    'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.~~',
     'Class:User/Attribute:status/Value:enabled' => 'Engedélyezett',
     'Class:User/Attribute:status/Value:disabled' => 'Letiltott',
 
