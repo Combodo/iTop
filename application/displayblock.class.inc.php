@@ -1611,7 +1611,6 @@ JS
 
 			$iTotalCount = 0;
 			$aURLs = array();
-			$iMaxNbCharsInLabel = 0;
 
 			foreach ($aRes as $iRow => $aRow) {
 				$sValue = $aRow['grouped_by_1'];
@@ -1623,9 +1622,6 @@ JS
 					'value' => (float)$aRow[$sFctVar],
 				);
 
-				if ($iMaxNbCharsInLabel < mb_strlen($sValue)) {
-					$iMaxNbCharsInLabel = mb_strlen($sValue);
-				}
 
 				// Build the search for this subset
 				$oSubsetSearch = $this->m_oFilter->DeepClone();
@@ -1643,9 +1639,13 @@ JS
 
 		switch ($sChartType) {
 			case 'bars':
-				$aNames = array();
+				$iMaxNbCharsInLabel = 0;
+				$aNames = [];
 				foreach ($aValues as $idx => $aValue) {
 					$aNames[$idx] = $aValue['label'];
+					if ($iMaxNbCharsInLabel < mb_strlen($aValue['label'])) {
+						$iMaxNbCharsInLabel = mb_strlen($aValue['label']);
+					}
 				}
 				$oBlock = new BlockChartAjaxBars();
 				$oBlock->sJSNames = json_encode($aNames);
@@ -1653,21 +1653,31 @@ JS
 				$oBlock->sId = $sId;
 				$oBlock->sJSURLs = $sJSURLs;
 				$oBlock->sURLForRefresh = str_replace("'", "\'", $sUrl);
+				$oBlock->iMaxNbCharsInLabel = $iMaxNbCharsInLabel;
 				break;
 
 			case 'pie':
-				$aColumns = array();
-				$aNames = array();
+				$aColumns = [];
+				$aNames = [];
 				foreach ($aValues as $idx => $aValue) {
 					$aColumns[] = array('series_'.$idx, (float)$aValue['value']);
 					$aNames['series_'.$idx] = $aValue['label'];
 				}
+
+				$iNbLinesToAddForName = 0;
+				if (count($aNames) > 50) {
+					// Calculation of the number of legends line add to the height of the graph to have a maximum of 5 legend columns
+					$iNbLinesIncludedInChartHeight = 10;
+					$iNbLinesToAddForName = ceil(count($aNames) / 5) - $iNbLinesIncludedInChartHeight;
+				}
+
 				$oBlock = new BlockChartAjaxPie();
 				$oBlock->sJSColumns = json_encode($aColumns);
 				$oBlock->sJSNames = json_encode($aNames);
 				$oBlock->sId = $sId;
 				$oBlock->sJSURLs = $sJSURLs;
 				$oBlock->sURLForRefresh = str_replace("'", "\'", $sUrl);
+				$oBlock->iNbLinesToAddForName = $iNbLinesToAddForName;
 				break;
 		}
 		if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
