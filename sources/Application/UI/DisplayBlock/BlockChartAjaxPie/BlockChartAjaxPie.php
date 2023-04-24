@@ -28,6 +28,8 @@ class BlockChartAjaxPie extends UIBlock
 	public $sJSURLs;
 	/** @var string */
 	public $sJSNames;
-
+	/** @var string */
 	public $sURLForRefresh;
+	/** @var int */
+	public $iNbLinesToAddForName;
 }
