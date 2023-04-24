@@ -843,7 +843,8 @@ HTML
 		// Request only "leaf" classes to avoid reloads
 		$aTriggerClasses = MetaModel::EnumChildClasses('Trigger');
 		foreach ($aTriggerClasses as $sTriggerClass) {
-			if (MetaModel::IsLeafClass($sTriggerClass)) {
+			$oReflectionClass = new ReflectionClass($sTriggerClass);
+			if (false === $oReflectionClass->isAbstract()) {
 				$oTriggerSet = new CMDBObjectSet(new DBObjectSearch($sTriggerClass));
 				while ($oTrigger = $oTriggerSet->Fetch()) {
 					if ($oTrigger->IsInScope($this)) {
