@@ -2076,6 +2076,11 @@ class MenuBlock extends DisplayBlock
 										}
 									}
 
+									// Lock removal button is not supported in modals yet
+									if (utils::IsXmlHttpRequest()) {
+										$bCanKill = false;
+									}
+
 									if ($bCanKill) {
 										$this->AddMenuSeparator($aRegularActions);
 										$aRegularActions['concurrent_lock_unlock'] = array(

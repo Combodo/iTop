@@ -1126,15 +1126,20 @@ HTML
 		$this->DisplayBareProperties($oPage, $bEditMode);
 		$this->DisplayBareRelations($oPage, $bEditMode);
 
+
 		// Note: Adding the JS snippet which enables the image upload should have been done directly by the ActivityPanel which would have kept the independance principle
 		// of the UIBlock. For now we keep it this way in order to move on and trace this known limitation in N°3736.
-		/** @var ActivityPanel $oActivityPanel */
-		$oActivityPanel = $oPage->GetContentLayout()->GetSubBlock(ActivityPanel::BLOCK_CODE);
-		// Note: Testing if block exists is necessary as during the 'release_lock_and_details' operation we don't have an activity panel
-		if (!is_null($oActivityPanel) && $oActivityPanel->HasTransactionId()) {
-			$iTransactionId = $oActivityPanel->GetTransactionId();
-			$sTempId = utils::GetUploadTempId($iTransactionId);
-			$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
+		//
+		// Note: Don't do it in modals as we don't display the activity panel
+		if (false === ($oPage instanceof AjaxPage)) {
+			/** @var ActivityPanel $oActivityPanel */
+			$oActivityPanel = $oPage->GetContentLayout()->GetSubBlock(ActivityPanel::BLOCK_CODE);
+			// Note: Testing if block exists is necessary as during the 'release_lock_and_details' operation we don't have an activity panel
+			if (!is_null($oActivityPanel) && $oActivityPanel->HasTransactionId()) {
+				$iTransactionId = $oActivityPanel->GetTransactionId();
+				$sTempId = utils::GetUploadTempId($iTransactionId);
+				$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
+			}
 		}
 	}
 
