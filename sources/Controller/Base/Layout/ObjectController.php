@@ -167,6 +167,8 @@ class ObjectController extends AbstractController
 				}
 JS;
 
+				// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
+				FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
 
 				$aFormExtraParams['js_handlers']['cancel_button_on_click'] =
 					<<<JS
@@ -178,9 +180,6 @@ JS;
 				$oPage->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 				$oPage->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
 			}
-
-			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
-			FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
 
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObjToClone, array(), $aFormExtraParams);
 		} else {
