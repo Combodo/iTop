@@ -579,19 +579,19 @@ While editing, click on the magnifier to get pertinent examples',
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:Trigger'                             => 'Trigger',
-	'Class:Trigger+'                            => 'Custom event handler',
-	'Class:Trigger/ComplementaryName'           => '%1$s, class restriction: %2$s',
-	'Class:Trigger/Attribute:description'       => 'Description',
-	'Class:Trigger/Attribute:description+'      => 'one line description',
-	'Class:Trigger/Attribute:action_list'       => 'Triggered actions',
-	'Class:Trigger/Attribute:action_list+'      => 'Actions performed when the trigger is activated',
-	'Class:Trigger/Attribute:finalclass'        => 'Trigger sub-class',
-	'Class:Trigger/Attribute:finalclass+'       => 'Name of the final class',
-	'Class:Trigger/Attribute:context'           => 'Context',
-	'Class:Trigger/Attribute:context+'          => 'Context to allow the trigger to start',
-	'Class:Trigger/Attribute:triggering_class'  => 'Triggering class',
-	'Class:Trigger/Attribute:triggering_class+' => 'Class triggering, if applicable for this type of trigger',
+	'Class:Trigger'                        => 'Trigger',
+	'Class:Trigger+'                       => 'Custom event handler',
+	'Class:Trigger/ComplementaryName'      => '%1$s, %2$s',
+	'Class:Trigger/Attribute:description'  => 'Description',
+	'Class:Trigger/Attribute:description+' => 'one line description',
+	'Class:Trigger/Attribute:action_list'  => 'Triggered actions',
+	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
+	'Class:Trigger/Attribute:finalclass'   => 'Trigger sub-class',
+	'Class:Trigger/Attribute:finalclass+'  => 'Name of the final class',
+	'Class:Trigger/Attribute:context'      => 'Context',
+	'Class:Trigger/Attribute:context+'     => 'Context to allow the trigger to start',
+	'Class:Trigger/Attribute:complement'   => 'Additional information',
+	'Class:Trigger/Attribute:complement+'  => 'Further information as provided in english, by this trigger',
 ));
 
 //

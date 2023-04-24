@@ -580,19 +580,19 @@ En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Trigger'                             => 'Déclencheur',
-	'Class:Trigger+'                            => '',
-	'Class:Trigger/ComplementaryName'           => '%1$s, limité à la classe : %2$s',
-	'Class:Trigger/Attribute:description'       => 'Description',
-	'Class:Trigger/Attribute:description+'      => '',
-	'Class:Trigger/Attribute:action_list'       => 'Actions déclenchées',
-	'Class:Trigger/Attribute:action_list+'      => 'Actions effectuées quand le déclencheur est activé',
-	'Class:Trigger/Attribute:finalclass'        => 'Sous-classe de Déclencheur',
-	'Class:Trigger/Attribute:finalclass+'       => 'Nom de la classe instanciable',
-	'Class:Trigger/Attribute:context'           => 'Contexte',
-	'Class:Trigger/Attribute:context+'          => 'Contexte de déclenchement',
-	'Class:Trigger/Attribute:triggering_class'  => 'Classe concernée',
-	'Class:Trigger/Attribute:triggering_class+' => 'Classe concernée par ce déclencheur',
+	'Class:Trigger'                        => 'Déclencheur',
+	'Class:Trigger+'                       => '',
+	'Class:Trigger/ComplementaryName'      => '%1$s, %2$s',
+	'Class:Trigger/Attribute:description'  => 'Description',
+	'Class:Trigger/Attribute:description+' => '',
+	'Class:Trigger/Attribute:action_list'  => 'Actions déclenchées',
+	'Class:Trigger/Attribute:action_list+' => 'Actions effectuées quand le déclencheur est activé',
+	'Class:Trigger/Attribute:finalclass'   => 'Sous-classe de Déclencheur',
+	'Class:Trigger/Attribute:finalclass+'  => 'Nom de la classe instanciable',
+	'Class:Trigger/Attribute:context'      => 'Contexte',
+	'Class:Trigger/Attribute:context+'     => 'Contexte de déclenchement',
+	'Class:Trigger/Attribute:complement'   => 'Information complémentaire',
+	'Class:Trigger/Attribute:complement+'  => 'Détails en anglais, fourni par ce type de déclencheur',
 ));
 
 //

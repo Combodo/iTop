@@ -95,13 +95,13 @@ if (!class_exists('StructureInstaller'))
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			// Search for existing TriggerOnObject where the Trigger string triggering_class is empty and set them with target_class field value
+			// Search for existing TriggerOnObject where the Trigger string complement is empty and fed it with target_class field value
 			if (version_compare($sPreviousVersion, '3.1.0', '<')) {
 				SetupLog::Info("|  Feed computed field triggering_class on existing Triggers.");
 
-				$sTableToSet = MetaModel::DBGetTable('Trigger', 'triggering_class');
+				$sTableToSet = MetaModel::DBGetTable('Trigger', 'complement');
 				$sTableToRead = MetaModel::DBGetTable('TriggerOnObject', 'target_class');
-				$oAttDefToSet = MetaModel::GetAttributeDef('Trigger', 'triggering_class');
+				$oAttDefToSet = MetaModel::GetAttributeDef('Trigger', 'complement');
 				$oAttDefToRead = MetaModel::GetAttributeDef('TriggerOnObject', 'target_class');
 
 				$aColumnsToSets = array_keys($oAttDefToSet->GetSQLColumns());
@@ -109,8 +109,8 @@ if (!class_exists('StructureInstaller'))
 				$aColumnsToReads = array_keys($oAttDefToRead->GetSQLColumns());
 				$sColumnToRead = $aColumnsToReads[0]; // We know that a string has only one column
 
-				$sRepair = "UPDATE `$sTableToSet` JOIN `$sTableToRead` ON `$sTableToSet`.id = `$sTableToRead`.id SET `$sTableToSet`.`$sColumnToSet` = `$sTableToRead`.`$sColumnToRead` WHERE `$sTableToSet`.`$sColumnToSet` = ''";
-				SetupLog::Debug("|  | Query: ".$sRepair);
+				$sRepair = "UPDATE $sTableToSet JOIN $sTableToRead ON $sTableToSet.id = $sTableToRead.id SET $sTableToSet.$sColumnToSet = CONCAT('class restriction: ',$sTableToRead.$sColumnToRead) WHERE $sTableToSet.$sColumnToSet = ''";
+				SetupLog::Debug(" |  | Query: ".$sRepair);
 				CMDBSource::Query($sRepair);
 				$iNbProcessed = CMDBSource::AffectedRows();
 				SetupLog::Info("|  | ".$iNbProcessed." triggers processed.");

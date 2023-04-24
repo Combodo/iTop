@@ -36,7 +36,7 @@ abstract class Trigger extends cmdbAbstractObject
 			"category"                   => "grant_by_profile,core/cmdb",
 			"key_type"                   => "autoincrement",
 			"name_attcode"               => "description",
-			"complementary_name_attcode" => array('finalclass', 'triggering_class'),
+			"complementary_name_attcode" => array('finalclass', 'complement'),
 			"state_attcode"              => "",
 			"reconc_keys"                => array('description'),
 			"db_table"                   => "priv_trigger",
@@ -51,12 +51,12 @@ abstract class Trigger extends cmdbAbstractObject
 			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "trigger_id", "ext_key_to_remote" => "action_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
 		$aTags = ContextTag::GetTags();
 		MetaModel::Init_AddAttribute(new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
-		// "triggering_class" is a computed field, fed by TriggerOnObject::ComputeValues, so it can be displayed in complementary_name
-		MetaModel::Init_AddAttribute(new AttributeString("triggering_class", array("allowed_values" => null, "sql" => "triggering_class", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		// "complement" is a computed field, fed by Trigger sub-classes, in general in ComputeValues method, for eg. the TriggerOnObject fed it with target_class info
+		MetaModel::Init_AddAttribute(new AttributeString("complement", array("allowed_values" => null, "sql" => "complement", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('finalclass', 'description', 'context', 'action_list', 'triggering_class')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'triggering_class')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('finalclass', 'description', 'context', 'action_list', 'complement')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'complement')); // Attributes to be displayed for a list
 		// Search criteria
 		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
@@ -208,8 +208,12 @@ abstract class TriggerOnObject extends Trigger
 	public function ComputeValues()
 	{
 		parent::ComputeValues();
-		// Copy the "triggering class name" in parent field, so it can be used in complementary_name of Trigger
-		$this->Set('triggering_class', $this->Get('target_class'));
+
+		// Complementary name of a Trigger is manually built
+		//   - the Trigger finalclass code not translated
+		//   - an hardcoded text in english
+		//   - the target class code not translated for TriggerOnObject subclasses
+		$this->Set('complement', 'class restriction: '.$this->Get('target_class'));
 	}
 
 
