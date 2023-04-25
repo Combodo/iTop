@@ -496,6 +496,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Loading' => 'Loading...',
 	'UI:Menu:Actions' => 'Actions',
 	'UI:Menu:OtherActions' => 'Other Actions',
+	'UI:Menu:Toolkit' => 'Toolkit',
 	'UI:Menu:New' => 'New...',
 	'UI:Menu:Add' => 'Add...',
 	'UI:Menu:Manage' => 'Manage...',

@@ -479,6 +479,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Loading' => 'Chargement...',
 	'UI:Menu:Actions' => 'Actions',
 	'UI:Menu:OtherActions' => 'Autres Actions',
+	'UI:Menu:Toolkit' => 'Trousse à outils',
 	'UI:Menu:New' => 'Créer...',
 	'UI:Menu:Add' => 'Ajouter...',
 	'UI:Menu:Manage' => 'Gérer...',
