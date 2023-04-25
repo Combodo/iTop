@@ -207,8 +207,11 @@ EOF
 
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
+				// N°6124 - Force remote ext. key as read-only if too many items in the linkset
+				$bReadOnlyField = ($sFieldCode === $this->m_sExtKeyToRemote) && (false === $bAllowRemoteExtKeyEdit);
+
 				$sSafeFieldId = $this->GetFieldId($iUniqueId, $sFieldCode);
-				$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $oNewLinkObj, $oP, $sNameSuffix, $sSafeFieldId);
+				$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $oNewLinkObj, $oP, $sNameSuffix, $sSafeFieldId, $bReadOnlyField);
 				$aFieldsMap[$sFieldCode] = $sSafeFieldId;
 
 				$sValue = $oNewLinkObj->Get($sFieldCode);
@@ -602,10 +605,11 @@ JS
 		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
 
 		$iAdditionId = $iMaxAddedId + 1;
+		$bAllowRemoteExtKeyEdit = count($aLinkedObjectIds) <= utils::GetConfig()->Get('link_set_max_edit_ext_key');
 		foreach ($aLinkedObjectIds as $iObjectId) {
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj)) {
-				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
+				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId, false /* Default value */, $bAllowRemoteExtKeyEdit); // Not yet created link get negative Ids
 				$aData = [];
 				foreach ($aRow as $item) {
 					$aData[] = $item;
