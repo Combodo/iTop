@@ -8,7 +8,7 @@
 Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Menu:ConfigEditor' => 'Configuration Générale',
-	'config-edit-title' => 'Editeur du Fichier de Configuration',
+	'config-edit-title' => 'Éditeur du Fichier de Configuration',
 	'config-edit-intro' => 'Attention: une configuration incorrecte peut rendre '.ITOP_APPLICATION_SHORT.' inopérant pour tous les utilisateurs!',
 	'config-apply' => 'Enregistrer',
 	'config-apply-title' => 'Enregistrer (Ctrl+S)',
@@ -20,4 +20,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'config-parse-error' => 'Ligne %2$d: %1$s.<br/>Le fichier n\'a PAS été modifié.',
 	'config-current-line' => 'Ligne en édition : %1$s',
 	'config-saved-warning-db-password' => 'Configuration enregistrée. Les sauvegardes ne fonctionneront pas à cause du format du pot de passe de la base.',
+	'config-error-transaction' => "Erreur : La transaction n'est plus valide. Les modifications n'ont <b>PAS</b> été enregistrées.",
+	'config-error-file-changed' => "Erreur : La configuration a été modifiée sur le serveur par une autre action. Les modifications n'ont <b>PAS</b> été enregistrées.",
+	'config-not-allowed-in-demo' => 'Désolé, '.ITOP_APPLICATION_SHORT.' est en <b>mode démonstration</b> : la configuration ne peut pas être modifiée.',
+	'config-interactive-not-allowed' => "La modification interactive de la configuration n'est pas autorisée. Voir le paramètre <code>'config_editor' => 'disabled'</code> dans le fichier de configuration.",
 ));
