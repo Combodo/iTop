@@ -5,17 +5,18 @@ const iTopObjectWorker = new function(){
 	const ROUTE_CREATE_OBJECT = 'object.new';
 	const ROUTE_MODIFY_OBJECT = 'object.modify';
 	const ROUTE_GET_OBJECT = 'object.get';
-	
+
 	/**
 	 * CallAjaxCreateObject.
 	 *
+	 * @param {string} sTitle
 	 * @param {string} sClass
 	 * @param oOnModalCloseCallback
 	 * @param oOnFormSubmittedCallback
 	 * @param {Object} aAdditionalData
 	 * @constructor
 	 */
-	const CallAjaxCreateObject = function(sClass, oOnModalCloseCallback = null, oOnFormSubmittedCallback = null, aAdditionalData = []){
+	const CallAjaxCreateObject = function(sTitle, sClass, oOnModalCloseCallback = null, oOnFormSubmittedCallback = null, aAdditionalData = []){
 		let aData = $.extend(
 			{
 				class: sClass,
@@ -24,7 +25,7 @@ const iTopObjectWorker = new function(){
 		);
 
 		let oOptions = {
-			title: Dict.S('UI:Object:Modal:Title'),
+			title: sTitle,
 			content: {
 				endpoint: `${ROUTER_BASE_URL}?route=${ROUTE_CREATE_OBJECT}`,
 				data: aData
@@ -43,6 +44,7 @@ const iTopObjectWorker = new function(){
 	/**
 	 * CallAjaxModifyObject.
 	 *
+	 * @param {string} sTitle
 	 * @param {string} sObjectClass
 	 * @param {string} sObjectKey
 	 * @param oOnModalCloseCallback
@@ -50,7 +52,7 @@ const iTopObjectWorker = new function(){
 	 * @param {Object} aAdditionalData
 	 * @constructor
 	 */
-	const CallAjaxModifyObject = function(sObjectClass, sObjectKey, oOnModalCloseCallback, oOnFormSubmittedCallback, aAdditionalData = []){
+	const CallAjaxModifyObject = function(sTitle, sObjectClass, sObjectKey, oOnModalCloseCallback, oOnFormSubmittedCallback, aAdditionalData = []){
 		let aData = $.extend(
 			{
 				class: sObjectClass,
@@ -58,9 +60,9 @@ const iTopObjectWorker = new function(){
 			},
 			aAdditionalData
 		);
-		
+
 		let oOptions = {
-			title: Dict.S('UI:Links:ActionRow:Modify:Modal:Title'),
+			title: sTitle,
 			content: {
 				endpoint: `${ROUTER_BASE_URL}?route=${ROUTE_MODIFY_OBJECT}`,
 				data: aData,
@@ -93,7 +95,7 @@ const iTopObjectWorker = new function(){
 			},
 			aAdditionalData
 		)
-		
+
 		$.post(`${ROUTER_BASE_URL}?route=${ROUTE_GET_OBJECT}`, aData, oOnResponseCallback);
 	};
 

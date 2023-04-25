@@ -249,6 +249,15 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				$oButton->SetColor($aAction['color']);
 			}
 			$oButton->SetDataAttributes(['label' => Dict::S($aAction['label']), 'action-id' => $iKey, 'table-id' => $oTable->GetId()]);
+			if (array_key_exists('metadata', $aAction)) {
+				$aMetadata = $aAction['metadata'];
+				if (is_array($aMetadata)) {
+					foreach ($aMetadata as $key => $value) {
+						$oButton->AddDataAttribute($key, $value);
+					}
+				}
+			}
+
 			$oToolbar->AddSubBlock($oButton);
 		}
 
@@ -923,9 +932,13 @@ JS;
 			'row_actions',
 			/** array of blocks displayed on every row */
 			'creation_in_modal_is_allowed',
-			/** bool to allow a creation of a new object of this type in a modal */	
+			/** bool to allow a creation of a new object of this type in a modal */
+			'creation_in_modal_tooltip',
+			/** creation in modal button tooltip */
 			'creation_in_modal_js_handler',
 			/** Handler to call when trying to create a new object in modal */
+			'creation_classic_disallowed',
+			/** Don't provide the standard object creation feature */
 		];
 	}
 }

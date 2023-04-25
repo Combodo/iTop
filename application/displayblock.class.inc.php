@@ -1845,6 +1845,7 @@ class MenuBlock extends DisplayBlock
 		/** @var string $sRefreshAction JS snippet to run when clicking on the refresh button of the menu */
 		$sRefreshAction = $aExtraParams['refresh_action'] ?? '';
 		$bIsCreationInModalAllowed = isset($aExtraParams['creation_in_modal_is_allowed']) && $aExtraParams['creation_in_modal_is_allowed'] === true;
+		$bIsClassicCreationDisallowed = isset($aExtraParams['creation_classic_disallowed']) && $aExtraParams['creation_classic_disallowed'] === true;
 
 		/** @var array $aRegularActions Any action other than a transition */
 		$aRegularActions = [];
@@ -1881,7 +1882,7 @@ class MenuBlock extends DisplayBlock
 			}
 
 			// Check rights
-			$bIsCreationAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) === UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+			$bIsCreationAllowed = (!$bIsClassicCreationDisallowed && UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) === UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 			$bIsModifyAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) === UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 
 			// Check concurrent lock (can only be lock if we are handling a single object
@@ -2311,7 +2312,10 @@ class MenuBlock extends DisplayBlock
 			if ($bIsCreationInModalAllowed === true) {
 				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
 					'fas fa-plus',
-					Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($sClass)),
+					// Allow button tooltip customization
+					array_key_exists('creation_in_modal_tooltip', $aExtraParams) ?
+						$aExtraParams['creation_in_modal_tooltip'] :
+						Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($sClass)),
 					'UI:Links:New',
 					'',
 					false

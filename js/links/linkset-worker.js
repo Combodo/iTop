@@ -46,6 +46,7 @@ const iTopLinkSetWorker = new function(){
 	/**
 	 * CallAjaxCreateLinkedObject.
 	 *
+	 * @param {string} sModalTitle
 	 * @param {string} sClass
 	 * @param {string} sAttCode
 	 * @param {string} sHostObjectClass
@@ -53,10 +54,10 @@ const iTopLinkSetWorker = new function(){
 	 * @param oOnModalCloseCallback
 	 * @param oOnFormSubmittedCallback
 	 */
-	const CallAjaxCreateLinkedObject = function(sClass, sAttCode, sHostObjectClass, sHostObjectId, oOnModalCloseCallback = null, oOnFormSubmittedCallback = null){
+	const CallAjaxCreateLinkedObject = function(sModalTitle, sClass, sAttCode, sHostObjectClass, sHostObjectId, oOnModalCloseCallback = null, oOnFormSubmittedCallback = null){
 
 		let oOptions = {
-			title: Dict.S('UI:Links:New:Modal:Title'),
+			title: sModalTitle,
 			content: {
 				endpoint: `${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_CREATE_OBJECT}`,
 				data: {

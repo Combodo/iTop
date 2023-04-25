@@ -19,19 +19,46 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 
-	// Action row
-	'UI:Links:ActionRow:Detach'                     => 'Remove',
-	'UI:Links:ActionRow:Detach+'                    => 'Remove this object',
-	'UI:Links:ActionRow:Detach:Confirmation'        => 'Do you really want to remove <b>{item}</b> from current object ?',
-	'UI:Links:ActionRow:Delete'                     => 'Delete',
-	'UI:Links:ActionRow:Delete+'                    => 'Delete this object',
-	'UI:Links:ActionRow:Delete:Confirmation'        => 'Do you really want to delete <b>{item}</b> from current object ?',
-	'UI:Links:ActionRow:Modify'                     => 'Modify',
-	'UI:Links:ActionRow:Modify+'                    => 'Modify this object',
-	'UI:Links:ActionRow:Modify:Modal:Title'         => 'Modify an object',
+	// Placeholders
+	// $%1s : host object class name
+	// $%2s : host object firendlyname
+	// $%3s : current tab name
+	// $%4s : remote object class name
+	// $%5s : remote object firendlyname
 
-	// Action
-	'UI:Links:New:Modal:Title'                      => 'Create an object',
+	'UI:Links:Object:New:Modal:Title'               => 'Create an object',
+
+	// Create
+	'UI:Links:Create:Button'                        => 'Create',
+	'UI:Links:Create:Button+'                       => 'Create a %4$s',
+	'UI:Links:Create:Modal:Title'                   => 'Create a %4$s in %2$s',
+
+	// Add
+	'UI:Links:Add:Button'                           => 'Add',
+	'UI:Links:Add:Button+'                          => 'Add a %4$s',
+	'UI:Links:Add:Modal:Title'                      => 'Add a %4$s to %2$s',
+
+	// Modify link
+	'UI:Links:ModifyLink:Button'                    => 'Modify',
+	'UI:Links:ModifyLink:Button+'                   => 'Modify this link',
+	'UI:Links:ModifyLink:Modal:Title'               => 'Modify the link between %2$s and %5$s',
+
+	// Modify object
+	'UI:Links:ModifyObject:Button'                  => 'Modify',
+	'UI:Links:ModifyObject:Button+'                 => 'Modify this object',
+	'UI:Links:ModifyObject:Modal:Title'             => '%5$s',
+
+	// Remove
+	'UI:Links:Remove:Button'                        => 'Remove',
+	'UI:Links:Remove:Button+'                       => 'Remove this %4$s',
+	'UI:Links:Remove:Modal:Title'                   => 'Remove a %4$s',
+	'UI:Links:Remove:Modal:Message'                 => 'Do you really want to remove %5$s from %2$s?',
+
+	// Delete
+	'UI:Links:Delete:Button'                        => 'Delete',
+	'UI:Links:Delete:Button+'                       => 'Delete this %4$s',
+	'UI:Links:Delete:Modal:Title'                   => 'Delete a %4$s',
+	'UI:Links:Delete:Modal:Message'                 => 'Do you really want to delete %5$s?',
 
 	// Bulk
 	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Add to all objects',
@@ -43,4 +70,22 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Links:Bulk:LinkExistForAllObjects'          => 'All objets are already linked',
 	'UI:Links:Bulk:LinkExistForOneObject'           => 'One object is linked',
 	'UI:Links:Bulk:LinkExistForXObjects'            => '{count} objects are linked',
+
+
+	//	'class:MyApplication/Attribute:service_list/UI:Links:New:Button'               => 'Create !!',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:New:Button+'              => 'Create a truc %4$s pour %2$s!!',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:New:Modal:Title'          => 'Create a machin truc chose pour %2$s!!',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:Add:Button+'              => 'Add a fucking %4$s in %2$s of class %1$s (tab %3$s)',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:Add:Modal:Title'          => 'Add a machin truc chose pour %2$s!!',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:ModifyLink:Button+'       => 'Modify link $%5s hi hi',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:ModifyLink:Modal:Title'   => 'Modify link $%5s <script>alert();</script>',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:ModifyObject:Button+'     => 'Modify object $%5s hi hi',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:ModifyObject:Modal:Title' => 'Modify object $%5s <script>alert();</script>',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:Remove:Button+'           => 'au revoir $%5s',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:Remove:Modal:Title'       => 'Et au revoir le $%5s',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:Remove:Modal:Message'     => 'Oh my god !<br>You are about to remove:<br><ul><li>-%1$s</li><li>-%2$s</li><li>-%3$s</li><li>-%4$s</li><li>-%5$s</li></ul>',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:Delete:Button+'           => 'Boom $%5s',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:Delete:Modal:Title'       => 'Et bim $%5s',
+	//	'class:MyApplication/Attribute:service_list/UI:Links:Delete:Modal:Message'     => 'Oh my god !<br>You are about to delete:<br><ul><li>-%1$s</li><li>-%2$s</li><li>-%3$s</li><li>-%4$s</li><li>-%5$s</li></ul>',
+
 ));

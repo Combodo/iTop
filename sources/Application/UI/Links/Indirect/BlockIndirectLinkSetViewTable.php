@@ -7,7 +7,8 @@
 namespace Combodo\iTop\Application\UI\Links\Indirect;
 
 use Combodo\iTop\Application\UI\Links\AbstractBlockLinkSetViewTable;
-use Combodo\iTop\Service\Links\LinkSetModel;
+use Combodo\iTop\Service\Links\LinkSetHelper;
+use Dict;
 use MetaModel;
 use PHPUnit\Exception;
 
@@ -50,9 +51,9 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			'zlist'         => false,
 			'extra_fields'  => $this->GetAttCodesToDisplay(),
 			'row_actions'   => $this->GetRowActions(),
-			'currentId' => $this->GetTableId(),
-			'panel_title' => $this->oAttDef->GetLabel(),
-			'panel_icon' => MetaModel::GetClassIcon($this->GetTargetClass(), false),
+			'currentId'     => $this->GetTableId(),
+			'panel_title'   => $this->oAttDef->GetLabel(),
+			'panel_icon'    => MetaModel::GetClassIcon($this->GetTargetClass(), false),
 		);
 
 		// Description
@@ -62,9 +63,11 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 
 		// Add creation in modal if the linkset is not readonly
 		if (!$this->oAttDef->GetReadOnly()) {
-			$sHostClass = get_class($this->oDbObject);
 			$aExtraParams['creation_in_modal_is_allowed'] = true;
+			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::DICT_ADD_BUTTON);
 			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
+		} else {
+			$aExtraParams['creation_classic_disallowed'] = true;
 		}
 
 		return $aExtraParams;
@@ -76,20 +79,26 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		$aRowActions = array();
 
 		$aRowActions[] = array(
-			'label'         => 'UI:Links:ActionRow:Modify',
-			'tooltip'       => 'UI:Links:ActionRow:Modify+',
+			'label'         => 'UI:Links:ModifyLink:Button',
+			'name'          => 'ModifyButton',
+			'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_LINK_BUTTON),
 			'icon_classes'  => 'fas fa-pen',
-			'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['Link/_key_/raw']);",
+			'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['Link/_key_/raw'], oTrElement, aRowData['Remote/friendlyname']);",
+			'metadata'      => [
+				'modify-modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_LINK_MODAL_TITLE),
+			],
 		);
 
 		$aRowActions[] = array(
-			'label'         => 'UI:Links:ActionRow:Detach',
-			'tooltip'       => 'UI:Links:ActionRow:Detach+',
+			'label'         => 'UI:Links:Remove:Button',
+			'name'          => 'RemoveButton',
+			'tooltip'       => $this->GetDictionaryEntry(static::DICT_REMOVE_BUTTON),
 			'icon_classes'  => 'fas fa-minus',
 			'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['Link/_key_/raw'], oTrElement);",
 			'confirmation'  => [
-				'message'                    => 'UI:Links:ActionRow:Detach:Confirmation',
-				'message_row_data'           => "Remote/hyperlink",
+				'title'                      => $this->GetDictionaryEntry(static::DICT_REMOVE_MODAL_TITLE),
+				'message'                    => $this->GetDictionaryEntry(static::DICT_REMOVE_MODAL_MESSAGE),
+				'row_data'                   => "Remote/hyperlink",
 				'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 			],
 		);

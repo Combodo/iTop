@@ -19,19 +19,47 @@
 
 Dict::Add('FR FR', 'French', 'Français', array(
 
-	// Action row
-	'UI:Links:ActionRow:Detach'                     => 'Enlever',
-	'UI:Links:ActionRow:Detach+'                    => 'Enlever cet objet',
-	'UI:Links:ActionRow:Detach:Confirmation'        => 'Voulez-vous Enlever <b>{item}</b> de l\'objet courant ?',
-	'UI:Links:ActionRow:Delete'                     => 'Supprimer',
-	'UI:Links:ActionRow:Delete+'                    => 'Supprimer cet objet',
-	'UI:Links:ActionRow:Delete:Confirmation'        => 'Voulez-vous supprimer <b>{item}</b> de l\'objet courant ?',
-	'UI:Links:ActionRow:Modify'                     => 'Modifier',
-	'UI:Links:ActionRow:Modify+'                    => 'Modifier cet objet',
-	'UI:Links:ActionRow:Modify:Modal:Title'         => 'Modifier un objet',
 
-	// Action
-	'UI:Links:New:Modal:Title'                      => 'Créer un objet',
+	// Placeholders
+	// $%1s : host object class name
+	// $%2s : host object firendlyname
+	// $%3s : current tab name
+	// $%4s : remote object class name
+	// $%5s : remote object firendlyname
+
+	'UI:Links:Object:New:Modal:Title'               => 'Créer un objet',
+
+	// Create
+	'UI:Links:Create:Button'                        => 'Créer',
+	'UI:Links:Create:Button+'                       => 'Créer un(e) %4$s',
+	'UI:Links:Create:Modal:Title'                   => 'Ajouter un(e) %4$s à %2$s',
+
+	// Add
+	'UI:Links:Add:Button'                           => 'Ajouter',
+	'UI:Links:Add:Button+'                          => 'Ajouter un(e) %4$s',
+	'UI:Links:Add:Modal:Title'                      => 'Ajouter un(e) %4$s à %2$s',
+
+	// Modify link
+	'UI:Links:ModifyLink:Button'                    => 'Modifier',
+	'UI:Links:ModifyLink:Button+'                   => 'Modifier cette relation',
+	'UI:Links:ModifyLink:Modal:Title'               => 'Modifier la relation entre %2$s et %5$s',
+
+	// Modify object
+	'UI:Links:ModifyObject:Button'                  => 'Modifier',
+	'UI:Links:ModifyObject:Button+'                 => 'Modifier cet objet',
+	'UI:Links:ModifyObject:Modal:Title'             => '%5$s',
+
+	// Remove
+	'UI:Links:Remove:Button'                        => 'Retirer',
+	'UI:Links:Remove:Button+'                       => 'Retirer cet(te) %4$s',
+	'UI:Links:Remove:Modal:Title'                   => 'Retirer un(e) %4$s de %1$s',
+	'UI:Links:Remove:Modal:Message'                 => 'Voulez-vous vraiment retirer %5$s de %2$s?',
+
+	// Delete
+	'UI:Links:Delete:Button'                        => 'Supprimer',
+	'UI:Links:Delete:Button+'                       => 'Supprimer cet(te) %4$s',
+	'UI:Links:Delete:Modal:Title'                   => 'Supprimer un(e) %4$s',
+	'UI:Links:Delete:Modal:Message'                 => 'Voulez-vous vraiment supprimer %5$s?',
 
 	// Bulk
 	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Ajouter à tous les objets',
