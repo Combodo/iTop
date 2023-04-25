@@ -8577,7 +8577,7 @@ class AttributeImage extends AttributeBlob
 		$sCssClasses .= ' '.(($bIsCustomImage) ? 'attribute-image-custom' : 'attribute-image-default');
 
 		// Important: If you change this, mind updating edit_image.js as well
-		return '<div class="'.$sCssClasses.'" style="max-width: '.$sMaxWidthPx.'; max-height: '.$sMaxHeightPx.'; aspect-ratio: '.$iMaxWidth.' / '.$iMaxHeight.'">'.$sRet.'</div>';
+		return '<div class="'.$sCssClasses.'" style="max-width: min('.$sMaxWidthPx.',100%); max-height: min('.$sMaxHeightPx.',100%); aspect-ratio: '.$iMaxWidth.' / '.$iMaxHeight.'">'.$sRet.'</div>';
 	}
 
 	/**
@@ -8591,7 +8591,7 @@ class AttributeImage extends AttributeBlob
 	 * @since 2.7.0 change visibility to protected
 	 */
 	protected function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
-		return  '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">';
+		return '<img src="'.$sUrl.'" style="max-width: min('.$iMaxWidthPx.',100%); max-height: min('.$iMaxHeightPx.',100%)">';
 	}
 
 	/**
