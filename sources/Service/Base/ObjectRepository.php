@@ -201,7 +201,7 @@ class ObjectRepository
 				foreach ($aComplementAttributeSpec[1] as $sAdditionalField) {
 					$aArguments[] = $oDbObject->Get($sAdditionalField);
 				}
-				$aData['additional_field'] = utils::HtmlEntities(vsprintf($aComplementAttributeSpec[0], $aArguments));
+				$aData['additional_field'] = vsprintf($aComplementAttributeSpec[0], $aArguments);
 				$aData['full_description'] = "{$aData['friendlyname']}<br><i><small>{$aData['additional_field']}</small></i>";
 			} else {
 				$aData['full_description'] = $aData['friendlyname'];
