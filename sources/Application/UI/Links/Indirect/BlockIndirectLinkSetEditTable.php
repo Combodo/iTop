@@ -308,8 +308,11 @@ EOF
 			}
 
 			foreach ($this->oUILinksWidget->GetEditableFields() as $sFieldCode) {
+				// N°6124 - Force remote ext. key as read-only if too many items in the linkset
+				$bReadOnlyField = ($sFieldCode === $this->oUILinksWidget->GetExternalKeyToRemote()) && (false === $bAllowRemoteExtKeyEdit);
+
 				$sSafeFieldId = $this->GetFieldId($iUniqueId, $sFieldCode);
-				$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $oNewLinkObj, $oP, $sNameSuffix, $sSafeFieldId);
+				$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $oNewLinkObj, $oP, $sNameSuffix, $sSafeFieldId, $bReadOnlyField);
 				$aFieldsMap[$sFieldCode] = $sSafeFieldId;
 
 				$sValue = $oNewLinkObj->Get($sFieldCode);

@@ -268,11 +268,12 @@ class UILinksWidget
 		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
 
 		$iAdditionId = $iMaxAddedId + 1;
+		$bAllowRemoteExtKeyEdit = count($aLinkedObjectIds) <= utils::GetConfig()->Get('link_set_max_edit_ext_key');
 		foreach ($aLinkedObjectIds as $iObjectId) {
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj)) {
 				$oBlock = new BlockIndirectLinkSetEditTable($this);
-				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
+				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId, false /* Default value */, $bAllowRemoteExtKeyEdit); // Not yet created link get negative Ids
 				$aData = [];
 				foreach ($aRow as $item) {
 					$aData[] = $item;
