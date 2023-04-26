@@ -103,8 +103,8 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 				);
 
 				$aRowActions[] = array(
-					'label'         => 'UI:Links:Remove:Button',
-					'name'          => 'RemoveButton',
+					'label'         => 'UI:Links:Delete:Button',
+					'name'          => 'DeleteButton',
 					'tooltip'       => $this->GetDictionaryEntry(static::DICT_DELETE_BUTTON),
 					'icon_classes'  => 'fas fa-trash',
 					'color'         => Button::ENUM_COLOR_SCHEME_DESTRUCTIVE,

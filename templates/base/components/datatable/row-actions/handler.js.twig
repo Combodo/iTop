@@ -14,7 +14,11 @@
         let sLabel = $(this).data('label');
         let iActionId = $(this).data('action-id');
         let aRowData = oDatatable.row(oTrElement).data();
-        let sConfirmButtonClass = {{ aAction.confirmation.confirm_button_class|var_export }};
+        let sConfirmButtonClass = null;
+
+        {% if aAction.confirmation.confirm_button_class is not empty %}
+            sConfirmButtonClass = '{{ aAction.confirmation.confirm_button_class }}';
+        {% endif %}
 
         {% if aAction.confirmation is defined %}
 
