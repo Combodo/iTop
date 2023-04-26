@@ -4253,7 +4253,9 @@ HTML;
 		{
 			case  'Document':
 				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
-				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'), 'remove' => $aOtherData['remove']);
+				if (is_array($aOtherData) && array_key_exists('remove', $aOtherData)) {
+					$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'), 'remove' => $aOtherData['remove']);
+				}
 				break;
 
 			case 'Image':
