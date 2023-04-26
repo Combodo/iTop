@@ -61,7 +61,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.RemoveSelected = function () {
 		let my_id = '#'+me.id;
 		$('#linkedset_'+me.id+' .selection:checked').closest('tr').each(function () {
-			$('#datatable_'+me.id).DataTable().row($(this)).remove().draw();
+			$('#datatable_'+me.id).DataTable().row($(this)).remove();
 			var oCheckbox = $(this).find('.selection');
 			let iLink = $(oCheckbox).attr('data-link-id');
 			if (iLink > 0) {
@@ -80,6 +80,9 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				me.aAdded[iUniqueId] = null;
 			}
 		});
+		// N°6124 Only draw table once for performance reasons
+		$('#datatable_'+me.id).DataTable().draw();
+
 		// Disable the button since all the selected items have been removed
 		$(my_id+'_btnRemove').prop('disabled', true);
 
