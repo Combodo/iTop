@@ -2837,7 +2837,20 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBInsert()
 	{
-		return $this->DBInsertNoReload();
+		$this->DBInsertNoReload();
+
+		foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded) {
+			if ($bLoaded) {
+				// N°6237 reloading external values, as the object instance isn't reloaded anymore
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+				$value = $oAttDef->ReadExternalValues($this);
+				if (false === is_null($value)) {
+					$this->m_aCurrValues[$sAttCode] = $value;
+				}
+			}
+		}
+
+		return $this->m_iKey;
 	}
 
     /**
@@ -3386,6 +3399,13 @@ abstract class DBObject implements iDisplay
 					if ($bLoaded) {
 						$value = $this->m_aCurrValues[$sAttCode];
 						$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
+
+						// N°6237 reloading external values, as the object instance isn't reloaded anymore
+						$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+						$value = $oAttDef->ReadExternalValues($this);
+						if (false === is_null($value)) {
+							$this->m_aCurrValues[$sAttCode] = $value;
+						}
 					}
 				}
 
