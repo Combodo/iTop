@@ -464,7 +464,9 @@ abstract class AttributeDefinition
 	 * @param \DBObject $oHostObject
 	 *
 	 * @return void
-	 * @since 3.1.0
+	 * @since 3.1.0 Method creation, to offer a generic method for all attributes - before we were calling directly \AttributeCustomFields::WriteValue
+	 *
+	 * @used-by \DBObject::WriteExternalAttributes()
 	 */
 	public function WriteExternalValues(DBObject $oHostObject): void
 	{
@@ -13151,23 +13153,17 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	/**
-	 * Record the data (currently in the processing of recording the host object)
-	 * It is assumed that the data has been checked prior to calling Write()
+	 * @inheritDoc
 	 *
-	 * @param DBObject $oHostObject
-	 *
-	 * @since 3.1.0
+	 * @since 3.1.0 N°6043 Move code contained in \AttributeCustomFields::WriteValue to this generic method
 	 */
 	public function WriteExternalValues(DBObject $oHostObject): void
 	{
 		$oValue = $oHostObject->Get($this->GetCode());
-		if (!($oValue instanceof ormCustomFieldsValue))
-		{
+		if (!($oValue instanceof ormCustomFieldsValue)) {
 			$oHandler = $this->GetHandler();
 			$aValues = array();
-		}
-		else
-		{
+		} else {
 			// Pass the values through the form to make sure that they are correct
 			$oHandler = $this->GetHandler($oValue->GetValues());
 			$oHandler->BuildForm($oHostObject, '');
