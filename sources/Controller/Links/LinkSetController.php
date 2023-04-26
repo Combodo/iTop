@@ -204,9 +204,10 @@ JS;
 
 
 			// Form title
+			/** @var \AttributeLinkedSet $oLinksetDef */
 			$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$oHostObj = MetaModel::GetObject($sClass, $sId);
-			$sFormTitle = LinkSetHelper::FormatWithFallback($sClass, $sAttCode, 'UI:Links:Add:Modal:Title',
+			$sFormTitle = LinkSetHelper::FormatLinkDictEntry($sClass, $sAttCode, 'UI:Links:Add:Modal:Title',
 				$sClass,
 				$oHostObj->Get('friendlyname'),
 				$oLinksetDef->GetLabel(),

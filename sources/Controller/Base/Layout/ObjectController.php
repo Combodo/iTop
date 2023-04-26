@@ -219,7 +219,7 @@ JS
 		$bPrintable = utils::ReadParam('printable', '0') === '1';
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$sId = utils::ReadParam('id', '');
-		$sFormTitle = utils::ReadPostedParam('form_title', '', utils::ENUM_SANITIZATION_FILTER_STRING);
+		$sFormTitle = utils::ReadPostedParam('form_title', null, utils::ENUM_SANITIZATION_FILTER_STRING);
 
 		// Check parameters
 		if (utils::IsNullOrEmptyString($sClass) || utils::IsNullOrEmptyString($sId))
@@ -243,6 +243,11 @@ JS
 		// Prepare web page (should more likely be some kind of response object like for Symfony)
 		$aFormExtraParams = array('wizard_container' => 1);
 		FormHelper::UpdateFlagsFromContext($oObj, $aFormExtraParams);
+
+		// Allow form title customization
+		if (!utils::IsNullOrEmptyString($sFormTitle)) {
+			$aFormExtraParams['form_title'] = $sFormTitle;
+		}
 
 		if ($this->IsHandlingXmlHttpRequest()) {
 			$oPage = new AjaxPage('');
@@ -284,9 +289,6 @@ JS;
 					$(this).closest('[data-role="ibo-modal"]').dialog('close');
 				};
 JS;
-
-
-			$aFormExtraParams['form_title'] = $sFormTitle;
 
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 			FormHelper::DisableAttributeBlobInputs($sClass, $aFormExtraParams);

@@ -124,7 +124,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 */
 	public function GetDictionaryEntry(string $sKey, DBObject $oDBObject = null)
 	{
-		return LinkSetHelper::FormatWithFallback($this->sObjectClass, $this->sAttCode, $sKey,
+		return LinkSetHelper::FormatLinkDictEntry($this->sObjectClass, $this->sAttCode, $sKey,
 			$this->sObjectClass,
 			$this->oDbObject->Get('friendlyname'),
 			$this->oAttDef->GetLabel(),

@@ -70,22 +70,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Links:Bulk:LinkExistForAllObjects'          => 'All objets are already linked',
 	'UI:Links:Bulk:LinkExistForOneObject'           => 'One object is linked',
 	'UI:Links:Bulk:LinkExistForXObjects'            => '{count} objects are linked',
-
-
-	//	'class:MyApplication/Attribute:service_list/UI:Links:New:Button'               => 'Create !!',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:New:Button+'              => 'Create a truc %4$s pour %2$s!!',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:New:Modal:Title'          => 'Create a machin truc chose pour %2$s!!',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:Add:Button+'              => 'Add a fucking %4$s in %2$s of class %1$s (tab %3$s)',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:Add:Modal:Title'          => 'Add a machin truc chose pour %2$s!!',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:ModifyLink:Button+'       => 'Modify link $%5s hi hi',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:ModifyLink:Modal:Title'   => 'Modify link $%5s <script>alert();</script>',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:ModifyObject:Button+'     => 'Modify object $%5s hi hi',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:ModifyObject:Modal:Title' => 'Modify object $%5s <script>alert();</script>',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:Remove:Button+'           => 'au revoir $%5s',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:Remove:Modal:Title'       => 'Et au revoir le $%5s',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:Remove:Modal:Message'     => 'Oh my god !<br>You are about to remove:<br><ul><li>-%1$s</li><li>-%2$s</li><li>-%3$s</li><li>-%4$s</li><li>-%5$s</li></ul>',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:Delete:Button+'           => 'Boom $%5s',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:Delete:Modal:Title'       => 'Et bim $%5s',
-	//	'class:MyApplication/Attribute:service_list/UI:Links:Delete:Modal:Message'     => 'Oh my god !<br>You are about to delete:<br><ul><li>-%1$s</li><li>-%2$s</li><li>-%3$s</li><li>-%4$s</li><li>-%5$s</li></ul>',
-
 ));

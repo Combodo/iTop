@@ -6,11 +6,7 @@
 
 namespace Combodo\iTop\Service\Links;
 
-use AttributeExternalKey;
-use AttributeLinkedSet;
-use AttributeLinkedSetIndirect;
 use Dict;
-use Exception;
 use MetaModel;
 
 /**
@@ -24,27 +20,28 @@ class LinkSetHelper
 {
 
 	/**
-	 * @param $sClass
-	 * @param $sAttCode
-	 * @param $sStringCode
-	 * @param ...$aArgs
+	 * FormatLinkDictEntry.
+	 *
+	 * @param string $sClass Host object class
+	 * @param string $sAttCode Linkset attribute
+	 * @param string $sDictKey Dict entry key
+	 * @param ...$aArgs Dict::Format arguments
 	 *
 	 * @return string
 	 */
-	public static function FormatWithFallback($sClass, $sAttCode, $sStringCode, ...$aArgs)
+	public static function FormatLinkDictEntry(string $sClass, string $sAttCode, string $sDictKey, ...$aArgs): string
 	{
 		$sNextClass = $sClass;
 
 		do {
-			$sKey = "class:{$sNextClass}/Attribute:{$sAttCode}/{$sStringCode}";
+			$sKey = "class:{$sNextClass}/Attribute:{$sAttCode}/{$sDictKey}";
 			if (Dict::S($sKey, null, true) !== $sKey) {
 				return Dict::Format($sKey, ...$aArgs);
 			}
 			$sNextClass = MetaModel::GetParentClass($sNextClass);
 		} while ($sNextClass !== null);
 
-		return Dict::Format($sStringCode, ...$aArgs);
+		return Dict::Format($sDictKey, ...$aArgs);
 	}
-
 
 }
