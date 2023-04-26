@@ -25,7 +25,7 @@ class DBUnionSearch extends DBSearch
 {
 	protected $aSearches; // source queries
 	protected $aSelectedClasses; // alias => classes (lowest common ancestors) computed at construction
-
+	protected $aColumnToAliases;
     /**
      * DBUnionSearch constructor.
      *
@@ -94,11 +94,14 @@ class DBUnionSearch extends DBSearch
 
 	/**
 	 * Find the lowest common ancestor for each of the selected class
+	 *
+	 * @throws \Exception
 	 */
 	protected function ComputeSelectedClasses()
 	{
 		// 1 - Collect all the column/classes
-		$aColumnToClasses = array();
+		$aColumnToClasses = [];
+		$this->aColumnToAliases = [];
 		foreach ($this->aSearches as $iPos => $oSearch)
 		{
 			$aSelected = array_values($oSearch->GetSelectedClasses());
@@ -117,7 +120,14 @@ class DBUnionSearch extends DBSearch
 
 			foreach ($aSelected as $iColumn => $sClass)
 			{
-				$aColumnToClasses[$iColumn][] = $sClass;
+				$aColumnToClasses[$iColumn][$iPos] = $sClass;
+			}
+
+			// Store the aliases by column to map them later (the first query impose the aliases)
+			$aAliases = array_keys($oSearch->GetSelectedClasses());
+			foreach ($aAliases as $iColumn => $sAlias)
+			{
+				$this->aColumnToAliases[$iColumn][$iPos] = $sAlias;
 			}
 		}
 
@@ -126,7 +136,7 @@ class DBUnionSearch extends DBSearch
 		$aColumnToAlias = array_keys($oFirstSearch->GetSelectedClasses());
 
 		// 3 - Compute alias => lowest common ancestor
-		$this->aSelectedClasses = array();
+		$this->aSelectedClasses = [];
 		foreach ($aColumnToClasses as $iColumn => $aClasses)
 		{
 			$sAlias = $aColumnToAlias[$iColumn];
@@ -215,15 +225,32 @@ class DBUnionSearch extends DBSearch
 
 	/**
 	 * @param array $aSelectedClasses array of aliases
-	 * @throws CoreException
+	 *
+	 * @throws \Exception
 	 */
 	public function SetSelectedClasses($aSelectedClasses)
 	{
+		// Get the columns corresponding the given aliases
+		$aSelectedColumns = [];
+		$oFirstSearch = $this->aSearches[0];
+		$aAliasesToColumn = array_flip(array_keys($oFirstSearch->GetSelectedClasses()));
+		foreach ($aSelectedClasses as $sSelectedAlias) {
+			if (!isset($aAliasesToColumn[$sSelectedAlias])) {
+				throw new CoreException("SetSelectedClasses: Invalid class alias $sSelectedAlias");
+			}
+			$aSelectedColumns[] = $aAliasesToColumn[$sSelectedAlias];
+		}
+
 		// 1 - change for each search
-		foreach ($this->aSearches as $oSearch)
+		foreach ($this->aSearches as $iPos => $oSearch)
 		{
+			$aCurrentSelectedAliases = [];
+			foreach ($aSelectedColumns as $iColumn) {
+				$aCurrentSelectedAliases[] = $this->aColumnToAliases[$iColumn][$iPos];
+			}
+
 			// Throws an exception if not valid
-			$oSearch->SetSelectedClasses($aSelectedClasses);
+			$oSearch->SetSelectedClasses($aCurrentSelectedAliases);
 		}
 		// 2 - update the lowest common ancestors
 		$this->ComputeSelectedClasses();

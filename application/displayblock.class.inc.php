@@ -1898,8 +1898,8 @@ class MenuBlock extends DisplayBlock
 			}
 
 			// Any style actions
-			// - Bulk actions on objects set (except unions...)
-			if ($iSetCount > 1 && !$this->GetFilter() instanceof DBUnionSearch) {
+			// - Bulk actions on objects set
+			if ($iSetCount > 1) {
 				// Bulk actions for each selected classes (eg. "link" and "remote" on n:n relations)
 				foreach ($aSelectedClasses as $sSelectedAlias => $sSelectedClass) {
 					$sSelectedClassName = MetaModel::GetName($sSelectedClass);

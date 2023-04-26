@@ -30,6 +30,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreOqlMultipleResultsForbiddenException;
+use DBObjectSet;
 use DBSearch;
 use Exception;
 use Expression;
@@ -744,5 +745,31 @@ class DBSearchTest extends ItopDataTestCase
 		$oSearch = \DBObjectSearch::FromOQL($sQuery);
 		$oSearch->MakeSelectQuery();
 		self::assertTrue(true);
+	}
+
+	/**
+	 * @dataProvider QueriesProvider
+	 * @param $sOQL
+	 *
+	 * @return void
+	 */
+	public function testQueries($sOQL)
+	{
+		$oSearch = DBSearch::FromOQL($sOQL);
+		$oSet = new DBObjectSet($oSearch);
+		if ($oSet->Count() > 0) {
+			$aSelectedAliases = array_keys($oSearch->GetSelectedClasses());
+			$aFirstRow = $oSet->FetchAssoc();
+			$aAliases = array_keys($aFirstRow);
+			$this->assertEquals($aSelectedAliases, $aAliases);
+		}
+	}
+
+	public function QueriesProvider()
+	{
+		return [
+			['SELECT L,P FROM Person AS P JOIN Location AS L ON P.location_id=L.id'],
+			['SELECT P,L FROM Person AS P JOIN Location AS L ON P.location_id=L.id'],
+		];
 	}
 }
