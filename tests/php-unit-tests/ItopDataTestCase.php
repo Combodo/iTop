@@ -293,25 +293,31 @@ class ItopDataTestCase extends ItopTestCase
 	 * Create a UserRequest in database
 	 *
 	 * @param int $iNum
-	 * @param int $iTimeSpent
-	 * @param int $iOrgId
-	 * @param int $iCallerId
+	 * @param array $aUserRequestCustomParams set fields values for the UserRequest : attcode as key, att value as value.
+	 *          If the attcode is already present in the default values, custom value will be kept (see array_merge documentation)
 	 *
 	 * @return \UserRequest
-	 * @throws Exception
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @link https://www.php.net/manual/en/function.array-merge.php array_merge PHP function documentation
+	 *
+	 * @uses \array_merge()
+	 * @uses createObject
 	 */
-	protected function CreateUserRequest($iNum, $iTimeSpent = 0, $iOrgId = 0, $iCallerId = 0)
-	{
-		/** @var \UserRequest $oTicket */
-		$oTicket = $this->createObject('UserRequest', array(
+	protected function CreateUserRequest($iNum, $aUserRequestCustomParams) {
+		$aUserRequestDefaultParams = [
 			'ref' => 'Ticket_'.$iNum,
 			'title' => 'BUG 1161_'.$iNum,
 			//'request_type' => 'incident',
 			'description' => 'Add aggregate functions',
-			'time_spent' => $iTimeSpent,
-			'caller_id' => $iCallerId,
-			'org_id' => ($iOrgId == 0 ? $this->getTestOrgId() : $iOrgId),
-		));
+			'org_id' => $this->getTestOrgId(),
+		];
+
+		$aUserRequestParams = array_merge($aUserRequestDefaultParams, $aUserRequestCustomParams);
+
+		/** @var \UserRequest $oTicket */
+		$oTicket = $this->createObject('UserRequest', $aUserRequestParams);
 		$this->debug("Created {$oTicket->Get('title')} ({$oTicket->Get('ref')})");
 
 		return $oTicket;
