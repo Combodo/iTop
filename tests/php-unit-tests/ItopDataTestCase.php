@@ -305,7 +305,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @uses \array_merge()
 	 * @uses createObject
 	 */
-	protected function CreateUserRequest($iNum, $aUserRequestCustomParams) {
+	protected function CreateUserRequest($iNum, $aUserRequestCustomParams = []) {
 		$aUserRequestDefaultParams = [
 			'ref' => 'Ticket_'.$iNum,
 			'title' => 'BUG 1161_'.$iNum,
