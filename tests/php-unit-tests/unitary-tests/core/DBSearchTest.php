@@ -163,7 +163,11 @@ class DBSearchTest extends ItopDataTestCase
 		$i = 0;
 		foreach($aReq as $aParams)
 		{
-			$oObj = $this->CreateUserRequest($i, $aParams[0], $aOrgIds[$aParams[1]], $aPersonIds[$aParams[2]]);
+			$oObj = $this->CreateUserRequest($i, [
+				'time_spent' => $aParams[0],
+				'org_id' => $aOrgIds[$aParams[1]],
+				'caller_id' => $aPersonIds[$aParams[2]],
+			]);
 			self::assertNotNull($oObj);
 			$i++;
 		}
