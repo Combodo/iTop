@@ -10,7 +10,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'bkp-backup-running' => 'Um backup está sendo executado. Por favor, espere...',
 	'bkp-restore-running' => 'Uma restauração está sendo executada. Por favor, espere...',
 
-	'Menu:BackupStatus' => 'Backups Agendados',
+	'Menu:BackupStatus' => 'Backups agendados',
 	'bkp-status-title' => 'Backups Agendados',
 	'bkp-status-checks' => 'Configurações e verificações',
 	'bkp-mysqldump-ok' => 'mysqldump está presente: %1$s',

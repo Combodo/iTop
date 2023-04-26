@@ -501,7 +501,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Actions' => 'Akce',
 	'UI:Menu:OtherActions' => 'Další akce',
 	'UI:Menu:Transitions' => 'Transitions~~',
-	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other transitions~~',
 	'UI:Menu:New' => 'Nový...',
 	'UI:Menu:Add' => 'Přidat...',
 	'UI:Menu:Manage' => 'Spravovat...',

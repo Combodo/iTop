@@ -21,7 +21,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:ChangeManagement' => 'Değişiklik Yönetimi',
+	'Menu:ChangeManagement' => 'Değişiklik yönetimi',
 	'Menu:Change:Overview' => 'Özet',
 	'Menu:Change:Overview+' => '~~',
 	'Menu:NewChange' => 'Yeni değişiklik',

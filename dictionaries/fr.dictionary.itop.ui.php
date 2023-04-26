@@ -376,10 +376,10 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 
 <div>Configurez vos préférences '.ITOP_APPLICATION.' pour une expérience personnalisée.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Requêtes en cours: %1$d',
-	'UI:WelcomeMenu:MyCalls' => 'Mes Appels Support',
+	'UI:WelcomeMenu:MyCalls' => 'Mes appels support',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidents en cours: %1$d',
 	'UI:WelcomeMenu:AllConfigItems' => 'Actifs: %1$d',
-	'UI:WelcomeMenu:MyIncidents' => 'Mes Incidents',
+	'UI:WelcomeMenu:MyIncidents' => 'Mes incidents',
 	'UI:AllOrganizations' => ' Toutes les Organisations ',
 	'UI:YourSearch' => 'Votre recherche',
 	'UI:LoggedAsMessage' => 'Connecté(e) comme: %1$s (%2$s)',
@@ -499,9 +499,9 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:History:StatsDeletes+'         => 'Nombre d\'objets effacés',
 	'UI:Loading'                       => 'Chargement...',
 	'UI:Menu:Actions'                  => 'Actions',
-	'UI:Menu:OtherActions'             => 'Autres Actions',
+	'UI:Menu:OtherActions'             => 'Autres actions',
 	'UI:Menu:Transitions'              => 'Transitions',
-	'UI:Menu:OtherTransitions' => 'Autres Transitions',
+	'UI:Menu:OtherTransitions' => 'Autres transitions',
 	'UI:Menu:View' => 'Voir cet objet',
 	'UI:Menu:New' => 'Créer...',
 	'UI:Menu:Add' => 'Ajouter...',
@@ -991,15 +991,15 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'Menu:CSVImportMenu' => 'Import CSV',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Import ou mise à jour en masse',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Modèle de Données',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Résumé du Modèle de Données',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Modèle de données',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Résumé du modèle de données',// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Export des résultats d\'une requête en HTML, CSV ou XML',// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:NotificationsMenu' => 'Notifications',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Configuration des Notifications',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuration des Notifications',
+	'Menu:NotificationsMenu+' => 'Configuration des notifications',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:NotificationsMenu:Title' => 'Configuration des notifications',
 	'UI:NotificationsMenu:Help' => 'Aide',
 	'UI:NotificationsMenu:HelpContent' => '<p>Dans '.ITOP_APPLICATION_SHORT.' les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
 <p><i><b>Les déclencheurs</b></i> définissent quand une notification sera exécutée. Il y a différents déclencheurs qui font partie du noyau d\'iTop, mais d\'autres peuvent être apportés par des extensions :
@@ -1049,22 +1049,22 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Menu:DataAdministration' => 'Administration des données',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => 'Administration des données',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Recherche Universelle',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Recherche universelle',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Rechercher n\'importe quel objet...',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Gestion des Utilisateurs',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'Gestion des Utilisateurs',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Gestion des utilisateurs',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Gestion des jutilisateurs',// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ProfilesMenu' => 'Profils',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profils',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Profils',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs',
+	'Menu:UserAccountsMenu' => 'Comptes utilisateurs',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs',
+	'Menu:UserAccountsMenu+' => 'Comptes utilisateurs',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs',
+	'Menu:UserAccountsMenu:Title' => 'Comptes utilisateurs',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',

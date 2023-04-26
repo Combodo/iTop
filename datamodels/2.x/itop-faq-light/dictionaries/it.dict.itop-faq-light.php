@@ -79,8 +79,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:FAQCategory/Attribute:faq_list+' => 'Tutte le faq legate a questa categoria',
 ));
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Menu:ProblemManagement' => 'Gestione dei Problemi',
-	'Menu:ProblemManagement+' => 'Gestione dei Problemi',
+	'Menu:ProblemManagement' => 'Gestione dei problemi',
+	'Menu:ProblemManagement+' => 'Gestione dei problemi',
 	'Menu:Problem:Shortcuts' => 'Scorciatoia',
 	'Menu:FAQCategory' => 'Categoria FAQ',
 	'Menu:FAQCategory+' => 'Tutte le categorie FAQ',

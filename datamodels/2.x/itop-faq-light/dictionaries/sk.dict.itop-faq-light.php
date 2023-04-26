@@ -78,8 +78,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
 ));
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Menu:ProblemManagement' => 'Problem Management~~',
-	'Menu:ProblemManagement+' => 'Problem Management~~',
+	'Menu:ProblemManagement' => 'Problem management~~',
+	'Menu:ProblemManagement+' => 'Problem management~~',
 	'Menu:Problem:Shortcuts' => 'Shortcuts~~',
 	'Menu:FAQCategory' => 'FAQ categories~~',
 	'Menu:FAQCategory+' => 'All FAQ categories~~',

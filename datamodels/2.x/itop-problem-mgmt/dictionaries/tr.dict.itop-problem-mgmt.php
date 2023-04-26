@@ -45,8 +45,8 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:ProblemManagement' => 'Problem Yönetimi',
-	'Menu:ProblemManagement+' => 'Problem Yönetimi',
+	'Menu:ProblemManagement' => 'Problem yönetimi',
+	'Menu:ProblemManagement+' => 'Problem yönetimi',
 	'Menu:Problem:Overview' => 'Özet',
 	'Menu:Problem:Overview+' => 'Özet',
 	'Menu:NewProblem' => 'Yeni Problem',

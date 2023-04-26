@@ -81,7 +81,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeArchiveDate/Label' => 'Date archivage',
 	'Core:AttributeArchiveDate/Label+' => '',
 
-	'Core:AttributeObsolescenceFlag' => 'Drapeau Obsolète',
+	'Core:AttributeObsolescenceFlag' => 'Drapeau obsolète',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Oui',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Cet objet est exclus de l\'analyse d\'impact, et n\'est pas affiché dans les résultats de recherche',
 	'Core:AttributeObsolescenceFlag/Value:no' => 'Non',
@@ -358,7 +358,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Event/Attribute:date+' => '',
 	'Class:Event/Attribute:userinfo' => 'Utilisateur',
 	'Class:Event/Attribute:userinfo+' => '',
-	'Class:Event/Attribute:finalclass' => 'Sous-classe d\'Evènement',
+	'Class:Event/Attribute:finalclass' => 'Sous-classe d\'évènement',
 	'Class:Event/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
 

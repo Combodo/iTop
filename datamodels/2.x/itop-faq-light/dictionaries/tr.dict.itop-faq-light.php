@@ -80,8 +80,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:FAQCategory/Attribute:faq_list+' => 'Bu kategoriyle ilgili tüm sık sorulan sorular',
 ));
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:ProblemManagement' => 'Problem Yönetimi',
-	'Menu:ProblemManagement+' => 'Problem Yönetimi',
+	'Menu:ProblemManagement' => 'Problem yönetimi',
+	'Menu:ProblemManagement+' => 'Problem yönetimi',
 	'Menu:Problem:Shortcuts' => 'Kısayollar',
 	'Menu:FAQCategory' => 'SSS kategorileri',
 	'Menu:FAQCategory+' => 'Tüm SSS kategorileri',

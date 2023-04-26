@@ -22,7 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:ChangeManagement' => 'Gerenciamento de Mudanças',
+	'Menu:ChangeManagement' => 'Gerenciamento de mudanças',
 	'Menu:Change:Overview' => 'Visão geral',
 	'Menu:Change:Overview+' => '',
 	'Menu:NewChange' => 'Nova mudança',

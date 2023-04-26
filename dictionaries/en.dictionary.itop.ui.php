@@ -1056,8 +1056,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Bulk creation or update',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Data Model',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Overview of the Data Model',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Data model',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Overview of the data model',// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML',// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1741,31 +1741,31 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:AdminTools' => 'Administration',
 	'Menu:AdminTools+' => 'Administration tools',
 	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile',
-	'Menu:DataModelMenu' => 'Data Model',
-	'Menu:DataModelMenu+' => 'Overview of the Data Model',
+	'Menu:DataModelMenu' => 'Data model',
+	'Menu:DataModelMenu+' => 'Overview of the data model',
 	'Menu:ExportMenu' => 'Export',
 	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML',
 	'Menu:NotificationsMenu' => 'Notifications',
-	'Menu:NotificationsMenu+' => 'Configuration of the Notifications',
-	'Menu:AuditCategories' => 'Audit Categories',
-	'Menu:AuditCategories+' => 'Audit Categories',
-	'Menu:Notifications:Title' => 'Audit Categories',
-	'Menu:RunQueriesMenu' => 'Run Queries',
+	'Menu:NotificationsMenu+' => 'Configuration of the notifications',
+	'Menu:AuditCategories' => 'Audit categories',
+	'Menu:AuditCategories+' => 'Audit categories',
+	'Menu:Notifications:Title' => 'Audit categories',
+	'Menu:RunQueriesMenu' => 'Run queries',
 	'Menu:RunQueriesMenu+' => 'Run any query',
 	'Menu:QueryMenu' => 'Query phrasebook',
 	'Menu:QueryMenu+' => 'Query phrasebook',
-	'Menu:UniversalSearchMenu' => 'Universal Search',
+	'Menu:UniversalSearchMenu' => 'Universal search',
 	'Menu:UniversalSearchMenu+' => 'Search for anything...',
-	'Menu:UserManagementMenu' => 'User Management',
+	'Menu:UserManagementMenu' => 'User management',
 	'Menu:UserManagementMenu+' => 'User management',
 	'Menu:ProfilesMenu' => 'Profiles',
 	'Menu:ProfilesMenu+' => 'Profiles',
 	'Menu:ProfilesMenu:Title' => 'Profiles',
-	'Menu:UserAccountsMenu' => 'User Accounts',
-	'Menu:UserAccountsMenu+' => 'User Accounts',
-	'Menu:UserAccountsMenu:Title' => 'User Accounts',
-	'Menu:MyShortcuts' => 'My Shortcuts',
-	'Menu:UserManagement' => 'User Management',
+	'Menu:UserAccountsMenu' => 'User accounts',
+	'Menu:UserAccountsMenu+' => 'User accounts',
+	'Menu:UserAccountsMenu:Title' => 'User accounts',
+	'Menu:MyShortcuts' => 'My shortcuts',
+	'Menu:UserManagement' => 'User management',
 	'Menu:Queries' => 'Queries',
 	'Menu:ConfigurationTools' => 'Configuration',
 ));

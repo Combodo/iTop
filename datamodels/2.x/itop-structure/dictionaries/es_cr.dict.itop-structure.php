@@ -298,8 +298,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Menu:DataAdministration' => 'Administración de Datos',
-	'Menu:DataAdministration+' => 'Administración de Datos',
+	'Menu:DataAdministration' => 'Administración de datos',
+	'Menu:DataAdministration+' => 'Administración de datos',
 	'Menu:Catalogs' => 'Catálogos',
 	'Menu:Catalogs+' => 'Tipos de Datos',
 	'Menu:Audit' => 'Auditoría',

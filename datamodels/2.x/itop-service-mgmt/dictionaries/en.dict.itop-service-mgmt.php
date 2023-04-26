@@ -33,8 +33,8 @@
 
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Menu:ServiceManagement' => 'Service Management',
-	'Menu:ServiceManagement+' => 'Service Management Overview',
+	'Menu:ServiceManagement' => 'Service management',
+	'Menu:ServiceManagement+' => 'Service management overview',
 	'Menu:Service:Overview' => 'Overview',
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',

@@ -48,8 +48,8 @@
 
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Menu:ProblemManagement' => 'Problem Management',
-	'Menu:ProblemManagement+' => 'Problem Management',
+	'Menu:ProblemManagement' => 'Problem management',
+	'Menu:ProblemManagement+' => 'Problem management',
 	'Menu:Problem:Overview' => 'Overview',
 	'Menu:Problem:Overview+' => 'Overview',
 	'Menu:NewProblem' => 'New problem',

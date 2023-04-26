@@ -35,6 +35,6 @@
 // Class: UserExternal
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:UserExternal' => 'Usuario Externo',
-	'Class:UserExternal+' => 'Usuario Autenticado fuera de '.ITOP_APPLICATION_SHORT,
+	'Class:UserExternal' => 'Usuario externo',
+	'Class:UserExternal+' => 'Usuario autenticado fuera de '.ITOP_APPLICATION_SHORT,
 ));

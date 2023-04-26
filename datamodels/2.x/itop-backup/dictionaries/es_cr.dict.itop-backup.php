@@ -26,7 +26,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'bkp-backup-running' => 'Un respaldo está en ejecuión.  Por favor espere...',
 	'bkp-restore-running' => 'Una restauración está en ejecución. Por favor espere...',
 
-	'Menu:BackupStatus' => 'Respaldos Programados',
+	'Menu:BackupStatus' => 'Respaldos programados',
 	'bkp-status-title' => 'Respaldos Programados',
 	'bkp-status-checks' => 'Configuraciones y verificaciones',
 	'bkp-mysqldump-ok' => 'mysqldump está presente: %1$s',

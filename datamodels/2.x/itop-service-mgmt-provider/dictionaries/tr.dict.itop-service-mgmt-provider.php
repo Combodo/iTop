@@ -30,18 +30,18 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:ServiceManagement' => 'Hizmet Yönetimi',
-	'Menu:ServiceManagement+' => 'Hizmet Yönetimi',
+	'Menu:ServiceManagement' => 'Hizmet yönetimi',
+	'Menu:ServiceManagement+' => 'Hizmet yönetimi',
 	'Menu:Service:Overview' => 'Özet',
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Hizmet seviyesine göre sözleşmeler',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Durumuna göre sözleşmeler',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 gün çinde biten sözleşmeler',
 
-	'Menu:ProviderContract' => 'Tedarikçi Sözleşmeleri',
-	'Menu:ProviderContract+' => 'Tedarikçi Sözleşmeleri',
-	'Menu:CustomerContract' => 'Müşteri Sözleşmeleri',
-	'Menu:CustomerContract+' => 'Müşteri Sözleşmeleri',
+	'Menu:ProviderContract' => 'Tedarikçi sözleşmeleri',
+	'Menu:ProviderContract+' => 'Tedarikçi sözleşmeleri',
+	'Menu:CustomerContract' => 'Müşteri sözleşmeleri',
+	'Menu:CustomerContract+' => 'Müşteri sözleşmeleri',
 	'Menu:ServiceSubcategory' => 'Hizmet alt kategorileri',
 	'Menu:ServiceSubcategory+' => 'Hizmet alt kategorileri',
 	'Menu:Service' => 'Hizmetler',
