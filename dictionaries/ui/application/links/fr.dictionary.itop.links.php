@@ -59,7 +59,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Links:Delete:Button'                        => 'Supprimer',
 	'UI:Links:Delete:Button+'                       => 'Supprimer cet(te) %4$s',
 	'UI:Links:Delete:Modal:Title'                   => 'Supprimer un(e) %4$s',
-	'UI:Links:Delete:Modal:Message'                 => 'Voulez-vous vraiment supprimer %5$s?',
+	'UI:Links:Delete:Modal:Message'                 => 'Voulez-vous vraiment supprimer %5$s ?',
 
 	// Bulk
 	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects'  => 'Ajouter à tous les objets',
