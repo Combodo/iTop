@@ -29,11 +29,6 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		return $this->oAttDef->GetLinkedClass();
 	}
 
-	public function GetTarget(): string
-	{
-		return MetaModel::Get($this->oAttDef->GetLinkedClass(),);
-	}
-
 	/** @inheritdoc * */
 	public function GetExtraParam(): array
 	{
