@@ -28,10 +28,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip'   => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.',
 
-	'Core:UniquenessDefaultError'         => 'Uniqueness rule \'%1$s\' in error',
-	'Class:*/UniquenessRule:no_duplicate' => '%1$s : %2$s is already linked to %3$s : %4$s, duplicates are not allowed on this relation.',
-	'Core:CheckConsistencyError'          => 'Consistency rules not followed: %1$s',
-	'Core:CheckValueError'                => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s',
+	'Core:UniquenessDefaultError'                          => 'Uniqueness rule \'%1$s\' in error',
+	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s : %2$s is already linked to %3$s : %4$s, duplicates are not allowed on this relation.',
+	'Core:CheckConsistencyError'                           => 'Consistency rules not followed: %1$s',
+	'Core:CheckValueError'                                 => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s',
 
 	'Core:AttributeLinkedSet'  => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',

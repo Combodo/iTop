@@ -2193,7 +2193,7 @@ abstract class DBObject implements iDisplay
 			$aUniquenessRuleProperties = $aUniquenessRules[$sUniquenessRuleId];
 
 			// Check generic message existence
-			$sMessageKey = "Class:*/UniquenessRule:$sUniquenessRuleId";
+			$sMessageKey = "Class:cmdbAbstractObject/UniquenessRule:$sUniquenessRuleId";
 			if (!Dict::Exists($sMessageKey)) {
 				return null;
 			}
