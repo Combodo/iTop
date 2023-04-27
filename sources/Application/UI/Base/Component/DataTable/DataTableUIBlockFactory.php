@@ -931,13 +931,13 @@ JS;
 			/**give definition of id for select checkbox*/
 			'row_actions',
 			/** array of blocks displayed on every row */
-			'creation_in_modal_is_allowed',
-			/** bool to allow a creation of a new object of this type in a modal */
+			'creation_in_modal',
+			/** bool to perform a creation of a new object of this type in a modal */
 			'creation_in_modal_tooltip',
 			/** creation in modal button tooltip */
 			'creation_in_modal_js_handler',
 			/** Handler to call when trying to create a new object in modal */
-			'creation_classic_disallowed',
+			'creation_disallowed',
 			/** Don't provide the standard object creation feature */
 		];
 	}

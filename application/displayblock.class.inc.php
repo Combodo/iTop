@@ -1844,8 +1844,12 @@ class MenuBlock extends DisplayBlock
 		$iSetCount = $oSet->Count();
 		/** @var string $sRefreshAction JS snippet to run when clicking on the refresh button of the menu */
 		$sRefreshAction = $aExtraParams['refresh_action'] ?? '';
-		$bIsCreationInModalAllowed = isset($aExtraParams['creation_in_modal_is_allowed']) && $aExtraParams['creation_in_modal_is_allowed'] === true;
-		$bIsClassicCreationDisallowed = isset($aExtraParams['creation_classic_disallowed']) && $aExtraParams['creation_classic_disallowed'] === true;
+		$bIsCreationInModal = isset($aExtraParams['creation_in_modal']) && $aExtraParams['creation_in_modal'] === true;
+		$bIsCreationDisallowed = isset($aExtraParams['creation_disallowed']) && $aExtraParams['creation_disallowed'] === true;
+
+		// Check rights
+		$oReflectionClass = new ReflectionClass($sClass);
+		$bIsCreationAllowed = (!$bIsCreationDisallowed && UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) === UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 
 		/** @var array $aRegularActions Any action other than a transition */
 		$aRegularActions = [];
@@ -1861,7 +1865,7 @@ class MenuBlock extends DisplayBlock
 				$sContext = '&'.$sContext;
 			}
 
-			$oReflectionClass = new ReflectionClass($sClass);
+
 			$sFilter = $this->GetFilter()->serialize();
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
 			$sRootUrl = utils::GetAbsoluteUrlAppRoot();
@@ -1880,10 +1884,6 @@ class MenuBlock extends DisplayBlock
 					$sDefaultValuesAsUrlParams .= "&default[$sKey]=$sValue";
 				}
 			}
-
-			// Check rights
-			$bIsCreationAllowed = (!$bIsClassicCreationDisallowed && UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) === UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
-			$bIsModifyAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) === UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 
 			// Check concurrent lock (can only be lock if we are handling a single object
 			$bLocked = false;
@@ -1906,7 +1906,7 @@ class MenuBlock extends DisplayBlock
 			//--------------------------------------------
 
 			// Create in new tab
-			if ($bIsCreationAllowed && !$bIsCreationInModalAllowed) {
+			if ($bIsCreationAllowed && !$bIsCreationInModal) {
 				$this->AddNewObjectMenuAction($aRegularActions, $sClass, $sDefaultValuesAsUrlParams);
 			}
 
@@ -2309,7 +2309,7 @@ class MenuBlock extends DisplayBlock
 			}
 
 			// - Creation in modal
-			if ($bIsCreationInModalAllowed === true) {
+			if ($bIsCreationAllowed && $bIsCreationInModal) {
 				$oAddLinkActionButton = ButtonUIBlockFactory::MakeIconAction(
 					'fas fa-plus',
 					// Allow button tooltip customization
