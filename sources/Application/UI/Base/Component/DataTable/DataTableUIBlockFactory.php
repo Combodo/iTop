@@ -347,7 +347,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				unset($aLists[$sAlias], $aAuthorizedClasses[$sAlias]);
 			}
 
-			if (!empty($sLinkageAttribute)) {
+			// Only for main class
+			if (!empty($sLinkageAttribute) && $sClassName === $oSet->GetFilter()->GetClass()) {
 				// The set to display is in fact a set of links between the object specified in the $sLinkageAttribute
 				// and other objects...
 				// The display will then group all the attributes related to the link itself:
