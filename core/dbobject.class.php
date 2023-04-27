@@ -2152,8 +2152,14 @@ abstract class DBObject implements iDisplay
 		$sMessageKey = "Class:$sClass/UniquenessRule:$sUniquenessRuleId";
 		$sTemplate = Dict::S($sMessageKey, '');
 
-		if (empty($sTemplate))
-		{
+		if (empty($sTemplate)) {
+
+			// Generic (class independent) uniqueness rule
+			$sUniquenessRuleGenericMessage = $this->GetUniquenessRuleGenericMessage($sCurrentClass, $sUniquenessRuleId);
+			if ($sUniquenessRuleGenericMessage !== null) {
+				return $sUniquenessRuleGenericMessage;
+			}
+
 			// we could add also a specific message if user is admin ("dict key is missing")
 			return Dict::Format('Core:UniquenessDefaultError', $sUniquenessRuleId);
 		}
@@ -2164,9 +2170,66 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     *
-     * @internal
-     *
+	 * GetUniquenessRuleGenericMessage.
+	 *
+	 * @param string $sCurrentClass
+	 * @param string $sUniquenessRuleId
+	 *
+	 * @return string|null
+	 */
+	private function GetUniquenessRuleGenericMessage(string $sCurrentClass, string $sUniquenessRuleId): ?string
+	{
+		// Dict placeholders data
+		$aPlaceholdersData = [];
+
+		try {
+			// Retrieve class uniqueness rules
+			$aUniquenessRules = MetaModel::GetUniquenessRules($sCurrentClass);
+
+			// Retrieve rule properties
+			if (!array_key_exists($sUniquenessRuleId, $aUniquenessRules)) {
+				return null;
+			}
+			$aUniquenessRuleProperties = $aUniquenessRules[$sUniquenessRuleId];
+
+			// Check generic message existence
+			$sMessageKey = "Class:*/UniquenessRule:$sUniquenessRuleId";
+			if (!Dict::Exists($sMessageKey)) {
+				return null;
+			}
+
+			// Retrieve rule attributes
+			if (array_key_exists('attributes', $aUniquenessRuleProperties)) {
+
+				// Retrieve attributes
+				$aAttributes = $aUniquenessRuleProperties['attributes'];
+
+				// Compute attributes data...
+				foreach ($aAttributes as $sAttCode) {
+					$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sAttCode);
+					if ($oAttDef instanceof AttributeExternalKey) {
+						$aPlaceholdersData[] = $oAttDef->GetTargetClass();
+						$aPlaceholdersData[] = MetaModel::GetObject($oAttDef->GetTargetClass(), $this->Get($sAttCode))->Get('friendlyname');
+					} else {
+						$aPlaceholdersData[] = $oAttDef->GetLabel();
+						$aPlaceholdersData[] = $oAttDef->GetAsHTML($this->Get($sAttCode));
+					}
+				}
+			}
+
+			return Dict::Format($sMessageKey, ...$aPlaceholdersData);
+		}
+		catch (Exception $e) {
+			ExceptionLog::LogException($e);
+
+			return null;
+		}
+	}
+
+	/**
+	 *
+	 * @internal
+	 *
 	 * @param string $sUniquenessRuleId uniqueness rule ID
 	 * @param array $aUniquenessRuleProperties uniqueness rule properties
 	 *
