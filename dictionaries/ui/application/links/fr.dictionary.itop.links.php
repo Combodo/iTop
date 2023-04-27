@@ -25,7 +25,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// $%2s : host object firendlyname
 	// $%3s : current tab name
 	// $%4s : remote object class name
-	// $%5s : remote object firendlyname
+	// $%5s : remote object friendlyname
 
 	'UI:Links:Object:New:Modal:Title'               => 'Créer un objet',
 
