@@ -38,7 +38,8 @@ class ormCustomFieldsValue
 	 *          user_data: string,
 	 *          current_template_id: string,
 	 *          current_template_data: string,
-	 *     } $aCurrentValues Containing JSON encoded strings in template_data/current_template_data, user_data
+	 *     } $aCurrentValues Containing JSON encoded strings in template_data/current_template_data, user_data.
+	 *          Warning, current_* are mandatory for data to be saved in a DBUpdate() call !
 	 */
 	protected $aCurrentValues;
 
