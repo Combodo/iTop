@@ -107,8 +107,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'iTopUpdate:UI:RestoreArchive' => 'You can restore your application from the archive \'%1$s\'~~',
 	'iTopUpdate:UI:RestoreBackup' => 'You can restore the database from \'%1$s\'~~',
 	'iTopUpdate:UI:UpdateDone' => 'Upgrade successful~~',
-	'Menu:iTopUpdate' => 'Application Upgrade~~',
-	'Menu:iTopUpdate+' => 'Application Upgrade~~',
+	'Menu:iTopUpdate' => 'Application upgrade~~',
+	'Menu:iTopUpdate+' => 'Application upgrade~~',
 
     // Missing itop entries
     'Class:ModuleInstallation/Attribute:installed' => 'Installed on~~',

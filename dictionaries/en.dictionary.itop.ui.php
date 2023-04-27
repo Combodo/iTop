@@ -1125,11 +1125,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Menu:ProfilesMenu:Title' => 'Profiles',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'User Accounts',
+	'Menu:UserAccountsMenu' => 'User accounts',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'User Accounts',
+	'Menu:UserAccountsMenu+' => 'User accounts',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'User Accounts',
+	'Menu:UserAccountsMenu:Title' => 'User accounts',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',

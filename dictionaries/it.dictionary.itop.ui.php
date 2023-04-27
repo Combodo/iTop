@@ -972,7 +972,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Menu:CSVImportMenu' => 'Importazione CSV',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Modello Dati',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Modello dati',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ExportMenu' => 'Esporta',// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1649,7 +1649,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:AdminTools' => 'Strumenti di amministrazione',
 	'Menu:AdminTools+' => '',
 	'Menu:AdminTools?' => 'Strumenti accessibile solo agli utenti con il profilo di amministratore',
-	'Menu:DataModelMenu' => 'Modello Dati',
+	'Menu:DataModelMenu' => 'Modello dati',
 	'Menu:DataModelMenu+' => '',
 	'Menu:ExportMenu' => 'Esporta',
 	'Menu:ExportMenu+' => '',

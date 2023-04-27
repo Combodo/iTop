@@ -961,8 +961,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Data Model~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Overview of the Data Model~~',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Data model~~',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Overview of the data model~~',// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ExportMenu' => 'Export~~',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1032,7 +1032,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 
 	'Menu:UserAccountsMenu' => 'Bruger konti',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'User Accounts~~',
+	'Menu:UserAccountsMenu+' => 'User accounts~~',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1638,8 +1638,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:AdminTools' => 'Admin værktøjer',
 	'Menu:AdminTools+' => 'Administration tools~~',
 	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil',
-	'Menu:DataModelMenu' => 'Data Model~~',
-	'Menu:DataModelMenu+' => 'Overview of the Data Model~~',
+	'Menu:DataModelMenu' => 'Data model~~',
+	'Menu:DataModelMenu+' => 'Overview of the data model~~',
 	'Menu:ExportMenu' => 'Export~~',
 	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',
 	'Menu:NotificationsMenu' => 'Notifikationer',
@@ -1659,10 +1659,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:ProfilesMenu+'          => 'Profiles~~',
 	'Menu:ProfilesMenu:Title'     => 'Profiler',
 	'Menu:UserAccountsMenu'       => 'Bruger konti',
-	'Menu:UserAccountsMenu+'      => 'User Accounts~~',
+	'Menu:UserAccountsMenu+'      => 'User accounts~~',
 	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
 	'Menu:MyShortcuts'            => 'Mine Genveje',
-	'Menu:UserManagement'         => 'User Management~~',
+	'Menu:UserManagement'         => 'User management~~',
 	'Menu:Queries'                => 'Queries~~',
 	'Menu:ConfigurationTools'     => 'Configuration~~',
 ));
