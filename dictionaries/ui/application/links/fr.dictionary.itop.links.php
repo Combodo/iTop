@@ -53,7 +53,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Links:Remove:Button'                        => 'Retirer',
 	'UI:Links:Remove:Button+'                       => 'Retirer cet(te) %4$s',
 	'UI:Links:Remove:Modal:Title'                   => 'Retirer un(e) %4$s de %1$s',
-	'UI:Links:Remove:Modal:Message'                 => 'Voulez-vous vraiment retirer %5$s de %2$s?',
+	'UI:Links:Remove:Modal:Message'                 => 'Voulez-vous vraiment retirer %5$s de %2$s ?',
 
 	// Delete
 	'UI:Links:Delete:Button'                        => 'Supprimer',
