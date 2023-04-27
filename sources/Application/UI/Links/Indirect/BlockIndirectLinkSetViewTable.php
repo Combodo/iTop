@@ -7,8 +7,6 @@
 namespace Combodo\iTop\Application\UI\Links\Indirect;
 
 use Combodo\iTop\Application\UI\Links\AbstractBlockLinkSetViewTable;
-use Combodo\iTop\Service\Links\LinkSetHelper;
-use Dict;
 use MetaModel;
 use PHPUnit\Exception;
 

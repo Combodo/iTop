@@ -11,7 +11,6 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\Service\Links\LinkSetHelper;
 use Combodo\iTop\Service\Links\LinkSetModel;
 use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Service\Base\ObjectRepository;
@@ -207,7 +206,7 @@ JS;
 			/** @var \AttributeLinkedSet $oLinksetDef */
 			$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$oHostObj = MetaModel::GetObject($sClass, $sId);
-			$sFormTitle = LinkSetHelper::FormatLinkDictEntry($sClass, $sAttCode, 'UI:Links:Add:Modal:Title',
+			$sFormTitle = $oLinksetDef->SearchSpecificLabel('UI:Links:Add:Modal:Title', '', true,
 				$sClass,
 				$oHostObj->Get('friendlyname'),
 				$oLinksetDef->GetLabel(),

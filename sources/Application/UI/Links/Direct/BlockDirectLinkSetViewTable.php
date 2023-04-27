@@ -8,7 +8,6 @@ namespace Combodo\iTop\Application\UI\Links\Direct;
 
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Links\AbstractBlockLinkSetViewTable;
-use Combodo\iTop\Service\Links\LinkSetHelper;
 use MetaModel;
 
 /**

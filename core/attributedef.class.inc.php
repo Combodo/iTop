@@ -2381,69 +2381,96 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		if ($oFormField === null)
 		{
-			$sFormFieldClass = static::GetFormFieldClass();
-			$oFormField = new $sFormFieldClass($this->GetCode());
-		}
+            $sFormFieldClass = static::GetFormFieldClass();
+            $oFormField = new $sFormFieldClass($this->GetCode());
+        }
 
-		// Setting target class
-		if (!$this->IsIndirect())
-		{
-			$sTargetClass = $this->GetLinkedClass();
-		}
-		else
-		{
-			/** @var \AttributeExternalKey $oRemoteAttDef */
-			/** @var \AttributeLinkedSetIndirect $this */
-			$oRemoteAttDef = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
-			$sTargetClass = $oRemoteAttDef->GetTargetClass();
+        // Setting target class
+		if (!$this->IsIndirect()) {
+            $sTargetClass = $this->GetLinkedClass();
+        } else {
+            /** @var \AttributeExternalKey $oRemoteAttDef */
+            /** @var \AttributeLinkedSetIndirect $this */
+            $oRemoteAttDef = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
+            $sTargetClass = $oRemoteAttDef->GetTargetClass();
 
-			/** @var \AttributeLinkedSetIndirect $this */
-			$oFormField->SetExtKeyToRemote($this->GetExtKeyToRemote());
-		}
-		$oFormField->SetTargetClass($sTargetClass);
-		$oFormField->SetIndirect($this->IsIndirect());
-		// Setting attcodes to display
-		$aAttCodesToDisplay = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetClass, 'list'));
-		// - Adding friendlyname attribute to the list is not already in it
-		$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetClass);
-		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay))
-		{
-			$aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
-		}
-		// - Adding attribute labels
-		$aAttributesToDisplay = array();
-		foreach($aAttCodesToDisplay as $sAttCodeToDisplay)
-		{
-			$oAttDefToDisplay = MetaModel::GetAttributeDef($sTargetClass, $sAttCodeToDisplay);
-			$aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
-		}
-		$oFormField->SetAttributesToDisplay($aAttributesToDisplay);
+            /** @var \AttributeLinkedSetIndirect $this */
+            $oFormField->SetExtKeyToRemote($this->GetExtKeyToRemote());
+        }
+        $oFormField->SetTargetClass($sTargetClass);
+        $oFormField->SetIndirect($this->IsIndirect());
+        // Setting attcodes to display
+        $aAttCodesToDisplay = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetClass, 'list'));
+        // - Adding friendlyname attribute to the list is not already in it
+        $sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetClass);
+        if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay)) {
+            $aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
+        }
+        // - Adding attribute labels
+        $aAttributesToDisplay = array();
+        foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
+            $oAttDefToDisplay = MetaModel::GetAttributeDef($sTargetClass, $sAttCodeToDisplay);
+            $aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
+        }
+        $oFormField->SetAttributesToDisplay($aAttributesToDisplay);
 
-		parent::MakeFormField($oObject, $oFormField);
+        parent::MakeFormField($oObject, $oFormField);
 
-		return $oFormField;
-	}
+        return $oFormField;
+    }
 
-	public function IsPartOfFingerprint()
-	{
-		return false;
-	}
+    public function IsPartOfFingerprint()
+    {
+        return false;
+    }
 
-	/**
-	 * @inheritDoc
-	 * @param \ormLinkSet $proposedValue
-	 */
-	public function HasAValue($proposedValue): bool
-	{
-		// Protection against wrong value type
-		if (false === ($proposedValue instanceof ormLinkSet))
-		{
-			return parent::HasAValue($proposedValue);
-		}
+    /**
+     * @inheritDoc
+     * @param \ormLinkSet $proposedValue
+     */
+    public function HasAValue($proposedValue): bool
+    {
+        // Protection against wrong value type
+        if (false === ($proposedValue instanceof ormLinkSet)) {
+            return parent::HasAValue($proposedValue);
+        }
 
-		// We test if there is at least 1 item in the linkset (new or existing), not if an item is being added to it.
-		return $proposedValue->Count() > 0;
-	}
+        // We test if there is at least 1 item in the linkset (new or existing), not if an item is being added to it.
+        return $proposedValue->Count() > 0;
+    }
+
+    /**
+     * SearchSpecificLabel.
+     *
+     * @param $sDictEntrySuffix
+     * @param $sDefault
+     * @param $bUserLanguageOnly
+     * @param ...$aArgs
+     * @return string
+     */
+    public function SearchSpecificLabel($sDictEntrySuffix, $sDefault, $bUserLanguageOnly, ...$aArgs): string
+    {
+        try {
+            $sNextClass = $this->m_sHostClass;
+
+            do {
+                $sKey = "class:{$sNextClass}/Attribute:{$this->m_sCode}/{$sDictEntrySuffix}";
+                if (Dict::S($sKey, null, $bUserLanguageOnly) !== $sKey) {
+                    return Dict::Format($sKey, ...$aArgs);
+                }
+                $sNextClass = MetaModel::GetParentClass($sNextClass);
+            } while ($sNextClass !== null);
+
+            if (Dict::S($sDictEntrySuffix, null, $bUserLanguageOnly) !== $sKey) {
+                return Dict::Format($sDictEntrySuffix, ...$aArgs);
+            } else {
+                return $sDefault;
+            }
+        } catch (Exception $e) {
+            ExceptionLog::LogException($e);
+            return $sDefault;
+        }
+    }
 }
 
 /**

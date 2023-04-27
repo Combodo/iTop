@@ -10,7 +10,6 @@ use ApplicationException;
 use ArchivedObjectException;
 use AttributeLinkedSet;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Combodo\iTop\Service\Links\LinkSetHelper;
 use CoreException;
 use CoreWarning;
 use DBObject;
@@ -124,7 +123,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 */
 	public function GetDictionaryEntry(string $sKey, DBObject $oDBObject = null)
 	{
-		return LinkSetHelper::FormatLinkDictEntry($this->sObjectClass, $this->sAttCode, $sKey,
+		return $this->oAttDef->SearchSpecificLabel($sKey, '', true,
 			$this->sObjectClass,
 			$this->oDbObject->Get('friendlyname'),
 			$this->oAttDef->GetLabel(),
