@@ -325,10 +325,12 @@ CombodoModal._ConvertButtonDefinition = function (aButtonsDefinitions) {
 	if(aButtonsDefinitions === null) {
 		return aConverted
 	}
-	aButtonsDefinitions.forEach(element => {
+	Object.keys(aButtonsDefinitions).forEach(key => {
+				const element = aButtonsDefinitions[key];
+				console.log(element);
 				const aButton = {
 					text: element.text,
-					class: element.class,
+					class: typeof(element.classes) !== 'undefined' ? element.classes.join(' ') : '',
 					click: element.callback_on_click
 				}
 				aConverted.push(aButton);
@@ -366,44 +368,40 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 		}
 	}
 	// Merge external options with confirmation modal default options
-	oOptions = $.extend({
+	oOptions = $.extend(true, {
 		title: Dict.S('UI:Modal:DefaultConfirmationTitle'),
 		content: '',
-		confirm_button_label: null,
-		confirm_button_class: null,
 		do_not_show_again_pref_key: null,
-		callback_on_confirm: null,
-		callback_on_cancel: null,
 		extra_options: {
 			callback_on_modal_close: function () {
 				$(this).dialog( "destroy" ); // destroy dialog object
 			}
 		},
-		buttons: [
-			{
+		buttons: {
+			cancel: {
 				text: Dict.S('UI:Button:Cancel'),
-				class: 'ibo-is-alternative',
+				classes: ['ibo-is-alternative'],
 				callback_on_click: function () {
 					// call confirm handler and close dialog
 					let bCanClose = true;
-					if(oOptions.callback_on_cancel != null){
+					if (oOptions.callback_on_cancel != null) {
 						bCanClose = oOptions.callback_on_cancel(...aData) !== false;
 					}
-					if(bCanClose){
+					if (bCanClose) {
 						$(this).dialog('close'); // close dialog
 					}
 				}
 			},
-			{
-				text: oOptions.confirm_button_label ?? Dict.S('UI:Button:Confirm'),
-				class: oOptions.confirm_button_class ?? 'ibo-is-primary',
+			confirm: {
+				text: Dict.S('UI:Button:Confirm'),
+				classes: ['ibo-is-primary'],
 				callback_on_click: function () {
 					// Call confirm handler and close dialog
 					let bCanClose = true;
-					if(oOptions.callback_on_confirm != null){
+					if (oOptions.callback_on_confirm != null) {
 						bCanClose = oOptions.callback_on_confirm(...aData) !== false;
 					}
-					if(bCanClose){
+					if (bCanClose) {
 						$(this).dialog('close'); // close dialog
 						// Handle "do not show again" user preference
 						let bDoNotShowAgain = oOptions.do_not_show_again_pref_key !== null ?
@@ -415,7 +413,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 					}
 				}
 			}
-		],
+		},
 		callback_on_content_loaded: function(oModalContentElement){
 			// Add option do not show again from template
 			if(oOptions.do_not_show_again_pref_key !== null) {
@@ -445,15 +443,15 @@ CombodoModal.OpenInformativeModal = function(sMessage, sSeverity, oOptions) {
 				$(this).dialog( "destroy" );
 			}
 		},
-		buttons: [
-			{
+		buttons: {
+			ok: {
 				text: Dict.S('UI:Button:Ok'),
-				class: 'ibo-is-regular ibo-is-neutral',
+				// classes: ['ibo-is-regular', 'ibo-is-neutral'],
 				callback_on_click: function () {
-						$(this).dialog('close');
+					$(this).dialog('close');
 				}
 			},
-		],
+		},
 	}, oOptions);
 
 	// Open modal
