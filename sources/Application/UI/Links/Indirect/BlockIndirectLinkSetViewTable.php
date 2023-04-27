@@ -62,7 +62,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		// Add creation in modal if the linkset is not readonly
 		if (!$this->oAttDef->GetReadOnly()) {
 			$aExtraParams['creation_in_modal'] = true;
-			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::DICT_ADD_BUTTON);
+			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::BUTTON_TOOLTIP);
 			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
 		} else {
 			$aExtraParams['creation_disallowed'] = true;
@@ -79,7 +79,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		$aRowActions[] = array(
 			'label'         => 'UI:Links:ModifyLink:Button',
 			'name'          => 'ModifyButton',
-			'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_LINK_BUTTON),
+			'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_LINK_BUTTON_TOOLTIP),
 			'icon_classes'  => 'fas fa-pen',
 			'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['Link/_key_/raw'], oTrElement, aRowData['Remote/friendlyname']);",
 			'metadata'      => [
@@ -90,7 +90,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		$aRowActions[] = array(
 			'label'         => 'UI:Links:Remove:Button',
 			'name'          => 'RemoveButton',
-			'tooltip'       => $this->GetDictionaryEntry(static::DICT_REMOVE_BUTTON),
+			'tooltip'       => $this->GetDictionaryEntry(static::DICT_REMOVE_BUTTON_TOOLTIP),
 			'icon_classes'  => 'fas fa-minus',
 			'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['Link/_key_/raw'], oTrElement);",
 			'confirmation'  => [

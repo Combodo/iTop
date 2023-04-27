@@ -51,7 +51,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		// Add creation in modal if the linkset is not readonly
 		if (!$this->oAttDef->GetReadOnly() && $this->oAttDef->GetEditMode() != LINKSET_EDITMODE_NONE) {
 			$aExtraParams['creation_in_modal'] = true;
-			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::DICT_CREATE_BUTTON);
+			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::DICT_CREATE_BUTTON_TOOLTIP);
 			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
 		} else {
 			$aExtraParams['creation_disallowed'] = true;
@@ -74,7 +74,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 				$aRowActions[] = array(
 					'label'         => 'UI:Links:ModifyObject:Button',
 					'name'          => 'ModifyButton',
-					'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON),
+					'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
 					'icon_classes'  => 'fas fa-pen',
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
 					'metadata'      => [
@@ -88,7 +88,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 				$aRowActions[] = array(
 					'label'         => 'UI:Links:ModifyObject:Button',
 					'name'          => 'ModifyButton',
-					'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON),
+					'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
 					'icon_classes'  => 'fas fa-pen',
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
 					'metadata'      => [
@@ -99,7 +99,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 				$aRowActions[] = array(
 					'label'         => 'UI:Links:Delete:Button',
 					'name'          => 'DeleteButton',
-					'tooltip'       => $this->GetDictionaryEntry(static::DICT_DELETE_BUTTON),
+					'tooltip'       => $this->GetDictionaryEntry(static::DICT_DELETE_BUTTON_TOOLTIP),
 					'icon_classes'  => 'fas fa-trash',
 					'color'         => Button::ENUM_COLOR_SCHEME_DESTRUCTIVE,
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement);",
@@ -117,7 +117,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 				$aRowActions[] = array(
 					'label'         => 'UI:Links:ModifyObject:Button',
 					'name'          => 'ModifyButton',
-					'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON),
+					'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
 					'icon_classes'  => 'fas fa-pen',
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
 					'metadata'      => [
@@ -127,7 +127,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 				$aRowActions[] = array(
 					'label'         => 'UI:Links:Remove:Button',
 					'name'          => 'RemoveButton',
-					'tooltip'       => $this->GetDictionaryEntry(static::DICT_REMOVE_BUTTON),
+					'tooltip'       => $this->GetDictionaryEntry(static::DICT_REMOVE_BUTTON_TOOLTIP),
 					'icon_classes'  => 'fas fa-minus',
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DetachLinkedObject', aRowData['{$this->sTargetClass}/_key_/raw'], oTrElement, oTrElement);",
 					'confirmation'  => [
