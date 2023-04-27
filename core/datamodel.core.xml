@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <user_rights>
     <profiles>
       <profile id="1024" _delta="define">
@@ -269,5 +269,242 @@
         </fields>
       </class>
     </classes>
+    <attribute_properties_definition  _delta="define">
+      <properties>
+        <property id="sql">
+          <php_param>sql</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="linked_class">
+          <php_param>linked_class</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="ext_key_to_me">
+          <php_param>ext_key_to_me</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="ext_key_to_remote">
+          <php_param>ext_key_to_remote</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="sql">
+          <php_param>sql</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="class_attcode">
+          <php_param>class_attcode</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="extkey_attcode">
+          <php_param>extkey_attcode</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="target_attcode">
+          <php_param>target_attcode</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="item_code">
+          <php_param>item_code</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="relation_code">
+          <php_param>relation_code</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="from_class">
+          <php_param>from_class</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="neighbour_id">
+          <php_param>neighbour_id</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="enabled_mode">
+          <php_param>enabled_mode</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="min_up_mode">
+          <php_param>min_up_mode</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="min_up_type">
+          <php_param>min_up_type</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="handler_class">
+          <php_param>handler_class</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="class_field">
+          <php_param>class_field</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="query_field">
+          <php_param>query_field</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="display_style">
+          <php_param>display_style</php_param>
+          <mandatory>false</mandatory>
+          <type>string</type>
+          <default/>
+        </property>
+        <property id="target">
+          <php_param>target</php_param>
+          <mandatory>false</mandatory>
+          <type>string</type>
+          <default/>
+        </property>
+        <property id="default_value">
+          <php_param>default_value</php_param>
+          <mandatory>false</mandatory>
+          <type>string</type>
+          <default/>
+        </property>
+        <property id="attribute_definition_list">
+          <php_param>attribute_definition_list</php_param>
+          <mandatory>false</mandatory>
+          <type>string</type>
+          <default/>
+        </property>
+        <property id="attribute_definition_exclusion_list">
+          <php_param>attribute_definition_exclusion_list</php_param>
+          <mandatory>false</mandatory>
+          <type>string</type>
+          <default/>
+        </property>
+        <property id="min_up">
+          <php_param>min_up</php_param>
+          <mandatory>true</mandatory>
+          <type>number</type>
+        </property>
+        <property id="count_min">
+          <php_param>count_min</php_param>
+          <mandatory>false</mandatory>
+          <type>number</type>
+          <default>0</default>
+        </property>
+        <property id="count_max">
+          <php_param>count_max</php_param>
+          <mandatory>false</mandatory>
+          <type>number</type>
+          <default>0</default>
+        </property>
+        <property id="max_combo_length">
+          <php_param>max_combo_length</php_param>
+          <mandatory>false</mandatory>
+          <type>number</type>
+        </property>
+        <property id="min_autocomplete_chars">
+          <php_param>min_autocomplete_chars</php_param>
+          <mandatory>false</mandatory>
+          <type>number</type>
+        </property>
+        <property id="display_max_width">
+          <php_param>display_max_width</php_param>
+          <mandatory>false</mandatory>
+          <type>number</type>
+          <default>128</default>
+        </property>
+        <property id="display_max_height">
+          <php_param>display_max_height</php_param>
+          <mandatory>false</mandatory>
+          <type>number</type>
+          <default>128</default>
+        </property>
+        <property id="storage_max_width">
+          <php_param>storage_max_width</php_param>
+          <mandatory>false</mandatory>
+          <type>number</type>
+          <default>256</default>
+        </property>
+        <property id="storage_max_height">
+          <php_param>storage_max_height</php_param>
+          <mandatory>false</mandatory>
+          <type>number</type>
+          <default>256</default>
+        </property>
+        <property id="max_items">
+          <php_param>max_items</php_param>
+          <mandatory>false</mandatory>
+          <type>number</type>
+          <default>12</default>
+        </property>
+        <property id="tag_code_max_len">
+          <php_param>tag_code_max_len</php_param>
+          <mandatory>false</mandatory>
+          <type>number</type>
+          <default>20</default>
+        </property>
+        <property id="enabled">
+          <php_param>enabled</php_param>
+          <mandatory>true</mandatory>
+          <type>boolean</type>
+        </property>
+        <property id="duplicates">
+          <php_param>duplicates</php_param>
+          <mandatory>false</mandatory>
+          <type>boolean</type>
+          <default>false</default>
+        </property>
+        <property id="is_null_allowed">
+          <php_param>is_null_allowed</php_param>
+          <mandatory>false</mandatory>
+          <type>boolean</type>
+          <default>false</default>
+        </property>
+        <property id="allow_target_creation">
+          <php_param>allow_target_creation</php_param>
+          <mandatory>false</mandatory>
+          <type>boolean</type>
+        </property>
+        <property id="is_user_editable">
+          <php_param>is_user_editable</php_param>
+          <mandatory>false</mandatory>
+          <type>boolean</type>
+          <default>true</default>
+        </property>
+        <property id="on_target_delete">
+          <php_param>on_target_delete</php_param>
+          <mandatory>false</mandatory>
+          <type>php</type>
+        </property>
+        <property id="target_class">
+          <php_param>targetclass</php_param>
+          <mandatory>true</mandatory>
+          <type>string</type>
+        </property>
+        <property id="goal">
+          <php_param>goal_computing</php_param>
+          <mandatory>false</mandatory>
+          <type>string</type>
+          <default>'DefaultMetricComputer'</default>
+        </property>
+        <property id="working_time">
+          <php_param>working_time_computing</php_param>
+          <mandatory>false</mandatory>
+          <type>string</type>
+          <default/>
+        </property>
+      </properties>
+    </attribute_properties_definition>
   </meta>
 </itop_design>

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -28,14 +28,14 @@ class CoreCannotSaveObjectException extends CoreException
 	 *
 	 * @param array $aContextData containing at least those keys : issues, id, class
 	 */
-	public function __construct($aContextData)
+	public function __construct($aContextData, $oPrevious = null)
 	{
 		$this->aIssues = $aContextData['issues'];
 		$this->iObjectId = $aContextData['id'];
 		$this->sObjectClass = $aContextData['class'];
 
 		$sIssues = implode(', ', $this->aIssues);
-		parent::__construct($sIssues, $aContextData);
+		parent::__construct($sIssues, $aContextData, '', $oPrevious);
 	}
 
 	/**
@@ -44,15 +44,15 @@ class CoreCannotSaveObjectException extends CoreException
 	public function getHtmlMessage()
 	{
 		$sTitle = Dict::S('UI:Error:SaveFailed');
-		$sContent = "<span><strong>{$sTitle}</strong></span>";
+		$sContent = "<span><strong>".utils::HtmlEntities($sTitle)."</strong></span>";
 
 		if (count($this->aIssues) == 1) {
 			$sIssue = reset($this->aIssues);
-			$sContent .= " <span>{$sIssue}</span>";
+			$sContent .= " <span>".utils::HtmlEntities($sIssue)."</span>";
 		} else {
 			$sContent .= '<ul>';
 			foreach ($this->aIssues as $sError) {
-				$sContent .= "<li>$sError</li>";
+				$sContent .= "<li>".utils::HtmlEntities($sError)."</li>";
 			}
 			$sContent .= '</ul>';
 		}

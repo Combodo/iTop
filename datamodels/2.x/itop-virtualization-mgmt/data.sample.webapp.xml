@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
 <WebApplication alias="WebApplication" id="25">
-<name>Open ERP</name>
+<name>Odoo</name>
 <description></description>
 <org_id>2</org_id>
 <business_criticity>low</business_criticity>

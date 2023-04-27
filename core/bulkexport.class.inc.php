@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -45,7 +45,7 @@ class BulkExportMissingParameterException extends BulkExportException
 /**
  * Class BulkExport
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -130,7 +130,7 @@ class BulkExportResultGC implements iBackgroundProcess
 /**
  * Class BulkExport
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -376,10 +376,11 @@ abstract class BulkExport
 	}
 
 	/**
-	 * @deprecated since 3.0 replaced by GetFormPart
+	 * @deprecated 3.0.0 use GetFormPart instead
 	 */
 	public function DisplayFormPart(WebPage $oP, $sPartId)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetFormPart instead');
 		$oP->AddSubBlock($this->GetFormPart($oP, $sPartId));
 	}
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -39,9 +39,14 @@ class SetupPage extends NiceWebPage
 	{
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
 		$this->add_linked_script("../setup/setup.js");
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+
 		$this->LoadTheme();
 		$this->add_saas("css/setup.scss");
 	}
@@ -70,28 +75,28 @@ class SetupPage extends NiceWebPage
 		return '';
 	}
 
-	public function info($sText)
+	public function info($sText, $sTextForLog = null)
 	{
-		$this->add("<p class=\"info\">$sText</p>\n");
-		$this->log_info($sText);
+		$this->add("<p class=\"info ibo-is-html-content\">$sText</p>\n");
+		SetupLog::Info($sTextForLog ?? $sText);
 	}
 
-	public function ok($sText)
+	public function ok($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-valid\"><span class=\"message-title\">Success:</span>$sText</div>");
-		$this->log_ok($sText);
+		$this->add("<div class=\"message message-valid ibo-is-html-content\"><span class=\"message-title\">Success:</span>$sText</div>");
+		SetupLog::Ok($sTextForLog ?? $sText);
 	}
 
-	public function warning($sText)
+	public function warning($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-warning\"><span class=\"message-title\">Warning:</span>$sText</div>");
-		$this->log_warning($sText);
+		$this->add("<div class=\"message message-warning ibo-is-html-content\"><span class=\"message-title\">Warning:</span>$sText</div>");
+		SetupLog::Warning($sTextForLog ?? $sText);
 	}
 
-	public function error($sText)
+	public function error($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-error\">$sText</div>");
-		$this->log_error($sText);
+		$this->add("<div class=\"message message-error ibo-is-html-content\">$sText</div>");
+		SetupLog::Error($sTextForLog ?? $sText);
 	}
 
 	public function form($aData)
@@ -152,7 +157,7 @@ class SetupPage extends NiceWebPage
 
 	public function output()
 	{
-		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
+		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/logos/logo-itop-simple-dark.svg?t='.utils::GetCacheBusterTimestamp();
 		$oSetupPage = UIContentBlockUIBlockFactory::MakeStandard();
 		$oHeader = UIContentBlockUIBlockFactory::MakeStandard('header', ['ibo-setup--header']);
 		$oSetupPage->AddSubBlock($oHeader);
@@ -168,50 +173,18 @@ class SetupPage extends NiceWebPage
 	}
 
 	/**
-	 * @deprecated 3.0.0 use SetupLog::Error
-	 */
-	public static function log_error($sText)
-	{
-		SetupLog::Error($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Warning
-	 */
-	public static function log_warning($sText)
-	{
-		SetupLog::Warning($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Info
-	 */
-	public static function log_info($sText)
-	{
-		SetupLog::Info($sText);
-	}
-
-	/**
-	 * deprecated 3.0.0 use SetupLog::Ok
-	 */
-	public static function log_ok($sText)
-	{
-		SetupLog::Ok($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Ok
-	 */
-	public static function log($sText)
-	{
-		SetupLog::Ok($sText);
-	}
-
-	/**
 	 * @inheritDoc
 	 */
 	protected function LoadTheme()
 	{
 		// Do nothing
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return utils::GetAbsoluteUrlAppRoot().'setup/favicon.ico';
 	}
 }

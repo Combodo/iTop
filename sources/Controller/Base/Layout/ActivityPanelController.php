@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,6 +8,7 @@ namespace Combodo\iTop\Controller\Base\Layout;
 
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelHelper;
+use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
 use Exception;
@@ -15,14 +16,22 @@ use InlineImage;
 use MetaModel;
 use utils;
 
-class ActivityPanelController
+/**
+ * Class ActivityPanelController
+ *
+ * @internal
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 3.0.0
+ * @package Combodo\iTop\Controller\Base\Layout
+ */
+class ActivityPanelController extends AbstractController
 {
 	/**
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public static function SaveState(): void
+	public function SaveState(): void
 	{
 		$sObjectClass = utils::ReadPostedParam('object_class', '', utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$sObjectMode = utils::ReadPostedParam('object_mode');
@@ -66,7 +75,7 @@ class ActivityPanelController
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public static function AddCaseLogsEntries(): array
+	public function AddCaseLogsEntries(): array
 	{
 		$sObjectClass = utils::ReadPostedParam('object_class', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$sObjectId = utils::ReadPostedParam('object_id', 0);
@@ -108,10 +117,17 @@ class ActivityPanelController
 				'html_rendering' => $sEntryAsHtml,
 			];
 		}
-		$oObject->DBWrite();
-
 		// Finalize inline images
 		InlineImage::FinalizeInlineImages($oObject);
+
+		// Invoke extensions after the update of the object from the activity form
+		/** @var \iApplicationUIExtension $oExtensionInstance */
+		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnFormSubmit($oObject);
+		}
+
+		$oObject->DBWrite();
 
 		return $aResults;
 	}
@@ -139,11 +155,12 @@ class ActivityPanelController
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public static function LoadMoreEntries(): array
+	public function LoadMoreEntries(): array
 	{
 		$sObjectClass = utils::ReadPostedParam('object_class', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$sObjectId = utils::ReadPostedParam('object_id', 0);
 		$aLastLoadedEntriesIds = utils::ReadPostedParam('last_loaded_entries_ids', [], utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$bLimitResultsLength = utils::ReadPostedParam('limit_results_length', 'true') === 'true';
 
 		$aResults = [
 			'success' => true,
@@ -153,7 +170,7 @@ class ActivityPanelController
 
 		// CMDBChangeOp entries
 		if (array_key_exists('cmdbchangeop', $aLastLoadedEntriesIds)) {
-			$aChangesData = ActivityPanelHelper::GetCMDBChangeOpEditsEntriesForObject($sObjectClass, $sObjectId, $aLastLoadedEntriesIds['cmdbchangeop']);
+			$aChangesData = ActivityPanelHelper::GetCMDBChangeOpEditsEntriesForObject($sObjectClass, $sObjectId, $aLastLoadedEntriesIds['cmdbchangeop'], $bLimitResultsLength);
 
 			if (true === $aChangesData['more_entries_to_load']) {
 				$aResults['last_loaded_entries_ids']['cmdbchangeop'] = $aChangesData['last_loaded_entry_id'];

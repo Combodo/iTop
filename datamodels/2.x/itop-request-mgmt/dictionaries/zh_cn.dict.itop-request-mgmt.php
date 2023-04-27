@@ -1,25 +1,9 @@
 <?php
-/**
- * Localized data
- *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:RequestManagement' => '服务台',
 	'Menu:RequestManagement+' => '服务台',
@@ -138,8 +122,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:origin/Value:monitoring+' => '监控',
 	'Class:UserRequest/Attribute:origin/Value:phone' => '电话',
 	'Class:UserRequest/Attribute:origin/Value:phone+' => '电话',
-	'Class:UserRequest/Attribute:origin/Value:portal' => 'iTop',
-	'Class:UserRequest/Attribute:origin/Value:portal+' => 'iTop',
+	'Class:UserRequest/Attribute:origin/Value:portal' => ITOP_APPLICATION_SHORT,
+	'Class:UserRequest/Attribute:origin/Value:portal+' => ITOP_APPLICATION_SHORT,
 	'Class:UserRequest/Attribute:approver_id' => '审核人',
 	'Class:UserRequest/Attribute:approver_id+' => '',
 	'Class:UserRequest/Attribute:approver_email' => '邮箱',
@@ -166,6 +150,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:resolution_date+' => '',
 	'Class:UserRequest/Attribute:last_pending_date' => '最近待定日期',
 	'Class:UserRequest/Attribute:last_pending_date+' => '',
+	'Class:UserRequest/Attribute:cumulatedpending' => '累计待定',
+	'Class:UserRequest/Attribute:cumulatedpending+' => '',
 	'Class:UserRequest/Attribute:tto' => '响应时间',
 	'Class:UserRequest/Attribute:tto+' => '',
 	'Class:UserRequest/Attribute:ttr' => '解决时间',
@@ -217,7 +203,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:parent_change_ref' => '变更编号',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => '衍生事件',
-	'Class:UserRequest/Attribute:related_request_list+' => '该事件相关的所有子事件',
+	'Class:UserRequest/Attribute:related_request_list+' => '此事件相关的所有子事件',
 	'Class:UserRequest/Attribute:public_log' => '评论',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => '用户满意度',
@@ -292,7 +278,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
+	'Organization:Overview:UserRequests' => '来自此组织的用户需求',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:Tickets' => '来自此组织的工单',
 ));

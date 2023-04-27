@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,14 +16,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 //
 // Class: FAQ
 //
-
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Question fréquement posée',
@@ -54,9 +52,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQCategory/Attribute:name' => 'Nom',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Toutes les questions fréquemment posées liées à cette catégorie',
 ));
-
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ProblemManagement' => 'Gestion des problèmes',
 	'Menu:ProblemManagement+' => 'Gestion des problèmes',

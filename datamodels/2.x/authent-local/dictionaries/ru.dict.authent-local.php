@@ -12,8 +12,8 @@
 // Class: UserLocal
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:UserLocal' => 'Пользователь iTop',
-	'Class:UserLocal+' => 'Пользователь, аутентифицируемый через iTop',
+	'Class:UserLocal' => 'Пользователь '.ITOP_APPLICATION_SHORT,
+	'Class:UserLocal+' => 'Пользователь, аутентифицируемый через '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Пароль',
 	'Class:UserLocal/Attribute:password+' => 'Строка аутентификации пользователя',
 
@@ -25,10 +25,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Истёкший',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'One-time Password~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Дата изменения пароля',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Когда пароль был изменен в последний раз',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Пароль должен содержать не менее 8 символов и включать прописные, строчные, числовые и специальные символы.',
 
-	'UserLocal:password:expiration' => 'Поля требуют наличия доп. расширения'
+	'UserLocal:password:expiration' => 'Поля требуют наличия доп. расширения',
+	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
 ));

@@ -1,22 +1,6 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
@@ -53,6 +37,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Requêtes ouvertes par type',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par client',
 	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
+	'Class:UserRequest:KnownErrorList+' => 'Erreurs connues liées à des éléments de configuration impactés par ce ticket',
 ));
 
 // Dictionnay conventions
@@ -128,6 +113,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'basse',
 	'Class:UserRequest/Attribute:origin' => 'Origine',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'en personne',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => '',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'chat',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => '',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'email',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'email',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'supervision',
@@ -162,6 +151,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:resolution_date+' => '',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Dernière date de suspension',
 	'Class:UserRequest/Attribute:last_pending_date+' => '',
+	'Class:UserRequest/Attribute:cumulatedpending' => 'Temps cumulé de suspension',
+	'Class:UserRequest/Attribute:cumulatedpending+' => '',
 	'Class:UserRequest/Attribute:tto' => 'TTO',
 	'Class:UserRequest/Attribute:tto+' => '',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
@@ -217,7 +208,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Référence Incident parent',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Requêtes filles',
-	'Class:UserRequest/Attribute:related_request_list+' => '',
+	'Class:UserRequest/Attribute:related_request_list+' => 'Toutes les requêtes liées à cette requête parente',
 	'Class:UserRequest/Attribute:public_log' => 'Journal public',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Satisfaction client',

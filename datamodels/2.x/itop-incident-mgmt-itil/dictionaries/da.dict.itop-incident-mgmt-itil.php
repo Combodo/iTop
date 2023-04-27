@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -195,7 +195,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Incident/Attribute:related_request_list' => 'Child requests~~',
 	'Class:Incident/Attribute:related_request_list+' => '~~',
 	'Class:Incident/Attribute:child_incidents_list' => 'Afledte Incidents',
-	'Class:Incident/Attribute:child_incidents_list+' => '',
+	'Class:Incident/Attribute:child_incidents_list+' => 'All the child incidents related to this incident~~',
 	'Class:Incident/Attribute:public_log' => 'Offentlig Log',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Bruger tilfredshed',

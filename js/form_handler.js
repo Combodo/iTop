@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -92,12 +92,27 @@ $(function()
 		{
 			return this.options.field_set.triggerHandler('get_current_values');
 		},
-
+		/**
+		 * @private
+		 * @since 3.0.2 3.1.0
+		 */
+		_updatePreviousValues: function()
+		{
+			let me = this;
+			if(this.element.find('[data-attribute-previous-value]').length > 0) {
+				let aPreviousValues = {};
+				$(this.element.find('[data-attribute-previous-value]')).each(function (iIdx, oElem) {
+					aPreviousValues[$(oElem).data('field-id')] = $(oElem).data('attribute-previous-value');
+				});
+				me.element.find('[data-field-id="previous_values"]').find('input[type="hidden"]').val(JSON.stringify(aPreviousValues));
+			}
+		},
 		// Events callback
 		// - Update fields depending on the update ones
 		_onUpdateFields: function(oEvent, oData)
 		{
 			var me = this;
+			me._updatePreviousValues();
 			var sFormPath = oData.form_path;
 
 			// Data checks
@@ -151,9 +166,16 @@ $(function()
 		// Intended for overloading in derived classes
 		_onUpdateSuccess: function(oData, sFormPath)
 		{
+			var me = this;
+			if(oData.form.hidden_fields !== undefined)
+			{
+				$.each(oData.form.hidden_fields, function( index, value ) {
+					me.element.find('[data-form-path="' + sFormPath + '"][data-field-id="'+value+'"][data-attribute-flag-hidden="false"]').children().remove();
+				});
+			}
 			if(oData.form.updated_fields !== undefined)
 			{
-				this.element.find('[data-form-path="' + sFormPath + '"]').trigger('update_form', {updated_fields: oData.form.updated_fields});
+				me.element.find('[data-form-path="' + sFormPath + '"]').trigger('update_form', {updated_fields: oData.form.updated_fields});
 			}
 		},
 		// Intended for overloading in derived classes

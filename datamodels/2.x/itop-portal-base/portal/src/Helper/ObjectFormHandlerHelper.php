@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -31,12 +31,12 @@ use iPopupMenuExtension;
 use IssueLog;
 use JSButtonItem;
 use MetaModel;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig_Environment;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 use Twig_Loader_Array;
 use URLButtonItem;
 use UserRights;
@@ -50,12 +50,17 @@ use UserRights;
  */
 class ObjectFormHandlerHelper
 {
-	/** @var string ENUM_MODE_VIEW */
+	/** @var string */
 	const ENUM_MODE_VIEW = 'view';
-	/** @var string ENUM_MODE_EDIT */
+	/** @var string */
 	const ENUM_MODE_EDIT = 'edit';
-	/** @var string ENUM_MODE_CREATE */
+	/** @var string */
 	const ENUM_MODE_CREATE = 'create';
+	/**
+	 * @var string
+	 * @since 2.7.7 3.0.1 3.1.0
+	 */
+	const ENUM_MODE_APPLY_STIMULUS = 'apply_stimulus';
 
 	/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 	private $oRequestManipulator;
@@ -75,8 +80,6 @@ class ObjectFormHandlerHelper
 	private $sPortalId;
 	/** @var \Combodo\iTop\Portal\Twig\AppExtension $oAppExtension */
 	private $oAppExtension;
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $oContainer */
-	private $oContainer;
 
 	/**
 	 * ObjectFormHandlerHelper constructor.
@@ -90,9 +93,11 @@ class ObjectFormHandlerHelper
 	 * @param array $aCombodoPortalInstanceConf
 	 * @param string $sPortalId
 	 * @param \Combodo\iTop\Portal\Twig\AppExtension $oAppExtension
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
 	 */
-	public function __construct(RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, NavigationRuleHelper $oNavigationRuleHelper, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId, AppExtension $oAppExtension, ContainerInterface $oContainer)
+	public function __construct(
+		RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, NavigationRuleHelper $oNavigationRuleHelper, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId,
+		AppExtension $oAppExtension
+	)
 	{
 		$this->oRequestManipulator = $oRequestManipulator;
 		$this->oContextManipulator = $oContextManipulator;
@@ -103,15 +108,14 @@ class ObjectFormHandlerHelper
 		$this->aCombodoPortalInstanceConf = $aCombodoPortalInstanceConf;
 		$this->sPortalId = $sPortalId;
 		$this->oAppExtension = $oAppExtension;
-		$this->oContainer = $oContainer;
 	}
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param string                                    $sMode
-	 * @param string                                    $sObjectClass
-	 * @param string                                    $sObjectId
-	 * @param string                                    $aFormProperties
+	 * @param string $sMode
+	 * @param string $sObjectClass
+	 * @param string $sObjectId
+	 * @param array $aFormProperties
 	 *
 	 * @return array
 	 *
@@ -131,7 +135,6 @@ class ObjectFormHandlerHelper
 		{
 			$aFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
 		}
-
 		// - Create and
 		if (empty($sOperation))
 		{
@@ -171,7 +174,7 @@ class ObjectFormHandlerHelper
 					'label' => Dict::S('Portal:Button:Submit'),
 				),
 			);
-			if ($sMode !== 'apply_stimulus')
+			if ($sMode !== static::ENUM_MODE_APPLY_STIMULUS)
 			{
 				// Add transition buttons
 				$oSetToCheckRights = DBObjectSet::FromObject($oObject);
@@ -236,9 +239,9 @@ class ObjectFormHandlerHelper
 			// Note : We might need to distinguish form & renderer endpoints
 			switch($sMode)
 			{
-				case 'create':
-				case 'edit':
-				case 'view':
+				case static::ENUM_MODE_CREATE:
+				case static::ENUM_MODE_EDIT:
+				case static::ENUM_MODE_VIEW:
 					$sFormEndpoint = $this->oUrlGenerator->generate(
 						'p_object_'.$sMode,
 						array(
@@ -248,7 +251,7 @@ class ObjectFormHandlerHelper
 					);
 					break;
 
-				case 'apply_stimulus':
+				case static::ENUM_MODE_APPLY_STIMULUS:
 					$sFormEndpoint = $this->oUrlGenerator->generate(
 						'p_object_apply_stimulus',
 						array(
@@ -266,13 +269,13 @@ class ObjectFormHandlerHelper
 			}
 
 			$oFormRenderer = new BsFormRenderer();
-			if($sFormEndpoint !== null)
-			{
+			if ($sFormEndpoint !== null) {
 				$oFormRenderer->SetEndpoint($sFormEndpoint);
 			}
 
 			$oFormManager = new ObjectFormManager();
-			$oFormManager->SetContainer($this->oContainer)
+			$oFormManager
+				->SetObjectFormHandlerHelper($this)
 				->SetObject($oObject)
 				->SetMode($sMode)
 				->SetActionRulesToken($sActionRulesToken)
@@ -280,13 +283,12 @@ class ObjectFormHandlerHelper
 				->SetFormProperties($aFormProperties);
 
 			$oFormManager->Build();
-
+			$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
 			// Check the number of editable fields
 			$aFormData['editable_fields_count'] = $oFormManager->GetForm()->GetEditableFieldCount();
-		}
-		else
-		{
+		} else {
 			// Update / Submit / Cancel
+			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $sFormManagerClass */
 			$sFormManagerClass = $this->oRequestManipulator->ReadParam('formmanager_class', '', FILTER_UNSAFE_RAW);
 			$sFormManagerData = $this->oRequestManipulator->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
 			if (empty($sFormManagerClass) || empty($sFormManagerData))
@@ -295,13 +297,12 @@ class ObjectFormHandlerHelper
 				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 
-			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
+			$this->CheckReadFormDataAllowed($sFormManagerData);
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetContainer($this->oContainer);
+			$oFormManager->SetObjectFormHandlerHelper($this);
 
 			// Applying action rules if present
-			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== ''))
-			{
+			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
 				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
 				$oObj = $oFormManager->GetObject();
 				$this->oContextManipulator->PrepareObject($aActionRules, $oObj);
@@ -388,6 +389,7 @@ class ObjectFormHandlerHelper
 		$aFormData['object_state'] = $oFormManager->GetObject()->GetState();
 		$aFormData['fieldset'] = $aFieldSetData;
 		$aFormData['display_mode'] = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['display_mode'] : ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
+		$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
 		// - Set a text to be copied on title if the object is not in creation
 		if($sMode !== static::ENUM_MODE_CREATE && !empty($sObjectId))
 		{
@@ -417,7 +419,7 @@ class ObjectFormHandlerHelper
 	public function RenderFormFromTwig($sId, $sTwigString, $aData)
 	{
 		// Creating sandbox twig env. to load and test the custom form template
-		$oTwig = new Twig_Environment(new Twig_Loader_Array(array($sId => $sTwigString)));
+		$oTwig = new Environment(new ArrayLoader(array($sId => $sTwigString)));
 
 		// Manually registering filters and functions as we didn't find how to do it automatically
 		$aFilters = $this->oAppExtension->getFilters();
@@ -435,6 +437,30 @@ class ObjectFormHandlerHelper
 	}
 
 	/**
+	 * Check if read object include in form data is allowed, throw an exception otherwise.
+	 *
+	 * @since 2.7.7 3.0.2 3.1.0
+	 *
+	 * @param string $sFormManagerData form data to check
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function CheckReadFormDataAllowed($sFormManagerData)
+	{
+		$aJsonFromData = ObjectFormManager::DecodeFormManagerData($sFormManagerData);
+		if(isset($aJsonFromData['formobject_class'])
+			&& isset($aJsonFromData['formobject_id'])
+			&& !$this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $aJsonFromData['formobject_class'], $aJsonFromData['formobject_id'])){
+			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Form data access denied.');
+		}
+	}
+
+	/**
 	 * Return an array of the available modes for a form.
 	 *
 	 * @since 2.7.0
@@ -447,5 +473,45 @@ class ObjectFormHandlerHelper
 			static::ENUM_MODE_EDIT,
 			static::ENUM_MODE_CREATE,
 		);
+	}
+
+	/**
+	 * @return \Combodo\iTop\Portal\Routing\UrlGenerator|\Symfony\Component\Routing\Generator\UrlGeneratorInterface
+	 * @since 3.1
+	 *
+	 */
+	public function getUrlGenerator()
+	{
+		return $this->oUrlGenerator;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Portal\Helper\SecurityHelper
+	 * @since 3.1
+	 *
+	 */
+	public function getSecurityHelper(): SecurityHelper
+	{
+		return $this->oSecurityHelper;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Portal\Helper\ScopeValidatorHelper
+	 * @since 3.1.0
+	 *
+	 */
+	public function GetScopeValidator(): ScopeValidatorHelper
+	{
+		return $this->oScopeValidator;
+	}
+
+	/**
+	 * @return array
+	 * @since 3.1.0
+	 *
+	 */
+	public function GetCombodoPortalConf(): array
+	{
+		return $this->aCombodoPortalInstanceConf;
 	}
 }

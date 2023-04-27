@@ -1,0 +1,36 @@
+{
+    "name": "datatables.net-fixedheader",
+    "version": "3.1.8",
+    "description": "FixedHeader for DataTables ",
+    "files": [
+        "js/**/*.js"
+    ],
+    "main": "js/dataTables.fixedHeader.js",
+    "type": "types.d.ts",
+    "keywords": [
+        "fixed headers",
+        "sticky",
+        "DataTables",
+        "jQuery",
+        "table",
+        "DataTables"
+    ],
+    "homepage": "https://datatables.net",
+    "bugs": "https://datatables.net/forums",
+    "license": "MIT",
+    "author": {
+        "name": "SpryMedia Ltd",
+        "url": "http://datatables.net"
+    },
+    "dependencies": {
+        "jquery": ">=1.7",
+        "datatables.net": "^1.10.15"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DataTables/Dist-DataTables-FixedHeader.git"
+    },
+    "devDependencies": {
+        "@types/jquery": "^3.5.1"
+    }
+}

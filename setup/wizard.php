@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -23,6 +23,8 @@
  * @see N°3253
  */
 
+use Combodo\iTop\Application\Helper\Session;
+
 $bBypassMaintenance = true; // Reset maintenance mode in case of problem
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
@@ -31,6 +33,7 @@ require_once(APPROOT.'/setup/setuppage.class.inc.php');
 require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
 require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
 
+Session::Start();
 clearstatcache(); // Make sure we know what we are doing !
 // Set a long (at least 4 minutes) execution time for the setup to avoid timeouts during this phase
 ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
@@ -39,7 +42,6 @@ ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
 date_default_timezone_set('Europe/Paris'); // Just to avoid a warning if the timezone is not set in php.ini
 
-SetupUtils::ExitMaintenanceMode(false);
 
 /////////////////////////////////////////////////////////////////////
 // Fake functions to protect the first run of the installer
@@ -51,9 +53,8 @@ if (!function_exists('json_encode'))
 		return '[]';
 	}
 }
-if (!function_exists('json_decode'))
-{
-	function json_decode($json, $assoc=null)
+if (!function_exists('json_decode')) {
+	function json_decode($json, $assoc = null)
 	{
 		return array();
 	}
@@ -61,6 +62,14 @@ if (!function_exists('json_decode'))
 /////////////////////////////////////////////////////////////////////
 //N°3671 setup context: force $bForceTrustProxy to be persisted in next calls
 utils::GetAbsoluteUrlAppRoot(true);
-
 $oWizard = new WizardController('WizStepWelcome');
-$oWizard->Run();
+//N°3952
+if (SetupUtils::IsSessionSetupTokenValid()) {
+	// Normal operation
+	$oWizard->Run();
+} else {
+	SetupUtils::ExitMaintenanceMode(false);
+	// Force initializing the setup
+	$oWizard->Start();
+	SetupUtils::CreateSetupToken();
+}

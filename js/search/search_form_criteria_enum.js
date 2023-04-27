@@ -225,7 +225,7 @@ $(function()
 			for (var i in aSortedValues)
 			{
 				var sValCode = aSortedValues[i][0];
-				var sValLabel = aSortedValues[i][1];
+				var sValLabel = $('<div/>').html(aSortedValues[i][1]).text();
 				//_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden,bObsolete, sAdditionalField)
 				var oValueElem = this._makeListItemElement(sValLabel, sValCode, false, false, aSortedValues[i][2], aSortedValues[i][3]);
 				oValueElem.appendTo(oDynamicListElem);
@@ -428,7 +428,6 @@ $(function()
 								bSearchMode: 'true',
 								sOutputFormat: 'json',
 								operation: 'ac_extkey',
-                                sAutocompleteOperation: 'equals_start_with'
 							}
 							)
 							.done(function(oResponse, sStatus, oXHR){
@@ -441,28 +440,7 @@ $(function()
 									return;
 								}
 
-                                oACXHR = $.post(
-                                    AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'),
-                                    {
-                                        sTargetClass: me.options.field.target_class,
-                                        sFilter: 'SELECT ' + me.options.field.target_class,
-                                        q: sQuery,
-                                        bSearchMode: 'true',
-                                        sOutputFormat: 'json',
-                                        operation: 'ac_extkey',
-                                        sAutocompleteOperation: 'contains'
-                                    }
-                                )
-								.done(function(oResponseContains, sStatus, oXHR){
-                                    //filter duplicates
-                                    $.each(oResponse, function(index, value) {
-                                        delete oResponseContains[index];
-									});
-
-                                    me._onACSearchContainsSuccess(oResponseContains);
-
-
-                                });
+								me._onACSearchContainsSuccess(oResponse);
 							})
 							.fail(function(oResponse, sStatus, oXHR){  me._onACSearchFail(oResponse, sStatus); })
 							.always(function(oResponse, sStatus, oXHR){
@@ -691,7 +669,7 @@ $(function()
 				for(var skey in oResponse)
 				{
 					var sValue = oResponse[skey].value;
-				    var sLabel = oResponse[skey].label;
+				    var sLabel =  $('<div/>').html(oResponse[skey].label).text();
 					// Note: We don't use the _isSelectedValue() method here as it only returns "applied" values; at this moment will could have a checked value that is not among selected (me.options.values) yet. The result would be an hidden item from the AC results.
 					var bSelected = (this.element.find(this._getSelectedValuesWrapperSelector() + ' .sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0);
 					var bInitChecked = bSelected;
@@ -701,51 +679,23 @@ $(function()
 				}
 			}
             this._setACWaitTempHint();
-		},
 
-        // Autocomplete CONTAINS callbacks
-        _onACSearchContainsSuccess: function(oResponse)
-        {
-            if(typeof oResponse !== 'object')
-            {
-                this._emptyACTempHint();
-            	return false;
-            }
-
-            var oDynamicListElem = this.element.find('.sfc_opc_mc_items_dynamic');
-            if(Object.keys(oResponse).length > 0)
-            {
-                // Note: Response is indexed by labels from server so the JSON is always ordered on decoding.
-                for(var skey in oResponse)
-                {
-                    var sValue = oResponse[skey].value;
-                    var sLabel = oResponse[skey].label;
-
-                    // Note: We don't use the _isSelectedValue() method here as it only returns "applied" values; at this moment will could have a checked value that is not among selected (me.options.values) yet. The result would be an hidden item from the AC results.
-                    var bSelected = (this.element.find(this._getSelectedValuesWrapperSelector() + ' .sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0);
-                    var bInitChecked = bSelected;
-                    var bInitHidden = bSelected;
-                    var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden,oResponse[skey].obsolescence_flag,oResponse[skey].additional_field);
-                    oValueElem.appendTo(oDynamicListElem);
-                }
-            }
-
-            if (oDynamicListElem.find('.sfc_opc_mc_item').length == 0)
-            {
-            	this._setACNoResultHint();
-            }
-            else
-            {
-                this._emptyACTempHint();
+			if (oDynamicListElem.find('.sfc_opc_mc_item').length == 0)
+			{
+				this._setACNoResultHint();
 			}
-        },
+			else
+			{
+				this._emptyACTempHint();
+			}
+		},
 		_onACSearchFail: function(oResponse, sStatus)
 		{
 			if(sStatus !== 'abort')
 			{
 				var sErrorMessage = Dict.Format('Error:XHR:Fail', '');
 
-				this._setACHint('=/');
+				this._setACHint(sErrorMessage);
 				this.handler.triggerHandler('itop.search.criteria.error_occured', sErrorMessage);
 			}
 		},
@@ -922,7 +872,7 @@ $(function()
 		// - Make a jQuery element for a list item
 		_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden,bObsolete, sAdditionalField)
 		{
-			var sEscapedLabel = sLabel; // Note: We don't escape this anymore as there is an issue with AttributeExternalKey being already escaped. This will be put back in iTop 2.7 with the AttributeDefinition::GetAllowedValues() refactoring. $('<div />').text(sLabel).html();
+			var sEscapedLabel = $('<div />').text(sLabel).html();
 			if (bObsolete == 1)	{
 				sEscapedLabel = '<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+sEscapedLabel;
 			}

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -10,12 +10,13 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 
 /**
  * Bulk export: CSV export
  *
- * @copyright   Copyright (C) 2015-2021 Combodo SARL
+ * @copyright   Copyright (C) 2015-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class CSVBulkExport extends TabularBulkExport
@@ -114,20 +115,18 @@ class CSVBulkExport extends TabularBulkExport
 			case 'csv_options':
 				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:CSVOptions'));
 
-				$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
-				$oMulticolumn->AddCSSClass('ibo-multi-column');
+				$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
 				$oPanel->AddSubBlock($oMulticolumn);
 
 				//SeparatorCharacter
 				$oFieldSetSeparator = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:CSVImport:SeparatorCharacter'));
-				$oFieldSetSeparator->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetSeparator);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetSeparator));
 
 				$sRawSeparator = utils::ReadParam('separator', ',', true, 'raw_data');
 				$sCustomDateTimeFormat = utils::ReadParam('', ',', true, 'raw_data');
 				$aSep = array(
-					';' => Dict::S('UI:CSVImport:SeparatorSemicolon+'),
-					',' => Dict::S('UI:CSVImport:SeparatorComma+'),
+					';'   => Dict::S('UI:CSVImport:SeparatorSemicolon+'),
+					','   => Dict::S('UI:CSVImport:SeparatorComma+'),
 					'tab' => Dict::S('UI:CSVImport:SeparatorTab+'),
 				);
 				$sOtherSeparator = '';
@@ -135,25 +134,25 @@ class CSVBulkExport extends TabularBulkExport
 					$sOtherSeparator = $sRawSeparator;
 					$sRawSeparator = 'other';
 				}
-				$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" name="other-separator" value="'.htmlentities($sOtherSeparator, ENT_QUOTES, 'UTF-8').'"/>';
+				$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" name="other-separator" value="'.utils::EscapeHtml($sOtherSeparator).'"/>';
 
 				foreach ($aSep as $sVal => $sLabel) {
-					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
+					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", utils::EscapeHtml($sVal), $sLabel, "radio");
 					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
 					$oRadio->SetBeforeInput(false);
-					$oRadio->AddCSSClass('ibo-input--label-right');
+					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
+					$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
 					$oFieldSetSeparator->AddSubBlock($oRadio);
 					$oFieldSetSeparator->AddSubBlock(new Html('</br>'));
 				}
 
 				//TextQualifierCharacter
 				$oFieldSetTextQualifier = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:CSVImport:TextQualifierCharacter'));
-				$oFieldSetTextQualifier->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetTextQualifier);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetTextQualifier));
 
 				$sRawQualifier = utils::ReadParam('text-qualifier', '"', true, 'raw_data');
 				$aQualifiers = array(
-					'"' => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
+					'"'  => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
 					'\'' => Dict::S('UI:CSVImport:QualifierSimpleQuote+'),
 				);
 				$sOtherQualifier = '';
@@ -161,74 +160,75 @@ class CSVBulkExport extends TabularBulkExport
 					$sOtherQualifier = $sRawQualifier;
 					$sRawQualifier = 'other';
 				}
-				$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" name="other-text-qualifier" value="'.htmlentities($sOtherQualifier, ENT_QUOTES, 'UTF-8').'"/>';
+				$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" name="other-text-qualifier" value="'.utils::EscapeHtml($sOtherQualifier).'"/>';
 
 				foreach ($aQualifiers as $sVal => $sLabel) {
-					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text-qualifier", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
+					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text-qualifier", utils::EscapeHtml($sVal), $sLabel, "radio");
 					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
 					$oRadio->SetBeforeInput(false);
 					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
+					$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
 					$oFieldSetTextQualifier->AddSubBlock($oRadio);
 					$oFieldSetTextQualifier->AddSubBlock(new Html('</br>'));
 				}
 
 				//Localization
 				$oFieldSetLocalization = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:CSVLocalization'));
-				$oFieldSetLocalization->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetLocalization);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetLocalization));
 
 				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionNoLocalize'), "no_localize", "1", "csv_no_localize", "checkbox");
 				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('no_localize', 0) == 1));
 				$oCheckBox->SetBeforeInput(false);
 				$oCheckBox->GetInput()->AddCSSClass('ibo-input--label-right');
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetLocalization->AddSubBlock($oCheckBox);
 				$oFieldSetLocalization->AddSubBlock(new Html('</br>'));
 
 				$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel("charset", Dict::S('UI:CSVImport:Encoding'));
-				$oSelect->SetBeforeInput(true);
+				$oSelect->SetIsLabelBefore(true);
 				$oFieldSetLocalization->AddSubBlock($oSelect);
 
 				$aPossibleEncodings = utils::GetPossibleEncodings(MetaModel::GetConfig()->GetCSVImportCharsets());
 				$sDefaultEncoding = MetaModel::GetConfig()->Get('csv_file_default_charset');
 				foreach ($aPossibleEncodings as $sIconvCode => $sDisplayName) {
-					$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sIconvCode, $sDisplayName, ($sIconvCode == $sDefaultEncoding)));
+					$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sIconvCode, $sDisplayName, ($sIconvCode == $sDefaultEncoding)));
 				}
 				//markup
 				$oFieldSetMarkup = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:TextFormat'));
-				$oFieldSetMarkup->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetMarkup);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetMarkup));
 
 				$oCheckBoxMarkup = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionFormattedText'), "formatted_text", "1", "csv_formatted_text", "checkbox");
 				$oCheckBoxMarkup->GetInput()->SetIsChecked((utils::ReadParam('formatted_text', 0) == 1));
 				$oCheckBoxMarkup->SetBeforeInput(false);
+				$oCheckBoxMarkup->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetMarkup->AddSubBlock($oCheckBoxMarkup);
 
 				//date format
 				$oFieldSetDate = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:DateTimeFormat'));
-				$oFieldSetDate->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetDate);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetDate));
 
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 
-				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
-				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
-				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "csv_custom_date_time_format", "default", "csv_date_time_format_default", "radio");
+				$sDefaultFormat = utils::EscapeHtml((string)AttributeDateTime::GetFormat());
+				$sExample = utils::EscapeHtml(date((string)AttributeDateTime::GetFormat()));
+				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "csv_date_format_radio", "default", "csv_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 				$oRadioDefault->SetBeforeInput(false);
+				$oRadioDefault->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-				$sFormatInput = '<input type="text" size="15" name="date_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
-				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "csv_custom_date_time_format", "custom", "csv_date_time_format_custom", "radio");
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="csv_custom_date_time_format" title="" value="'.utils::EscapeHtml($sDateTimeFormat).'"/>';
+				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "csv_date_format_radio", "custom", "csv_date_time_format_custom", "radio");
+				$oRadioCustom->SetDescription(Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip'));
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 				$oRadioCustom->SetBeforeInput(false);
+				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 
-				$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
 
 				$oP->add_ready_script(
 					<<<EOF
-$('#csv_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#form_part_csv_options').on('preview_updated', function() { FormatDatesInPreview('csv', 'csv'); });
 $('#csv_date_time_format_default').on('click', function() { FormatDatesInPreview('csv', 'csv'); });
 $('#csv_date_time_format_custom').on('click', function() { FormatDatesInPreview('csv', 'csv'); });
@@ -246,17 +246,18 @@ EOF
 	}
 
 	protected function GetSampleData($oObj, $sAttCode)
-	{	
-		if ($sAttCode != 'id')
-		{
+	{
+		if ($sAttCode != 'id') {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 			{
 				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
-				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.htmlentities($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj), ENT_QUOTES, 'UTF-8').'</div>';
+
+				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.utils::EscapeHtml($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj)).'</div>';
 			}
 		}
-		return '<div class="text-preview">'.htmlentities($this->GetValue($oObj, $sAttCode), ENT_QUOTES, 'UTF-8').'</div>';
+
+		return '<div class="text-preview">'.utils::EscapeHtml($this->GetValue($oObj, $sAttCode)).'</div>';
 	}
 
 	protected function GetValue($oObj, $sAttCode)

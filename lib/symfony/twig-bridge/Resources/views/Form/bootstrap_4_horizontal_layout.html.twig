@@ -24,28 +24,39 @@ col-sm-2
     {%- if expanded is defined and expanded -%}
         {{ block('fieldset_form_row') }}
     {%- else -%}
-        <div class="form-group row{% if (not compound or force_error|default(false)) and not valid %} is-invalid{% endif %}">
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+        <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' form-group row' ~ ((not compound or force_error|default(false)) and not valid ? ' is-invalid'))|trim})} %}{{ block('attributes') }}{% endwith %}>
             {{- form_label(form) -}}
             <div class="{{ block('form_group_class') }}">
-                {{- form_widget(form) -}}
+                {{- form_widget(form, widget_attr) -}}
+                {{- form_help(form) -}}
             </div>
     {##}</div>
     {%- endif -%}
 {%- endblock form_row %}
 
 {% block fieldset_form_row -%}
-    <fieldset class="form-group">
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <fieldset{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' form-group')|trim})} %}{{ block('attributes') }}{% endwith %}>
         <div class="row{% if (not compound or force_error|default(false)) and not valid %} is-invalid{% endif %}">
             {{- form_label(form) -}}
             <div class="{{ block('form_group_class') }}">
-                {{- form_widget(form) -}}
+                {{- form_widget(form, widget_attr) -}}
+                {{- form_help(form) -}}
+                {{- form_errors(form) -}}
             </div>
         </div>
 {##}</fieldset>
 {%- endblock fieldset_form_row %}
 
 {% block submit_row -%}
-    <div class="form-group row">{#--#}
+    <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' form-group row')|trim})} %}{{ block('attributes') }}{% endwith %}>{#--#}
         <div class="{{ block('form_label_class') }}"></div>{#--#}
         <div class="{{ block('form_group_class') }}">
             {{- form_widget(form) -}}
@@ -54,7 +65,7 @@ col-sm-2
 {%- endblock submit_row %}
 
 {% block reset_row -%}
-    <div class="form-group row">{#--#}
+    <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' form-group row')|trim})} %}{{ block('attributes') }}{% endwith %}>{#--#}
         <div class="{{ block('form_label_class') }}"></div>{#--#}
         <div class="{{ block('form_group_class') }}">
             {{- form_widget(form) -}}
@@ -67,10 +78,11 @@ col-sm-10
 {%- endblock form_group_class %}
 
 {% block checkbox_row -%}
-    <div class="form-group row">{#--#}
+    <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' form-group row')|trim})} %}{{ block('attributes') }}{% endwith %}>{#--#}
         <div class="{{ block('form_label_class') }}"></div>{#--#}
         <div class="{{ block('form_group_class') }}">
             {{- form_widget(form) -}}
+            {{- form_help(form) -}}
         </div>{#--#}
     </div>
 {%- endblock checkbox_row %}

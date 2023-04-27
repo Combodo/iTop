@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\Text\Text;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow;
@@ -139,30 +140,15 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 	return $oFilter;
 }
 
-function GetReportColor($iTotal, $iErrors)
-{
-	$sResult = 'red';
-	if ( ($iTotal == 0) || ($iErrors / $iTotal) <= 0.05 )
-	{
-		$sResult = 'green';
-	}
-	else if ( ($iErrors / $iTotal) <= 0.25 )
-	{
-		$sResult = 'orange';
-	}
-	return $sResult;
-}
-
 try
 {
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
-	require_once(APPROOT.'/application/csvpage.class.inc.php');
 
-	
 	require_once(APPROOT.'/application/startup.inc.php');
-	$operation = utils::ReadParam('operation', '');
+
+	$bSelectionAuditRulesByDefault = utils::GetConfig()->Get('audit.enable_selection_landing_page');
+	$operation = utils::ReadParam('operation', $bSelectionAuditRulesByDefault ? 'selection' : 'audit');
 	$oAppContext = new ApplicationContext();
 	
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
@@ -268,11 +254,89 @@ try
 			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
 			$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
 			break;
-		
+
+		case 'selection':
+			$oP->SetBreadCrumbEntry('ui-tool-auditselection', Dict::S('Menu:Audit'), Dict::S('UI:Audit:InteractiveAudit:Selection'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:InteractiveAudit:Selection')));
+			$oP->AddUiBlock(new Text(Dict::S('UI:Audit:InteractiveAudit:Selection+')));
+
+			// Header block to select all audit categories
+			$oCategoriesSet = new DBObjectSet(new DBObjectSearch('AuditCategory'));
+			$iCategoryCount = $oCategoriesSet->Count();
+
+			$oDashboardRow = new DashboardRow();
+			$oDashboardRow->AddCSSClass('ibo-audit--dashboard');
+			$oDashboardColumn = new DashboardColumn(false, true);
+			$oDashboardRow->AddDashboardColumn($oDashboardColumn);
+			$oAllCategoriesDashlet = new DashletContainer();
+			$oAllCategoriesDashlet
+				->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge'])
+				->AddSubBlock(DashletFactory::MakeForDashletBadge(
+					'../images/icons/icons8-audit.svg',
+					utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit",
+					$iCategoryCount,
+					Dict::S('UI:Audit:InteractiveAudit:Selection:All')
+				));
+			$oDashboardColumn->AddUIBlock($oAllCategoriesDashlet);
+			$oP->AddUiBlock($oDashboardRow);
+
+			// Three column layout to display all available audit domains
+			$oDashboardRow = new DashboardRow();
+			$oDashboardRow
+				->AddCSSClass('ibo-audit--dashboard')
+				->AddDashboardColumn(new DashboardColumn(false, true))
+				->AddDashboardColumn(new DashboardColumn(false, true))
+				->AddDashboardColumn(new DashboardColumn(false, true));
+
+			// Fetch all audit domains with at least on linked category
+			$oDomainSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditDomain AS domain JOIN lnkAuditCategoryToAuditDomain AS lnk ON lnk.domain_id = domain.id"));
+			$oDomainSet->SetOrderBy(array('name' => true));
+			$iDomainCnt = 0;
+			/** @var AuditDomain $oAuditDomain */
+			while($oAuditDomain = $oDomainSet->Fetch()) {
+				$sDomainUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit&domain=".$oAuditDomain->GetKey();
+				$sIconUrl = '../images/icons/icons8-puzzle.svg';
+					/** @var \ormDocument $oImage */
+				$oImage = $oAuditDomain->Get('icon');
+				if (!$oImage->IsEmpty()) {
+					$sIconUrl = $oImage->GetDisplayURL(get_class($oAuditDomain), $oAuditDomain->GetKey(), 'icon');
+				}
+				$iCategoryCount = $oAuditDomain->Get('categories_list')->Count();
+				$oDomainBlock = DashletFactory::MakeForDashletBadge($sIconUrl, $sDomainUrl, $iCategoryCount, $oAuditDomain->Get('name'));
+				$oDomainDashlet = new DashletContainer();
+				$oDomainDashlet->AddSubBlock($oDomainBlock)->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge']);
+				$oDashboardRow->GetSubBlocks()[$iDomainCnt % 3]->AddUIBlock($oDomainDashlet); // ;
+				$iDomainCnt++;
+			}
+
+			$oP->AddUiBlock($oDashboardRow);
+			break;
+
 		case 'audit':
 		default:
 		$oP->SetBreadCrumbEntry('ui-tool-audit', Dict::S('Menu:Audit'), Dict::S('UI:Audit:InteractiveAudit'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:InteractiveAudit')));
+
+		$sDomainKey = utils::ReadParam('domain', '');
+		$sCategories = utils::ReadParam('categories', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);  // May contain commas
+
+		$oCategoriesSet = new DBObjectSet(new DBObjectSearch('AuditCategory'));
+		$sSubTitle = Dict::S('UI:Audit:InteractiveAudit:AllCategories');
+		if(!empty($sCategories))
+		{
+			$oCategoriesSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditCategory WHERE id IN (:categories)", array('categories' => explode(',',$sCategories))));
+			$sSubTitle = Dict::Format('UI:Audit:InteractiveAudit:SelectedCategories', $oCategoriesSet->Count());
+		}
+		elseif (!empty($sDomainKey))
+		{
+			$oAuditDomain = MetaModel::GetObject('AuditDomain', $sDomainKey);
+			$oCategoriesSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditCategory AS c JOIN lnkAuditCategoryToAuditDomain AS lnk ON lnk.category_id = c.id WHERE lnk.domain_id = :domain", array('domain' => $oAuditDomain->GetKey())));
+			$sSubTitle = Dict::Format('UI:Audit:InteractiveAudit:SelectedDomain', $oAuditDomain->GetName());
+		}
+
+		$oP->AddUiBlock(new Text($sSubTitle));
+
+
 		$oTotalBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-audit.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsAudited'));
 		$oErrorBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-delete.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsInError'));
 		$oWorkingBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-checkmark.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsValidated'));
@@ -305,10 +369,10 @@ try
 
 		$oP->AddUiBlock($oDashboardRow);
 
-		$oAuditFilter = new DBObjectSearch('AuditCategory');
-		$oCategoriesSet = new DBObjectSet($oAuditFilter);
+
 		
 		$aAuditCategoryPanels = [];
+		/** @var AuditCategory $oAuditCategory */
 		while($oAuditCategory = $oCategoriesSet->fetch())
 		{
 			$oAuditCategoryPanelBlock = new Panel($oAuditCategory->GetName());
@@ -343,7 +407,7 @@ try
 						// nothing to check, really !
 						$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>"; 
 						$aRow['percent_ok'] = '100.00';
-						$aRow['class'] = GetReportColor($iCount, 0);
+						$aRow['class'] = $oAuditCategory->GetReportColor($iCount, 0);
 					}
 					else
 					{
@@ -358,7 +422,7 @@ try
 							}
 							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\"><img src=\"../images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>"; 
 							$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
-							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);							
+							$aRow['class'] = $oAuditCategory->GetReportColor($iCount, $iErrorsCount);
 						}
 						catch(Exception $e)
 						{
@@ -376,7 +440,7 @@ try
 				}
 				$iTotalErrors = count($aObjectsWithErrors);
 				$sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
-				$sClass = GetReportColor($iCount, $iTotalErrors);
+				$sClass = $oAuditCategory->GetReportColor($iCount, $iTotalErrors);
 				
 				$oTotalBlock->SetCount((int)$oTotalBlock->GetCount() + ($iCount));
 				$oErrorBlock->SetCount((int)$oErrorBlock->GetCount() + $iTotalErrors);
@@ -393,7 +457,7 @@ try
 				continue;
 			}
 			
-			$oAuditCategoryPanelBlock->SetColor($sClass);
+			$oAuditCategoryPanelBlock->SetColorFromColorSemantic($sClass);
 			$oAuditCategoryPanelBlock->AddCSSClass('ibo-audit--audit-category--panel');
 			$aData = [];
 			foreach($aResults as $aRow)
@@ -412,7 +476,7 @@ try
 				'percentage_ok' => array('label' => Dict::S('UI:Audit:PercentageOk'), 'description' => Dict::S('UI:Audit:PercentageOk')),
 			);
 			
-			$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
+			$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData, null, [], "", array('pageLength' => -1));
 			$oAuditCategoryPanelBlock->AddSubBlock($oAttachmentTableBlock);
 			$aAuditCategoryPanels[] = $oAuditCategoryPanelBlock;
 		}

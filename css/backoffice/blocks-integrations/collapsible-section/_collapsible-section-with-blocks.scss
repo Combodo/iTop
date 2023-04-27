@@ -1,0 +1,17 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-collapsible-section--spacing-top--with-same-block: $ibo-spacing-400 !default;
+$ibo-collapsible-section--spacing-top--with-other-blocks: $ibo-spacing-500 !default;
+
+/* Spacing between collapsible-section blocks */
+.ibo-collapsible-section + .ibo-collapsible-section {
+  margin-top: $ibo-collapsible-section--spacing-top--with-same-block;
+}
+
+/* Spacing between an alert block and something else */
+.ibo-collapsible-section + .ibo-block:not(.ibo-collapsible-section) {
+  margin-top: $ibo-collapsible-section--spacing-top--with-other-blocks;
+}

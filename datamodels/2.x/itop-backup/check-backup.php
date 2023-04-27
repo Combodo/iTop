@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -108,20 +108,9 @@ function MakeArchiveFileName($iRefTime = null)
 	$sDefaultBackupFileName = sys_get_temp_dir().'/'."__DB__-%Y-%m-%d";
 	$sBackupFile =  utils::ReadParam('backup_file', $sDefaultBackupFileName, true, 'raw_data');
 
-	$oConfig = GetConfig();
-
-	$sBackupFile = str_replace('__HOST__', $oConfig->Get('db_host'), $sBackupFile);
-	$sBackupFile = str_replace('__DB__', $oConfig->Get('db_name'), $sBackupFile);
-	$sBackupFile = str_replace('__SUBNAME__', $oConfig->Get('db_subname'), $sBackupFile);
-	
-	if (is_null($iRefTime))
-	{
-		$sBackupFile = strftime($sBackupFile);
-	}
-	else
-	{
-		$sBackupFile = strftime($sBackupFile, $iRefTime);
-	}
+	$oBackup = new DBBackup();
+	$oDateTime = $iRefTime !== null ? new DateTime($iRefTime) : new DateTime();
+	$sBackupFile = $oBackup->MakeName($sBackupFile, $oDateTime);
 
 	return $sBackupFile;
 }

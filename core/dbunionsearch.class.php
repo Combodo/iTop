@@ -1,21 +1,8 @@
 <?php
-// Copyright (C) 2015-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 /**
  * A union of DBObjectSearches
@@ -24,7 +11,7 @@
  * For clarity purpose, since only the constructor vary between DBObjectSearch and DBUnionSearch, all the API is documented on the common ancestor: DBSearch
  * Please refer to DBSearch's documentation
  *
- * @copyright   Copyright (C) 2015-2021 Combodo SARL
+ * @copyright   Copyright (C) 2015-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  *
@@ -34,12 +21,11 @@
  * @see DBSearch
  * @see DBObjectSearch
  */
- 
 class DBUnionSearch extends DBSearch
 {
 	protected $aSearches; // source queries
 	protected $aSelectedClasses; // alias => classes (lowest common ancestors) computed at construction
-
+	protected $aColumnToAliases;
     /**
      * DBUnionSearch constructor.
      *
@@ -108,11 +94,14 @@ class DBUnionSearch extends DBSearch
 
 	/**
 	 * Find the lowest common ancestor for each of the selected class
+	 *
+	 * @throws \Exception
 	 */
 	protected function ComputeSelectedClasses()
 	{
 		// 1 - Collect all the column/classes
-		$aColumnToClasses = array();
+		$aColumnToClasses = [];
+		$this->aColumnToAliases = [];
 		foreach ($this->aSearches as $iPos => $oSearch)
 		{
 			$aSelected = array_values($oSearch->GetSelectedClasses());
@@ -131,7 +120,14 @@ class DBUnionSearch extends DBSearch
 
 			foreach ($aSelected as $iColumn => $sClass)
 			{
-				$aColumnToClasses[$iColumn][] = $sClass;
+				$aColumnToClasses[$iColumn][$iPos] = $sClass;
+			}
+
+			// Store the aliases by column to map them later (the first query impose the aliases)
+			$aAliases = array_keys($oSearch->GetSelectedClasses());
+			foreach ($aAliases as $iColumn => $sAlias)
+			{
+				$this->aColumnToAliases[$iColumn][$iPos] = $sAlias;
 			}
 		}
 
@@ -140,7 +136,7 @@ class DBUnionSearch extends DBSearch
 		$aColumnToAlias = array_keys($oFirstSearch->GetSelectedClasses());
 
 		// 3 - Compute alias => lowest common ancestor
-		$this->aSelectedClasses = array();
+		$this->aSelectedClasses = [];
 		foreach ($aColumnToClasses as $iColumn => $aClasses)
 		{
 			$sAlias = $aColumnToAlias[$iColumn];
@@ -229,15 +225,32 @@ class DBUnionSearch extends DBSearch
 
 	/**
 	 * @param array $aSelectedClasses array of aliases
-	 * @throws CoreException
+	 *
+	 * @throws \Exception
 	 */
 	public function SetSelectedClasses($aSelectedClasses)
 	{
+		// Get the columns corresponding the given aliases
+		$aSelectedColumns = [];
+		$oFirstSearch = $this->aSearches[0];
+		$aAliasesToColumn = array_flip(array_keys($oFirstSearch->GetSelectedClasses()));
+		foreach ($aSelectedClasses as $sSelectedAlias) {
+			if (!isset($aAliasesToColumn[$sSelectedAlias])) {
+				throw new CoreException("SetSelectedClasses: Invalid class alias $sSelectedAlias");
+			}
+			$aSelectedColumns[] = $aAliasesToColumn[$sSelectedAlias];
+		}
+
 		// 1 - change for each search
-		foreach ($this->aSearches as $oSearch)
+		foreach ($this->aSearches as $iPos => $oSearch)
 		{
+			$aCurrentSelectedAliases = [];
+			foreach ($aSelectedColumns as $iColumn) {
+				$aCurrentSelectedAliases[] = $this->aColumnToAliases[$iColumn][$iPos];
+			}
+
 			// Throws an exception if not valid
-			$oSearch->SetSelectedClasses($aSelectedClasses);
+			$oSearch->SetSelectedClasses($aCurrentSelectedAliases);
 		}
 		// 2 - update the lowest common ancestors
 		$this->ComputeSelectedClasses();
@@ -416,7 +429,11 @@ class DBUnionSearch extends DBSearch
 		$aSearches = array();
 		foreach ($this->aSearches as $oSearch)
 		{
-			$aSearches[] = $oSearch->Filter($sClassAlias, $oFilter);
+			if (!$oSearch->IsAllDataAllowed()) {
+				$aSearches[] = $oSearch->Filter($sClassAlias, $oFilter);
+			} else {
+				$aSearches[] = $oSearch;
+			}
 		}
 		return new DBUnionSearch($aSearches);
 	}
@@ -672,26 +689,6 @@ class DBUnionSearch extends DBSearch
 		return $oSQLQuery;
 	}
 
-	function GetExpectedArguments()
-	{
-		$aVariableCriteria = array();
-		foreach ($this->aSearches as $oSearch)
-		{
-			$aVariableCriteria = array_merge($aVariableCriteria, $oSearch->GetExpectedArguments());
-		}
-
-		return $aVariableCriteria;
-	}
-	/**
-	 * @return \Expression
-	 */
-	public function GetCriteria()
-	{
-		// We're at the limit here
-		$oSearch = reset($this->aSearches);
-		return $oSearch->GetCriteria();
-	}
-
 	protected function IsDataFiltered()
 	{
 		$bIsAllDataFiltered = true;
@@ -734,13 +731,14 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
-	public function ListParameters()
+	function GetExpectedArguments(): array
 	{
-		$aParameters = array();
+		$aVariableCriteria = array();
 		foreach ($this->aSearches as $oSearch)
 		{
-			$aParameters = array_merge($aParameters, $oSearch->ListParameters());
+			$aVariableCriteria = array_merge($aVariableCriteria, $oSearch->GetExpectedArguments());
 		}
-		return $aParameters;
+
+		return $aVariableCriteria;
 	}
 }

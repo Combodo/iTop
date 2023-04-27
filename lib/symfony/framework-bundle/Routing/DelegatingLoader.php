@@ -11,10 +11,10 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Routing;
 
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
-use Symfony\Component\Config\Exception\FileLoaderLoadException;
+use Symfony\Component\Config\Exception\LoaderLoadException;
 use Symfony\Component\Config\Loader\DelegatingLoader as BaseDelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * DelegatingLoader delegates route loading to other loaders using a loader resolver.
@@ -23,19 +23,19 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
  * to the fully-qualified form (from a:b:c to class::method).
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @final
  */
 class DelegatingLoader extends BaseDelegatingLoader
 {
-    protected $parser;
     private $loading = false;
+    private $defaultOptions;
+    private $defaultRequirements;
 
-    /**
-     * @param ControllerNameParser    $parser   A ControllerNameParser instance
-     * @param LoaderResolverInterface $resolver A LoaderResolverInterface instance
-     */
-    public function __construct(ControllerNameParser $parser, LoaderResolverInterface $resolver)
+    public function __construct(LoaderResolverInterface $resolver, array $defaultOptions = [], array $defaultRequirements = [])
     {
-        $this->parser = $parser;
+        $this->defaultOptions = $defaultOptions;
+        $this->defaultRequirements = $defaultRequirements;
 
         parent::__construct($resolver);
     }
@@ -43,7 +43,7 @@ class DelegatingLoader extends BaseDelegatingLoader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, string $type = null): RouteCollection
     {
         if ($this->loading) {
             // This can happen if a fatal error occurs in parent::load().
@@ -62,7 +62,7 @@ class DelegatingLoader extends BaseDelegatingLoader
             // - this handles the case and prevents the second fatal error
             //   by triggering an exception beforehand.
 
-            throw new FileLoaderLoadException($resource, null, null, null, $type);
+            throw new LoaderLoadException($resource, null, 0, null, $type);
         }
         $this->loading = true;
 
@@ -73,14 +73,18 @@ class DelegatingLoader extends BaseDelegatingLoader
         }
 
         foreach ($collection->all() as $route) {
-            if (!\is_string($controller = $route->getDefault('_controller')) || !$controller) {
+            if ($this->defaultOptions) {
+                $route->setOptions($route->getOptions() + $this->defaultOptions);
+            }
+            if ($this->defaultRequirements) {
+                $route->setRequirements($route->getRequirements() + $this->defaultRequirements);
+            }
+            if (!\is_string($controller = $route->getDefault('_controller'))) {
                 continue;
             }
 
-            try {
-                $controller = $this->parser->parse($controller);
-            } catch (\InvalidArgumentException $e) {
-                // unable to optimize unknown notation
+            if (str_contains($controller, '::')) {
+                continue;
             }
 
             $route->setDefault('_controller', $controller);

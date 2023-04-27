@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <a>
+    <b/>
+    <d _delta="delete"/>
+    <f>
+      <g>I'm a future sibling</g>
+      <c _delta="delete">In self delete</c>
+      <e>In parent delete</e>
+    </f>
+  </a>
+</itop_design>

@@ -1,6 +1,94 @@
 CHANGELOG
 =========
 
+5.4
+---
+
+ * Add new `lint:yaml dirname --exclude=/dirname/foo.yaml --exclude=/dirname/bar.yaml`
+   option to exclude one or more specific files from multiple file list
+ * Allow negatable for the parse tags option with `--no-parse-tags`
+
+5.3
+---
+
+ * Added `github` format support & autodetection to render errors as annotations
+   when running the YAML linter command in a Github Action environment.
+
+5.1.0
+-----
+
+ * Added support for parsing numbers prefixed with `0o` as octal numbers.
+ * Deprecated support for parsing numbers starting with `0` as octal numbers. They will be parsed as strings as of Symfony 6.0. Prefix numbers with `0o`
+   so that they are parsed as octal numbers.
+
+   Before:
+
+   ```yaml
+   Yaml::parse('072');
+   ```
+
+   After:
+
+   ```yaml
+   Yaml::parse('0o72');
+   ```
+
+ * Added `yaml-lint` binary.
+ * Deprecated using the `!php/object` and `!php/const` tags without a value.
+
+5.0.0
+-----
+
+ * Removed support for mappings inside multi-line strings.
+ * removed support for implicit STDIN usage in the `lint:yaml` command, use `lint:yaml -` (append a dash) instead to make it explicit.
+
+4.4.0
+-----
+
+ * Added support for parsing the inline notation spanning multiple lines.
+ * Added support to dump `null` as `~` by using the `Yaml::DUMP_NULL_AS_TILDE` flag.
+ * deprecated accepting STDIN implicitly when using the `lint:yaml` command, use `lint:yaml -` (append a dash) instead to make it explicit.
+
+4.3.0
+-----
+
+ * Using a mapping inside a multi-line string is deprecated and will throw a `ParseException` in 5.0.
+
+4.2.0
+-----
+
+ * added support for multiple files or directories in `LintCommand`
+
+4.0.0
+-----
+
+ * The behavior of the non-specific tag `!` is changed and now forces
+   non-evaluating your values.
+ * complex mappings will throw a `ParseException`
+ * support for the comma as a group separator for floats has been dropped, use
+   the underscore instead
+ * support for the `!!php/object` tag has been dropped, use the `!php/object`
+   tag instead
+ * duplicate mapping keys throw a `ParseException`
+ * non-string mapping keys throw a `ParseException`, use the `Yaml::PARSE_KEYS_AS_STRINGS`
+   flag to cast them to strings
+ * `%` at the beginning of an unquoted string throw a `ParseException`
+ * mappings with a colon (`:`) that is not followed by a whitespace throw a
+   `ParseException`
+ * the `Dumper::setIndentation()` method has been removed
+ * being able to pass boolean options to the `Yaml::parse()`, `Yaml::dump()`,
+   `Parser::parse()`, and `Dumper::dump()` methods to configure the behavior of
+   the parser and dumper is no longer supported, pass bitmask flags instead
+ * the constructor arguments of the `Parser` class have been removed
+ * the `Inline` class is internal and no longer part of the BC promise
+ * removed support for the `!str` tag, use the `!!str` tag instead
+ * added support for tagged scalars.
+
+   ```yml
+   Yaml::parse('!foo bar', Yaml::PARSE_CUSTOM_TAGS);
+   // returns TaggedValue('foo', 'bar');
+   ```
+
 3.4.0
 -----
 

@@ -1,23 +1,35 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\FormHelper;
+use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\JsPopoverMenuItem;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanel;
@@ -26,8 +38,16 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetViewTable;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinkSetViewTable;
+use Combodo\iTop\Application\UI\Links\Set\LinkSetUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
+use Combodo\iTop\Service\Links\LinkSetDataTransformer;
+use Combodo\iTop\Service\Links\LinkSetModel;
+
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
 
@@ -47,27 +67,53 @@ require_once(APPROOT.'application/ui.linksdirectwidget.class.inc.php');
 require_once(APPROOT.'application/ui.passwordwidget.class.inc.php');
 require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'application/ui.htmleditorwidget.class.inc.php');
-require_once(APPROOT.'sources/application/search/searchform.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionparser.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversionabstract.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversion/criteriontooql.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/searchform.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/criterionparser.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/criterionconversionabstract.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/CriterionConversion/criteriontooql.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/CriterionConversion/criteriontosearchform.class.inc.php');
 
 /**
  * Class cmdbAbstractObject
  */
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
-	/** @var string ENUM_OBJECT_MODE_VIEW */
-	public const ENUM_OBJECT_MODE_VIEW = 'view';
-	/** @var string ENUM_OBJECT_MODE_EDIT */
-	public const ENUM_OBJECT_MODE_EDIT = 'edit';
-	/** @var string ENUM_OBJECT_MODE_CREATE */
-	public const ENUM_OBJECT_MODE_CREATE = 'create';
-	/** @var string ENUM_OBJECT_MODE_STIMULUS */
-	public const ENUM_OBJECT_MODE_STIMULUS = 'stimulus';
-	/** @var string ENUM_OBJECT_MODE_PRINT */
-	public const ENUM_OBJECT_MODE_PRINT = 'print';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_VIEW = 'view';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_EDIT = 'edit';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_CREATE = 'create';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_STIMULUS = 'stimulus';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_PRINT = 'print';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_BULK_EDIT = self::ENUM_DISPLAY_MODE_EDIT;
 
 	// N°3750 rendering used
 	/** @var string */
@@ -89,6 +135,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	/** @var string */
 	public const ENUM_INPUT_TYPE_RADIO = 'radio';
 	/** @var string */
+	public const ENUM_INPUT_TYPE_CHECKBOX = 'checkbox';
+	/** @var string */
 	public const ENUM_INPUT_TYPE_DROPDOWN_RAW = 'dropdown_raw';
 	/** @var string */
 	public const ENUM_INPUT_TYPE_DROPDOWN_DECORATED = 'dropdown_decorated'; // now with the JQuery Selectize plugin
@@ -100,13 +148,26 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public const ENUM_INPUT_TYPE_LINKEDSET = 'linkedset';
 
 	/**
-	 * @var string DEFAULT_OBJECT_MODE
+	 * @var string DEFAULT_DISPLAY_MODE
+	 * @see static::$sDisplayMode
 	 * @since 3.0.0
 	 */
-	public const DEFAULT_OBJECT_MODE = self::ENUM_OBJECT_MODE_VIEW;
+	public const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_VIEW;
+
+	/**
+	 * @var string Prefix for tags in the subtitle, allows to identify them more easily
+	 * @used-by static::DisplayBareHeader
+	 * @since 3.0.0
+	 */
+	public const HEADER_BLOCKS_SUBTITLE_TAG_PREFIX = 'tag-';
 
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	protected static $iGlobalFormId = 1;
+	/**
+	 * @var string Mode in which the object is displayed {@see static::ENUM_DISPLAY_MODE_VIEW}, ...)
+	 * @since 3.0.0
+	 */
+	protected $sDisplayMode;
 	protected $aFieldsMap;
 
 	/**
@@ -119,6 +180,36 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 * @var bool
 	 */
 	protected $bAllowDelete;
+
+
+	/** @var array attributes flags cache [target_state][attcode]['flags'] */
+	protected $aAttributesFlags;
+	/** @var array initial attributes flags cache [attcode]['flags'] */
+	protected $aInitialAttributesFlags;
+
+	protected $iUpdateLoopCount;
+
+	const MAX_UPDATE_LOOP_COUNT = 10;
+
+	/**
+	 * @var array First level classname, second level id, value number of calls done
+	 * @used-by static::RegisterObjectAwaitingEventDbLinksChanged()
+	 * @used-by static::RemoveObjectAwaitingEventDbLinksChanged()
+	 *
+	 */
+	protected static array $aObjectsAwaitingEventDbLinksChanged = [];
+
+	/**
+	 * @var bool Flag to allow/block the Event when DBLink are changed
+	 * This is used to avoid sending too many events when doing mass-update
+	 *
+	 * When this flag is set to true, the object registration for links modification is done
+	 * but the event is not fired.
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	protected static bool $bBlockEventDBLinksChanged = false;
+
 
 	/**
 	 * Constructor from a row of data (as a hash 'attcode' => value)
@@ -133,26 +224,54 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
+		$this->sDisplayMode = static::DEFAULT_DISPLAY_MODE;
 		$this->bAllowWrite = false;
 		$this->bAllowDelete = false;
+		$this->iUpdateLoopCount = 0;
 	}
 
 	/**
-	 * Return the allowed object modes
+	 * Return the allowed display modes
 	 *
-	 * @see static::ENUM_OBJECT_MODE_XXX
+	 * @see static::ENUM_DISPLAY_MODE_XXX
 	 *
 	 * @return string[]
 	 * @since 3.0.0
 	 */
-	public static function EnumObjectModes(): array
+	public static function EnumDisplayModes(): array
 	{
 		return [
-			static::ENUM_OBJECT_MODE_VIEW,
-			static::ENUM_OBJECT_MODE_EDIT,
-			static::ENUM_OBJECT_MODE_CREATE,
-			static::ENUM_OBJECT_MODE_STIMULUS,
+			static::ENUM_DISPLAY_MODE_VIEW,
+			static::ENUM_DISPLAY_MODE_EDIT,
+			static::ENUM_DISPLAY_MODE_CREATE,
+			static::ENUM_DISPLAY_MODE_STIMULUS,
+			static::ENUM_DISPLAY_MODE_PRINT,
+			static::ENUM_DISPLAY_MODE_BULK_EDIT,
 		];
+	}
+
+	/**
+	 * @see static::$sDisplayMode
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public function GetDisplayMode(): string
+	{
+		return $this->sDisplayMode;
+	}
+
+	/**
+	 * @param string $sMode
+	 *
+	 * @see static::$sDisplayMode
+	 * @return $this
+	 * @since 3.0.0
+	 */
+	public function SetDisplayMode(string $sMode)
+	{
+		$this->sDisplayMode = $sMode;
+
+		return $this;
 	}
 
 	/**
@@ -170,7 +289,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param \DBObject $oObj
+	 * @param \cmdbAbstractObject $oObj
 	 * @param array $aParams
 	 *
 	 * @throws \Exception
@@ -190,8 +309,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			$sParams .= $sName.'='.urlencode($value).'&'; // Always add a trailing &
 		}
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/'.$oObj->GetUIPage().'?'.$sParams.'class='.get_class($oObj).'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink().'&a=1';
-		$oPage->add_script(
-			<<<EOF
+		$oPage->add_early_script(<<<JS
 	if (!sessionStorage.getItem('$sSessionStorageKey'))
 	{
 		sessionStorage.setItem('$sSessionStorageKey', 1);
@@ -201,10 +319,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	{
 		sessionStorage.removeItem('$sSessionStorageKey');
 	}
-EOF
+JS
 		);
 
 		$oObj->Reload();
+		$oObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_VIEW);
 		$oObj->DisplayDetails($oPage, false);
 	}
 
@@ -247,27 +366,30 @@ EOF
 	public static function SetSessionMessage($sClass, $iKey, $sMessageId, $sMessage, $sSeverity, $fRank, $bMustNotExist = false)
 	{
 		$sMessageKey = $sClass.'::'.$iKey;
-		if (!isset($_SESSION['obj_messages'][$sMessageKey])) {
-			$_SESSION['obj_messages'][$sMessageKey] = array();
+		if (!Session::IsSet(['obj_messages', $sMessageKey])) {
+			Session::Set(['obj_messages', $sMessageKey], []);
 		}
-		if (!$bMustNotExist || !array_key_exists($sMessageId, $_SESSION['obj_messages'][$sMessageKey])) {
-			$_SESSION['obj_messages'][$sMessageKey][$sMessageId] = array(
+		if (!$bMustNotExist || !Session::IsSet(['obj_messages', $sMessageKey, $sMessageId])) {
+			Session::Set(['obj_messages', $sMessageKey, $sMessageId], [
 				'rank' => $fRank,
 				'severity' => $sSeverity,
 				'message' => $sMessage,
-			);
+			]);
 		}
 	}
 
 	/**
-	 * Important: For compatibility reasons, this function still allows to manipulate the $oPage. In that case, markup will be put above the real header of the panel.
-	 * To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
+	 * @param \WebPage $oPage Warning, since 3.0.0 this parameter was kept for compatibility reason. You shouldn't write directly on the page!
+	 *   When writing to the page, markup will be put above the real header of the panel.
+	 *   To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
+	 * @param bool $bEditMode Deprecated parameter in iTop 3.0.0, use {@see GetDisplayMode()} and ENUM_DISPLAY_MODE_* constants instead
 	 *
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
-	 * @param string $sMode Mode in which the object is displayed (see static::ENUM_OBJECT_MODE_XXX)
-	 *
-	 * @return array UIBlocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block. eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
+	 * @return array{
+	 *       subtitle: \Combodo\iTop\Application\UI\Base\UIBlock[],
+	 *       toolbar: \Combodo\iTop\Application\UI\Base\UIBlock[]
+	 *    }
+	 *    blocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block.
+	 *    eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -275,10 +397,13 @@ EOF
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 * @throws \OQLException
-	 * @todo 3.0.0: This has to be discussed within the R&D when I come back in 10 days
 	 *
+	 * @since 3.0.0 $bEditMode is deprecated, see param documentation above
+	 * @since 3.0.0 Changed signature: Method must return header content in an array (no more writing directly to the $oPage)
+	 *
+	 * @noinspection PhpUnusedParameterInspection
 	 */
-	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
+	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
 		$aHeaderBlocks = [
 			'subtitle' => [],
@@ -306,12 +431,14 @@ EOF
 			$oPage->AddSessionMessages($sMessageKey, $aRanks, $aMessages);
 		}
 
-		if (!$oPage->IsPrintableVersion() && ($sMode === static::ENUM_OBJECT_MODE_VIEW)) {
+		if (!$oPage->IsPrintableVersion() && ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_VIEW)) {
 			// action menu
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
 			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-			$aHeaderBlocks['toolbar'][] = $oBlock->GetRenderContent($oPage);
+			$sActionMenuId = utils::Sanitize(uniqid('', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+			$oActionMenuBlock = $oBlock->GetRenderContent($oPage, [], $sActionMenuId);
+			$aHeaderBlocks['toolbar'][$oActionMenuBlock->GetId()] = $oActionMenuBlock;
 		}
 
 		$aTags = array();
@@ -417,8 +544,9 @@ EOF
 		}
 
 		foreach ($aTags as $sIconId => $aIconData) {
-			$aHeaderBlocks['subtitle'][] = new Html(<<<HTML
-<span id="{$sIconId}" class="ibo-object-details--tag {$aIconData['css_classes']}" data-tooltip-content="{$aIconData['title']}" data-tooltip-html-enabled="true"><span class="ibo-object-details--tag-icon"><span class="{$aIconData['decoration_classes']}"></span></span>{$aIconData['label']}</span>
+			$sTagTooltipContent = utils::EscapeHtml($aIconData['title']);
+			$aHeaderBlocks['subtitle'][static::HEADER_BLOCKS_SUBTITLE_TAG_PREFIX.$sIconId] = new Html(<<<HTML
+<span id="{$sIconId}" class="ibo-object-details--tag {$aIconData['css_classes']}" data-tooltip-content="{$sTagTooltipContent}" data-tooltip-html-enabled="true"><span class="ibo-object-details--tag-icon"><span class="{$aIconData['decoration_classes']}"></span></span>{$aIconData['label']}</span>
 HTML
 			);
 		}
@@ -427,40 +555,17 @@ HTML
 	}
 
 	/**
-	 * Display history tab of an object
-	 *
-	 * @deprecated 3.0.0 will be removed in 3.1, see N°3824
-	 *
-	 * @param bool $bEditMode
-	 * @param int $iLimitCount
-	 * @param int $iLimitStart
-	 *
-	 * @param \WebPage $oPage
-	 *
-	 * @throws \CoreException
-	 *
-	 */
-	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
-	{
-		// history block (with as a tab)
-		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
-		$oHistoryFilter->AddCondition('objkey', $this->GetKey(), '=');
-		$oHistoryFilter->AddCondition('objclass', get_class($this), '=');
-		$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
-		$oBlock->SetLimit($iLimitCount, $iLimitStart);
-		$oBlock->Display($oPage, 'history');
-	}
-
-	/**
 	 * Display properties tab of an object
 	 *
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 * @param string $sPrefix
 	 * @param array $aExtraParams
 	 *
 	 * @return array
 	 * @throws \CoreException
+	 *
+	 * @since 3.0.0 $bEditMode is deprecated and no longer used
 	 */
 	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
@@ -498,11 +603,15 @@ HTML
 	 */
 	public function DisplayDashboard($oPage, $sAttCode)
 	{
+		// Retrieve parameters
+		/** @var bool $bIsContainerInEdition True if the container of the dashboard is currently in edition; meaning that the dashboard could not be up-to-date with data changed in the container (eg. when editing an object and adding linkedset items) */
+		$bIsContainerInEdition = (utils::ReadParam('host_container_in_edition', 'false') === 'true');
+
 		$sClass = get_class($this);
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 
-		if (!$oAttDef instanceof AttributeDashboard)
-		{
+		// Consistency checks
+		if (!$oAttDef instanceof AttributeDashboard) {
 			throw new CoreException(Dict::S('UI:Error:InvalidDashboard'));
 		}
 
@@ -514,6 +623,10 @@ HTML
 
 		$bCanEdit = UserRights::IsAdministrator() || $oAttDef->IsUserEditable();
 		$sDivId = $oDashboard->GetId();
+
+		if ($bIsContainerInEdition) {
+			$oPage->AddUiBlock(AlertUIBlockFactory::MakeForInformation(Dict::S('UI:Dashboard:NotUpToDateUntilContainerSaved')));
+		}
 		$oPage->add('<div id="'.$sDivId.'" class="ibo-dashboard" data-role="ibo-dashboard">');
 		$aExtraParams = array(
 			'query_params' => $this->ToArgsForQuery(),
@@ -525,7 +638,7 @@ HTML
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -535,6 +648,8 @@ HTML
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 * @throws \Exception
+	 *
+	 * @since 3.0.0 $bEditMode is deprecated and no longer used
 	 */
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
@@ -549,28 +664,33 @@ HTML
 			$aList = array_keys(MetaModel::ListAttributeDefs(get_class($this)));
 		}
 		$sClass = get_class($this);
-		foreach($aList as $sAttCode)
-		{
+		foreach($aList as $sAttCode) {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			if ($oAttDef instanceof AttributeDashboard)
-			{
-				if ($bEditMode)
-				{
-					continue;
+			if ($oAttDef instanceof AttributeDashboard) {
+				if (!$this->IsNew()) {
+					$sHostContainerInEditionUrlParam = ($bEditMode) ? '&host_container_in_edition=true' : '';
+					$oPage->AddAjaxTab(
+						'Class:'.$sClass.'/Attribute:'.$sAttCode,
+						utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='
+							.get_class($this)
+							.'&id='.$this->GetKey()
+							.'&attcode='.$oAttDef->GetCode()
+							.$sHostContainerInEditionUrlParam,
+						true,
+						$oAttDef->GetLabel(),
+						AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD
+					);
+					// Add graphs dependencies
+					WebResourcesHelper::EnableC3JSToWebPage($oPage);
 				}
-				$oPage->AddAjaxTab($oAttDef->GetLabel(),
-					utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode(),
-					true,
-					'Class:'.$sClass.'/Attribute:'.$sAttCode,
-					AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD);
 				continue;
 			}
 
-			// Display mode
-			if (!$oAttDef->IsLinkset())
-			{
+			// Process only link set attributes with tab display style
+			$bIsLinkSetWithDisplayStyleTab = is_a($oAttDef, AttributeLinkedSet::class) && $oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB;
+			if (!$oAttDef->IsLinkset() || !$bIsLinkSetWithDisplayStyleTab) {
 				continue;
-			} // Process only linkset attributes...
+			}
 
 			$sLinkedClass = $oAttDef->GetLinkedClass();
 
@@ -579,12 +699,9 @@ HTML
 			$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
 
 			$iCount = $oLinkSet->Count();
-			if ($this->IsNew())
-			{
+			if ($this->IsNew()) {
 				$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
-			}
-			else
-			{
+			} else {
 				$iFlags = $this->GetAttributeFlags($sAttCode);
 			}
 			// Adjust the flags according to user rights
@@ -624,132 +741,47 @@ HTML
 				continue;
 			}
 
+			$sTabCode = 'Class:'.$sClass.'/Attribute:'.$sAttCode;
+			$sTabDescription = utils::IsNotNullOrEmptyString($oAttDef->GetDescription()) ? $oAttDef->GetDescription() : null;
 			$sCount = ($iCount != 0) ? " ($iCount)" : "";
-			$oPage->SetCurrentTab('Class:'.$sClass.'/Attribute:'.$sAttCode, $oAttDef->GetLabel().$sCount);
+			$oPage->SetCurrentTab($sTabCode, $oAttDef->GetLabel().$sCount, $sTabDescription);
 
 			$aArgs = array('this' => $this);
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));
-			if ($bEditMode && (!$bReadOnly))
-			{
+			if ($bEditMode && (!$bReadOnly)) {
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
-
-				if ($oAttDef->IsIndirect())
-				{
-					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
-					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-				}
-				else
-				{
-					$sTargetClass = $sLinkedClass;
-				}
-
-				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
-				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-blocklist--medallion');
-				$oPage->AddUiBlock($oClassIcon);
-				
 				$sDisplayValue = ''; // not used
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
 						$oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 				$this->AddToFieldsMap($sAttCode, $sInputId);
 				$oPage->add($sHTMLValue);
-			}
-			else
-			{
-				// Display mode
-				if (!$oAttDef->IsIndirect())
-				{
-					// 1:n links
-					$sTargetClass = $sLinkedClass;
-
-					$aDefaults = array($oAttDef->GetExtKeyToMe() => $this->GetKey());
-					$oAppContext = new ApplicationContext();
-					foreach($oAppContext->GetNames() as $sKey)
-					{
-						// The linked object inherits the parent's value for the context
-						if (MetaModel::IsValidAttCode($sClass, $sKey))
-						{
-							$aDefaults[$sKey] = $this->Get($sKey);
-						}
-					}
-					$aParams = array(
-						'target_attr' => $oAttDef->GetExtKeyToMe(),
-						'object_id' => $this->GetKey(),
-						'menu' => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
-						//'menu_actions_target' => '_blank',
-						'default' => $aDefaults,
-						'table_id' => $sClass.'_'.$sAttCode,
-					);
+			} else {
+				if ($oAttDef->IsIndirect()) {
+					$oBlockLinkSetViewTable = new BlockIndirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
+				} else {
+					$oBlockLinkSetViewTable = new BlockDirectLinkSetViewTable($oPage, $this, $sClass, $sAttCode, $oAttDef);
 				}
-				else {
-					// n:n links
-					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
-					$sLinkingAttCode = $oLinkingAttDef->GetCode();
-					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-
-					// N°2334 fields to display for n:n relations
-					$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode);
-					$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($sTargetClass);
-					$aLnkAttCodesToDisplay = array_map(function ($oLnkAttDef) {
-						return ormLinkSet::LINK_ALIAS.'.'.$oLnkAttDef->GetCode();
-					},
-						$aLnkAttDefsToDisplay
-					);
-					if (!in_array(ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode, $aLnkAttCodesToDisplay)) {
-						// we need to display a link to the remote class instance !
-						$aLnkAttCodesToDisplay[] = ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode;
-					}
-					$aRemoteAttCodesToDisplay = array_map(function ($oRemoteAttDef) {
-						return ormLinkSet::REMOTE_ALIAS.'.'.$oRemoteAttDef->GetCode();
-					},
-						$aRemoteAttDefsToDisplay
-					);
-					$aAttCodesToDisplay = array_merge($aLnkAttCodesToDisplay, $aRemoteAttCodesToDisplay);
-					$sAttCodesToDisplay = implode(',', $aAttCodesToDisplay);
-
-					$aParams = array(
-						'link_attr' => $oAttDef->GetExtKeyToMe(),
-						'object_id' => $this->GetKey(),
-						'target_attr' => $oAttDef->GetExtKeyToRemote(),
-						'view_link' => false,
-						'menu' => false,
-						//'menu_actions_target' => '_blank',
-						// By default limit the list to speed up the initial load & display
-						'display_limit' => true,
-						'table_id' => $sClass.'_'.$sAttCode,
-						// N°2334 specify fields to display for n:n relations
-						'zlist' => false,
-						'extra_fields' => $sAttCodesToDisplay,
-					);
-				}
-				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
-				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-blocklist--medallion');
-				$oPage->AddUiBlock($oClassIcon);
-				$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'list', false);
-				$oBlock->Display($oPage, 'rel_'.$sAttCode, $aParams);
+				$oPage->AddUiBlock($oBlockLinkSetViewTable);
 			}
-			if (array_key_exists($sAttCode, $aRedundancySettings))
-			{
-				foreach($aRedundancySettings[$sAttCode] as $oRedundancyAttDef)
-				{
+			if (array_key_exists($sAttCode, $aRedundancySettings)) {
+				foreach ($aRedundancySettings[$sAttCode] as $oRedundancyAttDef) {
 					$sRedundancyAttCode = $oRedundancyAttDef->GetCode();
 					$sValue = $this->Get($sRedundancyAttCode);
 					$iRedundancyFlags = $this->GetFormAttributeFlags($sRedundancyAttCode);
 					$bRedundancyReadOnly = ($iRedundancyFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));
 
-					$oPage->add('<fieldset>');
-					$oPage->add('<legend>'.$oRedundancyAttDef->GetLabel().'</legend>');
-					if ($bEditMode && (!$bRedundancyReadOnly))
-					{
+					$oFieldSet = FieldSetUIBlockFactory::MakeStandard($oRedundancyAttDef->GetLabel());
+					$oFieldSet->AddCSSClass('mt-5');
+					$oPage->AddSubBlock($oFieldSet);
+
+					if ($bEditMode && (!$bRedundancyReadOnly)) {
 						$sInputId = $this->m_iFormId.'_'.$sRedundancyAttCode;
-						$oPage->add("<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass,
+						$oFieldSet->AddSubBlock(new Html("<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass,
 								$sRedundancyAttCode, $oRedundancyAttDef, $sValue, '', $sInputId, '', $iFlags,
-								$aArgs).'</span>');
+								$aArgs).'</span>'));
+					} else {
+						$oFieldSet->AddSubBlock(new Html($oRedundancyAttDef->GetDisplayForm($sValue, $oPage, false, $this->m_iFormId)));
 					}
-					else
-					{
-						$oPage->add($oRedundancyAttDef->GetDisplayForm($sValue, $oPage, false, $this->m_iFormId));
-					}
-					$oPage->add('</fieldset>');
 				}
 			}
 		}
@@ -761,35 +793,41 @@ HTML
 
 		$oPage->SetCurrentTab('');
 
-		// Look for any trigger that considers this object as "In Scope"
-		// If any trigger has been found then display a tab with notifications
-		//
-		$aTriggers = $this->GetRelatedTriggersIDs();
-		if (count($aTriggers) > 0) {
-			$iId = $this->GetKey();
-			$aParams = array('triggers' => $aTriggers, 'id' => $iId);
-			$aNotifSearches = array();
-			$iNotifsCount = 0;
-			$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification', ENUM_CHILD_CLASSES_EXCLUDETOP);
-			foreach ($aNotificationClasses as $sNotifClass) {
-				$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
-				$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
-				$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
-				$iNotifsCount += $oNotifSet->Count();
-			}
-			// Display notifications regarding the object: on block per subclass to have the interesting columns
-			$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
-			$oPage->SetCurrentTab('UI:NotificationsTab', Dict::S('UI:NotificationsTab').$sCount);
+		if (!$this->IsNew()) {
+			// Look for any trigger that considers this object as "In Scope"
+			// If any trigger has been found then display a tab with notifications
+			//
+			$aTriggers = $this->GetRelatedTriggersIDs();
+			if (count($aTriggers) > 0) {
+				$iId = $this->GetKey();
+				$aParams = array('triggers' => $aTriggers, 'id' => $iId);
+				$aNotifSearches = array();
+				$iNotifsCount = 0;
+				$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification');
+				foreach ($aNotificationClasses as $sNotifClass) {
+					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
+					$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
+					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
+					$iNotifsCount += $oNotifSet->Count();
+				}
+				// Display notifications regarding the object: on block per subclass to have the interesting columns
+				$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
+				$oPage->SetCurrentTab('UI:NotificationsTab', Dict::S('UI:NotificationsTab').$sCount);
 
-			foreach($aNotificationClasses as $sNotifClass) {
-				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sNotifClass, false));
-				$oClassIcon->SetDescription(MetaModel::GetName($sNotifClass))->AddCSSClass('ibo-blocklist--medallion');
-				$oPage->AddUiBlock($oClassIcon);
-
-				$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
-				$oBlock->Display($oPage, 'notifications_'.$sNotifClass, array('menu' => false));
+				foreach ($aNotificationClasses as $sNotifClass) {
+					$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
+					$oBlock->Display($oPage, 'notifications_'.$sNotifClass, [
+						'menu' => false,
+						'panel_title' => MetaModel::GetName($sNotifClass),
+						'panel_icon' => MetaModel::GetClassIcon($sNotifClass, false),
+					]);
+				}
 			}
 		}
+
+		// add hidden input for linkset transactions
+		$oInputHidden = InputUIBlockFactory::MakeForHidden('linkset_transactions_id', utils::GetNewTransactionId(), 'linkset_transactions_id');
+		$oPage->AddUiBlock($oInputHidden);
 	}
 
 	/**
@@ -801,11 +839,18 @@ HTML
 	 */
 	public function GetRelatedTriggersIDs(): array
 	{
-		$oTriggerSet = new CMDBObjectSet(new DBObjectSearch('Trigger'));
 		$aTriggers = [];
-		while ($oTrigger = $oTriggerSet->Fetch()) {
-			if ($oTrigger->IsInScope($this)) {
-				$aTriggers[] = $oTrigger->GetKey();
+		// Request only "leaf" classes to avoid reloads
+		$aTriggerClasses = MetaModel::EnumChildClasses('Trigger');
+		foreach ($aTriggerClasses as $sTriggerClass) {
+			$oReflectionClass = new ReflectionClass($sTriggerClass);
+			if (false === $oReflectionClass->isAbstract()) {
+				$oTriggerSet = new CMDBObjectSet(new DBObjectSearch($sTriggerClass));
+				while ($oTrigger = $oTriggerSet->Fetch()) {
+					if ($oTrigger->IsInScope($this)) {
+						$aTriggers[] = $oTrigger->GetKey();
+					}
+				}
 			}
 		}
 
@@ -814,7 +859,7 @@ HTML
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 * @param string $sPrefix
 	 * @param array $aExtraParams
 	 *
@@ -826,6 +871,8 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 * @throws \Exception
+	 *
+	 * @since 3.0.0 $bEditMode is deprecated and no longer used
 	 */
 	public function GetBareProperties(WebPage $oPage, $bEditMode, $sPrefix, $aExtraParams = array())
 	{
@@ -837,6 +884,7 @@ HTML
 		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
 		$aExtraFlags = (isset($aExtraParams['fieldsFlags'])) ? $aExtraParams['fieldsFlags'] : array();
 
+		$bHasFieldsWithRichTextEditor = false;
 		foreach ($aDetailsStruct as $sTab => $aCols) {
 			ksort($aCols);
 			$oPage->SetCurrentTab($sTab);
@@ -861,18 +909,19 @@ HTML
 							continue;
 						}
 
+						if (($oAttDef instanceof AttributeText) && ($oAttDef->GetFormat() === 'html')) {
+							$bHasFieldsWithRichTextEditor = true;
+						}
+
 						$sAttDefClass = get_class($oAttDef);
 						$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
 
 						if ($bEditMode) {
 							$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
 							$sInfos = '';
-							$iFlags = $this->GetFormAttributeFlags($sAttCode);
-							if (array_key_exists($sAttCode, $aExtraFlags)) {
-								// the caller may override some flags if needed
-								$iFlags = $iFlags | $aExtraFlags[$sAttCode];
-							}
-							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard)) {
+							$iFlags = FormHelper::GetAttributeFlagsForObject($this, $sAttCode, $aExtraFlags);
+							$bIsLinkSetWithDisplayStyleTab = is_a($oAttDef, AttributeLinkedSet::class) && $oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB;
+							if ((($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard) && !$bIsLinkSetWithDisplayStyleTab) {
 								$sInputId = $this->m_iFormId.'_'.$sAttCode;
 								if ($oAttDef->IsWritable()) {
 									$sInputType = '';
@@ -880,8 +929,8 @@ HTML
 										// State attribute is always read-only from the UI
 										$sHTMLValue = $this->GetAsHTML($sAttCode);
 										$val = array(
-											'label' => '<label>'.$oAttDef->GetLabel().'</label>',
-											'value' => $sHTMLValue,
+											'label'    => '<label>'.$oAttDef->GetLabel().'</label>',
+											'value'    => $sHTMLValue,
 											'input_id' => $sInputId,
 											'comments' => $sComments,
 											'infos' => $sInfos,
@@ -894,16 +943,14 @@ HTML
 												$this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 												$sTip = '';
 												foreach ($aReasons as $aRow) {
-													$sDescription = htmlentities($aRow['description'], ENT_QUOTES,
-														'UTF-8');
-													$sDescription = str_replace(array("\r\n", "\n"), "<br/>",
-														$sDescription);
+													$sDescription = utils::EscapeHtml($aRow['description']);
+													$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
 													$sTip .= "<div class='synchro-source'>";
 													$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
 													$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
 												}
 												$sTip = utils::HtmlEntities($sTip);
-												$sSynchroIcon = '<img id="synchro_'.$sInputId.'" src="../images/transp-lock.png"  data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true" />';
+												$sSynchroIcon = '<div id="synchro_'.$sInputId.'" class="ibo-field--comments--synchro ibo-pill ibo-is-frozen" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true"><i class="fas fa-lock"></i></div>';
 												$sComments = $sSynchroIcon;
 											}
 
@@ -912,7 +959,11 @@ HTML
 										} else {
 											$sValue = $this->Get($sAttCode);
 											$sDisplayValue = $this->GetEditValue($sAttCode);
+											// transfer bulk context to components as it can be needed (linked set)
 											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
+											if (array_key_exists('bulk_context', $aExtraParams)) {
+												$aArgs['bulk_context'] = $aExtraParams['bulk_context'];
+											}
 											$sHTMLValue = "".self::GetFormElementForField(
 													$oPage, $sClass, $sAttCode, $oAttDef, $sValue,
 													$sDisplayValue, $sInputId, '', $iFlags, $aArgs,
@@ -924,7 +975,7 @@ HTML
 										// Attribute description
 										$sDescription = $oAttDef->GetDescription();
 										$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
-										$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+										$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'" data-tooltip-max-width="600px"';
 
 										$val = array(
 											'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
@@ -941,7 +992,7 @@ HTML
 									// Attribute description
 									$sDescription = $oAttDef->GetDescription();
 									$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
-									$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+									$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.' "data-tooltip-max-width="600px"';
 
 									$val = array(
 										'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
@@ -1001,14 +1052,18 @@ HTML
 			}
 		}
 
+		// Fields with CKEditor need to have the highlight.js lib loaded even if they are in read-only, as it is needed to format code snippets
+		if ($bHasFieldsWithRichTextEditor) {
+			WebResourcesHelper::EnableCKEditorToWebPage($oPage);
+		}
+
 		return $aFieldsMap;
 	}
 
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode Note that this parameter is no longer used in ths method, $sMode is used instead, but we cannot remove it as it part of the base interface (iDisplay)...
-	 * @param string $sMode Mode in which the object will be displayed (see static::ENUM_OBJECT_MODE_XXX)
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method, {@see static::$sDisplayMode} is used instead, but we cannot remove it as it part of the base interface (iDisplay)...
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -1019,18 +1074,43 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 *
+	 * @since 3.0.0 $bEditMode is deprecated and no longer used
 	 */
-	public function DisplayDetails(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
+	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
+		// N°3786: As this can now be call recursively from the self::ReloadAndDisplay(), we need to make sure we don't fall into an infinite loop
+		static $bBlockReentrance = false;
+
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
 
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_VIEW) {
+			// The concurrent access lock makes sense only for already existing objects
+			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
+			if ($LockEnabled) {
+				$aLockInfo = iTopOwnershipLock::IsLocked($sClass, $iKey);
+				if ($aLockInfo['locked'] === true && $aLockInfo['owner']->GetKey() == UserRights::GetUserId() && $bBlockReentrance === false) {
+					// If the object is locked by the current user, it's worth trying again, since
+					// the lock may be released by 'onunload' which is called AFTER loading the current page.
+					//$bTryAgain = $oOwner->GetKey() == UserRights::GetUserId();
+					$bBlockReentrance = true;
+					self::ReloadAndDisplay($oPage, $this, array('operation' => 'details'));
+
+					return;
+				}
+			}
+		}
+
 		// Object's details
-		$oObjectDetails = ObjectFactory::MakeDetails($this);
+		$oObjectDetails = ObjectFactory::MakeDetails($this, $this->GetDisplayMode());
+		if ($oPage->IsPrintableVersion()) {
+			$oObjectDetails->SetIsHeaderVisibleOnScroll(false);
+		}
 
 		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
 		/** @var \iTopWebPage $oPage */
-		$aHeadersBlocks = $this->DisplayBareHeader($oPage, $bEditMode, $sMode);
+		$aHeadersBlocks = $this->DisplayBareHeader($oPage, $bEditMode);
 		if (false === empty($aHeadersBlocks['subtitle'])) {
 			$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
 		}
@@ -1045,18 +1125,21 @@ HTML
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
 		$this->DisplayBareRelations($oPage, $bEditMode);
-		// TODO 3.0.0: What to do with this?
-		//$this->DisplayBareHistory($oPage, $bEditMode);
+
 
 		// Note: Adding the JS snippet which enables the image upload should have been done directly by the ActivityPanel which would have kept the independance principle
 		// of the UIBlock. For now we keep it this way in order to move on and trace this known limitation in N°3736.
-		/** @var ActivityPanel $oActivityPanel */
-		$oActivityPanel = $oPage->GetContentLayout()->GetSubBlock(ActivityPanel::BLOCK_CODE);
-		// Note: Testing if block exists is necessary as during the 'release_lock_and_details' operation we don't have an activity panel
-		if (!is_null($oActivityPanel) && $oActivityPanel->HasTransactionId()) {
-			$iTransactionId = $oActivityPanel->GetTransactionId();
-			$sTempId = utils::GetUploadTempId($iTransactionId);
-			$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
+		//
+		// Note: Don't do it in modals as we don't display the activity panel
+		if (false === ($oPage instanceof AjaxPage)) {
+			/** @var ActivityPanel $oActivityPanel */
+			$oActivityPanel = $oPage->GetContentLayout()->GetSubBlock(ActivityPanel::BLOCK_CODE);
+			// Note: Testing if block exists is necessary as during the 'release_lock_and_details' operation we don't have an activity panel
+			if (!is_null($oActivityPanel) && $oActivityPanel->HasTransactionId()) {
+				$iTransactionId = $oActivityPanel->GetTransactionId();
+				$sTempId = utils::GetUploadTempId($iTransactionId);
+				$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
+			}
 		}
 	}
 
@@ -1109,25 +1192,11 @@ HTML
 	 */
 	public static function GetDisplaySetForPrinting(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
+		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : utils::GetUniqueId();;
+		$aExtraParams['view_link'] = true;
+		$aExtraParams['select_mode'] = 'none';
 
-		$bViewLink = true;
-		$sSelectMode = 'none';
-		$iListId = $sTableId;
-		$sClassAlias = $oSet->GetClassAlias();
-		$sClassName = $oSet->GetClass();
-		$sZListName = 'list';
-		$aClassAliases = array($sClassAlias => $sClassName);
-		$aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
-
-		$oDataTable = new PrintableDataTable($iListId, $oSet, $aClassAliases, $sTableId);
-		$oSettings = DataTableSettings::GetDataModelSettings($aClassAliases, $bViewLink, array($sClassAlias => $aList));
-		$oSettings->iDefaultPageSize = 0;
-		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
-
-		return $oDataTable->Display($oPage, $oSettings, false /* $bDisplayMenu */, $sSelectMode, $bViewLink,
-			$aExtraParams);
-
+		return DataTableUIBlockFactory::MakeForObject($oPage, $sTableId, $oSet, $aExtraParams);
 	}
 
 	/**
@@ -1153,12 +1222,36 @@ HTML
 	 */
 	public static function GetDisplaySet(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetDisplaySetBlock');
 		$oPage->AddUiBlock(static::GetDisplaySetBlock($oPage, $oSet, $aExtraParams));
+
 		return "";
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \DBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock|string
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 *
+	 * @since 3.0.0
+	 */
 	public static function GetDisplaySetBlock(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
+		if ($oPage->IsPrintableVersion() || $oPage->is_pdf()) {
+			return self::GetDisplaySetForPrinting($oPage, $oSet, $aExtraParams);
+		}
 		if (empty($aExtraParams['currentId'])) {
 			$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
 		} else {
@@ -1167,6 +1260,146 @@ HTML
 
 		return DataTableUIBlockFactory::MakeForResult($oPage, $iListId, $oSet, $aExtraParams);
 	}
+
+	public static function GetDataTableFromDBObjectSet(DBObjectSet $oSet, $aParams = array())
+	{
+		$aFields = null;
+		if (isset($aParams['fields']) && (strlen($aParams['fields']) > 0)) {
+			$aFields = explode(',', $aParams['fields']);
+		}
+
+		$bFieldsAdvanced = false;
+		if (isset($aParams['fields_advanced'])) {
+			$bFieldsAdvanced = (bool)$aParams['fields_advanced'];
+		}
+
+		$bLocalize = true;
+		if (isset($aParams['localize_values'])) {
+			$bLocalize = (bool)$aParams['localize_values'];
+		}
+
+		$aList = array();
+
+		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
+		$aAuthorizedClasses = array();
+		foreach ($aClasses as $sAlias => $sClassName) {
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO) {
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
+		$aHeader = array();
+		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
+			$aList[$sAlias] = array();
+
+			foreach (MetaModel::GetZListItems($sClassName, 'list') as $sAttCode) {
+				$oAttDef = Metamodel::GetAttributeDef($sClassName, $sAttCode);
+				if (is_null($aFields) || (count($aFields) == 0)) {
+					// Standard list of attributes (no link sets)
+					if ($oAttDef->IsScalar() && ($oAttDef->IsWritable() || $oAttDef->IsExternalField())) {
+						$sAttCodeEx = $oAttDef->IsExternalField() ? $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode() : $sAttCode;
+
+						$aList[$sAlias][$sAttCodeEx] = $oAttDef;
+
+						if ($bFieldsAdvanced && $oAttDef->IsExternalKey(EXTKEY_RELATIVE)) {
+							$sRemoteClass = $oAttDef->GetTargetClass();
+							foreach (MetaModel::GetReconcKeys($sRemoteClass) as $sRemoteAttCode) {
+								$aList[$sAlias][$sAttCode.'->'.$sRemoteAttCode] = MetaModel::GetAttributeDef($sRemoteClass,
+									$sRemoteAttCode);
+							}
+						}
+					}
+				} else {
+					// User defined list of attributes
+					if (in_array($sAttCode, $aFields) || in_array($sAlias.'.'.$sAttCode, $aFields)) {
+						$aList[$sAlias][$sAttCode] = $oAttDef;
+					}
+				}
+			}
+			// Replace external key by the corresponding friendly name (if not already in the list)
+			foreach ($aList[$sAlias] as $sAttCode => $oAttDef) {
+				if ($oAttDef->IsExternalKey()) {
+					unset($aList[$sAlias][$sAttCode]);
+					$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
+					if (!array_key_exists($sFriendlyNameAttCode,
+							$aList[$sAlias]) && MetaModel::IsValidAttCode($sClassName, $sFriendlyNameAttCode)) {
+						$oFriendlyNameAtt = MetaModel::GetAttributeDef($sClassName, $sFriendlyNameAttCode);
+						$aList[$sAlias][$sFriendlyNameAttCode] = $oFriendlyNameAtt;
+					}
+				}
+			}
+
+			foreach ($aList[$sAlias] as $sAttCodeEx => $oAttDef) {
+				$sColLabel = $bLocalize ? MetaModel::GetLabel($sClassName, $sAttCodeEx) : $sAttCodeEx;
+
+				$oFinalAttDef = $oAttDef->GetFinalAttDef();
+				if (get_class($oFinalAttDef) == 'AttributeDateTime') {
+					$aHeader[$oAttDef->GetCode().'/D'] = ['label' => $sColLabel.' ('.Dict::S('UI:SplitDateTime-Date').')'];
+					$aHeader[$oAttDef->GetCode().'/T'] = ['label' => $sColLabel.' ('.Dict::S('UI:SplitDateTime-Time').')'];
+				} else {
+					$aHeader[$oAttDef->GetCode()] = ['label' => $sColLabel];
+				}
+			}
+		}
+
+
+		$oSet->Seek(0);
+		$aRows = [];
+		while ($aObjects = $oSet->FetchAssoc()) {
+			$aRow = [];
+			foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
+				$oObj = $aObjects[$sAlias];
+				foreach ($aList[$sAlias] as $sAttCodeEx => $oAttDef) {
+					if (is_null($oObj)) {
+						$aRow[$oAttDef->GetCode()] = '';
+					} else {
+						$oFinalAttDef = $oAttDef->GetFinalAttDef();
+						if (get_class($oFinalAttDef) == 'AttributeDateTime') {
+							$sDate = $oObj->Get($sAttCodeEx);
+							if ($sDate === null) {
+								$aRow[$oAttDef->GetCode().'/D'] = '';
+								$aRow[$oAttDef->GetCode().'/T'] = '';
+							} else {
+								$iDate = AttributeDateTime::GetAsUnixSeconds($sDate);
+								$aRow[$oAttDef->GetCode().'/D'] = date('Y-m-d', $iDate); // Format kept as-is for 100% backward compatibility of the exports
+								$aRow[$oAttDef->GetCode().'/T'] = date('H:i:s', $iDate); // Format kept as-is for 100% backward compatibility of the exports
+							}
+						} else {
+							if ($oAttDef instanceof AttributeCaseLog) {
+								$rawValue = $oObj->Get($sAttCodeEx);
+								$outputValue = str_replace("\n", "<br/>", utils::EscapeHtml($rawValue->__toString()));
+								// Trick for Excel: treat the content as text even if it begins with an equal sign
+								$aRow[$oAttDef->GetCode()] = $outputValue;
+							} else {
+								$rawValue = $oObj->Get($sAttCodeEx);
+								// Due to custom formatting rules, empty friendlynames may be rendered as non-empty strings
+								// let's fix this and make sure we render an empty string if the key == 0
+								if ($oAttDef instanceof AttributeExternalField && $oAttDef->IsFriendlyName()) {
+									$sKeyAttCode = $oAttDef->GetKeyAttCode();
+									if ($oObj->Get($sKeyAttCode) == 0) {
+										$rawValue = '';
+									}
+								}
+								if ($bLocalize) {
+									$outputValue = utils::EscapeHtml($oFinalAttDef->GetEditValue($rawValue));
+								} else {
+									$outputValue = utils::EscapeHtml($rawValue);
+								}
+								$aRow[$oAttDef->GetCode()] = $outputValue;
+							}
+						}
+					}
+				}
+			}
+			$aRows[] = $aRow;
+		}
+		$oTable = new StaticTable();
+		$oTable->SetColumns($aHeader);
+		$oTable->SetData($aRows);
+
+		return $oTable;
+		//DataTableUIBlockFactory::MakeForStaticData('', $aHeader, $aRows);
+	}
+
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
@@ -1185,15 +1418,14 @@ HTML
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
-	 * @deprecated since 3.0.0
+	 * @deprecated 3.0.0
 	 */
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		if (empty($aExtraParams['currentId'])) {
 			$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
-		}
-		else
-		{
+		} else {
 			$iListId = $aExtraParams['currentId'];
 		}
 		$aList = array();
@@ -1456,6 +1688,9 @@ HTML
 	 * @param array $aParams
 	 *
 	 * @throws \Exception
+	 *  only used in old and deprecated export.php
+	 *
+	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
@@ -1476,6 +1711,8 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \Exception
+	 * 
+	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
 	{
@@ -1621,7 +1858,7 @@ HTML
 							{
 								$rawValue = $oObj->Get($sAttCodeEx);
 								$outputValue = str_replace("\n", "<br/>",
-									htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
+									utils::EscapeHtml($rawValue->__toString()));
 								// Trick for Excel: treat the content as text even if it begins with an equal sign
 								$aRow[] = '<td x:str>'.$outputValue.'</td>';
 							}
@@ -1638,14 +1875,11 @@ HTML
 										$rawValue = '';
 									}
 								}
-								if ($bLocalize)
-								{
-									$outputValue = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES,
-										'UTF-8');
+								if ($bLocalize) {
+									$outputValue = utils::EscapeHtml($oFinalAttDef->GetEditValue($rawValue));
 								}
-								else
-								{
-									$outputValue = htmlentities($rawValue, ENT_QUOTES, 'UTF-8');
+								else {
+									$outputValue = utils::EscapeHtml($rawValue);
 								}
 								$aRow[] = '<td>'.$outputValue.'</td>';
 							}
@@ -1780,7 +2014,7 @@ HTML
 	 * @param string $iId
 	 * @param string $sNameSuffix
 	 * @param int $iFlags
-	 * @param array $aArgs
+	 * @param array{this: \DBObject, formPrefix: string} $aArgs
 	 * @param bool $bPreserveCurrentValue Preserve the current value even if not allowed
 	 * @param string $sInputType type of rendering used, see ENUM_INPUT_TYPE_* const
 	 *
@@ -1797,6 +2031,7 @@ HTML
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 * @throws \Exception
 	 */
 	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true, &$sInputType = '')
 	{
@@ -1818,7 +2053,15 @@ HTML
 		}
 
 		$sHTMLValue = '';
-		if (!$oAttDef->IsExternalField()) {
+
+		// attributes not compatible with bulk modify
+		$bAttNotCompatibleWithBulk = array_key_exists('bulk_context', $aArgs) && !$oAttDef->IsBulkModifyCompatible();
+		if ($bAttNotCompatibleWithBulk) {
+			$oTagSetBlock = new Html('<span class="ibo-bulk--bulk-modify--incompatible-attribute">'.Dict::S('UI:Bulk:modify:IncompatibleAttribute').'</span>');
+			$sHTMLValue = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oTagSetBlock);
+		}
+
+		if (!$oAttDef->IsExternalField() && !$bAttNotCompatibleWithBulk) {
 			$bMandatory = 'false';
 			if ((!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY)) {
 				$bMandatory = 'true';
@@ -1837,18 +2080,21 @@ HTML
 			$sWizardHelperJsVarName = "oWizardHelper{$sFormPrefix}";
 			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode);
 
-			switch ($oAttDef->GetEditClass())
-			{
+			$sAttDefEditClass = $oAttDef->GetEditClass();
+			switch ($sAttDefEditClass) {
 				case 'Date':
 					$sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
-					$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDate::GetFormat()->ToPlaceholder(),
-							ENT_QUOTES, 'UTF-8').'"';
 
-					$sHTMLValue = "<div class=\"field_input_zone field_input_date ibo-input-wrapper ibo-input-date-wrapper\" data-validation=\"untouched\"><input title=\"$sHelpText\" class=\"date-pick ibo-input ibo-input-date\" type=\"text\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
-							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$sPlaceholderValue = 'placeholder="'.utils::EscapeHtml(AttributeDate::GetFormat()->ToPlaceholder()).'"';
+					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
+					$sHTMLValue = <<<HTML
+<div class="field_input_zone field_input_date ibo-input-wrapper ibo-input-date-wrapper" data-validation="untouched">
+	<input title="$sHelpText" class="date-pick ibo-input ibo-input-date" type="text" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autocomplete="off" />
+</div>{$sValidationSpan}{$sReloadSpan}
+HTML;
 					break;
 
 				case 'DateTime':
@@ -1857,10 +2103,13 @@ HTML
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
 
-					$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDateTime::GetFormat()->ToPlaceholder(),
-							ENT_QUOTES, 'UTF-8').'"';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper\" data-validation=\"untouched\"><input title=\"$sHelpText\" class=\"datetime-pick ibo-input ibo-input-datetime\" type=\"text\" size=\"19\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
-							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$sPlaceholderValue = 'placeholder="'.utils::EscapeHtml(AttributeDateTime::GetFormat()->ToPlaceholder()).'"';
+					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
+					$sHTMLValue = <<<HTML
+<div class="field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper" data-validation="untouched">
+	<input title="{$sHelpText}" class="datetime-pick ibo-input ibo-input-datetime" type="text" size="19" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autocomplete="off" />
+</div>{$sValidationSpan}{$sReloadSpan}
+HTML;
 					break;
 
 				case 'Duration':
@@ -1876,10 +2125,8 @@ HTML
 					$sHours = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
 					$sMinutes = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
 					$sSeconds = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
-					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES,
-							'UTF-8')."\"/>";
-					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes,
-							$sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
+					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".utils::EscapeHtml($value)."\"/>";
+					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
 					$oPage->add_ready_script("$('#{$iId}').on('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");
 					break;
 
@@ -1888,8 +2135,7 @@ HTML
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_password\"><input title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value,
-							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_password ibo-input-wrapper ibo-input-password-wrapper\" data-validation=\"untouched\"><input class=\"ibo-input ibo-input-password\" title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".utils::EscapeHtml($value)."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 					break;
 
 				case 'OQLExpression':
@@ -1917,7 +2163,11 @@ HTML
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
 
+					$aTextareaCssClasses = [];
+
 					if ($oAttDef->GetEditClass() == 'OQLExpression') {
+						$aTextareaCssClasses[] = 'ibo-query-oql';
+						$aTextareaCssClasses[] = 'ibo-is-code';
 						// N°3227 button to open predefined queries dialog
 						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
 						$sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');
@@ -1987,19 +2237,21 @@ JS
 					} else {
 						$sAdditionalStuff = '';
 					}
+
 					// Ok, the text area is drawn here
+					$sTextareCssClassesAsString = implode(' ', $aTextareaCssClasses);
 					$sHTMLValue = <<<HTML
 {$sAdditionalStuff}
 <div class="field_input_zone field_input_text ibo-input-wrapper ibo-input-text-wrapper" data-validation="untouched">
 	<div class="f_i_text_header">
 		<span class="fullscreen_button" title="{$sFullscreenLabelForHtml}"></span>
 	</div>
-	<textarea class="ibo-input ibo-input-text" title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" rows="8" cols="40" id="{$iId}" {$sStyle} >{$sEditValueForHtml}</textarea>
+	<textarea class="ibo-input ibo-input-text {$sTextareCssClassesAsString}" title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" rows="8" cols="40" id="{$iId}" {$sStyle} >{$sEditValueForHtml}</textarea>
 </div>
 {$sValidationSpan}{$sReloadSpan}
 HTML;
 					$oPage->add_ready_script(
-						<<<EOF
+						<<<JS
                         $('#$iId').closest('.field_input_text').find('.fullscreen_button').on('click', function(oEvent){
                             var oOriginField = $('#$iId').closest('.field_input_text');
                             var oClonedField = oOriginField.clone();
@@ -2012,11 +2264,18 @@ HTML;
                                 oOriginField.find('textarea').triggerHandler('change');
                             });
                         });
-EOF
+                        
+                        // Submit host form on "Ctrl + Enter" or "Meta (Cmd) + Enter" keyboard shortcut
+                        $('#$iId').on('keyup', function (oEvent) {
+                            if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.key === 'Enter') {
+                                $(this).closest('form').trigger('submit');
+                            }
+                        });
+JS
 					);
 				break;
 
-				// TODO 3.0.0: Isn't this part obsolete now that we have the activity panel or should we keep it for devs using it in custom extensions or maybe *transition forms* as a caselog can be MUST_PROMPT?
+				// In 3.0 not used for activity panel but kept  for bulk modify and bulk-event extension
 				case 'CaseLog':
 					$sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
 					$aStyles = array();
@@ -2033,16 +2292,15 @@ EOF
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
 
-					$sHeader = '<div class="caselog_input_header"></div>'; // will be hidden in CSS (via :empty) if it remains empty
+					$sHeader = '<div class="ibo-caselog-entry-form--actions"><div class="""ibo-caselog-entry-form--actions" data-role="ibo-caselog-entry-form--action-buttons--extra-actions"></div></div>'; // will be hidden in CSS (via :empty) if it remains empty
 					$sEditValue = is_object($value) ? $value->GetModifiedEntry('html') : '';
-					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */,
-						array('AttributeText', 'RenderWikiHtml')) : '';
+					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
 					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
 
-					$sHTMLValue = "<div class=\"field_input_zone field_input_caselog caselog\" $sStyle>$sHeader<textarea class=\"htmlEditor\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue,
-							ENT_QUOTES,
-							'UTF-8')."</textarea>$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
+					$sHTMLValue = "$sHeader<div class=\"ibo-caselog-entry-form--text-input\" $sStyle data-role=\"ibo-caselog-entry-form--text-input\">";
+					$sHTMLValue .= "<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".utils::EscapeHtml($sEditValue)."</textarea>";
+					$sHTMLValue .= "$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
 
 					// Note: This should be refactored for all types of attribute (see at the end of this function) but as we are doing this for a maintenance release, we are scheduling it for the next main release in to order to avoid regressions as much as possible.
 					$sNullValue = $oAttDef->GetNullValue();
@@ -2063,6 +2321,7 @@ EOF
 					// - Final config
 					$sConfigJS = json_encode($aConfig);
 
+					WebResourcesHelper::EnableCKEditorToWebPage($oPage);
 					$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
 
 					$oPage->add_ready_script(
@@ -2096,17 +2355,29 @@ EOF
 					break;
 
 				case 'LinkedSet':
-					$sInputType = self::ENUM_INPUT_TYPE_LINKEDSET;
-					if ($oAttDef->IsIndirect()) {
-						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
-							$oAttDef->DuplicatesAllowed());
+					if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY) {
+						if (array_key_exists('bulk_context', $aArgs)) {
+							$oTagSetBlock = LinkSetUIBlockFactory::MakeForBulkLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['bulk_context']);
+						} else {
+							$oTagSetBlock = LinkSetUIBlockFactory::MakeForLinkSet($iId, $oAttDef, $value, $sWizardHelperJsVarName, $aArgs['this']);
+						}
+						$oTagSetBlock->SetName("attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}");
+						$aEventsList[] = 'validate';
+						$aEventsList[] = 'change';
+						$sHTMLValue = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oTagSetBlock);
 					} else {
-						$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix);
+						$sInputType = self::ENUM_INPUT_TYPE_LINKEDSET;
+						if ($oAttDef->IsIndirect()) {
+							$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
+								$oAttDef->DuplicatesAllowed());
+						} else {
+							$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix);
+						}
+						$aEventsList[] = 'validate';
+						$aEventsList[] = 'change';
+						$oObj = $aArgs['this'] ?? null;
+						$sHTMLValue = $oWidget->Display($oPage, $value, array(), $sFormPrefix, $oObj);
 					}
-					$aEventsList[] = 'validate';
-					$aEventsList[] = 'change';
-					$oObj = isset($aArgs['this']) ? $aArgs['this'] : null;
-					$sHTMLValue = $oWidget->Display($oPage, $value, array(), $sFormPrefix, $oObj);
 					break;
 
 				case 'Document':
@@ -2120,9 +2391,11 @@ EOF
 						$sFileName = $oDocument->GetFileName();
 					}
 					$sFileNameForHtml = utils::EscapeHtml($sFileName);
+					$bHasFile = !empty($sFileName);
 
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
 					$sRemoveBtnLabelForHtml = utils::EscapeHtml(Dict::S('UI:Button:RemoveDocument'));
+					$sExtraCSSClassesForRemoveButton = $bHasFile ? '' : 'ibo-is-hidden';
 
 					$sHTMLValue = <<<HTML
 <div class="field_input_zone field_input_document">
@@ -2130,11 +2403,10 @@ EOF
 	<input type="hidden" id="do_remove_{$iId}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[remove]" value="0"/>
 	<input name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]" type="hidden" id="{$iId}" value="{$sFileNameForHtml}"/>
 	<span id="name_{$iInputId}" >{$sFileNameForHtml}</span>&#160;&#160;
-	<button id="remove_attr_{$iId}" class="ibo-button ibo-is-alternative ibo-is-danger ibo-is-hidden" data-role="ibo-button" type="button" data-tooltip-content="{$sRemoveBtnLabelForHtml}" onClick="$('#file_{$iId}').val(''); UpdateFileName('{$iId}', '');">
+	<button id="remove_attr_{$iId}" class="ibo-button ibo-is-alternative ibo-is-danger {$sExtraCSSClassesForRemoveButton}" data-role="ibo-button" type="button" data-tooltip-content="{$sRemoveBtnLabelForHtml}" onClick="$('#file_{$iId}').val(''); UpdateFileName('{$iId}', '');">
 		<span class="fas fa-trash"></span>
 	</button>
 </div>
-<br/>
 <input title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]" type="file" id="file_{$iId}" onChange="UpdateFileName('{$iId}', this.value)"/>
 {$sValidationSpan}{$sReloadSpan}
 HTML;
@@ -2226,57 +2498,51 @@ HTML;
 					break;
 
 				case 'RedundancySetting':
-					$sHTMLValue = '<table>';
-					$sHTMLValue .= '<tr>';
-					$sHTMLValue .= '<td>';
 					$sHTMLValue .= '<div id="'.$iId.'">';
 					$sHTMLValue .= $oAttDef->GetDisplayForm($value, $oPage, true);
 					$sHTMLValue .= '</div>';
-					$sHTMLValue .= '</td>';
-					$sHTMLValue .= '<td>'.$sValidationSpan.$sReloadSpan.'</td>';
-					$sHTMLValue .= '</tr>';
-					$sHTMLValue .= '</table>';
+					$sHTMLValue .= '<div>'.$sValidationSpan.$sReloadSpan.'</div>';
 					$oPage->add_ready_script("$('#$iId :input').on('keyup change validate', function(evt, sFormId) { return ValidateRedundancySettings('$iId',sFormId); } );"); // Custom validation function
 					break;
 
 				case 'CustomFields':
-					$sHTMLValue = '<table>';
-					$sHTMLValue .= '<tr>';
-					$sHTMLValue .= '<td>';
-					$sHTMLValue .= '<div id="'.$iId.'_console_form">';
-					$sHTMLValue .= '<div id="'.$iId.'_field_set">';
-					$sHTMLValue .= '</div>';
-					$sHTMLValue .= '</div>';
-					$sHTMLValue .= '</td>';
-					$sHTMLValue .= '<td>'.$sReloadSpan.'</td>'; // No validation span for this one: it does handle its own validation!
-					$sHTMLValue .= '</tr>';
-					$sHTMLValue .= '</table>';
-					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
+				case 'FormField':
+					if ($sAttDefEditClass === 'CustomFields') {
+						/** @var \ormCustomFieldsValue $value */
+						$oForm = $value->GetForm($sFormPrefix);
+					} else if ($sAttDefEditClass === 'FormField') {
+						$oForm = $oAttDef->GetForm($aArgs['this'], $sFormPrefix);
+					}
 
-					$oForm = $value->GetForm($sFormPrefix);
-					$oPredefQueryRenderer = new ConsoleFormRenderer($oForm);
-					$aRenderRes = $oPredefQueryRenderer->Render();
+					$oFormRenderer = new ConsoleFormRenderer($oForm);
+					$aFormRenderedContent = $oFormRenderer->Render();
 
 					$aFieldSetOptions = array(
 						'field_identifier_attr' => 'data-field-id',
 						// convention: fields are rendered into a div and are identified by this attribute
-						'fields_list' => $aRenderRes,
-						'fields_impacts' => $oForm->GetFieldsImpacts(),
-						'form_path' => $oForm->GetId(),
+						'fields_list'           => $aFormRenderedContent,
+						'fields_impacts'        => $oForm->GetFieldsImpacts(),
+						'form_path'             => $oForm->GetId(),
 					);
 					$sFieldSetOptions = json_encode($aFieldSetOptions);
 					$aFormHandlerOptions = array(
 						'wizard_helper_var_name' => 'oWizardHelper'.$sFormPrefix,
-						'custom_field_attcode' => $sAttCode,
+						'custom_field_attcode'   => $sAttCode,
 					);
 					$sFormHandlerOptions = json_encode($aFormHandlerOptions);
+
+					$sHTMLValue .= '<div id="'.$iId.'_console_form">';
+					$sHTMLValue .= '<div id="'.$iId.'_field_set">';
+					$sHTMLValue .= '</div></div>';
+					$sHTMLValue .= '<div>'.$sReloadSpan.'</div>'; // No validation span for this one: it does handle its own validation!
+					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_handler.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/console_form_handler.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_set.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_field.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/subform_field.js');
 					$oPage->add_ready_script(
-<<<JS
+						<<<JS
 $('#{$iId}_field_set').field_set($sFieldSetOptions);
 
 $('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);
@@ -2293,36 +2559,37 @@ $('#{$iId}').on('validate', function(evt, sFormId) {
     return ValidateCustomFields('$iId', sFormId); // Custom validation function
 });
 JS
-);
+					);
+
 					break;
 
 				case 'Set':
 				case 'TagSet':
 					$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/selectize.min.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
 					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-set-widget.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
 
 					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
 					/** @var \ormSet $value */
-				$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
-				$sEscapedJson = htmlentities($sJson, ENT_QUOTES, 'UTF-8');
-				$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
+					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
+					$sEscapedJson = utils::EscapeHtml($sJson);
+					$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
 
-				// handle form validation
-				$aEventsList[] = 'change';
-				$aEventsList[] = 'validate';
-				$sNullValue = '';
-				$sFieldToValidateId = $sFieldToValidateId.AttributeSet::EDITABLE_INPUT_ID_SUFFIX;
+					// handle form validation
+					$aEventsList[] = 'change';
+					$aEventsList[] = 'validate';
+					$sNullValue = '';
+					$sFieldToValidateId = $sFieldToValidateId.AttributeSet::EDITABLE_INPUT_ID_SUFFIX;
 
-				// generate form HTML output
-				$sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$sFieldToValidateId}\"></span>";
-				$sHTMLValue = '<div class="field_input_zone field_input_set ibo-input-wrapper ibo-input-tagset-wrapper" data-validation="untouched"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
-				$sScript = "$('#$iId').set_widget({inputWidgetIdSuffix: '".AttributeSet::EDITABLE_INPUT_ID_SUFFIX."'});";
-				$oPage->add_ready_script($sScript);
+					// generate form HTML output
+					$sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$sFieldToValidateId}\"></span>";
+					$sHTMLValue = '<div class="field_input_zone field_input_set ibo-input-wrapper ibo-input-tagset-wrapper" data-validation="untouched"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
+					$sScript = "$('#$iId').set_widget({inputWidgetIdSuffix: '".AttributeSet::EDITABLE_INPUT_ID_SUFFIX."'});";
+					$oPage->add_ready_script($sScript);
 
-				break;
+					break;
 
 				case 'String':
 				default:
@@ -2380,14 +2647,13 @@ EOF
 						$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
 
 						// Adding tooltip so we can read the whole value when its very long (eg. URL)
-						$sTip = '';
+                        $sTip = '';
 						if (!empty($sDisplayValue)) {
 							$sTip = 'data-tooltip-content="'.$sDisplayValueForHtml.'"';
-							$oPage->add_ready_script(
-								<<<EOF
+							$oPage->add_ready_script(<<<JS
 								$('#{$iId}').on('keyup', function(evt, sFormId){ 
-									var sVal = $('#{$iId}').val();
-									var oTippy = this._tippy;
+									let sVal = $('#{$iId}').val();
+									const oTippy = this._tippy;
 									
 									if(sVal === '')
 									{
@@ -2400,7 +2666,7 @@ EOF
 									}
 									oTippy.setContent(sVal);
 								});
-EOF
+JS
 							);
 						}
 
@@ -2496,9 +2762,11 @@ JS
 		$sOwnershipToken = null;
 		$iKey = $this->GetKey();
 		$sClass = get_class($this);
-		$sMode = ($iKey > 0) ? static::ENUM_OBJECT_MODE_EDIT : static::ENUM_OBJECT_MODE_CREATE;
 
-		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
+		$this->SetDisplayMode(($iKey > 0) ? static::ENUM_DISPLAY_MODE_EDIT : static::ENUM_DISPLAY_MODE_CREATE);
+		$sDisplayMode = $this->GetDisplayMode();
+
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT)
 		{
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
@@ -2530,13 +2798,6 @@ JS
 			}
 		}
 
-		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
-			$sClassLabel = MetaModel::GetName($sClass);
-			//$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $this->GetName());
-
-			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
-				$sClassLabel)); // Set title will take care of the encoding
-		}
 		self::$iGlobalFormId++;
 		$this->aFieldsMap = array();
 		$sPrefix = '';
@@ -2555,7 +2816,7 @@ JS
 		if (isset($aExtraParams['custom_button'])) {
 			$sApplyButton = $aExtraParams['custom_button'];
 		} else {
-			if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
+			if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 				$sApplyButton = Dict::S('UI:Button:Apply');
 			} else {
 				$sApplyButton = Dict::S('UI:Button:Create');
@@ -2565,7 +2826,7 @@ JS
 		if (isset($aExtraParams['custom_operation'])) {
 			$sOperation = $aExtraParams['custom_operation'];
 		} else {
-			if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
+			if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 				$sOperation = 'apply_modify';
 			} else {
 				$sOperation = 'apply_new';
@@ -2576,11 +2837,16 @@ JS
 		$oPage->AddUiBlock($oContentBlock);
 
 		$oForm = new Form("form_{$this->m_iFormId}");
-		$oForm->SetAction($sFormAction)
-			->SetOnSubmitJsCode("return OnSubmit('form_{$this->m_iFormId}');");
+		$oForm->SetAction($sFormAction);
+		$sOnSubmitForm = "let bOnSubmitForm = OnSubmit('form_{$this->m_iFormId}');";
+		if (isset($aExtraParams['js_handlers']['form_on_submit'])) {
+			$oForm->SetOnSubmitJsCode($sOnSubmitForm.$aExtraParams['js_handlers']['form_on_submit']);
+		} else {
+			$oForm->SetOnSubmitJsCode($sOnSubmitForm."return bOnSubmitForm;");
+		}
 		$oContentBlock->AddSubBlock($oForm);
 
-		if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 			// The object already exists in the database, it's a modification
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
 		}
@@ -2595,40 +2861,58 @@ JS
 		// TODO 3.0.0: Is this (the if condition, not the code inside) still necessary?
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
 			$sClassLabel = MetaModel::GetName($sClass);
-			$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
-				$this->GetName());
-
-			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
+			if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_CREATE) {
+				$oPage->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel)); // Set title will take care of the encoding
+			} else {
+				$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
+			}
 		}
 
-		$oToolbarTop = ToolbarUIBlockFactory::MakeStandard(null, ['ibo-toolbar-top']);
+		$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
 
 		$oCancelButton = ButtonUIBlockFactory::MakeForCancel();
 		$oCancelButton->AddCSSClasses(['action', 'cancel']);
-		$oToolbarTop->AddSubBlock($oCancelButton);
+		$oToolbarButtons->AddSubBlock($oCancelButton);
 		$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
 		$oApplyButton->AddCSSClass('action');
-		$oToolbarTop->AddSubBlock($oApplyButton);
-
+		$oToolbarButtons->AddSubBlock($oApplyButton);
+		$bAreTransitionsHidden = isset($aExtraParams['hide_transitions']) && $aExtraParams['hide_transitions'] === true;
 		$aTransitions = $this->EnumTransitions();
-		if (!isset($aExtraParams['custom_operation']) && count($aTransitions)) {
-			// transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
+		if (!isset($aExtraParams['custom_operation']) && !$bAreTransitionsHidden && count($aTransitions)) {
+			// Transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
 			$oSetToCheckRights = DBObjectSet::FromObject($this);
+
+			$oTransitionPopoverMenu = new PopoverMenu();
+			$sTPMSectionId = 'transitions';
+			$oTransitionPopoverMenu->AddSection($sTPMSectionId);
 			$aStimuli = Metamodel::EnumStimuli($sClass);
 			foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
 				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
 					$sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
 				switch ($iActionAllowed) {
 					case UR_ALLOWED_YES:
+						// Button to be displayed on its own on large screens
 						$oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
 						$oButton->AddCSSClass('action');
-						$oButton->SetColor(Button::ENUM_COLOR_NEUTRAL);
-						$oToolbarTop->AddSubBlock($oButton);
+						$oButton->SetColor(Button::ENUM_COLOR_SCHEME_NEUTRAL);
+						$oToolbarButtons->AddSubBlock($oButton);
+
+						// Button to be displayed in a grouped button on smaller screens
+						$oTPMPopupMenuItem = new JSPopupMenuItem('next_action--'.$oButton->GetId(), $oButton->GetLabel(), "$(`#{$oButton->GetId()}`).trigger(`click`);");
+						$oTransitionPopoverMenu->AddItem($sTPMSectionId, new JsPopoverMenuItem($oTPMPopupMenuItem));
 						break;
 
 					default:
 						// Do nothing
 				}
+			}
+
+			// If there are some allowed transitions, build the grouped button
+			if ($oTransitionPopoverMenu->HasItems()) {
+				$oApplyForButtonGroup = ButtonUIBlockFactory::MakeForPrimaryAction($oApplyButton->GetLabel(), null, null, true);
+				$oApplyAndTransitionsButtonGroup = ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu($oApplyForButtonGroup, $oTransitionPopoverMenu)
+					->SetIsHidden(true);
+				$oToolbarButtons->AddSubBlock($oApplyAndTransitionsButtonGroup);
 			}
 		}
 
@@ -2644,8 +2928,7 @@ JS
 				foreach($aInitialStates as $sStateCode => $sStateData)
 				{
 					$sSelected = '';
-					if ($sStateCode == $this->GetState())
-					{
+					if ($sStateCode == $this->GetState()) {
 						$sSelected = ' selected';
 					}
 					$sStatesSelection .= '<option value="'.$sStateCode.'" '.$sSelected.'>'.MetaModel::GetStateLabel($sClass,
@@ -2653,7 +2936,7 @@ JS
 				}
 				$sStatesSelection .= '</select>';
 				$sStatesSelection .= '<input type="hidden" id="obj_state_orig" name="obj_state_orig" value="'.$this->GetState().'"/>';
-				$oPage->add_ready_script(<<<JAVASCRIPT
+				$oPage->add_ready_script(<<<JS
 $('.state_select_{$this->m_iFormId}').change( function() {
 	if ($('#obj_state_orig').val() != $(this).val()) {
 		$('.state_select_{$this->m_iFormId}').val($(this).val());
@@ -2661,8 +2944,8 @@ $('.state_select_{$this->m_iFormId}').change( function() {
 		$('#form_{$this->m_iFormId}').submit();
 	}
 });
-JAVASCRIPT
-			);
+JS
+				);
 			}
 		}
 
@@ -2681,20 +2964,45 @@ JAVASCRIPT
 EOF
 		);
 
-		$oObjectDetails = ObjectFactory::MakeDetails($this, $sMode);
+		if (isset($aExtraParams['nbBulkObj'])) {
+			$sTitle = Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N', $aExtraParams['nbBulkObj'], $sClass, $aExtraParams['nbBulkObj']);
+			$sClassIcon = MetaModel::GetClassIcon($sClass, false);
+			$oObjectDetails = PanelUIBlockFactory::MakeForClass($sClass, $sTitle);
+			$oObjectDetails->SetIcon($sClassIcon);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+		} else {
+			$oObjectDetails = ObjectFactory::MakeDetails($this, $this->GetDisplayMode());
+			$oToolbarButtons->AddCSSClass('ibo-toolbar-top');
+			$oObjectDetails->AddToolbarBlock($oToolbarButtons);
+		}
 		$oForm->AddSubBlock($oObjectDetails);
+		if (isset($aExtraParams['nbBulkObj'])) {
+			// if bulk modify buttons must be after object display
+			$oForm->AddSubBlock($oToolbarButtons);
+		}
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix, $oObjectDetails);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 
 		$oPage->p($sStatesSelection);
-		$oObjectDetails->AddToolbarBlock($oToolbarTop);
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
+		//if we are in bulk modify : Special case to display the case log, if any...
+		// WARNING: if you modify the loop below, also check the corresponding code in UpdateObject and DisplayModifyForm
+		if (isset($aExtraParams['nbBulkObj'])) {
+			foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef) {
+				if ($oAttDef instanceof AttributeCaseLog) {
+					$sComment = (isset($aExtraParams['fieldsComments'][$sAttCode])) ? $aExtraParams['fieldsComments'][$sAttCode] : '';
+					$this->DisplayCaseLogForBulkModify($oPage, $sAttCode, $sComment, $sPrefix);
+					$aFieldsMap[$sAttCode] = $this->m_iFormId.'_'.$sAttCode;
+				}
+			}
+		}
+
 		if (!is_array($aFieldsMap)) {
 			$aFieldsMap = array();
 		}
-		if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 			$aFieldsMap['id'] = $sPrefix.'_id';
 		}
 		// Now display the relations, one tab per relation
@@ -2704,6 +3012,17 @@ EOF
 		}
 
 		$oPage->SetCurrentTab('');
+
+		// Add as hidden inputs values that we want displayed if they're readonly
+		if(isset($aExtraParams['forceFieldsSubmission'])){
+			$aExtraFlags = $aExtraParams['fieldsFlags'] ?? [];
+			foreach ($aExtraParams['forceFieldsSubmission'] as $sAttCode) {
+					if(FormHelper::GetAttributeFlagsForObject($this, $sAttCode, $aExtraFlags) & OPT_ATT_READONLY) {
+						$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('attr_'.$sPrefix.$sAttCode, $this->Get($sAttCode)));
+					}
+			}
+		}
+		
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 		foreach ($aExtraParams as $sName => $value) {
@@ -2717,8 +3036,16 @@ EOF
 		$oPage->add($oAppContext->GetForForm());
 
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
-		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=cancel&'.$oAppContext->GetForLink();
-		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').on('click', function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)} );");
+		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_form&class='.$sClass.'&'.$oAppContext->GetForLink();
+
+		$sCancelButtonOnClickScript = "let fOnClick{$this->m_iFormId}CancelButton = ";
+		if(isset($aExtraParams['js_handlers']['cancel_button_on_click'])){
+			$sCancelButtonOnClickScript .= $aExtraParams['js_handlers']['cancel_button_on_click'];
+		} else {
+			$sCancelButtonOnClickScript .= "function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)};";
+		}
+		$sCancelButtonOnClickScript .= "$('#form_{$this->m_iFormId} button.cancel').on('click', fOnClick{$this->m_iFormId}CancelButton);";
+		$oPage->add_ready_script($sCancelButtonOnClickScript);
 
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
@@ -2769,6 +3096,103 @@ EOF
 	}
 
 	/**
+	 *  Select the derived class to create
+	 * @param string $sClass
+	 * @param \WebPage $oP
+	 * @param \ApplicationContext $oAppContext
+	 * @param array $aPossibleClasses
+	 * @param array $aHiddenFields
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0
+	 */
+	public static function DisplaySelectClassToCreate(string $sClass, WebPage $oP, ApplicationContext $oAppContext, array $aPossibleClasses, array $aHiddenFields)
+	{
+		$sClassLabel = MetaModel::GetName($sClass);
+		$sTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
+
+		$oP->set_title($sTitle);
+		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)
+			->SetIcon($sClassIconUrl);
+		$oPanel->AddMainBlock(self::DisplayFormBlockSelectClassToCreate($sClass, $sClassLabel, $oAppContext, $aPossibleClasses, $aHiddenFields));
+
+		$oP->AddSubBlock($oPanel);
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param string $sClassLabel
+	 * @param array $aPossibleClasses
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Form\Form
+	 * @throws \CoreException
+	 */
+	public static function DisplayFormBlockSelectClassToCreate( string $sClass, string $sClassLabel, ApplicationContext $oAppContext, array $aPossibleClasses, array $aHiddenFields): Form
+	{
+		$oClassForm = FormUIBlockFactory::MakeStandard();
+
+		$oClassForm->AddHtml($oAppContext->GetForForm())
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('checkSubclass', '0'))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'new'));
+
+		foreach ($aHiddenFields as $sKey => $sValue) {
+			if (is_scalar($sValue)) {
+				$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey, $sValue));
+			}
+		}
+
+		$aDefaults = utils::ReadParam('default', array(), false, 'raw_data');
+		foreach ($aDefaults as $key => $value) {
+			if (is_array($value)) {
+				foreach ($value as $key2 => $value2) {
+					if (is_array($value2)) {
+						foreach ($value2 as $key3 => $value3) {
+							$sValue = utils::EscapeHtml($value3);
+							$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key][$key2][$key3]", $sValue));
+						}
+					} else {
+						$sValue = utils::EscapeHtml($value2);
+						$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key][$key2]", $sValue));
+					}
+				}
+			} else {
+				$sValue = utils::EscapeHtml($value);
+				$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key]", $sValue));
+			}
+		}
+
+		$oClassForm->AddSubBlock(self::DisplayBlockSelectClassToCreate($sClass, $sClassLabel, $aPossibleClasses));
+		return $oClassForm;
+	}
+	/**
+	 * @param string $sClassLabel
+	 * @param array $aPossibleClasses
+	 * @param string $sClass
+	 *
+	 * @return UIContentBlock
+	 * @throws \CoreException
+	 */
+	public static function DisplayBlockSelectClassToCreate( string $sClass, string $sClassLabel,array $aPossibleClasses): UIContentBlock
+	{
+		$oBlock= UIContentBlockUIBlockFactory::MakeStandard();
+		$oBlock->AddSubBlock(HtmlFactory::MakeRaw(Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel)));
+		$oSelect = SelectUIBlockFactory::MakeForSelect('class');
+		$oBlock->AddSubBlock($oSelect);
+		asort($aPossibleClasses);
+		foreach ($aPossibleClasses as $sClassName => $sClassLabel) {
+			$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sClassLabel, ($sClassName == $sClass)));
+		}
+
+		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
+		$oBlock->AddSubBlock($oToolbar);
+		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
+		return $oBlock;
+	}
+	/**
 	 * @param \WebPage $oPage
 	 * @param string $sClass
 	 * @param \DBObject|null $oSourceObject Object to use for the creation form, can be either the class to instantiate, an object to clone or an object to use (eg. already prefilled / modeled object)
@@ -2798,6 +3222,7 @@ EOF
 		} else {
 			$oObj = clone $oSourceObject;
 		}
+		$oObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_CREATE);
 
 		// Pre-fill the object with default values, when there is only on possible choice
 		// AND the field is mandatory (otherwise there is always the possiblity to let it empty)
@@ -2853,10 +3278,10 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param string   $sStimulus
-	 * @param null     $aPrefillFormParam
-	 * @param bool     $bDisplayBareProperties Whether to display the object details or not
+	 * @param \WebPage      $oPage
+	 * @param string        $sStimulus
+	 * @param array|null    $aPrefillFormParam
+	 * @param bool          $bDisplayBareProperties Whether to display the object details or not
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -2870,9 +3295,11 @@ EOF
 	 */
 	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null, $bDisplayBareProperties = true)
 	{
+		$this->SetDisplayMode(static::ENUM_DISPLAY_MODE_STIMULUS);
+
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
-		$sMode = static::ENUM_OBJECT_MODE_STIMULUS;
+		$sDisplayMode = $this->GetDisplayMode();
 		$iTransactionId = utils::GetNewTransactionId();
 
 		$aTransitions = $this->EnumTransitions();
@@ -2927,56 +3354,55 @@ EOF
 
 		// The list of candidate fields is made of the ordered list of "details" attributes + other attributes
 		$aAttributes = array();
-		foreach($this->FlattenZList(MetaModel::GetZListItems($sClass, 'details')) as $sAttCode)
-		{
+		foreach ($this->FlattenZList(MetaModel::GetZListItems($sClass, 'details')) as $sAttCode) {
 			$aAttributes[$sAttCode] = true;
 		}
-		foreach(MetaModel::GetAttributesList($sClass) as $sAttCode)
-		{
-			if (!array_key_exists($sAttCode, $aAttributes))
-			{
+		foreach (MetaModel::GetAttributesList($sClass) as $sAttCode) {
+			if (!array_key_exists($sAttCode, $aAttributes)) {
 				$aAttributes[$sAttCode] = true;
 			}
 		}
 		// Order the fields based on their dependencies, set the fields for which there is only one possible value
 		// and perform this in the order of dependencies to avoid dead-ends
 		$aDeps = array();
-		foreach($aAttributes as $sAttCode => $trash)
-		{
+		foreach ($aAttributes as $sAttCode => $trash) {
 			$aDeps[$sAttCode] = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
 		}
 		$aList = $this->OrderDependentFields($aDeps);
 
-		foreach($aList as $sAttCode)
-		{
+		$bExistFieldToDisplay = false;
+		foreach ($aList as $sAttCode) {
 			// Consider only the "expected" fields for the target state
-			if (array_key_exists($sAttCode, $aExpectedAttributes))
-			{
+			if (array_key_exists($sAttCode, $aExpectedAttributes)) {
 				$iExpectCode = $aExpectedAttributes[$sAttCode];
+
 				// Prompt for an attribute if
 				// - the attribute must be changed or must be displayed to the user for confirmation
 				// - or the field is mandatory and currently empty
 				if (($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
-					(($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) == '')))
-				{
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					(($iExpectCode & OPT_ATT_MANDATORY) && (false === $this->HasAValue($sAttCode)))) {
 					$aArgs = array('this' => $this);
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					// If the field is mandatory, set it to the only possible value
-					if ((!$oAttDef->IsNullAllowed()) || ($iExpectCode & OPT_ATT_MANDATORY))
-					{
-						if ($oAttDef->IsExternalKey())
-						{
+					if ((!$oAttDef->IsNullAllowed()) || ($iExpectCode & OPT_ATT_MANDATORY)) {
+						if ($oAttDef->IsExternalKey()) {
 							/** @var DBObjectSet $oAllowedValues */
 							$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '',
 								$this->Get($sAttCode));
-							if ($oAllowedValues->CountWithLimit(2) == 1)
-							{
+							if ($oAllowedValues->CountWithLimit(2) == 1) {
 								$oRemoteObj = $oAllowedValues->Fetch();
 								$this->Set($sAttCode, $oRemoteObj->GetKey());
 							}
-						}
-						else
+						} else
 						{
+							if ($oAttDef instanceof \AttributeCaseLog) {
+								// Add JS files for display caselog
+								// Dummy collapsible section created in order to get JS files
+								$oCollapsibleSection = new CollapsibleSection('');
+								foreach ($oCollapsibleSection->GetJsFilesUrlRecursively(true) as $sJSFile) {
+									$oPage->add_linked_script($sJSFile);
+								}
+							}
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 							if (is_array($aAllowedValues) && count($aAllowedValues) == 1)
 							{
@@ -2985,125 +3411,149 @@ EOF
 							}
 						}
 					}
+					$sInputType = '';
+					$sInputId   = 'att_'.$iFieldIndex;
 					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
-						$this->Get($sAttCode), $this->GetEditValue($sAttCode), 'att_'.$iFieldIndex, '', $iExpectCode,
-						$aArgs);
-					$aAttrib = array(
+						$this->Get($sAttCode), $this->GetEditValue($sAttCode), $sInputId, '', $iExpectCode,
+						$aArgs, true, $sInputType);
+					$aAttrib    = array(
 						'label' => '<span>'.$oAttDef->GetLabel().'</span>',
 						'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>",
 					);
 
 					//add attrib for data-attribute
 					// Prepare metadata attributes
-					$sAttCode = $oAttDef->GetCode();
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					$sAttCode     = $oAttDef->GetCode();
+					$oAttDef      = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					$sAttDefClass = get_class($oAttDef);
-					$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
+					$sAttLabel    = MetaModel::GetLabel($sClass, $sAttCode);
 
-					$aAttrib['attcode'] = $sAttCode;
-					$aAttrib['atttype'] = $sAttDefClass;
+					$aAttrib['attcode']  = $sAttCode;
+					$aAttrib['atttype']  = $sAttDefClass;
 					$aAttrib['attlabel'] = $sAttLabel;
 					// - Attribute flags
-					$aAttrib['attflags'] = $this->GetFormAttributeFlags($sAttCode) ;
+					$aAttrib['attflags'] = $this->GetFormAttributeFlags($sAttCode);
 					// - How the field should be rendered
-					$aAttrib['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+					$aAttrib['layout']    = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+					$aAttrib['inputid']   = $sInputId;
+					$aAttrib['inputtype'] = $sInputType;
 					// - For simple fields, we get the raw (stored) value as well
 					$bExcludeRawValue = false;
-					foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
-					{
-						if (is_a($sAttDefClass, $sAttDefClassToExclude, true))
-						{
+					foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
+						if (is_a($sAttDefClass, $sAttDefClassToExclude, true)) {
 							$bExcludeRawValue = true;
 							break;
 						}
 					}
 					$aAttrib['value_raw'] = ($bExcludeRawValue === false) ? $this->Get($sAttCode) : '';
 
-					$aDetails[] = $aAttrib;
-					$aFieldsMap[$sAttCode] = 'att_'.$iFieldIndex;
+					$aDetails[]            = $aAttrib;
+					$aFieldsMap[$sAttCode] = $sInputId;
 					$iFieldIndex++;
+					$bExistFieldToDisplay = true;
 				}
 			}
 		}
 
-		$oPage->set_title($sActionLabel);
-		$oPage->add(<<<HTML
-<!-- Beginning of object-transition -->
-<div class="object-transition" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
+		if ($bExistFieldToDisplay || MetaModel::GetConfig()->Get('force_transition_confirmation')) {
+			$oPage->set_title($sActionLabel);
+			$oPage->add(<<<HTML
+	<!-- Beginning of object-transition -->
+	<div class="object-transition" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sDisplayMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
 HTML
-		);
+			);
 
-		// Page title and subtitles
-		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionLabel.' - '.$this->GetName()));
-		if (!empty($sActionDetails)) {
-			$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionDetails));
-		}
+			// Page title and subtitles
+			$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionLabel.' - '.$this->GetRawName()));
+			if (!empty($sActionDetails)) {
+				$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionDetails));
+			}
 
-		$oFormContainer = new UIContentBlock(null, ['ibo-wizard-container']);
-		$oPage->AddUiBlock($oFormContainer);
-		$oForm = new Combodo\iTop\Application\UI\Base\Component\Form\Form('apply_stimulus');
-		$oFormContainer->AddSubBlock($oForm);
+			$oFormContainer = new UIContentBlock(null, ['ibo-wizard-container']);
+			$oPage->AddUiBlock($oFormContainer);
+			$oForm = new Combodo\iTop\Application\UI\Base\Component\Form\Form('apply_stimulus');
+			$oFormContainer->AddSubBlock($oForm);
 
-		$oForm->SetOnSubmitJsCode("return OnSubmit('apply_stimulus');")
-			->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $this->GetKey(), 'id'))
-			->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass))
-			->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_stimulus'))
-			->AddSubBlock(InputUIBlockFactory::MakeForHidden('stimulus', $sStimulus))
-			->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
+			$oForm->SetOnSubmitJsCode("return OnSubmit('apply_stimulus');")
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $this->GetKey(), 'id'))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_stimulus'))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('stimulus', $sStimulus))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 
-		if ($sOwnershipToken !== null) {
-			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
-		}
+			if ($sOwnershipToken !== null) {
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
+			}
 
-		// Note: Remove the table is we want fields to occupy the whole width of the container
-		$oForm->AddHtml('<table><tr><td>');
-		$oForm->AddHtml($oPage->GetDetails($aDetails));
-		$oForm->AddHtml('</td></tr></table>');
+			// Note: Remove the table if we want fields to occupy the whole width of the container, BUT with today's layout, fields' label will occupy way too much space. This should be part of the field layout rework.
+			// Note 2: The hardcoded width allows the fields to be a bit wider (useful for long values) while still working on different screen sizes
+			// Note 3: The inline style is not ideal but we are still wondring how transition form should be displayed
+			$sHtml = '<table style="width: min(100%, 35rem); margin-bottom: 12px;"><tr><td>';
+			$sHtml .= $oPage->GetDetails($aDetails);
+			$sHtml .= '</td></tr></table>';
 
-		$oAppContext = new ApplicationContext();
-		$oForm->AddHtml($oAppContext->GetForForm());
+			$oAppContext = new ApplicationContext();
+			$sHtml .= $oAppContext->GetForForm();
+			$oForm->AddHtml($sHtml);
 
-		$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
-		$oCancelButton->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
-		$oForm->AddSubBlock($oCancelButton);
+			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')
+				// Action type is changed on purpose so the button is more visible in the form.
+				->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
+				->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
+			$oForm->AddSubBlock($oCancelButton);
 
-		$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
-		$oForm->AddSubBlock($oSubmitButton);
+			$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
+			$oForm->AddSubBlock($oSubmitButton);
 
-		$oPage->add(<<<HTML
-<!-- End of object-transition -->
-</div>
+			$oPage->add(<<<HTML
+	<!-- End of object-transition -->
+	</div>
 HTML
-		);
+			);
 
-		$iFieldsCount = count($aFieldsMap);
-		$sJsonFieldsMap = json_encode($aFieldsMap);
+			$iFieldsCount = count($aFieldsMap);
+			$sJsonFieldsMap = json_encode($aFieldsMap);
 
-		$oPage->add_script(
-			<<<EOF
-		// Initializes the object once at the beginning of the page...
-		var oWizardHelper = new WizardHelper('$sClass', '', '$sTargetState', '{$this->GetState()}', '$sStimulus');
-		oWizardHelper.SetFieldsMap($sJsonFieldsMap);
-		oWizardHelper.SetFieldsCount($iFieldsCount);
+			$oPage->add_script(
+				<<<EOF
+			// Initializes the object once at the beginning of the page...
+			var oWizardHelper = new WizardHelper('$sClass', '', '$sTargetState', '{$this->GetState()}', '$sStimulus');
+			oWizardHelper.SetFieldsMap($sJsonFieldsMap);
+			oWizardHelper.SetFieldsCount($iFieldsCount);
 EOF
-		);
-		$sJSToken = json_encode($sOwnershipToken);
-		$oPage->add_ready_script(
-			<<<EOF
-		// Starts the validation when the page is ready
-		CheckFields('apply_stimulus', false);
-		$(window).on('unload', function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
+			);
+			$sJSToken = json_encode($sOwnershipToken);
+			$oPage->add_ready_script(
+				<<<EOF
+			// Starts the validation when the page is ready
+			CheckFields('apply_stimulus', false);
+			$(window).on('unload', function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
 EOF
-		);
+			);
 
-		if ($sOwnershipToken !== null)
-		{
-			$this->GetOwnershipJSHandler($oPage, $sOwnershipToken);
+			if ($sOwnershipToken !== null) {
+				$this->GetOwnershipJSHandler($oPage, $sOwnershipToken);
+			}
+
+			// Note: This part (inline images activation) is duplicated in self::DisplayModifyForm and several other places. Maybe it should be refactored so it automatically activates when an HTML field is present, or be an option of the attribute. See bug N°1240.
+			$sTempId = utils::GetUploadTempId($iTransactionId);
+			$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
+		} else {
+			//we can directly apply the stimuli
+			$bApplyStimulus = $this->ApplyStimulus($sStimulus); // will write the object in the DB
+			if (!$bApplyStimulus) {
+				throw new ApplicationException(Dict::S('UI:FailedToApplyStimuli'));
+			} else {
+				if ($sOwnershipToken !== null) {
+					// Release the concurrent lock, if any
+					iTopOwnershipLock::ReleaseLock($sClass, $iKey, $sOwnershipToken);
+				}
+
+				return true;
+			}
 		}
 
-		// Note: This part (inline images activation) is duplicated in self::DisplayModifyForm and several other places. Maybe it should be refactored so it automatically activates when an HTML field is present, or be an option of the attribute. See bug N°1240.
-		$sTempId = utils::GetUploadTempId($iTransactionId);
-		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
+		return false;
 	}
 
 	public static function ProcessZlist($aList, $aDetails, $sCurrentTab, $sCurrentCol, $sCurrentSet)
@@ -3184,27 +3634,25 @@ EOF
 	protected function GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode)
 	{
 		$retVal = null;
-		if ($this->IsNew())
-		{
+		if ($this->IsNew()) {
 			$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
-		}
-		else
-		{
+		} else {
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 		}
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard))
-		{
+		$bIsLinkSetWithDisplayStyleTab = is_a($oAttDef, AttributeLinkedSet::class) && $oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB;
+		if ((($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard) && !$bIsLinkSetWithDisplayStyleTab) {
 			// First prepare the label
 			// - Attribute description
 			$sDescription = $oAttDef->GetDescription();
 			$sDescriptionForHTMLAttributes = utils::HtmlEntities($sDescription);
-			$sDescriptionHTMLAttributes = (empty($sDescriptionForHTMLAttributes) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLAttributes.'"';
+			$sDescriptionHTMLAttributes = (empty($sDescriptionForHTMLAttributes) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLAttributes.'" data-tooltip-max-width="600px"';
 
 			// - Fullscreen toggler for large fields
 			$sFullscreenTogglerTooltip = Dict::S('UI:ToggleFullScreen');
 			$sFullscreenTogglerHTML = (false === in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? '' : <<<HTML
-<a href="#" class="ibo-field--fullscreen-toggler" data-role="ibo-field--fullscreen-toggler" 
+<a href="#" class="ibo-field--fullscreen-toggler" data-role="ibo-field--fullscreen-toggler"
+aria-label="{$sFullscreenTogglerTooltip}"
 data-tooltip-content="{$sFullscreenTogglerTooltip}" data-fullscreen-toggler-target="$(this).closest('[data-role=\'ibo-field\']')"><span class="fas fa-fw fa-expand-arrows-alt"></span></a>
 HTML;
 
@@ -3213,13 +3661,21 @@ HTML;
 			// Then prepare the value
 			// - The field is visible in the current state of the object
 			if ($oAttDef->GetEditClass() == 'Document') {
+				/** @var \ormDocument $oDocument */
 				$oDocument = $this->Get($sAttCode);
 				if (!$oDocument->IsEmpty()) {
-					$sDisplayValue = $this->GetAsHTML($sAttCode);
-					$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
-							$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
-					$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
-							$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+					$sFieldAsHtml = $this->GetAsHTML($sAttCode);
+
+					$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
+					$sDisplayUrl = $oDocument->GetDisplayURL(get_class($this), $this->GetKey(), $sAttCode);
+
+					$sDownloadLabel = Dict::S('UI:DownloadDocument_');
+					$sDownloadUrl = $oDocument->GetDownloadURL(get_class($this), $this->GetKey(), $sAttCode);
+
+					$sDisplayValue = <<<HTML
+{$sFieldAsHtml}
+<a href="{$sDisplayUrl}" target="_blank">{$sDisplayLabel}</a> / <a href="{$sDownloadUrl}">{$sDownloadLabel}</a>
+HTML;
 				} else {
 					$sDisplayValue = '';
 				}
@@ -3266,8 +3722,7 @@ HTML;
 						break;
 
 					default:
-						$oPage->add("<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true), ENT_QUOTES,
-								'UTF-8')."</pre>\n");
+						$oPage->add("<pre>".utils::EscapeHtml(MyHelpers::beautifulstr($data, 1000, true))."</pre>\n");
 				}
 				break;
 
@@ -3409,7 +3864,7 @@ HTML;
 	 * @api
 	 * @overwritable-hook
 	 *
-	 * @param $sFinalClass string The actual class of the objects for which to display the menu
+	 * @param string $sFinalClass The actual class of the objects for which to display the menu
 	 *
 	 * @return array the list of menu codes (i.e dictionary entries) that can be displayed as shortcuts next to the
 	 *     actions menu
@@ -3510,7 +3965,7 @@ HTML;
 				}
 				elseif ($iFlags & OPT_ATT_SLAVE)
 				{
-					$aErrors[$sAttCode] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
+					$aErrors[$sAttCode] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel(), $sAttCode);
 				}
 				else
 				{
@@ -3615,14 +4070,25 @@ HTML;
 							foreach ($value['to_be_created'] as $aData)
 							{
 								$sSubClass = $aData['class'];
-								if (($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass)))
-								{
+								if (($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass))) {
 									$aObjData = $aData['data'];
-									$oLink = MetaModel::NewObject($sSubClass);
-									$oLink->UpdateObjectFromArray($aObjData);
-									$oLinkSet->AddItem($oLink);
+									// Avoid duplicates on bulk modify
+									$bCanLinkBeCreated = true;
+									// - Special case for n:n links
+									if (
+										($oAttDef instanceof AttributeLinkedSetIndirect)
+										&& (false === $oAttDef->DuplicatesAllowed())
+										&& in_array($aObjData[$oAttDef->GetExtKeyToRemote()], $oLinkSet->GetColumnAsArray($oAttDef->GetExtKeyToRemote(), false))
+									) {
+										$bCanLinkBeCreated = false;
+									}
+									if ($bCanLinkBeCreated) {
+										$oLink = MetaModel::NewObject($sSubClass);
+										$oLink->UpdateObjectFromArray($aObjData);
+										$oLinkSet->AddItem($oLink);
+									}
 								}
-							}
+						}
 						}
 						if (array_key_exists('to_be_added', $value) && (count($value['to_be_added']) > 0))
 						{
@@ -3787,7 +4253,9 @@ HTML;
 		{
 			case  'Document':
 				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
-				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'), 'remove' => $aOtherData['remove']);
+				if (is_array($aOtherData) && array_key_exists('remove', $aOtherData)) {
+					$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'), 'remove' => $aOtherData['remove']);
+				}
 				break;
 
 			case 'Image':
@@ -3796,13 +4264,20 @@ HTML;
 				if (!is_null($oImage->GetData()))
 				{
 					$aSize = utils::GetImageSize($oImage->GetData());
-					$oImage = utils::ResizeImageToFit(
-						$oImage,
-						$aSize[0],
-						$aSize[1],
-						$oAttDef->Get('storage_max_width'),
-						$oAttDef->Get('storage_max_height')
-					);
+					if (is_array($aSize) && $aSize[0] > 0 && $aSize[1] > 0)
+					{
+						$oImage = utils::ResizeImageToFit(
+							$oImage,
+							$aSize[0],
+							$aSize[1],
+							$oAttDef->Get('storage_max_width'),
+							$oAttDef->Get('storage_max_height')
+						);
+					}
+					else
+					{
+						IssueLog::Warning($sClass . ':' . $this->GetKey() . '/' . $sAttCode . ': Image could not be resized. Mimetype: ' . $oImage->GetMimeType() . ', filename: ' . $oImage->GetFileName());
+					}
 				}
 				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				if (is_array($aOtherData))
@@ -3816,33 +4291,35 @@ HTML;
 				break;
 
 			case 'CustomFields':
+			case 'FormField':
 				$value = $oAttDef->ReadValueFromPostedForm($this, $sFormPrefix);
 				break;
 
 			case 'LinkedSet':
 				/** @var AttributeLinkedSet $oAttDef */
+				if ($oAttDef->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY) {
+					$sLinkedClass = LinkSetModel::GetLinkedClass($oAttDef);
+					$sTargetField = LinkSetModel::GetTargetField($oAttDef);
+					$aOperations = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_operations", '{}', 'raw_data'), true);
+					$value = LinkSetDataTransformer::Encode($aOperations, $sLinkedClass, $sTargetField);
+					break;
+				}
 				$aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}',
 					'raw_data'), true);
 				$aToBeCreated = array();
-				foreach($aRawToBeCreated as $aData)
-				{
+				foreach ($aRawToBeCreated as $aData) {
 					$sSubFormPrefix = $aData['formPrefix'];
 					$sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
 					$aObjData = array();
-					foreach($aData as $sKey => $value)
-					{
-						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
-						{
+					foreach ($aData as $sKey => $value) {
+						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches)) {
 							$oLinkAttDef = MetaModel::GetAttributeDef($sObjClass, $aMatches[1]);
 							// Recursing over n:n link datetime attributes
 							// Note: We might need to do it with other attribute types, like Document or redundancy setting.
-							if ($oLinkAttDef instanceof AttributeDateTime)
-							{
+							if ($oLinkAttDef instanceof AttributeDateTime) {
 								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
 									$aMatches[1], $sObjClass, $aData);
-							}
-							else
-							{
+							} else {
 								$aObjData[$aMatches[1]] = $value;
 							}
 						}
@@ -3853,25 +4330,19 @@ HTML;
 				$aRawToBeModified = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbm", '{}',
 					'raw_data'), true);
 				$aToBeModified = array();
-				foreach($aRawToBeModified as $iObjKey => $aData)
-				{
+				foreach($aRawToBeModified as $iObjKey => $aData) {
 					$sSubFormPrefix = $aData['formPrefix'];
 					$sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
 					$aObjData = array();
-					foreach($aData as $sKey => $value)
-					{
-						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
-						{
+					foreach($aData as $sKey => $value) {
+						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches)) {
 							$oLinkAttDef = MetaModel::GetAttributeDef($sObjClass, $aMatches[1]);
 							// Recursing over n:n link datetime attributes
 							// Note: We might need to do it with other attribute types, like Document or redundancy setting.
-							if ($oLinkAttDef instanceof AttributeDateTime)
-							{
+							if ($oLinkAttDef instanceof AttributeDateTime) {
 								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
 									$aMatches[1], $sObjClass, $aData);
-							}
-							else
-							{
+							} else {
 								$aObjData[$aMatches[1]] = $value;
 							}
 						}
@@ -3880,13 +4351,13 @@ HTML;
 				}
 
 				$value = array(
-					'to_be_created' => $aToBeCreated,
+					'to_be_created'  => $aToBeCreated,
 					'to_be_modified' => $aToBeModified,
-					'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]',
+					'to_be_deleted'  => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]',
 						'raw_data'), true),
-					'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]',
+					'to_be_added'    => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]',
 						'raw_data'), true),
-					'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]',
+					'to_be_removed'  => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]',
 						'raw_data'), true),
 				);
 				break;
@@ -3894,7 +4365,9 @@ HTML;
 			case 'Set':
 			case 'TagSet':
 				$sTagSetJson = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+			if ($sTagSetJson !== null) { // bulk modify, direct linked set not handled
 				$value = json_decode($sTagSetJson, true);
+			}
 				break;
 
 			default:
@@ -3943,6 +4416,25 @@ HTML;
 
 	/**
 	 * Updates the object from a given page argument
+	 *
+	 * The values are read from parameters (GET or POST, using {@see utils::ReadParam()}).
+	 *
+	 * To pass the arg, either add in HTML :
+	 *
+	 * ```html
+	 * <input type="hidden" name="sArgName[attCode1]" value="...">
+	 * <input type="hidden" name="sArgName[attCode2]" value="...">
+	 * ```
+	 *
+	 * Or directly in the URL :
+	 *
+	 * ```php
+	 * $aObjectArgs = ['attCode1' => ..., 'attCode2' => ...];
+	 * $sQueryString = http_build_query(['sArgName' => $aObjectArgs]);
+	 * ```
+	 *
+	 * @uses utils::ReadParam()
+	 * @uses self::UpdateObjectFromArray
 	 */
 	public function UpdateObjectFromArg($sArgName, $aAttList = null, $aAttFlags = array())
 	{
@@ -3989,17 +4481,23 @@ HTML;
 	 */
 	public function DBInsertNoReload()
 	{
-		$res = parent::DBInsertNoReload();
+		try {
+			$res = parent::DBInsertNoReload();
 
-		$this->SetWarningsAsSessionMessages('create');
+			$this->SetWarningsAsSessionMessages('create');
 
-		// Invoke extensions after insertion (the object must exist, have an id, etc.)
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-		{
-			$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
+			// Invoke extensions after insertion (the object must exist, have an id, etc.)
+			/** @var \iApplicationObjectExtension $oExtensionInstance */
+			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
+				$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
+			}
+		} finally {
+			if (static::IsCrudStackEmpty()) {
+				// Avoid signaling the current object that links were modified
+				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
+				static::FireEventDbLinksChangedForAllObjects();
+			}
 		}
-
 		return $res;
 	}
 
@@ -4028,36 +4526,52 @@ HTML;
 
 	public function DBUpdate()
 	{
-		$res = parent::DBUpdate();
+		try {
+			$res = parent::DBUpdate();
 
-		$this->SetWarningsAsSessionMessages('update');
+			$this->SetWarningsAsSessionMessages('update');
 
-		// Protection against reentrance (e.g. cascading the update of ticket logs)
-		// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
-		static $aUpdateReentrance = array();
-		$sKey = get_class($this).'::'.$this->GetKey();
-		if (array_key_exists($sKey, $aUpdateReentrance))
-		{
-			return $res;
-		}
-		$aUpdateReentrance[$sKey] = true;
+			// Protection against reentrance (e.g. cascading the update of ticket logs)
+			// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
+			if (!MetaModel::StartReentranceProtection($this)) {
+				$sClass = get_class($this);
+				$sKey = $this->GetKey();
+				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
 
-		try
-		{
-			// Invoke extensions after the update (could be before)
-			/** @var \iApplicationObjectExtension $oExtensionInstance */
-			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-			{
-				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
+				return $res;
 			}
-		}
-		catch (Exception $e)
-		{
-			throw $e;
-		}
-		finally
-		{
-			unset($aUpdateReentrance[$sKey]);
+
+			try {
+				// Invoke extensions after the update (could be before)
+				/** @var \iApplicationObjectExtension $oExtensionInstance */
+				foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
+					$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
+				}
+			}
+			finally {
+				MetaModel::StopReentranceProtection($this);
+			}
+
+			$aChanges = $this->ListChanges();
+			if (count($aChanges) != 0) {
+				$this->iUpdateLoopCount++;
+				if ($this->iUpdateLoopCount > self::MAX_UPDATE_LOOP_COUNT) {
+					$sClass = get_class($this);
+					$sKey = $this->GetKey();
+					$aPlugins = [];
+					foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
+						$aPlugins[] = get_class($oExtensionInstance);
+					}
+					$sPlugins = implode(', ', $aPlugins);
+					IssueLog::Error("CRUD: DBUpdate $sClass::$sKey Update loop detected plugins: $sPlugins", LogChannels::DM_CRUD);
+				} else {
+					return $this->DBUpdate();
+				}
+			}
+		} finally {
+			if (static::IsCrudStackEmpty()) {
+				static::FireEventDbLinksChangedForAllObjects();
+			}
 		}
 
 		return $res;
@@ -4070,11 +4584,9 @@ HTML;
 	 */
 	protected function SetWarningsAsSessionMessages($sMessageIdPrefix)
 	{
-		if (!empty($this->m_aCheckWarnings) && is_array($this->m_aCheckWarnings))
-		{
+		if (!empty($this->m_aCheckWarnings) && is_array($this->m_aCheckWarnings)) {
 			$iMsgNb = 0;
-			foreach ($this->m_aCheckWarnings as $sWarningMessage)
-			{
+			foreach ($this->m_aCheckWarnings as $sWarningMessage) {
 				$iMsgNb++;
 				$sMessageId = "$sMessageIdPrefix-$iMsgNb"; // each message must have its own messageId !
 				$this->SetSessionMessageFromInstance($sMessageId, $sWarningMessage, 'warning', 0);
@@ -4082,13 +4594,22 @@ HTML;
 		}
 	}
 
-	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
+	public function DBDelete(&$oDeletionPlan = null)
 	{
-		// Todo - invoke the extension
-		return parent::BulkUpdateTracked_Internal($oFilter, $aValues);
+		try {
+			parent::DBDelete($oDeletionPlan);
+		}  finally {
+			if (static::IsCrudStackEmpty()) {
+				// Avoid signaling the current object that links were modified
+				static::RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
+				static::FireEventDbLinksChangedForAllObjects();
+			}
+		}
+
+		return $oDeletionPlan;
 	}
 
-	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
+		protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
@@ -4256,23 +4777,19 @@ HTML;
 	 */
 	public function DisplayCaseLog(WebPage $oPage, $sAttCode, $sComment = '', $sPrefix = '', $bEditMode = false)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$sClass = get_class($this);
 
-		if ($this->IsNew())
-		{
+		if ($this->IsNew()) {
 			$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
-		}
-		else
-		{
+		} else {
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 		}
 
-		if ($iFlags & OPT_ATT_HIDDEN)
-		{
+		if ($iFlags & OPT_ATT_HIDDEN) {
 			// The case log is hidden do nothing
-		}
-		else
+		} else
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			$sAttDefClass = get_class($oAttDef);
@@ -4294,9 +4811,8 @@ HTML;
 				{
 					$aReasons = array();
 					$sTip = '';
-					foreach($aReasons as $aRow)
-					{
-						$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
+					foreach($aReasons as $aRow) {
+						$sDescription = utils::EscapeHtml($aRow['description']);
 						$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
 						$sTip .= "<div class=\"synchro-source\">";
 						$sTip .= "<div class=\"synchro-source-title\">Synchronized with {$aRow['name']}</div>";
@@ -4308,8 +4824,7 @@ HTML;
 
 				// Attribute is read-only
 				$sHTMLValue = $this->GetAsHTML($sAttCode);
-				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->GetEditValue($sAttCode),
-						ENT_QUOTES, 'UTF-8').'"/>';
+				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.utils::EscapeHtml($this->GetEditValue($sAttCode)).'"/>';
 				$aFieldsMap[$sAttCode] = $sInputId;
 			}
 			else
@@ -4347,6 +4862,70 @@ HTML
 	}
 
 	/**
+	 * Special display where the case log uses the whole "screen" at the bottom of the "Properties" tab
+	 *
+	 * @param \WebPage $oPage
+	 * @param string $sAttCode
+	 * @param string $sComment
+	 * @param string $sPrefix
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
+	public function DisplayCaseLogForBulkModify(WebPage $oPage, $sAttCode, $sComment = '', $sPrefix = '')
+	{
+		$sClass = get_class($this);
+
+		$iFlags = $this->GetAttributeFlags($sAttCode);
+
+		if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY | OPT_ATT_SLAVE)) {
+			// The case log can not be updated
+		} else {
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			$sAttDefClass = get_class($oAttDef);
+			$sAttLabel = $oAttDef->GetLabel();
+			$sAttMetaDataLabel = utils::HtmlEntities($sAttLabel);
+			$sAttMetaDataFlagMandatory = (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY) ? 'true' : 'false';
+			$sAttMetaDataFlagMustChange = (($iFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE) ? 'true' : 'false';
+			$sAttMetaDataFlagMustPrompt = (($iFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT) ? 'true' : 'false';
+
+			$sInputId = $this->m_iFormId.'_'.$sAttCode;
+
+			$sValue = $this->Get($sAttCode);
+			$sDisplayValue = $this->GetEditValue($sAttCode);
+			$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
+
+			$aFieldsMap[$sAttCode] = $sInputId;
+
+			$sCommentAsHtml = ($sComment != '') ? ' <div class="ibo-field--comments">'.$sComment.'</div>' : '';
+
+			$oFieldset = FieldSetUIBlockFactory::MakeStandard($sAttLabel.$sCommentAsHtml);
+			$oPage->AddSubBlock($oFieldset);
+
+			$oDivField = FieldUIBlockFactory::MakeLarge("");
+			//	UIContentBlockUIBlockFactory::MakeStandard(null,["field_container field_large"]);
+			$oDivField->AddDataAttribute("attribute-type", $sAttDefClass);
+			$oDivField->AddDataAttribute("attribute-label", $sAttMetaDataLabel);
+			$oDivField->AddDataAttribute("attribute-flag-hidden", false);
+			$oDivField->AddDataAttribute("attribute-flag-read-only", false);
+			$oDivField->AddDataAttribute("attribute-flag-mandatory", $sAttMetaDataFlagMandatory);
+			$oDivField->AddDataAttribute("attribute-flag-must-change", $sAttMetaDataFlagMustChange);
+			$oDivField->AddDataAttribute("attribute-flag-must-prompt", $sAttMetaDataFlagMustPrompt);
+			$oDivField->AddDataAttribute("attribute-flag-slave", false);
+			$oFieldset->AddSubBlock($oDivField);
+			//$oDivField->SetComments($sComment);
+			$sFieldAsHtml = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
+			$sHTMLValue = $sFieldAsHtml;
+			$oDivField->AddSubBlock(new Html($sHTMLValue));
+		}
+	}
+
+	/**
 	 * @param $sCurrentState
 	 * @param $sStimulus
 	 * @param $bOnlyNewOnes
@@ -4358,9 +4937,9 @@ HTML
 	 */
 	public function GetExpectedAttributes($sCurrentState, $sStimulus, $bOnlyNewOnes)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Since iTop 2.4, use DBObject::GetTransitionAttributes() instead');
 		$aTransitions = $this->EnumTransitions();
-		if (!isset($aTransitions[$sStimulus]))
-		{
+		if (!isset($aTransitions[$sStimulus])) {
 			// Invalid stimulus
 			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus,
 				$this->GetName(), $this->GetStateLabel()));
@@ -4433,13 +5012,12 @@ HTML
 			$sOQL = "SELECT $sClass WHERE id IN (".$sSelectedObj.")";
 			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
 
-			// Compute the distribution of the values for each field to determine which of the "scalar" fields are homogeneous
+			// Compute the distribution of the values for each field to determine which of the "scalar or linked set" fields are homogeneous
 			$aList = MetaModel::ListAttributeDefs($sClass);
 			$aValues = array();
 			foreach($aList as $sAttCode => $oAttDef)
 			{
-				if ($oAttDef->IsScalar())
-				{
+				if ($oAttDef->IsBulkModifyCompatible()) {
 					$aValues[$sAttCode] = array();
 				}
 			}
@@ -4447,26 +5025,27 @@ HTML
 			{
 				foreach($aList as $sAttCode => $oAttDef)
 				{
-					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
-					{
+					if ($oAttDef->IsBulkModifyCompatible() && $oAttDef->IsWritable()) {
 						$currValue = $oObj->Get($sAttCode);
-						if ($oAttDef instanceof AttributeCaseLog)
-						{
+						$editValue = '';
+						if ($oAttDef instanceof AttributeCaseLog) {
 							$currValue = ''; // Put a single scalar value to force caselog to mock a new entry. For more info see N°1059.
-						}
-						elseif ($currValue instanceof ormSet)
-						{
+						} elseif ($currValue instanceof ormSet) {
 							$currValue = $oAttDef->GetEditValue($currValue, $oObj);
+						} else if ($currValue instanceof ormLinkSet) {
+							$sHtmlValue = $oAttDef->GetAsHTML($currValue);
+							$editValue = $oAttDef->GetEditValue($currValue, $oObj);
+							$currValue = $sHtmlValue;
 						}
-						if (is_object($currValue))
-						{
+						if (is_object($currValue)) {
 							continue;
 						} // Skip non scalar values...
 						if (!array_key_exists($currValue, $aValues[$sAttCode]))
 						{
 							$aValues[$sAttCode][$currValue] = array(
-								'count' => 1,
-								'display' => $oObj->GetAsHTML($sAttCode),
+								'count'      => 1,
+								'display'    => $oObj->GetAsHTML($sAttCode),
+								'edit_value' => $editValue,
 							);
 						}
 						else
@@ -4479,11 +5058,11 @@ HTML
 			// Now create an object that has values for the homogeneous values only
 			/** @var \cmdbAbstractObject $oDummyObj */
 			$oDummyObj = new $sClass(); // @@ What if the class is abstract ?
+			$oDummyObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_BULK_EDIT);
 			$aComments = array();
 			function MyComparison($a, $b) // Sort descending
 			{
-				if ($a['count'] == $b['count'])
-				{
+				if ($a['count'] == $b['count']) {
 					return 0;
 				}
 
@@ -4493,64 +5072,58 @@ HTML
 			$iFormId = cmdbAbstractObject::GetNextFormId(); // Identifier that prefixes all the form fields
 			$sReadyScript = '';
 			$sFormPrefix = '2_';
-			foreach($aList as $sAttCode => $oAttDef)
-			{
+			foreach ($aList as $sAttCode => $oAttDef) {
 				$aPrerequisites = MetaModel::GetPrerequisiteAttributes($sClass,
 					$sAttCode); // List of attributes that are needed for the current one
-				if (count($aPrerequisites) > 0)
-				{
+				if (count($aPrerequisites) > 0) {
 					// When 'enabling' a field, all its prerequisites must be enabled too
 					$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aPrerequisites)."']";
 					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').on('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, true); } );\n");
 				}
 				$aDependents = MetaModel::GetDependentAttributes($sClass,
 					$sAttCode); // List of attributes that are needed for the current one
-				if (count($aDependents) > 0)
-				{
+				if (count($aDependents) > 0) {
 					// When 'disabling' a field, all its dependent fields must be disabled too
 					$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aDependents)."']";
 					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').on('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, false); } );\n");
 				}
-				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
-				{
-					if ($oAttDef->GetEditClass() == 'One Way Password')
-					{
+				if ($oAttDef->IsBulkModifyCompatible() && $oAttDef->IsWritable()) {
+					if ($oAttDef->GetEditClass() == 'One Way Password') {
 
 						$sTip = Dict::S('UI:Component:Field:BulkModify:UnknownValues:Tooltip');
 
 						$oDummyObj->Set($sAttCode, null);
-						$aComments[$sAttCode] = '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
-						$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'"> ? </div>';
+						$aComments[$sAttCode] = '<div class="multi_values ibo-field--enable-bulk ibo-pill ibo-is-failure" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'">?';
+						$aComments[$sAttCode] .= '<input type="checkbox" class="ibo-field--enable-bulk--checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/></div>';
 						$sReadyScript .= 'ToggleField(false, \''.$iFormId.'_'.$sAttCode.'\');'."\n";
-					}
-					else
-					{
+					} else {
 						$iCount = count($aValues[$sAttCode]);
-						if ($iCount == 1)
-						{
+						if ($iCount == 1) {
 							// Homogeneous value
 							reset($aValues[$sAttCode]);
 							$aKeys = array_keys($aValues[$sAttCode]);
 							$currValue = $aKeys[0]; // The only value is the first key
-							//echo "<p>current value for $sAttCode : $currValue</p>";
-							$oDummyObj->Set($sAttCode, $currValue);
-							$aComments[$sAttCode] = '';
-							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass))
-							{
-								$aComments[$sAttCode] .= '<input type="checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+							if ($oAttDef->GetEditClass() == 'LinkedSet') {
+								$oOrmLinkSet = $oDummyObj->Get($sAttCode);
+								LinkSetDataTransformer::StringToOrmLinkSet($aValues[$sAttCode][$currValue]['edit_value'], $oOrmLinkSet);
+
+							} else {
+								$oDummyObj->Set($sAttCode, $currValue);
 							}
-							$aComments[$sAttCode] .= '<div class="mono_value">1</div>';
-						}
-						else
-						{
+							$aComments[$sAttCode] = '';
+							$sValueCheckbox = '';
+							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass)) {
+								$sValueCheckbox .= '<input type="checkbox" class="ibo-field--enable-bulk--checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+							}
+							$aComments[$sAttCode] .= '<div class="mono_value ibo-field--enable-bulk ibo-pill ibo-is-success">1'.$sValueCheckbox.'</div>';
+						} else {
 							// Non-homogeneous value
 							$aMultiValues = $aValues[$sAttCode];
 							uasort($aMultiValues, 'MyComparison');
 							$iMaxCount = 5;
 							$sTip = "<p><b>".Dict::Format('UI:BulkModify_Count_DistinctValues', $iCount)."</b><ul>";
 							$index = 0;
-							foreach($aMultiValues as $sCurrValue => $aVal)
-							{
+							foreach ($aMultiValues as $sCurrValue => $aVal) {
 								$sDisplayValue = empty($aVal['display']) ? '<i>'.Dict::S('Enum:Undefined').'</i>' : str_replace(array(
 									"\n",
 									"\r",
@@ -4558,8 +5131,7 @@ HTML
 								$sTip .= "<li>".Dict::Format('UI:BulkModify:Value_Exists_N_Times', $sDisplayValue,
 										$aVal['count'])."</li>";
 								$index++;
-								if ($iMaxCount == $index)
-								{
+								if ($iMaxCount == $index) {
 									$sTip .= "<li>".Dict::Format('UI:BulkModify:N_MoreValues',
 											count($aMultiValues) - $iMaxCount)."</li>";
 									break;
@@ -4568,8 +5140,7 @@ HTML
 							$sTip .= "</ul></p>";
 							$sTip = utils::HtmlEntities($sTip);
 
-							if (($oAttDef->GetEditClass() == 'TagSet') || ($oAttDef->GetEditClass() == 'Set'))
-							{
+							if (($oAttDef->GetEditClass() == 'TagSet') || ($oAttDef->GetEditClass() == 'Set')) {
 								// Set the value by adding the values to the first one
 								reset($aMultiValues);
 								$aKeys = array_keys($aMultiValues);
@@ -4578,66 +5149,67 @@ HTML
 								/** @var ormTagSet $oTagSet */
 								$oTagSet = $oDummyObj->Get($sAttCode);
 								$oTagSet->SetDisplayPartial(true);
-								foreach($aKeys as $iIndex => $sValues)
-								{
-									if ($iIndex == 0)
-									{
+								foreach ($aKeys as $iIndex => $sValues) {
+									if ($iIndex == 0) {
 										continue;
 									}
 									$aTagCodes = $oAttDef->FromStringToArray($sValues);
 									$oTagSet->GenerateDiffFromArray($aTagCodes);
 								}
 								$oDummyObj->Set($sAttCode, $oTagSet);
-							}
-							else
-							{
+							} else if ($oAttDef->GetEditClass() == 'LinkedSet') {
+								$oOrmLinkSet = $oDummyObj->Get($sAttCode);
+								foreach ($aMultiValues as $key => $sValue) {
+									LinkSetDataTransformer::StringToOrmLinkSet($sValue['edit_value'], $oOrmLinkSet);
+								}
+
+							} else {
 								$oDummyObj->Set($sAttCode, null);
 							}
 							$aComments[$sAttCode] = '';
-							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass))
-							{
-								$aComments[$sAttCode] .= '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+							$sValueCheckbox = '';
+
+							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass)) {
+								$sValueCheckbox = '<input type="checkbox" class="ibo-field--enable-bulk--checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
-							$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.$iCount.'</div>';
+							$aComments[$sAttCode] .= '<div class="multi_values ibo-field--enable-bulk ibo-pill ibo-is-failure" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true" data-tooltip-append-to="body">'.$iCount.$sValueCheckbox.'</div>';
 						}
 						$sReadyScript .= 'ToggleField('.(($iCount == 1) ? 'true' : 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					}
 				}
 			}
 
-			if (MetaModel::HasLifecycle($sClass) && ($oDummyObj->GetState() == ''))
-			{
+			if (MetaModel::HasLifecycle($sClass) && ($oDummyObj->GetState() == '')) {
 				// Hmmm, it's not gonna work like this ! Set a default value for the "state"
 				// Maybe we should use the "state" that is the most common among the objects...
 				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 				$aMultiValues = $aValues[$sStateAttCode];
 				uasort($aMultiValues, 'MyComparison');
-				foreach($aMultiValues as $sCurrValue => $aVal)
-				{
+				foreach ($aMultiValues as $sCurrValue => $aVal) {
 					$oDummyObj->Set($sStateAttCode, $sCurrValue);
 					break;
 				}
 				//$oStateAtt = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
 				//$oDummyObj->Set($sStateAttCode, $oStateAtt->GetDefaultValue());
 			}
-			$oP->add("<div class=\"page_header\">\n");
-			$oP->add("<h1>".$oDummyObj->GetIcon()."&nbsp;".Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N',
-					$iAllowedCount, $sClass, $iAllowedCount)."</h1>\n");
-			$oP->add("</div>\n");
 
 			$oP->add("<div class=\"wizContainer\">\n");
 			$sDisableFields = json_encode($aExcludeAttributes);
 
 			$aParams = array
 			(
-				'fieldsComments' => $aComments,
-				'noRelations' => true,
+				'fieldsComments'   => $aComments,
+				'noRelations'      => true,
 				'custom_operation' => $sCustomOperation,
-				'custom_button' => Dict::S('UI:Button:PreviewModifications'),
-				'selectObj' => $sSelectedObj,
-				'preview_mode' => true,
-				'disabled_fields' => $sDisableFields,
-				'disable_plugins' => true,
+				'custom_button'    => Dict::S('UI:Button:PreviewModifications'),
+				'selectObj'        => $sSelectedObj,
+				'nbBulkObj'        => $iAllowedCount,
+				'preview_mode'     => true,
+				'disabled_fields'  => $sDisableFields,
+				'disable_plugins'  => true,
+				'bulk_context'     => [
+					'oql' => $sOQL,
+				],
 			);
 			$aParams = $aParams + $aContextData; // merge keeping associations
 
@@ -4679,10 +5251,6 @@ EOF
 	{
 		/** @var string[] $aHeaders */
 		$aHeaders = array(
-			'form::select' => array(
-				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>",
-				'description' => Dict::S('UI:SelectAllToggle+'),
-			),
 			'object' => array('label' => MetaModel::GetName($sClass), 'description' => Dict::S('UI:ModifiedObject')),
 			'status' => array(
 				'label' => Dict::S('UI:BulkModifyStatus'),
@@ -4695,101 +5263,105 @@ EOF
 		);
 		$aRows = array();
 
-		$oP->add("<div class=\"page_header\">\n");
-		$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Modify_N_ObjectsOf_Class',
-				count($aSelectedObj), MetaModel::GetName($sClass))."</h1>\n");
-		$oP->add("</div>\n");
+
+		$sHeaderTitle = Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), MetaModel::GetName($sClass));
+		$sClassIcon = MetaModel::GetClassIcon($sClass, false);
+
+
 		$oP->set_title(Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), $sClass));
-		if (!$bPreview)
-		{
+		if (!$bPreview) {
 			// Not in preview mode, do the update for real
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
-			if (!utils::IsTransactionValid($sTransactionId, false))
-			{
+			if (!utils::IsTransactionValid($sTransactionId, false)) {
 				throw new Exception(Dict::S('UI:Error:ObjectAlreadyUpdated'));
 			}
 			utils::RemoveTransaction($sTransactionId);
 		}
+
+		// Avoid too many events
+		static::SetEventDBLinksChangedBlocked(true);
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		foreach($aSelectedObj as $iId)
-		{
+		foreach ($aSelectedObj as $iId) {
 			set_time_limit(intval($iLoopTimeLimit));
 			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::GetObject($sClass, $iId);
 			$aErrors = $oObj->UpdateObjectFromPostedForm('');
 			$bResult = (count($aErrors) == 0);
-			if ($bResult)
-			{
+			if ($bResult) {
 				list($bResult, $aErrors) = $oObj->CheckToWrite();
 			}
-			if ($bPreview)
-			{
+			if ($bPreview) {
 				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusOk') : Dict::S('UI:BulkModifyStatusError');
-			}
-			else
-			{
+			} else {
 				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusModified') : Dict::S('UI:BulkModifyStatusSkipped');
 			}
-			$sCSSClass = $bResult ? HILIGHT_CLASS_NONE : HILIGHT_CLASS_CRITICAL;
-			$sChecked = $bResult ? 'checked' : '';
-			$sDisabled = $bResult ? '' : 'disabled';
+
+			$aErrorsToDisplay = array_map(function($sError) {
+				return utils::HtmlEntities($sError);
+			}, $aErrors);
 			$aRows[] = array(
-				'form::select' => "<input type=\"checkbox\" class=\"selectList\" $sChecked $sDisabled\"></input>",
 				'object' => $oObj->GetHyperlink(),
 				'status' => $sStatus,
-				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrors)).'</p>',
-				'@class' => $sCSSClass,
+				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrorsToDisplay)).'</p>',
 			);
-			if ($bResult && (!$bPreview))
-			{
+			if ($bResult && (!$bPreview)) {
 				$oObj->DBUpdate();
 			}
 		}
+		// Send all the retained events for further computations
+		static::SetEventDBLinksChangedBlocked(false);
+		static::FireEventDbLinksChangedForAllObjects();
+
 		set_time_limit(intval($iPreviousTimeLimit));
-		$oP->Table($aHeaders, $aRows);
-		if ($bPreview)
-		{
+		$oTable = DataTableUIBlockFactory::MakeForForm('BulkModify', $aHeaders, $aRows);
+		$oTable->AddOption("bFullscreen", true);
+
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, '');
+		$oPanel->SetIcon($sClassIcon);
+		$oPanel->SetTitle($sHeaderTitle);
+		$oPanel->AddCSSClass('ibo-datatable-panel');
+		$oPanel->AddSubBlock($oTable);
+
+
+		if ($bPreview) {
 			$sFormAction = utils::GetAbsoluteUrlAppRoot().'pages/UI.php'; // No parameter in the URL, the only parameter will be the ones passed through the form
 			// Form to submit:
-			$oP->add("<form method=\"post\" action=\"$sFormAction\" enctype=\"multipart/form-data\">\n");
+			$oForm = FormUIBlockFactory::MakeStandard('')->SetAction($sFormAction);
+			$oP->AddSubBlock($oForm);
+			$oForm->AddSubBlock($oPanel);
+
 			$oAppContext = new ApplicationContext();
 			$oP->add($oAppContext->GetForForm());
-			foreach($aContextData as $sKey => $value)
-			{
-				$oP->add("<input type=\"hidden\" name=\"{$sKey}\" value=\"$value\">\n");
+			foreach ($aContextData as $sKey => $value) {
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey, $value));
 			}
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sCustomOperation\">\n");
-			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-			$oP->add("<input type=\"hidden\" name=\"preview_mode\" value=\"0\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-			$oP->add("<button type=\"button\" class=\"action cancel\" onClick=\"window.location.href='$sCancelUrl'\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-			$oP->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:ModifyAll')."</span></button>\n");
-			foreach($_POST as $sKey => $value)
-			{
-				if (preg_match('/attr_(.+)/', $sKey, $aMatches))
-				{
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sCustomOperation));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('preview_mode', 0));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+
+			$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+			$oForm->AddSubBlock($oToolbarButtons);
+			$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'))->SetOnClickJsCode("window.location.href='$sCancelUrl'"));
+			$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:ModifyAll'), '', '', true));
+
+			foreach ($_POST as $sKey => $value) {
+				if (preg_match('/attr_(.+)/', $sKey, $aMatches)) {
 					// Beware: some values (like durations) are passed as arrays
-					if (is_array($value))
-					{
-						foreach($value as $vKey => $vValue)
-						{
-							$oP->add("<input type=\"hidden\" name=\"{$sKey}[$vKey]\" value=\"".htmlentities($vValue,
-									ENT_QUOTES, 'UTF-8')."\">\n");
+					if (is_array($value)) {
+						foreach ($value as $vKey => $vValue) {
+							$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey.'['.$vKey.']', $vValue));
 						}
-					}
-					else
-					{
-						$oP->add("<input type=\"hidden\" name=\"$sKey\" value=\"".htmlentities($value, ENT_QUOTES,
-								'UTF-8')."\">\n");
+					} else {
+						$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey, $value));
 					}
 				}
 			}
-			$oP->add("</form>\n");
-		}
-		else
-		{
-			$oP->add("<button type=\"button\" onClick=\"window.location.href='$sCancelUrl'\" class=\"action\"><span>".Dict::S('UI:Button:Done')."</span></button>\n");
+		} else {
+			$oP->AddUiBlock($oPanel);
+			$oP->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Done')))->SetOnClickJsCode("window.location.href='$sCancelUrl'")->AddCSSClass('mt-5');
 		}
 	}
 
@@ -4811,19 +5383,26 @@ EOF
 	{
 		$oDeletionPlan = new DeletionPlan();
 
-		foreach($aObjects as $oObj)
-		{
-			if ($bPreview) {
-				$oObj->CheckToDelete($oDeletionPlan);
-			} else {
-				$oObj->DBDelete($oDeletionPlan);
+		// Avoid too many events
+		static::SetEventDBLinksChangedBlocked(true);
+		try {
+			foreach ($aObjects as $oObj) {
+				if ($bPreview) {
+					$oObj->CheckToDelete($oDeletionPlan);
+				} else {
+					$oObj->DBDelete($oDeletionPlan);
+				}
 			}
+		} finally {
+			// Send all the retained events for further computations
+			static::SetEventDBLinksChangedBlocked(false);
+			static::FireEventDbLinksChangedForAllObjects();
 		}
 
 		if ($bPreview) {
 			if (count($aObjects) == 1) {
 				$oObj = $aObjects[0];
-				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Name', $oObj->GetName());
+				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Name', $oObj->GetRawName());
 			} else {
 				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class', count($aObjects),
 					MetaModel::GetName($sClass));
@@ -4837,6 +5416,7 @@ EOF
 				foreach ($aDeletes as $iId => $aData) {
 					$oToDelete = $aData['to_delete'];
 					$bAutoDel = (($aData['mode'] == DEL_SILENT) || ($aData['mode'] == DEL_AUTO));
+					$sRowCssClass = '';
 					if (array_key_exists('issue', $aData))
 					{
 						if ($bAutoDel)
@@ -4856,6 +5436,7 @@ EOF
 							$sConsequence = Dict::Format('UI:Delete:MustBeDeletedManuallyButNotPossible',
 								$aData['issue']);
 						}
+						$sRowCssClass = 'ibo-is-alert';
 					}
 					else
 					{
@@ -4873,9 +5454,11 @@ EOF
 						else
 						{
 							$sConsequence = Dict::S('UI:Delete:MustBeDeletedManually');
+							$sRowCssClass = 'ibo-is-warning';
 						}
 					}
 					$aDisplayData[] = array(
+						'@class' => $sRowCssClass,
 						'class' => MetaModel::GetName(get_class($oToDelete)),
 						'object' => $oToDelete->GetHyperLink(),
 						'consequence' => $sConsequence,
@@ -4887,9 +5470,11 @@ EOF
 				foreach($aToUpdate as $iId => $aData)
 				{
 					$oToUpdate = $aData['to_reset'];
+					$sRowCssClass = '';
 					if (array_key_exists('issue', $aData))
 					{
 						$sConsequence = Dict::Format('UI:Delete:CannotUpdateBecause_Issue', $aData['issue']);
+						$sRowCssClass = 'ibo-is-alert';
 					}
 					else
 					{
@@ -4897,6 +5482,7 @@ EOF
 							$aData['attributes_list']);
 					}
 					$aDisplayData[] = array(
+						'@class' => $sRowCssClass,
 						'class' => MetaModel::GetName(get_class($oToUpdate)),
 						'object' => $oToUpdate->GetHyperLink(),
 						'consequence' => $sConsequence,
@@ -4905,19 +5491,21 @@ EOF
 			}
 
 			$iImpactedIndirectly = $oDeletionPlan->GetTargetCount() - count($aObjects);
+			$sImpactedTableTitle = '';
+			$sImpactedTableSubtitle = '';
 			if ($iImpactedIndirectly > 0)
 			{
 				if (count($aObjects) == 1)
 				{
 					$oObj = $aObjects[0];
-					$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencing_Object', $iImpactedIndirectly,
-						$oObj->GetName()));
+					$sImpactedTableTitle = Dict::Format('UI:Delete:Count_Objects/LinksReferencing_Object', $iImpactedIndirectly,
+						$oObj->GetName());
 				}
 				else
 				{
-					$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencingTheObjects', $iImpactedIndirectly));
+					$sImpactedTableTitle = Dict::Format('UI:Delete:Count_Objects/LinksReferencingTheObjects', $iImpactedIndirectly);
 				}
-				$oP->p(Dict::S('UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity'));
+				$sImpactedTableSubtitle = Dict::S('UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity');
 			}
 
 			if (($iImpactedIndirectly > 0) || $oDeletionPlan->FoundStopper())
@@ -4929,32 +5517,35 @@ EOF
 					'label' => 'Consequence',
 					'description' => Dict::S('UI:Delete:Consequence+'),
 				);
-				$oP->table($aDisplayConfig, $aDisplayData);
+				$oBlock = PanelUIBlockFactory::MakeNeutral($sImpactedTableTitle, $sImpactedTableSubtitle);
+
+				$oDataTable = DataTableUIBlockFactory::MakeForForm(utils::Sanitize(uniqid('form_', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER), $aDisplayConfig, $aDisplayData);
+				$oBlock->AddSubBlock($oDataTable);
+				$oP->AddUiBlock($oBlock);
 			}
 
-			if ($oDeletionPlan->FoundStopper())
-			{
-				if ($oDeletionPlan->FoundSecurityIssue())
-				{
-					$oP->p(Dict::S('UI:Delete:SorryDeletionNotAllowed'));
+			if ($oDeletionPlan->FoundStopper()) {
+				if ($oDeletionPlan->FoundSecurityIssue()) {
+					$oFailAlertBlock = AlertUIBlockFactory::MakeForDanger('', Dict::S('UI:Delete:SorryDeletionNotAllowed'));
+					$oFailAlertBlock->SetIsClosable(false);
+					$oP->AddUiBlock($oFailAlertBlock);
 				}
-				elseif ($oDeletionPlan->FoundManualOperation())
-				{
-					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
+				else {
+					$oWarningAlertBlock = AlertUIBlockFactory::MakeForWarning('', Dict::S('UI:Delete:PleaseDoTheManualOperations'));
+					$oWarningAlertBlock->SetIsClosable(false);
+					$oP->AddUiBlock($oWarningAlertBlock);
 				}
-				else // $bFoundManualOp
-				{
-					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
-				}
+
+				$oForm = FormUIBlockFactory::MakeStandard('');
+				$oP->AddSubBlock($oForm);
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::ReadParam('transaction_id', '', false, 'transaction_id')));
+				$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+				$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+				$oForm->AddSubBlock($oToolbarButtons);
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Back'))->SetOnClickJsCode("window.history.back();"));
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForDestructiveAction(Dict::S('UI:Button:Delete'), null, null, true)->SetIsDisabled(true));
 				$oAppContext = new ApplicationContext();
-				$oP->add("<form method=\"post\">\n");
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id', '', false,
-						'transaction_id')
-					."\">\n");
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
-				$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("</form>\n");
+				$oForm->AddSubBlock($oAppContext->GetForFormBlock());
 			}
 			else {
 				if (count($aObjects) == 1) {
@@ -4964,7 +5555,6 @@ EOF
 					$sSubtitle = Dict::Format('UI:Delect:Confirm_Count_ObjectsOf_Class', count($aObjects),
 						MetaModel::GetName($sClass));
 				}
-				$oP->AddUiBlock(TitleUIBlockFactory::MakeStandard(new Html($sSubtitle)));
 
 				foreach ($aObjects as $oObj) {
 					$aKeys[] = $oObj->GetKey();
@@ -4972,28 +5562,39 @@ EOF
 				$oFilter = new DBObjectSearch($sClass);
 				$oFilter->AddCondition('id', $aKeys, 'IN');
 				$oSet = new CMDBobjectSet($oFilter);
-				$oP->add('<div id="0">');
-				CMDBAbstractObject::DisplaySet($oP, $oSet, array('display_limit' => false, 'menu' => false));
-				$oP->add("</div>\n");
-				$oP->add("<form method=\"post\">\n");
-				foreach ($aContextData as $sKey => $value)
-				{
-					$oP->add("<input type=\"hidden\" name=\"{$sKey}\" value=\"$value\">\n");
+				$oDisplaySet = UIContentBlockUIBlockFactory::MakeStandard("0");
+				$oP->AddSubBlock($oDisplaySet);
+				$oDisplaySet->AddSubBlock(CMDBAbstractObject::GetDisplaySetBlock($oP, $oSet, array(
+					'display_limit' => false,
+					'menu' => false,
+					'surround_with_panel' => true,
+					'panel_title' => $sSubtitle,
+					'panel_title_is_html' => true,
+					'panel_icon' => MetaModel::GetClassIcon($sClass, false),
+					'panel_class' => $sClass,
+				)));
+
+				$oForm = FormUIBlockFactory::MakeStandard('');
+				$oP->AddSubBlock($oForm);
+				foreach ($aContextData as $sKey => $value) {
+					$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey, $value));
 				}
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sCustomOperation\">\n");
-				$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".htmlentities($oFilter->Serialize(), ENT_QUOTES,
-						'UTF-8')."\">\n");
-				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-				foreach($aObjects as $oObj)
-				{
-					$oP->add("<input type=\"hidden\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\">\n");
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sCustomOperation));
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('filter', $oFilter->Serialize()));
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
+				foreach ($aObjects as $oObj) {
+					$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('selectObject[]', $oObj->GetKey()));
 				}
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
-				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
+
+				$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+				$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+				$oForm->AddSubBlock($oToolbarButtons);
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Back'))->SetOnClickJsCode("window.history.back();"));
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForDestructiveAction(Dict::S('UI:Button:Delete'), null, null, true));
 				$oAppContext = new ApplicationContext();
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("</form>\n");
+				$oForm->AddSubBlock($oAppContext->GetForFormBlock());
+
 			}
 		}
 		else // if ($bPreview)...
@@ -5002,7 +5603,7 @@ EOF
 			//
 			if (count($aObjects) == 1) {
 				$oObj = $aObjects[0];
-				$sTitle = Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetName());
+				$sTitle = Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetRawName());
 			} else {
 				$sTitle = Dict::Format('UI:Title:BulkDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass));
 			}
@@ -5070,18 +5671,16 @@ EOF
 					$sSubtitle = Dict::Format('UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class', count($aObjects),
 						MetaModel::GetName($sClass));
 				}
-				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sSubtitle));
 
 				$aDisplayConfig = array();
 				$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
 				$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
 				$aDisplayConfig['consequence'] = array('label' => 'Done', 'description' => Dict::S('UI:Delete:Done+'));
 
-				$oResultsPanel = PanelUIBlockFactory::MakeForInformation('');
+				$oResultsPanel = PanelUIBlockFactory::MakeForInformation($sSubtitle);
 				$oP->AddUiBlock($oResultsPanel);
-				$oResultsPanel->AddSubBlock(
-					DataTableUIBlockFactory::MakeForStaticData('', $aDisplayConfig, $aDisplayData)
-				);
+				$oDatatable = DataTableUIBlockFactory::MakeForStaticData('', $aDisplayConfig, $aDisplayData);
+				$oResultsPanel->AddSubBlock($oDatatable);
 			}
 		}
 	}
@@ -5137,6 +5736,20 @@ EOF
 		$sJSOk = json_encode(Dict::S('UI:Button:Ok'));
 		$oPage->add_ready_script(
 			<<<JS
+		// Prepare reusable modal
+		const oOwnershipLockModal = $('<div></div>').dialog({
+			title: $sJSTitle,
+			modal: true,
+			autoOpen: false,
+			minWidth: 600,
+			buttons:[{
+				text: $sJSOk,
+				class: 'ibo-is-alternative',
+				click: function() { $(this).dialog('close'); }
+			}],
+			close: function() { $(this).dialog('close'); }
+		});
+		// Start periodic handler
 		let hOwnershipLockHandlerInterval = window.setInterval(function() {
 			if (window.bInSubmit || window.bInCancel) return;
 			
@@ -5146,20 +5759,10 @@ EOF
 					if ($('.lock_owned').length == 0)
 					{
 						$('.ui-layout-content').prepend('<div class="header_message message_error lock_owned">'+data.message+'</div>');
-						$('<div>'+data.popup_message+'</div>').dialog({
-							title: $sJSTitle,
-							modal: true,
-							autoOpen: true,
-							minWidth: 600,
-							buttons:[{
-								text: {$sJSOk},
-								class: 'ibo-is-alternative',
-								click: function() { $(this).dialog('close'); }
-							}],
-							close: function() { $(this).remove(); }
-						});
+						oOwnershipLockModal.text(data.popup_message);
+						oOwnershipLockModal.dialog('open');
 					}
-					$('.object-details form .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
+					$('[data-role="ibo-object-details"][data-object-class="{$sJSClass}"][data-object-id="{$iKey}"] .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
 					clearInterval(hOwnershipLockHandlerInterval);
 				}
 				else if ((data.operation == 'lost') || (data.operation == 'expired'))
@@ -5167,20 +5770,10 @@ EOF
 					if ($('.lock_owned').length == 0)
 					{
 						$('.ui-layout-content').prepend('<div class="header_message message_error lock_owned">'+data.message+'</div>');
-						$('<div>'+data.popup_message+'</div>').dialog({
-							title: $sJSTitle,
-							modal: true,
-							autoOpen: true,
-							minWidth: 600,
-							buttons:[{
-								text: $sJSOk,
-								class: 'ibo-is-alternative',
-								click: function() { $(this).dialog('close'); }
-							}],
-							close: function() { $(this).remove(); }
-						});
+						oOwnershipLockModal.text(data.popup_message);
+						oOwnershipLockModal.dialog('open');
 					}
-					$('.object-details form .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
+					$('[data-role="ibo-object-details"][data-object-class="{$sJSClass}"][data-object-id="{$iKey}"] .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
 					clearInterval(hOwnershipLockHandlerInterval);
 				}
 			}, 'json');
@@ -5228,4 +5821,418 @@ JS
 			'AttributeOneWayPassword',
 		);
 	}
+
+	//////////////////
+	/// CREATE
+	///
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0
+	 */
+	final protected function FireEventCheckToWrite(): void
+	{
+		$this->FireEvent(EVENT_DB_CHECK_TO_WRITE);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0
+	 */
+	final protected function FireEventCreateDone(): void
+	{
+		$this->NotifyAttachedObjectsOnLinkClassModification();
+		$this->FireEventDbLinksChangedForCurrentObject();
+		$this->FireEvent(EVENT_DB_CREATE_DONE);
+	}
+
+	/////////////
+	/// UPDATE
+	///
+
+	/**
+	 * @param array $aChanges
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.1.0
+	 */
+	final protected function FireEventUpdateDone(array $aChanges): void
+	{
+		$this->NotifyAttachedObjectsOnLinkClassModification();
+		$this->FireEventDbLinksChangedForCurrentObject();
+		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
+	}
+
+	//////////////
+	/// DELETE
+	///
+
+	/**
+	 * @param \DeletionPlan $oDeletionPlan
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @since 3.1.0
+	 */
+	final protected function FireEventCheckToDelete(DeletionPlan $oDeletionPlan): void
+	{
+		$this->FireEvent(EVENT_DB_CHECK_TO_DELETE, ['deletion_plan' => $oDeletionPlan]);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0
+	 */
+	final protected function FireEventDeleteDone(): void
+	{
+		$this->NotifyAttachedObjectsOnLinkClassModification();
+		$this->FireEventDbLinksChangedForCurrentObject();
+		$this->FireEvent(EVENT_DB_DELETE_DONE);
+	}
+
+	/**
+	 * If the passed object is an instance of a link class, then will register each remote object for modification using {@see static::RegisterObjectAwaitingEventDbLinksChanged()}
+	 * If an external key was modified, register also the previous object that was linked previously.
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Exception
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	final protected function NotifyAttachedObjectsOnLinkClassModification(): void
+	{
+		$sClass = get_class($this);
+		if (false === MetaModel::IsLinkClass($sClass)) {
+			return;
+		}
+		// previous values in case of link change
+		$aPreviousValues = $this->ListPreviousValuesForUpdatedAttributes();
+
+		$aLnkClassExternalKeys = MetaModel::GetAttributesList($sClass, [AttributeExternalKey::class]);
+		foreach ($aLnkClassExternalKeys as $sExternalKeyAttCode) {
+			/** @var \AttributeExternalKey $oExternalKeyAttDef */
+			$oExternalKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExternalKeyAttCode);
+			$sRemoteClassName = $oExternalKeyAttDef->GetTargetClass();
+
+			$sRemoteObjectId = $this->Get($sExternalKeyAttCode);
+			if ($sRemoteObjectId > 0) {
+				self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sRemoteObjectId);
+			}
+
+			$sPreviousRemoteObjectId = $aPreviousValues[$sExternalKeyAttCode] ?? 0;
+			if ($sPreviousRemoteObjectId > 0) {
+				self::RegisterObjectAwaitingEventDbLinksChanged($sRemoteClassName, $sPreviousRemoteObjectId);
+			}
+		}
+	}
+
+	/**
+	 * Register one object for later EVENT_DB_LINKS_CHANGED event.
+	 *
+	 * @param string $sClass
+	 * @param string|int|null $sId
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	private static function RegisterObjectAwaitingEventDbLinksChanged(string $sClass, $sId): void
+	{
+		if (isset(self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId])) {
+			self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId]++;
+		} else {
+			self::$aObjectsAwaitingEventDbLinksChanged[$sClass][$sId] = 1;
+		}
+	}
+
+	/**
+	 * Fire the EVENT_DB_LINKS_CHANGED event if current object is registered
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	final protected function FireEventDbLinksChangedForCurrentObject(): void
+	{
+		if (true === static::IsEventDBLinksChangedBlocked()) {
+			return;
+		}
+
+		$sClass = get_class($this);
+		$sId = $this->GetKey();
+		self::FireEventDbLinksChangedForClassId($sClass, $sId);
+	}
+
+	/**
+	 * Fire the EVENT_DB_LINKS_CHANGED event if given object is registered, and unregister it
+	 *
+	 * @param string $sClass
+	 * @param string|int|null $sId
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	private static function FireEventDbLinksChangedForClassId(string $sClass, $sId): void
+	{
+		if (true === static::IsEventDBLinksChangedBlocked()) {
+			return;
+		}
+
+		$bIsObjectAwaitingEventDbLinksChanged = self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
+		if (false === $bIsObjectAwaitingEventDbLinksChanged) {
+			return;
+		}
+
+		// First we are disabling firing the event to avoid reentrance
+		// For example on a Ticket :
+		// - in the Ticket CRUD stack, DBWriteLinks will generate lnkApplicationSolutionToFunctionalCI instances
+		// - therefore the $aObjectsAwaitingEventDbLinksChanged attribute will contain our Ticket
+		// - we have a EVENT_DB_LINKS_CHANGED listener on Ticket that will update impacted items, so it will create new lnkApplicationSolutionToFunctionalCI
+		// We want to avoid launching the listener twice, first here, and secondly after saving the Ticket in the listener
+		// By disabling the event to be fired, we can remove the current object from the attribute !
+		/** @noinspection PhpRedundantOptionalArgumentInspection */
+		$oObject = MetaModel::GetObject($sClass, $sId, true);
+		self::SetEventDBLinksChangedBlocked(true);
+		MetaModel::StartReentranceProtection($oObject);
+		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
+		MetaModel::StopReentranceProtection($oObject);
+		if ($oObject->IsModified()) {
+			$oObject->DBUpdate();
+		}
+		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
+		cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
+	}
+
+	/**
+	 * Remove the registration of an object concerning the EVENT_DB_LINKS_CHANGED event
+	 *
+	 * @param string $sClass
+	 * @param string|int|null $sId
+	 *
+	 * @return bool true if the object [class, id] was present in the list
+	 * @throws \CoreException
+	 */
+	final protected static function RemoveObjectAwaitingEventDbLinksChanged(string $sClass, $sId): bool
+	{
+		$bFlagRemoved = false;
+		$aClassesHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);
+		foreach ($aClassesHierarchy as $sClassInHierarchy) {
+			if (isset(self::$aObjectsAwaitingEventDbLinksChanged[$sClassInHierarchy][$sId])) {
+				unset(self::$aObjectsAwaitingEventDbLinksChanged[$sClassInHierarchy][$sId]);
+				$bFlagRemoved = true;
+			}
+		}
+
+		return $bFlagRemoved;
+	}
+
+	/**
+	 * Fire the EVENT_DB_LINKS_CHANGED event to all the registered objects
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	final public static function FireEventDbLinksChangedForAllObjects()
+	{
+		if (true === static::IsEventDBLinksChangedBlocked()) {
+			return;
+		}
+
+		foreach (self::$aObjectsAwaitingEventDbLinksChanged as $sClass => $aClassInstances) {
+			foreach ($aClassInstances as $sId => $iCallsNumber) {
+				self::FireEventDbLinksChangedForClassId($sClass, $sId);
+			}
+		}
+	}
+
+	/**
+	 * Check if the event EVENT_DB_LINKS_CHANGED is blocked or not (for bulk operations)
+	 *
+	 * @return bool
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	final public static function IsEventDBLinksChangedBlocked(): bool
+	{
+		return self::$bBlockEventDBLinksChanged;
+	}
+
+	/**
+	 * Block/unblock the event EVENT_DB_LINKS_CHANGED (the registration of objects on links modifications continues to work)
+	 *
+	 * @param bool $bBlockEventDBLinksChanged
+	 *
+	 * @since 3.1.0 N°5906
+	 */
+	final public static function SetEventDBLinksChangedBlocked(bool $bBlockEventDBLinksChanged): void
+	{
+		self::$bBlockEventDBLinksChanged = $bBlockEventDBLinksChanged;
+	}
+
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
+	final protected function FireEventComputeValues(): void
+	{
+		$this->FireEvent(EVENT_DB_COMPUTE_VALUES);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
+	final protected function FireEventArchive(): void
+	{
+		$this->FireEvent(EVENT_DB_ARCHIVE);
+	}
+
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
+	final protected function FireEventUnArchive(): void
+	{
+		$this->FireEvent(EVENT_DB_UNARCHIVE);
+	}
+
+	/**
+	 * Append $iFlags to $sAttCode attribute in $sTargetState
+	 *
+	 * @api
+	 * @param string $sAttCode
+	 * @param int $iFlags
+	 * @param string $sTargetState
+	 * @param string|null $sReason
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function AddAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', string $sReason = null): void
+	{
+		if (!isset($this->aAttributesFlags[$sTargetState])) {
+			$this->aAttributesFlags[$sTargetState] = [];
+		}
+		$this->aAttributesFlags[$sTargetState][$sAttCode]['flags'] = ($this->aAttributesFlags[$sTargetState][$sAttCode]['flags'] ?? 0) | $iFlags;
+		if (!is_null($sReason)) {
+			$this->aAttributesFlags[$sTargetState][$sAttCode]['reasons'][] = $sReason;
+		}
+	}
+
+	/**
+	 * Force $iFlags to $sAttCode attribute in $sTargetState
+	 *
+	 * @api
+	 * @param string $sAttCode
+	 * @param int $iFlags
+	 * @param string $sTargetState
+	 * @param string|null $sReason
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function ForceAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', string $sReason = null): void
+	{
+		if (!isset($this->aAttributesFlags[$sTargetState])) {
+			$this->aAttributesFlags[$sTargetState] = [];
+		}
+		$this->aAttributesFlags[$sTargetState][$sAttCode]['flags'] = $iFlags;
+		if (!is_null($sReason)) {
+			$this->aAttributesFlags[$sTargetState][$sAttCode]['reasons'] = [$sReason];
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
+	final protected function GetExtensionsAttributeFlags(string $sAttCode, array &$aReasons, string $sTargetState): int
+	{
+		if (!isset($this->aAttributesFlags[$sTargetState])) {
+			$this->aAttributesFlags[$sTargetState] = [];
+			$aEventData = [
+				'target_state' => $sTargetState,
+			];
+			$this->FireEvent(EVENT_DB_SET_ATTRIBUTES_FLAGS, $aEventData);
+		}
+		$iFlags = $this->aAttributesFlags[$sTargetState][$sAttCode]['flags'] ?? 0;
+		$aReasons += ($this->aAttributesFlags[$sTargetState][$sAttCode]['reasons'] ?? []);
+
+		return $iFlags;
+	}
+
+
+	/**
+	 * Append $iFlags to $sAttCode attribute in initial state
+	 *
+	 * @api
+	 * @param string $sAttCode
+	 * @param int $iFlags
+	 * @param string|null $sReason
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function AddInitialAttributeFlags(string $sAttCode, int $iFlags, string $sReason = null)
+	{
+		if (!isset($this->aInitialAttributesFlags)) {
+			$this->aInitialAttributesFlags = [];
+		}
+		$this->aInitialAttributesFlags[$sAttCode]['flags'] = ($this->aInitialAttributesFlags[$sAttCode]['flags'] ?? 0) | $iFlags;
+		if (!is_null($sReason)) {
+			$this->aInitialAttributesFlags[$sAttCode]['reasons'][] = $sReason;
+		}
+	}
+
+	/**
+	 * Force $iFlags to $sAttCode attribute in initial state
+	 *
+	 * @api
+	 * @param string $sAttCode
+	 * @param int $iFlags
+	 * @param string|null $sReason
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function ForceInitialAttributeFlags(string $sAttCode, int $iFlags, string $sReason = null)
+	{
+		if (!isset($this->aInitialAttributesFlags)) {
+			$this->aInitialAttributesFlags = [];
+		}
+		$this->aInitialAttributesFlags[$sAttCode]['flags'] = $iFlags;
+		if (!is_null($sReason)) {
+			$this->aInitialAttributesFlags[$sAttCode]['reasons'] = [$sReason];
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
+	final protected function GetExtensionsInitialStateAttributeFlags(string $sAttCode, array &$aReasons): int
+	{
+		if (!isset($this->aInitialAttributesFlags)) {
+			$this->aInitialAttributesFlags = [];
+			$this->FireEvent(EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS);
+		}
+		$iFlags = $this->aInitialAttributesFlags[$sAttCode]['flags'] ?? 0;
+		$aReasons += ($this->aInitialAttributesFlags[$sAttCode]['reasons'] ?? []);
+
+		return $iFlags;
+	}
+
 }

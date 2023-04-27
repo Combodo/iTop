@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -60,20 +60,46 @@ class UISearchFormForeignKeys
 
 		$oPage->add(<<<HTML
 <form id="ObjectsAddForm_{$this->m_iInputId}">
-    <div id="SearchResultsToAdd_{$this->m_iInputId}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
+    <div id="SearchResultsToAdd_{$this->m_iInputId}" style="vertical-align:top;height:100%;overflow:auto;padding:0;border:0;">
         <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
     </div>
     <input type="hidden" id="count_{$this->m_iInputId}" value="0"/>
-    <input type="button" value="{$sCancel}" onClick="$('#dlg_{$this->m_iInputId}').dialog('close');">&nbsp;&nbsp;
-    <input id="btn_ok_add_{$this->m_iInputId}" disabled="disabled" type="button" onclick="return oForeignKeysWidget{$this->m_iInputId}.DoAddObjects(this.id);" value="{$sAdd}">
 </form>
 HTML
 		);
 
-		$oPage->add_ready_script("$('#dlg_{$this->m_iInputId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oForeignKeysWidget{$this->m_iInputId}.UpdateSizes });");
-		$oPage->add_ready_script("$('#dlg_{$this->m_iInputId}').dialog('option', {title:'$sTitle'});");
-		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_iInputId} form').on('submit.uilinksWizard', oForeignKeysWidget{$this->m_iInputId}.SearchObjectsToAdd);");
-		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_iInputId}').resize(oForeignKeysWidget{$this->m_iInputId}.UpdateSizes);");
+		$oPage->add_ready_script(
+			<<<JS
+ $('#dlg_{$this->m_iInputId}').dialog({ 
+ 			width: $(window).width()*0.8, 
+ 			height: $(window).height()*0.8, 
+ 			autoOpen: false, 
+ 			modal: true, 
+ 			resizeStop: oForeignKeysWidget{$this->m_iInputId}.UpdateSizes,
+            buttons: [
+				{
+					text: Dict.S('UI:Button:Cancel'),
+					class: "cancel ibo-is-alternative ibo-is-neutral",
+					click: function() {
+						$('#dlg_{$this->m_iInputId}').dialog('close');
+					}
+				},
+				{
+					text:  Dict.S('UI:Button:Add'),
+					id: 'btn_ok_{$this->m_iInputId}',
+					class: "ok ibo-is-regular ibo-is-primary",
+					click: function() {
+						oForeignKeysWidget{$this->m_iInputId}.DoAddObjects(this.id);							
+					}
+				},
+			],
+
+ });
+$('#dlg_{$this->m_iInputId}').dialog('option', {title:'$sTitle'});
+$('#SearchFormToAdd_{$this->m_iInputId} form').on('submit.uilinksWizard', oForeignKeysWidget{$this->m_iInputId}.SearchObjectsToAdd);
+$('#SearchFormToAdd_{$this->m_iInputId}').resize(oForeignKeysWidget{$this->m_iInputId}.UpdateSizes);
+JS
+);
 	}
 
 	public function GetFullListForeignKeysFromSelection($oPage, $oFullSetFilter)

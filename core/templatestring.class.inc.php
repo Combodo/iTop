@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@
  *     $oString = new TemplateString("Blah $this->friendlyname$ is in location $this->location_id->name$ ('$this->location_id->org_id->name$)");
  *     echo $oString->Render(array('this' => $oContact));
 
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -42,7 +42,7 @@ class TemplateStringPlaceholder
 	public function __construct($sToken)
 	{
 		$this->sToken = $sToken;
-		$this->sAttcode = '';
+		$this->sAttCode = '';
 		$this->sFunction = '';
 		$this->sParamName = '';
 		$this->bIsValid = false; // Validity may be false in general, but it can work anyway (thanks to specialization) when rendering
@@ -90,9 +90,9 @@ class TemplateString
 						$oPlaceholder->sFunction = '';
 
 						$oPlaceholder->sParamName = $sParamName;
-						$sAttcode = substr($sPlaceholder, strlen($sParamPrefix));
-						$oPlaceholder->sAttcode = $sAttcode;
-						$oPlaceholder->bIsValid = MetaModel::IsValidAttCode($sClass, $sAttcode, true /* extended */);
+						$sAttCode = substr($sPlaceholder, strlen($sParamPrefix));
+						$oPlaceholder->sAttCode = $sAttCode;
+						$oPlaceholder->bIsValid = MetaModel::IsValidAttCode($sClass, $sAttCode, true /* extended */);
 					}
 				}
 
@@ -164,7 +164,7 @@ class TemplateString
 				$oRef = $aParamValues[$oPlaceholder->sParamName];
 				try
 				{
-					$value = $oRef->Get($oPlaceholder->sAttcode);
+					$value = $oRef->Get($oPlaceholder->sAttCode);
 					$aSearch[] = '$'.$oPlaceholder->sToken.'$';
 					$aReplace[] = $value;
 					$oPlaceholder->bIsValid = true;

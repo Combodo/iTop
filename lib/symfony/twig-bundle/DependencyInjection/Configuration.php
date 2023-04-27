@@ -14,6 +14,7 @@ namespace Symfony\Bundle\TwigBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
  * TwigExtension configuration structure.
@@ -25,18 +26,25 @@ class Configuration implements ConfigurationInterface
     /**
      * Generates the configuration tree builder.
      *
-     * @return TreeBuilder The tree builder
+     * @return TreeBuilder
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('twig');
+        $treeBuilder = new TreeBuilder('twig');
+        $rootNode = $treeBuilder->getRootNode();
 
-        $rootNode
-            ->children()
-                ->scalarNode('exception_controller')->defaultValue('twig.controller.exception:showAction')->end()
-            ->end()
-        ;
+        $rootNode->beforeNormalization()
+            ->ifTrue(function ($v) { return \is_array($v) && \array_key_exists('exception_controller', $v); })
+            ->then(function ($v) {
+                if (isset($v['exception_controller'])) {
+                    throw new InvalidConfigurationException('Option "exception_controller" under "twig" must be null or unset, use "error_controller" under "framework" instead.');
+                }
+
+                unset($v['exception_controller']);
+
+                return $v;
+            })
+        ->end();
 
         $this->addFormThemesSection($rootNode);
         $this->addGlobalsSection($rootNode);
@@ -54,7 +62,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('form_themes')
                     ->addDefaultChildrenIfNoneSet()
                     ->prototype('scalar')->defaultValue('form_div_layout.html.twig')->end()
-                    ->example(['MyBundle::form.html.twig'])
+                    ->example(['@My/form.html.twig'])
                     ->validate()
                         ->ifTrue(function ($v) { return !\in_array('form_div_layout.html.twig', $v); })
                         ->then(function ($v) {
@@ -74,12 +82,13 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('globals')
                     ->normalizeKeys(false)
                     ->useAttributeAsKey('key')
-                    ->example(['foo' => '"@bar"', 'pi' => 3.14])
+                    ->example(['foo' => '@bar', 'pi' => 3.14])
                     ->prototype('array')
+                        ->normalizeKeys(false)
                         ->beforeNormalization()
-                            ->ifTrue(function ($v) { return \is_string($v) && 0 === strpos($v, '@'); })
+                            ->ifTrue(function ($v) { return \is_string($v) && str_starts_with($v, '@'); })
                             ->then(function ($v) {
-                                if (0 === strpos($v, '@@')) {
+                                if (str_starts_with($v, '@@')) {
                                     return substr($v, 1);
                                 }
 
@@ -127,7 +136,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('cache')->defaultValue('%kernel.cache_dir%/twig')->end()
                 ->scalarNode('charset')->defaultValue('%kernel.charset%')->end()
                 ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
-                ->booleanNode('strict_variables')->end()
+                ->booleanNode('strict_variables')->defaultValue('%kernel.debug%')->end()
                 ->scalarNode('auto_reload')->end()
                 ->integerNode('optimizations')->min(-1)->end()
                 ->scalarNode('default_path')

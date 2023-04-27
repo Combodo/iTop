@@ -1,5 +1,5 @@
-/*!
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,16 +8,16 @@
 // @see http://csswizardry.com/2013/04/shame-css/
 // Thanks https://github.com/heroheman/shepherd/blob/master/sass/_shame.scss
 // ==========================================================================
-
+//
 // ==========================================================================
 // because hacks happen.
 //
 // be very specific about what each piece of code is doing, and
 // how to better fix it later
 // ==========================================================================
-
+//
 // Try:  $ git blame _shame.scss
-
+//
 // Rules:
 // ---------------
 //   1. If it’s a hack, it goes in _shame.scss.
@@ -32,14 +32,20 @@
 // Example:
 // ---------------
 // Nav specificity fix.
-
+//
 // Someone used an ID in the header code (`#header a{}`) which trumps the
 // nav selectors (`.site-nav a{}`). Use !important to override it until I
 // have time to refactor the header stuff.
-
+//
 // .site-nav a { color:#BADA55!important; }
 
 // N°2847 - Recolor svg illustrations with iTop's primary color
 .ibo-svg-illustration--container > svg *[fill="#6c63ff"]{
 	fill: $ibo-svg-illustration--fill;
+}
+
+// Workaround for a Safari (unsupported browser) issue: https://sourceforge.net/p/itop/discussion/itop-hub/thread/fc97ec4a10/?limit=25#1cc0/9930
+// Fix found here: https://stackoverflow.com/questions/40895387/z-index-not-working-on-safari-fine-on-firefox-and-chrome
+.ibo-navigation-menu.ibo-is-active .ibo-navigation-menu--drawer{
+    transform: translate3d(0,0,0);
 }

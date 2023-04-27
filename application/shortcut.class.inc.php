@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
  * Persistent class Shortcut and derived
  * Shortcuts of any kind
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -286,10 +286,10 @@ class ShortcutOQL extends Shortcut
 		$sRateTitle = addslashes(Dict::Format('Class:ShortcutOQL/Attribute:auto_reload_sec/tip', MetaModel::GetConfig()->Get('min_reload_interval')));
 
 		$oPage->add_ready_script(
-<<<EOF
-
+<<<JS
 // Note: the title gets deleted by the validation mechanism
-$("#attr_auto_reload_sec").tooltip({items: 'input', content: '$sRateTitle'});
+$("#attr_auto_reload_sec").attr('data-tooltip-content', '$sRateTitle');
+CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 $("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 
 $('#attr_auto_reload').change( function(ev) {
@@ -322,16 +322,23 @@ $('#shortcut_creation_dlg').dialog({
 	modal: true,
 	title: '$sDialogTitle',
 	buttons: [
-	{ text: "$sOkButtonLabel", click: ShortcutCreationOK },
-	{ text: "$sCancelButtonLabel", click: function() {
-		$(this).dialog( "close" ); $(this).remove();
-	} },
+	{
+		text: "$sCancelButtonLabel",
+        class: "ibo-is-alternative",
+		click: function() {
+			$(this).dialog( "close" );
+			$(this).remove();
+		}
+	},
+	{
+		text: "$sOkButtonLabel",
+        class: "ibo-is-primary",
+		click: ShortcutCreationOK
+	},
 	],
 	close: function() { $(this).remove(); }
 });
-EOF
+JS
 		);
 	}
 }
-
-?>

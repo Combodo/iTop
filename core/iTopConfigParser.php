@@ -6,6 +6,8 @@
  */
 
 use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Expr\Variable;
+use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 
@@ -80,38 +82,49 @@ class iTopConfigParser
 	 * @param \PhpParser\Parser $oParser
 	 * @param $sConfig
 	 *
-	 * @return \Combodo\iTop\Config\Validator\ConfigNodesVisitor
+	 * @return void
 	 */
-	private function BrowseFile(\PhpParser\Parser $oParser, $sConfig)
+	private function BrowseFile(Parser $oParser, $sConfig)
 	{
 		$prettyPrinter = new Standard();
 
-		try
-		{
+		try {
 			$aNodes = $oParser->parse($sConfig);
 		}
-		catch (\Error $e)
-		{
+		catch (\Error $e) {
 			$sMessage = Dict::Format('config-parse-error', $e->getMessage(), $e->getLine());
 			$this->oException = new \Exception($sMessage, 0, $e);
 		}
 
-		foreach ($aNodes as $oAssignation)
-		{
-			if (! $oAssignation instanceof Assign)
-			{
+		foreach ($aNodes as $sKey => $oNode) {
+			// With PhpParser 3 we had an Assign node at root
+			// In PhpParser 4 the root node is now an Expression
+
+			if (false === ($oNode instanceof \PhpParser\Node\Stmt\Expression)) {
+				continue;
+			}
+			/** @var \PhpParser\Node\Stmt\Expression $oNode */
+
+			if (false === ($oNode->expr instanceof Assign)) {
+				continue;
+			}
+			/** @var Assign $oAssignation */
+			$oAssignation = $oNode->expr;
+
+			if (false === ($oAssignation->var instanceof Variable)) {
+				continue;
+			}
+			if (false === ($oAssignation->expr instanceof PhpParser\Node\Expr\Array_)) {
 				continue;
 			}
 
 			$sCurrentRootVar = $oAssignation->var->name;
-			if (!array_key_exists($sCurrentRootVar, $this->aVarsMap))
-			{
+			if (!array_key_exists($sCurrentRootVar, $this->aVarsMap)) {
 				continue;
 			}
 			$aCurrentRootVarMap =& $this->aVarsMap[$sCurrentRootVar];
 
-			foreach ($oAssignation->expr->items as $oItem)
-			{
+			foreach ($oAssignation->expr->items as $oItem) {
 				$sValue = $prettyPrinter->prettyPrintExpr($oItem->value);
 				$aCurrentRootVarMap[$oItem->key->value] = $sValue;
 			}

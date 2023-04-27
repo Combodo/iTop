@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Manage a runtime environment
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -490,11 +490,13 @@ class RunTimeEnvironment
 	 * The list of modules to be installed in the target environment is:
 	 *  - the list of modules present in the "source_dir" (defined by the source environment) which are marked as "installed" in the source environment's database
 	 *  - plus the list of modules present in the "extra" directory of the target environment: data/<target_environment>-modules/
+	 *
 	 * @param string $sSourceEnv The name of the source environment to 'imitate'
 	 * @param bool $bUseSymLinks Whether to create symbolic links instead of copies
+	 *
 	 * @return string[]
 	 */
-	public function CompileFrom($sSourceEnv, $bUseSymLinks = false)
+	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
 	{
 		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 		$sSourceDir = $oSourceConfig->Get('source_dir');
@@ -504,7 +506,7 @@ class RunTimeEnvironment
 		//
 		$oFactory = new ModelFactory($sSourceDirFull);
 		$aModulesToCompile = $this->GetMFModulesToCompile($sSourceEnv, $sSourceDir);
-		foreach($aModulesToCompile as $oModule)
+		foreach ($aModulesToCompile as $oModule)
 		{
 			if ($oModule instanceof MFDeltaModule)
 			{
@@ -514,15 +516,12 @@ class RunTimeEnvironment
 			}
 			$oFactory->LoadModule($oModule);
 		}
-		
 
-		if ($oModule instanceof MFDeltaModule)
-		{
+
+		if ($oModule instanceof MFDeltaModule) {
 			// A delta was loaded, let's save a second copy of the datamodel
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'-with-delta.xml');
-		}
-		else
-		{
+		} else {
 			// No delta was loaded, let's save the datamodel now
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
 		}
@@ -599,11 +598,16 @@ class RunTimeEnvironment
 				$this->log_ok("Database structure successfully updated.");
 	
 				// Check (and update only if it seems needed) the hierarchical keys
-				ob_start();
-				MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, true /* bVerbose*/, true /* bForceUpdate */); // Since in 1.2-beta the detection was buggy, let's force the rebuilding of HKeys
-				$sFeedback = ob_get_clean();
-				$this->log_ok("Hierchical keys rebuilt: $sFeedback");
-	
+				if (MFCompiler::SkipRebuildHKeys()) {
+					$this->log_ok("Hierchical keys are NOT rebuilt due to the presence of the \"data/.setup-rebuild-hkeys-never\" file");
+				} else {
+					ob_start();
+					$this->log_ok("Start of rebuilt of hierchical keys. If you have problems with this step, you can skip it by creating a \".setup-rebuild-hkeys-never\" file in data");
+					MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, true /* bVerbose*/, true /* bForceUpdate */); // Since in 1.2-beta the detection was buggy, let's force the rebuilding of HKeys
+					$sFeedback = ob_get_clean();
+					$this->log_ok("Hierchical keys rebuilt: $sFeedback");
+				}
+
 				// Check (and fix) data sync configuration
 				ob_start();
 				MetaModel::CheckDataSources(false /*$bDiagnostics*/, true/*$bVerbose*/);
@@ -735,41 +739,40 @@ class RunTimeEnvironment
 		$oInstallRec->Set('parent_id', 0); // root module
 		$oInstallRec->Set('installed', $iInstallationTime);
 		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
-	
-		
+
+
 		// Record installed modules and extensions
 		//
 		$aAvailableExtensions = array();
 		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
-		foreach($aSelectedModuleCodes as $sModuleId)
-		{
+		foreach ($aSelectedModuleCodes as $sModuleId) {
+			if (!array_key_exists($sModuleId, $aAvailableModules)) {
+				continue;
+			}
 			$aModuleData = $aAvailableModules[$sModuleId];
 			$sName = $sModuleId;
 			$sVersion = $aModuleData['version_code'];
 			$aComments = array();
 			$aComments[] = $sShortComment;
-			if ($aModuleData['mandatory'])
-			{
+			if ($aModuleData['mandatory']) {
 				$aComments[] = 'Mandatory';
-			}
-			else
-			{
+			} else {
 				$aComments[] = 'Optional';
 			}
-			if ($aModuleData['visible'])
-			{
+			if ($aModuleData['visible']) {
 				$aComments[] = 'Visible (during the setup)';
-			}
-			else
-			{
+			} else {
 				$aComments[] = 'Hidden (selected automatically)';
 			}
-			foreach ($aModuleData['dependencies'] as $sDependOn)
-			{
-				$aComments[] = "Depends on module: $sDependOn";
+
+			$aDependencies = $aModuleData['dependencies'];
+			if (!empty($aDependencies)) {
+				foreach ($aDependencies as $sDependOn) {
+					$aComments[] = "Depends on module: $sDependOn";
+				}
 			}
 			$sComment = implode("\n", $aComments);
-	
+
 			$oInstallRec = new ModuleInstallation();
 			$oInstallRec->Set('name', $sName);
 			$oInstallRec->Set('version', $sVersion);
@@ -778,7 +781,7 @@ class RunTimeEnvironment
 			$oInstallRec->Set('installed', $iInstallationTime);
 			$oInstallRec->DBInsertNoReload();
 		}
-		
+
 		if ($this->oExtensionsMap)
 		{
 			// Mark as chosen the selected extensions code passed to us
@@ -809,10 +812,14 @@ class RunTimeEnvironment
 		// Database is created, installation has been tracked into it
 		return true;	
 	}
-	
+
+	/**
+	 * @param \Config $oConfig
+	 *
+	 * @return array|false
+	 */
 	public function GetApplicationVersion(Config $oConfig)
 	{
-		$aResult = false;
 		try
 		{
 			CMDBSource::InitFromConfig($oConfig);
@@ -826,7 +833,8 @@ class RunTimeEnvironment
 			$this->log_error('Exception '.$e->getMessage());
 			return false;
 		}
-	
+
+		$aResult = [];
 		// Scan the list of installed modules to get the version of the 'ROOT' module which holds the main application version
 		foreach ($aSelectInstall as $aInstall)
 		{
@@ -864,7 +872,7 @@ class RunTimeEnvironment
 			$aResult['datamodel_version'] = $aResult['product_version'];
 		}
 		$this->log_info("GetApplicationVersion returns: product_name: ".$aResult['product_name'].', product_version: '.$aResult['product_version']);
-		return $aResult;	
+		return empty($aResult) ? false : $aResult;
 	}
 
 	public static function MakeDirSafe($sDir)
@@ -1106,29 +1114,24 @@ class RunTimeEnvironment
 	 */
 	public function LoadData($aAvailableModules, $aSelectedModules, $bSampleData)
 	{
-	    $oDataLoader = new XMLDataLoader();
-	    
-	    CMDBObject::SetTrackInfo("Initialization");
-	    $oMyChange = CMDBObject::GetCurrentChange();
+		$oDataLoader = new XMLDataLoader();
+
+		CMDBObject::SetCurrentChangeFromParams("Initialization from XML files for the selected modules ");
+		$oMyChange = CMDBObject::GetCurrentChange();
 
 		SetupLog::Info("starting data load session");
-	    $oDataLoader->StartSession($oMyChange);
-	    
-	    $aFiles = array();
-	    $aPreviouslyLoadedFiles = array();
-	    foreach($aAvailableModules as $sModuleId => $aModule)
-	    {
-	        if (($sModuleId != ROOT_MODULE))
-	        {
-	            $sRelativePath = 'env-'.$this->sTargetEnv.'/'.basename($aModule['root_dir']);
-	            // Load data only for selected AND newly installed modules
-	            if (in_array($sModuleId, $aSelectedModules))
-	            {
-	                if ($aModule['version_db'] != '')
-	                {
-	                    // Simulate the load of the previously loaded XML files to get the mapping of the keys
-	                    if ($bSampleData)
-	                    {
+		$oDataLoader->StartSession($oMyChange);
+
+		$aFiles = array();
+		$aPreviouslyLoadedFiles = array();
+		foreach ($aAvailableModules as $sModuleId => $aModule) {
+			if (($sModuleId != ROOT_MODULE)) {
+				$sRelativePath = 'env-'.$this->sTargetEnv.'/'.basename($aModule['root_dir']);
+				// Load data only for selected AND newly installed modules
+				if (in_array($sModuleId, $aSelectedModules)) {
+					if ($aModule['version_db'] != '') {
+						// Simulate the load of the previously loaded XML files to get the mapping of the keys
+						if ($bSampleData) {
 	                        $aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
 	                        $aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
 	                    }

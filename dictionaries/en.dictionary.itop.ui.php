@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -30,6 +30,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditCategory/Attribute:definition_set+' => 'OQL expression defining the set of objects to audit',
 	'Class:AuditCategory/Attribute:rules_list' => 'Audit Rules',
 	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category',
+	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Error tolerance (OK)',
+	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Allowed percentage of invalid objects at which the result is still displayed as OK (green)',
+	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error tolerance (warning)',
+	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Allowed percentage of invalid objects at which the result is still displayed as a warning (orange)',
+	'Class:AuditCategory/Attribute:domains_list' => 'Domains',
+	'Class:AuditCategory/Attribute:domains_list+' => 'List of domains linked to this category',
 ));
 
 //
@@ -61,26 +67,70 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: AuditDomain
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:AuditDomain' => 'Audit Domain',
+	'Class:AuditDomain+' => '',
+	'Class:AuditDomain/Attribute:name' => 'Name',
+	'Class:AuditDomain/Attribute:name+' => '',
+	'Class:AuditDomain/Attribute:description' => 'Description',
+	'Class:AuditDomain/Attribute:description+' => '',
+	'Class:AuditDomain/Attribute:icon' => 'Icon',
+	'Class:AuditDomain/Attribute:icon+' => '',
+	'Class:AuditDomain/Attribute:categories_list' => 'Categories',
+	'Class:AuditDomain/Attribute:categories_list+' => 'Linked audit categories',
+));
+
+//
+// Class: lnkAuditCategoryToAuditDomain
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain',
+	'Class:lnkAuditCategoryToAuditDomain+' => '',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+' => 'Audit Category',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name' => 'Category name',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name+' => 'Audit category name',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id' => 'Domain',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name',
+));
+
+//
 // Class: QueryOQL
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:Query' => 'Query',
-	'Class:Query+' => 'A query is a data set defined in a dynamic way',
-	'Class:Query/Attribute:name' => 'Name',
-	'Class:Query/Attribute:name+' => 'Identifies the query',
-	'Class:Query/Attribute:description' => 'Description',
-	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)',
-	'Class:Query/Attribute:is_template' => 'Template for OQL fields',
-	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications',
-	'Class:Query/Attribute:is_template/Value:yes' => 'Yes',
-	'Class:Query/Attribute:is_template/Value:no' => 'No',
-	'Class:QueryOQL/Attribute:fields' => 'Fields',
-	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export',
-	'Class:QueryOQL' => 'OQL Query',
-	'Class:QueryOQL+' => 'A query based on the Object Query Language',
-	'Class:QueryOQL/Attribute:oql' => 'Expression',
-	'Class:QueryOQL/Attribute:oql+' => 'OQL Expression',
+	'Class:Query'                                     => 'Query',
+	'Class:Query+'                                    => 'A query is a data set defined in a dynamic way',
+	'Class:Query/Attribute:name'                      => 'Name',
+	'Class:Query/Attribute:name+'                     => 'Identifies the query',
+	'Class:Query/Attribute:description'               => 'Description',
+	'Class:Query/Attribute:description+'              => 'Long description for the query (purpose, usage, etc.)',
+	'Class:Query/Attribute:is_template'               => 'Template for OQL fields',
+	'Class:Query/Attribute:is_template+'              => 'Usable as source for recipient OQL in Notifications',
+	'Class:Query/Attribute:is_template/Value:yes'     => 'Yes',
+	'Class:Query/Attribute:is_template/Value:no'      => 'No',
+	'Class:Query/Attribute:export_count'              => 'Export counter',
+	'Class:Query/Attribute:export_count+'             => 'Counter reflecting the number of time this query has been executed',
+	'Class:Query/Attribute:export_last_date'          => 'Last export',
+	'Class:Query/Attribute:export_last_date+'         => 'Date and time of the last export execution',
+	'Class:Query/Attribute:export_last_user_id'       => 'User',
+	'Class:Query/Attribute:export_last_user_id+'      => 'The user who executed the last export',
+	'Class:Query/Attribute:export_last_user_contact'  => 'Contact',
+	'Class:Query/Attribute:export_last_user_contact+' => 'The contact who executed the last export',
+	'Query:baseinfo'                                  => 'General information',
+	'Query:exportInfo'                                => 'Export information',
+	'Class:QueryOQL/Attribute:fields'                 => 'Fields',
+	'Class:QueryOQL/Attribute:fields+'                => 'Comma separated list of attributes (or alias.attribute) to export',
+	'Class:QueryOQL'                                  => 'OQL Query',
+	'Class:QueryOQL+'                                 => 'A query based on the Object Query Language',
+	'Class:QueryOQL/Attribute:oql'                    => 'Expression',
+	'Class:QueryOQL/Attribute:oql+'                   => 'OQL Expression',
 ));
 
 //////////////////////////////////////////////////////////////////////
@@ -93,39 +143,43 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:User' => 'User',
-	'Class:User+' => 'User login',
-	'Class:User/Attribute:finalclass' => 'Type of account',
-	'Class:User/Attribute:finalclass+' => 'Name of the final class',
-	'Class:User/Attribute:contactid' => 'Person',
-	'Class:User/Attribute:contactid+' => 'Personal details from the business data',
-	'Class:User/Attribute:org_id' => 'Organization',
-	'Class:User/Attribute:org_id+' => 'Organization of the associated person',
-	'Class:User/Attribute:last_name' => 'Last name',
-	'Class:User/Attribute:last_name+' => 'Name of the corresponding contact',
-	'Class:User/Attribute:first_name' => 'First name',
-	'Class:User/Attribute:first_name+' => 'First name of the corresponding contact',
-	'Class:User/Attribute:email' => 'Email',
-	'Class:User/Attribute:email+' => 'Email of the corresponding contact',
-	'Class:User/Attribute:login' => 'Login',
-	'Class:User/Attribute:login+' => 'user identification string',
-	'Class:User/Attribute:language' => 'Language',
-	'Class:User/Attribute:language+' => 'User language',
-	'Class:User/Attribute:language/Value:EN US' => 'English',
+	'Class:User'                                 => 'User',
+	'Class:User+'                                => 'User login',
+	'Class:User/Attribute:finalclass'            => 'Type of account',
+	'Class:User/Attribute:finalclass+'           => 'Name of the final class',
+	'Class:User/Attribute:contactid'             => 'Person',
+	'Class:User/Attribute:contactid+'            => 'Mandatory for a User Portal and highly recommended for all but technical accounts',
+	'Class:User/Attribute:org_id'                => 'Organization',
+	'Class:User/Attribute:org_id+'               => 'Organization of the associated person',
+	'Class:User/Attribute:last_name'             => 'Last name',
+	'Class:User/Attribute:last_name+'            => 'Name of the corresponding contact',
+	'Class:User/Attribute:first_name'            => 'First name',
+	'Class:User/Attribute:first_name+'           => 'First name of the corresponding contact',
+	'Class:User/Attribute:email'                 => 'Email',
+	'Class:User/Attribute:email+'                => 'Email of the corresponding contact',
+	'Class:User/Attribute:login'                 => 'Login',
+	'Class:User/Attribute:login+'                => 'Account identification string, must be unique within '.ITOP_APPLICATION_SHORT,
+	'Class:User/Attribute:language'              => 'Language',
+	'Class:User/Attribute:language+'             => 'Default '.ITOP_APPLICATION_SHORT.' language for this user, to choose amoungst languages in which '.ITOP_APPLICATION_SHORT.' was localized . ',
+	'Class:User/Attribute:language/Value:EN US'  => 'English',
 	'Class:User/Attribute:language/Value:EN US+' => 'English (U.S.)',
-	'Class:User/Attribute:language/Value:FR FR' => 'French',
+	'Class:User/Attribute:language/Value:FR FR'  => 'French',
 	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
-	'Class:User/Attribute:profile_list' => 'Profiles',
-	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person',
-	'Class:User/Attribute:allowed_org_list' => 'Allowed Organizations',
-	'Class:User/Attribute:allowed_org_list+' => 'The end user is allowed to see data belonging to the following organizations. If no organization is specified, there is no restriction.',
-	'Class:User/Attribute:status' => 'Status',
-	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.',
+	'Class:User/Attribute:profile_list'          => 'Profiles',
+	'Class:User/Attribute:profile_list+'         => 'Roles, granting rights for that person',
+	'Class:User/Attribute:allowed_org_list'      => 'Allowed Organizations',
+	'Class:User/Attribute:allowed_org_list+'     => 'The end user is allowed to see data belonging to the following organizations. If no organization is specified, there is no restriction.',
+	'Class:User/Attribute:status'                => 'Status',
+	'Class:User/Attribute:status+'               => 'Whether the user account is enabled or disabled.',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled',
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled',
 
-	'Class:User/Error:LoginMustBeUnique' => 'Login must be unique - "%1s" is already being used.',
+	'Class:User/Error:LoginMustBeUnique' => 'Login must be unique - "%1$s" is already being used.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'At least one profile must be assigned to this user.',
+	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.',
@@ -142,7 +196,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_Profiles' => 'Profile',
 	'Class:URP_Profiles+' => 'User profile',
 	'Class:URP_Profiles/Attribute:name' => 'Name',
-	'Class:URP_Profiles/Attribute:name+' => 'label',
+	'Class:URP_Profiles/Attribute:name+' => '',
 	'Class:URP_Profiles/Attribute:description' => 'Description',
 	'Class:URP_Profiles/Attribute:description+' => 'one line description',
 	'Class:URP_Profiles/Attribute:user_list' => 'Users',
@@ -157,7 +211,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_Dimensions' => 'dimension',
 	'Class:URP_Dimensions+' => 'application dimension (defining silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Name',
-	'Class:URP_Dimensions/Attribute:name+' => 'label',
+	'Class:URP_Dimensions/Attribute:name+' => '',
 	'Class:URP_Dimensions/Attribute:description' => 'Description',
 	'Class:URP_Dimensions/Attribute:description+' => 'one line description',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
@@ -171,6 +225,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserProfile' => 'User to profile',
 	'Class:URP_UserProfile+' => 'user profiles',
+	'Class:URP_UserProfile/Name' => 'Link between %1$s and %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'User',
 	'Class:URP_UserProfile/Attribute:userid+' => 'user account',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -191,6 +246,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserOrg' => 'User organizations',
 	'Class:URP_UserOrg+' => 'Allowed organizations',
+	'Class:URP_UserOrg/Name' => 'LinkGG between %1$s and %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'User',
 	'Class:URP_UserOrg/Attribute:userid+' => 'user account',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -335,10 +391,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'BooleanLabel:yes' => 'yes',
 	'BooleanLabel:no' => 'no',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
-	'Menu:WelcomeMenu' => 'Welcome', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Welcome', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'Welcome to '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu' => 'Welcome',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT,// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Welcome',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => 'Welcome to '.ITOP_APPLICATION_SHORT,// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Welcome to '.ITOP_APPLICATION_SHORT,
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' is a complete, OpenSource, IT Operational Portal.</p>
@@ -367,107 +423,120 @@ Dict::Add('EN US', 'English', 'English', array(
 <li>Manage the most important asset of your IT: Documentation.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'            => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open requests: %1$d',
-	'UI:WelcomeMenu:MyCalls' => 'My requests',
-	'UI:WelcomeMenu:OpenIncidents' => 'Open incidents: %1$d',
-	'UI:WelcomeMenu:AllConfigItems' => 'Configuration Items: %1$d',
-	'UI:WelcomeMenu:MyIncidents' => 'Incidents assigned to me',
-	'UI:AllOrganizations' => ' All Organizations ',
-	'UI:YourSearch' => 'Your Search',
-	'UI:LoggedAsMessage' => 'Logged in as %1$s',
-	'UI:LoggedAsMessage+Admin' => 'Logged in as %1$s (Administrator)',
-	'UI:Button:Logoff' => 'Log off',
-	'UI:Button:GlobalSearch' => 'Search',
-	'UI:Button:Search' => ' Search ',
-	'UI:Button:Clear' => ' Clear ',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ',
-	'UI:Button:Query' => ' Query ',
-	'UI:Button:Ok' => 'Ok',
-	'UI:Button:Save' => 'Save',
-	'UI:Button:Cancel' => 'Cancel',
-	'UI:Button:Close' => 'Close',
-	'UI:Button:Apply' => 'Apply',
-	'UI:Button:Send' => 'Send',
-	'UI:Button:Back' => ' << Back ',
-	'UI:Button:Restart' => ' |<< Restart ',
-	'UI:Button:Next' => ' Next >> ',
-	'UI:Button:Finish' => ' Finish ',
-	'UI:Button:DoImport' => ' Run the Import ! ',
-	'UI:Button:Done' => ' Done ',
-	'UI:Button:SimulateImport' => ' Simulate the Import ',
-	'UI:Button:Test' => 'Test!',
-	'UI:Button:Evaluate' => ' Evaluate ',
-	'UI:Button:Evaluate:Title' => ' Evaluate (Ctrl+Enter)',
-	'UI:Button:AddObject' => ' Add... ',
-	'UI:Button:BrowseObjects' => ' Browse... ',
-	'UI:Button:Add' => ' Add ',
-	'UI:Button:AddToList' => ' << Add ',
-	'UI:Button:RemoveFromList' => ' Remove >> ',
-	'UI:Button:FilterList' => ' Filter... ',
-	'UI:Button:Create' => ' Create ',
-	'UI:Button:Delete' => ' Delete ! ',
-	'UI:Button:Rename' => ' Rename... ',
-	'UI:Button:ChangePassword' => ' Change Password ',
-	'UI:Button:ResetPassword' => ' Reset Password ',
-	'UI:Button:Insert' => 'Insert',
-	'UI:Button:More' => 'More',
-	'UI:Button:Less' => 'Less',
-	'UI:Button:Wait' => 'Please wait while updating fields',
-	'UI:Treeview:CollapseAll' => 'Collapse All',
-	'UI:Treeview:ExpandAll' => 'Expand All',
-	'UI:UserPref:DoNotShowAgain' => 'Do not show again',
-	'UI:InputFile:NoFileSelected' => 'No File Selected',
-	'UI:InputFile:SelectFile' => 'Select a file',
+	'UI:WelcomeMenu:MyCalls'         => 'My requests',
+	'UI:WelcomeMenu:OpenIncidents'   => 'Open incidents: %1$d',
+	'UI:WelcomeMenu:AllConfigItems'  => 'Configuration Items: %1$d',
+	'UI:WelcomeMenu:MyIncidents'     => 'Incidents assigned to me',
+	'UI:AllOrganizations'            => ' All Organizations ',
+	'UI:YourSearch'                  => 'Your Search',
+	'UI:LoggedAsMessage'             => 'Logged in as %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin'       => 'Logged in as %1$s (%2$s, Administrator)',
+	'UI:Button:Logoff'               => 'Log off',
+	'UI:Button:GlobalSearch'         => 'Search',
+	'UI:Button:Search'               => ' Search ',
+	'UI:Button:Clear'                => ' Clear ',
+	'UI:Button:Confirm'              => ' Confirm ',
+	'UI:Button:SearchInHierarchy'    => 'Search in hierarchy',
+	'UI:Button:Query'                => ' Query ',
+	'UI:Button:Ok'                   => 'Ok',
+	'UI:Button:Save'                 => 'Save',
+	'UI:Button:SaveAnd'              => 'Save and %1$s',
+	'UI:Button:Cancel'               => 'Cancel',
+	'UI:Button:Close'                => 'Close',
+	'UI:Button:Apply'                => 'Apply',
+	'UI:Button:Send'                 => 'Send',
+	'UI:Button:SendAnd'              => 'Send and %1$s',
+	'UI:Button:Back'                 => ' << Back ',
+	'UI:Button:Restart'              => ' |<< Restart ',
+	'UI:Button:Next'                 => ' Next >> ',
+	'UI:Button:Finish'               => ' Finish ',
+	'UI:Button:DoImport'             => ' Run the Import ! ',
+	'UI:Button:Done'                 => ' Done ',
+	'UI:Button:SimulateImport'       => ' Simulate the Import ',
+	'UI:Button:Test'                 => 'Test!',
+	'UI:Button:Evaluate'             => ' Evaluate ',
+	'UI:Button:Evaluate:Title'       => ' Evaluate (Ctrl+Enter)',
+	'UI:Button:AddObject'            => ' Add... ',
+	'UI:Button:BrowseObjects'        => ' Browse... ',
+	'UI:Button:Add'                  => ' Add ',
+	'UI:Button:AddToList'            => ' << Add ',
+	'UI:Button:RemoveFromList'       => ' Remove >> ',
+	'UI:Button:FilterList'           => ' Filter... ',
+	'UI:Button:Create'               => ' Create ',
+	'UI:Button:Delete'               => ' Delete ',
+	'UI:Button:Rename'               => ' Rename... ',
+	'UI:Button:ChangePassword'       => ' Change Password ',
+	'UI:Button:ResetPassword'        => ' Reset Password ',
+	'UI:Button:Insert'               => 'Insert',
+	'UI:Button:More'                 => 'More',
+	'UI:Button:Less'                 => 'Less',
+	'UI:Button:Wait'                 => 'Please wait while updating fields',
+	'UI:Treeview:CollapseAll'        => 'Collapse All',
+	'UI:Treeview:ExpandAll'          => 'Expand All',
+	'UI:UserPref:DoNotShowAgain'     => 'Do not show again',
+	'UI:InputFile:NoFileSelected'    => 'No File Selected',
+	'UI:InputFile:SelectFile'        => 'Select a file',
 
-	'UI:SearchToggle' => 'Search',
-	'UI:ClickToCreateNew' => 'Create a %1$s',
-	'UI:SearchFor_Class' => 'Search for %1$s objects',
-	'UI:NoObjectToDisplay' => 'No object to display.',
-	'UI:Error:SaveFailed' => 'The object cannot be saved :',
-	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.',
-	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.',
-	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by is mandatory. Check the definition of the display template.',
-	'UI:Error:InvalidGroupByFields' => 'Invalid list of fields to group by: "%1$s".',
-	'UI:Error:UnsupportedStyleOfBlock' => 'Error: unsupported style of block: "%1$s".',
+	'UI:SearchToggle'                                    => 'Search',
+	'UI:ClickToCreateNew'                                => 'Create a %1$s',
+	'UI:SearchFor_Class'                                 => 'Search for %1$s objects',
+	'UI:NoObjectToDisplay'                               => 'No object to display.',
+	'UI:Error:SaveFailed'                                => 'The object cannot be saved :',
+	'UI:Error:MandatoryTemplateParameter_object_id'      => 'Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.',
+	'UI:Error:MandatoryTemplateParameter_target_attr'    => 'Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.',
+	'UI:Error:MandatoryTemplateParameter_group_by'       => 'Parameter group_by is mandatory. Check the definition of the display template.',
+	'UI:Error:InvalidGroupByFields'                      => 'Invalid list of fields to group by: "%1$s".',
+	'UI:Error:UnsupportedStyleOfBlock'                   => 'Error: unsupported style of block: "%1$s".',
 	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Incorrect link definition: the class of objects to manage: %1$s was not found as an external key in the class %2$s',
-	'UI:Error:Object_Class_Id_NotFound' => 'Object: %1$s:%2$d not found.',
-	'UI:Error:WizardCircularReferenceInDependencies' => 'Error: Circular reference in the dependencies between the fields, check the data model.',
-	'UI:Error:UploadedFileTooBig' => 'The uploaded file is too big. (Max allowed size is %1$s). To modify this limit, contact your '.ITOP_APPLICATION_SHORT.' administrator. (Check the PHP configuration for upload_max_filesize and post_max_size on the server).',
-	'UI:Error:UploadedFileTruncated.' => 'Uploaded file has been truncated !',
-	'UI:Error:NoTmpDir' => 'The temporary directory is not defined.',
-	'UI:Error:CannotWriteToTmp_Dir' => 'Unable to write the temporary file to the disk. upload_tmp_dir = "%1$s".',
-	'UI:Error:UploadStoppedByExtension_FileName' => 'Upload stopped  by extension. (Original file name = "%1$s").',
-	'UI:Error:UploadFailedUnknownCause_Code' => 'File upload failed, unknown cause. (Error code = "%1$s").',
+	'UI:Error:Object_Class_Id_NotFound'                  => 'Object: %1$s:%2$d not found.',
+	'UI:Error:WizardCircularReferenceInDependencies'     => 'Error: Circular reference in the dependencies between the fields, check the data model.',
+	'UI:Error:UploadedFileTooBig'                        => 'The uploaded file is too big. (Max allowed size is %1$s). To modify this limit, contact your '.ITOP_APPLICATION_SHORT.' administrator. (Check the PHP configuration for upload_max_filesize and post_max_size on the server).',
+	'UI:Error:UploadedFileTruncated.'                    => 'Uploaded file has been truncated !',
+	'UI:Error:NoTmpDir'                                  => 'The temporary directory is not defined.',
+	'UI:Error:CannotWriteToTmp_Dir'                      => 'Unable to write the temporary file to the disk. upload_tmp_dir = "%1$s".',
+	'UI:Error:UploadStoppedByExtension_FileName'         => 'Upload stopped  by extension. (Original file name = "%1$s").',
+	'UI:Error:UploadFailedUnknownCause_Code'             => 'File upload failed, unknown cause. (Error code = "%1$s").',
 
-	'UI:Error:1ParametersMissing' => 'Error: the following parameter must be specified for this operation: %1$s.',
-	'UI:Error:2ParametersMissing' => 'Error: the following parameters must be specified for this operation: %1$s and %2$s.',
-	'UI:Error:3ParametersMissing' => 'Error: the following parameters must be specified for this operation: %1$s, %2$s and %3$s.',
-	'UI:Error:4ParametersMissing' => 'Error: the following parameters must be specified for this operation: %1$s, %2$s, %3$s and %4$s.',
-	'UI:Error:IncorrectOQLQuery_Message' => 'Error: incorrect OQL query: %1$s',
+	'UI:Error:1ParametersMissing'                         => 'Error: the following parameter must be specified for this operation: %1$s.',
+	'UI:Error:2ParametersMissing'                         => 'Error: the following parameters must be specified for this operation: %1$s and %2$s.',
+	'UI:Error:3ParametersMissing'                         => 'Error: the following parameters must be specified for this operation: %1$s, %2$s and %3$s.',
+	'UI:Error:4ParametersMissing'                         => 'Error: the following parameters must be specified for this operation: %1$s, %2$s, %3$s and %4$s.',
+	'UI:Error:IncorrectOQLQuery_Message'                  => 'Error: incorrect OQL query: %1$s',
 	'UI:Error:AnErrorOccuredWhileRunningTheQuery_Message' => 'An error occured while running the query: %1$s',
-	'UI:Error:ObjectAlreadyUpdated' => 'Error: the object has already been updated.',
-	'UI:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated.',
-	'UI:Error:ObjectsAlreadyDeleted' => 'Error: objects have already been deleted!',
-	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'You are not allowed to perform a bulk delete of objects of class %1$s',
-	'UI:Error:DeleteNotAllowedOn_Class' => 'You are not allowed to delete objects of class %1$s',
-	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s',
-	'UI:Error:BulkModifyNotAllowedOn_Class' => 'You are not allowed to perform a bulk update of objects of class %1$s',
-	'UI:Error:ObjectAlreadyCloned' => 'Error: the object has already been cloned!',
-	'UI:Error:ObjectAlreadyCreated' => 'Error: the object has already been created!',
-	'UI:Error:Invalid_Stimulus_On_Object_In_State' => '%2$s is currently in the "%3$s" state, the "%1$s" operation you requested could not be applied.',
-	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file',
-	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard',
-	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance',
-	'UI:Error:MaintenanceTitle' => 'Maintenance',
-	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)',
+	'UI:Error:ObjectAlreadyUpdated'                       => 'Error: the object has already been updated.',
+	'UI:Error:ObjectCannotBeUpdated'                      => 'Error: object cannot be updated.',
+	'UI:Error:ObjectsAlreadyDeleted'                      => 'Error: objects have already been deleted!',
+	'UI:Error:BulkDeleteNotAllowedOn_Class'               => 'You are not allowed to perform a bulk delete of objects of class %1$s',
+	'UI:Error:DeleteNotAllowedOn_Class'                   => 'You are not allowed to delete objects of class %1$s',
+	'UI:Error:ReadNotAllowedOn_Class'                     => 'You are not allowed to view objects of class %1$s',
+	'UI:Error:BulkModifyNotAllowedOn_Class'               => 'You are not allowed to perform a bulk update of objects of class %1$s',
+	'UI:Error:ObjectAlreadyCloned'                        => 'Error: the object has already been cloned!',
+	'UI:Error:ObjectAlreadyCreated'                       => 'Error: the object has already been created!',
+	'UI:Error:Invalid_Stimulus_On_Object_In_State'        => '%2$s is currently in the "%3$s" state, the "%1$s" operation you requested could not be applied.',
+	'UI:Error:InvalidDashboardFile'                       => 'Error: invalid dashboard file',
+	'UI:Error:InvalidDashboard'                           => 'Error: invalid dashboard',
+	'UI:Error:MaintenanceMode'                            => 'Application is currently in maintenance',
+	'UI:Error:MaintenanceTitle'                           => 'Maintenance',
+	'UI:Error:InvalidToken'                               => 'Error: the requested operation has already been performed (CSRF token not found)',
 
-	'UI:GroupBy:Count' => 'Count',
-	'UI:GroupBy:Count+' => 'Number of elements',
-	'UI:CountOfObjects' => '%1$d objects matching the criteria.',
-	'UI_CountOfObjectsShort' => '%1$d objects.',
-	'UI:NoObject_Class_ToDisplay' => 'No %1$s to display',
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)',
+
+	'UI:GroupBy:Count'              => 'Count',
+	'UI:GroupBy:Count+'             => 'Number of elements',
+	'UI:CountOfObjects'             => '%1$d objects matching the criteria.',
+	'UI_CountOfObjectsShort'        => '%1$d objects.',
+	'UI:NoObject_Class_ToDisplay'   => 'No %1$s to display',
 	'UI:History:LastModified_On_By' => 'Last modified on %1$s by %2$s.',
-	'UI:HistoryTab' => 'History',
+	'UI:HistoryTab'                 => 'History',
 	'UI:NotificationsTab' => 'Notifications',
 	'UI:History:BulkImports' => 'History',
 	'UI:History:BulkImports+' => 'List of CSV imports (latest import first)',
@@ -487,6 +556,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Loading' => 'Loading...',
 	'UI:Menu:Actions' => 'Actions',
 	'UI:Menu:OtherActions' => 'Other Actions',
+	'UI:Menu:Transitions' => 'Transitions',
+	'UI:Menu:OtherTransitions' => 'Other Transitions',
+	'UI:Menu:View' => 'View this object',
 	'UI:Menu:New' => 'New...',
 	'UI:Menu:Add' => 'Add...',
 	'UI:Menu:Manage' => 'Manage...',
@@ -495,6 +567,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Menu:Modify' => 'Modify...',
 	'UI:Menu:Delete' => 'Delete...',
 	'UI:Menu:BulkDelete' => 'Delete...',
+	'UI:Menu:BulkDelete_Class' => 'Delete %1$s objects...',
+	'UI:Menu:BulkDelete_Link' => 'Delete %1$s...',
+	'UI:Menu:BulkDelete_Remote' => 'Delete %1$s...',
 	'UI:UndefinedObject' => 'undefined',
 	'UI:Document:OpenInNewWindow:Download' => 'Open in new window: %1$s, Download: %2$s',
 	'UI:SplitDateTime-Date' => 'date',
@@ -545,43 +620,43 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ResetPwd-Ready' => 'The password has been changed.',
 	'UI:ResetPwd-Login' => 'Click here to login...',
 
-	'UI:Login:About' => ITOP_APPLICATION.' Powered by Combodo',
-	'UI:Login:ChangeYourPassword' => 'Change Your Password',
-	'UI:Login:OldPasswordPrompt' => 'Old password',
-	'UI:Login:NewPasswordPrompt' => 'New password',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Retype new password',
-	'UI:Login:IncorrectOldPassword' => 'Error: the old password is incorrect',
-	'UI:LogOffMenu' => 'Log off',
-	'UI:LogOff:ThankYou' => 'Thank you for using '.ITOP_APPLICATION,
-	'UI:LogOff:ClickHereToLoginAgain' => 'Click here to login again...',
-	'UI:ChangePwdMenu' => 'Change Password...',
-	'UI:Login:PasswordChanged' => 'Password successfully set!',
-	'UI:AccessRO-All' => ITOP_APPLICATION.' is read-only',
-	'UI:AccessRO-Users' => ITOP_APPLICATION.' is read-only for end-users',
-	'UI:ApplicationEnvironment' => 'Application environment: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch' => 'New password and retyped new password do not match!',
-	'UI:Button:Login' => 'Enter '.ITOP_APPLICATION,
-	'UI:Login:Error:AccessRestricted' => ITOP_APPLICATION_SHORT.' access is restricted. Please, contact an '.ITOP_APPLICATION_SHORT.' administrator.',
-	'UI:Login:Error:AccessAdmin' => 'Access restricted to people having administrator privileges. Please, contact an '.ITOP_APPLICATION_SHORT.' administrator.',
-	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization',
+	'UI:Login:About'                               => ITOP_APPLICATION.' Powered by Combodo',
+	'UI:Login:ChangeYourPassword'                  => 'Change Your Password',
+	'UI:Login:OldPasswordPrompt'                   => 'Old password',
+	'UI:Login:NewPasswordPrompt'                   => 'New password',
+	'UI:Login:RetypeNewPasswordPrompt'             => 'Retype new password',
+	'UI:Login:IncorrectOldPassword'                => 'Error: the old password is incorrect',
+	'UI:LogOffMenu'                                => 'Log off',
+	'UI:LogOff:ThankYou'                           => 'Thank you for using '.ITOP_APPLICATION,
+	'UI:LogOff:ClickHereToLoginAgain'              => 'Click here to login again...',
+	'UI:ChangePwdMenu'                             => 'Change Password...',
+	'UI:Login:PasswordChanged'                     => 'Password successfully set!',
+	'UI:AccessRO-All'                              => ITOP_APPLICATION.' is read-only',
+	'UI:AccessRO-Users'                            => ITOP_APPLICATION.' is read-only for end-users',
+	'UI:ApplicationEnvironment'                    => 'Application environment: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch'               => 'New password and retyped new password do not match!',
+	'UI:Button:Login'                              => 'Enter '.ITOP_APPLICATION,
+	'UI:Login:Error:AccessRestricted'              => ITOP_APPLICATION_SHORT.' access to this page is restricted. Please, contact an '.ITOP_APPLICATION_SHORT.' administrator.',
+	'UI:Login:Error:AccessAdmin'                   => 'Access restricted to people having administrator privileges. Please, contact an '.ITOP_APPLICATION_SHORT.' administrator.',
+	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail',
-	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided',
-	'UI:CSVImport:MappingSelectOne' => '-- select one --',
-	'UI:CSVImport:MappingNotApplicable' => '-- ignore this field --',
-	'UI:CSVImport:NoData' => 'Empty data set..., please provide some data!',
-	'UI:Title:DataPreview' => 'Data Preview',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'Error: The data contains only one column. Did you select the appropriate separator character?',
-	'UI:CSVImport:FieldName' => 'Field %1$d',
-	'UI:CSVImport:DataLine1' => 'Data Line 1',
-	'UI:CSVImport:DataLine2' => 'Data Line 2',
-	'UI:CSVImport:idField' => 'id (Primary Key)',
-	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - Bulk import',
-	'UI:Title:BulkImport+' => 'CSV Import Wizard',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronization of %1$d objects of class %2$s',
-	'UI:CSVImport:ClassesSelectOne' => '-- select one --',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Internal error: "%1$s" is an incorrect code because "%2$s" is NOT an external key of the class "%3$s"',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objects(s) will stay unchanged.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objects(s) will be modified.',
+	'UI:Login:Error:NoValidProfiles'               => 'No valid profile provided',
+	'UI:CSVImport:MappingSelectOne'                => '-- select one --',
+	'UI:CSVImport:MappingNotApplicable'            => '-- ignore this field --',
+	'UI:CSVImport:NoData'                          => 'Empty data set..., please provide some data!',
+	'UI:Title:DataPreview'                         => 'Data Preview',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Error: The data contains only one column. Did you select the appropriate separator character?',
+	'UI:CSVImport:FieldName'                       => 'Field %1$d',
+	'UI:CSVImport:DataLine1'                       => 'Data Line 1',
+	'UI:CSVImport:DataLine2'                       => 'Data Line 2',
+	'UI:CSVImport:idField'                         => 'id (Primary Key)',
+	'UI:Title:BulkImport'                          => ITOP_APPLICATION_SHORT.' - Bulk import',
+	'UI:Title:BulkImport+'                         => 'CSV Import Wizard',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronization of %1$d objects of class %2$s',
+	'UI:CSVImport:ClassesSelectOne'                => '-- select one --',
+	'UI:CSVImport:ErrorExtendedAttCode'            => 'Internal error: "%1$s" is an incorrect code because "%2$s" is NOT an external key of the class "%3$s"',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objects(s) will stay unchanged.',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objects(s) will be modified.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objects(s) will be added.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d objects(s) will have errors.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objects(s) remained unchanged.',
@@ -630,9 +705,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Select the class to search: ',
 
 	'UI:CSVReport-Value-Modified' => 'Modified',
-	'UI:CSVReport-Value-SetIssue' => 'Could not be changed - reason: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Could not be changed to %1$s - reason: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'No match',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'',
+	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s',
+	'UI:CSVReport-Value-NoMatch-NoObject' => 'There are no \'%1$s\' objects',
+	'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => 'There are no \'%1$s\' objects found with your current profile',
+	'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => 'There are some \'%1$s\' objects not visible with your current profile',
+
 	'UI:CSVReport-Value-Missing' => 'Missing mandatory value',
 	'UI:CSVReport-Value-Ambiguous' => 'Ambiguous: found %1$s objects',
 	'UI:CSVReport-Row-Unchanged' => 'unchanged',
@@ -646,11 +726,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CSVReport-Value-Issue-Readonly' => 'The attribute \'%1$s\' is read-only and cannot be modified (current value: %2$s, proposed value: %3$s)',
 	'UI:CSVReport-Value-Issue-Format' => 'Failed to process input: %1$s',
 	'UI:CSVReport-Value-Issue-NoMatch' => 'Unexpected value for attribute \'%1$s\': no match found, check spelling',
+	'UI:CSVReport-Value-Issue-AllowedValues' => 'Allowed \'%1$s\' value(s): %2$s',
 	'UI:CSVReport-Value-Issue-Unknown' => 'Unexpected value for attribute \'%1$s\': %2$s',
 	'UI:CSVReport-Row-Issue-Inconsistent' => 'Attributes not consistent with each others: %1$s',
 	'UI:CSVReport-Row-Issue-Attribute' => 'Unexpected attribute value(s)',
 	'UI:CSVReport-Row-Issue-MissingExtKey' => 'Could not be created, due to missing external key(s): %1$s',
 	'UI:CSVReport-Row-Issue-DateFormat' => 'wrong date format',
+	'UI:CSVReport-Row-Issue-ExpectedDateFormat' => 'Expected format: %1$s',
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'failed to reconcile',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'ambiguous reconciliation',
 	'UI:CSVReport-Row-Issue-Internal' => 'Internal error: %1$s, %2$s',
@@ -677,6 +759,12 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Audit',
 	'UI:Audit:InteractiveAudit' => 'Interactive Audit',
+	'UI:Audit:InteractiveAudit:Selection' => 'Audit - Domain Selection',
+	'UI:Audit:InteractiveAudit:Selection+' => 'Select a domain to get the result for selected domain',
+	'UI:Audit:InteractiveAudit:Selection:All' => 'All categories',
+	'UI:Audit:InteractiveAudit:AllCategories' => 'Audit result for all categories',
+	'UI:Audit:InteractiveAudit:SelectedCategories' => 'Audit result for %1$s categories / category',
+	'UI:Audit:InteractiveAudit:SelectedDomain' => 'Audit result for domain: %1$s',
 	'UI:Audit:HeaderAuditRule' => 'Audit Rule',
 	'UI:Audit:HeaderNbObjects' => '# Objects',
 	'UI:Audit:HeaderNbErrors' => '# Errors',
@@ -696,11 +784,13 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL Query Evaluation',
 	'UI:RunQuery:QueryExamples' => 'Query Examples',
+	'UI:RunQuery:QueryResults' => 'Query Results',
 	'UI:RunQuery:HeaderPurpose' => 'Purpose',
 	'UI:RunQuery:HeaderPurpose+' => 'Explanation about the query',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL Expression',
 	'UI:RunQuery:HeaderOQLExpression+' => 'The query in OQL syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expression to evaluate: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments',
 	'UI:RunQuery:MoreInfo' => 'More information about the query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Redevelopped query expression: ',
 	'UI:RunQuery:SerializedFilter' => 'Serialized filter: ',
@@ -712,6 +802,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objects schema',
+	'UI:Schema:TitleForClass' => '%1$s schema',
 	'UI:Schema:CategoryMenuItem' => 'Category <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relationships',
 	'UI:Schema:AbstractClass' => 'Abstract class: no object from this class can be instantiated.',
@@ -777,6 +868,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
+	'UI:Schema:Events' => 'Events',
+	'UI:Schema:Events:Defined' => 'Defined events',
+	'UI:Schema:Events:NoEvent' => 'No event defined',
+	'UI:Schema:Events:Listeners' => 'Event listeners',
+	'UI:Schema:Events:NoListener' => 'No event listener',
+	'UI:Schema:Events:Event' => 'Event',
+	'UI:Schema:Events:Description' => 'Description',
+	'UI:Schema:Events:Listener' => 'Listener',
+	'UI:Schema:Events:Rank' => 'Rank',
+	'UI:Schema:Events:Module' => 'Module',
 	'UI:LinksWidget:Autocomplete+' => 'Type the first 3 characters...',
 	'UI:Edit:SearchQuery' => 'Select a predefined query',
 	'UI:Edit:TestQuery' => 'Test query',
@@ -788,7 +889,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Add %1$s objects linked with %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Add %1$s objects to link with the %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Manage %1$s objects linked with %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Add %1$s objects...',
+	'UI:AddLinkedObjectsOf_Class' => 'Add %1$s',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Remove selected objects',
 	'UI:Message:EmptyList:UseAdd' => 'The list is empty, use the "Add..." button to add elements.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Use the search form above to search for objects to be added.',
@@ -903,12 +1004,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'No lifecycle has been defined for this class',
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link between %1$s and %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link between %1$s and %2$s',
 
-	'Menu:AdminTools' => 'Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => 'Administration tools', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Administration',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Administration tools',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
@@ -954,17 +1053,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI-ContactsMenu-ContactsByType' => 'Contacts by type',
 	'UI-ContactsMenu-ContactsByStatus' => 'Contacts by status',
 
-	'Menu:CSVImportMenu' => 'CSV import', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => 'Bulk creation or update', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => 'Bulk creation or update',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Data Model', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Overview of the Data Model', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Data model',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Overview of the data model',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Export', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Configuration of the Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu' => 'Notifications',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Configuration of the Notifications',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuration of the Notifications',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' the notifications are fully customizable. They are based on two sets of objects: <i>triggers and actions</i>.</p>
@@ -976,10 +1075,13 @@ Dict::Add('EN US', 'English', 'English', array(
 </ol>
 </p>
 <p>
-<i><b>Actions</b></i> define the actions to be performed when the triggers execute. For now there is only one kind of action consisting in sending an email message.
-Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.
+<i><b>Actions</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	A special page: <a href="../setup/email.test.php" target="_blank">email.test.php</a> is available for testing and troubleshooting your PHP mail configuration.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>A special page: <a href="../setup/email.test.php" target="_blank">email.test.php</a> is available for testing and troubleshooting your PHP mail configuration.</p>
 <p>To be executed, actions must be associated to triggers.
 When associated with a trigger, each action is given an "order" number, specifying in which order the actions are to be executed.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
@@ -988,6 +1090,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:NotificationsMenu:OnStateEnter' => 'When an object enters a given state',
 	'UI:NotificationsMenu:OnStateLeave' => 'When an object leaves a given state',
 	'UI:NotificationsMenu:Actions' => 'Actions',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions',
 	'UI:NotificationsMenu:AvailableActions' => 'Available actions',
 
 	'Menu:TagAdminMenu' => 'Tags configuration',
@@ -996,39 +1101,43 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s',
 
-	'Menu:AuditCategories' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => 'Audit Categories',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Audit Categories',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Audit Categories',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Run Queries', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Run any query', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'Run Queries',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Run any query',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Query phrasebook',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Query phrasebook',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Data Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Data Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Data Administration',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Data Administration',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Universal Search', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Search for anything...', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Universal Search',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Search for anything...',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'User Management', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'User management', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'User Management',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'User management',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profiles', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Profiles', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profiles', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Profiles',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Profiles',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profiles',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'User Accounts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'User Accounts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'User Accounts', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'User Accounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'User Accounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'User Accounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => 'Properties',
 
-	'UI:OpenDocumentInNewWindow_' => 'Open this document in a new window: %1$s',
-	'UI:DownloadDocument_' => 'Download this document: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Open',
+	'UI:DownloadDocument_' => 'Download',
 	'UI:Document:NoPreview' => 'No preview is available for this type of document',
 	'UI:Download-CSV' => 'Download %1$s',
 
@@ -1038,7 +1147,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Help',
-	'UI:PasswordConfirm' => '(Confirm)',
+	'UI:PasswordConfirm' => 'Confirm',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Before adding more %1$s objects, save this object.',
 	'UI:DisplayThisMessageAtStartup' => 'Display this message at startup',
 	'UI:RelationshipGraph' => 'Graphical view',
@@ -1110,9 +1219,13 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Enum:Undefined' => 'Undefined',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s d %2$s h %3$s min %4$s s',
 	'UI:ModifyAllPageTitle' => 'Modify All',
+	'UI:Modify_ObjectsOf_Class' => 'Modifying objects of class %1$s',
 	'UI:Modify_N_ObjectsOf_Class' => 'Modifying %1$d objects of class %2$s',
 	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'Modifying %1$d objects of class %2$s out of %3$d',
 	'UI:Menu:ModifyAll' => 'Modify...',
+	'UI:Menu:ModifyAll_Class' => 'Modify %1$s objects...',
+	'UI:Menu:ModifyAll_Link' => 'Modify %1$s...',
+	'UI:Menu:ModifyAll_Remote' => 'Modify %1$s...',
 	'UI:Button:ModifyAll' => 'Modify All',
 	'UI:Button:PreviewModifications' => 'Preview Modifications >>',
 	'UI:ModifiedObject' => 'Object Modified',
@@ -1133,7 +1246,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:CaseLogTypeYourTextHere' => 'Type your text here...',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Initial value:',
-	'UI:AttemptingToSetASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value not set.',
+	'UI:AttemptingToSetASlaveAttribute_Name' => 'The field %1$s (%2$s) is not writable because it is mastered by the data synchronization. Value not set.',
 	'UI:ActionNotAllowed' => 'You are not allowed to perform this action on these objects.',
 	'UI:BulkAction:NoObjectSelected' => 'Please select at least one object to perform this operation',
 	'UI:AttemptingToChangeASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value remains unchanged.',
@@ -1201,6 +1314,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ImportDashBoard' => 'Import from a file...',
 	'UI:ImportDashboardTitle' => 'Import From a File',
 	'UI:ImportDashboardText' => 'Select a dashboard file to import:',
+	'UI:Dashboard:Actions' => 'Dashboard actions',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.',
 
 
 	'UI:DashletCreation:Title' => 'Create a new Dashlet',
@@ -1213,6 +1328,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh',
 	'UI:DashboardEdit:AutoReloadSec' => 'Automatic refresh interval (seconds)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds',
+	'UI:DashboardEdit:Revert' => 'Revert',
+	'UI:DashboardEdit:Apply' => 'Apply',
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard Properties',
@@ -1312,66 +1429,69 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'DayOfWeek-Sunday' => 'Sunday',
 	'DayOfWeek-Monday' => 'Monday',
 	'DayOfWeek-Tuesday' => 'Tuesday',
-	'DayOfWeek-Wednesday' => 'Wednesday',
-	'DayOfWeek-Thursday' => 'Thursday',
-	'DayOfWeek-Friday' => 'Friday',
-	'DayOfWeek-Saturday' => 'Saturday',
-	'Month-01' => 'January',
-	'Month-02' => 'February',
-	'Month-03' => 'March',
-	'Month-04' => 'April',
-	'Month-05' => 'May',
-	'Month-06' => 'June',
-	'Month-07' => 'July',
-	'Month-08' => 'August',
-	'Month-09' => 'September',
-	'Month-10' => 'October',
-	'Month-11' => 'November',
-	'Month-12' => 'December',
+	'DayOfWeek-Wednesday'           => 'Wednesday',
+	'DayOfWeek-Thursday'            => 'Thursday',
+	'DayOfWeek-Friday'              => 'Friday',
+	'DayOfWeek-Saturday'            => 'Saturday',
+	'Month-01'                      => 'January',
+	'Month-02'                      => 'February',
+	'Month-03'                      => 'March',
+	'Month-04'                      => 'April',
+	'Month-05'                      => 'May',
+	'Month-06'                      => 'June',
+	'Month-07'                      => 'July',
+	'Month-08'                      => 'August',
+	'Month-09'                      => 'September',
+	'Month-10'                      => 'October',
+	'Month-11'                      => 'November',
+	'Month-12'                      => 'December',
 
 	// Short version for the DatePicker
-	'DayOfWeek-Sunday-Min' => 'Su',
-	'DayOfWeek-Monday-Min' => 'Mo',
-	'DayOfWeek-Tuesday-Min' => 'Tu',
-	'DayOfWeek-Wednesday-Min' => 'We',
-	'DayOfWeek-Thursday-Min' => 'Th',
-	'DayOfWeek-Friday-Min' => 'Fr',
-	'DayOfWeek-Saturday-Min' => 'Sa',
-	'Month-01-Short' => 'Jan',
-	'Month-02-Short' => 'Feb',
-	'Month-03-Short' => 'Mar',
-	'Month-04-Short' => 'Apr',
-	'Month-05-Short' => 'May',
-	'Month-06-Short' => 'Jun',
-	'Month-07-Short' => 'Jul',
-	'Month-08-Short' => 'Aug',
-	'Month-09-Short' => 'Sep',
-	'Month-10-Short' => 'Oct',
-	'Month-11-Short' => 'Nov',
-	'Month-12-Short' => 'Dec',
-	'Calendar-FirstDayOfWeek' => 0, // 0 = Sunday, 1 = Monday, etc...
+	'DayOfWeek-Sunday-Min'          => 'Su',
+	'DayOfWeek-Monday-Min'          => 'Mo',
+	'DayOfWeek-Tuesday-Min'         => 'Tu',
+	'DayOfWeek-Wednesday-Min'       => 'We',
+	'DayOfWeek-Thursday-Min'        => 'Th',
+	'DayOfWeek-Friday-Min'          => 'Fr',
+	'DayOfWeek-Saturday-Min'        => 'Sa',
+	'Month-01-Short'                => 'Jan',
+	'Month-02-Short'                => 'Feb',
+	'Month-03-Short'                => 'Mar',
+	'Month-04-Short'                => 'Apr',
+	'Month-05-Short'                => 'May',
+	'Month-06-Short'                => 'Jun',
+	'Month-07-Short'                => 'Jul',
+	'Month-08-Short'                => 'Aug',
+	'Month-09-Short'                => 'Sep',
+	'Month-10-Short'                => 'Oct',
+	'Month-11-Short'                => 'Nov',
+	'Month-12-Short'                => 'Dec',
+	'Calendar-FirstDayOfWeek'       => 0,
+	// 0 = Sunday, 1 = Monday, etc...
 
-	'UI:Menu:ShortcutList' => 'Create a Shortcut...',
-	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut',
-	'UI:ShortcutListDlg:Title' => 'Create a shortcut for the list',
-	'UI:ShortcutDelete:Confirm' => 'Please confirm that wou wish to delete the shortcut(s).',
-	'Menu:MyShortcuts' => 'My Shortcuts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Class:Shortcut' => 'Shortcut',
-	'Class:Shortcut+' => '',
-	'Class:Shortcut/Attribute:name' => 'Name',
-	'Class:Shortcut/Attribute:name+' => 'Label used in the menu and page title',
-	'Class:ShortcutOQL' => 'Search result shortcut',
-	'Class:ShortcutOQL+' => '',
-	'Class:ShortcutOQL/Attribute:oql' => 'Query',
-	'Class:ShortcutOQL/Attribute:oql+' => 'OQL defining the list of objects to search for',
-	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatic refresh',
-	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabled',
+	'UI:Menu:ShortcutList'                                 => 'Create a Shortcut...',
+	'UI:Menu:FilterList'                                   => 'Display list with search criteria',
+	'UI:ShortcutRenameDlg:Title'                           => 'Rename the shortcut',
+	'UI:ShortcutListDlg:Title'                             => 'Create a shortcut for the list',
+	'UI:ShortcutDelete:Confirm'                            => 'Please confirm that wou wish to delete the shortcut(s).',
+	'Menu:MyShortcuts'                                     => 'My Shortcuts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Class:Shortcut'                                       => 'Shortcut',
+	'Class:Shortcut+'                                      => '',
+	'Class:Shortcut/Attribute:name'                        => 'Name',
+	'Class:Shortcut/Attribute:name+'                       => 'Label used in the menu and page title',
+	'Class:ShortcutOQL'                                    => 'Search result shortcut',
+	'Class:ShortcutOQL+'                                   => '',
+	'Class:ShortcutOQL/Attribute:oql'                      => 'Query',
+	'Class:ShortcutOQL/Attribute:oql+'                     => 'OQL defining the list of objects to search for',
+	'Class:ShortcutOQL/Attribute:auto_reload'              => 'Automatic refresh',
+	'Class:ShortcutOQL/Attribute:auto_reload/Value:none'   => 'Disabled',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate',
-	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Automatic refresh interval (seconds)',
-	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'The minimum allowed is %1$d seconds',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec'          => 'Automatic refresh interval (seconds)',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip'      => 'The minimum allowed is %1$d seconds',
 
 	'UI:FillAllMandatoryFields' => 'Please fill all mandatory fields.',
-	'UI:ValueMustBeSet' => 'Please specify a value',
+	'UI:ValueMustBeSet'         => 'Please specify a value',
 	'UI:ValueMustBeChanged' => 'Please change the value',
 	'UI:ValueInvalidFormat' => 'Invalid format',
 
@@ -1435,7 +1555,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.',
-	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.',
 	'UI:CurrentObjectLockExpired' => 'The lock to prevent concurrent modifications of the object has expired.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.',
@@ -1460,8 +1580,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand',
-	'UI:Search:AutoSubmit:DisabledHint' => '<i class="fas fa-sync fa-1x"></i> Auto submit has been disabled for this class',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden',
+	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class',
+	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria',
 	// - Add new criteria button
@@ -1469,6 +1589,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.',
+
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Minimize / Expand',
+	'UI:Search:Criteria:Remove' => 'Remove',
+	'UI:Search:Criteria:Locked' => 'Locked',
 
 	// - Criteria titles
 	//   - Default widget
@@ -1530,12 +1655,12 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches',
 
@@ -1610,37 +1735,37 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:DataSources' => 'Synchronization Data Sources',
 	'Menu:DataSources+' => 'All Synchronization Data Sources',
 	'Menu:WelcomeMenu' => 'Welcome',
-	'Menu:WelcomeMenu+' => 'Welcome to iTop',
+	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => 'Welcome',
-	'Menu:WelcomeMenuPage+' => 'Welcome to iTop',
+	'Menu:WelcomeMenuPage+' => 'Welcome to '.ITOP_APPLICATION_SHORT,
 	'Menu:AdminTools' => 'Administration',
 	'Menu:AdminTools+' => 'Administration tools',
 	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile',
-	'Menu:DataModelMenu' => 'Data Model',
-	'Menu:DataModelMenu+' => 'Overview of the Data Model',
+	'Menu:DataModelMenu' => 'Data model',
+	'Menu:DataModelMenu+' => 'Overview of the data model',
 	'Menu:ExportMenu' => 'Export',
 	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML',
 	'Menu:NotificationsMenu' => 'Notifications',
-	'Menu:NotificationsMenu+' => 'Configuration of the Notifications',
-	'Menu:AuditCategories' => 'Audit Categories',
-	'Menu:AuditCategories+' => 'Audit Categories',
-	'Menu:Notifications:Title' => 'Audit Categories',
-	'Menu:RunQueriesMenu' => 'Run Queries',
+	'Menu:NotificationsMenu+' => 'Configuration of the notifications',
+	'Menu:AuditCategories' => 'Audit categories',
+	'Menu:AuditCategories+' => 'Audit categories',
+	'Menu:Notifications:Title' => 'Audit categories',
+	'Menu:RunQueriesMenu' => 'Run queries',
 	'Menu:RunQueriesMenu+' => 'Run any query',
 	'Menu:QueryMenu' => 'Query phrasebook',
 	'Menu:QueryMenu+' => 'Query phrasebook',
-	'Menu:UniversalSearchMenu' => 'Universal Search',
+	'Menu:UniversalSearchMenu' => 'Universal search',
 	'Menu:UniversalSearchMenu+' => 'Search for anything...',
-	'Menu:UserManagementMenu' => 'User Management',
+	'Menu:UserManagementMenu' => 'User management',
 	'Menu:UserManagementMenu+' => 'User management',
 	'Menu:ProfilesMenu' => 'Profiles',
 	'Menu:ProfilesMenu+' => 'Profiles',
 	'Menu:ProfilesMenu:Title' => 'Profiles',
-	'Menu:UserAccountsMenu' => 'User Accounts',
-	'Menu:UserAccountsMenu+' => 'User Accounts',
-	'Menu:UserAccountsMenu:Title' => 'User Accounts',
-	'Menu:MyShortcuts' => 'My Shortcuts',
-	'Menu:UserManagement' => 'User Management',
+	'Menu:UserAccountsMenu' => 'User accounts',
+	'Menu:UserAccountsMenu+' => 'User accounts',
+	'Menu:UserAccountsMenu:Title' => 'User accounts',
+	'Menu:MyShortcuts' => 'My shortcuts',
+	'Menu:UserManagement' => 'User management',
 	'Menu:Queries' => 'Queries',
 	'Menu:ConfigurationTools' => 'Configuration',
 ));

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -31,19 +31,19 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Menu:ServiceManagement' => 'Gestione del Servizio',
-	'Menu:ServiceManagement+' => 'Panoramica della Gestione del Servizio',
+	'Menu:ServiceManagement' => 'Gestione del servizio',
+	'Menu:ServiceManagement+' => 'Panoramica della gestione del servizio',
 	'Menu:Service:Overview' => 'Panoramica',
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratti per livello di servizio',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratti per stato',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratti che terminano in meno di 30 giorni',
-	'Menu:ProviderContract' => 'Contratti con Provider',
-	'Menu:ProviderContract+' => 'Contratti con Provider',
-	'Menu:CustomerContract' => 'Contratti con Clienti',
-	'Menu:CustomerContract+' => 'Contratti con Clienti',
-	'Menu:ServiceSubcategory' => 'Sottocategorie di Servizio',
-	'Menu:ServiceSubcategory+' => 'Sottocategorie di Servizio',
+	'Menu:ProviderContract' => 'Contratti con provider',
+	'Menu:ProviderContract+' => 'Contratti con provider',
+	'Menu:CustomerContract' => 'Contratti con clienti',
+	'Menu:CustomerContract+' => 'Contratti con clienti',
+	'Menu:ServiceSubcategory' => 'Sottocategorie di servizio',
+	'Menu:ServiceSubcategory+' => 'Sottocategorie di servizio',
 	'Menu:Service' => 'Servizi',
 	'Menu:Service+' => 'Servizi',
 	'Menu:ServiceElement' => 'Sevice elements~~',

@@ -1,27 +1,15 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 require_once('dbobjectiterator.php');
 
 /**
  * Object set management
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -53,6 +41,18 @@ class DBObjectSet implements iDBObjectSetIterator
 	 * @var array
 	 */
 	protected $m_aAttToLoad;
+	/**
+	 * @var null|array
+	 */
+	protected $m_aExtendedDataSpec;
+	/**
+	 * @var int Maximum number of elements to retrieve
+	 */
+	protected $m_iLimitCount;
+	/**
+	 * @var int Offset from which elements should be retrieved
+	 */
+	protected $m_iLimitStart;
 	/**
 	 * @var array
 	 */
@@ -141,7 +141,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	{
 		$sRet = '';
 		$this->Rewind();
-		$sRet .= "Set (".$this->m_oFilter->ToOQL().")<br/>\n";
+		$sRet .= "Set (".$this->m_oFilter->ToOQL(true).")<br/>\n";
         $sRet .= "Query: <pre style=\"font-size: smaller; display:inline;\">".$this->m_oFilter->MakeSelectQuery().")</pre>\n";
 		
 		$sRet .= $this->Count()." records<br/>\n";
@@ -154,6 +154,7 @@ class DBObjectSet implements iDBObjectSetIterator
 			}
 			$sRet .= "</ul>\n";
 		}
+		$this->Rewind();
 		return $sRet;
 	}
 
@@ -842,7 +843,7 @@ class DBObjectSet implements iDBObjectSetIterator
      * @throws \MySQLException
      * @throws \MySQLHasGoneAwayException
      */
-	public function Count()
+	public function Count(): int
 	{
 		if (is_null($this->m_iNumTotalDBRows))
 		{
@@ -1077,14 +1078,13 @@ class DBObjectSet implements iDBObjectSetIterator
      *
      * @param int $iRow
      *
-     * @return int|mixed
-     *
      * @throws \CoreException
      * @throws \MissingQueryArgument
      * @throws \MySQLException
      * @throws \MySQLHasGoneAwayException
+     * @since 3.1.0 N°4517 Now returns void for return type to match parent class and be compatible with PHP 8.1
      */
-	public function Seek($iRow)
+	public function Seek($iRow): void
 	{
 		if (!$this->m_bLoaded) $this->Load();
 
@@ -1093,7 +1093,6 @@ class DBObjectSet implements iDBObjectSetIterator
 		{
 			$this->m_oSQLResult->data_seek($this->m_iCurrRow);
 		}
-		return $this->m_iCurrRow;
 	}
 
     /**
@@ -1471,7 +1470,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	public function ListConstantFields()
 	{
 		// The complete list of arguments will include magic arguments (e.g. current_user->attcode)
-		$aScalarArgs = MetaModel::PrepareQueryArguments($this->m_oFilter->GetInternalParams(), $this->m_aArgs, $this->m_oFilter->ListParameters());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($this->m_oFilter->GetInternalParams(), $this->m_aArgs, $this->m_oFilter->GetExpectedArguments());
 		$aConst = $this->m_oFilter->ListConstantFields();
 				
 		foreach($aConst as $sClassAlias => $aVals)

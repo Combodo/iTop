@@ -1,0 +1,102 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-vendors-selectize-input--color: $ibo-color-grey-900 !default;
+$ibo-vendors-selectize-control--plugin-add-button--add-option--right: $ibo-spacing-0 !default;
+$ibo-vendors-selectize-control--plugin-add-button--add-option--height: 100% !default;
+$ibo-vendors-selectize-control--plugin-add-button--add-option--width: $ibo-size-350 !default;
+$ibo-vendors-selectize-control--plugin-add-button--add-option--color: $ibo-color-grey-900 !default;
+
+$ibo-vendors-selectize--item--icon--margin-right: $ibo-spacing-200 !default;
+
+$ibo-vendors-selectize--item--add--background-color: $ibo-color-green-100 !default;
+$ibo-vendors-selectize--item--add--icon--color: $ibo-color-green-900 !default;
+
+$ibo-vendors-selectize--item--remove--background-color: $ibo-color-red-100 !default;
+$ibo-vendors-selectize--item--remove--icon--color: $ibo-color-red-800 !default;
+
+$ibo-vendors-selectize--item--ignore-partial--background-color: $ibo-color-grey-200 !default;
+
+$ibo-vendors-selectize--input-error--border: 1px solid $ibo-color-red-600 !default;
+
+.selectize-dropdown-content {
+  max-height: unset; /* Overloaded as it will be handled by the _input-select.scss partial */
+}
+.selectize-input input{
+  color: $ibo-vendors-selectize-input--color;
+}
+
+
+.selectize-control.plugin-combodo_add_button{
+  display: flex;
+
+  .selectize-add-option {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    
+    position: absolute;
+    right: $ibo-vendors-selectize-control--plugin-add-button--add-option--right;
+    
+    height: $ibo-vendors-selectize-control--plugin-add-button--add-option--height;
+    width: $ibo-vendors-selectize-control--plugin-add-button--add-option--width;
+    z-index: 1;
+    
+    color: $ibo-vendors-selectize-control--plugin-add-button--add-option--color;
+    @extend %ibo-font-size-100;
+  }
+}
+
+
+// Simple options renderer
+
+.simple-option-renderer--container {
+  display: flex;
+  align-items: center;
+}
+
+.simple-option-renderer--container--icon {
+  width: 25px;
+  text-align: center;
+}
+
+.simple-option-renderer--container--label {
+  margin-left: 3px;
+  flex-grow: 1;
+}
+
+
+
+.selectize-input{
+  .attribute-set-item{
+    >* {
+      display: inline;
+    }
+    &.item-add::before,&.item-remove::before{
+      @extend %fa-solid-base;
+      margin-right: $ibo-vendors-selectize--item--icon--margin-right;
+    }
+    &.item-add{
+      background-color: $ibo-vendors-selectize--item--add--background-color !important;
+      &::before{
+        color: $ibo-vendors-selectize--item--add--icon--color;
+        content: '\f067';
+      }
+    }
+    &.item-remove{
+      background-color: $ibo-vendors-selectize--item--remove--background-color !important;
+      &::before{
+        color: $ibo-vendors-selectize--item--remove--icon--color;
+        content: '\f1f8';
+      }
+    }
+    &.item-ignore-partial{
+      background-color: $ibo-vendors-selectize--item--ignore-partial--background-color !important;
+    }
+  }
+  &.selectize-input-error{
+    border: $ibo-vendors-selectize--input-error--border;
+  }
+}

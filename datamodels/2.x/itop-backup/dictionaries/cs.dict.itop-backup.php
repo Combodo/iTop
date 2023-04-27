@@ -4,7 +4,7 @@
  *
  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
@@ -36,6 +36,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'bkp-status-backups-manual' => 'Manuální zálohy',
 	'bkp-status-backups-none' => 'Žádné zálohy',
 	'bkp-next-backup' => 'Další záloha bude provedena dne <b>%1$s</b> (%2$s) v %3$s',
+	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Zálohovat nyní!',
 	'bkp-button-restore-now' => 'Obnovit ze zálohy!',
 	'bkp-confirm-backup' => 'Potvrďte prosím, že chcete provést zálohu nyní.',

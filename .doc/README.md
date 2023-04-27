@@ -77,24 +77,20 @@ Then, **for a method** of an eligible class:
   
 :notebook: as spaces are used to mark code, the templates (`.doc/phpdoc-templates/combodo-wiki/*`) have very few indentation, thus they are awful to read (sorry).
 
-
-
-
 ## Installation
+
 ```
 cd .doc
 composer require phpdocumentor/phpdocumentor:~2 --dev
 ```
 
 ## Generation
-`./bin/build-doc-object-manipulation` and `./bin/build-doc-extensions` contains examples of doc. generation, beware: they have to be called from the .doc directory:
-```shell
-cd /path/to/itop/.doc
-./bin/build-doc-object-manipulation
-``` 
 
-the resulting documentation is written into `data/phpdocumentor/output`
-
+1. Switch to this directory : `cd /path/to/itop/.doc`
+2. `composer install`
+3. `./bin/build-doc-object-manipulation`
+3. `./bin/build-doc-extensions`
+4. Get the generated files from `/path/to/itop/data/phpdocumentor/output`
 
 ## Dokuwiki requirements
  * the template uses the [wrap plugin](https://www.dokuwiki.org/plugin:wrap).

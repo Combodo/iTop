@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -242,7 +242,7 @@ class DeletionPlan
 
 	public function SetDeletionIssues($oObject, $aIssues, $bSecurityIssue)
 	{
-		if (count($aIssues) > 0)
+		if (count($aIssues ?? []) > 0)
 		{
 			$sClass = get_class($oObject);
 			$iId = $oObject->GetKey();

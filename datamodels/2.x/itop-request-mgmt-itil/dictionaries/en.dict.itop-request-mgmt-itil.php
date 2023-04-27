@@ -1,24 +1,7 @@
 <?php
-/**
- * Localized data
- *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 Dict::Add('EN US', 'English', 'English', array(
@@ -52,6 +35,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Open requests by type',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open requests by customer',
 	'Class:UserRequest:KnownErrorList' => 'Known Errors',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket',
 ));
 
 // Dictionnay conventions
@@ -127,6 +111,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'low',
 	'Class:UserRequest/Attribute:origin' => 'Origin',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'in-person',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => '',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'chat',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => '',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'email',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'email',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'monitoring',
@@ -161,6 +149,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Attribute:resolution_date+' => '',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Last pending date',
 	'Class:UserRequest/Attribute:last_pending_date+' => '',
+	'Class:UserRequest/Attribute:cumulatedpending' => 'cumulatedpending',
+	'Class:UserRequest/Attribute:cumulatedpending+' => '',
 	'Class:UserRequest/Attribute:tto' => 'TTO',
 	'Class:UserRequest/Attribute:tto+' => '',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',

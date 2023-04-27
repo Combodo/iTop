@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Authent Local
  * User authentication Module, password stored in the local database
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -68,7 +68,8 @@ class UserLocal extends UserInternal
 	const EXPIRE_CAN   = 'can_expire';
 	const EXPIRE_NEVER = 'never_expire';
 	const EXPIRE_FORCE = 'force_expire';
-
+	const EXPIRE_ONE_TIME_PWD = 'otp_expire';
+	
 	/** @var UserLocalPasswordValidity|null */
 	protected $m_oPasswordValidity = null;
 
@@ -76,7 +77,7 @@ class UserLocal extends UserInternal
 	{
 		$aParams = array
 		(
-			"category" => "addon/authentication,grant_by_profile",
+			"category" => "addon/authentication,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "login",
 			"state_attcode" => "",
@@ -90,8 +91,8 @@ class UserLocal extends UserInternal
 
 		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("password", array("allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
-		$sExpireEnum = implode(',', array(self::EXPIRE_CAN, self::EXPIRE_NEVER, self::EXPIRE_FORCE));
-		MetaModel::Init_AddAttribute(new AttributeEnum("expiration", array("allowed_values"=>new ValueSetEnum($sExpireEnum), "sql"=>"expiration", "default_value"=>'never_expire', "is_null_allowed"=>false, "depends_on"=>array())));
+		$sExpireEnum = implode(',', array(self::EXPIRE_CAN, self::EXPIRE_NEVER, self::EXPIRE_FORCE, self::EXPIRE_ONE_TIME_PWD));
+		MetaModel::Init_AddAttribute(new AttributeEnum("expiration", array("allowed_values"=>new ValueSetEnum($sExpireEnum), "sql"=>"expiration", "default_value"=>self::EXPIRE_NEVER, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDate("password_renewed_date", array("allowed_values"=>null, "sql"=>"password_renewed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
@@ -99,14 +100,15 @@ class UserLocal extends UserInternal
 			array(
 				'col:col1' =>
 					array(
-						'fieldset:UserLocal:info' =>  array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'profile_list', 'allowed_org_list',)
+						'fieldset:User:info' => array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status'),
 					),
 				'col:col2' =>
 					array(
-						'fieldset:UserLocal:password:expiration' =>  array('expiration', 'password_renewed_date',),
+						'fieldset:User:profiles'                 => array('profile_list',),
+						'fieldset:UserLocal:password:expiration' => array('expiration', 'password_renewed_date',),
 					),
+				'allowed_org_list',
 			)
-
 		); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
@@ -133,6 +135,10 @@ class UserLocal extends UserInternal
 	public function CanChangePassword()
 	{
 		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			return false;
+		}
+		if($this->Get('expiration') == self::EXPIRE_ONE_TIME_PWD)
 		{
 			return false;
 		}
@@ -184,6 +190,8 @@ class UserLocal extends UserInternal
 	protected function OnInsert()
 	{
 		parent::OnInsert();
+		$sToday = date(\AttributeDate::GetInternalFormat());
+		$this->Set('password_renewed_date', $sToday);
 
 		$this->OnWrite();
 	}
@@ -202,6 +210,15 @@ class UserLocal extends UserInternal
 
 		$sNow = date(\AttributeDate::GetInternalFormat());
 		$this->Set('password_renewed_date', $sNow);
+	
+		// Reset the "force" expiration flag when the user updates her/his own password!
+		if ($this->IsCurrentUser())
+		{
+			if (($this->Get('expiration') == self::EXPIRE_FORCE))
+			{
+				$this->Set('expiration', self::EXPIRE_CAN);
+			}
+		}
 	}
 
 	public function IsPasswordValid()
@@ -278,7 +295,13 @@ class UserLocal extends UserInternal
 		{
 			$this->m_aCheckIssues[] = $this->m_oPasswordValidity->getPasswordValidityMessage();
 		}
-
+		
+		// A User cannot force a one-time password on herself/himself
+		if ($this->IsCurrentUser()) {
+			if (array_key_exists('expiration', $this->ListChanges()) && ($this->Get('expiration') == self::EXPIRE_ONE_TIME_PWD)) {
+				$this->m_aCheckIssues[] = Dict::S('Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed');
+			}
+		}
 		parent::DoCheckToWrite();
 	}
 

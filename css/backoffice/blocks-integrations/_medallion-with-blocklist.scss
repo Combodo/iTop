@@ -1,0 +1,19 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+.ibo-block-list--medallion{
+  flex-direction: column;
+  align-items: center;
+  > .ibo-medallion-icon--image{
+    margin: 0 auto;
+    ~ .ibo-medallion-icon--description{
+      margin-top: 12px;
+    }
+  }
+  > .ibo-medallion-icon--description{
+    flex-grow: 1;
+    text-align: center;
+  }
+}

@@ -2,7 +2,7 @@
 /**
  * iTop
  *
- * @copyright   Copyright (C) 2010,2021 Combodo SARL
+ * @copyright   Copyright (C) 2010,2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  */
@@ -535,7 +535,8 @@ final class CoreUpdater
 			SetupLog::Info('itop-core-update: Archive extracted, check files integrity');
 
 			// Check files integrity
-			FilesIntegrity::CheckInstallationIntegrity(self::UPDATE_DIR.'web/');
+			$sRootPath = self::UPDATE_DIR.'web/';
+			FilesIntegrity::CheckInstallationIntegrity($sRootPath);
 
 			SetupLog::Info('itop-core-update: Files integrity OK');
 		} catch (Exception $e)

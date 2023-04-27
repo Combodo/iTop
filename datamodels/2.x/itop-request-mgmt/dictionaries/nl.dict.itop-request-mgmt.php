@@ -1,30 +1,15 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 /**
- * @author	LinProfs <info@linprofs.com>
- * 
+ * @author    LinProfs <info@linprofs.com>
+ *
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  *
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
- *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:RequestManagement' => 'Helpdesk',
@@ -138,6 +123,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Laag',
 	'Class:UserRequest/Attribute:origin' => 'Oorsprong',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'Persoonlijk',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Mondeling, in persoon',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Chat',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'E-mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'E-mail',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -172,6 +161,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:resolution_date+' => '',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Laatst in afwachting op',
 	'Class:UserRequest/Attribute:last_pending_date+' => '',
+	'Class:UserRequest/Attribute:cumulatedpending' => 'Opgetelde wachttijd',
+	'Class:UserRequest/Attribute:cumulatedpending+' => '',
 	'Class:UserRequest/Attribute:tto' => 'TTO',
 	'Class:UserRequest/Attribute:tto+' => '',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',

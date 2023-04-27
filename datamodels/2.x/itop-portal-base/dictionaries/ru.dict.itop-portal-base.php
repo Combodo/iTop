@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -31,7 +31,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Page:PleaseWait' => 'Пожалуйста, подождите...',
 	'Page:Home' => 'Домашняя страница',
 	'Page:GoPortalHome' => 'Домашняя страница',
-	'Page:GoPreviousPage' => 'Предыдущяя страница',
+	'Page:GoPreviousPage' => 'Предыдущая страница',
 	'Page:ReloadPage' => 'Перезагрузить страницу',
 	'Portal:Button:Submit' => 'Применить',
 	'Portal:Button:Apply' => 'Обновить',
@@ -70,7 +70,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Открыть</a> / <a href="%4$s" class="file_download_link">Скачать</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'ru', //work with moment.js locales
+));
+
+// Object form
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
 	'Portal:Form:Close:Warning' => 'Вы действительно хотите закрыть эту форму? Введённые данные могут быть утеряны.',
+	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
 ));
 
 // UserProfile brick

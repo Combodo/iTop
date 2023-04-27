@@ -1,0 +1,21 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-toolbar--button-margin-top: $ibo-spacing-500 !default;
+
+.ibo-toolbar {
+  display: flex;
+  align-items: center;
+
+  &.ibo-toolbar--action {
+    position: relative;
+  }
+
+  &.ibo-toolbar--button {
+    @extend %ibo-vertically-centered-content;
+    margin-top: $ibo-toolbar--button-margin-top;
+  }
+}
+

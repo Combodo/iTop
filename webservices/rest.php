@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,11 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 require_once(APPROOT.'core/restservices.class.inc.php');
@@ -65,7 +63,6 @@ if (!function_exists('json_last_error_msg')) {
 //
 // Main
 //
-$oP = new ajax_page('rest');
 $oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
@@ -258,22 +255,20 @@ if ($sResponse === false)
 	$sResponse = json_encode($oJsonIssue);
 }
 
-$oP->add_header('Access-Control-Allow-Origin: *');
 
 $sCallback = utils::ReadParam('callback', null);
 if ($sCallback == null)
 {
-	$oP->SetContentType('application/json');
-	$oP->add($sResponse);
+	$oP = new JsonPage();
 }
 else
 {
-	$oP->SetContentType('application/javascript');
-	$oP->add($sCallback.'('.$sResponse.')');
+	$oP = new JsonPPage($sCallback);
 }
+$oP->add_header('Access-Control-Allow-Origin: *');
+$oP->SetData(json_decode($sResponse, true));
+$oP->SetOutputDataOnly(true);
 $oP->Output();
-
-$oKPI->ComputeAndReport('REST outputed');
 
 // Log usage
 //
@@ -296,7 +291,4 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('json_output', $sResponse);
 
 	$oLog->DBInsertNoReload();
-	$oKPI->ComputeAndReport('Log inserted');
 }
-
-ExecutionKPI::ReportStats();

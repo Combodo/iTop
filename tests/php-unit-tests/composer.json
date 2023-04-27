@@ -1,0 +1,6 @@
+{
+  "require-dev": {
+    "phpunit/phpunit" : "^9",
+    "sempro/phpunit-pretty-print": "^1.4"
+  }
+}

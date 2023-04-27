@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,10 +15,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
@@ -44,20 +44,20 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Menu:ProblemManagement' => 'Administración de Problemas',
-	'Menu:ProblemManagement+' => 'Administración de Problemas',
-	'Menu:Problem:Overview' => 'Resumen de Problemas',
-	'Menu:Problem:Overview+' => 'Resumen de Problemas',
-	'Menu:NewProblem' => 'Nuevo Problema',
-	'Menu:NewProblem+' => 'Nuevo Problema',
-	'Menu:SearchProblems' => 'Búsqueda de Problemas',
-	'Menu:SearchProblems+' => 'Búsqueda de Problemas',
-	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
-	'Menu:Problem:MyProblems' => 'Problemas Asignados a Mí',
-	'Menu:Problem:MyProblems+' => 'Problemas Asignados a Mí',
-	'Menu:Problem:OpenProblems' => 'Problemas Abiertos',
-	'Menu:Problem:OpenProblems+' => 'Problemas Abiertos',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Menu:ProblemManagement' => 'Administración de problemas',
+	'Menu:ProblemManagement+' => 'Administración de problemas',
+	'Menu:Problem:Overview' => 'Resumen de problemas',
+	'Menu:Problem:Overview+' => 'Resumen de problemas',
+	'Menu:NewProblem' => 'Nuevo problema',
+	'Menu:NewProblem+' => 'Nuevo problema',
+	'Menu:SearchProblems' => 'Búsqueda de problemas',
+	'Menu:SearchProblems+' => 'Búsqueda de problemas',
+	'Menu:Problem:Shortcuts' => 'Acceso rápido',
+	'Menu:Problem:MyProblems' => 'Problemas asignados a Mí',
+	'Menu:Problem:MyProblems+' => 'Problemas asignados a Mí',
+	'Menu:Problem:OpenProblems' => 'Problemas abiertos',
+	'Menu:Problem:OpenProblems+' => 'Problemas abiertos',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Problemas por Servicio',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemas por Servicio',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemas por Prioridad',
@@ -72,7 +72,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Problem
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Problem' => 'Problema',
 	'Class:Problem+' => 'Problema',
 	'Class:Problem/Attribute:status' => 'Estatus',

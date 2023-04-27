@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2010-2021 Combodo SARL
+ * Copyright (c) 2010-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -138,7 +138,7 @@ final class ormTagSet extends ormSet
 	}
 
 	/**
-	 * @return array of tags indexed by code
+	 * @return array index: code, value: corresponding {@see \TagSetFieldData}
 	 */
 	public function GetTags()
 	{
@@ -499,9 +499,9 @@ final class ormTagSet extends ormSet
 	}
 
 	/**
-	 * @param $sTagCode
+	 * @param $sTagLabel
 	 *
-	 * @return DBObject tag
+	 * @return string Tag code
 	 * @throws \CoreUnexpectedValue
 	 * @throws \CoreException
 	 */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -43,7 +43,7 @@ $(function() {
 				main_actions: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"]',
 				cancel_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="cancel"]',
 				save_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="save"]',
-				save_choices_picker: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="save"] + [data-role="ibo-popover-menu"]',
+				save_choices_picker: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="save"] + [data-role="ibo-button"]',
 			},
 			enums:
 			{
@@ -84,20 +84,32 @@ $(function() {
 				// Handlers for the CKEditor itself
 				CKEDITOR.on('instanceReady', function (oEvent) {
 					// Handle only the current CKEditor instance
-					if (oEvent.editor.name === me.options.text_input_id) {
-						// Update depending elements on change
-						// Note: That when images are uploaded, the "change" event is triggered before the image upload is complete, meaning that we don't have the <img> tag yet.
-						me._GetCKEditorInstance().on('change', function () {
-							const bWasDraftBefore = me.is_draft;
-							const bIsDraftNow = !me._IsInputEmpty();
-
-							if (bWasDraftBefore !== bIsDraftNow) {
-								me.is_draft = bIsDraftNow;
-								me._UpdateEditingVisualHint();
-								// Note: We must not call me._UpdateSubmitButtonState() as it will be updated by the disable_submission/enable_submission events
-							}
-						});
+					if (oEvent.editor.name !== me.options.text_input_id) {
+						return;
 					}
+
+					// Update depending elements on change
+					// Note: That when images are uploaded, the "change" event is triggered before the image upload is complete, meaning that we don't have the <img> tag yet.
+					me._GetCKEditorInstance().on('change', function () {
+						const bWasDraftBefore = me.is_draft;
+						const bIsDraftNow = !me._IsInputEmpty();
+
+						if (bWasDraftBefore !== bIsDraftNow) {
+							me.is_draft = bIsDraftNow;
+							me._UpdateEditingVisualHint();
+							// Note: We must not call me._UpdateSubmitButtonState() as it will be updated by the disable_submission/enable_submission events
+						}
+					});
+
+					// Dispatch submission to the right pipeline on submit
+					$(me.element).on('submit', function (oSubmitEvent) {
+						oSubmitEvent.preventDefault();
+						if (me._IsSubmitAutonomous()) {
+							me._RequestSubmission();
+						} else {
+							me._GetGeneralFormElement().trigger('submit');
+						}
+					});
 				});
 
 				if (false === this._IsSubmitAutonomous()) {
@@ -132,6 +144,11 @@ $(function() {
 					me._HideEntryForm();
 				});
 
+				// Form submission
+				this.element.on('save_entry.caselog_entry_form.itop', function (oEvent, oData) {
+					me._RequestSubmission(oData.stimulus_code);
+				});
+
 				// Form enable/disable submission
 				this.element.on('disable_submission.caselog_entry_form.itop', function () {
 					me._DisableSubmission();
@@ -152,6 +169,9 @@ $(function() {
 				this.element.on('get_entry.caselog_entry_form.itop', function () {
 					return me._GetInputData();
 				});
+				this.element.on('get_extra_inputs.caselog_entry_form.itop', function () {
+					return me._GetExtraInputs();
+				});
 				// Clear the entry value
 				this.element.on('clear_entry.caselog_entry_form.itop', function () {
 					me._EmptyInput();
@@ -166,8 +186,19 @@ $(function() {
 			_IsSubmitAutonomous: function () {
 				return this.options.submit_mode === this.enums.submit_mode.autonomous;
 			},
-			_RequestSubmission: function () {
-				this.element.trigger('request_submission.caselog_entry_form.itop');
+			/**
+			 * @param sStimulusCode {string} Optional stimulus code to apply after submission
+			 * @return {void}
+			 * @private
+			 */
+			_RequestSubmission: function (sStimulusCode = null) {
+				let oData = {};
+
+				if (null !== sStimulusCode) {
+					oData['stimulus_code'] = sStimulusCode;
+				}
+
+				this.element.trigger('requested_submission.caselog_entry_form.itop', oData);
 			},
 			// - Form
 			_GetCKEditorInstance: function () {
@@ -182,20 +213,20 @@ $(function() {
 				// TODO 3.0.0: This should also clear the form (input, lock, send button, ...)
 			},
 			_DisableSubmission: function () {
-				this.element.find(this.js_selectors.save_button).prop('disabled', true);
+				this.element.find(this.js_selectors.save_button+', '+this.js_selectors.save_choices_picker).prop('disabled', true);
 			},
 			_EnableSubmission: function () {
-				this.element.find(this.js_selectors.save_button).prop('disabled', false);
+				this.element.find(this.js_selectors.save_button+', '+this.js_selectors.save_choices_picker).prop('disabled', false);
 			},
 			_EnterPendingSubmissionState: function () {
 				this._GetCKEditorInstance().setReadOnly(true);
 				this.element.find(this.js_selectors.cancel_button).prop('disabled', true);
-				this.element.find(this.js_selectors.save_button).prop('disabled', true);
+				this._DisableSubmission();
 			},
 			_LeavePendingSubmissionState: function () {
 				this._GetCKEditorInstance().setReadOnly(false);
 				this.element.find(this.js_selectors.cancel_button).prop('disabled', false);
-				this.element.find(this.js_selectors.save_button).prop('disabled', false);
+				this._EnableSubmission();
 			},
 			// - Bridged form input
 			/**
@@ -265,6 +296,27 @@ $(function() {
 			_GetInputData: function() {
 				return (this._GetCKEditorInstance() === undefined) ? '' : this._GetCKEditorInstance().getData();
 			},
+			_GetExtraInputs: function() {
+				let aExtraInputs = {};
+				const aFormInputs = this.element.serializeArray();
+				// Iterate across all values that would be sent if we submit current form
+				for (const aExtraInput of aFormInputs) {
+					// If we don't already have a value with the same name, add it
+					// Otherwise we'll consider that we need to return this value as an array of values
+					if(aExtraInputs[aExtraInput.name] === undefined) {
+						aExtraInputs[aExtraInput.name] = aExtraInput.value;
+					}
+					else {
+						if(Array.isArray(aExtraInputs[aExtraInput.name])){
+							aExtraInputs[aExtraInput.name].push(aExtraInput.value);
+						}
+						else{
+							aExtraInputs[aExtraInput.name] = [aExtraInputs[aExtraInput.name], aExtraInput.value];
+						}
+					}
+				};
+				return aExtraInputs;
+			},
 			// - Main actions
 			_ShowMainActions: function() {
 				this.element.find(this.js_selectors.main_actions).removeClass(this.css_classes.is_hidden);
@@ -277,7 +329,11 @@ $(function() {
 				this._UpdateSubmitButtonState();
 			},
 			_UpdateSubmitButtonState: function() {
-				this.element.find(this.js_selectors.save_button).prop('disabled', this._IsInputEmpty());
+				if (this._IsInputEmpty()) {
+					this._DisableSubmission();
+				} else {
+					this._EnableSubmission();
+				}
 			},
 			_UpdateEditingVisualHint: function() {
 				const sEvent = this._IsInputEmpty() ? 'emptied' : 'draft';

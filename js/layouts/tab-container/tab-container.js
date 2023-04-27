@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,6 +15,9 @@ $(function()
             css_classes:
             {
             	is_hidden: 'ibo-is-hidden',
+            	is_disabled: 'ibo-is-disabled',
+	            is_transparent: 'ibo-is-transparent',
+	            is_opaque: 'ibo-is-opaque',
 	            is_scrollable: 'ibo-is-scrollable',
 	            tab_container: 'ibo-tab-container',
             },
@@ -22,6 +25,8 @@ $(function()
             {
                 tabs_list: '[data-role="ibo-tab-container--tabs-list"]',
                 tab_header: '[data-role="ibo-tab-container--tab-header"]',
+                tab_ajax_type: '[data-tab-type="ajax"]',
+                tab_html_type: '[data-tab-type="html"]',
                 tab_toggler: '[data-role="ibo-tab-container--tab-toggler"]',
                 extra_tabs_container: '[data-role="ibo-tab-container--extra-tabs-container"]',
                 extra_tabs_list_toggler: '[data-role="ibo-tab-container--extra-tabs-list-toggler"]',
@@ -52,7 +57,8 @@ $(function()
 		            classes: {
 			            'ui-tabs-panel': 'ibo-tab-container--tab-container',    // For ajax tabs, so their containers have the right CSS classes
 		            },
-		            active: $.bbq.getState( this.element.attr('id'), true ) || 0,
+		            // There we want a number as it is for the jQuery Tabs API
+		            active: this._getTabIndexFromTabId($.bbq.getState(this.element.attr('id'), true)) || 0,
 		            remote_tab_load_dict: this.options.remote_tab_load_dict
 	            };
 	            if ($.bbq) {
@@ -62,10 +68,27 @@ $(function()
 		            // will be executed for the selected tab whenever the hash changes.
 		            oTabsParams['event'] = 'change';
 	            }
+	            
+	            // While our tab widget is loading, protect tab toggler from being triggered
+	            this.element.find(this.js_selectors.tab_toggler).on('click', function(e){
+		            if(me.element.attr('data-status') === 'loading') {
+			            e.preventDefault();
+			            e.stopImmediatePropagation();
+		            }
+	            });
+	            // Now that we are protected from toggler being triggered without tab container being loaded, we can put back
+	            // data-target attribute value back into href attribute
+	            $.each(this.element.find(this.js_selectors.tab_header + this.js_selectors.tab_ajax_type), function (a){
+	            	let oLink = $(this).find(me.js_selectors.tab_toggler);
+		            oLink.attr('href', oLink.attr('data-target'));
+	            })
+	            
 	            this._addTabsWidget(oTabsParams);
 
-
-	            this._bindEvents();
+	            this._bindEvents()
+	            
+	            // We're done, set our status as loaded
+	            this.element.attr('data-status', 'loaded');
             },
 	        /**
 	         * @param oParams {Object} Structured object representing the options for the jQuery UI Tabs widget
@@ -75,7 +98,18 @@ $(function()
 		        if (this.element.hasClass(this.css_classes.is_scrollable)) {
 			        this.element.scrollabletabs(oParams);
 		        } else {
-			        this.element.tabs(oParams);
+			        this.element.regulartabs(oParams);
+		        }
+	        },
+	        /**
+	         * Return tabs widget instance
+	         * @public
+	         */
+	        GetTabsWidget: function () {
+		        if (this.element.hasClass(this.css_classes.is_scrollable)) {
+			        return this.element.scrollabletabs('instance');
+		        } else {
+			        return this.element.regulartabs('instance');
 		        }
 	        },
             // events bound via _bind are removed automatically
@@ -105,17 +139,30 @@ $(function()
                     me._onTabTogglerClick($(this));
                 });
                 // Resize of the tab container
-                if(window.ResizeObserver)
-                {
-                    const oTabsListRO = new ResizeObserver(function(){
-                        // Note: For a reason I don't understand, when called instantly the sub function IsElementVisibleToTheUser() won't be able to retrieve an element using the document.elementFromPoint() function
-                        // As it won't return anything, the function always thinks it's invisible...
-                        setTimeout(function(){
-                            me._onTabContainerResize();
-                        }, 200);
-
-                    });
-                    oTabsListRO.observe($('.ibo-tab-container--tabs-list')[0]);
+                if(window.IntersectionObserver) {
+                	const oTabsListIntersectObs = new IntersectionObserver(function(aEntries, oTabsListIntersectObs){
+                		aEntries.forEach(oEntry => {
+                			let oTabHeaderElem = $(oEntry.target);
+                			let bIsVisible = oEntry.isIntersecting;
+			                if(bIsVisible) {
+				                oTabHeaderElem.removeClass(me.css_classes.is_transparent);
+				                oTabHeaderElem.css('visibility', '');
+			                }
+			                else {
+				                oTabHeaderElem.removeClass(me.css_classes.is_transparent);
+				                // This is necessary, otherwise link will still be clickable
+				                oTabHeaderElem.css('visibility', 'hidden');
+			                }
+			                me._updateTabHeaderDisplay(oTabHeaderElem, bIsVisible);
+		                });
+                		me._updateExtraTabsList();
+	                }, {
+                		root: this.element.find(this.js_selectors.tabs_list)[0],
+		                threshold: [0.9] // N°4783 Should be completely visible, but lowering the threshold prevents a bug in the JS Observer API when the window is zoomed in/out, in which case all items respond as being hidden even when they are not.
+	                });
+                	this.element.find(this.js_selectors.tab_header).each(function(){
+		                oTabsListIntersectObs.observe(this);
+	                });
                 }
                 // Click on extra tabs list toggler
                 this.element.find(this.js_selectors.extra_tabs_list_toggler).on('click', function(oEvent){
@@ -154,74 +201,82 @@ $(function()
 		            $('#'+this.id).DataTable().columns.adjust().draw();
 	            });
 
-	            // Get the index of this tab.
-	            const iIdx = $(oUI.newTab).prevAll().length;
+	            // Get the ID of this tab.
+	            const sTabId = $(oUI.newTab).attr('data-tab-id');
 
 	            // Set the state!
-	            oState[sId] = iIdx;
+	            oState[sId] = sTabId;
 	            $.bbq.pushState(oState);
             },
-            // - Change current tab as necessary when URL hash changes
-            _onHashChange: function()
-            {
-                // Get the index for this tab widget from the hash, based on the
-                // appropriate id property. In jQuery 1.4, you should use e.getState()
-                // instead of $.bbq.getState(). The second, 'true' argument coerces the
-                // string value to a number.
-                const iIdx = $.bbq.getState( this.element.attr('id'), true ) || 0;
+	        // - Change current tab as necessary when URL hash changes
+	        _onHashChange: function () {
+		        // Get the index for this tab widget from the hash, based on the
+		        // appropriate id property. In jQuery 1.4, you should use e.getState()
+		        // instead of $.bbq.getState(). The second, 'true' argument coerces the
+		        // string value to a number.
+		        const sTabId = $.bbq.getState(this.element.attr('id'), true) || this._getTabIdFromTabIndex(0);
 
-                // Select the appropriate tab for this tab widget by triggering the custom
-                // event specified in the .tabs() init above (you could keep track of what
-                // tab each widget is on using .data, and only select a tab if it has
-                // changed).
-                this.element.find(this.js_selectors.tab_toggler).eq(iIdx).triggerHandler('change');
+		        // Select the appropriate tab for this tab widget by triggering the custom
+		        // event specified in the .tabs() init above (you could keep track of what
+		        // tab each widget is on using .data, and only select a tab if it has
+		        // changed).
+		        this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header+'[data-tab-id="'+sTabId+'"]').find(this.js_selectors.tab_toggler).triggerHandler('change');
 
-                // Iterate over all truncated lists to find whether they are expanded or not
-                $('a.truncated').each(function()
-                {
-                    const sState = $.bbq.getState( this.id, true ) || 'close';
-                    if (sState === 'open')
-                    {
-                        $(this).trigger('open');
-                    }
-                    else
-                    {
-                        $(this).trigger('close');
-                    }
-                });
-            },
-            // - Define our own click handler for the tabs, overriding the default.
-            _onTabTogglerClick: function(oTabHeaderElem)
-            {
-                if ($.bbq) {
-                    let oState = {};
+		        // Iterate over all truncated lists to find whether they are expanded or not
+		        $('a.truncated').each(function () {
+			        const sState = $.bbq.getState(this.id, true) || 'close';
+			        if (sState === 'open') {
+				        $(this).trigger('open');
+			        } else {
+				        $(this).trigger('close');
+			        }
+		        });
+	        },
+	        // - Define our own click handler for the tabs, overriding the default.
+	        _onTabTogglerClick: function (oTabHeaderElem) {
+		        if ($.bbq) {
+			        let oState = {};
 
-                    // Get the id of this tab widget.
-                    const sId = this.element.attr('id');
+			        // Get the id of this tab widget.
+			        const sId = this.element.attr('id');
 
-                    // Get the index of this tab.
-                    const iIdx = oTabHeaderElem.parent().prevAll().length;
+			        // Get the index of this tab.
+			        const sTabId = oTabHeaderElem.closest(this.js_selectors.tab_header).attr('data-tab-id');
 
-                    // Set the state!
-                    oState[sId] = iIdx;
-                    $.bbq.pushState(oState);
-                }
-            },
+			        // Set the state!
+			        oState[sId] = sTabId;
+			        $.bbq.pushState(oState);
+		        }
+	        },
 	        // - Forward click event to real tab toggler
-            _onExtraTabTogglerClick: function(oExtraTabTogglerElem, oEvent)
-            {
-                // Prevent anchor default behaviour
-                oEvent.preventDefault();
+	        _onExtraTabTogglerClick: function (oExtraTabTogglerElem, oEvent) {
+		        // Prevent anchor default behaviour
+		        oEvent.preventDefault();
 
-                // Trigger click event on real tab toggler (the hidden one)
-                const sTargetTabId = oExtraTabTogglerElem.attr('href').replace(/#/, '');
-                this.element.find(this.js_selectors.tab_header+'[data-tab-id="'+sTargetTabId+'"] '+this.js_selectors.tab_toggler).trigger('click');
-            },
+		        if (oExtraTabTogglerElem.attr('aria-disabled') === 'true') {
+		            // Corresponding tab is disabled, do nothing			
+		            oEvent.stopPropagation();
+		            return;
+		        }			
+		        // Trigger click event on real tab toggler (the hidden one)
+		        const sTargetTabId = oExtraTabTogglerElem.attr('href').replace(/#/, '');
+		        this.element.find(this.js_selectors.tab_header+'[data-tab-id="'+sTargetTabId+'"] '+this.js_selectors.tab_toggler).trigger('click');
+	        },
             // - Toggle extra tabs list
             _onExtraTabsListTogglerClick: function(oElem, oEvent)
             {
                 // Prevent anchor default behaviour
                 oEvent.preventDefault();
+
+				// Compute list position
+	            // Note: Arbitrary +6px for the position as we don't want it to be exactly against the toggler
+	            let fTopOffset = this.element.find(this.js_selectors.extra_tabs_list_toggler).offset().top + this.element.find(this.js_selectors.extra_tabs_list_toggler).outerHeight() + 6;
+				// We need to compute position from the right side of the screen because at this time the list isn't visible and we can't know its width, so we can't position it regarding the left side of the screen
+	            // Note: We use window.innerWidth instead of outerWidth as we need the width of the actual viewport, not the OS browser window
+				let fRightOffset = window.innerWidth - this.element.find(this.js_selectors.extra_tabs_list_toggler).offset().left - this.element.find(this.js_selectors.extra_tabs_list_toggler).outerWidth();
+	            this.element.find(this.js_selectors.extra_tabs_list)
+		            .css('top', fTopOffset + 'px')
+		            .css('right', fRightOffset + 'px');
 
                 // TODO 3.0.0: Should/could we use a popover menu instead here?
                 this.element.find(this.js_selectors.extra_tabs_list).toggleClass(this.css_classes.is_hidden);
@@ -239,37 +294,100 @@ $(function()
             /**
              * Update tab header display based on its visibility to the user
              *
-             * @param oTabHeaderElem jQuery element
+             * @param oTabHeaderElem {Object} jQuery element
+             * @param bIsVisible {boolean|null} If null, visibility will be computed automatically. Not that performance might not be great so it's preferable to pass the value when known
              * @private
              */
-            _updateTabHeaderDisplay(oTabHeaderElem)
+            _updateTabHeaderDisplay(oTabHeaderElem, bIsVisible = null)
             {
             	const sTabId = oTabHeaderElem.attr('data-tab-id');
             	const oMatchingExtraTabElem = this.element.find(this.js_selectors.extra_tab_toggler+'[href="#'+sTabId+'"]');
 
-                if(!IsElementVisibleToTheUser(oTabHeaderElem[0], true, 2))
-                {
-                    oMatchingExtraTabElem.removeClass(this.css_classes.is_hidden);
+                // Disabled tabs should be disabled in the ExtraTabs list as well
+                let bIsDisabled = false;
+                if (oTabHeaderElem.attr('aria-disabled') === 'true') {
+                    bIsDisabled = true;
                 }
-                else
-                {
-                    oMatchingExtraTabElem.addClass(this.css_classes.is_hidden);
-                }
-            },
-            // - Update extra tabs list
-            _updateExtraTabsList: function()
-            {
-	            const iVisibleExtraTabsCount = this.element.find(this.js_selectors.extra_tab_toggler+':not(.'+this.css_classes.is_hidden+')').length;
-	            const oExtraTabsContainerElem = this.element.find(this.js_selectors.extra_tabs_container);
+            	// Manually check if the tab header is visible if the info isn't passed
+            	if (bIsVisible === null) {
+                    bIsVisible = CombodoGlobalToolbox.IsElementVisibleToTheUser(oTabHeaderElem[0], true, 2);
+            	}
 
-	            if(iVisibleExtraTabsCount > 0)
-	            {
-	            	oExtraTabsContainerElem.removeClass(this.css_classes.is_hidden);
-	            }
-	            else
-	            {
-	            	oExtraTabsContainerElem.addClass(this.css_classes.is_hidden);
-	            }
+            	// Hide/show the corresponding extra tab element
+            	if (bIsVisible) {
+                    oMatchingExtraTabElem.addClass(this.css_classes.is_hidden);
+            	} else {
+                    oMatchingExtraTabElem.removeClass(this.css_classes.is_hidden);
+            	}
+            	// Enable/disable the corresponding extra tab element
+            	if (bIsDisabled) {
+                    oMatchingExtraTabElem.attr('aria-disabled', 'true');
+                    oMatchingExtraTabElem.addClass(this.css_classes.is_disabled);
+            	} else {
+                    oMatchingExtraTabElem.attr('aria-disabled', 'false');
+                     oMatchingExtraTabElem.removeClass(this.css_classes.is_disabled);
+            	}
+            },
+	        // - Update extra tabs list
+	        _updateExtraTabsList: function () {
+		        const iVisibleExtraTabsCount = this.element.find(this.js_selectors.extra_tab_toggler+':not(.'+this.css_classes.is_hidden+')').length;
+		        const oExtraTabsContainerElem = this.element.find(this.js_selectors.extra_tabs_container);
+
+		        if (iVisibleExtraTabsCount > 0) {
+			        oExtraTabsContainerElem.removeClass(this.css_classes.is_hidden);
+		        } else {
+			        oExtraTabsContainerElem.addClass(this.css_classes.is_hidden);
+		        }
+	        },
+	        // - Get tab's "data-tab-id" from tab's index
+	        /**
+	         * @param iIdx {number} Index (starting from 0) of the tab in the container
+	         * @return {string} The [data-tab-id] of the iIdx-th tab (zero based). Can return undefined if it has not [data-tab-id] attribute
+	         * @private
+	         */
+	        _getTabIdFromTabIndex: function(iIdx) {
+		        return this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header).eq(iIdx).attr('data-tab-id');
+	        },
+	        /**
+	         * @param sId {string} The [data-tab-id] of the tab
+	         * @return {number} The index (zero based) of the tab. If no matching tab, 0 will be returned.
+	         * @private
+	         */
+	        _getTabIndexFromTabId: function(sId) {
+		        const oTabElem = this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header+'[data-tab-id="'+sId+'"]');
+
+		        return oTabElem.length === 0 ? 0 : oTabElem.prevAll().length;
+	        },
+            /**
+             * @param sId {string} The [data-tab-id] of the tab
+             * @return {Object} The jQuery object representing the tab element
+             *
+             * @private
+             */
+            _getTabElementFromTabId: function(sId) {
+                return this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header+'[data-tab-id="'+sId+'"]');
+            },
+            /**
+             * @param sId {string} The [data-tab-id] of the tab
+             * @return {Object} The jQuery object representing the tab element
+             */
+            disableTab: function(sId){
+               const tabsWidget = this.GetTabsWidget();
+               const iIdx = this._getTabIndexFromTabId(sId);
+               tabsWidget.disable(iIdx);
+               const tabElement = this._getTabElementFromTabId(sId);
+               this._updateTabHeaderDisplay(tabElement); 
+            },
+            /**
+             * @param sId {string} The [data-tab-id] of the tab
+             * @return {Object} The jQuery object representing the tab element
+             */
+            enableTab: function(sId){
+               const tabsWidget = this.GetTabsWidget();
+               const iIdx = this._getTabIndexFromTabId(sId);
+               tabsWidget.enable(iIdx);
+               const tabElement = this._getTabElementFromTabId(sId);
+               this._updateTabHeaderDisplay(tabElement);                
             }
         });
 });

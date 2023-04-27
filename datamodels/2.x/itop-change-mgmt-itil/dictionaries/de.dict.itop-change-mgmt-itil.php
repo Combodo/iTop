@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2021 Combodo SARL
+* @copyright     Copyright (C) 2023 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
@@ -38,8 +38,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:WaitingApproval+' => '',
 	'Menu:Changes' => 'Offene Changes',
 	'Menu:Changes+' => 'Alle Offene Changes',
-	'Menu:MyChanges' => 'An mich zugewiesene Changes',
-	'Menu:MyChanges+' => 'An mich zugewiesene Changes (als Bearbeiter)',
+	'Menu:MyChanges' => 'Mir zugewiesene Changes',
+	'Menu:MyChanges+' => 'Mir zugewiesene Changes (als Bearbeiter)',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes der letzten sieben Tage nach Kategorie',
 	'UI-ChangeManagementOverview-Last-7-days' => 'Anzahl der Changes der letzten sieben Tage',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes der letzten sieben Tage nach Typ',
@@ -127,13 +127,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:parent_name' => 'Parent Change Ref',
 	'Class:Change/Attribute:parent_name+' => '',
 	'Class:Change/Attribute:related_request_list' => 'Verwandte Requests',
-	'Class:Change/Attribute:related_request_list+' => '',
+	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
 	'Class:Change/Attribute:related_problems_list' => 'Verwandte Probleme',
-	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:related_problems_list+' => 'All the problems linked to this change~~',
 	'Class:Change/Attribute:related_incident_list' => 'Verwandte Incidents',
-	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_incident_list+' => 'All the incidents linked to this change~~',
 	'Class:Change/Attribute:child_changes_list' => 'Abgeleitete Changes',
-	'Class:Change/Attribute:child_changes_list+' => '',
+	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Friendly Name',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Change-Typ',

@@ -137,13 +137,13 @@ $(function()
 		},
 		add_dashlet: function (options) {
 			var $container = options.container;
-			var aDashletsIds = $container.closest(".ibo-dashboard--grid-row").find("div.ibo-dashlet").map(function () {
+			var aDashletsIds = $container.closest('[data-role="ibo-dashboard--grid"]').find('[data-role="ibo-dashlet"]').map(function () {
 				// Note:
 				// - At runtime a unique dashlet ID is generated (see \Dashboard::GetDashletUniqueId) to avoid JS widget collisions
 				// - At design time, the dashlet ID is not touched (same as in the XML datamodel)
 				var sDashletUniqueId = $(this).attr("id");
 				var sDashletIdParts = sDashletUniqueId.split('_');
-				var sDashletOrigId = sDashletIdParts[sDashletIdParts.length - 1];
+				var sDashletOrigId = sDashletIdParts[sDashletIdParts.length-1];
 				return isNaN(parseInt(sDashletOrigId)) ? 0 : parseInt(sDashletOrigId);
 			}).get();
 			// avoid empty array for IE
@@ -323,7 +323,7 @@ $(function()
 			oParams.dashletid = sTempDashletId;
 
 			$.post(this.options.new_dashletid_endpoint, oParams, function (data) {
-				me.add_dashlet_prepare(options, data);
+				me.add_dashlet_prepare(options, data.trim());
 			});
 		},
 		add_dashlet_ajax: function (options, sDashletId) {
@@ -406,7 +406,7 @@ $(function()
 					{
 						if(data.result.error !== '')
 						{
-							alert(data.result.error);
+							CombodoModal.OpenErrorModal(data.result.error);
 							me.element.dialog('close');
 						}
 						else

@@ -1,0 +1,26 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-collapsible-section-within-alert--body--padding: $ibo-spacing-300 !default;
+$ibo-collapsible-section-within-alert--body--text-color: $ibo-color-grey-900 !default;
+
+.ibo-alert--body {
+  .ibo-collapsible-section {
+    .ibo-collapsible-section--header .ibo-collapsible-section--title,
+    .ibo-collapsible-section--body {
+      @extend %ibo-font-size-150;
+    }
+
+    .ibo-collapsible-section--body {
+      color: $ibo-collapsible-section-within-alert--body--text-color;
+      padding: $ibo-collapsible-section-within-alert--body--padding;
+    }
+  }
+  > * + .ibo-collapsible-section {
+    margin-top: 8px;
+  }
+}
+  

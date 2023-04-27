@@ -3,7 +3,7 @@
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,7 +19,7 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
  *
  * You should have received a copy of the GNU Affero General Public License
  *
- * @deprecated since 3.0.0 use Combodo\iTop\Application\UI\Base\Component\DataTable\Datatable
+ * @deprecated 3.0.0 use Combodo\iTop\Application\UI\Base\Component\DataTable\Datatable
  */
 
 class DataTable
@@ -48,6 +48,7 @@ class DataTable
 	 */
 	public function __construct($iListId, $oSet, $aClassAliases, $sTableId = null)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use Combodo\iTop\Application\UI\Base\Component\DataTable\Datatable');
 		$this->iListId = utils::GetSafeId($iListId); // Make a "safe" ID for jQuery
 		$this->sDatatableContainerId = 'datatable_'.utils::GetSafeId($iListId);
 		$this->oSet = $oSet;
@@ -115,8 +116,7 @@ class DataTable
 						// See if this column is a must to load			
 						$sClass = $this->aClassAliases[$sAlias];
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						if ($oAttDef->alwaysLoadInTables())
-						{
+						if ($oAttDef->AlwaysLoadInTables()) {
 							$aColumnsToLoad[$sAlias][] = $sAttCode;
 						}
 					}
@@ -386,7 +386,7 @@ EOF;
 		if (!$oPage->IsPrintableVersion())
 		{
 			$sMenuTitle = Dict::S('UI:ConfigureThisList');
-			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><i class="fas fa-tools"></i><i class="fas fa-caret-down"></i><ul>';
+			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li aria-label="'.Dict::S('UI:Menu:Toolkit').'"><i class="fas fa-tools"></i><i class="fas fa-caret-down"></i><ul>';
 	
 			$oMenuItem1 = new JSPopupMenuItem('iTop::ConfigureList', $sMenuTitle, "$('#datatable_dlg_".$this->iListId."').dialog('open');");
 			$aActions = array(

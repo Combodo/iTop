@@ -1,0 +1,15 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+$ibo-panel--spacing-top--with-same-block: $ibo-spacing-600 !default;
+$ibo-panel--spacing-top--with-other-block: $ibo-spacing-500 !default;
+
+
+.ibo-panel + .ibo-panel {
+  margin-top: $ibo-panel--spacing-top--with-same-block;
+}
+
+.ibo-panel + .ibo-block:not(.ibo-panel) {
+  margin-top: $ibo-panel--spacing-top--with-other-block;
+}

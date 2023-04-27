@@ -79,9 +79,10 @@
 							// Building tooltip for the node
 							// We have to concatenate the HTML as we return the raw HTML of the cell. If we did a jQuery.insertAfter, the tooltip would not be returned.
 							// For the same reason, tooltip widget is created in "drawCallback" instead of here.
-							if( (data.tooltip !== undefined) && (data.tooltip !== ''))
+                            // N°4662 - Surround tooltip with div to ensure text retrival
+							if( (data.tooltip !== undefined) && ($('<div>'+data.tooltip+'</div>').text() !== ''))
 							{
-								cellElem.html( $('<span></span>').attr('title', data.tooltip).attr('data-toggle', 'tooltip').html(data.name).prop('outerHTML') );
+								cellElem.html( $('<span></span>').attr('data-tooltip-content', data.tooltip).attr('data-tooltip-html-enabled', true).html(data.name).prop('outerHTML') );
 							}
 							else
 							{
@@ -103,7 +104,7 @@
 										break;
 									case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 										url = levelPrimaryAction.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-										url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[levelPrimaryAction.type]);
+										url = CombodoGlobalToolbox.AddParameterToUrl(url, 'ar_token', data.action_rules_token[levelPrimaryAction.type]);
 										break;
 									default:
 									    url = '#';
@@ -151,7 +152,7 @@
 												break;
 											case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 												url = action.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-												url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[action.type]);
+												url = CombodoGlobalToolbox.AddParameterToUrl(url, 'ar_token', data.action_rules_token[action.type]);
 												break;
 											default:
 											    url = '#';
@@ -267,9 +268,7 @@
 				"columns": getColumnsDefinition(),
 				"order": [],
 				"drawCallback": function(settings){
-					// Tooltip has to been created here, as the render callback only returns a string, not an object.
-					$(this).find('[data-toggle="tooltip"]').tooltip({container: 'body', html: true, trigger: 'hover', placement: 'right'});	// container option is necessary when in a table
-					// Hiding pagination if only one page
+                   // Hiding pagination if only one page
 					if($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
 					{
 						$(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();

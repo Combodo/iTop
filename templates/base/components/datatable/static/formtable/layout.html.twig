@@ -1,10 +1,10 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 <input type="hidden" name="attr_{{ oUIBlock.GetRef() }}" value="">
 
 {% set columns = oUIBlock.GetColumns() %}
-<table id="{{ oUIBlock.GetId() }}" class="ibo-datatable listResults{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" >
+<table id="{{ oUIBlock.GetId() }}" width="100%" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} listResults{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-datatable" data-status="loading">
     <thead>
     <tr>
         {% for column in columns %}
@@ -13,8 +13,12 @@
     </tr>
     </thead>
     <tbody>
-    {% for oSubBlock in oUIBlock.GetRows() %}
-        {{ render_block(oSubBlock, {aPage: aPage}) }}
+    {% for oRowBlock in oUIBlock.GetRows() %}
+        {{ render_block(oRowBlock, {aPage: aPage}) }}
     {% endfor %}
     </tbody>
 </table>
+
+{% if oUIBlock.HasRowActions() %}
+    {{ render_block(oUIBlock.GetRowActionsTemplate()) }}
+{% endif %}

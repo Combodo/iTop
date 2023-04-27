@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Various dev/debug helpers
  * TODO: cleanup or at least re-organize
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -66,9 +66,8 @@ class MyHelpers
 	// getmicrotime()
 	// format sss.mmmuuupppnnn 
 	public static function getmicrotime()
-	{ 
-		list($usec, $sec) = explode(" ",microtime()); 
-		return ((float)$usec + (float)$sec); 
+	{
+		return microtime(true);
 	}
 
 	/*
@@ -471,9 +470,9 @@ class Str
 	public static function pure2html($pure, $maxLength = false)
 	{
 		// Check for HTML entities, but be careful the DB is in UTF-8
-		return $maxLength                                         
-			? htmlentities(substr($pure, 0, $maxLength), ENT_QUOTES, 'UTF-8')
-			: htmlentities($pure, ENT_QUOTES, 'UTF-8');
+		return $maxLength
+			? utils::EscapeHtml(substr($pure, 0, $maxLength))
+			: utils::EscapeHtml($pure);
 	}
 	public static function pure2sql($pure, $maxLength = false)
 	{

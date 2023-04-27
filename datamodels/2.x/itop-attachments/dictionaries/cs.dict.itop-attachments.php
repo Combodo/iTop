@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
  *
  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
@@ -40,9 +40,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
 	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
 Either you have pushed an empty file,
-or ask your iTop administrator if the iTop server disk is full.~~',
+or ask your '.ITOP_APPLICATION_SHORT.' administrator if the '.ITOP_APPLICATION_SHORT.' server disk is full.~~',
 	'Attachments:Render:Icons' => 'Display as icons~~',
 	'Attachments:Render:Table' => 'Display as list~~',
+	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
 ));
 
 //

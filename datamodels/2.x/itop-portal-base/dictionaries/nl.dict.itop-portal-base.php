@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 /**
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
 // Portal
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -64,7 +64,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'nl', //work with moment.js locales
+));
+
+// Object form
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Sluit dit item.',
 	'Portal:Form:Close:Warning' => 'Ben je zeker dat je dit venster wil sluiten? Ingevoerde gegevens kunnen verloren gaan.',
+	'Portal:Error:ObjectCannotBeCreated' => 'Fout: object kan niet worden aangemaakt. Kijk verwante objecten en bijlagen na vooraleer dit formulier opnieuw te versturen.',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Fout: object kan niet worden aangepast. Kijk verwante objecten en bijlagen na vooraleer dit formulier opnieuw te versturen.',
 ));
 
 // UserProfile brick

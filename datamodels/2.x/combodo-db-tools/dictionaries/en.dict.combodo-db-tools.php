@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -28,6 +28,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'DBTools:Class' => 'Class',
 	'DBTools:Title' => 'Database integrity check',
 	'DBTools:ErrorsFound' => 'Errors Found',
+	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated',
+	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES',
 	'DBTools:Error' => 'Error',
 	'DBTools:Count' => 'Count',
 	'DBTools:SQLquery' => 'SQL query',
@@ -39,18 +41,22 @@ Dict::Add('EN US', 'English', 'English', array(
 	'DBTools:ShowReport' => 'Report',
 	'DBTools:IntegrityCheck' => 'Integrity check',
 	'DBTools:FetchCheck' => 'Fetch Check (long)',
+	'DBTools:SelectAnalysisType' => 'Select analysis type',
 
 	'DBTools:Analyze' => 'Analyze',
 	'DBTools:Details' => 'Show Details',
 	'DBTools:ShowAll' => 'Show All Errors',
 
 	'DBTools:Inconsistencies' => 'Database inconsistencies',
+	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s',
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Invalid external key %1$s (column: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Missing external key %1$s (column: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-InvalidValue' => 'Invalid value for %1$s (column: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Some user accounts have no profile at all',
+	'DBAnalyzer-Integrity-HKInvalid' => 'Broken hierarchical key `%1$s`',
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted',
 	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class',

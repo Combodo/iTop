@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -260,7 +260,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 				$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
 			}
 		);
-		theMap["sFilter"] = $('#datatable_ResultsToAdd_'+me.id).data().itopDatatable.options.sFilter;
+		theMap["sFilter"] = $('#datatable_ResultsToAdd_'+me.id+' [name="filter"]').val();
 		theMap["class"] = me.sTargetClass;
 		theMap['operation'] = 'GetFullListForeignKeysFromSelection';
 		$('#busy_'+me.iInputId).html('&nbsp;<img src="../images/indicator.gif"/>');

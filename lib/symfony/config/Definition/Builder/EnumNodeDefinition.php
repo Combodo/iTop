@@ -41,7 +41,7 @@ class EnumNodeDefinition extends ScalarNodeDefinition
     /**
      * Instantiate a Node.
      *
-     * @return EnumNode The node
+     * @return EnumNode
      *
      * @throws \RuntimeException
      */
@@ -51,6 +51,6 @@ class EnumNodeDefinition extends ScalarNodeDefinition
             throw new \RuntimeException('You must call ->values() on enum nodes.');
         }
 
-        return new EnumNode($this->name, $this->parent, $this->values);
+        return new EnumNode($this->name, $this->parent, $this->values, $this->pathSeparator);
     }
 }

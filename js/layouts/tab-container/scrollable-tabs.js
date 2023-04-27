@@ -1,4 +1,5 @@
 $.widget( "itop.scrollabletabs", $.ui.tabs, {
+	widgetEventPrefix: 'tabs',
 	js_selectors:
 		{
 			tab_toggler: '[data-role="ibo-tab-container--tab-toggler"]',
@@ -20,11 +21,13 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 				}
 			},
 		},
+	// Used keep the beginning of the panel visible when scrolling to it
+	scroll_offset_y: null,
 	controller: null,
 	_create: function() {
 		var me = this;
 		// Initialize a single controller for this tab container
-		this.controller = new ScrollMagic.Controller({'container': '#' + this.element.find(this.js_selectors.tab_container_list).attr('id'), 'refreshInterval' : 200});
+		this.controller = new ScrollMagic.Controller({'container': this.element.scrollParent()[0], 'refreshInterval' : 200});
 		
 		// Add remote tabs to controller after they are loaded
 		var afterloadajax = function (a, b)
@@ -34,7 +37,9 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 		this.element.on('scrollabletabsload', afterloadajax);
 
 		this._super(this.options);
-		
+
+		// Initialize the vertical scroll offset
+		this.scroll_offset_y = this.element.find('#' + this.tabs.eq(0).attr('data-tab-id')).offset().top;
 		
 		// Add every other tab to the controller 
 		$(this.js_selectors.tab_toggler).each(function(){
@@ -47,18 +52,27 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 		
 		// Set active tab, tab-container gives us a tab based on url hash or 0
 		this.setTab(this._findActive(this.options.active));
-		this.controller.scrollTo('#' + this.tabs.eq(this.options.active).attr('data-tab-id'));
+		// If not on the first tab, we scroll directly to it
+		// Note: We don't want to scroll if we are on the first one, otherwise it will looks buggy because the page will be a bit scrolled and it doesn't feel right
+		if(this.options.active > 0) {
+			const oActiveTab = this.tabs.eq(this.options.active);
+			const oActivePanel = this.element.find('#' + oActiveTab.attr('data-tab-id'));
+
+			// Remove from scroll length the initial space between the top of the first panel and the top of the screen; this is to avoid scrolling too far
+			// That being said, as lists are fetched / updated asynchroniously, once they got their responses, the layout will change/shift and the current tab won't be the good one anymore 😕
+			this.controller.scrollTo(oActivePanel.offset().top - this.scroll_offset_y);
+		}
 	},
 	// Create a new scene to be added to the controller
 	_newScene: function(tab, panel)
 	{
 		var me = this;
-		var iPanelId = panel.attr('id');
+		var sPanelId = panel.attr('id');
 		return new ScrollMagic.Scene({
-			triggerElement: '#' + iPanelId,
-			triggerHook: 0.03, // show, when scrolled 10% into view
+			triggerElement: '#' + sPanelId,
+			triggerHook: 0.2, // show, when scrolled 20% into view
 			duration: function () {
-				return $('#' + iPanelId).outerHeight();
+				return $('#' + sPanelId).outerHeight();
 			}
 		})
 			.on("enter", function (event) {
@@ -251,7 +265,17 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 				panel = that.element.find( selector );
 				if ( !panel.length ) {
 					panel = that._createPanel( panelId );
-					panel.insertAfter( that.panels[ i - 1 ] || that.tablist );
+					// If we can't attach to an other tab, try to get tab-container-list right after
+					if( that.panels[ i - 1 ] ) {
+						panel.insertAfter( that.panels[ i - 1 ] );
+					}
+					else if( that.element.find(that.js_selectors.tab_container_list) ) {
+						that.element.find(that.js_selectors.tab_container_list).append( panel );
+					}
+					else {
+						panel.insertAfter( that.tablist );
+
+					}
 					that.options.remotePanelCreated(panel, tab, that.options.remote_tab_load_dict);
 				}
 				panel.attr( "aria-live", "polite" );
@@ -352,5 +376,17 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 	// Set the current tab information 
 	setTab : function(tab){
 		this.active = tab;
+	},
+	// JQuery UI overload
+	disable: function(index){
+		const panel = this._getPanelForTab( this.tabs[index] );
+		panel.addClass('ibo-is-hidden'); // Do not use .hide() since it alters the tab state
+		this._super( index );        
+	},
+	// JQuery UI overload
+	enable: function(index) {
+		const panel = this._getPanelForTab( this.tabs[index] );
+		panel.removeClass('ibo-is-hidden'); // Do not use .show() since it alters the tab state
+		this._super( index );  
 	},
 });

@@ -1,0 +1,40 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-field-badge-within-datatable--ibo-field-badge--margin: $ibo-spacing-0 !default;
+$ibo-field-badge-within-datatable--ibo-field-badge--padding: $ibo-spacing-0 !default;
+$ibo-field-badge-within-datatable--ibo-field-badge--text-color: unset !default;
+$ibo-field-badge-within-datatable--ibo-field-badge--background-color: unset !default;
+$ibo-field-badge-within-datatable--ibo-field-badge-dot--size: 10px !default;
+$ibo-field-badge-within-datatable--ibo-field-badge-dot--spacing-x: $ibo-field-badge--label--spacing-x !default;
+$ibo-field-badge-within-datatable--ibo-field-badge-dot--background-color: $ibo-color-white-100 !default;
+
+.ibo-datatable {
+  .ibo-field-badge {
+    margin: $ibo-field-badge-within-datatable--ibo-field-badge--margin;
+    padding: $ibo-field-badge-within-datatable--ibo-field-badge--padding;
+    color: $ibo-field-badge-within-datatable--ibo-field-badge--text-color;
+    background-color: $ibo-field-badge-within-datatable--ibo-field-badge--background-color;
+
+    &::before {
+      content: "";
+      display: inline-flex;
+      margin-right: $ibo-field-badge-within-datatable--ibo-field-badge-dot--spacing-x;
+      width: $ibo-field-badge-within-datatable--ibo-field-badge-dot--size;
+      height: $ibo-field-badge-within-datatable--ibo-field-badge-dot--size;
+      min-width: $ibo-field-badge-within-datatable--ibo-field-badge-dot--size;
+      min-height: $ibo-field-badge-within-datatable--ibo-field-badge-dot--size;
+      background-color: var(--ibo-main-color);
+      @extend %ibo-border-radius-full;
+    }
+
+    .ibo-field-badge--decoration {
+      display: none;
+      + .ibo-field-badge--label {
+        margin-left: unset;
+      }
+    }
+  }
+}

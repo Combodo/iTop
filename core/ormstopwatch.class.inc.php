@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@ require_once('backgroundprocess.inc.php');
  * ormStopWatch
  * encapsulate the behavior of a stop watch that will be stored as an attribute of class AttributeStopWatch 
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -242,7 +242,7 @@ class ormStopWatch
 		foreach ($aProperties as $sProperty => $sValue)
 		{
 			$sRes .= "<TR>";
-			$sCell = str_replace("\n", "<br>\n", $sValue);
+			$sCell = str_replace("\n", "<br>\n", $sValue ?? '');
 			$sRes .= "<TD class=\"label\">$sProperty</TD><TD>$sCell</TD>";
 			$sRes .= "</TR>";
 		}
@@ -596,10 +596,9 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							$oSW = $oObj->Get($sAttCode);
 							$oSW->MarkThresholdAsTriggered($iThreshold);
 							$oObj->Set($sAttCode, $oSW);
-		
-							if($oObj->IsModified())
-							{
-								CMDBObject::SetTrackInfo("Automatic - threshold triggered");
+
+							if ($oObj->IsModified()) {
+								CMDBObject::SetCurrentChangeFromParams("Automatic - threshold triggered");
 
 								$oObj->DBUpdate();
 							}

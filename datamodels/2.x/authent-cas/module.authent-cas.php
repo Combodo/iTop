@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'authent-cas/3.0.0',
+	'authent-cas/3.1.0',
 	array(
 		// Identification
 		//
@@ -24,7 +24,8 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.authent-cas.php',
-			'main.php'
+			'vendor/autoload.php',
+			'src/CASLoginExtension.php',
 		),
 		'webservice' => array(
 			
@@ -50,6 +51,7 @@ SetupWebPage::AddModule(
 			'cas_port' => '',
 			'cas_context' => '',
 			'cas_version' => '',
+			'service_base_url' => '',
 		),
 	)
 );

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -72,14 +72,18 @@ function DisplayPreferences($oP)
 	$oUICancelButton = ButtonUIBlockFactory::MakeForCancel();
 	$oUIToolbar->AddSubBlock($oUICancelButton);
 	$oUICancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+
 	// - Submit button
 	$oUISubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_user_interface', true);
 	$oUIToolbar->AddSubBlock($oUISubmitButton);
 
-	// Language
-	$oLanguageFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:FavoriteLanguage'), 'ibo-fieldset-for-language-preferences');
-	$oLanguageFieldset->AddSubBlock(GetLanguageFieldBlock());
-	$oFirstColumn->AddSubBlock($oLanguageFieldset);
+	// General
+	$oGeneralFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:General:Title'), 'ibo-fieldset-for-language-preferences');
+	$oGeneralFieldset->AddSubBlock(GetLanguageFieldBlock());
+	if (true === MetaModel::GetConfig()->Get('user_preferences.allow_backoffice_theme_override')) {
+		$oGeneralFieldset->AddSubBlock(GetThemeFieldBlock());
+	}
+	$oFirstColumn->AddSubBlock($oGeneralFieldset);
 
 	// Lists
 	$oListsFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:Lists:Title'), 'ibo-fieldset-for-lists-preferences');
@@ -106,6 +110,7 @@ function DisplayPreferences($oP)
 	$oMiscOptionsFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:FavoriteOtherSettings'), 'ibo-fieldset-for-misc-options');
 	$oSecondColumn->AddSubBlock($oMiscOptionsFieldset);
 	$oMiscOptionsFieldset->AddSubBlock(GetObsoleteDataFieldBlock());
+	$oMiscOptionsFieldset->AddSubBlock(GetSummaryCardsFieldBlock());
 
 	$oP->add_script(
 		<<<JS
@@ -136,7 +141,8 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 
 	$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), array(), 'grey', 'ibo-favorite-organizations');
-	$oFavoriteOrganizationsBlock->AddHtml(Dict::S('UI:FavoriteOrganizations+'));
+	$oFavoriteOrganizationsBlock->SetSubTitle(Dict::S('UI:FavoriteOrganizations+'));
+	$oFavoriteOrganizationsBlock->AddCSSClass('ibo-datatable-panel');
 	$oFavoriteOrganizationsForm = new Form();
 	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsForm);
 	// Favorite organizations: the organizations listed in the drop-down menu
@@ -148,12 +154,12 @@ JS
 
 	$sIdFavoriteOrganizations = 1;
 	$oFavoriteOrganizationsForm->AddSubBlock($oBlock->GetDisplay($oP, $sIdFavoriteOrganizations, [
-		'menu' => false,
-		'selection_mode' => true,
-		'selection_type' => 'multiple',
-		'table_id' => 'user_prefs',
+		'menu'                => false,
+		'selection_mode'      => true,
+		'selection_type'      => 'multiple',
+		'table_id'            => 'user_prefs',
 		'surround_with_panel' => false,
-		'selected_rows' => $aFavoriteOrgs
+		'selected_rows'       => $aFavoriteOrgs,
 	]));
 	$oFavoriteOrganizationsForm->AddSubBlock($oAppContext->GetForFormBlock());
 
@@ -190,19 +196,22 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 
 	$oShortcutsBlock = new BlockShortcuts(Dict::S('Menu:MyShortcuts'), array(), 'grey', 'ibo-shortcuts');
+	$oShortcutsBlock->AddCSSClass('ibo-datatable-panel');
+
 	$oShortcutsBlock->sIdShortcuts = 'shortcut_list';
 	$oShortcutsFilter = new DBObjectSearch('Shortcut');
 	$oShortcutsFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
 
 	$oBlock = new DisplayBlock($oShortcutsFilter, 'list', false);
 	$oShortcutsBlock->AddSubBlock($oBlock->GetDisplay($oP, $oShortcutsBlock->sIdShortcuts, [
-		'view_link' => false,
-		'menu' => false,
-		'toolkit_menu' => false,
-		'selection_mode' => true,
-		'selection_type' => 'multiple',
-		'table_id' => 'user_prefs_shortcuts',
+		'view_link'           => false,
+		'menu'                => false,
+		'toolkit_menu'        => false,
+		'selection_mode'      => true,
+		'selection_type'      => 'multiple',
+		'table_id'            => 'user_prefs_shortcuts',
 		'surround_with_panel' => false,
+		'id_for_select'       => 'Shortcut/_key_',
 	]));
 
 	$oSet = new DBObjectSet($oShortcutsFilter);
@@ -219,7 +228,7 @@ JS
 		$oShortcutsToolBar->AddSubBlock($oShortcutsDeleteButton);
 	}
 	$oContentLayout->AddMainBlock($oShortcutsBlock);
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// Newsroom
@@ -235,7 +244,7 @@ JS
 			$iCountProviders++;
 		}
 	}
-	
+
 	$bNewsroomEnabled = (MetaModel::GetConfig()->Get('newsroom_enabled') !== false);
 	if ($bNewsroomEnabled && ($iCountProviders > 0))
 	{
@@ -244,13 +253,13 @@ JS
 		$sNewsroomHtml = '';
 		$sNewsroomHtml .= '<form method="post">';
 		$iNewsroomDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', 7);
-		
+
 		if ($iNewsroomDisplaySize < 1) $iNewsroomDisplaySize = 1;
 		if ($iNewsroomDisplaySize > 20) $iNewsroomDisplaySize = 20;
 		$sInput = '<input min="1" max="20" id="newsroom_display_size" type="number" size="2" name="newsroom_display_size" value="'.$iNewsroomDisplaySize.'">';
 		$sIcon = '<i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow fas fa-bell" style="top: 0;"></i>';
 		$sNewsroomHtml .= Dict::Format('UI:Newsroom:DisplayAtMost_X_Messages', $sInput, $sIcon);
-		
+
 		/**
 		 * @var iNewsroomProvider[] $aProviders
 		 */
@@ -307,7 +316,7 @@ JS
 		$oNewsroomBlock->AddSubBlock($oNewsroomEndHtmlBlock);
 		$oContentLayout->AddMainBlock($oNewsroomBlock);
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// User defined keyboard shortcut
@@ -335,14 +344,14 @@ JS
 JS
 	);
 	// For each existing shortcut keyboard existing in iTop
-	$aKeyboardShortcuts = utils::GetKeyboardShortcutPref();
+	$aKeyboardShortcuts = utils::GetAllKeyboardShortcutsPrefs();
 	$sKeyboardShortcutsInputHint = Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint');
 	$sKeyboardShortcutsButtonTooltip = Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip');
-	foreach($aKeyboardShortcuts as $sKeyboardShortcutId => $aKeyboardShortcut){
-			// Recording button
-			$oButton = ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('');
-			$oButton->SetIconClass('fas fa-pen')->SetTooltip($sKeyboardShortcutsButtonTooltip)->SetOnClickJsCode(
-				<<<JS
+	foreach ($aKeyboardShortcuts as $sKeyboardShortcutId => $aKeyboardShortcut) {
+		// Recording button
+		$oButton = ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('');
+		$oButton->SetIconClass('fas fa-pen')->SetTooltip($sKeyboardShortcutsButtonTooltip)->SetOnClickJsCode(
+			<<<JS
 let oPanel = $(this).siblings('input');
 var fCallback = function(sVal){
 	oPanel.removeClass('ibo-is-focus').val(sVal);
@@ -350,14 +359,14 @@ var fCallback = function(sVal){
 oPanel.addClass('ibo-is-focus').val('$sKeyboardShortcutsInputHint')
 recordSequence$sKeyboardShortcutBlockId(fCallback);
 JS
-			);
-			
-			$oInput = InputUIBlockFactory::MakeForInputWithLabel(Dict::S($aKeyboardShortcut['label']), $sKeyboardShortcutId, $aKeyboardShortcut['key'], $sKeyboardShortcutId, 'text');
-			$oInput->GetInput()->AddCSSClasses(['ibo-keyboard-shortcut--input']);
-			$oKeyboardShortcutForm->AddSubBlock(new Html('<div class="ibo-keyboard-shortcut--shortcut">'));
-			$oKeyboardShortcutForm->AddSubBlock($oInput);
-			$oKeyboardShortcutForm->AddSubBlock($oButton);
-			$oKeyboardShortcutForm->AddSubBlock(new Html('</div>'));
+		);
+
+		$oInput = InputUIBlockFactory::MakeForInputWithLabel(Dict::S($aKeyboardShortcut['label']), $sKeyboardShortcutId, $aKeyboardShortcut['key'], $sKeyboardShortcutId, 'text');
+		$oInput->GetInput()->AddCSSClasses(['ibo-keyboard-shortcut--input']);
+		$oKeyboardShortcutForm->AddSubBlock(new Html('<div class="ibo-keyboard-shortcut--shortcut">'));
+		$oKeyboardShortcutForm->AddSubBlock($oInput);
+		$oKeyboardShortcutForm->AddSubBlock($oButton);
+		$oKeyboardShortcutForm->AddSubBlock(new Html('</div>'));
 	}
 
 	// Prepare buttons
@@ -368,10 +377,16 @@ JS
 	$oKeyboardShortcutCancelButton = ButtonUIBlockFactory::MakeForCancel();
 	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutCancelButton);
 	$oKeyboardShortcutCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+
+	// - Reset button
+	$oKeyboardShortcutResetButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset'), 'operation', 'reset_keyboard_shortcuts', true);
+	$oKeyboardShortcutResetButton->SetTooltip(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset:Tooltip'));
+	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutResetButton);
 	// - Submit button
 	$oKeyboardShortcutSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_keyboard_shortcuts', true);
 	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutSubmitButton);
-	
+
+
 	$oContentLayout->AddMainBlock($oKeyboardShortcutBlock);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -402,9 +417,28 @@ JS
 	$oP->add_ready_script(
 		<<<JS
 $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').on('click',function(){
-SetUserPreference('user_picture_placeholder', $(this).attr('data-image-name'), true);
-$('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').removeClass('ibo-is-active');
-$(this).addClass('ibo-is-active');
+	const me = this;
+	
+	// Save new preference
+	$.post(
+		GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+		{
+			'operation': 'preferences.set_user_picture',
+			'image_filename': $(this).attr('data-image-name')
+		}
+	)
+	.done(function(oData){
+		if(false === oData.success){
+			return;
+		}
+		
+		// Update selection
+		$('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').removeClass('ibo-is-active');
+		$(me).addClass('ibo-is-active');
+		
+		// Update navigation menu
+		$('[data-role="ibo-navigation-menu--user-picture--image"]').attr('src', oData.data.image_url);
+	});
 });
 JS
 );
@@ -416,7 +450,7 @@ HTML
 	$oUserPicturePlaceHolderHtmlBlock = new Html($sUserPicturePlaceHolderHtml);
 	$oUserPicturePlaceHolderBlock->AddSubBlock($oUserPicturePlaceHolderHtmlBlock);
 	$oContentLayout->AddMainBlock($oUserPicturePlaceHolderBlock);
-	
+
 	/** @var iPreferencesExtension $oLoginExtensionInstance */
 	foreach (MetaModel::EnumPlugins('iPreferencesExtension') as $oPreferencesExtensionInstance)
 	{
@@ -448,12 +482,36 @@ function GetLanguageFieldBlock(): iUIBlock
 	}
 	ksort($aSortedLanguages);
 
-	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('language', Dict::S('UI:Favorites:SelectYourLanguage'));
-	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select $oSelectInput */
-	$oSelectInput = $oSelect->GetInput();
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('language', Dict::S('UI:FavoriteLanguage'));
+	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select\Select $oSelectInput */
 	foreach ($aSortedLanguages as $sCode) {
 		$bSelected = ($sCode === Dict::GetUserLanguage());
-		$oSelectInput->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $aAvailableLanguages[$sCode]['description'].' ('.$aAvailableLanguages[$sCode]['localized_description'].')', $bSelected));
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $aAvailableLanguages[$sCode]['description'].' ('.$aAvailableLanguages[$sCode]['localized_description'].')', $bSelected));
+	}
+
+	return $oSelect;
+}
+
+/**
+ * @return \Combodo\iTop\Application\UI\Base\iUIBlock
+ * @since 3.0.0
+ */
+function GetThemeFieldBlock(): iUIBlock
+{
+	$aAvailableThemes = ThemeHandler::GetAvailableThemes();
+
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('theme', Dict::S('UI:Preferences:General:Theme'));
+	foreach ($aAvailableThemes as $sCode => $sLabel) {
+		if (MetaModel::GetConfig()->Get('demo_mode') && ($sCode !== ThemeHandler::GetApplicationThemeId())) {
+			// Demo mode: only the current app. theme is listed in the available choices
+			continue;
+		}
+
+		$bSelected = ($sCode === ThemeHandler::GetCurrentUserThemeId());
+		if ($sCode === MetaModel::GetConfig()->Get('backoffice_default_theme')) {
+			$sLabel = Dict::Format('UI:Preferences:General:Theme:DefaultThemeLabel', $sLabel);
+		}
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $sLabel, $bSelected));
 	}
 
 	return $oSelect;
@@ -493,7 +551,7 @@ function GetTabsLayoutFieldBlock(): iUIBlock
 	];
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('tab_layout', Dict::S('UI:Preferences:Tabs:Layout:Label'));
 	foreach ($aOptionsValues as $sValue) {
-		$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
 			Dict::S('UI:Preferences:Tabs:Layout:'.ucfirst($sValue)),
 			$sValue === $sCurrentValue)
@@ -521,7 +579,7 @@ function GetTabsNavigationFieldBlock(): iUIBlock
 	];
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('tab_scrollable', Dict::S('UI:Preferences:Tabs:Scrollable:Label'));
 	foreach ($aOptionsValues as $sValue => $sDictEntrySuffix) {
-		$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
 			Dict::S('UI:Preferences:Tabs:Scrollable:'.$sDictEntrySuffix),
 			$sValue === $sCurrentValueAsString)
@@ -549,7 +607,7 @@ function GetRichTextToolbarExpandedFieldBlock(): iUIBlock
 	];
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:Preferences:RichText:ToolbarState'));
 	foreach ($aOptionsValues as $sValue => $sDictEntrySuffix) {
-		$oSelect->GetInput()->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption(
+		$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
 			Dict::S('UI:Preferences:RichText:ToolbarState:'.$sDictEntrySuffix),
 			$sValue === $sCurrentValueAsString)
@@ -617,6 +675,33 @@ HTML;
 	return new Html($sHtml);
 }
 
+
+/**
+ * @return \Combodo\iTop\Application\UI\Base\iUIBlock
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \MySQLException
+ * @since 3.1.0
+ */
+function GetSummaryCardsFieldBlock(): iUIBlock
+{
+	$bShow = appUserPreferences::GetPref('show_summary_cards', true);
+	$sSelectedForHtmlAttribute = $bShow ? 'checked="checked"' : '';
+
+	$sLabel = Dict::S('UI:Favorites:General:ShowSummaryCards');
+	$sLabelDescription = Dict::S('UI:Favorites:General:ShowSummaryCards+');
+	$sHtml = <<<HTML
+<p>
+	<label data-tooltip-content="{$sLabelDescription}">
+		<span>{$sLabel}</span>
+		<input type="checkbox" name="show_summary_cards" value="1" {$sSelectedForHtmlAttribute}>
+	</label>
+</p>
+HTML;
+
+	return new Html($sHtml);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Main program
@@ -656,6 +741,7 @@ try {
 					$aSelectOrgs = utils::ReadMultipleSelection($oFilter);
 					appUserPreferences::SetPref('favorite_orgs', $aSelectOrgs);
 				}
+				$oPage->ResetNavigationMenuLayout();
 				DisplayPreferences($oPage);
 				break;
 
@@ -669,6 +755,12 @@ try {
 				$oUser->AllowWrite(true);
 				$oUser->DBUpdate();
 				utils::PopArchiveMode();
+
+				// Theme
+				$sThemeId = utils::ReadParam('theme', '');
+				if (!empty($sThemeId) && ThemeHandler::IsValidTheme($sThemeId)) {
+					appUserPreferences::SetPref('backoffice_theme', $sThemeId);
+				}
 
 				// List
 				$iDefaultPageSize = (int)utils::ReadParam('default_page_size', -1);
@@ -702,6 +794,10 @@ try {
 				// - Obsolete data
 				$bShowObsoleteData = (bool)utils::ReadParam('show_obsolete_data', 0);
 				appUserPreferences::SetPref('show_obsolete_data', $bShowObsoleteData);
+				
+				// - Summary cards
+				$bShowSummaryCards = (bool)utils::ReadParam('show_summary_cards', 0);
+				appUserPreferences::SetPref('show_summary_cards', $bShowSummaryCards);
 
 				// Redirect to force a reload/display of the page in case language has been changed
 				$oAppContext = new ApplicationContext();
@@ -710,7 +806,7 @@ try {
 				break;
 			case 'apply_keyboard_shortcuts':
 				// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
+				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 				$aShortcutPrefs = [];
 				foreach ($aShortcutClasses as $cShortcutPlugin) {
 					foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
@@ -719,6 +815,11 @@ try {
 					}
 				}
 				appUserPreferences::SetPref('keyboard_shortcuts', $aShortcutPrefs);
+
+				DisplayPreferences($oPage);
+				break;
+			case 'reset_keyboard_shortcuts':
+				appUserPreferences::UnsetPref('keyboard_shortcuts');
 
 				DisplayPreferences($oPage);
 				break;

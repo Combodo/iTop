@@ -1,0 +1,102 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-modal--max-height: 90vh !default;
+$ibo-modal--max-width: 90vw !default;
+
+$ibo-modal--extra-small--relative-height: 20vh !default;
+$ibo-modal--extra-small--absolute-height: 150px !default;
+$ibo-modal--extra-small--height: calc(min(#{$ibo-modal--extra-small--relative-height}, #{$ibo-modal--extra-small--absolute-height})) !default;
+$ibo-modal--extra-small--relative-width: 20vw !default;
+$ibo-modal--extra-small--absolute-width: 200px !default;
+$ibo-modal--extra-small--width: calc(min(#{$ibo-modal--extra-small--relative-width}, #{$ibo-modal--extra-small--absolute-width})) !default;
+
+$ibo-modal--small--relative-height: 60vh !default;
+$ibo-modal--small--absolute-height: 400px !default;
+$ibo-modal--small--height: calc(min(#{$ibo-modal--small--relative-height}, #{$ibo-modal--small--absolute-height})) !default;
+$ibo-modal--small--relative-width: 60vw !default;
+$ibo-modal--small--absolute-width: 800px !default;
+$ibo-modal--small--width: calc(min(#{$ibo-modal--small--relative-width}, #{$ibo-modal--small--absolute-width})) !default;
+
+$ibo-modal--medium--relative-height: 75vh !default;
+$ibo-modal--medium--absolute-height: 600px !default;
+$ibo-modal--medium--height: calc(min(#{$ibo-modal--medium--relative-height}, #{$ibo-modal--medium--absolute-height})) !default;
+$ibo-modal--medium--relative-width: 75vw !default;
+$ibo-modal--medium--absolute-width: 1200px !default;
+$ibo-modal--medium--width: calc(min(#{$ibo-modal--medium--relative-width}, #{$ibo-modal--medium--absolute-width})) !default;
+
+$ibo-modal--large--relative-height: 90vh !default;
+$ibo-modal--large--absolute-height: 900px !default;
+$ibo-modal--large--height: calc(min(#{$ibo-modal--large--relative-height}, #{$ibo-modal--large--absolute-height})) !default;
+$ibo-modal--large--relative-width: 90vw !default;
+$ibo-modal--large--absolute-width: 1800px !default;
+$ibo-modal--large--width: calc(min(#{$ibo-modal--large--relative-width}, #{$ibo-modal--large--absolute-width})) !default;
+
+$ibo-modal-option--do-not-show-again--margin-top: $ibo-spacing-500 !default;
+
+$ibo-modal--is-informative--min-width: $ibo-size-700 !default;
+$ibo-modal--is-informative--min-height: $ibo-size-300 !default;
+$ibo-modal--is-informative--is-error--highlight--background-color: $ibo-color-red-600 !default;
+$ibo-modal--is-informative--is-warning--highlight--background-color: $ibo-color-orange-600 !default;
+$ibo-modal--is-informative--is-information--highlight--background-color: $ibo-color-blue-600 !default;
+$ibo-modal--is-informative--is-success--highlight--background-color: $ibo-color-green-600 !default;
+
+/* Avoid modals bigger than window size 
+!important in order to overload jQueryUI max-height:none being put on dialog elements */
+.ibo-modal{
+  max-height: $ibo-modal--max-height !important;
+  max-width: $ibo-modal--max-width !important;
+  &.ibo-is-extra-small{
+    height: $ibo-modal--extra-small--height !important;
+    width: $ibo-modal--extra-small--width !important;
+  }
+  &.ibo-is-small{
+    height: $ibo-modal--small--height !important;
+    width: $ibo-modal--small--width !important;
+  }
+  &.ibo-is-medium{
+    height: $ibo-modal--medium--height !important;
+    width: $ibo-modal--medium--width !important;
+  }
+  &.ibo-is-large{
+    height: $ibo-modal--large--height !important;
+    width: $ibo-modal--large--width !important;
+  }
+}
+
+// Modal Option - Do not show again
+.ibo-modal-option--do-not-show-again{
+  margin-top: $ibo-modal-option--do-not-show-again--margin-top;
+
+  .ibo-modal-option--do-not-show-again--checkbox{
+    height: auto;
+    display: inline-block;
+    width: auto;
+  }
+}
+
+.ibo-modal.ibo-is-informative{
+  display: flex;
+  align-items: center;
+  min-width: $ibo-modal--is-informative--min-width;
+  min-height: $ibo-modal--is-informative--min-height !important; // !important in order to overload jQueryUI CSS rule that's put directly on the element
+  
+  &::before {
+    @include ibo-vertical-highlight;
+  }
+  &.ibo-is-error::before {
+    background-color: $ibo-modal--is-informative--is-error--highlight--background-color;
+  }  
+  &.ibo-is-warning::before {
+    background-color: $ibo-modal--is-informative--is-warning--highlight--background-color;
+  }  
+  &.ibo-is-information::before {
+    background-color: $ibo-modal--is-informative--is-information--highlight--background-color;
+  }  
+  &.ibo-is-success::before {
+    background-color: $ibo-modal--is-informative--is-success--highlight--background-color;
+  }
+}

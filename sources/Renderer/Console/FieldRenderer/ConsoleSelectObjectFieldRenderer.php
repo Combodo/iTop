@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,11 +19,20 @@
 
 namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 
-use Combodo\iTop\Form\Validator\MandatoryValidator;
-use \Dict;
-use \DBObjectSet;
-use Combodo\iTop\Renderer\FieldRenderer;
+use CaptureWebPage;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Form\Field\SelectObjectField;
+use Combodo\iTop\Form\Validator\MandatoryValidator;
+use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\FieldRenderer;
+use DBObjectSet;
+use Dict;
+use UIExtKeyWidget;
 
 /**
  * Class ConsoleSelectObjectFieldRenderer
@@ -32,23 +41,20 @@ use Combodo\iTop\Form\Field\SelectObjectField;
  */
 class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 {
-    /**
-     * @inheritDoc
-     */
-    public function Render()
+	/**
+	 * @inheritDoc
+	 */
+	public function Render()
 	{
 		$oOutput = parent::Render();
 
-		$oOutput->AddHtml('<table class="form-field-container">');
-		$oOutput->AddHtml('<tr>');
-		if ($this->oField->GetLabel() != '')
-		{
-			$oOutput->AddHtml('<td class="form-field-label label"><span><label for="'.$this->oField->GetGlobalId().'">'.$this->oField->GetLabel().'</label></span></td>');
-		}
-		$oOutput->AddHtml('<td class="form-field-content">');
+		$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
+		$oBlock->AddDataAttribute("input-id", $this->oField->GetGlobalId());
+
 		$sEditType = 'none';
 		if ($this->oField->GetReadOnly())
 		{
+			$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\readonly");
 			$oSearch = $this->oField->GetSearch()->DeepClone();
 			$oSearch->AddCondition('id', $this->oField->GetCurrentValue());
 			$oSet = new DBObjectSet($oSearch);
@@ -61,15 +67,17 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 			{
 				$sCurrentLabel = '';
 			}
-			$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
-			$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($sCurrentLabel, ENT_QUOTES, 'UTF-8').'</span>');
+			$oValue = UIContentBlockUIBlockFactory::MakeStandard();
+			$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+			$oValue->AddSubBlock(new Html($sCurrentLabel));
+			$oBlock->SetValue($oValue);
 		}
 		else
 		{
 			$oSearch = $this->oField->GetSearch()->DeepClone();
 			$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 
-			$oSet = new \DBObjectSet($oSearch);
+			$oSet = new DBObjectSet($oSearch);
 			$oSet->ApplyParameters();
 			$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 
@@ -82,6 +90,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 			{
 				// Auto-complete
 				//
+				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Autocomplete");
 				$sEditType = 'autocomplete';
 				$aExtKeyParams = array();
 				$aExtKeyParams['iFieldSize'] = 10;
@@ -89,14 +98,17 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 				$sFieldName = $this->oField->GetGlobalId();
 				$sFieldId = $sFieldName;
 				$sFormPrefix = '';
-				$oWidget = new \UIExtKeyWidget($sTargetClass, $sFieldId, '', true);
+				$oWidget = new UIExtKeyWidget($sTargetClass, $sFieldId, '', true);
 				$aArgs = array();
 				$sTitle = $this->oField->GetLabel();
-				require_once(APPROOT.'application/capturewebpage.class.inc.php');
-				$oPage = new \CaptureWebPage();
+
+				$oPage = new CaptureWebPage();
 				$sHTMLValue = $oWidget->DisplaySelect($oPage, $iMaxComboLength, false /* $bAllowTargetCreation */, $sTitle, $oSet, $this->oField->GetCurrentValue(), $this->oField->GetMandatory(), $sFieldName, $sFormPrefix, $aArgs);
-				$oOutput->AddHtml($sHTMLValue);
-				$oOutput->AddHtml($oPage->GetHtml());
+				$oValue = UIContentBlockUIBlockFactory::MakeStandard();
+				$oValue->AddSubBlock(new Html($sHTMLValue));
+				$oValue->AddSubBlock(new Html($oPage->GetHtml()));
+				$oBlock->AddSubBlock($oValue);
+
 				$oOutput->AddJs($oPage->GetJS());
 				$oOutput->AddJs($oPage->GetReadyJS());
 				foreach ($oPage->GetCSS() as $sCss)
@@ -111,9 +123,24 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 				{
 					$oOutput->AddCssFile($sFile);
 				}
+				$oOutput->AddJs(
+				<<<EOF
+	                    $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
+                    	var me = this;
+
+                        $(this).closest(".field_set").trigger("field_change", {
+                            id: $(me).attr("id"),
+                            name: $(me).closest(".form_field").attr("data-field-id"),
+                            value: $(me).val()
+                        })
+                        .closest('.form_handler').trigger('value_change');
+                    });
+EOF
+				);
 			}
 			elseif($this->oField->GetControlType() == SelectObjectField::CONTROL_RADIO_VERTICAL)
 			{
+				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Radio");
 				// Radio buttons (vertical)
 				//
 				$sEditType = 'radio';
@@ -122,7 +149,9 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 				$bMandatory = $this->oField->GetMandatory();
 				$value = $this->oField->GetCurrentValue();
 				$sId = $this->oField->GetGlobalId();
-				$oOutput->AddHtml('<div>');
+
+				$oValue = UIContentBlockUIBlockFactory::MakeStandard();
+
 				while ($oObject = $oSet->Fetch())
 				{
 					$iObject = $oObject->GetKey();
@@ -137,35 +166,30 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 					{
 						$sSelected = ($value == $iObject) ? 'checked' : '';
 					}
-					$oOutput->AddHtml("<input type=\"radio\" id=\"{$sId}_{$iObject}\" name=\"radio_$sId\" onChange=\"$('#{$sId}').val(this.value).trigger('change');\" value=\"$iObject\" $sSelected><label class=\"radio\" for=\"{$sId}_{$iObject}\">&nbsp;".htmlentities($sLabel, ENT_QUOTES, 'UTF-8')."</label>&nbsp;");
+					$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_$sId", $iObject, "{$sId}_{$iObject}", "radio");
+					$oRadioCustom->AddCSSClass('ibo-input-field-wrapper');
+					$oRadioCustom->GetInput()->SetIsChecked($sSelected);
+					$oRadioCustom->SetBeforeInput(false);
+					$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
+					$oValue->AddSubBlock($oRadioCustom);
+					$oOutput->AddJs(
+						<<<EOF
+	                    $("#{$sId}_{$iObject}").off("change").on("change", function(){
+	                        $('#{$sId}').val(this.value).trigger('change');
+	                    });
+EOF
+					);
 					if ($bVertical)
 					{
-						$oOutput->AddHtml("<br>\n");
+						$oValue->AddSubBlock(new Html("<br>"));
 					}
 					$idx++;
 				}
-				$oOutput->AddHtml('</div>');
-				$oOutput->AddHtml("<input type=\"hidden\" id=\"$sId\" name=\"$sId\" value=\"$value\"/>");
-			}
-			else
-			{
-				// Drop-down select
-				//
-				$sEditType = 'select';
-				$oOutput->AddHtml('<select class="form-field-data" id="'.$this->oField->GetGlobalId().'">');
-				$oOutput->AddHtml('<option value="">'.Dict::S('UI:SelectOne').'</option>');
-				while ($oObject = $oSet->Fetch())
-				{
-					$iObject = $oObject->GetKey();
-					$sLabel = $oObject->Get('friendlyname');
-					// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
-					$sSelectedAtt = ($this->oField->GetCurrentValue() == $iObject) ? 'selected' : '';
-					$oOutput->AddHtml('<option value="'.$iObject.'" '.$sSelectedAtt.' >'.htmlentities($sLabel, ENT_QUOTES, 'UTF-8').'</option>');
-				}
-				$oOutput->AddHtml('</select>');
-			}
-			$oOutput->AddJs(
-				<<<EOF
+				$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden($sId,$value,$sId));
+				$oBlock->AddSubBlock($oValue);
+				$oBlock->AddSubBlock(new Html('<span class="form_validation"></span>'));
+				$oOutput->AddJs(
+					<<<EOF
 	                    $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
                     	var me = this;
 
@@ -177,14 +201,48 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
                         .closest('.form_handler').trigger('value_change');
                     });
 EOF
-			);
+				);
+			}
+			else
+			{
+				// Drop-down select
+				//
+				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Select");
+				$sEditType = 'select';
+				$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
+				$oSelect->AddCSSClass('ibo-input-select-placeholder');
+				$oBlock->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard(null,['ibo-input-field-wrapper'])->AddSubBlock($oSelect));
+				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('',Dict::S('UI:SelectOne'), false ));
+				while ($oObject = $oSet->Fetch())
+				{
+					$iObject = $oObject->GetKey();
+					$sLabel = $oObject->Get('friendlyname');
+					// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iObject,$sLabel, ($this->oField->GetCurrentValue() == $iObject)));
+				}
+				$oBlock->AddSubBlock(new Html('<span class="form_validation"></span>'));
+				$oOutput->AddJs(
+					<<<JS
+ $("#{$this->oField->GetGlobalId()}").selectize({
+    sortField: 'text',
+    onChange: function(value){
+    			  var me = this.\$input;
+    			  me.trigger("field_change", {
+                            id: me.attr("id"),
+                            name: me.closest(".form_field").attr("data-field-id"),
+                            value: me.val()
+                        })
+                        .closest('.form_handler').trigger('value_change');
+    },
+	inputClass: 'ibo-input-vanilla ibo-input ibo-input-selectize',	
+});
+ $("#{$this->oField->GetGlobalId()}").closest('div').addClass('ibo-input-select-wrapper--with-buttons');
+JS
+				);
+			}
 		}
-		$oOutput->AddHtml('<span class="form_validation"></span>');
-		$oOutput->AddHtml('</td>');
 
-		$oOutput->AddHtml('</tr>');
-		$oOutput->AddHtml('</table>');
-
+		$oOutput->AddHtml((BlockRenderer::RenderBlockTemplates($oBlock)));
 		// JS Form field widget construct
 		$aValidators = array();
 		foreach ($this->oField->GetValidators() as $oValidator)
@@ -209,21 +267,15 @@ EOF
 		if (oResult.is_valid)
 		{
 			oValidationElement.html('');
+			 $(me.element).find('.ibo-input-field-wrapper').removeClass("is-error");
 		}
 		else
 		{
 			//TODO: escape html entities
 			var sExplain = oResult.error_messages.join(', ');
-			oValidationElement.html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
-			oValidationElement.tooltip({
-				items: 'span',
-				classes: {
-			        "ui-tooltip": "form_field_error"
-			    },
-				content: function() {
-					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
-				}
-			});
+			oValidationElement.html(sExplain);
+			oValidationElement.addClass(' ibo-field-validation');
+			 $(me.element).find('.ibo-input-field-wrapper').addClass("is-error");
 		}
 	}
 }
@@ -239,19 +291,14 @@ EOF
 		{
 			case 'autocomplete':
 			case 'radio':
+			case 'select':
 				$oOutput->AddJs(
 					<<<EOF
 	                    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field('option', 'get_current_value_callback', function(me){ return $(me.element).find('#{$this->oField->GetGlobalId()}').val();});
 EOF
 				);
 				break;
-			case 'select':
-				$oOutput->AddJs(
-					<<<EOF
-	                    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field('option', 'get_current_value_callback', function(me){ return $(me.element).find('select').val();});
-EOF
-				);
-				break;
+
 
 			case 'none':
 			default:

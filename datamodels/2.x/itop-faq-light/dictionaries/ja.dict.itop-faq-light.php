@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,14 +16,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 //
 // Class: FAQ
 //
-
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'よくある質問',
@@ -54,9 +52,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:FAQCategory/Attribute:name' => '名前',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
 ));
-
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:ProblemManagement' => '問題管理',
 	'Menu:ProblemManagement+' => '問題管理',

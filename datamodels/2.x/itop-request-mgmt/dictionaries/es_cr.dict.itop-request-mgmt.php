@@ -1,28 +1,10 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
- *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:RequestManagement' => 'Administración de Requerimientos',
 	'Menu:RequestManagement+' => 'Administración de Requerimientos',
 	'Menu:RequestManagementProvider' => 'Proveedor de Mesa de Ayuda',
@@ -33,8 +15,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:UserRequest:Overview+' => 'Resumen de Requerimientos',
 	'Menu:NewUserRequest' => 'Nuevo Requerimiento',
 	'Menu:NewUserRequest+' => 'Nuevo Requerimiento',
-	'Menu:SearchUserRequests' => 'Búsqueda de Requerimientos de Usuario',
-	'Menu:SearchUserRequests+' => 'Búsqueda de Requerimientos de Usuario',
+	'Menu:SearchUserRequests' => 'Búsqueda de Requerimientos',
+	'Menu:SearchUserRequests+' => 'Búsqueda de Requerimientos',
 	'Menu:UserRequest:Shortcuts' => 'Acceso Rápido',
 	'Menu:UserRequest:Shortcuts+' => 'Acceso Rápido',
 	'Menu:UserRequest:MyRequests' => 'Requerimientos Asignados a Mí',
@@ -73,7 +55,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: UserRequest
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest' => 'Requerimiento',
 	'Class:UserRequest+' => 'Requerimiento',
 	'Class:UserRequest/Attribute:status' => 'Estatus',
@@ -168,6 +150,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:UserRequest/Attribute:resolution_date+' => 'Fecha de Solución',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Última Fecha de Espera',
 	'Class:UserRequest/Attribute:last_pending_date+' => 'Última Fecha de Espera',
+	'Class:UserRequest/Attribute:cumulatedpending' => 'Espera Acumulada',
+	'Class:UserRequest/Attribute:cumulatedpending+' => 'Espera Acumulada',
 	'Class:UserRequest/Attribute:tto' => 'TDA - Tiempo de Asignación',
 	'Class:UserRequest/Attribute:tto+' => 'Tiempo de Asignación',
 	'Class:UserRequest/Attribute:ttr' => 'TDS - Tiempo de Solución',
@@ -264,7 +248,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Portal:TitleDetailsFor_Request' => 'Detalles del Requerimiento',
 	'Portal:ButtonUpdate' => 'Actualizar',
 	'Portal:ButtonClose' => 'Cerrar',
@@ -279,7 +263,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Portal:UserRequest:MoreInfo' => 'Más Información',
 	'Portal:Details-Service-Element' => 'Elementos del Servicio',
 	'Portal:NoClosedTicket' => 'Requerimiento No Cerrado',
-	'Portal:NoService' => '',
+	'Portal:NoService' => 'Requerimiento Sin Servicio',
 	'Portal:ListOpenProblems' => 'Problemas Abiertos',
 	'Portal:ShowProblem' => 'Problemas',
 	'Portal:ShowFaqs' => 'Preguntas Frecuentes',
@@ -293,8 +277,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Organization:Overview:UserRequests' => 'Requerimientos para esta Organización',
+	'Organization:Overview:MyUserRequests' => 'Mis Requerimientos para esta Organización',
+	'Organization:Overview:Tickets' => 'Tickets para esta Organización',
 ));

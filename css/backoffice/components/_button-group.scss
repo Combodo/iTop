@@ -1,0 +1,66 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-button-group--border-radius-external: $ibo-button--border-radius !default;
+$ibo-button-group--border-radius-internal: 0 !default;
+
+$ibo-button-group--elements-separator--content: "" !default;
+$ibo-button-group--elements-separator--space-y: 6px !default;
+$ibo-button-group--elements-separator--left: 0 !default;
+$ibo-button-group--elements-separator--width: 1px !default;
+$ibo-button-group--elements-separator--border-left: 1px solid transparent !default;
+
+.ibo-button-group {
+  display: inline-flex; /* Ensure that buttons of a same group always stay on the same line */
+  flex-wrap: nowrap;
+
+  .ibo-button {
+    position: relative;
+  }
+
+  /* Overload border radius to make it look like a whole */
+  .ibo-button:first-child {
+    border-radius: $ibo-button-group--border-radius-external $ibo-button-group--border-radius-internal $ibo-button-group--border-radius-internal $ibo-button-group--border-radius-external;
+  }
+
+  .ibo-button:last-child {
+    border-radius: $ibo-button-group--border-radius-internal $ibo-button-group--border-radius-external $ibo-button-group--border-radius-external $ibo-button-group--border-radius-internal;
+  }
+
+  .ibo-button:not(:first-child):not(:last-child){
+    border-radius: $ibo-button-group--border-radius-internal;
+  }
+
+  /* Overload the default button left margin for siblings with the group */
+  .ibo-button + .ibo-button {
+    margin-left: 0;
+  }
+
+  .ibo-button + .ibo-button::before {
+    content: $ibo-button-group--elements-separator--content;
+    position: absolute;
+    top: $ibo-button-group--elements-separator--space-y;
+    bottom: $ibo-button-group--elements-separator--space-y;
+    left: $ibo-button-group--elements-separator--left;
+    width: $ibo-button-group--elements-separator--width;
+    border-left: $ibo-button-group--elements-separator--border-left;
+  }
+
+  /* Note: Selector cannot be simplified in the one above as the "::before" must be after the different classes.
+  * A more precise selector could be .ibo-button + .ibo-button, however .ibo-button is extended by multiple element and in a multiple loop it creates heavy selectors.
+  */
+  > * + * {
+    @each $sType, $aColors in $ibo-button-colors {
+      @each $sColor, $aPseudoclasses in $aColors {
+        @each $sPseudoclass, $aAttributes in $aPseudoclasses {
+          $accent-color: nth($aAttributes, 4);
+          &.ibo-is-#{$sType}.ibo-is-#{$sColor}#{$sPseudoclass}::before {
+            border-left-color: $accent-color;
+          }
+        }
+      }
+    }
+  }
+}

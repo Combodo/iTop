@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -24,7 +24,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => '文件丢失: %1$s~~',
 	'FilesInformation:Error:CorruptedFile' => '文件 %1$s 已损坏',
-	'FilesInformation:Error:CantWriteToFile' => '无法写入文件 %1$s',
+	'FilesInformation:Error:ListCorruptedFile' => '已损坏的文件: %1$s',
+	'FilesInformation:Error:CantWriteToFile' => '文件 %1$s 无法写入',
 ));
 
 

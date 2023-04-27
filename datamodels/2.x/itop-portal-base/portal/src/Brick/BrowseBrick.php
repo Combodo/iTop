@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -600,7 +600,7 @@ class BrowseBrick extends PortalBrick
 									null, null, $oActionNode);
 							}
 						}
-						uasort($aLevel[$sTagName], "static::CompareActionsByRank");
+						uasort($aLevel[$sTagName], [$this, 'CompareActionsByRank']);
 					}
 					break;
 

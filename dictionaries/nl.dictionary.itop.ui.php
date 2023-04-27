@@ -1,31 +1,7 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * @author	LinProfs <info@linprofs.com>
- * 
- * Linux & Open Source Professionals
- * http://www.linprofs.com
- * 
- * @author Hipska (2018)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
- *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
 // Classes in 'gui'
@@ -90,6 +66,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Query/Attribute:name+' => 'Identificeert de query',
 	'Class:Query/Attribute:description' => 'Beschrijving',
 	'Class:Query/Attribute:description+' => 'Uitgebreide beschrijving voor de query (doel, gebruik, enz.)',
+	'Class:Query/Attribute:is_template' => 'Sjabloon voor OQL-velden',
+	'Class:Query/Attribute:is_template+' => 'Bruikbaar als bron voor bestemming OQL-notificaties',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Ja',
+	'Class:Query/Attribute:is_template/Value:no' => 'Nee',
 	'Class:QueryOQL/Attribute:fields' => 'Velden',
 	'Class:QueryOQL/Attribute:fields+' => 'Kommagescheiden lijst van attributen (of alias.attribuut) om te exporteren',
 	'Class:QueryOQL' => 'OQL-query',
@@ -132,7 +112,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:User/Attribute:language/Value:FR FR+' => 'Frans (Frankrijk)',
 	'Class:User/Attribute:profile_list' => 'Profielen',
 	'Class:User/Attribute:profile_list+' => 'Rollen waarmee rechten verleend zijn aan deze account.',
-	'Class:User/Attribute:allowed_org_list' => 'Mijn organisaties',
+	'Class:User/Attribute:allowed_org_list' => 'Toegestane organisaties',
 	'Class:User/Attribute:allowed_org_list+' => 'De eindgebruiker heeft toestemming om data te bekijken van de gerelateerde organisaties. Als er geen organisatie is opgegeven, heeft de persoon toegang tot data van alle organisaties.',
 	'Class:User/Attribute:status' => 'Status',
 	'Class:User/Attribute:status+' => 'De gebruikersaccount kan in- of uitgeschakeld zijn.',
@@ -141,12 +121,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login moet uniek zijn - "%1s" is al in gebruik',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Minstens één profiel moet toegewezen zijn aan deze gebruiker',
+	'Class:User/Error:ProfileNotAllowed' => 'Profiel "%1$s" kan niet toegevoegd worden omdat het de toegang tot de backoffice zou ontzeggen.',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Je kan de status voor je eigen gebruikersaccount niet wijzigen.',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'De toegestande organisaties moeten minstens de organisatie bevatten waartoe de gebruikersaccount behoort.',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'De huidige lijst van profielen heeft niet voldoende toegangsrechten (gebruikersaccount zijn niet meer wijzigbaar).',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Minstens één organisatie moet toegewezen zijn aan deze gebruiker',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organisatie is niet toegestaan.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'De gebruikersaccount behoort niet tot de organisaties waar je zelf rechten voor hebt.',
 	'Class:User/Error:PersonIsMandatory' => 'De persoon moet ingevuld zijn.',
 	'Class:UserInternal' => 'Interne gebruiker',
-	'Class:UserInternal+' => 'Gebruiker gedefinieerd in iTop',
+	'Class:UserInternal+' => 'Gebruiker gedefinieerd in '.ITOP_APPLICATION_SHORT,
 ));
 
 //
@@ -186,6 +170,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_UserProfile' => 'Gebruiker / Profiel',
 	'Class:URP_UserProfile+' => 'Koppeling tussen gebruikers en profielen',
+	'Class:URP_UserProfile/Name' => 'Link tussen %1$s en %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Gebruiker',
 	'Class:URP_UserProfile/Attribute:userid+' => 'De gebruiker gekoppeld aan dit profiel',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -206,6 +191,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_UserOrg' => 'Gebruiker / Organisatie',
 	'Class:URP_UserOrg+' => 'Koppeling tussen gebruikers en organisaties',
+	'Class:URP_UserOrg/Name' => 'Link tussen %1$s en %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Gebruiker',
 	'Class:URP_UserOrg/Attribute:userid+' => 'Account van de gebruiker',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -350,9 +336,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'BooleanLabel:yes' => 'Ja',
 	'BooleanLabel:no' => 'Nee',
 	'UI:Login:Title' => 'Aanmelden in '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenu' => 'Welkom', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu' => 'Welkom',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Welkom in '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Welkom', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Welkom',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage+' => 'Welkom in '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Welkom in '.ITOP_APPLICATION_SHORT,
 
@@ -382,6 +368,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 <li>Het beheren van het belangrijkste middel: documentatie.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=>  '<div>Proficiat, je werkt nu met '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>Deze versie heeft een volledig nieuw, modern en toegankelijk uiterlijk.</div>
+
+<div>De belangrijkste en meest vertrouwde '.ITOP_APPLICATION.' functies hebben we behouden en een modern jasje gegeven.
+We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben genoten om het te ontwerpen.</div>
+
+<div>Wijzig je '.ITOP_APPLICATION.'-voorkeuren voor een gepersonaliseerde ervaring.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open aanvragen: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mijn aanvragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Open incidenten: %1$d',
@@ -389,17 +383,22 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:WelcomeMenu:MyIncidents' => 'Aan mij toegewezen incidenten',
 	'UI:AllOrganizations' => ' Alle Organisaties ',
 	'UI:YourSearch' => 'Jouw zoekopdracht',
-	'UI:LoggedAsMessage' => 'Ingelogd als %1$s',
-	'UI:LoggedAsMessage+Admin' => 'Ingelogd als %1$s (Beheerder)',
+	'UI:LoggedAsMessage' => 'Ingelogd als %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Ingelogd als %1$s (%2$s, Beheerder)',
 	'UI:Button:Logoff' => 'Log uit',
 	'UI:Button:GlobalSearch' => 'Zoek',
 	'UI:Button:Search' => ' Zoek ',
+	'UI:Button:Clear' => ' Wis ',
+	'UI:Button:SearchInHierarchy' => ' Zoek in hiërarchie ',
 	'UI:Button:Query' => ' Query ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Opslaan',
+	'UI:Button:SaveAnd' => 'Opslaan en %1$s',
 	'UI:Button:Cancel' => 'Annuleer',
 	'UI:Button:Close' => 'Sluiten',
 	'UI:Button:Apply' => 'Pas toe',
+	'UI:Button:Send' => 'Verzenden',
+	'UI:Button:SendAnd' => 'Verzend en %1$s',
 	'UI:Button:Back' => ' << Vorige ',
 	'UI:Button:Restart' => ' |<< Herstarten ',
 	'UI:Button:Next' => ' Volgende >> ',
@@ -417,19 +416,22 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Button:RemoveFromList' => ' Verwijder >> ',
 	'UI:Button:FilterList' => ' Filter... ',
 	'UI:Button:Create' => ' Maak aan ',
-	'UI:Button:Delete' => ' Verwijder ! ',
+	'UI:Button:Delete' => ' Verwijder ',
 	'UI:Button:Rename' => ' Hernoem... ',
 	'UI:Button:ChangePassword' => ' Verander wachtwoord ',
 	'UI:Button:ResetPassword' => ' Stel wachtwoord opnieuw in ',
 	'UI:Button:Insert' => 'Invoegen',
 	'UI:Button:More' => 'Meer',
 	'UI:Button:Less' => 'Minder',
-	'UI:Button:Wait' => 'Please wait while updating fields~~',
-	'UI:Treeview:CollapseAll' => 'Collapse All~~',
-	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:Button:Wait' => 'Even geduld terwijl de velden vernieuwd worden',
+	'UI:Treeview:CollapseAll' => 'Alles inklappen',
+	'UI:Treeview:ExpandAll' => 'Alles uitklappen',
+	'UI:UserPref:DoNotShowAgain' => 'Niet meer opnieuw tonen',
+	'UI:InputFile:NoFileSelected' => 'Geen bestand geselecteerd',
+	'UI:InputFile:SelectFile' => 'Selecteer een bestand',
 
 	'UI:SearchToggle' => 'Zoek',
-	'UI:ClickToCreateNew' => 'Maak een %1$s aan~~',
+	'UI:ClickToCreateNew' => 'Maak een %1$s aan',
 	'UI:SearchFor_Class' => 'Zoek naar %1$s objecten',
 	'UI:NoObjectToDisplay' => 'Geen object om weer te geven.',
 	'UI:Error:SaveFailed' => 'Het object kan niet bewaard worden:',
@@ -459,6 +461,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Fout: objecten zijn al verwijderd',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Je bent niet gemachtigd om meerdere objecten in klasse "%1$s") in één keer te verwijderen.',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Je bent niet gemachtigd om objecten van de klasse "%1$s" te verwijderen',
+	'UI:Error:ReadNotAllowedOn_Class' => 'Je bent niet gemachtigd om objecten van de klasse "%1$s" te bekijken',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Je bent niet gemachtigd om meerdere objecten (klasse %1$s) in één keer aan te passen',
 	'UI:Error:ObjectAlreadyCloned' => 'Fout: het object is al gekloond!',
 	'UI:Error:ObjectAlreadyCreated' => 'Fout: het object is al aangemaakt!',
@@ -467,6 +470,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Error:InvalidDashboard' => 'Fout: ongeldig dashboard',
 	'UI:Error:MaintenanceMode' => 'Toepassing is momenteel in onderhoud',
 	'UI:Error:MaintenanceTitle' => 'Onderhoud',
+	'UI:Error:InvalidToken' => 'Fout: de gevraagde bewerking werd al uitgevoerd (CSRF token niet gevonden)',
+
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 
 	'UI:GroupBy:Count' => 'Aantal',
 	'UI:GroupBy:Count+' => 'Aantal objecten',
@@ -494,6 +500,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Loading' => 'Laden...',
 	'UI:Menu:Actions' => 'Acties',
 	'UI:Menu:OtherActions' => 'Andere acties',
+	'UI:Menu:Transitions' => 'Overgangen',
+	'UI:Menu:OtherTransitions' => 'Andere overgangen',
 	'UI:Menu:New' => 'Nieuw...',
 	'UI:Menu:Add' => 'Voeg toe...',
 	'UI:Menu:Manage' => 'Beheer...',
@@ -552,43 +560,43 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ResetPwd-Ready' => 'Het wachtwoord is veranderd',
 	'UI:ResetPwd-Login' => 'Klik hier om in te loggen',
 
-	'UI:Login:About' => ITOP_APPLICATION,
-	'UI:Login:ChangeYourPassword' => 'Verander jouw wachtwoord',
-	'UI:Login:OldPasswordPrompt' => 'Oud wachtwoord',
-	'UI:Login:NewPasswordPrompt' => 'Nieuw wachtwoord',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Herhaal nieuwe wachtwoord',
-	'UI:Login:IncorrectOldPassword' => 'Fout: het oude wachtwoord is incorrect',
-	'UI:LogOffMenu' => 'Log uit',
-	'UI:LogOff:ThankYou' => 'Bedankt voor het gebruiken van '.ITOP_APPLICATION,
-	'UI:LogOff:ClickHereToLoginAgain' => 'Klik hier om in te loggen',
-	'UI:ChangePwdMenu' => 'Verander wachtwoord',
-	'UI:Login:PasswordChanged' => 'Wachtwoord met succes aangepast',
-	'UI:AccessRO-All' => ITOP_APPLICATION.' is alleen-lezen',
-	'UI:AccessRO-Users' => ITOP_APPLICATION.' is alleen-lezen voor eindgebruikers',
-	'UI:ApplicationEnvironment' => 'Omgeving van de applicatie: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Het nieuwe wachtwoord en de herhaling van het nieuwe wachtwoord komen niet overeen',
-	'UI:Button:Login' => 'Ga naar '.ITOP_APPLICATION,
-	'UI:Login:Error:AccessRestricted' => 'Geen toegang tot '.ITOP_APPLICATION_SHORT.'. Neem contact op met een '.ITOP_APPLICATION_SHORT.'-beheerder.',
-	'UI:Login:Error:AccessAdmin' => 'Alleen toegankelijk voor mensen met beheerdersrechten. Neem contact op met een '.ITOP_APPLICATION_SHORT.'-beheerder',
-	'UI:Login:Error:WrongOrganizationName' => 'Onbekende organisatie',
+	'UI:Login:About'                               => ITOP_APPLICATION,
+	'UI:Login:ChangeYourPassword'                  => 'Verander jouw wachtwoord',
+	'UI:Login:OldPasswordPrompt'                   => 'Oud wachtwoord',
+	'UI:Login:NewPasswordPrompt'                   => 'Nieuw wachtwoord',
+	'UI:Login:RetypeNewPasswordPrompt'             => 'Herhaal nieuwe wachtwoord',
+	'UI:Login:IncorrectOldPassword'                => 'Fout: het oude wachtwoord is incorrect',
+	'UI:LogOffMenu'                                => 'Log uit',
+	'UI:LogOff:ThankYou'                           => 'Bedankt voor het gebruiken van '.ITOP_APPLICATION,
+	'UI:LogOff:ClickHereToLoginAgain'              => 'Klik hier om in te loggen',
+	'UI:ChangePwdMenu'                             => 'Verander wachtwoord',
+	'UI:Login:PasswordChanged'                     => 'Wachtwoord met succes aangepast',
+	'UI:AccessRO-All'                              => ITOP_APPLICATION.' is alleen-lezen',
+	'UI:AccessRO-Users'                            => ITOP_APPLICATION.' is alleen-lezen voor eindgebruikers',
+	'UI:ApplicationEnvironment'                    => 'Omgeving van de applicatie: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch'               => 'Het nieuwe wachtwoord en de herhaling van het nieuwe wachtwoord komen niet overeen',
+	'UI:Button:Login'                              => 'Ga naar '.ITOP_APPLICATION,
+	'UI:Login:Error:AccessRestricted'              => 'Geen toegang tot '.ITOP_APPLICATION_SHORT.'. Neem contact op met een '.ITOP_APPLICATION_SHORT.'-beheerder.',
+	'UI:Login:Error:AccessAdmin'                   => 'Alleen toegankelijk voor mensen met beheerdersrechten. Neem contact op met een '.ITOP_APPLICATION_SHORT.'-beheerder',
+	'UI:Login:Error:WrongOrganizationName'         => 'Onbekende organisatie',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Meerdere contacten hebben hetzelfde e-mailadres',
-	'UI:Login:Error:NoValidProfiles' => 'Geen geldig profiel opgegeven',
-	'UI:CSVImport:MappingSelectOne' => '-- Selecteer --',
-	'UI:CSVImport:MappingNotApplicable' => '-- Negeer dit veld --',
-	'UI:CSVImport:NoData' => 'Lege dataset..., voeg data toe',
-	'UI:Title:DataPreview' => 'Datavoorbeeld',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'Fout: De data bevat slechts één kolom. Is het juiste scheidingsteken geselecteerd?',
-	'UI:CSVImport:FieldName' => 'Veld %1$d',
-	'UI:CSVImport:DataLine1' => 'Dataregel 1',
-	'UI:CSVImport:DataLine2' => 'Dataregel 2',
-	'UI:CSVImport:idField' => 'id (Primaire sleutel (key))',
-	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - Bulk import',
-	'UI:Title:BulkImport+' => 'CSV Import Wizard',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronisatie van %1$d objecten van klasse "%2$s"',
-	'UI:CSVImport:ClassesSelectOne' => '-- selecteer een --',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Interne fout: "%1$s" is een incorrecte code omdat "%2$s" geen externe sleutel (key) van klasse "%3$s" is',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objecten(s) zullen onveranderd blijven.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objecten(s) zullen worden aangepast.',
+	'UI:Login:Error:NoValidProfiles'               => 'Geen geldig profiel opgegeven',
+	'UI:CSVImport:MappingSelectOne'                => '-- Selecteer --',
+	'UI:CSVImport:MappingNotApplicable'            => '-- Negeer dit veld --',
+	'UI:CSVImport:NoData'                          => 'Lege dataset..., voeg data toe',
+	'UI:Title:DataPreview'                         => 'Datavoorbeeld',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Fout: De data bevat slechts één kolom. Is het juiste scheidingsteken geselecteerd?',
+	'UI:CSVImport:FieldName'                       => 'Veld %1$d',
+	'UI:CSVImport:DataLine1'                       => 'Dataregel 1',
+	'UI:CSVImport:DataLine2'                       => 'Dataregel 2',
+	'UI:CSVImport:idField'                         => 'id (Primaire sleutel (key))',
+	'UI:Title:BulkImport'                          => ITOP_APPLICATION_SHORT.' - Bulk import',
+	'UI:Title:BulkImport+'                         => 'CSV Import Wizard',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronisatie van %1$d objecten van klasse "%2$s"',
+	'UI:CSVImport:ClassesSelectOne'                => '-- selecteer een --',
+	'UI:CSVImport:ErrorExtendedAttCode'            => 'Interne fout: "%1$s" is een incorrecte code omdat "%2$s" geen externe sleutel (key) van klasse "%3$s" is',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objecten(s) zullen onveranderd blijven.',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objecten(s) zullen worden aangepast.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objecten(s) zullen worden toegevoegd.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d objecten(s) zullen fouten bevatten.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objecten(s) zijn onveranderd gebleven.',
@@ -631,14 +639,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:CSVImport:AlertMultipleMapping' => 'Zorg dat er voor elk veld slechts één mapping is',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Selecteer tenminste een zoekcriterium.',
 	'UI:CSVImport:Encoding' => 'Tekstencodering',
-	'UI:UniversalSearchTitle' => 'iTop - Universele zoekopdracht',
+	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Universele zoekopdracht',
 	'UI:UniversalSearch:Error' => 'Fout: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Selecteer de klasse om te zoeken: ',
 
 	'UI:CSVReport-Value-Modified' => 'Aangepast',
-	'UI:CSVReport-Value-SetIssue' => 'Kon niet worden aangepast - reden: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Kon niet worden aangepast naar %1$s - reden: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Geen match',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Ontbrekende verplichte waarde',
 	'UI:CSVReport-Value-Ambiguous' => 'Onduidelijk: gevonden %1$s objecten',
 	'UI:CSVReport-Row-Unchanged' => 'onveranderd',
@@ -687,16 +695,28 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Audit:HeaderNbObjects' => '# objecten',
 	'UI:Audit:HeaderNbErrors' => '# fouten',
 	'UI:Audit:PercentageOk' => '% Ok',
+	'UI:Audit:OqlError' => 'OQL fout',
+	'UI:Audit:Error:ValueNA' => 'NB',
+	'UI:Audit:ErrorIn_Rule' => 'Fout in regel',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL-fout in de regel %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Fout in Categorie',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL-fout in de categorie %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Audit fouten',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Gecontroleerde objecten',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Foutieve objecten',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Gevalideerde objecten',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s fouten van de %2$s - %3$s%%',
+
 
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Evaluatie van OQL-query',
 	'UI:RunQuery:QueryExamples' => 'Voorbeelden van query\'s',
+	'UI:RunQuery:QueryResults' => 'Query-resultaten',
 	'UI:RunQuery:HeaderPurpose' => 'Doel',
 	'UI:RunQuery:HeaderPurpose+' => 'Uitleg over de query',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL-expressie',
 	'UI:RunQuery:HeaderOQLExpression+' => 'De query in OQL syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expressie om te evalueren: ',
+	'UI:RunQuery:QueryArguments' => 'Query-argumenten',
 	'UI:RunQuery:MoreInfo' => 'Meer informatie over de query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Herschreven query-expressie: ',
 	'UI:RunQuery:SerializedFilter' => 'Geserialiseerde filter: ',
@@ -706,8 +726,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:RunQuery:ResultSQL' => 'Resulterende SQL',
 	'UI:RunQuery:Error' => 'Er trad een fout op tijdens het uitvoeren van deze query',
 	'UI:Query:UrlForExcel' => 'URL om te gebruiken voor MS Excel-webquery\'s',
-	'UI:Query:UrlV1' => 'De lijst van velden is leeg gelaten. De pagina <em>export-V2.php</em> kan niet aangeroepen worden zonder deze informatie.Daarom verwijst de onderstaande link naar de oude export-pagina: <em>export.php</em>. Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van iTop. Als je wil dat de lijst van geëxporteerde kolommen hetzelfde blijft over lange tijd, dan moet je een waarde opgeven voor het attribuut "Velden" en de pagina <em>export-V2.php</em> gebruiken.',
+	'UI:Query:UrlV1' => 'De lijst van velden is leeg gelaten. De pagina <em>export-V2.php</em> kan niet aangeroepen worden zonder deze informatie.Daarom verwijst de onderstaande link naar de oude export-pagina: <em>export.php</em>. Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van '.ITOP_APPLICATION_SHORT.'. Als je wil dat de lijst van geëxporteerde kolommen hetzelfde blijft over lange tijd, dan moet je een waarde opgeven voor het attribuut "Velden" en de pagina <em>export-V2.php</em> gebruiken.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objecten-schema',
+	'UI:Schema:TitleForClass' => '%1$s schema',
 	'UI:Schema:CategoryMenuItem' => 'Categorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relaties',
 	'UI:Schema:AbstractClass' => 'Abstracte klasse: objecten van deze klasse kunnen niet worden geïnstantieerd.',
@@ -774,6 +795,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Schema:Attribute/Filter' => 'Filter',
 	'UI:Schema:DefaultNullValue' => 'Standaardwaarde null : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Typ de eerste 3 karakters...',
+	'UI:Edit:SearchQuery' => 'Kies een vooraf gedefinieerde query',
 	'UI:Edit:TestQuery' => 'Test query',
 	'UI:Combo:SelectValue' => '--- selecteer een waarde ---',
 	'UI:Label:SelectedObjects' => 'Geselecteerde objecten: ',
@@ -783,7 +805,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Voeg %1$s objecten gelinkt met %2$s: %3$s toe',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Voeg %1$s objecten toe om te linken met de %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Manage %1$s objecten gelinkt met %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Voeg %1$s toe...',
+	'UI:AddLinkedObjectsOf_Class' => 'Voeg %1$s toe',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Verwijder geselecteerde objecten',
 	'UI:Message:EmptyList:UseAdd' => 'De lijst is leeg, gebruik de "Voeg toe..." knop om elementen toe te voegen.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Gebruik het bovenstaande zoekveld om te zoeker naar objecten die je wilt toevoegen.',
@@ -864,7 +886,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:FatalErrorMessage' => 'Fatale fout, '.ITOP_APPLICATION_SHORT.' kan niet doorgaan.',
 	'UI:Error_Details' => 'Fout: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => ITOP_APPLICATION_SHORT.' gebruikersbeheer - klasse-projecties',
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' gebruikersbeheer - profiel-projecties',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => 'Klasse van objecten',
@@ -899,12 +920,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'Niet beschikbaar',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Er is geen levenscyclus gedefinieerd voor deze klasse',
 	'UI:UserManagement:GrantMatrix' => 'Rechtenmatrix',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link tussen %1$s en %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link tussen %1$s en %2$s',
 
-	'Menu:AdminTools' => 'Beheerderstools', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => 'Beheerderstools', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Tools die alleen toegankelijk zijn voor gebruikers met een beheerdersprofiel', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Admintools',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Beheertools',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met een administratorprofiel.',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'Systeem',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
@@ -950,17 +969,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ContactsMenu-ContactsByType' => 'Contacten aan de hand van soort',
 	'UI-ContactsMenu-ContactsByStatus' => 'Contacten aan de hand van status',
 
-	'Menu:CSVImportMenu' => 'CSV import', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => 'In bulk aanmaken of aanpassen van objecten', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => 'In bulk aanmaken of aanpassen van objecten',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Datamodel', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Overzicht van het Datamodel', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Datamodel',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Overzicht van het datamodel',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Exporteer', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => 'Exporteer de resultaten van elke query als HTML, CSV of XML', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Exporteer de resultaten van query\'s als HTML, CSV of XML',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Meldingen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu' => 'Meldingen',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuratie van Meldingen',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' zijn de meldingen volledig aan te passen. Ze zijn gebaseerd op twee sets van objecten: <i>triggers and actions</i>.</p>
@@ -975,10 +994,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 </ol>
 </p>
 <p>
-<i><b>Acties</b></i> bepalen de acties (zoals het versturen van meldingen) die uitgevoerd worden bij een bepaalde trigger. 
-Op dit moment is er slechts een standaardactie: het verzenden van een e-mail. 
-Per actie kan je ook het sjabloon instellen die gebruikt moet worden voor het versturen van de e-mail, maar ook andere e-mailparameters zoals de ontvangers, de prioriteit, enz. </p>
-<p>Een <a href="../setup/email.test.php" target="_blank">speciale testpagina (email.test.php)</a> is beschikbaar voor het testen en oplossen van eventuele problemen met jouw PHP e-mailconfiguratie.</p>
+<i><b>Acties</b></i> definieer de acties die uitgevoerd moeten worden als de triggers geactiveerd worden. Er zijn momenteel 2 soorten standaardacties:
+<ol>
+	<li>Stuur een e-mail: Bij deze acties definieer je een sjabloon voor het bericht en ook parameters zoals ontvanger(s), prioriteit, enz.<br />
+	Een <a href="../setup/email.test.php" target="_blank">speciale testpagina (email.test.php)</a> is beschikbaar voor het testen en oplossen van eventuele problemen met jouw PHP e-mailconfiguratie.</li>
+	<li>Webhooks: Staat toe om te integreren met toepassingen van derde partijen, door gestructureerde data te sturen naar een URL.</li>
+</ol>
+</p>
 <p>Acties moeten gekoppeld zijn aan triggers.
 Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt in welke volgorde de acties moeten worden uitgevoerd.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
@@ -987,6 +1009,9 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:NotificationsMenu:OnStateEnter' => 'Wanneer een object een bepaalde fase intreedt',
 	'UI:NotificationsMenu:OnStateLeave' => 'Wanneer een object een bepaalde fase uittreedt',
 	'UI:NotificationsMenu:Actions' => 'Acties',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email acties',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook acties (uitgaande integraties)',
+	'UI:NotificationsMenu:Actions:Action' => 'Andere acties',
 	'UI:NotificationsMenu:AvailableActions' => 'Beschikbare acties',
 
 	'Menu:TagAdminMenu' => 'Tags-configuratie',
@@ -995,39 +1020,43 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:TagAdminMenu:NoTags' => 'Geen tags geconfigureerd',
 	'UI:TagSetFieldData:Error' => 'Fout: %1$s',
 
-	'Menu:AuditCategories' => 'Auditcategorieën', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Auditcategorieën', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Auditcategorieën', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => 'Auditcategorieën',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Auditcategorieën',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Auditcategorieën',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Query\'s uitvoeren', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Voer een query uit', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'Query\'s uitvoeren',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Voer een query uit',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Favoriete query\'s', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Favoriete query\'s', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Favoriete query\'s',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Favoriete query\'s',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Databeheer', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Databeheer', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Databeheer',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Databeheer',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Globale zoekopdracht', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Zoek naar alles...', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Globale zoekopdracht',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Zoek in alle data...',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Gebruikersbeheer', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'Gebruikersbeheer', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Gebruikersbeheer',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Gebruikersbeheer',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profielen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Profielen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profielen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Profielen',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Profielen',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profielen',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Gebruikersaccounts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Gebruikersaccounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s versie %2$s',
 	'UI:iTopVersion:Long' => '%1$s versie %2$s-%3$s uitgegeven op %4$s',
 	'UI:PropertiesTab' => 'Eigenschappen',
 
-	'UI:OpenDocumentInNewWindow_' => 'Open dit document in een nieuw venster: %1$s',
-	'UI:DownloadDocument_' => 'Download dit document: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Open',
+	'UI:DownloadDocument_' => 'Download',
 	'UI:Document:NoPreview' => 'Er is geen voorbeeld beschikbaar voor dit soort document',
 	'UI:Download-CSV' => 'Download %1$s',
 
@@ -1037,7 +1066,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Help',
-	'UI:PasswordConfirm' => '(Bevestig)',
+	'UI:PasswordConfirm' => 'Bevestig',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Sla dit object op voordat je meer %1$s objecten toevoegt.',
 	'UI:DisplayThisMessageAtStartup' => 'Geef dit bericht weer bij het opstarten',
 	'UI:RelationshipGraph' => 'Grafische weergave',
@@ -1149,10 +1178,10 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:ArchiveMode:Banner+' => 'Gearchiveerde objecten zijn zichtbaar, maar kunnen niet worden aangepast',
 	'UI:FavoriteOrganizations' => 'Favoriete organisaties',
 	'UI:FavoriteOrganizations+' => 'Duid in onderstaande lijst de organisaties aan die je wilt zien in de keuzelijst voor een snelle toegang. Dit is geen beveiligingsinstelling; objecten van elke organisatie zijn nog steed zichtbaar en toegankelijk door "Alle Organisaties" te selecteren in de keuzelijst.',
-	'UI:FavoriteLanguage' => 'Taal van de gebruikersinterface~~',
+	'UI:FavoriteLanguage' => 'Taal van de gebruikersinterface',
 	'UI:Favorites:SelectYourLanguage' => 'Selecteer jouw taal',
 	'UI:FavoriteOtherSettings' => 'Overige instellingen',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Standaardlengte voor lijsten: %1$s items per pagina~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Standaardlengte: %1$s items per pagina',
 	'UI:Favorites:ShowObsoleteData' => 'Toon "Buiten dienst"-data',
 	'UI:Favorites:ShowObsoleteData+' => 'Toon "Buiten dienst"-data in zoekresultaten en in keuzelijsten.',
 	'UI:NavigateAwayConfirmationMessage' => 'Bewerkingen zullen worden genegeerd.',
@@ -1169,8 +1198,8 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:PrintResolution:A4Landscape' => 'A4 Landschap',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portret',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landschap',
-	'UI:Toggle:StandardDashboard' => 'Standaard',
-	'UI:Toggle:CustomDashboard' => 'Aangepast',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Schakel over naar het standaard dashboard',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Schakel over naar aangepast dashboard',
 
 	'UI:ConfigureThisList' => 'Configureer deze lijst...',
 	'UI:ListConfigurationTitle' => 'Configuratie van lijst',
@@ -1191,13 +1220,16 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:OQL:UnknownClassAndFix' => 'Onbekende klasse "%1$s". Je zou "%2$s" kunnen proberen.',
 	'UI:OQL:UnknownClassNoFix' => 'Onbekende klasse "%1$s"',
 
-	'UI:Dashboard:Edit' => 'Bewerk deze pagina...',
-	'UI:Dashboard:Revert' => 'Herstel de originele versie...',
+	'UI:Dashboard:EditCustom' => 'Bewerk aangepaste versie...',
+	'UI:Dashboard:CreateCustom' => 'Maak aangepaste versie...',
+	'UI:Dashboard:DeleteCustom' => 'Verwijder aangepaste versie...',
 	'UI:Dashboard:RevertConfirm' => 'Alle bewerkingen die zijn gemaakt aan de originele versie zullen verloren gaan. Bevestig dat je wilt doorgaan.',
 	'UI:ExportDashBoard' => 'Exporteer naar een bestand',
 	'UI:ImportDashBoard' => 'Importeer vanuit een bestand',
 	'UI:ImportDashboardTitle' => 'Importeer vanuit een bestand',
 	'UI:ImportDashboardText' => 'Selecteer een bestand van het dashboard om te importeren:',
+	'UI:Dashboard:Actions' => 'Dashboard acties',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'Dit dashboard toont informatie die nog geen rekening houdt met de wijzigingen die nu gemaakt worden.',
 
 
 	'UI:DashletCreation:Title' => 'Maak een nieuwe Dashlet aan',
@@ -1210,6 +1242,8 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:DashboardEdit:AutoReload' => 'Automatisch vernieuwen',
 	'UI:DashboardEdit:AutoReloadSec' => 'Interval voor het automatisch vernieuwen (seconden)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'Het toegestane minimum is 5 seconden',
+	'UI:DashboardEdit:Revert' => 'Herstel',
+	'UI:DashboardEdit:Apply' => 'Opslaan',
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Eigenschappen van dashboard',
@@ -1346,13 +1380,13 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'Month-10-Short' => 'Okt',
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dec',
-	'Calendar-FirstDayOfWeek' => '0', // 0 = Sunday, 1 = Monday, etc...
+	'Calendar-FirstDayOfWeek' => '0',// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Maak een snelkoppeling aan...',
 	'UI:ShortcutRenameDlg:Title' => 'Hernoem de snelkoppeling',
 	'UI:ShortcutListDlg:Title' => 'Maak een snelkoppeling voor de lijst aan',
 	'UI:ShortcutDelete:Confirm' => 'Bevestig dat je de snelkoppeling(en) wil verwijderen.',
-	'Menu:MyShortcuts' => 'Mijn Snelkoppelingen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Snelkoppelingen',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Naam',
@@ -1432,6 +1466,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 
 	'UI:CurrentObjectIsLockedBy_User' => 'Het object is vergrendeld omdat het momenteel aangepast wordt door %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Het object wordt aangepast door %1$s. Jouw wijzigingen kunnen niet opgeslagen worden omdat ze een conflict kunnen veroorzaken.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'Het object wordt aangepast door %1$s. Je kan je wijzigingen doorvoeren wanneer men klaar is.',
 	'UI:CurrentObjectLockExpired' => 'De vergrendeling om gelijktijdige wijzigingen te voorkomen, is opgeheven.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'De vergrendeling om gelijktijdige wijzigingen te voorkomen, is opgeheven. Je kan je wijzigingen niet meer opslaan aangezien andere gebruikers ondertussen dit object kunnen aanpassen.',
 	'UI:ConcurrentLockKilled' => 'De vergrendeling voor gelijktijdige gebruikers is opgeheven.',
@@ -1449,14 +1484,15 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:ToggleFullScreen' => 'Minimaliseren / Maximaliseren',
 	'UI:Button:ResetImage' => 'Vorige afbeelding herstellen',
 	'UI:Button:RemoveImage' => 'Afbeelding verwijderen',
+	'UI:Button:UploadImage' => 'Afbeelding uploaden',
 	'UI:UploadNotSupportedInThisMode' => 'Het aanpassen van afbeeldingen of bestanden wordt niet ondersteund in deze mode.',
 
-	'UI:Button:RemoveDocument' => 'Remove the document~~',
+	'UI:Button:RemoveDocument' => 'Document verwijderen',
 
 	// Search form
 	'UI:Search:Toggle' => 'Inklappen / uitklappen',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Direct zoeken werd uitgeschakeld voor deze klasse.',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Door jouw voorkeuren worden objecten met status "buiten dienst" verborgen',
+	'UI:Search:Obsolescence:DisabledHint' => 'Door jouw voorkeuren worden objecten met status "buiten dienst" verborgen',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Voeg enkele criteria toe in het zoekveld of klik op de zoekknop om objecten te zien.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Voeg nieuw criterium toe',
 	// - Add new criteria button
@@ -1464,6 +1500,11 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Meest populair',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Andere',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Nog geen.',
+
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Klap in / uit',
+	'UI:Search:Criteria:Remove' => 'Verwijder',
+	'UI:Search:Criteria:Locked' => 'Vergrendeld',
 
 	// - Criteria titles
 	//   - Default widget
@@ -1525,12 +1566,12 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Eindigt in',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regex ',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Gelijk aan',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Groter',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Groter of gelijk aan',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Kleiner',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Kleiner of gelijk aan',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Verschillend van',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Gelijk aan',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Groter',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Groter of gelijk aan',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Kleiner',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Kleiner of gelijk aan',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Verschillend van',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Bevat',
 
@@ -1560,6 +1601,8 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Gefilterd',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Gefiltered op %1$s',
+
+	'UI:StateChanged' => 'Status veranderd',
 ));
 
 //
@@ -1588,6 +1631,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Newsroom:NoNewMessage' => 'Geen nieuw bericht',
+	'UI:Newsroom:XNewMessage' => '%1$s nieuw(e) bericht(en)',
 	'UI:Newsroom:MarkAllAsRead' => 'Markeer alle berichten als gelezen',
 	'UI:Newsroom:ViewAllMessages' => 'Bekijk alle berichten',
 	'UI:Newsroom:Preferences' => 'Voorkeuren voor Newsroom',
@@ -1597,13 +1641,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Toon maximaal %1$s berichten in het %2$s menu.',
 ));
 
+
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:DataSources' => 'Synchronisatie-databronnen',
 	'Menu:DataSources+' => 'Alle Synchronisatie-databronnen',
 	'Menu:WelcomeMenu' => 'Welkom',
-	'Menu:WelcomeMenu+' => 'Welkom in iTop',
+	'Menu:WelcomeMenu+' => 'Welkom in '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => 'Welkom',
-	'Menu:WelcomeMenuPage+' => 'Welkom in iTop',
+	'Menu:WelcomeMenuPage+' => 'Welkom in '.ITOP_APPLICATION_SHORT,
 	'Menu:AdminTools' => 'Admintools',
 	'Menu:AdminTools+' => 'Beheertools',
 	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met een administratorprofiel.',
@@ -1616,22 +1661,30 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:AuditCategories' => 'Auditcategorieën',
 	'Menu:AuditCategories+' => 'Auditcategorieën',
 	'Menu:Notifications:Title' => 'Auditcategorieën',
-	'Menu:RunQueriesMenu' => 'Query\'s uitvoeren',
-	'Menu:RunQueriesMenu+' => 'Voer een query uit',
-	'Menu:QueryMenu' => 'Favoriete query\'s',
-	'Menu:QueryMenu+' => 'Favoriete query\'s',
-	'Menu:UniversalSearchMenu' => 'Globale zoekopdracht',
-	'Menu:UniversalSearchMenu+' => 'Zoek in alle data...',
-	'Menu:UserManagementMenu' => 'Gebruikersbeheer',
-	'Menu:UserManagementMenu+' => 'Gebruikersbeheer',
-	'Menu:ProfilesMenu' => 'Profielen',
-	'Menu:ProfilesMenu+' => 'Profielen',
-	'Menu:ProfilesMenu:Title' => 'Profielen',
-	'Menu:UserAccountsMenu' => 'Gebruikersaccounts',
-	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts',
+	'Menu:RunQueriesMenu'         => 'Query\'s uitvoeren',
+	'Menu:RunQueriesMenu+'        => 'Voer een query uit',
+	'Menu:QueryMenu'              => 'Voorgedefinieerde query\'s',
+	'Menu:QueryMenu+'             => 'Voorgedefinieerde query\'s',
+	'Menu:UniversalSearchMenu'    => 'Globale zoekopdracht',
+	'Menu:UniversalSearchMenu+'   => 'Zoek in alle data...',
+	'Menu:UserManagementMenu'     => 'Gebruikersbeheer',
+	'Menu:UserManagementMenu+'    => 'Gebruikersbeheer',
+	'Menu:ProfilesMenu'           => 'Profielen',
+	'Menu:ProfilesMenu+'          => 'Profielen',
+	'Menu:ProfilesMenu:Title'     => 'Profielen',
+	'Menu:UserAccountsMenu'       => 'Gebruikersaccounts',
+	'Menu:UserAccountsMenu+'      => 'Gebruikersaccounts',
 	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',
-	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',
-	'Menu:UserManagement' => 'Gebruikersbeheer',
-	'Menu:Queries' => 'Query\'s',
-	'Menu:ConfigurationTools' => 'Configuratie',
+	'Menu:MyShortcuts'            => 'Mijn snelkoppelingen',
+	'Menu:UserManagement'         => 'Gebruikersbeheer',
+	'Menu:Queries'                => 'Query\'s',
+	'Menu:ConfigurationTools'     => 'Configuratie',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'UI:Toggle:StandardDashboard' => 'Standaard',
+	'UI:Toggle:CustomDashboard'   => 'Aangepast',
+	'UI:Dashboard:Edit'           => 'Bewerk deze pagina...',
+	'UI:Dashboard:Revert'         => 'Herstel de originele versie...',
 ));

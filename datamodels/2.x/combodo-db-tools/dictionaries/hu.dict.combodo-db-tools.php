@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -23,67 +23,72 @@
 // Database inconsistencies
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	// Dictionary entries go here
-	'Menu:DBToolsMenu' => 'DB Tools~~',
-	'DBTools:Class' => 'Class~~',
-	'DBTools:Title' => 'Database Maintenance Tools~~',
-	'DBTools:ErrorsFound' => 'Errors Found~~',
-	'DBTools:Error' => 'Error~~',
-	'DBTools:Count' => 'Count~~',
-	'DBTools:SQLquery' => 'SQL query~~',
-	'DBTools:FixitSQLquery' => 'SQL query To Fix it (indication)~~',
-	'DBTools:SQLresult' => 'SQL result~~',
-	'DBTools:NoError' => 'The database is OK~~',
-	'DBTools:HideIds' => 'Error List~~',
-	'DBTools:ShowIds' => 'Detailed view~~',
-	'DBTools:ShowReport' => 'Report~~',
-	'DBTools:IntegrityCheck' => 'Integrity check~~',
-	'DBTools:FetchCheck' => 'Fetch Check (long)~~',
+	'Menu:DBToolsMenu' => 'DB eszközök',
+	'DBTools:Class' => 'Osztály',
+	'DBTools:Title' => 'Adatbázis karbantartó eszközök',
+	'DBTools:ErrorsFound' => 'Hibák vannak',
+	'DBTools:Indication' => 'Fontos: az adatbázisban lévő hibák kijavítása után újra kell futtatni az elemzést, mivel új következetlenségek keletkeznek.',
+	'DBTools:Disclaimer' => 'A JAVÍTÁSOK FUTTATÁSA ELŐTT MINDIG KÉSZÍTSEN BIZTONSÁGI MENTÉST AZ ADATBÁZISÁRÓL.',
+	'DBTools:Error' => 'Hiba',
+	'DBTools:Count' => 'Sorszám',
+	'DBTools:SQLquery' => 'SQL lekérdezés',
+	'DBTools:FixitSQLquery' => 'SQL lekérdezés To Fix it (indication)',
+	'DBTools:SQLresult' => 'SQL eredmény',
+	'DBTools:NoError' => 'Az adatbázis OK',
+	'DBTools:HideIds' => 'Hibalista',
+	'DBTools:ShowIds' => 'Részletes nézet',
+	'DBTools:ShowReport' => 'Jelentés',
+	'DBTools:IntegrityCheck' => 'Integritás ellenőrzés',
+	'DBTools:FetchCheck' => 'Lehívás ellenőrzés (hosszú)',
+	'DBTools:SelectAnalysisType' => 'Válasszon elemzés típust',
 
-	'DBTools:Analyze' => 'Analyze~~',
-	'DBTools:Details' => 'Show Details~~',
-	'DBTools:ShowAll' => 'Show All Errors~~',
+	'DBTools:Analyze' => 'Elemzés',
+	'DBTools:Details' => 'Részletek mutatása',
+	'DBTools:ShowAll' => 'Minden hiba mutatása',
 
-	'DBTools:Inconsistencies' => 'Database inconsistencies~~',
+	'DBTools:Inconsistencies' => 'Adatbázis inkonzisztenciák',
+	'DBTools:DetailedErrorTitle' => '%2$s hiba a %1$s osztályban: %3$s',
 
-	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`~~',
-	'DBAnalyzer-Integrity-InvalidExtKey' => 'Invalid external key %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-MissingExtKey' => 'Missing external key %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-InvalidValue' => 'Invalid value for %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Some user accounts have no profile at all~~',
-	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted~~',
-	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`~~',
-	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class~~',
+    'DBAnalyzer-Integrity-OrphanRecord' => 'Árva rekord a `%1$s` -ban, kell hogy legyen megfelelője a `%2$s` táblázatban',
+	'DBAnalyzer-Integrity-InvalidExtKey' => 'Érvénytelen a %1$s  külső kulcs (oszlop: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-MissingExtKey' => 'Hiányzik a %1$s külső külcs (oszlop: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-InvalidValue' => '%1$s értéke érvénytelen (oszlop: `%2$s.%3$s`)~~',
+	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Néhány felhasználónak egyáltalán nincs fiókja',
+	'DBAnalyzer-Integrity-HKInvalid' => 'Sérült a `%1$s` hierarchikus kulcs',
+	'DBAnalyzer-Fetch-Count-Error' => 'Lekérési hiba a `%1$s` -nál, %2$d bejegyzés lekérve / %3$d megszámlálva',
+	'DBAnalyzer-Integrity-FinalClass' => 'A `%2$s`.`%1$s` mezőnek ugyanolyan értékűnek kell lennie mint a `%3$s`.`%1$s`',
+	'DBAnalyzer-Integrity-RootFinalClass' => '`%2$s`.`%1$s` mezőnek érvényes osztályt kell tartalmaznia',
 ));
 
 // Database Info
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'DBTools:DatabaseInfo' => 'Database Information~~',
-	'DBTools:Base' => 'Base~~',
-	'DBTools:Size' => 'Size~~',
+	'DBTools:DatabaseInfo' => 'Adatbázis információ',
+	'DBTools:Base' => 'Bázis',
+	'DBTools:Size' => 'Méret',
 ));
 
 // Lost attachments
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'DBTools:LostAttachments' => 'Lost attachments~~',
-	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, is does not retrieve deleted data.~~',
+	'DBTools:LostAttachments' => 'Elveszett mellékletek',
+	'DBTools:LostAttachments:Disclaimer' => 'Itt kereshet az adatbázisban elveszett vagy elkeveredett mellékletek után. Ez NEM egy adat-visszaállítási eszköz, nem állítja vissza a törölt adatokat.',
 
-	'DBTools:LostAttachments:Button:Analyze' => 'Analyze~~',
-	'DBTools:LostAttachments:Button:Restore' => 'Restore~~',
-	'DBTools:LostAttachments:Button:Restore:Confirm' => 'This action cannot be undone, please confirm that you want to restore the selected files.~~',
-	'DBTools:LostAttachments:Button:Busy' => 'Please wait...~~',
+	'DBTools:LostAttachments:Button:Analyze' => 'Elemzés',
+	'DBTools:LostAttachments:Button:Restore' => 'Visszaállítás',
+	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Ez a művelet nem vonható vissza, kérjük, erősítse meg, hogy vissza kívánja-e állítani a kiválasztott fájlokat.',
+	'DBTools:LostAttachments:Button:Busy' => 'Kérem várjon...',
 
-	'DBTools:LostAttachments:Step:Analyze' => 'First, search for lost/misplaced attachments by analyzing the database.~~',
+	'DBTools:LostAttachments:Step:Analyze' => 'Először az adatbázis elemzésével keresse meg az elveszett/áthelyezett mellékleteket.',
 
-	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analyze results:~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Great! Every thing seems to be at the right place.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Some attachments (%1$d) seem to be misplaced. Take a look at the following list and check the ones you would like to move.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Filename~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Current location~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Move to...~~',
+	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Elemzés eredménye:',
+	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Nagyszerű! Úgy tűnik, minden a helyén van.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Úgy tűnik, hogy néhány melléklet (%1$d) rossz helyen van. Nézze meg az alábbi listát, és ellenőrizze azokat, amelyeket szeretne áthelyezni.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Fájlnév',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Jelenlegi helye',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Áthelyezés...',
 
-	'DBTools:LostAttachments:Step:RestoreResults' => 'Restore results:~~',
-	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d attachments were restored.~~',
+	'DBTools:LostAttachments:Step:RestoreResults' => 'Visszaállítás eredménye:',
+	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d melléklet lett visszaállítva.',
 
-	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stored as inline image~~',
-	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools~~'
+	'DBTools:LostAttachments:StoredAsInlineImage' => 'Soron belüli képként tárolva',
+	'DBTools:LostAttachments:History' => 'A "%1$s" melléklet visszaállítva a DB eszközzel'
 ));

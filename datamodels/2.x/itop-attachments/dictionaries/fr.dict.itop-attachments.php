@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -36,6 +36,7 @@ Soit vous avez attaché un fichier vide,
 Soit demandez à votre administrateur système s\'il reste de la place disque disponible sur le serveur',
 	'Attachments:Render:Icons' => 'Affichage en icônes',
 	'Attachments:Render:Table' => 'Affichage en liste',
+	'UI:Attachments:DropYourFileHint' => 'Déposez vos fichiers dans cet espace',
 ));
 
 //
@@ -67,6 +68,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:File:Uploader' => 'Chargé par',
 	'Attachments:File:Size' => 'Taille',
 	'Attachments:File:MimeType' => 'Type',
+	'Attachments:File:DownloadsCount' => 'Téléchargements',
 ));
 //
 // Class: Attachment
@@ -79,4 +81,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Contact',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:TriggerOnAttachmentDownload' => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
+	'Class:TriggerOnAttachmentDownload+' => '',
 ));

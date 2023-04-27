@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -145,6 +145,8 @@ if (file_exists($sDotExecutable))
 		readfile($sImageFilePath);
 	}
 	@unlink($sDotFilePath);
+	// Image file is removed as well as there is no cache system yet
+	@unlink($sImageFilePath);
 }
 else
 {

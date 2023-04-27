@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
  * Localized data
  *
  * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -45,8 +45,8 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:ProblemManagement' => 'Problem Yönetimi',
-	'Menu:ProblemManagement+' => 'Problem Yönetimi',
+	'Menu:ProblemManagement' => 'Problem yönetimi',
+	'Menu:ProblemManagement+' => 'Problem yönetimi',
 	'Menu:Problem:Overview' => 'Özet',
 	'Menu:Problem:Overview+' => 'Özet',
 	'Menu:NewProblem' => 'Yeni Problem',
@@ -105,24 +105,24 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Problem/Attribute:impact/Value:3+' => '',
 	'Class:Problem/Attribute:urgency' => 'Aciliyeti',
 	'Class:Problem/Attribute:urgency+' => '',
-	'Class:Problem/Attribute:urgency/Value:1' => 'Düşük',
-	'Class:Problem/Attribute:urgency/Value:1+' => 'Düşük',
+	'Class:Problem/Attribute:urgency/Value:1' => 'Critical~~',
+	'Class:Problem/Attribute:urgency/Value:1+' => 'Critical~~',
 	'Class:Problem/Attribute:urgency/Value:2' => 'Orta',
 	'Class:Problem/Attribute:urgency/Value:2+' => 'Orta',
 	'Class:Problem/Attribute:urgency/Value:3' => 'Yüksek',
 	'Class:Problem/Attribute:urgency/Value:3+' => 'Yüksek',
-	'Class:Problem/Attribute:urgency/Value:4' => 'low~~',
-	'Class:Problem/Attribute:urgency/Value:4+' => 'low~~',
+	'Class:Problem/Attribute:urgency/Value:4' => 'Düşük',
+	'Class:Problem/Attribute:urgency/Value:4+' => 'Düşük',
 	'Class:Problem/Attribute:priority' => 'Öncelik',
 	'Class:Problem/Attribute:priority+' => '',
-	'Class:Problem/Attribute:priority/Value:1' => 'Düşük',
+	'Class:Problem/Attribute:priority/Value:1' => 'Critical~~',
 	'Class:Problem/Attribute:priority/Value:1+' => '',
 	'Class:Problem/Attribute:priority/Value:2' => 'Orta',
 	'Class:Problem/Attribute:priority/Value:2+' => '',
 	'Class:Problem/Attribute:priority/Value:3' => 'Yüksek',
 	'Class:Problem/Attribute:priority/Value:3+' => '',
-	'Class:Problem/Attribute:priority/Value:4' => 'Low~~',
-	'Class:Problem/Attribute:priority/Value:4+' => 'Low~~',
+	'Class:Problem/Attribute:priority/Value:4' => 'Düşük',
+	'Class:Problem/Attribute:priority/Value:4+' => 'Düşük',
 	'Class:Problem/Attribute:related_change_id' => 'İlgili değişiklik',
 	'Class:Problem/Attribute:related_change_id+' => '',
 	'Class:Problem/Attribute:related_change_ref' => 'Referans',
@@ -132,11 +132,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Problem/Attribute:resolution_date' => 'Çözülme tarihi',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Bilinen Hatalar',
-	'Class:Problem/Attribute:knownerrors_list+' => '',
-	'Class:Problem/Attribute:related_request_list' => 'Related requests~~',
-	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
-	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
-	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
+	'Class:Problem/Attribute:knownerrors_list+' => 'All the known errors that are linked to this problem~~',
+	'Class:Problem/Attribute:related_request_list' => 'İlgili Talepler',
+	'Class:Problem/Attribute:related_request_list+' => 'Bu problemle ilgili tüm talepler',
+	'Class:Problem/Attribute:related_incident_list' => 'İlişkili Olaylar',
+	'Class:Problem/Attribute:related_incident_list+' => 'Bu problemle ilgili olan tüm olaylar',
 	'Class:Problem/Stimulus:ev_assign' => 'Ata',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Yeniden ata',

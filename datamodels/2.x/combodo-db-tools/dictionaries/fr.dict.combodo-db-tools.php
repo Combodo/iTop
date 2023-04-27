@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2021 Combodo SARL
+// Copyright (c) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,6 +23,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'DBTools:Class' => 'Classe',
 	'DBTools:Title' => 'Contrôle de l\'intégrité de la base de données',
 	'DBTools:ErrorsFound' => 'Erreurs trouvées',
+	'DBTools:Indication' => 'Important : après correction il est nécessaire de relancer l\'analyse car d\'autres inconsistances peuvent être générées par les modifications',
+	'DBTools:Disclaimer' => 'ATTENTION : EFFECTUEZ UNE SAUVEGARDE DE LA BASE AVANT D\'APPLIQUER LES CORRECTIONS',
 	'DBTools:Error' => 'Erreur',
 	'DBTools:Count' => 'Nombre',
 	'DBTools:SQLquery' => 'Requête SQL',
@@ -34,18 +36,22 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'DBTools:ShowReport' => 'Rapport',
 	'DBTools:IntegrityCheck' => 'Contrôle d\'intégrité',
 	'DBTools:FetchCheck' => 'Contrôle de récupération (long)',
+	'DBTools:SelectAnalysisType' => 'Type d\'analyse',
 
 	'DBTools:Analyze' => 'Analyser',
 	'DBTools:Details' => 'Afficher détails',
 	'DBTools:ShowAll' => 'Afficher toutes les erreurs',
 
 	'DBTools:Inconsistencies' => 'Incohérences de base de données',
+	'DBTools:DetailedErrorTitle' => '%2$s erreur(s) dans la classe %1$s : %3$s',
+	'DBTools:DetailedErrorLimit' => 'Liste limitée à %1$s erreurs',
 
-	'DBAnalyzer-Integrity-OrphanRecord' => 'Enregistrement orphelin dans `%1$s`, il devrait avoir son équivalent dans la tableit  `%2$s`',
-	'DBAnalyzer-Integrity-InvalidExtKey' => 'Clef externe invalide %1$s (colonne: `%2$s.%3$s`)',
-	'DBAnalyzer-Integrity-MissingExtKey' => 'Clef externe manquante %1$s (colonne: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-OrphanRecord' => 'Enregistrement orphelin dans `%1$s`, il devrait avoir son équivalent dans la table `%2$s`',
+	'DBAnalyzer-Integrity-InvalidExtKey' => 'Clé externe invalide %1$s (colonne: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-MissingExtKey' => 'Clé externe manquante %1$s (colonne: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-InvalidValue' => 'Valeur invalide pour %1$s (colonne: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Certains comptes utilisateurs n\'ont aucun profile',
+	'DBAnalyzer-Integrity-HKInvalid' => 'Clé hiérarchique `%1$s` invalide',
 	'DBAnalyzer-Fetch-Count-Error' => 'Erreur de récupération dans `%1$s`, %2$d enregistrements récupérés / %3$d comptés',
 	'DBAnalyzer-Integrity-FinalClass' => 'Le champ `%2$s`.`%1$s` doit avoir la même valeur que `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Le champ `%2$s`.`%1$s` doit contenir une classe valide',

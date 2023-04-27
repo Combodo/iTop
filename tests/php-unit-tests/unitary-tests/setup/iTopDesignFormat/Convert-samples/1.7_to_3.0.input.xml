@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <branding>
+    <themes>
+      <theme id="test-red" _delta="define">
+        <variables>
+          <variable id="backoffice-environment-banner-background-color">#C53030</variable>
+          <variable id="var1">#C53030</variable>
+        </variables>
+        <imports>
+          <import id="css-variables">../css/css-variables.scss</import>
+          <import id="scss-variables">../css/scss-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/main.scss</stylesheet>
+          <stylesheet id="custom">../css/custom.scss</stylesheet>
+        </stylesheets>
+      </theme>
+      <theme id="light-grey">
+        <variables/>
+        <imports>
+          <import id="css-variables">../css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/light-grey.scss</stylesheet>
+        </stylesheets>
+      </theme>
+    </themes>
+  </branding>
+  <classes>
+    <class id="ClassWithNewValueInFieldWhichHasNoXsiTypeDueToMustExistFlag" _delta="must_exist">
+      <fields>
+        <field id="status" _delta="must_exist">
+          <values>
+            <value id="test" _delta="define">test</value>
+          </values>
+        </field>
+      </fields>
+    </class>
+    <class id="ClassWithLifecycle">
+      <properties>
+        <icon>images/class-with-lifecycle.png</icon>
+      </properties>
+      <lifecycle>
+        <attribute>foo</attribute>
+      </lifecycle>
+    </class>
+    <class id="ClassWithLifecycleNoProperties">
+      <lifecycle>
+        <attribute>foo</attribute>
+      </lifecycle>
+    </class>
+    <class id="OtherClass">
+      <properties>
+        <icon revisionid="2" _delta="redefine">
+          <fileref ref="company_0faae3b9d86b7c382b2e4cdae570bc3c" revisionid="62"/>
+        </icon>
+      </properties>
+      <fields>
+        <field id="status" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="new">new</value>
+            <value id="assigned">assigned</value>
+          </values>
+          <sql>status</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="operational_status" xsi:type="AttributeMetaEnum">
+          <values>
+            <value id="ongoing">ongoing</value>
+            <value id="resolved">resolved</value>
+            <value id="closed">closed</value>
+          </values>
+          <sql>operational_status</sql>
+          <default_value>ongoing</default_value>
+          <mappings>
+            <mapping id="Ticket">
+              <attcode>status</attcode>
+              <metavalues>
+                <metavalue id="resolved">
+                  <values>
+                    <value id="resolved"/>
+                  </values>
+                </metavalue>
+                <metavalue id="closed">
+                  <values>
+                    <value id="closed"/>
+                    <value id="rejected"/>
+                  </values>
+                </metavalue>
+              </metavalues>
+            </mapping>
+          </mappings>
+        </field>
+      </fields>
+    </class>
+  </classes>
+</itop_design>

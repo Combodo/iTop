@@ -21,6 +21,8 @@ use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 /**
  * @author Aaron Scherer <aequasi@gmail.com>
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
+ *
+ * @final
  */
 class CacheDataCollector extends DataCollector implements LateDataCollectorInterface
 {
@@ -29,10 +31,7 @@ class CacheDataCollector extends DataCollector implements LateDataCollectorInter
      */
     private $instances = [];
 
-    /**
-     * @param string $name
-     */
-    public function addInstance($name, TraceableAdapter $instance)
+    public function addInstance(string $name, TraceableAdapter $instance)
     {
         $this->instances[$name] = $instance;
     }
@@ -40,7 +39,7 @@ class CacheDataCollector extends DataCollector implements LateDataCollectorInter
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
         $empty = ['calls' => [], 'config' => [], 'options' => [], 'statistics' => []];
         $this->data = ['instances' => $empty, 'total' => $empty];
@@ -62,33 +61,29 @@ class CacheDataCollector extends DataCollector implements LateDataCollectorInter
 
     public function lateCollect()
     {
-        $this->data = $this->cloneVar($this->data);
+        $this->data['instances']['calls'] = $this->cloneVar($this->data['instances']['calls']);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'cache';
     }
 
     /**
      * Method returns amount of logged Cache reads: "get" calls.
-     *
-     * @return array
      */
-    public function getStatistics()
+    public function getStatistics(): array
     {
         return $this->data['instances']['statistics'];
     }
 
     /**
      * Method returns the statistic totals.
-     *
-     * @return array
      */
-    public function getTotals()
+    public function getTotals(): array
     {
         return $this->data['total']['statistics'];
     }
@@ -103,10 +98,7 @@ class CacheDataCollector extends DataCollector implements LateDataCollectorInter
         return $this->data['instances']['calls'];
     }
 
-    /**
-     * @return array
-     */
-    private function calculateStatistics()
+    private function calculateStatistics(): array
     {
         $statistics = [];
         foreach ($this->data['instances']['calls'] as $name => $calls) {
@@ -123,7 +115,15 @@ class CacheDataCollector extends DataCollector implements LateDataCollectorInter
             foreach ($calls as $call) {
                 ++$statistics[$name]['calls'];
                 $statistics[$name]['time'] += $call->end - $call->start;
-                if ('getItem' === $call->name) {
+                if ('get' === $call->name) {
+                    ++$statistics[$name]['reads'];
+                    if ($call->hits) {
+                        ++$statistics[$name]['hits'];
+                    } else {
+                        ++$statistics[$name]['misses'];
+                        ++$statistics[$name]['writes'];
+                    }
+                } elseif ('getItem' === $call->name) {
                     ++$statistics[$name]['reads'];
                     if ($call->hits) {
                         ++$statistics[$name]['hits'];
@@ -157,10 +157,7 @@ class CacheDataCollector extends DataCollector implements LateDataCollectorInter
         return $statistics;
     }
 
-    /**
-     * @return array
-     */
-    private function calculateTotalStatistics()
+    private function calculateTotalStatistics(): array
     {
         $statistics = $this->getStatistics();
         $totals = [

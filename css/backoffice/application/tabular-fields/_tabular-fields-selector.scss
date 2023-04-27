@@ -1,36 +1,60 @@
-/*!
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+$ibo-table-preview--header-cell--padding: $ibo-spacing-200 $ibo-spacing-600 $ibo-spacing-200 $ibo-spacing-200 !default;
+$ibo-table-preview--header-cell--background-color: $ibo-color-white-200 !default;
+$ibo-table-preview--header-cell--border-width:  1px 1px 0 !default;
+
+$ibo-table-preview--body-cell--padding-x: $ibo-spacing-200 !default;
+$ibo-table-preview--body-cell--border-width: 0 1px !default;
+$ibo-table-preview--body-cell--last--border-bottom-width: 1px !default;
+
+$ibo-preview-header--margin-bottom: $ibo-spacing-200 !default;
+$ibo-table-preview--remove-column--top: $ibo-spacing-300 !default;
+$ibo-table-preview--remove-column--right: $ibo-spacing-300 !default;
+$ibo-table-preview--remove-column--font-size: 8px !default;
+
+$ibo-form-part-interactive-fields--margin-top: $ibo-spacing-600 !default;
 
 .ibo-table-preview {
   margin-top: 20px;
   overflow-x: auto;
 
   th {
-    padding: 5px;
-    border-width: 1px 1px 0;
+    position: relative;
+    padding: $ibo-table-preview--header-cell--padding;
+    border-width: $ibo-table-preview--header-cell--border-width;
     border-style: groove groove none;
-    background: $ibo-body-background-color;
+    background: $ibo-table-preview--header-cell--background-color;
   }
 
   td {
-    padding-right: 5px;
-    padding-left: 5px;
-    border-width: 0 1px;
+    padding-right: $ibo-table-preview--body-cell--padding-x;
+    padding-left: $ibo-table-preview--body-cell--padding-x;
+    border-width: $ibo-table-preview--body-cell--border-width;
     border-style: none groove;
   }
 
   tr:last-child td {
-    border-bottom-width: 1px;
+    border-bottom-width: $ibo-table-preview--body-cell--last--border-bottom-width;
     border-bottom-style: groove;
   }
 }
 
 .ibo-preview-header {
-  margin-bottom: 5px;
+  margin-bottom: $ibo-preview-header--margin-bottom;
+}
+.ibo-table-preview--remove-column {
+  position: absolute;
+  top: $ibo-table-preview--remove-column--top;
+  right: $ibo-table-preview--remove-column--right;
+  display: inline-block;
+  cursor: pointer;
+  font-size: $ibo-table-preview--remove-column--font-size;
 }
 
 #form_part_interactive_fields_xlsx, #form_part_interactive_fields_csv, #form_part_interactive_fields_pdf {
-  margin-top: $ibo-panel--spacing-top;
+  margin-top: $ibo-form-part-interactive-fields--margin-top;
 }

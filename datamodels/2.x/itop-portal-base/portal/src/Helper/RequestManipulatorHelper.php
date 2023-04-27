@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -89,13 +89,13 @@ class RequestManipulatorHelper
 	 *
 	 * @param string $sKey
 	 * @param mixed  $default
-	 * @param int    $iFilter Default is FILTER_SANITIZE_STRING
+	 * @param int    $iFilter Default is FILTER_SANITIZE_SPECIAL_CHARS
 	 *
 	 * @return mixed|null
 	 *
 	 * @since 2.5.1
 	 */
-	public function ReadParam($sKey, $default = null, $iFilter = FILTER_SANITIZE_STRING)
+	public function ReadParam($sKey, $default = null, $iFilter = FILTER_SANITIZE_SPECIAL_CHARS)
 	{
 		if ($this->GetCurrentRequest()->query->has($sKey))
 		{

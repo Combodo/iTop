@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -277,12 +277,26 @@ function CheckAll(sSelector, bValue) {
 function ToggleField(value, field_id) {
 	if (value) {
 		$('#'+field_id).prop('disabled', false);
-		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
-		$('#'+field_id+' :input').prop('disabled', false);
+		if ($('#'+field_id).hasClass('selectized')) {
+			$('#'+field_id)[0].selectize.enable();
+		} else if ($('#'+field_id).parent().find('.ibo-input-select-autocomplete').length > 0) {
+			$('#'+field_id).parent().find('.ibo-input-select-autocomplete').prop('disabled', false);
+			$('#'+field_id).parent().find('.ibo-input-select--action-buttons').removeClass('ibo-is-hidden');
+		} else {
+			// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
+			$('#'+field_id+' :input').prop('disabled', false);
+		}
 	} else {
 		$('#'+field_id).prop('disabled', true);
-		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
-		$('#'+field_id+' :input').prop('disabled', true);
+		if ($('#'+field_id).hasClass('selectized')) {
+			$('#'+field_id)[0].selectize.disable();
+		} else if ($('#'+field_id).parent().find('.ibo-input-select-autocomplete').length > 0) {
+			$('#'+field_id).parent().find('.ibo-input-select-autocomplete').prop('disabled', true);
+			$('#'+field_id).parent().find('.ibo-input-select--action-buttons').addClass('ibo-is-hidden');
+		} else {
+			// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
+			$('#'+field_id+' :input').prop('disabled', true);
+		}
 	}
 	$('#'+field_id).trigger('update');
 	$('#'+field_id).trigger('validate');
@@ -357,8 +371,8 @@ function DashletCreationDlg(sOQL, sContext) {
 function ShortcutListDlg(sOQL, sDataTableId, sContext) {
 	var sDataTableName = 'datatable_'+sDataTableId;
 	var oTableSettings = {
-		oColumns: $('#'+sDataTableName).DataTable().ajax.params()['columns'],
-		iPageSize: $('#'+sDataTableName).DataTable().ajax.params()['length']/numberCachePages
+		oColumns: $('#datatable_dlg_'+sDataTableName).DataTableSettings('GetColumns'),
+		iPageSize: $('#'+sDataTableName).DataTable().ajax.params()['length']
 	};
 	var sTableSettings = JSON.stringify(oTableSettings);
 
@@ -374,13 +388,23 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle) {
 		var sDataTableName = 'datatable_'+sDataTableId;
 		var oColumns = $('#'+sDataTableName).DataTable().ajax.params()['columns'];
 		for (var j in oColumns) {
-			for (var k in oColumns[j]) {
-				if (oColumns[j][k].checked) {
-					var sCode = oColumns[j][k].code;
-					if (sCode == '_key_') {
-						sCode = 'id';
+			if (oColumns[j]['data']) {
+				if (oColumns[j]['data']!='id') {
+					var sCode = oColumns[j]['data'].split("/");
+					if (sCode[1] == '_key_') {
+						sCode[1] = 'id';
 					}
-					aFields.push(j+'.'+sCode);
+					aFields.push(sCode[0]+'.'+sCode[1]);
+				}
+			} else {
+				for (var k in oColumns[j]) {
+					if (oColumns[j][k].checked) {
+						var sCode = oColumns[j][k].code;
+						if (sCode == '_key_') {
+							sCode = 'id';
+						}
+						aFields.push(j+'.'+sCode);
+					}
 				}
 			}
 		}
@@ -446,8 +470,8 @@ function ExportStartExport() {
 				ExportRun(data);
 			}
 		}, 'json')
-		.fail(function () {
-			ExportError('Export failed, please contact your administrator');
+		.fail(function (data) {
+			ExportError('Export failed, please contact your administrator<br/>'+data.responseText);
 		});
 }
 
@@ -483,14 +507,11 @@ function ExportRun(data) {
 			sMessage = '<a href="'+GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=export_download&token='+data.token+'" target="_blank">'+data.message+'</a>';
 			$('.export-message').html(sMessage);
 			$('.export-progress-bar').hide();
-			$('#export-btn').hide();
 			$('#export-form').attr('data-state', 'done');
 			if (data.text_result != undefined) {
 				if (data.mime_type == 'text/html') {
 					$('#export_content').parent().html(data.text_result);
-					$('#export_text_result').show();
-					//$('#export_text_result .listResults').tableHover();
-					$('#export_text_result .listResults').tablesorter({widgets: ['myZebra']});
+					$('#export_text_result').removeClass('ibo-is-hidden');
 				} else {
 					if ($('#export_text_result').closest('ui-dialog').length == 0) {
 						// not inside a dialog box, adjust the height... approximately
@@ -504,7 +525,7 @@ function ExportRun(data) {
 						$('#export_content').height(iTotalHeight-80);
 					}
 					$('#export_content').val(data.text_result);
-					$('#export_text_result').show();
+					$('#export_text_result').removeClass('ibo-is-hidden');
 				}
 			}
 			$('#export-dlg-submit').button('option', 'label', Dict.S('UI:Button:Done')).button('enable');
@@ -532,7 +553,7 @@ function ExportInitButton(sSelector) {
 				var aMessages = $('#export-form').data('validation_messages');
 
 				if (aMessages.length > 0) {
-					alert(aMessages.join(''));
+					CombodoModal.OpenErrorModal(aMessages.join(''));
 					return;
 				}
 				if ($(this).hasClass('ui-button')) {
@@ -565,20 +586,10 @@ function ExportInitButton(sSelector) {
 }
 
 /**
- * @deprecated 3.0.0 will be removed in 3.1, see N°3824
- */
-function DisplayHistory(sSelector, sFilter, iCount, iStart) {
-	$(sSelector).block();
-	var oParams = {operation: 'history_from_filter', filter: sFilter, start: iStart, count: iCount};
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function (data) {
-			$(sSelector).html(data).unblock();
-		}
-	);
-}
-
-/**
+ * @deprecated 3.0.0 N°4367 deprecated, use {@see CombodoSanitizer.EscapeHtml} instead
+ *
  * @param sValue value to escape
- * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contrains html entities we want to keep)
+ * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
  * @returns {string} escaped value, ready to insert in the DOM without XSS risk
  *
  * @since 2.6.5, 2.7.2, 3.0.0 N°3332
@@ -624,49 +635,6 @@ function Format() {
 }
 
 /**
- * Return true if oDOMElem is visible to the user, meaning that it is in the current viewport AND is not behind another element.
- *
- * @param oDOMElem DOM element to check
- * @param bCompletely Should oDOMElem be completely visible for the function to return true?
- * @param iThreshold Use when bCompletely = true, a threshold in pixels to consider oDOMElem as completely visible. This is useful when elements are next to others as the browser can consider 1 pixel is overlapping the next element.
- * @returns {boolean}
- * @url: https://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
- */
-function IsElementVisibleToTheUser(oDOMElem, bCompletely = false, iThreshold = 0)
-{
-	const oRect = oDOMElem.getBoundingClientRect(),
-		fViewportWidth = window.innerWidth || doc.documentElement.clientWidth,
-		fViewportHeight = window.innerHeight || doc.documentElement.clientHeight,
-		efp = function (x, y) {
-			return document.elementFromPoint(x, y)
-		};
-
-	// Return false if it's not in the viewport
-	if (oRect.right < 0 || oRect.bottom < 0
-		|| oRect.left > fViewportWidth || oRect.top > fViewportHeight) {
-		return false;
-	}
-
-	if (bCompletely === true) {
-		// Return true if ALL of its four corners are visible
-		return (
-			oDOMElem.contains(efp(oRect.left+iThreshold, oRect.top+iThreshold))
-			&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.top+iThreshold))
-			&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.bottom-iThreshold))
-			&& oDOMElem.contains(efp(oRect.left+iThreshold, oRect.bottom-iThreshold))
-		);
-	} else {
-		// Return true if ANY of its four corners are visible
-		return (
-			oDOMElem.contains(efp(oRect.left, oRect.top))
-			|| oDOMElem.contains(efp(oRect.right, oRect.top))
-			|| oDOMElem.contains(efp(oRect.right, oRect.bottom))
-			|| oDOMElem.contains(efp(oRect.left, oRect.bottom))
-		);
-	}
-}
-
-/**
  * Enable to access translation keys client side.
  * The called keys needs to be exported using \WebPage::add_dict_entry
  */
@@ -688,7 +656,7 @@ Dict.Format = function () {
 	var args = Array.from(arguments);
 	args[0] = Dict.S(arguments[0]);
 	return Format(args);
-}
+};
 
 // TODO 3.0.0: Move functions above either in CombodoGlobalToolbox or CombodoBackofficeToolbox and deprecate them
 /**
@@ -699,7 +667,199 @@ Dict.Format = function () {
  * @api
  * @since 3.0.0
  */
-const CombodoGlobalToolbox = {};
+const CombodoGlobalToolbox = {
+	/**
+	 * Return true if oDOMElem is visible to the user, meaning that it is in the current viewport AND is not behind another element.
+	 *
+	 * @param oDOMElem {Object} DOM element to check
+	 * @param bCompletely {boolean} Should oDOMElem be completely visible for the function to return true?
+	 * @param iThreshold {integer} Use when bCompletely = true, a threshold in pixels to consider oDOMElem as completely visible. This is useful when elements are next to others as the browser can consider 1 pixel is overlapping the next element.
+	 * @returns {boolean}
+	 * @url: https://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+	 */
+	IsElementVisibleToTheUser: function (oDOMElem, bCompletely = false, iThreshold = 0) {
+		const oRect = oDOMElem.getBoundingClientRect(),
+			fViewportWidth = window.innerWidth || doc.documentElement.clientWidth,
+			fViewportHeight = window.innerHeight || doc.documentElement.clientHeight,
+			efp = function (x, y) {
+				return document.elementFromPoint(x, y)
+			};
+
+		// Return false if it's not in the viewport
+		if (oRect.right < 0 || oRect.bottom < 0
+			|| oRect.left > fViewportWidth || oRect.top > fViewportHeight) {
+			return false;
+		}
+
+		if (bCompletely === true) {
+			// Return true if ALL of its four corners are visible
+			return (
+				oDOMElem.contains(efp(oRect.left+iThreshold, oRect.top+iThreshold))
+				&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.top+iThreshold))
+				&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.bottom-iThreshold))
+				&& oDOMElem.contains(efp(oRect.left+iThreshold, oRect.bottom-iThreshold))
+			);
+		} else {
+			// Return true if ANY of its four corners are visible
+			return (
+				oDOMElem.contains(efp(oRect.left, oRect.top))
+				|| oDOMElem.contains(efp(oRect.right, oRect.top))
+				|| oDOMElem.contains(efp(oRect.right, oRect.bottom))
+				|| oDOMElem.contains(efp(oRect.left, oRect.bottom))
+			);
+		}
+	},
+	/**
+	 * @param sUrl {string} The URL to append the new param to
+	 * @param sParamName {string} Name of the parameter
+	 * @param sParamValue {string} Value of the param, needs to be already URL encoded
+	 * @return {string} The sUrl parameter with the sParamName / sParamValue append at the end of the query string (but before the hash if any)
+	 */
+	AddParameterToUrl: function(sUrl, sParamName, sParamValue)
+	{
+		const sNewParamForUrl = sParamName + '=' + sParamValue;
+
+		// Split URL around the '#'. Note that if there are multiple '#' in the URL (which is not permitted!) this method won't work.
+		const aHashParts = sUrl.split('#');
+		// Part of the URL starting from the protocol to the character before the '#' if one, to the end of the URL otherwise
+		const sPreHashPart = aHashParts[0];
+		// Part of the URL starting just after the '#' if one, null otherwise
+		const sPostHashPart = aHashParts[1] ?? null;
+
+		sUrl = sPreHashPart + (sUrl.split('?')[1] ? '&' : '?') + sNewParamForUrl + (sPostHashPart !== null ? '#' + sPostHashPart : '');
+
+		return sUrl;
+	},
+	/**
+	 * This method should be a JS mirror of the PHP {@see utils::FilterXSS} method
+	 *
+	 * @param sInput {string} Input text to filter from XSS attacks
+	 * @returns {string} The sInput string filtered from possible XSS attacks
+	 */
+	FilterXSS: function (sInput) {
+		let sOutput = sInput;
+
+		// Remove HTML script tags
+		sOutput = sOutput.replace(/<script/g, '&lt;script WARNING: scripts are not allowed in tooltips');
+
+		return sOutput;
+	},
+	/**
+	 * Pause the JS activity for iDuration milliseconds
+	 *
+	 * @see N°2763 for the original code idea
+	 * @return {void}
+	 * @param iDuration {integer} Duration in milliseconds
+	 */
+	Pause: function (iDuration) {
+		const oDate = new Date();
+		let oCurrentDate = null;
+
+		do {
+			oCurrentDate = new Date();
+		}
+		while ((oCurrentDate - oDate) < iDuration);
+	},
+
+	/**
+	 * Render a template and inject data into it.
+	 *
+	 * This rendering engine is aimed to produce client side template rendering.
+	 *
+	 * markups with attributes:
+	 *  data-template-attr-{title|name|for}: set dom element attribute with corresponding datavalue
+	 *  data-template-text: set dom element text with corresponding data value
+	 *  data-template-condition: set dom element visibility depending on data value
+	 *  data-template-css-{background-image}: set dom element css property with corresponding data value
+	 *  data-template-add-class: add class to dom element with corresponding data value
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param sTemplateId
+	 * @param aData
+	 * @param sTemplateClass
+	 * @returns {*|jQuery|HTMLElement|JQuery<HTMLElement>}
+	 * @constructor
+	 */
+	RenderTemplate: function(sTemplateId, aData, sTemplateClass = null)
+	{
+		let sHtml = '<div>' + $(sTemplateId).html() + '</div>';
+
+		// Create element
+		let oElement = $(sHtml);
+		if(sTemplateClass !== null){
+			oElement.addClass(sTemplateClass);
+		}
+
+		// Attribute replacement
+		let aAttrElements = ['title', 'name', 'for'];
+		aAttrElements.forEach(function(e){
+			$(`[data-template-attr-${e}]`, oElement).each(function(){
+				$(this).attr(e, aData[$(this).attr(`data-template-attr-${e}`)]);
+			})
+		});
+
+		// CSS replacement
+		let aCssElements = ['background-image'];
+		aCssElements.forEach(function(e){
+			$(`[data-template-css-${e}]`, oElement).each(function(){
+				$(this).css(e, aData[$(this).attr(`data-template-css-${e}`)]);
+			})
+		});
+
+		// Text replacement
+		$('[data-template-text]', oElement).each(function(){
+			$(this).text(aData[$(this).attr('data-template-text')]);
+		})
+
+		// Condition
+		$('[data-template-condition]', oElement).each(function(){
+			$(this).toggle(aData[$(this).attr('data-template-condition')]);
+		})
+
+		// Add classes
+		$('[data-template-add-class]', oElement).each(function(){
+			$(this).addClass(aData[$(this).attr('data-template-add-class')]);
+		})
+
+		return oElement;
+	},
+
+	/**
+	 * ExtractArrayItemsContainingThisKeyAndValue.
+	 *
+	 * This function extract item(s) of an array witch include the key value pair.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param aArrayToSearchIn Array to search in
+	 * @param sKey Key to search
+	 * @param sValue Value to search
+	 * @returns {*|*[]|null}
+	 * @constructor
+	 */
+	ExtractArrayItemsContainingThisKeyAndValue: function(aArrayToSearchIn, sKey, sValue)
+	{
+		let aResult = [];
+
+		// Iterate throw items...
+		for(let i = 0 ; i < aArrayToSearchIn.length ; i++){
+			if(aArrayToSearchIn[i][sKey] === sValue){
+				aResult.push(aArrayToSearchIn[i]);
+			}
+		}
+
+		// Return result
+		switch(aResult.length){
+			case 0:
+				return null;
+			case 1:
+				return aResult[0];
+			default:
+				return aResult;
+		}
+	}
+};
 
 /**
  * Helper for tooltip instantiation (abstraction layer between iTop markup and tooltip plugin to ease its replacement in the future)
@@ -710,6 +870,15 @@ const CombodoGlobalToolbox = {};
  * @since 3.0.0
  */
 const CombodoTooltip = {
+	
+	/**
+	 * Tooltips remote content once fetched from the server will be cached in this array
+	 * associated to their URL to avoid fetching the same content multiple times
+	 * @var aTooltipsRemoteContent {Object}
+	 * @since 3.1.0
+	 */
+	aTooltipsRemoteContent: {},
+	
 	/**
 	 * Instantiate a tooltip on oElem from its data attributes
 	 *
@@ -717,15 +886,16 @@ const CombodoTooltip = {
 	 *
 	 * @param {Object} oElem The jQuery object representing the element
 	 * @param {boolean} bForce When set to true, tooltip will be instantiate even if one already exists, overwritting it.
-	 * @constructor
 	 */
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
-		const oOptions = {
-			allowHTML: true,    // Always true so line breaks can work. Don't worry content will be sanitized.
-		};
+		const oOptions = {};
 
-		// First, check if the tooltip isn't already instantiated
-		if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
+		// First, check if the jQuery element actually represent DOM elements
+		if (oElem.length === 0) {
+			return false;
+		}
+		// Then, check if the tooltip isn't already instantiated
+		else if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
 			return false;
 		}
 		else if((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === true) && (oElem[0]._tippy !== undefined)){
@@ -735,30 +905,26 @@ const CombodoTooltip = {
 		// Content must be reworked before getting into the tooltip
 		// - Should we enable HTML content or keep text as is
 		const bEnableHTML = oElem.attr('data-tooltip-html-enabled') === 'true';
+		oOptions['allowHTML'] = bEnableHTML;
 
 		// - Content should be sanitized unless the developer says otherwise
 		// Note: Condition is inversed on purpose. When the developer is instantiating a tooltip,
-		// we want him/her to explicitly declare that he/she wants the sanitizer to be skipped.
+		// we want they to explicitly declare that they want the sanitizer to be skipped.
 		// Whereas in this code, it's easier to follow the logic with the variable oriented this way.
 		const bSanitizeContent = oElem.attr('data-tooltip-sanitizer-skipped') !== 'true';
 
-		// - Sanitize content and make sure line breaks are kept
-		const oTmpContentElem = $('<div />').html(oElem.attr('data-tooltip-content'));
-		let sContent = '';
-		if (bEnableHTML) {
-			sContent = oTmpContentElem.html();
-			if (bSanitizeContent) {
-				sContent = sContent.replace(/<script/g, '&lt;script WARNING: scripts are not allowed in tooltips');
-			}
-		} else {
-			sContent = oTmpContentElem.text();
-			sContent = sContent.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>');
+		let sContent = oElem.attr('data-tooltip-content');
+		// - Check if both HTML and sanitizer are enabled
+		if (bEnableHTML && bSanitizeContent) {
+			sContent = CombodoGlobalToolbox.FilterXSS(sContent);
 		}
 		oOptions['content'] = sContent;
 
 		// Interaction (selection, click, ...) have to be enabled manually
-		// Important: When set to true, if "data-tooltip-append-to" is not specified, tooltip will be append to the parent element instead of the body
-		const bInteractive = oElem.attr('data-tooltip-interaction-enabled') === 'true';
+		// Important: When set to true, if "data-tooltip-append-to" is not specified, tooltip will be appended to the parent element instead of the body
+		// Note: Defaults to true if it contains hyperlink
+		let bDefaultInteractive = (bEnableHTML && sContent.indexOf("<a ") > -1)
+		const bInteractive = oElem.attr('data-tooltip-interaction-enabled') !== undefined ? oElem.attr('data-tooltip-interaction-enabled') === 'true' : bDefaultInteractive;
 		oOptions['interactive'] = bInteractive;
 
 		// Element to append the tooltip to
@@ -787,6 +953,12 @@ const CombodoTooltip = {
 			oOptions['appendTo'] = mAppendTo;
 		}
 
+		// Max. width overload
+		const sMaxWidth = oElem.attr('data-tooltip-max-width');
+		if ((sMaxWidth !== undefined) && (sMaxWidth !== '')) {
+			oOptions['maxWidth'] = sMaxWidth;
+		}
+
 		oOptions['placement'] = oElem.attr('data-tooltip-placement') ?? 'top';
 		oOptions['trigger'] = oElem.attr('data-tooltip-trigger') ?? 'mouseenter focus';
 
@@ -805,6 +977,50 @@ const CombodoTooltip = {
 			(typeof sShowDelay === 'undefined') ? 200 : parseInt(sShowDelay),
 			(typeof sHideDelay === 'undefined') ? null : parseInt(sHideDelay),
 		];
+		
+		// - If the content is asynchronous, bind methods to retrieve its content and cache it
+		const bRemoteContent = oElem.attr('data-tooltip-is-async') === 'true'
+		if(bRemoteContent) {
+			oOptions['onCreate'] = function(instance) {
+				instance._isFetching = false;
+				instance._isLoaded = null;
+			};
+			oOptions['onShow'] = function(instance) {
+					if (instance._isFetching || instance._isLoaded || instance._error) {
+						return;
+					}
+					instance._isFetching = true;
+					let sRemoteUrl = oOptions['content'];
+					if(CombodoTooltip.aTooltipsRemoteContent[sRemoteUrl] !== undefined){
+						instance.setContent(CombodoTooltip.aTooltipsRemoteContent[sRemoteUrl]);
+					}
+					else {
+						instance.setContent('Loading...');
+						$.ajax(sRemoteUrl)
+							.done(function (html) {
+								instance.setContent(html);
+								
+								// - Ugly hack to include JS scripts as it doesn't work with tippy when adding multiple nodes
+								$(html).each(function( index ) {
+									if($(this).is('script')){
+										$('body').append($(this));
+									}
+								});
+								
+								CombodoTooltip.aTooltipsRemoteContent[sRemoteUrl] = html;
+								instance._isLoaded = true;
+							})
+							.fail(function () {
+								instance.setContent(`Request failed.`);
+							})
+							.always(function () {
+								instance._isFetching = false;
+							});
+					}
+				};
+		}
+
+		oOptions['theme'] = oElem.attr('data-tooltip-theme') ?? '';
 
 		tippy(oElem[0], oOptions);
 
@@ -817,7 +1033,6 @@ const CombodoTooltip = {
 	 *
 	 * @param {Object} oContainerElem Tooltips will only be instantiated if they are contained within this jQuery object
 	 * @param {boolean} bForce Whether the tooltip instantiation should be forced or not (if already done)
-	 * @constructor
 	 */
 	InitAllNonInstantiatedTooltips: function (oContainerElem = null, bForce = false) {
 		if (oContainerElem === null) {
@@ -827,6 +1042,25 @@ const CombodoTooltip = {
 		oContainerElem.find('[data-tooltip-content]' + (bForce ? '' : ':not([data-tooltip-instantiated="true"])')).each(function () {
 			CombodoTooltip.InitTooltipFromMarkup($(this), bForce);
 		});
+	},
+	/**
+	 * Instantiate a singleton for tooltips of elements matching sSelector.
+	 * Used to guarantee that tooltips from said selector elements won't show at same time.
+	 * Require selector elements tooltips to be instantiated before.
+	 *
+	 * @param {string} sSelector jQuery selector used to get elements tooltips
+	 */
+	InitSingletonFromSelector: function (sSelector) {
+		let oTippyInstances = [];
+		$(sSelector).each(function(){
+			if($(this)[0]._tippy !== undefined){
+				oTippyInstances.push($(this)[0]._tippy);
+			}
+		});
+		let aOptions = {
+			moveTransition: 'transform 0.2s ease-out',
+		}
+		tippy.createSingleton(oTippyInstances, $.extend(aOptions, oTippyInstances[0].props));
 	}
 };
 
@@ -860,7 +1094,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.log(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Log: function(sMessage) {
 		this._Trace(sMessage, 'log');
@@ -869,7 +1102,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.info(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Info: function(sMessage) {
 		this._Trace(sMessage, 'info');
@@ -878,7 +1110,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.debug(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Debug: function(sMessage) {
 		this._Trace(sMessage, 'debug');
@@ -887,7 +1118,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.warn(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Warn: function(sMessage) {
 		this._Trace(sMessage, 'warn');
@@ -896,9 +1126,419 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.error(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Error: function(sMessage) {
 		this._Trace(sMessage, 'error');
 	}
 }
+
+/**
+ * Helper to Sanitize string
+ *
+ * Note: Same as in php (see \utils::Sanitize)
+ *
+ * @api
+ * @since 2.6.5 2.7.6 3.0.0 N°4367
+ */
+const CombodoSanitizer = {
+	ENUM_SANITIZATION_FILTER_INTEGER: 'integer',
+	ENUM_SANITIZATION_FILTER_STRING: 'string',
+	ENUM_SANITIZATION_FILTER_CONTEXT_PARAM: 'context_param',
+	ENUM_SANITIZATION_FILTER_PARAMETER: 'parameter',
+	ENUM_SANITIZATION_FILTER_FIELD_NAME: 'field_name',
+	ENUM_SANITIZATION_FILTER_TRANSACTION_ID: 'transaction_id',
+	ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER: 'element_identifier',
+	ENUM_SANITIZATION_FILTER_VARIABLE_NAME: 'variable_name',
+
+	/**
+	 * @param {String} sValue The string to sanitize
+	 * @param {String} sDefaultValue The string to return if sValue not match (used for some filters)
+	 * @param {String} sSanitizationFilter one of the ENUM_SANITIZATION_FILTERs
+	 */
+	Sanitize: function (sValue, sDefaultValue, sSanitizationFilter) {
+		switch (sSanitizationFilter) {
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_INTEGER:
+				return this._CleanString(sValue, sDefaultValue, /[^0-9-+]*/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_STRING:
+				return $("<div>").text(sValue).text();
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
+				return this._ReplaceString(sValue, sDefaultValue, /^([\. A-Za-z0-9_=-]*)$/g, '');
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_PARAMETER:
+				return this._ReplaceString(sValue, sDefaultValue, /^([ A-Za-z0-9_=-]*)$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_FIELD_NAME:
+				return this._ReplaceString(sValue, sDefaultValue, /^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
+				return this._ReplaceString(sValue, sDefaultValue, /^[ A-Za-z0-9_=%:+-]*$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
+				return this._CleanString(sValue, sDefaultValue, /[^a-zA-Z0-9_-]/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
+				return this._CleanString(sValue, sDefaultValue, /[^a-zA-Z0-9_]/g);
+
+		}
+		return sDefaultValue;
+	},
+	_CleanString: function (sValue, sDefaultValue, sRegExp) {
+		return sValue.replace(sRegExp, '');
+	},
+
+	_ReplaceString: function (sValue, sDefaultValue, sRegExp) {
+		if (sRegExp.test(sValue)) {
+			return sValue;
+		} else {
+			return sDefaultValue;
+		}
+	},
+
+	/**
+	 * @param sValue value to escape
+	 * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
+	 *
+	 * @returns {string} escaped value, ready to insert in the DOM without XSS risk
+	 *
+	 * @since 2.6.5, 2.7.2, 3.0.0 N°3332
+	 * @since 3.0.0 N°4367 deprecate EncodeHtml and copy the method here (CombodoSanitizer.EscapeHtml)
+	 *
+	 * @see https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
+	 * @see https://stackoverflow.com/questions/295566/sanitize-rewrite-html-on-the-client-side/430240#430240 why inserting in the DOM (for
+	 *        example the text() JQuery way) isn't safe
+	 */
+	EscapeHtml: function (sValue, bReplaceAmp) {
+		if (bReplaceAmp) {
+			return $('<div/>').text(sValue).html();
+		}
+
+		let sEncodedValue = (sValue+'')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#x27;')
+			.replace(/\//g, '&#x2F;');
+
+		return sEncodedValue;
+	}
+};
+
+/**
+ * Helper for InlineImages
+ * @since 3.0.0
+ */
+const CombodoInlineImage = {
+	/**
+	 * Max width to apply on inline images
+	 */
+	max_width: 600,
+	/**
+	 * @param sMaxWidth {string} {@see CombodoInlineImage.max_width}
+	 */
+	SetMaxWidth: function (sMaxWidth) {
+		this.max_width = sMaxWidth;
+	},
+	/**
+	 * Apply the {@see CombodoInlineImage.max_width} to all inline images
+	 */
+	FixImagesWidth: function () {
+		$('img[data-img-id]').each(function() {
+			if ($(this).width() > CombodoInlineImage.max_width)
+			{
+				$(this).css({'max-width': CombodoInlineImage.max_width+'px', width: '', height: '', 'max-height': ''});
+			}
+			$(this).addClass('inline-image').attr('href', $(this).attr('src'));
+		}).magnificPopup({type: 'image', closeOnContentClick: true });
+	}
+};
+
+/**
+ * Abstract wrapper to manage modal dialogs in iTop.
+ * Implementations for the various GUIs may vary but APIs are the same.
+ *
+ * @since 3.1.0
+ */
+let CombodoModal = {
+
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_SUCCESS : 'success',
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_INFORMATION : 'information',
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_WARNING : 'warning',
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_ERROR : 'error',
+	
+	/**
+	 * Close all opened modals on the page
+	 *
+	 * @return {void}
+	 */
+	CloseAllModals: function() {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.CloseAllModals not implemented');
+	},
+	/**
+	 * Open a standard modal and put the content of the URL in it.
+	 *
+	 * @param sTargetUrl {String}
+	 * @param bCloseOtherModals {String}
+	 * @param callbackOnContentLoaded {function}
+	 * @return {Object} The jQuery object representing the modal element
+	 * @api
+	 */
+	OpenUrlInModal: function(sTargetUrl, bCloseOtherModals, callbackOnContentLoaded) {
+		// Set default values
+		if(bCloseOtherModals === undefined)
+		{
+			bCloseOtherModals = false;
+		}
+
+		// Close other modals if necessary
+		if(bCloseOtherModals)
+		{
+			CombodoModal.CloseAllModals();
+		}
+
+		// Prepare options
+		let oOptions = {
+			content: {
+				endpoint: sTargetUrl,
+			}
+		};
+
+		if (callbackOnContentLoaded !== undefined) {
+			oOptions.callback_on_content_loaded = callbackOnContentLoaded;
+		}
+
+		// Opening modal
+		return CombodoModal.OpenModal(oOptions);
+	},
+	/**
+	 * Generic function to create and open a modal, used by high-level functions such as "CombodoModal.OpenUrlInModal()".
+	 * When developing extensions, you should use them instead.
+	 *
+	 * @param oOptions {Object} TODO: Document
+	 * @returns {(Object | null)} The jQuery object of the modal element or null if the modal could not be opened
+	 * @internal
+	 */
+	OpenModal: function(oOptions) {
+		// Set default options
+		oOptions = $.extend(
+			true,
+			{
+				id: null,           // ID of the created modal
+				attributes: {},     // HTML attributes
+				classes: {}, // Classes for the created modal elements
+				base_modal: {
+					usage: 'clone',                                 // Either 'clone' or 'replace'
+					selector: this._GetDefaultBaseModalSelector()   // Either a selector of the modal element used to base this one on or the modal element itself
+				},
+				title: undefined,   // Title of the modal
+				content: undefined, // Either a string, an object containing the endpoint / data or undefined to keep base modal content as-is
+				buttons: null,
+				size: 'auto',       // Either 'auto' / 'xs' / 'sm' / 'md' / 'lg' or specific height & width via {width: '80px', height: '100px'}
+				auto_open: true,    // true for the modal to open automatically on instantiation
+				callback_on_content_loaded: null, // Callback to call once the content is loaded. Arguments will be oModalElem (the jQuery object representing the modal) callback_on_content_loaded
+				extra_options: {},  // Extra options to pass to the modal lib directly if they are not handled by the CombodoModal widget yet
+			},
+			oOptions
+		);
+
+		// Compute modal selector
+		let oSelectorElem = null;
+		switch(typeof oOptions.base_modal.selector) {
+			case 'string':
+				oSelectorElem = $(oOptions.base_modal.selector);
+				if (oSelectorElem.length === 0) {
+					CombodoJSConsole.Error('Could not open modal dialog as the selector option did not return any element: ' + oOptions.base_modal.selector);
+					return null;
+				}
+				break;
+
+			case 'object':
+				oSelectorElem = oOptions.base_modal.selector;
+				break;
+
+			default:
+				CombodoJSConsole.Warn('Could not open modal dialog as the selector option was malformed: '+oOptions.base_modal.selector);
+				return null;
+		}
+
+		// Get modal element by either
+		let oModalElem = null;
+		// - Create a new modal from template
+		//   Note : This could be better if we check for an existing modal first instead of always creating a new one
+		if (oOptions.base_modal.usage === 'clone') {
+			// Clone modal using a real template
+			if (oSelectorElem[0].tagName === 'TEMPLATE') {
+				oModalElem = $(oSelectorElem.html());
+			}
+			// Clone modal using an existing element
+			else {
+				oModalElem = oSelectorElem.clone();
+			}
+
+			// Force modal to have an HTML ID, otherwise it can lead to complications, especially with the portal_leave_handle.js
+			// See N°3469
+			let sModalID = (oOptions.id !== null) ? oOptions.id : 'modal-with-generated-id-'+Date.now();
+			oModalElem.attr('id', sModalID);
+		}
+		// - Get an existing modal in the DOM
+		else {
+			oModalElem = oSelectorElem;
+		}
+
+		// Set attributes
+		for (let sProp in oOptions.attributes) {
+			oModalElem.attr(sProp, oOptions.attributes[sProp]);
+		}
+
+		if (false === this._InstantiateModal(oModalElem, oOptions)) {
+			return null;
+		}
+		this._BindEvents(oModalElem);
+
+		return oModalElem;
+	},
+	/**
+	 * @return {String} The JS selector to the default base modal to use either for display or as a template ("clone" usage)
+	 * @private
+	 * @internal
+	 */
+	_GetDefaultBaseModalSelector: function() {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._GetDefaultBaseModalSelector not implemented');
+	},
+	/**
+	 * Instantiate the oModal modal regarding the oOptions
+	 *
+	 * @param oModalElem {Object} The jQuery object representing the modal element
+	 * @param oOptions {Object}
+	 * @return {boolean} True if the modal could be instantiated, false otherwise
+	 * @private
+	 * @internal
+	 */
+	_InstantiateModal: function(oModalElem, oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._InstantiateModal not implemented');
+		return false;
+	},
+	/**
+	 * Bind event on the modal
+	 *
+	 * @param oModalElem {Object} The jQuery object representing the modal element
+	 * @returns {boolean}
+	 * @private
+	 * @internal
+	 */
+	_BindEvents: function(oModalElem) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._BindEvents not implemented');
+		return false;
+	},
+	/**
+	 * Center the modal in the current viewport
+	 *
+	 * @param oModalElem {Object} The jQuery representation of the modale element
+	 * @return {void}
+	 * @private
+	 * @internal
+	 */
+	_CenterModalInViewport: function (oModalElem) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._CenterModalInViewport not implemented');
+	},
+	/**
+	 * Callback called when the content of the modal has been loaded.
+	 *
+	 * @param oModalElem {object} The jQuery object representing the modal element
+	 * @param callback {(string | function)} The callback to be executed. Can be either a string representing a function declared in the window object or an anonymous function
+	 * @private
+	 * @return {void}
+	 */
+	_OnContentLoaded: function (oModalElem, callback) {
+		if (callback !== undefined) {
+			if (typeof callback === 'string') {
+				if (window[callback] === undefined) {
+					CombodoJSConsole.Error('Could not call _OnContentLoaded callback "' + callback + '" as it is not defined in the window object.');
+					return;
+				}
+				window[callback](oModalElem);
+			}
+			else if (typeof callback === 'function') {
+				callback(oModalElem);
+			}
+		}
+	},
+
+	/**
+	 * Open a standard confirmation modal and put the content into it.
+	 *
+	 * @param oOptions {Object} {@see CombodoModal.OpenModal} +
+	 *      ```
+	 *      {
+	 *          do_not_show_again_pref_key: string,
+	 *          callback_on_confirm: function,
+	 *          callback_on_cancel: function
+ *          }
+	 *      ```
+	 * @param aData {Array} Array of arguments to pass to the callbacks
+	 * @return {Object} The jQuery object of the modal element
+	 */
+	OpenConfirmationModal: function(oOptions, aData) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.OpenConfirmationModal not implemented');
+	},
+	/**
+	 * Open a standard informative modal, should only be extended to created your own modal method to prepare a custom informative modal
+	 * In most cases you should prefer {@see CombodoModal.OpenSuccessModal}, {@see CombodoModal.OpenInformativeModal}, {@see CombodoModal.OpenWarningModal}, {@see CombodoModal.OpenErrorModal}
+	 *
+	 * @param sMessage {String} Informative message to be displayed in the modal
+	 * @param sSeverity {String} Severity of the information. Default values are success, information, warning, error.
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenInformativeModal: function(sMessage,sSeverity, oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.OpenInformativeModal not implemented');
+	},
+
+	/**
+	 * Open a standard informative modal for success messages.
+	 *
+	 * @param sMessage {String} Informative success message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenSuccessModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_SUCCESS, oOptions);
+	},
+	/**
+	 * Open a standard informative modal for information messages.
+	 *
+	 * @param sMessage {String} Informative information success to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenInformationModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_INFORMATION, oOptions);
+	},
+	/**
+	 * Open a standard informative modal for warning messages.
+	 *
+	 * @param sMessage {String} Informative warning message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenWarningModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_WARNING, oOptions);
+	},
+	/**
+	 * Open a standard informative error modal for success messages.
+	 *
+	 * @param sMessage {String} Informative error message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenErrorModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR, oOptions);
+	},
+};

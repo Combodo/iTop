@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2021 Combodo SARL
+* @copyright     Copyright (C) 2023 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
@@ -110,9 +110,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Problem/Attribute:resolution_date' => 'Datum der Lösung',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Bekannte Fehler',
-	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:knownerrors_list+' => 'All the known errors that are linked to this problem~~',
 	'Class:Problem/Attribute:related_request_list' => 'Verwandte Requests',
-	'Class:Problem/Attribute:related_request_list+' => '',
+	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
 	'Class:Problem/Attribute:related_incident_list' => 'Verknüpfte Incidents',
 	'Class:Problem/Attribute:related_incident_list+' => 'Alle Incidents, die mit diesem Problem verknüpft sind',
 	'Class:Problem/Stimulus:ev_assign' => 'Zuweisen',

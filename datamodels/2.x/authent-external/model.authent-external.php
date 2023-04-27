@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -26,7 +26,7 @@
  * Similarly once inside iTop, there is no way for the users to change their password or
  * log off from the iTop application, this has to be handled outside of iTop.
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -37,24 +37,36 @@ class UserExternal extends User
 	{
 		$aParams = array
 		(
-			"category" => "addon/authentication,grant_by_profile",
-			"key_type" => "autoincrement",
-			"name_attcode" => "login",
-			"state_attcode" => "",
-			"reconc_keys" => array('login'),
-			"db_table" => "",
-			"db_key_field" => "id",
+			"category"            => "addon/authentication,grant_by_profile,silo",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "login",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('login'),
+			"db_table"            => "",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details',
+			array(
+				'col:col1' =>
+					array(
+						'fieldset:User:info' => array('contactid', 'org_id', 'email', 'login', 'language', 'status'),
+					),
+				'col:col2' =>
+					array(
+						'fieldset:User:profiles' => array('profile_list'),
+					),
+				'allowed_org_list',
+			)
+		); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login', 'status')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the advanced search form
 	}
 
 	/**

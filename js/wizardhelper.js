@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -146,8 +146,11 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 			var sAttCode = this.m_oData.m_aAllowedValuesRequested[i];
 			var sFieldId = this.m_oData.m_oFieldsMap[sAttCode];
 			var bDisabled = $('#'+sFieldId).prop('disabled');
-			//console.log('Setting #field_'+sFieldId+' to: '+this.m_oData.m_oAllowedValues[sAttCode]);
-			$('#field_'+sFieldId).html(this.m_oData.m_oAllowedValues[sAttCode]);
+
+			// N°4408 Depending if the returned field contains an input or only the display value; we replace the wrapper to avoid dummy nesting (replaceWith), otherwise we replace the content like before (html)
+			const sMethodToCall = ($(this.m_oData.m_oAllowedValues[sAttCode]).attr('id') === 'field_'+sFieldId) ? 'replaceWith' : 'html';
+			$('#field_'+sFieldId)[sMethodToCall](this.m_oData.m_oAllowedValues[sAttCode]);
+
 			if (bDisabled)
 			{
 				$('#'+sFieldId).prop('disabled', true);
@@ -173,6 +176,9 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 			var sString = "$('#"+aRefreshed[i]+"').trigger('change').trigger('update');";
 			window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
 		}
+		if($('[data-field-status="blocked"]').length === 0) {
+			$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');
+		}
 	};
 
 	this.UpdateWizard = function () {
@@ -197,7 +203,13 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 			{operation: 'wizard_helper', json_obj: this.ToJSON()},
 			function (html) {
 				$('#ajax_content').html(html);
-				$('.blockUI').parent().unblock();
+				$('[data-field-status="blocked"]')
+					.attr('data-field-status', 'ready')
+					.unblock();
+
+				if($('[data-field-status="blocked"]').length === 0) {
+					$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');
+				}
 			}
 		);
 	};
@@ -232,21 +244,28 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 
 		this.ResetQuery();
 		this.UpdateWizard();
-		while (index < aFieldNames.length)
+		var fieldForm = null;
+		while (index < aFieldNames.length )
 		{
 			sAttCode = aFieldNames[index];
 			sFieldId = this.GetFieldId(sAttCode);
-			if (sFieldId !== undefined)
-			{
+			if (sFieldId !== undefined) {
 				nbOfFieldsToUpdate++;
-				$('#fstatus_'+sFieldId).html('<img src="../images/indicator.gif" />');
-				$('#field_'+sFieldId).find('div').block({
-					message: '',
-					overlayCSS: {backgroundColor: '#f1f1f1', opacity: 0.3}
+				$('#fstatus_' + sFieldId).html('<img src="../images/indicator.gif" />');
+				$('#field_' + sFieldId).find('div')
+					.attr('data-field-status', 'blocked')
+					.block({
+						message: '',
+						overlayCSS: {backgroundColor: '#f1f1f1', opacity: 0.3}
 				});
+				fieldForm = $('#field_' + sFieldId).closest('form');
 				this.RequestAllowedValues(sAttCode);
 			}
 			index++;
+		}
+		
+		if ((fieldForm !== null) && ($('[data-field-status="blocked"]').length > 0)) {
+			fieldForm.find('button[type=submit]:not(:disabled)').prop("disabled", true).addClass('disabledDuringFieldLoading');
 		}
 
 		if (nbOfFieldsToUpdate > 0)

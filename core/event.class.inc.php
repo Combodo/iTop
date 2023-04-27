@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -221,6 +221,10 @@ class EventIssue extends Event
 		// Init page information: name, arguments
 		//
 		$this->Set('page', @$GLOBALS['_SERVER']['SCRIPT_NAME']);
+
+		if (strlen($this->Get('userinfo')) == 0) {
+			$this->Set('userinfo', UserRights::GetUserId());
+		}
 
 		if (array_key_exists('_GET', $GLOBALS) && is_array($GLOBALS['_GET']))
 		{

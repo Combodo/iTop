@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-faq-light/3.0.0',
+	'itop-faq-light/3.1.0',
 	array(
 		// Identification
 		//
@@ -13,11 +13,11 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-structure/2.7.0',
+			'itop-structure/3.0.0 || itop-portal/3.0.0',
 		),
 		'mandatory' => false,
 		'visible' => true,
-		'installer' => 'KnownErrorMgmtInstaller',
+		'installer' => 'FAQLightInstaller',
 
 		// Components
 		//
@@ -43,11 +43,11 @@ SetupWebPage::AddModule(
 	)
 );
 
-if (!class_exists('KnownErrorMgmtInstaller'))
+if (!class_exists('FAQLightInstaller'))
 {
 	// Module installation handler
 	//
-	class KnownErrorMgmtInstaller extends ModuleInstallerAPI
+	class FAQLightInstaller extends ModuleInstallerAPI
 	{
 		public static function BeforeWritingConfig(Config $oConfiguration)
 		{

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -40,7 +40,8 @@ abstract class FormManager
 	 * - formrenderer_class : The class of the FormRenderer to use in the FormManager
 	 * - formrenderer_endpoint : The endpoint of the renderer
 	 *
-	 * @param string $sJson
+	 * @param string|string[] $sJson
+	 *
 	 * @return $this
 	 */
 	static function FromJSON($sJson)

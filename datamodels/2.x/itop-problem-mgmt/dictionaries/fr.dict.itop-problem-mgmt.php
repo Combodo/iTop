@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
@@ -110,11 +110,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Problem/Attribute:resolution_date' => 'Date de résolution',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Erreurs connues',
-	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:knownerrors_list+' => 'Toutes les erreurs connues liées à ce problème',
 	'Class:Problem/Attribute:related_request_list' => 'Requêtes liées',
-	'Class:Problem/Attribute:related_request_list+' => '',
+	'Class:Problem/Attribute:related_request_list+' => 'Toutes les requêtes liées à ce problème',
 	'Class:Problem/Attribute:related_incident_list' => 'Incidents liés',
-	'Class:Problem/Attribute:related_incident_list+' => '',
+	'Class:Problem/Attribute:related_incident_list+' => 'Tous les incidents liés à ce problème',
 	'Class:Problem/Stimulus:ev_assign' => 'Assigner',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Réaassigner',

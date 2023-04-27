@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
@@ -29,6 +29,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Relation:depends on/Description' => 'Elementi di questo elemento dipende da',
 	'Relation:depends on/DownStream' => 'Dipende da...',
 	'Relation:depends on/UpStream' => 'Impatto...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 
@@ -1205,23 +1207,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 ));
 
 //
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Link Document / FunctionalCI~~',
-	'Class:lnkDocumentToFunctionalCI+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functionalci~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Document name~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
-));
-
-//
 // Class: Subnet
 //
 
@@ -1306,6 +1291,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPInterface+' => '~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP address~~',
 	'Class:IPInterface/Attribute:ipaddress+' => '~~',
+
+
 	'Class:IPInterface/Attribute:macaddress' => 'MAC address~~',
 	'Class:IPInterface/Attribute:macaddress+' => '~~',
 	'Class:IPInterface/Attribute:comment' => 'Comment~~',
@@ -1479,7 +1466,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Group/Attribute:parent_name' => 'Nome',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'CIs collegati',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent Group~~',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 ));
@@ -1503,9 +1490,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Server:baseinfo' => 'General information~~',
@@ -1519,6 +1504,24 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'IP liberi: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Qui c\'è un estratto di 10 indirizzi IP liberi',
 	'Class:Document:PreviewTab' => 'Anteprima',
+));
+
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Link Document / FunctionalCI~~',
+	'Class:lnkDocumentToFunctionalCI+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functionalci~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Document name~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
 ));
 
 //
@@ -1571,3 +1574,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:Software' => 'Software catalog~~',
 	'Menu:Software+' => 'Software catalog~~',
 ));
+?>

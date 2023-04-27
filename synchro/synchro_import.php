@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -22,11 +22,6 @@
 // - reconciliation is made on the column primary_key
 //
 
-if (!defined('__DIR__'))
-{
-	/** @noinspection DirectoryConstantCanBeUsedInspection */
-	define('__DIR__', dirname(__FILE__));
-}
 require_once __DIR__.'/../approot.inc.php';
 require_once APPROOT.'/application/application.inc.php';
 require_once APPROOT.'/application/startup.inc.php';
@@ -255,7 +250,7 @@ if (utils::IsModeCLI())
 {
 	// Next steps:
 	//   specific arguments: 'csvfile'
-	//   
+	//
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
 	$sCsvFile = ReadMandatoryParam($oP, 'csvfile', 'raw_data');
@@ -282,6 +277,9 @@ if (utils::IsModeCLI())
 else
 {
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
+
+	//N°6022 - Make synchro scripts work by http via token authentication with SYNCHRO scopes
+	$oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
@@ -435,6 +433,7 @@ try
 
 	$aIsDateToTransform = array();
 	$aDateToTransformReport = array();
+	$aIsBinaryToTransform = array();
 	foreach ($aInputColumns as $iFieldId => $sInputColumn)
 	{
 		if (array_key_exists($sInputColumn, $aDateColumns))
@@ -450,12 +449,14 @@ try
 		if ($sInputColumn === 'primary_key')
 		{
 			$iPrimaryKeyCol = $iFieldId;
+			$aIsBinaryToTransform[$iFieldId] = false;
 			continue;
 		}
 		if (!array_key_exists($sInputColumn, $aColumns))
 		{
 			throw new ExchangeException("Unknown column '$sInputColumn' (class: '$sClass')");
 		}
+		$aIsBinaryToTransform[$iFieldId] = $aColumns[$sInputColumn] === 'LONGBLOB';
 	}
 	if (!isset($iPrimaryKeyCol))
 	{
@@ -491,16 +492,16 @@ try
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey());
 		$oMutex->Lock();
-		set_time_limit(intval($iLoopTimeLimit));
 		foreach ($aData as $iRow => $aRow)
 		{
+			/** @noinspection DisconnectedForeachInstructionInspection */
+			set_time_limit($iLoopTimeLimit);
 			$sReconciliationCondition = '`primary_key` = '.CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
 			$sSelect = "SELECT COUNT(*) FROM `$sTable` WHERE $sReconciliationCondition";
 			$aRes = CMDBSource::QueryToArray($sSelect);
 			$iCount = (int)$aRes[0]['COUNT(*)'];
 
-			if ($iCount === 0)
-			{
+			if ($iCount === 0) {
 				// No record... create it
 				//
 				$iCountCreations++;
@@ -534,6 +535,10 @@ try
 						{
 							$aValues[] = $sDate;
 						}
+					}
+					elseif ($aIsBinaryToTransform[$iCol])
+					{
+						$aValues[] = base64_decode($value);
 					}
 					else
 					{
@@ -599,6 +604,10 @@ try
 						{
 							$aValuePairs[] = "`$sCol` = ".CMDBSource::Quote($sDate);
 						}
+					}
+					elseif ($aIsBinaryToTransform[$iCol])
+					{
+						$aValuePairs[] = "`$sCol` = FROM_BASE64(".CMDBSource::Quote($aRow[$iCol], true).")";
 					}
 					else
 					{

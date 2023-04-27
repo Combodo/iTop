@@ -1,0 +1,14 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+.ibo-bulk--bulk-modify--incompatible-attribute {
+
+  &:before{
+    margin-right: $ibo-vendors-selectize--item--icon--margin-right;
+    @extend %fa-solid-base;
+    content: '\f05a';
+    color: $ibo-color-information-500;
+  }
+}

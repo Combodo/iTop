@@ -1,0 +1,13 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-button--spacing-left--with-button-group: $ibo-button--spacing-left--with-same-block !default;
+
+/* Reset siblings spacing */
+.ibo-button-group + .ibo-button-group,
+.ibo-button + .ibo-button-group,
+.ibo-button-group + .ibo-button{
+  margin-left: $ibo-button--spacing-left--with-button-group;
+}

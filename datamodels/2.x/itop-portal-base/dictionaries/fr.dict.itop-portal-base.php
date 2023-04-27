@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -61,7 +61,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Ouvrir</a> / <a href="%4$s" class="file_download_link">Télécharger</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'fr', //work with moment.js locales
+));
+
+// Object form
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Fermer cette entrée',
 	'Portal:Form:Close:Warning' => 'Voulez-vous quitter ce formulaire ? Les données saisies seront perdues',
+	'Portal:Error:ObjectCannotBeCreated' => 'Erreur: L\'objet n\'a pas été créé. Vérifiez les objets liés et les attachements avant de soumettre à nouveau le formulaire.',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Erreur: L\'objet n\'a pas été modifié. Vérifiez les objets liés et les attachements avant de soumettre à nouveau le formulaire.',
 ));
 
 // UserProfile brick

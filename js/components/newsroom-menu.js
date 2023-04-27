@@ -40,19 +40,20 @@ $(function()
 		_initializePopoverMenu: function()
 		{
 			var me = this;
+
+			// Important: For now, the popover menu is manually instantiated even though the PHP NewsroomMenu class inherits PopoverMenu because the jQuery widget doesn't. We might refactor this in the future.
 			$(me.element).popover_menu({'toggler': this.js_selectors.menu_toggler});
-			$(this.js_selectors.menu_toggler).on('click', function(oEvent) {
+			$(this.js_selectors.menu_toggler).on('click', function (oEvent) {
 				var oEventTarget = $(oEvent.target);
 				var aEventTargetPos = oEventTarget.position();
 				var aEventTargetOffset = oEventTarget.offset();
 
-				$iHeight = Math.abs(aEventTargetOffset.top - 100);
+				$iHeight = Math.abs(aEventTargetOffset.top-100);
 				$(me.element).css({
-					'max-height': $iHeight + 'px',
-					'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) -  Math.min($(me.element).height(), $iHeight)) + 'px',
-					'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px',
+					'max-height': $iHeight+'px',
+					'top': (aEventTargetPos.top+parseInt(oEventTarget.css('marginTop'), 10)-Math.min($(me.element).height(), $iHeight))+'px',
+					'left': (aEventTargetPos.left+parseInt(oEventTarget.css('marginLeft'), 10)+oEventTarget.width())+'px',
 				});
-				$(me.element).popover_menu("togglePopup");
 			});
 			this.element.addClass(this.css_classes.newsroom_menu);
 			$(this.js_selectors.menu_toggler).addClass('ibo-is-loaded');
@@ -86,7 +87,10 @@ $(function()
 		_load: function()
 		{
 			var me = this;
-			setTimeout(function() { me._getAllMessages(); }, 1000);
+
+			if(this.options.providers.length > 0) {
+				setTimeout(function() { me._getAllMessages(); }, 1000);
+			}
 		},
 		_getAllMessages: function()
 		{
@@ -189,7 +193,7 @@ $(function()
 		_buildDismissAllSection: function()
 		{
 			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications-dismiss-all" data-role="ibo-popover-menu--section"><a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-dismiss-all" ><i class="fas fa-fw fa-check' +
-				' ibo-navigation-menu--notifications-dismiss-all--icon"></i>' + Dict.S(this.options.labels.mark_all_as_read) + '</a><hr class="ibo-popover-menu--item ibo-popover-menu--separator"></div>';
+				' ibo-navigation-menu--notifications-dismiss-all--icon"></i>' + Dict.S(this.options.labels.mark_all_as_read) + '</a><hr class="ibo-popover-menu--item ibo-popover-menu--item-separator"></div>';
 		},
 		_buildMessageSection: function () {
 			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications--messages-section" data-role="ibo-popover-menu--section">';
@@ -205,7 +209,7 @@ $(function()
 			div.textContent = sText;
 			var sDescription = div.innerHTML; // Escape HTML entities for XSS prevention
 
-			var sRichDescription = '<div class="ibo-navigation-menu--notifications--item--content">' + oConverter.makeHtml(sDescription) + '</div>';
+			var sRichDescription = '<div class="ibo-navigation-menu--notifications--item--content ibo-is-html-content">' + oConverter.makeHtml(sDescription) + '</div>';
 
 			var sBottomText = '<span class="ibo-navigation-menu--notifications--item--bottom-text">' + sImage + '<span>' + this.options.providers[sProvider].label + '</span> <span> ' + moment(sStartDate).fromNow() + '</span></span>';
 
@@ -214,7 +218,7 @@ $(function()
 		},
 		_buildNoMessageItem: function()
 		{
-			return '<div class="ibo-popover-menu--item ibo-popover-menu--item--no-message">' + Dict.S(this.options.labels.no_notification) + 
+			return '<div class="ibo-popover-menu--item ibo-popover-menu--item--no-message">' + Dict.S(this.options.labels.no_notification) +
 				'<div class="ibo-popover-menu--item--no-message--image ibo-svg-illustration--container">' + this.options.no_message_icon + '</div></div>';
 		},
 		_buildSingleShowAllMessagesItem: function()
@@ -268,11 +272,11 @@ $(function()
 				var sNoMessageItem = this._buildNoMessageItem();
 				sMessageSection += sNoMessageItem;
 			}
-			sMessageSection += '<hr class="ibo-popover-menu--item ibo-popover-menu--separator"></div>';
-			
+			sMessageSection += '<hr class="ibo-popover-menu--item ibo-popover-menu--item-separator"></div>';
+
 			if (this.options.providers.length == 1)
 			{
-				var SingleShowAllMessagesItem = this._buildSingleShowAllMessagesItem();	
+				var SingleShowAllMessagesItem = this._buildSingleShowAllMessagesItem();
 				sShowAllMessagesSection += SingleShowAllMessagesItem;
 				sShowAllMessagesSection += '</div>'
 			}
@@ -303,19 +307,14 @@ $(function()
 				// Add class to show there is no messages
 				$(this.js_selectors.menu_toggler).addClass(this.css_classes.empty);
 			}
-			
-			if (this.options.providers.length != 1)
-			{
-				var oElem = $('[data-role="ibo-navigation-menu--notifications-show-all-multiple"]~[data-role="ibo-popover-menu"]');
-				oElem.popover_menu({'toggler': '[data-role="ibo-navigation-menu--notifications-show-all-multiple"]'});
 
-				$('[data-role="ibo-navigation-menu--notifications-show-all-multiple"]').on('click', function(oEvent){
-					var oEventTarget = $(oEvent.target);
-					var aEventTargetPos = oEventTarget.position();
-					oElem.css({
-						'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px'
-					});
-					oElem.popover_menu("togglePopup");
+			if (this.options.providers.length != 1) {
+				var oElem = $('[data-role="ibo-navigation-menu--notifications-show-all-multiple"]~[data-role="ibo-popover-menu"]');
+				oElem.popover_menu({
+					'toggler': '[data-role="ibo-navigation-menu--notifications-show-all-multiple"]',
+					'position': {
+						'horizontal': "(oTargetPos.left+parseInt(oTargetElem.css('marginLeft'), 10)+(oTargetElem.outerWidth() / 2)-(oElem.outerWidth() / 2))+'px'",
+					},
 				});
 
 			}

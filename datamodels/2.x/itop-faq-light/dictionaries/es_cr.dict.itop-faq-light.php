@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
@@ -47,8 +47,10 @@
 //
 // Class: FAQ
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+//
+// Class: FAQ
+//
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQ' => 'Preguntas y Respuestas Frecuentes',
 	'Class:FAQ+' => 'Preguntas y Respuestas Frecuentes',
 	'Class:FAQ/Attribute:title' => 'Asunto',
@@ -65,14 +67,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:FAQ/Attribute:error_code+' => 'Código de Error',
 	'Class:FAQ/Attribute:key_words' => 'Palabras Clave',
 	'Class:FAQ/Attribute:key_words+' => 'Palabras Clave',
-	'Class:FAQ/Attribute:domains' => 'Domains~~',
+	'Class:FAQ/Attribute:domains' => 'Ámbito',
 ));
 
 //
 // Class: FAQCategory
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQCategory' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory+' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory/Attribute:name' => 'Nombre',
@@ -80,9 +81,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
 ));
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Menu:ProblemManagement' => 'Gestión de problemas',
-	'Menu:ProblemManagement+' => 'Gestión de problemas',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Menu:ProblemManagement' => 'Administración de problemas',
+	'Menu:ProblemManagement+' => 'GestAdministraciónión de problemas',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
 	'Menu:FAQCategory' => 'Categorías de FAQ',
 	'Menu:FAQCategory+' => 'Categorías FAQ',

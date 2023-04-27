@@ -1,0 +1,77 @@
+{
+  "_COMMENT": "This file was generated using the license-checker package. Command used : `license-checker --json --out setup\\licenses\\additionals-npm.json --relativeLicensePath`. See https://www.npmjs.com/package/license-checker",
+  "@popperjs/core@2.4.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/popperjs/popper-core",
+    "publisher": "Federico Zivolo",
+    "email": "federico.zivolo@gmail.com",
+    "licenseFile": "node_modules\\@popperjs\\core\\LICENSE.md"
+  },
+  "bulma-scss@0.9.0-1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/j1mc/bulma-scss",
+    "publisher": "Jim Campbell",
+    "licenseFile": "node_modules\\bulma-scss\\LICENSE"
+  },
+  "datatables.net-fixedheader@3.1.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables-FixedHeader",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net-fixedheader\\License.txt"
+  },
+  "datatables.net-responsive@2.2.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables-Responsive",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net-responsive\\License.txt"
+  },
+  "datatables.net-scroller@1.5.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables-Scroller",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net-scroller\\License.txt"
+  },
+  "datatables.net-select@1.3.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables-Select",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net-select\\License.txt"
+  },
+  "datatables.net@1.10.24": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net\\License.txt"
+  },
+  "jquery@3.6.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jquery/jquery",
+    "publisher": "OpenJS Foundation and other contributors",
+    "url": "https://github.com/jquery/jquery/blob/3.6.0/AUTHORS.txt",
+    "licenseFile": "node_modules\\jquery\\LICENSE.txt"
+  },
+  "raleway-webfont@3.0.1": {
+    "licenses": "MIT AND OFL-1.1",
+    "repository": "https://github.com/Dilatorily/raleway",
+    "publisher": "Pablo Impallari",
+    "licenseFile": "node_modules\\raleway-webfont\\LICENSE"
+  },
+  "scrollmagic@2.0.8": {
+    "licenses": "(MIT OR GPL-3.0+)",
+    "repository": "https://github.com/janpaepke/ScrollMagic",
+    "publisher": "Jan Paepke",
+    "url": "http://www.janpaepke.de",
+    "licenseFile": "node_modules\\scrollmagic\\LICENSE.md"
+  },
+  "tippy.js@6.2.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/atomiks/tippyjs",
+    "publisher": "atomiks",
+    "licenseFile": "node_modules\\tippy.js\\LICENSE"
+  }
+}

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+  <branding>
+    <themes>
+      <theme id="test-red" _delta="define">
+        <variables>
+          <variable id="ibo-page-banner--background-color">#C53030</variable>
+          <variable id="var1">#C53030</variable>
+        </variables>
+        <imports>
+          <import id="scss-variables" xsi:type="utilities">../css/scss-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="custom">../css/custom.scss</stylesheet>
+        </stylesheets>
+      </theme>
+    </themes>
+  </branding>
+  <classes>
+    <class id="ClassWithStateButNoLifecycle">
+      <properties>
+        <style>
+          <icon>images/class-with-lifecycle.png</icon>
+        </style>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+        </fields_semantic>
+      </properties>
+    </class>
+    <class id="ClassWithStateAndLifecycle">
+      <properties>
+        <style>
+          <icon>images/class-with-lifecycle.png</icon>
+        </style>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+        </fields_semantic>
+      </properties>
+      <lifecycle/>
+    </class>
+    <class id="ClassWithStateAndImage">
+      <properties>
+        <style>
+          <icon>images/class-with-lifecycle.png</icon>
+        </style>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+          <image_attribute>bar</image_attribute>
+        </fields_semantic>
+      </properties>
+    </class>
+    <class id="ClassWithImageOnly">
+      <properties>
+        <style>
+          <icon>images/class-with-lifecycle.png</icon>
+        </style>
+        <fields_semantic>
+          <image_attribute>bar</image_attribute>
+        </fields_semantic>
+      </properties>
+    </class>
+    <class id="OtherClass">
+      <properties>
+        <style>
+          <icon revisionid="2" _delta="redefine">
+            <fileref ref="company_0faae3b9d86b7c382b2e4cdae570bc3c" revisionid="62"/>
+          </icon>
+          <main_color>#4E79A5</main_color>
+          <complementary_color>white</complementary_color>
+        </style>
+      </properties>
+      <fields>
+        <field id="status" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="new">
+              <code>new</code>
+              <style>
+                <main_color>#2C5382</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="waiting_for_approval">
+              <code>waiting_for_approval</code>
+            </value>
+          </values>
+          <default_style>
+            <main_color>#2B6CB0</main_color>
+            <complementary_color>#FFFFFF</complementary_color>
+            <decoration_classes/>
+          </default_style>
+        </field>
+        <field id="operational_status" xsi:type="AttributeMetaEnum">
+          <values>
+            <value id="ongoing">
+              <code>ongoing</code>
+              <style>
+                <main_color>#2C5382</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="resolved">
+              <code>resolved</code>
+            </value>
+          </values>
+          <default_style>
+            <main_color>#2B6CB0</main_color>
+            <complementary_color>#FFFFFF</complementary_color>
+            <decoration_classes/>
+          </default_style>
+        </field>
+      </fields>
+    </class>
+  </classes>
+  <menus>
+    <menu id="WelcomeMenuLink1" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>100</rank>
+      <parent>WelcomeMenu</parent>
+      <url>$$http://fr.wikipedia.org/</url>
+      <in_new_window>true</in_new_window>
+    </menu>
+    <menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
+      <rank>30</rank>
+      <enable_stimulus/>
+      <style>
+        <decoration_classes>fas fa-comment-alt</decoration_classes>
+      </style>
+    </menu>
+  </menus>
+  <branding>
+    <main_logo _delta="define">images/itop-logo.png</main_logo>
+    <main_logo_compact _delta="define">images/itop-logo-square.png</main_logo_compact>
+  </branding>
+  <meta>
+    <previous_versions>
+      <previous_version_1_7>
+        <trashed_nodes>
+          <trashed_node id="1">
+            <parent_xpath>/itop_design/branding/themes</parent_xpath>
+            <node_tree>
+              <theme id="light-grey">
+                <variables/>
+                <imports>
+                  <import id="css-variables">../css/css-variables.scss</import>
+                </imports>
+                <stylesheets>
+                  <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+                  <stylesheet id="main">../css/light-grey.scss</stylesheet>
+                </stylesheets>
+              </theme>
+            </node_tree>
+          </trashed_node>
+          <trashed_node id="2">
+            <parent_xpath>/itop_design/branding/themes/theme[@id="test-red"]/imports</parent_xpath>
+            <node_tree>
+              <import id="css-variables">../css/css-variables.scss</import>
+            </node_tree>
+          </trashed_node>
+          <trashed_node id="3">
+            <parent_xpath>/itop_design/branding/themes/theme[@id="test-red"]/stylesheets</parent_xpath>
+            <node_tree>
+              <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+            </node_tree>
+          </trashed_node>
+          <trashed_node id="4">
+            <parent_xpath>/itop_design/branding/themes/theme[@id="test-red"]/stylesheets</parent_xpath>
+            <node_tree>
+              <stylesheet id="main">../css/main.scss</stylesheet>
+            </node_tree>
+          </trashed_node>
+        </trashed_nodes>
+      </previous_version_1_7>
+    </previous_versions>
+  </meta>
+</itop_design>

@@ -11,14 +11,12 @@
 
 namespace Symfony\Component\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\EnvVarProcessor;
 use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
  * Creates the container.env_var_processors_locator service.
@@ -27,7 +25,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  */
 class RegisterEnvVarProcessorsPass implements CompilerPassInterface
 {
-    private static $allowedTypes = ['array', 'bool', 'float', 'int', 'string'];
+    private const ALLOWED_TYPES = ['array', 'bool', 'float', 'int', 'string'];
 
     public function process(ContainerBuilder $container)
     {
@@ -41,7 +39,7 @@ class RegisterEnvVarProcessorsPass implements CompilerPassInterface
                 throw new InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, EnvVarProcessorInterface::class));
             }
             foreach ($class::getProvidedTypes() as $prefix => $type) {
-                $processors[$prefix] = new ServiceClosureArgument(new Reference($id));
+                $processors[$prefix] = new Reference($id);
                 $types[$prefix] = self::validateProvidedTypes($type, $class);
             }
         }
@@ -56,20 +54,19 @@ class RegisterEnvVarProcessorsPass implements CompilerPassInterface
         }
 
         if ($processors) {
-            $container->register('container.env_var_processors_locator', ServiceLocator::class)
+            $container->setAlias('container.env_var_processors_locator', (string) ServiceLocatorTagPass::register($container, $processors))
                 ->setPublic(true)
-                ->setArguments([$processors])
             ;
         }
     }
 
-    private static function validateProvidedTypes($types, $class)
+    private static function validateProvidedTypes(string $types, string $class): array
     {
         $types = explode('|', $types);
 
         foreach ($types as $type) {
-            if (!\in_array($type, self::$allowedTypes)) {
-                throw new InvalidArgumentException(sprintf('Invalid type "%s" returned by "%s::getProvidedTypes()", expected one of "%s".', $type, $class, implode('", "', self::$allowedTypes)));
+            if (!\in_array($type, self::ALLOWED_TYPES)) {
+                throw new InvalidArgumentException(sprintf('Invalid type "%s" returned by "%s::getProvidedTypes()", expected one of "%s".', $type, $class, implode('", "', self::ALLOWED_TYPES)));
             }
         }
 

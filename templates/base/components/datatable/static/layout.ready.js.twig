@@ -1,13 +1,14 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-
+{% set sListId = oUIBlock.GetId() %}
+{% set sListIDForVarSuffix = ('' ~ sListId)|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
 {% if oUIBlock.GetOption("iPageSize") is not empty %}
-    {% set iPageSize = oUIBlock.GetOption("iPageSize") %}
+{% set iPageSize = oUIBlock.GetOption("iPageSize") %}
 {% else %}
-    {% set iPageSize = 10 %}
+{% set iPageSize = 10 %}
 {% endif %}
 
-$('#{{ oUIBlock.GetId() }}').DataTable({
+var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         processing: "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
         search: "{{ 'UI:Datatables:Language:Search'|dict_s }}",
@@ -18,10 +19,10 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
         infoFiltered: "({{ 'UI:Datatables:Language:InfoFiltered'|dict_s }})",
         emptyTable: "{{ 'UI:Datatables:Language:EmptyTable'|dict_s }}",
         paginate: {
-            first: "<<",
+            first: "<i class=\"fas fa-angle-double-left\"></i>",
             previous: "<i class=\"fas fa-angle-left\"></i>",
             next: "<i class=\"fas fa-angle-right\"></i>",
-            last: ">>"
+            last: "<i class=\"fas fa-angle-double-right\"></i>"
         },
         aria: {
             sortAscending: ": {{ 'UI:Datatables:Language:Sort:Ascending'|dict_s }}",
@@ -29,26 +30,82 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
         }
     },
     scrollX: true,
+    {% if oUIBlock.GetOption('sMaxHeight') is not empty %}
+        scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
+    {% endif %}
     scrollCollapse: true,
     order: [],
-    autoWidth: false,
     rowId: "id",
     filter: false,
     {% if oUIBlock.GetOption("pageLength") is not empty %}
-    pageLength: {{ oUIBlock.GetOptions()["pageLength"] }},
+        pageLength: {{ oUIBlock.GetOption("pageLength") }},
     {% endif %}
-    {% if oUIBlock.GetData()|length <= iPageSize %}
-    paging: false,
+    {% if oUIBlock.GetOption("dom") is not empty %}
+    dom: "<'ibo-datatable--toolbar'{{ oUIBlock.GetOption("dom") }}>t",
+    {% else %}
+    dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
     {% endif %}
-    dom: "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     columns: [
         {% for key, column in oUIBlock.GetColumns() %}
         {
             data: "{{ key }}",
-        	width: "auto",
+            width: "auto",
             sortable: true
         },
         {% endfor %}
-    ]
+        {% if oUIBlock.HasRowActions() %}
+            getRowActionsColumnDefinition('{{ oUIBlock.GetId() }}'),
+        {% endif %}
+    ],
+    drawCallback: function (settings) {
+        if(settings.json)
+        {
+            $(this).closest('.ibo-panel').find('.ibo-datatable--result-count').html(settings.json.recordsTotal);
+        }
+        // Hiding pagination if only one page
+        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
+        {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+        }
+        else
+        {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+        }
+        if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
+        {
+            $(this).closest('.dataTables_wrapper').find('.checkAll')[0].checked = true;
+        }
+        
+        // Disable hyperlinks if necessary
+        {% if oUIBlock.GetOption("disable_hyperlinks") is same as true or (oUIBlock.GetOption("select_mode") is not empty and oUIBlock.GetOption("disable_hyperlinks") is not same as false) %}
+        $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
+            e.preventDefault();
+        });
+        {% endif %}
+    },
+    initComplete: function () {
+        if (this.api().page.info().pages < 2)
+        {
+            this.closest('.dataTables_wrapper').find('.dataTables_length').hide();
+        }
+        
+        // Set header and body datatables status as loaded
+        this.attr('data-status', 'loaded');
+        this.closest('.dataTables_scroll').find('.dataTables_scrollHead .ibo-datatable').attr('data-status', 'loaded');
+    }
 });
+
+if (window.ResizeObserver)
+{
+    let oStaticTable{{ sListIDForVarSuffix }}ResizeTimeout = null;
+    const oStaticTable{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function(){
+        clearTimeout(oStaticTable{{ sListIDForVarSuffix }}ResizeTimeout);
+        oStaticTable{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function(){
+            $('#{{ oUIBlock.GetId() }}').DataTable().columns.adjust();
+        }, 120);
+    });
+    oStaticTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
+}
+
+{% include 'base/components/datatable/row-actions/handler.js.twig' %}

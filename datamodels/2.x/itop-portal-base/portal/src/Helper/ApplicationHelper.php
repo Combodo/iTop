@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -24,6 +24,7 @@ use cmdbAbstractObject;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use DBObjectSearch;
 use DBObjectSet;
+use DeprecatedCallsLog;
 use Dict;
 use Exception;
 use IssueLog;
@@ -60,6 +61,7 @@ class ApplicationHelper
 	 */
 	public static function LoadClasses($sScannedDir, $sFilePattern, $sType)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		@trigger_error(
 			sprintf(
 				'Usage of legacy LoadClasses is deprecated. You should rely on autoloading (and therefore follow PSR4).',
@@ -322,10 +324,9 @@ class ApplicationHelper
 				if (substr($sFieldsetName, 0, 1) !== '_')
 				{
 					$sFieldsetHTML = "\t\t<fieldset>\n";
-					$sFieldsetHTML .= "\t\t\t<legend>".htmlentities(Dict::S($sFieldsetName), ENT_QUOTES, 'UTF-8')."</legend>\n";
+					$sFieldsetHTML .= "\t\t\t<legend>".utils::EscapeHtml(Dict::S($sFieldsetName))."</legend>\n";
 
-					foreach ($aAttCodes as $sAttCode)
-					{
+					foreach ($aAttCodes as $sAttCode) {
 						$sFieldsetHTML .= "\t\t\t<div class=\"form_field\" data-field-id=\"".$sAttCode."\"></div>\n";
 					}
 

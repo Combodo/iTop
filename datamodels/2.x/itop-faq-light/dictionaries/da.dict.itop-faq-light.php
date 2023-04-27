@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,13 +17,12 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 //
 // Class: FAQ
 //
-
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => '',
@@ -54,7 +53,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:FAQCategory/Attribute:name' => 'Navn',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
 ));
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:ProblemManagement' => 'Problem Management',

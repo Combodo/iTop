@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Implementation of iTop SOAP services
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -369,7 +369,7 @@ abstract class WebServicesBase
 		{
 			if (!MetaModel::IsValidFilterCode($sKeyClass, $sForeignAttCode))
 			{
-				$aCodes = array_keys(MetaModel::GetClassFilterDefs($sKeyClass));
+				$aCodes = MetaModel::GetFiltersList($sKeyClass);
 				$sMsg = "Parameter $sParamName: '$sForeignAttCode' is not a valid filter code for class '$sKeyClass', expecting a value in {".implode(', ', $aCodes)."}";
 				$oRes->LogIssue($sMsg, $bIsMandatory);
 			}
@@ -445,11 +445,9 @@ abstract class WebServicesBase
 			}
 			$oReconFilter = new DBObjectSearch($sTargetClass);
 			$aCIStringDesc = array();
-			foreach ($aItemData['search'] as $sAttCode => $value)
-			{
-				if (!MetaModel::IsValidFilterCode($sTargetClass, $sAttCode))
-				{
-					$aCodes = array_keys(MetaModel::GetClassFilterDefs($sTargetClass));
+			foreach ($aItemData['search'] as $sAttCode => $value) {
+				if (!MetaModel::IsValidFilterCode($sTargetClass, $sAttCode)) {
+					$aCodes = MetaModel::GetFiltersList($sTargetClass);
 					$oRes->LogError("Parameter $sParamName: '$sAttCode' is not a valid filter code for class '$sTargetClass', expecting a value in {".implode(', ', $aCodes)."}");
 					continue 2; // skip the entire item
 				}

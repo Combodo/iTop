@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,21 +18,35 @@
 
 
 /**
- * Base class to hold the value managed by CustomFieldsHandler
+ * Base class to hold the value managed by {@see CustomFieldsHandler} and {@see AttributeCustomFields}
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 class ormCustomFieldsValue
 {
+	/** @var \DBObject|null $oHostObject */
 	protected $oHostObject;
+	/** @var string $sAttCode */
 	protected $sAttCode;
+	/** @var array{
+	 *          legacy: int,
+	 *          extradata_id: string,
+	 *          _template_name: string,
+	 *          template_id: string,
+	 *          template_data: string,
+	 *          user_data: string,
+	 *          current_template_id: string,
+	 *          current_template_data: string,
+	 *     } $aCurrentValues Containing JSON encoded strings in template_data/current_template_data, user_data.
+	 *          Warning, current_* are mandatory for data to be saved in a DBUpdate() call !
+	 */
 	protected $aCurrentValues;
 
 	/**
-	 * @param DBObject $oHostObject
-	 * @param $sAttCode
+	 * @param \DBObject|null $oHostObject
+	 * @param string $sAttCode
+	 * @param array $aCurrentValues
 	 */
 	public function __construct(DBObject $oHostObject, $sAttCode, $aCurrentValues = null)
 	{
@@ -50,44 +64,59 @@ class ormCustomFieldsValue
 	 * Wrapper used when the only thing you have is the value...
 	 * @return \Combodo\iTop\Form\Form
 	 */
-	public function GetForm()
+	public function GetForm($sFormPrefix = null)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		return $oAttDef->GetForm($this->oHostObject);
+
+		return $oAttDef->GetForm($this->oHostObject, $sFormPrefix);
 	}
 
 	public function GetAsHTML($bLocalize = true)
 	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->GetValues());
-		return $oHandler->GetAsHTML($this->aCurrentValues, $bLocalize);
+		return $this->GetHandler()->GetAsHTML($this->aCurrentValues, $bLocalize);
 	}
 
 	public function GetAsXML($bLocalize = true)
 	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->GetValues());
-		return $oHandler->GetAsXML($this->aCurrentValues, $bLocalize);
+		return $this->GetHandler()->GetAsXML($this->aCurrentValues, $bLocalize);
 	}
 
 	public function GetAsCSV($sSeparator = ',', $sTextQualifier = '"', $bLocalize = true)
 	{
+		return $this->GetHandler()->GetAsCSV($this->aCurrentValues, $sSeparator, $sTextQualifier, $bLocalize);
+	}
+
+	/**
+	 * @return string|array
+	 * @throws \Exception
+	 * @since 3.1.0 N°1150 Method creation
+	 */
+	public function GetForJSON()
+	{
+		return $this->GetHandler()->GetAsJSON($this->aCurrentValues);
+	}
+
+	/**
+	 * @return \CustomFieldsHandler
+	 * @throws \Exception
+	 * @since 3.1.0 N°1150 Method creation
+	 */
+	final protected function GetHandler()
+	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->GetValues());
-		return $oHandler->GetAsCSV($this->aCurrentValues, $sSeparator, $sTextQualifier, $bLocalize);
+
+		return $oAttDef->GetHandler($this->GetValues());
 	}
 
 	/**
 	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
-	 * @param $value mixed The current value of the field
+	 *
 	 * @param $sVerb string The verb specifying the representation of the value
 	 * @param $bLocalize bool Whether or not to localize the value
 	 */
 	public function GetForTemplate($sVerb, $bLocalize = true)
 	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->GetValues());
-		return $oHandler->GetForTemplate($this->aCurrentValues, $sVerb, $bLocalize);
+		return $this->GetHandler()->GetForTemplate($this->aCurrentValues, $sVerb, $bLocalize);
 	}
 
 	/**

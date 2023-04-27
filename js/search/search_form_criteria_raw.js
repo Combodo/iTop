@@ -72,7 +72,7 @@ $(function()
 		{
 			if(sTitle === undefined)
 			{
-				sTitle = this.options.label;
+				sTitle = $('<div/>').text(this.options.label).html();
 			}
 
 			return this._super(sTitle);

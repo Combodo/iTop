@@ -1,0 +1,12 @@
+
+when@dev:
+  web_profiler:
+    toolbar: true
+    intercept_redirects: false
+
+when@test:
+  web_profiler:
+    toolbar: false
+    intercept_redirects: false
+
+

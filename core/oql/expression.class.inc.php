@@ -1,20 +1,7 @@
 <?php
 /*
- * Copyright (C) 2010-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class MissingQueryArgument extends CoreException {
@@ -107,7 +94,7 @@ abstract class Expression {
 	/**
 	 * recursive rendering
 	 *
-	 * @deprecated use RenderExpression
+	 * @deprecated 3.0.0 use RenderExpression
 	 *
 	 * @param array $aArgs used as input by default, or used as output if bRetrofitParams set to True
 	 * @param bool $bRetrofitParams
@@ -117,6 +104,9 @@ abstract class Expression {
 	 */
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use RenderExpression');
+
 		return $this->RenderExpression(false, $aArgs, $bRetrofitParams);
 	}
 
@@ -1762,6 +1752,7 @@ class FieldExpression extends UnaryExpression
 	 */
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
+
 		$sAttCode = $this->GetName();
 		$sParentAlias = $this->GetParent();
 
@@ -2521,7 +2512,7 @@ class NestedQueryExpression extends Expression
 	}
 
 	public function ListParameters() {
-		return $this->m_oNestedQuery->ListParameters();
+		return $this->m_oNestedQuery->GetExpectedArguments();
 	}
 
 	public function RenameParam($sOldName, $sNewName) {
@@ -2759,25 +2750,96 @@ class FunctionExpression extends Expression
 				return $iRet;
 
 			case 'DATE_FORMAT':
-				if (count($this->m_aArgs) != 2)
-				{
+				if (count($this->m_aArgs) != 2) {
 					throw new \Exception("Function {$this->m_sVerb} requires 2 arguments");
 				}
 				$oDate = new DateTime($this->m_aArgs[0]->Evaluate($aArgs));
-				$sFormat = $this->m_aArgs[1]->Evaluate($aArgs);
-				$sFormat = str_replace(
-					array('%y', '%x', '%w', '%W', '%v', '%T', '%S', '%r', '%p', '%M', '%l', '%k', '%I', '%h', '%b', '%a', '%D', '%c', '%e', '%Y', '%d', '%m', '%H', '%i', '%s'),
-					array('y', 'o', 'w', 'l', 'W', 'H:i:s', 's', 'h:i:s A', 'A', 'F', 'g', 'H', 'h', 'h','M', 'D', 'jS', 'n', 'j', 'Y', 'd', 'm', 'H', 'i', 's'),
-					$sFormat);
-				if (preg_match('/%j/', $sFormat))
-				{
-					$sFormat = str_replace('%j', date_format($oDate, 'z') + 1, $sFormat);
-				}
-				if (preg_match('/%[fUuVX]/', $sFormat))
-				{
+				$sFormatForMysqlDateFormat = $this->m_aArgs[1]->Evaluate($aArgs);
+
+				if (preg_match('/%[fUuVX]/', $sFormatForMysqlDateFormat)) {
 					throw new NotYetEvaluatedExpression("Expression ".$this->RenderExpression().' cannot be evaluated (known limitation)');
 				}
-				$sRet = date_format($oDate, $sFormat);
+
+				if (preg_match('/%j/', $sFormatForMysqlDateFormat)) {
+					$sFormatForMysqlDateFormat = str_replace('%j', 'z', $sFormatForMysqlDateFormat);
+					$sRet = date_format($oDate, $sFormatForMysqlDateFormat);
+					$sRet++;
+					/** @noinspection PhpUnnecessaryLocalVariableInspection */
+					$sRet = str_pad($sRet, 3, '0', STR_PAD_LEFT);
+
+					return $sRet;
+				}
+
+				/**
+				 * @var string[] $aFormatsForMysqlDateFormat
+				 * @link https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html#function_date-format
+				 */
+				//@formatter:off we want to keep every single item on its own line to ease comp between MySQL and PHP formats !
+				$aFormatsForMysqlDateFormat = [
+					'%y',
+					'%x',
+					'%w',
+					'%W',
+					'%v',
+					'%T',
+					'%S',
+					'%r',
+					'%p',
+					'%M',
+					'%l',
+					'%k',
+					'%I',
+					'%h',
+					'%b',
+					'%a',
+					'%D',
+					'%c',
+					'%e',
+					'%Y',
+					'%d',
+					'%m',
+					'%H',
+					'%i',
+					'%s'
+				];
+				//@formatter:on
+				/**
+				 * @var string[] $aFormatsForPhpDateFormat
+				 * @link https://www.php.net/manual/en/datetime.format.php
+				 */
+				//@formatter:off we want to keep every single item on its own line to ease comp between MySQL and PHP formats !
+				$aFormatsForPhpDateFormat = [
+					'y',
+					'o',
+					'w',
+					'l',
+					'W',
+					'H:i:s',
+					's',
+					'h:i:s A',
+					'A',
+					'F',
+					'g',
+					'G',
+					'h',
+					'h',
+					'M',
+					'D',
+					'jS',
+					'n',
+					'j',
+					'Y',
+					'd',
+					'm',
+					'H',
+					'i',
+					's'
+				];
+				//@formatter:on
+				$sFormatForPhpDateFormat = str_replace($aFormatsForMysqlDateFormat, $aFormatsForPhpDateFormat, $sFormatForMysqlDateFormat);
+				/** @noinspection PhpUnnecessaryLocalVariableInspection */
+				$sRet = date_format($oDate, $sFormatForPhpDateFormat);
+
 				return $sRet;
 
 			case 'TO_DAYS':
@@ -2785,9 +2847,26 @@ class FunctionExpression extends Expression
 				{
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
+
+				// N°5985 - Since PHP 8.1+, a bug fix on \DateTimeInterval for a date anterior to "1937-05-23" now returns a different number of days. The workaround below aim at making the code work with PHP 7.4 => 8.2+
+				//
+				// $oDate = new DateTimeImmutable('2020-01-02');
+				// $oZero = new DateTimeImmutable('1937-05-22');
+				// $iRet = (int) $oDate->diff($oZero)->format('%a');
+				// echo $iRet."\n"; // 30174 (PHP 8.0) vs 30175 (PHP 8.1+)
+				//
+				// $oDate = new DateTimeImmutable('2020-01-02');
+				// $oZero = new DateTimeImmutable('1937-05-23');
+				// $iRet = (int) $oDate->diff($oZero)->format('%a');
+				// echo $iRet."\n"; // 30174 (PHP 8.0) vs 30174 (PHP 8.1+)
+				//
+				// To work around that we take 1970-01-01 as "zero date" and we offset it with the number of days between 1582-01-01 and 1970-01-01.
+				// Note that as the "target" date could be between 1582-01-01 and 1970-01-01 we have to format the interval with the "-"/"+" sign in order to correct the number of days.
+
 				$oDate = new DateTime($this->m_aArgs[0]->Evaluate($aArgs));
-				$oZero = new DateTime('1582-01-01');
-				$iRet = (int) $oDate->diff($oZero)->format('%a') + 577815;
+				$oZero = new DateTime('1970-01-01');
+				$iDaysBetween19700101And15800101 = 141713;
+				$iRet = (int) $oZero->diff($oDate)->format('%R%a') + 577815 + $iDaysBetween19700101And15800101;
 				return $iRet;
 
 			case 'FROM_DAYS':
@@ -2975,8 +3054,7 @@ class FunctionExpression extends Expression
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
 		static $aWeekDayToString = null;
-		if (is_null($aWeekDayToString))
-		{
+		if (is_null($aWeekDayToString)) {
 			// Init the correspondance table
 			$aWeekDayToString = array(
 				0 => Dict::S('DayOfWeek-Sunday'),
@@ -2985,7 +3063,7 @@ class FunctionExpression extends Expression
 				3 => Dict::S('DayOfWeek-Wednesday'),
 				4 => Dict::S('DayOfWeek-Thursday'),
 				5 => Dict::S('DayOfWeek-Friday'),
-				6 => Dict::S('DayOfWeek-Saturday')
+				6 => Dict::S('DayOfWeek-Saturday'),
 			);
 		}
 		static $aMonthToString = null;
@@ -2993,15 +3071,15 @@ class FunctionExpression extends Expression
 		{
 			// Init the correspondance table
 			$aMonthToString = array(
-				1 => Dict::S('Month-01'),
-				2 => Dict::S('Month-02'),
-				3 => Dict::S('Month-03'),
-				4 => Dict::S('Month-04'),
-				5 => Dict::S('Month-05'),
-				6 => Dict::S('Month-06'),
-				7 => Dict::S('Month-07'),
-				8 => Dict::S('Month-08'),
-				9 => Dict::S('Month-09'),
+				1  => Dict::S('Month-01'),
+				2  => Dict::S('Month-02'),
+				3  => Dict::S('Month-03'),
+				4  => Dict::S('Month-04'),
+				5  => Dict::S('Month-05'),
+				6  => Dict::S('Month-06'),
+				7  => Dict::S('Month-07'),
+				8  => Dict::S('Month-08'),
+				9  => Dict::S('Month-09'),
 				10 => Dict::S('Month-10'),
 				11 => Dict::S('Month-11'),
 				12 => Dict::S('Month-12'),
@@ -3009,30 +3087,22 @@ class FunctionExpression extends Expression
 		}
 
 		$sRes = $sDefault;
-		if (strtolower($this->m_sVerb) == 'date_format')
-		{
+		if (strtolower($this->m_sVerb) == 'date_format') {
 			$oFormatExpr = $this->m_aArgs[1];
-			if ($oFormatExpr->Render() == "'%w'")
-			{
-				if (isset($aWeekDayToString[(int)$sValue]))
-				{
+
+			if ($oFormatExpr->RenderExpression() == "'%w'") {
+				if (isset($aWeekDayToString[(int)$sValue])) {
 					$sRes = $aWeekDayToString[(int)$sValue];
 				}
-			}
-			elseif ($oFormatExpr->Render() == "'%Y-%m'")
-			{
+			} elseif ($oFormatExpr->RenderExpression() == "'%Y-%m'") {
 				// yyyy-mm => "yyyy month"
-				$iMonth = (int) substr($sValue, -2); // the two last chars
+				$iMonth = (int)substr($sValue, -2); // the two last chars
 				$sRes = substr($sValue, 0, 4).' '.$aMonthToString[$iMonth];
-			}
-			elseif ($oFormatExpr->Render() == "'%Y-%m-%d'")
-			{
+			} elseif ($oFormatExpr->RenderExpression() == "'%Y-%m-%d'") {
 				// yyyy-mm-dd => "month d"
-				$iMonth = (int) substr($sValue, 5, 2);
+				$iMonth = (int)substr($sValue, 5, 2);
 				$sRes = $aMonthToString[$iMonth].' '.(int)substr($sValue, -2);
-			}
-			elseif ($oFormatExpr->Render() == "'%H'")
-			{
+			} elseif ($oFormatExpr->RenderExpression() == "'%H'") {
 				// H => "H Hour(s)"
 				$sRes = $sValue.':00';
 			}

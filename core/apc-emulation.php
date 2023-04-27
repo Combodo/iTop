@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2021 Combodo SARL
+// Copyright (c) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -110,7 +110,7 @@ class apcFile
 	 */
 	static public function GetCacheFileName($sKey = '')
 	{
-		$sPath = str_replace(array(' ', '/', '\\', '.'), '-', $sKey);
+		$sPath = str_replace(array(' ', '/', '\\', '.'), '-', $sKey ?? '');
 		return utils::GetCachePath().'apc-emul/'.$sPath;
 	}
 

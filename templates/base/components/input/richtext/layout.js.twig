@@ -1,1 +1,1 @@
-$('#{{ oUIBlock.GetId() }}').ckeditor(function() { /* callback code */ }, {{ oUIBlock.GetConfig()| raw }});
+$('#{{ oUIBlock.GetId() }}').ckeditor(function() { /* callback code */ }, {{ oUIBlock.GetConfig()|json_encode|raw }});

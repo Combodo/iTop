@@ -24,10 +24,10 @@ $(function()
 			var me = this;
 			this._initFields();
 
-			this.moveup_btn = $('<button type="button" disabled class="ibo-button ibo-button--vertical-align">'+this.options.labels.moveup+'</button>');
-			this.movedown_btn = $('<button type="button" disabled class="ibo-button ibo-button--vertical-align">'+this.options.labels.movedown+'</button>');
+			this.moveup_btn = $('<button type="button" disabled class="ibo-button ibo-is-regular ibo-is-neutral ibo-button--vertical-align">'+this.options.labels.moveup+'</button>');
+			this.movedown_btn = $('<button type="button" disabled class="ibo-button ibo-is-regular ibo-is-neutral ibo-button--vertical-align">'+this.options.labels.movedown+'</button>');
 			columnWithButtons = $('<div class="ibo-mini-column"></div>');
-			this.element.parent().parent().append(columnWithButtons.append(this.moveup_btn).append('<br>').append(this.movedown_btn));
+			this.element.parent().parent().append(columnWithButtons.append(this.moveup_btn).append(this.movedown_btn));
 			this.moveup_btn.on('click', function () {
 				me._moveUp();
 			});
@@ -66,15 +66,15 @@ $(function()
 							
 							if (f.sort == 'none')
 							{
-								sSortOrder = '&nbsp;<span sort="none" class="sort_order sort_none' + sHidden + '"/>&nbsp;</span>';
+								sSortOrder = '&nbsp;<span sort="none" class="sort_order sort_none ibo-sort-order ibo-is-none' + sHidden + '"/>&nbsp;</span>';
 							}
 							else if (f.sort == 'asc')
 							{
-								sSortOrder = '&nbsp;<span sort="none" class="sort_order sort_asc' + sHidden + '"/>&nbsp;</span>';
+								sSortOrder = '&nbsp;<span sort="none" class="sort_order sort_asc ibo-sort-order ibo-is-ascending' + sHidden + '"/>&nbsp;</span>';
 							}
 							else if (f.sort == 'desc')
 							{
-								sSortOrder = '&nbsp;<span sort="none" class="sort_order sort_desc' + sHidden + '">&nbsp;</span>';
+								sSortOrder = '&nbsp;<span sort="none" class="sort_order sort_desc ibo-sort-order ibo-is-descending' + sHidden + '">&nbsp;</span>';
 							}
 						}
 						var field = $('<li name="' + k + '" alias="' + f.alias + '" code="' + f.code + '"><input type="checkbox"' + sChecked + sDisabled + '/>&nbsp;' + f.label + sSortOrder + '</li>');
@@ -93,9 +93,10 @@ $(function()
 		{
 			this.element
 			.removeClass('itop-fieldsorter');
-			
+			let oButtonsColumn = this.moveup_btn.parent('.ibo-mini-column');
 			this.moveup_btn.remove();
 			this.movedown_btn.remove();
+			oButtonsColumn.remove();
 			this.element.sortable('destroy').html('');		
 		},
 		// _setOptions is called with a hash of all options that are changing
@@ -204,20 +205,25 @@ $(function()
 				if (this != elt)
 				{
 					$(this).attr('sort', 'none').removeClass('sort_asc').removeClass('sort_desc').addClass('sort_none');
+					$(this).attr('sort', 'none').removeClass('ibo-is-ascending').removeClass('ibo-is-descending').addClass('ibo-is-none');
 				}
 			});
 			var sSortOrder = oElt.attr('sort');
 			if (sSortOrder == 'none')
 			{
-				oElt.attr('sort', 'asc').removeClass('sort_none').addClass('sort_asc');				
+				oElt.attr('sort', 'asc').removeClass('sort_none').addClass('sort_asc');
+				oElt.attr('sort', 'asc').removeClass('ibo-is-none').addClass('ibo-is-ascending');
+
 			}
 			else if (sSortOrder == 'asc')
 			{
-				oElt.attr('sort', 'desc').removeClass('sort_asc').addClass('sort_desc');				
+				oElt.attr('sort', 'desc').removeClass('sort_asc').addClass('sort_desc');
+				oElt.attr('sort', 'desc').removeClass('ibo-is-ascending').addClass('ibo-is-descending');
 			}
 			else if (sSortOrder == 'desc')
 			{
-				oElt.attr('sort', 'none').removeClass('sort_desc').addClass('sort_none');				
+				oElt.attr('sort', 'none').removeClass('sort_desc').addClass('sort_none');
+				oElt.attr('sort', 'none').removeClass('ibo-is-descending').addClass('ibo-is-none');
 			}
 			this._notifyChange();
 		},

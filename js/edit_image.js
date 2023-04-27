@@ -70,7 +70,7 @@ $(function()
 
 				let sMarkup = `
 				<input type="hidden" id="do_remove_${this.options.input_name}" name="${this.options.input_name}[remove]" value="0"/>
-				<div id="preview_${this.options.input_name}" class="${sCssClasses}" data-role="ibo-input-image--image-view" style="width: ${this.options.max_width_px}px; min-width: ${this.options.max_width_px}px; height: ${this.options.max_height_px}px;" min-height: ${this.options.max_height_px}px;">
+				<div id="preview_${this.options.input_name}" class="${sCssClasses}" data-role="ibo-input-image--image-view" style="max-width: ${this.options.max_width_px}px; max-height: ${this.options.max_height_px}px; aspect-ratio: ${this.options.max_width_px} / ${this.options.max_height_px};">
 					<img src="${sImageUrl}" data-original-src="${sImageUrl}" data-default-src="${this.options.default_image_url}" style="max-width: ${this.options.max_width_px}px; max-height: ${this.options.max_height_px}px">
 					<input id="file_${this.options.input_name}" name="${this.options.input_name}[fcontents]" type="file" />
 				</div>

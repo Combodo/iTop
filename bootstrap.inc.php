@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -44,14 +44,9 @@ define('ITOP_DEFAULT_ENV', 'production');
 define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
 define('READONLY_MODE_FILE', APPROOT.'data/.readonly');
 
-if (function_exists('microtime')) {
-	$fItopStarted = microtime(true);
-} else {
-	$fItopStarted = 1000 * time();
-}
+$fItopStarted = microtime(true);
 
-if (! isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false)
-{
+if (!isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false) {
 	require_once APPROOT.'/lib/autoload.php';
 }
 
@@ -60,8 +55,7 @@ if (! isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false
 //
 
 // Use 'maintenance' parameter to bypass maintenance mode
-if (!isset($bBypassMaintenance))
-{
+if (!isset($bBypassMaintenance)) {
 	$bBypassMaintenance = isset($_REQUEST['maintenance']) ? boolval($_REQUEST['maintenance']) : false;
 }
 

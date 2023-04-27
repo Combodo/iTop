@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -20,7 +20,7 @@
 $(function () {
 	// the widget definition, where 'itop' is the namespace,
 	// 'breadcrumbs' the widget name
-	$.widget('itop.collapsibleSection',
+	$.widget('itop.collapsible_section',
 		{
 			// default options
 			options:

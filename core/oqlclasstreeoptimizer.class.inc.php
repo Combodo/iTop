@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -55,7 +55,7 @@ class OQLClassTreeOptimizer
 						$sJoinedClass = $oJoin->GetOOQLClassNode()->GetNodeClass();
 						$sExtKeyAttCode = $oJoin->GetLeftField();
 						$oExtKeyAttDef = MetaModel::GetAttributeDef($oCurrentClassNode->GetNodeClass(), $sExtKeyAttCode);
-						if ($sJoinedClass == $oExtKeyAttDef->GetTargetClass()) {
+						if (($oExtKeyAttDef instanceof AttributeExternalKey) && ($sJoinedClass == $oExtKeyAttDef->GetTargetClass())) {
 							// The join is not used, remove from tree
 							$oCurrentClassNode->RemoveJoin($sLeftKey, $index);
 						}

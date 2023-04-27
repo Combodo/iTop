@@ -1,0 +1,46 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-size-0: 0 !default;
+$ibo-size-50: 2px !default;
+$ibo-size-100: 4px !default;
+$ibo-size-150: 8px !default;
+$ibo-size-200: 12px !default;
+$ibo-size-250: 16px !default;
+$ibo-size-300: 24px !default;
+$ibo-size-350: 32px !default;
+$ibo-size-400: 48px !default;
+$ibo-size-450: 64px !default;
+$ibo-size-500: 96px !default;
+$ibo-size-550: 128px !default;
+$ibo-size-600: 192px !default;
+$ibo-size-650: 256px !default;
+$ibo-size-700: 384px !default;
+$ibo-size-750: 512px !default;
+$ibo-size-800: 640px !default;
+$ibo-size-850: 768px !default;
+$ibo-size-900: 896px !default;
+
+:root{
+  --ibo-size-0: #{$ibo-size-0};
+  --ibo-size-50: #{$ibo-size-50};
+  --ibo-size-100: #{$ibo-size-100};
+  --ibo-size-150: #{$ibo-size-150};
+  --ibo-size-200: #{$ibo-size-200};
+  --ibo-size-250: #{$ibo-size-250};
+  --ibo-size-300: #{$ibo-size-300};
+  --ibo-size-350: #{$ibo-size-350};
+  --ibo-size-400: #{$ibo-size-400};
+  --ibo-size-450: #{$ibo-size-450};
+  --ibo-size-500: #{$ibo-size-500};
+  --ibo-size-550: #{$ibo-size-550};
+  --ibo-size-600: #{$ibo-size-600};
+  --ibo-size-650: #{$ibo-size-650};
+  --ibo-size-700: #{$ibo-size-700};
+  --ibo-size-750: #{$ibo-size-750};
+  --ibo-size-800: #{$ibo-size-800};
+  --ibo-size-850: #{$ibo-size-850};
+  --ibo-size-900: #{$ibo-size-900};
+}

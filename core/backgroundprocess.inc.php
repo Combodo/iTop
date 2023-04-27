@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -35,7 +35,7 @@ interface iProcess
  * interface iBackgroundProcess
  * Any extension that must be called regularly to be executed in the background 
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 interface iBackgroundProcess extends iProcess
@@ -52,7 +52,7 @@ interface iBackgroundProcess extends iProcess
  *
  * @see \AbstractWeeklyScheduledProcess for a bootstrap implementation
  * @license     http://opensource.org/licenses/AGPL-3.0
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  */
 interface iScheduledProcess extends iProcess
 {

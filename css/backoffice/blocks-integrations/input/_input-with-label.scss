@@ -1,0 +1,14 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input--spacing-left--with-label: $ibo-spacing-300 !default;
+
+
+/* Input reset */
+/* - Standard spacing between label and input */
+select + label, label + select, label > select,
+input + label, label + input, label > input {
+  margin-left: $ibo-input--spacing-left--with-label;
+}

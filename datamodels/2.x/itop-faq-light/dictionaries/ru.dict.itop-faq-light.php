@@ -8,11 +8,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  */
-
 //
 // Class: FAQ
 //
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Часто задаваемые вопросы',
@@ -45,7 +43,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Связанные FAQ',
 ));
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:ProblemManagement' => 'Управление проблемами',
 	'Menu:ProblemManagement+' => 'Управление проблемами',

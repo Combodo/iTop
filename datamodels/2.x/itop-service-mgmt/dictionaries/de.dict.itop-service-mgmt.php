@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,9 +18,9 @@
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2021 Combodo SARL
+* @copyright     Copyright (C) 2023 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
-*		
+*
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ServiceManagement' => 'Service Management',
@@ -38,7 +38,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ServiceSubcategory+' => 'Service-Unterkategorien',
 	'Menu:Service' => 'Services',
 	'Menu:Service+' => 'Services',
-	'Menu:ServiceElement' => 'Sevice-Elemente',
+	'Menu:ServiceElement' => 'Service-Elemente',
 	'Menu:ServiceElement+' => '',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Service Level Agreements',
@@ -86,9 +86,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contract/Attribute:organization_name' => 'Kunden-Name',
 	'Class:Contract/Attribute:organization_name+' => '',
 	'Class:Contract/Attribute:contacts_list' => 'Kontakte',
-	'Class:Contract/Attribute:contacts_list+' => '',
+	'Class:Contract/Attribute:contacts_list+' => 'All the contacts for this customer contract~~',
 	'Class:Contract/Attribute:documents_list' => 'Dokumente',
-	'Class:Contract/Attribute:documents_list+' => '',
+	'Class:Contract/Attribute:documents_list+' => 'All the documents for this customer contract~~',
 	'Class:Contract/Attribute:description' => 'Beschreibung',
 	'Class:Contract/Attribute:description+' => '',
 	'Class:Contract/Attribute:start_date' => 'Anfangsdatum',
@@ -105,7 +105,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contract/Attribute:cost_currency/Value:euros+' => '',
 	'Class:Contract/Attribute:contracttype_id' => 'Vertragstyp',
 	'Class:Contract/Attribute:contracttype_id+' => '',
-	'Class:Contract/Attribute:contracttype_name' => 'Vertragsty-Name',
+	'Class:Contract/Attribute:contracttype_name' => 'Vertragstyp-Name',
 	'Class:Contract/Attribute:contracttype_name+' => '',
 	'Class:Contract/Attribute:billing_frequency' => 'Abrechnungshäufigkeit',
 	'Class:Contract/Attribute:billing_frequency+' => '',
@@ -134,7 +134,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CustomerContract' => 'Kundenvertrag',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
-	'Class:CustomerContract/Attribute:services_list+' => '',
+	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract~~',
 ));
 
 //
@@ -145,7 +145,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ProviderContract' => 'Provider-Vertrag',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
-	'Class:ProviderContract/Attribute:functionalcis_list+' => '',
+	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this provider contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement',
 	'Class:ProviderContract/Attribute:coverage' => 'Abdeckung',
@@ -202,7 +202,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ServiceFamily/Attribute:icon' => 'Icon',
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
-	'Class:ServiceFamily/Attribute:services_list+' => '',
+	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
 ));
 
 //
@@ -225,9 +225,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Service/Attribute:description' => 'Beschreibung',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:documents_list' => 'Dokumente',
-	'Class:Service/Attribute:documents_list+' => '',
+	'Class:Service/Attribute:documents_list+' => 'All the documents linked to the service~~',
 	'Class:Service/Attribute:contacts_list' => 'Kontakte',
-	'Class:Service/Attribute:contacts_list+' => '',
+	'Class:Service/Attribute:contacts_list+' => 'All the contacts for this service~~',
 	'Class:Service/Attribute:status' => 'Status',
 	'Class:Service/Attribute:status+' => '',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implementation',
@@ -239,13 +239,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Service/Attribute:icon' => 'Icon',
 	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Kunden-Verträge',
-	'Class:Service/Attribute:customercontracts_list+' => '',
+	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service~~',
 	'Class:Service/Attribute:providercontracts_list' => 'Provider-Verträge',
-	'Class:Service/Attribute:providercontracts_list+' => '',
+	'Class:Service/Attribute:providercontracts_list+' => 'All the provider contracts to support this service~~',
 	'Class:Service/Attribute:functionalcis_list' => 'Benötigte CIs',
-	'Class:Service/Attribute:functionalcis_list+' => '',
+	'Class:Service/Attribute:functionalcis_list+' => 'All the configuration items that are used to provide this service~~',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Service-Subkategorien',
-	'Class:Service/Attribute:servicesubcategories_list+' => '',
+	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
 ));
 
 //
@@ -331,8 +331,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
 	'Class:SLA/Attribute:slts_list+' => 'Service Level Targets:',
 	'Class:SLA/Attribute:customercontracts_list' => 'Kunden-Verträge',
-	'Class:SLA/Attribute:customercontracts_list+' => '',
-	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
+	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA~~',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Konnte den Link zwischen Kundevertrag %1$s und Service %2$s speichern: SLA existiert bereits',
 ));
 
 //
@@ -457,9 +457,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:DeliveryModel/Attribute:description' => 'Beschreibung',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakte',
-	'Class:DeliveryModel/Attribute:contacts_list+' => '',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Kunden',
-	'Class:DeliveryModel/Attribute:customers_list+' => '',
+	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 ));
 
 //

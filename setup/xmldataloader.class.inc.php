@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Load XML data from a set of files
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -179,10 +179,14 @@ class XMLDataLoader
 	
 	/**
 	 * Helper function to load the objects from a standard XML file into the database
+	 *
 	 * @param $sFilePath string The full path to the XML file to load
 	 * @param $bUpdateKeyCacheOnly bool Set to true to *just* update the keys cache but not reload the objects
+	 * @param bool $bSearch Set to true to create objects only if they do not already exist based on reconciliation keys
+	 *
+	 * @since 3.0.0 Added $bSearch parameter
 	 */
-	function LoadFile($sFilePath, $bUpdateKeyCacheOnly = false)
+	function LoadFile($sFilePath, $bUpdateKeyCacheOnly = false, bool $bSearch = false)
 	{
 		global $aKeys;
 		
@@ -223,8 +227,6 @@ class XMLDataLoader
 				{
 					$sMsg = "Unknown attribute code - $sClass/$sAttCode";
 					continue; // ignore silently...
-					//SetupPage::log_error($sMsg);
-					//throw(new Exception($sMsg));
 				}
 
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -298,7 +300,7 @@ class XMLDataLoader
 					}
 				}
 			}
-			$this->StoreObject($sClass, $oTargetObj, $iSrcId, $bUpdateKeyCacheOnly, $bUpdateKeyCacheOnly);
+			$this->StoreObject($sClass, $oTargetObj, $iSrcId, $bSearch || $bUpdateKeyCacheOnly, $bUpdateKeyCacheOnly);
 		}
 		return true;
 	}

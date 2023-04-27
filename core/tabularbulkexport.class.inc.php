@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -11,7 +11,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
  * Bulk export: Tabular export: abstract base class for all "tabular" exports.
  * Provides the user interface for selecting the column to be exported
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 abstract class TabularBulkExport extends BulkExport
@@ -286,19 +286,16 @@ abstract class TabularBulkExport extends BulkExport
 			$aSampleRow = array();
 			foreach($aAuthorizedClasses as $sAlias => $sClass)
 			{
-				if (count($aAuthorizedClasses) > 1 )
-				{
+				if (count($aAuthorizedClasses) > 1) {
 					$sShortAlias = $sAlias.'.';
-				}
-				else
-				{
+				} else {
 					$sShortAlias = '';
 				}
-
-				foreach ($aAllAttCodes[$sAlias] as $sAttCodeEx)
-				{
-					$oObj = $aRow[$sAlias];
-					$aSampleRow[$sShortAlias.$sAttCodeEx] = $oObj ? $this->GetSampleData($oObj, $sAttCodeEx) : '';
+				if (isset($aAllAttCodes[$sAlias])) {
+					foreach ($aAllAttCodes[$sAlias] as $sAttCodeEx) {
+						$oObj = $aRow[$sAlias];
+						$aSampleRow[$sShortAlias.$sAttCodeEx] = $oObj ? $this->GetSampleData($oObj, $sAttCodeEx) : '';
+					}
 				}
 			}
 			$aSampleData[] = $aSampleRow;

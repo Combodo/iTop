@@ -1,9 +1,14 @@
+{% apply spaceless %}
 <form id="{{ oUIBlock.GetId() }}"
-      class="ibo-caselog-entry-form {% if oUIBlock.IsSubmitAutonomous() and (bInitOpened == false) %}ibo-is-closed{% endif %}"
+      class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsSubmitAutonomous() and (bInitOpened == false) %}ibo-is-closed{% endif %}"
       data-role="ibo-caselog-entry-form"
       data-object-class="{{ oUIBlock.GetObjectClass() }}"
       data-object-id="{{ oUIBlock.GetObjectId() }}"
       data-attribute-code="{{ oUIBlock.GetAttCode() }}"
+      data-attribute-label="{{ oUIBlock.GetAttLabel() }}"
+      data-attribute-type="{{ oUIBlock.GetAttType() }}"
+      data-input-type="{{ constant('cmdbAbstractObject::ENUM_INPUT_TYPE_HTML_EDITOR') }}"
+      data-input-id="{{ oUIBlock.GetTextInput().GetId() }}"
       data-submit-mode="{{ oUIBlock.GetSubmitMode() }}"
       method="post">
     <div class="ibo-caselog-entry-form--actions">
@@ -17,11 +22,12 @@
             {% for FormActionButton in oUIBlock.GetMainActionButtons() %}
                 {{ render_block(FormActionButton, {aPage: aPage}) }}
             {% endfor %}
-            {{ render_block(oUIBlock.GetSendButtonPopoverMenu(), {aPage: aPage}) }}
         </div>
     </div>
     <div class="ibo-caselog-entry-form--text-input" data-role="ibo-caselog-entry-form--text-input">
         {{ render_block(oUIBlock.GetTextInput(), {aPage: aPage}) }}
+    </div>
+    <div class="ibo-caselog-entry-form--extra-inputs" data-role="ibo-caselog-entry-form--extra-inputs">
     </div>
     <div class="ibo-caselog-entry-form--lock-indicator ibo-is-hidden" data-role="ibo-caselog-entry-form--lock-indicator">
         <span class="ibo-caselog-entry-form--lock-icon" data-role="ibo-caselog-entry-form--lock-icon">
@@ -30,3 +36,4 @@
         <span class="ibo-caselog-entry-form--lock-message" data-role="ibo-caselog-entry-form--lock-message"></span>
     </div>
 </form>
+{% endapply %}

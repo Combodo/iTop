@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -50,14 +50,15 @@ class URP_Profiles extends UserRightsBaseClass
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_profiles",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
+			"category"                   => "addon/userrights",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "name",
+			"complementary_name_attcode" => array('description'),
+			"state_attcode"              => "",
+			"reconc_keys"                => array(),
+			"db_table"                   => "priv_urp_profiles",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -110,8 +111,8 @@ class URP_Profiles extends UserRightsBaseClass
 			{
 				$oGrant = $oUserRights->GetClassStimulusGrant($this->GetKey(), $sClass, $sStimulusCode);
 				if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes'))
-				{ 
-					$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->GetDescription(), ENT_QUOTES, 'UTF-8').'">'.htmlentities($oStimulus->GetLabel(), ENT_QUOTES, 'UTF-8').'</span>';
+				{
+					$aStimuli[] = '<span title="'.$sStimulusCode.': '.utils::EscapeHtml($oStimulus->GetDescription()).'">'.utils::EscapeHtml($oStimulus->GetLabel()).'</span>';
 				}
 			}
 			$sStimuli = implode(', ', $aStimuli);
@@ -268,24 +269,25 @@ class URP_UserProfile extends UserRightsBaseClass
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights",
-			"key_type" => "autoincrement",
-			"name_attcode" => "userid",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_userprofile",
-			"db_key_field" => "id",
+			"category"            => "addon/userrights",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => array("userlogin", "profile"),
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_urp_userprofile",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass" => "User", "jointype" => "", "allowed_values" => null, "sql" => "userid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", array("allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login")));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid",
+			array("targetclass" => "URP_Profiles", "jointype" => "", "allowed_values" => null, "sql" => "profileid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array(), "allow_target_creation" => false)));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values" => null, "extkey_attcode" => 'profileid', "target_attcode" => "name")));
 
-		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('userid', 'profileid', 'reason')); // Attributes to be displayed for the complete details
@@ -293,11 +295,6 @@ class URP_UserProfile extends UserRightsBaseClass
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('userid', 'profileid')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'profileid')); // Criteria of the advanced search form
-	}
-
-	public function GetName()
-	{
-		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Profile', $this->Get('userlogin'), $this->Get('profile'));
 	}
 }
 
@@ -573,14 +570,11 @@ class UserRightsProjection extends UserRightsAddOnAPI
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
 		// Create a change to record the history of the User object
-		$oChange = MetaModel::NewObject("CMDBChange");
-		$oChange->Set("date", time());
-		$oChange->Set("userinfo", "Initialization");
+		CMDBObject::SetCurrentChangeFromParams('Initialization : create first user admin');
 
 		$oOrg = new Organization();
 		$oOrg->Set('name', 'My Company/Department');
 		$oOrg->Set('code', 'SOMECODE');
-		$oOrg::SetCurrentChange($oChange);
 		$iOrgId = $oOrg->DBInsertNoReload();
 
 		$oContact = new Person();
@@ -589,7 +583,6 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		//$oContact->Set('status', 'available');
 		$oContact->Set('org_id', $iOrgId);
 		$oContact->Set('email', 'my.email@foo.org');
-		$oContact::SetCurrentChange($oChange);
 		$iContactId = $oContact->DBInsertNoReload();
 		
 		$oUser = new UserLocal();
@@ -597,7 +590,6 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('contactid', $iContactId);
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
-		$oUser::SetCurrentChange($oChange);
 		$iUserId = $oUser->DBInsertNoReload();
 		
 		// Add this user to the very specific 'admin' profile
@@ -605,7 +597,6 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		$oUserProfile->Set('userid', $iUserId);
 		$oUserProfile->Set('profileid', ADMIN_PROFILE_ID);
 		$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-		$oUserProfile::SetCurrentChange($oChange);
 		$oUserProfile->DBInsertNoReload();
 		return true;
 	}

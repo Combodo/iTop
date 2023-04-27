@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design version="3.1">
+  <events>
+    <event id="EVENT_DISPLAY_OBJECT_DETAILS" _delta="define">
+      <description>An object details is about to be displayed to a user</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <arguments>
+        <argument id="object">
+          <description>The object displayed</description>
+          <type>DBObject</type>
+        </argument>
+        <argument id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </argument>
+      </arguments>
+    </event>
+  </events>
+</itop_design>

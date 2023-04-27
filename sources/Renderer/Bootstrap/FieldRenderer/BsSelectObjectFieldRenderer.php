@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -266,7 +266,7 @@ EOF
 							},{
 								name: '{$this->oField->GetId()}',
 								source: oAutocompleteSource_{$this->oField->GetId()},
-								limit: 20,
+								limit: {$this->oField->GetMaxAutoCompleteResults()},
 								display: 'name',
 								templates: {
 									suggestion: Handlebars.compile('<div>{{name}}</div>'),
@@ -381,7 +381,7 @@ EOF
 <<<JS
 				$('#{$sHierarchicalButtonId}').off('click').on('click', function(){
 					// Creating a new modal
-					CombodoPortalToolbox.OpenModal({
+					CombodoModal.OpenModal({
 						attributes: {
 							'data-source-element': '{$sHierarchicalButtonId}',
 						},
@@ -441,7 +441,7 @@ JS
 						'selector': '.modal[data-source-element="{$sSearchButtonId}"]:first'
 					};
 				}
-				CombodoPortalToolbox.OpenModal(oOptions);
+				CombodoModal.OpenModal(oOptions);
 			});
 JS
 		);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
 <DatabaseSchema alias="DatabaseSchema" id="20">
-<name>openerpprod</name>
+<name>odooprod</name>
 <description></description>
 <org_id>2</org_id>
 <business_criticity>low</business_criticity>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -54,7 +54,7 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 		$aItemIds = array();
 		$this->PrepareItems($aItems, $aItemIds);
 		$sItemsAsJson = json_encode($aItems);
-        $sItemIdsAsJson = htmlentities(json_encode(array('current' => $aItemIds)), ENT_QUOTES, 'UTF-8');
+		$sItemIdsAsJson = utils::EscapeHtml(json_encode(array('current' => $aItemIds)));
 
         if (!$this->oField->GetHidden())
 		{
@@ -115,14 +115,14 @@ EOF
 
 			// Rendering table widget
 			// - Vars
-			$sEmptyTableLabel = htmlentities(Dict::S(($this->oField->GetReadOnly()) ? 'Portal:Datatables:Language:EmptyTable' : 'UI:Message:EmptyList:UseAdd'), ENT_QUOTES, 'UTF-8');
-			$sLabelGeneralCheckbox = htmlentities(Dict::S('Core:BulkExport:CheckAll') . ' / ' . Dict::S('Core:BulkExport:UncheckAll'), ENT_QUOTES, 'UTF-8');
+			$sEmptyTableLabel = utils::EscapeHtml(Dict::S(($this->oField->GetReadOnly()) ? 'Portal:Datatables:Language:EmptyTable' : 'UI:Message:EmptyList:UseAdd'));
+			$sLabelGeneralCheckbox = utils::EscapeHtml(Dict::S('Core:BulkExport:CheckAll').' / '.Dict::S('Core:BulkExport:UncheckAll'));
 			$sSelectionOptionHtml = ($this->oField->GetReadOnly()) ? 'false' : '{"style": "multi"}';
-			$sSelectionInputGlobalHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" id="' . $this->oField->GetGlobalId() . '_check_all" name="' . $this->oField->GetGlobalId() . '_check_all" title="' . $sLabelGeneralCheckbox . '" /></span>';
-			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="' . $this->oField->GetGlobalId() . '" /></span>';
+			$sSelectionInputGlobalHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" id="'.$this->oField->GetGlobalId().'_check_all" name="'.$this->oField->GetGlobalId().'_check_all" title="'.$sLabelGeneralCheckbox.'" /></span>';
+			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="'.$this->oField->GetGlobalId().'" /></span>';
 			// - Output
 			$oOutput->AddJs(
-<<<JS
+				<<<JS
 				// Collapse handlers
 				// - Collapsing by default to optimize form space
 				// It would be better to be able to construct the widget as collapsed, but in this case, datatables thinks the container is very small and therefore renders the table as if it was in microbox.
@@ -163,7 +163,7 @@ EOF
 								"sortable": false,
 								"title": '{$sSelectionInputGlobalHtml}',
 								"type": "html",
-								"data": "",
+								"data": "id",
 								"render": function(data, type, row)
 								{
 									var oCheckboxElem = $('{$sSelectionInputHtml}');
@@ -249,7 +249,7 @@ EOF
 								oEvent.stopPropagation();
 								
 								// Note : This could be better if we check for an existing modal first instead of always creating a new one
-								CombodoPortalToolbox.OpenModal({
+								CombodoModal.OpenModal({
 									content: {
 										endpoint: $(this).attr('href'),
 									},
@@ -261,7 +261,7 @@ EOF
 					// Handles items selection/deselection
 					// - Preventing limited access rows to be selected on click
 					oTable_{$this->oField->GetGlobalId()}.off('user-select').on('user-select', function(oEvent, dt, type, cell, originalEvent){
-						if($(originalEvent.target).closest('tr[role="row"]').hasClass('limited_access'))
+						if($(originalEvent.target).closest('tr[id]').hasClass('limited_access'))
 						{
 							oEvent.preventDefault();
 						}
@@ -271,7 +271,7 @@ EOF
 						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
 
 						// Checking input
-						$('#{$sTableId} tbody tr[role="row"].selected td:first-child input').prop('checked', true);
+						$('#{$sTableId} tbody tr[id].selected td:first-child input').prop('checked', true);
 						// Saving values in temp array
 						for(var i in aData)
 						{
@@ -289,7 +289,7 @@ EOF
 						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
 
 						// Checking input
-						$('#{$sTableId} tbody tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+						$('#{$sTableId} tbody tr[id]:not(.selected) td:first-child input').prop('checked', false);
 						// Saving values in temp array
 						for(var i in aData)
 						{
@@ -370,7 +370,7 @@ JS
 											oData.items[i].target_id = oData.items[i].id;
 											
 											// Adding item to table only if it's not already there
-											if($('#{$sTableId} tr[role="row"] > td input[data-target-object-id="' + oData.items[i].target_id + '"], #{$sTableId} tr[role="row"] > td input[data-target-object-id="' + (oData.items[i].target_id*-1) + '"]').length === 0)
+											if($('#{$sTableId} tr[id] > td input[data-target-object-id="' + oData.items[i].target_id + '"], #{$sTableId} tr[id] > td input[data-target-object-id="' + (oData.items[i].target_id*-1) + '"]').length === 0)
 											{
 												// Making id negative in order to recognize it when persisting
 												oData.items[i].id = -1 * parseInt(oData.items[i].id);
@@ -464,7 +464,7 @@ EOF
 					    // Checking removed objects
 					    for(var i in oValues.current)
 					    {
-					        if($('#{$sTableId} tr[role="row"][id="'+i+'"]').length === 0)
+					        if($('#{$sTableId} tr[id="'+i+'"]').length === 0)
                             {
                                 oValues.remove[i] = {};
                             }
@@ -499,7 +499,7 @@ EOF
 					$('#{$sButtonAddId}').off('click').on('click', function(){
 						// Preparing current values
 						var aObjectIdsToIgnore = [];
-						$('#{$sTableId} tr[role="row"] > td input[data-target-object-id]').each(function(iIndex, oElem){
+						$('#{$sTableId} tr[id] > td input[data-target-object-id]').each(function(iIndex, oElem){
 							aObjectIdsToIgnore.push( $(oElem).attr('data-target-object-id') );
 						});
 						
@@ -527,7 +527,7 @@ EOF
 								'selector': '.modal[data-source-element="{$sButtonAddId}"]:first'
 							};
 						}
-						CombodoPortalToolbox.OpenModal(oOptions);
+						CombodoModal.OpenModal(oOptions);
 					});
 JS
 				);

@@ -1,30 +1,20 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 
 /**
  * Bulk export: "spreadsheet" export: a simplified HTML export in which the date/time columns are split in two column: date AND time
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class SpreadsheetBulkExport extends TabularBulkExport
@@ -59,49 +49,49 @@ class SpreadsheetBulkExport extends TabularBulkExport
 			case 'spreadsheet_options':
 				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:SpreadsheetOptions'));
 
-				$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
-				$oMulticolumn->AddCSSClass('ibo-multi-column');
+				$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
 				$oPanel->AddSubBlock($oMulticolumn);
 
 				$oFieldSetFormat = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:TextFormat'));
-				$oFieldSetFormat->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetFormat);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetFormat));
 
 				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionFormattedText'), "formatted_text", "1", "spreadsheet_formatted_text", "checkbox");
 				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('formatted_text', 0) == 1));
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oCheckBox->SetBeforeInput(false);
 				$oFieldSetFormat->AddSubBlock($oCheckBox);
 				$oFieldSetFormat->AddSubBlock(new Html('<br>'));
 
 				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionNoLocalize'), "no_localize", "1", "spreadsheet_no_localize", "checkbox");
 				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('no_localize', 0) == 1));
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oCheckBox->SetBeforeInput(false);
 				$oFieldSetFormat->AddSubBlock($oCheckBox);
 
 				$oFieldSetDate = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:DateTimeFormat'));
-				$oFieldSetDate->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetDate);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetDate));
 
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 
-				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
-				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+				$sDefaultFormat = utils::EscapeHtml((string)AttributeDateTime::GetFormat());
+				$sExample = utils::EscapeHtml(date((string)AttributeDateTime::GetFormat()));
 				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "spreadsheet_date_format_radio", "default", "spreadsheet_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
+				$oRadioDefault->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oRadioDefault->SetBeforeInput(false);
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-				$sFormatInput = '<input type="text" size="15" name="date_format" id="spreadsheet_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="spreadsheet_custom_date_time_format" title="" value="'.utils::EscapeHtml($sDateTimeFormat).'"/>';
 				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "spreadsheet_date_format_radio", "custom", "spreadsheet_date_time_format_custom", "radio");
+				$oRadioCustom->SetDescription(Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip'));
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
+				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oRadioCustom->SetBeforeInput(false);
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 
-				$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
 				$oP->add_ready_script(
 					<<<EOF
-$('#spreadsheet_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#form_part_spreadsheet_options').on('preview_updated', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
 $('#spreadsheet_date_time_format_default').on('click', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
 $('#spreadsheet_date_time_format_custom').on('click', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
@@ -150,7 +140,8 @@ EOF
 			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 			{
 				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
-				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.htmlentities($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj), ENT_QUOTES, 'UTF-8').'</div>';
+
+				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.utils::EscapeHtml($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj)).'</div>';
 			}
 		}
 		return $this->GetValue($oObj, $sAttCode);
@@ -168,19 +159,13 @@ EOF
 			default:
 				$value = $oObj->Get($sAttCode);
 				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-				if ($value instanceof ormCaseLog)
-				{
-					$sRet = str_replace("\n", "<br/>", htmlentities($value->__toString(), ENT_QUOTES, 'UTF-8'));
-				}
-				elseif ($value instanceof ormStopWatch)
-				{
+				if ($value instanceof ormCaseLog) {
+					$sRet = str_replace("\n", "<br/>", utils::EscapeHtml($value->__toString()));
+				} elseif ($value instanceof ormStopWatch) {
 					$sRet = $value->GetTimeSpent();
-				}
-				elseif ($value instanceof ormDocument)
-				{
+				} elseif ($value instanceof ormDocument) {
 					$sRet = '';
-				}
-				elseif ($oAttDef instanceof AttributeText)
+				} elseif ($oAttDef instanceof AttributeText)
 				{
 					if ($bFormattedText)
 					{
@@ -201,15 +186,11 @@ EOF
 					// Stick to the weird implementation made in GetNextChunk
 					$sRet = utils::TextToHtml($oObj->GetEditValue($sAttCode));
 				}
-				else
-				{
-					if ($this->bLocalizeOutput)
-					{
-						$sRet = htmlentities($oObj->GetEditValue(), ENT_QUOTES, 'UTF-8');
-					}
-					else
-					{
-						$sRet = htmlentities((string)$value, ENT_QUOTES, 'UTF-8');
+				else {
+					if ($this->bLocalizeOutput) {
+						$sRet = utils::EscapeHtml($oObj->GetEditValue());
+					} else {
+						$sRet = utils::EscapeHtml((string)$value);
 					}
 				}
 		}
@@ -324,22 +305,16 @@ EOF
 							$sData .= "<td>$sDate</td>";
 							$sData .= "<td>$sTime</td>";
 						}
-						else if (get_class($oFinalAttDef) == 'AttributeDate')
-						{
+						else if (get_class($oFinalAttDef) == 'AttributeDate') {
 							$sDate = $oDateFormat->Format($oObj->Get($sAttCode));
 							$sData .= "<td>$sDate</td>";
-						}
-						else if($oAttDef instanceof AttributeCaseLog)
-						{
+						} else if ($oAttDef instanceof AttributeCaseLog) {
 							$rawValue = $oObj->Get($sAttCode);
-							$sField = str_replace("\n", "<br/>", htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
+							$sField = str_replace("\n", "<br/>", utils::EscapeHtml($rawValue->__toString()));
 							// Trick for Excel: treat the content as text even if it begins with an equal sign
 							$sData .= "<td x:str>$sField</td>";
-						}
-						elseif ($oAttDef instanceof AttributeText)
-						{
-							if ($bFormattedText)
-							{
+						} elseif ($oAttDef instanceof AttributeText) {
+							if ($bFormattedText) {
 								// Replace paragraphs (<p...>...</p>, etc) by line breaks (<br/>) since Excel (pre-2016) splits the cells when there is a paragraph
 								$sField = static::HtmlToSpreadsheet($oObj->GetAsHTML($sAttCode));
 							}
@@ -363,19 +338,15 @@ EOF
 						}
 						else if ($oAttDef instanceof AttributeTagSet)
 						{
-							$sField = $oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, '');
+							$sField = utils::HtmlEntities($oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, ''));
 							$sData .= "<td x:str>$sField</td>";
 						}
-						else
-						{
+						else {
 							$rawValue = $oObj->Get($sAttCode);
-							if ($this->bLocalizeOutput)
-							{
-								$sField = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES, 'UTF-8');
-							}
-							else
-							{
-								$sField = htmlentities($rawValue, ENT_QUOTES, 'UTF-8');
+							if ($this->bLocalizeOutput) {
+								$sField = utils::EscapeHtml($oFinalAttDef->GetEditValue($rawValue));
+							} else {
+								$sField = utils::EscapeHtml($rawValue);
 							}
 							$sData .= "<td>$sField</td>";
 						}

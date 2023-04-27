@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -22,8 +22,8 @@ $approot-relative: '../' !default;
 
 @import "backoffice/main";
 
-$content-border-color: #CBD2D9 !default;
-$default-font-color: #1A202C !default;
+$content-border-color: $ibo-color-grey-400 !default;
+$default-font-color: $ibo-color-grey-900 !default;
 $legend-border-color: #718096 !default;
 $link-default-color: #1c94c4 !default;
 $link-hover-color: #EA7D1E !default;
@@ -89,7 +89,9 @@ $progress-bar-error-bg-color: #F56565 !default;
 
 /* Theme */
 body {
-  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  background-color: $ibo-color-grey-100;
   color: $default-font-color;
   margin: 0;
   padding: 0;
@@ -286,10 +288,9 @@ h3.clickable.open {
 fieldset {
   border: none;
   padding: 0;
-  margin: 30px 0 0 0;
+  margin: 15px 0 0 0;
 
   > legend {
-    margin-top: 25px;
     margin-bottom: 7px;
     padding-bottom: 7px;
     width: 100%;
@@ -307,7 +308,6 @@ fieldset {
 }
 
 .module-selection-body {
-  height: 28em;
   overflow: auto;
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, .06) !important;
   background-color: #F7FAFC;
@@ -340,6 +340,15 @@ body {
   width: 800px;
   margin-left: auto;
   margin-right: auto;
+  
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+
+  pre {
+    white-space: pre-wrap;
+  }
 
   .ibo-title {
     @extend %ibo-vertically-centered-content;
@@ -351,29 +360,49 @@ body {
 
   .ibo-setup--header {
     background-color: #fff;
-    padding: 20px;
+    padding: 0 20px;
     border: 3px solid $content-border-color;
-    margin-top: 50px;
     height: 80px;
     border-bottom: none;
+    border-radius: $ibo-border-radius-300 $ibo-border-radius-300 0 0;
 
-    img {
+    .ibo-title--icon {
       border: 0;
       vertical-align: middle;
       margin-right: 20px;
     }
-
-    h1 {
-      margin-top: 10px;
-    }
   }
 
   .ibo-setup--body {
+    display: flex;
+    flex-direction: column;
     background-color: #fff;
     padding: 20px;
     border: 3px solid $content-border-color;
     border-top: none;
+    flex-grow: 1;
+    overflow: auto;
+    border-radius: 0 0 $ibo-border-radius-300 $ibo-border-radius-300;
 
+    .ibo-setup--wizard{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      .ibo-setup--wizard--content{
+        overflow: auto;
+      }
+      .ibo-setup--wizard--buttons-container{
+        margin-top: auto;
+        tr{
+          display: flex;
+          justify-content: flex-end;
+        }
+        button {
+          margin-left: 8px;
+        }
+      }
+    }
     .itop-setup--message {
       margin-top: 16px;
     }
@@ -399,10 +428,10 @@ body {
     }
 
     .ibo-fieldset {
-      margin-top: 25px;
+      margin-top: 12px;
 
       & ~ .ibo-fieldset {
-        margin-top: 25px;
+        margin-top: 12px;
       }
     }
 
@@ -451,6 +480,22 @@ body {
         overflow: auto;
       }
     }
+    .ibo-input{
+      width: auto;
+      display: inline-block;
+    }
+    table {
+        td{
+        white-space: nowrap;
+        line-height: 2.5rem;
+        padding-right: 8px;
+        padding-bottom: 1rem;
+      }
+    }
+    .setup-content-title, h2{
+      @extend %ibo-font-ral-nor-250;
+      margin-bottom: 18px;
+    }
   }
 }
 
@@ -472,4 +517,140 @@ body {
   font-size: $ibo-font-size-150;
 }
 
+#ibo-setup-licenses--components-list {
+  background-color: $ibo-color-white-200;
+  padding: 12px;
+  box-shadow: inset 0px 2px 4px 1px rgb(0, 0, 0, 0.15);
+  @extend %ibo-border-radius-300;
+}
+
+
+.setup-prefix-toggler--input--container, .setup-tls--input--container, .setup-disk-location--input--container, .setup-backup--input--container {
+  display: flex;
+  line-height: 2.5rem;
+  margin: 1rem 0;
+  input{
+    margin: 0 8px;
+  }
+}
+.setup-disk-location--input--container, .setup-backup--input--container{
+  input{
+    flex-grow: 1;
+  }
+}
+.collapsable-options{
+  margin-bottom: 18px;
+  [data-role="setup-collapsable-options--toggler"]::before {
+    margin-right: 8px;
+    @extend %fa-solid-base;
+    cursor: pointer;
+  }
+  &:not(.setup-is-opened) [data-role="setup-collapsable-options--toggler"]::before{
+    content: '\f078';
+  }
+  &.setup-is-opened [data-role="setup-collapsable-options--toggler"]::before{
+    content: '\f077';
+  }
+}
+.setup-input--hint--icon{
+  color: $ibo-color-grey-700
+}
+.setup-invalid-field--icon{
+  color: $ibo-color-red-700;
+  margin-left: 8px;
+}
+.setup-accept-licenses{
+  margin-top: 18px;
+}
+.module-selection-banner{
+  display: flex;
+  >img{
+    margin-right: 12px;
+  }
+}
+.setup-end-placeholder{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  >div {
+    padding: 0px 15px;
+  }
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    @extend %ibo-font-ral-nor-250;
+    svg{
+      max-height: 150px;
+      margin-bottom: 15px;
+      width: auto;
+    }
+  }
+}
+.setup-extension--icon{
+  margin-right: 5px;
+  color: $ibo-color-blue-700;
+  font-size: $ibo-font-size-200;
+}
+.setup--wizard-choice--label + .setup--wizard-choice--more-info {
+  margin-left: 0.5rem;
+}
 /* integrityCheck: end (do not remove/edit) */
+
+/* Legacy inline stuff */
+#params_summary {
+  overflow: auto;
+}
+#params_summary div {
+  width:100%;
+  margin-top:0;
+  padding-top: 0.5em;
+  padding-left: 0;
+}
+#params_summary div ul {
+  margin-left:0;
+  padding-left: 40px;
+}
+#params_summary div.closed ul {
+  display:none;
+}
+#params_summary div li {
+  list-style: none;
+  width: 100%;
+  margin-left:0;
+  padding-left: 0em;
+}
+.title {
+  padding-left: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#params_summary div {
+  &.closed .title::before {
+    margin-right: 5px;
+    @extend %fa-solid-base;
+    content: '\f078';
+  }
+  &:not(.closed) .title::before {
+    margin-right: 5px;
+    @extend %fa-solid-base;
+    content: '\f077';
+  }
+}
+
+  #progress_content {
+    height: 200px;
+    overflow: auto;
+    text-align: center;
+  }
+  #installation_progress {
+    display: none;
+  }
+  #fresh_content{
+    border: 0;
+    min-height: 300px;
+    min-width: 600px;
+    display:none;
+    margin-left: auto;
+    margin-right: auto;
+  }

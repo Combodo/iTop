@@ -1,4 +1,4 @@
-<div id="{{ oUIBlock.GetId() }}" class="ibo-activity-panel ibo-tab-container" data-role="ibo-activity-panel" data-object-class="{{ oUIBlock.GetObjectClass() }}" data-object-id="{{ oUIBlock.GetObjectId() }}" data-object-mode="{{ oUIBlock.GetObjectMode() }}">
+<div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-tab-container" data-role="ibo-activity-panel" data-object-class="{{ oUIBlock.GetObjectClass() }}" data-object-id="{{ oUIBlock.GetObjectId() }}" data-object-mode="{{ oUIBlock.GetObjectMode() }}">
 	<div class="ibo-activity-panel--header">
 		<div class="ibo-title--text title">
 			{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}

@@ -1,0 +1,55 @@
+/*!
+ * Copyright (C) 2013-2023 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+
+
+body{
+  display: block;
+}
+
+/* Landing page */
+#uwp-main-container{
+  margin-top: 40px;
+
+  #uwp-logo,
+  #uwp-title{
+    vertical-align: middle;
+    max-height: 74px;
+  }
+  #uwp-title{
+    margin-left: 25px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  #uwp-description{
+    margin-bottom: 25px;
+  }
+  .uwp-text-hint--icon{
+    font-size: 12px;
+    margin-left: 5px;
+    color: #939191;
+  }
+  #uwp-bottom-buttons {
+    margin-top: 25px;
+    text-align: right;
+    .btn ~ .btn{
+      margin-left: 8px;
+    }
+  }
+}

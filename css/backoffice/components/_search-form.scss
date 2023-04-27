@@ -1,4 +1,48 @@
-/* Search forms v2 */
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-search-form-panel--z-index: 3 !default;
+
+$ibo-search-form-panel--body--padding-top: 18px !default;
+$ibo-search-form-panel--body--padding-bottom: 10px !default;
+$ibo-search-form-panel--body--padding-x: 14px !default;
+
+$ibo-search-form-panel--highlight--border-radius: $ibo-panel--body--border-radius $ibo-panel--body--border-radius 0 0 !default;
+
+$ibo-search-form-panel--criteria--margin-bottom: 5px !default;
+$ibo-search-form-panel--criteria--color: $ibo-color-grey-900 !default;
+$ibo-search-form-panel--criteria--background-color: $ibo-color-white-200 !default;
+$ibo-search-form-panel--criteria--border-color: $ibo-color-grey-300 !default;
+$ibo-search-form-panel--criteria--locked--background-color: $ibo-color-grey-300 !default;
+
+$ibo-search-form-panel--more-criteria--color: $ibo-color-blue-grey-800 !default;
+$ibo-search-form-panel--more-criteria--background-color: $ibo-color-white-100 !default;
+$ibo-search-form-panel--more-criteria--icon--color: $ibo-color-primary-600 !default;
+$ibo-search-form-panel--more-criteria--border-color: $ibo-search-form-panel--criteria--border-color !default;
+
+$ibo-search-form-panel--items--hover--color: $ibo-color-grey-200 !default;
+
+$ibo-search-form-panel--multiple-choice--hover--color: $ibo-color-grey-200 !default;
+
+$ibo-search-form-panel--hint--margin-left: $ibo-spacing-300 !default;
+$ibo-search-form-panel--hint--color: $ibo-color-grey-800 !default;
+
+$ibo-search-form-panel--misc-button--background-color: $ibo-search-form-panel--more-criteria--background-color !default;
+$ibo-search-form-panel--misc-button--icon--color: $ibo-search-form-panel--more-criteria--icon--color !default;
+
+$ibo-search-results-area--z-index: $ibo-search-form-panel--z-index - 2 !default; /* Minus 2 because the criteria expands between the search form panel and the results area */
+$ibo-search-results-area--margin-bottom: 300px !default; /* Arbitrary value, must be greater than the position (y) of the first result line in non sticking state, should be discussed to find a clever way to adjust it in both search page and search modals (linkedsets) */
+
+$ibo-search-results-area--datatable-toolbar--background-color--is-sticking: $ibo-panel--body--background-color !default;
+$ibo-search-results-area--datatable-toolbar--border--is-sticking: $ibo-panel--body--border !default;
+
+$ibo-search-results-area--datatable-scrollhead--background-color--is-sticking: $ibo-search-results-area--datatable-toolbar--background-color--is-sticking !default;
+$ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search-results-area--datatable-toolbar--border--is-sticking !default;
+
+/* IMPORTANT: All the code below do NOT follow the coding convention and has NOT been refactored to the UIBlock system */
+
 .search_box {
 	box-sizing: border-box;
 	position: relative;
@@ -12,26 +56,10 @@
 }
 
 .search_form_handler {
-	//	position: relative;
-	//	z-index: 10;
-	//	width: 100%;
-	//	margin-left: auto;
-	//	margin-right: auto;
-	//	font-size: 12px;
-	//	text-align: left; /* To compensate .search_box:text-align */
-	//	border: 1px solid $search-form-container-bg-color;
-	//transition: width 0.3s ease-in-out;
-
-	/* Sizing reset */
-	* {
-		box-sizing: border-box;
-	}
-
 	/* Hyperlink reset */
 	a {
-		color: inherit;
-		text-decoration: none;
-	}
+    @extend %ibo-hyperlink-inherited-colors;
+  }
 
 	/* Input reset */
 	input[type="text"],
@@ -45,11 +73,6 @@
 				display: none;
 			}
 
-			.sft_hint,
-			.sfobs_hint,
-			.sft_toggler {
-				margin-top: 4px;
-			}
 
 			.sft_toggler {
 				transform: rotateX(180deg);
@@ -127,40 +150,15 @@
 
 	}
 
-	.sf_title {
-		transition: opacity 0.3s, background-color 0.3s, color 0.3s linear;
-		padding: 8px 10px;
-		margin: 0;
-		color: $ibo-color-white-200;
-		//background-color: $search-form-container-bg-color;
-		cursor: pointer;
-
-		.sft_hint,
-		.sfobs_hint {
-			font-size: 8pt;
-			font-style: italic;
-		}
-
-		.sft_toggler {
-			margin-left: 0.7em;
-			transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
-
-			&:hover {
-				color: $ibo-color-grey-100;
-			}
-		}
-	}
-
 	.sf_message {
 		display: none;
-		margin: 8px 8px 0px 8px;
+		margin: $ibo-spacing-300 $ibo-spacing-300 $ibo-spacing-0 $ibo-spacing-300;
 		border-radius: 0px;
 	}
 
 	.sf_criterion_area {
 		/*display: none;*/
-		padding: 8px 8px 3px 8px; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
-		background-color: $ibo-color-white-100;
+		padding: $ibo-spacing-300 $ibo-spacing-300 3px $ibo-spacing-300; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
 
 		.sf_criterion_row {
 
@@ -192,7 +190,7 @@
 				display: inline;
 				.sfc_fg_button,
 				.sfc_header {
-					border: 1px solid #E1E7EC; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+					border: 1px solid $ibo-search-form-panel--criteria--border-color; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
 					border-radius: 3px;
 				}
 			}
@@ -205,25 +203,24 @@
 			position: relative;
 			display: inline-block;
 			margin-right: 10px;
-			margin-bottom: 5px;
+			margin-top: 3px;
+			margin-bottom: 3px; /* Bottom spacing (6px) for next criteria line is actually splitted between top and bottom margin in order to center the criteria within the container. The cumulated margins fo the lines will do the trick. */
 			vertical-align: top;
-			min-width: 34px;
-			text-align: center;
 
 			&.opened {
-				margin-bottom: 0px; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
+				margin-bottom: $ibo-spacing-0; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
 
 				.sfc_header,
 				.sfm_header {
-					margin-bottom: 7px;
-					//padding-bottom: 13px; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
-				}
+          border-bottom: none !important;
+          padding-bottom: 13px; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+        }
 			}
 
 			> * {
-				padding: 7px 8px;
+				padding: 7px $ibo-spacing-300;
 				vertical-align: top;
-				border: solid 1px $ibo-color-grey-300;
+				border: solid 1px $ibo-search-form-panel--more-criteria--border-color;
 				border-radius: $ibo-border-radius-300;
 			}
 
@@ -233,18 +230,25 @@
 				min-width: 100%;
 				left: 0px;
 				margin-top: -1px;
-
-				.sfc_fg_buttons {
-					white-space: nowrap;
-				}
 			}
+
+      .sfc_fg_buttons,
+      .sfm_buttons{
+        white-space: nowrap;
+      }
 		}
 
-		/* Criteria tags */
-		.search_form_criteria {
-			/* Non editable criteria */
-			&.locked {
-				background-color: $ibo-color-grey-200;
+    .sf_more_criterion,
+    .sf_button {
+      min-width: 34px;
+      text-align: center;
+    }
+
+    /* Criteria tags */
+    .search_form_criteria {
+      /* Non editable criteria */
+      &.locked {
+        background-color: $ibo-search-form-panel--criteria--locked--background-color;
 
 				.sfc_title {
 					user-select: none;
@@ -256,8 +260,9 @@
 			&.draft {
 				.sfc_header,
 				.sfc_form_group {
-					border-style: dashed;
-				}
+          border-style: dashed;
+          border-color: $ibo-color-grey-600;
+        }
 
 				.sfc_title {
 					font-style: italic;
@@ -273,8 +278,10 @@
 				}
 
 				.sfc_form_group {
-					display: block;
-				}
+          display: block;
+          margin-top: -1px;
+          z-index: -1;
+        }
 			}
 
 			&.opened_left {
@@ -290,8 +297,8 @@
 			}
 
 			> * {
-				background-color: $ibo-color-white-200;
-				color: $ibo-color-grey-900;
+				background-color: $ibo-search-form-panel--criteria--background-color;
+				color: $ibo-search-form-panel--criteria--color;
 			}
 
 			/* Top left corner icons */
@@ -334,12 +341,14 @@
 			}
 
 			.sfc_form_group {
-				/* Form group (operators) is displayed only when the criteria is toggled to opened state */
-				display: none;
-				max-width: 450px;
-				max-height: 520px;
-				overflow-x: auto;
-				overflow-y: hidden;
+        position: absolute;
+        /* Form group (operators) is displayed only when the criteria is toggled to opened state */
+        display: none;
+        max-width: 450px;
+        width: max-content;
+        max-height: 520px;
+        overflow-x: auto;
+        overflow-y: hidden;
 
 				.sfc_fg_operators {
 					font-size: 12px;
@@ -361,12 +370,12 @@
 
 						.sfc_op_radio {
 							width: 12px;
-							margin: 0px;
+							margin: $ibo-spacing-0;
 							margin-right: 7px;
 						}
 
 						.sfc_op_name {
-							width: 90px;
+							width: 96px;
 						}
 
 						.sfc_op_content {
@@ -379,8 +388,8 @@
 
 						.sfc_opc_multichoices {
 							label > input {
-								vertical-align: middle;
-								margin-left: 0px;
+								vertical-align: text-top;
+								margin-left: $ibo-spacing-0;
 								margin-right: 8px;
 							}
 
@@ -391,7 +400,7 @@
 							.sfc_opc_mc_items_wrapper {
 								max-height: 415px; /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
 								overflow-y: auto;
-								margin: 0px -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
+								margin: $ibo-spacing-0 -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
 
 								.sfc_opc_mc_items {
 									.sfc_opc_mc_items_list {
@@ -418,10 +427,10 @@
 										}
 
 										.sfc_opc_mc_item {
-											padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
+											padding: $ibo-spacing-200 $ibo-spacing-300; /* Putting back the padding remove by .sfc_opc_mc_items */
 
 											&:hover {
-												background-color: $ibo-color-grey-200;
+												background-color: $ibo-search-form-panel--multiple-choice--hover--color;
 											}
 
 											label {
@@ -502,7 +511,7 @@
 						margin-bottom: 3px;
 
 						&:last-of-type {
-							margin-bottom: 0px;
+							margin-bottom: $ibo-spacing-0;
 						}
 					}
 
@@ -657,8 +666,8 @@
 			}
 
 			> * {
-				background-color: $ibo-color-white-100;
-				color: $ibo-color-blue-grey-800;
+				background-color: $ibo-search-form-panel--more-criteria--background-color;
+				color: $ibo-search-form-panel--more-criteria--color;
 			}
 
 			.sfm_toggler {
@@ -676,8 +685,8 @@
 				min-width: 200px; /* To avoid element going to thin on filter, not very slick */
 
 				.sfm_lists {
-					margin: 0px -8px;
-					padding: 0px 8px;
+					margin: $ibo-spacing-0 -8px;
+					padding: $ibo-spacing-0 8px;
 					max-height: 400px;
 					overflow-x: hidden;
 					overflow-y: auto;
@@ -685,7 +694,7 @@
 					.sfl_items {
 						> li {
 							&:hover {
-								background-color: $ibo-color-grey-200;
+								background-color: $ibo-search-form-panel--items--hover--color;
 							}
 						}
 					}
@@ -701,7 +710,7 @@
 						font-size: 11px;
 
 						&:last-of-type {
-							margin-right: 0px;
+							margin-right: $ibo-spacing-0;
 						}
 					}
 				}
@@ -710,11 +719,11 @@
 
 		/* Misc. buttons */
 		.sf_button {
-			cursor: pointer;
+      cursor: pointer;
 
 			> * {
-				background-color: $ibo-color-white-100;
-				color: $ibo-color-primary-600;
+				background-color: $ibo-search-form-panel--misc-button--background-color;
+				color: $ibo-search-form-panel--misc-button--icon--color;
 			}
 		}
 	}
@@ -734,17 +743,17 @@
 		}
 
 		.sfl_items {
-			margin: 5px -8px 0px -8px;
-			padding: 0px;
+			margin: 5px -8px $ibo-spacing-0 -8px;
+			padding: $ibo-spacing-0;
 			text-align: left;
 
 			> li {
-				padding: 4px 8px;
+				padding: $ibo-spacing-200 $ibo-spacing-300;
 				list-style: none;
 				white-space: nowrap;
 
 				&:hover {
-					background-color: $ibo-color-white-100;
+					background-color: $ibo-search-form-panel--items--hover--color;
 				}
 
 				&.sfl_i_placeholder {
@@ -761,8 +770,8 @@
 					}
 
 					> input[type="checkbox"] {
-						margin-left: 0px;
-						margin-right: 8px;
+						margin-left: $ibo-spacing-0;
+						margin-right: $ibo-spacing-300;
 					}
 				}
 			}
@@ -838,17 +847,20 @@
 	}
 }
 
+.sft_hint,
+.sfobs_hint,
+.sft_toggler {
+  margin-left: $ibo-search-form-panel--hint--margin-left;
+  color: $ibo-search-form-panel--hint--color;
+}
 
 .sf_results_placeholder {
-	@extend %ibo-font-ral-med-150;
+	@extend %ibo-font-size-150;
 	margin-top: 24px;
 	text-align: center;
 	
 	button {
 		margin-top: 8px;
-		@extend .ibo-button;
-		@extend .ibo-is-primary;
-		@extend .ibo-is-regular;
 		> span {
 			margin-right: 0.5em;
 		}
@@ -857,38 +869,64 @@
 
 
 .ibo-search-form-panel {
+  z-index: $ibo-search-form-panel--z-index;
 	margin-bottom: 8px;
 	
 	.ibo-panel--body {
-		padding: 18px 14px 10px;
-	}
+    padding: $ibo-search-form-panel--body--padding-top $ibo-search-form-panel--body--padding-x $ibo-search-form-panel--body--padding-bottom;
+    overflow: initial;
+
+    &::before {
+      border-radius: $ibo-search-form-panel--highlight--border-radius;
+    }
+  }
 }
 .ibo-criterion-area{
-	//font-size: $ibo-font-size-150;
-	@extend %ibo-font-ral-med-100;
+	@extend %ibo-font-size-100;
 }
 #ibo-main-content .search_form_handler .sf_criterion_area{
 	padding: 0;
 }
-.ibo-search-form{
-	padding-top: $ibo-panel--spacing-top ;
+
+.sfm_tg_title{
+  display: none;
+}
+.ibo-criterion-group:empty ~ .sf_more_criterion .sfm_tg_title{
+  display: unset;
+}
+.sf_results_area {
+  z-index: $ibo-search-results-area--z-index;
+  margin-bottom: $ibo-search-results-area--margin-bottom; /* This is mostly to avoid glitches when the result list's bottom limit is just around the window bottom limit and the user scrolls down (boucing effect, see N°4427) */
 }
 
-.ibo-form-group{
-	position: fixed;
-}
+/***********************/
+/* Sticky header rules */
+/***********************/
+.ibo-search-form-panel {
+  .ibo-panel--body.ibo-is-sticking {
+      position: fixed;
 
-.sf_more_criterion.opened > .sfm_content{
-	position: fixed !important;
-	left: auto !important;
+      border-radius: 0;
+      border-bottom-color: transparent;
+  }
 }
-.sfc_fg_button{
-	@extend .ibo-button;
-	@extend .ibo-is-neutral;
-	&.sfc_fg_search, &.sfc_fg_apply, &.sfc_fg_cancel {
-		@extend .ibo-is-regular;
-	}
-	&.sfc_fg_more {
-		@extend .ibo-is-alternative;
-	}
+.ibo-datatable-panel.ibo-is-sticking {
+  .ibo-panel--header {
+    z-index: 0;
+  }
+  .ibo-datatable--toolbar {
+    position: fixed;
+    z-index: 2;
+    padding-bottom: 4px;
+    background-color: $ibo-search-results-area--datatable-toolbar--background-color--is-sticking;
+    border-left: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
+    border-right: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
+  }
+  .dataTables_scrollHead {
+    position: fixed !important; /* Important is required as the property is already set in the style attribute by the JS lib */
+    z-index: 2;
+    background-color: $ibo-search-results-area--datatable-scrollhead--background-color--is-sticking;
+    border-left: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
+    border-right: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
+  }
 }

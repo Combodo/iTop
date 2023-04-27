@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
  * Localized data
  *
  * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -44,27 +44,25 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: FAQ
 //
-
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:FAQ' => 'FAQ~~',
-	'Class:FAQ+' => 'Frequently asked questions~~',
-	'Class:FAQ/Attribute:title' => 'Title~~',
+	'Class:FAQ' => 'SSS',
+	'Class:FAQ+' => 'Sıkça Sorulan Sorular',
+	'Class:FAQ/Attribute:title' => 'Başlık',
 	'Class:FAQ/Attribute:title+' => '~~',
-	'Class:FAQ/Attribute:summary' => 'Summary~~',
+	'Class:FAQ/Attribute:summary' => 'Özet',
 	'Class:FAQ/Attribute:summary+' => '~~',
-	'Class:FAQ/Attribute:description' => 'Description~~',
+	'Class:FAQ/Attribute:description' => 'Açıklama',
 	'Class:FAQ/Attribute:description+' => '~~',
-	'Class:FAQ/Attribute:category_id' => 'Category~~',
+	'Class:FAQ/Attribute:category_id' => 'Kategori',
 	'Class:FAQ/Attribute:category_id+' => '~~',
-	'Class:FAQ/Attribute:category_name' => 'Category name~~',
+	'Class:FAQ/Attribute:category_name' => 'Kategori Adı',
 	'Class:FAQ/Attribute:category_name+' => '~~',
-	'Class:FAQ/Attribute:error_code' => 'Error code~~',
+	'Class:FAQ/Attribute:error_code' => 'Hata Kodu',
 	'Class:FAQ/Attribute:error_code+' => '~~',
-	'Class:FAQ/Attribute:key_words' => 'Key words~~',
+	'Class:FAQ/Attribute:key_words' => 'Anahtar Kelimeler',
 	'Class:FAQ/Attribute:key_words+' => '~~',
 	'Class:FAQ/Attribute:domains' => 'Domains~~',
 ));
@@ -74,23 +72,23 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:FAQCategory' => 'FAQ Category~~',
-	'Class:FAQCategory+' => 'Category for FAQ~~',
-	'Class:FAQCategory/Attribute:name' => 'Name~~',
+	'Class:FAQCategory' => 'SSS Kategori',
+	'Class:FAQCategory+' => 'SSS için kategori',
+	'Class:FAQCategory/Attribute:name' => 'İsim',
 	'Class:FAQCategory/Attribute:name+' => '~~',
-	'Class:FAQCategory/Attribute:faq_list' => 'FAQs~~',
-	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
+	'Class:FAQCategory/Attribute:faq_list' => 'SSS',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Bu kategoriyle ilgili tüm sık sorulan sorular',
 ));
-
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:ProblemManagement' => 'Problem Yönetimi',
-	'Menu:ProblemManagement+' => 'Problem Yönetimi',
+	'Menu:ProblemManagement' => 'Problem yönetimi',
+	'Menu:ProblemManagement+' => 'Problem yönetimi',
 	'Menu:Problem:Shortcuts' => 'Kısayollar',
-	'Menu:FAQCategory' => 'FAQ categories~~',
-	'Menu:FAQCategory+' => 'All FAQ categories~~',
-	'Menu:FAQ' => 'FAQs~~',
-	'Menu:FAQ+' => 'All FAQs~~',
-	'Brick:Portal:FAQ:Menu' => 'FAQ~~',
-	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions~~',
+	'Menu:FAQCategory' => 'SSS kategorileri',
+	'Menu:FAQCategory+' => 'Tüm SSS kategorileri',
+	'Menu:FAQ' => 'SSS',
+	'Menu:FAQ+' => 'Tüm SSS',
+
+	'Brick:Portal:FAQ:Menu' => 'SSS',
+	'Brick:Portal:FAQ:Title' => 'Sıkça Sorulan Sorular',
 	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>~~',
 ));

@@ -1,0 +1,87 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+// IMPORTANT: We have to cancel the panel padding because the tab-container already has its own.
+// - As the tab-container can be used outside a panel in another type of block, we can't remove it from its partial (_tab-container.scss)
+// - This kind of file is the place where *integrations* like this are supposed to be done, keep this in mind when integrating others blocks
+
+// Note: This might not be named well, maybe "tab-container-within-panel" would have been better?
+
+$ibo-panel-with-tab-container--padding-top: -1 * ($ibo-panel--body--padding-top - $ibo-panel--highlight--height) !default;
+$ibo-panel-with-tab-container--margin-x: -1 * $ibo-panel--body--padding-x !default;
+$ibo-panel-with-tab-container--margin-bottom: -1 * $ibo-panel--body--padding-bottom !default;
+
+$ibo-panel-with-tab-container--tab-toggler--font-size--is-sticking: $ibo-font-size-100 !default;
+
+// Note: We use the child ">" selector to ensure this applies only to the child tab container, not another one that would be nested
+.ibo-panel {
+	> .ibo-panel--body {
+		> .ibo-tab-container {
+      margin-top: $ibo-panel-with-tab-container--padding-top;
+      margin-left: $ibo-panel-with-tab-container--margin-x;
+      margin-right: $ibo-panel-with-tab-container--margin-x;
+      margin-bottom: $ibo-panel-with-tab-container--margin-bottom;
+
+      > .ibo-tab-container--tab-container-list {
+        height: 100%;
+        overflow-y: auto;
+        flex-grow: 1;
+      }
+
+      &.ibo-is-vertical {
+        display: flex;
+        flex-direction: row;
+
+        > .ibo-tab-container--tabs-list {
+          padding-top: 50px;
+          flex-direction: column;
+          height: auto;
+          padding-left: unset;
+          margin-right: unset;
+          min-width: calc(32px + 90px + 32px);
+
+          > .ibo-tab-container--tab-header {
+            height: 50px;
+            width: 100%;
+            justify-content: left;
+
+            > .ibo-tab-container--tab-toggler {
+              width: 100%;
+              justify-content: left;
+            }
+          }
+        }
+
+        > .ibo-tab-container--tab-container {
+          flex-grow: 1;
+          margin-left: unset;
+        }
+      }
+    }
+	}
+
+  /* Sticky header rules */
+  &.ibo-has-sticky-header {
+    > .ibo-panel--body {
+      > .ibo-tab-container {
+        > .ibo-tab-container--tabs-list.ibo-is-sticking {
+          position: fixed;
+          z-index: 10;
+        }
+
+        &:not(.ibo-is-vertical){
+          > .ibo-tab-container--tabs-list.ibo-is-sticking {
+            padding-left: 0;
+
+            .ibo-tab-container--tab-toggler,
+            .ibo-tab-container--extra-tabs-list-toggler {
+              font-size: $ibo-panel-with-tab-container--tab-toggler--font-size--is-sticking;
+            }
+          }
+        }
+      }
+    }
+  }
+}

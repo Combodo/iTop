@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
@@ -32,6 +32,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Relation:depends on/Description' => 'Eléments dont dépend',
 	'Relation:depends on/DownStream' => 'Dépend de...',
 	'Relation:depends on/UpStream' => 'Impacte...',
+	'Relation:impacts/LoadData'       => 'Charger les données',
+	'Relation:impacts/NoFilteredData' => 'Veuillez sélectionner des objets dans l\'onglet Graph',
 ));
 
 
@@ -115,16 +117,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:move2production' => 'Date de mise en production',
 	'Class:FunctionalCI/Attribute:move2production+' => '',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Contacts',
-	'Class:FunctionalCI/Attribute:contacts_list+' => '',
+	'Class:FunctionalCI/Attribute:contacts_list+' => 'Tous les contacts de cet élément de configuration',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Documents',
-	'Class:FunctionalCI/Attribute:documents_list+' => '',
+	'Class:FunctionalCI/Attribute:documents_list+' => 'Tous les documents liés à cet élément de configuration',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Solutions applicatives',
-	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
+	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Toutes les solutions applicatives dépendantes de cet élément de configuration',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Logiciels',
-	'Class:FunctionalCI/Attribute:softwares_list+' => '',
+	'Class:FunctionalCI/Attribute:softwares_list+' => 'Tous les logiciels installés sur cet élément de configuration',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Sous-classe de CI',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Tickets en cours',
+	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Tickets ouverts impactant cet élément de configuration',
 ));
 
 //
@@ -176,9 +179,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Rack/Attribute:nb_u' => 'NB Unité',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Matériels',
-	'Class:Rack/Attribute:device_list+' => '',
+	'Class:Rack/Attribute:device_list+' => 'Tous les matériels rackés dans ce rack',
 	'Class:Rack/Attribute:enclosure_list' => 'Chassis',
-	'Class:Rack/Attribute:enclosure_list+' => '',
+	'Class:Rack/Attribute:enclosure_list+' => 'Tous les chassis dans ce rack',
 ));
 
 //
@@ -240,9 +243,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ConnectableCI' => 'CI connecté',
 	'Class:ConnectableCI+' => '',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Equipements réseaux',
-	'Class:ConnectableCI/Attribute:networkdevice_list+' => '',
+	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Tous les équipements réseaux connectés à ce matériel',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interfaces réseaux',
-	'Class:ConnectableCI/Attribute:physicalinterface_list+' => '',
+	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Toutes les interfaces réseaux physiques',
 ));
 
 //
@@ -273,9 +276,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'Nom Source électrique B',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC ports',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Toutes les interfaces fibre optique de ce matériel',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
-	'Class:DatacenterDevice/Attribute:san_list+' => '',
+	'Class:DatacenterDevice/Attribute:san_list+' => 'Tous les switchs SAN connectés à ce matériel',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redondance',
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Le %2$s est alimenté si au moins une source électrique (A ou B) est opérationnelle',
 	// Unused yet
@@ -295,7 +298,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Nom Type',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Matériel connectés',
-	'Class:NetworkDevice/Attribute:connectablecis_list+' => '',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Tous les matériels connectés à cet appareil réseau',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'Version IOS',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'Nom Version IOS',
@@ -328,7 +331,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Server/Attribute:ram' => 'RAM',
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Volumes logiques',
-	'Class:Server/Attribute:logicalvolumes_list+' => '',
+	'Class:Server/Attribute:logicalvolumes_list+' => 'Tous les volumes logiques connectés à ce serveur',
 ));
 
 //
@@ -339,7 +342,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:StorageSystem' => 'Système de stockage',
 	'Class:StorageSystem+' => '',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumes logiques',
-	'Class:StorageSystem/Attribute:logicalvolume_list+' => '',
+	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Tous les volumes logiques dans ce système de stockage',
 ));
 
 //
@@ -350,7 +353,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SANSwitch' => 'Switch SAN',
 	'Class:SANSwitch+' => '',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Matériels connectés',
-	'Class:SANSwitch/Attribute:datacenterdevice_list+' => '',
+	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Tous les matériels connectés à ce switch SAN',
 ));
 
 //
@@ -361,7 +364,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TapeLibrary' => 'Bandothèque',
 	'Class:TapeLibrary+' => '',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Bandes',
-	'Class:TapeLibrary/Attribute:tapes_list+' => '',
+	'Class:TapeLibrary/Attribute:tapes_list+' => 'Toutes les bandes dans cette bandothèque',
 ));
 
 //
@@ -372,7 +375,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Systèmes de fichier NAS',
-	'Class:NAS/Attribute:nasfilesystem_list+' => '',
+	'Class:NAS/Attribute:nasfilesystem_list+' => 'Tous les systèmes de fichier dans ce NAS',
 ));
 
 //
@@ -416,7 +419,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:PowerConnection' => 'Connection Electrique',
+	'Class:PowerConnection' => 'Connexion électrique',
 	'Class:PowerConnection+' => '',
 ));
 
@@ -428,7 +431,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PowerSource' => 'Arrivée électrique',
 	'Class:PowerSource+' => '',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
-	'Class:PowerSource/Attribute:pdus_list+' => '',
+	'Class:PowerSource/Attribute:pdus_list+' => 'Toutes les PDUs de cette arrivée électrique',
 ));
 
 //
@@ -471,7 +474,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Enclosure/Attribute:nb_u' => 'NB Unité',
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'Devices',
-	'Class:Enclosure/Attribute:device_list+' => '',
+	'Class:Enclosure/Attribute:device_list+' => 'Tous les matériels dans ce chassis',
 ));
 
 //
@@ -482,9 +485,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ApplicationSolution' => 'Solution applicative',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
-	'Class:ApplicationSolution/Attribute:functionalcis_list+' => '',
+	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Tous les éléments de configuration qui composent cette solution applicative',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Processus métiers',
-	'Class:ApplicationSolution/Attribute:businessprocess_list+' => '',
+	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Tous les processus métiers dépendants de cette solution applicative',
 	'Class:ApplicationSolution/Attribute:status' => 'Statut',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'active',
@@ -505,7 +508,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:BusinessProcess' => 'Processus métier',
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Solutions applicatives',
-	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => '',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Toutes les solutions applicatives qui impactent ce processus métier',
 	'Class:BusinessProcess/Attribute:status' => 'Statut',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'actif',
@@ -551,7 +554,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instance Middleware',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => '',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Toutes les instances de middleware fournies par ce middleware',
 ));
 
 //
@@ -562,7 +565,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DBServer' => 'Serveur de base de données',
 	'Class:DBServer+' => '',
 	'Class:DBServer/Attribute:dbschema_list' => 'Instances de base de données',
-	'Class:DBServer/Attribute:dbschema_list+' => '',
+	'Class:DBServer/Attribute:dbschema_list+' => 'Toutes les instances de base de données pour ce serveur',
 ));
 
 //
@@ -573,7 +576,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:WebServer' => 'Serveur Web',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Application Web',
-	'Class:WebServer/Attribute:webapp_list+' => '',
+	'Class:WebServer/Attribute:webapp_list+' => 'Toutes les applications Web disponibles sur ce serveur',
 ));
 
 //
@@ -654,7 +657,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock' => 'stock',
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volumes logiques',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => '',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Tous les volumes logiques utilisés par ce matériel',
 ));
 
 //
@@ -665,7 +668,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VirtualHost' => 'Hôte Virtuel',
 	'Class:VirtualHost+' => '',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Machines virtuelles',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => '',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Toutes les machiens virtuelles hébergées par cet hôte',
 ));
 
 //
@@ -693,7 +696,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Farm' => 'vCluster',
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hyperviseurs',
-	'Class:Farm/Attribute:hypervisor_list+' => '',
+	'Class:Farm/Attribute:hypervisor_list+' => 'Tous les hyperviseurs qui composent ce vCluster',
 	'Class:Farm/Attribute:redundancy' => 'Haute disponibilité',
 	'Class:Farm/Attribute:redundancy/disabled' => 'Le vCluster est opérationnel si tous les hyperviseurs qui le composent sont opérationnels',
 	'Class:Farm/Attribute:redundancy/count' => 'Nombre minimal d\'hyperviseurs pour que le vCluster soit opérationnel : %1$s',
@@ -730,7 +733,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VirtualMachine/Attribute:managementip' => 'IP',
 	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfaces réseaux',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => '',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Toutes les interfaces réseaux logiques',
 ));
 
 //
@@ -754,10 +757,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:LogicalVolume/Attribute:storagesystem_id+' => '',
 	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Nom Système de stockage',
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Servers',
-	'Class:LogicalVolume/Attribute:servers_list+' => '',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Serveurs',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'Tous les serveurs utilisant ce volume',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Machines virtuelles',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => '',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Toutes les machines virtuelles utilisant ce volume',
 ));
 
 //
@@ -873,7 +876,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Software/Attribute:version' => 'Version',
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Documents',
-	'Class:Software/Attribute:documents_list+' => '',
+	'Class:Software/Attribute:documents_list+' => 'Tous les documents liés à ce logiciel',
 	'Class:Software/Attribute:type' => 'Type',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Serveur de base de données',
@@ -887,11 +890,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Software/Attribute:type/Value:WebServer' => 'Serveur Web',
 	'Class:Software/Attribute:type/Value:WebServer+' => 'Serveur Web',
 	'Class:Software/Attribute:softwareinstance_list' => 'Instances logiciels',
-	'Class:Software/Attribute:softwareinstance_list+' => '',
+	'Class:Software/Attribute:softwareinstance_list+' => 'Toutes les instances de ce logiciel',
 	'Class:Software/Attribute:softwarepatch_list' => 'Patchs logiciels',
-	'Class:Software/Attribute:softwarepatch_list+' => '',
+	'Class:Software/Attribute:softwarepatch_list+' => 'Tous les patchs de ce logiciel',
 	'Class:Software/Attribute:softwarelicence_list' => 'Software licences',
-	'Class:Software/Attribute:softwarelicence_list+' => '',
+	'Class:Software/Attribute:softwarelicence_list+' => 'Toutes les licences de ce logiciel',
 ));
 
 //
@@ -904,7 +907,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Patch/Attribute:name' => 'Nom',
 	'Class:Patch/Attribute:name+' => '',
 	'Class:Patch/Attribute:documents_list' => 'Documents',
-	'Class:Patch/Attribute:documents_list+' => '',
+	'Class:Patch/Attribute:documents_list+' => 'Tous les documents liés à ce patch',
 	'Class:Patch/Attribute:description' => 'Description',
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Sous-classe de Patch',
@@ -919,7 +922,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OSPatch' => 'Patch OS',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Systèmes',
-	'Class:OSPatch/Attribute:functionalcis_list+' => '',
+	'Class:OSPatch/Attribute:functionalcis_list+' => 'Tous les systèmes où ce patch est installé',
 	'Class:OSPatch/Attribute:osversion_id' => 'Version OS',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'Nom Version OS',
@@ -938,7 +941,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SoftwarePatch/Attribute:software_name' => 'Nom logiciel',
 	'Class:SoftwarePatch/Attribute:software_name+' => '',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Instances logiciels',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => '',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Tous les systèmes où ce logiciel est installé',
 ));
 
 //
@@ -951,7 +954,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Licence/Attribute:name' => 'Nom',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Documents',
-	'Class:Licence/Attribute:documents_list+' => '',
+	'Class:Licence/Attribute:documents_list+' => 'Tous les documents liés à cette licence',
 	'Class:Licence/Attribute:org_id' => 'Organisation',
 	'Class:Licence/Attribute:org_id+' => '',
 	'Class:Licence/Attribute:organization_name' => 'Nom organisation',
@@ -988,9 +991,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OSLicence/Attribute:osversion_name' => 'Nom Version OS',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Machines virtuelles',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => '',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Toutes les machines virtuelles où cette licence est utilisée',
 	'Class:OSLicence/Attribute:servers_list' => 'Serveurs',
-	'Class:OSLicence/Attribute:servers_list+' => '',
+	'Class:OSLicence/Attribute:servers_list+' => 'Tous les serveurs où cette licence est utilisée',
 ));
 
 //
@@ -1005,10 +1008,25 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SoftwareLicence/Attribute:software_name' => 'Nom Logiciel',
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Instances logiciels',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => '',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Tous les systèmes où cette licence est utilisée',
 ));
 
+//
+// Class: lnkDocumentToLicence
+//
 
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
+	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
+	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Nom Licence',
+	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nom Document',
+	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
+));
 
 //
 // Class: OSVersion
@@ -1032,7 +1050,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OSFamily+' => '',
 ));
 
-
 //
 // Class: Brand
 //
@@ -1041,7 +1058,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Brand' => 'Marque',
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Matériels',
-	'Class:Brand/Attribute:physicaldevices_list+' => '',
+	'Class:Brand/Attribute:physicaldevices_list+' => 'Tous les matériels correspondant à cette marque',
 	'Class:Brand/UniquenessRule:name+' => 'Le nom doit être unique',
 	'Class:Brand/UniquenessRule:name' => 'cette marque existe déjà',
 ));
@@ -1096,7 +1113,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Model/Attribute:type/Value:Phone' => 'Téléphone',
 	'Class:Model/Attribute:type/Value:Phone+' => 'Téléphone',
 	'Class:Model/Attribute:physicaldevices_list' => 'Matériels',
-	'Class:Model/Attribute:physicaldevices_list+' => '',
+	'Class:Model/Attribute:physicaldevices_list+' => 'Tous les matériels correspondant à ce modèle',
 	'Class:Model/UniquenessRule:name_brand+' => 'Le nom doit être unique dans une marque',
 	'Class:Model/UniquenessRule:name_brand' => 'ce modèle existe déjà dans cette marque',
 ));
@@ -1109,7 +1126,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkDeviceType' => 'Type d\'équipement réseau',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Equipements réseaux',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => '',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Tous les équipements réseaux correspondant à ce type',
 ));
 
 //
@@ -1123,6 +1140,23 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nom Marque',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+));
+
+//
+// Class: lnkDocumentToPatch
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToPatch' => 'Lien Document / Patch',
+	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
+	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Nom patch',
+	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nom document',
+	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
 ));
 
 //
@@ -1159,6 +1193,22 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
 ));
 
+//
+// Class: lnkDocumentToSoftware
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToSoftware' => 'Lien Document / Logiciel',
+	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Logiciel',
+	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Nom logiciel',
+	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nom document',
+	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
+));
 
 //
 // Class: Subnet
@@ -1377,7 +1427,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkApplicationSolutionToBusinessProcess' => 'Lien ApplicationSolutionToSolution Applicative / Processus métier',
+	'Class:lnkApplicationSolutionToBusinessProcess' => 'Lien Solution Applicative / Processus métier',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Processus métier',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
@@ -1388,7 +1438,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Nom Solution applicative',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
 ));
-
 
 //
 // Class: Group
@@ -1421,7 +1470,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Group/Attribute:parent_name' => 'Nom groupe parent',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'CIs liés',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'Tous les éléments de configuration liés à ce groupe',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Nom usuel du parent',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
 ));
@@ -1445,7 +1494,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ));
 
-
 // Add translation for Fieldsets
 
 Dict::Add('FR FR', 'French', 'Français', array(
@@ -1455,6 +1503,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Server:otherinfo' => 'Autres informations',
 	'Server:power' => 'Alimentation électrique',
 	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
+	'Class:Subnet/Tab:IPUsage+' => 'Utilisation des IPs de ce subnet',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
 	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
 	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
@@ -1462,60 +1511,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document:PreviewTab' => 'Aperçu',
 ));
 
-
-//
-// Class: lnkDocumentToLicence
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
-	'Class:lnkDocumentToLicence+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
-	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Nom Licence',
-	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
-	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
-	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nom Document',
-	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-));
-
-
-//
-// Class: lnkDocumentToPatch
-//
-
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToPatch' => 'Lien Document / Patch',
-	'Class:lnkDocumentToPatch+' => '',
-	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
-	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
-	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Nom patch',
-	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
-	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
-	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nom document',
-	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-));
-
-
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToSoftware' => 'Lien Document / Logiciel',
-	'Class:lnkDocumentToSoftware+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Logiciel',
-	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Nom logiciel',
-	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nom document',
-	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-));
 
 //
 // Class: lnkDocumentToFunctionalCI
@@ -1584,6 +1579,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Software' => 'Catalogue des logiciels de références',
 	'Menu:Software+' => 'Catalogue des logiciels de références',
 ));
-
-
 ?>

@@ -3,9 +3,19 @@
   "replace": {
     "tecnickcom/tcpdf": "self.version"
   },
-  "homepage": "https://github.com/combodo-itop-libs/TCPDF",
   "type": "library",
-  "description": "TCPDF fork adding requirements for iTop: Specific fonts.",
+  "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
+  "keywords": [
+    "PDF",
+    "tcpdf",
+    "PDFD32000-2008",
+    "qrcode",
+    "datamatrix",
+    "pdf417",
+    "barcodes"
+  ],
+  "homepage": "https://github.com/combodo-itop-libs/TCPDF",
+  "version": "6.4.4",
   "license": "LGPL-3.0-only",
   "authors": [
     {

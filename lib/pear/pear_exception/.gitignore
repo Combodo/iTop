@@ -1,6 +1,0 @@
-PEAR_Exception*.tgz
-
-# composer related
-composer.lock
-composer.phar
-vendor

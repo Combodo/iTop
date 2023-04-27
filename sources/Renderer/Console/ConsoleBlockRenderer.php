@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -99,7 +99,7 @@ class ConsoleBlockRenderer extends BlockRenderer
 		$oPage->add_style($oBlockRenderer->RenderCssInline());
 
 		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
-			static::AddCssJsTemplatesToPageRecursively( $oPage, $oSubBlock, $aContextParams);
+			static::AddCssJsTemplatesToPageRecursively($oPage, $oSubBlock, $aContextParams);
 		}
 	}
 

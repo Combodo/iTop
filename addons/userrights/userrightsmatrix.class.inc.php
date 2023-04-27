@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * UserRightsMatrix (User management Module)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -121,7 +121,6 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
 		// Maybe we should check that no other user with userid == 0 exists
-		CMDBObject::SetTrackInfo('Initialization');
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);

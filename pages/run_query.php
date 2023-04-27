@@ -1,32 +1,26 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -66,27 +60,28 @@ function ShowExamples($oP, $sExpression)
 	$aDisplayData = array();
 	$oAppContext = new ApplicationContext();
 	$sContext = $oAppContext->GetForForm();
-	foreach($aExamples as $sTopic => $aQueries)
-	{
-		foreach($aQueries as $sDescription => $sOql)
-		{
+	foreach ($aExamples as $sTopic => $aQueries) {
+		foreach ($aQueries as $sDescription => $sOql) {
 			$sHighlight = '';
 			$sDisable = '';
-			if ($sOql == $sExpression)
-			{
+			if ($sOql == $sExpression) {
 				// this one is currently being tested, highlight it
-				$sHighlight = "background-color:yellow;";
+				$sHighlight = "ibo-run-query--highlight";
 				$sDisable = 'disabled';
 				// and remember we are testing a query of the list
 				$bUsingExample = true;
 			}
+			$oFormButton = FormUIBlockFactory::MakeStandard();
+			$oFormButton->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", $sOql));
+			$oButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Test'), '', '', true);
+			$oButton->SetIsDisabled($sDisable);
+			$oFormButton->AddSubBlock($oButton);
+			$oFormButton->AddSubBlock(new Html($sContext));
 			//$aDisplayData[$sTopic][] = array(
 			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
-				'desc' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
-				'oql' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
-				//TODO 3.0.0 : buttons are not styled properly yet...
-				// This whole "query examples" may be migrated to TWIG using iTop Twig tags ?
-				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable>$sContext</form>\n",
+				'desc' => "<div class=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
+				'oql' => "<div class=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
+				'go' => BlockRenderer::RenderBlockTemplates($oFormButton),
 			);
 		}
 	}
@@ -103,7 +98,7 @@ function ShowExamples($oP, $sExpression)
 
 	foreach ($aDisplayData as $sTopic => $aQueriesDisplayData) {
 		$bShowOpened = $bUsingExample;
-		$oTopic = $oP->GetTableBlock($aDisplayConfig, $aQueriesDisplayData);
+		$oTopic = DataTableUIBlockFactory::MakeForForm('oqlExample', $aDisplayConfig, $aQueriesDisplayData);
 		$oTopicSection = new CollapsibleSection($sTopic, [$oTopic]);
 		$oTopicSection->SetOpenedByDefault($bShowOpened);
 		$oP->AddUiBlock($oTopicSection);
@@ -126,8 +121,6 @@ try
 {
 	if ($sEncoding == 'crypted') {
 		// Translate $sExpression into a oql expression
-		$sClearText = base64_decode($sExpression);
-		echo "<strong>FYI: '$sClearText'</strong><br/>\n";
 		$oFilter = DBObjectSearch::unserialize($sExpression);
 		$sExpression = $oFilter->ToOQL();
 	}
@@ -171,39 +164,39 @@ try
 		}
 	}
 
+	$oPanelQuery = PanelUIBlockFactory::MakeWithBrandingPrimaryColor(Dict::S('UI:RunQuery:ExpressionToEvaluate'));
+	$oP->AddSubBlock($oPanelQuery);
 	$oQueryForm = new Form();
-	$oP->AddUiBlock($oQueryForm);
+	$oPanelQuery->AddSubBlock($oQueryForm);
 
 	$oHiddenParams = new Html($oAppContext->GetForForm());
 	$oQueryForm->AddSubBlock($oHiddenParams);
 
 	//--- Query textarea
-	$oQueryTitle = new Html('<h2>'.Dict::S('UI:RunQuery:ExpressionToEvaluate').'</h2>');
-	$oQueryForm->AddSubBlock($oQueryTitle);
 	$oQueryTextArea = new TextArea('expression', utils::EscapeHtml($sExpression), 'expression', 120, 8);
-	$oQueryTextArea->SetName('expression');
+	$oQueryTextArea->AddCSSClasses(['ibo-input-text', 'ibo-query-oql', 'ibo-is-code']);
 	$oQueryForm->AddSubBlock($oQueryTextArea);
 
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
-	$oP->add_ready_script(<<<EOF
+	$oP->add_ready_script(<<<JS
 $("#expression").select();
-$("#expression").on("keydown", null, "ctrl+return", function() {
-	$(this).closest("form").submit();
+$("#expression").on('keyup', function (oEvent) {
+    if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.key === 'Enter') {
+        $(this).closest('form').trigger('submit');
+    }
 });
-EOF
+JS
 	);
 
 	if (count($aArgs) > 0) {
 		//--- Query arguments
-		$oQueryArgsContainer = PanelUIBlockFactory::MakeForInformation('Query arguments')
-			->SetCSSClasses(['wizContainer']);
+		$oQueryForm->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RunQuery:QueryArguments'), 3)->AddCSSClass("ibo-collapsible-section--title"));
+		$oQueryArgsContainer = UIContentBlockUIBlockFactory::MakeStandard(null,['wizContainer']);
 		$oQueryForm->AddSubBlock($oQueryArgsContainer);
 		foreach ($aArgs as $sParam => $sValue) {
-			$oArgInput = InputUIBlockFactory::MakeForInputWithLabel(
-				$sParam,
-				'arg_'.$sParam,
-				$sValue
-			);
+			$oInput = InputUIBlockFactory::MakeStandard("text",'arg_'.$sParam,	$sValue);
+			$oArgInput = \Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory::MakeFromObject($sParam,$oInput,Field::ENUM_FIELD_LAYOUT_SMALL);
+			$oArgInput->AddCSSClass("ibo-field--label-small");
+			//$oArgInput = InputUIBlockFactory::MakeForInputWithLabel(				$sParam,				'arg_'.$sParam,				$sValue			);
 			$oQueryArgsContainer->AddSubBlock($oArgInput);
 		}
 	}
@@ -214,15 +207,19 @@ EOF
 		null,
 		true
 	)->SetTooltip(Dict::S('UI:Button:Evaluate:Title'));
-	$oQueryForm->AddSubBlock($oQuerySubmit);
+	$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+	$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+	$oToolbarButtons->AddCSSClass('mb-5');
+	$oQueryForm->AddSubBlock($oToolbarButtons);
+	$oToolbarButtons->AddSubBlock($oQuerySubmit);
 
 
 	if ($oFilter) {
 		//--- Query filter
-		$oP->add("<h2>Query results</h2>\n");
-
+		$oPanelResult= PanelUIBlockFactory::MakeWithBrandingSecondaryColor(Dict::S('UI:RunQuery:QueryResults'));
+		$oP->AddSubBlock($oPanelResult);
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
-		$oResultBlock->Display($oP, 'runquery');
+		$oPanelResult->AddSubBlock($oResultBlock->GetDisplay($oP, 'runquery'));
 
 		// Breadcrumb
 		//$iCount = $oResultBlock->GetDisplayedCount();
@@ -240,19 +237,18 @@ EOF
 			}
 		}
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?'.implode('&', $aArgs);
-		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal',
-			iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 
 		//--- More info
 		$aMoreInfoBlocks = [];
 
 		$oDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedQuery'));
-		$oDevelopedQuerySet->AddSubBlock(new Html('<pre>'.utils::EscapeHtml($oFilter->ToOQL()).'</pre>'));
+		$oDevelopedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode(utils::EscapeHtml($oFilter->ToOQL())));
 		$aMoreInfoBlocks[] = $oDevelopedQuerySet;
 
 		$oSerializedQuerySet = new FieldSet(Dict::S('UI:RunQuery:SerializedFilter'));
-		$oSerializedQuerySet->AddSubBlock(new Html('<pre>'.utils::EscapeHtml($oFilter->serialize()).'</pre>'));
+		$oSerializedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode(utils::EscapeHtml($oFilter->serialize())));
 		$aMoreInfoBlocks[] = $oSerializedQuerySet;
 
 
@@ -270,34 +266,34 @@ EOF
 
 		$aOrderBy = MetaModel::GetOrderByDefault($sMainClass);
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
+		if ($oFilter instanceof DBObjectSearch) {
 			// OQL Developed for Count
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
 			$oCountDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedOQLCount'));
-			$oCountDevelopedQuerySet->AddSubBlock(new Html('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>'));
+			$oCountDevelopedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild)));
 			$aMoreInfoBlocks[] = $oCountDevelopedQuerySet;
 		}
 
 		// SQL Count
 		$sSQL = $oFilter->MakeSelectQuery(array(), $aRealArgs, $aCountAttToLoad, null, 0, 0, true);
 		$oCountResultQuerySet = new FieldSet(Dict::S('UI:RunQuery:ResultSQLCount'));
-		$oCountResultQuerySet->AddSubBlock(new Html('<pre>'.$sSQL.'</pre>'));
+		$oCountResultQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($sSQL));
 		$aMoreInfoBlocks[] = $oCountResultQuerySet;
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
+		if ($oFilter instanceof DBObjectSearch) {
 			// OQL Developed
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
 			$oOqlDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedOQL'));
-			$oOqlDevelopedQuerySet->AddSubBlock(new Html('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>'));
+			$oOqlDevelopedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild)));
 			$aMoreInfoBlocks[] = $oOqlDevelopedQuerySet;
 		}
 
 		// SQL
 		$sSQL = $oFilter->MakeSelectQuery($aOrderBy, $aRealArgs, null, null, 0, 0, false);
 		$oSqlQuerySet = new FieldSet(Dict::S('UI:RunQuery:ResultSQL'));
-		$oSqlQuerySet->AddSubBlock(new Html('<pre>'.$sSQL.'</pre>'));
+		$oSqlQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($sSQL));
 		$aMoreInfoBlocks[] = $oSqlQuerySet;
 
 		$oMoreInfoSection = new CollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), $aMoreInfoBlocks);
@@ -318,19 +314,20 @@ EOF
 					$sBefore = substr($sExpression, 0, $e->GetColumn());
 					$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
 					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
-					$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
+					$sFixedExpressionHtml = $sBefore.'<span class="ibo-run-query--highlight">'.$sSuggestedWord.'</span>'.$sAfter;
 					$sSyntaxErrorText .= "<p>Suggesting: $sFixedExpressionHtml</p>";
 					$oSyntaxErrorPanel->AddSubBlock(new Html($sSyntaxErrorText));
 
-					$sEscapedExpression = utils::EscapeHtml(addslashes($sFixedExpression));
+					$sEscapedExpression = json_encode(utils::EscapeHtml($sFixedExpression));
 					$oUseSuggestedQueryButton = ButtonUIBlockFactory::MakeForDestructiveAction('Use this query');
-					$oUseSuggestedQueryButton->SetOnClickJsCode(<<<JS
+					$oUseSuggestedQueryButton->SetOnClickJsCode(
+<<<JS
 let \$oQueryTextarea = $('textarea[name=expression]');
-\$oQueryTextarea.val('$sEscapedExpression').focus();
+\$oQueryTextarea.val($sEscapedExpression).focus();
 \$oQueryTextarea.closest('form').submit();
 JS
 					);
-					$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
+						$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
 				} else {
 					$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getHtmlDesc()));
 				}

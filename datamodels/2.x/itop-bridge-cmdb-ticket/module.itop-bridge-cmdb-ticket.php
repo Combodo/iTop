@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-bridge-cmdb-ticket/3.0.0',
+	'itop-bridge-cmdb-ticket/3.1.0',
 	array(
 		// Identification
 		//
@@ -17,11 +17,10 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 				'itop-config-mgmt/2.7.1',
 				'itop-tickets/2.7.0',
-				'itop-service-mgmt/2.7.1 || itop-service-mgmt-provider/2.7.1',
 		),
 		'mandatory' => false,
 		'visible' => false,
-		'auto_select' => 'SetupInfo::ModuleIsSelected("itop-config-mgmt") && SetupInfo::ModuleIsSelected("itop-tickets") && (SetupInfo::ModuleIsSelected("itop-service-mgmt") || SetupInfo::ModuleIsSelected("itop-service-mgmt-provider")) ',
+		'auto_select' => 'SetupInfo::ModuleIsSelected("itop-config-mgmt") && SetupInfo::ModuleIsSelected("itop-tickets") ',
 
 		// Components
 		//

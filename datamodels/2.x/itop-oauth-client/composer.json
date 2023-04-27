@@ -1,0 +1,16 @@
+{
+  "config": {
+    "classmap-authoritative": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Combodo\\iTop\\OAuthClient\\": "src"
+    }
+  },
+  "name": "combodo/itop-oauth-client",
+  "type": "itop-extension",
+  "description": "Remote authentication for OAuth 2.0",
+  "require": {
+    "composer-runtime-api": "^2.0"
+  }
+}

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,13 +16,10 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-use Combodo\iTop\Form\Form;
-use Combodo\iTop\Form\FormManager;
-
 /**
  * Base class to implement a handler for AttributeCustomFields
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -101,12 +98,29 @@ abstract class CustomFieldsHandler
 	 * @param string $sSeparator
 	 * @param string $sTextQualifier
 	 * @param bool|true $bLocalize
+	 *
 	 * @return mixed
 	 */
 	abstract public function GetAsCSV($aValues, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true);
 
 	/**
+	 * @param $aValues
+	 *
+	 * @return array|null
+	 *
+	 * @since 3.1.0 N°1150 Method creation
+	 */
+	public function GetAsJSON($aValues)
+	{
+		// Other GetAsCSV/GetAsHTML/GetAsXML methods are abstract, but were here from the start
+		// To ensure backward compatibility with older extensions, we are defining a default impl for this method
+		// Older extensions might have children classes without this new method
+		return null;
+	}
+
+	/**
 	 * @param DBObject $oHostObject
+	 *
 	 * @return array Associative array id => value
 	 */
 	abstract public function ReadValues(DBObject $oHostObject);

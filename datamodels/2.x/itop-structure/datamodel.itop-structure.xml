@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -7,7 +7,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
@@ -53,16 +53,16 @@
             <value id="active">
               <code>active</code>
               <style>
-                <main_color>#689F38</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
               <style>
-                <main_color>#E1E7EC</main_color>
-                <complementary_color>#6E7A8A</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -97,7 +97,7 @@
                     <rank>0</rank>
                     <title>Organization:Overview:FunctionalCIs</title>
                     <style>
-                      <icon>itop-config-mgmt/images/server.png</icon>
+                      <icon>../images/icons/icons8-server.svg</icon>
                     </style>
                     <subtitle>Organization:Overview:FunctionalCIs:subtitle</subtitle>
                     <query>SELECT FunctionalCI WHERE org_id=:this-&gt;id</query>
@@ -230,16 +230,16 @@
             <value id="active">
               <code>active</code>
               <style>
-                <main_color>#689F38</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
               <style>
-                <main_color>#E1E7EC</main_color>
-                <complementary_color>#6E7A8A</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -285,10 +285,31 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
       <presentation>
+        <summary>
+          <items>
+            <item id="address">
+              <rank>10</rank>
+            </item>
+            <item id="postal_code">
+              <rank>20</rank>
+            </item>
+            <item id="city">
+              <rank>30</rank>
+            </item>
+            <item id="country">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="name">
@@ -392,8 +413,8 @@
         </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-customer.svg</icon>
-          <main_color>blue-grey</main_color>
-          <complementary_color>white</complementary_color>
+          <main_color>$ibo-color-blue-grey-600</main_color>
+          <complementary_color>$ibo-color-white-100</complementary_color>
         </style>
         <reconciliation>
           <attributes>
@@ -419,16 +440,16 @@
             <value id="active">
               <code>active</code>
               <style>
-                <main_color>#689F38</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
               <style>
-                <main_color>#E1E7EC</main_color>
-                <complementary_color>#6E7A8A</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -578,6 +599,10 @@
             <attribute id="first_name"/>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="email"></attribute>
+            <attribute id="org_id_friendlyname"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <image_attribute>picture</image_attribute>
@@ -674,6 +699,16 @@
           <count_max>0</count_max>
           <ext_key_to_remote>team_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
+        </field>
+        <field id="user_list" xsi:type="AttributeLinkedSet">
+          <linked_class>User</linked_class>
+          <ext_key_to_me>contactid</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods>
@@ -755,10 +790,32 @@
         </method>
       </methods>
       <presentation>
+        <summary>
+          <items>
+            <item id="function">
+              <rank>10</rank>
+            </item>
+            <item id="phone">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="team_list">
               <rank>10</rank>
+            </item>
+            <item id="user_list">
+              <rank>55</rank>
             </item>
             <item id="col:col1">
               <rank>40</rank>
@@ -900,6 +957,11 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="function"></attribute>
+            <attribute id="org_id_friendlyname"></attribute>
+          </complementary_attributes>
+
         </naming>
         <style>
           <icon>../../images/icons/icons8-team.svg</icon>
@@ -921,10 +983,27 @@
           <count_max>0</count_max>
           <ext_key_to_remote>person_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
       <presentation>
+        <summary>
+          <items>
+            <item id="function">
+              <rank>10</rank>
+            </item>
+            <item id="phone">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="name">
@@ -1008,17 +1087,30 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="team_id"/>
-            <attribute id="person_id"/>
+            <attribute id="person_id_friendlyname"/>
+            <attribute id="team_name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="team_id"/>
             <attribute id="person_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="team_id"/>
+              <attribute id="person_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="team_id" xsi:type="AttributeExternalKey">
@@ -1056,10 +1148,10 @@
       <presentation>
         <details>
           <items>
-            <item id="team_id">
+            <item id="person_id">
               <rank>10</rank>
             </item>
-            <item id="person_id">
+            <item id="team_id">
               <rank>20</rank>
             </item>
             <item id="role_id">
@@ -1109,7 +1201,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1444,7 +1538,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/document.png</icon>
+          <icon>../../images/icons/icons8-note.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1633,7 +1727,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1680,7 +1776,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1766,7 +1864,7 @@
                 <rank>1</rank>
                 <title>Menu:Contact</title>
                 <style>
-                  <icon>itop-structure/images/team.png</icon>
+                  <icon>../images/icons/icons8-team.svg</icon>
                 </style>
                 <subtitle>Menu:Contact:Count</subtitle>
                 <query>SELECT Contact</query>
@@ -1822,7 +1920,7 @@
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:Typology</title>
                 <style>
-                  <icon>itop-structure/images/typology.png</icon>
+                  <icon>../images/icons/icons8-new-item.svg</icon>
                 </style>
               </dashlet>
               <dashlet id="9" xsi:type="DashletBadge">
@@ -1856,12 +1954,13 @@
         <stylesheets>
           <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
         </stylesheets>
+        <precompiled_stylesheet>itop-structure/precompiled-themes/fullmoon/main.css</precompiled_stylesheet>
       </theme>
       <theme id="test-red" _delta="define">
         <variables>
-          <variable id="ibo-page-banner-background-color">$ibo-color-red-600</variable>
-          <variable id="ibo-page-banner-text-color">$ibo-color-red-100</variable>
-          <variable id="ibo-page-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
+          <variable id="ibo-page-banner--background-color">$ibo-color-red-600</variable>
+          <variable id="ibo-page-banner--text-color">$ibo-color-red-100</variable>
+          <variable id="ibo-page-banner--text-content">"THIS IS A TEST INSTANCE"</variable>
         </variables>
         <imports>
         </imports>
@@ -1869,8 +1968,17 @@
           <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
           <stylesheet id="environment-banner">../css/backoffice/themes/page-banner.scss</stylesheet>
         </stylesheets>
+        <precompiled_stylesheet>itop-structure/precompiled-themes/test-red/main.css</precompiled_stylesheet>
       </theme>
     </themes>
+    <themes_common>
+      <variables>
+        </variables>
+      <imports>
+        </imports>
+      <stylesheets>
+        </stylesheets>
+    </themes_common>
   </branding>
   <user_rights>
     <groups>
@@ -1878,4 +1986,5 @@
     <profiles>
     </profiles>
   </user_rights>
+  <constants/>
 </itop_design>

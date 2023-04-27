@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
@@ -26,21 +26,22 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Attachments:EmptyTabTitle' => 'Anexos',
 	'Attachments:FieldsetTitle' => 'Anexos',
 	'Attachments:DeleteBtn' => 'Excluir',
-	'Attachments:History_File_Added' => 'Anexo %1$s adicionado.',
-	'Attachments:History_File_Removed' => 'Anexo %1$s excluído.',
+	'Attachments:History_File_Added' => 'Anexo %1$s adicionado',
+	'Attachments:History_File_Removed' => 'Anexo %1$s excluído',
 	'Attachments:AddAttachment' => 'Adicionar anexo: ',
-	'Attachments:UploadNotAllowedOnThisSystem' => 'Arquivo carregado NÃO PERMITIDO pelo sistema.',
-	'Attachment:Max_Go' => '(Tamanho máximo arquivo: %1$s Gb)',
-	'Attachment:Max_Mo' => '(Tamanho máximo arquivo: %1$s Mb)',
-	'Attachment:Max_Ko' => '(Tamanho máximo arquivo: %1$s Kb)',
-	'Attachments:NoAttachment' => 'Nenhum anexo. ',
-	'Attachments:PreviewNotAvailable' => 'A pré-visualização não está disponível para este tipo de anexo.',
+	'Attachments:UploadNotAllowedOnThisSystem' => 'Arquivo carregado NÃO PERMITIDO pelo sistema',
+	'Attachment:Max_Go' => '(Tamanho máximo de arquivo: %1$s Gb)',
+	'Attachment:Max_Mo' => '(Tamanho máximo de arquivo: %1$s Mb)',
+	'Attachment:Max_Ko' => '(Tamanho máximo de arquivo: %1$s Kb)',
+	'Attachments:NoAttachment' => 'Nenhum anexo',
+	'Attachments:PreviewNotAvailable' => 'A pré-visualização não está disponível para este tipo de anexo',
 	'Attachments:Error:FileTooLarge' => 'Arquivo muito grande para ser anexado. %1$s',
-	'Attachments:Error:UploadedFileEmpty' => 'O arquivo recebido está vazio e não pode ser anexado.
+	'Attachments:Error:UploadedFileEmpty' => 'O arquivo recebido está vazio e não pode ser anexado
 Ou você anexou um arquivo vazio,
-ou entre em contato com o seu administrador do iTOP pois o servidor pode estar sem espaço de armazenamento.',
-	'Attachments:Render:Icons' => 'Mostrar como ícones',
-	'Attachments:Render:Table' => 'Mostrar como lista',
+ou entre em contato com o seu administrador do '.ITOP_APPLICATION_SHORT.' pois o servidor pode estar sem espaço de armazenamento',
+	'Attachments:Render:Icons' => 'Exibir como ícones',
+	'Attachments:Render:Table' => 'Exibir como lista',
+	'UI:Attachments:DropYourFileHint' => 'Solte arquivos em qualquer lugar nesta área',
 ));
 
 //
@@ -52,7 +53,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => 'Expira',
 	'Class:Attachment/Attribute:expire+' => '',
-	'Class:Attachment/Attribute:temp_id' => 'Identificador temporário',
+	'Class:Attachment/Attribute:temp_id' => 'ID temporário',
 	'Class:Attachment/Attribute:temp_id+' => '',
 	'Class:Attachment/Attribute:item_class' => 'Classe do item',
 	'Class:Attachment/Attribute:item_class+' => '',

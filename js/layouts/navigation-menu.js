@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -31,6 +31,7 @@ $(function()
 				},
 			css_classes:
 				{
+					is_hidden: 'ibo-is-hidden',
 					menu_expanded: 'ibo-is-expanded',
 					menu_active: 'ibo-is-active',
 					menu_filtered: 'ibo-is-filtered',
@@ -49,14 +50,15 @@ $(function()
 					menu_filter_hint_close: '[data-role="ibo-navigation-menu--menu-filter-hint-close"]',
 					user_menu_toggler: '[data-role="ibo-navigation-menu--user-menu--toggler"]',
 					user_menu_container: '[data-role="ibo-navigation-menu--user-menu-container"]',
-					user_menu: '[data-role="ibo-navigation-menu--user-menu-container"] > [data-role="ibo-popover-menu"]'
+					user_menu: '[data-role="ibo-navigation-menu--user-menu-container"] > [data-role="ibo-popover-menu"]',
+					menu_node: '[data-role="ibo-navigation-menu--menu-node"]',
+					menu_node_label: '[data-role="ibo-navigation-menu--menu-node-label"]',
 				},
 			filter_throttle_timeout: null,
 
 			// the constructor
 			_create: function () {
 				this.element.addClass('ibo-navigation-menu');
-				$(this.js_selectors.user_menu).popover_menu({'toggler': this.js_selectors.user_menu_toggler});
 				this._bindEvents();
 			},
 			// events bound via _bind are removed automatically
@@ -102,9 +104,9 @@ $(function()
 					me._onFilterHintCloseClick(oEvent);
 				});
 
-				// User info
-				this.element.find(this.js_selectors.user_menu_toggler).on('click', function (oEvent) {
-					me._onUserMenuTogglerClick(oEvent);
+				// External events
+				oBodyElem.on('add_shortcut_node.navigation_menu.itop', function (oEvent, oData) {
+					me._onAddShortcutNode(oData);
 				});
 			},
 
@@ -188,37 +190,24 @@ $(function()
 				// Position focus in the input for better UX
 				this._focusFilter();
 			},
-			_onFilterHintCloseClick: function(oEvent)
-			{
+			_onFilterHintCloseClick: function (oEvent) {
 				this.element.find(this.js_selectors.menu_filter_hint).hide();
 
 				// Save state in user preferences
 				SetUserPreference('navigation_menu.show_filter_hint', false, true);
 			},
 
-			_onUserMenuTogglerClick: function(oEvent)
-			{
-				// Avoid anchor glitch
-				oEvent.preventDefault();
-				var oEventTarget = $(oEvent.target);
-				var aEventTargetPos = oEventTarget.position();
-
-				$(this.js_selectors.user_menu_container).css({
-					'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) -  $(this.js_selectors.user_menu).height()) + 'px',
-					'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px'
-				});
-				$(this.js_selectors.user_menu).popover_menu('togglePopup');
+			_onAddShortcutNode: function (oData) {
+				this._addShortcut(oData.parent_menu_node_id, oData.new_menu_node_html_rendering, oData.new_menu_name);
 			},
 
 			// Methods
-			_checkIfClickShouldCloseDrawer: function(oEvent)
-			{
-				if(
+			_checkIfClickShouldCloseDrawer: function (oEvent) {
+				if (
 					$(oEvent.target.closest(this.js_selectors.menu_drawer)).length === 0
 					&& $(oEvent.target.closest('[data-role="ibo-navigation-menu--menu-group"]')).length === 0
 					&& $(oEvent.target.closest(this.js_selectors.menu_toggler)).length === 0
-				)
-				{
+				) {
 					this._closeDrawer();
 				}
 			},
@@ -333,6 +322,7 @@ $(function()
 					}
 
 					if (bMatches) {
+						me.element.find(me.js_selectors.menu_filter_placeholder).css('display', 'none');
 						bHasAnyMatch = true;
 						// Note: Selector must be recursive
 						$(this).parents('[data-role="ibo-navigation-menu--menu-nodes"], [data-role="ibo-navigation-menu--menu-node"]').show();
@@ -372,13 +362,45 @@ $(function()
 						.done(function (data) {
 							if (data.code === "done") {
 								for (const [key, value] of Object.entries(data.counts)) {
-									let menuEntry = me.element.find('[data-menu-id="' + key + '"]');
+									let menuEntry = me.element.find('[data-menu-id="'+key+'"]');
 									menuEntry.html(value);
-									menuEntry.show();
+									menuEntry.removeClass(me.css_classes.is_hidden);
 								}
 							}
 						});
 				}
+			},
+			/**
+			 * @param sParentMenuNodeId {string} ID of the parent menu node the shortcut should be added to
+			 * @param sNewMenuNodeHtmlRendering {string} HTML rendering of the new menu node to add
+			 * @param sNewMenulabel {string} Label of the menu node to add
+			 * @return {boolean}
+			 */
+			_addShortcut: function (sParentMenuNodeId, sNewMenuNodeHtmlRendering, sNewMenulabel) {
+				const oNewMenuNodeContainerElem = this.element.find(this.js_selectors.menu_node+'[data-menu-node-id="'+sParentMenuNodeId+'"]');
+				if (oNewMenuNodeContainerElem.length === 0) {
+					return false;
+				}
+				let oNewMenuNodeContainerElemUL = oNewMenuNodeContainerElem.find('ul');
+				if (oNewMenuNodeContainerElemUL.length === 0) {
+					oNewMenuNodeContainerElem.append('<ul>'+sNewMenuNodeHtmlRendering+'</ul>');
+				} else {
+					let oChildrenElem = oNewMenuNodeContainerElem.find('li');
+					let iIndex = 0;
+					let bInsertToDo = true;
+					while (bInsertToDo && iIndex < oChildrenElem.length) {
+						let oCurrentChild = oChildrenElem.eq(iIndex);
+						if (oCurrentChild.find(this.js_selectors.menu_node_label).attr('title').toUpperCase() > sNewMenulabel.toUpperCase()) {
+							oCurrentChild.before(sNewMenuNodeHtmlRendering);
+							bInsertToDo = false;
+						}
+						iIndex++;
+					}
+					if (bInsertToDo) {
+						oNewMenuNodeContainerElemUL.append(sNewMenuNodeHtmlRendering);
+					}
+				}
+				return true;
 			}
 		});
 });

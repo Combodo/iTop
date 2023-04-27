@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -24,6 +24,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => 'Fehlende Datei: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Datei %1$s ist beschädigt',
+	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'Datei %1$s kann nicht geschrieben werden',
 ));
 

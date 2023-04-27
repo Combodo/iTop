@@ -1,6 +1,6 @@
 <?php
 /**
- *  @copyright   Copyright (C) 2010-2021 Combodo SARL
+ *  @copyright   Copyright (C) 2010-2023 Combodo SARL
  *  @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -34,6 +34,25 @@ class UpdateController extends Controller
 		$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation WHERE parent_id=0 AND name!="datamodel"');
 		$oSet = new DBObjectSet($oFilter, ['installed' => false]); // Most recent first
 		$aParams['oSet'] = $oSet;
+
+		$oConfig = utils::GetConfig();
+		$bConfigParamSetupLaunchButtonEnabled = $oConfig->Get('setup.launch_button.enabled');
+		if (is_null($bConfigParamSetupLaunchButtonEnabled)) {
+			$bIsSetupLaunchButtonEnabled = utils::IsDevelopmentEnvironment();
+		} else if (false === $bConfigParamSetupLaunchButtonEnabled) {
+			$bIsSetupLaunchButtonEnabled = false;
+		} else {
+			$bIsSetupLaunchButtonEnabled = $bConfigParamSetupLaunchButtonEnabled || utils::IsDevelopmentEnvironment();
+		}
+		$aParams['bIsSetupLaunchButtonEnabled'] = $bIsSetupLaunchButtonEnabled;
+		if ($bIsSetupLaunchButtonEnabled) {
+			$sLaunchSetupUrl = utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php',
+				[
+					'operation'      => 'LaunchSetup',
+					'transaction_id' => $sTransactionId,
+				]);;
+			$aParams['sLaunchSetupUrl'] = $sLaunchSetupUrl;
+		}
 
 		$this->DisplayPage($aParams);
 	}

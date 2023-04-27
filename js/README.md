@@ -24,6 +24,8 @@ For example :
 
 Having `(A)()(B)()` is different than `(A)();(B)();` !
 
-To avoid those problems simply add a leading semicolon on all JS files containing `()` at their end.
+To avoid those problems simply add a leading semicolon on all JS files.
 
-See https://stackoverflow.com/a/23056287
+See :
+https://stackoverflow.com/a/23056287
+https://github.com/Combodo/iTop/commit/3959ed505b324d26500c517731371ae318576af7

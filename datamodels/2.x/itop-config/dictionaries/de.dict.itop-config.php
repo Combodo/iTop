@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2021 Combodo SARL
+* @copyright     Copyright (C) 2023 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
@@ -36,5 +36,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'config-reverted' => 'Die Konfiguration wurde zurückgesetzt',
 	'config-parse-error' => 'Zeile %2$d: %1$s.<br/>Die Datei wurde nicht aktualisiert.',
 	'config-current-line' => 'Editiere Zeile: %1$s',
-	'config-saved-warning-db-password' => 'Die Konfiguration wurde gespeichert. Das Backup wird NICHT funktionieren, im Datenbankpassword sind unzulässige Zeichen enthalten.',
+	'config-saved-warning-db-password' => 'Die Konfiguration wurde gespeichert. Das Backup wird NICHT funktionieren, im Datenbankpasswort sind unzulässige Zeichen enthalten.',
 ));

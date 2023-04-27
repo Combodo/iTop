@@ -1,15 +1,12 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\DBTools\Service\DBAnalyzerUtils;
 
-@include_once('../approot.inc.php');
-@include_once('../../approot.inc.php');
-@include_once('../../../approot.inc.php');
-
+require_once ('../../../approot.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 
 require_once('../db_analyzer.class.inc.php');

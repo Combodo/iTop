@@ -1,0 +1,24 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input-within-datatable--attribute-set-item--padding-x: $ibo-input-set--item--padding-x !default;
+$ibo-input-within-datatable--attribute-set-item--padding-y: $ibo-input-set--item--padding-y !default;
+$ibo-input-within-datatable--attribute-set-item--box-shadow: $ibo-elevation-100 !default;
+$ibo-input-within-datatable--attribute-set-item--siblings-spacing: 0.5rem !default;
+
+.ibo-datatable {
+  .attribute-set {
+    .attribute-set-item {
+      display: inline;
+      margin: 0;
+      padding: $ibo-input-within-datatable--attribute-set-item--padding-y $ibo-input-within-datatable--attribute-set-item--padding-x;
+      box-shadow: $ibo-input-within-datatable--attribute-set-item--box-shadow;
+
+      + .attribute-set-item {
+        margin-left: $ibo-input-within-datatable--attribute-set-item--siblings-spacing;
+      }
+    }
+  }
+}

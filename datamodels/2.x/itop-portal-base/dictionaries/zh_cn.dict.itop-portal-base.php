@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,7 +18,7 @@
  */
 // Portal
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Page:DefaultTitle' => 'iTop 用户门户',
+	'Page:DefaultTitle' => ITOP_APPLICATION_SHORT.' 用户门户',
 	'Page:PleaseWait' => '请稍后...',
 	'Page:Home' => '主页',
 	'Page:GoPortalHome' => '主页面',
@@ -33,35 +33,42 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:Button:Delete' => '删除',
 	'Portal:EnvironmentBanner:Title' => '您目前处于 <strong>%1$s</strong> 模式',
 	'Portal:EnvironmentBanner:GoToProduction' => '回到产品模式',
-	'Error:HTTP:400' => 'Bad request~~',
-	'Error:HTTP:401' => '认证',
+	'Error:HTTP:400' => '请求错误',
+	'Error:HTTP:401' => '认证错误',
 	'Error:HTTP:404' => '页面找不到',
 	'Error:HTTP:500' => 'Oops! 发生了一个错误.',
 	'Error:HTTP:GetHelp' => '如果问题仍然存在,请联系管理员.',
 	'Error:XHR:Fail' => '无法加载数据, 请联系管理员',
-	'Portal:ErrorUserLoggedOut' => '您已退出，请重新登录.',
+	'Portal:ErrorUserLoggedOut' => '您已退出,请重新登录.',
 	'Portal:Datatables:Language:Processing' => '请稍后...',
 	'Portal:Datatables:Language:Search' => '过滤器:',
 	'Portal:Datatables:Language:LengthMenu' => '每页显示 _MENU_ 项',
 	'Portal:Datatables:Language:ZeroRecords' => '没有结果',
 	'Portal:Datatables:Language:Info' => '第 _PAGE_ 页,共 _PAGES_ 页',
 	'Portal:Datatables:Language:InfoEmpty' => '没有信息',
-	'Portal:Datatables:Language:InfoFiltered' => 'filtered out of _MAX_ items',
+	'Portal:Datatables:Language:InfoFiltered' => '最多过滤 _MAX_ 项',
 	'Portal:Datatables:Language:EmptyTable' => '表格中没有数据',
 	'Portal:Datatables:Language:DisplayLength:All' => '全部',
 	'Portal:Datatables:Language:Paginate:First' => '首页',
 	'Portal:Datatables:Language:Paginate:Previous' => '上一页',
 	'Portal:Datatables:Language:Paginate:Next' => '下一页',
 	'Portal:Datatables:Language:Paginate:Last' => '尾页',
-	'Portal:Datatables:Language:Sort:Ascending' => '升序排序',
-	'Portal:Datatables:Language:Sort:Descending' => '降序排序',
+	'Portal:Datatables:Language:Sort:Ascending' => '升序',
+	'Portal:Datatables:Language:Sort:Descending' => '降序',
 	'Portal:Autocomplete:NoResult' => '没有数据',
 	'Portal:Attachments:DropZone:Message' => '把文件添加为附件',
 	'Portal:File:None' => '没有文件',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'en-us~~', //work with moment.js locales
+));
+
+// Object form
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
 	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
+	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
 ));
 
 // UserProfile brick
@@ -80,7 +87,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 // AggregatePageBrick
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
+	'Brick:Portal:AggregatePage:DefaultTitle' => '仪表盘',
 ));
 
 // BrowseBrick brick
@@ -103,7 +110,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Manage:Name' => '管理项目',
 	'Brick:Portal:Manage:Table:NoData' => '没有项目.',
-	'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
+	'Brick:Portal:Manage:Table:ItemActions' => '操作',
 	'Brick:Portal:Manage:DisplayMode:list' => '列表',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => '饼图',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => '条形图',
@@ -123,25 +130,25 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Object:Form:Create:Title' => '新建 %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => '正在更新 %2$s (%1$s)',
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:',
+	'Brick:Portal:Object:Form:Stimulus:Title' => '请填写下列信息:',
 	'Brick:Portal:Object:Form:Message:Saved' => '已保存',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '已保存 %1$s~~',
 	'Brick:Portal:Object:Search:Regular:Title' => '选择 %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => '选择 %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
-	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:Tooltip' => '复制对象链接',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => '已复制'
 ));
 
 // CreateBrick brick
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Create:Name' => '快速创建',
-	'Brick:Portal:Create:ChooseType' => 'Please, choose a type',
+	'Brick:Portal:Create:ChooseType' => '请选择类型',
 ));
 
 // Filter brick
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Filter:Name' => 'Prefilter a brick',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => '例如. 连接 wifi',
-	'Brick:Portal:Filter:SearchInput:Submit' => '搜素',
+	'Brick:Portal:Filter:SearchInput:Submit' => '搜索',
 ));

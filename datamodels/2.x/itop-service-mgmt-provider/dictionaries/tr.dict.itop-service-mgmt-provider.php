@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -30,18 +30,18 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:ServiceManagement' => 'Hizmet Yönetimi',
-	'Menu:ServiceManagement+' => 'Hizmet Yönetimi',
+	'Menu:ServiceManagement' => 'Hizmet yönetimi',
+	'Menu:ServiceManagement+' => 'Hizmet yönetimi',
 	'Menu:Service:Overview' => 'Özet',
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Hizmet seviyesine göre sözleşmeler',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Durumuna göre sözleşmeler',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 gün çinde biten sözleşmeler',
 
-	'Menu:ProviderContract' => 'Tedarikçi Sözleşmeleri',
-	'Menu:ProviderContract+' => 'Tedarikçi Sözleşmeleri',
-	'Menu:CustomerContract' => 'Müşteri Sözleşmeleri',
-	'Menu:CustomerContract+' => 'Müşteri Sözleşmeleri',
+	'Menu:ProviderContract' => 'Tedarikçi sözleşmeleri',
+	'Menu:ProviderContract+' => 'Tedarikçi sözleşmeleri',
+	'Menu:CustomerContract' => 'Müşteri sözleşmeleri',
+	'Menu:CustomerContract+' => 'Müşteri sözleşmeleri',
 	'Menu:ServiceSubcategory' => 'Hizmet alt kategorileri',
 	'Menu:ServiceSubcategory+' => 'Hizmet alt kategorileri',
 	'Menu:Service' => 'Hizmetler',
@@ -73,9 +73,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery model~~',
+	'Class:Organization/Attribute:deliverymodel_id' => 'Teslimat Modeli',
 	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
-	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name~~',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Teslimat Modeli Adı',
 	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
 ));
 

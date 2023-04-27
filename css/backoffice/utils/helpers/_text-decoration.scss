@@ -1,0 +1,104 @@
+/*!
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-has-description--content: "?" !default;
+$ibo-has-description--padding-left: $ibo-spacing-200 !default;
+$ibo-has-description--color: $ibo-color-grey-600 !default;
+$ibo-has-description--font-size: 0.7em !default; /* Font size is em on purpose as we want it to be proportional to its context */
+
+$ibo-is-code--background-color: $ibo-color-white-200 !default;
+$ibo-is-code--padding: 1.25rem 1.5rem !default;
+
+/* Rules */
+%ibo-text-truncated-with-ellipsis {
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+.ibo-text-truncated-with-ellipsis {
+  @extend %ibo-text-truncated-with-ellipsis;
+}
+
+/* Use this when you want the hyperlink to be of the color of its container's text instead of the global hyperlink color */
+%ibo-hyperlink-inherited-colors {
+  color: inherit;
+
+  &:hover,
+  &:active {
+    color: inherit;
+  }
+}
+
+.ibo-is-broken-hyperlink {
+  text-decoration: line-through;
+  cursor: help;
+}
+
+.ibo-is-disabled {
+  cursor: not-allowed !important; /* Note: !important is necessary as it needs to overload any standard rules */
+}
+
+/* Class to display a hint on elements that have a tooltip for further description */
+.ibo-has-description {
+  &::after {
+    content: $ibo-has-description--content;
+    padding-left: $ibo-has-description--padding-left;
+    vertical-align: top;
+
+    cursor: pointer;
+    color: $ibo-has-description--color;
+
+    /* We don't use a %ibo-font-ral-xxx-yyy as we need a specific size */
+    @extend %ibo-font-weight-700;
+    font-size: $ibo-has-description--font-size;
+  }
+}
+
+.ibo-is-code {
+  background-color: $ibo-is-code--background-color;
+  padding: $ibo-is-code--padding;
+  @extend %ibo-font-code-150;
+}
+
+/*
+ * A single class to handle WYSIWYG generated content, where only HTML tags are available
+ * See https://bulma.io/documentation/elements/content/
+ */
+.ibo-is-html-content {
+  @extend .content;
+
+  /* Force user-generated tables to fit within the container as they often have an hard-coded width */
+  table {
+    width: unset !important;
+    max-width: max-content;
+  }
+
+  /* For table to render like in CKEditor, works with bulma lib. overload see:
+   * - ../../vendors/_bulma-variables-overload.scss)
+   * - ../../_shame.scss
+   */
+  table {
+    border-collapse: separate;
+    border-spacing: 2px;
+  }
+
+  /*
+   * N°5317 - Handle overlapping tables when table cells have fixed widths
+   * Force table cell NOT to have a fixed width and to wrap when necessary
+   */
+  td {
+    width: unset !important;
+    word-break: break-word !important;
+    white-space: unset !important;
+  }
+
+  /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */
+  & > code,
+  code:not(.hljs)  {
+    color: inherit;
+  }
+}

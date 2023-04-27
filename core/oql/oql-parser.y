@@ -23,7 +23,15 @@ later : solve the 2 remaining shift-reduce conflicts (JOIN)
 %name OQLParser_
 %declare_class {class OQLParserRaw}
 %syntax_error { 
-throw new OQLParserException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCol, $this->tokenName($yymajor), $TOKEN);
+throw new OQLParserSyntaxErrorException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCol, $this->tokenName($yymajor), $TOKEN);
+}
+/* Bug N°4052 Parser stack size too small for huge OQL requests */
+%stack_size 1000
+%stack_overflow {
+throw new OQLParserStackOverFlowException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCol);
+}
+%parse_failure {
+throw new OQLParserParseFailureException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCol);
 }
 
 result ::= union(X). { $this->my_result = X; }
@@ -264,11 +272,39 @@ func_name(A) ::= F_INET_NTOA(X). { A=X; }
 
 class OQLParserException extends OQLException
 {
+	public function __construct($sIssue, $sInput, $iLine, $iCol, $sTokenValue)
+	{
+		parent::__construct($sIssue, $sInput, $iLine, $iCol, $sTokenValue);
+	}
+}
+
+class OQLParserSyntaxErrorException extends OQLParserException
+{
 	public function __construct($sInput, $iLine, $iCol, $sTokenName, $sTokenValue)
 	{
 		$sIssue = "Unexpected token $sTokenName";
-	
+
 		parent::__construct($sIssue, $sInput, $iLine, $iCol, $sTokenValue);
+	}
+}
+
+class OQLParserStackOverFlowException extends OQLParserException
+{
+	public function __construct($sInput, $iLine, $iCol)
+	{
+		$sIssue = "Stack overflow";
+
+		parent::__construct($sIssue, $sInput, $iLine, $iCol, '');
+	}
+}
+
+class OQLParserParseFailureException extends OQLParserException
+{
+	public function __construct($sInput, $iLine, $iCol)
+	{
+		$sIssue = "Unexpected token $sTokenName";
+
+		parent::__construct($sIssue, $sInput, $iLine, $iCol, '');
 	}
 }
 

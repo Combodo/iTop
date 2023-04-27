@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -107,7 +107,7 @@ try
 catch (Exception $e)
 {
 	// note: transform to cope with XSS attacks
-	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
+	echo utils::EscapeHtml($e->GetMessage());
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
 

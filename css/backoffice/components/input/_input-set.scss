@@ -1,19 +1,25 @@
-$ibo-input-set--padding-x: 8px !default;
-$ibo-input-set--padding-y: 5px !default;
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input-set--padding-x: $ibo-spacing-300 !default;
+$ibo-input-set--padding-y: $ibo-spacing-0 !default;
+
+$ibo-input-set--input--height: auto !default;
+$ibo-input-set--input--min-height: $ibo-input--height !default;
 
 $ibo-input-set--input--height: 100% !default;
 
 $ibo-input-set--remove--padding-top: 0.15em !default;
 $ibo-input-set--remove--border-left: none !default;
 
-$ibo-input-set--has-items--after--right: 8px !default;
-$ibo-input-set--has-items--after--top: 5px !default;
 
 $ibo-input-set--item--siblings-spacing: 3px !default;
-$ibo-input-set--item--margin-y: 2px !default;
+$ibo-input-set--item--margin-y: 1px !default;
 $ibo-input-set--item--padding-x: 6px !default;
-$ibo-input-set--item--padding-y: 4px !default;
-$ibo-input-set--item--max-width: 120px !default;
+$ibo-input-set--item--padding-y: $ibo-spacing-200 !default;
+$ibo-input-set--item--max-width: 360px !default;
 $ibo-input-set--item--background-color: $ibo-color-white-100 !default;
 $ibo-input-set--item--border: none !default;
 $ibo-input-set--item--border-radius: $ibo-border-radius-300 !default;
@@ -21,6 +27,10 @@ $ibo-input-set--item--box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb
 
 
 .ibo-input-set {
+  flex-wrap: wrap;
+  height: $ibo-input-set--input--height;
+  min-height: $ibo-input-set--input--min-height;
+  
   > input {
     height: $ibo-input-set--input--height;
   }
@@ -31,17 +41,7 @@ $ibo-input-set--item--box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb
     border-left: $ibo-input-set--remove--border-left;
   }
 
-  &.has-items::after {
-    content: "\f067";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 600;
-    font-size: 10px;
 
-    position: absolute;
-
-    right: $ibo-input-set--has-items--after--right;
-    top: $ibo-input-set--has-items--after--top;
-  }
 }
 
 /* CSS rules from the old style, retrieved almost as is. Do not change the classes names in the markup without second thought as they are used by the portal as well */
@@ -62,7 +62,11 @@ $ibo-input-set--item--box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb
   color: $ibo-color-grey-900;
   text-shadow: none;
   @extend %ibo-text-truncated-with-ellipsis;
-
+  /* - Guaranty that if a set item has html sub-node, they correctly display ellipsis (eg. Link set set items) */
+  > * {
+    @extend %ibo-text-truncated-with-ellipsis;
+  }
+  
   &:not(:first-child) {
     margin-left: $ibo-input-set--item--siblings-spacing;
   }

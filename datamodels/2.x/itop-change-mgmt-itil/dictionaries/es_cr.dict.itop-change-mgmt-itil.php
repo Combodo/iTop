@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,37 +15,37 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Menu:ChangeManagement' => 'Administración de Cambios',
-	'Menu:Change:Overview' => 'Resumen de Cambios',
-	'Menu:Change:Overview+' => 'Resumen de Cambios',
-	'Menu:NewChange' => 'Nuevo Cambio',
-	'Menu:NewChange+' => 'Crear Ticket de Cambio',
-	'Menu:SearchChanges' => 'Búsqueda de Cambios',
-	'Menu:SearchChanges+' => 'Búsqueda de Tickets de Cambios',
-	'Menu:Change:Shortcuts' => 'Accesos Rápidos',
-	'Menu:Change:Shortcuts+' => 'Accesos Rápidos',
-	'Menu:WaitingAcceptance' => 'Cambios Esperando ser Aceptados',
-	'Menu:WaitingAcceptance+' => 'Cambios Esperando ser Aceptados',
-	'Menu:WaitingApproval' => 'Cambios Esperando ser Aprobados',
-	'Menu:WaitingApproval+' => 'Cambios Esperando ser Aprobados',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Menu:ChangeManagement' => 'Administración de cambios',
+	'Menu:Change:Overview' => 'Resumen de cambios',
+	'Menu:Change:Overview+' => 'Resumen de cambios',
+	'Menu:NewChange' => 'Nuevo cambio',
+	'Menu:NewChange+' => 'Crear ticket de cambio',
+	'Menu:SearchChanges' => 'Búsqueda de cambios',
+	'Menu:SearchChanges+' => 'Búsqueda de tickets de cambios',
+	'Menu:Change:Shortcuts' => 'Accesos rápidos',
+	'Menu:Change:Shortcuts+' => 'Accesos rápidos',
+	'Menu:WaitingAcceptance' => 'Cambios esperando ser aceptados',
+	'Menu:WaitingAcceptance+' => 'Cambios esperando ser aceptados',
+	'Menu:WaitingApproval' => 'Cambios esperando ser aprobados',
+	'Menu:WaitingApproval+' => 'Cambios esperando ser aprobados',
 	'Menu:Changes' => 'Cambios Abiertos',
-	'Menu:Changes+' => 'Cambios Abiertos',
-	'Menu:MyChanges' => 'Cambios Asignados Mí',
-	'Menu:MyChanges+' => 'Cambios Asignados a Mí (como Analista)',
-	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Cambios por Categoría de los últimos 7 días',
-	'UI-ChangeManagementOverview-Last-7-days' => 'Número de Cambios de los últimos 7 días',
-	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Cambios por Dominio de los últimos 7 días',
-	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Cambios por Estatus de los últimos 7 días',
-	'Tickets:Related:OpenChanges' => 'Cambios Abiertos',
-	'Tickets:Related:RecentChanges' => 'Cambios Recientes (72 hrs)',
+	'Menu:Changes+' => 'Cambios abiertos',
+	'Menu:MyChanges' => 'Cambios asignados mí',
+	'Menu:MyChanges+' => 'Cambios asignados a mí (como analista)',
+	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Cambios por categoría de los últimos 7 días',
+	'UI-ChangeManagementOverview-Last-7-days' => 'Número de cambios de los últimos 7 días',
+	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Cambios por dominio de los últimos 7 días',
+	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Cambios por estatus de los últimos 7 días',
+	'Tickets:Related:OpenChanges' => 'Cambios abiertos',
+	'Tickets:Related:RecentChanges' => 'Cambios recientes (72 hrs)',
 ));
 
 // Dictionnay conventions
@@ -63,7 +63,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Change
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Change' => 'Cambio',
 	'Class:Change+' => 'Cambio',
 	'Class:Change/Attribute:status' => 'Estatus',
@@ -166,7 +166,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: RoutineChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:RoutineChange' => 'Cambio Rutinario',
 	'Class:RoutineChange+' => 'Cambio Rutinario',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Validar',
@@ -197,7 +197,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ApprovedChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ApprovedChange' => 'Cambios Aprobados',
 	'Class:ApprovedChange+' => 'Cambios Aprobados',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Fecha de Aprobación',
@@ -232,7 +232,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: NormalChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:NormalChange' => 'Cambio Normal',
 	'Class:NormalChange+' => 'Cambio Normal',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Fecha de Aceptación',
@@ -267,7 +267,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: EmergencyChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EmergencyChange' => 'Cambio de Emergencia',
 	'Class:EmergencyChange+' => 'Cambio de Emergencia',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Validar',

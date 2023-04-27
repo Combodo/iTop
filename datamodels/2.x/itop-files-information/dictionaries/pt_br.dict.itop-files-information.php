@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -22,8 +22,9 @@
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	// Errors
-	'FilesInformation:Error:MissingFile' => 'Faltando arquivo: %1$s',
+	'FilesInformation:Error:MissingFile' => 'Arquivo ausente: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Arquivo %1$s está corrompido',
+	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'Sem permissão de escrita no arquivo %1$s',
 ));
 

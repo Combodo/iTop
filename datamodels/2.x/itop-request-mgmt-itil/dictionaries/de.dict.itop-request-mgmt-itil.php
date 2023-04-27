@@ -1,27 +1,11 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /*
-* @author ITOMIG GmbH <martin.raenker@itomig.de>
-
-* @copyright     Copyright (C) 2018 Combodo SARL
-* @licence	http://opensource.org/licenses/AGPL-3.0
-*		
-*/
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+/*
+ *  @author ITOMIG GmbH <martin.raenker@itomig.de>
+ */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => '',
@@ -47,7 +31,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserRequest:OpenRequests+' => '',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Mir zugewiesene Benutzeranfragen',
 	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Benutzeranfragen der letzten 14 Tage nach Typ',
-	'UI-RequestManagementOverview-Last-14-days' => 'Anzahl Benutzeranfragen der letzen 14 Tage',
+	'UI-RequestManagementOverview-Last-14-days' => 'Anzahl Benutzeranfragen der letzten 14 Tage',
 	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Offene Benutzeranfragen nach Status',
 	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Offene Benutzeranfragen nach Bearbeiter',
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Offene Benutzeranfragen nach Typ',
@@ -138,7 +122,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:origin/Value:portal+' => '',
 	'Class:UserRequest/Attribute:approver_id' => 'Genehmiger',
 	'Class:UserRequest/Attribute:approver_id+' => '',
-	'Class:UserRequest/Attribute:approver_email' => 'Gemehhmiger-Email',
+	'Class:UserRequest/Attribute:approver_email' => 'Gemehhmiger-E-Mail',
 	'Class:UserRequest/Attribute:approver_email+' => '',
 	'Class:UserRequest/Attribute:service_id' => 'Service',
 	'Class:UserRequest/Attribute:service_id+' => '',
@@ -162,6 +146,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:resolution_date+' => '',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Letztes Auszeit-Datum',
 	'Class:UserRequest/Attribute:last_pending_date+' => '',
+	'Class:UserRequest/Attribute:cumulatedpending' => 'Kumulierte Auszeit',
+	'Class:UserRequest/Attribute:cumulatedpending+' => '',
 	'Class:UserRequest/Attribute:tto' => 'TTO (Time To Own)',
 	'Class:UserRequest/Attribute:tto+' => '',
 	'Class:UserRequest/Attribute:ttr' => 'TTR (Time To Resolve)',
@@ -217,7 +203,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent-Incident-Referenz',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Abgeleitete Requests',
-	'Class:UserRequest/Attribute:related_request_list+' => '',
+	'Class:UserRequest/Attribute:related_request_list+' => 'All the requests that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:public_log' => 'Öffentliches Log',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Benutzerzufriedenheit',

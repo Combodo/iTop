@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -33,25 +33,30 @@ abstract class Trigger extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "description",
-			"state_attcode" => "",
-			"reconc_keys" => array('description'),
-			"db_table" => "priv_trigger",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "realclass",
+			"category"                   => "grant_by_profile,core/cmdb",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "description",
+			"complementary_name_attcode" => array('finalclass', 'complement'),
+			"state_attcode"              => "",
+			"reconc_keys"                => array('description'),
+			"db_table"                   => "priv_trigger",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "realclass",
+			'style'                      => new ormStyle(null, null, null, null, null, '../images/icons/icons8-conflict.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("action_list", array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "trigger_id", "ext_key_to_remote" => "action_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("action_list",
+			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "trigger_id", "ext_key_to_remote" => "action_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
 		$aTags = ContextTag::GetTags();
-		MetaModel::Init_AddAttribute( new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
+		MetaModel::Init_AddAttribute(new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
+		// "complement" is a computed field, fed by Trigger sub-classes, in general in ComputeValues method, for eg. the TriggerOnObject fed it with target_class info
+		MetaModel::Init_AddAttribute(new AttributeString("complement", array("allowed_values" => null, "sql" => "complement", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('finalclass', 'description', 'context', 'action_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('finalclass', 'description', 'context', 'action_list', 'complement')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'complement')); // Attributes to be displayed for a list
 		// Search criteria
 		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
@@ -198,6 +203,21 @@ abstract class TriggerOnObject extends Trigger
 	}
 
 	/**
+	 * @throws \CoreException
+	 */
+	public function ComputeValues()
+	{
+		parent::ComputeValues();
+
+		// Complementary name of a Trigger is manually built
+		//   - the Trigger finalclass code not translated
+		//   - an hardcoded text in english
+		//   - the target class code not translated for TriggerOnObject subclasses
+		$this->Set('complement', 'class restriction: '.$this->Get('target_class'));
+	}
+
+
+	/**
 	 * Check whether the given object is in the scope of this trigger
 	 * and can potentially be the subject of notifications
 	 *
@@ -238,7 +258,8 @@ abstract class TriggerOnObject extends Trigger
 	 * @param $iObjectId
 	 * @param array $aChanges
 	 *
-	 * @return bool
+	 * @return bool True if the object of ID $iObjectId is within the scope of the OQL defined by the "filter" attribute
+	 *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
@@ -247,20 +268,48 @@ abstract class TriggerOnObject extends Trigger
 	 */
 	public function IsTargetObject($iObjectId, $aChanges = array())
 	{
-		$sFilter = trim($this->Get('filter'));
-		if (strlen($sFilter) > 0)
-		{
+		$sFilter = trim($this->Get('filter') ?? '');
+		if (strlen($sFilter) > 0) {
 			$oSearch = DBObjectSearch::FromOQL($sFilter);
 			$oSearch->AddCondition('id', $iObjectId, '=');
+			$oSearch->AllowAllData();
 			$oSet = new DBObjectSet($oSearch);
 			$bRet = ($oSet->Count() > 0);
-		}
-		else
-		{
+		} else {
 			$bRet = true;
 		}
 
 		return $bRet;
+	}
+
+	/**
+	 * @param Exception $oException
+	 * @param \DBObject $oObject
+	 *
+	 * @return void
+	 *
+	 * @uses \IssueLog::Error()
+	 *
+	 * @since 2.7.9 3.0.3 3.1.0 N°5893
+	 */
+	public function LogException($oException, $oObject)
+	{
+		$sObjectKey = $oObject->GetKey(); // if object wasn't persisted yet, then we'll have a negative value
+
+		$aContext = [
+			'exception.class'      => get_class($oException),
+			'exception.message'    => $oException->getMessage(),
+			'trigger.class'        => get_class($this),
+			'trigger.id'           => $this->GetKey(),
+			'trigger.friendlyname' => $this->GetRawName(),
+			'object.class'         => get_class($oObject),
+			'object.id'            => $sObjectKey,
+			'object.friendlyname'  => $oObject->GetRawName(),
+			'current_user'         => UserRights::GetUser(),
+			'exception.stack'      => $oException->getTraceAsString(),
+		];
+
+		IssueLog::Error('A trigger did throw an exception', null, $aContext);
 	}
 }
 
@@ -558,7 +607,7 @@ class TriggerOnObjectUpdate extends TriggerOnObject
  * Class TriggerOnObjectMention
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.7.0
+ * @since 3.0.0
  */
 class TriggerOnObjectMention extends TriggerOnObject
 {
@@ -582,39 +631,87 @@ class TriggerOnObjectMention extends TriggerOnObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeOQL("mentioned_filter", array("allowed_values" => null, "sql" => "mentioned_filter", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'mentioned_filter', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
 	}
 
-	// TODO 3.0.0: Clean this up. What was the intention?
-//	public function IsTargetObject($iObjectId, $aChanges = array())
-//	{
-//		if (!parent::IsTargetObject($iObjectId, $aChanges))
-//		{
-//			return false;
-//		}
-//
-//		// Check the attribute
-//		$oAttCodeSet = $this->Get('target_attcodes');
-//		$aAttCodes = $oAttCodeSet->GetValues();
-//		if (empty($aAttCodes))
-//		{
-//			return true;
-//		}
-//
-//		foreach($aAttCodes as $sAttCode)
-//		{
-//			if (array_key_exists($sAttCode, $aChanges))
-//			{
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
+	/**
+	 * @param \DBObject $oObject
+	 *
+	 * @return bool True if $oObject is within the scope of the OQL defined by the "mentioned_filter" attribute OR if no mentioned_filter defined. Otherwise, returns false.
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function IsMentionedObjectInScope(DBObject $oObject)
+	{
+		$sFilter = trim($this->Get('mentioned_filter'));
+		if (strlen($sFilter) > 0)
+		{
+			$oSearch = DBObjectSearch::FromOQL($sFilter);
+			$sSearchClass = $oSearch->GetClass();
+
+			// If filter not on current object class (or descendants), consider it as not in scope
+			if (is_a($oObject, $sSearchClass, true) === false) {
+				return false;
+			}
+
+			$oSearch->AddCondition('id', $oObject->GetKey(), '=');
+			if (MetaModel::IsAbstract($oSearch->GetClass())) {
+				$oSearch->AddCondition('finalclass', get_class($oObject), '=');
+			}
+
+			$aParams = $oObject->ToArgs('this');
+			$oSet = new DBObjectSet($oSearch, [], $aParams);
+			$bRet = $oSet->CountExceeds(0);
+		}
+		else
+		{
+			$bRet = true;
+		}
+
+		return $bRet;
+	}
+}
+
+/**
+ * Class TriggerOnAttributeBlobDownload
+ *
+ * @since 3.1.0
+ */
+class TriggerOnAttributeBlobDownload extends TriggerOnObject
+{
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "grant_by_profile,core/cmdb,application",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"state_attcode" => "",
+			"reconc_keys" => array('description'),
+			"db_table" => "priv_trigger_onattblobdownload",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+	}
 }
 
 /**
@@ -630,15 +727,26 @@ class lnkTriggerAction extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb,application",
-			"key_type" => "autoincrement",
-			"name_attcode" => "",
-			"state_attcode" => "",
-			"reconc_keys" => array('action_id', 'trigger_id'),
-			"db_table" => "priv_link_action_trigger",
-			"db_key_field" => "link_id",
+			"category"            => "grant_by_profile,core/cmdb,application",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('action_id', 'trigger_id'),
+			"db_table"            => "priv_link_action_trigger",
+			"db_key_field"        => "link_id",
 			"db_finalclass_field" => "",
-			"is_link" => true,
+			"is_link"             => true,
+			'uniqueness_rules'    => array(
+				'no_duplicate' => array(
+					'attributes'  => array(
+						0 => 'action_id',
+						1 => 'trigger_id',
+					),
+					'filter'      => '',
+					'disabled'    => false,
+					'is_blocking' => true,
+				),
+			),
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("action_id", array("targetclass" => "Action", "jointype" => '', "allowed_values" => null, "sql" => "action_id", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array())));

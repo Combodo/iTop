@@ -2,8 +2,9 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  *
  * This file is part of iTop.
  *
@@ -20,12 +21,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 	'bkp-backup-running' => 'Un respaldo está en ejecuión.  Por favor espere...',
 	'bkp-restore-running' => 'Una restauración está en ejecución. Por favor espere...',
 
-	'Menu:BackupStatus' => 'Respaldos Programados',
+	'Menu:BackupStatus' => 'Respaldos programados',
 	'bkp-status-title' => 'Respaldos Programados',
 	'bkp-status-checks' => 'Configuraciones y verificaciones',
 	'bkp-mysqldump-ok' => 'mysqldump está presente: %1$s',
@@ -45,10 +46,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'bkp-table-size+' => '',
 	'bkp-table-actions' => 'Acciones',
 	'bkp-table-actions+' => '',
-	'bkp-status-backups-auto' => 'Respaldos Programandos',
+	'bkp-status-backups-auto' => 'Respaldos Programados',
 	'bkp-status-backups-manual' => 'Respaldos Manuales',
 	'bkp-status-backups-none' => 'No hay respaldos',
 	'bkp-next-backup' => 'El siguiente respaldo ocurrirá el <b>%1$s</b> (%2$s) a %3$s',
+	'bkp-next-backup-unknown' => 'El siguiente respaldo <b>no está programado</b> todavía.',
 	'bkp-button-backup-now' => 'Respaldar Ahora!',
 	'bkp-button-restore-now' => 'Restaurar!',
 	'bkp-confirm-backup' => 'Por favor confirme que requiere realizar el respaldo en este momento.',

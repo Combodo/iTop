@@ -1,0 +1,17 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Skeleton palette */
+/* - Colors used by skeletons svg to display placeholders */
+
+$ibo-skeleton-start-color: $ibo-color-grey-200 !default;
+$ibo-skeleton-stop-color: $ibo-color-blue-grey-100 !default;
+
+/* CSS variables */
+/* Skeleton CSS3 variables are not ibo prefixed as they are not iTop backoffice exclusives*/
+:root {
+  --skeleton-start-color: #{$ibo-skeleton-start-color};
+  --skeleton-stop-color: #{$ibo-skeleton-stop-color};
+}

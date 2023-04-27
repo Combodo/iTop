@@ -3,13 +3,13 @@
 <Software alias="Software" id="2">
 <name>MySql</name>
 <vendor>Oracle</vendor>
-<version>5.3</version>
+<version>8</version>
 <type>DBServer</type>
 </Software>
 <Software alias="Software" id="1">
 <name>Oracle DB engine</name>
 <vendor>Oracle</vendor>
-<version>11i</version>
+<version>19c</version>
 <type>DBServer</type>
 </Software>
 </Set>

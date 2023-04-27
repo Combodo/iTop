@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2010-2021 Combodo SARL
+ * Copyright (c) 2010-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,9 +19,47 @@
  *
  */
 
-class MissingDependencyException extends Exception
+class MissingDependencyException extends CoreException
 {
+	/**
+	 * @see \ModuleDiscovery::OrderModulesByDependencies property init
+	 * @var array<string, array<string>>
+	 *     module id as key
+	 *     another array as value, containing : 'module' with module info, 'dependencies' with missing dependencies
+	 */
 	public $aModulesInfo;
+
+	/**
+	 * @return string HTML to print to the user the modules impacted
+	 * @since 2.7.7 3.0.2 3.1.0 N°5090 PR #280
+	 */
+	public function getHtmlDesc($sHighlightHtmlBegin = null, $sHighlightHtmlEnd = null)
+	{
+		$sErrorMessage = <<<HTML
+<p>The following modules have unmet dependencies:</p>
+<ul>
+HTML;
+		foreach ($this->aModulesInfo as $sModuleId => $aModuleErrors) {
+			$sModuleLabel = $aModuleErrors['module']['label'];
+			$aModuleMissingDependencies = $aModuleErrors['dependencies'];
+			$sErrorMessage .= <<<HTML
+	<li><strong>{$sModuleLabel}</strong> ({$sModuleId}):
+		<ul>
+HTML;
+
+			foreach ($aModuleMissingDependencies as $sMissingModule) {
+				$sErrorMessage .= "<li>{$sMissingModule}</li>";
+			}
+			$sErrorMessage .= <<<HTML
+		</ul>
+	</li>
+HTML;
+
+		}
+		$sErrorMessage .= '</ul>';
+
+		return $sErrorMessage;
+	}
 }
 
 class ModuleDiscovery
@@ -223,10 +261,10 @@ class ModuleDiscovery
 			foreach($aDependencies as $sId => $aDeps)
 			{
 				$aModule = $aModules[$sId];
-				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on ".implode(' + ', $aDeps);
+				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on: ".implode(' + ', $aDeps);
 				$aModulesInfo[$sId] = array('module' => $aModule, 'dependencies' => $aDeps);
 			}
-			$sMessage = "The following modules have unmet dependencies: ".implode(', ', $aModuleDeps);
+			$sMessage = "The following modules have unmet dependencies:\n".implode(",\n", $aModuleDeps);
 			$oException = new MissingDependencyException($sMessage);
 			$oException->aModulesInfo = $aModulesInfo;
 			throw $oException;

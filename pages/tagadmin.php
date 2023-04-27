@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,7 +19,6 @@
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/itopwebpage.class.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 require_once(APPROOT.'application/loginwebpage.class.inc.php');
 
@@ -38,7 +37,6 @@ try
 	$oP->add_linked_script("../js/forms-json-utils.js");
 	$oP->add_linked_script("../js/wizardhelper.js");
 	$oP->add_linked_script("../js/wizard.utils.js");
-	$oP->add_linked_script("../js/linkswidget.js");
 	$oP->add_linked_script("../js/extkeywidget.js");
 	$oP->add_linked_script("../js/jquery.blockUI.js");
 
@@ -100,6 +98,8 @@ try
 
 	if (!empty($oFilter))
 	{
+		$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
+
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$aExtraParams = $oAppContext->GetAsHash();

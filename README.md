@@ -1,13 +1,11 @@
 <p align="center"><a href="https://www.combodo.com/itop-193" target="_blank">
-    <img src="https://www.combodo.com/logos/logo-itop.svg">
+    <img src="https://www.combodo.com/logos/logo-itop-baseline.svg" width=350>
 </a></p>
 
 
-# iTop - ITSM & CMDB
- 
-iTop stands for *IT Operations Portal*.
-It is a complete open source, ITIL, web based service management tool including a fully customizable CMDB, a helpdesk system and a document management tool. 
-iTop also offers mass import tools and web services to integrate with your IT
+iTop stands for IT Operations Portal. It is a complete open source and web-based IT service management platform, including a fully customizable CMDB, a helpdesk system, and a document management tool. It is ITIL compliant and easily customizable and extensible thanks to a high number of add-ons and web services to integrate with your IT.
+
+iTop also offers mass import tools to help you become even more efficient.
 
 ## Features
 - Fully configurable [Configuration Management (CMDB)][10]
@@ -39,17 +37,19 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [iTop Forums][1]: community support
  - [iTop Tickets][2]: for feature requests and bug reports
  - [Releases download][3]
- - [Software requirements][4]
+ - [iTop requirements][4]
  - [Documentation][5] covering both iTop and its official extensions
  - [iTop Hub][6] : discover and install extensions !
+ - [iTop versions history][7]
 
 
 [1]: https://sourceforge.net/p/itop/discussion/
 [2]: https://sourceforge.net/p/itop/tickets/
 [3]: https://sourceforge.net/projects/itop/files/itop/
-[4]: https://www.itophub.io/wiki/page?id=latest:install:upgrading_itop
+[4]: https://www.itophub.io/wiki/page?id=latest:install:requirements
 [5]: https://www.itophub.io/wiki
 [6]: https://store.itophub.io/en_US/
+[7]: .doc/itop-version-history.md
 
 [10]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#configuration_management_cmdb
 [11]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#ticketing
@@ -65,58 +65,69 @@ iTop also offers mass import tools and web services to integrate with your IT
 
 ## About Us
 
-iTop development is sponsored, led and supported by [Combodo][0].
+iTop development is sponsored, led, and supported by [Combodo][0].
 
 [0]: https://www.combodo.com
 
 
 ## Contributors
 
-We would like to give a special thank you to the people from the community who contributed to this project, including:
+We would like to give a special thank you 🤗 to the people from the community who contributed to this project, including:
 
 ### Names
- - Alves, David
- - Beck, Pedro
- - Bilger, Jean-François
- - Bostoen, Jeffrey (a.k.a @jbostoen)
- - Cardoso, Anderson
- - Cassaro, Bruno
- - Casteleyn, Thomas (a.k.a @Hipska)
- - Castro, Randall Badilla
- - Colantoni, Maria Laura
- - Couronné, Guy
- - Dvořák, Lukáš
- - Goethals, Stefan
- - Gumble, David
- - Hippler, Lars
- - Khamit, Shamil
- - Kincel, Martin
- - Konečný, Kamil
- - Kunin, Vladimir
- - Lassiter, Dennis
- - Lazcano, Federico
- - Lucas, Jonathan
- - Malik, Remie
- - Mindêllo de Andrade, Lucas (a.k.a @rokam)
- - Rosenke, Stephan
- - Seki, Shoji
- - Shilov, Vladimir
- - Tulio, Marco
- - Turrubiates, Miguel
+
+- Alves, David
+- Beck, Pedro
+- Beer, Christian (a.k.a [@ChristianBeer](https://www.github.com/ChristianBeer))
+- Bilger, Jean-François
+- Bostoen, Jeffrey (a.k.a [@jbostoen](https://www.github.com/jbostoen))
+- Cardoso, Anderson
+- Cassaro, Bruno
+- Casteleyn, Thomas (a.k.a [@Hipska](https://www.github.com/Hipska))
+- Castro, Randall Badilla
+- Colantoni, Maria Laura
+- Couronné, Guy
+- Dvořák, Lukáš
+- Goethals, Stefan
+- Gumble, David
+- Kaltefleiter, Lars (a.k.a [@larhip](https://www.github.com/larhip))
+- Khamit, Shamil
+- Kincel, Martin
+- Konečný, Kamil
+- Kunin, Vladimir
+- Lassiter, Dennis
+- Lazcano, Federico
+- Lucas, Jonathan
+- Malik, Remie
+- Mindêllo de Andrade, Lucas (a.k.a [@rokam](https://www.github.com/rokam))
+- Mozart de Oliveira, Eduardo (a.k.a [@eduardomozart](https://github.com/eduardomozart))
+- Raenker, Martin
+- Roháč, Richard (a.k.a [@RohacRichard](https://github.com/RohacRichard))
+- Rosenke, Stephan
+- Rudner, Björn (a.k.a [@rudnerbjoern](https://github.com/rudnerbjoern))
+- Seki, Shoji
+- Shilov, Vladimir
+- Stukalov, Ilya (a.k.a [@ilya](https://www.github.com/ilya)-stukalov)
+- Tulio, Marco
+- Turrubiates, Miguel
 
 ### Aliases
- - chifu1234
- - cprobst
- - Karkoff1212
- - larhip
- - Laura
- - Purple Grape
- - Schlobinux
- - theBigOne
- - ulmerspatz
+
+- chifu1234
+- cprobst
+- DudekArtur
+- Karkoff1212
+- Laura
+- nv35
+- Purple Grape
+- Schlobinux
+- theBigOne
+- ulmerspatz
 
 ### Companies
- - Hardis
- - ITOMIG
- - Pimkie
+
+- [Hardis](https://www.hardis-group.com/)
+- [ITOMIG](https://www.itomig.de/)
+- [Pimkie](https://www.pimkie.com/)
+- [Super-Visions](https://www.super-visions.com/)
 

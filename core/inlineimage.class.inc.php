@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -198,31 +198,29 @@ class InlineImage extends DBObject
 			$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
 			$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
-            $aInlineImagesId = array();
-			while($oInlineImage = $oSet->Fetch())
-			{
-                $aInlineImagesId[] = $oInlineImage->GetKey();
+			$aInlineImagesId = array();
+			while ($oInlineImage = $oSet->Fetch()) {
+				$aInlineImagesId[] = $oInlineImage->GetKey();
 				$oInlineImage->SetItem($oObject);
 				$oInlineImage->Set('temp_id', '');
 				$oInlineImage->DBUpdate();
 			}
-            IssueLog::Trace('FinalizeInlineImages (see $aInlineImagesId for the id list)', 'InlineImage', array(
-                '$sObjectClass' => get_class($oObject),
-                '$sTransactionId' => $iTransactionId,
-                '$sTempId' => $sTempId,
-                '$aInlineImagesId' => $aInlineImagesId,
-                '$sUser' => UserRights::GetUser(),
-                'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-            ));
+			IssueLog::Trace('FinalizeInlineImages (see $aInlineImagesId for the id list)', LogChannels::INLINE_IMAGE, array(
+				'$sObjectClass' => get_class($oObject),
+				'$sTransactionId' => $iTransactionId,
+				'$sTempId' => $sTempId,
+				'$aInlineImagesId' => $aInlineImagesId,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+			));
 		}
-        else
-        {
-            IssueLog::Trace('FinalizeInlineImages "error" $iTransactionId is null', 'InlineImage', array(
-                '$sObjectClass' => get_class($oObject),
-                '$sTransactionId' => $iTransactionId,
-                '$sUser' => UserRights::GetUser(),
-                'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-            ));
+        else {
+	        IssueLog::Trace('FinalizeInlineImages "error" $iTransactionId is null', LogChannels::INLINE_IMAGE, array(
+		        '$sObjectClass' => get_class($oObject),
+		        '$sTransactionId' => $iTransactionId,
+		        '$sUser' => UserRights::GetUser(),
+		        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+	        ));
         }
 	}
 
@@ -231,7 +229,7 @@ class InlineImage extends DBObject
 	 *
 	 * @param string $sTempId
 	 *
-	 * @return void
+	 * @return bool True if cleaning was successful, false if anything aborted it
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
@@ -241,8 +239,19 @@ class InlineImage extends DBObject
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public static function OnFormCancel($sTempId)
+	public static function OnFormCancel($sTempId): bool
 	{
+		// Protection against unfortunate massive delete of inline images when a null temp ID is passed
+		if (utils::IsNullOrEmptyString($sTempId)) {
+			IssueLog::Trace('OnFormCancel "error" $sTempId is null or empty', LogChannels::INLINE_IMAGE, array(
+				'$sTempId' => $sTempId,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+			));
+
+			return false;
+		}
+
 		// Delete all "pending" InlineImages for this form
 		$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
 		$oSearch = DBObjectSearch::FromOQL($sOQL);
@@ -253,12 +262,14 @@ class InlineImage extends DBObject
             $aInlineImagesId[] = $oInlineImage->GetKey();
 			$oInlineImage->DBDelete();
 		}
-        IssueLog::Trace('OnFormCancel', 'InlineImage', array(
-            '$sTempId' => $sTempId,
-            '$aInlineImagesId' => $aInlineImagesId,
-            '$sUser' => UserRights::GetUser(),
-            'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-        ));
+		IssueLog::Trace('OnFormCancel', LogChannels::INLINE_IMAGE, array(
+			'$sTempId' => $sTempId,
+			'$aInlineImagesId' => $aInlineImagesId,
+			'$sUser' => UserRights::GetUser(),
+			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+		));
+
+		return true;
 	}
 
 	/**
@@ -284,13 +295,12 @@ class InlineImage extends DBObject
 			{
 				$sImgTag = $aImgInfo[0][0];
 				$sSecret = '';
-				if (preg_match('/data-img-secret="([0-9a-f]+)"/', $sImgTag, $aSecretMatches))
-				{
+				if (preg_match('/data-img-secret="([0-9a-f]+)"/', $sImgTag, $aSecretMatches)) {
 					$sSecret = '&s='.$aSecretMatches[1];
 				}
 				$sAttId = $aImgInfo[2][0];
-	
-				$sNewImgTag = preg_replace('/src="[^"]+"/', 'src="'.htmlentities($sUrl.$sAttId.$sSecret, ENT_QUOTES, 'UTF-8').'"', $sImgTag); // preserve other attributes, must convert & to &amp; to be idempotent with CKEditor
+
+				$sNewImgTag = preg_replace('/src="[^"]+"/', 'src="'.utils::EscapeHtml($sUrl.$sAttId.$sSecret).'"', $sImgTag); // preserve other attributes, must convert & to &amp; to be idempotent with CKEditor
 				$aNeedles[] = $sImgTag;
 				$aReplacements[] = $sNewImgTag;
 			}
@@ -351,13 +361,8 @@ class InlineImage extends DBObject
 		{
 			$sJS =
 <<<JS
-$('img[data-img-id]').each(function() {
-	if ($(this).width() > {$iMaxWidth})
-	{
-		$(this).css({'max-width': '{$iMaxWidth}px', width: '', height: '', 'max-height': ''});
-	}
-	$(this).addClass('inline-image').attr('href', $(this).attr('src'));
-}).magnificPopup({type: 'image', closeOnContentClick: true });
+CombodoInlineImage.SetMaxWidth('{$iMaxWidth}');
+CombodoInlineImage.FixImagesWidth();
 JS
 			;
 		}
@@ -530,15 +535,13 @@ JS
 		$iObjKey = $oObject->GetKey();
 
 		$sAbsoluteUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
-		$sToggleFullScreen = htmlentities(Dict::S('UI:ToggleFullScreen'), ENT_QUOTES, 'UTF-8');
-		
+		$sToggleFullScreen = utils::EscapeHtml(Dict::S('UI:ToggleFullScreen'));
+
 		return
 			<<<JS
 		// Hook the file upload of all CKEditor instances
 		$('.htmlEditor').each(function() {
 			var oEditor = $(this).ckeditorGet();
-			oEditor.config.extraPlugins = 'font,uploadimage';
-			oEditor.config.uploadUrl = '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php';
 			oEditor.config.filebrowserBrowseUrl = '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php?operation=cke_browse&temp_id=$sTempId&obj_class=$sObjClass&obj_key=$iObjKey';
 			oEditor.on( 'fileUploadResponse', function( evt ) {
 				var fileLoader = evt.data.fileLoader;
@@ -579,7 +582,7 @@ JS
 			oEditor.on( 'instanceReady', function() {
 				if(!CKEDITOR.env.iOS && $('#'+oEditor.id+'_toolbox .ibo-vendors-ckeditor--toolbar-fullscreen-button').length == 0)
 				{
-					$('#'+oEditor.id+'_toolbox').append('<span class="ibo-vendors-ckeditor--toolbar-fullscreen-button" data-role="ibo-vendors-ckeditor--toolbar-fullscreen-button" title="$sToggleFullScreen" style="background-image:url(\\'$sAbsoluteUrlAppRoot/images/full-screen.png\\')">&nbsp;</span>');
+					$('#'+oEditor.id+'_toolbox').append('<span class="ibo-vendors-ckeditor--toolbar-fullscreen-button editor-fullscreen-button" data-role="ibo-vendors-ckeditor--toolbar-fullscreen-button" title="$sToggleFullScreen">&nbsp;</span>');
 					$('#'+oEditor.id+'_toolbox .ibo-vendors-ckeditor--toolbar-fullscreen-button').on('click', function() {
 							oEditor.execCommand('maximize');
 							if ($(this).closest('.cke_maximized').length != 0)
@@ -608,17 +611,17 @@ JS
 	 */
     protected function AfterInsert()
     {
-        IssueLog::Trace(__METHOD__, 'InlineImage', array(
-            'id' => $this->GetKey(),
-            'expire' => $this->Get('expire'),
-            'temp_id' => $this->Get('temp_id'),
-            'item_class' => $this->Get('item_class'),
-            'item_id' => $this->Get('item_id'),
-            'item_org_id' => $this->Get('item_org_id'),
-            'secret' => $this->Get('secret'),
-            'user' => $sUser = UserRights::GetUser(),
-            'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-            'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+	    IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, array(
+		    'id' => $this->GetKey(),
+		    'expire' => $this->Get('expire'),
+		    'temp_id' => $this->Get('temp_id'),
+		    'item_class' => $this->Get('item_class'),
+		    'item_id' => $this->Get('item_id'),
+		    'item_org_id' => $this->Get('item_org_id'),
+		    'secret' => $this->Get('secret'),
+		    'user' => $sUser = UserRights::GetUser(),
+		    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+		    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
         ));
 
 	    parent::AfterInsert();
@@ -629,17 +632,17 @@ JS
 	 */
     protected function AfterUpdate()
     {
-        IssueLog::Trace(__METHOD__, 'InlineImage', array(
-            'id' => $this->GetKey(),
-            'expire' => $this->Get('expire'),
-            'temp_id' => $this->Get('temp_id'),
-            'item_class' => $this->Get('item_class'),
-            'item_id' => $this->Get('item_id'),
-            'item_org_id' => $this->Get('item_org_id'),
-            'secret' => $this->Get('secret'),
-            'user' => $sUser = UserRights::GetUser(),
-            'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-            'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+	    IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, array(
+		    'id' => $this->GetKey(),
+		    'expire' => $this->Get('expire'),
+		    'temp_id' => $this->Get('temp_id'),
+		    'item_class' => $this->Get('item_class'),
+		    'item_id' => $this->Get('item_id'),
+		    'item_org_id' => $this->Get('item_org_id'),
+		    'secret' => $this->Get('secret'),
+		    'user' => $sUser = UserRights::GetUser(),
+		    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+		    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
         ));
 
 	    parent::AfterUpdate();
@@ -650,17 +653,17 @@ JS
 	 */
 	protected function AfterDelete()
     {
-        IssueLog::Trace(__METHOD__, 'InlineImage', array(
-            'id' => $this->GetKey(),
-            'expire' => $this->Get('expire'),
-            'temp_id' => $this->Get('temp_id'),
-            'item_class' => $this->Get('item_class'),
-            'item_id' => $this->Get('item_id'),
-            'item_org_id' => $this->Get('item_org_id'),
-            'secret' => $this->Get('secret'),
-            'user' => $sUser = UserRights::GetUser(),
-            'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-            'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+	    IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, array(
+		    'id' => $this->GetKey(),
+		    'expire' => $this->Get('expire'),
+		    'temp_id' => $this->Get('temp_id'),
+		    'item_class' => $this->Get('item_class'),
+		    'item_id' => $this->Get('item_id'),
+		    'item_org_id' => $this->Get('item_org_id'),
+		    'secret' => $this->Get('secret'),
+		    'user' => $sUser = UserRights::GetUser(),
+		    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+		    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
         ));
 
 	    parent::AfterDelete();

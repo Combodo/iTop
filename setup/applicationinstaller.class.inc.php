@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -30,7 +30,7 @@ require_once(APPROOT.'setup/backup.class.inc.php');
  * while displaying a progress bar, or in an unattended manner
  * (for example from the command line), to run all the steps
  * in one go.
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -165,14 +165,17 @@ class ApplicationInstaller
 	{
 		$sTargetEnvironment = $this->GetTargetEnv();
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
-		try
-		{
-			return new Config($sConfigFile);
+		try {
+			$oConfig = new Config($sConfigFile);
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			return null;
 		}
+
+		$aParamValues = $this->oParams->GetParamForConfigArray();
+		$oConfig->UpdateFromParams($aParamValues);
+
+		return $oConfig;
 	}
 
 	/**
@@ -274,23 +277,21 @@ class ApplicationInstaller
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$sTargetEnvironment = $this->GetTargetEnv();
 					$sTargetDir = $this->GetTargetDir();
-					$bUseSymbolicLinks = false;
 					$aMiscOptions = $this->oParams->Get('options', array());
-					if (isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])
-					{
-						if (function_exists('symlink'))
-						{
+
+					$bUseSymbolicLinks = null;
+					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {
+						if (function_exists('symlink')) {
 							$bUseSymbolicLinks = true;
 							SetupLog::Info("Using symbolic links instead of copying data model files (for developers only!)");
-						}
-						else
-						{
+						} else {
 							SetupLog::Info("Symbolic links (function symlinks) does not seem to be supported on this platform (OS/PHP version).");
 						}
 					}
 
+					$aParamValues = $this->oParams->GetParamForConfigArray();
 					self::DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sTargetEnvironment,
-						$bUseSymbolicLinks);
+						$bUseSymbolicLinks, $aParamValues);
 
 					$aResult = array(
 						'status' => self::OK,
@@ -504,8 +505,7 @@ class ApplicationInstaller
 	{
 		$oBackup = new SetupDBBackup($oConfig);
 		$sTargetFile = $oBackup->MakeName($sBackupFileFormat);
-		if (!empty($sMySQLBinDir))
-		{
+		if (!empty($sMySQLBinDir)) {
 			$oBackup->SetMySQLBinDir($sMySQLBinDir);
 		}
 
@@ -513,8 +513,23 @@ class ApplicationInstaller
 		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
 	}
 
-	
-	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sEnvironment, $bUseSymbolicLinks = false)
+
+	/**
+	 * @param array $aSelectedModules
+	 * @param string $sSourceDir
+	 * @param string $sExtensionDir
+	 * @param string $sTargetDir
+	 * @param string $sEnvironment
+	 * @param boolean $bUseSymbolicLinks
+	 * @param array $aParamValues
+	 *
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 *
+	 * @since 3.1.0 N°2013 added the aParamValues param
+	 */
+	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sEnvironment, $bUseSymbolicLinks = null, $aParamValues = [])
 	{
 		SetupLog::Info("Compiling data model.");
 
@@ -522,10 +537,9 @@ class ApplicationInstaller
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
 		require_once(APPROOT.'setup/compiler.class.inc.php');
 
-		if (empty($sSourceDir) || empty($sTargetDir))
-		{
+		if (empty($sSourceDir) || empty($sTargetDir)) {
 			throw new Exception("missing parameter source_dir and/or target_dir");
-		}		
+		}
 
 		$sSourcePath = APPROOT.$sSourceDir;
 		$aDirsToScan = array($sSourcePath);
@@ -551,14 +565,16 @@ class ApplicationInstaller
 		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
 		{
 			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
-			if (is_file($sConfigFilePath))
-			{
+			if (is_file($sConfigFilePath)) {
 				$oConfig = new Config($sConfigFilePath);
-			}
-			else
-			{
+			} else {
 				$oConfig = null;
 			}
+
+			if (false === is_null($oConfig)) {
+				$oConfig->UpdateFromParams($aParamValues);
+			}
+
 			SetupUtils::EnterMaintenanceMode($oConfig);
 		}
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
@@ -194,7 +194,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Attribute:related_request_list' => 'Child requests~~',
 	'Class:Incident/Attribute:related_request_list+' => '~~',
 	'Class:Incident/Attribute:child_incidents_list' => '子インシデント',
-	'Class:Incident/Attribute:child_incidents_list+' => '',
+	'Class:Incident/Attribute:child_incidents_list+' => 'All the child incidents related to this incident~~',
 	'Class:Incident/Attribute:public_log' => 'パブリックログ',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'ユーザ満足度',
