@@ -2212,7 +2212,7 @@ abstract class DBObject implements iDisplay
 						$aPlaceholdersData[] = MetaModel::GetObject($oAttDef->GetTargetClass(), $this->Get($sAttCode))->Get('friendlyname');
 					} else {
 						$aPlaceholdersData[] = $oAttDef->GetLabel();
-						$aPlaceholdersData[] = $oAttDef->GetAsHTML($this->Get($sAttCode));
+						$aPlaceholdersData[] = $oAttDef->GetLabel($this->Get($sAttCode));
 					}
 				}
 			}
