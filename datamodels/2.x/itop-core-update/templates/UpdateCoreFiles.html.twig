@@ -54,7 +54,7 @@
         {% UIToolbar ForButton {'AddCSSClass':'ibo-setup--wizard--buttons-container'} %}
                 {% UIContentBlock Standard {sId:'run_setup',aContainerClasses:['ibo-update-core--run-setup'], IsHidden:true} %}
                     {% UIForm Standard {CSSClasses:['form-inline']} %}
-                        {% UIInput ForHidden {sName:'operation', sValue:'RunSetup'} %}
+                        {% UIInput ForHidden {sName:'route', sValue:'core_update.run_setup'} %}
                         {% UIInput ForHidden {sName:'authent', sValue:sSetupToken} %}
                         {% UIInput ForHidden {sName:'', sValue:''} %}
                         {% UIButton ForPrimaryAction {sLabel:'iTopUpdate:UI:RunSetup'|dict_s, sId:'run_setup', bIsSubmit:true, IsDisabled:false} %}

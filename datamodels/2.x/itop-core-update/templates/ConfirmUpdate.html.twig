@@ -39,7 +39,7 @@
             {% UIToolbarSpacer Standard {} %}
             {% UIForm Standard {'CSSClasses':['form-inline']} %}
                 {% UIButton ForPrimaryAction {'sId':'do-update', 'sLabel':'iTopUpdate:UI:DoUpdate'|dict_s, 'bIsSubmit':true} %}
-                {% UIInput ForHidden {'sName':'operation', 'sValue':'UpdateCoreFiles'} %}
+                {% UIInput ForHidden {'sName':'route', 'sValue':'core_update.update_core_files'} %}
                 {% UIInput ForHidden {'sName':'transaction_id', 'sValue':sTransactionId} %}
                 {% UIInput ForHidden {'sName':'filename', 'sValue':sName} %}
                 {% UIInput ForHidden {'sName':'doBackup', 'sValue':bDoBackup} %}

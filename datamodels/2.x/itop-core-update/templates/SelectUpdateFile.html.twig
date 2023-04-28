@@ -45,7 +45,7 @@
 
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:SelectUpdateFile'|dict_s, 'sId':'form-update-outer'} %}
             {% UIForm Standard {} %}
-                {% UIInput ForHidden {'sName':'operation', 'sValue':'ConfirmUpdate'} %}
+                {% UIInput ForHidden {'sName':'route', 'sValue':'core_update.confirm_update'} %}
                 {% UIInput ForHidden {'sName':'transaction_id', 'sValue':sTransactionId} %}
 
                 {% UIAlert ForFailure {'sId':'header-file-size', 'IsHidden':true} %}

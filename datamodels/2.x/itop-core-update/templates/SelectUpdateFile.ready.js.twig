@@ -7,7 +7,8 @@ $.ajax({
     method: "POST",
     url: "{{ sAjaxURL|raw }}",
     data: {
-        "operation": "CanUpdateCore"
+        route: "core_update_ajax.can_update_core",
+        maintenance: true
     },
     dataType: "json",
     success: function (data) {
@@ -39,7 +40,8 @@ var oGetItopDiskSpace = $.ajax({
     method: "POST",
     url: "{{ sAjaxURL|raw }}",
     data: {
-        "operation": "GetItopDiskSpace"
+        route: "core_update_ajax.get_itop_disk_space",
+        maintenance: true
     },
     dataType: "json",
     success: function(data)
@@ -53,7 +55,8 @@ var oGetDBDiskSpace = $.ajax({
     method: "POST",
     url: "{{ sAjaxURL|raw }}",
     data: {
-        "operation": "GetDBDiskSpace"
+        route: "core_update_ajax.get_d_b_disk_space",
+        maintenance: true
     },
     dataType: "json",
     success: function(data)

@@ -1,7 +1,7 @@
 <?php
 /**
- *  @copyright   Copyright (C) 2010-2023 Combodo SARL
- *  @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\CoreUpdate\Controller;
@@ -9,6 +9,7 @@ namespace Combodo\iTop\CoreUpdate\Controller;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 use Combodo\iTop\DBTools\Service\DBToolsUtils;
+use Combodo\iTop\Service\Router\Router;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
@@ -18,13 +19,26 @@ use utils;
 
 class UpdateController extends Controller
 {
+	public const ROUTE_NAMESPACE = 'core_update';
+
+	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
+	{
+		$sModuleName = 'itop-core-update';
+		$sViewPath = MODULESROOT.'itop-core-update/templates';
+		parent::__construct($sViewPath, $sModuleName, $aAdditionalPaths);
+
+		// Previously in index.php
+		$this->DisableInDemoMode();
+		$this->AllowOnlyAdmin();
+		$this->CheckAccess();
+	}
+
 	public function OperationSelectUpdateFile()
 	{
 		$sTransactionId = utils::GetNewTransactionId();
 		$aParams = [];
 		$aParams['sTransactionId'] = $sTransactionId;
-		//$aParams['aPreviousInstall'] = $this->GetPreviousInstallations();
-		$aParams['sAjaxURL'] = utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php', array('maintenance' => 'true'));
+		$aParams['sAjaxURL'] = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php';
 		$aParams['iDiskFreeSpace'] = disk_free_space(APPROOT);
 		$aParams['sDiskFreeSpace'] = utils::BytesToFriendlyFormat($aParams['iDiskFreeSpace']);
 		$aParams['iFileUploadMaxSize'] = $this->GetFileUploadMaxSize();
@@ -46,15 +60,11 @@ class UpdateController extends Controller
 		}
 		$aParams['bIsSetupLaunchButtonEnabled'] = $bIsSetupLaunchButtonEnabled;
 		if ($bIsSetupLaunchButtonEnabled) {
-			$sLaunchSetupUrl = utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php',
-				[
-					'operation'      => 'LaunchSetup',
-					'transaction_id' => $sTransactionId,
-				]);;
+			$sLaunchSetupUrl = Router::GetInstance()->GenerateUrl('core_update_ajax.launch_setup', ['transaction_id' => $sTransactionId]);
 			$aParams['sLaunchSetupUrl'] = $sLaunchSetupUrl;
 		}
 
-		$this->DisplayPage($aParams);
+		$this->DisplayPage($aParams, 'SelectUpdateFile');
 	}
 
 	/**
@@ -63,108 +73,94 @@ class UpdateController extends Controller
 	public function OperationConfirmUpdate()
 	{
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
-		if (!utils::IsTransactionValid($sTransactionId))
-		{
+		if (!utils::IsTransactionValid($sTransactionId)) {
 			throw new Exception(Dict::S('iTopUpdate:Error:InvalidToken'));
 		}
 
 		$bDoBackup = utils::ReadPostedParam('doBackup', 0, 'integer') == 1;
 		$bDoFilesArchive = utils::ReadPostedParam('doFilesArchive', 0, 'integer') == 1;
 
-        $sNewVersion = null;
 		$sName = '';
-        $sVersionToInstall = '';
-        $sError = '';
-        try
-        {
-            if (isset($_FILES['file']))
-            {
-                $aFileInfo = $_FILES['file'];
-                $iError = $aFileInfo['error'];
-                if ($iError === UPLOAD_ERR_OK)
-                {
-                    $sDownloadDir = CoreUpdater::DOWNLOAD_DIR;
-                    if (is_dir($sDownloadDir))
-                    {
-                        SetupUtils::rrmdir($sDownloadDir);
-                    }
-                    SetupUtils::builddir($sDownloadDir);
-                    $sTmpName = $aFileInfo['tmp_name'];
-                    $sName = $aFileInfo['name'];
-                    $sNewVersion = $sDownloadDir.$sName;
-                    if (@move_uploaded_file($sTmpName, $sNewVersion) === false)
-                    {
-                        throw new Exception(Dict::S('iTopUpdate:Error:FileNotFound'));
-                    }
-                    CoreUpdater::ExtractDownloadedFile($sNewVersion);
-                    $sVersionToInstall = CoreUpdater::GetVersionToInstall();
-                }
-                else
-                {
-                    throw new Exception(Dict::S('iTopUpdate:Error:NoFile'));
-                }
-            }
-            else
-            {
-                throw new Exception(Dict::S('iTopUpdate:Error:NoFile'));
-            }
-        }
-        catch (Exception $e)
-        {
-            $iError = UPLOAD_ERR_NO_FILE;
-            $sError = $e->getMessage();
-        }
+		$sVersionToInstall = '';
+		$sError = '';
+		try {
+			if (isset($_FILES['file'])) {
+				$aFileInfo = $_FILES['file'];
+				$iError = $aFileInfo['error'];
+				if ($iError === UPLOAD_ERR_OK) {
+					$sDownloadDir = CoreUpdater::DOWNLOAD_DIR;
+					if (is_dir($sDownloadDir)) {
+						SetupUtils::rrmdir($sDownloadDir);
+					}
+					SetupUtils::builddir($sDownloadDir);
+					$sTmpName = $aFileInfo['tmp_name'];
+					$sName = $aFileInfo['name'];
+					$sNewVersion = $sDownloadDir.$sName;
+					if (@move_uploaded_file($sTmpName, $sNewVersion) === false) {
+						throw new Exception(Dict::S('iTopUpdate:Error:FileNotFound'));
+					}
+					CoreUpdater::ExtractDownloadedFile($sNewVersion);
+					$sVersionToInstall = CoreUpdater::GetVersionToInstall();
+				} else {
+					throw new Exception(Dict::S('iTopUpdate:Error:NoFile'));
+				}
+			} else {
+				throw new Exception(Dict::S('iTopUpdate:Error:NoFile'));
+			}
+		}
+		catch (Exception $e) {
+			$iError = UPLOAD_ERR_NO_FILE;
+			$sError = $e->getMessage();
+		}
 
-
-		$aParams = array();
-        $aParams['sName'] = $sName;
-        $aParams['bSuccess'] = ($iError == 0);
-        $aParams['sError'] = $sError;
+		$aParams = [];
+		$aParams['sName'] = $sName;
+		$aParams['bSuccess'] = ($iError == 0);
+		$aParams['sError'] = $sError;
 
 		$aParams['bDoBackup'] = $bDoBackup;
 		$aParams['bDoFilesArchive'] = $bDoFilesArchive;
-        $aParams['sItopArchive'] = CoreUpdater::GetItopArchiveFile();
-        $aParams['sBackupFile'] = CoreUpdater::GetBackupFile();
+		$aParams['sItopArchive'] = CoreUpdater::GetItopArchiveFile();
+		$aParams['sBackupFile'] = CoreUpdater::GetBackupFile();
 
-        $sQuestion = Dict::Format('iTopUpdate:UI:ConfirmInstallFile', $sVersionToInstall);
+		$sQuestion = Dict::Format('iTopUpdate:UI:ConfirmInstallFile', $sVersionToInstall);
 		$aParams['sQuestion'] = $sQuestion;
 
-        $sTransactionId = utils::GetNewTransactionId();
+		$sTransactionId = utils::GetNewTransactionId();
 		$aParams['sTransactionId'] = $sTransactionId;
 
 		$this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
-		$this->DisplaySetupPage($aParams);
+		$this->DisplaySetupPage($aParams, 'ConfirmUpdate');
 	}
 
 	public function OperationUpdateCoreFiles()
-    {
-        $sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
-        if (!utils::IsTransactionValid($sTransactionId))
-        {
-            throw new Exception(Dict::S('iTopUpdate:Error:InvalidToken'));
-        }
+	{
+		$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
+		if (!utils::IsTransactionValid($sTransactionId)) {
+			throw new Exception(Dict::S('iTopUpdate:Error:InvalidToken'));
+		}
 
-        $sNewVersion = utils::ReadPostedParam('filename', null, 'filename');
-        $bDoBackup = utils::ReadPostedParam('doBackup', 0, 'integer') == 1;
+		$sNewVersion = utils::ReadPostedParam('filename', null, 'filename');
+		$bDoBackup = utils::ReadPostedParam('doBackup', 0, 'integer') == 1;
 		$bDoFilesArchive = utils::ReadPostedParam('doFilesArchive', 0, 'integer') == 1;
-        $sCurrentVersion = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
+		$sCurrentVersion = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
 
-        $aParams = array(
-            'sCurrentVersion' => $sCurrentVersion,
-            'bDoBackup' => $bDoBackup,
-	        'sBackupFile' => CoreUpdater::GetBackupFile(),
+		$aParams = [
+			'sCurrentVersion' => $sCurrentVersion,
+			'bDoBackup'       => $bDoBackup,
+			'sBackupFile'     => CoreUpdater::GetBackupFile(),
 			'bDoFilesArchive' => $bDoFilesArchive,
-	        'sItopArchive' => CoreUpdater::GetItopArchiveFile(),
-            'sNewVersion' => $sNewVersion,
-            'sProgressImage' => utils::GetAbsoluteUrlAppRoot().'setup/orange-progress.gif',
-            'sSetupToken' => SetupUtils::CreateSetupToken(),
-            'sAjaxURL' => utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php', array('maintenance' => 'true')),
-        );
-        $this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'setup/jquery.progression.js');
-        $this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
+			'sItopArchive'    => CoreUpdater::GetItopArchiveFile(),
+			'sNewVersion'     => $sNewVersion,
+			'sProgressImage'  => utils::GetAbsoluteUrlAppRoot().'setup/orange-progress.gif',
+			'sSetupToken'     => SetupUtils::CreateSetupToken(),
+			'sAjaxURL'        => utils::GetAbsoluteUrlAppRoot().'/pages/UI.php',
+		];
+		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'setup/jquery.progression.js');
+		$this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
 
-        $this->DisplaySetupPage($aParams);
-    }
+		$this->DisplaySetupPage($aParams, 'UpdateCoreFiles');
+	}
 
     public function OperationRunSetup()
     {
@@ -186,23 +182,21 @@ class UpdateController extends Controller
 	{
 		static $iMaxSize = -1;
 
-		if ($iMaxSize < 0)
-		{
+		if ($iMaxSize < 0) {
 			// Start with post_max_size.
 			$iPostMaxSize = $this->ParseSize(ini_get('post_max_size'));
-			if ($iPostMaxSize > 0)
-			{
+			if ($iPostMaxSize > 0) {
 				$iMaxSize = $iPostMaxSize;
 			}
 
 			// If upload_max_size is less, then reduce. Except if upload_max_size is
 			// zero, which indicates no limit.
 			$iUploadMax = $this->ParseSize(ini_get('upload_max_filesize'));
-			if ($iUploadMax > 0 && $iUploadMax < $iMaxSize)
-			{
+			if ($iUploadMax > 0 && $iUploadMax < $iMaxSize) {
 				$iMaxSize = $iUploadMax;
 			}
 		}
+
 		return $iMaxSize;
 	}
 
@@ -210,13 +204,10 @@ class UpdateController extends Controller
 	{
 		$sUnit = preg_replace('/[^bkmgtpezy]/i', '', $iSize); // Remove the non-unit characters from the size.
 		$iSize = preg_replace('/[^0-9.]/', '', $iSize); // Remove the non-numeric characters from the size.
-		if ($sUnit)
-		{
+		if ($sUnit) {
 			// Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
 			return round($iSize * pow(1024, stripos('bkmgtpezy', $sUnit[0])));
-		}
-		else
-		{
+		} else {
 			return round($iSize);
 		}
 	}

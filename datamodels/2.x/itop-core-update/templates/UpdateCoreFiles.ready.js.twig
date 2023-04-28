@@ -15,7 +15,8 @@ var oGetCurrentVersion = {
     method: "POST",
     url: "{{ sAjaxURL|raw }}",
     data: {
-        "operation": "GetCurrentVersion"
+        route: "core_update_ajax.get_current_version",
+        maintenance: true
     },
     dataType: "json",
     success: function(data)
@@ -34,20 +35,21 @@ function GetAjaxRequest(sOperation)
         method: "POST",
         url: "{{ sAjaxURL|raw }}",
         data: {
-            "operation": sOperation,
-            "authent": "{{ sSetupToken }}"
+            route: sOperation,
+            authent: "{{ sSetupToken }}",
+            maintenance: true
         },
         dataType: "json"
     };
 
-    if (sOperation === "Backup")
+    if (sOperation === "core_update_ajax.backup")
     {
         oAjaxRequest.success = function() {
             $("#do_backup_done").removeClass("ibo-is-hidden");
         };
     }
 
-    if (sOperation === "FilesArchive")
+    if (sOperation === "core_update_ajax.files_archive")
     {
         oAjaxRequest.success = function() {
             $("#do_files_archive_done").removeClass("ibo-is-hidden");
@@ -67,15 +69,15 @@ aStepsName.push({{ ('iTopUpdate:UI:SetupMessage:' ~ sStep)|dict_s|json_encode|ra
 
 var sBackupStep;
 {% if bDoBackup %}
-sBackupStep = "Backup";
+sBackupStep = "backup";
 {% endif %}
 
 var sFilesArchiveStep;
 {% if bDoFilesArchive %}
-sFilesArchiveStep = "FilesArchive";
+sFilesArchiveStep = "files_archive";
 {% endif %}
 
-var aStepsAjaxOperation = ["EnterMaintenance", sBackupStep, sFilesArchiveStep, "CopyFiles", "CheckCompile", "Compile", "UpdateDatabase", "ExitMaintenance", null];
+var aStepsAjaxOperation = ["enter_maintenance", sBackupStep, sFilesArchiveStep, "copy_files", "check_compile", "compile", "update_database", "exit_maintenance", null];
 
 var iNextStep = 0;
 var oInstallationProgress = $('#installation_progress')
@@ -87,7 +89,7 @@ function ExecNextStep() {
         UpdateProgress(aStepsName[iNextStep], iPercent);
         iNextStep++;
         if (sAjaxOperation) {
-            $.ajax(GetAjaxRequest(sAjaxOperation))
+            $.ajax(GetAjaxRequest("core_update_ajax." + sAjaxOperation))
                 .done(function () {
                     setTimeout(ExecNextStep, 500);
                 })
