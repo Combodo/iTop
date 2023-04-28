@@ -78,7 +78,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 					'icon_classes'  => 'fas fa-pen',
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
 					'metadata'      => [
-						'modify-modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
+						'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
 					],
 				);
 				break;
@@ -92,7 +92,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 					'icon_classes'  => 'fas fa-pen',
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
 					'metadata'      => [
-						'modify-modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
+						'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
 					],
 				);
 
@@ -121,7 +121,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 					'icon_classes'  => 'fas fa-pen',
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
 					'metadata'      => [
-						'modify-modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
+						'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
 					],
 				);
 				$aRowActions[] = array(

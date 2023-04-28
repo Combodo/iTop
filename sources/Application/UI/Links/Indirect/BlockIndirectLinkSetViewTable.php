@@ -83,7 +83,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			'icon_classes'  => 'fas fa-pen',
 			'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['Link/_key_/raw'], oTrElement, aRowData['Remote/friendlyname']);",
 			'metadata'      => [
-				'modify-modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_LINK_MODAL_TITLE),
+				'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_LINK_MODAL_TITLE),
 			],
 		);
 

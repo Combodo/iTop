@@ -110,7 +110,7 @@ $(function()
 			// retrieve modify button and extract modal title
 			const $ModifyButton = $('[name="ModifyButton"]', $TRElement);
 			const sButtonTooltipContent = $ModifyButton.attr('data-tooltip-content');
-			let sButtonTitleContent = $ModifyButton.attr('data-modify-modal-title');
+			let sButtonTitleContent = $ModifyButton.attr('data-modal-title');
 			sButtonTitleContent = sButtonTitleContent.replaceAll('{item}', sRemoteFriendlyname);
 
 			// Specify that external key to host object will be readonly
