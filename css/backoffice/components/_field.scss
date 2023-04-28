@@ -74,6 +74,10 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
   &[data-attribute-type="AttributeImage"] {
     > .ibo-field--value {
       display: grid;
+
+      > span {
+        display: inherit;
+      }
     }
   }
 }
