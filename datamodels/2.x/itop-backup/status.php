@@ -422,11 +422,10 @@ function LaunchBackupNow()
 
 	if (confirm('$sConfirmBackup'))
 	{
-		if(!$('#waitbackup').length)
-		{
-			$('body').append($('<div class="mt-5 text-nowrap" title="$sBackUpNow" id="waitbackup"><i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitBackup</div>'));
-		}
-		$('#waitbackup').dialog();
+		const oModal = CombodoModal.OpenModal({
+				title: '$sBackUpNow',
+				content: '<i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitBackup'
+		});
 
 		var oParams = {};
 		oParams.operation = 'backup';
@@ -441,7 +440,7 @@ function LaunchBackupNow()
 			{
 				window.location.reload();
 			}
-			$('#waitbackup').dialog('close');
+			oModal.dialog('close');
 		});
 	}
 }
@@ -451,11 +450,11 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 	{
 		return;
 	}
-	if(!$('#waitrestore').length)
-		{
-			$('body').append($('<div class="mt-5 text-nowrap" title="$sRestore" id="waitrestore"><i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitRestore</div>'));
-		}
-	$('#waitrestore').dialog();
+
+	const oModal = CombodoModal.OpenModal({
+		title: '$sRestore',
+		content: '<i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitRestore'
+	});
 
 	$('#backup_success').addClass('ibo-is-hidden');
 	$('#backup_errors').addClass('ibo-is-hidden');
@@ -485,11 +484,11 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 					$('#backup_success').html('$sRestoreDone');
 					$('#backup_success').removeClass('ibo-is-hidden');
 				}
-				$('#waitrestore').dialog('close');
+				oModal.dialog('close');
 			});
 		} else {
 			$('button.restore').prop('disabled', true);
-			$('#waitrestore').dialog('close');
+			oModal.dialog('close');
 		}
 	});
 }
