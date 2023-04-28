@@ -2176,6 +2176,7 @@ abstract class DBObject implements iDisplay
 	 * @param string $sUniquenessRuleId
 	 *
 	 * @return string|null
+	 * @since 3.1.0
 	 */
 	private function GetUniquenessRuleGenericMessage(string $sCurrentClass, string $sUniquenessRuleId): ?string
 	{

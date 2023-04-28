@@ -22,5 +22,5 @@
  */
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s : %2$s is already linked to %3$s : %4$s, duplicates are not allowed on this relation.',
+	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s is already linked to %3$s: %4$s, duplicates are not allowed on this relation.',
 ]);
