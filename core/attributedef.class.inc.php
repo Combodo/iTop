@@ -2442,13 +2442,14 @@ class AttributeLinkedSet extends AttributeDefinition
     /**
      * SearchSpecificLabel.
      *
-     * @param $sDictEntrySuffix
-     * @param $sDefault
-     * @param $bUserLanguageOnly
+     * @param string $sDictEntrySuffix
+     * @param string $sDefault
+     * @param bool $bUserLanguageOnly
      * @param ...$aArgs
      * @return string
+     * @since 3.1.0
      */
-    public function SearchSpecificLabel($sDictEntrySuffix, $sDefault, $bUserLanguageOnly, ...$aArgs): string
+    public function SearchSpecificLabel(string $sDictEntrySuffix, string $sDefault, bool $bUserLanguageOnly, ...$aArgs): string
     {
         try {
             $sNextClass = $this->m_sHostClass;
