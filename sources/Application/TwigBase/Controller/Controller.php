@@ -49,7 +49,7 @@ abstract class Controller extends AbstractController
 	/** @var \Twig\Environment */
 	private $m_oTwig;
 	/** @var string */
-	private $m_sOperation;
+	protected $m_sOperation;
 	/** @var string */
 	private $m_sModule;
 	/** @var iTopWebPage|\AjaxPage */

@@ -63,8 +63,8 @@ class UpdateController extends Controller
 			$sLaunchSetupUrl = Router::GetInstance()->GenerateUrl('core_update_ajax.launch_setup', ['transaction_id' => $sTransactionId]);
 			$aParams['sLaunchSetupUrl'] = $sLaunchSetupUrl;
 		}
-
-		$this->DisplayPage($aParams, 'SelectUpdateFile');
+		$this->m_sOperation = 'SelectUpdateFile';
+		$this->DisplayPage($aParams);
 	}
 
 	/**
@@ -130,7 +130,8 @@ class UpdateController extends Controller
 		$aParams['sTransactionId'] = $sTransactionId;
 
 		$this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
-		$this->DisplaySetupPage($aParams, 'ConfirmUpdate');
+		$this->m_sOperation = 'ConfirmUpdate';
+		$this->DisplaySetupPage($aParams);
 	}
 
 	public function OperationUpdateCoreFiles()
@@ -157,9 +158,10 @@ class UpdateController extends Controller
 			'sAjaxURL'        => utils::GetAbsoluteUrlAppRoot().'/pages/UI.php',
 		];
 		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'setup/jquery.progression.js');
-		$this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
+		$this->AddSaas('css/backoffice/main.scss');
 
-		$this->DisplaySetupPage($aParams, 'UpdateCoreFiles');
+		$this->m_sOperation = 'UpdateCoreFiles';
+		$this->DisplaySetupPage($aParams);
 	}
 
     public function OperationRunSetup()
