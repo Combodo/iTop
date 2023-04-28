@@ -19,4 +19,9 @@
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Modal:DefaultConfirmationTitle' => 'Confirmation',
+	'UI:Modal:Informative:Title' => 'Modale d\'information',
+	'UI:Modal:InformativeError:Title' => 'Erreur',
+	'UI:Modal:InformativeWarning:Title' => 'Avertissement',
+	'UI:Modal:InformativeInformation:Title' => 'Information',
+	'UI:Modal:InformativeSuccess:Title' => 'Succès',
 ));
