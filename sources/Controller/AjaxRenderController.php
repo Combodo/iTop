@@ -81,6 +81,7 @@ class AjaxRenderController
 					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/_key_/raw"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
+					$aObj[$sAlias."/friendlyname"] = $aObject[$sAlias]->Get('friendlyname');
 
 					// N°5943 Protection against $aColumnsLoad having less class aliases than $aClassAliases, this is in case the method's consumer isn't passing data correctly
 					if (false === array_key_exists($sAlias, $aColumnsLoad)) {

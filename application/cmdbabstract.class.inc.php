@@ -2974,7 +2974,12 @@ EOF
 			$oObjectDetails = ObjectFactory::MakeDetails($this, $this->GetDisplayMode());
 			$oToolbarButtons->AddCSSClass('ibo-toolbar-top');
 			$oObjectDetails->AddToolbarBlock($oToolbarButtons);
+			// Allow form title customization
+			if (array_key_exists('form_title', $aExtraParams)) {
+				$oObjectDetails->SetTitle($aExtraParams['form_title']);
+			}
 		}
+
 		$oForm->AddSubBlock($oObjectDetails);
 		if (isset($aExtraParams['nbBulkObj'])) {
 			// if bulk modify buttons must be after object display

@@ -75,6 +75,10 @@ $(function()
 			// retrieve table
 			const $Table = $('table', this.element);
 
+			// retrieve new button
+			const $NewButton = $('[name="UI:Links:New"]', this.element);
+			const sButtonTooltipContent = $NewButton.attr('data-tooltip-content');
+
 			// retrieve context parameters
 			const sClass = $Table.closest('[data-role="ibo-block-links-table"]').attr('data-link-class');
 			const sAttCode = $Table.closest('[data-role="ibo-block-links-table"]').attr('data-link-attcode');
@@ -82,7 +86,7 @@ $(function()
 			const sHostObjectId = $Table.closest('[data-role="ibo-object-details"]').attr('data-object-id');
 
 			// link object creation
-			iTopLinkSetWorker.CreateLinkedObject(sClass, sAttCode, sHostObjectClass, sHostObjectId, function(){
+			iTopLinkSetWorker.CreateLinkedObject(sButtonTooltipContent, sClass, sAttCode, sHostObjectClass, sHostObjectId, function(){
 				$(this).find("form").remove();
 				$(this).dialog('destroy');
 			},function (event, data) {
@@ -96,20 +100,29 @@ $(function()
 		 * ModifyLinkedObject.
 		 *
 		 * @param {string} sLinkedObjectKey
+		 * @param {Element} $TRElement
+		 * @param {string} sRemoteFriendlyname
 		 */
-		ModifyLinkedObject: function (sLinkedObjectKey) {
+		ModifyLinkedObject: function (sLinkedObjectKey, $TRElement, sRemoteFriendlyname) {
 
 			const me = this;
-			
+
+			// retrieve modify button and extract modal title
+			const $ModifyButton = $('[name="ModifyButton"]', $TRElement);
+			const sButtonTooltipContent = $ModifyButton.attr('data-tooltip-content');
+			let sButtonTitleContent = $ModifyButton.attr('data-modal-title');
+			sButtonTitleContent = sButtonTitleContent.replaceAll('{item}', sRemoteFriendlyname);
+
 			// Specify that external key to host object will be readonly
 			let aReadOnlyParams = {
 				'readonly': {
 				}
 			}
 			aReadOnlyParams['readonly'][this.options.external_key_to_me] = 1;
-			
+			aReadOnlyParams['form_title'] = sButtonTitleContent;
+
 			// link object modification
-			iTopObjectWorker.ModifyObject(this.options.link_class, sLinkedObjectKey, function () {
+			iTopObjectWorker.ModifyObject(sButtonTooltipContent, this.options.link_class, sLinkedObjectKey, function () {
 				$(this).find("form").remove();
 				$(this).dialog('destroy');
 			}, function(event, data){

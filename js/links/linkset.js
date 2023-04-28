@@ -15,7 +15,7 @@ const iTopLinkSet = new function () {
 	const CallCreateLinkedObject = function(sLinkedClass, oWidget)
 	{
 		// Create link object
-		iTopObjectWorker.CreateObject(sLinkedClass, function(){
+		iTopObjectWorker.CreateObject(Dict.S('UI:Links:Object:New:Modal:Title'), sLinkedClass, function(){
 				$(this).find("form").remove();
 				$(this).dialog('destroy');
 			},

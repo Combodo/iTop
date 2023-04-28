@@ -11,6 +11,7 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\Service\Links\LinkSetModel;
 use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Service\Base\ObjectRepository;
 use Exception;
@@ -198,17 +199,30 @@ class LinkSetController extends AbstractController
 						}
 					});
 				}
-JS
-			;
+JS;
+
+
+			// Form title
+			/** @var \AttributeLinkedSet $oLinksetDef */
+			$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			$oHostObj = MetaModel::GetObject($sClass, $sId);
+			$sFormTitle = $oLinksetDef->SearchSpecificLabel('UI:Links:Add:Modal:Title', '', true,
+				$sClass,
+				$oHostObj->Get('friendlyname'),
+				$oLinksetDef->GetLabel(),
+				LinkSetModel::GetTargetClass($oLinksetDef));
+
 			$aExtraParams = [
-				'noRelations'      => true,
-				'hide_transitions' => true,
-				'formPrefix'       => $sAttCode,
-				'fieldsFlags'      => $aFieldFlags,
+				'noRelations'           => true,
+				'hide_transitions'      => true,
+				'formPrefix'            => $sAttCode,
+				'fieldsFlags'           => $aFieldFlags,
 				'forceFieldsSubmission' => [
-					$sExtKeyToMe
+					$sExtKeyToMe,
 				],
-				'js_handlers'      => [
+				'form_title'            => $sFormTitle,
+				'custom_button'         => \Dict::S('UI:Button:Add'),
+				'js_handlers'           => [
 					'form_on_submit'         => $sFormOnSubmitJsCode,
 					'cancel_button_on_click' =>
 						<<<JS

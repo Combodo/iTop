@@ -9,7 +9,6 @@ namespace Combodo\iTop\Application\UI\Links;
 use ApplicationException;
 use ArchivedObjectException;
 use AttributeLinkedSet;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use CoreException;
 use CoreWarning;
@@ -17,7 +16,6 @@ use DBObject;
 use DictExceptionMissingString;
 use DisplayBlock;
 use Exception;
-use MetaModel;
 use MySQLException;
 use Utils;
 use WebPage;
@@ -40,6 +38,20 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 		'js/object/object-worker.js',
 		'js/wizardhelper.js',
 	];
+
+	// Dictionnary entries
+	public const BUTTON_TOOLTIP                    = 'UI:Links:Add:Button+';
+	public const DICT_CREATE_BUTTON_TOOLTIP        = 'UI:Links:Create:Button+';
+	public const DICT_MODIFY_LINK_BUTTON_TOOLTIP   = 'UI:Links:ModifyLink:Button+';
+	public const DICT_MODIFY_LINK_MODAL_TITLE      = 'UI:Links:ModifyLink:Modal:Title';
+	public const DICT_MODIFY_OBJECT_BUTTON_TOOLTIP = 'UI:Links:ModifyObject:Button+';
+	public const DICT_MODIFY_OBJECT_MODAL_TITLE    = 'UI:Links:ModifyObject:Modal:Title';
+	public const DICT_REMOVE_BUTTON_TOOLTIP        = 'UI:Links:Remove:Button+';
+	public const DICT_REMOVE_MODAL_TITLE           = 'UI:Links:Remove:Modal:Title';
+	public const DICT_REMOVE_MODAL_MESSAGE         = 'UI:Links:Remove:Modal:Message';
+	public const DICT_DELETE_BUTTON_TOOLTIP        = 'UI:Links:Delete:Button+';
+	public const DICT_DELETE_MODAL_TITLE           = 'UI:Links:Delete:Modal:Title';
+	public const DICT_DELETE_MODAL_MESSAGE         = 'UI:Links:Delete:Modal:Message';
 
 	/** @var DBObject $oDbObject db object witch link set belongs to */
 	protected DBObject $oDbObject;
@@ -97,6 +109,25 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	private function Init()
 	{
 		$this->sTargetClass = $this->GetTargetClass();
+	}
+
+
+	/**
+	 * @param string $sKey
+	 * @param \DBObject|null $oDBObject
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public function GetDictionaryEntry(string $sKey, DBObject $oDBObject = null)
+	{
+		return $this->oAttDef->SearchSpecificLabel($sKey, '', true,
+			$this->sObjectClass,
+			$this->oDbObject->Get('friendlyname'),
+			$this->oAttDef->GetLabel(),
+			$this->sTargetClass,
+			$oDBObject !== null ? $oDBObject->Get('friendlyname') : '{item}');
 	}
 
 	/**
