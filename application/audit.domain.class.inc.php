@@ -43,6 +43,7 @@ class AuditDomain extends cmdbAbstractObject
 			"db_table" => "priv_auditdomain",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			'style' => new ormStyle(null, null, null, null, null, '../images/icons/icons8-audit-album.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("description"=>"Short name for this category", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
