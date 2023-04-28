@@ -1884,6 +1884,26 @@ class MenuBlock extends DisplayBlock
 			$bIsCreationAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) === UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 			$bIsModifyAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) === UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 
+			// Check concurrent lock (can only be lock if we are handling a single object
+			$bLocked = false;
+			if ($iSetCount === 1) {
+				$oObj = $oSet->Fetch();
+				if (false === is_null($oObj)) {
+					if (MetaModel::GetConfig()->Get('concurrent_lock_enabled')) {
+						$aLockInfo = iTopOwnershipLock::IsLocked(get_class($oObj), $oObj->GetKey());
+						if ($aLockInfo['locked']) {
+							$bLocked = true;
+						}
+					}
+				}
+				unset($oObj);
+				$oSet->Rewind();
+			}
+
+			//--------------------------------------------
+			// Any object count, any style. Common actions
+			//--------------------------------------------
+
 			// Create in new tab
 			if ($bIsCreationAllowed && !$bIsCreationInModalAllowed) {
 				$this->AddNewObjectMenuAction($aRegularActions, $sClass, $sDefaultValuesAsUrlParams);
@@ -1897,8 +1917,81 @@ class MenuBlock extends DisplayBlock
 				];
 			}
 
-			// Any style actions
-			// - Bulk actions on objects set
+			// Transitions
+			// - Do not perform time-consuming computations if there are too many objects in the list
+			$iLimit = MetaModel::GetConfig()->Get('complex_actions_limit');
+			if (
+				($iSetCount > 0) && (false === $bLocked) && MetaModel::HasLifecycle($sClass) &&
+				( ($iLimit == 0) || ($iSetCount < $iLimit) )
+			) {
+				$aTransitions = [];
+				// Processing (optimizations) and endpoints are not exactly the same depending on if there is only 1 object or a set
+				if ($iSetCount === 1) {
+					$oObj = $oSet->Fetch();
+					if (false === is_null($oObj)) {
+						$sLifecycleClass = get_class($oObj);
+						$aTransitions = $oObj->EnumTransitions();
+						$aUrlParams = [
+							'operation' => 'stimulus',
+							'id' => $oObj->GetKey(),
+						];
+					}
+					unset($oObj);
+					$oSet->Rewind();
+				} else {
+					// Life cycle actions may be available... if all objects are in the same state
+					// Group by <state>
+					$oGroupByExp = new FieldExpression(MetaModel::GetStateAttributeCode($sClass), $this->m_oFilter->GetClassAlias());
+					$aGroupBy = array('__state__' => $oGroupByExp);
+					$aQueryParams = array();
+					if (isset($aExtraParams['query_params'])) {
+						$aQueryParams = $aExtraParams['query_params'];
+					}
+
+					$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy);
+					$aRes = CMDBSource::QueryToArray($sSql);
+					if (count($aRes) === 1) {
+						$sLifecycleClass = $sClass;
+						// All objects are in the same state...
+						$sState = $aRes[0]['__state__'];
+						$aTransitions = Metamodel::EnumTransitions($sLifecycleClass, $sState);
+						$aUrlParams = [
+							'operation' => 'select_bulk_stimulus',
+							'state' => $sState,
+							'filter' => $sFilter,
+						];
+					}
+				}
+
+				if (count($aTransitions)) {
+					$sUrlQueryString = http_build_query($aUrlParams).$sContext;
+					$aStimuli = Metamodel::EnumStimuli($sLifecycleClass);
+					foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
+						$oSet->Rewind();
+						// As soon as the user rights implementation will browse the object set,
+						// then we might consider using OptimizeColumnLoad() here
+						$iActionAllowed = UserRights::IsStimulusAllowed($sLifecycleClass, $sStimulusCode, $oSet);
+						$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) === 'StimulusUserAction') ? $iActionAllowed : UR_ALLOWED_NO;
+						switch ($iActionAllowed) {
+							case UR_ALLOWED_YES:
+							case UR_ALLOWED_DEPENDS:
+								$aTransitionActions[$sStimulusCode] = array(
+										'label' => $aStimuli[$sStimulusCode]->GetLabel(),
+										'url' => "{$sRootUrl}pages/UI.php?stimulus=$sStimulusCode&class=$sLifecycleClass&{$sUrlQueryString}",
+									) + $aActionParams;
+								break;
+
+							default:
+								// Do nothing
+						}
+					}
+					$oSet->Rewind();
+				}
+			}
+
+			//------------------------------------------
+			// Several objects (bulk), any style actions
+			//------------------------------------------
 			if ($iSetCount > 1) {
 				// Bulk actions for each selected classes (eg. "link" and "remote" on n:n relations)
 				foreach ($aSelectedClasses as $sSelectedAlias => $sSelectedClass) {
@@ -1922,56 +2015,11 @@ class MenuBlock extends DisplayBlock
 						$this->AddBulkDeleteObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:BulkDelete:'.$sSelectedAlias, Dict::Format('UI:Menu:BulkDelete_'.$sActionLabelCodeSuffix, $sSelectedClassName));
 					}
 				}
-
-				// Stimuli
-				$aStates = MetaModel::EnumStates($sClass);
-				// Do not perform time-consuming computations if there are too many objects in the list
-				$iLimit = MetaModel::GetConfig()->Get('complex_actions_limit');
-
-				if ((count($aStates) > 0) && (($iLimit == 0) || ($oSet->CountWithLimit($iLimit + 1) < $iLimit))) {
-					// Life cycle actions may be available... if all objects are in the same state
-					//
-					// Group by <state>
-					$oGroupByExp = new FieldExpression(MetaModel::GetStateAttributeCode($sClass), $this->m_oFilter->GetClassAlias());
-					$aGroupBy = array('__state__' => $oGroupByExp);
-					$aQueryParams = array();
-					if (isset($aExtraParams['query_params'])) {
-						$aQueryParams = $aExtraParams['query_params'];
-					}
-
-					$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy);
-					$aRes = CMDBSource::QueryToArray($sSql);
-					if (count($aRes) == 1) {
-						// All objects are in the same state...
-						$sState = $aRes[0]['__state__'];
-						$aTransitions = Metamodel::EnumTransitions($sClass, $sState);
-						if (count($aTransitions)) {
-							$aStimuli = Metamodel::EnumStimuli($sClass);
-							foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
-								$oSet->Rewind();
-								// As soon as the user rights implementation will browse the object set,
-								// then we might consider using OptimizeColumnLoad() here
-								$iActionAllowed = UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet);
-								$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? $iActionAllowed : UR_ALLOWED_NO;
-								switch ($iActionAllowed) {
-									case UR_ALLOWED_YES:
-									case UR_ALLOWED_DEPENDS:
-										$aTransitionActions[$sStimulusCode] = array(
-												'label' => $aStimuli[$sStimulusCode]->GetLabel(),
-												'url' => "{$sRootUrl}pages/UI.php?operation=select_bulk_stimulus&stimulus=$sStimulusCode&state=$sState&class=$sClass&filter=".urlencode($sFilter)."{$sContext}",
-											) + $aActionParams;
-										break;
-
-									default:
-										// Do nothing
-								}
-							}
-						}
-					}
-				}
 			}
 
-			// NOT "listInObject" (linksets) style actions
+			//----------------------------------------------------
+			// Any style but NOT "listInObject" (linksets) actions
+			//----------------------------------------------------
 			if ($this->m_sStyle !== static::ENUM_STYLE_LIST_IN_OBJECT) {
 				switch ($iSetCount) {
 					case 1:
@@ -1986,13 +2034,6 @@ class MenuBlock extends DisplayBlock
 								}
 							}
 
-							$bLocked = false;
-							if (MetaModel::GetConfig()->Get('concurrent_lock_enabled')) {
-								$aLockInfo = iTopOwnershipLock::IsLocked(get_class($oObj), $id);
-								if ($aLockInfo['locked']) {
-									$bLocked = true;
-								}
-							}
 							$bRawModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 							$bIsModifyAllowed = !$bLocked && $bRawModifiedAllowed;
 							$bIsDeleteAllowed = !$bLocked && UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
@@ -2009,29 +2050,6 @@ class MenuBlock extends DisplayBlock
 											'label' => Dict::S('UI:Menu:Delete'),
 											'url' => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$id{$sContext}",
 										) + $aActionParams;
-								}
-
-								// Transitions / Stimuli
-								if (!$bLocked) {
-									$aTransitions = $oObj->EnumTransitions();
-									if (count($aTransitions)) {
-										$aStimuli = Metamodel::EnumStimuli(get_class($oObj));
-										foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
-											$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
-												$sStimulusCode, $oSet) : UR_ALLOWED_NO;
-											switch ($iActionAllowed) {
-												case UR_ALLOWED_YES:
-													$aTransitionActions[$sStimulusCode] = array(
-															'label' => $aStimuli[$sStimulusCode]->GetLabel(),
-															'url' => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}",
-														) + $aActionParams;
-													break;
-
-												default:
-													// Do nothing
-											}
-										}
-									}
 								}
 
 								// Relations...
