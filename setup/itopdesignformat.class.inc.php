@@ -1137,7 +1137,7 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath("/itop_design/meta/presentation/custom_presentations");
 
 		// N°1646 - Enum: logical ordering defined in datamodel (dashlet, list, transition menu...)
-		// - fill rank to keep actual order
+		// - remove rank in Enum
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/values/value/rank");
 	}
 
