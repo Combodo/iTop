@@ -22,5 +22,5 @@
  */
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s : %2$s est déjà lié à %3$s : %4$s, les doublons ne sont pas autorisés sur cette relation.',
+	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s : %2$s est déjà lié à un(e) %3$s : %4$s, les doublons ne sont pas autorisés sur cette relation.',
 ]);
