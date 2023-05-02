@@ -225,6 +225,11 @@ class ActionEmail extends ActionNotification
 	 * @since 3.0.1
 	 */
 	const ENUM_HEADER_NAME_REFERENCES = 'References';
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	const TEMPLATE_BODY_CONTENT = '$content$';
 
 	/**
 	 * @inheritDoc
@@ -257,6 +262,10 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_AddAttribute(new AttributeTemplateString("subject", array("allowed_values" => null, "sql" => "subject", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeTemplateHTML("body", array("allowed_values" => null, "sql" => "body", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values" => new ValueSetEnum('low,normal,high'), "sql" => "importance", "default_value" => 'normal', "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeBlob("html_template", array("is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
+		MetaModel::Init_AddAttribute(new AttributeEnum("bypass_notify", array("allowed_values" => new ValueSetEnum('yes,no'), "sql" => "bypass_notify", "default_value" => 'yes', "is_null_allowed" => false, "depends_on" => array())));
+		
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
@@ -266,8 +275,10 @@ class ActionEmail extends ActionNotification
 					0 => 'name',
 					1 => 'description',
 					2 => 'status',
-					3 => 'subject',
-					4 => 'body',
+					3 => 'language',
+					4 => 'html_template',
+					5 => 'subject',
+					6 => 'body',
 					// 5 => 'importance', not handled when sending the mail, better hide it then
 				),
 				'fieldset:ActionEmail:trigger' => array(
@@ -281,20 +292,21 @@ class ActionEmail extends ActionNotification
 					2 => 'reply_to',
 					3 => 'reply_to_label',
 					4 => 'test_recipient',
-					5 => 'to',
-					6 => 'cc',
-					7 => 'bcc',
+					5 => 'bypass_notify',
+					6 => 'to',
+					7 => 'cc',
+					8 => 'bcc',
 				),
 			),
 		));
 
 		// - Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('list', array('status', 'to', 'subject'));
+		MetaModel::Init_SetZListItems('list', array('status', 'to', 'subject', 'language'));
 		// Search criteria
 		// - Standard criteria of the search
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'status', 'subject'));
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'status', 'subject', 'language'));
 		// - Default criteria for the search
-		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status', 'subject'));
+		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status', 'subject', 'language'));
 	}
 
 	// count the recipients found
@@ -324,6 +336,15 @@ class ActionEmail extends ActionNotification
 		try
 		{
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
+			if($this->Get('bypass_notify') === 'no') {
+				// In theory it is possible to notify *any* kind of object, 
+				// as long as there is an email attribute in the class
+				// So let's not assume that the selected class is a Person
+				$sFirstSelectedClass = $oSearch->GetClass();
+				if (MetaModel::IsValidAttCode($sFirstSelectedClass, 'notify')) {
+					$oSearch->AddCondition('notify', 'yes');
+				}
+			}
 			$oSearch->AllowAllData();
 		}
 		catch (OQLException $e)
@@ -448,114 +469,27 @@ class ActionEmail extends ActionNotification
 	 */
 	protected function _DoExecute($oTrigger, $aContextArgs, &$oLog)
 	{
-		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
-		try
-		{
-			$this->m_iRecipients = 0;
-			$this->m_aMailErrors = array();
-
-			// Determine recipients
-			//
-			$sTo = $this->FindRecipients('to', $aContextArgs);
-			$sCC = $this->FindRecipients('cc', $aContextArgs);
-			$sBCC = $this->FindRecipients('bcc', $aContextArgs);
-
-			$sFrom = MetaModel::ApplyParams($this->Get('from'), $aContextArgs);
-			$sFromLabel = MetaModel::ApplyParams($this->Get('from_label'), $aContextArgs);
-			$sReplyTo = MetaModel::ApplyParams($this->Get('reply_to'), $aContextArgs);
-			$sReplyToLabel = MetaModel::ApplyParams($this->Get('reply_to_label'), $aContextArgs);
-
-			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
-			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
-
-			$oObj = $aContextArgs['this->object()'];
-			$sMessageId = $this->GenerateIdentifierForHeaders($oObj, static::ENUM_HEADER_NAME_MESSAGE_ID);
-			$sReference = $this->GenerateIdentifierForHeaders($oObj, static::ENUM_HEADER_NAME_REFERENCES);
-		}
-		catch (Exception $e) {
-			/** @noinspection PhpUnhandledExceptionInspection */
-			throw $e;
-		}
-		finally {
-			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
-		}
-
-		if (!is_null($oLog)) {
-			// Note: we have to secure this because those values are calculated
-			// inside the try statement, and we would like to keep track of as
-			// many data as we could while some variables may still be undefined
-			if (isset($sTo)) {
-				$oLog->Set('to', $sTo);
-			}
-			if (isset($sCC)) {
-				$oLog->Set('cc', $sCC);
-			}
-			if (isset($sBCC)) {
-				$oLog->Set('bcc', $sBCC);
-			}
-			if (isset($sFrom)) {
-				$oLog->Set('from', $sFrom);
-			}
-			if (isset($sSubject)) {
-				$oLog->Set('subject', $sSubject);
-			}
-			if (isset($sBody)) {
-				$oLog->Set('body', $sBody);
-			}
-		}
 		$sStyles = file_get_contents(APPROOT.'css/email.css');
 		$sStyles .= MetaModel::GetConfig()->Get('email_css');
-
+		
 		$oEmail = new EMail();
-
-		if ($this->IsBeingTested()) {
-			$oEmail->SetSubject('TEST['.$sSubject.']');
-			$sTestBody = $sBody;
-			$sTestBody .= "<div style=\"border: dashed;\">\n";
-			$sTestBody .= "<h1>Testing email notification ".$this->GetHyperlink()."</h1>\n";
-			$sTestBody .= "<p>The email should be sent with the following properties\n";
-			$sTestBody .= "<ul>\n";
-			$sTestBody .= "<li>TO: $sTo</li>\n";
-			$sTestBody .= "<li>CC: $sCC</li>\n";
-			$sTestBody .= "<li>BCC: $sBCC</li>\n";
-			$sTestBody .= empty($sFromLabel) ? "<li>From: $sFrom</li>\n" : "<li>From: $sFromLabel &lt;$sFrom&gt;</li>\n";
-			$sTestBody .= empty($sReplyToLabel) ? "<li>Reply-To: $sReplyTo</li>\n" : "<li>Reply-To: $sReplyToLabel &lt;$sReplyTo&gt;</li>\n";
-			$sTestBody .= "<li>References: $sReference</li>\n";
-			$sTestBody .= "</ul>\n";
-			$sTestBody .= "</p>\n";
-			$sTestBody .= "</div>\n";
-			$oEmail->SetBody($sTestBody, 'text/html', $sStyles);
-			$oEmail->SetRecipientTO($this->Get('test_recipient'));
-			$oEmail->SetRecipientFrom($sFrom, $sFromLabel);
-			$oEmail->SetReferences($sReference);
-			$oEmail->SetMessageId($sMessageId);
-			// Note: N°4849 We pass the "References" identifier instead of the "Message-ID" on purpose as we want notifications emails to group around the triggering iTop object, not just the users' replies to the notification
-			$oEmail->SetInReplyTo($sReference);
-		} else {
-			$oEmail->SetSubject($sSubject);
-			$oEmail->SetBody($sBody, 'text/html', $sStyles);
-			$oEmail->SetRecipientTO($sTo);
-			$oEmail->SetRecipientCC($sCC);
-			$oEmail->SetRecipientBCC($sBCC);
-			$oEmail->SetRecipientFrom($sFrom, $sFromLabel);
-			$oEmail->SetRecipientReplyTo($sReplyTo, $sReplyToLabel);
-			$oEmail->SetReferences($sReference);
-			$oEmail->SetMessageId($sMessageId);
-			// Note: N°4849 We pass the "References" identifier instead of the "Message-ID" on purpose as we want notifications emails to group around the triggering iTop object, not just the users' replies to the notification
-			$oEmail->SetInReplyTo($sReference);
+		
+		$aEmailContent = $this->PrepareMessageContent($aContextArgs, $oLog);
+		$oEmail->SetSubject($aEmailContent['subject']);
+		$oEmail->SetBody($aEmailContent['body'], 'text/html', $sStyles);
+		$oEmail->SetRecipientTO($aEmailContent['to']);
+		$oEmail->SetRecipientCC($aEmailContent['cc']);
+		$oEmail->SetRecipientBCC($aEmailContent['bcc']);
+		$oEmail->SetRecipientFrom($aEmailContent['from'], $aEmailContent['from_label']);
+		$oEmail->SetRecipientReplyTo($aEmailContent['reply_to'], $aEmailContent['reply_to_label']);
+		$oEmail->SetReferences($aEmailContent['references']);
+		$oEmail->SetMessageId($aEmailContent['message_id']);
+		$oEmail->SetMessageInreplyTo($aEmailContent['in_reply_to']);
+		
+		foreach($aEmailContent['attachments'] as $aAttachment) {
+			$oEmail->AddAttachment($aAttachment['data'], $aAttachment['filename'], $aAttachment['mime_type']);
 		}
-
-		if (isset($aContextArgs['attachments']))
-		{
-			$aAttachmentReport = array();
-			foreach($aContextArgs['attachments'] as $oDocument)
-			{
-				$oEmail->AddAttachment($oDocument->GetData(), $oDocument->GetFileName(), $oDocument->GetMimeType());
-				$aAttachmentReport[] = array($oDocument->GetFileName(), $oDocument->GetMimeType(), strlen($oDocument->GetData()));
-			}
-			$oLog->Set('attachments', $aAttachmentReport);
-		}
-
+		
 		if (empty($this->m_aMailErrors))
 		{
 			if ($this->m_iRecipients == 0)
@@ -586,6 +520,139 @@ class ActionEmail extends ActionNotification
 
 			return 'Notification was not sent: '.$sError;
 		}
+	}
+
+	/**
+	 * @param array $aContextArgs
+	 * @param \EventNotification $oLog
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	protected function PrepareMessageContent($aContextArgs, &$oLog): array
+	{
+		$aMessageContent = [
+			'to' => '',
+			'cc' => '',
+			'bcc' => '',
+			'from' => '',
+			'from_label' => '',
+			'reply_to' => '',
+			'reply_to_label' => '',
+			'subject' => '',
+			'body' => '',
+			'references' => '',
+			'in_reply_to' => '',
+			'message_id' => '',
+			'attachments' => [],
+		];
+		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
+		$sPreviousLanguage = Dict::GetUserLanguage();
+		if ($this->Get('language') !== '') {
+			// If a language is specified for this action, force this language
+			// when rendering all placeholders inside this message
+			Dict::SetUserLanguage($this->Get('language'));
+		}
+		$oEmail = new EMail();
+		try
+		{
+			$this->m_iRecipients = 0;
+			$this->m_aMailErrors = array();
+			
+			// Determine recipients
+			//
+			$aMessageContent['to'] = $this->FindRecipients('to', $aContextArgs);
+			$aMessageContent['cc'] = $this->FindRecipients('cc', $aContextArgs);
+			$aMessageContent['bcc'] = $this->FindRecipients('bcc', $aContextArgs);
+			
+			$aMessageContent['from'] = MetaModel::ApplyParams($this->Get('from'), $aContextArgs);
+			$aMessageContent['from_label'] = MetaModel::ApplyParams($this->Get('from_label'), $aContextArgs);
+			$aMessageContent['reply_to'] = MetaModel::ApplyParams($this->Get('reply_to'), $aContextArgs);
+			$aMessageContent['reply_to_label'] = MetaModel::ApplyParams($this->Get('reply_to_label'), $aContextArgs);
+			
+			$aMessageContent['subject'] = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
+			$aMessageContent['body'] = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
+
+			/**  @var ormDocument $oHtmlTemplate */
+			$oHtmlTemplate = $this->Get('html_template');
+			if (!$oHtmlTemplate->IsEmpty()) {
+				$aMessageContent['body'] = str_replace(static::TEMPLATE_BODY_CONTENT, $aMessageContent['body'], $oHtmlTemplate->GetData());
+			}
+			
+			$oObj = $aContextArgs['this->object()'];
+			$aMessageContent['message_id'] = $this->GenerateIdentifierForHeaders($oObj, static::ENUM_HEADER_NAME_MESSAGE_ID);
+			$aMessageContent['references'] = $this->GenerateIdentifierForHeaders($oObj, static::ENUM_HEADER_NAME_REFERENCES);
+		}
+		catch (Exception $e) {
+			/** @noinspection PhpUnhandledExceptionInspection */
+			throw $e;
+		}
+		finally {
+			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
+			Dict::SetUserLanguage($sPreviousLanguage);
+		}
+		
+		if (!is_null($oLog)) {
+			// Note: we have to secure this because those values are calculated
+			// inside the try statement, and we would like to keep track of as
+			// many data as we could while some variables may still be undefined
+			if (isset($sTo)) {
+				$oLog->Set('to', $aMessageContent['to']);
+			}
+			if (isset($sCC)) {
+				$oLog->Set('cc', $aMessageContent['cc']);
+			}
+			if (isset($sBCC)) {
+				$oLog->Set('bcc', $aMessageContent['bcc']);
+			}
+			if (isset($sFrom)) {
+				$oLog->Set('from', $aMessageContent['from']);
+			}
+			if (isset($sSubject)) {
+				$oLog->Set('subject', $aMessageContent['subject']);
+			}
+			if (isset($sBody)) {
+				$oLog->Set('body', $aMessageContent['body']);
+			}
+		}
+		$sStyles = file_get_contents(APPROOT.'css/email.css');
+		$sStyles .= MetaModel::GetConfig()->Get('email_css');
+		
+		if ($this->IsBeingTested()) {
+			$sTestBody = $aMessageContent['body'];
+			$sTestBody .= "<div style=\"border: dashed;\">\n";
+			$sTestBody .= "<h1>Testing email notification ".$this->GetHyperlink()."</h1>\n";
+			$sTestBody .= "<p>The email should be sent with the following properties\n";
+			$sTestBody .= "<ul>\n";
+			$sTestBody .= "<li>TO: {$aMessageContent['to']}</li>\n";
+			$sTestBody .= "<li>CC: {$aMessageContent['cc']}</li>\n";
+			$sTestBody .= "<li>BCC: {$aMessageContent['bcc']}</li>\n";
+			$sTestBody .= empty($aMessageContent['from_label']) ? "<li>From: {$aMessageContent['from']}</li>\n" : "<li>From: {$aMessageContent['from_label']} &lt;{$aMessageContent['from']}&gt;</li>\n";
+			$sTestBody .= empty($aMessageContent['reply_to_label']) ? "<li>Reply-To: {$aMessageContent['reply_to']}</li>\n" : "<li>Reply-To: {$aMessageContent['reply_to_label']} &lt;{$aMessageContent['reply_to']}&gt;</li>\n";
+			$sTestBody .= "<li>References: {$aMessageContent['references']}</li>\n";
+			$sTestBody .= "</ul>\n";
+			$sTestBody .= "</p>\n";
+			$sTestBody .= "</div>\n";
+			$aEmailContentEmail['subject'] = 'TEST['.$aMessageContent['subject'].']';
+			$aEmailContentEmail['body'] = $sTestBody;
+			$aEmailContentEmail['to'] = $this->Get('test_recipient');
+		}
+		// Note: N°4849 We pass the "References" identifier instead of the "Message-ID" on purpose as we want notifications emails to group around the triggering iTop object, not just the users' replies to the notification
+		$aMessageContent['in_reply_to'] = $aMessageContent['references'];
+		
+		if (isset($aContextArgs['attachments']))
+		{
+			$aAttachmentReport = array();
+			foreach($aContextArgs['attachments'] as $oDocument)
+			{
+				$aMessageContent['attachments'][] = ['data' => $oDocument->GetData(), 'filename' => $oDocument->GetFileName(), 'mime_type' => $oDocument->GetMimeType()];
+				$aAttachmentReport[] = array($oDocument->GetFileName(), $oDocument->GetMimeType(), strlen($oDocument->GetData()));
+			}
+			$oLog->Set('attachments', $aAttachmentReport);
+		}
+		
+		return $aMessageContent;
 	}
 
 	/**

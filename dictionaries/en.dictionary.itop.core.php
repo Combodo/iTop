@@ -572,6 +572,14 @@ While editing, click on the magnifier to get pertinent examples',
 	'ActionEmail:main'                                     => 'Message',
 	'ActionEmail:trigger'                                  => 'Triggers',
 	'ActionEmail:recipients'                               => 'Contacts',
+	'Class:ActionEmail/Attribute:language'                 => 'Language',
+	'Class:ActionEmail/Attribute:language+'                => 'The language to use for placeholders inside the message (state, importance, priority, etc)',
+	'Class:ActionEmail/Attribute:html_template'            => 'HTML Template',
+	'Class:ActionEmail/Attribute:html_template+'           => 'An HTML template wrapping the actual content (figured by the $content$ placeholder)',
+	'Class:ActionEmail/Attribute:bypass_notify'            => 'Bypass the Notify flag',
+	'Class:ActionEmail/Attribute:bypass_notify+'           => 'If set to "No" contacts with their Notify flag set to No will not be notified.',
+	'Class:ActionEmail/Attribute:bypass_notify/Value:no'   => 'No',
+	'Class:ActionEmail/Attribute:bypass_notify/value:yes'  => 'Yes',
 ));
 
 //
