@@ -10,6 +10,7 @@ use Combodo\iTop\Service\Router\Exception\RouteNotFoundException;
 use ReflectionClass;
 use ReflectionMethod;
 use utils;
+use SetupUtils;
 
 /**
  * Class Router
@@ -29,51 +30,13 @@ class Router
 	/**
 	 * @return $this The singleton instance of the router
 	 */
-	public static function GetInstance()
+	public static function GetInstance(): Router
 	{
 		if (null === static::$oSingleton) {
 			static::$oSingleton = new static();
 		}
 
 		return static::$oSingleton;
-	}
-
-	/**
-	 * @return array{0: string, 1: string} Array of available routes namespaces and their corresponding controllers (eg. ['object' => '\Combodo\iTop\Controller\Base\Layout\ObjectController', ...])
-	 */
-	public static function GetRoutesNamespaces(): array
-	{
-		$aRoutesNamespaces = [];
-		foreach (utils::GetClassesForInterface('Combodo\iTop\Controller\iController', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']) as $sControllerFQCN) {
-			$aRoutesNamespaces[$sControllerFQCN::ROUTE_NAMESPACE] = $sControllerFQCN;
-		}
-
-		return $aRoutesNamespaces;
-	}
-
-	/**
-	 * @return array{0: string, 1: string} Array of available routes and their corresponding controllers (eg. ['object.modify' => '\Combodo\iTop\Controller\Base\Layout\ObjectController::OperationModify', ...])
-	 * @throws \ReflectionException
-	 */
-	public static function GetRoutes(): array
-	{
-		$aRoutes = [];
-		foreach (static::GetRoutesNamespaces() as $sRouteNamespace => $sRouteControllerFQCN) {
-			$oReflectionClass = new ReflectionClass($sRouteControllerFQCN);
-			foreach ($oReflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $oReflectionMethod) {
-				// Ignore non "operation" methods
-				$sPrefix = 'Operation';
-				$iPos = stripos($oReflectionMethod->name, $sPrefix);
-				if ($iPos !== 0) {
-					continue;
-				}
-
-				$sOperationName = substr($oReflectionMethod->name, $iPos + strlen($sPrefix));
-				$aRoutes[$sRouteNamespace.'.'.utils::ToSnakeCase($sOperationName)] = $sRouteControllerFQCN.'::'.$oReflectionMethod->name;
-			}
-		}
-
-		return $aRoutes;
 	}
 
 	/**********************/
@@ -85,7 +48,7 @@ class Router
 	 *
 	 * @return void
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		// Don't do anything, we don't want to be initialized
 	}
@@ -150,30 +113,103 @@ class Router
 	}
 
 	/**
+	 * @return array{0: string, 1: array{
+	 *          namespace: string,
+	 *          operation: string,
+	 *          controller: string,
+	 *          description: string
+	 *      }
+	 * } Array of available routes and their corresponding controllers (eg. [
+	 *      'object.modify' => [            // Complete route code
+	 *          'namespace' => 'object',    // Route namespace
+	 *          'operation' => 'modify',    // Route operation
+	 *          'controller' => '\Combodo\iTop\Controller\Base\Layout\ObjectController::OperationModify',   // FQCN of the controller/method that handle the route
+	 *          'description' => 'Handles display of a modification form for a datamodel object'            // Text description of the route
+	 *      ],
+	 *      ...
+	 *  ])
+	 * @throws \ReflectionException
+	 */
+	public function GetRoutes(): array
+	{
+		$aRoutes = [];
+		$bUseCache = false === utils::IsDevelopmentEnvironment();
+		$sCacheFilePath = $this->GetCacheFileAbsPath();
+
+		// Try to read from cache
+		if ($bUseCache) {
+			if (is_file($sCacheFilePath)) {
+				$aRoutes = include $sCacheFilePath;
+			}
+		}
+
+		// If no cache, force to re-scan for routes
+		if (count($aRoutes) === 0) {
+			foreach (utils::GetClassesForInterface('Combodo\iTop\Controller\iController', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']) as $sControllerFQCN) {
+				$sRouteNamespace = $sControllerFQCN::ROUTE_NAMESPACE;
+				// Ignore controller with no namespace
+				if (is_null($sRouteNamespace)) {
+					continue;
+				}
+
+				$oReflectionClass = new ReflectionClass($sControllerFQCN);
+				foreach ($oReflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $oReflectionMethod) {
+					// Ignore non "operation" methods
+					$sPrefix = 'Operation';
+					$iPos = stripos($oReflectionMethod->name, $sPrefix);
+					if ($iPos !== 0) {
+						continue;
+					}
+
+					// eg. "OperationDoSomething"
+					$sMethodName = $oReflectionMethod->name;
+					// eg. "do_something"
+					$sRouteOperation = utils::ToSnakeCase(substr($oReflectionMethod->name, $iPos + strlen($sPrefix)));
+
+					$aRoutes[$sRouteNamespace . '.' . $sRouteOperation] = [
+						'namespace' => $sRouteNamespace,
+						'operation' => $sRouteOperation,
+						'controller' => $sControllerFQCN . '::' . $sMethodName,
+						'description' => $oReflectionMethod->getDocComment(),
+					];
+				}
+			}
+		}
+
+		// Save to cache
+		if ($bUseCache) {
+			$sCacheContent = "<?php\n\nreturn ".var_export($aRoutes, true).";";
+			SetupUtils::builddir(dirname($sCacheFilePath));
+			file_put_contents($sCacheFilePath, $sCacheContent);
+		}
+
+		return $aRoutes;
+	}
+
+	/**
 	 * @param string $sRoute
 	 *
 	 * @return array{sControllerFQCN, sOperationMethodName}|null The FQCN controller and operation method matching $sRoute, null if no matching handler
 	 */
-	public function GetDispatchSpecsForRoute(string $sRoute)
+	protected function GetDispatchSpecsForRoute(string $sRoute)
 	{
 		$aRouteParts = $this->GetRouteParts($sRoute);
 		if (is_null($aRouteParts)) {
 			return null;
 		}
 
-		$sRouteNamespace = $aRouteParts['namespace'];
-		$sRouteOperation = $aRouteParts['operation'];
-		$sControllerFQCN = $this->FindControllerFromRouteNamespace($sRouteNamespace);
-		if (utils::IsNullOrEmptyString($sControllerFQCN)) {
+		$sRouteHandlerFQCN = $this->FindHandlerFromRoute($sRoute);
+		if (utils::IsNullOrEmptyString($sRouteHandlerFQCN)) {
 			return null;
 		}
 
-		$sOperationMethodName = $this->MakeOperationMethodNameFromOperation($sRouteOperation);
-		if (false === method_exists($sControllerFQCN, $sOperationMethodName)) {
+		// Extract controller and method names
+		$aParts = explode('::', $sRouteHandlerFQCN);
+		if (count($aParts) !== 2) {
 			return null;
 		}
 
-		return [$sControllerFQCN, $sOperationMethodName];
+		return [$aParts[0], $aParts[1]];
 	}
 
 	/**
@@ -181,7 +217,7 @@ class Router
 	 *
 	 * @return array{namespace: string, operation: string}|null Route parts (namespace and operation) if route can be parsed, null otherwise
 	 */
-	public function GetRouteParts(string $sRoute)
+	protected function GetRouteParts(string $sRoute)
 	{
 		if (utils::IsNullOrEmptyString($sRoute)) {
 			return null;
@@ -201,7 +237,7 @@ class Router
 	 *
 	 * @return string|null Namespace of the route (eg. "object" for "object.modify") if route can be parsed null otherwise
 	 */
-	public function GetRouteNamespace(string $sRoute): ?string
+	protected function GetRouteNamespace(string $sRoute): ?string
 	{
 		$mSeparatorPos = strripos($sRoute, '.', -1);
 		if (false === $mSeparatorPos) {
@@ -216,7 +252,7 @@ class Router
 	 *
 	 * @return string|null Operation of the route (eg. "modify" for "object.modify") if route can be parsed null otherwise
 	 */
-	public function GetRouteOperation(string $sRoute): ?string
+	protected function GetRouteOperation(string $sRoute): ?string
 	{
 		$mSeparatorPos = strripos($sRoute, '.', -1);
 		if (false === $mSeparatorPos) {
@@ -227,28 +263,23 @@ class Router
 	}
 
 	/**
-	 * @param string $sRouteNamespace {@see static::$sRouteNamespace}
+	 * @param string $sRouteToFind Route (eg. 'object.modify') to find the matching controler for
 	 *
-	 * @return string|null The FQCN of the controller matching the $sRouteNamespace, null if none matching.
+	 * @return string|null The FQCN of the handler (controller class + operation, eg. "\Combodo\iTop\Controller\Base\Layout\ObjectController::OperationModify) matching $sRouteNamespace, null if none matching.
 	 */
-	protected function FindControllerFromRouteNamespace(string $sRouteNamespace): ?string
+	protected function FindHandlerFromRoute(string $sRouteToFind): ?string
 	{
-		foreach (static::GetRoutesNamespaces() as $sControllerRouteNamespace => $sControllerFQCN) {
-			if ($sControllerRouteNamespace === $sRouteNamespace) {
-				return $sControllerFQCN;
+		foreach ($this->GetRoutes() as $sRoute => $aRouteData) {
+			if ($sRoute === $sRouteToFind) {
+				return $aRouteData['controller'];
 			}
 		}
 
 		return null;
 	}
 
-	/**
-	 * @param string $sOperation
-	 *
-	 * @return string The method name for the $sOperation regarding the convention
-	 */
-	protected function MakeOperationMethodNameFromOperation(string $sOperation): string
+	protected function GetCacheFileAbsPath(): string
 	{
-		return 'Operation'.utils::ToCamelCase($sOperation);
+		return utils::GetCachePath().'router/available-routes.php';
 	}
 }

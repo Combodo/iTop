@@ -124,29 +124,13 @@ class RouterTest extends ItopTestCase
 	 *
 	 * @return void
 	 */
-//	public function testCanDispatchRoute(string $sRoute, $bExpectedResult): void
-//	{
-//		$oRouter = Router::GetInstance();
-//		$bTestedResult = $oRouter->CanDispatchRoute($sRoute);
-//
-//		$sRouteNamespace = $oRouter->GetRouteNamespace($sRoute);
-//		$sRouteOperation = $oRouter->GetRouteOperation($sRoute);
-//		$aRouteParts = $oRouter->GetRouteParts($sRoute);
-//		$sControllerFQCN = $this->InvokeNonPublicMethod(get_class($oRouter), 'FindControllerFromRouteNamespace', $oRouter, ['object']);
-//		$sMethodName = $this->InvokeNonPublicMethod(get_class($oRouter), 'MakeOperationMethodNameFromOperation', $oRouter, ['modify']);
-//		$aDispatchSpecs = $oRouter->GetDispatchSpecsForRoute($sRoute);
-//
-//$this->debug($sRoute);
-//$this->debug($sRouteNamespace);
-//$this->debug($sRouteOperation);
-//$this->debug($aRouteParts);
-//$this->debug($sControllerFQCN);
-//$this->debug($sMethodName);
-//$this->debug(is_callable([$sControllerFQCN, $sMethodName]) ? 'true' : 'false');
-//$this->debug($aDispatchSpecs);
-//$this->debug($bTestedResult);
-//		$this->assertEquals($bExpectedResult, $bTestedResult, "Dispatch capability for '$sRoute' was not the expected one. Got ".var_export($bTestedResult, true).", expected ".var_export($bExpectedResult, true));
-//	}
+	public function testCanDispatchRoute(string $sRoute, $bExpectedResult): void
+	{
+		$oRouter = Router::GetInstance();
+		$bTestedResult = $oRouter->CanDispatchRoute($sRoute);
+
+		$this->assertEquals($bExpectedResult, $bTestedResult, "Dispatch capability for '$sRoute' was not the expected one. Got ".var_export($bTestedResult, true).", expected ".var_export($bExpectedResult, true));
+	}
 
 	public function CanDispatchRouteProvider(): array
 	{
@@ -167,6 +151,84 @@ class RouterTest extends ItopTestCase
 	}
 
 	/**
+	 * @dataProvider GetRoutesProvider
+	 * @covers \Combodo\iTop\Service\Router\Router::GetRoutes
+	 *
+	 * @param string $sRoute
+	 * @param bool $bShouldBePresent
+	 *
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	public function testGetRoutes(string $sRoute, bool $bShouldBePresent): void
+	{
+		$oRouter = Router::GetInstance();
+		$aTestedRoutes = $this->InvokeNonPublicMethod(Router::class, 'GetRoutes', $oRouter, []);
+
+		$bIsPresent = array_key_exists($sRoute, $aTestedRoutes);
+		$this->assertEquals($bShouldBePresent, $bIsPresent, "Route '$sRoute' was not expected amongst the available routes.");
+	}
+
+	public function GetRoutesProvider(): array
+	{
+		return [
+			'Valid route' => [
+				'object.modify',
+				true,
+			],
+			// eg. a route from a controller that has no ROUTE_NAMESPACE
+			'Invalid route' => [
+				'.save_state',
+				false,
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider GetRoutePartsProvider
+	 * @covers \Combodo\iTop\Service\Router\Router::GetRouteParts
+	 *
+	 * @param string $sRoute
+	 * @param array|null $aExpectedParts
+	 *
+	 * @return void
+	 */
+	public function testGetRouteParts(string $sRoute, ?array $aExpectedParts): void
+	{
+		$oRouter = Router::GetInstance();
+		$aTestedParts = $this->InvokeNonPublicMethod(Router::class, 'GetRouteParts', $oRouter, [$sRoute]);
+
+		$this->assertEquals($aExpectedParts, $aTestedParts, "Parts found for '$sRoute' were not the expected ones. Got '".print_r($aTestedParts, true)."', expected '".print_r($aExpectedParts, true)."'.");
+	}
+
+	public function GetRoutePartsProvider(): array
+	{
+		return [
+			'Empty route' => [
+				'',
+				null,
+			],
+			// eg. controller implmenting iController but without the ROUTE_NAMESPACE content. This is for BC compatibility
+			'Route with no namespace' => [
+				'.some_operation',
+				null,
+			],
+			'Route with no operation' => [
+				'some_namespace.',
+				null,
+			],
+			'Valid route' => [
+				'some_namespace.some_operation',
+				['namespace' => 'some_namespace', 'operation' => 'some_operation'],
+			],
+			'Valid route with deep namespace' => [
+				'some.deep.namespace.some_operation',
+				['namespace' => 'some.deep.namespace', 'operation' => 'some_operation'],
+			],
+		];
+	}
+
+	/**
 	 * @dataProvider GetRouteNamespaceProvider
 	 * @covers \Combodo\iTop\Service\Router\Router::GetRouteNamespace
 	 *
@@ -178,7 +240,7 @@ class RouterTest extends ItopTestCase
 	public function testGetRouteNamespace(string $sRoute, ?string $sExpectedNamespace): void
 	{
 		$oRouter = Router::GetInstance();
-		$sTestedNamespace = $oRouter->GetRouteNamespace($sRoute);
+		$sTestedNamespace = $this->InvokeNonPublicMethod(Router::class, 'GetRouteNamespace', $oRouter, [$sRoute]);
 
 		$this->assertEquals($sExpectedNamespace, $sTestedNamespace, "Namespace found for '$sRoute' was not the expected one. Got '$sTestedNamespace', expected '$sExpectedNamespace'.");
 	}
@@ -213,7 +275,7 @@ class RouterTest extends ItopTestCase
 	public function testGetRouteOperation(string $sRoute, ?string $sExpectedOperation): void
 	{
 		$oRouter = Router::GetInstance();
-		$sTestedOperation = $oRouter->GetRouteOperation($sRoute);
+		$sTestedOperation = $this->InvokeNonPublicMethod(Router::class, 'GetRouteOperation', $oRouter, [$sRoute]);
 
 		$this->assertEquals($sExpectedOperation, $sTestedOperation, "Operation found for '$sRoute' was not the expected one. Got '$sTestedOperation', expected '$sExpectedOperation'.");
 	}
@@ -237,66 +299,32 @@ class RouterTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider FindControllerFromRouteNamespaceProvider
-	 * @covers \Combodo\iTop\Service\Router\Router::FindControllerFromRouteNamespace
+	 * @dataProvider FindHandlerFromRouteProvider
+	 * @covers \Combodo\iTop\Service\Router\Router::FindHandlerFromRoute
 	 *
 	 * @param string $sRouteNamespace
-	 * @param string $sExpectedControllerFQCN
+	 * @param string $sExpectedHandlerFQCN
 	 *
 	 * @return void
 	 */
-	public function testFindControllerFromRouteNamespace(string $sRoute, ?string $sExpectedControllerFQCN): void
+	public function testFindHandlerFromRoute(string $sRoute, ?string $sExpectedHandlerFQCN): void
 	{
 		$oRouter = Router::GetInstance();
-		$sRouteNamespace = $oRouter->GetRouteNamespace($sRoute);
+		$sTestedHandlerFQCN = $this->InvokeNonPublicMethod(Router::class, 'FindHandlerFromRoute', $oRouter, [$sRoute]);
 
-		$sTestedControllerFQCN = $this->InvokeNonPublicMethod(get_class($oRouter), 'FindControllerFromRouteNamespace', $oRouter, [$sRouteNamespace]);
-
-		$this->assertEquals($sExpectedControllerFQCN, $sTestedControllerFQCN, "Controller found for '$sRouteNamespace' was not the expected one. Got '$sTestedControllerFQCN', expected '$sExpectedControllerFQCN'.");
+		$this->assertEquals($sExpectedHandlerFQCN, $sTestedHandlerFQCN, "Handler found for '$sRoute' was not the expected one. Got '$sTestedHandlerFQCN', expected '$sExpectedHandlerFQCN'.");
 	}
 
-	public function FindControllerFromRouteNamespaceProvider(): array
+	public function FindHandlerFromRouteProvider(): array
 	{
 		return [
 			'Object controller' => [
 				'object.modify',
-				'Combodo\iTop\Controller\Base\Layout\ObjectController',
+				'Combodo\iTop\Controller\Base\Layout\ObjectController::OperationModify',
 			],
 			'Unknown controller' => [
 				'something_that_should_not_exist_in_the_default_package.foo',
 				null,
-			],
-		];
-	}
-
-	/**
-	 * @dataProvider GetOperationMethodNameFromRouteOperationProvider
-	 * @covers \Combodo\iTop\Service\Router\Router::MakeOperationMethodNameFromOperation
-	 *
-	 * @param string $sRoute
-	 * @param string $sExpectedMethodName
-	 *
-	 * @return void
-	 */
-	public function testGetOperationMethodNameFromRouteOperation(string $sRoute, string $sExpectedMethodName): void
-	{
-		$oRouter = Router::GetInstance();
-		$aRouteParts = $oRouter->GetRouteParts($sRoute);
-
-		$sTestedMethodName = $this->InvokeNonPublicMethod(get_class($oRouter), 'MakeOperationMethodNameFromOperation', $oRouter, [$aRouteParts['operation']]);
-		$this->assertEquals($sExpectedMethodName, $sTestedMethodName, "Operation method name '".$aRouteParts['operation']."' was not matching the expected one. Got '$sTestedMethodName', expected '$sExpectedMethodName'.");
-	}
-
-	public function GetOperationMethodNameFromRouteOperationProvider(): array
-	{
-		return [
-			'Simple operation' => [
-				'object.modify',
-				'OperationModify',
-			],
-			'Operation with an underscore' => [
-				'object.apply_modify',
-				'OperationApplyModify',
 			],
 		];
 	}
