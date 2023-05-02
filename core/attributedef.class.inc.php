@@ -8402,10 +8402,10 @@ class AttributeImage extends AttributeBlob
 		}
 		else
 		{
-			$oDefaultImg = $this->Get('default_image');
-			if (is_object($oDefaultImg) && !$oDefaultImg->IsEmpty()) {
-				$oFormField->SetDownloadUrl($oDefaultImg);
-				$oFormField->SetDisplayUrl($oDefaultImg);
+			$oDefaultImage = $this->Get('default_image');
+			if (is_object($oDefaultImage) && !$oDefaultImage->IsEmpty()) {
+				$oFormField->SetDownloadUrl($oDefaultImage);
+				$oFormField->SetDisplayUrl($oDefaultImage);
 			}
 		}
 
