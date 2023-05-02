@@ -2455,7 +2455,7 @@ class AttributeLinkedSet extends AttributeDefinition
             $sNextClass = $this->m_sHostClass;
 
             do {
-                $sKey = "class:{$sNextClass}/Attribute:{$this->m_sCode}/{$sDictEntrySuffix}";
+                $sKey = "Class:{$sNextClass}/Attribute:{$this->m_sCode}/{$sDictEntrySuffix}";
                 if (Dict::S($sKey, null, $bUserLanguageOnly) !== $sKey) {
                     return Dict::Format($sKey, ...$aArgs);
                 }
