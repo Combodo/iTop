@@ -3355,44 +3355,23 @@ EOF
 
 		// The list of candidate fields is made of the ordered list of "details" attributes + other attributes
 		$aAttributes = array();
-		if (MetaModel::GetZListItems($sClass, $sStimulus)) {
-			$aList = $this->FlattenZList(MetaModel::GetZListItems($sClass, $sStimulus));
+		$aList = $this->FlattenZList(MetaModel::GetZListItems($sClass, 'details'));
 
-			foreach (MetaModel::GetAttributesList($sClass) as $sAttCode) {
-				$aAttributes[$sAttCode] = true;
-			}
-			// Order the fields based on their dependencies, set the fields for which there is only one possible value
-			// and perform this in the order of dependencies to avoid dead-ends
-			$aDeps = array();
-			foreach ($aAttributes as $sAttCode => $trash) {
-				$aDeps[$sAttCode] = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
-			}
-			$aListOrdered = $this->OrderDependentFields($aDeps);
-			//merge of the two list
-			foreach ($aListOrdered as $sAttCode) {
-				if (!in_array($sAttCode, $aList)) {
-					$aList[] = $sAttCode;
-				}
-			}
-		} else {
-			$aList = $this->FlattenZList(MetaModel::GetZListItems($sClass, 'details'));
+		foreach (MetaModel::GetAttributesList($sClass) as $sAttCode) {
+			$aAttributes[$sAttCode] = true;
+		}
+		// Order the fields based on their dependencies, set the fields for which there is only one possible value
+		// and perform this in the order of dependencies to avoid dead-ends
+		$aDeps = array();
+		foreach ($aAttributes as $sAttCode => $trash) {
+			$aDeps[$sAttCode] = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
+		}
+		$aListOrdered = $this->OrderDependentFields($aDeps);
 
-			foreach (MetaModel::GetAttributesList($sClass) as $sAttCode) {
-				$aAttributes[$sAttCode] = true;
-			}
-			// Order the fields based on their dependencies, set the fields for which there is only one possible value
-			// and perform this in the order of dependencies to avoid dead-ends
-			$aDeps = array();
-			foreach ($aAttributes as $sAttCode => $trash) {
-				$aDeps[$sAttCode] = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
-			}
-			$aListOrdered = $this->OrderDependentFields($aDeps);
-
-			//merge of the two list
-			foreach ($aListOrdered as $sAttCode) {
-				if (!in_array($sAttCode, $aList)) {
-					$aList[] = $sAttCode;
-				}
+		//merge of the two list
+		foreach ($aListOrdered as $sAttCode) {
+			if (!in_array($sAttCode, $aList)) {
+				$aList[] = $sAttCode;
 			}
 		}
 

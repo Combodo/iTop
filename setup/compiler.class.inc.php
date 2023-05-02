@@ -1839,23 +1839,6 @@ EOF;
 
 			$sZlists .= "\n" . $this->GeneratePhpCodeForZlist($sListCode, $oListNode);
 		}
-		//Add presentation for apply stimuli
-		$oListStimuli = $oPresentation->GetOptionalElement("stimuli");
-		if ($oListStimuli) {
-			foreach ($oListStimuli->getElementsByTagName('stimulus') as $oListNode) {
-				$sStimulusCode = $oListNode->getAttribute('id');
-
-				$aAttributes = $oListNode->GetNodeAsArrayOfItems();
-				if (!is_array($aAttributes)) {
-					$aAttributes = array();
-				}
-				$this->ArrayOfItemsToZList($aAttributes);
-
-				$sZAttributes = var_export($aAttributes, true);
-				$sZlists .= "		MetaModel::Init_SetZListItems('$sStimulusCode', $sZAttributes);\n";
-			}
-		}
-
 
 		// Methods
 		$oMethods = $oClass->GetUniqueElement('methods');
