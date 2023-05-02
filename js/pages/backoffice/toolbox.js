@@ -361,8 +361,8 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 	// Check do not show again preference key
 	if(oOptions.do_not_show_again_pref_key !== null){
 		if(GetUserPreference(oOptions.do_not_show_again_pref_key, false)){
-			if(oOptions.callback_on_confirm !== null){
-				oOptions.callback_on_confirm(...aData);
+			if(oOptions.callback_on_confirmation_confirm !== null){
+				oOptions.callback_on_confirmation_confirm(...aData);
 			}
 			return;
 		}
@@ -372,6 +372,8 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 		title: Dict.S('UI:Modal:DefaultConfirmationTitle'),
 		content: '',
 		do_not_show_again_pref_key: null,
+		callback_on_confirmation_confirm: null,
+		callback_on_confirmation_cancel: null,
 		extra_options: {
 			callback_on_modal_close: function () {
 				$(this).dialog( "destroy" ); // destroy dialog object
@@ -384,8 +386,8 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 				callback_on_click: function () {
 					// call confirm handler and close dialog
 					let bCanClose = true;
-					if (oOptions.callback_on_cancel != null) {
-						bCanClose = oOptions.callback_on_cancel(...aData) !== false;
+					if (oOptions.callback_on_confirmation_cancel != null) {
+						bCanClose = oOptions.callback_on_confirmation_cancel(...aData) !== false;
 					}
 					if (bCanClose) {
 						$(this).dialog('close'); // close dialog
@@ -398,8 +400,8 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 				callback_on_click: function () {
 					// Call confirm handler and close dialog
 					let bCanClose = true;
-					if (oOptions.callback_on_confirm != null) {
-						bCanClose = oOptions.callback_on_confirm(...aData) !== false;
+					if (oOptions.callback_on_confirmation_confirm != null) {
+						bCanClose = oOptions.callback_on_confirmation_confirm(...aData) !== false;
 					}
 					if (bCanClose) {
 						$(this).dialog('close'); // close dialog
@@ -446,7 +448,7 @@ CombodoModal.OpenInformativeModal = function(sMessage, sSeverity, oOptions) {
 		buttons: {
 			ok: {
 				text: Dict.S('UI:Button:Ok'),
-				// classes: ['ibo-is-regular', 'ibo-is-neutral'],
+				classes: ['ibo-is-regular', 'ibo-is-neutral'],
 				callback_on_click: function () {
 					$(this).dialog('close');
 				}
