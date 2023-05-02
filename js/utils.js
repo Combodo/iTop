@@ -1481,8 +1481,8 @@ let CombodoModal = {
 	 *      ```
 	 *      {
 	 *          do_not_show_again_pref_key: string,
-	 *          callback_on_confirmation_cancel: function,
-	 *          callback_on_confirmation_cancel: function
+	 *          callback_on_confirm: function,
+	 *          callback_on_cancel: function
  *          }
 	 *      ```
 	 * @param aData {Array} Array of arguments to pass to the callbacks

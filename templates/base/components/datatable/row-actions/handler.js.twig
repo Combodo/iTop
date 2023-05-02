@@ -40,7 +40,7 @@
             CombodoModal.OpenConfirmationModal({
                 title: sTitle,
                 content: sMessage,
-                callback_on_confirmation_confirm: ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }},
+                callback_on_confirm: ActionRowFunction{{ oUIBlock.GetId() }}{{ loop.index0 }},
                 buttons: {
                     confirm: {
                         text: sLabel,
