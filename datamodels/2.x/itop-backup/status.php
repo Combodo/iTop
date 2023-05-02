@@ -471,7 +471,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 	$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
 
 		// Get the value of restore_token
-		$('#backup_errors').append(data);
+		$('#restore_token').val(data.token);
 
 		var oParams = {};
 		oParams.operation = 'restore_exec';
