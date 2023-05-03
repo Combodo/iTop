@@ -372,6 +372,8 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 		title: Dict.S('UI:Modal:DefaultConfirmationTitle'),
 		content: '',
 		do_not_show_again_pref_key: null,
+		callback_on_confirm: null,
+		callback_on_cancel: null,
 		extra_options: {
 			callback_on_modal_close: function () {
 				$(this).dialog( "destroy" ); // destroy dialog object
@@ -446,7 +448,7 @@ CombodoModal.OpenInformativeModal = function(sMessage, sSeverity, oOptions) {
 		buttons: {
 			ok: {
 				text: Dict.S('UI:Button:Ok'),
-				// classes: ['ibo-is-regular', 'ibo-is-neutral'],
+				classes: ['ibo-is-regular', 'ibo-is-neutral'],
 				callback_on_click: function () {
 					$(this).dialog('close');
 				}
