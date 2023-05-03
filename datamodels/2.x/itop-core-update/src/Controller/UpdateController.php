@@ -159,6 +159,7 @@ class UpdateController extends Controller
 		];
 		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'setup/jquery.progression.js');
 		$this->AddSaas('css/backoffice/main.scss');
+		$this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
 		$this->m_sOperation = 'UpdateCoreFiles';
 		$this->DisplaySetupPage($aParams);
 	}

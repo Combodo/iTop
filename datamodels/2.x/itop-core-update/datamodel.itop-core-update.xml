@@ -8,11 +8,4 @@
       <enable_admin_only>1</enable_admin_only>
     </menu>
   </menus>
-  <branding>
-    <themes_common>
-      <stylesheets>
-        <stylesheet id="itop-core-update-style" _delta="define">itop-core-update/css/itop-core-update.scss</stylesheet>
-      </stylesheets>
-    </themes_common>
-  </branding>
 </itop_design>
