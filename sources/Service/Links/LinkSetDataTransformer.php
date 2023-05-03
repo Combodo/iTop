@@ -78,6 +78,7 @@ class LinkSetDataTransformer
 		catch (Exception $e) {
 
 			ExceptionLog::LogException($e);
+
 			return [];
 		}
 	}

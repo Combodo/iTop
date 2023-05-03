@@ -26,15 +26,17 @@ class LinkSetRepository
 {
 
 	/**
-	 * LinksDbSetToTargetObjectArray.
+	 * Get list of remote objects information based on a linkSet
 	 *
 	 * @param iDBObjectSetIterator $oDbObjectSet Db object set
+	 * @param bool $bForce options with force flag will be kept event if they don't be part of the current value of set
+	 * @param array $aInitialOptions
 	 * @param string $sTargetClass Target class name
 	 * @param string|null $sTargetField Target field
 	 *
 	 * @return array|null
 	 */
-	static public function LinksDbSetToTargetObjectArray(iDBObjectSetIterator $oDbObjectSet, string $sTargetClass, string $sTargetField = null): ?array
+	static public function LinksDbSetToTargetObjectArray(iDBObjectSetIterator $oDbObjectSet, bool $bForce, array &$aInitialOptions, string $sTargetClass, string $sTargetField = null): ?array
 	{
 		try {
 
@@ -51,9 +53,6 @@ class LinkSetRepository
 			$oDbObjectSet->OptimizeColumnLoad([
 				$sTargetClass => $aFieldsToLoad,
 			]);
-
-			// Prepare result
-			$aResult = [];
 
 			// Iterate throw objects...
 			$oDbObjectSet->Rewind();
@@ -78,16 +77,19 @@ class LinkSetRepository
 				// Remote key
 				$aObjectData['key'] = $oObject->GetKey();
 
+				// force option
+				$aObjectData['force'] = $bForce;
+
 				// Fill loaded columns...
 				foreach ($aFieldsToLoad as $sField) {
 					$aObjectData[$sField] = $oObject->Get($sField);
 				}
 
 				// Compute others data
-				$aResult[] = ObjectRepository::ComputeOthersData($oObject, $sTargetClass, $aObjectData, $aComplementAttributeSpec, $sObjectImageAttCode);
+				$aInitialOptions[$oObject->GetKey()] = ObjectRepository::ComputeOthersData($oObject, $sTargetClass, $aObjectData, $aComplementAttributeSpec, $sObjectImageAttCode);
 			}
 
-			return $aResult;
+			return $aInitialOptions;
 		}
 		catch (Exception $e) {
 

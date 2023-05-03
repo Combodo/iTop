@@ -69,13 +69,19 @@ class LinkSetUIBlockFactory extends SetUIBlockFactory
 
 		// Current value
 		$aCurrentValues = LinkSetDataTransformer::Decode($oDbObjectSet, $sTargetClass, $sTargetField);
+		// Some operations can have been done in case of reload after an error
+		$aInitialValues = LinkSetDataTransformer::Decode($oDbObjectSet->GetOriginalSet(), $sTargetClass, $sTargetField);
 
 		// Initial options data
-		$aInitialOptions = LinkSetRepository::LinksDbSetToTargetObjectArray($oDbObjectSet, $sTargetClass, $sTargetField);
+		$aInitialOptions = [];
+		LinkSetRepository::LinksDbSetToTargetObjectArray($oDbObjectSet, false, $aInitialOptions, $sTargetClass, $sTargetField);
+		// Register also original values in case of reload after an error. In order to remember the operations, use the "bForce" flag
+		LinkSetRepository::LinksDbSetToTargetObjectArray($oDbObjectSet->GetOriginalSet(), true, $aInitialOptions, $sTargetClass, $sTargetField);
 		if ($aInitialOptions !== null) {
-			$oSetUIBlock->GetDataProvider()->SetOptions($aInitialOptions);
+			$oSetUIBlock->GetDataProvider()->SetOptions(array_values($aInitialOptions));
 			// Set value
 			$oSetUIBlock->SetValue(json_encode($aCurrentValues));
+			$oSetUIBlock->SetInitialValue(json_encode($aInitialValues));
 		} else {
 			$oSetUIBlock->SetHasError(true);
 		}

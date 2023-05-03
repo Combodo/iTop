@@ -19,7 +19,7 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     plugins: {
         {# PLUGIN update operations  #}
         'combodo_update_operations' : {
-            initial: {{ oUIBlock.GetValue()|raw }},
+            initial: {{ oUIBlock.GetInitialValue()|raw }},
         },
         {# PLUGIN combodo auto position  #}
         'combodo_auto_position' : {
@@ -106,8 +106,9 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
                 // Retrieve current input value
                 let aSelectedItems = me.getValue();
                 // Filter old options data to keep selected values
+                // (options with force flag will be kept event if they doesn't be part of the current value)
                 let options = Object.values(me.options);
-                options = options.filter(item => aSelectedItems.includes(item['{{ oDataProvider.GetDataValueField() }}']));
+                options = options.filter(item => (typeof(item.force) !== "undefined" && item.force === true) || aSelectedItems.includes(item['{{ oDataProvider.GetDataValueField() }}']));
                 // Merge kept and new values
                 options = $.merge(options, res.data.search_data);
                 // Compute groups

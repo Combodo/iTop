@@ -112,7 +112,6 @@ Selectize.define("combodo_update_operations", function (aOptions) {
 					}
 				}
 			});
-
 		};
 	})();
 

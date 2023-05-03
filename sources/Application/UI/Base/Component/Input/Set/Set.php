@@ -81,6 +81,8 @@ class Set extends AbstractInput
 	/** @var bool $bHasError Error flag */
 	private bool $bHasError;
 
+	private ?string $sInitialValue = null;
+
 	/**
 	 * Constructor.
 	 *
@@ -423,5 +425,24 @@ class Set extends AbstractInput
 	public function HasError(): bool
 	{
 		return $this->bHasError;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetInitialValue(): string
+	{
+		if (is_null($this->sInitialValue)) {
+			return $this->GetValue();
+		}
+		return $this->sInitialValue;
+	}
+
+	/**
+	 * @param string $sInitialValue
+	 */
+	public function SetInitialValue(string $sInitialValue): void
+	{
+		$this->sInitialValue = $sInitialValue;
 	}
 }

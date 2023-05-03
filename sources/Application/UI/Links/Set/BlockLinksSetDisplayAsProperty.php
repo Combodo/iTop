@@ -89,7 +89,9 @@ class BlockLinkSetDisplayAsProperty extends UIContentBlock
 		$sTargetField = LinkSetModel::GetTargetField($this->oAttribute);
 
 		// Get objects from linked data
-		$this->aObjectsData = LinkSetRepository::LinksDbSetToTargetObjectArray($this->oValue, $this->sTargetClass, $sTargetField);
+		$aObjectsData = [];
+		LinkSetRepository::LinksDbSetToTargetObjectArray($this->oValue, false, $aObjectsData, $this->sTargetClass, $sTargetField);
+		$this->aObjectsData = array_values($aObjectsData);
 
 		// Twig environment
 		$this->oTwigEnv = TwigHelper::GetTwigEnvironment(TwigHelper::ENUM_TEMPLATES_BASE_PATH_BACKOFFICE);

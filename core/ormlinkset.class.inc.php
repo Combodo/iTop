@@ -845,6 +845,11 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			}
 			$oLinkSearch->SetSelectedClasses([self::LINK_ALIAS, self::REMOTE_ALIAS]);
 		}
+		if (count($this->aRemoved) !== 0) {
+			$sConditionExpr = '`'.self::LINK_ALIAS.'`.id NOT IN ('.implode(',', $this->aRemoved).')';
+			$oRemovedExpression = Expression::FromOQL($sConditionExpr);
+			$oLinkSearch->AddConditionExpression($oRemovedExpression);
+		}
 		$oLinkSet = new DBObjectSet($oLinkSearch);
 		$oLinkSet->SetShowObsoleteData($bShowObsolete);
 		if ($this->HasDelta()) {
@@ -872,5 +877,13 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		sort($aValues);
 
 		return $aValues;
+	}
+
+	/**
+	 * @return \DBObjectSet|null
+	 */
+	public function GetOriginalSet(): ?DBObjectSet
+	{
+		return $this->oOriginalSet;
 	}
 }

@@ -2367,6 +2367,7 @@ EOF
 						$sHTMLValue = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oTagSetBlock);
 					} else {
 						$sInputType = self::ENUM_INPUT_TYPE_LINKEDSET;
+						$oObj = $aArgs['this'] ?? null;
 						if ($oAttDef->IsIndirect()) {
 							$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
 								$oAttDef->DuplicatesAllowed());
@@ -2375,7 +2376,6 @@ EOF
 						}
 						$aEventsList[] = 'validate';
 						$aEventsList[] = 'change';
-						$oObj = $aArgs['this'] ?? null;
 						$sHTMLValue = $oWidget->Display($oPage, $value, array(), $sFormPrefix, $oObj);
 					}
 					break;

@@ -8,19 +8,17 @@ namespace Combodo\iTop\Application\UI\Links\Indirect;
 
 use AttributeLinkedSetIndirect;
 use cmdbAbstractObject;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Combodo\iTop\Service\Links\LinkSetModel;
 use ConfigException;
 use CoreException;
 use DBObject;
-use Exception;
 use Dict;
+use Exception;
 use MetaModel;
 use UILinksWidget;
 use utils;
@@ -60,7 +58,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	/** @var int */
 	public int $iMaxAddedId = 0;
 
-	/** @var array */
+	/** @var array List of removed links id used by twig template */
 	public array $aRemoved = [];
 
 	/** @var string */
@@ -131,7 +129,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public function InitTable(\WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $aTableConfig)
+	public function InitTable(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $aTableConfig)
 	{
 		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
 		$oValue->Rewind();
@@ -139,29 +137,48 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 		$aForm = array();
 		$iMaxAddedId = 0;
 		$iAddedId = -1; // Unique id for new links
-		$this->aRemoved = json_decode(\utils::ReadPostedParam("attr_{$sFormPrefix}{$this->oUILinksWidget->GetAttCode()}_tbd", '[]', 'raw_data'));
+		$this->aRemoved = json_decode(\utils::ReadPostedParam("attr_{$sFormPrefix}{$this->oUILinksWidget->GetAttCode()}_tbd", '[]', 'raw_data'), true);
+		$aModified = json_decode(\utils::ReadPostedParam("attr_{$sFormPrefix}{$this->oUILinksWidget->GetAttCode()}_tbm", '[]', 'raw_data'), true);
 		while ($oCurrentLink = $oValue->Fetch()) {
 			// We try to retrieve the remote object as usual
-			if (!in_array($oCurrentLink->GetKey(), $this->aRemoved)) {
-				$oLinkedObj = MetaModel::GetObject($this->oUILinksWidget->GetRemoteClass(), $oCurrentLink->Get($this->oUILinksWidget->GetExternalKeyToRemote()), false /* Must not be found */);
-				// If successful, it means that we can edit its link
-				if ($oLinkedObj !== null) {
-					$bReadOnly = false;
-				} // Else we retrieve it without restrictions (silos) and will display its link as readonly
-				else {
-					$bReadOnly = true;
-					$oLinkedObj = MetaModel::GetObject($this->oUILinksWidget->GetRemoteClass(), $oCurrentLink->Get($this->oUILinksWidget->GetExternalKeyToRemote()), false /* Must not be found */, true);
-				}
-
-				if ($oCurrentLink->IsNew()) {
-					$key = $iAddedId--;
-				} else {
-					$key = $oCurrentLink->GetKey();
-				}
-
-				$iMaxAddedId = max($iMaxAddedId, $key);
-				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly, $bAllowRemoteExtKeyEdit);
+			$sCurrentLinkId = $oCurrentLink->GetKey();
+			if ($oCurrentLink->IsNew()) {
+				$key = $iAddedId--;
+			} else {
+				$key = $oCurrentLink->GetKey();
 			}
+
+			if (isset($aModified[$sCurrentLinkId])) {
+				// Apply the modifications to the current link
+				$aModifications = $aModified[$sCurrentLinkId];
+				$sPrefix = 'attr_'.$aModifications['formPrefix'];
+				foreach ($aModifications as $sName => $sValue) {
+					if (!utils::StartsWith($sName, $sPrefix)) {
+						continue;
+					}
+					$sAttCode = substr($sName, strlen($sPrefix));
+					$oCurrentLink->Set($sAttCode, $sValue);
+					$sEscapedValue = addslashes($sValue);
+					$oPage->add_ready_script(<<<EOF
+oWidget{$this->oUILinksWidget->GetInputId()}.OnValueChange($sCurrentLinkId, $iAddedId, "$sAttCode", "$sEscapedValue");
+EOF
+					);
+				}
+			}
+			$oLinkedObj = MetaModel::GetObject($this->oUILinksWidget->GetRemoteClass(), $oCurrentLink->Get($this->oUILinksWidget->GetExternalKeyToRemote()), false /* Must not be found */);
+			// If successful, it means that we can edit its link
+			if ($oLinkedObj !== null) {
+				$bReadOnly = false;
+			} // Else we retrieve it without restrictions (silos) and will display its link as readonly
+			else {
+				$bReadOnly = true;
+				$oLinkedObj = MetaModel::GetObject($this->oUILinksWidget->GetRemoteClass(), $oCurrentLink->Get($this->oUILinksWidget->GetExternalKeyToRemote()), false /* Must not be found */, true);
+			}
+
+
+
+			$iMaxAddedId = max($iMaxAddedId, $key);
+			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly, $bAllowRemoteExtKeyEdit);
 		}
 		$this->iMaxAddedId = (int)$iMaxAddedId;
 
