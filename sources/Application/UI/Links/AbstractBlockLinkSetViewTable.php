@@ -13,6 +13,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use CoreException;
 use CoreWarning;
 use DBObject;
+use Dict;
 use DictExceptionMissingString;
 use DisplayBlock;
 use Exception;
@@ -123,7 +124,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	public function GetDictionaryEntry(string $sKey, DBObject $oDBObject = null)
 	{
 		return $this->oAttDef->SearchSpecificLabel($sKey, '', true,
-			$this->sObjectClass,
+			Dict::S("Class:{$this->sObjectClass}"),
 			$this->oDbObject->Get('friendlyname'),
 			$this->oAttDef->GetLabel(),
 			$this->sTargetClass,

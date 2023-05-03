@@ -14,6 +14,7 @@ use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Service\Links\LinkSetModel;
 use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Service\Base\ObjectRepository;
+use Dict;
 use Exception;
 use JsonPage;
 use CoreException;
@@ -207,7 +208,7 @@ JS;
 			$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$oHostObj = MetaModel::GetObject($sClass, $sId);
 			$sFormTitle = $oLinksetDef->SearchSpecificLabel('UI:Links:Add:Modal:Title', '', true,
-				$sClass,
+				Dict::S("Class:{$sClass}"),
 				$oHostObj->Get('friendlyname'),
 				$oLinksetDef->GetLabel(),
 				LinkSetModel::GetTargetClass($oLinksetDef));

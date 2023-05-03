@@ -327,7 +327,6 @@ CombodoModal._ConvertButtonDefinition = function (aButtonsDefinitions) {
 	}
 	Object.keys(aButtonsDefinitions).forEach(key => {
 				const element = aButtonsDefinitions[key];
-				console.log(element);
 				const aButton = {
 					text: element.text,
 					class: typeof(element.classes) !== 'undefined' ? element.classes.join(' ') : '',
