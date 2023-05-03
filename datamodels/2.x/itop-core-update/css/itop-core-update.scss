@@ -2,20 +2,6 @@
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-$link-hover-color: #EA7D1E !default;
-
-fieldset {
-  margin-top: 0;
-  legend {
-    margin-top: 0;
-  }
-  ~ fieldset {
-    margin-top: 13px;
-  }
-  p, div {
-    margin: 7px 0;
-  }
-}
 
 #setup_msg {
   font-size: 1.17rem;
