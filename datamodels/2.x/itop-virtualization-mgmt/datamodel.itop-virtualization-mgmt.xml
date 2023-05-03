@@ -356,12 +356,6 @@
             <item id="virtualmachine_list">
               <rank>120</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>130</rank>
-            </item>
-            <item id="services_list">
-              <rank>140</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -496,12 +490,6 @@
             </item>
             <item id="virtualmachine_list">
               <rank>110</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>120</rank>
-            </item>
-            <item id="services_list">
-              <rank>130</rank>
             </item>
           </items>
         </details>
@@ -664,12 +652,6 @@
             </item>
             <item id="logicalvolumes_list">
               <rank>60</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>70</rank>
-            </item>
-            <item id="services_list">
-              <rank>80</rank>
             </item>
             <item id="col:col1">
               <rank>90</rank>

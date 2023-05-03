@@ -233,12 +233,6 @@
             <item id="documents_list">
               <rank>160</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>180</rank>
-            </item>
-            <item id="services_list">
-              <rank>190</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -403,12 +397,6 @@
             <item id="documents_list">
               <rank>180</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>200</rank>
-            </item>
-            <item id="services_list">
-              <rank>210</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -562,12 +550,6 @@
             <item id="documents_list">
               <rank>160</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>180</rank>
-            </item>
-            <item id="services_list">
-              <rank>190</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -711,12 +693,6 @@
             </item>
             <item id="documents_list">
               <rank>160</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>170</rank>
-            </item>
-            <item id="services_list">
-              <rank>180</rank>
             </item>
           </items>
         </details>
@@ -880,12 +856,6 @@
             </item>
             <item id="networkdevice_list">
               <rank>50</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>60</rank>
-            </item>
-            <item id="services_list">
-              <rank>70</rank>
             </item>
             <item id="col:col1">
               <rank>80</rank>
@@ -1084,12 +1054,6 @@
             </item>
             <item id="networkdevice_list">
               <rank>50</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>60</rank>
-            </item>
-            <item id="services_list">
-              <rank>70</rank>
             </item>
             <item id="col:col1">
               <rank>80</rank>
@@ -1303,12 +1267,6 @@
             </item>
             <item id="documents_list">
               <rank>150</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>170</rank>
-            </item>
-            <item id="services_list">
-              <rank>180</rank>
             </item>
           </items>
         </details>
