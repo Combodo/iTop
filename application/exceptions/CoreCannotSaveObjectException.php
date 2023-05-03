@@ -48,7 +48,7 @@ class CoreCannotSaveObjectException extends CoreException
 
 		if (count($this->aIssues) == 1) {
 			$sIssue = reset($this->aIssues);
-			$sContent .= " <span>".utils::HtmlEntities($sIssue)."</span>";
+			$sContent .= "&nbsp;<span>".utils::HtmlEntities($sIssue)."</span>";
 		} else {
 			$sContent .= '<ul>';
 			foreach ($this->aIssues as $sError) {
