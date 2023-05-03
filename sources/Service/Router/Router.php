@@ -15,12 +15,12 @@ use SetupUtils;
 /**
  * Class Router
  *
- * Service to find the corresponding controller / method for a given "route" parameter
+ * Service to find the corresponding controller / method for a given "route" parameter.
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Service\Router
  * @since 3.1.0
- * @internal
+ * @api
  */
 class Router
 {
@@ -28,6 +28,7 @@ class Router
 	protected static ?Router $oSingleton = null;
 
 	/**
+	 * @api
 	 * @return $this The singleton instance of the router
 	 */
 	public static function GetInstance(): Router
@@ -54,6 +55,9 @@ class Router
 	}
 
 	/**
+	 * Generate a complete URL for a specific route and optional parameters
+	 *
+	 * @api
 	 * @param string $sRoute Code of the route to generate the URL for (eg. "object.modify" => "https://itop/pages/UI.php?route=object.modify")
 	 * @param array $aParams Parameters to add to the URL query string, they will be URL-encoded automatically.
 	 *      Note that only scalars and arrays are supported.
