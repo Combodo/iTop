@@ -131,10 +131,11 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	 * @param WebPage $oPage
 	 * @param DBObjectSet $oValue
 	 * @param string $sFormPrefix
+	 * @param $oCurrentObj
 	 *
 	 * @return void
 	 */
-	public function InitTable(WebPage $oPage, iDBObjectSetIterator $oValue, string $sFormPrefix)
+	public function InitTable(WebPage $oPage, iDBObjectSetIterator $oValue, string $sFormPrefix, $oCurrentObj)
 	{
 		$this->sInputName = $sFormPrefix.'attr_'.$this->oUILinksDirectWidget->GetAttCode();
 		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
@@ -142,7 +143,7 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 		try {
 			$aAttribs = $this->oUILinksDirectWidget->GetTableConfig();
 			$aRows = $this->GetTableRows($oPage, $oValue);
-			$aRowActions = $this->GetRowActions();
+			$aRowActions = $this->GetRowActions($oCurrentObj);
 			$oDatatable = DataTableUIBlockFactory::MakeForForm($this->oUILinksDirectWidget->GetInputId(), $aAttribs, $aRows, '', $aRowActions);
 			$oDatatable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
 
@@ -275,11 +276,25 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	/**
 	 * Return row actions.
 	 *
+	 * @param $oHostObject
+	 *
 	 * @return \string[][]
 	 */
-	private function GetRowActions(): array
+	private function GetRowActions($oHostObject): array
 	{
 		$aRowActions = array();
+
+		$sDeleteButtonTooltip = $this->oAttributeLinkedSet->SearchSpecificLabel('UI:Links:Delete:Button+', '', true,
+			Dict::S("Class:{$this->oAttributeLinkedSet->GetHostClass()}"),
+			$oHostObject->Get('friendlyname'),
+			$this->oAttributeLinkedSet->GetLabel(),
+			Dict::S("Class:{$this->oUILinksDirectWidget->GetLinkedClass()}"));
+
+		$sRemoveButtonTooltip = $this->oAttributeLinkedSet->SearchSpecificLabel('UI:Links:Remove:Button+', '', true,
+			Dict::S("Class:{$this->oAttributeLinkedSet->GetHostClass()}"),
+			$oHostObject->Get('friendlyname'),
+			$this->oAttributeLinkedSet->GetLabel(),
+			Dict::S("Class:{$this->oUILinksDirectWidget->GetLinkedClass()}"));
 
 		// until a full link set refactoring (continue using edit_mode property)
 		switch ($this->oAttributeLinkedSet->GetEditMode()) {
@@ -292,8 +307,8 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
 			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
 				$aRowActions[] = array(
-					'label'         => 'UI:Links:ActionRow:Delete',
-					'tooltip'       => 'UI:Links:ActionRow:Delete+',
+					'label'         => 'UI:Links:Delete:Button',
+					'tooltip'       => $sDeleteButtonTooltip,
 					'icon_classes'  => 'fas fa-trash',
 					'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
 				);
@@ -301,8 +316,8 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
 				$aRowActions[] = array(
-					'label'         => 'UI:Links:ActionRow:Detach',
-					'tooltip'       => 'UI:Links:ActionRow:Detach+',
+					'label'         => 'UI:Links:Remove:Button',
+					'tooltip'       => $sRemoveButtonTooltip,
 					'icon_classes'  => 'fas fa-minus',
 					'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
 				);

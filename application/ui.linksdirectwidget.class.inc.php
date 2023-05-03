@@ -84,7 +84,7 @@ class UILinksWidgetDirect
 	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj)
 	{
 		$oBlock = new BlockDirectLinkSetEditTable($this, $this->sInputid);
-		$oBlock->InitTable($oPage, $oValue, $sFormPrefix);
+		$oBlock->InitTable($oPage, $oValue, $sFormPrefix, $oCurrentObj);
 
 		return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
 	}

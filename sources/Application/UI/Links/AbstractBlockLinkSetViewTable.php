@@ -127,7 +127,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 			Dict::S("Class:{$this->sObjectClass}"),
 			$this->oDbObject->Get('friendlyname'),
 			$this->oAttDef->GetLabel(),
-			$this->sTargetClass,
+			Dict::S("Class:{$this->sTargetClass}"),
 			$oDBObject !== null ? $oDBObject->Get('friendlyname') : '{item}');
 	}
 

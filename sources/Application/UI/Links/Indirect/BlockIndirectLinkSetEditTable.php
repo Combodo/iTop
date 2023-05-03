@@ -166,7 +166,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 		$this->iMaxAddedId = (int)$iMaxAddedId;
 
 		// Datatable
-		$aRowActions = $this->GetRowActions();
+		$aRowActions = $this->GetRowActions($oCurrentObj);
 		$oDataTable = DataTableUIBlockFactory::MakeForForm("{$this->oUILinksWidget->GetAttCode()}{$this->oUILinksWidget->GetNameSuffix()}", $aTableConfig, $aForm, '', $aRowActions);
 		$oDataTable->SetOptions([
 			'select_mode'        => 'custom',
@@ -448,19 +448,26 @@ JS
 		);
 	}
 
-
 	/**
 	 * Return row actions.
 	 *
+	 * @param $oHostObject
+	 *
 	 * @return \string[][]
 	 */
-	private function GetRowActions(): array
+	private function GetRowActions($oHostObject): array
 	{
 		$aRowActions = array();
 
+		$sRemoveButtonTooltip = $this->oAttributeLinkedSetIndirect->SearchSpecificLabel('UI:Links:Remove:Button+', '', true,
+			Dict::S("Class:{$this->oAttributeLinkedSetIndirect->GetHostClass()}"),
+			$oHostObject->Get('friendlyname'),
+			$this->oAttributeLinkedSetIndirect->GetLabel(),
+			Dict::S("Class:{$this->oUILinksWidget->GetRemoteClass()}"));
+
 		$aRowActions[] = array(
-			'label'         => 'UI:Links:ActionRow:Detach',
-			'tooltip'       => 'UI:Links:ActionRow:Detach+',
+			'label'         => 'UI:Links:Remove:Button',
+			'tooltip'       => $sRemoveButtonTooltip,
 			'icon_classes'  => 'fas fa-minus',
 			'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
 		);
