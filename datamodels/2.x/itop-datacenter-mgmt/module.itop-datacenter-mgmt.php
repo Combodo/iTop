@@ -35,10 +35,7 @@ SetupWebPage::AddModule(
 
 		// Components
 		//
-		'datamodel' => array(
-			'model.itop-datacenter-mgmt.php',
-			
-		),
+		'datamodel' => array(),
 		'webservice' => array(
 			
 		),

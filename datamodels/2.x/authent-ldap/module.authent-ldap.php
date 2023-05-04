@@ -27,7 +27,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.authent-ldap.php',
 		),
 		'data.struct' => array(
 			//'data.struct.authent-ldap.xml',

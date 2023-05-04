@@ -23,7 +23,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-incident-mgmt-itil.php',
 		),
 		'data.struct' => array(
 

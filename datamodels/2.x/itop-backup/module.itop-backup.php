@@ -21,7 +21,6 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'main.itop-backup.php',
-			'model.itop-backup.php',
 		),
 		'webservice' => array(
 			//'webservices.itop-backup.php',

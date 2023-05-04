@@ -21,7 +21,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-request-mgmt.php',
 			'main.itop-request-mgmt.php',
 		),
 		'data.struct' => array(

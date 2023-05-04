@@ -44,7 +44,6 @@
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-storage-mgmt.php'
 		),
 		'webservice' => array(
 			

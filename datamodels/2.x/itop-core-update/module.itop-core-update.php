@@ -43,7 +43,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => [
-			'model.itop-core-update.php',
 			'src/Service/RunTimeEnvironmentCoreUpdater.php',
 			'src/Service/CoreUpdater.php',
 			'src/Controller/UpdateController.php',

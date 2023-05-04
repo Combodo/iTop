@@ -44,7 +44,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-endusers-devices.php'
 		),
 		'webservice' => array(
 			

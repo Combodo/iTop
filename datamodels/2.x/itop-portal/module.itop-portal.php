@@ -33,7 +33,6 @@ SetupWebPage::AddModule(
 	// Components
 	'datamodel' => array(
 		'main.itop-portal.php',
-		'model.itop-portal.php',
 	),
 	'webservice' => array(
 	//'webservices.itop-portal.php',

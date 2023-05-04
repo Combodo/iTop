@@ -36,7 +36,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'main.itop-sla-computation.php'
+			'main.itop-sla-computation.php',
 		),
 		'webservice' => array(
 			

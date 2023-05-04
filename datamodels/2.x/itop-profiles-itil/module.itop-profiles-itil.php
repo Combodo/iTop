@@ -36,7 +36,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-profiles-itil.php',
 		),
 		'webservice' => array(
 			//'webservices.itop-profiles-itil.php',

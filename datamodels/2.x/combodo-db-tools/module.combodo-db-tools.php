@@ -42,7 +42,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.combodo-db-tools.php',
 			'src/Service/DBToolsUtils.php',
             'src/Service/DBAnalyzerUtils.php',
 		),

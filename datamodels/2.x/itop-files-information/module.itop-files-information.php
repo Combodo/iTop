@@ -41,7 +41,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-		    'model.itop-files-information.php',
             'src/Service/FilesInformation.php',
             'src/Service/FilesInformationException.php',
 			'src/Service/FilesInformationUtils.php',

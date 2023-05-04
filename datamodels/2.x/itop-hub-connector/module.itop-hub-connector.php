@@ -25,7 +25,6 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'menus.php',
 		    'hubnewsroomprovider.class.inc.php',
-		    'model.itop-hub-connector.php'
 		),
 		'webservice' => array(
 			

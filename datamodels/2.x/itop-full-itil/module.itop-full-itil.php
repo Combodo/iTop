@@ -23,8 +23,7 @@ SetupWebPage::AddModule(
 		'auto_select' => 'SetupInfo::ModuleIsSelected("itop-request-mgmt-itil") && SetupInfo::ModuleIsSelected("itop-incident-mgmt-itil")',
 		// Components
 		//
-		'datamodel' => array(//'model.itop-portal-full-itil.php'
-		),
+		'datamodel' => array(),
 		'webservice' => array(),
 		'data.struct' => array(// add your 'structure' definition XML files here,
 		),

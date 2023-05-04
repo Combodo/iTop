@@ -34,7 +34,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-virtualization-mgmt.php'
 		),
 		'webservice' => array(
 			
