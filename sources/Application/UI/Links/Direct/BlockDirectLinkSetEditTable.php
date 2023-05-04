@@ -19,6 +19,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ConfigException;
 use CoreException;
 use CoreUnexpectedValue;
+use DBObject;
 use DBObjectSet;
 use Dict;
 use DictExceptionMissingString;
@@ -128,14 +129,14 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	}
 
 	/**
-	 * @param WebPage $oPage
-	 * @param DBObjectSet $oValue
+	 * @param \WebPage $oPage
+	 * @param \DBObjectSet $oValue
 	 * @param string $sFormPrefix
-	 * @param $oCurrentObj
+	 * @param \DBObject $oCurrentObj
 	 *
 	 * @return void
 	 */
-	public function InitTable(WebPage $oPage, iDBObjectSetIterator $oValue, string $sFormPrefix, $oCurrentObj)
+	public function InitTable(WebPage $oPage, iDBObjectSetIterator $oValue, string $sFormPrefix, DBObject $oCurrentObj)
 	{
 		$this->sInputName = $sFormPrefix.'attr_'.$this->oUILinksDirectWidget->GetAttCode();
 		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
@@ -276,11 +277,11 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	/**
 	 * Return row actions.
 	 *
-	 * @param $oHostObject
+	 * @param \DBObject $oHostObject
 	 *
 	 * @return \string[][]
 	 */
-	private function GetRowActions($oHostObject): array
+	private function GetRowActions(DBObject $oHostObject): array
 	{
 		$aRowActions = array();
 

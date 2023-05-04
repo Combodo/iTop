@@ -468,11 +468,11 @@ JS
 	/**
 	 * Return row actions.
 	 *
-	 * @param $oHostObject
+	 * @param \DBObject $oHostObject
 	 *
 	 * @return \string[][]
 	 */
-	private function GetRowActions($oHostObject): array
+	private function GetRowActions(DBObject $oHostObject): array
 	{
 		$aRowActions = array();
 

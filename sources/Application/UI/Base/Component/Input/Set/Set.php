@@ -440,9 +440,12 @@ class Set extends AbstractInput
 
 	/**
 	 * @param string $sInitialValue
+	 * @return $this
 	 */
-	public function SetInitialValue(string $sInitialValue): void
+	public function SetInitialValue(string $sInitialValue)
 	{
 		$this->sInitialValue = $sInitialValue;
+
+		return $this;
 	}
 }
