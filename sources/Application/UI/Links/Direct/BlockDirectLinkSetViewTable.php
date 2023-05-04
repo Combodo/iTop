@@ -50,7 +50,9 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		}
 
 		// Add creation in modal if the linkset is not readonly
-		if (!$this->oAttDef->GetReadOnly() && $this->oAttDef->GetEditMode() != LINKSET_EDITMODE_NONE) {
+		if (!$this->oAttDef->GetReadOnly()
+			&& $this->oAttDef->GetEditMode() != LINKSET_EDITMODE_NONE
+			&& UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES) {
 			$aExtraParams['creation_in_modal'] = true;
 			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::DICT_CREATE_BUTTON_TOOLTIP);
 			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
