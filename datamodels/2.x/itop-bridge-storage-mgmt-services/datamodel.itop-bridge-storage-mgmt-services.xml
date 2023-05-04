@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <constants/>
+  <classes>
+    <class id="SANSwitch" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>80</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>90</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="TapeLibrary" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>80</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>90</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="NAS" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>80</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>90</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="StorageSystem" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>90</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>100</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+  </menus>
+  <user_rights>
+    <groups>
+    </groups>
+    <profiles>
+    </profiles>
+  </user_rights>
+</itop_design>

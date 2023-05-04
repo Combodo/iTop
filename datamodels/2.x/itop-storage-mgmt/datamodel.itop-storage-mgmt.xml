@@ -65,12 +65,6 @@
             <item id="san_list">
               <rank>80</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>90</rank>
-            </item>
-            <item id="services_list">
-              <rank>100</rank>
-            </item>
             <item id="col:col1">
               <rank>110</rank>
               <items>
@@ -313,12 +307,6 @@
             </item>
             <item id="datacenterdevice_list">
               <rank>70</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>80</rank>
-            </item>
-            <item id="services_list">
-              <rank>90</rank>
             </item>
             <item id="col:col1">
               <rank>100</rank>
@@ -564,12 +552,6 @@
             <item id="networkdevice_list">
               <rank>70</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>80</rank>
-            </item>
-            <item id="services_list">
-              <rank>90</rank>
-            </item>
             <item id="col:col1">
               <rank>100</rank>
               <items>
@@ -813,12 +795,6 @@
             </item>
             <item id="nasfilesystem_list">
               <rank>70</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>80</rank>
-            </item>
-            <item id="services_list">
-              <rank>90</rank>
             </item>
             <item id="col:col1">
               <rank>100</rank>

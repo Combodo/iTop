@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <constants/>
+  <classes>
+    <class id="Rack" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>200</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>210</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Enclosure" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>200</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>210</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="PowerConnection" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>160</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>170</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="PowerSource" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>180</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>190</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="PDU" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>190</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>200</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+  </menus>
+  <user_rights>
+    <groups>
+    </groups>
+    <profiles>
+    </profiles>
+  </user_rights>
+</itop_design>
