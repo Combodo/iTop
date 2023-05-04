@@ -154,16 +154,15 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	{
 		parent::InitializeLinkedScripts();
 
+		// Used by forms
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/leave_handler.js');
+
 		// Used by external keys, DM viewer
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.min.js');
 
 		// Used by advanced search, date(time) attributes. Coupled to the PrepareWidgets() JS function.
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon-i18n.min.js');
-
-		// Tooltips
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
 
 		// Used by external keys and other drop down lists
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
@@ -178,6 +177,10 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		// Used by the newsroom
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
+
+		// Tooltips
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
 
 		// Keyboard shortcuts
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap.min.js');
@@ -211,6 +214,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_dict_entries('Enum:Undefined');
 		$this->add_dict_entry('UI:Datatables:Language:Processing');
 		$this->add_dict_entries('UI:Newsroom');
+		$this->add_dict_entry('UI:NavigateAwayConfirmationMessage');
 
 		// User not logged in dialog
 		$this->add_dict_entry('UI:DisconnectedDlgTitle');

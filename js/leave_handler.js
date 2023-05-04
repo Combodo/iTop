@@ -21,16 +21,27 @@ $(function()
 			// default options
 			options:
 			{
+				/** {String} Message to show in the confirmation dialog if supported by the browser */
 				'message': 'Do you really want to loose your changes?',
+				/** {Object} @see this.events */
 				'extra_events': {},
 			},
-			//[event]
+			/**
+			 * {Object} Object representing the DOM elements on which specific events can have a blocker registered on.
+			 *          Will be merged with {@see this.options.extra_events} from the widget instantiator
+			 */
 			events: {
 				'window': ['beforeunload'],
 				'body': [],
 				'element': []
 			},
-			// {id : {target : 'event1', target : 'event2'}}
+			/**
+			 * {Object} Object representing for each blocker their DOM target and events
+			 *          {
+			 *              id1: {target1 : 'event1', target1 : 'event2'},
+			 *              id2: {target1 : 'event3', target2 : 'event1'}
+			 *          }
+			 */
 			registered_blockers: {},
 
 			// the constructor
@@ -85,6 +96,13 @@ $(function()
 
 				this._super();
 			},
+			/**
+			 * @param sBlockerId {String} {@see this.registered_blockers}
+			 * @param sTargetElemSelector {String} JS string selector of the target element (eg. `'#some-element'` for a regular element,`'document'` for the document)
+			 * @param oTargetElemSelector {String|Object} JS string selector or JS DOM object representing the target element (eg. `'#some-element'` for a regular element, `document` for the document -mind the absence of quotes)
+			 * @param sEventName {String}
+			 * @private
+			 */
 			_onRegisterBlocker: function(sBlockerId, sTargetElemSelector, oTargetElemSelector, sEventName)
 			{
 				let aRegisteredBlock = {};
@@ -95,10 +113,20 @@ $(function()
 				);
 				this.registered_blockers[sBlockerId] = aRegisteredBlock;
 			},
+			/**
+			 * @param sBlockerId {String} {@see this.registered_blockers}
+			 * @private
+			 */
 			_onUnregisterBlocker: function(sBlockerId)
 			{
 				delete this.registered_blockers[sBlockerId];
 			},
+			/**
+			 *
+			 * @param oEvent {Object} jQuery object representing the event triggering the leave attempt
+			 * @returns {boolean}
+			 * @private
+			 */
 			_onLeaveHandler: function(oEvent)
 			{
 				const me = this;

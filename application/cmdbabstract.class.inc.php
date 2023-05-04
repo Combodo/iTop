@@ -2694,8 +2694,7 @@ HTML;
 				$sEventList = implode(' ', $aEventsList);
 				$oPage->add_ready_script(<<<JS
 $('#$sFieldToValidateId')
-	.on('$sEventList',  
-		function(evt, sFormId) {
+	.on('$sEventList', function(oEvent, sFormId) {
 			// Bind to a custom event: validate
 			return ValidateField('$sFieldToValidateId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue);
 		} 
@@ -2949,19 +2948,52 @@ JS
 			}
 		}
 
+		// Prepare blocker protection to avoid loosing data
+		$sBlockerId = uniqid($sClass.':'.$iKey.':', true);
 		$sConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
 		$sJSToken = json_encode($sOwnershipToken);
-		$oPage->add_ready_script(
-			<<<EOF
-	$(window).on('unload',function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
-	window.onbeforeunload = function() {
-		if (!window.bInSubmit && !window.bInCancel)
-		{
-			return '$sConfirmationMessage';	
-		}
-		// return nothing ! safer for IE
-	};
-EOF
+		$oPage->add_ready_script(<<<JS
+// Try to release concurrent lock when leaving the page
+$(window).on('unload',function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
+
+// Leave handler for the current form (check if in a modal or not)
+// Note: We use a self-invoking function to avoid making unique vars. names to avoid collision (this can be called multiple time if modal forms are displayed)
+(function () {
+	const sBlockerId = '{$sBlockerId}';
+	
+	// Register blocker for the whole form even though it has not been touched yet.
+	// Note: This is a known limitation of the backoffice forms, which will be handled during the whole form SDK refactoring (hopefully summer '23).
+	//       For now we have no way of knowing if a field (**of any type**) has been touched, so we consider the whole form has dirty no matter what 
+	// - On page leave
+	$('body').trigger('register_blocker.itop', {
+		'sBlockerId': sBlockerId,
+		'sTargetElemSelector': 'document',
+		'oTargetElemSelector': document,
+		'sEventName': 'beforeunload'
+	});
+	
+	// - On modal close if we are in one
+	const oModalElem = $('#{$oForm->GetId()}').closest('[data-role="ibo-modal"]');
+	if (oModalElem.length !== 0) {
+		$('body').trigger('register_blocker.itop', {
+			'sBlockerId': sBlockerId,
+			'sTargetElemSelector': '#' + oModalElem.attr('id'),
+			'oTargetElemSelector': '#' + oModalElem.attr('id'),
+			'sEventName': 'dialogbeforeclose'
+		});
+	}
+	
+	// Unregister blockers if any action button has been clicked (cancel, submit, transition, custom operation)
+	// Important 1: The listener MUST be on the buttons directly (instead of on the toolbar with a filter on listener) as we need this to be call as early as possible, we can't wait for the event to bubble.
+	//              Otherwise the buttons action listener will be triggered first.
+	// Important 2: This must be declared BEFORE the cancel button callback in order to be triggered first as well
+	$('#{$oToolbarButtons->GetId()}').find('button, a').on('click', function () {
+		$('body').trigger('unregister_blocker.itop', {
+			'sBlockerId': sBlockerId
+		});
+	});
+})();
+JS
 		);
 
 		if (isset($aExtraParams['nbBulkObj'])) {

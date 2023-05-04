@@ -79,4 +79,12 @@ $(document).ready(function () {
 		let oDialogElem = $(this).dialog('instance').uiDialog;
 		oDialogElem.next('.ui-widget-overlay').css('z-index', oDialogElem.css('z-index') - 1);
 	} );
+
+	// Initialize leave handler when a form with touched fields is about to be closed
+	$('body').leave_handler({
+		'message': Dict.S('UI:NavigateAwayConfirmationMessage'),
+		'extra_events': {
+			'body': ['dialogbeforeclose'] // jQueryUI dialog
+		}
+	});
 });
