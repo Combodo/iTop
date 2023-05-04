@@ -279,7 +279,6 @@ class UserLocalTest extends ItopDataTestCase
 		$oUserLocal->DBWrite();
 		$this->assertEquals($oExpectedAfter, $oUserLocal->Get('password_renewed_date'), 'UPDATE "password" fields trigger automatic change of the  "password_renewed_date" field');
 
-
 		//UPDATE both password & password_renewed_date
 		$oUserLocal->Set('password', 'fooBar1???2');
 		$oUserLocal->Set('password_renewed_date', $oBefore);
@@ -356,10 +355,10 @@ class UserLocalTest extends ItopDataTestCase
 				'oExpectedBefore' => null,
 				'bRenewedDateTouched' => true,
 			),
-			'EXPIRE_NEVER: nominal case' => array(
+			'EXPIRE_NEVER (default mode): nothing changed on UserLocal' => array(
 				'sExpirationMode' => UserLocal::EXPIRE_NEVER,
 				'oExpectedBefore' => null,
-				'bRenewedDateTouched' => true,
+				'bRenewedDateTouched' => false,
 			),
 			'EXPIRE_FORCE: nominal case' => array(
 				'sExpirationMode' => UserLocal::EXPIRE_FORCE,
