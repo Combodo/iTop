@@ -359,17 +359,17 @@ class UserLocalTest extends ItopDataTestCase
 			'EXPIRE_NEVER: nominal case' => array(
 				'sExpirationMode' => UserLocal::EXPIRE_NEVER,
 				'oExpectedBefore' => null,
-				'bRenewedDateTouched' => false,
+				'bRenewedDateTouched' => true,
 			),
 			'EXPIRE_FORCE: nominal case' => array(
 				'sExpirationMode' => UserLocal::EXPIRE_FORCE,
 				'oExpectedBefore' => null,
-				'bRenewedDateTouched' => false,
+				'bRenewedDateTouched' => true,
 			),
 			'EXPIRE_ONE_TIME_PWD: nominal case' => array(
 				'sExpirationMode' => UserLocal::EXPIRE_ONE_TIME_PWD,
 				'oExpectedBefore' => null,
-				'bRenewedDateTouched' => false,
+				'bRenewedDateTouched' => true,
 			),
 			'date initiated' => array(
 				'sExpirationMode' => UserLocal::EXPIRE_CAN,
