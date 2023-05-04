@@ -23,6 +23,7 @@ use Exception;
 use Dict;
 use MetaModel;
 use UILinksWidget;
+use UserRights;
 use utils;
 use WebPage;
 
@@ -190,17 +191,22 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 
 		// Toolbar and actions
 		$oToolbar = ToolbarUIBlockFactory::MakeForButton();
-		$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Remove'));
-		$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();")
-							->AddDataAttribute('action', 'detach');
-		$oToolbar->AddSubBlock($oActionButtonUnlink);
-		
-		$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Add'));
-		$oActionButtonLink->SetTooltip(Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->oAttributeLinkedSetIndirect->GetLinkedClass())))
-							->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();")
-							->AddDataAttribute('action', 'add');
-		$oToolbar->AddSubBlock($oActionButtonLink);
-		
+
+		if (UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES) {
+			$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Remove'));
+			$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();")
+				->AddDataAttribute('action', 'detach');
+			$oToolbar->AddSubBlock($oActionButtonUnlink);
+		}
+
+		if (UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES) {
+			$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Add'));
+			$oActionButtonLink->SetTooltip(Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->oAttributeLinkedSetIndirect->GetLinkedClass())))
+				->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();")
+				->AddDataAttribute('action', 'add');
+			$oToolbar->AddSubBlock($oActionButtonLink);
+		}
+
 		$oTablePanel->AddToolbarBlock($oToolbar);
 		$oTablePanel->AddSubBlock($oDataTable);
 
@@ -465,12 +471,14 @@ JS
 			$this->oAttributeLinkedSetIndirect->GetLabel(),
 			Dict::S("Class:{$this->oUILinksWidget->GetRemoteClass()}"));
 
-		$aRowActions[] = array(
-			'label'         => 'UI:Links:Remove:Button',
-			'tooltip'       => $sRemoveButtonTooltip,
-			'icon_classes'  => 'fas fa-minus',
-			'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
-		);
+		if (UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES) {
+			$aRowActions[] = array(
+				'label'         => 'UI:Links:Remove:Button',
+				'tooltip'       => $sRemoveButtonTooltip,
+				'icon_classes'  => 'fas fa-minus',
+				'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
+			);
+		}
 
 		return $aRowActions;
 	}
