@@ -67,7 +67,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.RemoveSelected = function () {
 		let my_id = '#'+me.id;
 		$('#linkedset_'+me.id+' .selection:checked').closest('tr').each(function () {
-			me.Remove($(this));
+			me.Remove($(this), false);
 		});
 		// N°6124 Only draw table once for performance reasons
 		$('#datatable_'+me.id).DataTable().draw();
@@ -84,25 +84,30 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		this.UpdateButtons();
 	};
 
-	this.Remove = function(oRowElement){
+	this.Remove = function(oRowElement, bForceTableRefresh = true){
 		$('#datatable_'+me.id).DataTable().row($(oRowElement)).remove();
 		var oCheckbox = $(oRowElement).find('.selection');
-			let iLink = $(oCheckbox).attr('data-link-id');
-			if (iLink > 0) {
-				me.aRemoved.push(iLink);
-				if (me.aModified.hasOwnProperty(iLink)) {
-					delete me.aModified[iLink];
-				}
+		let iLink = $(oCheckbox).attr('data-link-id');
+		if (iLink > 0) {
+			me.aRemoved.push(iLink);
+			if (me.aModified.hasOwnProperty(iLink)) {
+				delete me.aModified[iLink];
 			}
-			else
+		}
+		else
+		{
+			let iUniqueId = $(oCheckbox).attr('data-unique-id');
+			if (iUniqueId < 0)
 			{
-				let iUniqueId = $(oCheckbox).attr('data-unique-id');
-				if (iUniqueId < 0)
-				{
-					iUniqueId = -iUniqueId;
-				}
-				me.aAdded[iUniqueId] = null;
+				iUniqueId = -iUniqueId;
 			}
+			me.aAdded[iUniqueId] = null;
+		}
+
+		// N°6124 Only draw table once for performance reasons
+		if(bForceTableRefresh){
+			$('#datatable_'+me.id).DataTable().draw();
+		}
 
 		this.UpdateButtons();
 		}
