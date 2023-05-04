@@ -304,5 +304,84 @@ class UserLocalTest extends ItopDataTestCase
 			),
 		);
 	}
+
+	/**
+	 * @dataProvider CanExpireFixProvider
+	 *
+	 */
+	public function testCanExpireFix($sExpirationMode, $sBefore, bool $bRenewedDateTouched)
+	{
+		$oBefore = is_null($sBefore) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sBefore));
+		$oNow = date(\AttributeDate::GetInternalFormat());
+		$oExpectedAfter = $bRenewedDateTouched ? $oNow : $oBefore;
+
+		$aUserLocalValues = array('login' => 'john');
+		if (!is_null($oBefore))
+		{
+			$aUserLocalValues['password_renewed_date'] = $oBefore;
+		}
+
+		/** @var UserLocal $oUserLocal */
+		$oUserLocal = \MetaModel::NewObject('UserLocal', $aUserLocalValues);
+		/** @var \ormLinkSet $oProfileSet */
+		$oProfileSet = $oUserLocal->Get('profile_list');
+
+		$oProfileSet->AddItem(
+			\MetaModel::NewObject('URP_UserProfile', array('profileid' => 1))
+		);
+
+		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'));
+
+		//INSERT
+		$oUserLocal->Set('password', 'fooBar1???');
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oNow, $oUserLocal->Get('password_renewed_date'), 'INSERT sets the "password_renewed_date" to the current date');
+
+		//UPDATE password_renewed_date
+		$oUserLocal->Set('password_renewed_date', $oBefore);
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'UPDATE can target and change the "password_renewed_date"');
+
+		//UPDATE password
+		$oUserLocal->Set('expiration', $sExpirationMode);
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oExpectedAfter, $oUserLocal->Get('password_renewed_date'), 'UPDATE "password" fields trigger automatic change of the  "password_renewed_date" field');
+	}
+
+	public function CanExpireFixProvider()
+	{
+		return array(
+			'EXPIRE_CAN: nominal case' => array(
+				'sExpirationMode' => UserLocal::EXPIRE_CAN,
+				'oExpectedBefore' => null,
+				'bRenewedDateTouched' => true,
+			),
+			'EXPIRE_NEVER: nominal case' => array(
+				'sExpirationMode' => UserLocal::EXPIRE_NEVER,
+				'oExpectedBefore' => null,
+				'bRenewedDateTouched' => false,
+			),
+			'EXPIRE_FORCE: nominal case' => array(
+				'sExpirationMode' => UserLocal::EXPIRE_FORCE,
+				'oExpectedBefore' => null,
+				'bRenewedDateTouched' => false,
+			),
+			'EXPIRE_ONE_TIME_PWD: nominal case' => array(
+				'sExpirationMode' => UserLocal::EXPIRE_ONE_TIME_PWD,
+				'oExpectedBefore' => null,
+				'bRenewedDateTouched' => false,
+			),
+			'date initiated' => array(
+				'sExpirationMode' => UserLocal::EXPIRE_CAN,
+				'oBefore' => '-1 day',
+				'bRenewedDateTouched' => false,
+			),
+			'date initiated in the future' => array(
+				'sExpirationMode' => UserLocal::EXPIRE_CAN,
+				'oBefore' => '+1 day',
+				'bRenewedDateTouched' => false,
+			),
+		);
+	}
 }
 
