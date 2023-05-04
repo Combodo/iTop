@@ -15,7 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 
 /**
@@ -1081,7 +1080,7 @@ class DeprecatedCallsLog extends LogAPI
 		parent::Enable($sTargetFile);
 
 		if (
-			(false === defined(ItopTestCase::ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))
+			(false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))
 			&& static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)
 		) {
 			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler'], E_DEPRECATED | E_USER_DEPRECATED);

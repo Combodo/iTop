@@ -33,19 +33,9 @@ use SetupUtils;
 define('DEBUG_UNIT_TEST', true);
 
 class ItopTestCase extends TestCase {
-	/**
-	 * @since 3.0.4 N°6274 Allow to test if PHPUnit is currently running. Starting with PHPUnit 9.5 we'll be able to replace it with $GLOBALS['phpunit_version']
-	 */
-	public const ITOP_PHPUNIT_RUNNING_CONSTANT_NAME = 'ITOP_PHPUNIT_RUNNING';
-
 	public const TEST_LOG_DIR = 'test';
 
 	protected function setUp(): void {
-		if (false === defined(static::ITOP_PHPUNIT_RUNNING_CONSTANT_NAME)) {
-			// setUp might be called multiple times, so protecting the define() call !
-			define(static::ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
-		}
-
 		$sAppRootRelPath = 'approot.inc.php';
 		$sDepthSeparator = '../';
 		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
@@ -55,6 +45,11 @@ class ItopTestCase extends TestCase {
 			}
 
 			$sAppRootRelPath = $sDepthSeparator.$sAppRootRelPath;
+		}
+
+		if (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME)) {
+			// setUp might be called multiple times, so protecting the define() call !
+			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
 		}
 	}
 
