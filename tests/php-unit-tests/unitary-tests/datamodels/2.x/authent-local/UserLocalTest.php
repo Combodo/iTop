@@ -351,32 +351,32 @@ class UserLocalTest extends ItopDataTestCase
 	{
 		return array(
 			'EXPIRE_CAN: nominal case' => array(
-				'sExpirationMode' => UserLocal::EXPIRE_CAN,
+				'sExpirationMode' => 'can_expire',
 				'oExpectedBefore' => null,
 				'bRenewedDateTouched' => true,
 			),
 			'EXPIRE_NEVER (default mode): nothing changed on UserLocal' => array(
-				'sExpirationMode' => UserLocal::EXPIRE_NEVER,
+				'sExpirationMode' => 'never_expire',
 				'oExpectedBefore' => null,
 				'bRenewedDateTouched' => false,
 			),
 			'EXPIRE_FORCE: nominal case' => array(
-				'sExpirationMode' => UserLocal::EXPIRE_FORCE,
+				'sExpirationMode' => 'force_expire',
 				'oExpectedBefore' => null,
 				'bRenewedDateTouched' => true,
 			),
 			'EXPIRE_ONE_TIME_PWD: nominal case' => array(
-				'sExpirationMode' => UserLocal::EXPIRE_ONE_TIME_PWD,
+				'sExpirationMode' => 'otp_expire',
 				'oExpectedBefore' => null,
 				'bRenewedDateTouched' => true,
 			),
 			'date initiated' => array(
-				'sExpirationMode' => UserLocal::EXPIRE_CAN,
+				'sExpirationMode' => 'can_expire',
 				'oBefore' => '-1 day',
 				'bRenewedDateTouched' => false,
 			),
 			'date initiated in the future' => array(
-				'sExpirationMode' => UserLocal::EXPIRE_CAN,
+				'sExpirationMode' => 'can_expire',
 				'oBefore' => '+1 day',
 				'bRenewedDateTouched' => false,
 			),
