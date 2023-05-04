@@ -8,7 +8,13 @@
 namespace Combodo\iTop\Test\UnitTest\Module\AuthentLocal;
 
 
+use AttributeDate;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Config;
+use Dict;
+use MetaModel;
+use ormLinkSet;
+use URP_UserProfile;
 use UserLocal;
 
 /**
@@ -34,23 +40,23 @@ class UserLocalTest extends ItopDataTestCase
 	 */
 	public function testValidatePassword($sPassword, $aValidatorNames, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null, $sUserLanguage = null)
 	{
-		$configMock = $this->createMock(\Config::class);
+		$configMock = $this->createMock(Config::class);
 		$configMock
 			->method('GetModuleSetting')
 			->willReturnMap($aConfigValueMap);
 		restore_error_handler();
 
 		if (isset($sUserLanguage)) {
-			\Dict::SetUserLanguage($sUserLanguage);
+			Dict::SetUserLanguage($sUserLanguage);
 		}
 
 		/** @var UserLocal $oUserLocal */
-		$oUserLocal = \MetaModel::NewObject('UserLocal', array('login' => 'john'));
-		/** @var \ormLinkSet $oProfileSet */
+		$oUserLocal = MetaModel::NewObject(UserLocal::class, array('login' => 'john'));
+		/** @var ormLinkSet $oProfileSet */
 		$oProfileSet = $oUserLocal->Get('profile_list');
 
 		$oProfileSet->AddItem(
-			\MetaModel::NewObject('URP_UserProfile', array('profileid' => 1))
+			MetaModel::NewObject(URP_UserProfile::class, array('profileid' => 1))
 		);
 
 		$aValidatorCollection = array();
@@ -242,9 +248,10 @@ class UserLocalTest extends ItopDataTestCase
 	 */
 	public function testPasswordRenewal($sBefore, $sExpectedAfter)
 	{
-		$oBefore = is_null($sBefore) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sBefore));
-		$oNow = date(\AttributeDate::GetInternalFormat());
-		$oExpectedAfter = is_null($sExpectedAfter) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sExpectedAfter));
+		$sDateFormat = AttributeDate::GetInternalFormat();
+		$oBefore = is_null($sBefore) ? null : date($sDateFormat, strtotime($sBefore));
+		$oNow = date($sDateFormat);
+		$oExpectedAfter = is_null($sExpectedAfter) ? null : date($sDateFormat, strtotime($sExpectedAfter));
 
 		$aUserLocalValues = array('login' => 'john');
 		if (!is_null($oBefore))
@@ -253,14 +260,13 @@ class UserLocalTest extends ItopDataTestCase
 		}
 
 		/** @var UserLocal $oUserLocal */
-		$oUserLocal = \MetaModel::NewObject('UserLocal', $aUserLocalValues);
-		/** @var \ormLinkSet $oProfileSet */
+		$oUserLocal = MetaModel::NewObject(UserLocal::class, $aUserLocalValues);
+		/** @var ormLinkSet $oProfileSet */
 		$oProfileSet = $oUserLocal->Get('profile_list');
 
 		$oProfileSet->AddItem(
-			\MetaModel::NewObject('URP_UserProfile', array('profileid' => 1))
+			MetaModel::NewObject(URP_UserProfile::class, array('profileid' => 1))
 		);
-
 
 		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'));
 
@@ -270,16 +276,19 @@ class UserLocalTest extends ItopDataTestCase
 		$this->assertEquals($oNow, $oUserLocal->Get('password_renewed_date'), 'INSERT sets the "password_renewed_date" to the current date');
 
 		//UPDATE password_renewed_date
+		$oUserLocal = MetaModel::GetObject(UserLocal::class, $oUserLocal->GetKey());
 		$oUserLocal->Set('password_renewed_date', $oBefore);
 		$oUserLocal->DBWrite();
 		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'UPDATE can target and change the "password_renewed_date"');
 
 		//UPDATE password
+		$oUserLocal = MetaModel::GetObject(UserLocal::class, $oUserLocal->GetKey());
 		$oUserLocal->Set('password', 'fooBar1???1');
 		$oUserLocal->DBWrite();
 		$this->assertEquals($oExpectedAfter, $oUserLocal->Get('password_renewed_date'), 'UPDATE "password" fields trigger automatic change of the  "password_renewed_date" field');
 
 		//UPDATE both password & password_renewed_date
+		$oUserLocal = MetaModel::GetObject(UserLocal::class, $oUserLocal->GetKey());
 		$oUserLocal->Set('password', 'fooBar1???2');
 		$oUserLocal->Set('password_renewed_date', $oBefore);
 		$oUserLocal->DBWrite();
@@ -310,8 +319,8 @@ class UserLocalTest extends ItopDataTestCase
 	 */
 	public function testCanExpireFix($sExpirationMode, $sBefore, bool $bRenewedDateTouched)
 	{
-		$oBefore = is_null($sBefore) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sBefore));
-		$oNow = date(\AttributeDate::GetInternalFormat());
+		$oBefore = is_null($sBefore) ? null : date(AttributeDate::GetInternalFormat(), strtotime($sBefore));
+		$oNow = date(AttributeDate::GetInternalFormat());
 		$oExpectedAfter = $bRenewedDateTouched ? $oNow : $oBefore;
 
 		$aUserLocalValues = array('login' => 'john');
@@ -321,12 +330,12 @@ class UserLocalTest extends ItopDataTestCase
 		}
 
 		/** @var UserLocal $oUserLocal */
-		$oUserLocal = \MetaModel::NewObject('UserLocal', $aUserLocalValues);
-		/** @var \ormLinkSet $oProfileSet */
+		$oUserLocal = MetaModel::NewObject(UserLocal::class, $aUserLocalValues);
+		/** @var ormLinkSet $oProfileSet */
 		$oProfileSet = $oUserLocal->Get('profile_list');
 
 		$oProfileSet->AddItem(
-			\MetaModel::NewObject('URP_UserProfile', array('profileid' => 1))
+			MetaModel::NewObject(URP_UserProfile::class, array('profileid' => 1))
 		);
 
 		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'));
@@ -336,12 +345,13 @@ class UserLocalTest extends ItopDataTestCase
 		$oUserLocal->DBWrite();
 		$this->assertEquals($oNow, $oUserLocal->Get('password_renewed_date'), 'INSERT sets the "password_renewed_date" to the current date');
 
-		//UPDATE password_renewed_date
+		$oUserLocal = MetaModel::GetObject(UserLocal::class, $oUserLocal->GetKey());
 		$oUserLocal->Set('password_renewed_date', $oBefore);
 		$oUserLocal->DBWrite();
 		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'UPDATE can target and change the "password_renewed_date"');
 
 		//UPDATE password
+		$oUserLocal = MetaModel::GetObject(UserLocal::class, $oUserLocal->GetKey());
 		$oUserLocal->Set('expiration', $sExpirationMode);
 		$oUserLocal->DBWrite();
 		$this->assertEquals($oExpectedAfter, $oUserLocal->Get('password_renewed_date'), 'UPDATE "password" fields trigger automatic change of the  "password_renewed_date" field');

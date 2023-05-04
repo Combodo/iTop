@@ -219,8 +219,9 @@ OQL;
 					$oCMDBChangeOpCreate = $oSet->Fetch();
 					if (! is_null($oCMDBChangeOpCreate))
 					{
-						$oUserCreationDate = date(\AttributeDate::GetInternalFormat(), $oCMDBChangeOpCreate->Get('date'));
-						$this->Set('password_renewed_date', $oUserCreationDate);
+						$oUserCreationDateTime = \DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $oCMDBChangeOpCreate->Get('date'));
+						$sCreationDate = $oUserCreationDateTime->format(\AttributeDate::GetInternalFormat());
+						$this->Set('password_renewed_date', $sCreationDate);
 					}
 			}
 			return;
