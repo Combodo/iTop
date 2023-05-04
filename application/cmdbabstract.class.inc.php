@@ -2275,7 +2275,7 @@ JS
 					);
 				break;
 
-				// In 3.0 not used for activity panel but kept  for bulk modify and bulk-event extension
+				// Since 3.0 not used for activity panel but kept for bulk modify and bulk-event extension
 				case 'CaseLog':
 					$sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
 					$aStyles = array();
@@ -5767,7 +5767,7 @@ EOF
 						oOwnershipLockModal.text(data.popup_message);
 						oOwnershipLockModal.dialog('open');
 					}
-					$('[data-role="ibo-object-details"][data-object-class="{$sJSClass}"][data-object-id="{$iKey}"] .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
+					$('[data-role="ibo-object-details"][data-object-class={$sJSClass}][data-object-id="{$iKey}"] .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
 					clearInterval(hOwnershipLockHandlerInterval);
 				}
 				else if ((data.operation == 'lost') || (data.operation == 'expired'))
@@ -5778,7 +5778,7 @@ EOF
 						oOwnershipLockModal.text(data.popup_message);
 						oOwnershipLockModal.dialog('open');
 					}
-					$('[data-role="ibo-object-details"][data-object-class="{$sJSClass}"][data-object-id="{$iKey}"] .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
+					$('[data-role="ibo-object-details"][data-object-class={$sJSClass}][data-object-id="{$iKey}"] .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
 					clearInterval(hOwnershipLockHandlerInterval);
 				}
 			}, 'json');
