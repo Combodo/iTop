@@ -84,6 +84,13 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		this.UpdateButtons();
 	};
 
+	/**
+	 * Remove.
+	 *
+	 * @param oRowElement tr element to remove
+	 * @param bForceTableRefresh be careful with this flag and performance impact @see N°6124
+	 * @constructor
+	 */
 	this.Remove = function(oRowElement, bForceTableRefresh = true){
 		$('#datatable_'+me.id).DataTable().row($(oRowElement)).remove();
 		var oCheckbox = $(oRowElement).find('.selection');
