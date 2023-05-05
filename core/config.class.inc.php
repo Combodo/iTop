@@ -1475,6 +1475,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'allow_rest_services_via_tokens' => [
+			'type' => 'bool',
+			'description' => 'When set to true, REST endpoint token authorization works even with secure_rest_services set.',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'search_manual_submit' => [
 			'type' => 'array',
 			'description' => 'Force manual submit of search all requests',

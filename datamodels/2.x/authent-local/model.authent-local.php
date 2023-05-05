@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -69,7 +69,7 @@ class UserLocal extends UserInternal
 	const EXPIRE_NEVER = 'never_expire';
 	const EXPIRE_FORCE = 'force_expire';
 	const EXPIRE_ONE_TIME_PWD = 'otp_expire';
-	
+
 	/** @var UserLocalPasswordValidity|null */
 	protected $m_oPasswordValidity = null;
 
@@ -161,7 +161,7 @@ class UserLocal extends UserInternal
 
 	/**
 	 * Use with care!
-	 */	 	
+	 */
 	public function SetPassword($sNewPassword)
 	{
 		$this->Set('password', $sNewPassword);
@@ -198,19 +198,39 @@ class UserLocal extends UserInternal
 
 	protected function OnWrite()
 	{
-		if (empty($this->m_oPasswordValidity))
-		{
-			return;
-		}
-
 		if (array_key_exists('password_renewed_date', $this->ListChanges()))
 		{
 			return;
 		}
 
+		if (empty($this->m_oPasswordValidity))
+		{
+			//password unchanged
+			if (is_null($this->Get('password_renewed_date')))
+			{
+				//initialize password_renewed_date with User creation date
+				$sKey = $this->GetKey();
+$sOql = <<<OQL
+SELECT CMDBChangeOpCreate AS ccc
+JOIN CMDBChange AS c ON ccc.change = c.id
+WHERE ccc.objclass="UserLocal" AND ccc.objkey="$sKey"
+OQL;
+					$oCmdbChangeOpSearch = \DBObjectSearch::FromOQL($sOql);
+					$oSet = new \DBObjectSet($oCmdbChangeOpSearch);
+					$oCMDBChangeOpCreate = $oSet->Fetch();
+					if (! is_null($oCMDBChangeOpCreate))
+					{
+						$oUserCreationDateTime = \DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $oCMDBChangeOpCreate->Get('date'));
+						$sCreationDate = $oUserCreationDateTime->format(\AttributeDate::GetInternalFormat());
+						$this->Set('password_renewed_date', $sCreationDate);
+					}
+			}
+			return;
+		}
+
 		$sNow = date(\AttributeDate::GetInternalFormat());
 		$this->Set('password_renewed_date', $sNow);
-	
+
 		// Reset the "force" expiration flag when the user updates her/his own password!
 		if ($this->IsCurrentUser())
 		{
@@ -295,7 +315,7 @@ class UserLocal extends UserInternal
 		{
 			$this->m_aCheckIssues[] = $this->m_oPasswordValidity->getPasswordValidityMessage();
 		}
-		
+
 		// A User cannot force a one-time password on herself/himself
 		if ($this->IsCurrentUser()) {
 			if (array_key_exists('expiration', $this->ListChanges()) && ($this->Get('expiration') == self::EXPIRE_ONE_TIME_PWD)) {
