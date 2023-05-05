@@ -3840,36 +3840,91 @@ abstract class DBObject implements iDisplay
      *
      * @throws ArchivedObjectException
      * @throws CoreException
-     */
+      */
 	public function EnumTransitions()
 	{
 		$sClass = get_class($this);
-		if (!MetaModel::HasLifecycle($sClass)) return array();
+		if (!MetaModel::HasLifecycle($sClass)) {
+			return array();
+		}
 
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$sState = $this->Get($sStateAttCode);
+
 		return MetaModel::EnumTransitions($sClass, $sState);
 	}
 
-    /**
-     * Helper to reset a stop-watch
-     * Suitable for use as a lifecycle action
-     *
-     * @api
-     *
-     * @param string $sAttCode
-     *
-     * @return bool
-     *
-     * @throws ArchivedObjectException
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     */
+	/**
+	 * get list of Transition in order from current status, then in reverse order before current status
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 * @since 3.1.0
+	 */
+	public function EnumOrderedAllowedTransitions()
+	{
+		$sClass = get_class($this);
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+		$sState = $this->Get($sStateAttCode);
+
+		$aEnumTransitions = MetaModel::EnumTransitions($sClass, $sState);
+
+		//Get target status in right order ( in order from current status, then in reverse order before current status)
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
+		$aAllowedValues = $oAttDef->GetAllowedValues();
+		$aTargetStatusOrderedStart = [];
+		$aTargetStatusOrderedEnd = [];
+		$bIsAfterCurrentState = false;
+		foreach ($aAllowedValues as $sStatus => $sStatusLabel) {
+			if ($bIsAfterCurrentState) {
+				$aTargetStatusOrderedStart[] = $sStatus;
+			} else {
+				if ($sStatus === $sState) {
+					$bIsAfterCurrentState = true;
+				}
+				array_unshift($aTargetStatusOrderedEnd, $sStatus);
+			}
+		}
+		$aTargetStatusOrdered = array_merge($aTargetStatusOrderedStart, $aTargetStatusOrderedEnd);
+
+		//Create array $aTarget in order to find transition with a given status
+		foreach ($aEnumTransitions as $sStimulusCode => $aTransitionDef) {
+			$aTarget[$aTransitionDef['target_state']][] = $sStimulusCode;
+		}
+
+		//order $aEnumTransitions
+		$aOrderedTransition = [];
+		foreach ($aTargetStatusOrdered as $sStatus) {
+			if (array_key_exists($sStatus, $aTarget)) {
+				foreach ($aTarget[$sStatus] as $sStimulusCode) {
+					$aOrderedTransition[$sStimulusCode] = $aEnumTransitions[$sStimulusCode];
+				}
+			}
+		}
+
+		return $aOrderedTransition;
+	}
+	
+	/**
+	 * Helper to reset a stop-watch
+	 * Suitable for use as a lifecycle action
+	 *
+	 * @api
+	 *
+	 * @param string $sAttCode
+	 *
+	 * @return bool
+	 *
+	 * @throws ArchivedObjectException
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 */
 	public function ResetStopWatch($sAttCode)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		if (!$oAttDef instanceof AttributeStopWatch)
-		{
+		if (!$oAttDef instanceof AttributeStopWatch) {
 			throw new CoreException("Invalid stop watch id: '$sAttCode'");
 		}
 		$oSW = $this->Get($sAttCode);

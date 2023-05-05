@@ -1905,7 +1905,8 @@ class MenuBlock extends DisplayBlock
 
 								// Transitions / Stimuli
 								if (!$bLocked) {
-									$aTransitions = $oObj->EnumTransitions();
+									//
+									$aTransitions = $oObj->EnumOrderedAllowedTransitions();
 									if (count($aTransitions)) {
 										$aStimuli = Metamodel::EnumStimuli(get_class($oObj));
 										foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
@@ -1915,7 +1916,7 @@ class MenuBlock extends DisplayBlock
 												case UR_ALLOWED_YES:
 													$aTransitionActions[$sStimulusCode] = array(
 															'label' => $aStimuli[$sStimulusCode]->GetLabel(),
-															'url' => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}",
+															'url'   => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}",
 														) + $aActionParams;
 													break;
 

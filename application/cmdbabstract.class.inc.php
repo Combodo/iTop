@@ -2889,7 +2889,7 @@ JS
 		$oApplyButton->AddCSSClass('action');
 		$oToolbarButtons->AddSubBlock($oApplyButton);
 		$bAreTransitionsHidden = isset($aExtraParams['hide_transitions']) && $aExtraParams['hide_transitions'] === true;
-		$aTransitions = $this->EnumTransitions();
+		$aTransitions = $this->EnumOrderedAllowedTransitions();
 		if (!isset($aExtraParams['custom_operation']) && !$bAreTransitionsHidden && count($aTransitions)) {
 			// Transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
 			$oSetToCheckRights = DBObjectSet::FromObject($this);

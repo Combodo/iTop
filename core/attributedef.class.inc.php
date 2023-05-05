@@ -5873,7 +5873,7 @@ class AttributeEnum extends AttributeString
 		if (is_null($aRawValues)) {
 			return null;
 		}
-		IssueLog::Error($this->GetCode().'TRI'.$this->GetSortOrder());
+
 		$aLocalizedValues = [];
 		switch ($this->GetSortOrder()) {
 			case 'label':
@@ -5889,7 +5889,6 @@ class AttributeEnum extends AttributeString
 				//bHaveSortedValues : some values have rank in xml
 				$bHaveSortedValues = false;
 				foreach ($aRawValues as $sKey => $sValue) {
-					IssueLog::Error($sValue);
 					$aVal = explode('::', $sValue);
 					if (count($aVal) == 1) {
 						$aLocalizedValues[$sValue] = $this->GetValueLabel($sValue);
