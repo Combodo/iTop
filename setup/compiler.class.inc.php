@@ -1837,7 +1837,7 @@ EOF;
 				$this->aCustomListsCodes[] = $sListCode;
 			}
 
-			$sZlists .= "\n" . $this->GeneratePhpCodeForZlist($sListCode, $oListNode);
+			$sZlists .= "\n".$this->GeneratePhpCodeForZlist($sListCode, $oListNode);
 		}
 
 		// Methods
