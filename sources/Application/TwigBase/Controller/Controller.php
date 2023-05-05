@@ -204,15 +204,16 @@ abstract class Controller extends AbstractController
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
-			$sMethodName = 'Operation'.utils::ToCamelCase($this->m_sOperation);
-			if (method_exists($this, $sMethodName))
-			{
-				$this->$sMethodName();
+			if ($this->CallOperation(utils::ToCamelCase($this->m_sOperation))) {
+				return;
 			}
-			else
-			{
-				$this->DisplayPageNotFound();
+
+			// Fallback to unchanged names for compatibility
+			if ($this->CallOperation($this->m_sOperation)) {
+				return;
 			}
+
+			$this->DisplayPageNotFound();
 		}
 		catch (Exception $e)
 		{
@@ -220,6 +221,17 @@ abstract class Controller extends AbstractController
 			$aResponse = array('sError' => $e->getMessage());
 			echo json_encode($aResponse);
 		}
+	}
+
+	private function CallOperation($sOperation): bool
+	{
+		$sMethodName = 'Operation'.$sOperation;
+		if (!method_exists($this, $sMethodName)) {
+			return false;
+		}
+
+		$this->$sMethodName();
+		return true;
 	}
 
 	/**
