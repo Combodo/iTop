@@ -3866,6 +3866,9 @@ abstract class DBObject implements iDisplay
 	public function EnumOrderedAllowedTransitions()
 	{
 		$sClass = get_class($this);
+		if (!MetaModel::HasLifecycle($sClass)) {
+			return array();
+		}
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$sState = $this->Get($sStateAttCode);
 

@@ -176,15 +176,19 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_order>rank</sort_order>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>2</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>1</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>3</rank>
             </value>
           </values>
           <sql>status</sql>
@@ -1109,15 +1113,19 @@ public function PrefillSearchForm(&$aContextParam)
           <read_only>false</read_only>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_order>rank</sort_order>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>2</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>1</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>3</rank>
             </value>
           </values>
           <sql>status</sql>
@@ -1495,15 +1503,19 @@ public function PrefillSearchForm(&$aContextParam)
           <display_style>radio_horizontal</display_style>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_order>rank</sort_order>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>2</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>1</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>3</rank>
             </value>
           </values>
           <sql>status</sql>
@@ -1768,19 +1780,15 @@ public function PrefillSearchForm(&$aContextParam)
           <values>
             <value id="1">
               <code>1</code>
-              <rank>1</rank>
             </value>
             <value id="2">
               <code>2</code>
-              <rank>2</rank>
             </value>
             <value id="3">
               <code>3</code>
-              <rank>3</rank>
             </value>
             <value id="4">
               <code>4</code>
-              <rank>4</rank>
             </value>
           </values>
           <sql>priority</sql>

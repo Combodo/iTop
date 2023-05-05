@@ -151,15 +151,12 @@
           <values>
             <value id="1">
               <code>1</code>
-              <rank>1</rank>
             </value>
             <value id="2">
               <code>2</code>
-              <rank>2</rank>
             </value>
             <value id="3">
               <code>3</code>
-              <rank>3</rank>
             </value>
           </values>
           <sql>impact</sql>
@@ -171,7 +168,6 @@
           <values>
             <value id="1">
               <code>1</code>
-              <rank>1</rank>
               <style>
                 <main_color>$ibo-color-danger-700</main_color>
                 <complementary_color>$ibo-color-white-100</complementary_color>
@@ -180,7 +176,6 @@
             </value>
             <value id="2">
               <code>2</code>
-              <rank>2</rank>
               <style>
                 <main_color>$ibo-color-warning-700</main_color>
                 <complementary_color>$ibo-color-white-100</complementary_color>
@@ -189,7 +184,6 @@
             </value>
             <value id="3">
               <code>3</code>
-              <rank>3</rank>
               <style>
                 <main_color>$ibo-color-information-700</main_color>
                 <complementary_color>$ibo-color-white-100</complementary_color>
@@ -198,7 +192,6 @@
             </value>
             <value id="4">
               <code>4</code>
-              <rank>4</rank>
               <style>
                 <main_color>$ibo-color-grey-700</main_color>
                 <complementary_color>$ibo-color-white-100</complementary_color>
@@ -223,19 +216,15 @@
           <values>
             <value id="1">
               <code>1</code>
-              <rank>1</rank>
             </value>
             <value id="2">
               <code>2</code>
-              <rank>2</rank>
             </value>
             <value id="3">
               <code>3</code>
-              <rank>3</rank>
             </value>
             <value id="4">
               <code>4</code>
-              <rank>4</rank>
             </value>
           </values>
           <sql>urgency</sql>
@@ -555,19 +544,15 @@
           <values>
             <value id="1">
               <code>1</code>
-              <rank>1</rank>
             </value>
             <value id="2">
               <code>2</code>
-              <rank>2</rank>
             </value>
             <value id="3">
               <code>3</code>
-              <rank>3</rank>
             </value>
             <value id="4">
               <code>4</code>
-              <rank>4</rank>
             </value>
           </values>
           <sql>user_satisfaction</sql>

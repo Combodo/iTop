@@ -35,18 +35,23 @@
       </properties>
       <fields>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_order>rank</sort_order>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>3</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>2</rank>
             </value>
             <value id="stock">
               <code>stock</code>
+              <rank>1</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>4</rank>
             </value>
           </values>
           <sql>status</sql>
