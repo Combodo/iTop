@@ -9,8 +9,6 @@ namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DeprecatedCallsLog;
-use PHPUnit\Framework\Error\Notice;
-use PHPUnit\Framework\Error\Warning;
 
 class DeprecatedCallsLogTest extends ItopTestCase {
 	/**
@@ -19,15 +17,15 @@ class DeprecatedCallsLogTest extends ItopTestCase {
 	 * @link https://www.php.net/manual/en/migration80.incompatible.php check "A number of notices have been converted into warnings:"
 	 */
 	private function SetUndefinedOffsetExceptionToExpect(): void {
-		if (version_compare(phpversion(), '8.0', '>=')) {
-			$sUndefinedOffsetExceptionClass = Warning::class;
+		/** @noinspection ConstantCanBeUsedInspection Preferring the function call as it is easier to read and won't cost that much in this PHPUnit context */
+		if (version_compare(PHP_VERSION, '8.0', '>=')) {
+			$this->expectWarning();
 			$sUndefinedOffsetExceptionMessage = 'Undefined array key "tutu"';
 		}
 		else {
-			$sUndefinedOffsetExceptionClass = Notice::class;
+			$this->expectNotice();
 			$sUndefinedOffsetExceptionMessage = 'Undefined index: tutu';
 		}
-		$this->expectException($sUndefinedOffsetExceptionClass);
 		$this->expectExceptionMessage($sUndefinedOffsetExceptionMessage);
 	}
 
