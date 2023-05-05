@@ -49,7 +49,9 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		}
 
 		// Add creation in modal if the linkset is not readonly
-		if (!$this->oAttDef->GetReadOnly() && $this->oAttDef->GetEditMode() != LINKSET_EDITMODE_NONE) {
+		if (!$this->oAttDef->GetReadOnly()
+			&& $this->oAttDef->GetEditMode() != LINKSET_EDITMODE_NONE
+			&& $this->bIsAllowCreate) {
 			$aExtraParams['creation_in_modal'] = true;
 			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::DICT_CREATE_BUTTON_TOOLTIP);
 			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
@@ -71,20 +73,23 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 				break;
 
 			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
-				$aRowActions[] = array(
-					'label'         => 'UI:Links:ModifyObject:Button',
-					'name'          => 'ModifyButton',
-					'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
-					'icon_classes'  => 'fas fa-pen',
-					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
-					'metadata'      => [
-						'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
-					],
-				);
+				if ($this->bIsAllowModify) {
+					$aRowActions[] = array(
+						'label'         => 'UI:Links:ModifyObject:Button',
+						'name'          => 'ModifyButton',
+						'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
+						'icon_classes'  => 'fas fa-pen',
+						'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
+						'metadata'      => [
+							'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
+						],
+					);
+				}
 				break;
 
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
 			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
+			if ($this->bIsAllowModify) {
 				$aRowActions[] = array(
 					'label'         => 'UI:Links:ModifyObject:Button',
 					'name'          => 'ModifyButton',
@@ -95,7 +100,9 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 						'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
 					],
 				);
+				}
 
+			if ($this->bIsAllowDelete) {
 				$aRowActions[] = array(
 					'label'         => 'UI:Links:Delete:Button',
 					'name'          => 'DeleteButton',
@@ -104,39 +111,45 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 					'color'         => Button::ENUM_COLOR_SCHEME_DESTRUCTIVE,
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement);",
 					'confirmation'  => [
-						'title'                      => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_TITLE),
-						'message'                    => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_MESSAGE),
-						'confirm_button_class'       => 'ibo-is-danger',
-						'row_data'                   => "{$this->sTargetClass}/hyperlink",
-						'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
-					],
-				);
+						'title'                          => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_TITLE),
+						'message'                        => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_MESSAGE),
+							'confirm_button_class'       => 'ibo-is-danger',
+							'row_data'                   => "{$this->sTargetClass}/hyperlink",
+							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
+						],
+					);
+				}
 				break;
 
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
-				$aRowActions[] = array(
-					'label'         => 'UI:Links:ModifyObject:Button',
-					'name'          => 'ModifyButton',
-					'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
-					'icon_classes'  => 'fas fa-pen',
-					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
-					'metadata'      => [
-						'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
-					],
-				);
-				$aRowActions[] = array(
-					'label'         => 'UI:Links:Remove:Button',
-					'name'          => 'RemoveButton',
-					'tooltip'       => $this->GetDictionaryEntry(static::DICT_REMOVE_BUTTON_TOOLTIP),
-					'icon_classes'  => 'fas fa-minus',
-					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DetachLinkedObject', aRowData['{$this->sTargetClass}/_key_/raw'], oTrElement, oTrElement);",
-					'confirmation'  => [
-						'title'                      => $this->GetDictionaryEntry(static::DICT_REMOVE_MODAL_TITLE),
-						'message'                    => $this->GetDictionaryEntry(static::DICT_REMOVE_MODAL_MESSAGE),
-						'row_data'                   => "{$this->sTargetClass}/hyperlink",
-						'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
-					],
-				);
+				if ($this->bIsAllowModify) {
+					$aRowActions[] = array(
+						'label'         => 'UI:Links:ModifyObject:Button',
+						'name'          => 'ModifyButton',
+						'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
+						'icon_classes'  => 'fas fa-pen',
+						'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
+						'metadata'      => [
+							'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
+						],
+					);
+				}
+
+				if ($this->bIsAllowModify) {
+					$aRowActions[] = array(
+						'label'         => 'UI:Links:Remove:Button',
+						'name'          => 'RemoveButton',
+						'tooltip'       => $this->GetDictionaryEntry(static::DICT_REMOVE_BUTTON_TOOLTIP),
+						'icon_classes'  => 'fas fa-minus',
+						'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DetachLinkedObject', aRowData['{$this->sTargetClass}/_key_/raw'], oTrElement, oTrElement);",
+						'confirmation'  => [
+							'title'                      => $this->GetDictionaryEntry(static::DICT_REMOVE_MODAL_TITLE),
+							'message'                    => $this->GetDictionaryEntry(static::DICT_REMOVE_MODAL_MESSAGE),
+							'row_data'                   => "{$this->sTargetClass}/hyperlink",
+							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
+						],
+					);
+				}
 				break;
 
 			default:

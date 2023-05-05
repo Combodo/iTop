@@ -18,6 +18,7 @@ use DictExceptionMissingString;
 use DisplayBlock;
 use Exception;
 use MySQLException;
+use UserRights;
 use Utils;
 use WebPage;
 
@@ -71,6 +72,11 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 
 	protected string $sTableId;
 
+	// User rights
+	protected bool $bIsAllowCreate;
+	protected bool $bIsAllowModify;
+	protected bool $bIsAllowDelete;
+
 	/**
 	 * Constructor.
 	 *
@@ -110,6 +116,11 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	private function Init()
 	{
 		$this->sTargetClass = $this->GetTargetClass();
+
+		// User rights
+		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
+		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
+		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
 	}
 
 
