@@ -4210,31 +4210,20 @@ abstract class MetaModel
 		{
 			foreach (array_merge($aArgs, $aMoreArgs) as $sArgName => $value)
 			{
-				if (self::IsValidObject($value))
-				{
-					if (strpos($sArgName, '->object()') === false)
-					{
+				if (self::IsValidObject($value)) {
+					if (strpos($sArgName, '->object()') === false) {
 						// Normalize object arguments
 						$aScalarArgs[$sArgName.'->object()'] = $value;
-						}
-					else
-					{
+					} else {
 						// Leave as is
 						$aScalarArgs[$sArgName] = $value;
 					}
-				}
-				else
-				{
-					if (is_scalar($value))
-					{
+				} else {
+					if (is_scalar($value)) {
 						$aScalarArgs[$sArgName] = (string)$value;
-					}
-					elseif (is_null($value))
-					{
+					} elseif (is_null($value)) {
 						$aScalarArgs[$sArgName] = null;
-					}
-					elseif (is_array($value))
-					{
+					} elseif (is_array($value)) {
 						$aScalarArgs[$sArgName] = $value;
 					}
 				}
@@ -4264,7 +4253,6 @@ abstract class MetaModel
 			if (!is_null($oUser))
 			{
 				$aPlaceholders['current_user->object()'] = $oUser;
-
 				$oContact = UserRights::GetContactObject();
 				if (!is_null($oContact))
 				{
@@ -4279,31 +4267,25 @@ abstract class MetaModel
 			foreach ($aExpectedArgs as $expression)
 			{
 				$aName = explode('->', $expression->GetName());
-				if ($aName[0] == 'current_contact_id')
-				{
+				if ($aName[0] == 'current_contact_id') {
 					$aPlaceholders['current_contact_id'] = UserRights::GetContactId();
 				}
-				if ($aName[0] == 'current_user')
-				{
+				if ($aName[0] == 'current_user') {
 					array_push($aCurrentUser, $aName[1]);
 				}
-				if ($aName[0] == 'current_contact')
-				{
+				if ($aName[0] == 'current_contact') {
 					array_push($aCurrentContact, $aName[1]);
 				}
 			}
-			if (count($aCurrentUser) > 0)
-			{
-				$oUser = MetaModel::GetObject("User", UserRights::GetUserId(),true,true);
+			if (count($aCurrentUser) > 0) {
+				$oUser = UserRights::GetUserObject();
 				$aPlaceholders['current_user->object()'] = $oUser;
-				foreach ($aCurrentUser as $sField)
-				{
+				foreach ($aCurrentUser as $sField) {
 					$aPlaceholders['current_user->'.$sField] = $oUser->Get($sField);
 				}
 			}
-			if (count($aCurrentContact) > 0)
-			{
-				$oPerson = MetaModel::GetObject("Person", UserRights::GetContactId(), true, true);
+			if (count($aCurrentContact) > 0) {
+				$oPerson = UserRights::GetContactObject();
 				$aPlaceholders['current_contact->object()'] = $oPerson;
 				foreach ($aCurrentContact as $sField) {
 					$aPlaceholders['current_contact->'.$sField] = $oPerson->Get($sField);
