@@ -68,6 +68,11 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	/** @var string $sJSDoSearch */
 	public string $sJSDoSearch;
 
+	// User rights
+	private bool $bIsAllowCreate;
+	private bool $bIsAllowModify;
+	private bool $bIsAllowDelete;
+
 	/**
 	 * Constructor.
 	 *
@@ -114,6 +119,11 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	private function Init()
 	{
 		$this->oAttributeLinkedSet = MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetClass(), $this->oUILinksDirectWidget->GetAttCode());
+
+		// User rights
+		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
+		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
+		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
 	}
 
 	/**
@@ -192,7 +202,7 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 				break;
 
 			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
-				if (UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES) {
+				if ($this->bIsAllowCreate) {
 					$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Create'));
 					$oActionButtonCreate->SetTooltip(Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())))
 						->AddDataAttribute('action', 'create')
@@ -203,24 +213,24 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
 			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
-				if (UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES) {
-					$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Create'));
-					$oActionButtonCreate->SetTooltip(Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())))
-						->AddDataAttribute('action', 'create')
-						->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('createRow');");
-					$oToolbar->AddSubBlock($oActionButtonCreate);
-				}
+			if ($this->bIsAllowCreate) {
+				$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Create'));
+				$oActionButtonCreate->SetTooltip(Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())))
+					->AddDataAttribute('action', 'create')
+					->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('createRow');");
+				$oToolbar->AddSubBlock($oActionButtonCreate);
+			}
 
-				if (UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES) {
-					$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Delete'));
-					$oActionButtonDelete->AddDataAttribute('action', 'delete')
-						->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('deleteSelection');");
-					$oToolbar->AddSubBlock($oActionButtonDelete);
-				}
+			if ($this->bIsAllowDelete) {
+				$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Delete'));
+				$oActionButtonDelete->AddDataAttribute('action', 'delete')
+					->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('deleteSelection');");
+				$oToolbar->AddSubBlock($oActionButtonDelete);
+			}
 				break;
 
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
-				if (UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES) {
+				if ($this->bIsAllowCreate) {
 					$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Add'));
 					$oActionButtonLink->SetTooltip(Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())))
 						->AddDataAttribute('action', 'add')
@@ -228,7 +238,7 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 					$oToolbar->AddSubBlock($oActionButtonLink);
 				}
 
-				if (UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES) {
+				if ($this->bIsAllowDelete) {
 					$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Remove'));
 					$oActionButtonUnlink->AddDataAttribute('action', 'detach')
 						->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('removeSelection');");
@@ -317,18 +327,18 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
 			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
-				if (UserRights::IsActionAllowed($this->oUILinksDirectWidget->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES) {
-					$aRowActions[] = array(
-						'label'         => 'UI:Links:Delete:Button',
-						'tooltip'       => $sDeleteButtonTooltip,
-						'icon_classes'  => 'fas fa-trash',
-						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
-					);
-				}
+			if ($this->bIsAllowDelete) {
+				$aRowActions[] = array(
+					'label'         => 'UI:Links:Delete:Button',
+					'tooltip'       => $sDeleteButtonTooltip,
+					'icon_classes'  => 'fas fa-trash',
+					'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
+				);
+			}
 				break;
 
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
-				if (UserRights::IsActionAllowed($this->oUILinksDirectWidget->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES) {
+				if ($this->bIsAllowModify) {
 					$aRowActions[] = array(
 						'label'         => 'UI:Links:Remove:Button',
 						'tooltip'       => $sRemoveButtonTooltip,

@@ -8,14 +8,12 @@ namespace Combodo\iTop\Application\UI\Links\Indirect;
 
 use AttributeLinkedSetIndirect;
 use cmdbAbstractObject;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Combodo\iTop\Service\Links\LinkSetModel;
 use ConfigException;
 use CoreException;
 use DBObject;
@@ -67,6 +65,10 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	/** @var string */
 	public string $sFormPrefix;
 
+	// User rights
+	private bool $bIsAllowCreate;
+	private bool $bIsAllowDelete;
+
 	/**
 	 * Constructor.
 	 *
@@ -103,6 +105,11 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 	private function Init()
 	{
 		$this->oAttributeLinkedSetIndirect = MetaModel::GetAttributeDef($this->oUILinksWidget->GetClass(), $this->oUILinksWidget->GetAttCode());
+
+		// User rights
+		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
+		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
+		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
 	}
 
 	/**
@@ -192,14 +199,14 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 		// Toolbar and actions
 		$oToolbar = ToolbarUIBlockFactory::MakeForButton();
 
-		if (UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES) {
+		if ($this->bIsAllowDelete) {
 			$oActionButtonUnlink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Remove'));
 			$oActionButtonUnlink->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.RemoveSelected();")
 				->AddDataAttribute('action', 'detach');
 			$oToolbar->AddSubBlock($oActionButtonUnlink);
 		}
 
-		if (UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES) {
+		if ($this->bIsAllowCreate) {
 			$oActionButtonLink = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Add'));
 			$oActionButtonLink->SetTooltip(Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->oAttributeLinkedSetIndirect->GetLinkedClass())))
 				->SetOnClickJsCode("oWidget{$this->oUILinksWidget->GetInputId()}.AddObjects();")
@@ -471,7 +478,7 @@ JS
 			$this->oAttributeLinkedSetIndirect->GetLabel(),
 			Dict::S("Class:{$this->oUILinksWidget->GetRemoteClass()}"));
 
-		if (UserRights::IsActionAllowed($this->oAttributeLinkedSetIndirect->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES) {
+		if ($this->bIsAllowDelete) {
 			$aRowActions[] = array(
 				'label'         => 'UI:Links:Remove:Button',
 				'tooltip'       => $sRemoveButtonTooltip,

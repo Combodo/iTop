@@ -9,7 +9,6 @@ namespace Combodo\iTop\Application\UI\Links\Indirect;
 use Combodo\iTop\Application\UI\Links\AbstractBlockLinkSetViewTable;
 use MetaModel;
 use PHPUnit\Exception;
-use UserRights;
 
 /**
  * Class BlockIndirectLinkSetViewTable
@@ -62,7 +61,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 
 		// Add creation in modal if the linkset is not readonly
 		if (!$this->oAttDef->GetReadOnly()
-			&& UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES) {
+			&& $this->bIsAllowCreate) {
 			$aExtraParams['creation_in_modal'] = true;
 			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::BUTTON_TOOLTIP);
 			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
@@ -78,7 +77,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 	{
 		$aRowActions = array();
 
-		if (UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES) {
+		if ($this->bIsAllowModify) {
 			$aRowActions[] = array(
 				'label'         => 'UI:Links:ModifyLink:Button',
 				'name'          => 'ModifyButton',
@@ -91,7 +90,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			);
 		}
 
-		if (UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES) {
+		if ($this->bIsAllowDelete) {
 			$aRowActions[] = array(
 				'label'         => 'UI:Links:Remove:Button',
 				'name'          => 'RemoveButton',
