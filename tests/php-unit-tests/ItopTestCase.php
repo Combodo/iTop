@@ -36,8 +36,7 @@ class ItopTestCase extends TestCase
 	static $DEBUG_UNIT_TEST = false;
 
 	/** @noinspection UsingInclusionOnceReturnValueInspection avoid errors for approot includes */
-	protected function setUp(): void
-	{
+	protected function setUp(): void {
 		$sAppRootRelPath = 'approot.inc.php';
 		$sDepthSeparator = '../';
 		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
@@ -52,6 +51,11 @@ class ItopTestCase extends TestCase
 		static::$DEBUG_UNIT_TEST = getenv('DEBUG_UNIT_TEST');
 
 		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
+
+		if (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME)) {
+			// setUp might be called multiple times, so protecting the define() call !
+			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
+		}
 	}
 
 	/**

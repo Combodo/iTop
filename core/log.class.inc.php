@@ -1121,16 +1121,19 @@ class DeprecatedCallsLog extends LogAPI
 	 * @uses \set_error_handler() to catch deprecated notices
 	 *
 	 * @since 3.0.0 N°3002 logs deprecated notices in called code
+	 * @since 3.0.4 N°6274 do not set handler when in PHPUnit context (otherwise PHP notices won't be caught)
 	 */
-	public static function Enable($sTargetFile = null): void
-	{
+	public static function Enable($sTargetFile = null): void {
 		if (empty($sTargetFile)) {
 			$sTargetFile = APPROOT.'log/deprecated-calls.log';
 		}
 		parent::Enable($sTargetFile);
 
-		if (static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)) {
-			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler']);
+		if (
+			(false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))
+			&& static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)
+		) {
+			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler'], E_DEPRECATED | E_USER_DEPRECATED);
 		}
 	}
 
