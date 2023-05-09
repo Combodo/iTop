@@ -1931,7 +1931,7 @@ abstract class DBObject implements iDisplay
 				/** @var \AttributeExternalKey $oAtt */
 				$sTargetClass = $oAtt->GetTargetClass();
 				if (false === MetaModel::IsObjectInDB($sTargetClass, $toCheck)) {
-					return "Target object not found (".$sTargetClass.".::".$toCheck.")";
+					return "Target object not found ({$sTargetClass}::{$toCheck})";
 				}
 			}
 			if ($oAtt->IsHierarchicalKey())
