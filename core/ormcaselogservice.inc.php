@@ -17,20 +17,21 @@ class ormCaseLogService
 	 */
 	protected $aOrmCaseLogExtension = null;
 
-	public function __construct()
+	public function __construct(array $aOrmCaseLogExtensions=null)
 	{
+		$this->aOrmCaseLogExtension = $aOrmCaseLogExtensions;
 	}
 
 	protected function LoadCaseLogExtensions()
 	{
 		if ($this->aOrmCaseLogExtension !== null) return;
 
-		$aOrmCaseLogExtension = [];
-		$aProviderClasses = \utils::GetClassesForInterface(iOrmCaseLogExtension::class, '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
-		foreach($aProviderClasses as $sProviderClass) {
-			$aOrmCaseLogExtension[] = new $sProviderClass();
+		$aOrmCaseLogExtensions = [];
+		$aOrmCaseLogExtensionClasses = \utils::GetClassesForInterface(iOrmCaseLogExtension::class, '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
+		foreach($aOrmCaseLogExtensionClasses as $sOrmCaseLogExtensionClass) {
+			$aOrmCaseLogExtensions[] = new $sOrmCaseLogExtensionClass();
 		}
-		$this->aOrmCaseLogExtension = $aOrmCaseLogExtension;
+		$this->aOrmCaseLogExtension = $aOrmCaseLogExtensions;
 	}
 
 	/**
