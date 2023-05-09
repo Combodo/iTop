@@ -13,7 +13,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="volume_id"/>
+            <attribute id="virtualdevice_name"/>
+            <attribute id="volume_name"/>
           </attributes>
         </naming>
         <style>
@@ -23,6 +24,17 @@
           <attributes>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="volume_id"/>
+              <attribute id="virtualdevice_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="volume_id" xsi:type="AttributeExternalKey">
@@ -55,10 +67,10 @@
       <presentation>
         <details>
           <items>
-            <item id="volume_id">
+            <item id="virtualdevice_id">
               <rank>10</rank>
             </item>
-            <item id="virtualdevice_id">
+            <item id="volume_id">
               <rank>20</rank>
             </item>
             <item id="size_used">
@@ -78,10 +90,10 @@
         </search>
         <list>
           <items>
-            <item id="volume_id">
+            <item id="virtualdevice_id">
               <rank>10</rank>
             </item>
-            <item id="virtualdevice_id">
+            <item id="volume_id">
               <rank>20</rank>
             </item>
             <item id="size_used">

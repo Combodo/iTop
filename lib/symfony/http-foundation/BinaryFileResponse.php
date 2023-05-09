@@ -206,15 +206,19 @@ class BinaryFileResponse extends Response
      */
     public function prepare(Request $request)
     {
+        if ($this->isInformational() || $this->isEmpty()) {
+            parent::prepare($request);
+
+            $this->maxlen = 0;
+
+            return $this;
+        }
+
         if (!$this->headers->has('Content-Type')) {
             $this->headers->set('Content-Type', $this->file->getMimeType() ?: 'application/octet-stream');
         }
 
-        if ('HTTP/1.0' !== $request->server->get('SERVER_PROTOCOL')) {
-            $this->setProtocolVersion('1.1');
-        }
-
-        $this->ensureIEOverSSLCompatibility($request);
+        parent::prepare($request);
 
         $this->offset = 0;
         $this->maxlen = -1;
@@ -222,6 +226,7 @@ class BinaryFileResponse extends Response
         if (false === $fileSize = $this->file->getSize()) {
             return $this;
         }
+        $this->headers->remove('Transfer-Encoding');
         $this->headers->set('Content-Length', $fileSize);
 
         if (!$this->headers->has('Accept-Ranges')) {
@@ -291,6 +296,10 @@ class BinaryFileResponse extends Response
             }
         }
 
+        if ($request->isMethod('HEAD')) {
+            $this->maxlen = 0;
+        }
+
         return $this;
     }
 
@@ -312,40 +321,42 @@ class BinaryFileResponse extends Response
      */
     public function sendContent()
     {
-        if (!$this->isSuccessful()) {
-            return parent::sendContent();
-        }
-
-        if (0 === $this->maxlen) {
-            return $this;
-        }
-
-        $out = fopen('php://output', 'w');
-        $file = fopen($this->file->getPathname(), 'r');
-
-        ignore_user_abort(true);
-
-        if (0 !== $this->offset) {
-            fseek($file, $this->offset);
-        }
-
-        $length = $this->maxlen;
-        while ($length && !feof($file)) {
-            $read = ($length > $this->chunkSize) ? $this->chunkSize : $length;
-            $length -= $read;
-
-            stream_copy_to_stream($file, $out, $read);
-
-            if (connection_aborted()) {
-                break;
+        try {
+            if (!$this->isSuccessful()) {
+                return parent::sendContent();
             }
-        }
 
-        fclose($out);
-        fclose($file);
+            if (0 === $this->maxlen) {
+                return $this;
+            }
 
-        if ($this->deleteFileAfterSend && is_file($this->file->getPathname())) {
-            unlink($this->file->getPathname());
+            $out = fopen('php://output', 'w');
+            $file = fopen($this->file->getPathname(), 'r');
+
+            ignore_user_abort(true);
+
+            if (0 !== $this->offset) {
+                fseek($file, $this->offset);
+            }
+
+            $length = $this->maxlen;
+            while ($length && !feof($file)) {
+                $read = ($length > $this->chunkSize) ? $this->chunkSize : $length;
+                $length -= $read;
+
+                stream_copy_to_stream($file, $out, $read);
+
+                if (connection_aborted()) {
+                    break;
+                }
+            }
+
+            fclose($out);
+            fclose($file);
+        } finally {
+            if ($this->deleteFileAfterSend && is_file($this->file->getPathname())) {
+                unlink($this->file->getPathname());
+            }
         }
 
         return $this;

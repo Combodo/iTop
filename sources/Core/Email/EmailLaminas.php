@@ -1,29 +1,10 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Send an email (abstraction for synchronous/asynchronous modes)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-@include APPROOT."/core/oauth.php";
 
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use Laminas\Mail\Header\ContentType;
@@ -81,9 +62,6 @@ class EMailLaminas extends Email
 	 * @param string $sSerializedMessage The serialized representation of the message
 	 *
 	 * @return \EMail
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
 	 */
 	public static function UnSerializeV2($sSerializedMessage)
 	{
@@ -170,24 +148,28 @@ class EMailLaminas extends Email
 				$sEncryption = self::$m_oConfig->Get('email_transport_smtp.encryption');
 				$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
 				$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
-				$bAllowSelfSigned = static::$m_oConfig->Get('email_transport_smtp.allow_self_signed');
 				$bVerifyPeer = static::$m_oConfig->Get('email_transport_smtp.verify_peer');
 
 				$oTransport = new Smtp();
-				$aOptions = [
-					'host'              => $sHost,
-					'port'              => $sPort,
-					'connection_class'  => 'login',
-					'connection_config' => [
-						'ssl' => $sEncryption,
-					],
-					'allow_self_signed' => $bAllowSelfSigned,
-					'verify_peer'       => $bVerifyPeer,
-				];
-				if (strlen($sUserName) > 0) {
-					$aOptions['connection_config']['username'] = $sUserName;
-					$aOptions['connection_config']['password'] = $sPassword;
+				$aOptions = [];
+				$aConnectionConfig = [];
+
+				$aOptions['host'] = $sHost;
+				$aOptions['port'] = $sPort;
+
+				$aConnectionConfig['ssl'] = $sEncryption;
+				$aConnectionConfig['novalidatecert'] = !$bVerifyPeer;
+
+				if (strlen($sPassword) > 0) {
+					$aConnectionConfig['username'] = $sUserName;
+					$aConnectionConfig['password'] = $sPassword;
+					$aOptions['connection_class'] = 'login';
+				} else {
+					$aOptions['connection_class'] = 'smtp';
 				}
+
+				$aOptions['connection_config'] = $aConnectionConfig;
+
 				$oOptions = new SmtpOptions($aOptions);
 				$oTransport->setOptions($oOptions);
 				break;
@@ -268,7 +250,7 @@ class EMailLaminas extends Email
 	protected function EmbedInlineImages(string &$sBody)
 	{
 		$oDOMDoc = new DOMDocument();
-		$oDOMDoc->preserveWhitespace = true;
+		$oDOMDoc->preserveWhiteSpace = true;
 		@$oDOMDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sBody); // For loading HTML chunks where the character set is not specified
 
 		$oXPath = new DOMXPath($oDOMDoc);
@@ -321,7 +303,8 @@ class EMailLaminas extends Email
 		if ($bForceSynchronous) {
 			return $this->SendSynchronous($aIssues, $oLog);
 		} else {
-			$bConfigASYNC = MetaModel::GetConfig()->Get('email_asynchronous');
+			$oConfig = $this->LoadConfig();
+			$bConfigASYNC = $oConfig->Get('email_asynchronous');
 			if ($bConfigASYNC) {
 				return $this->SendAsynchronous($aIssues, $oLog);
 			} else {
@@ -378,12 +361,12 @@ class EMailLaminas extends Email
 	 *
 	 * @param $sBody
 	 * @param string $sMimeType
-	 * @param $sCustomStyles
+	 * @param null $sCustomStyles
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
+	 * @throws \Symfony\Component\CssSelector\Exception\ParseException
 	 */
 	public function SetBody($sBody, $sMimeType = Mime::TYPE_HTML, $sCustomStyles = null)
 	{

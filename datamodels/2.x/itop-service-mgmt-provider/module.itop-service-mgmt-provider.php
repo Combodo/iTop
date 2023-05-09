@@ -22,7 +22,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-service-mgmt-provider.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-service-mgmt.xml',

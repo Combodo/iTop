@@ -23,7 +23,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-bridge-virtualization-storage.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-change-mgmt.xml',

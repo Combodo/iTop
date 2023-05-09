@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
@@ -37,6 +37,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Requêtes ouvertes par type',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par organisation',
 	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
+	'Class:UserRequest:KnownErrorList+' => 'Erreurs connues liées à des éléments de configuration impactés par ce ticket',
 	'Menu:UserRequest:MyWorkOrders' => 'Tâches qui me sont assignées',
 	'Menu:UserRequest:MyWorkOrders+' => 'Tâches qui me sont assignées',
 	'Class:Problem:KnownProblemList' => 'Problèmes connus',
@@ -209,7 +210,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref Changement parent',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Requêtes filles',
-	'Class:UserRequest/Attribute:related_request_list+' => '',
+	'Class:UserRequest/Attribute:related_request_list+' => 'Toutes les requêtes liées à cette requête parente',
 	'Class:UserRequest/Attribute:public_log' => 'Journal public',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Satisfaction client',

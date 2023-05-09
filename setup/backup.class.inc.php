@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -146,18 +146,35 @@ class DBBackup
 	/**
 	 * Create a normalized backup name, depending on the current date/time and Database
 	 *
-	 * @param string sNameSpec Name and path, eventually containing itop placeholders + time formatting specs
+	 * @param string sNameSpec Name and path, eventually containing itop placeholders + time formatting following the strftime() format {@link https://www.php.net/manual/fr/function.strftime.php}
+	 * @param \DateTime|null $oDateTime Date time to use for the name
 	 *
 	 * @return string
+	 * @since 3.1.0 N°5279 Add $oDtaeaTime parameter
 	 */
-	public function MakeName($sNameSpec = "__DB__-%Y-%m-%d")
+	public function MakeName($sNameSpec = "__DB__-%Y-%m-%d", DateTime $oDateTime = null)
 	{
+		if ($oDateTime === null) {
+			$oDateTime = new DateTime();
+		}
+
 		$sFileName = $sNameSpec;
 		$sFileName = str_replace('__HOST__', $this->sDBHost, $sFileName);
 		$sFileName = str_replace('__DB__', $this->sDBName, $sFileName);
 		$sFileName = str_replace('__SUBNAME__', $this->sDBSubName, $sFileName);
-		// Transform %Y, etc.
-		$sFileName = strftime($sFileName);
+
+		// Transform date/time placeholders (%Y, %m, etc)
+		// N°5279 - As of PHP 8.1 strftime() is deprecated so we use \DateTime::format() instead
+		//
+		// IMPORTANT: We can't use \DateTime::format() directly on the whole filename as it would also format characters that are not supposed to be. eg. "__DB__-Y-m-d-production" would become "itopdb-2023-02-09-+01:00Thu, 09 Feb 2023 11:34:01 +0100202309"
+		$sFileName = preg_replace_callback(
+			'/(%[a-zA-Z])/',
+			function ($aMatches) use ($oDateTime) {
+				$sDateTimeFormatPlaceholder = utils::StrftimeFormatToDateTimeFormat($aMatches[0]);
+				return $oDateTime->format($sDateTimeFormatPlaceholder);
+			},
+			$sFileName,
+		);
 
 		return $sFileName;
 	}
@@ -464,13 +481,13 @@ EOF;
 	 * @param Config $oConfig
 	 *
 	 * @return string TLS arguments for CLI programs such as mysqldump. Empty string if the config does not use TLS.
+	 * @throws \MySQLException
 	 *
-	 * @uses \CMDBSource::GetDBVendor() so needs a connection opened !
-	 * @uses \CMDBSource::GetDBVersion() so needs a connection opened !
+	 * @uses \CMDBSource::IsSslModeDBVersion() so needs a connection opened !
 	 *
 	 * @since 2.5.0 N°1260
 	 * @since 2.6.2 2.7.0 N°2336 Call DB to get vendor and version (so CMDBSource must be init before calling this method)
-	 * @link https://dev.mysql.com/doc/refman/5.6/en/connection-options.html#encrypted-connection-options "Command Options for Encrypted Connections"
+	 * @link https://dev.mysql.com/doc/refman/5.7/en/connection-options.html#encrypted-connection-options Command Options for Encrypted Connections
 	 */
 	public static function GetMysqlCliTlsOptions($oConfig)
 	{
@@ -480,13 +497,17 @@ EOF;
 			return '';
 		}
 		$sTlsOptions = '';
-
-		$sDBVendor = CMDBSource::GetDBVendor();
-		$sDBVersion = CMDBSource::GetDBVersion();
-		$sMysqlSSLModeVersion = '5.7.0'; //Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
-		if ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL && version_compare($sDBVersion, $sMysqlSSLModeVersion, '>='))
+		// Mysql 5.7.11 and upper deprecated --ssl and uses --ssl-mode instead
+		if (CMDBSource::IsSslModeDBVersion())
 		{
-			$sTlsOptions .= ' --ssl-mode=VERIFY_CA';
+			if(empty($oConfig->Get('db_tls.ca')))
+			{
+				$sTlsOptions .= ' --ssl-mode=REQUIRED';
+			}
+			else
+			{
+				$sTlsOptions .= ' --ssl-mode=VERIFY_CA';
+			}
 		}
 		else
 		{

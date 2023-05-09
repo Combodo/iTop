@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:User/Attribute:language/Value:FR FR' => 'French',
 	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
 	'Class:User/Attribute:profile_list' => 'Profily/role',
-	'Class:User/Attribute:profile_list+' => '',
+	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person~~',
 	'Class:User/Attribute:allowed_org_list' => 'Přístupné organizace',
 	'Class:User/Attribute:allowed_org_list+' => 'Uživatel má oprávnění přistupovat k údajům následujících organizací. Pokud není zvolena žádná organizace, neuplatňují se žádná omezení.',
 	'Class:User/Attribute:status' => 'Stav',
@@ -416,7 +416,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Odebrat >> ',
 	'UI:Button:FilterList' => ' Filtrovat... ',
 	'UI:Button:Create' => ' Vytvořit ',
-	'UI:Button:Delete' => ' Odstranit ! ',
+	'UI:Button:Delete' => ' Odstranit ',
 	'UI:Button:Rename' => ' Přejmenovat... ',
 	'UI:Button:ChangePassword' => ' Změnit heslo ',
 	'UI:Button:ResetPassword' => ' Obnovit heslo ',
@@ -501,7 +501,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Actions' => 'Akce',
 	'UI:Menu:OtherActions' => 'Další akce',
 	'UI:Menu:Transitions' => 'Transitions~~',
-	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other transitions~~',
 	'UI:Menu:New' => 'Nový...',
 	'UI:Menu:Add' => 'Přidat...',
 	'UI:Menu:Manage' => 'Spravovat...',

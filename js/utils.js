@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -553,7 +553,7 @@ function ExportInitButton(sSelector) {
 				var aMessages = $('#export-form').data('validation_messages');
 
 				if (aMessages.length > 0) {
-					alert(aMessages.join(''));
+					CombodoModal.OpenErrorModal(aMessages.join(''));
 					return;
 				}
 				if ($(this).hasClass('ui-button')) {
@@ -759,6 +759,105 @@ const CombodoGlobalToolbox = {
 			oCurrentDate = new Date();
 		}
 		while ((oCurrentDate - oDate) < iDuration);
+	},
+
+	/**
+	 * Render a template and inject data into it.
+	 *
+	 * This rendering engine is aimed to produce client side template rendering.
+	 *
+	 * markups with attributes:
+	 *  data-template-attr-{title|name|for}: set dom element attribute with corresponding datavalue
+	 *  data-template-text: set dom element text with corresponding data value
+	 *  data-template-condition: set dom element visibility depending on data value
+	 *  data-template-css-{background-image}: set dom element css property with corresponding data value
+	 *  data-template-add-class: add class to dom element with corresponding data value
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param sTemplateId
+	 * @param aData
+	 * @param sTemplateClass
+	 * @returns {*|jQuery|HTMLElement|JQuery<HTMLElement>}
+	 * @constructor
+	 */
+	RenderTemplate: function(sTemplateId, aData, sTemplateClass = null)
+	{
+		let sHtml = '<div>' + $(sTemplateId).html() + '</div>';
+
+		// Create element
+		let oElement = $(sHtml);
+		if(sTemplateClass !== null){
+			oElement.addClass(sTemplateClass);
+		}
+
+		// Attribute replacement
+		let aAttrElements = ['title', 'name', 'for'];
+		aAttrElements.forEach(function(e){
+			$(`[data-template-attr-${e}]`, oElement).each(function(){
+				$(this).attr(e, aData[$(this).attr(`data-template-attr-${e}`)]);
+			})
+		});
+
+		// CSS replacement
+		let aCssElements = ['background-image'];
+		aCssElements.forEach(function(e){
+			$(`[data-template-css-${e}]`, oElement).each(function(){
+				$(this).css(e, aData[$(this).attr(`data-template-css-${e}`)]);
+			})
+		});
+
+		// Text replacement
+		$('[data-template-text]', oElement).each(function(){
+			$(this).text(aData[$(this).attr('data-template-text')]);
+		})
+
+		// Condition
+		$('[data-template-condition]', oElement).each(function(){
+			$(this).toggle(aData[$(this).attr('data-template-condition')]);
+		})
+
+		// Add classes
+		$('[data-template-add-class]', oElement).each(function(){
+			$(this).addClass(aData[$(this).attr('data-template-add-class')]);
+		})
+
+		return oElement;
+	},
+
+	/**
+	 * ExtractArrayItemsContainingThisKeyAndValue.
+	 *
+	 * This function extract item(s) of an array witch include the key value pair.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param aArrayToSearchIn Array to search in
+	 * @param sKey Key to search
+	 * @param sValue Value to search
+	 * @returns {*|*[]|null}
+	 * @constructor
+	 */
+	ExtractArrayItemsContainingThisKeyAndValue: function(aArrayToSearchIn, sKey, sValue)
+	{
+		let aResult = [];
+
+		// Iterate throw items...
+		for(let i = 0 ; i < aArrayToSearchIn.length ; i++){
+			if(aArrayToSearchIn[i][sKey] === sValue){
+				aResult.push(aArrayToSearchIn[i]);
+			}
+		}
+
+		// Return result
+		switch(aResult.length){
+			case 0:
+				return null;
+			case 1:
+				return aResult[0];
+			default:
+				return aResult;
+		}
 	}
 };
 
@@ -771,6 +870,15 @@ const CombodoGlobalToolbox = {
  * @since 3.0.0
  */
 const CombodoTooltip = {
+	
+	/**
+	 * Tooltips remote content once fetched from the server will be cached in this array
+	 * associated to their URL to avoid fetching the same content multiple times
+	 * @var aTooltipsRemoteContent {Object}
+	 * @since 3.1.0
+	 */
+	aTooltipsRemoteContent: {},
+	
 	/**
 	 * Instantiate a tooltip on oElem from its data attributes
 	 *
@@ -782,8 +890,12 @@ const CombodoTooltip = {
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
 		const oOptions = {};
 
-		// First, check if the tooltip isn't already instantiated
-		if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
+		// First, check if the jQuery element actually represent DOM elements
+		if (oElem.length === 0) {
+			return false;
+		}
+		// Then, check if the tooltip isn't already instantiated
+		else if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
 			return false;
 		}
 		else if((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === true) && (oElem[0]._tippy !== undefined)){
@@ -865,6 +977,48 @@ const CombodoTooltip = {
 			(typeof sShowDelay === 'undefined') ? 200 : parseInt(sShowDelay),
 			(typeof sHideDelay === 'undefined') ? null : parseInt(sHideDelay),
 		];
+		
+		// - If the content is asynchronous, bind methods to retrieve its content and cache it
+		const bRemoteContent = oElem.attr('data-tooltip-is-async') === 'true'
+		if(bRemoteContent) {
+			oOptions['onCreate'] = function(instance) {
+				instance._isFetching = false;
+				instance._isLoaded = null;
+			};
+			oOptions['onShow'] = function(instance) {
+					if (instance._isFetching || instance._isLoaded || instance._error) {
+						return;
+					}
+					instance._isFetching = true;
+					let sRemoteUrl = oOptions['content'];
+					if(CombodoTooltip.aTooltipsRemoteContent[sRemoteUrl] !== undefined){
+						instance.setContent(CombodoTooltip.aTooltipsRemoteContent[sRemoteUrl]);
+					}
+					else {
+						instance.setContent('Loading...');
+						$.ajax(sRemoteUrl)
+							.done(function (html) {
+								instance.setContent(html);
+								
+								// - Ugly hack to include JS scripts as it doesn't work with tippy when adding multiple nodes
+								$(html).each(function( index ) {
+									if($(this).is('script')){
+										$('body').append($(this));
+									}
+								});
+								
+								CombodoTooltip.aTooltipsRemoteContent[sRemoteUrl] = html;
+								instance._isLoaded = true;
+							})
+							.fail(function () {
+								instance.setContent(`Request failed.`);
+							})
+							.always(function () {
+								instance._isFetching = false;
+							});
+					}
+				};
+		}
 
 		oOptions['theme'] = oElem.attr('data-tooltip-theme') ?? '';
 
@@ -1107,6 +1261,16 @@ const CombodoInlineImage = {
  * @since 3.1.0
  */
 let CombodoModal = {
+
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_SUCCESS : 'success',
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_INFORMATION : 'information',
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_WARNING : 'warning',
+	/** @var {String} */
+	INFORMATIVE_MODAL_SEVERITY_ERROR : 'error',
+	
 	/**
 	 * Close all opened modals on the page
 	 *
@@ -1167,6 +1331,7 @@ let CombodoModal = {
 			{
 				id: null,           // ID of the created modal
 				attributes: {},     // HTML attributes
+				classes: {}, // Classes for the created modal elements
 				base_modal: {
 					usage: 'clone',                                 // Either 'clone' or 'replace'
 					selector: this._GetDefaultBaseModalSelector()   // Either a selector of the modal element used to base this one on or the modal element itself
@@ -1234,6 +1399,7 @@ let CombodoModal = {
 		if (false === this._InstantiateModal(oModalElem, oOptions)) {
 			return null;
 		}
+		this._BindEvents(oModalElem);
 
 		return oModalElem;
 	},
@@ -1258,6 +1424,19 @@ let CombodoModal = {
 	_InstantiateModal: function(oModalElem, oOptions) {
 		// Meant for overlaoding
 		CombodoJSConsole.Debug('CombodoModal._InstantiateModal not implemented');
+		return false;
+	},
+	/**
+	 * Bind event on the modal
+	 *
+	 * @param oModalElem {Object} The jQuery object representing the modal element
+	 * @returns {boolean}
+	 * @private
+	 * @internal
+	 */
+	_BindEvents: function(oModalElem) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal._BindEvents not implemented');
 		return false;
 	},
 	/**
@@ -1298,11 +1477,68 @@ let CombodoModal = {
 	/**
 	 * Open a standard confirmation modal and put the content into it.
 	 *
-	 * @param oOptions
-	 * @returns object The jQuery object of the modal element
+	 * @param oOptions {Object} {@see CombodoModal.OpenModal} +
+	 *      ```
+	 *      {
+	 *          do_not_show_again_pref_key: string,
+	 *          callback_on_confirm: function,
+	 *          callback_on_cancel: function
+ *          }
+	 *      ```
+	 * @param aData {Array} Array of arguments to pass to the callbacks
+	 * @return {Object} The jQuery object of the modal element
 	 */
-	OpenConfirmationModal: function(oOptions) {
+	OpenConfirmationModal: function(oOptions, aData) {
 		// Meant for overlaoding
 		CombodoJSConsole.Debug('CombodoModal.OpenConfirmationModal not implemented');
-	}
+	},
+	/**
+	 * Open a standard informative modal, should only be extended to created your own modal method to prepare a custom informative modal
+	 * In most cases you should prefer {@see CombodoModal.OpenSuccessModal}, {@see CombodoModal.OpenInformativeModal}, {@see CombodoModal.OpenWarningModal}, {@see CombodoModal.OpenErrorModal}
+	 *
+	 * @param sMessage {String} Informative message to be displayed in the modal
+	 * @param sSeverity {String} Severity of the information. Default values are success, information, warning, error.
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenInformativeModal: function(sMessage,sSeverity, oOptions) {
+		// Meant for overlaoding
+		CombodoJSConsole.Debug('CombodoModal.OpenInformativeModal not implemented');
+	},
+
+	/**
+	 * Open a standard informative modal for success messages.
+	 *
+	 * @param sMessage {String} Informative success message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenSuccessModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_SUCCESS, oOptions);
+	},
+	/**
+	 * Open a standard informative modal for information messages.
+	 *
+	 * @param sMessage {String} Informative information success to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenInformationModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_INFORMATION, oOptions);
+	},
+	/**
+	 * Open a standard informative modal for warning messages.
+	 *
+	 * @param sMessage {String} Informative warning message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenWarningModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_WARNING, oOptions);
+	},
+	/**
+	 * Open a standard informative error modal for success messages.
+	 *
+	 * @param sMessage {String} Informative error message to be displayed in the modal
+	 * @param oOptions {Object | null} {@see CombodoModal.OpenModal}
+	 */
+	OpenErrorModal: function(sMessage, oOptions) {
+		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR, oOptions);
+	},
 };

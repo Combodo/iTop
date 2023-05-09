@@ -1,6 +1,6 @@
 <?php
 
-define('APPROOT', dirname(__FILE__).'/');
+define('APPROOT', __DIR__.'/');
 define('APPCONF', APPROOT.'conf/');
 
 /**
@@ -24,5 +24,10 @@ define('ITOP_DESIGN_LATEST_VERSION', '3.1');
  * @used-by iTopModulesPhpVersionIntegrationTest
  */
 define('ITOP_CORE_VERSION', '3.1.0');
+
+/**
+ * @since 3.0.4 N°6274 Allow to test if PHPUnit is currently running. Starting with PHPUnit 9.5 we'll be able to replace it with $GLOBALS['phpunit_version']
+ */
+define('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME', 'ITOP_PHPUNIT_RUNNING');
 
 require_once APPROOT.'bootstrap.inc.php';

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -31,19 +31,19 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:ServiceManagement' => 'Gerenciamento de Serviços',
-	'Menu:ServiceManagement+' => 'Gerenciamento de Serviços',
+	'Menu:ServiceManagement' => 'Gerenciamento de serviços',
+	'Menu:ServiceManagement+' => 'Gerenciamento de serviços',
 	'Menu:Service:Overview' => 'Visão geral',
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por nível serviço',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos terminando em menos de 30 dias',
 
-	'Menu:ProviderContract' => 'Contratos de Provedores',
+	'Menu:ProviderContract' => 'Contratos de provedores',
 	'Menu:ProviderContract+' => '',
-	'Menu:CustomerContract' => 'Contratos de Clientes',
+	'Menu:CustomerContract' => 'Contratos de clientes',
 	'Menu:CustomerContract+' => '',
-	'Menu:ServiceSubcategory' => 'Subcategorias de Serviços',
+	'Menu:ServiceSubcategory' => 'Subcategorias de serviços',
 	'Menu:ServiceSubcategory+' => '',
 	'Menu:Service' => 'Serviços',
 	'Menu:Service+' => '',
@@ -53,9 +53,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:SLA+' => 'Lista de Acordos de Nível de Serviço (ANSs)',
 	'Menu:SLT' => 'SLTs',
 	'Menu:SLT+' => 'Lista de Níveis Mínimos de Serviço (NMSs)',
-	'Menu:DeliveryModel' => 'Modelos de Entrega',
+	'Menu:DeliveryModel' => 'Modelos de entrega',
 	'Menu:DeliveryModel+' => '',
-	'Menu:ServiceFamily' => 'Família de Serviços',
+	'Menu:ServiceFamily' => 'Família de serviços',
 	'Menu:ServiceFamily+' => '',
 ));
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,9 +8,7 @@
 namespace Combodo\iTop\Application\TwigBase\UI;
 
 
-use Exception;
-use ReflectionClass;
-use SetupUtils;
+use Combodo\iTop\Application\UI\Base\iUIBlockFactory;
 use Twig\Extension\AbstractExtension;
 use utils;
 
@@ -30,7 +28,7 @@ class UIBlockExtension extends AbstractExtension
 	{
 		$aParsers = [];
 
-		$sInterface = "Combodo\\iTop\\Application\\UI\\Base\\iUIBlockFactory";
+		$sInterface = iUIBlockFactory::class;
 		$aFactoryClasses = utils::GetClassesForInterface($sInterface, 'UIBlockFactory');
 
 		foreach ($aFactoryClasses as $sFactoryClass) {

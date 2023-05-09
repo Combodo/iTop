@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Persistent classes (internal): user defined actions
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -181,7 +181,7 @@ abstract class AsyncTask extends DBObject
 	    if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
 	    {
 	        $aConfig = $aRetries[get_class($this)];
-	        $bExponential = (bool)$aConfig['exponential_delay'] ?? $bExponential;
+		    $bExponential = (bool) ($aConfig['exponential_delay'] ?? $bExponential);
 	    }
 	    return $bExponential;
 	}

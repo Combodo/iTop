@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -31,6 +31,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBloc
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
+define('ATTACHMENT_DISPLAY_URL', 'pages/ajax.render.php?operation=display_document&class=Attachment&field=contents&id=');
 define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id=');
 define('ATTACHMENTS_RENDERER', 'TableDetailsAttachmentsRenderer');
 
@@ -116,9 +117,11 @@ abstract class AbstractAttachmentsRenderer
 		$this->sTransactionId = $sTransactionId;
 
 		$oSearch = DBObjectSearch::FromOQL('SELECT Attachment WHERE item_class = :class AND item_id = :item_id');
+		$oSearch->AllowAllData();
 		$this->oAttachmentsSet = new DBObjectSet($oSearch, array(), array('class' => $sObjClass, 'item_id' => $iObjKey));
 
 		$oSearchTemp = DBObjectSearch::FromOQL('SELECT Attachment WHERE temp_id = :temp_id');
+		$oSearchTemp->AllowAllData();
 		$this->oTempAttachmentsSet = new DBObjectSet($oSearchTemp, array(), array('temp_id' => $this->sTransactionId));
 	}
 
@@ -416,6 +419,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$sFileDate = Dict::S('Attachments:File:Date');
 		$sFileUploader = Dict::S('Attachments:File:Uploader');
 		$sFileType = Dict::S('Attachments:File:MimeType');
+		$sFileDownloadsCount = Dict::S('Attachments:File:DownloadsCount');
 
 		if ($bWithDeleteButton)
 		{
@@ -443,6 +447,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 			'upload-date' => array('label' => $sFileDate, 'description' => $sFileDate),
 			'uploader' => array('label' => $sFileUploader, 'description' => $sFileUploader),
 			'type' => array('label' => $sFileType, 'description' => $sFileType),
+			'downloads-count' => array('label' => $sFileDownloadsCount, 'description' => $sFileDownloadsCount),
 		);
 
 		if ($bWithDeleteButton) {
@@ -496,6 +501,7 @@ JS
 		/** @var \ormDocument $oDoc */
 		$oDoc = $oAttachment->Get('contents');
 
+		$sDocDisplayUrl = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DISPLAY_URL.$iAttachmentId;
 		$sDocDownloadUrl = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttachmentId;
 		$sFileName = utils::HtmlEntities($oDoc->GetFileName());
 		$sTrId = $this->GetAttachmentContainerId($iAttachmentId);
@@ -521,6 +527,7 @@ JS
 		$sFileType = $oDoc->GetMimeType();
 
 		$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
+		$sAttachmentPreviewUrl = '';
 		$sIconClass = '';
 		$iMaxWidth = MetaModel::GetModuleSetting('itop-attachments', 'preview_max_width', 290);
 		$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', self::DEFAULT_MAX_SIZE_FOR_PREVIEW);
@@ -530,23 +537,25 @@ JS
 		if ($oDoc->IsPreviewAvailable())
 		{
 			$sIconClass = ' preview';
+			$sAttachmentPreviewUrl = $sDocDisplayUrl;
 			if ($oDoc->GetSize() <= $iMaxSizeForPreview)
 			{
-				$sAttachmentThumbUrl = $sDocDownloadUrl;
+				$sAttachmentThumbUrl = $sDocDisplayUrl;
 			}
-			$sPreviewMarkup = utils::HtmlEntities('<img src="'.$sDocDownloadUrl.'" style="max-width: '.$iMaxWidth.'"/>');
+			$sPreviewMarkup = utils::HtmlEntities('<img src="'.$sDocDisplayUrl.'" style="max-width: '.$iMaxWidth.'"/>');
 		}
 
 		
 		$aAttachmentLine = array(
 			'@id' => $sTrId,
 			'@meta' => 'data-file-type="'.utils::HtmlEntities($sFileType).'" data-file-size-raw="'.utils::HtmlEntities($iFileSize).'" data-file-size-formatted="'.utils::HtmlEntities($sFileFormattedSize).'" data-file-uploader="'.utils::HtmlEntities($sAttachmentUploader).'"',
-			'icon' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="trigger-preview '.$sIconClass.'"><img class="ibo-attachment--datatable--icon-preview '.$sIconClass.'" data-tooltip-content="'.$sPreviewMarkup.'" data-tooltip-html-enabled="true" src="'.$sAttachmentThumbUrl.'"></a>',
+			'icon' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="'.$sIconClass.'"><img class="ibo-attachment--datatable--icon-preview '.$sIconClass.'" data-tooltip-content="'.$sPreviewMarkup.'" data-tooltip-html-enabled="true" src="'.$sAttachmentThumbUrl.'"></a>',
 			'filename' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="$sIconClass">'.$sFileName.'</a>'.$sAttachmentMeta,
 			'formatted-size' => $sFileFormattedSize,
 			'upload-date' => $sAttachmentDateFormatted,
 			'uploader' => $sAttachmentUploaderForHtml,
 			'type' => $sFileType,
+			'downloads-count' => $oDoc->GetDownloadsCount(),
 			'js' => '',
 		);
 

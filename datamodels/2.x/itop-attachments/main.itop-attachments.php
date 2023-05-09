@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExtension
@@ -293,11 +280,11 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		if (!is_null($sTransactionId))
 		{
 			$aActions = array();
-			$aAttachmentIds = utils::ReadParam('attachments', array());
 			$aRemovedAttachmentIds = utils::ReadParam('removed_attachments', array());
 
 			// Get all current attachments
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
+			$oSearch->AllowAllData();
 			$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
 			while ($oAttachment = $oSet->Fetch())
 			{
@@ -305,7 +292,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
 				{
 					$aData = ['target_object' => $oObject];
-					$oAttachment->FireEvent(EVENT_SERVICE_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
+					$oAttachment->FireEvent(EVENT_REMOVE_ATTACHMENT_FROM_OBJECT, $aData);
 					$oAttachment->DBDelete();
 					$aActions[] = self::GetActionChangeOp($oAttachment, false /* false => deletion */);
 				}
@@ -317,26 +304,24 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 			// for this object, but deleting the "new" ones that were already removed from the form
 			$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
-			foreach ($aAttachmentIds as $iAttachmentId)
+			$oSearch->AllowAllData();
+			$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
+			while ($oAttachment = $oSet->Fetch())
 			{
-				$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
-				while ($oAttachment = $oSet->Fetch())
+				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
 				{
-					if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
-					{
-						$oAttachment->DBDelete();
-						// temporary attachment removed, don't even mention it in the history
-					}
-					else
-					{
-						$oAttachment->SetItem($oObject);
-						$oAttachment->Set('temp_id', '');
-						$oAttachment->DBUpdate();
-						// temporary attachment confirmed, list it in the history
-						$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
-						$aData = ['target_object' => $oObject];
-						$oAttachment->FireEvent(EVENT_SERVICE_ADD_ATTACHMENT_TO_OBJECT, $aData);
-					}
+					$oAttachment->DBDelete();
+					// temporary attachment removed, don't even mention it in the history
+				}
+				else
+				{
+					$oAttachment->SetItem($oObject);
+					$oAttachment->Set('temp_id', '');
+					$oAttachment->DBUpdate();
+					// temporary attachment confirmed, list it in the history
+					$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
+					$aData = ['target_object' => $oObject];
+					$oAttachment->FireEvent(EVENT_ADD_ATTACHMENT_TO_OBJECT, $aData);
 				}
 			}
 			if (count($aActions) > 0)
@@ -745,6 +730,37 @@ class CMDBChangeOpAttachmentRemoved extends CMDBChangeOp
 			'<span class="attachment-history-deleted">'.utils::EscapeHtml($this->Get('filename')).'</span>');
 
 		return $sResult;
+	}
+}
+
+/**
+ * Class TriggerOnAttachmentDownload
+ *
+ * @since 3.1.0
+ */
+class TriggerOnAttachmentDownload extends TriggerOnAttributeBlobDownload
+{
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "grant_by_profile,core/cmdb,application",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"state_attcode" => "",
+			"reconc_keys" => array('description'),
+			"db_table" => "priv_trigger_onattdownload",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
 	}
 }
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1566,7 +1566,7 @@ JS;
 	 */
 	protected function output_dict_entries($bReturnOutput = false)
 	{
-		if ($this->sContentType != 'text/plain' && $this->sContentType != 'application/json') {
+		if ($this->sContentType != 'text/plain' && $this->sContentType != 'application/json' && $this->sContentType != 'application/javascript') {
 			/** @var \iBackofficeDictEntriesExtension $oExtensionInstance */
 			foreach (MetaModel::EnumPlugins('iBackofficeDictEntriesExtension') as $oExtensionInstance) {
 				foreach ($oExtensionInstance->GetDictEntries() as $sDictEntry) {

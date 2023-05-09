@@ -384,6 +384,7 @@
     <xsd:element name="ext_key_to_me" type="xsd:string"/>
     <xsd:element name="count_min" type="xsd:string"/>
     <xsd:element name="count_max" type="xsd:string"/>
+    <xsd:element name="display_style" type="xsd:string" minOccurs="0"/>
    </xsd:sequence>
   </xsd:extension>
  </xsd:complexContent>

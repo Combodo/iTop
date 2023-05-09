@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -110,6 +110,7 @@ function DisplayPreferences($oP)
 	$oMiscOptionsFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:FavoriteOtherSettings'), 'ibo-fieldset-for-misc-options');
 	$oSecondColumn->AddSubBlock($oMiscOptionsFieldset);
 	$oMiscOptionsFieldset->AddSubBlock(GetObsoleteDataFieldBlock());
+	$oMiscOptionsFieldset->AddSubBlock(GetSummaryCardsFieldBlock());
 
 	$oP->add_script(
 		<<<JS
@@ -674,6 +675,33 @@ HTML;
 	return new Html($sHtml);
 }
 
+
+/**
+ * @return \Combodo\iTop\Application\UI\Base\iUIBlock
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \MySQLException
+ * @since 3.1.0
+ */
+function GetSummaryCardsFieldBlock(): iUIBlock
+{
+	$bShow = appUserPreferences::GetPref('show_summary_cards', true);
+	$sSelectedForHtmlAttribute = $bShow ? 'checked="checked"' : '';
+
+	$sLabel = Dict::S('UI:Favorites:General:ShowSummaryCards');
+	$sLabelDescription = Dict::S('UI:Favorites:General:ShowSummaryCards+');
+	$sHtml = <<<HTML
+<p>
+	<label data-tooltip-content="{$sLabelDescription}">
+		<span>{$sLabel}</span>
+		<input type="checkbox" name="show_summary_cards" value="1" {$sSelectedForHtmlAttribute}>
+	</label>
+</p>
+HTML;
+
+	return new Html($sHtml);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Main program
@@ -766,6 +794,10 @@ try {
 				// - Obsolete data
 				$bShowObsoleteData = (bool)utils::ReadParam('show_obsolete_data', 0);
 				appUserPreferences::SetPref('show_obsolete_data', $bShowObsoleteData);
+				
+				// - Summary cards
+				$bShowSummaryCards = (bool)utils::ReadParam('show_summary_cards', 0);
+				appUserPreferences::SetPref('show_summary_cards', $bShowSummaryCards);
 
 				// Redirect to force a reload/display of the page in case language has been changed
 				$oAppContext = new ApplicationContext();
@@ -774,7 +806,7 @@ try {
 				break;
 			case 'apply_keyboard_shortcuts':
 				// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
+				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 				$aShortcutPrefs = [];
 				foreach ($aShortcutClasses as $cShortcutPlugin) {
 					foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -291,7 +291,17 @@ class ApplicationMenu
 	 * @param string $sMenuGroupIdx
 	 * @param array $aExtraParams
 	 *
-	 * @return array
+	 * @return array{
+	 *     array{
+	 *        sId: string,
+	 *        sTitle: string,
+	 *        sLabel: string,
+	 *        bHasCount: boolean,
+	 *        sUrl: string,
+	 *        bOpenInNewWindow: boolean,
+	 *        aSubMenuNodes: array
+	 *     }
+	 * } The aSubMenuNodes key contains the same structure recursively
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 * @since 3.0.0
@@ -320,12 +330,13 @@ class ApplicationMenu
 			}
 
 			$aSubMenuNodes[] = [
-				'sId' => $oSubMenuNode->GetMenuId(),
-				'sTitle' => $oSubMenuNode->GetTitle(),
-				'bHasCount' => $oSubMenuNode->HasCount(),
-				'sUrl' => $oSubMenuNode->GetHyperlink($aExtraParams),
+				'sId'              => $oSubMenuNode->GetMenuId(),
+				'sTitle'           => $oSubMenuNode->GetTitle(),
+				'sLabel'           => $oSubMenuNode->GetLabel(),
+				'bHasCount'        => $oSubMenuNode->HasCount(),
+				'sUrl'             => $oSubMenuNode->GetHyperlink($aExtraParams),
 				'bOpenInNewWindow' => $oSubMenuNode->IsHyperLinkInNewWindow(),
-				'aSubMenuNodes' => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
+				'aSubMenuNodes'    => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
 			];
 		}
 
@@ -746,7 +757,7 @@ abstract class MenuNode
 	}
 
 	/**
-	 * @return string
+	 * @return string The "+" dictionary entry for this menu if exists, otherwise the Title (if we have a parent title, will output parentTitle / currentTitle)
 	 */
 	public function GetLabel()
 	{
@@ -758,7 +769,6 @@ abstract class MenuNode
 			} else {
 				$sRet = $this->GetTitle();
 			}
-			//$sRet = $this->GetTitle();
 		}
 		return $sRet;
 	}
@@ -1101,6 +1111,7 @@ class OQLMenuNode extends MenuNode
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
+		ContextTag::AddContext(ContextTag::TAG_OBJECT_SEARCH);
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
 		OQLMenuNode::RenderOQLSearch
 		(

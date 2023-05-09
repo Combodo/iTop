@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent;
-use Combodo\iTop\Service\EventService;
+use Combodo\iTop\Service\Events\EventService;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -269,15 +269,16 @@ function DisplayEvents(WebPage $oPage, $sClass)
 {
 	$aEvents = EventService::GetEventsByClass($sClass);
 	$aColumns = [
-		'event'       => ['label' => 'Event'],
-		'description' => ['label' => 'Description'],
+		'event'       => ['label' => Dict::S('UI:Schema:Events:Event')],
+		'description' => ['label' => Dict::S('UI:Schema:Events:Description')],
 	];
 	$aRows = [];
 	foreach ($aEvents as $sEvent => $aEventInfo) {
-		$aDesc = $aEventInfo['description'];
+		/** @var \Combodo\iTop\Service\Events\Description\EventDescription $oDesc */
+		$oDesc = $aEventInfo['description'];
 		$aRows[] = [
 			'event'       => $sEvent,
-			'description' => $aDesc['description'] ?? '',
+			'description' => $oDesc->GetDescription(),
 		];
 	}
 	$oTable = DataTableUIBlockFactory::MakeForStaticData(Dict::S('UI:Schema:Events:Defined'), $aColumns, $aRows);
@@ -317,10 +318,10 @@ function DisplayEvents(WebPage $oPage, $sClass)
 		return ($a['event'] > $b['event']) ? 1 : -1;
 	});
 	$aColumns = [
-		'event'    => ['label' => 'Event'],
-		'listener' => ['label' => 'Listener'],
-		'priority' => ['label' => 'Priority'],
-		'module'   => ['label' => 'Module'],
+		'event'    => ['label' => Dict::S('UI:Schema:Events:Event')],
+		'listener' => ['label' => Dict::S('UI:Schema:Events:Listener')],
+		'priority' => ['label' => Dict::S('UI:Schema:Events:Rank')],
+		'module'   => ['label' => Dict::S('UI:Schema:Events:Module')],
 	];
 	$aRows = [];
 	$oReflectionClass = new ReflectionClass($sClass);
@@ -330,14 +331,14 @@ function DisplayEvents(WebPage $oPage, $sClass)
 			if ($aListener['callback'][0] != $sClass) {
 				$oListenerReflectionClass = new ReflectionClass(get_class($aListener['callback'][0]));
 				if (!$oListenerReflectionClass->isSubclassOf($sClass)) {
-					$sListenerClass = get_class($aListener['callback'][0]);
+					$sListenerClass = $oListenerReflectionClass->getName();
 				} elseif (!$oReflectionClass->hasMethod($aListener['callback'][1])) {
 					continue;
 				}
 			}
-			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\EventData $oEventData)';
+			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
 		} else {
-			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1].'(\Combodo\iTop\Service\EventData $oEventData)';
+			$sListener = $aListener['callback'].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
 		}
 		$aRows[] = [
 			'event'    => $aListener['event'],

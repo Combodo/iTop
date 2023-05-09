@@ -170,7 +170,7 @@
         <field id="virtualmachine_list" xsi:type="AttributeLinkedSet">
           <linked_class>VirtualMachine</linked_class>
           <ext_key_to_me>virtualhost_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -356,12 +356,6 @@
             <item id="virtualmachine_list">
               <rank>120</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>130</rank>
-            </item>
-            <item id="services_list">
-              <rank>140</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -440,7 +434,7 @@
         <field id="hypervisor_list" xsi:type="AttributeLinkedSet">
           <linked_class>Hypervisor</linked_class>
           <ext_key_to_me>farm_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -496,12 +490,6 @@
             </item>
             <item id="virtualmachine_list">
               <rank>110</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>120</rank>
-            </item>
-            <item id="services_list">
-              <rank>130</rank>
             </item>
           </items>
         </details>
@@ -631,7 +619,7 @@
         <field id="logicalinterface_list" xsi:type="AttributeLinkedSet">
           <linked_class>LogicalInterface</linked_class>
           <ext_key_to_me>virtualmachine_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -664,12 +652,6 @@
             </item>
             <item id="logicalvolumes_list">
               <rank>60</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>70</rank>
-            </item>
-            <item id="services_list">
-              <rank>80</rank>
             </item>
             <item id="col:col1">
               <rank>90</rank>

@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% extends 'base/components/panel/layout.html.twig' %}
 
@@ -7,7 +7,7 @@
     data-object-id="{{ oUIBlock.GetObjectId() }}"
     data-object-mode="{{ oUIBlock.GetObjectMode() }}"
     {% if oUIBlock.HasStatus() %}data-object-state="{{ oUIBlock.GetStatusCode() }}"{% endif %}
-    data-role="ibo-object-details"
+    data-role="{{ oUIBlock.GetBlockCode() }}"
 {% endblock %}
 
 {% block iboPanelSubTitle %}

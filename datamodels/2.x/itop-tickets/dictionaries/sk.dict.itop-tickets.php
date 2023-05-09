@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -68,11 +68,11 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Ticket/Attribute:private_log' => 'Skrytý záznam',
 	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => 'Kontakty',
-	'Class:Ticket/Attribute:contacts_list+' => '',
+	'Class:Ticket/Attribute:contacts_list+' => 'All the contacts linked to this ticket~~',
 	'Class:Ticket/Attribute:functionalcis_list' => 'Komponenty',
-	'Class:Ticket/Attribute:functionalcis_list+' => '',
+	'Class:Ticket/Attribute:functionalcis_list+' => 'All the configuration items impacted by this ticket. Items marked as "Computed" have been automatically marked as impacted. Items marked as "Not impacted" are excluded from the impact.~~',
 	'Class:Ticket/Attribute:workorders_list' => 'Pracovné príkazy',
-	'Class:Ticket/Attribute:workorders_list+' => '',
+	'Class:Ticket/Attribute:workorders_list+' => 'All the work orders for this ticket~~',
 	'Class:Ticket/Attribute:finalclass' => 'Typ',
 	'Class:Ticket/Attribute:finalclass+' => '',
 	'Class:Ticket/Attribute:operational_status' => 'Operational status~~',
@@ -243,13 +243,3 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Goal based on a SLT of type TTR~~',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:Document/Attribute:contracts_list' => 'Zmluvy',
-	'Class:Document/Attribute:contracts_list+' => '',
-	'Class:Document/Attribute:services_list' => 'Služby',
-	'Class:Document/Attribute:services_list+' => '',
-));

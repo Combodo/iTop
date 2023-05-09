@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,7 +15,7 @@ use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Controller\PreferencesController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
-use Combodo\iTop\Router\Router;
+use Combodo\iTop\Service\Router\Router;
 
 require_once('../approot.inc.php');
 
@@ -244,15 +244,15 @@ try
 			// ui.linksdirectwidget
 			case 'getLinksetRow':
 				$oPage = new JsonPage();
+				$oPage->SetOutputDataOnly(true);
 				$sClass = utils::ReadParam('class', '', false, 'class');
 				$sRealClass = utils::ReadParam('real_class', '', false, 'class');
 				$sAttCode = utils::ReadParam('att_code', '');
 				$iInputId = utils::ReadParam('iInputId', '');
 				$iTempId = utils::ReadParam('tempId', '');
 				$aValues = utils::ReadParam('values', array(), false, 'raw_data');
-				$oPage->SetContentType('text/html');
 				$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
-				$oPage->AddData($oWidget->GetFormRow($oPage, $sRealClass, $aValues, -$iTempId));
+				$oPage->SetData($oWidget->GetFormRow($oPage, $sRealClass, $aValues, -$iTempId));
 				break;
 
 			// ui.linksdirectwidget
@@ -337,6 +337,7 @@ try
 					}
 				}
 				$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
+				$oFullSetFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 				$oWidget->DoAddObjects($oPage, $oFullSetFilter);
 				break;
 
@@ -415,9 +416,10 @@ try
 				$iInputId = utils::ReadParam('iInputId', '');
 				$sAttCode = utils::ReadParam('sAttCode', '');
 				$sJson = utils::ReadParam('json', '', false, 'raw_data');
-				// Building form, if target class is abstract we ask the user for the desired leaf class
+	            $bTargetClassSelected = utils::ReadParam('bTargetClassSelected', '', false, 'raw_data');
+	            // Building form, if target class has child classes we ask the user for the desired leaf class, unless we've already done just that
 				$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, false);
-				if (MetaModel::IsAbstract($sTargetClass)) {
+	            if(!$bTargetClassSelected && MetaModel::HasChildrenClasses($sTargetClass)){
 					$oWidget->GetClassSelectionForm($oPage);
 				} else {
 					$aPrefillFormParam = array();
@@ -1062,7 +1064,7 @@ EOF
 				$aParams = utils::ReadParam('params', '', false, 'raw_data');
 				$sDashletClass = $aParams['attr_dashlet_class'];
 				$sDashletType = $aParams['attr_dashlet_type'];
-			$sDashletId = utils::HtmlEntities($aParams['attr_dashlet_id']);
+				$sDashletId = utils::HtmlEntities($aParams['attr_dashlet_id']);
 				$aUpdatedProperties = $aParams['updated']; // Code of the changed properties as an array: 'attr_xxx', 'attr_xxy', etc...
 				$aPreviousValues = $aParams['previous_values']; // hash array: 'attr_xxx' => 'old_value'
 				if (is_subclass_of($sDashletClass, 'Dashlet')) {
@@ -2433,7 +2435,7 @@ EOF
 				break;
 
 			case 'custom_fields_update':
-				$oPage->SetContentType('application/json');
+				$oPage = new JsonPage();
 				$sAttCode = utils::ReadParam('attcode', '');
 				$aRequestedFields = utils::ReadParam('requested_fields', array());
 				$sRequestedFieldsFormPath = utils::ReadParam('form_path', '');
@@ -2445,6 +2447,7 @@ EOF
 					$oWizardHelper = WizardHelper::FromJSON($sJson);
 					$oObj = $oWizardHelper->GetTargetObject();
 
+					/** @var \ormCustomFieldsValue $oOrmCustomFieldValue */
 					$oOrmCustomFieldValue = $oObj->Get($sAttCode);
 					$oForm = $oOrmCustomFieldValue->GetForm();
 					$oSubForm = $oForm->FindSubForm($sRequestedFieldsFormPath);
@@ -2456,7 +2459,8 @@ EOF
 				catch (Exception $e) {
 					$aResult['error'] = $e->getMessage();
 				}
-				$oPage->add(json_encode($aResult));
+				$oPage->SetData($aResult);
+				$oPage->SetOutputDataOnly(true);
 				break;
 
 			//--------------------------------

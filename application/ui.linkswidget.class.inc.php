@@ -1,12 +1,12 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEditTable;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinkSetEditTable;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
@@ -136,7 +136,7 @@ class UILinksWidget
 	 */
 	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj): string
 	{
-		$oBlock = new BlockIndirectLinksEditTable($this);
+		$oBlock = new BlockIndirectLinkSetEditTable($this);
 		$oBlock->InitTable($oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $this->m_aTableConfig);
 
 		return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
@@ -171,15 +171,10 @@ class UILinksWidget
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 
-		$sLinkedSetId = "{$this->m_sAttCode}{$this->m_sNameSuffix}";
-
 		$oBlock = new BlockObjectPickerDialog($this);
 		$oPage->AddUiBlock($oBlock);
 
-		$oBlock->sLinkedSetId = $sLinkedSetId;
-		$oBlock->iInputId = $this->m_sInputId;
-		$oBlock->sLinkedClassName = MetaModel::GetName($this->m_sLinkedClass);
-		$oBlock->sClassName = MetaModel::GetName($this->m_sClass);
+		$sLinkedSetId = $oBlock->oUILinksWidget->GetLinkedSetId();
 
 		$oDisplayBlock = new DisplayBlock($oFilter, 'search', false);
 		$oBlock->AddSubBlock($oDisplayBlock->GetDisplay($oPage, "SearchFormToAdd_{$sLinkedSetId}",
@@ -248,7 +243,7 @@ class UILinksWidget
 		foreach ($aLinkedObjectIds as $iObjectId) {
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj)) {
-				$oBlock = new BlockIndirectLinksEditTable($this);
+				$oBlock = new BlockIndirectLinkSetEditTable($this);
 				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
 				$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aRow, -$iAdditionId);
 				$oP->AddUiBlock($oRow);
@@ -273,11 +268,12 @@ class UILinksWidget
 		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
 
 		$iAdditionId = $iMaxAddedId + 1;
+		$bAllowRemoteExtKeyEdit = count($aLinkedObjectIds) <= utils::GetConfig()->Get('link_set_max_edit_ext_key');
 		foreach ($aLinkedObjectIds as $iObjectId) {
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj)) {
-				$oBlock = new BlockIndirectLinksEditTable($this);
-				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
+				$oBlock = new BlockIndirectLinkSetEditTable($this);
+				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId, false /* Default value */, $bAllowRemoteExtKeyEdit); // Not yet created link get negative Ids
 				$aData = [];
 				foreach ($aRow as $item) {
 					$aData[] = $item;

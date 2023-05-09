@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
@@ -1466,7 +1466,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Group/Attribute:parent_name' => 'Nome',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'CIs collegati',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent Group~~',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 ));

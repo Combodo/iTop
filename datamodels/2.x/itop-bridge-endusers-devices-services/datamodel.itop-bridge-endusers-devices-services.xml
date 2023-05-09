@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <constants/>
+  <classes>
+    <class id="Phone" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define">
+              <rank>180</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>190</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="MobilePhone" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define">
+              <rank>200</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>210</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="IPPhone" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define">
+              <rank>170</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>180</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Tablet" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define">
+              <rank>170</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>180</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="PC" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define">
+              <rank>60</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>70</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Peripheral" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define">
+              <rank>170</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>180</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+  </menus>
+  <user_rights>
+    <groups>
+    </groups>
+    <profiles>
+    </profiles>
+  </user_rights>
+</itop_design>

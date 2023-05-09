@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -305,7 +305,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:DataAdministration' => 'Administração de Dados',
+	'Menu:DataAdministration' => 'Administração de dados',
 	'Menu:DataAdministration+' => '',
 	'Menu:Catalogs' => 'Catálogos',
 	'Menu:Catalogs+' => 'Tipos de dados',
@@ -314,41 +314,41 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:CSVImport' => 'Importar CSV',
 	'Menu:CSVImport+' => 'Criação ou atualização em massa',
 	'Menu:Organization' => 'Organizações',
-	'Menu:Organization+' => 'Lista de Organizações',
-	'Menu:ConfigManagement' => 'Gerenciamento Configuração',
-	'Menu:ConfigManagement+' => 'Gerenciamento de Configuração',
-	'Menu:ConfigManagementCI' => 'Itens de Configuração',
-	'Menu:ConfigManagementCI+' => 'Lista de Itens de Configuração',
+	'Menu:Organization+' => 'Lista de organizações',
+	'Menu:ConfigManagement' => 'Gerenciamento configuração',
+	'Menu:ConfigManagement+' => 'Gerenciamento de configuração',
+	'Menu:ConfigManagementCI' => 'Itens de configuração',
+	'Menu:ConfigManagementCI+' => 'Lista de itens de configuração',
 	'Menu:ConfigManagementOverview' => 'Visão geral',
 	'Menu:ConfigManagementOverview+' => '',
 	'Menu:Contact' => 'Contatos',
-	'Menu:Contact+' => 'Lista de Contatos',
+	'Menu:Contact+' => 'Lista de contatos',
 	'Menu:Contact:Count' => '%1$d contato(s)',
 	'Menu:Person' => 'Pessoas',
-	'Menu:Person+' => 'Lista de Pessoas',
+	'Menu:Person+' => 'Lista de pessoas',
 	'Menu:Team' => 'Equipes',
-	'Menu:Team+' => 'Lista de Equipes',
+	'Menu:Team+' => 'Lista de equipes',
 	'Menu:Document' => 'Documentos',
-	'Menu:Document+' => 'Lista de Documentos',
+	'Menu:Document+' => 'Lista de documentos',
 	'Menu:Location' => 'Localizações',
-	'Menu:Location+' => 'Lista de Localizações',
+	'Menu:Location+' => 'Lista de localizações',
 	'Menu:NewContact' => 'Novo contato',
 	'Menu:NewContact+' => '',
 	'Menu:SearchContacts' => 'Pesquisar por contatos',
 	'Menu:SearchContacts+' => '',
 	'Menu:ConfigManagement:Shortcuts' => 'Atalhos',
 	'Menu:ConfigManagement:AllContacts' => 'Todos os contatos: %1$d',
-	'Menu:Typology' => 'Configuração de Tipologias',
-	'Menu:Typology+' => 'Lista de Tipologias',
+	'Menu:Typology' => 'Configuração de tipologias',
+	'Menu:Typology+' => 'Lista de tipologias',
 	'UI_WelcomeMenu_AllConfigItems' => 'Índice',
-	'Menu:ConfigManagement:Typology' => 'Configuração de Tipologias',
+	'Menu:ConfigManagement:Typology' => 'Configuração de tipologias',
 ));
 
 // Add translation for Fieldsets
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Person:info' => 'Informações gerais',
-	'UserLocal:info' => 'Informações gerais',
+	'User:info' => 'Informações gerais',
 	'Person:personal_info' => 'Informações pessoais',
 	'Person:notifiy' => 'Notificações',
 ));

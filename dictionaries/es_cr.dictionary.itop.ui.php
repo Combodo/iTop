@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  */
@@ -975,8 +975,8 @@ Esperamos distrute de esta versión tanto como nosotros la imaginamos y creamos.
 	'Menu:CSVImportMenu' => 'Importar CSV', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Creación o Actualización Másiva', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Modelo de Datos', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Resumen del Modelo de Datos', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Modelo de datos', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Resumen del modelo de datos', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ExportMenu' => 'Exportar', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Exportar los Resultados de Cualquier Consulta en HTML, CSV o XML', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1651,23 +1651,23 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:AdminTools' => 'Herramientas Administrativas',
 	'Menu:AdminTools+' => 'Herramientas Administrativas',
 	'Menu:AdminTools?' => 'Herramientas accesibles sólo a usuarios con Perfil de administrador',
-	'Menu:DataModelMenu' => 'Modelo de Datos',
-	'Menu:DataModelMenu+' => 'Resumen del Modelo de Datos',
+	'Menu:DataModelMenu' => 'Modelo de datos',
+	'Menu:DataModelMenu+' => 'Resumen del modelo de datos',
 	'Menu:ExportMenu' => 'Exportar',
-	'Menu:ExportMenu+' => 'Exportar los Resultados de Cualquier Consulta en HTML, CSV o XML',
+	'Menu:ExportMenu+' => 'Exportar los resultados de cualquier consulta en HTML, CSV o XML',
 	'Menu:NotificationsMenu' => 'Notificaciones',
-	'Menu:NotificationsMenu+' => 'Configuración de las Notificaciones',
-	'Menu:AuditCategories' => 'Auditar Categorías',
-	'Menu:AuditCategories+' => 'Auditar Categorías',
-	'Menu:Notifications:Title' => 'Auditar Categorías',
-	'Menu:RunQueriesMenu'         => 'Ejecutar Consultas',
-	'Menu:RunQueriesMenu+'        => 'Ejecutar Cualquier Consulta',
-	'Menu:QueryMenu'              => 'Libreta de Consultas',
-	'Menu:QueryMenu+'             => 'Libreta de Consultas',
-	'Menu:UniversalSearchMenu'    => 'Búsqueda Universal',
+	'Menu:NotificationsMenu+' => 'Configuración de las notificaciones',
+	'Menu:AuditCategories' => 'Auditar categorías',
+	'Menu:AuditCategories+' => 'Auditar categorías',
+	'Menu:Notifications:Title' => 'Auditar categorías',
+	'Menu:RunQueriesMenu'         => 'Ejecutar consultas',
+	'Menu:RunQueriesMenu+'        => 'Ejecutar cualquier consulta',
+	'Menu:QueryMenu'              => 'Libreta de consultas',
+	'Menu:QueryMenu+'             => 'Libreta de consultas',
+	'Menu:UniversalSearchMenu'    => 'Búsqueda universal',
 	'Menu:UniversalSearchMenu+'   => 'Buscar cualquier cosa',
-	'Menu:UserManagementMenu'     => 'Administración de Usuarios',
-	'Menu:UserManagementMenu+'    => 'Administración de Usuarios',
+	'Menu:UserManagementMenu'     => 'Administración de usuarios',
+	'Menu:UserManagementMenu+'    => 'Administración de usuarios',
 	'Menu:ProfilesMenu'           => 'Perfiles',
 	'Menu:ProfilesMenu+'          => 'Perfiles',
 	'Menu:ProfilesMenu:Title'     => 'Perfiles',

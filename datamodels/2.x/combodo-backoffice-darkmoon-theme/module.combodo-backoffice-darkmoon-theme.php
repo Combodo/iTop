@@ -23,7 +23,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.combodo-backoffice-darkmoon-theme.php'
 		),
 		'webservice' => array(
 			

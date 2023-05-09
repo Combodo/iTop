@@ -7,7 +7,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
@@ -282,7 +282,7 @@
         <field id="person_list" xsi:type="AttributeLinkedSet">
           <linked_class>Person</linked_class>
           <ext_key_to_me>location_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -291,6 +291,25 @@
       </fields>
       <methods/>
       <presentation>
+        <summary>
+          <items>
+            <item id="address">
+              <rank>10</rank>
+            </item>
+            <item id="postal_code">
+              <rank>20</rank>
+            </item>
+            <item id="city">
+              <rank>30</rank>
+            </item>
+            <item id="country">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="name">
@@ -580,6 +599,10 @@
             <attribute id="first_name"/>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="email"></attribute>
+            <attribute id="org_id_friendlyname"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <image_attribute>picture</image_attribute>
@@ -678,6 +701,15 @@
           <duplicates/>
           <read_only>false</read_only>
         </field>
+        <field id="user_list" xsi:type="AttributeLinkedSet">
+          <linked_class>User</linked_class>
+          <ext_key_to_me>contactid</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
+        </field>
       </fields>
       <methods>
         <method id="CheckToDelete">
@@ -758,10 +790,32 @@
         </method>
       </methods>
       <presentation>
+        <summary>
+          <items>
+            <item id="function">
+              <rank>10</rank>
+            </item>
+            <item id="phone">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="team_list">
               <rank>10</rank>
+            </item>
+            <item id="user_list">
+              <rank>55</rank>
             </item>
             <item id="col:col1">
               <rank>40</rank>
@@ -903,6 +957,11 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="function"></attribute>
+            <attribute id="org_id_friendlyname"></attribute>
+          </complementary_attributes>
+
         </naming>
         <style>
           <icon>../../images/icons/icons8-team.svg</icon>
@@ -929,6 +988,22 @@
       </fields>
       <methods/>
       <presentation>
+        <summary>
+          <items>
+            <item id="function">
+              <rank>10</rank>
+            </item>
+            <item id="phone">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="name">
@@ -1012,8 +1087,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="team_id"/>
-            <attribute id="person_id"/>
+            <attribute id="person_id_friendlyname"/>
+            <attribute id="team_name"/>
           </attributes>
         </naming>
         <style>
@@ -1025,6 +1100,17 @@
             <attribute id="person_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="team_id"/>
+              <attribute id="person_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="team_id" xsi:type="AttributeExternalKey">
@@ -1062,10 +1148,10 @@
       <presentation>
         <details>
           <items>
-            <item id="team_id">
+            <item id="person_id">
               <rank>10</rank>
             </item>
-            <item id="person_id">
+            <item id="team_id">
               <rank>20</rank>
             </item>
             <item id="role_id">

@@ -5,7 +5,7 @@ use Combodo\iTop\Application\Helper\Session;
 /**
  * Class LoginBasic
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -59,7 +59,6 @@ class LoginBasic extends AbstractLoginFSMExtension
 			list($sAuthUser, $sAuthPwd) = $this->GetAuthUserAndPassword();
 			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
 			{
-				$_SESSION['auth_user'] = $sAuthUser;
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}

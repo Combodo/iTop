@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
  * Localized data
  * @author      Benjamin Planque <benjamin.planque@combodo.com>
  * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -306,8 +306,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:DataAdministration' => 'Veri Yönetimi',
-	'Menu:DataAdministration+' => 'Veri Yönetimi',
+	'Menu:DataAdministration' => 'Veri yönetimi',
+	'Menu:DataAdministration+' => 'Veri yönetimi',
 	'Menu:Catalogs' => 'Kataloglar',
 	'Menu:Catalogs+' => 'Veri tipleri',
 	'Menu:Audit' => 'Denetleme',
@@ -316,10 +316,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:CSVImport+' => 'Çoklu yaratım veya güncelleme',
 	'Menu:Organization' => 'Kurumlar',
 	'Menu:Organization+' => 'Tüm Kurumlar',
-	'Menu:ConfigManagement' => 'Konfigürasyon Yönetimi',
-	'Menu:ConfigManagement+' => 'Konfigürasyon Yönetimi',
-	'Menu:ConfigManagementCI' => 'Konfigürasyon Kalemleri',
-	'Menu:ConfigManagementCI+' => 'Konfigürasyon Kalemleri',
+	'Menu:ConfigManagement' => 'Konfigürasyon yönetimi',
+	'Menu:ConfigManagement+' => 'Konfigürasyon yönetimi',
+	'Menu:ConfigManagementCI' => 'Konfigürasyon kalemleri',
+	'Menu:ConfigManagementCI+' => 'Konfigürasyon kalemleri',
 	'Menu:ConfigManagementOverview' => 'Özet',
 	'Menu:ConfigManagementOverview+' => 'Özet',
 	'Menu:Contact' => 'İrtibatlar',
@@ -332,7 +332,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Document' => 'Dokümanlar',
 	'Menu:Document+' => 'Tüm dokümanlar',
 	'Menu:Location' => 'Yerleşkeler',
-	'Menu:Location+' => 'Tüm Yerleşkeler',
+	'Menu:Location+' => 'Tüm yerleşkeler',
 	'Menu:NewContact' => 'Yeni İrtibat',
 	'Menu:NewContact+' => 'Yeni İrtibat',
 	'Menu:SearchContacts' => 'İrtibat ara',
@@ -349,7 +349,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Person:info' => 'Genel Bilgi',
-	'UserLocal:info' => 'Genel Bilgi',
+	'User:info' => 'Genel Bilgi',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Bildirim',
 ));

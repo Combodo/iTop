@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@ use Combodo\iTop\Application\Helper\Session;
 /**
  * The standardized result of any pass/fail check performed by the setup
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class CheckResult {
@@ -88,7 +88,7 @@ class CheckResult {
 /**
  * All of the functions/utilities needed by both the setup wizard and the installation process
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class SetupUtils
@@ -1547,8 +1547,7 @@ JS
 	}
 
 	/**
-	 *
-	 * @param $oWizard
+	 * @param \WizardController $oWizard
 	 * @param bool $bAbortOnMissingDependency ...
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
 	 *
@@ -1561,39 +1560,23 @@ JS
 		$oConfig = new Config();
 		$sSourceDir = $oWizard->GetParameter('source_dir', '');
 
-		if (strpos($sSourceDir, APPROOT) !== false)
-		{
+		if (strpos($sSourceDir, APPROOT) !== false) {
 			$sRelativeSourceDir = str_replace(APPROOT, '', $sSourceDir);
-		}
-		else if (strpos($sSourceDir, $oWizard->GetParameter('previous_version_dir')) !== false)
-		{
+		} else if (strpos($sSourceDir, $oWizard->GetParameter('previous_version_dir')) !== false) {
 			$sRelativeSourceDir = str_replace($oWizard->GetParameter('previous_version_dir'), '', $sSourceDir);
-		}
-		else
-		{
+		} else {
 			throw(new Exception('Internal error: AnalyzeInstallation: source_dir is neither under APPROOT nor under previous_installation_dir ???'));
 		}
 
-
-		$aParamValues = array(
-			'db_server' => $oWizard->GetParameter('db_server', ''),
-			'db_user' => $oWizard->GetParameter('db_user', ''),
-			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
-			'db_name' => $oWizard->GetParameter('db_name', ''),
-			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
-			'db_tls_enabled' => $oWizard->GetParameter('db_tls_enabled', false),
-			'db_tls_ca' => $oWizard->GetParameter('db_tls_ca', ''),
-			'source_dir' => $sRelativeSourceDir,
-		);
+		$aParamValues = $oWizard->GetParamForConfigArray();
+		$aParamValues['source_dir'] = $sRelativeSourceDir;
 		$oConfig->UpdateFromParams($aParamValues, null);
 		$aDirsToScan = array($sSourceDir);
 
-		if (is_dir(APPROOT.'extensions'))
-		{
+		if (is_dir(APPROOT.'extensions')) {
 			$aDirsToScan[] = APPROOT.'extensions';
 		}
-		if (is_dir($oWizard->GetParameter('copy_extensions_from')))
-		{
+		if (is_dir($oWizard->GetParameter('copy_extensions_from'))) {
 			$aDirsToScan[] = $oWizard->GetParameter('copy_extensions_from');
 		}
 		$sExtraDir = APPROOT.'data/production-modules/';
@@ -1627,16 +1610,8 @@ JS
 		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 		$oConfig = new Config();
 
-		$aParamValues = array(
-			'db_server' => $oWizard->GetParameter('db_server', ''),
-			'db_user' => $oWizard->GetParameter('db_user', ''),
-			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
-			'db_name' => $oWizard->GetParameter('db_name', ''),
-			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
-			'db_tls_enabled' => $oWizard->GetParameter('db_tls_enabled', false),
-			'db_tls_ca' => $oWizard->GetParameter('db_tls_ca', ''),
-			'source_dir' => '',
-		);
+		$aParamValues = $oWizard->GetParamForConfigArray();
+		$aParamValues['source_dir'] = '';
 		$oConfig->UpdateFromParams($aParamValues, null);
 
 		$oProductionEnv = new RunTimeEnvironment();

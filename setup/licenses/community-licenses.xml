@@ -892,7 +892,7 @@ THE SOFTWARE.
   </license>
   <license>
     <product>iTop</product>
-    <author>2010-2021 Combodo SARL</author>
+    <author>2010-2023 Combodo SARL</author>
     <license_type>AGPL v3</license_type>
     <text><![CDATA[
                     GNU AFFERO GENERAL PUBLIC LICENSE
@@ -1674,7 +1674,7 @@ to represent the company, product, or service to which they refer.**
   </license>
   <license>
           <product scope="datamodels">apereo/phpcas</product>
-          <author>Joachim Fritschi - Adam Franco</author>
+          <author>Joachim Fritschi - Adam Franco - Henry Pan</author>
           <license_type>Apache-2.0</license_type>
           <text><![CDATA[
                                    Apache License

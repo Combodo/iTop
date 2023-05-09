@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@
  * 
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -249,13 +249,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Doel gebaseerd op een SLT (TTR)',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:Document/Attribute:contracts_list' => 'Contracten',
-	'Class:Document/Attribute:contracts_list+' => 'Alle contracten gerelateerd aan dit document',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'Alle services gerelateerd aan dit document.',
-));

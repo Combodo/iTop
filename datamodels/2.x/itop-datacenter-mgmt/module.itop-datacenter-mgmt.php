@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -35,10 +35,7 @@ SetupWebPage::AddModule(
 
 		// Components
 		//
-		'datamodel' => array(
-			'model.itop-datacenter-mgmt.php',
-			
-		),
+		'datamodel' => array(),
 		'webservice' => array(
 			
 		),

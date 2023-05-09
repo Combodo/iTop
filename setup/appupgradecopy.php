@@ -5,7 +5,7 @@ use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 /**
  * iTop
  *
- * @copyright   Copyright (C) 2010,2022 Combodo SARL
+ * @copyright   Copyright (C) 2010,2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  */

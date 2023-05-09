@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -22,6 +22,7 @@ namespace Combodo\iTop\Application\TwigBase\Controller;
 use AjaxPage;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Controller\AbstractController;
 use Dict;
 use ErrorPage;
 use Exception;
@@ -38,7 +39,7 @@ use utils;
 use WebPage;
 use ZipArchive;
 
-abstract class Controller
+abstract class Controller extends AbstractController
 {
 	const ENUM_PAGE_TYPE_HTML = 'html';
 	const ENUM_PAGE_TYPE_BASIC_HTML = 'basic_html';
@@ -48,7 +49,7 @@ abstract class Controller
 	/** @var \Twig\Environment */
 	private $m_oTwig;
 	/** @var string */
-	private $m_sOperation;
+	protected $m_sOperation;
 	/** @var string */
 	private $m_sModule;
 	/** @var iTopWebPage|\AjaxPage */
@@ -85,7 +86,7 @@ abstract class Controller
 	 * @param string $sViewPath Path of the twig files
 	 * @param string $sModuleName name of the module (or 'core' if not a module)
 	 */
-	public function __construct($sViewPath, $sModuleName = 'core', $aAdditionalPaths = [])
+	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
 	{
 		$this->m_aLinkedScripts = [];
 		$this->m_aLinkedStylesheets = [];
@@ -93,14 +94,16 @@ abstract class Controller
 		$this->m_aAjaxTabs = [];
 		$this->m_aDefaultParams = [];
 		$this->m_aBlockParams = [];
-		$this->SetViewPath($sViewPath, $aAdditionalPaths);
 		$this->SetModuleName($sModuleName);
-		if ($sModuleName != 'core') {
-			try {
-				$this->m_aDefaultParams = ['sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
-			}
-			catch (Exception $e) {
-				IssueLog::Error($e->getMessage());
+		if (strlen($sViewPath) > 0) {
+			$this->SetViewPath($sViewPath, $aAdditionalPaths);
+			if ($sModuleName != 'core') {
+				try {
+					$this->m_aDefaultParams = ['sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
+				}
+				catch (Exception $e) {
+					IssueLog::Error($e->getMessage());
+				}
 			}
 		}
 	}
@@ -201,15 +204,16 @@ abstract class Controller
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
-			$sMethodName = 'Operation'.utils::ToCamelCase($this->m_sOperation);
-			if (method_exists($this, $sMethodName))
-			{
-				$this->$sMethodName();
+			if ($this->CallOperation(utils::ToCamelCase($this->m_sOperation))) {
+				return;
 			}
-			else
-			{
-				$this->DisplayPageNotFound();
+
+			// Fallback to unchanged names for compatibility
+			if ($this->CallOperation($this->m_sOperation)) {
+				return;
 			}
+
+			$this->DisplayPageNotFound();
 		}
 		catch (Exception $e)
 		{
@@ -217,6 +221,17 @@ abstract class Controller
 			$aResponse = array('sError' => $e->getMessage());
 			echo json_encode($aResponse);
 		}
+	}
+
+	private function CallOperation($sOperation): bool
+	{
+		$sMethodName = 'Operation'.$sOperation;
+		if (!method_exists($this, $sMethodName)) {
+			return false;
+		}
+
+		$this->$sMethodName();
+		return true;
 	}
 
 	/**
@@ -240,7 +255,7 @@ abstract class Controller
 	/**
 	 * @throws \Exception
 	 */
-	private function CheckAccess()
+	protected function CheckAccess()
 	{
 		if ($this->m_bCheckDemoMode && MetaModel::GetConfig()->Get('demo_mode'))
 		{

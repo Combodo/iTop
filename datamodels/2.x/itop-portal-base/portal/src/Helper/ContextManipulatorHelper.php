@@ -1,21 +1,8 @@
 <?php
 
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Portal\Helper;
@@ -24,6 +11,7 @@ use BinaryExpression;
 use Combodo\iTop\Portal\Brick\BrickCollection;
 use CorePortalInvalidActionRuleException;
 use DBObject;
+use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
 use DeprecatedCallsLog;
@@ -330,7 +318,13 @@ class ContextManipulatorHelper
 		if ($aRule['source_oql'] !== null)
 		{
 			// Preparing query to retrieve source object(s)
+			/** @var \DBObjectSearch $oSearch */
 			$oSearch = DBSearch::FromOQL($aRule['source_oql']);
+			if (!$oSearch instanceof DBObjectSearch) {
+				$sErrMsg = "Portal query was stopped: action_rule '$sRuleId' source_oql does not allow UNION";
+				IssueLog::Error($sErrMsg);
+				throw new CorePortalInvalidActionRuleException($sErrMsg);
+			}
 			$sSearchClass = $oSearch->GetClass();
 			$aSearchParams = $oSearch->GetInternalParams();
 

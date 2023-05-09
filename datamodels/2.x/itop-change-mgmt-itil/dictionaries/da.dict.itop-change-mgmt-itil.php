@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -125,13 +125,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Change/Attribute:parent_name' => 'Parent Change Ref',
 	'Class:Change/Attribute:parent_name+' => '',
 	'Class:Change/Attribute:related_request_list' => 'Relaterede Requests',
-	'Class:Change/Attribute:related_request_list+' => '',
+	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
 	'Class:Change/Attribute:related_problems_list' => 'Relaterede Problemer',
-	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:related_problems_list+' => 'All the problems linked to this change~~',
 	'Class:Change/Attribute:related_incident_list' => 'Relaterede incidents',
-	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_incident_list+' => 'All the incidents linked to this change~~',
 	'Class:Change/Attribute:child_changes_list' => 'Afledte Changes',
-	'Class:Change/Attribute:child_changes_list+' => '',
+	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Friendly Name',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Change-Type',

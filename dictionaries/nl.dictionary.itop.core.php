@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@
  * @author Hipska (2018, 2019)
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2019 - 2022)
  * 
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -528,7 +528,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Status bepaalt wie op de hoogte zal gesteld worden: enkel de testontvanger, iedereen (Aan, CC en BCC) of niemand',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Enkel de testontvanger zal op de hoogte gesteld worden',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Alle Aan, CC en BCC bestemingen zullen op de hoogte gesteld worden',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Alle Aan, CC en BCC bestemmingen zullen op de hoogte gesteld worden',
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'De e-mailmelding zal niet verstuurd worden',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testontvanger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Bestemming als de status op "Test" staat',

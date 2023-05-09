@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design version="3.1">
   <events>
-    <event id="EVENT_SERVICE_DISPLAY_OBJECT_DETAILS" _delta="define">
+    <event id="EVENT_DISPLAY_OBJECT_DETAILS" _delta="define">
       <description>An object details is about to be displayed to a user</description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>

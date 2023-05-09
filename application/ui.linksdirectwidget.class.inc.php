@@ -1,16 +1,17 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinksEditTable;
+use Combodo\iTop\Application\Helper\FormHelper;
+use Combodo\iTop\Application\UI\Links\Direct\BlockDirectLinkSetEditTable;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
  * Class UILinksWidgetDirect
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class UILinksWidgetDirect
@@ -19,6 +20,7 @@ class UILinksWidgetDirect
 	protected $sAttCode;
 	protected $sInputid;
 	protected $sNameSuffix;
+	protected $aZlist;
 	protected $sLinkedClass;
 
 	/**
@@ -81,8 +83,8 @@ class UILinksWidgetDirect
 	 */
 	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj)
 	{
-		$oBlock = new BlockDirectLinksEditTable($this, $this->sInputid);
-		$oBlock->InitTable($oPage, $oValue, $sFormPrefix);
+		$oBlock = new BlockDirectLinkSetEditTable($this, $this->sInputid);
+		$oBlock->InitTable($oPage, $oValue, $sFormPrefix, $oCurrentObj);
 
 		return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
 	}
@@ -117,15 +119,32 @@ class UILinksWidgetDirect
 			$sRealClass = $aKeys[0];
 		}
 
-		if ($sRealClass != '')
-		{
+		if ($sRealClass != '') {
 			$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
-			$aFieldFlags = array( $sExtKeyToMe => OPT_ATT_HIDDEN);
+			$aFieldsFlags = array($sExtKeyToMe => OPT_ATT_HIDDEN);
 			$oObj = DBObject::MakeDefaultInstance($sRealClass);
 			$aPrefillParam = array('source_obj' => $oSourceObj);
 			$oObj->PrefillForm('creation_from_editinplace', $aPrefillParam);
-		 	cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), array('formPrefix' => $this->sInputid, 'noRelations' => true, 'fieldsFlags' => $aFieldFlags));
+			$aFormExtraParams = array(
+				'formPrefix'  => $this->sInputid,
+				'noRelations' => true,
+				'fieldsFlags' => $aFieldsFlags,
+				'js_handlers'      => [
+					'cancel_button_on_click' =>
+						<<<JS
+				function() {
+// Do nothing, already handled by linksdirectwidget.js
+				};
+JS
+					,
+				],
+			);
+
+			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
+			FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
+
+			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aFormExtraParams);
 		}
 		else
 		{

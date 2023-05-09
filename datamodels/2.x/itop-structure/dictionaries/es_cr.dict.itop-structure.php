@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  */
@@ -298,8 +298,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Menu:DataAdministration' => 'Administración de Datos',
-	'Menu:DataAdministration+' => 'Administración de Datos',
+	'Menu:DataAdministration' => 'Administración de datos',
+	'Menu:DataAdministration+' => 'Administración de datos',
 	'Menu:Catalogs' => 'Catálogos',
 	'Menu:Catalogs+' => 'Tipos de Datos',
 	'Menu:Audit' => 'Auditoría',
@@ -341,7 +341,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Person:info' => 'Información General',
-	'UserLocal:info' => 'Información General',
+	'User:info' => 'Información General',
 	'Person:personal_info' => 'Información Personal',
 	'Person:notifiy' => 'Notificación',
 ));

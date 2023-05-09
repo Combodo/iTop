@@ -1,9 +1,10 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
@@ -323,12 +324,12 @@ EOF
 EOF
 			);
 			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
-			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--clear ibo-is-hidden\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\" data-tooltip-content='".Dict::S('UI:Button:Clear')."'><i class=\"fas fa-times\"></i></div>";
+			$sHTMLValue .= "	<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--clear ibo-is-hidden\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\" data-tooltip-content='".Dict::S('UI:Button:Clear')."'><i class=\"fas fa-times\"></i></a>";
 		}
 		if ($bCreate && $bExtensions) {
 			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
 
-			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--create\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\" data-tooltip-content='".Dict::S('UI:Button:Create')."'><i class=\"fas fa-plus\"></i></div>";
+			$sHTMLValue .= "<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--create\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\" data-tooltip-content='".Dict::S('UI:Button:Create')."'><i class=\"fas fa-plus\"></i></a>";
 			$oPage->add_ready_script(
 				<<<JS
 		if ($('#ajax_{$this->iId}').length == 0)
@@ -339,7 +340,7 @@ JS
 			);
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false) {
-			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\" data-tooltip-content='".Dict::S('UI:Button:SearchInHierarchy')."'><i class=\"fas fa-sitemap\"></i></div>";
+			$sHTMLValue .= "<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\" data-tooltip-content='".Dict::S('UI:Button:SearchInHierarchy')."'><i class=\"fas fa-sitemap\"></i></a>";
 			$oPage->add_ready_script(
 				<<<JS
 			if ($('#ac_tree_{$this->iId}').length == 0)
@@ -350,7 +351,7 @@ JS
 			);
 		}
 		if ($oAllowedValues->CountExceeds($iMaxComboLength)) {
-			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\" data-tooltip-content='".Dict::S('UI:Button:Search')."'><i class=\"fas fa-search\"></i></div>";
+			$sHTMLValue .= "	<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\" data-tooltip-content='".Dict::S('UI:Button:Search')."'><i class=\"fas fa-search\"></i></a>";
 		}
 		$sHTMLValue .= "</div>";
 		$sHTMLValue .= "</div>";
@@ -685,15 +686,15 @@ JS
 		}
 		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oBlock = new DisplayBlock($oFilter, 'search', false, $aParams);
-		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, $this->iId,
+		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, 'dtc_'.$this->iId,
 			array(
-				'menu' => false,
-				'currentId' => $this->iId,
-				'table_id' => "dr_{$this->iId}",
+				'menu'           => false,
+				'currentId'      => $this->iId,
+				'table_id'       => "dr_{$this->iId}",
 				'table_inner_id' => "{$this->iId}_results",
 				'selection_mode' => true,
 				'selection_type' => 'single',
-				'cssCount' => '#count_'.$this->iId.'_results',
+				'cssCount'       => '#count_'.$this->iId.'_results',
 			)
 		));
 		$sCancel = Dict::S('UI:Button:Cancel');
@@ -904,7 +905,7 @@ JS
 	{
         // For security reasons: check that the "proposed" class is actually a subclass of the linked class
         // and that the current user is allowed to create objects of this class
-        $aSubClasses = MetaModel::EnumChildClasses($this->sTargetClass);
+        $aSubClasses = MetaModel::EnumChildClasses($this->sTargetClass, ENUM_CHILD_CLASSES_ALL);
         $aPossibleClasses = array();
         foreach($aSubClasses as $sCandidateClass)
         {
@@ -924,6 +925,7 @@ JS
 		$sDialogTitleEscaped = addslashes($sDialogTitle);
         $oPage->add_ready_script("$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitleEscaped'});\n");
         $oPage->add_ready_script("$('#ac_create_{$this->iId} form').removeAttr('onsubmit');");
+        $oPage->add_ready_script("$('#ac_create_{$this->iId} form').find('select').attr('id', 'ac_create_{$this->iId}_select');");
         $oPage->add_ready_script("$('#ac_create_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
 	}
 
@@ -966,15 +968,16 @@ JS
 	<div id="dcr_{$this->iId}">
 HTML
 		);
-		$aFieldsFlags = array();
-		$aFieldsComments = array();
-		foreach (MetaModel::ListAttributeDefs($this->sTargetClass) as $sAttCode => $oAttDef) {
-			if (($oAttDef instanceof AttributeBlob) || (false)) {
-				$aFieldsFlags[$sAttCode] = OPT_ATT_READONLY;
-				$aFieldsComments[$sAttCode] = '&nbsp;<img src="../images/transp-lock.png" style="vertical-align:middle" title="'.utils::EscapeHtml(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
-			}
-		}
-		cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));
+
+		$aFormExtraParams = array(
+			'formPrefix'  => $this->iId,
+			'noRelations' => true,
+		);
+
+		// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
+		FormHelper::DisableAttributeBlobInputs($this->sTargetClass, $aFormExtraParams);
+
+		cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), $aFormExtraParams);
 		$oPage->add(<<<HTML
 	</div>
 </div>

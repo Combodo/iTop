@@ -8,7 +8,7 @@
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:CreateMailbox' => 'Create a mailbox...~~',
-	'Menu:OAuthClient' => 'OAuth Client~~',
+	'Menu:OAuthClient' => 'OAuth client~~',
 	'Menu:OAuthClient+' => '~~',
 	'Menu:GenerateTokens' => 'Generate access tokens...~~',
 	'Menu:RegenerateTokens' => 'Regenerate access tokens...~~',

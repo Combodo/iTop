@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -86,9 +86,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:KnownError/Attribute:version' => 'Versione',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
-	'Class:KnownError/Attribute:ci_list+' => '',
+	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Documenti',
-	'Class:KnownError/Attribute:document_list+' => '',
+	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
 ));
 
 //

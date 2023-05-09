@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -417,7 +417,7 @@ Mamy nadzieję, że spodoba ci się ta wersja tak samo, jak nam się podobało j
 	'UI:Button:RemoveFromList' => ' Usuń >> ',
 	'UI:Button:FilterList' => ' Filtruj... ',
 	'UI:Button:Create' => ' Utwórz ',
-	'UI:Button:Delete' => ' Usuń ! ',
+	'UI:Button:Delete' => ' Usuń ',
 	'UI:Button:Rename' => ' Zmień nazwę... ',
 	'UI:Button:ChangePassword' => ' Zmień hasło ',
 	'UI:Button:ResetPassword' => ' Reset hasła ',
@@ -643,9 +643,9 @@ Mamy nadzieję, że spodoba ci się ta wersja tak samo, jak nam się podobało j
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Wybierz klasę do przeszukania: ',
 
 	'UI:CSVReport-Value-Modified' => 'Zmodyfikowano',
-	'UI:CSVReport-Value-SetIssue' => 'Nie można było zmienić - powód: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => 'Nie można zmienić na %1$s - powód: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Nie pasuje',
+	'UI:CSVReport-Value-SetIssue' => 'Nie można było zmienić',
+	'UI:CSVReport-Value-ChangeIssue' => 'Nie można zmienić na %1$s',
+	'UI:CSVReport-Value-NoMatch' => 'Nie pasuje - powód: %1$s',
 	'UI:CSVReport-Value-Missing' => 'Brak wymaganej wartości',
 	'UI:CSVReport-Value-Ambiguous' => 'Uwaga: znaleziono %1$s obiektów',
 	'UI:CSVReport-Row-Unchanged' => 'niezmieniony',
@@ -804,7 +804,7 @@ Mamy nadzieję, że spodoba ci się ta wersja tak samo, jak nam się podobało j
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Dodaj obiekty %1$s powiązane z %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Dodaj obiekty %1$s do połączenia z %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Zarządzaj obiektami %1$s powiązanymi z %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Dodaj obiekty %1$s...',
+	'UI:AddLinkedObjectsOf_Class' => 'Dodaj obiekty %1$s',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Usuń wybrane obiekty',
 	'UI:Message:EmptyList:UseAdd' => 'Lista jest pusta, użyj przycisku "Dodaj...", aby dodać elementy.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Użyj powyższego formularza wyszukiwania, aby wyszukać obiekty do dodania.',

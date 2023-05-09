@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -13,14 +13,13 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
-use Combodo\iTop\Router\Router;
+use Combodo\iTop\Service\Router\Router;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -143,12 +142,15 @@ function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
  * @throws \CoreException
  * @throws \DictExceptionMissingString
  */
-function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = true)
+function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = true, $aParams = [])
 {
 	//search block
 	$oBlockForm = null;
 	if ($bSearchForm) {
-		$aParams = array('open' => $bSearchFormOpen, 'table_id' => 'result_1');
+		$aParams['open'] = $bSearchFormOpen;
+		if (false === isset($aParams['table_id'])) {
+			$aParams['table_id'] = 'result_1';
+		}
 		if (!empty($sBaseClass)) {
 			$aParams['baseClass'] = $sBaseClass;
 		}
@@ -327,7 +329,6 @@ try
 
 		// Response is a \WebPage, let's handle it like legacy operations
 		$oP = $mResponse;
-		// TODO 3.1: If no route match, die instead of fallback to legacy operation dispatch and dump available routes if in dev env.
 	}
 	// Otherwise, use legacy operation
 	else {
@@ -341,8 +342,6 @@ try
 		switch($operation)
 		{
 			case 'new': // Form to create a new object
-			case 'apply_new': // Creation of a new object
-			case 'apply_modify': // Applying the modifications to an existing object
 			case 'form_for_modify_all': // Form to modify multiple objects (bulk modify)
 			case 'bulk_stimulus': // For to apply a stimulus to multiple objects
 			case 'stimulus': // Form displayed when applying a stimulus (state change)
@@ -466,50 +465,46 @@ try
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'search_oql': // OQL query
+				$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 				$sOQLClass = utils::ReadParam('oql_class', '', false, 'class');
 				$sBaseClass = utils::ReadParam('base_class', $sOQLClass, false, 'class');
 				$sOQLClause = utils::ReadParam('oql_clause', '', false, 'raw_data');
 				$sFormat = utils::ReadParam('format', '');
 				$bSearchForm = utils::ReadParam('search_form', true);
 				$sTitle = utils::ReadParam('title', 'UI:SearchResultsPageTitle');
-				if (empty($sOQLClass))
-				{
+				if (empty($sOQLClass)) {
 					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'oql_class'));
 				}
 				$oP->set_title(Dict::S($sTitle));
 				$oP->add('<h1>'.Dict::S($sTitle).'</h1>');
 				$sOQL = "SELECT $sOQLClass $sOQLClause";
-				try
-				{
+				try {
 					$oFilter = DBObjectSearch::FromOQL($sOQL);
 					DisplaySearchSet($oP, $oFilter, $bSearchForm, $sBaseClass, $sFormat);
 				}
-				catch(CoreException $e)
-				{
+				catch(CoreException $e) {
 					$oFilter = new DBObjectSearch($sOQLClass);
 					$oSet = new DBObjectSet($oFilter);
-					if ($bSearchForm)
-					{
+					if ($bSearchForm) {
 						$oBlock = new DisplayBlock($oFilter, 'search', false);
 						$oBlock->Display($oP, 0, array('table_id' => 'search-widget-result-outer'));
 					}
 					$oP->add('<div id="search-widget-result-outer"><p><b>'.Dict::Format('UI:Error:IncorrectOQLQuery_Message', $e->getHtmlDesc()).'</b></p></div>');
 				}
-				catch(Exception $e)
-				{
+				catch(Exception $e) {
 					$oP->P('<b>'.Dict::Format('UI:Error:AnErrorOccuredWhileRunningTheQuery_Message', $e->getMessage()).'</b>');
 				}
-			break;
+				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'search_form': // Search form
+				$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 				$sClass = utils::ReadParam('class', '', false, 'class');
 				$sFormat = utils::ReadParam('format', 'html');
 				$bSearchForm = utils::ReadParam('search_form', true);
 				$bDoSearch = utils::ReadParam('do_search', true);
-				if (empty($sClass))
-				{
+				if (empty($sClass)) {
 					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 				}
 				$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
@@ -520,6 +515,7 @@ try
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'search': // Serialized DBSearch
+				$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 				$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 				$sFormat = utils::ReadParam('format', '');
 				$bSearchForm = utils::ReadParam('search_form', true);
@@ -530,8 +526,14 @@ try
 				$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
 				$oFilter = DBSearch::unserialize($sFilter); // TO DO : check that the filter is valid
 				$oFilter->UpdateContextFromUser();
-				DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat);
-			break;
+
+				//FIXME Params won't work as expected :(
+				// During the ajax call fetching the datatable data, the URL is rewritten and the info are lost, and we are getting a worse result :(
+//				$sParams = utils::ReadParam('aParams', '{}', false, \utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+//				$aParams = json_decode($sParams, true);
+
+				DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat); //, true, true, $aParams
+				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -698,248 +700,19 @@ try
 				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
-
+			
+			/** @deprecated 3.1.0 Use the "object.new" route instead */
+			// Kept for backward compatibility
 			case 'new': // Form to create a new object
-				$oP->DisableBreadCrumb();
-				$sClass = utils::ReadParam('class', '', false, 'class');
-				$sStateCode = utils::ReadParam('state', '');
-				$bCheckSubClass = utils::ReadParam('checkSubclass', true);
-				if ( empty($sClass) )
-				{
-					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
-				}
-
-	/*
-				$aArgs = utils::ReadParam('default', array(), false, 'raw_data');
-				$aContext = $oAppContext->GetAsHash();
-				foreach( $oAppContext->GetNames() as $key)
-				{
-					$aArgs[$key] = $oAppContext->GetCurrentValue($key);
-				}
-	*/
-				// If the specified class has subclasses, ask the user an instance of which class to create
-				$aSubClasses = MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
-				$aPossibleClasses = array();
-				$sRealClass = '';
-				if ($bCheckSubClass)
-				{
-					foreach($aSubClasses as $sCandidateClass)
-					{
-						if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
-						{
-							$aPossibleClasses[$sCandidateClass] = MetaModel::GetName($sCandidateClass);
-						}
-					}
-					// Only one of the subclasses can be instantiated...
-					if (count($aPossibleClasses) == 1)
-					{
-						$aKeys = array_keys($aPossibleClasses);
-						$sRealClass = $aKeys[0];
-					}
-				}
-				else
-				{
-					$sRealClass = $sClass;
-				}
-
-				if (!empty($sRealClass))
-				{
-					// Set all the default values in an object and clone this "default" object
-					$oObjToClone = MetaModel::NewObject($sRealClass);
-					// 1st - set context values
-					$oAppContext->InitObjectFromContext($oObjToClone);
-					// 2nd - set values from the page argument 'default'
-					$oObjToClone->UpdateObjectFromArg('default');
-					$aPrefillFormParam = array(
-						'user' => Session::Get('auth_user'),
-						'context' => $oAppContext->GetAsHash(),
-						'default' => utils::ReadParam('default', array(), '', 'raw_data'),
-						'origin' => 'console',
-					);
-					// 3rd - prefill API
-					$oObjToClone->PrefillForm('creation_from_0', $aPrefillFormParam);
-
-					// Display the creation form
-					$sClassLabel = MetaModel::GetName($sRealClass);
-					$sClassIcon = MetaModel::GetClassIcon($sRealClass);
-					$sObjectTmpKey = $oObjToClone->GetKey();
-					$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
-					// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
-					$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
-					cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1, 'keep_source_object' => true)); // wizard_container: Display the title above the form
-				} else {
-					// Select the derived class to create
-					cmdbAbstractObject::DisplaySelectClassToCreate($sClass, $oP, $oAppContext, $aPossibleClasses,['state' => $sStateCode]);
-				}
+				$oController = new ObjectController();
+				$oP = $oController->OperationNew();
 			break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'apply_modify': // Applying the modifications to an existing object
-				$oP->DisableBreadCrumb();
-				$sClass = utils::ReadPostedParam('class', '', 'class');
-				$sClassLabel = MetaModel::GetName($sClass);
-				$id = utils::ReadPostedParam('id', '');
-				$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
-				if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
-				{
-	                IssueLog::Trace('Object not updated (empty class or id)', $sClass, array(
-	                    '$operation' => $operation,
-	                    '$id' => $id,
-	                    '$sTransactionId' => $sTransactionId,
-	                    '$sUser' => UserRights::GetUser(),
-	                    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-	                    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-	                ));
-
-	                throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
-				}
-				$bDisplayDetails = true;
-				$oObj = MetaModel::GetObject($sClass, $id, false);
-				if ($oObj == null)
-				{
-					$bDisplayDetails = false;
-					$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
-
-	                IssueLog::Trace('Object not updated (id not found)', $sClass, array(
-	                    '$operation' => $operation,
-	                    '$id' => $id,
-	                    '$sTransactionId' => $sTransactionId,
-	                    '$sUser' => UserRights::GetUser(),
-	                    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-	                    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-	                ));
-				}
-				elseif (!utils::IsTransactionValid($sTransactionId, false))
-				{
-					//TODO: since $bDisplayDetails= true, there will be an redirection, thus, the content generated here is ignored, only the $sMessage and $sSeverity are used afeter the redirection
-					$sUser = UserRights::GetUser();
-					IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
-					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-					$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
-					$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
-					$sSeverity = 'error';
-
-					IssueLog::Trace('Object not updated (invalid transaction_id)', $sClass, array(
-						'$operation' => $operation,
-						'$id' => $id,
-						'$sTransactionId' => $sTransactionId,
-						'$sUser' => UserRights::GetUser(),
-						'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-						'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-					));
-				}
-				else
-				{
-					$aErrors = $oObj->UpdateObjectFromPostedForm();
-					$sMessage = '';
-					$sSeverity = 'ok';
-
-					if (!$oObj->IsModified() && empty($aErrors))
-					{
-						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-						$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
-						$sSeverity = 'info';
-
-	                    IssueLog::Trace('Object not updated (see either $aErrors or IsModified)', $sClass, array(
-	                        '$operation' => $operation,
-	                        '$id' => $id,
-	                        '$sTransactionId' => $sTransactionId,
-	                        '$aErrors' => $aErrors,
-	                        'IsModified' => $oObj->IsModified(),
-	                        '$sUser' => UserRights::GetUser(),
-	                        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-	                        'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-	                    ));
-					}
-					else
-					{
-	                    IssueLog::Trace('Object updated', $sClass, array(
-	                        '$operation' => $operation,
-	                        '$id' => $id,
-	                        '$sTransactionId' => $sTransactionId,
-	                        '$aErrors' => $aErrors,
-	                        'IsModified' => $oObj->IsModified(),
-	                        '$sUser' => UserRights::GetUser(),
-	                        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-	                        'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-	                    ));
-
-						try
-						{
-							if (!empty($aErrors))
-							{
-								throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
-							}
-							// Transactions are now handled in DBUpdate
-							$oObj->DBUpdate();
-							$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
-							$sSeverity = 'ok';
-						}
-						catch (CoreCannotSaveObjectException $e)
-						{
-							// Found issues, explain and give the user a second chance
-							//
-							$bDisplayDetails = false;
-							$aIssues = $e->getIssues();
-							$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
-							$oObj->DisplayModifyForm($oP,
-								array('wizard_container' => true)); // wizard_container: display the wizard border and the title
-						}
-						catch (DeleteException $e)
-						{
-							// Say two things:
-							// - 1) Don't be afraid nothing was modified
-							$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
-							$sSeverity = 'info';
-							cmdbAbstractObject::SetSessionMessage(get_class($oObj), $oObj->GetKey(), 'UI:Class_Object_NotUpdated', $sMessage,
-								$sSeverity, 0, true /* must not exist */);
-							// - 2) Ok, there was some trouble indeed
-							$sMessage = $e->getMessage();
-							$sSeverity = 'error';
-						}
-						utils::RemoveTransaction($sTransactionId);
-					}
-				}
-				if ($bDisplayDetails)
-				{
-					$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey()); //Workaround: reload the object so that the linkedset are displayed properly
-					$sNextAction = utils::ReadPostedParam('next_action', '');
-					if (!empty($sNextAction))
-					{
-						try
-						{
-							ApplyNextAction($oP, $oObj, $sNextAction);
-						}
-						catch (ApplicationException $e)
-						{
-							$sMessage = $e->getMessage();
-							$sSeverity = 'info';
-							ReloadAndDisplay($oP, $oObj, 'update', $sMessage, $sSeverity);
-						}
-					}
-					else
-					{
-						// Nothing more to do
-						$sMessage = isset($sMessage) ? $sMessage : '';
-						$sSeverity = isset($sSeverity) ? $sSeverity : null;
-						ReloadAndDisplay($oP, $oObj, 'update', $sMessage, $sSeverity);
-					}
-
-					$bLockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
-					if ($bLockEnabled)
-					{
-						// Release the concurrent lock, if any
-						$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
-						if ($sOwnershipToken !== null)
-						{
-							// We're done, let's release the lock
-							iTopOwnershipLock::ReleaseLock(get_class($oObj), $oObj->GetKey(), $sOwnershipToken);
-						}
-					}
-				}
+				$oController = new ObjectController();
+				$oP = $oController->OperationApplyModify();
 			break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
@@ -1038,137 +811,10 @@ try
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'apply_new': // Creation of a new object
-			$oP->DisableBreadCrumb();
-			$sClass = utils::ReadPostedParam('class', '', 'class');
-			$sClassLabel = MetaModel::GetName($sClass);
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
-			$aErrors = array();
-			$aWarnings = array();
-			if ( empty($sClass) ) // TO DO: check that the class name is valid !
-			{
-	            IssueLog::Trace('Object not created (empty class)', $sClass, array(
-	                '$operation' => $operation,
-	                '$sTransactionId' => $sTransactionId,
-	                '$sUser' => UserRights::GetUser(),
-	                'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-	                'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-	            ));
 
-				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
-			}
-			if (!utils::IsTransactionValid($sTransactionId, false))
-			{
-				$sUser = UserRights::GetUser();
-				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
-				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyCreated')."</strong>\n");
-
-	            IssueLog::Trace('Object not created (invalid transaction_id)', $sClass, array(
-	                '$operation' => $operation,
-	                '$sTransactionId' => $sTransactionId,
-	                '$sUser' => UserRights::GetUser(),
-	                'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-	                'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-	            ));
-			}
-			else
-			{
-				/** @var \cmdbAbstractObject $oObj */
-				$oObj = MetaModel::NewObject($sClass);
-				if (MetaModel::HasLifecycle($sClass))
-				{
-					$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-					$sTargetState = utils::ReadPostedParam('obj_state', '');
-					if ($sTargetState != '')
-					{
-						$sOrigState = utils::ReadPostedParam('obj_state_orig', '');
-						if ($sTargetState != $sOrigState)
-						{
-							$aWarnings[] = Dict::S('UI:StateChanged');
-						}
-						$oObj->Set($sStateAttCode, $sTargetState);
-					}
-				}
-				$aErrors = $oObj->UpdateObjectFromPostedForm();
-			}
-			if (isset($oObj) && is_object($oObj))
-			{
-				$sClass = get_class($oObj);
-				$sClassLabel = MetaModel::GetName($sClass);
-
-				try
-				{
-					if (!empty($aErrors) || !empty($aWarnings))
-					{
-	                    IssueLog::Trace('Object not created (see $aErrors)', $sClass, array(
-	                        '$operation' => $operation,
-	                        '$sTransactionId' => $sTransactionId,
-	                        '$aErrors' => $aErrors,
-	                        '$sUser' => UserRights::GetUser(),
-	                        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-	                        'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-	                    ));
-
-						throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
-					}
-
-					$oObj->DBInsertNoReload();// No need to reload
-
-	                IssueLog::Trace('Object created', $sClass, array(
-	                    '$operation' => $operation,
-	                    '$id' => $oObj->GetKey(),
-	                    '$sTransactionId' => $sTransactionId,
-	                    '$aErrors' => $aErrors,
-	                    '$sUser' => UserRights::GetUser(),
-	                    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-	                    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-	                ));
-
-					utils::RemoveTransaction($sTransactionId);
-					$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
-					QuickCreateHelper::AddClassToHistory($sClass);
-
-					// Compute the name, by reloading the object, even if it disappeared from the silo
-					$oObj = MetaModel::GetObject($sClass, $oObj->GetKey(), true /* Must be found */, true /* Allow All Data*/);
-					$sName = $oObj->GetName();
-					$sMessage = Dict::Format('UI:Title:Object_Of_Class_Created', $sName, $sClassLabel);
-
-					$sNextAction = utils::ReadPostedParam('next_action', '');
-					if (!empty($sNextAction)) {
-						$oP->add("<h1>$sMessage</h1>");
-						try {
-							ApplyNextAction($oP, $oObj, $sNextAction);
-						}
-						catch (ApplicationException $e) {
-							$sMessage = $e->getMessage();
-							$sSeverity = 'info';
-							ReloadAndDisplay($oP, $oObj, 'create', $sMessage, $sSeverity);
-						}
-					} else {
-						// Nothing more to do
-						ReloadAndDisplay($oP, $oObj, 'create', $sMessage, 'ok');
-					}
-				}
-				catch (CoreCannotSaveObjectException $e) {
-					// Found issues, explain and give the user a second chance
-					//
-					$aIssues = $e->getIssues();
-
-					$sObjKey = $oObj->GetKey();
-					$sClassIcon = MetaModel::GetClassIcon($sClass, false);
-					$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
-
-					$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-					if (!empty($aIssues)) {
-						$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
-					}
-					if (!empty($aWarnings)) {
-						$sWarnings = implode(', ', $aWarnings);
-						$oP->AddHeaderMessage($sWarnings, 'message_warning');
-					}
-					cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj, [], ['transaction_id' => $sTransactionId]);
-				}
-			}
-			break;
+				$oController = new ObjectController();
+				$oP = $oController->OperationApplyNew();
+				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1697,7 +1343,7 @@ try
 								$sSeverity = 'info';
 							}
 							$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten',$sIssues);
-							$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
+							$oP->add_ready_script("CombodoModal.OpenErrorModal('".addslashes($sIssueDesc)."');");
 						}
 						else
 						{
@@ -1773,7 +1419,7 @@ try
 
 				$aResults = $oRelGraph->GetObjectsByClass();
 				$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
-				$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
+				$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName());
 				$sClassIcon = MetaModel::GetClassIcon($sClass, false);
 				if (strlen($sClassIcon) > 0){
 					$oPanel->SetIcon($sClassIcon);
@@ -1912,7 +1558,7 @@ class UI
 	{
 		$oP->DisableBreadCrumb();
 		$oP->set_title(Dict::S('UI:ModifyAllPageTitle'));
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$sFilter = utils::ReadParam('filter', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 		if (empty($sFilter)) {
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
 		}
@@ -1921,10 +1567,11 @@ class UI
 		$oFilter->UpdateContextFromUser();
 		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
 		$sClass = $oFilter->GetClass();
+		$sClassName = MetaModel::GetName($sClass);
 
 		$aDisplayParams = [
 			'icon' => MetaModel::GetClassIcon($sClass, false),
-			'title' => Dict::S('UI:ModifyAllPageTitle'),
+			'title' => Dict::Format('UI:Modify_ObjectsOf_Class', $sClassName),
 		];
 		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker, [], $aDisplayParams);
 	}
@@ -1944,8 +1591,8 @@ class UI
 	public static function OperationFormForModifyAll(iTopWebPage $oP, ApplicationContext $oAppContext): void
 	{
 		$oP->DisableBreadCrumb();
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-		$sClass = utils::ReadParam('class', '', false, 'class');
+		$sFilter = utils::ReadParam('filter', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$sClass = utils::ReadParam('class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
 		// Add user filter
 		$oFullSetFilter->UpdateContextFromUser();

@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% extends "pages/backoffice/nicewebpage/layout.html.twig" %}
 {% block iboPageBodyHtml %}
@@ -36,16 +36,6 @@
 {% endblock %}
 
 {% block iboPageTemplates %}
-    <template id="ibo-small-loading-placeholder-template">
-        <div>TODO 3.1: LOADER AVEC ICONE SEULE</div>
-    </template>
-    <template id="ibo-large-loading-placeholder-template">
-        <div>TODO 3.1: LOADER AVEC TEXTE ET ICONE</div>
-    </template>
-    <template id="ibo-modal-template">
-        <div class="ibo-modal" data-role="ibo-modal">TODO 3.1: Please wait</div>
-    </template>
-
     {# Templates #}
     {% for oTemplate in aTemplates %}
         {{ render_block(oTemplate, {aPage: aPage})  }}

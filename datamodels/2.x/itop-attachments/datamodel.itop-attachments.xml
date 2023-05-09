@@ -12,7 +12,7 @@
  * Configuration: the list of classes for which the "Attachments" tab is visible is defined via the module's 'allowed_classes'
  * configuration parameter. By default the tab is active for all kind of Tickets.
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>addon,bizmodel</category>
@@ -102,6 +102,20 @@
         </field>
       </fields>
       <methods>
+        <method id="DBInsertNoReload">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+    public function DBInsertNoReload()
+    {
+        $this->SetCurrentDateIfNull('creation_date');
+        $this->SetIfNull('user_id', CMDBChange::GetCurrentUserId());
+
+        return parent::DBInsertNoReload();
+    }
+        ]]></code>
+        </method>
         <method id="MapContextParam">
           <comment><![CDATA[/**
 	 * Maps the given context parameter name to the appropriate filter/search code for this class
@@ -172,36 +186,25 @@
           <type>Overload-ExNihilo</type>
           <code><![CDATA[	public function SetDefaultOrgId()
 	{
-		// First check that the organization CAN be fetched from the target class
-		//
-		$sClass = $this->Get('item_class');
-		$aCallSpec = array($sClass, 'MapContextParam');
-		if (is_callable($aCallSpec))
-		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
-			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
-				// Second: check that the organization CAN be fetched from the current user
-				//
-				if (MetaModel::IsValidClass('Person'))
-				{
-					$aCallSpec = array($sClass, 'MapContextParam');
-					if (is_callable($aCallSpec))
-					{
-						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
-						if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-						{
-							// OK - try it
-							//
-							$oCurrentPerson = MetaModel::GetObject('Person', UserRights::GetContactId(), false);
-							if ($oCurrentPerson)
-							{
-						 		$this->Set('item_org_id', $oCurrentPerson->Get($sAttCode));
-						 	}
-						}
-					}
-				}
-			}
+    // Check that the organization CAN be fetched from the current user
+    //
+    if (MetaModel::IsValidClass('Person'))
+    {
+      $aCallSpec = array('Person', 'MapContextParam');
+      if (is_callable($aCallSpec))
+      {
+        $sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
+        if (MetaModel::IsValidAttCode('Person', $sAttCode))
+        {
+          // OK - try it
+          //
+          $oCurrentPerson = MetaModel::GetObject('Person', UserRights::GetContactId(), false);
+          if ($oCurrentPerson)
+          {
+            $this->Set('item_org_id', $oCurrentPerson->Get($sAttCode));
+          }
+        }
+      }
 		}
 	}]]></code>
         </method>
@@ -256,7 +259,7 @@
     </class>
   </classes>
   <events>
-    <event id="EVENT_SERVICE_ADD_ATTACHMENT_TO_OBJECT" _delta="define">
+    <event id="EVENT_ADD_ATTACHMENT_TO_OBJECT" _delta="define">
       <description>An attachment has been added to an object</description>
       <replaces>Attachment::AfterUpdate</replaces>
       <sources>
@@ -278,7 +281,7 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_REMOVE_ATTACHMENT_FROM_OBJECT" _delta="define">
+    <event id="EVENT_REMOVE_ATTACHMENT_FROM_OBJECT" _delta="define">
       <description>An attachment has been removed from an object</description>
       <replaces>Attachment::AfterUpdate</replaces>
       <sources>

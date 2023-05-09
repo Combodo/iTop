@@ -13,7 +13,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
@@ -28,7 +28,7 @@
           </attributes>
         </naming>
         <style>
-          <icon/>
+          <icon>../../images/icons/icons8-comments.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -220,6 +220,13 @@
           <read_only>false</read_only>
         </field>
       </fields>
+      <event_listeners>
+        <event_listener id="UpdateImpactAnalysis">
+          <event>EVENT_DB_LINKS_CHANGED</event>
+          <callback>UpdateImpactedItems</callback>
+          <rank>0</rank>
+        </event_listener>
+      </event_listeners>
       <methods>
         <method id="DBInsertNoReload">
           <static>false</static>
@@ -257,6 +264,62 @@
                 return 'T-%06d';
         }
         ]]></code>
+        </method>
+        <method id="AddCurrentUserToContacts" _revision_id="294" _delta="define">
+          <comment>/**
+            *
+            * Add the current contact associated Person to the contacts_list of this Ticket
+            * No error if there is no associated Person or if the Person is already in the list
+            * @return bool Return true on success
+            */
+          </comment>
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[	public function AddCurrentUserToContacts()
+    {
+        $iPersonId = UserRights::GetContactId();
+        if ($iPersonId > 0) {
+            $oContactsSet = $this->Get('contacts_list');
+            if (!in_array($iPersonId, $oContactsSet->GetColumnAsArray('contact_id'))) {
+                $oLnk = MetaModel::NewObject('lnkContactToTicket');
+                $oLnk->Set('contact_id', $iPersonId);
+                $oLnk->Set('ticket_id', $this->GetKey());
+                $oContactsSet->AddItem($oLnk);
+                $this->Set('contacts_list', $oContactsSet);
+                $this->DBUpdate();
+            }
+	      }
+		    return true;
+	  }]]></code>
+          <arguments/>
+        </method>
+        <method id="RemoveCurrentUserFromContacts" _revision_id="296" _delta="define">
+          <comment>/**
+            *
+            * Remove the current user associated Person from the contacts_list of this Ticket
+            * No error if there is no associated Person or if the Person is not in the list
+            * @return bool Return true
+            */
+          </comment>
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[	public function RemoveCurrentUserFromContacts()
+	  {
+        $iPersonId = UserRights::GetContactId();
+        if ($iPersonId > 0) {
+            $oContactsSet = $this->Get('contacts_list');
+            foreach ($oContactsSet as $oLnk) {
+                if ($oLnk->Get('contact_id') == $iPersonId) {
+                    $oContactsSet->RemoveItem($oLnk->GetKey());
+                    $this->Set('contacts_list', $oContactsSet);
+                    $this->DBUpdate();
+                    return true;
+                }
+            }
+        }
+      return true;
+	  }]]></code>
+          <arguments/>
         </method>
       </methods>
       <presentation>
@@ -395,8 +458,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="ticket_id"/>
-            <attribute id="contact_id"/>
+            <attribute id="contact_name"/>
+            <attribute id="ticket_ref"/>
           </attributes>
         </naming>
         <style>
@@ -408,6 +471,17 @@
             <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="contact_id"/>
+              <attribute id="ticket_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ticket_id" xsi:type="AttributeExternalKey">
@@ -429,6 +503,10 @@
         <field id="contact_email" xsi:type="AttributeExternalField">
           <extkey_attcode>contact_id</extkey_attcode>
           <target_attcode>email</target_attcode>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
         </field>
         <field id="role" xsi:type="AttributeString">
           <sql>role</sql>
@@ -737,47 +815,12 @@
         </list>
       </presentation>
     </class>
-    <class id="Document" _delta="must_exist">
-      <fields>
-        <field id="contracts_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
-          <linked_class>lnkContractToDocument</linked_class>
-          <ext_key_to_me>document_id</ext_key_to_me>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <ext_key_to_remote>contract_id</ext_key_to_remote>
-          <duplicates/>
-          <read_only>false</read_only>
-        </field>
-        <field id="services_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
-          <linked_class>lnkDocumentToService</linked_class>
-          <ext_key_to_me>document_id</ext_key_to_me>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <ext_key_to_remote>service_id</ext_key_to_remote>
-          <duplicates/>
-          <read_only>false</read_only>
-        </field>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item id="contracts_list" _delta="define">
-              <rank>70</rank>
-            </item>
-            <item id="services_list" _delta="define">
-              <rank>80</rank>
-            </item>
-          </items>
-        </details>
-      </presentation>
-    </class>
     <class id="Person" _delta="must_exist">
       <fields>
         <field id="tickets_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>Ticket</linked_class>
           <ext_key_to_me>caller_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -799,7 +842,7 @@
         <field id="tickets_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>Ticket</linked_class>
           <ext_key_to_me>team_id</ext_key_to_me>
-          <legacy_edit_mode>none</legacy_edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>

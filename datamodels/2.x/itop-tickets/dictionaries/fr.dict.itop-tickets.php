@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
@@ -58,11 +58,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:private_log' => 'Journal privé',
 	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => 'Contacts',
-	'Class:Ticket/Attribute:contacts_list+' => '',
+	'Class:Ticket/Attribute:contacts_list+' => 'Tous les contacts liés à ce ticket',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Tous les éléments de configuration impactés par ce ticket. Les éléments marqués comme "Calculés" sont le résultat du calcul de l\'analyse d\'impact. Les éléments marqués comme "Non impactés" sont exclus de cette analyse.',
 	'Class:Ticket/Attribute:workorders_list' => 'Tâches',
-	'Class:Ticket/Attribute:workorders_list+' => '',
+	'Class:Ticket/Attribute:workorders_list+' => 'Toutes les tâches de ce ticket',
 	'Class:Ticket/Attribute:finalclass' => 'Sous-classe de Ticket',
 	'Class:Ticket/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:Ticket/Attribute:operational_status' => 'Statut opérationnel',
@@ -90,7 +90,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Contact',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
-	'Class:lnkContactToTicket/Attribute:contact_email' => 'Email Contact',
+	'Class:lnkContactToTicket/Attribute:contact_name' => 'Nom du contact',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_email' => 'Email du contact',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rôle (texte)',
 	'Class:lnkContactToTicket/Attribute:role+' => '',
@@ -233,13 +235,3 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Objectif calculé à partir d\'un SLT de type TTR',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Document/Attribute:contracts_list' => 'Contrats',
-	'Class:Document/Attribute:contracts_list+' => '',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => '',
-));

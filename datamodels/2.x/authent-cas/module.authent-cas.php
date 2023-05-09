@@ -23,7 +23,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.authent-cas.php',
 			'vendor/autoload.php',
 			'src/CASLoginExtension.php',
 		),

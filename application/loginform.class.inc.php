@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -68,7 +68,6 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
 			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
 			{
-				$_SESSION['auth_user'] = $sAuthUser;
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}

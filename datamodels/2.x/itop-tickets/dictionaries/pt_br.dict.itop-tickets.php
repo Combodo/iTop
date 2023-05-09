@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -244,13 +244,3 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Objetivo baseado em um SLT do tipo TTR',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:Document/Attribute:contracts_list' => 'Contratos',
-	'Class:Document/Attribute:contracts_list+' => 'Todos os contratos associados a este documento',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'Todos os serviços associados a este documento',
-));

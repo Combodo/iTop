@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -48,7 +48,7 @@ class CoreCannotSaveObjectException extends CoreException
 
 		if (count($this->aIssues) == 1) {
 			$sIssue = reset($this->aIssues);
-			$sContent .= " <span>".utils::HtmlEntities($sIssue)."</span>";
+			$sContent .= "&nbsp;<span>".utils::HtmlEntities($sIssue)."</span>";
 		} else {
 			$sContent .= '<ul>';
 			foreach ($this->aIssues as $sError) {

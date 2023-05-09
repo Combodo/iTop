@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1052,16 +1052,16 @@ EOF
 		});
 		if (!bMappingOk)
 		{
-			alert("$sAlertIncompleteMapping");
+			CombodoModal.OpenErrorModal('$sAlertIncompleteMapping');
 		}
 		if (bMultipleMapping)
 		{
-			alert("$sAlertMultipleMapping");
+			CombodoModal.OpenErrorModal('$sAlertMultipleMapping');
 		}
 		if (!bSearchOk)
 		{
 				bResult = false; 
-				alert("$sAlertNoSearchCriteria");
+				CombodoModal.OpenErrorModal('$sAlertNoSearchCriteria');
 		}
 		
 		if (bResult)

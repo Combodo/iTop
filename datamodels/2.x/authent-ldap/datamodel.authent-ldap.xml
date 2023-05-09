@@ -11,7 +11,7 @@
                     * LDAP Authentication
                     * User authentication Module, no password at all!
                     *
-                    * @copyright   Copyright (C) 2010-2020 Combodo SARL
+                    * @copyright   Copyright (C) 2010-2023 Combodo SARL
                     * @license     http://opensource.org/licenses/AGPL-3.0
                     */</comment>
         <category>addon/authentication,grant_by_profile,silo</category>
@@ -257,32 +257,57 @@
       <presentation>
         <details>
           <items>
-            <item id="contactid">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:User:info">
+                  <rank>10</rank>
+                  <items>
+                    <item id="contactid">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="email">
+                      <rank>30</rank>
+                    </item>
+                    <item id="login">
+                      <rank>40</rank>
+                    </item>
+                    <item id="language">
+                      <rank>50</rank>
+                    </item>
+                    <item id="status">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
               <rank>20</rank>
-            </item>
-            <item id="email">
-              <rank>30</rank>
-            </item>
-            <item id="login">
-              <rank>40</rank>
-            </item>
-            <item id="language">
-              <rank>50</rank>
-            </item>
-            <item id="status">
-              <rank>60</rank>
-            </item>
-            <item id="profile_list">
-              <rank>70</rank>
+              <items>
+                <item id="fieldset:User:profiles">
+                  <rank>10</rank>
+                  <items>
+                    <item id="profile_list">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:UserLDAP:server">
+                  <rank>20</rank>
+                  <items>
+                    <item id="ldap_server">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="allowed_org_list">
               <rank>80</rank>
-            </item>
-            <item id="ldap_server">
-              <rank>90</rank>
             </item>
           </items>
         </details>

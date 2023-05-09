@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -21,7 +21,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:ChangeManagement' => 'Değişiklik Yönetimi',
+	'Menu:ChangeManagement' => 'Değişiklik yönetimi',
 	'Menu:Change:Overview' => 'Özet',
 	'Menu:Change:Overview+' => '~~',
 	'Menu:NewChange' => 'Yeni değişiklik',

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -44,8 +44,8 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:ProblemManagement' => 'Gerenciamento de Problemas',
-	'Menu:ProblemManagement+' => 'Lista de Gerenciamento de Problemas',
+	'Menu:ProblemManagement' => 'Gerenciamento de problemas',
+	'Menu:ProblemManagement+' => 'Lista de gerenciamento de problemas',
 	'Menu:Problem:Overview' => 'Visão geral',
 	'Menu:Problem:Overview+' => '',
 	'Menu:NewProblem' => 'Novo problema',
@@ -63,7 +63,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-ProblemManagementOverview-ProblemByPriority+' => '',
 	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Problemas não atribuídos',
 	'UI-ProblemManagementOverview-ProblemUnassigned+' => '',
-	'UI:ProblemMgmtMenuOverview:Title' => 'Painel de Gerenciamento de Problemas',
+	'UI:ProblemMgmtMenuOverview:Title' => 'Painel de gerenciamento de problemas',
 	'UI:ProblemMgmtMenuOverview:Title+' => '',
 
 ));

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -22,11 +22,6 @@
 // - reconciliation is made on the column primary_key
 //
 
-if (!defined('__DIR__'))
-{
-	/** @noinspection DirectoryConstantCanBeUsedInspection */
-	define('__DIR__', dirname(__FILE__));
-}
 require_once __DIR__.'/../approot.inc.php';
 require_once APPROOT.'/application/application.inc.php';
 require_once APPROOT.'/application/startup.inc.php';
@@ -255,7 +250,7 @@ if (utils::IsModeCLI())
 {
 	// Next steps:
 	//   specific arguments: 'csvfile'
-	//   
+	//
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
 	$sCsvFile = ReadMandatoryParam($oP, 'csvfile', 'raw_data');
@@ -282,6 +277,9 @@ if (utils::IsModeCLI())
 else
 {
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
+
+	//N°6022 - Make synchro scripts work by http via token authentication with SYNCHRO scopes
+	$oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
@@ -451,6 +449,7 @@ try
 		if ($sInputColumn === 'primary_key')
 		{
 			$iPrimaryKeyCol = $iFieldId;
+			$aIsBinaryToTransform[$iFieldId] = false;
 			continue;
 		}
 		if (!array_key_exists($sInputColumn, $aColumns))

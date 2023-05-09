@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <constants/>
+  <classes>
+    <class id="lnkFunctionalCIToProviderContract" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkfunctionalcitoprovidercontract</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="functionalci_name"/>
+            <attribute id="providercontract_name"/>
+          </attributes>
+        </naming>
+        <style>
+          <icon/>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="providercontract_id"/>
+            <attribute id="functionalci_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="functionalci_id"/>
+              <attribute id="providercontract_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="providercontract_id" xsi:type="AttributeExternalKey">
+          <sql>providercontract_id</sql>
+          <target_class>ProviderContract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="providercontract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>providercontract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="functionalci_id" xsi:type="AttributeExternalKey">
+          <sql>functionalci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="functionalci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>functionalci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="providercontract_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="providercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="providercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkFunctionalCIToService" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkfunctionalcitoservice</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="functionalci_name"/>
+            <attribute id="service_name"/>
+          </attributes>
+        </naming>
+        <style>
+          <icon/>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="functionalci_id"/>
+            <attribute id="service_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="functionalci_id"/>
+              <attribute id="service_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="functionalci_id" xsi:type="AttributeExternalKey">
+          <sql>functionalci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="functionalci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>functionalci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="service_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="FunctionalCI" _delta="must_exist">
+      <fields>
+        <field id="providercontracts_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+          <linked_class>lnkFunctionalCIToProviderContract</linked_class>
+          <ext_key_to_me>functionalci_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>providercontract_id</ext_key_to_remote>
+          <duplicates/>
+          <read_only>false</read_only>
+        </field>
+        <field id="services_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+          <linked_class>lnkFunctionalCIToService</linked_class>
+          <ext_key_to_me>functionalci_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>service_id</ext_key_to_remote>
+          <duplicates/>
+          <read_only>false</read_only>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>100</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>110</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="NetworkDevice" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>60</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>70</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Server" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>100</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>110</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="ApplicationSolution" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>120</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>130</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Middleware" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>160</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>170</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DBServer" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>160</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>170</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="WebServer" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>160</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>170</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="PCSoftware" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>150</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>160</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="OtherSoftware" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>150</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>160</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="MiddlewareInstance" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>110</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>120</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DatabaseSchema" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>110</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>120</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="WebApplication" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="providercontracts_list" _delta="define_if_not_exists">
+              <rank>120</rank>
+            </item>
+            <item id="services_list" _delta="define_if_not_exists">
+              <rank>130</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Document" _delta="must_exist">
+      <fields>
+        <field id="contracts_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+          <linked_class>lnkContractToDocument</linked_class>
+          <ext_key_to_me>document_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contract_id</ext_key_to_remote>
+          <duplicates/>
+          <read_only>false</read_only>
+        </field>
+        <field id="services_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+          <linked_class>lnkDocumentToService</linked_class>
+          <ext_key_to_me>document_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>service_id</ext_key_to_remote>
+          <duplicates/>
+          <read_only>false</read_only>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="contracts_list" _delta="define">
+              <rank>70</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>80</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+  </menus>
+  <user_rights>
+    <groups>
+    </groups>
+    <profiles>
+    </profiles>
+  </user_rights>
+</itop_design>

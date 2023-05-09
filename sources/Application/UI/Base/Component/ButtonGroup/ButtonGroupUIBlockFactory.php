@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,9 +15,9 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
  * Class ButtonGroupUIBlockFactory
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Button
- * @since 3.0.0
+ * @package UIBlockAPI
  * @api
+ * @since 3.0.0
  */
 class ButtonGroupUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -29,6 +29,7 @@ class ButtonGroupUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a button that has a primary action ($oButton) but also an options menu ($oMenu) on the side
 	 *
+	 * @api
 	 * @param \Combodo\iTop\Application\UI\Base\Component\Button\Button $oButton
 	 * @param \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu $oMenu
 	 *

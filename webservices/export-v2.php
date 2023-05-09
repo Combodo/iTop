@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -16,9 +16,6 @@ use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
-if (!defined('__DIR__')) {
-	define('__DIR__', dirname(__FILE__));
-}
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/excelexporter.class.inc.php');
@@ -182,7 +179,7 @@ $('#export-form').on('submit', function() {
 		var sOQL = $('#textarea_oql').val();
 		if (sOQL == '')
 		{
-			alert($sJSEmptyOQL);
+			CombodoModal.OpenErrorModal($sJSEmptyOQL);
 			return false;
 		}
 	}
@@ -191,7 +188,7 @@ $('#export-form').on('submit', function() {
 		var sQueryId = $('#select_phrasebook').val();
 		if (sQueryId == '')
 		{
-			alert($sJSEmptyQueryId);
+			CombodoModal.OpenErrorModal($sJSEmptyQueryId);
 			return false;
 		}
 	}
@@ -262,14 +259,14 @@ EOF
 	}
 
 	if ($sExpression !== '') {
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", utils::EscapeHtml($sExpression)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", $sExpression));
 		$oExportSearch = DBObjectSearch::FromOQL($sExpression);
 		$oExportSearch->UpdateContextFromUser();
 	} else {
 		$oQuery = MetaModel::GetObject('QueryOQL', $sQueryId);
 		$oExportSearch = DBObjectSearch::FromOQL($oQuery->Get('oql'));
 		$oExportSearch->UpdateContextFromUser();
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", utils::EscapeHtml($sQueryId)));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", $sQueryId));
 	}
 	$aFormPartsByFormat = array();
 	$aAllFormParts = array();

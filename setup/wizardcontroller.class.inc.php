@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -26,7 +26,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
  * of the previous screens. The WizardController also maintains from page
  * to page a list of "parameters" to be dispayed/edited by each of the steps.
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -75,15 +75,37 @@ class WizardController
 	 */
 	public function GetParameter($sParamCode, $defaultValue = '')
 	{
-		if (array_key_exists($sParamCode, $this->aParameters))
-		{
+		if (array_key_exists($sParamCode, $this->aParameters)) {
 			return $this->aParameters[$sParamCode];
 		}
+
 		return $defaultValue;
 	}
 
 	/**
+	 * @return array Allow to update config using {@see Config::UpdateFromParams()}
+	 *
+	 * @since 3.1.0 N°2013
+	 */
+	public function GetParamForConfigArray(): array
+	{
+		/** @noinspection PhpUnnecessaryLocalVariableInspection */
+		$aParamValues = array(
+			'db_server'      => $this->GetParameter('db_server', ''),
+			'db_user'        => $this->GetParameter('db_user', ''),
+			'db_pwd'         => $this->GetParameter('db_pwd', ''),
+			'db_name'        => $this->GetParameter('db_name', ''),
+			'db_prefix'      => $this->GetParameter('db_prefix', ''),
+			'db_tls_enabled' => $this->GetParameter('db_tls_enabled', false),
+			'db_tls_ca'      => $this->GetParameter('db_tls_ca', ''),
+		);
+
+		return $aParamValues;
+	}
+
+	/**
 	 * Stores a "persistent" parameter in the wizard's context
+	 *
 	 * @param string $sParamCode The code identifying this parameter
 	 * @param mixed $value The value to store
 	 */
@@ -349,7 +371,7 @@ on the page's parameters
  * If a step needs to maintain an internal "state" (for complex steps)
  * then it's up to the derived class to implement the behavior based on
  * the internal 'sCurrentState' variable.
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -498,7 +498,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Action/Attribute:status/Value:disabled' => 'Inaktiv',
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Relaterede Triggere',
-	'Class:Action/Attribute:trigger_list+' => '',
+	'Class:Action/Attribute:trigger_list+' => 'Triggers linked to this action~~',
 	'Class:Action/Attribute:finalclass' => 'Type',
 	'Class:Action/Attribute:finalclass+' => '',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
@@ -564,7 +564,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Trigger/Attribute:description' => 'Beskrivelse',
 	'Class:Trigger/Attribute:description+' => '',
 	'Class:Trigger/Attribute:action_list' => 'Triggerede handlinger',
-	'Class:Trigger/Attribute:action_list+' => '',
+	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated~~',
 	'Class:Trigger/Attribute:finalclass' => 'Type',
 	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Context~~',

@@ -7,7 +7,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,changemgmt</category>
@@ -178,7 +178,7 @@
         <field id="related_request_list" xsi:type="AttributeLinkedSet">
           <linked_class>UserRequest</linked_class>
           <ext_key_to_me>parent_change_id</ext_key_to_me>
-          <legacy_edit_mode>add_remove</legacy_edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -187,7 +187,7 @@
         <field id="related_incident_list" xsi:type="AttributeLinkedSet">
           <linked_class>Incident</linked_class>
           <ext_key_to_me>parent_change_id</ext_key_to_me>
-          <legacy_edit_mode>add_remove</legacy_edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -196,7 +196,7 @@
         <field id="related_problems_list" xsi:type="AttributeLinkedSet">
           <linked_class>Problem</linked_class>
           <ext_key_to_me>related_change_id</ext_key_to_me>
-          <legacy_edit_mode>add_remove</legacy_edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -205,7 +205,7 @@
         <field id="child_changes_list" xsi:type="AttributeLinkedSet">
           <linked_class>Change</linked_class>
           <ext_key_to_me>parent_id</ext_key_to_me>
-          <legacy_edit_mode>add_remove</legacy_edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <filter><![CDATA[SELECT Change WHERE id != :this->id]]></filter>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -581,8 +581,7 @@
           <code><![CDATA[
     protected function OnInsert()
 	{
-        parent::OnInsert();
-        $this->UpdateImpactedItems();
+    parent::OnInsert();
 		$this->SetIfNull('creation_date', time());
 		$this->SetIfNull('last_update', time());
 	}]]></code>
@@ -594,12 +593,7 @@
           <code><![CDATA[
     protected function OnUpdate()
 	{
-        parent::OnUpdate();
-        $aChanges = $this->ListChanges();
-        if (array_key_exists('functionalcis_list', $aChanges))
-        {
-            $this->UpdateImpactedItems();
-        }
+    parent::OnUpdate();
 		$this->Set('last_update', time());
 	}]]></code>
         </method>

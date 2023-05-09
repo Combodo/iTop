@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Base\Component\Modal\DoNotShowAgainOptionBlock;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Spinner\SpinnerUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Template\TemplateUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
@@ -47,6 +48,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// - DisplayableGraph, impact analysis
 		'js/raphael-min.js',
 		'js/jquery.mousewheel.js',
+		/** - links widgets moved in links folder @since 3.1.0 * */
+		'js/links/links_direct_widget.js',
+		'js/links/links_widget.js',
 	];
 	/** @inheritDoc */
 	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
@@ -150,16 +154,15 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	{
 		parent::InitializeLinkedScripts();
 
+		// Used by forms
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/leave_handler.js');
+
 		// Used by external keys, DM viewer
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.min.js');
 
 		// Used by advanced search, date(time) attributes. Coupled to the PrepareWidgets() JS function.
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon-i18n.min.js');
-
-		// Tooltips
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
 
 		// Used by external keys and other drop down lists
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
@@ -174,6 +177,10 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		// Used by the newsroom
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
+
+		// Tooltips
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
 
 		// Keyboard shortcuts
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap.min.js');
@@ -207,6 +214,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_dict_entries('Enum:Undefined');
 		$this->add_dict_entry('UI:Datatables:Language:Processing');
 		$this->add_dict_entries('UI:Newsroom');
+		$this->add_dict_entry('UI:NavigateAwayConfirmationMessage');
 
 		// User not logged in dialog
 		$this->add_dict_entry('UI:DisconnectedDlgTitle');
@@ -215,6 +223,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		// Modals
 		$this->add_dict_entries('UI:Modal:');
+		$this->add_dict_entries('UI:Links:');
+		$this->add_dict_entries('UI:Object:');
+		$this->add_dict_entry('UI:Layout:ObjectDetails:New:Modal:Title');
 	}
 
 	/**
@@ -898,6 +909,27 @@ HTML;
 		$aData['aDeferredBlocks']['oPageContent'] = $this->GetDeferredBlocks($this->GetContentLayout());
 		// - Prepare generic templates
 		$aData['aTemplates'] = array();
+		
+		// TODO 3.1 Replace hardcoded 'Please wait' with dict entries
+		
+		// - Modal template with loader
+		$oModalTemplateContentBlock = new UIContentBlock();
+		$oModalTemplateContentBlock->AddCSSClass('ibo-modal')
+			->AddDataAttribute('role', 'ibo-modal')
+			->AddSubBlock(SpinnerUIBlockFactory::MakeMedium(null, 'Please wait'));
+		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-modal-template', $oModalTemplateContentBlock);
+		
+		// - Small loader template
+		$oSmallLoaderTemplateContentBlock = new UIContentBlock();
+		$oSmallLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeSmall(null , 'Please wait'));
+		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-small-loading-placeholder-template', $oSmallLoaderTemplateContentBlock);
+
+		// - Large loader template
+		$oLargeLoaderTemplateContentBlock = new UIContentBlock();
+		$oLargeLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeLarge(null , 'Please wait'));
+		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-large-loading-placeholder-template', $oLargeLoaderTemplateContentBlock);
+
+		// - Do not show again template
 		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-modal-option--do-not-show-again-template', new DoNotShowAgainOptionBlock());
 
 		// - Retrieve layouts linked files
@@ -1034,10 +1066,13 @@ EOF
 
 	/**
 	 * @inheritDoc
+	 *
+	 * @param string|null $sTabDescription {@see \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab::$sDescription}
+	 * @since 3.1.0 N°5920 Add $sTabDescription argument
 	 */
-	public function SetCurrentTab($sTabCode = '', $sTabTitle = null)
+	public function SetCurrentTab($sTabCode = '', $sTabTitle = null, ?string $sTabDescription = null)
 	{
-		return $this->m_oTabs->SetCurrentTab($sTabCode, $sTabTitle);
+		return $this->m_oTabs->SetCurrentTab($sTabCode, $sTabTitle, $sTabDescription);
 	}
 
 	/**

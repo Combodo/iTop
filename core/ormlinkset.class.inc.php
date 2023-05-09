@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -24,7 +24,7 @@ require_once('dbobjectiterator.php');
  * The value for an attribute representing a set of links between the host object and "remote" objects
  *
  * @package     iTopORM
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -845,13 +845,45 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			}
 			$oLinkSearch->SetSelectedClasses([self::LINK_ALIAS, self::REMOTE_ALIAS]);
 		}
+		if (count($this->aRemoved) !== 0) {
+			$sConditionExpr = '`'.self::LINK_ALIAS.'`.id NOT IN ('.implode(',', $this->aRemoved).')';
+			$oRemovedExpression = Expression::FromOQL($sConditionExpr);
+			$oLinkSearch->AddConditionExpression($oRemovedExpression);
+		}
 		$oLinkSet = new DBObjectSet($oLinkSearch);
 		$oLinkSet->SetShowObsoleteData($bShowObsolete);
-		if ($this->HasDelta())
-		{
+		if ($this->HasDelta()) {
 			$oLinkSet->AddObjectArray($this->aAdded);
 		}
 
 		return $oLinkSet;
+	}
+
+	/**
+	 * GetValues.
+	 *
+	 * @return array of tag codes
+	 */
+	public function GetValues()
+	{
+		$aValues = array();
+		foreach ($this->aPreserved as $sTagCode => $oTag) {
+			$aValues[] = $sTagCode;
+		}
+		foreach ($this->aAdded as $sTagCode => $oTag) {
+			$aValues[] = $sTagCode;
+		}
+
+		sort($aValues);
+
+		return $aValues;
+	}
+
+	/**
+	 * @return \DBObjectSet|null
+	 */
+	public function GetOriginalSet(): ?DBObjectSet
+	{
+		return $this->oOriginalSet;
 	}
 }

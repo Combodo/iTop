@@ -1,0 +1,17 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-vertical-highlight--width: $ibo-size-100;
+$ibo-vertical-highlight--height: 100%;
+
+@mixin ibo-vertical-highlight {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  width: $ibo-vertical-highlight--width;
+  height: $ibo-vertical-highlight--height;
+}

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -79,7 +79,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQCategory/Attribute:faq_list+' => 'Todas as perguntas frequentes associadas à esta categoria',
 ));
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:ProblemManagement' => 'Gerencimento de Problemas',
+	'Menu:ProblemManagement' => 'Gerencimento de problemas',
 	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Shortcuts' => 'Atalhos',
 	'Menu:FAQCategory' => 'Categorias de FAQ',

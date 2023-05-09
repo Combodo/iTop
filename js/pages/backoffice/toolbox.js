@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -180,7 +180,14 @@ const CombodoBackofficeToolbox = {
  * @inheritDoc
  */
 CombodoModal.CloseAllModals = function() {
-	// TODO: Implement
+	$('.ui-dialog .ui-dialog-content').each(function () {
+		// Don't try to close dialog if not instantiated yet
+		if ($(this).dialog('instance') === undefined) {
+			return false;
+		}
+
+		$(this).dialog('close');
+	});
 };
 /**
  * @override
@@ -201,35 +208,30 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 		width: 'auto',
 		height: 'auto',
 		modal: oOptions.extra_options.modal ?? true,
+		classes: oOptions.classes ?? {},
 		close: oOptions.extra_options.callback_on_modal_close,
 		autoOpen: oOptions.auto_open,
 		title: oOptions.title,
 		buttons: this._ConvertButtonDefinition(oOptions.buttons)
 	};
+	
+	const aSizeMap = {
+		'xs': 'extra-small',
+		's': 'small',
+		'md': 'medium',
+		'lg': 'large',
+	};
 
 	// Resize to desired size
 	switch (typeof oOptions.size) {
 		case 'string':
-			switch (oOptions.size) {
-				case 'xs':
-					oJQueryOptions.width = Math.min(window.innerWidth * 0.2, '200px');
-					oJQueryOptions.height = Math.min(window.innerHeight * 0.2, '150px');
-					break;
-
-				case 'sm':
-					oJQueryOptions.width = Math.min(window.innerWidth * 0.6, '800px');
-					oJQueryOptions.height = Math.min(window.innerHeight * 0.6, '400px');
-					break;
-
-				case 'md':
-					oJQueryOptions.width = Math.min(window.innerWidth * 0.75, '1200px');
-					oJQueryOptions.height = Math.min(window.innerHeight * 0.75, '600px');
-					break;
-
-				case 'lg':
-					oJQueryOptions.width = Math.min(window.innerWidth * 0.9, '1800px');
-					oJQueryOptions.height = Math.min(window.innerHeight * 0.9, '900px');
-					break;
+			if(aSizeMap[oOptions.size] !== undefined && aSizeMap[oOptions.size] !== 'auto') {
+				let sSize = 'ibo-is-' + aSizeMap[oOptions.size];
+				if (oJQueryOptions.classes['ui-dialog-content'] !== undefined) {
+					oJQueryOptions.classes['ui-dialog-content'] += ' ' + sSize;
+				} else {
+					oJQueryOptions.classes['ui-dialog-content'] = sSize;
+				}
 			}
 			break;
 
@@ -294,66 +296,64 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 	// Show modal
 	oModalElem.dialog(oJQueryOptions);
 
-	// TODO 3.1 : Cleanup
-	// {
-	// 	height: 'auto',
-	// 		width: 'auto',
-	// 	modal: true,
-	// 	title: '$sDialogTitle',
-	// 	buttons: [
-	// 	{ text: "$sOkButtonLabel", click: function() {
-	// 			if ($('#$sDialogId .ui-state-error').length == 0)
-	// 			{
-	// 				var aTargetsSelect = [];
-	//
-	// 			}
-	// 		} },
-	// 	{ text: "$sCancelButtonLabel", click: function() {
-	// 			$(this).dialog( "close" );
-	// 		} },
-	// ],
-	// }
-
 	return true;
 };
+/**
+ * @override
+ * @inheritDoc
+ */
+CombodoModal._BindEvents = function (oModalElem) {
+	const me = this;
 
+	// Center modal on resize
+	if(window.ResizeObserver) {
+		const oModalObs = new ResizeObserver(function(){
+			me._CenterModalInViewport(oModalElem);
+		});
+		oModalObs.observe(oModalElem[0]);
+	}
+};
 /**
  * Convert generic buttons definitions to jquery ui dialog definitions.
  *
  * @param aButtonsDefinitions
  * @returns {*[]}
- * @constructor
+ * @private
  */
-CombodoModal._ConvertButtonDefinition = function(aButtonsDefinitions){
+CombodoModal._ConvertButtonDefinition = function (aButtonsDefinitions) {
 	const aConverted = [];
-	aButtonsDefinitions.forEach(element => {
-			const aButton = {
-				text: element.text,
-				class: element.class,
-				click: element.callback_on_click
+	if(aButtonsDefinitions === null) {
+		return aConverted
+	}
+	Object.keys(aButtonsDefinitions).forEach(key => {
+				const element = aButtonsDefinitions[key];
+				const aButton = {
+					text: element.text,
+					class: typeof(element.classes) !== 'undefined' ? element.classes.join(' ') : '',
+					click: element.callback_on_click
+				}
+				aConverted.push(aButton);
 			}
-		aConverted.push(aButton);
-		}
 	);
 	return aConverted;
-}
-
+};
 /**
  * @override
  * @inheritDoc
  */
 CombodoModal._CenterModalInViewport = function (oModalElem) {
+	if(oModalElem.dialog('instance') === undefined){
+		CombodoJSConsole.Error('CombodoModal._CenterModalInViewport: Cannot center modal as it is not a jQuery UI dialog widget');
+		return false;
+	}
+
 	oModalElem.dialog('option', {
 		position: {my: 'center', at: 'center', of: window},
 	});
 };
-
 /**
- * Open a standard confirmation modal and put the content into it.
- *
- * @param oOptions array @see CombodoModal.OpenModal + {do_not_show_again_pref_key: string, callback_on_confirm: function, callback_on_cancel}
- * @param aData data passed to callbacks
- * @returns object The jQuery object of the modal element
+ * @override
+ * @inheritDoc
  */
 CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 
@@ -367,7 +367,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 		}
 	}
 	// Merge external options with confirmation modal default options
-	oOptions = $.extend({
+	oOptions = $.extend(true, {
 		title: Dict.S('UI:Modal:DefaultConfirmationTitle'),
 		content: '',
 		do_not_show_again_pref_key: null,
@@ -378,31 +378,31 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 				$(this).dialog( "destroy" ); // destroy dialog object
 			}
 		},
-		buttons: [
-			{
+		buttons: {
+			cancel: {
 				text: Dict.S('UI:Button:Cancel'),
-				class: 'ibo-is-alternative',
+				classes: ['ibo-is-alternative'],
 				callback_on_click: function () {
 					// call confirm handler and close dialog
 					let bCanClose = true;
-					if(oOptions.callback_on_cancel != null){
+					if (oOptions.callback_on_cancel != null) {
 						bCanClose = oOptions.callback_on_cancel(...aData) !== false;
 					}
-					if(bCanClose){
+					if (bCanClose) {
 						$(this).dialog('close'); // close dialog
 					}
 				}
 			},
-			{
-				text: Dict.S('UI:Button:Ok'),
-				class: 'ibo-is-primary',
+			confirm: {
+				text: Dict.S('UI:Button:Confirm'),
+				classes: ['ibo-is-primary'],
 				callback_on_click: function () {
 					// Call confirm handler and close dialog
 					let bCanClose = true;
-					if(oOptions.callback_on_confirm != null){
+					if (oOptions.callback_on_confirm != null) {
 						bCanClose = oOptions.callback_on_confirm(...aData) !== false;
 					}
-					if(bCanClose){
+					if (bCanClose) {
 						$(this).dialog('close'); // close dialog
 						// Handle "do not show again" user preference
 						let bDoNotShowAgain = oOptions.do_not_show_again_pref_key !== null ?
@@ -414,13 +414,45 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 					}
 				}
 			}
-		],
+		},
 		callback_on_content_loaded: function(oModalContentElement){
 			// Add option do not show again from template
 			if(oOptions.do_not_show_again_pref_key !== null) {
 				oModalContentElement.append($('#ibo-modal-option--do-not-show-again-template').html());
 			}
 		}
+	}, oOptions);
+
+	// Open modal
+	CombodoModal.OpenModal(oOptions);
+}
+/**
+ * @override
+ * @inheritDoc
+ */
+CombodoModal.OpenInformativeModal = function(sMessage, sSeverity, oOptions) {
+	let sFirstLetterUppercaseSeverity = sSeverity.charAt(0).toUpperCase() + sSeverity.slice(1);
+	// Merge external options with confirmation modal default options
+	oOptions = $.extend({
+		title: Dict.S('UI:Modal:Informative' + sFirstLetterUppercaseSeverity + ':Title'),
+		classes : {
+			'ui-dialog-content': 'ibo-is-informative ibo-is-'+sSeverity,	
+		},
+		content: sMessage,
+		extra_options: {
+			callback_on_modal_close: function () {
+				$(this).dialog( "destroy" );
+			}
+		},
+		buttons: {
+			ok: {
+				text: Dict.S('UI:Button:Ok'),
+				classes: ['ibo-is-regular', 'ibo-is-neutral'],
+				callback_on_click: function () {
+					$(this).dialog('close');
+				}
+			},
+		},
 	}, oOptions);
 
 	// Open modal

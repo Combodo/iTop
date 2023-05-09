@@ -23,7 +23,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-change-mgmt.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-change-mgmt.xml',

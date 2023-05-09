@@ -1,3 +1,7 @@
+# 3.4.3 (2022-09-28)
+
+ * Fix a security issue on filesystem loader (possibility to load a template outside a configured directory)
+
 # 3.4.2 (2022-08-12)
 
  * Allow inherited magic method to still run with calling class

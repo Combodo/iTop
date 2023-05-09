@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016-2021 Combodo SARL
+// Copyright (C) 2016-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -47,22 +47,28 @@
  *
  * if (ContextTag::Check('GUI:Portal'))
  *
- * @copyright   Copyright (C) 2016-2021 Combodo SARL
+ * @copyright   Copyright (C) 2016-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class ContextTag
 {
-	const TAG_PORTAL = 'GUI:Portal';
-	const TAG_CRON = 'CRON';
-	const TAG_CONSOLE = 'GUI:Console';
-	const TAG_SETUP = 'Setup';
-	const TAG_SYNCHRO = 'Synchro';
-	const TAG_REST = 'REST/JSON';
+	public const TAG_PORTAL  = 'GUI:Portal';
+	public const TAG_CRON    = 'CRON';
+	public const TAG_CONSOLE = 'GUI:Console';
+	public const TAG_SETUP   = 'Setup';
+	public const TAG_SYNCHRO = 'Synchro';
+	public const TAG_REST    = 'REST/JSON';
+	/**
+	 * @var string
+	 * @since 3.1.0 N°3200
+	 */
+	public const TAG_OBJECT_SEARCH = 'ObjectSearch';
 
 	protected static $aStack = array();
 
 	/**
 	 * Store a context tag on the stack
+	 *
 	 * @param string $sTag
 	 */
 	public function __construct($sTag)

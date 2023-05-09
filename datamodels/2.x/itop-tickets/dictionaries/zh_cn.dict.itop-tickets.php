@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -243,13 +243,3 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'SLT 的解决时间',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Document/Attribute:contracts_list' => '合同',
-	'Class:Document/Attribute:contracts_list+' => '此文档关联的所有合同',
-	'Class:Document/Attribute:services_list' => '服务',
-	'Class:Document/Attribute:services_list+' => '此文档关联的所有服务',
-));

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -405,7 +405,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Fjern >> ',
 	'UI:Button:FilterList' => ' Filter... ',
 	'UI:Button:Create' => ' Opret ',
-	'UI:Button:Delete' => ' Slet! ',
+	'UI:Button:Delete' => ' Slet ',
 	'UI:Button:Rename' => ' Omdøb... ',
 	'UI:Button:ChangePassword' => ' Skift Password ',
 	'UI:Button:ResetPassword' => ' Reset Password ',
@@ -794,7 +794,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Tilføj %1$s objekter kædet til %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Tilføj %1$s objekter til kæden til %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Administrer %1$s objekter kædet til %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Tilføj %1$s objekter...',
+	'UI:AddLinkedObjectsOf_Class' => 'Tilføj %1$s objekter',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Fjern valgte objekter',
 	'UI:Message:EmptyList:UseAdd' => 'Listen er tom, brug "Tilføj..." knappen for at tilføje elementer.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Brug søgeformularen ovenfor, til søgning efter objekters som skal tilføjes.',
@@ -961,8 +961,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Data Model~~',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Overview of the Data Model~~',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Data model~~',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Overview of the data model~~',// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ExportMenu' => 'Export~~',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1032,7 +1032,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 
 	'Menu:UserAccountsMenu' => 'Bruger konti',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'User Accounts~~',
+	'Menu:UserAccountsMenu+' => 'User accounts~~',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1638,8 +1638,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:AdminTools' => 'Admin værktøjer',
 	'Menu:AdminTools+' => 'Administration tools~~',
 	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil',
-	'Menu:DataModelMenu' => 'Data Model~~',
-	'Menu:DataModelMenu+' => 'Overview of the Data Model~~',
+	'Menu:DataModelMenu' => 'Data model~~',
+	'Menu:DataModelMenu+' => 'Overview of the data model~~',
 	'Menu:ExportMenu' => 'Export~~',
 	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',
 	'Menu:NotificationsMenu' => 'Notifikationer',
@@ -1659,10 +1659,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:ProfilesMenu+'          => 'Profiles~~',
 	'Menu:ProfilesMenu:Title'     => 'Profiler',
 	'Menu:UserAccountsMenu'       => 'Bruger konti',
-	'Menu:UserAccountsMenu+'      => 'User Accounts~~',
+	'Menu:UserAccountsMenu+'      => 'User accounts~~',
 	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
 	'Menu:MyShortcuts'            => 'Mine Genveje',
-	'Menu:UserManagement'         => 'User Management~~',
+	'Menu:UserManagement'         => 'User management~~',
 	'Menu:Queries'                => 'Queries~~',
 	'Menu:ConfigurationTools'     => 'Configuration~~',
 ));

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,7 +15,8 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
  * Class UIContentBlockUIBlockFactory
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Layout
+ * @package UIBlockAPI
+ * @api
  * @since 3.0.0
  */
 class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
@@ -28,6 +29,7 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an empty UIContentBlock which can be used to embed anything or to surround another block with specific CSS classes.
 	 *
+	 * @api
 	 * @param string|null $sId
 	 * @param array $aContainerClasses
 	 *
@@ -42,6 +44,7 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	 * Used to display a block of code like <pre> but allows line break.
 	 * The \n are replaced by <br>
 	 *
+	 * @api
 	 * @param string $sCode
 	 * @param string|null $sId
 	 *
@@ -59,6 +62,7 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Used to display a block of preformatted text in a <pre> tag.
 	 *
+	 * @api
 	 * @param string $sCode
 	 * @param string|null $sId
 	 *

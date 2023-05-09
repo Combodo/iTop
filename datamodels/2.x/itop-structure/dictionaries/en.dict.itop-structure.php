@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -156,6 +156,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Person' => 'Person',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Last Name',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'First Name',
@@ -176,6 +177,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller',
+	'Class:Person/Attribute:user_list' => 'Users',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Picture',
@@ -193,6 +196,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Members',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
@@ -305,16 +309,18 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkPersonToTeam' => 'Link Person / Team',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
+	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => 'A team to which the person belongs',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Team name',
 	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
 	'Class:lnkPersonToTeam/Attribute:person_id' => 'Person',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => 'A member of the team',
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Person name',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Role',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Role name',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
 ));
@@ -334,8 +340,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:CSVImport+' => 'Bulk creation or update',
 	'Menu:Organization' => 'Organizations',
 	'Menu:Organization+' => 'All organizations',
-	'Menu:ConfigManagement' => 'Configuration Management',
-	'Menu:ConfigManagement+' => 'Configuration Management',
+	'Menu:ConfigManagement' => 'Configuration management',
+	'Menu:ConfigManagement+' => 'Configuration management',
 	'Menu:ConfigManagementCI' => 'Configuration items',
 	'Menu:ConfigManagementCI+' => 'Configuration items',
 	'Menu:ConfigManagementOverview' => 'Overview',
@@ -367,7 +373,8 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Person:info' => 'General information',
-	'UserLocal:info' => 'General information',
+	'User:info' => 'General information',
+	'User:profiles' => 'Profiles (minimum one)',
 	'Person:personal_info' => 'Personal information',
 	'Person:notifiy' => 'Notification',
 ));

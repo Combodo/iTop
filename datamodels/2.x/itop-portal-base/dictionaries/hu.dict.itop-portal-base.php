@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,137 +18,137 @@
  */
 // Portal
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Page:DefaultTitle' => '%1$s User portal~~',
-	'Page:PleaseWait' => 'Please wait...~~',
-	'Page:Home' => 'Home~~',
-	'Page:GoPortalHome' => 'Home page~~',
-	'Page:GoPreviousPage' => 'Previous page~~',
-	'Page:ReloadPage' => 'Reload page~~',
-	'Portal:Button:Submit' => 'Submit~~',
-	'Portal:Button:Apply' => 'Update~~',
-	'Portal:Button:Cancel' => 'Cancel~~',
-	'Portal:Button:Close' => 'Close~~',
-	'Portal:Button:Add' => 'Add~~',
-	'Portal:Button:Remove' => 'Remove~~',
-	'Portal:Button:Delete' => 'Delete~~',
-	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode~~',
-	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode~~',
-	'Error:HTTP:400' => 'Bad request~~',
-	'Error:HTTP:401' => 'Authentication~~',
-	'Error:HTTP:404' => 'Page not found~~',
-	'Error:HTTP:500' => 'Oops! An error has occured.~~',
-	'Error:HTTP:GetHelp' => 'Please contact your %1$s administrator if the problem keeps happening.~~',
-	'Error:XHR:Fail' => 'Could not load data, please contact your %1$s administrator~~',
-	'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
-	'Portal:Datatables:Language:Processing' => 'Please wait...~~',
-	'Portal:Datatables:Language:Search' => 'Filter:~~',
-	'Portal:Datatables:Language:LengthMenu' => 'Display _MENU_ items per page~~',
-	'Portal:Datatables:Language:ZeroRecords' => 'No result~~',
-	'Portal:Datatables:Language:Info' => 'Page _PAGE_ of _PAGES_~~',
-	'Portal:Datatables:Language:InfoEmpty' => 'No information~~',
-	'Portal:Datatables:Language:InfoFiltered' => 'filtered out of _MAX_ items~~',
-	'Portal:Datatables:Language:EmptyTable' => 'No data available in this table~~',
-	'Portal:Datatables:Language:DisplayLength:All' => 'All~~',
-	'Portal:Datatables:Language:Paginate:First' => 'First~~',
-	'Portal:Datatables:Language:Paginate:Previous' => 'Previous~~',
-	'Portal:Datatables:Language:Paginate:Next' => 'Next~~',
-	'Portal:Datatables:Language:Paginate:Last' => 'Last~~',
-	'Portal:Datatables:Language:Sort:Ascending' => 'enable for an ascending sort~~',
-	'Portal:Datatables:Language:Sort:Descending' => 'enable for a descending sort~~',
-	'Portal:Autocomplete:NoResult' => 'No data~~',
-	'Portal:Attachments:DropZone:Message' => 'Drop your files to add them as attachments~~',
-	'Portal:File:None' => 'No file~~',
-	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>~~',
-	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>~~',
-	'Portal:Calendar-FirstDayOfWeek' => 'hu', //work with moment.js locales
+    'Page:DefaultTitle' => '%1$s Felhasználói portál',
+    'Page:PleaseWait' => 'Kérem várjon...',
+    'Page:Home' => 'Kezdőlap',
+    'Page:GoPortalHome' => 'Kezdőlap',
+    'Page:GoPreviousPage' => 'Előző oldal',
+    'Page:ReloadPage' => 'Oldal újratöltése',
+    'Portal:Button:Submit' => 'Beküldés',
+    'Portal:Button:Apply' => 'Alkalmazás',
+    'Portal:Button:Cancel' => 'Mégsem',
+    'Portal:Button:Close' => 'Bezárás',
+    'Portal:Button:Add' => 'Hozzáadás',
+    'Portal:Button:Remove' => 'Eltávolítás',
+    'Portal:Button:Delete' => 'Törlés',
+    'Portal:EnvironmentBanner:Title' => 'Jelenleg <strong>%1$s</strong> módban van',
+    'Portal:EnvironmentBanner:GoToProduction' => 'Visszatérés az ÉLES módba',
+    'Error:HTTP:400' => 'Hibás kérelem',
+    'Error:HTTP:401' => 'Azonosítás',
+    'Error:HTTP:404' => 'Az oldal nem található',
+    'Error:HTTP:500' => 'Hopp! Valami hiba történt.',
+    'Error:HTTP:GetHelp' => 'Kérjük, lépjen kapcsolatba a %1$s rendszergazdával, ha a probléma továbbra is fennáll.',
+    'Error:XHR:Fail' => 'Nem sikerült betölteni az adatokat, kérjük, lépjen kapcsolatba a %1$s rendszergazdával',
+    'Portal:ErrorUserLoggedOut' => 'Kijelentkezett, és a folytatáshoz újra be kell jelentkeznie.',
+    'Portal:Datatables:Language:Processing' => 'Kérem várjon...',
+    'Portal:Datatables:Language:Search' => 'Szűrő:',
+    'Portal:Datatables:Language:LengthMenu' => '_MENU_ elemek kijelzése oldalanként',
+    'Portal:Datatables:Language:ZeroRecords' => 'Nincs eredmény',
+    'Portal:Datatables:Language:Info' => '_PAGE_ oldal a _PAGES_ oldalból',
+    'Portal:Datatables:Language:InfoEmpty' => 'Nincs információ',
+    'Portal:Datatables:Language:InfoFiltered' => 'leszűrve _MAX_ elemből',
+    'Portal:Datatables:Language:EmptyTable' => 'Nincs adat ehhez a táblázathoz',
+    'Portal:Datatables:Language:DisplayLength:All' => 'Összes',
+    'Portal:Datatables:Language:Paginate:First' => 'Első',
+    'Portal:Datatables:Language:Paginate:Previous' => 'Előző',
+    'Portal:Datatables:Language:Paginate:Next' => 'Következő',
+    'Portal:Datatables:Language:Paginate:Last' => 'Utolsó',
+    'Portal:Datatables:Language:Sort:Ascending' => 'Növekvő rendezés',
+    'Portal:Datatables:Language:Sort:Descending' => 'Csökkenő rendezés',
+    'Portal:Autocomplete:NoResult' => 'Nincs adat',
+    'Portal:Attachments:DropZone:Message' => 'Húzza ide a fájlokat, hogy csatolmányként hozzáadhassa őket',
+    'Portal:File:None' => 'Nincs fájl',
+    'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
+    'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Megnyitás</a> / <a href="%4$s" class="file_download_link">Letöltés</a>',
+    'Portal:Calendar-FirstDayOfWeek' => 'hu', //work with moment.js locales
 ));
 
 // Object form
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
-	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
-	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
-	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
+    'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Bejegyzés bezárása',
+    'Portal:Form:Close:Warning' => 'Szeretné elhagyni ezt az űrlapot? A megadott adatok elveszhetnek',
+    'Portal:Error:ObjectCannotBeCreated' => 'Hiba: az objektum nem hozható létre. Ellenőrizze a kapcsolódó objektumokat és mellékleteket, mielőtt újra elküldi ezt az űrlapot.',
+    'Portal:Error:ObjectCannotBeUpdated' => 'Hiba: az objektum nem frissíthető. Ellenőrizze a kapcsolódó objektumokat és mellékleteket, mielőtt újra elküldi ezt az űrlapot.',
 ));
 
 // UserProfile brick
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Brick:Portal:UserProfile:Name' => 'User profile~~',
-	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'My profile~~',
-	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Logoff~~',
-	'Brick:Portal:UserProfile:Password:Title' => 'Password~~',
-	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Choose password~~',
-	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirm password~~',
-	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'To change your password, please contact your %1$s administrator~~',
-	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Can\'t change password, please contact your %1$s administrator~~',
-	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal informations~~',
-	'Brick:Portal:UserProfile:Photo:Title' => 'Photo~~',
+    'Brick:Portal:UserProfile:Name' => 'Felhasználói profil',
+    'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Saját profil',
+    'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Kijelentkezés',
+    'Brick:Portal:UserProfile:Password:Title' => 'Jelszó',
+    'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Új jelszó',
+    'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Jelszó megerősítése',
+    'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Jelszóváltoztatáshoz forduljon a %1$s rendszergazdához',
+    'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Nem tudja megváltoztatni a jelszót, lépjen kapcsolatba a %1$s rendszergazdával',
+    'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Személyi adatok',
+    'Brick:Portal:UserProfile:Photo:Title' => 'Fénykép',
 ));
 
 // AggregatePageBrick
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard~~',
+    'Brick:Portal:AggregatePage:DefaultTitle' => 'Műszerfal',
 ));
 
 // BrowseBrick brick
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Brick:Portal:Browse:Name' => 'Browse throught items~~',
-	'Brick:Portal:Browse:Mode:List' => 'List~~',
-	'Brick:Portal:Browse:Mode:Tree' => 'Tree~~',
-	'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
-	'Brick:Portal:Browse:Action:Drilldown' => 'Drilldown~~',
-	'Brick:Portal:Browse:Action:View' => 'Details~~',
-	'Brick:Portal:Browse:Action:Edit' => 'Edit~~',
-	'Brick:Portal:Browse:Action:Create' => 'Create~~',
-	'Brick:Portal:Browse:Action:CreateObjectFromThis' => 'New %1$s~~',
-	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expand all~~',
-	'Brick:Portal:Browse:Tree:CollapseAll' => 'Collapse all~~',
-	'Brick:Portal:Browse:Filter:NoData' => 'No item~~',
+    'Brick:Portal:Browse:Name' => 'Böngésszen az elemek között',
+    'Brick:Portal:Browse:Mode:List' => 'Lista',
+    'Brick:Portal:Browse:Mode:Tree' => 'Fa',
+    'Brick:Portal:Browse:Mode:Mosaic' => 'Mozaik',
+    'Brick:Portal:Browse:Action:Drilldown' => 'Lefúrás',
+    'Brick:Portal:Browse:Action:View' => 'Részletek',
+    'Brick:Portal:Browse:Action:Edit' => 'Szerkesztés',
+    'Brick:Portal:Browse:Action:Create' => 'Létrehozás',
+    'Brick:Portal:Browse:Action:CreateObjectFromThis' => 'Új %1$s',
+    'Brick:Portal:Browse:Tree:ExpandAll' => 'Összes kinyitása',
+    'Brick:Portal:Browse:Tree:CollapseAll' => 'Összecsukás',
+    'Brick:Portal:Browse:Filter:NoData' => 'Nincs elem',
 ));
 
 // ManageBrick brick
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Brick:Portal:Manage:Name' => 'Manage items~~',
-	'Brick:Portal:Manage:Table:NoData' => 'No item.~~',
-	'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
-	'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
-	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
-	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart~~',
-	'Brick:Portal:Manage:Others' => 'Others~~',
-	'Brick:Portal:Manage:All' => 'All~~',
-	'Brick:Portal:Manage:Group' => 'Group~~',
-	'Brick:Portal:Manage:fct:count' => 'Total~~',
-	'Brick:Portal:Manage:fct:sum' => 'Sum~~',
-	'Brick:Portal:Manage:fct:avg' => 'Average~~',
-	'Brick:Portal:Manage:fct:min' => 'Min~~',
-	'Brick:Portal:Manage:fct:max' => 'Max~~',
+    'Brick:Portal:Manage:Name' => 'Elemek kezelése',
+    'Brick:Portal:Manage:Table:NoData' => 'Nincs elem',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Műveletek',
+    'Brick:Portal:Manage:DisplayMode:list' => 'Lista',
+    'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Tortadiagram',
+    'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Oszlopdiagram',
+    'Brick:Portal:Manage:Others' => 'Egyéb',
+    'Brick:Portal:Manage:All' => 'Összes',
+    'Brick:Portal:Manage:Group' => 'Csoport',
+    'Brick:Portal:Manage:fct:count' => 'Összesen',
+    'Brick:Portal:Manage:fct:sum' => 'Összeg',
+    'Brick:Portal:Manage:fct:avg' => 'Átlag',
+    'Brick:Portal:Manage:fct:min' => 'Minimum',
+    'Brick:Portal:Manage:fct:max' => 'Maximum',
 ));
 
 // ObjectBrick brick
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Brick:Portal:Object:Name' => 'Object~~',
-	'Brick:Portal:Object:Form:Create:Title' => 'New %1$s~~',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Updating %2$s (%1$s)~~',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s~~',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:~~',
-	'Brick:Portal:Object:Form:Message:Saved' => 'Saved~~',
-	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s saved~~',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)~~',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)~~',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
-	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
+    'Brick:Portal:Object:Name' => 'Objektum',
+    'Brick:Portal:Object:Form:Create:Title' => 'Új %1$s',
+    'Brick:Portal:Object:Form:Edit:Title' => '%2$s frissítése (%1$s)',
+    'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+    'Brick:Portal:Object:Form:Stimulus:Title' => 'Adja meg a következő információkat:',
+    'Brick:Portal:Object:Form:Message:Saved' => 'Mentve',
+    'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s mentve',
+    'Brick:Portal:Object:Search:Regular:Title' => '%1$s kiválasztása (%2$s)',
+    'Brick:Portal:Object:Search:Hierarchy:Title' => '%1$s kiválasztása (%2$s)',
+    'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+    'Brick:Portal:Object:Copy:Tooltip' => 'Objektum hivatkozás másolása',
+    'Brick:Portal:Object:Copy:CopiedTooltip' => 'Másolva'
 ));
 
 // CreateBrick brick
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Brick:Portal:Create:Name' => 'Quick creation~~',
-	'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
+    'Brick:Portal:Create:Name' => 'Gyors létrehozás',
+    'Brick:Portal:Create:ChooseType' => 'Válasszon típust',
 ));
 
 // Filter brick
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
-	'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
-	'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
+    'Brick:Portal:Filter:Name' => 'Tégla előszűrése',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'pl. wifi kapcsolat',
+    'Brick:Portal:Filter:SearchInput:Submit' => 'Keresés',
 ));

@@ -4,7 +4,7 @@
     <menu id="iTopUpdate" xsi:type="WebPageMenuNode" _delta="define">
       <rank>60</rank>
       <parent>SystemTools</parent>
-      <url>$pages/exec.php?exec_module=itop-core-update&amp;exec_page=index.php&amp;c[menu]=iTopUpdate&amp;maintenance=true</url>
+      <url>$pages/UI.php?route=core_update.select_update_file&amp;maintenance=true</url>
       <enable_admin_only>1</enable_admin_only>
     </menu>
   </menus>

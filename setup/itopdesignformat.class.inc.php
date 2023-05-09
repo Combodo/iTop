@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -40,6 +40,17 @@
  */
 class iTopDesignFormat
 {
+	/**
+	 * @var array{
+	 *     string,
+	 *     array{
+	 *          previous: string,
+	 *          go_to_previous: string,
+	 *          next: string,
+	 *          go_to_next: string
+	 *     }
+     *  }
+	 */
 	public static $aVersions = array(
 		'1.0' => array(
 			'previous' => null,
@@ -160,6 +171,29 @@ class iTopDesignFormat
 			'severity' => 'Info',
 			'msg' => $sMessage,
 		);
+	}
+
+	/**
+	 * @param string $sCurrentDesignVersion A design version like 3.0
+	 *
+	 * @return ?string the previous design version from the one passed, null if passed version unknown or 1.0
+	 * @since 3.1.0 N°5779
+	 */
+	public static function GetPreviousDesignVersion(string $sCurrentDesignVersion): ?string
+	{
+		$aDesignVersions = array_keys(self::$aVersions);
+
+		$iCurrentDesignVersionIndex = array_search($sCurrentDesignVersion, $aDesignVersions, true);
+		if (false === $iCurrentDesignVersionIndex) {
+			return null;
+		}
+
+		$iPreviousDesignVersionIndex = $iCurrentDesignVersionIndex - 1;
+		if ($iPreviousDesignVersionIndex < 0) {
+			return null;
+		}
+
+		return $aDesignVersions[$iPreviousDesignVersionIndex];
 	}
 
 	/**
@@ -1013,8 +1047,8 @@ class iTopDesignFormat
 
 		// N°5563 AttributeLinkedSet
 		// - move edit_mode attribute to legacy_edit_mode attribute
-		// - fill relation_type & read_only
-		$oLinkedSetNodes = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']");
+		// - fill relation_type & read_only if non-existing
+		$oLinkedSetNodes = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']");
 		/** @var \DOMElement $oNode */
 		foreach ($oLinkedSetNodes as $oNode) {
 			$sEditMode = 'actions';
@@ -1024,9 +1058,6 @@ class iTopDesignFormat
 					$oEditModeNode = $oLinkedSetEditModeNodes->item(0);
 					/** @noinspection NullPointerExceptionInspection already checked */
 					$sEditMode = $oEditModeNode->nodeValue;
-					$oLegacyEditModeNode = $oNode->ownerDocument->createElement('legacy_edit_mode', $sEditMode);
-					/** @noinspection NullPointerExceptionInspection already checked */
-					$oNode->replaceChild($oLegacyEditModeNode, $oEditModeNode);
 				}
 
 				switch ($sEditMode) {
@@ -1047,19 +1078,29 @@ class iTopDesignFormat
 						break;
 				}
 
-				$oRelationTypeNode = $oNode->ownerDocument->createElement('relation_type', $sRelationType);
-				$oNode->appendChild($oRelationTypeNode);
-				$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', $sReadOnly);
-				$oNode->appendChild($oReadOnlyNode);
+				$bHasRelationType = ($oNode->getElementsByTagName('relation_type')->count() > 0);
+				if (false === $bHasRelationType) {
+					$oRelationTypeNode = $oNode->ownerDocument->createElement('relation_type', $sRelationType);
+					$oNode->appendChild($oRelationTypeNode);
+				}
+
+				$bHasReadOnly = ($oNode->getElementsByTagName('read_only')->count() > 0);
+				if (false === $bHasReadOnly) {
+					$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', $sReadOnly);
+					$oNode->appendChild($oReadOnlyNode);
+				}
 			}
 		}
 
 		// N°5563 AttributeLinkedSetIndirect
-		// - fill read_only attribute
-		$oLinkedSetIndirectNodes = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSetIndirect']");
+		// - fill read_only attribute if non-existing
+		$oLinkedSetIndirectNodes = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']");
 		foreach ($oLinkedSetIndirectNodes as $oNode) {
-			$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', 'false');
-			$oNode->appendChild($oReadOnlyNode);
+			$bHasReadOnly = ($oNode->getElementsByTagName('read_only')->count() > 0);
+			if (false === $bHasReadOnly) {
+				$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', 'false');
+				$oNode->appendChild($oReadOnlyNode);
+			}
 		}
 	}
 	/**
@@ -1074,21 +1115,26 @@ class iTopDesignFormat
 		// N°5563 AttributeLinkedSet
 		// - remove relation_type & read_only (added in 3.1)
 		// - restore edit_mode attribute from legacy_edit_mode attribute
-		$this->RemoveNodeFromXPath("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']/read_only");
-		$this->RemoveNodeFromXPath("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']/relation_type");
-		$oLegacyEditModeNodesList = $oXPath->query("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSet']/legacy_edit_mode");
-		/** @var \DOMElement $oLegacyEditModeNode */
-		foreach ($oLegacyEditModeNodesList as $oLegacyEditModeNode) {
-			$sEditMode = $oLegacyEditModeNode->nodeValue;
-			$oEditModeNode = $oLegacyEditModeNode->ownerDocument->createElement('edit_mode', $sEditMode);
-			$oLinkedSetNode = $oLegacyEditModeNode->parentNode;
-			/** @noinspection NullPointerExceptionInspection already checked */
-			$oLinkedSetNode->replaceChild($oEditModeNode, $oLegacyEditModeNode);
-		}
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/read_only");
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/relation_type");
 
 		// N°5563 AttributeLinkedSetIndirect
 		// - remove read_only attribute (added in 3.1)
-		$this->RemoveNodeFromXPath("/itop_design/classes/class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/read_only");
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/read_only");
+
+		// N°4756 - Ease extensibility for CRUD operations : Event Service
+		$this->RemoveNodeFromXPath('/itop_design/events');
+		$this->RemoveNodeFromXPath('/itop_design/event_listeners');
+		$this->RemoveNodeFromXPath('/itop_design/classes//class/event_listeners');
+
+		// N°3190 - Edit n:n LinkedSetIndirect in object details using a tagset-like widget
+		// - remove display style
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/display_style");
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/display_style");
+
+		// N°2783 Custom zlists
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/presentation/custom_presentations");
+		$this->RemoveNodeFromXPath("/itop_design/meta/presentation/custom_presentations");
 	}
 
 	/**

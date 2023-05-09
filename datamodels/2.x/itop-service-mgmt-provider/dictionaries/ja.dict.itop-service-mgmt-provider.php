@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
@@ -95,9 +95,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Contract/Attribute:organization_name' => '組織名',
 	'Class:Contract/Attribute:organization_name+' => '',
 	'Class:Contract/Attribute:contacts_list' => '連絡先',
-	'Class:Contract/Attribute:contacts_list+' => '',
+	'Class:Contract/Attribute:contacts_list+' => 'All the contacts for this customer contract~~',
 	'Class:Contract/Attribute:documents_list' => '文書',
-	'Class:Contract/Attribute:documents_list+' => '',
+	'Class:Contract/Attribute:documents_list+' => 'All the documents for this customer contract~~',
 	'Class:Contract/Attribute:description' => '説明',
 	'Class:Contract/Attribute:description+' => '',
 	'Class:Contract/Attribute:start_date' => '開始日',
@@ -144,11 +144,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:CustomerContract' => '顧客契約',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'サービス',
-	'Class:CustomerContract/Attribute:services_list+' => '',
+	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract~~',
 	'Class:CustomerContract/Attribute:functionalcis_list' => 'CI',
-	'Class:CustomerContract/Attribute:functionalcis_list+' => '',
+	'Class:CustomerContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract~~',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'プロバイダー契約',
-	'Class:CustomerContract/Attribute:providercontracts_list+' => '',
+	'Class:CustomerContract/Attribute:providercontracts_list+' => 'All the provider contracts to deliver the services for this contract (underpinning contract)~~',
 ));
 
 //
@@ -159,7 +159,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ProviderContract' => 'プロバイダー契約',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI',
-	'Class:ProviderContract/Attribute:functionalcis_list+' => '',
+	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this provider contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => '',
 	'Class:ProviderContract/Attribute:coverage' => 'サービス時間帯',
@@ -229,7 +229,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'サービス',
-	'Class:ServiceFamily/Attribute:services_list+' => '',
+	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
 ));
 
 //
@@ -252,9 +252,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Service/Attribute:servicefamily_name' => 'サービスファミリ名',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => '文書',
-	'Class:Service/Attribute:documents_list+' => '',
+	'Class:Service/Attribute:documents_list+' => 'All the documents linked to the service~~',
 	'Class:Service/Attribute:contacts_list' => '連絡先',
-	'Class:Service/Attribute:contacts_list+' => '',
+	'Class:Service/Attribute:contacts_list+' => 'All the contacts for this service~~',
 	'Class:Service/Attribute:status' => '状態',
 	'Class:Service/Attribute:status+' => '',
 	'Class:Service/Attribute:status/Value:implementation' => '実装',
@@ -266,9 +266,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Service/Attribute:icon' => 'Icon~~',
 	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => '顧客契約',
-	'Class:Service/Attribute:customercontracts_list+' => '',
+	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service~~',
 	'Class:Service/Attribute:servicesubcategories_list' => 'サービスサブカテゴリ',
-	'Class:Service/Attribute:servicesubcategories_list+' => '',
+	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
 ));
 
 //
@@ -354,9 +354,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:SLA/Attribute:organization_name' => '組織名',
 	'Class:SLA/Attribute:organization_name+' => '',
 	'Class:SLA/Attribute:slts_list' => 'SLT',
-	'Class:SLA/Attribute:slts_list+' => '',
+	'Class:SLA/Attribute:slts_list+' => 'All the service level targets for this SLA~~',
 	'Class:SLA/Attribute:customercontracts_list' => '顧客契約',
-	'Class:SLA/Attribute:customercontracts_list+' => '',
+	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA~~',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
 ));
 
@@ -499,9 +499,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:DeliveryModel/Attribute:description' => '説明',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => '連絡先',
-	'Class:DeliveryModel/Attribute:contacts_list+' => '',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model~~',
 	'Class:DeliveryModel/Attribute:customers_list' => '顧客',
-	'Class:DeliveryModel/Attribute:customers_list+' => '',
+	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 ));
 
 //

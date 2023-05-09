@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -25,7 +25,7 @@
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-core-update/3.1.0',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'iTop Core Update',
@@ -33,25 +33,24 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
+		'dependencies' => [
             'itop-files-information/2.7.0',
             'combodo-db-tools/2.7.0',
-		),
+		],
 		'mandatory' => false,
 		'visible' => true,
 
 		// Components
 		//
-		'datamodel' => array(
-			'model.itop-core-update.php',
+		'datamodel' => [
 			'src/Service/RunTimeEnvironmentCoreUpdater.php',
 			'src/Service/CoreUpdater.php',
 			'src/Controller/UpdateController.php',
 			'src/Controller/AjaxController.php',
-		),
-		'webservice' => array(),
-		'data.struct' => array(),
-		'data.sample' => array(),
+		],
+		'webservice' => [],
+		'data.struct' => [],
+		'data.sample' => [],
 
 		// Documentation
 		//
@@ -60,6 +59,6 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(),
-	)
+		'settings' => [],
+	]
 );

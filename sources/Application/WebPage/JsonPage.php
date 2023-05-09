@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -29,6 +29,7 @@ class JsonPage extends WebPage
 	{
 		$oKpi = new ExecutionKPI();
 		parent::__construct('');
+		$this->sContentType = 'application/json';
 		$oKpi->ComputeStats(get_class($this).' creation', 'JsonPage');
 	}
 
@@ -78,29 +79,48 @@ class JsonPage extends WebPage
 	}
 
 	/**
-	 * @inheritDoc
+	 * Output the headers
+	 *
+	 * @return void
+	 * @since 3.1.0
 	 */
-	public function output()
+	protected function OutputHeaders(): void
 	{
-		$oKpi = new ExecutionKPI();
-		$this->add_header('Content-type: application/json');
+		$this->add_header('Content-type: ' . $this->sContentType);
 
 		foreach ($this->a_headers as $s_header) {
 			header($s_header);
 		}
+	}
 
+	/**
+	 * @return string Content to output
+	 * @since 3.1.0
+	 */
+	protected function ComputeContent(): string
+	{
 		$aScripts = array_merge($this->a_init_scripts, $this->a_scripts, $this->a_ready_scripts);
 
 		$aJson = $this->bOutputDataOnly ? $this->aData : [
 			'data'    => $this->aData,
 			'scripts' => $aScripts,
 		];
-		$sJSON = json_encode($aJson);
-		$oKpi->ComputeAndReport(get_class($this).' output');
 
-		echo $sJSON;
-		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sJSON) / 1024).' Kb)');
-		ExecutionKPI::ReportStats();
+		return json_encode($aJson);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function output()
+	{
+		$oKpi = new ExecutionKPI();
+		$this->OutputHeaders();
+		$sContent = $this->ComputeContent();
+		$oKpi->ComputeAndReport(get_class($this).' output');
+
+		echo $sContent;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sContent) / 1024).' Kb)');
+		ExecutionKPI::ReportStats();
+	}
 }

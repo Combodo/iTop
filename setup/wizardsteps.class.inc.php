@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -1336,6 +1336,10 @@ class WizStepModulesChoice extends WizardStep
 		if ($sConfigPath !== null)
 		{
 			$oConfig = new Config($sConfigPath);
+
+			$aParamValues = $oWizard->GetParamForConfigArray();
+			$oConfig->UpdateFromParams($aParamValues);
+
 			$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($oConfig);
 		}
 	}
@@ -1417,7 +1421,7 @@ class WizStepModulesChoice extends WizardStep
 		}
 		catch(MissingDependencyException $e)
 		{
-			$oPage->warning($e->getHtmlDesc());
+			$oPage->warning($e->getHtmlDesc(), $e->getMessage());
 		}
 
 		$this->bUpgrade = ($this->oWizard->GetParameter('install_mode') != 'install');
@@ -2576,6 +2580,8 @@ class WizStepDone extends WizardStep
 
 
 		$oConfig = new Config(utils::GetConfigFilePath());
+		$aParamValues = $this->oWizard->GetParamForConfigArray();
+		$oConfig->UpdateFromParams($aParamValues);
 		// Load the data model only, in order to load env-production/core/main.php to get the XML parameters (needed by GetModuleSettings below)
 		// But main.php may also contain classes (defined without any module), and thus requiring the full data model
 		// to be loaded to prevent "class not found" errors...
@@ -2583,8 +2589,7 @@ class WizStepDone extends WizardStep
 		$oProductionEnv->InitDataModel($oConfig, true);
 		$sIframeUrl = $oConfig->GetModuleSetting('itop-hub-connector', 'setup_url', '');
 
-		if ($sIframeUrl != '')
-		{
+		if ($sIframeUrl != '') {
 			$oPage->add('<iframe id="fresh_content" frameborder="0" scrolling="auto" src="'.$sIframeUrl.'"></iframe>');
 
 			$oPage->add_script("

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -314,10 +314,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:CSVImport+' => '',
 	'Menu:Organization' => 'Organizzazioni',
 	'Menu:Organization+' => 'Tutte le organizzazioni',
-	'Menu:ConfigManagement' => 'Gestione delle Configurazioni',
-	'Menu:ConfigManagement+' => 'Gestione delle Configurazioni',
-	'Menu:ConfigManagementCI' => 'Elementi di Configurazione (CI)',
-	'Menu:ConfigManagementCI+' => 'Elementi di Configurazione (CI)',
+	'Menu:ConfigManagement' => 'Gestione delle configurazioni',
+	'Menu:ConfigManagement+' => 'Gestione delle configurazioni',
+	'Menu:ConfigManagementCI' => 'Elementi di configurazione (CI)',
+	'Menu:ConfigManagementCI+' => 'Elementi di configurazione (CI)',
 	'Menu:ConfigManagementOverview' => 'Panoramica',
 	'Menu:ConfigManagementOverview+' => 'Panoramica',
 	'Menu:Contact' => 'Contatti',
@@ -347,7 +347,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Person:info' => 'General information~~',
-	'UserLocal:info' => 'General information~~',
+	'User:info' => 'General information~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Notification~~',
 ));

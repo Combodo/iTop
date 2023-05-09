@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -242,7 +242,7 @@ class InlineImage extends DBObject
 	public static function OnFormCancel($sTempId): bool
 	{
 		// Protection against unfortunate massive delete of inline images when a null temp ID is passed
-		if (strlen($sTempId) === 0) {
+		if (utils::IsNullOrEmptyString($sTempId)) {
 			IssueLog::Trace('OnFormCancel "error" $sTempId is null or empty', LogChannels::INLINE_IMAGE, array(
 				'$sTempId' => $sTempId,
 				'$sUser' => UserRights::GetUser(),

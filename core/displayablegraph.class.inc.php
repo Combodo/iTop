@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@ use Combodo\iTop\Renderer\BlockRenderer;
 /**
  * Special kind of Graph for producing some nice output
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1541,7 +1541,7 @@ class DisplayableGraph extends SimpleGraph
 		}
 		catch(err)
 		{
-			alert(err);
+			CombodoModal.OpenErrorModal(err);
 		}
 	}
 EOF

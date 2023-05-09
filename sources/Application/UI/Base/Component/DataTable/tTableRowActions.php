@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2022 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -25,6 +25,7 @@ trait tTableRowActions
 	/**
 	 * @var $aRowActions array array of row actions
 	 * action => {
+	 *      label: string,
 	 *      tooltip: string,
 	 *      icon_classes: string,
 	 *      js_row_action: string,

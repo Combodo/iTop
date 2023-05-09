@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -34,6 +34,8 @@ $ibo-tab-container--extra-tab-toggler--max-width: 220px !default;
 $ibo-tab-container--extra-tab-toggler--text-color: $ibo-color-grey-700 !default;
 $ibo-tab-container--extra-tab-toggler--text-color--on-hover: $ibo-color-blue-800 !default;
 $ibo-tab-container--extra-tab-toggler--background-color--on-hover: $ibo-color-grey-200 !default;
+
+$ibo-tab-container--extra-tab-toggler--tooltip-title--margin-bottom: $ibo-spacing-500 !default;
 
 $ibo-tab-container--tab-container--label--text-color: $ibo-color-grey-600 !default;
 $ibo-tab-container--tab-container--label--spacing: 20px !default;
@@ -148,19 +150,24 @@ $ibo-tab-container--tab-container--last--min-height: 60vh !default;
   }
 }
 
+.ibo-tab-container--extra-tab-toggler--tooltip-title {
+  @extend %ibo-font-weight-600;
+  margin-bottom: $ibo-tab-container--extra-tab-toggler--tooltip-title--margin-bottom;
+}
+
 .ibo-tab-container--tab-container {
   padding: $ibo-tab-container--tab-container--padding-y $ibo-tab-container--tab-container--padding-x;
   overflow-x: auto;
 }
 
 .ibo-tab-container--tab-container-list.ibo-is-scrollable {
-  .ibo-tab-container--tab-container--label {
+  .ibo-tab-container--tab-container:not(:first-child:nth-last-child(2)) .ibo-tab-container--tab-container--label {
     display: block;
   }
   .ibo-tab-container--tab-container {
     min-height: $ibo-tab-container--tab-container--min-height;
   }  
-  .ibo-tab-container--tab-container:last-child {
+  .ibo-tab-container--tab-container:last-child:not(:only-child) {
     min-height: $ibo-tab-container--tab-container--last--min-height;
   }
 }

@@ -21,7 +21,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-knownerror-mgmt.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-knownerror-mgmt.xml',

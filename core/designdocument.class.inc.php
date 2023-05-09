@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2010-2021 Combodo SARL
+ * Copyright (c) 2010-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -30,6 +30,7 @@ use DOMDocument;
 use DOMFormatException;
 use IssueLog;
 use LogAPI;
+use utils;
 
 /**
  * Class \Combodo\iTop\DesignDocument

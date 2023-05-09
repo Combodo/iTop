@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -28,7 +28,7 @@ use ScssPhp\ScssPhp\ValueConverter;
 /**
  * Static class utils
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 define('ITOP_CONFIG_FILE', 'config-itop.php');
@@ -168,7 +168,7 @@ class utils
 			self::$m_aParamsFromFile = array();
 		}
 
-		$aParamLines = explode("\n", $sParams);
+		$aParamLines = explode("\n", $sParams ?? '');
 		foreach ($aParamLines as $sLine)
 		{
 			$sLine = trim($sLine);
@@ -874,9 +874,48 @@ class utils
 	 */
 	public static function DateTimeFormatToPHP($sOldDateTimeFormat)
 	{
-		$aSearch = array('%d', '%m', '%y', '%Y', '%H', '%i', '%s');
-		$aReplacement = array('d', 'm', 'y', 'Y', 'H', 'i', 's');
+		$aSearch = ['%d', '%m', '%y', '%Y', '%H', '%i', '%s'];
+		$aReplacement = ['d', 'm', 'y', 'Y', 'H', 'i', 's'];
 		return str_replace($aSearch, $aReplacement, $sOldDateTimeFormat);
+	}
+
+	/**
+	 * Convert an old strtime() date/time format specification {@link https://www.php.net/manual/fr/function.strftime.php}
+	 * to a format compatible with \DateTime::format {@link https://www.php.net/manual/fr/datetime.format.php}
+	 *
+	 * Example: '%Y-%m-%d %H:%M:%S' => 'Y-m-d H:i:s'
+	 *
+	 * Note: Not all strftime() formats can be converted, in which case they will be present in the returned string (eg. '%U' or '%W')
+	 *
+	 * @param string $sOldStrftimeFormat
+	 *
+	 * @return string
+	 * @since 3.1.0
+	 */
+	public static function StrftimeFormatToDateTimeFormat(string $sOldStrftimeFormat): string
+	{
+		$aSearch = [
+			'%d', '%m', '%y', '%Y', '%H', '%M', '%S', // Most popular formats
+			'%a', '%A', '%e', '%j', '%u', '%w', // Day formats
+			'%U', '%V', '%W', // Week formats
+			'%b', '%B', '%h', // Month formats
+			'%C', '%g', '%G', // Year formats
+			'%k', '%I', '%l', '%p', '%P', '%r', '%R', '%T', '%X', '%z', '%Z', // Time formats
+			'%c', '%D', '%F', '%s', '%x', // Datetime formats
+			'%n', '%t', '%%', // Misc. formats
+		];
+		$aReplacement = [
+			'd', 'm', 'y', 'Y', 'H', 'i', 's',
+			'D', 'l', 'j', 'z', 'N', 'w',
+			'%U', 'W', '%W',
+			'M', 'F', 'M',
+			'%C', 'y', 'Y',
+			'G', 'h', 'g', 'A', 'a', 'h:i:s A', 'H:i', 'H:i:s', '%X', 'O', 'T',
+			'%c', 'm/d/y', 'Y-m-d', 'U', '%x',
+			'%n', '%t', '%',
+		];
+
+		return str_replace($aSearch, $aReplacement, $sOldStrftimeFormat);
 	}
 
 	/**
@@ -1416,6 +1455,10 @@ class utils
 		// 
 		switch($iMenuId)
 		{
+			case iPopupMenuExtension::MENU_OBJLIST_ACTIONS:
+				// No native action there yet
+				break;
+
 			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
 				/** @var \DBObjectSet $param */
 				$oAppContext = new ApplicationContext();
@@ -1429,18 +1472,24 @@ class utils
 				$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
 				$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
 
-				$aResult = array();
-				if (strlen($sUrl) < SERVER_MAX_URL_LENGTH)
-				{
+				// Configure this list on datatables
+				if (utils::IsNotNullOrEmptyString($sDataTableId)) {
+					$aResult[] = new JSPopupMenuItem(
+						'iTop::ConfigureList',
+						Dict::S('UI:ConfigureThisList'),
+						"$('#datatable_dlg_datatable_{$sDataTableId}').dialog('open'); return false;"
+					);
 					$aResult[] = new SeparatorPopupMenuItem();
+				}
+
+				if (strlen($sUrl) < SERVER_MAX_URL_LENGTH) {
 					// Static menus: Email this page, CSV Export & Add to Dashboard
 					$aResult[] = new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'),
 							"mailto:?body=".urlencode($sUrl).' ' // Add an extra space to make it work in Outlook
 					);
 				}
 
-				if (UserRights::IsActionAllowed($param->GetFilter()->GetClass(), UR_ACTION_BULK_READ, $param) != UR_ALLOWED_NO)
-				{
+				if (UserRights::IsActionAllowed($param->GetFilter()->GetClass(), UR_ACTION_BULK_READ, $param) != UR_ALLOWED_NO) {
 					// Bulk export actions
 					$aResult[] = new JSPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), "ExportListDlg('$sOQL', '$sDataTableId', 'csv', ".json_encode(Dict::S('UI:Menu:CSVExport')).")");
 					$aResult[] = new JSPopupMenuItem('UI:Menu:ExportXLSX', Dict::S('ExcelExporter:ExportMenu'), "ExportListDlg('$sOQL', '$sDataTableId', 'xlsx', ".json_encode(Dict::S('ExcelExporter:ExportMenu')).")");
@@ -1452,6 +1501,7 @@ class utils
 				}
 				$aResult[] = new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL', '$sContext')");
 				$aResult[] = new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')");
+
 				break;
 
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
@@ -1505,37 +1555,159 @@ class utils
 			default:
 				// Unknown type of menu, do nothing
 		}
-		foreach ($aResult as $oMenuItem)
-		{
+		foreach ($aResult as $oMenuItem) {
 			$aActions[$oMenuItem->GetUID()] = $oMenuItem->GetMenuItem();
 		}
 
 		// Invoke the plugins
 		//
 		/** @var \iPopupMenuExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
-		{
-			if (is_object($param) && !($param instanceof DBObject))
-			{
+		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance) {
+			if (is_object($param) && !($param instanceof DBObject)) {
 				$tmpParam = clone $param; // In case the parameter is an DBObjectSet, clone it to prevent alterations
-			}
-			else
-			{
+			} else {
 				$tmpParam = $param;
 			}
-			foreach($oExtensionInstance->EnumItems($iMenuId, $tmpParam) as $oMenuItem)
-			{
-				if (is_object($oMenuItem))
-				{
+			foreach ($oExtensionInstance->EnumItems($iMenuId, $tmpParam) as $oMenuItem) {
+				if (is_object($oMenuItem)) {
 					$aActions[$oMenuItem->GetUID()] = $oMenuItem->GetMenuItem();
-					
-					foreach($oMenuItem->GetLinkedScripts() as $sLinkedScript)
-					{
+
+					foreach ($oMenuItem->GetLinkedScripts() as $sLinkedScript) {
 						$oContainerBlock->AddJsFileRelPath($sLinkedScript);
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * We cannot use iMenuId (corresponding values in {@see \iPopupMenuExtension} constants) as value is always {@see \iPopupMenuExtension::MENU_OBJLIST_TOOLKIT}
+	 * whenever we are in a datatable, whereas it is included in a object tab, a dashlet or a search.
+	 *
+	 * So a {@see \ContextTag} is set on the corresponding calls.
+	 *
+	 * @return bool true if we are in a search page context, either directly or by the datatable ajax call
+	 *
+	 * @since 3.1.0 N°3200
+	 *
+	 * @uses \ContextTag::TAG_OBJECT_SEARCH
+	 */
+	public static function IsCurrentPageASearch(): bool
+	{
+		if (ContextTag::Check(ContextTag::TAG_OBJECT_SEARCH)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param \DBObjectSearch $oFilter object list
+	 * @param array $aExtraParams
+	 *
+	 * @return string|null null if we are already in a search, otherwise the URL to open this list in a search
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @uses utils::IsCurrentPageASearch()
+	 *
+	 * @since 3.1.0 N°3200
+	 */
+	public static function GetDataTableSearchUrl(DBSearch $oFilter, array $aExtraParams): ?string
+	{
+		if (static::IsCurrentPageASearch()) {
+			// we don't want to add the link when already in a search page !
+			return null;
+		}
+
+		$bIsObjectRelation = isset($aExtraParams['object_id'], $aExtraParams['target_attr']);
+		if ($bIsObjectRelation) {
+			[$oDataTableSearchFilter, $aParams] = static::GetDataTableSearchForRelations($oFilter, $aExtraParams);
+		} else {
+			$oDataTableSearchFilter = $oFilter;
+			$aParams = [];
+		}
+
+		if (isset($aExtraParams['table_id'])) {
+			$aParams['table_id'] = $aExtraParams['table_id'];
+		}
+		$sParams = json_encode($aParams);
+
+		$sAppRootUrl = static::GetAbsoluteUrlAppRoot();
+		$oAppContext = new ApplicationContext();
+
+		$sUrl = $sAppRootUrl
+			.'pages/UI.php?operation=search&'
+			.$oAppContext->GetForLink()
+			.'&filter='.rawurlencode($oDataTableSearchFilter->serialize());
+		$sUrl .= '&aParams='.rawurlencode($sParams); // Not working... yet, cause not handled by UI.php
+
+		return $sUrl;
+	}
+
+	/**
+	 * Rewrites filter for object relations, so that in the search page we will have the correct criteria and will be able to use "configure this list"
+	 *
+	 * @param \DBSearch $oFilter object list
+	 * @param array{link_attr: string, target_attr: string, object_id: string} $aExtraParams
+	 *
+	 * @return array{\DBObjectSearch, string[]}
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 *
+	 * @since 3.1.0 N°3200
+	 */
+	private static function GetDataTableSearchForRelations(DBSearch $oFilter, array $aExtraParams): array
+	{
+		$sObjectId = $aExtraParams['object_id'];
+		$bIsLinkedSetIndirect = isset($aExtraParams['link_attr']);
+		if ($bIsLinkedSetIndirect) {
+			//--- AttributeLinkedSetIndirect (n,n => lnk class)
+			$sLnkClass = $oFilter->GetClass();
+			$sExtKeyToObjectClass = $aExtraParams['link_attr'];
+			$sExtKeyToRemoteClass = $aExtraParams['target_attr'];
+
+			/** @var \AttributeExternalKey $oLnkExtKeyToRemote */
+			$oLnkExtKeyToRemote = MetaModel::GetAttributeDef($sLnkClass, $sExtKeyToRemoteClass);
+			$sRemoteClass = $oLnkExtKeyToRemote->GetTargetClass();
+
+			/** @var \AttributeExternalKey $oLnkExtKeyToRemote */
+			$oLnkExtKeyToObject = MetaModel::GetAttributeDef($sLnkClass, $sExtKeyToObjectClass);
+			$sObjectClass = $oLnkExtKeyToObject->GetTargetClass();
+
+			/** @var \AttributeExternalKey $oLnkExtKeyToRemote */
+			$oObjectExtKeyToLnk = $oLnkExtKeyToObject->GetMirrorLinkAttribute();
+			$sObjectExtKeyToLnkClass = $oObjectExtKeyToLnk->GetCode();
+
+			$sRemoteClassAliasName = ormLinkSet::REMOTE_ALIAS;
+			$sLnkClassAliasName = ormLinkSet::LINK_ALIAS;
+			$sOql = <<<SQL
+SELECT {$sRemoteClassAliasName},{$sLnkClassAliasName}
+	FROM {$sRemoteClass} AS {$sRemoteClassAliasName}
+	JOIN {$sLnkClass} AS {$sLnkClassAliasName} ON {$sLnkClassAliasName}.$sExtKeyToRemoteClass = {$sRemoteClassAliasName}.id
+	WHERE {$sLnkClassAliasName}.$sExtKeyToObjectClass = $sObjectId
+SQL;
+
+			$aAttCodesToDisplay = MetaModel::GetAttributeLinkedSetIndirectDatatableAttCodesToDisplay($sObjectClass, $sObjectExtKeyToLnkClass, $sRemoteClass, $sExtKeyToRemoteClass);
+			/** @noinspection PhpUnnecessaryLocalVariableInspection */
+			$sAttCodesToDisplay = implode(',', $aAttCodesToDisplay);
+			$aParams = [
+				'zlist'        => false,
+				'extra_fields' => $sAttCodesToDisplay,
+			];
+		} else {
+			//--- AttributeLinkedSet (1,n => AttributeExternalKey)
+			$sClass = $oFilter->GetClass();
+			$sExtKeyCode = $aExtraParams['target_attr'];
+
+			$sOql = "SELECT $sClass WHERE $sExtKeyCode = $sObjectId";
+
+			$aParams = [];
+		}
+
+		$oDataTableSearchFilter = DBSearch::FromOQL($sOql);
+
+		return [$oDataTableSearchFilter, $aParams];
 	}
 
 	/**
@@ -1545,10 +1717,10 @@ class utils
 	 */
 	public static function GetConfigFilePath($sEnvironment = null)
 	{
-		if (is_null($sEnvironment))
-		{
+		if (is_null($sEnvironment)) {
 			$sEnvironment = self::GetCurrentEnvironment();
 		}
+
 		return APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
 	}
 
@@ -1581,7 +1753,6 @@ class utils
 	 * it at all (losing the direct access to the page) :
 	 *
 	 * ```php
-	 * if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 	 * require_once(__DIR__.'/../../approot.inc.php');
 	 * ```
 	 *
@@ -1677,11 +1848,11 @@ class utils
 	}
 	
 	/**
-	 * Helper to execute an HTTP POST request
+	 * Helper to execute an HTTP POST request, uses CURL PHP extension
+	 *
 	 * Source: http://netevil.org/blog/2006/nov/http-post-from-php-without-curl
-	 *         originaly named after do_post_request
-	 * Does not require cUrl but requires openssl for performing https POSTs.
-	 * 
+	 *         originally named after do_post_request
+	 *
 	 * @param string $sUrl The URL to POST the data to
 	 * @param array $aData The data to POST as an array('param_name' => value)
 	 * @param string $sOptionnalHeaders Additional HTTP headers as a string with newlines between headers
@@ -1691,118 +1862,70 @@ class utils
 	 * have precedence over the default ones. Example: CURLOPT_SSLVERSION => CURL_SSLVERSION_SSLv3
 	 *
 	 * @return string The result of the POST request
+	 *
 	 * @throws Exception with a specific error message depending on the cause
-	 */ 
+	 * @throws ApplicationException if CURL PHP extension isn't available
+	 *
+	 * @noinspection PhpComposerExtensionStubsInspection we don't want the "white screen of death" on production (N°6146)
+	 *
+	 * @since 3.1.0 N°6172 as curl ext is now mandatory, method will crash with a ApplicationException if this PHP extension isn't available
+	 */
 	public static function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = array())
 	{
-		// $sOptionnalHeaders is a string containing additional HTTP headers that you would like to send in your request.
-	
-		if (function_exists('curl_init'))
-		{
-			// If cURL is available, let's use it, since it provides a greater control over the various HTTP/SSL options
-			// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
-			// by setting the SSLVERSION to 3 as done below.
-			$aHeaders = explode("\n", $sOptionnalHeaders);
-			// N°3267 - Webservices: Fix optional headers not being taken into account
-			//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
-			$aHTTPHeaders = array();
-			foreach($aHeaders as $sHeaderString)
-			{
-				$aHTTPHeaders[] = trim($sHeaderString);
-			}
-			// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
-			$aOptions = array(
-				CURLOPT_RETURNTRANSFER	=> true,     // return the content of the request
-				CURLOPT_HEADER			=> false,    // don't return the headers in the output
-				CURLOPT_FOLLOWLOCATION	=> true,     // follow redirects
-				CURLOPT_ENCODING		=> "",       // handle all encodings
-				CURLOPT_USERAGENT		=> "spider", // who am i
-				CURLOPT_AUTOREFERER		=> true,     // set referer on redirect
-				CURLOPT_CONNECTTIMEOUT	=> 120,      // timeout on connect
-				CURLOPT_TIMEOUT			=> 120,      // timeout on response
-				CURLOPT_MAXREDIRS		=> 10,       // stop after 10 redirects
-				CURLOPT_SSL_VERIFYPEER	=> false,    // Disabled SSL Cert checks
-				// SSLV3 (CURL_SSLVERSION_SSLv3 = 3) is now considered as obsolete/dangerous: http://disablessl3.com/#why
-				// but it used to be a MUST to prevent a strange SSL error: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
-				// CURLOPT_SSLVERSION		=> 3,
-				CURLOPT_POST			=> count($aData),
-				CURLOPT_POSTFIELDS		=> http_build_query($aData),
-				CURLOPT_HTTPHEADER		=> $aHTTPHeaders,
-			);
-			
-			$aAllOptions = $aCurlOptions + $aOptions;
-			$ch = curl_init($sUrl);
-			curl_setopt_array($ch, $aAllOptions);
-			$response = curl_exec($ch);
-			$iErr = curl_errno($ch);
-			$sErrMsg = curl_error( $ch );
-			$aHeaders = curl_getinfo( $ch );
-			if ($iErr !== 0)
-			{
-				throw new Exception("Problem opening URL: $sUrl, $sErrMsg");
-			}
-			if (is_array($aResponseHeaders))
-			{
-				$aHeaders = curl_getinfo($ch);
-				foreach($aHeaders as $sCode => $sValue)
-				{
-					$sName = str_replace(' ' , '-', ucwords(str_replace('_', ' ', $sCode))); // Transform "content_type" into "Content-Type"
-					$aResponseHeaders[$sName] = $sValue;
-				}
-			}
-			curl_close( $ch );
+		if (false === function_exists('curl_init')) {
+			throw new ApplicationException('\utils::DoPostRequest method called whereas the CURL PHP extension isn\'t available !');
 		}
-		else
-		{
-			// cURL is not available let's try with streams and fopen...
-			
-			$sData = http_build_query($aData);
-			$aParams = array('http' => array(
-									'method' => 'POST',
-									'content' => $sData,
-									'header'=> "Content-type: application/x-www-form-urlencoded\r\nContent-Length: ".strlen($sData)."\r\n",
-									));
-			if ($sOptionnalHeaders !== null)
-			{
-				$aParams['http']['header'] .= $sOptionnalHeaders;
-			}
-			$ctx = stream_context_create($aParams);
-		
-			$fp = @fopen($sUrl, 'rb', false, $ctx);
-			if (!$fp)
-			{
-				global $php_errormsg;
-				if (isset($php_errormsg))
-				{
-					throw new Exception("Wrong URL: $sUrl, $php_errormsg");
-				}
-				elseif ((strtolower(substr($sUrl, 0, 5)) == 'https') && !extension_loaded('openssl'))
-				{
-					throw new Exception("Cannot connect to $sUrl: missing module 'openssl'");
-				}
-				else
-				{
-					throw new Exception("Wrong URL: $sUrl");
-				}
-			}
-			$response = @stream_get_contents($fp);
-			if ($response === false)
-			{
-				throw new Exception("Problem reading data from $sUrl, $php_errormsg");
-			}
-			if (is_array($aResponseHeaders))
-			{
-				$aMeta = stream_get_meta_data($fp);
-				$aHeaders = $aMeta['wrapper_data'];
-				foreach($aHeaders as $sHeaderString)
-				{
-					if(preg_match('/^([^:]+): (.+)$/', $sHeaderString, $aMatches))
-					{
-						$aResponseHeaders[$aMatches[1]] = trim($aMatches[2]);
-					}
-				}
+
+		// CURL PHP extension is mandatory since 3.1.0 (N°5270)
+		// it provides a greater control over the various HTTP/SSL options
+		// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
+		// by setting the SSLVERSION to 3 as done below.
+		$aHeaders = explode("\n", $sOptionnalHeaders ?? '');
+		// N°3267 - Webservices: Fix optional headers not being taken into account
+		//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
+		$aHTTPHeaders = array();
+		foreach ($aHeaders as $sHeaderString) {
+			$aHTTPHeaders[] = trim($sHeaderString);
+		}
+		// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
+		$aOptions = array(
+			CURLOPT_RETURNTRANSFER => true,     // return the content of the request
+			CURLOPT_HEADER         => false,    // don't return the headers in the output
+			CURLOPT_FOLLOWLOCATION => true,     // follow redirects
+			CURLOPT_ENCODING       => "",       // handle all encodings
+			CURLOPT_USERAGENT      => "spider", // who am i
+			CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+			CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
+			CURLOPT_TIMEOUT        => 120,      // timeout on response
+			CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+			CURLOPT_SSL_VERIFYPEER => false,    // Disabled SSL Cert checks
+			// SSLV3 (CURL_SSLVERSION_SSLv3 = 3) is now considered as obsolete/dangerous: http://disablessl3.com/#why
+			// but it used to be a MUST to prevent a strange SSL error: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
+			// CURLOPT_SSLVERSION		=> 3,
+			CURLOPT_POST           => count($aData),
+			CURLOPT_POSTFIELDS     => http_build_query($aData),
+			CURLOPT_HTTPHEADER     => $aHTTPHeaders,
+		);
+
+		$aAllOptions = $aCurlOptions + $aOptions;
+		$ch = curl_init($sUrl);
+		curl_setopt_array($ch, $aAllOptions);
+		$response = curl_exec($ch);
+		$iErr = curl_errno($ch);
+		$sErrMsg = curl_error($ch);
+		$aHeaders = curl_getinfo($ch);
+		if ($iErr !== 0) {
+			throw new Exception("Problem opening URL: $sUrl, $sErrMsg");
+		}
+		if (is_array($aResponseHeaders)) {
+			$aHeaders = curl_getinfo($ch);
+			foreach ($aHeaders as $sCode => $sValue) {
+				$sName = str_replace(' ', '-', ucwords(str_replace('_', ' ', $sCode))); // Transform "content_type" into "Content-Type"
+				$aResponseHeaders[$sName] = $sValue;
 			}
 		}
+		curl_close($ch);
+
 		return $response;
 	}
 
@@ -1880,19 +2003,36 @@ class utils
 	}
 
 	/**
+	 * @param string $sValue value encoded with {@see self::EscapeHtml()}
+	 *
+	 * @return string decoded value
+	 *
+	 * @uses \htmlspecialchars_decode()
+	 * @link https://www.php.net/manual/en/function.htmlspecialchars-decode.php
+	 * @since 3.0.3 3.1.0 N°6020 method creation
+	 */
+	public static function EscapedHtmlDecode($sValue)
+	{
+		return htmlspecialchars_decode(
+			$sValue,
+			ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5
+		);
+	}
+
+	/**
 	 * Convert a string containing some (valid) HTML markup to plain text
+	 *
 	 * @param string $sHtml
+	 *
 	 * @return string
 	 */
 	public static function HtmlToText($sHtml)
 	{
-		try
-		{
+		try {
 			//return '<?xml encoding="UTF-8">'.$sHtml;
 			return \Html2Text\Html2Text::convert('<?xml encoding="UTF-8">'.$sHtml);
 		}
-		catch(Exception $e)
-		{
+		catch (Exception $e) {
 			return $e->getMessage();
 		}
 	}
@@ -2260,7 +2400,7 @@ class utils
 				$aParams = array();
 				foreach(explode('&', $sQuery) as $sChunk)
 				{
-					$aParts = explode('=', $sChunk);
+					$aParts = explode('=', $sChunk ?? '');
 					if (count($aParts) != 2) continue;
 					$aParams[$aParts[0]] = urldecode($aParts[1]);
 				}
@@ -2407,7 +2547,7 @@ class utils
 		$aCleanHeaders = array();
 		foreach( $aHeaders as $sKey => $sValue )
 		{
-			$aTokens = explode(':', $sValue, 2);
+			$aTokens = explode(':', $sValue ?? '', 2);
 			if(isset($aTokens[1]))
 			{
 				$aCleanHeaders[trim($aTokens[0])] = trim($aTokens[1]);
@@ -2711,10 +2851,10 @@ HTML;
 	 * @param string $sClassNameFilter
 	 * @param array $aExcludedPath Reg. exp. of the paths to exclude. Note that backslashes (typically for Windows env.) need to be 4 backslashes, 2 for the escaping backslash, 2 for the actual backslash 😅
 	 *
-	 * @return array
+	 * @return array classes are returned in the same order as the module dependency tree, so core classes on top
 	 * @since 3.0.0
 	 */
-	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']): array
+	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = []): array
 	{
 		$aMatchingClasses = [];
 
@@ -2765,12 +2905,18 @@ HTML;
 					$bSkipped = true;
 				}
 				else {
-					foreach ($aExcludedPath as $sExcludedPath) {
-						// Note: We use '#' as delimiters as usual '/' is often used in paths.
-						if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
-							$bSkipped = true;
-							break;
+					$sPHPFile = self::LocalPath($sPHPFile);
+					if ($sPHPFile !== false) {
+						$sPHPFile = '/'.$sPHPFile; // for regex
+						foreach ($aExcludedPath as $sExcludedPath) {
+							// Note: We use '#' as delimiters as usual '/' is often used in paths.
+							if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
+								$bSkipped = true;
+								break;
+							}
 						}
+					} else {
+						$bSkipped = true; // file not found
 					}
 				}
 				
@@ -2808,7 +2954,7 @@ HTML;
 		$aResultPref = [];
 		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
 		// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
+		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 
 		foreach ($aShortcutClasses as $cShortcutPlugin) {
 			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();
@@ -2816,7 +2962,7 @@ HTML;
 				$sKey = isset($aShortcutPrefs[$aShortcutKey['id']]) ? $aShortcutPrefs[$aShortcutKey['id']] : $aShortcutKey['key'];
 
 				// Format key for display
-				$aKeyParts = explode('+', $sKey);
+				$aKeyParts = explode('+', $sKey ?? '');
 				$aFormattedKeyParts = [];
 				foreach ($aKeyParts as $sKeyPart) {
 					$aFormattedKeyParts[] = ucfirst(trim($sKeyPart));
@@ -3035,16 +3181,33 @@ HTML;
 	}
 
 	/**
-	 * Transform a snake_case $sInput into a CamelCase string
-	 *
 	 * @param string $sInput
 	 *
-	 * @return string
+	 * @return string Camel case representation of $sInput (eg. "something_new" becomes "SomethingNew")
 	 * @since 2.7.0
 	 */
-	public static function ToCamelCase($sInput)
+	public static function ToCamelCase($sInput): string
 	{
 		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
+	}
+
+	/**
+	 * @param string $sInput
+	 *
+	 * @return string Snake case representation of $sInput (eg. "SomethingNew" becomes "something_new")
+	 * @since 3.1.0
+	 * @link https://stackoverflow.com/a/19533226/2710325
+	 */
+	public static function ToSnakeCase(string $sInput): string
+	{
+		// Remove special chars to join words
+		$sOutput = preg_replace('/(\W)/', '_', $sInput);
+		// Transform camel case words to snake case
+		$sOutput = preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '_$0', $sOutput);
+		// Lowercase everything
+		$sOutput = mb_strtolower($sOutput);
+		// Trim outer underscores
+		return trim($sOutput, '_');
 	}
 
 	/**
@@ -3205,9 +3368,5 @@ HTML;
 	{
 		return in_array($sTrait, self::TraitsUsedByClass($sClass, true));
 	}
-  
-	public static function GetUniqId()
-	{
-		return hash('sha256', uniqid(sprintf('%x', rand()), true).sprintf('%x', rand()));
-	}
+	
 }

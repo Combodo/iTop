@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -31,32 +31,32 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:ServiceManagement' => 'Gerenciamento de Serviços',
+	'Menu:ServiceManagement' => 'Gerenciamento de serviços',
 	'Menu:ServiceManagement+' => '',
 	'Menu:Service:Overview' => 'Visão geral',
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por nível de serviço',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos finalizando em menos de 30 dias',
-	'Menu:ProviderContract' => 'Contratos de Provedores',
-	'Menu:ProviderContract+' => 'Lista de Contratos de Provedores',
-	'Menu:CustomerContract' => 'Contratos de Clientes',
-	'Menu:CustomerContract+' => 'Lista de Contratos de Clientes',
-	'Menu:ServiceSubcategory' => 'Subcategorias de Serviços',
-	'Menu:ServiceSubcategory+' => 'Lista de Subcategorias de Serviços',
+	'Menu:ProviderContract' => 'Contratos de provedores',
+	'Menu:ProviderContract+' => 'Lista de contratos de provedores',
+	'Menu:CustomerContract' => 'Contratos de clientes',
+	'Menu:CustomerContract+' => 'Lista de contratos de clientes',
+	'Menu:ServiceSubcategory' => 'Subcategorias de serviços',
+	'Menu:ServiceSubcategory+' => 'Lista de subcategorias de serviços',
 	'Menu:Service' => 'Serviços',
-	'Menu:Service+' => 'Lista de Serviços',
-	'Menu:ServiceElement' => 'Elementos de Serviços',
-	'Menu:ServiceElement+' => 'Lista de Elementos de Serviços',
+	'Menu:Service+' => 'Lista de serviços',
+	'Menu:ServiceElement' => 'Elementos de serviços',
+	'Menu:ServiceElement+' => 'Lista de elementos de serviços',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Lista de Acordos de Nível de Serviço (ANS)',
 	'Menu:SLT' => 'SLTs',
 	'Menu:SLT+' => 'Lista de Níveis Mínimos de Serviço (NMS)',
-	'Menu:DeliveryModel' => 'Modelos de Entrega',
-	'Menu:DeliveryModel+' => 'Lista de Modelos de Entrega',
-	'Menu:ServiceFamily' => 'Família de Serviços',
-	'Menu:ServiceFamily+' => 'Lista de Família de Serviços',
-	'Menu:Procedure' => 'Catálogo de Procedimentos',
+	'Menu:DeliveryModel' => 'Modelos de entrega',
+	'Menu:DeliveryModel+' => 'Lista de modelos de entrega',
+	'Menu:ServiceFamily' => 'Família de serviços',
+	'Menu:ServiceFamily+' => 'Lista de família de serviços',
+	'Menu:Procedure' => 'Catálogo de procedimentos',
 	'Menu:Procedure+' => '',
 ));
 

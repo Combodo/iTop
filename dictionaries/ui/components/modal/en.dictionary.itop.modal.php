@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,4 +19,9 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Modal:Confirmation:DefaultTitle' => 'Confirmation',
+	'UI:Modal:Informative:Title' => 'Informative Modal',
+	'UI:Modal:InformativeError:Title' => 'Error',
+	'UI:Modal:InformativeWarning:Title' => 'Warning',
+	'UI:Modal:InformativeInformation:Title' => 'Information',
+	'UI:Modal:InformativeSuccess:Title' => 'Success',
 ));

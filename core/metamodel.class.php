@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2021 Combodo SARL
+// Copyright (c) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -40,7 +40,7 @@ require_once APPROOT.'application/loginurl.class.inc.php';
 /**
  * Metamodel
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -128,9 +128,17 @@ abstract class MetaModel
 	/** @var string */
 	protected static $m_sEnvironment = 'production';
 
-	public const REENTRANCE_TYPE_UPDATE = 'update';
-
-	protected static $m_aReentranceProtection = [];
+	/**
+	 * Objects currently created/updated.
+	 *
+	 * if an object is already being updated, then this method will return this object instead of recreating a new one.
+	 * At this point the method DBUpdate of a new object with the same class and id won't do anything due to reentrance protection,
+	 * so to ensure that the potential modifications are correctly saved, the object currently being updated is returned.
+	 * DBUpdate() method then will take care that all the modifications will be saved.
+	 *
+	 * [class][key] -> object
+	 */
+	protected static array $m_aReentranceProtection = [];
 
 	/**
 	 * MetaModel constructor.
@@ -342,7 +350,7 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 
-		return $sClass::GetClassName($sClass);
+		return call_user_func([$sClass, 'GetClassName'], $sClass);
 	}
 
 	/**
@@ -426,7 +434,7 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 
-		return $sClass::GetClassDescription($sClass);
+		return call_user_func([$sClass, 'GetClassDescription'], $sClass);
 	}
 
 	/**
@@ -2062,6 +2070,43 @@ abstract class MetaModel
 		}
 
 		return $aAttCodesToPrint;
+	}
+
+	/**
+	 * @param string $sObjectClass class of the object containing the AttributeLinkedSetIndirect (eg: Team)
+	 * @param string $sObjectLinkedSetIndirectAttCode code of the AttributeLinkedSetIndirect in the sObjectClass (eg: persons_list in the Team class, pointing to lnkPersonToTeam lnk class)
+	 * @param string $sRemoteClass remote class pointed by the lnk class (eg: Person pointed by lnkPersonToTeam)
+	 * @param string $sLnkExternalKeyToRemoteClassAttCode in the lnk class, external key to the remote class (eg: person_id in lnkPersonToTeam, pointing to a Person instance)
+	 *
+	 * @return string[] attcodes to display, containing aliases
+	 * @throws \CoreException
+	 *
+	 * @since 3.0.0 N°2334 added code for n-n relations in {@see BlockIndirectLinkSetViewTable::GetAttCodesToDisplay}
+	 * @since 3.1.0 N°3200 method creation so that it can be used elsewhere
+	 */
+	public static function GetAttributeLinkedSetIndirectDatatableAttCodesToDisplay(string $sObjectClass, string $sObjectLinkedSetIndirectAttCode, string $sRemoteClass, string $sLnkExternalKeyToRemoteClassAttCode):array
+	{
+		$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sObjectClass, $sObjectLinkedSetIndirectAttCode);
+		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($sRemoteClass);
+		$aLnkAttCodesToDisplay = array_map(
+			function ($oLnkAttDef) {
+				return ormLinkSet::LINK_ALIAS.'.'.$oLnkAttDef->GetCode();
+			},
+			$aLnkAttDefsToDisplay
+		);
+		if (!in_array(ormLinkSet::LINK_ALIAS.'.'.$sLnkExternalKeyToRemoteClassAttCode, $aLnkAttCodesToDisplay)) {
+			// we need to display a link to the remote class instance !
+			$aLnkAttCodesToDisplay[] = ormLinkSet::LINK_ALIAS.'.'.$sLnkExternalKeyToRemoteClassAttCode;
+		}
+		$aRemoteAttCodesToDisplay = array_map(
+			function ($oRemoteAttDef) {
+				return ormLinkSet::REMOTE_ALIAS.'.'.$oRemoteAttDef->GetCode();
+			},
+			$aRemoteAttDefsToDisplay
+		);
+		$aAttCodesToDisplay = array_merge($aLnkAttCodesToDisplay, $aRemoteAttCodesToDisplay);
+
+		return $aAttCodesToDisplay;
 	}
 
 	/**
@@ -4165,31 +4210,20 @@ abstract class MetaModel
 		{
 			foreach (array_merge($aArgs, $aMoreArgs) as $sArgName => $value)
 			{
-				if (self::IsValidObject($value))
-				{
-					if (strpos($sArgName, '->object()') === false)
-					{
+				if (self::IsValidObject($value)) {
+					if (strpos($sArgName, '->object()') === false) {
 						// Normalize object arguments
 						$aScalarArgs[$sArgName.'->object()'] = $value;
-						}
-					else
-					{
+					} else {
 						// Leave as is
 						$aScalarArgs[$sArgName] = $value;
 					}
-				}
-				else
-				{
-					if (is_scalar($value))
-					{
+				} else {
+					if (is_scalar($value)) {
 						$aScalarArgs[$sArgName] = (string)$value;
-					}
-					elseif (is_null($value))
-					{
+					} elseif (is_null($value)) {
 						$aScalarArgs[$sArgName] = null;
-					}
-					elseif (is_array($value))
-					{
+					} elseif (is_array($value)) {
 						$aScalarArgs[$sArgName] = $value;
 					}
 				}
@@ -4219,7 +4253,6 @@ abstract class MetaModel
 			if (!is_null($oUser))
 			{
 				$aPlaceholders['current_user->object()'] = $oUser;
-
 				$oContact = UserRights::GetContactObject();
 				if (!is_null($oContact))
 				{
@@ -4234,31 +4267,25 @@ abstract class MetaModel
 			foreach ($aExpectedArgs as $expression)
 			{
 				$aName = explode('->', $expression->GetName());
-				if ($aName[0] == 'current_contact_id')
-				{
+				if ($aName[0] == 'current_contact_id') {
 					$aPlaceholders['current_contact_id'] = UserRights::GetContactId();
 				}
-				if ($aName[0] == 'current_user')
-				{
+				if ($aName[0] == 'current_user') {
 					array_push($aCurrentUser, $aName[1]);
 				}
-				if ($aName[0] == 'current_contact')
-				{
+				if ($aName[0] == 'current_contact') {
 					array_push($aCurrentContact, $aName[1]);
 				}
 			}
-			if (count($aCurrentUser) > 0)
-			{
-				$oUser = MetaModel::GetObject("User", UserRights::GetUserId(),true,true);
+			if (count($aCurrentUser) > 0) {
+				$oUser = UserRights::GetUserObject();
 				$aPlaceholders['current_user->object()'] = $oUser;
-				foreach ($aCurrentUser as $sField)
-				{
+				foreach ($aCurrentUser as $sField) {
 					$aPlaceholders['current_user->'.$sField] = $oUser->Get($sField);
 				}
 			}
-			if (count($aCurrentContact) > 0)
-			{
-				$oPerson = MetaModel::GetObject("Person", UserRights::GetContactId(), true, true);
+			if (count($aCurrentContact) > 0) {
+				$oPerson = UserRights::GetContactObject();
 				$aPlaceholders['current_contact->object()'] = $oPerson;
 				foreach ($aCurrentContact as $sField) {
 					$aPlaceholders['current_contact->'.$sField] = $oPerson->Get($sField);
@@ -5081,9 +5108,9 @@ abstract class MetaModel
 
 		if (!empty(self::$m_sTablePrefix))
 		{
-			foreach(CMDBSource::EnumTables() as $sTable)
+			foreach(self::DBEnumTables() as $sTable)
 			{
-				// perform a case insensitive test because on Windows the table names become lowercase :-(
+				// perform a case-insensitive test because on Windows the table names become lowercase :-(
 				if (strtolower(substr($sTable, 0, strlen(self::$m_sTablePrefix))) == strtolower(self::$m_sTablePrefix))
 				{
 					CMDBSource::DropTable($sTable);
@@ -6796,7 +6823,7 @@ abstract class MetaModel
 		// DBUpdate() method then will take care that all the modifications will be saved.
 		if (array_key_exists($sClassAlias.'id', $aRow)) {
 			$iKey = $aRow[$sClassAlias."id"];
-			$oObject = self::GetReentranceObject(Metamodel::REENTRANCE_TYPE_UPDATE, $sClass, $iKey);
+			$oObject = self::GetReentranceObject($sClass, $iKey);
 			if ($oObject !== false) {
 				return $oObject;
 			}
@@ -7273,9 +7300,14 @@ abstract class MetaModel
 	/**
 	 * Replaces all the parameters by the values passed in the hash array
 	 *
-	 * @param string $sInput
-	 * @param array $aParams
+	 * @param string $sInput Can be plain text or HTML. Note that some part may be url-encoded if a placeholder is used in an URL.
+	 * @param array $aParams Placeholder descriptor as key, replacement as value. Possible placeholders can be of the forms:
+	 *   * foo_bar : Static placeholder
+	 *   * foo->bar : Another static placeholder
+	 *   * foo->object() : Will be developed into a set of placeholders depending on the attribute of the given \DBObject and their corresponding transformation methods {@see \AttributeDefinition::GetForTemplate()}
+	 *                     Example: foo->hyperlink(), foo->name, foo->html(name), foo->head(log), foo->head_html(log), ...
 	 *
+	 * @link https://www.itophub.io/wiki/page?id=latest:admin:placeholders
 	 * @return string
 	 *
 	 * @throws \Exception
@@ -7337,15 +7369,23 @@ abstract class MetaModel
 				}
 			} else {
 				$aRegExps = array(
-					'/(\$)'.$sSearch.'\$/',   // Support for regular placeholders (eg. $APP_URL$)
-					'/(%24)'.$sSearch.'%24/', // Support for urlencoded in HTML attributes (eg. %24APP_URL%24)
+					'/(\$)'.$sSearch.'\$/',   // Regular placeholders (eg. $APP_URL$) or placeholders with an arrow in plain text (eg. $foo->bar$)
+					'/(%24)'.$sSearch.'%24/', // Regular placeholders url-encoded in HTML attributes (eg. %24APP_URL%24)
+
+					'/(\$)'.utils::EscapeHtml($sSearch).'\$/',      // Placeholders with an arrow in HTML (eg. $foo-&gt;bar$)
+					'/(%24)'.utils::EscapeHtml($sSearch).'%24/',    // Placeholders with an arrow url-encoded in HTML attributes (eg. %24-&gt;bar%24)
 				);
 				foreach ($aRegExps as $sRegExp) {
 					if (preg_match_all($sRegExp, $sInput, $aMatches)) {
 						foreach ($aMatches[1] as $idx => $sDelimiter) {
 							try {
-								$aReplacements[] = (string)$replace;
+								// Regular or plain text
+								$aReplacements[] = (string) $replace;
 								$aSearches[] = $aMatches[1][$idx].$sSearch.$aMatches[1][$idx];
+
+								// With an arrow in HTML
+								$aReplacements[] = (string) $replace;
+								$aSearches[] = $aMatches[1][$idx].utils::EscapeHtml($sSearch).$aMatches[1][$idx];
 							}
 							catch (Exception $e) {
 								IssueLog::Debug(
@@ -7561,33 +7601,42 @@ abstract class MetaModel
 		return $oAttDef->GetStyle($sValue);
 	}
 
-	protected static function GetReentranceObject($sType, $sClass, $sKey)
+	protected static function GetReentranceObject($sClass, $sKey)
 	{
-		if (isset(self::$m_aReentranceProtection[$sType][$sClass][$sKey])) {
-			return self::$m_aReentranceProtection[$sType][$sClass][$sKey];
+		if (isset(self::$m_aReentranceProtection[$sClass][$sKey])) {
+			return self::$m_aReentranceProtection[$sClass][$sKey];
 		}
 		return false;
 	}
 
 	/**
-	 * @param $sType
 	 * @param \DBObject $oObject
 	 *
 	 * @return bool true if reentry possible
+	 *
+	 * @since 3.1.0 N°4756
 	 */
-	public static function StartReentranceProtection($sType, DBObject $oObject)
+	public static function StartReentranceProtection(DBObject $oObject)
 	{
-		if (isset(self::$m_aReentranceProtection[$sType][get_class($oObject)][$oObject->GetKey()])) {
+		if (isset(self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()])) {
 			return false;
 		}
-		self::$m_aReentranceProtection[$sType][get_class($oObject)][$oObject->GetKey()] = $oObject;
+		self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()] = $oObject;
+
 		return true;
 	}
 
-	public static function StopReentranceProtection($sType, DBObject $oObject)
+	/**
+	 * @param \DBObject $oObject
+	 *
+	 * @return void
+	 *
+	 * @since 3.1.0 N°4756
+	 */
+	public static function StopReentranceProtection(DBObject $oObject)
 	{
-		if (isset(self::$m_aReentranceProtection[$sType][get_class($oObject)][$oObject->GetKey()])) {
-			unset(self::$m_aReentranceProtection[$sType][get_class($oObject)][$oObject->GetKey()]);
+		if (isset(self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()])) {
+			unset(self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()]);
 		}
 	}
 }
@@ -7597,6 +7646,7 @@ abstract class MetaModel
 MetaModel::RegisterZList("noneditable", array("description" => "non editable fields", "type" => "attributes"));
 
 MetaModel::RegisterZList("details", array("description" => "All attributes to be displayed for the 'details' of an object", "type" => "attributes"));
+MetaModel::RegisterZList("summary", array("description" => "All attributes to be displayed for shorter 'details' of an object", "type" => "attributes"));
 MetaModel::RegisterZList("list", array("description" => "All attributes to be displayed for a list of objects", "type" => "attributes"));
 MetaModel::RegisterZList("preview", array("description" => "All attributes visible in preview mode", "type" => "attributes"));
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -195,7 +195,7 @@ class ObjectController extends BrickController
 		$sObjectClass = get_class($oObject);
 		$sObjectId = $oObject->GetKey();
 
-		$oObject->FireEvent(EVENT_SERVICE_DISPLAY_OBJECT_DETAILS);
+		$oObject->FireEvent(EVENT_DISPLAY_OBJECT_DETAILS);
 
 		$aData = array('sMode' => 'view');
 		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
@@ -1106,6 +1106,12 @@ class ObjectController extends BrickController
 			$oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, true, true);
 			$sHostClass = $oAttachment->Get('item_class');
 			$sHostId = $oAttachment->Get('item_id');
+			
+			// Attachments could be linked to host objects without an org_id. Retrieving the attachment would fail if enforced silos are based on org_id
+			if($oAttachment->Get('item_org_id') === 0 && ($sHostId > 0) && $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostClass, $sHostId)) {
+				$bCheckSecurity = false;
+			}
+			
 		}
 		else
 		{
@@ -1230,8 +1236,6 @@ class ObjectController extends BrickController
 						$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime')); // one hour...
 						$oAttachment->Set('temp_id', $sTempId);
 						$oAttachment->Set('item_class', $sObjectClass);
-						$oAttachment->Set('creation_date', time());
-						$oAttachment->Set('user_id', UserRights::GetUserObject());
 						$oAttachment->SetDefaultOrgId();
 						$oAttachment->Set('contents', $oDocument);
 						$iAttId = $oAttachment->DBInsert();
@@ -1247,6 +1251,7 @@ class ObjectController extends BrickController
 						$aData['att_id'] = $iAttId;
 						$aData['preview'] = $oDocument->IsPreviewAvailable();
 						$aData['file_size'] = $oDocument->GetFormattedSize();
+						$aData['downloads_count'] = $oDocument->GetDownloadsCount();
 						$aData['creation_date'] = $oAttachment->Get('creation_date');
 						$aData['user_id_friendlyname'] = $oAttachment->Get('user_id_friendlyname');
 						$aData['file_type'] = $oDocument->GetMimeType();

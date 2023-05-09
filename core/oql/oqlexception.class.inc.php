@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,13 +19,44 @@
 /**
  * Special handling for OQL syntax errors
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
 class OQLException extends CoreException
 {
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $m_MyIssue;
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $m_sInput;
+	/**
+	 * @var int
+	 * @since 3.1.0
+	 */
+	protected $m_iLine;
+	/**
+	 * @var int
+	 * @since 3.1.0
+	 */
+	protected $m_iCol;
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected $m_sUnexpected;
+	/**
+	 * @var array|null string
+	 * @since 3.1.0
+	 */
+	protected $m_aExpecting;
+
 	public function __construct($sIssue, $sInput, $iLine, $iCol, $sUnexpected, $aExpecting = null)
 	{
 		$this->m_MyIssue = $sIssue;

@@ -1,0 +1,110 @@
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+var iDiskFreeSpace = {{ iDiskFreeSpace }};
+
+$.ajax({
+    method: "POST",
+    url: "{{ sAjaxURL|raw }}",
+    data: {
+        route: "core_update_ajax.can_update_core",
+        maintenance: true
+    },
+    dataType: "json",
+    success: function (data) {
+        var oRequirements = $("#header-requirements");
+        var oCanCoreUpdate = $("#can-core-update");
+        oCanCoreUpdate.html(data.sMessage);
+        if(data.sMessageDetails){
+            $("#header-requirements-details").removeClass("ibo-is-hidden");
+            $('#can-core-update-details').html(data.sMessageDetails);
+            $("#toggle-requirements-details").click( function() { $("#can-core-update-details").toggle(); } );
+        }
+        oRequirements.removeClass("ibo-is-information");
+        if (data.bStatus) {
+            oRequirements.addClass("ibo-is-success");
+            $("#check-update").prop("disabled", false);
+            $("#file").prop("disabled", false);
+            $("#file-container").removeClass("ibo-is-hidden");
+            $("#check-in-progress").addClass("ibo-is-hidden");
+        } else {
+            $("#check-update").prop("disabled", true);
+            $("#file").prop("disabled", true);
+            $('#form-update-outer').slideUp(600);
+            oRequirements.addClass("ibo-is-failure");
+        }
+    }
+});
+
+var oGetItopDiskSpace = $.ajax({
+    method: "POST",
+    url: "{{ sAjaxURL|raw }}",
+    data: {
+        route: "core_update_ajax.get_itop_disk_space",
+        maintenance: true
+    },
+    dataType: "json",
+    success: function(data)
+    {
+        var oRequirement = $("#itop-disk-space");
+        oRequirement.html(data.sItopDiskSpace);
+    }
+});
+
+var oGetDBDiskSpace = $.ajax({
+    method: "POST",
+    url: "{{ sAjaxURL|raw }}",
+    data: {
+        route: "core_update_ajax.get_d_b_disk_space",
+        maintenance: true
+    },
+    dataType: "json",
+    success: function(data)
+    {
+        var oRequirement = $("#db-disk-space");
+        oRequirement.html(data.sDBDiskSpace);
+    }
+});
+
+$.when(oGetItopDiskSpace, oGetDBDiskSpace).then(
+    function(data1, data2)
+    {
+        var iItopDiskSpace = data1[0].iItopDiskSpace;
+        var iDBDiskSpace = data2[0].iDBDiskSpace;
+        if ((2 * (iItopDiskSpace + iDBDiskSpace)) > iDiskFreeSpace)
+        {
+            $("#dobackup-warning").removeClass("ibo-is-hidden");
+        }
+    }
+);
+
+$("#file").on("change", function(e) {
+    var selectedFile = $('#file').get(0).files[0];
+    var errorMsg = $("#header-file-size");
+    var submitButton = $("#check-update");
+    if (selectedFile)
+    {
+        if (selectedFile.size > {{ iFileUploadMaxSize }})
+        {
+            errorMsg.removeClass("ibo-is-hidden");
+            submitButton.prop("disabled", true);
+            return;
+        }
+    }
+    errorMsg.addClass("ibo-is-hidden");
+    submitButton.prop("disabled", false);
+});
+
+$("#check-update").on("click", function(e) {
+    $("#submit-wait").removeClass("ibo-is-hidden");
+    $(this).prop("disabled", true);
+    $(".ajax-spin").removeClass("fa-sync-alt").removeClass("fa-spin").addClass("fa-times");
+    $(this).parents('form').submit();
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+});
+
+$("#launch-setup-form").on("submit", function () {
+    return window.confirm("{{ 'iTopUpdate:UI:SetupLaunchConfirm'|dict_s }}");
+});

@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -25,7 +25,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'bkp-backup-running' => 'A backup is running. Please wait...~~',
 	'bkp-restore-running' => 'A restore is running. Please wait...~~',
 
-	'Menu:BackupStatus' => 'Scheduled Backups~~',
+	'Menu:BackupStatus' => 'Scheduled backups~~',
 	'bkp-status-title' => 'Scheduled Backups~~',
 	'bkp-status-checks' => 'Settings and checks~~',
 	'bkp-mysqldump-ok' => 'mysqldump is present: %1$s~~',

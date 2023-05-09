@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 <!DOCTYPE html>
 <html lang="{{ aPage.aMetadata.sLang }}">
@@ -66,14 +66,30 @@
 {% block iboPageTemplates %}
 {% endblock %}
 
-{% if aPage.aJsFiles is not empty %}
-    <script type="text/javascript">
-    var aListJsFiles = [];
-    {% for sJsFile in aPage.aJsFiles %}
-            aListJsFiles.push("{{ sJsFile|raw }}");
-        {% endfor %}
-    </script>
-{% endif %}
+<script type="text/javascript">
+{# JS files can either be loaded initially or requested by an XHR response                                          #}
+{# - For the initial page, all files are loaded before running inline snippets                                      #}
+{# - For XHR responses, we need to ensure that all required files are fully loaded before running inline snippets   #}
+
+/**
+ * @var {Map} aLoadedJsFilesRegister
+ * Register of all JS files loaded in this page, including the Promise corresponding to the loading state of each file.
+ * A JS file MUST NOT be loaded more than once as it could compromise settings / plugins loaded after the first time.
+ */
+const aLoadedJsFilesRegister = new Map();
+/**
+ * @var {Map} aLoadedJsFilesResolveCallbacks
+ * Resolve callbacks of JS files registered in aLoadedJsFilesRegister. Used -mostly in \AjaxPage- to know when a file is done loading so the depending snippets can run
+ */
+const aLoadedJsFilesResolveCallbacks = new Map();
+{% for sJsFile in aPage.aJsFiles %}
+aLoadedJsFilesRegister.set("{{ sJsFile|raw }}", new Promise(function(resolve) {
+    aLoadedJsFilesResolveCallbacks.set("{{ sJsFile|raw }}", resolve);
+    // Resolve promise right away as these files are loaded immediately before any inline JS is executed
+    aLoadedJsFilesResolveCallbacks.get("{{ sJsFile|raw }}")();
+}));
+{% endfor %}
+</script>
 
 {% block iboPageJsFiles %}
     {% for sJsFile in aPage.aJsFiles %}

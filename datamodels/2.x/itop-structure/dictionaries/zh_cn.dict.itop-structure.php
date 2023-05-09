@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -368,7 +368,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Person:info' => '基本信息',
-	'UserLocal:info' => '基本信息',
+	'User:info' => '基本信息',
 	'Person:personal_info' => '个人信息',
 	'Person:notifiy' => '通知',
 ));

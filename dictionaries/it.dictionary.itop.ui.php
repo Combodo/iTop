@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -416,7 +416,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveFromList' => ' Rimuovi >> ~~',
 	'UI:Button:FilterList' => ' Filtra... ~~',
 	'UI:Button:Create' => ' Crea ~~',
-	'UI:Button:Delete' => ' Cancella ! ~~',
+	'UI:Button:Delete' => ' Cancella ~~',
 	'UI:Button:Rename' => ' Rename... ~~',
 	'UI:Button:ChangePassword' => ' Cambia Password ~~',
 	'UI:Button:ResetPassword' => ' Resetta Password ~~',
@@ -805,7 +805,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Aggiungi l\'oggeto %1$s collegato con %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Aggiungi l\'oggeto %1$s al collegamento con %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Gestisci l\'oggetto %1$s collegato con %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Aggiungi %1$s...',
+	'UI:AddLinkedObjectsOf_Class' => 'Aggiungi %1$s',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Rimuovi gli oggetti selezionati',
 	'UI:Message:EmptyList:UseAdd' => 'La lista è vuota, utilizzare il pulsante "Aggiungi ..." per aggiungere elementi.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Utilizza il modulo di ricerca qui sopra per cercare oggetti da aggiungere.',
@@ -972,7 +972,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Menu:CSVImportMenu' => 'Importazione CSV',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Modello Dati',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Modello dati',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ExportMenu' => 'Esporta',// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1649,7 +1649,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:AdminTools' => 'Strumenti di amministrazione',
 	'Menu:AdminTools+' => '',
 	'Menu:AdminTools?' => 'Strumenti accessibile solo agli utenti con il profilo di amministratore',
-	'Menu:DataModelMenu' => 'Modello Dati',
+	'Menu:DataModelMenu' => 'Modello dati',
 	'Menu:DataModelMenu+' => '',
 	'Menu:ExportMenu' => 'Esporta',
 	'Menu:ExportMenu+' => '',

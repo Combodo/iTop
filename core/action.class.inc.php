@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Persistent classes (internal): user defined actions
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -43,22 +43,38 @@ abstract class Action extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array('name'),
-			"db_table" => "priv_action",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "realclass",
-			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-in-transit.svg'),
+			"category"                   => "grant_by_profile,core/cmdb",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "name",
+			"complementary_name_attcode" => array('finalclass', 'description'),
+			"state_attcode"              => "status",
+			"reconc_keys"                => array('name'),
+			"db_table"                   => "priv_action",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "realclass",
+			"style"                      => new ormStyle("ibo-dm-class--Action", "ibo-dm-class-alt--Action", "var(--ibo-dm-class--Action--main-color)", "var(--ibo-dm-class--Action--complementary-color)", null, '../images/icons/icons8-in-transit.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum(array('test'=>'Being tested' ,'enabled'=>'In production', 'disabled'=>'Inactive')), "sql"=>"status", "default_value"=>"test", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("trigger_list", array("linked_class"=>"lnkTriggerAction", "ext_key_to_me"=>"action_id", "ext_key_to_remote"=>"trigger_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values" => null, "sql" => "name", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array(
+			"allowed_values"  => new ValueSetEnum(array('test' => 'Being tested', 'enabled' => 'In production', 'disabled' => 'Inactive')),
+			"styled_values"   => [
+				'test'     => new ormStyle('ibo-dm-enum--Action-status-test', 'ibo-dm-enum-alt--Action-status-test', 'var(--ibo-dm-enum--Action-status-test--main-color)', 'var(--ibo-dm-enum--Action-status-test--complementary-color)', null, null),
+				'enabled'  => new ormStyle('ibo-dm-enum--Action-status-enabled', 'ibo-dm-enum-alt--Action-status-enabled', 'var(--ibo-dm-enum--Action-status-enabled--main-color)', 'var(--ibo-dm-enum--Action-status-enabled--complementary-color)', 'fas fa-check', null),
+				'disabled' => new ormStyle('ibo-dm-enum--Action-status-disabled', 'ibo-dm-enum-alt--Action-status-disabled', 'var(--ibo-dm-enum--Action-status-disabled--main-color)', 'var(--ibo-dm-enum--Action-status-disabled--complementary-color)', null, null),
+			],
+			"display_style"   => 'list',
+			"sql"             => "status",
+			"default_value"   => "test",
+			"is_null_allowed" => false,
+			"depends_on"      => array(),
+		)));
+
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("trigger_list",
+			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "action_id", "ext_key_to_remote" => "trigger_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => array(), "display_style" => 'property')));
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
@@ -66,10 +82,9 @@ abstract class Action extends cmdbAbstractObject
 		// - Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status'));
 		// Search criteria
-		// - Criteria of the std search form
+		// - Default criteria of the search form
 		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status'));
-		// - Criteria of the advanced search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
+
 	}
 
 	/**
@@ -168,13 +183,13 @@ abstract class ActionNotification extends Action
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array('name'),
-			"db_table" => "priv_action_notification",
-			"db_key_field" => "id",
+			"category"            => "grant_by_profile,core/cmdb",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "name",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('name'),
+			"db_table"            => "priv_action_notification",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -184,12 +199,12 @@ abstract class ActionNotification extends Action
 		// - Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'trigger_list'));
 		// - Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'description', 'status'));
 		// Search criteria
 		// - Criteria of the std search form
 //		MetaModel::Init_SetZListItems('standard_search', array('name'));
-		// - Criteria of the advanced search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
+		// - Default criteria of the search form
+//		MetaModel::Init_SetZListItems('default_search', array('name'));
 	}
 }
 
@@ -230,29 +245,56 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeEmailAddress("test_recipient", array("allowed_values"=>null, "sql"=>"test_recipient", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEmailAddress("test_recipient", array("allowed_values" => null, "sql" => "test_recipient", "default_value" => "", "is_null_allowed" => true, "depends_on" => array())));
 
-		MetaModel::Init_AddAttribute(new AttributeString("from", array("allowed_values"=>null, "sql"=>"from", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("from_label", array("allowed_values"=>null, "sql"=>"from_label", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("reply_to", array("allowed_values"=>null, "sql"=>"reply_to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("reply_to_label", array("allowed_values"=>null, "sql"=>"reply_to_label", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeOQL("to", array("allowed_values"=>null, "sql"=>"to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeOQL("cc", array("allowed_values"=>null, "sql"=>"cc", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeOQL("bcc", array("allowed_values"=>null, "sql"=>"bcc", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeTemplateString("subject", array("allowed_values"=>null, "sql"=>"subject", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeTemplateHTML("body", array("allowed_values"=>null, "sql"=>"body", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values"=>new ValueSetEnum('low,normal,high'), "sql"=>"importance", "default_value"=>'normal', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("from", array("allowed_values" => null, "sql" => "from", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeString("from_label", array("allowed_values" => null, "sql" => "from_label", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reply_to", array("allowed_values" => null, "sql" => "reply_to", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reply_to_label", array("allowed_values" => null, "sql" => "reply_to_label", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeOQL("to", array("allowed_values" => null, "sql" => "to", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeOQL("cc", array("allowed_values" => null, "sql" => "cc", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeOQL("bcc", array("allowed_values" => null, "sql" => "bcc", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeTemplateString("subject", array("allowed_values" => null, "sql" => "subject", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeTemplateHTML("body", array("allowed_values" => null, "sql" => "body", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values" => new ValueSetEnum('low,normal,high'), "sql" => "importance", "default_value" => 'normal', "is_null_allowed" => false, "depends_on" => array())));
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'test_recipient', 'from', 'from_label', 'reply_to', 'reply_to_label', 'to', 'cc', 'bcc', 'subject', 'body', 'importance', 'trigger_list'));
+		MetaModel::Init_SetZListItems('details', array(
+			'col:col1' => array(
+				'fieldset:ActionEmail:main'    => array(
+					0 => 'name',
+					1 => 'description',
+					2 => 'status',
+					3 => 'subject',
+					4 => 'body',
+					// 5 => 'importance', not handled when sending the mail, better hide it then
+				),
+				'fieldset:ActionEmail:trigger' => array(
+					0 => 'trigger_list',
+				),
+			),
+			'col:col2' => array(
+				'fieldset:ActionEmail:recipients' => array(
+					0 => 'from',
+					1 => 'from_label',
+					2 => 'reply_to',
+					3 => 'reply_to_label',
+					4 => 'test_recipient',
+					5 => 'to',
+					6 => 'cc',
+					7 => 'bcc',
+				),
+			),
+		));
+
 		// - Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'to', 'subject'));
+		MetaModel::Init_SetZListItems('list', array('status', 'to', 'subject'));
 		// Search criteria
-		// - Criteria of the std search form
-		MetaModel::Init_SetZListItems('standard_search', array('name','description', 'status', 'subject'));
-		// - Criteria of the advanced search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
+		// - Standard criteria of the search
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'status', 'subject'));
+		// - Default criteria for the search
+		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status', 'subject'));
 	}
 
 	// count the recipients found

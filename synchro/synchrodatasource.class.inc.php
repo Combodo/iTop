@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -2817,12 +2817,16 @@ class SynchroReplica extends DBObject implements iDisplay
 			$aData = $this->LoadExtendedDataFromTable($sSQLTable);
 
 			$aHeaders = array(
-				'attcode' => array('label' => 'Attribute Code', 'description' => ''),
-				'data'    => array('label' => 'Value', 'description' => ''),
+				'attcode' => array('label' => Dict::S('UI:Form:Property'), 'description' => ''),
+				'data'    => array('label' => Dict::S('UI:Form:Value'), 'description' => ''),
 			);
 			$aRows = array();
 			foreach ($aData as $sKey => $value) {
-				$aRows[] = array('attcode' => $sKey, 'data' => $value);
+				if (strpos(CMDBSource::GetFieldType($sSQLTable, $sKey), 'blob') !== false) {
+					$aRows[] = array('attcode' => $sKey, 'data' => sprintf('<i>%s (%s)</i>', Dict::S('Core:AttributeBlob'), utils::BytesToFriendlyFormat(strlen($value))));
+				} else {
+					$aRows[] = array('attcode' => $sKey, 'data' => utils::EscapeHtml($value));
+				}
 			}
 			$oPage->Table($aHeaders, $aRows);
 			$oPage->add('</fieldset>');
@@ -3531,17 +3535,24 @@ class SynchroExecution
 			$oSetToProcess = $oSetScope;
 		}
 
-		$iLastReplicaProcessed = -1;
-		/** @var \SynchroReplica $oReplica */
-		while ($oReplica = $oSetToProcess->Fetch())
-		{
-			set_time_limit(intval($iLoopTimeLimit));
-			$iLastReplicaProcessed = $oReplica->GetKey();
-			$this->m_oStatLog->AddTrace("Synchronizing replica id=$iLastReplicaProcessed.");
-			$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange,
-				$this->m_oStatLog);
-			$this->m_oStatLog->AddTrace("Updating replica id=$iLastReplicaProcessed.");
-			$oReplica->DBUpdate();
+		// Avoid too many events
+		cmdbAbstractObject::SetEventDBLinksChangedBlocked(true);
+		try {
+			$iLastReplicaProcessed = -1;
+			/** @var \SynchroReplica $oReplica */
+			while ($oReplica = $oSetToProcess->Fetch()) {
+				set_time_limit(intval($iLoopTimeLimit));
+				$iLastReplicaProcessed = $oReplica->GetKey();
+				$this->m_oStatLog->AddTrace("Synchronizing replica id=$iLastReplicaProcessed.");
+				$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange,
+					$this->m_oStatLog);
+				$this->m_oStatLog->AddTrace("Updating replica id=$iLastReplicaProcessed.");
+				$oReplica->DBUpdate();
+			}
+		} finally {
+			// Send all the retained events for further computations
+			cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
+			cmdbAbstractObject::FireEventDbLinksChangedForAllObjects();
 		}
 
 		if ($iMaxReplica)

@@ -100,7 +100,7 @@
         <field id="softwares_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareInstance</linked_class>
           <ext_key_to_me>system_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -227,10 +227,13 @@
 			foreach ($aSearches as $sSubClass => $oSearch)
 			{
 				$sBlockId = __class__.'_opened_'.$sSubClass;
-
-				$oPage->AddUiBlock(\Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory::MakeNeutral(MetaModel::GetName($sSubClass), 2));
 				$oBlock = new DisplayBlock($oSearch, 'list', false);
-				$oBlock->Display($oPage, $sBlockId, array('menu' => false));
+				$oBlock->Display($oPage, $sBlockId, array(
+				    'menu' => false,
+				    'panel_title' => MetaModel::GetName($sSubClass),
+				    'panel_icon' => MetaModel::GetClassIcon($sSubClass, false)
+				    )
+				);
 			}
 		}
 	}]]></code>
@@ -541,7 +544,7 @@
         <field id="physicalinterface_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalInterface</linked_class>
           <ext_key_to_me>connectableci_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -773,7 +776,7 @@
         <field id="fiberinterfacelist_list" xsi:type="AttributeLinkedSet">
           <linked_class>FiberChannelInterface</linked_class>
           <ext_key_to_me>datacenterdevice_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -2064,7 +2067,7 @@
         <field id="middlewareinstance_list" xsi:type="AttributeLinkedSet">
           <linked_class>MiddlewareInstance</linked_class>
           <ext_key_to_me>middleware_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -2195,7 +2198,7 @@
         <field id="dbschema_list" xsi:type="AttributeLinkedSet">
           <linked_class>DatabaseSchema</linked_class>
           <ext_key_to_me>dbserver_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -2326,7 +2329,7 @@
         <field id="webapp_list" xsi:type="AttributeLinkedSet">
           <linked_class>WebApplication</linked_class>
           <ext_key_to_me>webserver_id</ext_key_to_me>
-          <legacy_edit_mode>in_place</legacy_edit_mode>
+          <edit_mode>in_place</edit_mode>
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -3080,7 +3083,7 @@
         <field id="softwareinstance_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareInstance</linked_class>
           <ext_key_to_me>software_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3089,7 +3092,7 @@
         <field id="softwarepatch_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwarePatch</linked_class>
           <ext_key_to_me>software_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3098,7 +3101,7 @@
         <field id="softwarelicence_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareLicence</linked_class>
           <ext_key_to_me>software_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3673,7 +3676,7 @@
         <field id="virtualmachines_list" xsi:type="AttributeLinkedSet">
           <linked_class>VirtualMachine</linked_class>
           <ext_key_to_me>oslicence_id</ext_key_to_me>
-          <legacy_edit_mode>none</legacy_edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3682,7 +3685,7 @@
         <field id="servers_list" xsi:type="AttributeLinkedSet">
           <linked_class>Server</linked_class>
           <ext_key_to_me>oslicence_id</ext_key_to_me>
-          <legacy_edit_mode>none</legacy_edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3818,7 +3821,7 @@
         <field id="softwareinstance_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareInstance</linked_class>
           <ext_key_to_me>softwarelicence_id</ext_key_to_me>
-          <legacy_edit_mode>none</legacy_edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>
@@ -3922,8 +3925,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="licence_id"/>
-            <attribute id="document_id"/>
+            <attribute id="document_name"/>
+            <attribute id="licence_name"/>
           </attributes>
         </naming>
         <style>
@@ -3935,6 +3938,17 @@
             <attribute id="document_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="document_id"/>
+              <attribute id="licence_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="licence_id" xsi:type="AttributeExternalKey">
@@ -3962,10 +3976,10 @@
       <presentation>
         <details>
           <items>
-            <item id="licence_id">
+            <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="document_id">
+            <item id="licence_id">
               <rank>20</rank>
             </item>
           </items>
@@ -4145,7 +4159,7 @@
         <field id="physicaldevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalDevice</linked_class>
           <ext_key_to_me>brand_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -4292,7 +4306,7 @@
         <field id="physicaldevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalDevice</linked_class>
           <ext_key_to_me>model_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -4370,7 +4384,7 @@
         <field id="networkdevicesdevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>NetworkDevice</linked_class>
           <ext_key_to_me>networkdevicetype_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -4487,8 +4501,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="functionalci_id"/>
-            <attribute id="contact_id"/>
+            <attribute id="contact_name"/>
+            <attribute id="functionalci_name"/>
           </attributes>
         </naming>
         <style>
@@ -4500,6 +4514,17 @@
             <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="contact_id"/>
+              <attribute id="functionalci_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="functionalci_id" xsi:type="AttributeExternalKey">
@@ -4527,10 +4552,10 @@
       <presentation>
         <details>
           <items>
-            <item id="functionalci_id">
+            <item id="contact_id">
               <rank>10</rank>
             </item>
-            <item id="contact_id">
+            <item id="functionalci_id">
               <rank>20</rank>
             </item>
           </items>
@@ -4547,10 +4572,10 @@
         </search>
         <list>
           <items>
-            <item id="functionalci_id">
+            <item id="contact_id">
               <rank>10</rank>
             </item>
-            <item id="contact_id">
+            <item id="functionalci_id">
               <rank>20</rank>
             </item>
           </items>
@@ -4569,8 +4594,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="patch_id"/>
-            <attribute id="document_id"/>
+            <attribute id="document_name"/>
+            <attribute id="patch_name"/>
           </attributes>
         </naming>
         <style>
@@ -4582,6 +4607,17 @@
             <attribute id="document_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="document_id"/>
+              <attribute id="patch_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="patch_id" xsi:type="AttributeExternalKey">
@@ -4609,10 +4645,10 @@
       <presentation>
         <details>
           <items>
-            <item id="patch_id">
+            <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="document_id">
+            <item id="patch_id">
               <rank>20</rank>
             </item>
           </items>
@@ -4651,8 +4687,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="softwarepatch_id"/>
-            <attribute id="softwareinstance_id"/>
+            <attribute id="softwareinstance_name"/>
+            <attribute id="softwarepatch_name"/>
           </attributes>
         </naming>
         <style>
@@ -4664,6 +4700,17 @@
             <attribute id="softwareinstance_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="softwareinstance_id"/>
+              <attribute id="softwarepatch_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="softwarepatch_id" xsi:type="AttributeExternalKey">
@@ -4691,10 +4738,10 @@
       <presentation>
         <details>
           <items>
-            <item id="softwarepatch_id">
+            <item id="softwareinstance_id">
               <rank>10</rank>
             </item>
-            <item id="softwareinstance_id">
+            <item id="softwarepatch_id">
               <rank>20</rank>
             </item>
           </items>
@@ -4733,8 +4780,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="ospatch_id"/>
-            <attribute id="functionalci_id"/>
+            <attribute id="functionalci_name"/>
+            <attribute id="ospatch_name"/>
           </attributes>
         </naming>
         <style>
@@ -4746,6 +4793,17 @@
             <attribute id="functionalci_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="functionalci_id"/>
+              <attribute id="ospatch_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ospatch_id" xsi:type="AttributeExternalKey">
@@ -4773,10 +4831,10 @@
       <presentation>
         <details>
           <items>
-            <item id="ospatch_id">
+            <item id="functionalci_id">
               <rank>10</rank>
             </item>
-            <item id="functionalci_id">
+            <item id="ospatch_id">
               <rank>20</rank>
             </item>
           </items>
@@ -4815,8 +4873,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="software_id"/>
-            <attribute id="document_id"/>
+            <attribute id="document_name"/>
+            <attribute id="software_name"/>
           </attributes>
         </naming>
         <style>
@@ -4828,6 +4886,17 @@
             <attribute id="document_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="document_id"/>
+              <attribute id="software_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="software_id" xsi:type="AttributeExternalKey">
@@ -4855,10 +4924,10 @@
       <presentation>
         <details>
           <items>
-            <item id="software_id">
+            <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="document_id">
+            <item id="software_id">
               <rank>20</rank>
             </item>
           </items>
@@ -4897,8 +4966,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="functionalci_id"/>
-            <attribute id="document_id"/>
+            <attribute id="document_name"/>
+            <attribute id="functionalci_name"/>
           </attributes>
         </naming>
         <style>
@@ -4910,6 +4979,17 @@
             <attribute id="document_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="document_id"/>
+              <attribute id="functionalci_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="functionalci_id" xsi:type="AttributeExternalKey">
@@ -4937,10 +5017,10 @@
       <presentation>
         <details>
           <items>
-            <item id="functionalci_id">
+            <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="document_id">
+            <item id="functionalci_id">
               <rank>20</rank>
             </item>
           </items>
@@ -5062,7 +5142,12 @@
         $oIfFilter = DBObjectSearch::FromOQL("SELECT IPInterface AS if WHERE INET_ATON(if.ipaddress) >= INET_ATON('$sIPMin') AND INET_ATON(if.ipaddress) <= INET_ATON('$sIPMax')");
         $oIfSet = new CMDBObjectSet($oIfFilter);
         $oBlock = new DisplayBlock($oIfFilter, 'list', false);
-        $oBlock->Display($oPage, 'nwif', array('menu' => false));
+        $oBlock->Display($oPage, 'nwif', array(
+            'menu' => false,
+            'panel_title' => MetaModel::GetName('IPInterface'),
+				    'panel_icon' => MetaModel::GetClassIcon('IPInterface', false)
+            )
+        );
 
         $iCountUsed = $oIfSet->Count();
         $iCountRange = $iIPMax - $iIPMin; // On 32-bit systems the substraction will be computed using floats for values greater than PHP_MAX_INT;
@@ -5296,8 +5381,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="subnet_id"/>
-            <attribute id="vlan_id"/>
+            <attribute id="subnet_name"/>
+            <attribute id="vlan_tag"/>
           </attributes>
         </naming>
         <style>
@@ -5309,6 +5394,17 @@
             <attribute id="vlan_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="subnet_id"/>
+              <attribute id="vlan_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="subnet_id" xsi:type="AttributeExternalKey">
@@ -5715,8 +5811,9 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="physicalinterface_id"/>
-            <attribute id="vlan_id"/>
+            <attribute id="physicalinterface_device_name"/>
+            <attribute id="physicalinterface_name"/>
+            <attribute id="vlan_tag"/>
           </attributes>
         </naming>
         <style>
@@ -5728,6 +5825,17 @@
             <attribute id="vlan_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="physicalinterface_id"/>
+              <attribute id="vlan_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="physicalinterface_id" xsi:type="AttributeExternalKey">
@@ -5805,8 +5913,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="networkdevice_id"/>
-            <attribute id="connectableci_id"/>
+            <attribute id="connectableci_name"/>
+            <attribute id="networkdevice_name"/>
           </attributes>
         </naming>
         <style>
@@ -5818,6 +5926,17 @@
             <attribute id="connectableci_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="networkdevice_id"/>
+              <attribute id="connectableci_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="networkdevice_id" xsi:type="AttributeExternalKey">
@@ -6037,16 +6156,16 @@
       <presentation>
         <details>
           <items>
-            <item id="networkdevice_id">
+            <item id="connectableci_id">
               <rank>10</rank>
             </item>
-            <item id="connectableci_id">
+            <item id="device_port">
               <rank>20</rank>
             </item>
-            <item id="network_port">
+            <item id="networkdevice_id">
               <rank>30</rank>
             </item>
-            <item id="device_port">
+            <item id="network_port">
               <rank>40</rank>
             </item>
             <item id="connection_type">
@@ -6075,16 +6194,16 @@
         </search>
         <list>
           <items>
-            <item id="networkdevice_id">
+            <item id="connectableci_id">
               <rank>10</rank>
             </item>
-            <item id="connectableci_id">
+            <item id="networkdevice_id">
               <rank>20</rank>
             </item>
-            <item id="network_port">
+            <item id="device_port">
               <rank>30</rank>
             </item>
-            <item id="device_port">
+            <item id="network_port">
               <rank>40</rank>
             </item>
             <item id="connection_type">
@@ -6106,8 +6225,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="applicationsolution_id"/>
-            <attribute id="functionalci_id"/>
+            <attribute id="applicationsolution_name"/>
+            <attribute id="functionalci_name"/>
           </attributes>
         </naming>
         <style>
@@ -6119,6 +6238,17 @@
             <attribute id="functionalci_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="applicationsolution_id"/>
+              <attribute id="functionalci_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="applicationsolution_id" xsi:type="AttributeExternalKey">
@@ -6188,8 +6318,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="businessprocess_id"/>
-            <attribute id="applicationsolution_id"/>
+            <attribute id="applicationsolution_name"/>
+            <attribute id="businessprocess_name"/>
           </attributes>
         </naming>
         <style>
@@ -6201,6 +6331,17 @@
             <attribute id="applicationsolution_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="applicationsolution_id"/>
+              <attribute id="businessprocess_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="businessprocess_id" xsi:type="AttributeExternalKey">
@@ -6228,10 +6369,10 @@
       <presentation>
         <details>
           <items>
-            <item id="businessprocess_id">
+            <item id="applicationsolution_id">
               <rank>10</rank>
             </item>
-            <item id="applicationsolution_id">
+            <item id="businessprocess_id">
               <rank>20</rank>
             </item>
           </items>
@@ -6440,7 +6581,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="group_id"/>
+            <attribute id="group_name"/>
+            <attribute id="ci_name"/>
           </attributes>
         </naming>
         <style>
@@ -6452,6 +6594,17 @@
             <attribute id="ci_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="group_id"/>
+              <attribute id="ci_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="group_id" xsi:type="AttributeExternalKey">
@@ -6551,7 +6704,7 @@
         <field id="physicaldevice_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>PhysicalDevice</linked_class>
           <ext_key_to_me>location_id</ext_key_to_me>
-          <legacy_edit_mode>add_only</legacy_edit_mode>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <relation_type>link</relation_type>

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactor
 /**
  * Bulk export: XML export
  *
- * @copyright   Copyright (C) 2015-2021 Combodo SARL
+ * @copyright   Copyright (C) 2015-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class XMLBulkExport extends BulkExport

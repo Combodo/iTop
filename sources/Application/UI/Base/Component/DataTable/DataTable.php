@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -48,10 +48,18 @@ class DataTable extends UIContentBlock
 	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
+	/**
+	 * @var string
+	 */
+	protected $sJsonData;
 	/*
 	 * array of data to display the first page
 	 */
 	protected $aInitDisplayData;
+	/**
+	 * @var string JS Handler to be called when "open_creation_modal.object.itop" is fired on the table
+	 */
+	protected string $sModalCreationHandler;
 
 	public const DEFAULT_ACTION_ROW_CONFIRMATION = true;
 
@@ -69,6 +77,7 @@ class DataTable extends UIContentBlock
 		$this->aOptions = [];
 		$this->aResultColumns = [];
 		$this->sJsonData = '';
+		$this->sModalCreationHandler = '';
 	}
 
 	/**
@@ -254,6 +263,24 @@ class DataTable extends UIContentBlock
 		}
 
 		return [];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetModalCreationHandler(): string
+	{
+		return $this->sModalCreationHandler;
+	}
+
+	/**
+	 * @param string $sModalCreationHandler
+	 * @return $this
+	 */
+	public function SetModalCreationHandler(string $sModalCreationHandler)
+	{
+		$this->sModalCreationHandler = $sModalCreationHandler;
+		return $this;
 	}
 
 }

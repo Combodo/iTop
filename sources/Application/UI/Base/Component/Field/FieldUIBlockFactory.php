@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -16,9 +16,10 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  *
  * Use it to make a "field" which is composed of a label and a value (which can be read-only or editable)
  *
+ * @api
+ * @package UIBlockAPI
  * @author Pierre Goiffon <pierre.goiffon@combodo.com>
  * @since 3.0.0
- * @internal
  */
 class FieldUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -27,6 +28,12 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Field::class;
 
+	/**
+	 * @api
+	 * @param $aParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
+	 */
 	public static function MakeFromParams($aParams)
 	{
 		$oValue = new Html($aParams['value']);
@@ -75,6 +82,14 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 		$oField->$sMethodName((($iParamsFlags & $iConstant) === $iConstant));
 	}
 
+	/**
+	 * @api
+	 * @param string $sLabel
+	 * @param \Combodo\iTop\Application\UI\Base\UIBlock $oInput
+	 * @param string|null $sLayout
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
+	 */
 	public static function MakeFromObject(string $sLabel, UIBlock $oInput, ?string $sLayout = null)
 	{
 		$oField = new Field($sLabel, $oInput);
@@ -86,23 +101,51 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 		return $oField;
 	}
 
-	public static function MakeLarge(string $sLabel, string $sValueHtml = '')
+	/**
+	 * @api
+	 * @param string $sLabel
+	 * @param string $sValueHtml
+	 * @param string $sDescription
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
+	 */
+	public static function MakeLarge(string $sLabel, string $sValueHtml = '', string $sDescription = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
+		$oField->SetDescription($sDescription);
 		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_LARGE);
 		return $oField;
 	}
 
-	public static function MakeSmall(string $sLabel, string $sValueHtml = '')
+	/**
+	 * @api
+	 * @param string $sLabel
+	 * @param string $sValueHtml
+	 * @param string $sDescription
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
+	 */
+	public static function MakeSmall(string $sLabel, string $sValueHtml = '', string $sDescription = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
+		$oField->SetDescription($sDescription);
 		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_SMALL);
 		return $oField;
 	}
 
-	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null)
+	/**
+	 * @api
+	 * @param string $sLabel
+	 * @param string $sLayout
+	 * @param string|null $sId
+	 * @param string $sDescription
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Field\Field
+	 */
+	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null, string $sDescription = '')
 	{
 		$oField = new Field($sLabel, null, $sId);
+		$oField->SetDescription($sDescription);
 		$oField->SetLayout($sLayout);
 		return $oField;
 

@@ -3,7 +3,7 @@
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -386,7 +386,7 @@ EOF;
 		if (!$oPage->IsPrintableVersion())
 		{
 			$sMenuTitle = Dict::S('UI:ConfigureThisList');
-			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><i class="fas fa-tools"></i><i class="fas fa-caret-down"></i><ul>';
+			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li aria-label="'.Dict::S('UI:Menu:Toolkit').'"><i class="fas fa-tools"></i><i class="fas fa-caret-down"></i><ul>';
 	
 			$oMenuItem1 = new JSPopupMenuItem('iTop::ConfigureList', $sMenuTitle, "$('#datatable_dlg_".$this->iListId."').dialog('open');");
 			$aActions = array(

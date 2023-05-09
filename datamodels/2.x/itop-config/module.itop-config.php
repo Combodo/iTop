@@ -19,7 +19,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-config.php',
 			'src/Validator/ConfigNodesVisitor.php',
 			'src/Validator/iTopConfigAstValidator.php',
 			'src/Validator/iTopConfigSyntaxValidator.php',

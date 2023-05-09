@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
  * Localized data
  *
  * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -1473,7 +1473,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Group/Attribute:parent_name' => 'Adı',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'Bağlantılı Konfigürasyon Kalemleri (KK)',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Ana Grup',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 ));

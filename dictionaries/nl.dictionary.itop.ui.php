@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -416,7 +416,7 @@ We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben ge
 	'UI:Button:RemoveFromList' => ' Verwijder >> ',
 	'UI:Button:FilterList' => ' Filter... ',
 	'UI:Button:Create' => ' Maak aan ',
-	'UI:Button:Delete' => ' Verwijder ! ',
+	'UI:Button:Delete' => ' Verwijder ',
 	'UI:Button:Rename' => ' Hernoem... ',
 	'UI:Button:ChangePassword' => ' Verander wachtwoord ',
 	'UI:Button:ResetPassword' => ' Stel wachtwoord opnieuw in ',
@@ -805,7 +805,7 @@ We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben ge
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Voeg %1$s objecten gelinkt met %2$s: %3$s toe',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Voeg %1$s objecten toe om te linken met de %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Manage %1$s objecten gelinkt met %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Voeg %1$s toe...',
+	'UI:AddLinkedObjectsOf_Class' => 'Voeg %1$s toe',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Verwijder geselecteerde objecten',
 	'UI:Message:EmptyList:UseAdd' => 'De lijst is leeg, gebruik de "Voeg toe..." knop om elementen toe te voegen.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Gebruik het bovenstaande zoekveld om te zoeker naar objecten die je wilt toevoegen.',

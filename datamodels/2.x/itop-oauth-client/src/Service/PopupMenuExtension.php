@@ -1,13 +1,12 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2022 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\OAuthClient\Service;
 
 use ApplicationContext;
-use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use Dict;
 use iPopupMenuExtension;
 use JSPopupMenuItem;
@@ -42,11 +41,10 @@ class PopupMenuExtension implements \iPopupMenuExtension
 					$sAjaxUri = utils::GetAbsoluteUrlModulePage(static::MODULE_CODE, 'ajax.php');
 					// Add a new menu item that triggers a custom JS function defined in our own javascript file: js/sample.js
 					$sJSFileUrl = 'env-'.utils::GetCurrentEnvironment().'/'.static::MODULE_CODE.'/assets/js/oauth_connect.js';
-					$sRedirectUri = OAuthClientProviderFactory::GetRedirectUri();
 					$aResult[] = new JSPopupMenuItem(
 						$sMenu.' from '.$sObjClass,
 						Dict::S($sMenu),
-						"OAuthConnect('$sClass', $sId, '$sAjaxUri', '$sRedirectUri')",
+						"OAuthConnect('$sClass', $sId, '$sAjaxUri')",
 						[$sJSFileUrl]
 					);
 

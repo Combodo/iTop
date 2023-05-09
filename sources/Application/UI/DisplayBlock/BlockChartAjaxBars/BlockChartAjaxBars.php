@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -28,7 +28,9 @@ class BlockChartAjaxBars extends UIBlock
 	public $sId;
 	/** @var string */
 	public $sJSURLs;
-
+	/** @var string */
 	public $sURLForRefresh;
+	/** @var int */
+	public $iMaxNbCharsInLabel;
 
 }
