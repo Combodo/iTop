@@ -456,7 +456,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_filename_builder_impl' => [
+		'log_filename_builder_impl'             => [
 			'type' => 'string',
 			'description' => 'Name of the iLogFileNameBuilder to use',
 			'default' => 'MonthlyRotatingLogFileNameBuilder',
@@ -464,39 +464,47 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_rest_service' => [
-			'type' => 'bool',
-			'description' => 'Log the usage of the REST/JSON service',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'log_rest_service'                      => [
+			'type'                => 'bool',
+			'description'         => 'Log the usage of the REST/JSON service',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'synchro_trace' => [
-			'type' => 'string',
-			'description' => 'Synchronization details: none, display, save (includes \'display\')',
-			'default' => 'none',
-			'value' => 'none',
-			'source_of_value' => '',
+		'synchro_trace'                         => [
+			'type'                => 'string',
+			'description'         => 'Synchronization details: none, display, save (includes \'display\')',
+			'default'             => 'none',
+			'value'               => 'none',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_item_separator' => [
-			'type' => 'string',
-			'description' => 'Link set from string: line separator',
-			'default' => '|',
-			'value' => '|',
-			'source_of_value' => '',
+		'synchro_obsolete_replica_locks_object' => [
+			'type'                => 'bool',
+			'description'         => 'Obsolete synchro replicas prevent object modification by any mean (eg. anonymization)',
+			'default'             => 'true',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_attribute_separator' => [
-			'type' => 'string',
+		'link_set_item_separator'               => [
+			'type'                => 'string',
+			'description'         => 'Link set from string: line separator',
+			'default'             => '|',
+			'value'               => '|',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
+		'link_set_attribute_separator'          => [
+			'type'                => 'string',
 			'description' => 'Link set from string: attribute separator',
 			'default' => ';',
 			'value' => ';',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_value_separator' => [
+		'link_set_value_separator'              => [
 			'type' => 'string',
 			'description' => 'Link set from string: value separator (between the attcode and the value itself',
 			'default' => ':',

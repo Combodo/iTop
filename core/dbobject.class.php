@@ -5063,28 +5063,27 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetSynchroData()
+	public function GetSynchroData($bIncludeObsolete = true)
 	{
-		if (is_null($this->m_aSynchroData))
-		{
+		if (is_null($this->m_aSynchroData)) {
 			$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE replica.dest_class = :dest_class AND replica.dest_id = :dest_id";
+			if (!$bIncludeObsolete) {
+				$sOQL .= " AND replica.status != 'obsolete'";
+			}
 			$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_class' => get_class($this), 'dest_id' => $this->GetKey()));
 			$this->m_aSynchroData = array();
-			while($aData = $oReplicaSet->FetchAssoc())
-			{
+			while ($aData = $oReplicaSet->FetchAssoc()) {
 				/** @var \DBObject[] $aData */
 				$iSourceId = $aData['datasource']->GetKey();
-				if (!array_key_exists($iSourceId, $this->m_aSynchroData))
-				{
+				if (!array_key_exists($iSourceId, $this->m_aSynchroData)) {
 					$aAttributes = array();
 					$oAttrSet = $aData['datasource']->Get('attribute_list');
-					while($oSyncAttr = $oAttrSet->Fetch())
-					{
+					while ($oSyncAttr = $oAttrSet->Fetch()) {
 						/** @var \DBObject $oSyncAttr */
 						$aAttributes[$oSyncAttr->Get('attcode')] = $oSyncAttr;
 					}
 					$this->m_aSynchroData[$iSourceId] = array(
-						'source' => $aData['datasource'],
+						'source'     => $aData['datasource'],
 						'attributes' => $aAttributes,
 						'replica' => array()
 					);
@@ -5113,18 +5112,15 @@ abstract class DBObject implements iDisplay
 	public function GetSynchroReplicaFlags($sAttCode, &$aReason)
 	{
 		$iFlags = OPT_ATT_NORMAL;
-		foreach ($this->GetSynchroData() as $iSourceId => $aSourceData)
-		{
-			if ($iSourceId == SynchroExecution::GetCurrentTaskId())
-			{
+		foreach ($this->GetSynchroData(MetaModel::GetConfig()->Get('synchro_obsolete_replica_locks_object')) as $iSourceId => $aSourceData) {
+			if ($iSourceId == SynchroExecution::GetCurrentTaskId()) {
 				// Ignore the current task (check to write => ok)
 				continue;
 			}
 			// Assumption: one replica - take the first one!
 			$oReplica = reset($aSourceData['replica']);
 			$oSource = $aSourceData['source'];
-			if (array_key_exists($sAttCode, $aSourceData['attributes']))
-			{
+			if (array_key_exists($sAttCode, $aSourceData['attributes'])) {
 				/** @var \DBObject $oSyncAttr */
 				$oSyncAttr = $aSourceData['attributes'][$sAttCode];
 				if (($oSyncAttr->Get('update') == 1) && ($oSyncAttr->Get('update_policy') == 'master_locked'))
