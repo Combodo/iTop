@@ -3335,6 +3335,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'lnkAuditCategoryToAuditDomain' => __DIR__ . '/../..' . '/application/audit.domain.class.inc.php',
         'lnkTriggerAction' => __DIR__ . '/../..' . '/core/trigger.class.inc.php',
         'ormCaseLog' => __DIR__ . '/../..' . '/core/ormcaselog.class.inc.php',
+        'ormCaseLogService' => __DIR__ . '/../..' . '/core/ormcaselogservice.inc.php',
         'ormCustomFieldsValue' => __DIR__ . '/../..' . '/core/ormcustomfieldsvalue.class.inc.php',
         'ormDocument' => __DIR__ . '/../..' . '/core/ormdocument.class.inc.php',
         'ormLinkSet' => __DIR__ . '/../..' . '/core/ormlinkset.class.inc.php',
