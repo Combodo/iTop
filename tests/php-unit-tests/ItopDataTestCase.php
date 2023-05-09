@@ -286,16 +286,24 @@ class ItopDataTestCase extends ItopTestCase
 	{
 		$oFilter = DBSearch::FromOQL($sOQL);
 		$aRes = $oFilter->ToDataArray(array('id'));
-		foreach ($aRes as $aRow)
-		{
+		foreach ($aRes as $aRow) {
 			$this->debug($aRow);
 			$iKey = $aRow['id'];
-			if (!empty($iKey))
-			{
+			if (!empty($iKey)) {
 				$oObject = MetaModel::GetObject($sClass, $iKey);
 				$oObject->DBDelete();
 			}
 		}
+	}
+
+	protected function GetUserRequestParams($iNum) {
+		return [
+			'ref'         => 'Ticket_'.$iNum,
+			'title'       => 'BUG 1161_'.$iNum,
+			//'request_type' => 'incident',
+			'description' => 'Add aggregate functions',
+			'org_id'      => $this->getTestOrgId(),
+		];
 	}
 
 	/**
@@ -315,13 +323,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @uses createObject
 	 */
 	protected function CreateUserRequest($iNum, $aUserRequestCustomParams = []) {
-		$aUserRequestDefaultParams = [
-			'ref' => 'Ticket_'.$iNum,
-			'title' => 'BUG 1161_'.$iNum,
-			//'request_type' => 'incident',
-			'description' => 'Add aggregate functions',
-			'org_id' => $this->getTestOrgId(),
-		];
+		$aUserRequestDefaultParams = $this->GetUserRequestParams($iNum);
 
 		$aUserRequestParams = array_merge($aUserRequestDefaultParams, $aUserRequestCustomParams);
 
