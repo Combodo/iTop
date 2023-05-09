@@ -33,7 +33,7 @@ class ormCaseLogTest extends ItopDataTestCase
 		$oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
 
 		if (is_object($oAdminProfile)) {
-			$this->sLogin = "admin-".date('dmYHis');
+			$this->sLogin = sprintf("admin-%s-%s", date('dmYHis'), uniqid());
 
 			$this->CreateTestOrganization();
 
