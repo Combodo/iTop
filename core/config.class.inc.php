@@ -483,7 +483,7 @@ class Config
 		'synchro_obsolete_replica_locks_object' => [
 			'type'                => 'bool',
 			'description'         => 'Obsolete synchro replicas prevent object modification by any mean (eg. anonymization)',
-			'default'             => 'true',
+			'default'             => true,
 			'value'               => '',
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
