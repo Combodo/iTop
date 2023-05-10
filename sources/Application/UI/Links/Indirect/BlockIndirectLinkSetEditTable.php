@@ -492,10 +492,10 @@ JS
 		$aRowActions = array();
 
 		$sRemoveButtonTooltip = $this->oAttributeLinkedSetIndirect->SearchSpecificLabel('UI:Links:Remove:Button+', '', true,
-			Dict::S("Class:{$this->oAttributeLinkedSetIndirect->GetHostClass()}"),
+			MetaModel::GetName($this->oAttributeLinkedSetIndirect->GetHostClass()),
 			$oHostObject->Get('friendlyname'),
 			$this->oAttributeLinkedSetIndirect->GetLabel(),
-			Dict::S("Class:{$this->oUILinksWidget->GetRemoteClass()}"));
+			MetaModel::GetName($this->oUILinksWidget->GetRemoteClass()));
 
 		if ($this->bIsAllowDelete) {
 			$aRowActions[] = array(

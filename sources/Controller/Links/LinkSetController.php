@@ -208,10 +208,10 @@ JS;
 			$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$oHostObj = MetaModel::GetObject($sClass, $sId);
 			$sFormTitle = $oLinksetDef->SearchSpecificLabel('UI:Links:Add:Modal:Title', '', true,
-				Dict::S("Class:{$sClass}"),
+				MetaModel::GetName($sClass),
 				$oHostObj->Get('friendlyname'),
 				$oLinksetDef->GetLabel(),
-				LinkSetModel::GetTargetClass($oLinksetDef));
+				MetaModel::GetName(LinkSetModel::GetTargetClass($oLinksetDef)));
 
 			$aExtraParams = [
 				'noRelations'           => true,

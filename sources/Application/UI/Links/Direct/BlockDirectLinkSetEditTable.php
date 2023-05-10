@@ -307,16 +307,16 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 		$aRowActions = array();
 
 		$sDeleteButtonTooltip = $this->oAttributeLinkedSet->SearchSpecificLabel('UI:Links:Delete:Button+', '', true,
-			Dict::S("Class:{$this->oAttributeLinkedSet->GetHostClass()}"),
+			MetaModel::GetName($this->oAttributeLinkedSet->GetHostClass()),
 			$oHostObject->Get('friendlyname'),
 			$this->oAttributeLinkedSet->GetLabel(),
-			Dict::S("Class:{$this->oUILinksDirectWidget->GetLinkedClass()}"));
+			MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass()));
 
 		$sRemoveButtonTooltip = $this->oAttributeLinkedSet->SearchSpecificLabel('UI:Links:Remove:Button+', '', true,
-			Dict::S("Class:{$this->oAttributeLinkedSet->GetHostClass()}"),
+			MetaModel::GetName($this->oAttributeLinkedSet->GetHostClass()),
 			$oHostObject->Get('friendlyname'),
 			$this->oAttributeLinkedSet->GetLabel(),
-			Dict::S("Class:{$this->oUILinksDirectWidget->GetLinkedClass()}"));
+			MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass()));
 
 		// until a full link set refactoring (continue using edit_mode property)
 		switch ($this->oAttributeLinkedSet->GetEditMode()) {

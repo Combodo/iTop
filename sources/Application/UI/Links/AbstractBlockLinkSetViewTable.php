@@ -17,6 +17,7 @@ use Dict;
 use DictExceptionMissingString;
 use DisplayBlock;
 use Exception;
+use MetaModel;
 use MySQLException;
 use UserRights;
 use Utils;
@@ -135,10 +136,10 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	public function GetDictionaryEntry(string $sKey, DBObject $oDBObject = null)
 	{
 		return $this->oAttDef->SearchSpecificLabel($sKey, '', true,
-			Dict::S("Class:{$this->sObjectClass}"),
+			MetaModel::GetName($this->sObjectClass),
 			$this->oDbObject->Get('friendlyname'),
 			$this->oAttDef->GetLabel(),
-			Dict::S("Class:{$this->sTargetClass}"),
+			MetaModel::GetName($this->sTargetClass),
 			$oDBObject !== null ? $oDBObject->Get('friendlyname') : '{item}');
 	}
 
