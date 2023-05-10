@@ -2251,13 +2251,10 @@ interface iModuleExtension
  * Interface to manipulate ormCaseLog objects after initialization/edition
  *
  * @api
- * @private
  * @since 3.1.0 N°6275
  */
 interface iOrmCaseLogExtension
 {
-	public function __construct();
-
 	/**
 	 * Rebuild API to be able manipulate ormCaseLog after its initialization/modifications
 	 * Examples of use: fix ormcase log broken index/shrink huge histories/....
@@ -2267,4 +2264,18 @@ interface iOrmCaseLogExtension
 	 * @return bool: indicate whether current ormCaseLog fields were touched
 	 */
 	public function Rebuild(&$sLog, &$aIndex) : bool;
+}
+
+/**
+ * Inherit from iOrmCaseLogExtension to manipulate ormCaseLog after its initialization/modifications
+ *
+ * @api
+ * @since 3.1.0 N°6275
+ */
+abstract class AbstractOrmCaseLogExtension implements iOrmCaseLogExtension
+{
+	public function Rebuild(&$sLog, &$aIndex) : bool
+	{
+		return false;
+	}
 }

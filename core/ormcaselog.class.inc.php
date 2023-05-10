@@ -757,6 +757,7 @@ class ormCaseLog {
 		if (! is_null($oNewOrmCaseLog)) {
 			$this->m_aIndex = $oNewOrmCaseLog->m_aIndex;
 			$this->m_sLog = $oNewOrmCaseLog->m_sLog;
+			$this->m_bModified = true;
 		}
 	}
 }
