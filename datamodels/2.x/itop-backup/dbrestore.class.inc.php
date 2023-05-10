@@ -232,8 +232,12 @@ class DBRestore extends DBBackup
 		$oIterator = new RecursiveIteratorIterator($oDirectoryIterator);
 		foreach ($oIterator as $oFileInfo)
 		{
-			if (in_array($oFileInfo->getFilename(), $aStandardFiles)) continue;
-			if (strncmp($oFileInfo->getPathname(), $sDataDir.'/production-modules', strlen($sDataDir.'/production-modules')) == 0) continue;
+			if (in_array($oFileInfo->getFilename(), $aStandardFiles)) {
+				continue;
+			}
+			if (strncmp($oFileInfo->getPathname(), $sDataDir.'/production-modules', strlen($sDataDir.'/production-modules')) == 0) {
+				continue;
+			}
 			
 			$aExtraFiles[$oFileInfo->getPathname()] = APPROOT.substr($oFileInfo->getPathname(), strlen($sDataDir));
 		}

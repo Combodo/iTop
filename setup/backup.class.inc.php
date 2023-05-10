@@ -253,10 +253,12 @@ class DBBackup
 			$aExtraFiles = MetaModel::GetModuleSetting('itop-backup', 'extra_files', []);
 			foreach($aExtraFiles as $sExtraFileOrDir)
 			{
-				if(!file_exists(APPROOT.'/'.$sExtraFileOrDir)) continue; // Ignore non-existing files
+				if(!file_exists(APPROOT.'/'.$sExtraFileOrDir)) {
+					continue; // Ignore non-existing files
+				}
 	
-				$sExtraFullPath = realpath(APPROOT.'/'.$sExtraFileOrDir);
-				if (strncmp(APPROOT, $sExtraFullPath, strlen(APPROOT)) !== 0)
+				$sExtraFullPath = utils::RealPath(APPROOT.'/'.$sExtraFileOrDir, APPROOT);
+				if ($sExtraFullPath === false)
 				{
 					throw new Exception("Backup: Aborting, resource '$sExtraFileOrDir'. Considered as UNSAFE because not inside the iTop directory.");
 				}
