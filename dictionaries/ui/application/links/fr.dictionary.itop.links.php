@@ -47,7 +47,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// Modify object
 	'UI:Links:ModifyObject:Button'                  => 'Modifier',
 	'UI:Links:ModifyObject:Button+'                 => 'Modifier cet objet',
-	'UI:Links:ModifyObject:Modal:Title'             => '%5$s',
+	'UI:Links:ModifyObject:Modal:Title'             => 'Modifier %5$s',
 
 	// Remove
 	'UI:Links:Remove:Button'                        => 'Retirer',

@@ -46,12 +46,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Modify object
 	'UI:Links:ModifyObject:Button'                  => 'Modify',
 	'UI:Links:ModifyObject:Button+'                 => 'Modify this object',
-	'UI:Links:ModifyObject:Modal:Title'             => '%5$s',
+	'UI:Links:ModifyObject:Modal:Title'             => 'Modify %5$s',
 
 	// Remove
 	'UI:Links:Remove:Button'                        => 'Remove',
 	'UI:Links:Remove:Button+'                       => 'Remove this %4$s',
-	'UI:Links:Remove:Modal:Title'                   => 'Remove a %4$s',
+	'UI:Links:Remove:Modal:Title'                   => 'Remove a %4$s from its %1$s',
 	'UI:Links:Remove:Modal:Message'                 => 'Do you really want to remove %5$s from %2$s?',
 
 	// Delete
