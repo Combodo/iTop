@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\PageContent;
 
 
 use cmdbAbstractObject;
+use Combodo\iTop\Application\UI\Base\Component\Navigation\NavigationUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use DBObject;
@@ -56,14 +57,17 @@ class PageContentFactory
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent
 	 * @throws \CoreException
 	 */
-	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE)
+	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE, $sFilter = null, $aList = [])
 	{
 		$oLayout = new PageContentWithSideContent();
 
-		// Add object details layout
-		// TODO 3.0.0 see N°3518
-		//$oObjectDetails = ObjectFactory::MakeDetails($oObject, $sMode);
-		//$oLayout->AddMainBlock($oObjectDetails);
+
+		if ($sFilter != null) {
+			$oNavigationBlock = NavigationUIBlockFactory::MakeStandard($oObject, $sFilter, $aList);
+			if ($oNavigationBlock != null) {
+				$oLayout->AddSubBlock($oNavigationBlock);
+			}
+		}
 
 		// Add object activity layout
 		$oActivityPanel = ActivityPanelFactory::MakeForObjectDetails($oObject, $sMode);
