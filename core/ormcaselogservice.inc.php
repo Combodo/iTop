@@ -15,23 +15,31 @@ class ormCaseLogService
 	 * Array of "providers" of welcome popup messages
 	 * @var iOrmCaseLogExtension[]
 	 */
-	protected $aOrmCaseLogExtension = null;
+	protected $aOrmCaseLogExtensions = null;
 
 	public function __construct(array $aOrmCaseLogExtensions=null)
 	{
-		$this->aOrmCaseLogExtension = $aOrmCaseLogExtensions;
+		$this->aOrmCaseLogExtensions = $aOrmCaseLogExtensions;
 	}
 
-	protected function LoadCaseLogExtensions()
+	protected function LoadCaseLogExtensions($aClassesForInterfaceOrmCaseLog=null) : array
 	{
-		if ($this->aOrmCaseLogExtension !== null) return;
+		if ($this->aOrmCaseLogExtensions !== null) return $this->aOrmCaseLogExtensions;
 
-		$aOrmCaseLogExtensions = [];
-		$aOrmCaseLogExtensionClasses = \utils::GetClassesForInterface(iOrmCaseLogExtension::class, '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
-		foreach($aOrmCaseLogExtensionClasses as $sOrmCaseLogExtensionClass) {
-			$aOrmCaseLogExtensions[] = new $sOrmCaseLogExtensionClass();
+		if ($aClassesForInterfaceOrmCaseLog === null) {
+			$aClassesForInterfaceOrmCaseLog = \utils::GetClassesForInterface(iOrmCaseLogExtension::class, '',
+				array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 		}
-		$this->aOrmCaseLogExtension = $aOrmCaseLogExtensions;
+
+		$aConfiguredOrmCaseLogExtensionClasses = MetaModel::GetConfig()->Get('ormcaselog_extension_classes');
+		$this->aOrmCaseLogExtensions = [];
+		foreach ($aConfiguredOrmCaseLogExtensionClasses as $sConfiguredOrmCaseLogExtensionClass) {
+			if (in_array($sConfiguredOrmCaseLogExtensionClass, $aClassesForInterfaceOrmCaseLog)){
+				$this->aOrmCaseLogExtensions[] = new $sConfiguredOrmCaseLogExtensionClass();
+			}
+		}
+
+		return $this->aOrmCaseLogExtensions;
 	}
 
 	/**
@@ -45,7 +53,7 @@ class ormCaseLogService
 		$this->LoadCaseLogExtensions();
 
 		$bTouched = false;
-		foreach ($this->aOrmCaseLogExtension as $oOrmCaseLogExtension){
+		foreach ($this->aOrmCaseLogExtensions as $oOrmCaseLogExtension){
 			/** var iOrmCaseLogExtension $oOrmCaseLogExtension */
 			$bTouched = $bTouched || $oOrmCaseLogExtension->Rebuild($sLog, $aIndex);
 		}

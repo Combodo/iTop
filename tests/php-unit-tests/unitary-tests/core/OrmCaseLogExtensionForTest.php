@@ -1,5 +1,7 @@
 <?php
 
+namespace Combodo\iTop\Test;
+
 class OrmCaseLogExtensionForTest implements \iOrmCaseLogExtension
 {
 	private $sReturnedLog;
@@ -22,3 +24,14 @@ class OrmCaseLogExtensionForTest implements \iOrmCaseLogExtension
 	}
 }
 
+class FakeOrmCaseLogExtension1 extends \AbstractOrmCaseLogExtension
+{
+}
+
+class FakeOrmCaseLogExtension2 extends \AbstractOrmCaseLogExtension
+{
+}
+
+class FakeOrmCaseLogExtension3 extends \AbstractOrmCaseLogExtension
+{
+}

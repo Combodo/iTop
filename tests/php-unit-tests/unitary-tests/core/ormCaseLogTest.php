@@ -125,6 +125,9 @@ class ormCaseLogTest extends ItopDataTestCase
 		);
 		$oJson = json_decode($sJson);
 
+		//create a real service with no extension to speed up treatment and avoid +1s delta in history diff
+		$oOrmCaseLogService = new \ormCaseLogService([]);
+
 		$iUserId = \UserRights::GetUserId();
 		$sOnBehalfOf = \UserRights::GetUserFriendlyName();
 		$sDate = date(\AttributeDateTime::GetInternalFormat());
@@ -142,8 +145,6 @@ class ormCaseLogTest extends ItopDataTestCase
 			]
 		];
 
-		//create a real service with no extension to speed up treatment and avoid +1s delta in history diff
-		$oOrmCaseLogService = new \ormCaseLogService([]);
 		$oLog = new ormCaseLog('', [], $oOrmCaseLogService);
 
 		$oOrmCaseLogService = $this->createMock(\ormCaseLogService::class);
@@ -181,6 +182,9 @@ class ormCaseLogTest extends ItopDataTestCase
 		);
 		$oJson = json_decode($sJson);
 
+		//create a real service with no extension to speed up treatment and avoid +1s delta in history diff
+		$oOrmCaseLogService = new \ormCaseLogService([]);
+
 		$iUserId = \UserRights::GetUserId();
 		$sOnBehalfOf = \UserRights::GetUserFriendlyName();
 		$sDate = date(\AttributeDateTime::GetInternalFormat());
@@ -197,8 +201,6 @@ class ormCaseLogTest extends ItopDataTestCase
 			]
 		];
 
-		//create a real service with no extension to speed up treatment and avoid +1s delta in history diff
-		$oOrmCaseLogService = new \ormCaseLogService([]);
 		$oLog = new ormCaseLog('', [], $oOrmCaseLogService);
 
 		$oOrmCaseLogService = $this->createMock(\ormCaseLogService::class);
@@ -262,5 +264,6 @@ class ormCaseLogTest extends ItopDataTestCase
 			$this->assertEquals($aInitialIndex, $oLog->GetIndex());
 			$this->assertEquals($sLog, $oLog->GetText());
 		}
+		$this->assertEquals($bTouched, $this->GetNonPublicProperty($oLog, 'm_bModified'));
 	}
 }
