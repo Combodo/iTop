@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Test;
 
-class OrmCaseLogExtensionForTest implements \iOrmCaseLogExtension
+class OrmCaseLogExtensionForTest extends \AbstractOrmCaseLogExtension
 {
 	private $sReturnedLog;
 	private $aReturnedIndex;

@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
+use Combodo\iTop\Test\OrmCaseLogExtensionForTest;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ormCaseLog;
 
@@ -251,7 +252,7 @@ class ormCaseLogTest extends ItopDataTestCase
 			)
 			->willReturn($bTouched);*/
 
-		$aOrmCaseLogExtensionForTest = new \OrmCaseLogExtensionForTest();
+		$aOrmCaseLogExtensionForTest = new OrmCaseLogExtensionForTest();
 		$aOrmCaseLogExtensionForTest->Init($bTouched, $sRebuiltLog, $aRebuiltIndex);
 		$aOrmCaseLogExtension=[$aOrmCaseLogExtensionForTest];
 		$oOrmCaseLogService = new \ormCaseLogService($aOrmCaseLogExtension);
