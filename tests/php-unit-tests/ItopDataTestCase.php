@@ -48,6 +48,7 @@ use Server;
 use TagSetFieldData;
 use Ticket;
 use URP_UserProfile;
+use UserRequest;
 use VirtualHost;
 use VirtualMachine;
 use XMLDataLoader;
@@ -328,7 +329,7 @@ class ItopDataTestCase extends ItopTestCase
 		$aUserRequestParams = array_merge($aUserRequestDefaultParams, $aUserRequestCustomParams);
 
 		/** @var \UserRequest $oTicket */
-		$oTicket = $this->createObject('UserRequest', $aUserRequestParams);
+		$oTicket = $this->createObject(UserRequest::class, $aUserRequestParams);
 		$this->debug("Created {$oTicket->Get('title')} ({$oTicket->Get('ref')})");
 
 		return $oTicket;

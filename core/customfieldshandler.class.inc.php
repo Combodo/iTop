@@ -23,10 +23,22 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-abstract class CustomFieldsHandler
-{
+abstract class CustomFieldsHandler {
+	/** @var string $sAttCode */
 	protected $sAttCode;
+	/** @var array{
+	 *          legacy: int,
+	 *          extradata_id: string,
+	 *          _template_name: string,
+	 *          template_id: string,
+	 *          template_data: string,
+	 *          user_data: array<string, mixed>,
+	 *          current_template_id: string,
+	 *          current_template_data: string,
+	 *     } $aValues same as {@see \ormCustomFieldsValue::$aCurrentValues}
+	 */
 	protected $aValues;
+	/** @var \Combodo\iTop\Form\Form $oForm */
 	protected $oForm;
 
 	/**
@@ -117,6 +129,21 @@ abstract class CustomFieldsHandler
 		// Older extensions might have children classes without this new method
 		return null;
 	}
+
+	/**
+	 * @param \stdClass|null $json
+	 * @param string $sAttCode
+	 *
+	 * @return \ormCustomFieldsValue|null
+	 *
+	 * @since 3.1.0 N°1150 Method creation
+	 */
+	public function FromJSONToValue(?stdClass $json, string $sAttCode): ?ormCustomFieldsValue
+	{
+		// Default impl doing nothing, to avoid errors on children not having this method
+		return null;
+	}
+
 
 	/**
 	 * @param DBObject $oHostObject

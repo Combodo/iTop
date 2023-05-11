@@ -801,8 +801,8 @@ abstract class AttributeDefinition
 	/**
 	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
 	 *
-	 * @param $proposedValue
-	 * @param $oHostObj
+	 * @param mixed $proposedValue
+	 * @param \DBObject $oHostObj
 	 *
 	 * @return mixed
 	 */
@@ -992,17 +992,21 @@ abstract class AttributeDefinition
 	}
 
 	/**
-	 * Helper to form a value, given JSON decoded data
+	 * Helper to form a value, given JSON decoded data. This way the attribute itself handles the transformation from the JSON structure to the expected data (the one that
+	 * needs to be used in the {@see \DBObject::Set()} method).
+	 *
+	 * Note that for CSV and XML this isn't done yet (no delegation to the attribute but switch/case inside controllers) :/
+	 *
+	 * @see GetForJSON for the reverse operation
 	 *
 	 * @param string $json JSON encoded value
 	 *
-	 * @return mixed JSON decoded data
+	 * @return mixed JSON decoded data, depending on the attribute type
 	 *
-	 * @see GetForJSON for the reverse operation
 	 */
 	public function FromJSONToValue($json)
 	{
-		// Passthrough in most of the cases
+		// Pass-through in most of the cases
 		return $json;
 	}
 
@@ -13048,6 +13052,7 @@ class AttributeCustomFields extends AttributeDefinition
 	public function GetHandler($aValues = null)
 	{
 		$sHandlerClass = $this->Get('handler_class');
+		/** @var \TemplateFieldsHandler $oHandler */
 		$oHandler = new $sHandlerClass($this->GetCode());
 		if (!is_null($aValues))
 		{
@@ -13072,36 +13077,50 @@ class AttributeCustomFields extends AttributeDefinition
 	/**
 	 * Makes the string representation out of the values given by the form defined in GetDisplayForm
 	 */
-	public function ReadValueFromPostedForm($oHostObject, $sFormPrefix)
-	{
-		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'),	true);
+	public function ReadValueFromPostedForm($oHostObject, $sFormPrefix) {
+		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'), true);
 		if ($aRawData != null) {
 			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
-		} else{
+		}
+		else {
 			return null;
 		}
 	}
 
-	public function MakeRealValue($proposedValue, $oHostObject)
-	{
-		if (is_object($proposedValue) && ($proposedValue instanceof ormCustomFieldsValue))
-		{
+	public function MakeRealValue($proposedValue, $oHostObject) {
+		if (is_object($proposedValue) && ($proposedValue instanceof ormCustomFieldsValue)) {
+			if (false === $oHostObject->IsNew()) {
+				// In that case we need additional keys : see \TemplateFieldsHandler::DoBuildForm
+				$aRequestTemplateValues = $proposedValue->GetValues();
+				if (false === array_key_exists('current_template_id', $aRequestTemplateValues)) {
+					$aRequestTemplateValues['current_template_id'] = $aRequestTemplateValues['template_id'];
+					$aRequestTemplateValues['current_template_data'] = $aRequestTemplateValues['template_data'];
+					$proposedValue = new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRequestTemplateValues);
+				}
+			}
+
+			if (is_null($proposedValue->GetHostObject())) {
+				// the object might not be set : for example in \AttributeCustomFields::FromJSONToValue we don't have the object available :(
+				$proposedValue->SetHostObject($oHostObject);
+			}
+
 			return $proposedValue;
 		}
-		elseif (is_string($proposedValue))
-		{
+
+		if (is_string($proposedValue)) {
 			$aValues = json_decode($proposedValue, true);
 
 			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aValues);
 		}
-		elseif (is_array($proposedValue))
-		{
+
+		if (is_array($proposedValue)) {
 			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $proposedValue);
 		}
-		elseif (is_null($proposedValue))
-		{
+
+		if (is_null($proposedValue)) {
 			return new ormCustomFieldsValue($oHostObject, $this->GetCode());
 		}
+
 		throw new Exception('Unexpected type for the value of a custom fields attribute: '.gettype($proposedValue));
 	}
 
@@ -13388,11 +13407,13 @@ class AttributeCustomFields extends AttributeDefinition
 	/**
 	 * @inheritDoc
 	 *
-	 * @return ?\ormCustomFieldsValue
+	 * @return ?\ormCustomFieldsValue with empty host object as we don't have it here (most consumers don't have an object in their context, for example in \RestUtils::GetObjectSetFromKey)
+	 *                  The host object will be set in {@see MakeRealValue}
+	 *                  All the necessary checks will be done in {@see CheckValue}
 	 */
 	public function FromJSONToValue($json)
 	{
-		return null;
+		return ormCustomFieldsValue::FromJSONToValue($json, $this);
 	}
 
 	public function Equals($val1, $val2)

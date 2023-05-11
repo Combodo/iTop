@@ -35,10 +35,11 @@ class ormCustomFieldsValue
 	 *          _template_name: string,
 	 *          template_id: string,
 	 *          template_data: string,
-	 *          user_data: string,
+	 *          user_data: array<string, mixed>,
 	 *          current_template_id: string,
 	 *          current_template_data: string,
-	 *     } $aCurrentValues Containing JSON encoded strings in template_data/current_template_data, user_data.
+	 *     } $aCurrentValues Containing JSON encoded strings in template_data/current_template_data.
+	 *          The user_data key contains an array with field code as key and field value as value
 	 *          Warning, current_* are mandatory for data to be saved in a DBUpdate() call !
 	 */
 	protected $aCurrentValues;
@@ -48,11 +49,29 @@ class ormCustomFieldsValue
 	 * @param string $sAttCode
 	 * @param array $aCurrentValues
 	 */
-	public function __construct(DBObject $oHostObject, $sAttCode, $aCurrentValues = null)
+	public function __construct(?DBObject $oHostObject, $sAttCode, $aCurrentValues = null)
 	{
 		$this->oHostObject = $oHostObject;
 		$this->sAttCode = $sAttCode;
 		$this->aCurrentValues = $aCurrentValues;
+	}
+
+	/**
+	 * @return \DBObject|null
+	 */
+	public function GetHostObject(): ?DBObject
+	{
+		return $this->oHostObject;
+	}
+
+	/**
+	 * @param \DBObject|null $oHostObject
+	 *
+	 * @return void
+	 */
+	public function SetHostObject(?DBObject $oHostObject): void
+	{
+		$this->oHostObject = $oHostObject;
 	}
 
 	public function GetValues()
@@ -62,6 +81,7 @@ class ormCustomFieldsValue
 
 	/**
 	 * Wrapper used when the only thing you have is the value...
+	 *
 	 * @return \Combodo\iTop\Form\Form
 	 */
 	public function GetForm($sFormPrefix = null)
@@ -97,12 +117,26 @@ class ormCustomFieldsValue
 	}
 
 	/**
+	 * @param string|null $json
+	 * @param \AttributeDefinition $oAttDef
+	 *
+	 * @return \ormCustomFieldsValue
+	 *
+	 * @since 3.1.0 N°1150 Method creation
+	 */
+	public static function FromJSONToValue(?stdClass $json, AttributeCustomFields $oAttDef)
+	{
+		return $oAttDef->GetHandler()->FromJSONToValue($json, $oAttDef->GetCode());
+	}
+
+	/**
 	 * @return \CustomFieldsHandler
 	 * @throws \Exception
 	 * @since 3.1.0 N°1150 Method creation
 	 */
 	final protected function GetHandler()
 	{
+		/** @var \AttributeCustomFields $oAttDef */
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
 
 		return $oAttDef->GetHandler($this->GetValues());

@@ -400,7 +400,7 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * Important: If you need to add a condition on the same $sFilterCode several times with different $value values; do not use this method as the previous $value occurences will be replaced by the last. Instead use:
+	 * Important: If you need to add a condition on the same $sFilterCode several times with different $value values; do not use this method as the previous $value occurrences will be replaced by the last. Instead use:
 	 *  * {@see \DBObjectSearch::AddConditionExpression()} in loops to add conditions one by one
 	 *  * {@see \DBObjectSearch::AddConditionForInOperatorUsingParam()} for IN/NOT IN queries with lots of params at once
 	 *
