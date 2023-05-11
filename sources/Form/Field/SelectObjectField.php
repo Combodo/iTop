@@ -28,6 +28,7 @@ use DBSearch;
 use FieldExpression;
 use MetaModel;
 use ScalarExpression;
+use utils;
 
 /**
  * Description of SelectObjectField
@@ -237,17 +238,38 @@ class SelectObjectField extends Field
 	/**
 	 * @return int
 	 */
-	public function GetControlType()
-	{
+	public function GetControlType() {
 		return $this->iControlType;
 	}
 
 	/**
 	 * @return string|null
 	 */
-	public function GetSearchEndpoint()
-	{
+	public function GetSearchEndpoint() {
 		return $this->sSearchEndpoint;
+	}
+
+	public function Validate() {
+		$sCurrentValueForExtKey = $this->currentValue;
+		if (utils::IsNotNullOrEmptyString($sCurrentValueForExtKey) && ($sCurrentValueForExtKey !== 0)) {
+			$oSearchForExistingCurrentValue = $this->oSearch->DeepClone();
+			$oSearchForExistingCurrentValue->AddCondition('id', $sCurrentValueForExtKey, '=');
+			$oCheckIdAgainstCurrentValueExpression = new BinaryExpression(
+				new FieldExpression('id', $oSearchForExistingCurrentValue->GetClassAlias()), '=', new ScalarExpression($sCurrentValueForExtKey)
+			);
+			$oSearchForExistingCurrentValue->AddConditionExpression($oCheckIdAgainstCurrentValueExpression);
+			$oSetForExistingCurrentValue = new DBObjectSet($oSearchForExistingCurrentValue);
+			$iObjectsCount = $oSetForExistingCurrentValue->CountWithLimit(1);
+
+			if ($iObjectsCount === 0) {
+				$this->SetValid(false);
+				$this->AddErrorMessage("Value $sCurrentValueForExtKey does not match the corresponding filter set");
+
+				return $this->GetValid();
+			}
+		}
+
+		return parent::Validate();
 	}
 
 	/**

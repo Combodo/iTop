@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Form\Field;
 
 use Closure;
+use utils;
 
 /**
  * Description of MultipleChoicesField
@@ -213,17 +214,25 @@ abstract class MultipleChoicesField extends Field
 	/**
 	 * @inheritDoc
 	 */
-	public function Validate()
-	{
+	public function Validate() {
 		$this->SetValid(true);
 		$this->EmptyErrorMessages();
 
-		foreach ($this->GetValidators() as $oValidator)
-		{
-			foreach ($this->currentValue as $value)
-			{
-				if (!preg_match($oValidator->GetRegExp(true), $value))
-				{
+		if (count($this->currentValue) > 0) {
+			foreach ($this->currentValue as $sCode => $value) {
+				if (utils::IsNullOrEmptyString($value)) {
+					continue;
+				}
+				if (false === array_key_exists($value, $this->aChoices)) {
+					$this->SetValid(false);
+					$this->AddErrorMessage("Value ({$value}) is not part of the field possible values list");
+				}
+			}
+		}
+
+		foreach ($this->GetValidators() as $oValidator) {
+			foreach ($this->currentValue as $value) {
+				if (!preg_match($oValidator->GetRegExp(true), $value)) {
 					$this->SetValid(false);
 					$this->AddErrorMessage($oValidator->GetErrorMessage());
 				}
