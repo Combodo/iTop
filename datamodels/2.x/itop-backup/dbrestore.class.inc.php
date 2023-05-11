@@ -187,6 +187,12 @@ class DBRestore extends DBBackup
 				@chmod($sConfigFile, 0770); // Allow overwriting the file
 				rename($sDataDir.'/config-itop.php', $sConfigFile);
 				@chmod($sConfigFile, 0440); // Read-only
+				
+				$aExtraFiles = $this->ListExtraFiles($sDataDir);
+				foreach($aExtraFiles as $sSourceFilePath => $sDestinationFilePath) {
+					SetupUtils::builddir(dirname($sDestinationFilePath));
+					rename($sSourceFilePath, $sDestinationFilePath);
+				}
 
 				try {
 					SetupUtils::rrmdir($sDataDir);
@@ -210,5 +216,32 @@ class DBRestore extends DBBackup
 			IssueLog::Info('Backup Restore - LOCK released.');
 			$oRestoreMutex->Unlock();
 		}
+	}
+
+	/**
+	 * List the 'extra files' found in the decompressed archive
+	 * (i.e. files other than config-itop.php, delta.xml, itop-dump.sql or production-modules/*
+	 * @param string $sDataDir
+	 * @return string[]
+	 */
+	protected function ListExtraFiles(string $sDataDir)
+	{
+		$aExtraFiles = [];
+		$aStandardFiles = ['config-itop.php', 'itop-dump.sql', 'production-modules', 'delta.xml'];
+		$oDirectoryIterator = new RecursiveDirectoryIterator($sDataDir, FilesystemIterator::CURRENT_AS_FILEINFO|FilesystemIterator::SKIP_DOTS);
+		$oIterator = new RecursiveIteratorIterator($oDirectoryIterator);
+		foreach ($oIterator as $oFileInfo)
+		{
+			if (in_array($oFileInfo->getFilename(), $aStandardFiles)) {
+				continue;
+			}
+			if (strncmp($oFileInfo->getPathname(), $sDataDir.'/production-modules', strlen($sDataDir.'/production-modules')) == 0) {
+				continue;
+			}
+			
+			$aExtraFiles[$oFileInfo->getPathname()] = APPROOT.substr($oFileInfo->getPathname(), strlen($sDataDir));
+		}
+		
+		return $aExtraFiles;
 	}
 }
