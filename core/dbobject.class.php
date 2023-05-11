@@ -3637,9 +3637,10 @@ abstract class DBObject implements iDisplay
 	 * @uses m_aOrigValues
 	 * @uses m_aPreviousValuesForUpdatedAttributes
 	 * @since 2.7.0 N°2293
+	 * @since 3.1.0 N°6299 - change visibility
 	 * @throws \Exception
 	 */
-	private function InitPreviousValuesForUpdatedAttributes()
+	protected final function InitPreviousValuesForUpdatedAttributes()
 	{
 		$aChanges= $this->ListChanges();
 		if (empty($aChanges))

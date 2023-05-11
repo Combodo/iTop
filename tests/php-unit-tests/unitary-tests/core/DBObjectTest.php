@@ -118,6 +118,12 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertCount(0, $oOrg->ListChanges());
 		$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
 
+		$oOrg->Set('name', $oOrg->Get('name'));
+		$this->assertCount(0, $oOrg->ListChanges());
+		$oOrg->DBUpdate();
+		$this->assertCount(0, $oOrg->ListChanges());
+		$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
+
 		$oOrg->DBDelete();
 
 		$oOrg = MetaModel::NewObject('Organization');
@@ -236,11 +242,15 @@ class DBObjectTest extends ItopDataTestCase
 		});
 
 		$this->assertDBQueryCount(0, function() use (&$oBordeaux, &$oObject){
+			/** @var DBObject $oObject */
 			$oObject->Set('location_id', $oBordeaux);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 			static::assertEquals('IT Department', $oObject->Get('org_name'));
 			static::assertEquals('Bordeaux', $oObject->Get('location_id_friendlyname'));
 		});
+
+		static::assertEquals('Bordeaux', $oObject->Get('location_id_friendlyname'));
+//		static::assertEquals('toto', $oObject->EvaluateExpression(\Expression::FromOQL("CONCAT(org_name, '-', location_id_friendlyname)")));
 	}
 
 	/**
