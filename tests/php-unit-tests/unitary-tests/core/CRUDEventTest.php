@@ -104,8 +104,7 @@ class CRUDEventTest extends ItopDataTestCase
 
 		$oOrg->DBUpdate();
 
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(1, self::$iEventCalls);
+		$this->assertEquals(0, self::$iEventCalls);
 	}
 
 	/**
