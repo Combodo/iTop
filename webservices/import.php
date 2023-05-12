@@ -206,6 +206,10 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 /////////////////////////////////
 // Main program
 
+/**
+ * @since 3.1.0 N°6047
+ */
+$oCtx = new ContextTag(ContextTag::TAG_IMPORT);
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage("iTop - Bulk import");

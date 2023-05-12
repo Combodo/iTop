@@ -548,6 +548,12 @@ function DoExport(WebPage $oP, BulkExport $oExporter, $bInteractive = false)
 // Command Line mode
 //
 /////////////////////////////////////////////////////////////////////////////
+///
+/**
+ * @since 3.1.0 N°6047
+ */
+$oCtx = new ContextTag(ContextTag::TAG_EXPORT);
+
 if (utils::IsModeCLI()) {
 	SetupUtils::CheckPhpAndExtensionsForCli(new CLIPage('iTop - Export'));
 

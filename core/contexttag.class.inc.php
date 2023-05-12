@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -58,6 +58,13 @@ class ContextTag
 	public const TAG_SETUP   = 'Setup';
 	public const TAG_SYNCHRO = 'Synchro';
 	public const TAG_REST    = 'REST/JSON';
+
+	/**
+	 * @since 3.1.0 N°6047
+	 */
+	public const TAG_IMPORT    = 'Import';
+	public const TAG_EXPORT    = 'Export';
+
 	/**
 	 * @var string
 	 * @since 3.1.0 N°3200
@@ -75,7 +82,7 @@ class ContextTag
 	{
 		static::$aStack[] = $sTag;
 	}
-	
+
 	public static function AddContext($sTag)
 	{
 		static::$aStack[] = $sTag;
