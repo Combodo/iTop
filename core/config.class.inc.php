@@ -841,7 +841,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'deadline_format' => [
+		'deadline_format'            => [
 			'type' => 'string',
 			'description' => 'The format used for displaying "deadline" attributes: any string with the following placeholders: $date$, $difference$',
 			// examples... $date$ ($deadline$)
@@ -850,7 +850,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
-		'buttons_position' => [
+		'buttons_position'           => [
 			'type' => 'string',
 			'description' => 'Deprecated since 3.0.0, buttons are now always on top of the form.',
 			// examples... not used
@@ -859,22 +859,30 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'shortcut_actions' => [
-			'type' => 'string',
-			'description' => 'Actions that are available as direct buttons next to the "Actions" menu',
+		'shortcut_actions'           => [
+			'type'                => 'string',
+			'description'         => 'Actions that are available as direct buttons next to the "Actions" menu',
 			// examples... not used
-			'default' => 'UI:Menu:Modify,UI:Menu:New',
-			'value' => 'UI:Menu:Modify',
-			'source_of_value' => '',
+			'default'             => 'UI:Menu:Modify,UI:Menu:New',
+			'value'               => 'UI:Menu:Modify',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'complex_actions_limit' => [
-			'type' => 'integer',
-			'description' => 'Display the "actions" menu items that require long computation only if the list of objects is contains less objects than this number (0 means no limit)',
+		'transitions_order'          => [
+			'type'                => 'string',
+			'description'         => '4 values available : "legacy", "alphabetic", "fixed" or "relative"',
+			'default'             => 'relative',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
+		'complex_actions_limit'      => [
+			'type'                => 'integer',
+			'description'         => 'Display the "actions" menu items that require long computation only if the list of objects is contains less objects than this number (0 means no limit)',
 			// examples... not used
-			'default' => 50,
-			'value' => 50,
-			'source_of_value' => '',
+			'default'             => 50,
+			'value'               => 50,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'synchro_prevent_delete_all' => [
@@ -886,7 +894,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'source_dir' => [
+		'source_dir'                 => [
 			'type' => 'string',
 			'description' => 'Source directory for the datamodel files. (which gets compiled to env-production).',
 			// examples... not used

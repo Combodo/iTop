@@ -5877,7 +5877,6 @@ class AttributeEnum extends AttributeString
 		$aLocalizedValues = [];
 		switch ($this->GetSortOrder()) {
 			case 'label':
-
 				foreach ($aRawValues as $sKey => $sValue) {
 					$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 				}

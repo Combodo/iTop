@@ -3865,46 +3865,81 @@ abstract class DBObject implements iDisplay
 	 */
 	public function EnumOrderedAllowedTransitions()
 	{
-		$sClass = get_class($this);
-		if (!MetaModel::HasLifecycle($sClass)) {
-			return array();
-		}
-		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-		$sState = $this->Get($sStateAttCode);
-
-		$aEnumTransitions = MetaModel::EnumTransitions($sClass, $sState);
-
-		//Get target status in right order ( in order from current status, then in reverse order before current status)
-		$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
-		$aAllowedValues = $oAttDef->GetAllowedValues();
-		$aTargetStatusOrderedStart = [];
-		$aTargetStatusOrderedEnd = [];
-		$bIsAfterCurrentState = false;
-		foreach ($aAllowedValues as $sStatus => $sStatusLabel) {
-			if ($bIsAfterCurrentState) {
-				$aTargetStatusOrderedStart[] = $sStatus;
-			} else {
-				if ($sStatus === $sState) {
-					$bIsAfterCurrentState = true;
-				}
-				array_unshift($aTargetStatusOrderedEnd, $sStatus);
-			}
-		}
-		$aTargetStatusOrdered = array_merge($aTargetStatusOrderedStart, $aTargetStatusOrderedEnd);
-
-		//Create array $aTarget in order to find transition with a given status
-		foreach ($aEnumTransitions as $sStimulusCode => $aTransitionDef) {
-			$aTarget[$aTransitionDef['target_state']][] = $sStimulusCode;
+		//extensibility
+		$aTransitions = $this->EnumTransitions();
+		if (count($aTransitions) == 0) {
+			return [];
 		}
 
-		//order $aEnumTransitions
+		$sTransitionOrder = MetaModel::GetConfig()->Get('transitions_order');
 		$aOrderedTransition = [];
-		foreach ($aTargetStatusOrdered as $sStatus) {
-			if (array_key_exists($sStatus, $aTarget)) {
-				foreach ($aTarget[$sStatus] as $sStimulusCode) {
-					$aOrderedTransition[$sStimulusCode] = $aEnumTransitions[$sStimulusCode];
+		switch ($sTransitionOrder) {
+			case 'legacy':
+				return $aTransitions;
+
+			case 'alphabetic':
+				$sClass = get_class($this);
+				$aLocalizedValues = [];
+				$aStimuli = MetaModel::EnumStimuli($sClass);
+				foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
+					$aLocalizedValues[$sStimulusCode] = $aStimuli[$sStimulusCode]->GetLabel();
 				}
-			}
+				asort($aLocalizedValues);
+				foreach ($aLocalizedValues as $sStimulusCode => $sLabel) {
+					$aOrderedTransition[$sStimulusCode] = $aTransitions[$sStimulusCode];
+				}
+
+				return $aOrderedTransition;
+
+			case 'fixed':
+			case 'relative':
+				$sClass = get_class($this);
+				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+
+				//Create array $aTarget in order to find transition with a given status
+				foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
+					$aTarget[$aTransitionDef['target_state']][] = $sStimulusCode;
+				}
+
+				//Get ordered target status
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
+				$aAllowedValues = $oAttDef->GetAllowedValues();
+				$aTargetOrderedStatus = [];
+
+				if ($sTransitionOrder == 'fixed') {
+					//Get ordered target status from beginning to the end
+					foreach ($aAllowedValues as $sStatus => $sStatusLabel) {
+						$aTargetOrderedStatus[] = $sStatus;
+					}
+				} else {
+					//Get target status in order from current status, then in reverse order before current status
+					$sState = $this->Get($sStateAttCode);
+					$aTargetOrderedStatus_Start = [];
+					$aTargetOrderedStatus_End = [];
+					$bIsAfterCurrentState = false;
+					foreach ($aAllowedValues as $sStatus => $sStatusLabel) {
+						if ($bIsAfterCurrentState) {
+							$aTargetOrderedStatus_Start[] = $sStatus;
+						} else {
+							if ($sStatus === $sState) {
+								$bIsAfterCurrentState = true;
+							}
+							array_unshift($aTargetOrderedStatus_End, $sStatus);
+						}
+					}
+					$aTargetOrderedStatus = array_merge($aTargetOrderedStatus_Start, $aTargetOrderedStatus_End);
+				}
+
+				//order $aTransitions thanks to target status
+				$aOrderedTransition = [];
+				foreach ($aTargetOrderedStatus as $sStatus) {
+					if (array_key_exists($sStatus, $aTarget)) {
+						foreach ($aTarget[$sStatus] as $sStimulusCode) {
+							$aOrderedTransition[$sStimulusCode] = $aTransitions[$sStimulusCode];
+						}
+					}
+				}
+				break;
 		}
 
 		return $aOrderedTransition;
