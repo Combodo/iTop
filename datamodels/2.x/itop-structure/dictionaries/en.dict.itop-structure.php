@@ -187,6 +187,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number',
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization',
 ));
 
 //

@@ -196,6 +196,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	\'$this->org_name$\'',
 	'Class:Person/UniquenessRule:name+' => 'Le nom de l\'employé devrait être unique dans l\'organisation',
 	'Class:Person/UniquenessRule:name' => 'Il y a déjà une personne avec ce nom dans l\'organisation \'$this->org_name$\'',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible de déplacer cette personne sous l\'organisation \'%1$s\', cela casserait son accès au portail utilisateur, car il n\'a pas le droit de voir cette organisation',
 ));
 
 //

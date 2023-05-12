@@ -642,6 +642,13 @@
           </rule>
         </uniqueness_rules>
       </properties>
+      <event_listeners>
+        <event_listener id="CheckUsersUpdate">
+          <event>EVENT_DB_CHECK_TO_WRITE</event>
+          <callback>CheckUsersOnUpdate</callback>
+          <rank>1</rank>
+        </event_listener>
+      </event_listeners>
       <fields>
         <field id="picture" xsi:type="AttributeImage">
           <display_max_width>96</display_max_width>
@@ -712,6 +719,40 @@
         </field>
       </fields>
       <methods>
+        <method id="CheckUsersOnUpdate">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[  	public function CheckUsersOnUpdate(Combodo\iTop\Service\Events\EventData $oEventData)
+  	{
+        // This method can block the Person modification, by adding a Check Issue
+        $aChanges = $this->ListChanges();
+        // Current User may not be allowed to see User class, so we can't use $this->Get('user_list')
+        $oSearch = new DBObjectSearch('User');
+        $oSearch->AddCondition('contactid', $this->GetKey(), '=');
+        $oSearch->AllowAllData();
+        $oUserSet = new DBObjectSet($oSearch);
+
+        // The organization's person was changed and it has associated Users
+        if (array_key_exists('org_id', $aChanges) && ($oUserSet->Count() > 0)) {
+            while($oUser = $oUserSet->Fetch())
+            {
+                $oAddon = UserRights::GetModuleInstance();
+                $aOrgs = $oAddon->GetUserOrgs($oUser,'Organization');
+                $oSet = $oUser->Get('profile_list');
+                $aProfiles = $oSet->GetColumnAsArray('profile');
+
+                // User is not allowed on the new Organization and has 'Portal user' Profile and is enabled
+                if (!in_array($this->Get('org_id'), $aOrgs) &&  in_array('Portal user',$aProfiles) && ($oUser->Get('status') === 'enabled'))
+                {   // Let's block the Person modification,
+                    // replace by $this->AddCheckWarning(...) if you don't want to block the modification
+                    $this->AddCheckIssue(Dict::Format('Class:Person/Error:ChangingOrgDenied', $this->Get('org_id_friendlyname')));
+                }
+            }
+        }
+  	}
+]]></code>
+        </method>
         <method id="CheckToDelete">
           <static>false</static>
           <access>public</access>

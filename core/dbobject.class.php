@@ -5962,7 +5962,22 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 *
 	 * @api
+	 *
+	 * @param string $sWarning Warning message displayed when objet is redisplayed
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	final public function AddCheckWarning(string $sWarning)
+	{
+		$this->m_aCheckWarnings[] = $sWarning;
+	}
+
+	/**
+	 * @api
+	 *
 	 * @param string $sIssue
 	 * @param bool $bIsSecurityIssue
 	 *
