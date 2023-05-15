@@ -192,7 +192,7 @@ if (!class_exists('StructureInstaller'))
 				// Build the corresponding action and link it to the triggers
 				if (count($aCreatedTriggerIds) > 0) {
 					$oAction = MetaModel::NewObject('ActionEmail');
-					$oAction->Set('name', 'Notification to persons mentioned in case logs');
+					$oAction->Set('name', 'Notification to persons mentioned in logs');
 					$oAction->Set('status', 'enabled');
 					$oAction->Set('from', '$current_contact->email$');
 					$oAction->Set('to', 'SELECT Person WHERE id = :mentioned->id');
