@@ -21,13 +21,14 @@ namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu;
 
 
 
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItem;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Dict;
+use iPopupMenuExtension;
 use JSPopupMenuItem;
 use MetaModel;
 use SeparatorPopupMenuItem;
 use URLPopupMenuItem;
-use iPopupMenuExtension;
 use UserRights;
 use utils;
 
@@ -56,29 +57,67 @@ class PopoverMenuFactory
 			->SetHorizontalPosition(PopoverMenu::ENUM_HORIZONTAL_POSITION_ALIGN_OUTER_RIGHT)
 			->SetVerticalPosition(PopoverMenu::ENUM_VERTICAL_POSITION_ABOVE);
 
+		$aUserMenuItems = [];
+
 		// Allowed portals
 		$aAllowedPortalsItems = static::PrepareAllowedPortalsItemsForUserMenu();
-		if (!empty($aAllowedPortalsItems)) {
-			$oMenu->AddSection('allowed_portals')
-				->SetItems('allowed_portals', $aAllowedPortalsItems);
-		}
+		self::AddPopoverMenuItems($aAllowedPortalsItems, $aUserMenuItems);
 
 		// User related pages
-		$oMenu->AddSection('user_related')
-			->SetItems('user_related', static::PrepareUserRelatedItemsForUserMenu());
+		self::AddPopoverMenuItems(static::PrepareUserRelatedItemsForUserMenu(), $aUserMenuItems);
 
 		// API: iPopupMenuExtension::MENU_USER_ACTIONS
 		$aAPIItems = static::PrepareAPIItemsForUserMenu($oMenu);
-		if (count($aAPIItems) > 0) {
-			$oMenu->AddSection('popup_menu_extension-menu_user_actions')
-				->SetItems('popup_menu_extension-menu_user_actions', $aAPIItems);
-		}
+		self::AddPopoverMenuItems($aAPIItems, $aUserMenuItems);
 
 		// Misc links
-		$oMenu->AddSection('misc')
-			->SetItems('misc', static::PrepareMiscItemsForUserMenu());
+		/*$oMenu->AddSection('misc')
+			->SetItems('misc', static::PrepareMiscItemsForUserMenu());*/
+		self::AddPopoverMenuItems(static::PrepareMiscItemsForUserMenu(), $aUserMenuItems);
 
+		self::SortPopoverMenuItems($aUserMenuItems);
+
+		$oMenu->AddSection('misc')
+			->AddItems('misc', $aUserMenuItems);
 		return $oMenu;
+	}
+
+	/**
+	 * @param PopoverMenuItem[] $aPopoverMenuItem
+	 * @param PopoverMenuItem[] $aUserMenuItems
+	 *
+	 * @return void
+	 */
+	private static function AddPopoverMenuItems(array $aPopoverMenuItem, array &$aUserMenuItems) : void {
+		foreach ($aPopoverMenuItem as $oPopoverMenuItem){
+			$aUserMenuItems[$oPopoverMenuItem->GetUID()] = $oPopoverMenuItem;
+		}
+	}
+
+	/**
+	 * @param PopoverMenuItem[] $aPopoverMenuItem
+	 * @param PopoverMenuItem[] $aUserMenuItems
+	 *
+	 * @return void
+	 */
+	private static function SortPopoverMenuItems(array &$aUserMenuItems) : void {
+		$aSortedMenusFromConfig = MetaModel::GetConfig()->Get('navigation_menu.sorted_popup_user_menu_items');
+		if (!is_array($aSortedMenusFromConfig) || empty($aSortedMenusFromConfig)){
+			return;
+		}
+
+		$aSortedMenus = [];
+		foreach ($aSortedMenusFromConfig as $sMenuUID){
+			if (array_key_exists($sMenuUID, $aUserMenuItems)){
+				$aSortedMenus[]=$aUserMenuItems[$sMenuUID];
+				unset($aUserMenuItems[$sMenuUID]);
+			}
+		}
+
+		foreach ($aUserMenuItems as $oMenu){
+			$aSortedMenus[]=$oMenu;
+		}
+		$aUserMenuItems = $aSortedMenus;
 	}
 	
 	/**
