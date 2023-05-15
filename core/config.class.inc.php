@@ -1305,6 +1305,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'navigation_menu.sorted_popup_user_menu_items' => [
+			'type' => 'array',
+			'description' => 'Sort user menu items after setup on page load',
+			'default' => [],
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'quick_create.enabled' => [
 			'type' => 'bool',
 			'description' => 'Whether or not the quick create is enabled',
