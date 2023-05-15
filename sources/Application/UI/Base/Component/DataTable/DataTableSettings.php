@@ -10,7 +10,6 @@ use cmdbAbstract;
 use cmdbAbstractObject;
 use Dict;
 use Metamodel;
-use Serializable;
 
 /**
  * Class DataTableSettings
@@ -167,7 +166,8 @@ class DataTableSettings
         $oSettings = new DataTableSettings($aClassAliases);
         // Retrieve the class specific settings for each class/alias based on the 'list' ZList
         //TODO let the caller pass some other default settings (another Zlist, extre fields...)
-        $aColumns = array();
+        $aColumns = [];
+	    $aSortOrder = [];
         foreach ($aClassAliases as $sAlias => $sClass) {
             if ($aDefaultLists == null) {
                 $aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClass, 'list'));
