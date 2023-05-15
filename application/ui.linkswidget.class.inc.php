@@ -178,17 +178,18 @@ class UILinksWidget
 
 		$oDisplayBlock = new DisplayBlock($oFilter, 'search', false);
 		$oBlock->AddSubBlock($oDisplayBlock->GetDisplay($oPage, "SearchFormToAdd_{$sLinkedSetId}",
-			array(
-				'menu' => false,
+			[
+				'menu'                       => false,
 				'result_list_outer_selector' => "SearchResultsToAdd_{$sLinkedSetId}",
-				'table_id' => "add_{$sLinkedSetId}",
-				'table_inner_id' => "ResultsToAdd_{$sLinkedSetId}",
-				'selection_mode' => true,
-				'json' => $sJson,
-				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
-				'query_params' => $oFilter->GetInternalParams(),
-				'hidden_criteria' => $sAlreadyLinkedExpression,
-			)));
+				'table_id'                   => "add_{$sLinkedSetId}",
+				'table_inner_id'             => "ResultsToAdd_{$sLinkedSetId}",
+				'selection_mode'             => true,
+				'json'                       => $sJson,
+				'cssCount'                   => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
+				'query_params'               => $oFilter->GetInternalParams(),
+				'hidden_criteria'            => $sAlreadyLinkedExpression,
+				'submit_on_load'             => false,
+			]));
 
 		$oBlock->AddForm();
 	}
