@@ -1853,28 +1853,6 @@
       </presentation>
     </class>
   </classes>
-  <events>
-    <event id="EVENT_DOWNLOAD_DOCUMENT" _delta="define">
-      <description>A document has been downloaded from the GUI</description>
-      <sources>
-        <source id="Document">Document</source>
-      </sources>
-      <event_data>
-        <event_datum id="object">
-          <description>The object containing the document</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="document">
-          <description>The document downloaded</description>
-          <type>ormDocument</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-  </events>
   <menus>
     <menu id="DataAdministration" xsi:type="MenuGroup" _delta="define">
       <rank>70</rank>
