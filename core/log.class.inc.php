@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -581,7 +581,14 @@ class LogChannels
 	 * @var string Everything related to the datamodel CRUD
 	 * @since 3.1.0
 	 */
+
 	public const DM_CRUD = 'DMCRUD';
+
+	/**
+	 * @var string Everything related to the datamodel CRUD
+	 * @since 3.1.0 N°5341
+	 */
+	public const ORM_CASELOG = 'ORCMCASELOG';
 
 	/**
 	 * @var string Everything related to the event service
