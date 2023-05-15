@@ -743,7 +743,7 @@
                 $aProfiles = $oSet->GetColumnAsArray('profile');
 
                 // User is not allowed on the new Organization and has 'Portal user' Profile and is enabled
-                if (!in_array($this->Get('org_id'), $aOrgs) &&  in_array('Portal user',$aProfiles) && ($oUser->Get('status') === 'enabled'))
+                if ((count($aOrgs) > 0) && !in_array($this->Get('org_id'), $aOrgs) &&  in_array('Portal user',$aProfiles) && ($oUser->Get('status') === 'enabled'))
                 {   // Let's block the Person modification,
                     // replace by $this->AddCheckWarning(...) if you don't want to block the modification
                     $this->AddCheckIssue(Dict::Format('Class:Person/Error:ChangingOrgDenied', $this->Get('org_id_friendlyname')));
