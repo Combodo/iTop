@@ -70,7 +70,7 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
       }
     }
   }
-
+  /* We need the rule to keep picture inside the column */
   &[data-attribute-type="AttributeImage"] {
     > .ibo-field--value {
       display: grid;
