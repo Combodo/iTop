@@ -1,6 +1,6 @@
 <?php
 
-class LogBrokenOrmCaseLogExtension implements iOrmCaseLogExtension {
+class ormBrokenCaselogExtension implements iOrmCaseLogExtension {
 	const CASE_LOG_SEPARATOR_REGEX_FIND = "\n?========== \w+-\d+-\d+ \d+:\d+:\d+ : .*\s\(\d+\) ============\n\n";
 	const CASE_LOG_SEPARATOR_REGEX_EXTRACT = "\n?========== (?<date>\w+-\d+-\d+ \d+:\d+:\d+) : (?<user_name>.*)\s\((?<user_id>\d+)\) ============\n\n";
 
@@ -11,10 +11,12 @@ class LogBrokenOrmCaseLogExtension implements iOrmCaseLogExtension {
 			}
 		} catch (Exception $oException) {
 			\IssueLog::Error('Broken caselog', LogChannels::ORM_CASELOG, [
-				'exception_message' => $oException->getMessage(),
+				'sLog' => $sLog,
+				'$aIndex' => $aIndex,
 				'exception_stacktrace' => $oException->getTraceAsString(),
 			]);
 		}
+		return false;
 	}
 
 	/**

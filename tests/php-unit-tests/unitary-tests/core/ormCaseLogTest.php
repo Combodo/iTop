@@ -237,21 +237,6 @@ class ormCaseLogTest extends ItopDataTestCase
 		$aInitialIndex = ['a' => 'b'];
 		$aRebuiltIndex = ['c' => 'd'];
 
-		/*$aOrmCaseLogExtensionForTest = $this->createMock(\iOrmCaseLogExtension::class);
-		$aOrmCaseLogExtensionForTest->expects($this->exactly(1))
-			->method('Rebuild')
-			->with(
-				$this->callback(
-					function ($sLogParam, &$aIndexParam) use ($aInitialIndex, $sLog, $aRebuiltIndex, $sRebuiltLog, $bTouched) {
-						$sLogParam = $sRebuiltLog;
-						$aIndexParam = $aRebuiltIndex;
-						return ($sLog === $sLogParam)
-							&& ($aInitialIndex === $sLogParam);
-					}
-				)
-			)
-			->willReturn($bTouched);*/
-
 		$aOrmCaseLogExtensionForTest = new OrmCaseLogExtensionForTest();
 		$aOrmCaseLogExtensionForTest->Init($bTouched, $sRebuiltLog, $aRebuiltIndex);
 		$aOrmCaseLogExtension=[$aOrmCaseLogExtensionForTest];
