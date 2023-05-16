@@ -21,7 +21,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'config-current-line' => 'Ligne en édition : %1$s',
 	'config-saved-warning-db-password' => 'Configuration enregistrée. Les sauvegardes ne fonctionneront pas à cause du format du pot de passe de la base.',
 	'config-error-transaction' => "Erreur : La transaction n'est plus valide. Les modifications n'ont <b>PAS</b> été enregistrées.",
-	'config-error-file-changed' => "Erreur : La configuration a été modifiée sur le serveur par une autre action. Les modifications n'ont <b>PAS</b> été enregistrées.",
+	'config-error-file-changed' => "Erreur : La configuration a été modifiée depuis que vous l'avez ouvert. Vos modifications ne peuvent <b>PAS</b> être enregistrées. Rechargez la page et recommencez.",
 	'config-not-allowed-in-demo' => 'Désolé, '.ITOP_APPLICATION_SHORT.' est en <b>mode démonstration</b> : la configuration ne peut pas être modifiée.',
 	'config-interactive-not-allowed' => "La modification interactive de la configuration n'est pas autorisée. Voir le paramètre <code>'config_editor' => 'disabled'</code> dans le fichier de configuration.",
 ));
