@@ -5877,6 +5877,11 @@ JS
 		$this->FireEvent(EVENT_DB_CHECK_TO_WRITE);
 	}
 
+	final protected function FireEventBeforeDatabaseCreate()
+	{
+		$this->FireEvent(EVENT_DB_BEFORE_CREATE);
+	}
+
 	/**
 	 * @return void
 	 * @throws \CoreException
@@ -5893,6 +5898,16 @@ JS
 	/////////////
 	/// UPDATE
 	///
+
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function FireEventBeforeDatabaseUpdate()
+	{
+		$this->FireEvent(EVENT_DB_BEFORE_UPDATE);
+	}
 
 	/**
 	 * @param array $aChanges

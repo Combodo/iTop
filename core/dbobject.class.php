@@ -3086,6 +3086,8 @@ abstract class DBObject implements iDisplay
 
 			$this->ComputeStopWatchesDeadline(true);
 
+			$this->FireEventBeforeDatabaseCreate();
+
 			$iTransactionRetry = 1;
 			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 			if ($bIsTransactionEnabled) {
@@ -3275,6 +3277,8 @@ abstract class DBObject implements iDisplay
 			$this->DoComputeValues();
 			$this->ComputeStopWatchesDeadline(false);
 			$this->OnUpdate();
+
+			$this->FireEventBeforeDatabaseUpdate();
 
 			// Freeze the changes at this point
 			$this->InitPreviousValuesForUpdatedAttributes();
@@ -6057,6 +6061,14 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
+	protected function FireEventBeforeDatabaseCreate()
+	{
+	}
+
+	/**
+	 * @return void
+	 * @since 3.1.0
+	 */
 	protected function FireEventCreateDone(): void
 	{
 	}
@@ -6069,6 +6081,16 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
+	protected function FireEventBeforeDatabaseUpdate()
+	{
+	}
+
+	/**
+	 * @param array $aChanges
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
 	protected function FireEventUpdateDone(array $aChanges): void
 	{
 	}
@@ -6078,6 +6100,8 @@ abstract class DBObject implements iDisplay
 	///
 
 	/**
+	 * @param \DeletionPlan $oDeletionPlan
+	 *
 	 * @return void
 	 * @since 3.1.0
 	 */

@@ -340,7 +340,7 @@ final class EventService
 		foreach (self::$aEventDescriptions as $sEvent => $aEventInfo) {
 			if (is_array($aEventInfo['description']->GetEventSources())) {
 				foreach ($aEventInfo['description']->GetEventSources() as $sSource) {
-					if (\MetaModel::IsValidClass($sSource) && ($sClass == $sSource || $oClass->isSubclassOf($sSource))) {
+					if (class_exists($sSource) && ($sClass == $sSource || $oClass->isSubclassOf($sSource))) {
 						$aRes[$sEvent] = $aEventInfo;
 					}
 				}
