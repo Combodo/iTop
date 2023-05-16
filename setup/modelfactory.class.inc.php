@@ -176,6 +176,10 @@ class MFModule
 		$this->sAutoSelect = 'false';
 		$this->aFilesToInclude = array('addons' => array(), 'business' => array(), 'webservices' => array(),);
 
+		if (is_null($sRootDir)) {
+			return;
+		}
+
 		// Scan the module's root directory to find the datamodel(*).xml files
 		if ($hDir = opendir($sRootDir))
 		{
