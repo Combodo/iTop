@@ -524,6 +524,9 @@
     </event>
     <event id="EVENT_DOWNLOAD_DOCUMENT" _delta="define">
       <description>A document has been downloaded from the GUI</description>
+      <sources>
+        <source id="Document">Document</source>
+      </sources>
       <event_data>
         <event_datum id="object">
           <description>The object containing the document</description>
