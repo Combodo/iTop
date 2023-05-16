@@ -29,6 +29,7 @@ use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use utils;
 
 /**
  * Contains static methods to help loading / registering classes of the application.
