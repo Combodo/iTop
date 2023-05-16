@@ -17,7 +17,10 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
 
+use Combodo\iTop\Application\EventRegister\ApplicationEvents;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
 
 require_once APPROOT.'core/modulehandler.class.inc.php';
 require_once APPROOT.'core/querymodifier.class.inc.php';
@@ -6343,36 +6346,37 @@ abstract class MetaModel
 	{
 		self::$m_sEnvironment = $sEnvironment;
 
-		if (!defined('MODULESROOT'))
-		{
-			define('MODULESROOT', APPROOT.'env-'.self::$m_sEnvironment.'/');
+		try {
+			if (!defined('MODULESROOT')) {
+				define('MODULESROOT', APPROOT.'env-'.self::$m_sEnvironment.'/');
 
-			self::$m_bTraceSourceFiles = $bTraceSourceFiles;
+				self::$m_bTraceSourceFiles = $bTraceSourceFiles;
 
-			// $config can be either a filename, or a Configuration object (volatile!)
-			if ($config instanceof Config)
-			{
-				self::LoadConfig($config, $bAllowCache);
-			}
-			else
-			{
-				self::LoadConfig(new Config($config), $bAllowCache);
+				// $config can be either a filename, or a Configuration object (volatile!)
+				if ($config instanceof Config) {
+					self::LoadConfig($config, $bAllowCache);
+				} else {
+					self::LoadConfig(new Config($config), $bAllowCache);
+				}
+
+				if ($bModelOnly) {
+					return;
+				}
 			}
 
-			if ($bModelOnly)
-			{
-				return;
+			CMDBSource::SelectDB(self::$m_sDBName);
+
+			foreach (MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass) {
+				$oPHPClass::OnMetaModelStarted();
 			}
+
+			ExpressionCache::Warmup();
 		}
-
-		CMDBSource::SelectDB(self::$m_sDBName);
-
-        foreach(MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass)
-        {
-            $oPHPClass::OnMetaModelStarted();
-        }
-
-		ExpressionCache::Warmup();
+		finally {
+			// Event service must be initialized after the MetaModel startup, otherwise it cannot discover classes implementing the iEventServiceSetup interface
+			EventService::InitService();
+			EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
+		}
 	}
 
 	/**

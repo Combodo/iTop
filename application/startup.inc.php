@@ -15,10 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-use Combodo\iTop\Application\EventRegister\ApplicationEvents;
 use Combodo\iTop\Application\Helper\Session;
-use Combodo\iTop\Service\Events\EventData;
-use Combodo\iTop\Service\Events\EventService;
 
 require_once(APPROOT.'core/cmdbobject.class.inc.php');
 require_once(APPROOT.'application/utils.inc.php');
@@ -103,6 +100,3 @@ else
 }
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
-// Event service must be initialized after the MetaModel startup, otherwise it cannot discover classes implementing the iEventServiceSetup interface
-EventService::InitService();
-EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
