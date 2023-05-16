@@ -218,14 +218,16 @@ abstract class MultipleChoicesField extends Field
 		$this->SetValid(true);
 		$this->EmptyErrorMessages();
 
-		if (count($this->currentValue) > 0) {
-			foreach ($this->currentValue as $sCode => $value) {
-				if (utils::IsNullOrEmptyString($value)) {
-					continue;
-				}
-				if (false === array_key_exists($value, $this->aChoices)) {
-					$this->SetValid(false);
-					$this->AddErrorMessage("Value ({$value}) is not part of the field possible values list");
+		if ($this->GetReadOnly() === false) {
+			if (count($this->currentValue) > 0) {
+				foreach ($this->currentValue as $sCode => $value) {
+					if (utils::IsNullOrEmptyString($value)) {
+						continue;
+					}
+					if (false === array_key_exists($value, $this->aChoices)) {
+						$this->SetValid(false);
+						$this->AddErrorMessage("Value ({$value}) is not part of the field possible values list");
+					}
 				}
 			}
 		}

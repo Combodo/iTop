@@ -250,22 +250,24 @@ class SelectObjectField extends Field
 	}
 
 	public function Validate() {
-		$sCurrentValueForExtKey = $this->currentValue;
-		if (utils::IsNotNullOrEmptyString($sCurrentValueForExtKey) && ($sCurrentValueForExtKey !== 0)) {
-			$oSearchForExistingCurrentValue = $this->oSearch->DeepClone();
-			$oSearchForExistingCurrentValue->AddCondition('id', $sCurrentValueForExtKey, '=');
-			$oCheckIdAgainstCurrentValueExpression = new BinaryExpression(
-				new FieldExpression('id', $oSearchForExistingCurrentValue->GetClassAlias()), '=', new ScalarExpression($sCurrentValueForExtKey)
-			);
-			$oSearchForExistingCurrentValue->AddConditionExpression($oCheckIdAgainstCurrentValueExpression);
-			$oSetForExistingCurrentValue = new DBObjectSet($oSearchForExistingCurrentValue);
-			$iObjectsCount = $oSetForExistingCurrentValue->CountWithLimit(1);
+		if ($this->GetReadOnly() === false) {
+			$sCurrentValueForExtKey = $this->currentValue;
+			if (utils::IsNotNullOrEmptyString($sCurrentValueForExtKey) && ($sCurrentValueForExtKey !== 0)) {
+				$oSearchForExistingCurrentValue = $this->oSearch->DeepClone();
+				$oSearchForExistingCurrentValue->AddCondition('id', $sCurrentValueForExtKey, '=');
+				$oCheckIdAgainstCurrentValueExpression = new BinaryExpression(
+					new FieldExpression('id', $oSearchForExistingCurrentValue->GetClassAlias()), '=', new ScalarExpression($sCurrentValueForExtKey)
+				);
+				$oSearchForExistingCurrentValue->AddConditionExpression($oCheckIdAgainstCurrentValueExpression);
+				$oSetForExistingCurrentValue = new DBObjectSet($oSearchForExistingCurrentValue);
+				$iObjectsCount = $oSetForExistingCurrentValue->CountWithLimit(1);
 
-			if ($iObjectsCount === 0) {
-				$this->SetValid(false);
-				$this->AddErrorMessage("Value $sCurrentValueForExtKey does not match the corresponding filter set");
+				if ($iObjectsCount === 0) {
+					$this->SetValid(false);
+					$this->AddErrorMessage("Value $sCurrentValueForExtKey does not match the corresponding filter set");
 
-				return $this->GetValid();
+					return $this->GetValid();
+				}
 			}
 		}
 
