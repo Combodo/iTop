@@ -3066,6 +3066,8 @@ abstract class DBObject implements iDisplay
 			$this->DoComputeValues();
 			$this->OnInsert();
 
+			$this->FireEventBeforeObjectCreate();
+
 			// If not automatically computed, then check that the key is given by the caller
 			if (!MetaModel::IsAutoIncrementKey($sRootClass)) {
 				if (empty($this->m_iKey)) {
@@ -3085,9 +3087,7 @@ abstract class DBObject implements iDisplay
 			}
 
 			$this->ComputeStopWatchesDeadline(true);
-
-			$this->FireEventBeforeDatabaseCreate();
-
+			
 			$iTransactionRetry = 1;
 			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 			if ($bIsTransactionEnabled) {
@@ -3278,7 +3278,7 @@ abstract class DBObject implements iDisplay
 			$this->ComputeStopWatchesDeadline(false);
 			$this->OnUpdate();
 
-			$this->FireEventBeforeDatabaseUpdate();
+			$this->FireEventBeforeObjectUpdate();
 
 			// Freeze the changes at this point
 			$this->InitPreviousValuesForUpdatedAttributes();
@@ -6061,7 +6061,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function FireEventBeforeDatabaseCreate()
+	protected function FireEventBeforeObjectCreate()
 	{
 	}
 
@@ -6081,7 +6081,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function FireEventBeforeDatabaseUpdate()
+	protected function FireEventBeforeObjectUpdate()
 	{
 	}
 

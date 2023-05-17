@@ -5877,7 +5877,7 @@ JS
 		$this->FireEvent(EVENT_DB_CHECK_TO_WRITE);
 	}
 
-	final protected function FireEventBeforeDatabaseCreate()
+	final protected function FireEventBeforeObjectCreate()
 	{
 		$this->FireEvent(EVENT_DB_BEFORE_CREATE);
 	}
@@ -5904,7 +5904,7 @@ JS
 	 * @return void
 	 * @throws \CoreException
 	 */
-	final protected function FireEventBeforeDatabaseUpdate()
+	final protected function FireEventBeforeObjectUpdate()
 	{
 		$this->FireEvent(EVENT_DB_BEFORE_UPDATE);
 	}
