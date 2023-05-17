@@ -62,23 +62,13 @@ class PopoverMenuFactory
 		// Allowed portals
 		$aAllowedPortalsItems = static::PrepareAllowedPortalsItemsForUserMenu();
 		self::AddPopoverMenuItems($aAllowedPortalsItems, $aUserMenuItems);
-		/*if (!empty($aAllowedPortalsItems)) {
-			$oMenu->AddSection('allowed_portals')
-				->SetItems('allowed_portals', $aAllowedPortalsItems);
-		}*/
 
 		// User related pages
 		self::AddPopoverMenuItems(static::PrepareUserRelatedItemsForUserMenu(), $aUserMenuItems);
-		/*$oMenu->AddSection('user_related')
-			->SetItems('user_related', static::PrepareUserRelatedItemsForUserMenu());*/
 
 		// API: iPopupMenuExtension::MENU_USER_ACTIONS
 		$aAPIItems = static::PrepareAPIItemsForUserMenu($oMenu);
 		self::AddPopoverMenuItems($aAPIItems, $aUserMenuItems);
-		/*if (count($aAPIItems) > 0) {
-			$oMenu->AddSection('popup_menu_extension-menu_user_actions')
-				->SetItems('popup_menu_extension-menu_user_actions', $aAPIItems);
-		}*/
 
 		// Misc links
 		/*$oMenu->AddSection('misc')
@@ -112,7 +102,7 @@ class PopoverMenuFactory
 	 */
 	private static function SortPopoverMenuItems(array &$aUserMenuItems) : void {
 		$aSortedMenusFromConfig = MetaModel::GetConfig()->Get('navigation_menu.sorted_popup_user_menu_items');
-		if (empty($aSortedMenusFromConfig)){
+		if (!is_array($aSortedMenusFromConfig) || empty($aSortedMenusFromConfig)){
 			return;
 		}
 
