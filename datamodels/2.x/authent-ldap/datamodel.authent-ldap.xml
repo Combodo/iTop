@@ -309,6 +309,9 @@
             <item id="allowed_org_list">
               <rank>80</rank>
             </item>
+            <item id="log">
+              <rank>90</rank>
+            </item>
           </items>
         </details>
         <search>

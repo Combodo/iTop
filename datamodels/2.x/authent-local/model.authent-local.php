@@ -108,6 +108,7 @@ class UserLocal extends UserInternal
 						'fieldset:UserLocal:password:expiration' => array('expiration', 'password_renewed_date',),
 					),
 				'allowed_org_list',
+				'log',
 			)
 		); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login', 'org_id')); // Attributes to be displayed for a list

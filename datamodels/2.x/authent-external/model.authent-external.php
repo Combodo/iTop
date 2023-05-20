@@ -61,6 +61,7 @@ class UserExternal extends User
 						'fieldset:User:profiles' => array('profile_list'),
 					),
 				'allowed_org_list',
+				'log',
 			)
 		); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login', 'status')); // Attributes to be displayed for a list

@@ -235,15 +235,26 @@ abstract class User extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values" => null, "sql" => "login", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 
-		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values" => new ValueSetEnum('enabled,disabled'), "styled_values"=>['enabled' =>  new ormStyle('ibo-dm-enum--User-status-enabled', 'ibo-dm-enum-alt--User-status-enabled', 'var(--ibo-dm-enum--User-status-enabled--main-color)', 'var(--ibo-dm-enum--User-status-enabled--complementary-color)', null, null),'disabled' =>  new ormStyle('ibo-dm-enum--User-status-disabled', 'ibo-dm-enum-alt--User-status-disabled', 'var(--ibo-dm-enum--User-status-disabled--main-color)', 'var(--ibo-dm-enum--User-status-disabled--complementary-color)', null, null)], "sql"=>"status", "default_value"=>"enabled", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql" => "language", "default_value" => "EN US", "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array(
+			"allowed_values"  => new ValueSetEnum('enabled,disabled'),
+			"styled_values"   => [
+				'enabled'  => new ormStyle('ibo-dm-enum--User-status-enabled', 'ibo-dm-enum-alt--User-status-enabled', 'var(--ibo-dm-enum--User-status-enabled--main-color)', 'var(--ibo-dm-enum--User-status-enabled--complementary-color)', null, null),
+				'disabled' => new ormStyle('ibo-dm-enum--User-status-disabled', 'ibo-dm-enum-alt--User-status-disabled', 'var(--ibo-dm-enum--User-status-disabled--main-color)', 'var(--ibo-dm-enum--User-status-disabled--complementary-color)', null, null),
+			],
+			"sql"             => "status",
+			"default_value"   => "enabled",
+			"is_null_allowed" => false,
+			"depends_on"      => array(),
+		)));
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list",
 			array("linked_class" => "URP_UserProfile", "ext_key_to_me" => "userid", "ext_key_to_remote" => "profileid", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), "display_style" => 'property')));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class" => "URP_UserOrg", "ext_key_to_me" => "userid", "ext_key_to_remote" => "allowed_org_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeCaseLog("log", array("sql" => 'log', "is_null_allowed" => true, "default_value" => '', "allowed_values" => null, "depends_on" => array(), "always_load_in_tables" => false)));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list')); // Unused as it's an abstract class !
+		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list', 'log')); // Unused as it's an abstract class !
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'status', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'email', 'language', 'status', 'org_id')); // Criteria of the std search form
@@ -640,23 +651,23 @@ abstract class UserInternal extends User
 	{
 		$aParams = array
 		(
-			"category" => "core,grant_by_profile,silo",
-			"key_type" => "autoincrement",
-			"name_attcode" => "login",
-			"state_attcode" => "",
-			"reconc_keys" => array('login'),
-			"db_table" => "priv_internaluser",
-			"db_key_field" => "id",
+			"category"            => "core,grant_by_profile,silo",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "login",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('login'),
+			"db_table"            => "priv_internaluser",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
 		// When set, this token allows for password reset
-		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("reset_pwd_token", array("allowed_values"=>null, "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("reset_pwd_token", array("allowed_values" => null, "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'status', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'status', 'language', 'profile_list', 'allowed_org_list', 'log')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'status', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
