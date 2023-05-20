@@ -773,9 +773,21 @@ public function PrefillSearchForm(&$aContextParam)
           <extkey_attcode>contract_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="customer_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="provider_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>provider_id</target_attcode>
+        </field>
         <field id="contact_id" xsi:type="AttributeExternalKey">
           <sql>contact_id</sql>
           <target_class>Contact</target_class>
+          <filter><![CDATA[SELECT Contact WHERE org_id IN (:this->customer_id, :this->provider_id)]]></filter>
+          <dependencies>
+            <attribute id="contract_id"/>
+          </dependencies>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
@@ -793,6 +805,12 @@ public function PrefillSearchForm(&$aContextParam)
             </item>
             <item id="contract_id">
               <rank>20</rank>
+            </item>
+            <item id="customer_id">
+              <rank>30</rank>
+            </item>
+            <item id="provider_id">
+              <rank>40</rank>
             </item>
           </items>
         </details>
@@ -866,9 +884,21 @@ public function PrefillSearchForm(&$aContextParam)
           <extkey_attcode>contract_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="customer_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="provider_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>provider_id</target_attcode>
+        </field>
         <field id="document_id" xsi:type="AttributeExternalKey">
           <sql>document_id</sql>
           <target_class>Document</target_class>
+          <filter><![CDATA[SELECT Document WHERE org_id IN (:this->customer_id, :this->provider_id)]]></filter>
+          <dependencies>
+            <attribute id="contract_id"/>
+          </dependencies>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
@@ -2114,9 +2144,17 @@ public function PrefillSearchForm(&$aContextParam)
           <extkey_attcode>customercontract_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="provider_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>customercontract_id</extkey_attcode>
+          <target_attcode>provider_id</target_attcode>
+        </field>
         <field id="service_id" xsi:type="AttributeExternalKey">
           <sql>service_id</sql>
           <target_class>Service</target_class>
+          <filter><![CDATA[SELECT Service WHERE org_id = :this->provider_id]]></filter>
+          <dependencies>
+            <attribute id="customercontract_id"/>
+          </dependencies>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
@@ -2213,16 +2251,6 @@ public function PrefillSearchForm(&$aContextParam)
         </uniqueness_rules>
       </properties>
       <fields>
-        <field id="service_id" xsi:type="AttributeExternalKey">
-          <sql>service_id</sql>
-          <target_class>Service</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="service_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>service_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
         <field id="providercontract_id" xsi:type="AttributeExternalKey">
           <sql>providercontract_id</sql>
           <target_class>ProviderContract</target_class>
@@ -2231,6 +2259,24 @@ public function PrefillSearchForm(&$aContextParam)
         </field>
         <field id="providercontract_name" xsi:type="AttributeExternalField">
           <extkey_attcode>providercontract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="provider_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>providercontract_id</extkey_attcode>
+          <target_attcode>provider_id</target_attcode>
+        </field>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <filter><![CDATA[SELECT Service WHERE org_id = :this->provider_id]]></filter>
+          <dependencies>
+            <attribute id="providercontract_id"/>
+          </dependencies>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
       </fields>
