@@ -1013,6 +1013,10 @@ public function PrefillSearchForm(&$aContextParam)
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="status"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <image_attribute>icon</image_attribute>
@@ -1228,6 +1232,16 @@ public function PrefillSearchForm(&$aContextParam)
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkDocumentToService" _delta="define">
@@ -1429,6 +1443,10 @@ public function PrefillSearchForm(&$aContextParam)
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="service_provider"></attribute>
+            <attribute id="status"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -1581,6 +1599,19 @@ public function PrefillSearchForm(&$aContextParam)
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="service_provider">
+              <rank>10</rank>
+            </item>
+            <item id="request_type">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="SLA" _delta="define">

@@ -224,6 +224,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Service' => 'Service',
 	'Class:Service+' => '',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Name',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Provider',
@@ -303,6 +304,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:ServiceSubcategory' => 'Service Subcategory',
 	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Name',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Description',

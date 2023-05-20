@@ -119,6 +119,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact' => 'Contact',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Name',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Status',
@@ -211,6 +212,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Document' => 'Document',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Name',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organization',

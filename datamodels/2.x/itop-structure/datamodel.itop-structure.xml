@@ -407,6 +407,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="email"></attribute>
+            <attribute id="org_name"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -1302,6 +1306,11 @@
         <db_final_class_field>finalclass</db_final_class_field>
         <naming>
           <attributes/>
+          <complementary_attributes>
+            <attribute id="org_name"></attribute>
+            <attribute id="status"></attribute>
+            <attribute id="documenttype_name"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
