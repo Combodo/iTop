@@ -14,6 +14,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-server.svg</icon>
@@ -269,6 +272,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -518,6 +525,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-server.svg</icon>
@@ -689,6 +700,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-server.svg</icon>
@@ -978,6 +993,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="networkdevicetype_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-switch.svg</icon>
@@ -1254,6 +1273,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-server.svg</icon>
@@ -1557,6 +1580,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -1719,6 +1745,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -1850,6 +1879,9 @@
             <attribute id="name"/>
             <attribute id="system_name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -2049,6 +2081,9 @@
             <attribute id="name"/>
             <attribute id="system_name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-automatic.svg</icon>
@@ -2180,6 +2215,9 @@
             <attribute id="name"/>
             <attribute id="system_name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-database.svg</icon>
@@ -2311,6 +2349,9 @@
             <attribute id="name"/>
             <attribute id="system_name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-server-custom.svg</icon>
@@ -2442,6 +2483,9 @@
             <attribute id="name"/>
             <attribute id="system_name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-desktop.svg</icon>
@@ -2550,6 +2594,9 @@
             <attribute id="name"/>
             <attribute id="system_name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-software-other.svg</icon>
@@ -2657,6 +2704,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="middleware_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-automatic.svg</icon>
@@ -2776,6 +2827,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-database-custom.svg</icon>
@@ -2893,6 +2947,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="webserver_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-web.svg</icon>
@@ -3020,6 +3078,10 @@
             <attribute id="name"/>
             <attribute id="version"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="vendor"></attribute>
+            <attribute id="type"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-software.svg</icon>
@@ -3284,6 +3346,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="osversion_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-bandage.svg</icon>
@@ -3374,6 +3439,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="software_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-bandage.svg</icon>
@@ -3464,6 +3532,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-licence.svg</icon>
@@ -3650,6 +3721,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"/>
+            <attribute id="osversion_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-licence.svg</icon>
@@ -3793,6 +3868,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"/>
+            <attribute id="software_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-software-license.svg</icon>
@@ -4020,6 +4099,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="osfamily_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon/>
@@ -4208,6 +4290,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="brand_name"></attribute>
+            <attribute id="type"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon/>
@@ -5061,6 +5147,10 @@
             <attribute id="ip"/>
             <attribute id="ip_mask"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="org_name"></attribute>
+            <attribute id="subnet_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-network.svg</icon>
@@ -5545,6 +5635,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="ipaddress"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-globe-cable.svg</icon>
@@ -6412,6 +6505,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="owner_name"></attribute>
+            <attribute id="type"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>

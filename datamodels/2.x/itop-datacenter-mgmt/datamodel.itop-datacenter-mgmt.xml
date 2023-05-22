@@ -14,6 +14,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-rack.svg</icon>
@@ -196,6 +200,11 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+            <attribute id="rack_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-enclosure-for-servers.svg</icon>
@@ -383,6 +392,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-electrical.svg</icon>
@@ -545,6 +558,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-electricity.svg</icon>
@@ -702,6 +719,11 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+            <attribute id="rack_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-plug-socket.svg</icon>

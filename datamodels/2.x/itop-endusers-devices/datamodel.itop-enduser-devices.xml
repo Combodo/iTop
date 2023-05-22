@@ -14,6 +14,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="phonenumber"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-phone.svg</icon>
@@ -168,6 +172,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="phonenumber"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-telephone.svg</icon>
@@ -315,6 +323,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="phonenumber"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-mobile.svg</icon>
@@ -485,6 +497,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="phonenumber"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-office-phone.svg</icon>
@@ -632,6 +648,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-smartphone-tablet.svg</icon>
@@ -776,6 +795,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-laptop.svg</icon>
@@ -1026,6 +1049,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-print.svg</icon>
@@ -1206,6 +1233,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-electronics.svg</icon>
