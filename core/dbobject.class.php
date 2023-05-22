@@ -1378,7 +1378,7 @@ abstract class DBObject implements iDisplay
 
 		if ($bClickable && (strlen($sUrl) > 0)) {
 			if ($bInBasket) {
-				$sHLink = "<a class=\"object-ref-link object-in-basket\" data-href=\"$sUrl\">$sIcon$sHtmlLabel</a>";
+				$sHLink = "<a class=\"object-ref-link object-in-basket\" href=\"$sUrl\">$sIcon$sHtmlLabel</a>";
 			} else {
 				$sHLink = "<a class=\"object-ref-link\" href=\"$sUrl\" >$sIcon$sHtmlLabel</a>";
 			}

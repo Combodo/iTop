@@ -113,13 +113,16 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% else %}
 
         $('#{{ oUIBlock.GetId() }}_wrapper').find('.object-in-basket').on('click',
-                function () {
-                    console.warn('ici');
-                    sUrl = $(this).attr('data-href');
+                function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    sUrl = $(this).attr('href');
                     $('#basket{{ oUIBlock.GetId() }}').attr('action', sUrl);
+                    if (event.ctrlKey)
+                    {
+                        $('#basket{{ oUIBlock.GetId() }}').attr('target', "_blank");
+                    }
                     $('#basket{{ oUIBlock.GetId() }}').submit();
-
-
                 }
         );
         {% endif %}
@@ -149,13 +152,16 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% else %}
 
         $('#{{ oUIBlock.GetId() }}_wrapper').find('.object-in-basket').on('click',
-                function () {
-                    console.warn('ici');
-                    sUrl = $(this).attr('data-href');
+                function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    sUrl = $(this).attr('href');
                     $('#basket{{ oUIBlock.GetId() }}').attr('action', sUrl);
+                    if (event.ctrlKey)
+                    {
+                        $('#basket{{ oUIBlock.GetId() }}').attr('target', "_blank");
+                    }
                     $('#basket{{ oUIBlock.GetId() }}').submit();
-
-
                 }
         );
 
