@@ -6171,7 +6171,7 @@ class AttributeDateTime extends AttributeDBField
 	/**
 	 * Load the 3 settings: date format, time format and data_time format from the configuration
 	 */
-	protected static function LoadFormatFromConfig()
+	public static function LoadFormatFromConfig()
 	{
 		$aFormats = MetaModel::GetConfig()->Get('date_and_time_format');
 		$sLang = Dict::GetUserLanguage();

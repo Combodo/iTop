@@ -484,7 +484,7 @@ class ActionEmail extends ActionNotification
 		$oEmail->SetRecipientReplyTo($aEmailContent['reply_to'], $aEmailContent['reply_to_label']);
 		$oEmail->SetReferences($aEmailContent['references']);
 		$oEmail->SetMessageId($aEmailContent['message_id']);
-		$oEmail->SetMessageInreplyTo($aEmailContent['in_reply_to']);
+		$oEmail->SetInReplyTo($aEmailContent['in_reply_to']);
 		
 		foreach($aEmailContent['attachments'] as $aAttachment) {
 			$oEmail->AddAttachment($aAttachment['data'], $aAttachment['filename'], $aAttachment['mime_type']);
@@ -549,12 +549,15 @@ class ActionEmail extends ActionNotification
 		];
 		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
 		$sPreviousLanguage = Dict::GetUserLanguage();
+		$aPreviousPluginProperties = ApplicationContext::GetPluginProperties($sPluginClass);
 		if ($this->Get('language') !== '') {
 			// If a language is specified for this action, force this language
 			// when rendering all placeholders inside this message
 			Dict::SetUserLanguage($this->Get('language'));
+			AttributeDateTime::LoadFormatFromConfig();
+			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', $this->Get('language'));
 		}
-		$oEmail = new EMail();
+
 		try
 		{
 			$this->m_iRecipients = 0;
@@ -572,13 +575,14 @@ class ActionEmail extends ActionNotification
 			$aMessageContent['reply_to_label'] = MetaModel::ApplyParams($this->Get('reply_to_label'), $aContextArgs);
 			
 			$aMessageContent['subject'] = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
-			$aMessageContent['body'] = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
+			$sBody = $this->Get('body');
 
 			/**  @var ormDocument $oHtmlTemplate */
 			$oHtmlTemplate = $this->Get('html_template');
-			if (!$oHtmlTemplate->IsEmpty()) {
-				$aMessageContent['body'] = str_replace(static::TEMPLATE_BODY_CONTENT, $aMessageContent['body'], $oHtmlTemplate->GetData());
+			if (!$oHtmlTemplate->IsEmpty() && (false !== mb_strpos($oHtmlTemplate->GetData(), static::TEMPLATE_BODY_CONTENT))) {
+				$sBody = str_replace(static::TEMPLATE_BODY_CONTENT, $sBody, $oHtmlTemplate->GetData()); // str_replace is ok as long as both strings are UTF-8
 			}
+			$aMessageContent['body'] = MetaModel::ApplyParams($sBody, $aContextArgs);
 			
 			$oObj = $aContextArgs['this->object()'];
 			$aMessageContent['message_id'] = $this->GenerateIdentifierForHeaders($oObj, static::ENUM_HEADER_NAME_MESSAGE_ID);
@@ -591,29 +595,31 @@ class ActionEmail extends ActionNotification
 		finally {
 			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
 			Dict::SetUserLanguage($sPreviousLanguage);
+			AttributeDateTime::LoadFormatFromConfig();
+			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', $aPreviousPluginProperties['language_code'] ?? null);
 		}
 		
 		if (!is_null($oLog)) {
 			// Note: we have to secure this because those values are calculated
 			// inside the try statement, and we would like to keep track of as
 			// many data as we could while some variables may still be undefined
-			if (isset($sTo)) {
+			if (isset($aMessageContent['to'])) {
 				$oLog->Set('to', $aMessageContent['to']);
 			}
-			if (isset($sCC)) {
+			if (isset($aMessageContent['cc'])) {
 				$oLog->Set('cc', $aMessageContent['cc']);
 			}
-			if (isset($sBCC)) {
+			if (isset($aMessageContent['bcc'])) {
 				$oLog->Set('bcc', $aMessageContent['bcc']);
 			}
-			if (isset($sFrom)) {
+			if (isset($aMessageContent['from'])) {
 				$oLog->Set('from', $aMessageContent['from']);
 			}
-			if (isset($sSubject)) {
+			if (isset($aMessageContent['subject'])) {
 				$oLog->Set('subject', $aMessageContent['subject']);
 			}
-			if (isset($sBody)) {
-				$oLog->Set('body', $aMessageContent['body']);
+			if (isset($aMessageContent['body'])) {
+				$oLog->Set('body', HTMLSanitizer::Sanitize($aMessageContent['body']));
 			}
 		}
 		$sStyles = file_get_contents(APPROOT.'css/email.css');
