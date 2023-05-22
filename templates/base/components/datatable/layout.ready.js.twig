@@ -108,14 +108,25 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         // Disable hyperlinks if necessary
         {% if oUIBlock.GetOption("disable_hyperlinks") is not same as false %}
         $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
-                e.preventDefault();
-            });
+            e.preventDefault();
+        });
+        {% else %}
+
+        $('#{{ oUIBlock.GetId() }}_wrapper').find('.object-in-basket').on('click',
+                function () {
+                    console.warn('ici');
+                    sUrl = $(this).attr('data-href');
+                    $('#basket{{ oUIBlock.GetId() }}').attr('action', sUrl);
+                    $('#basket{{ oUIBlock.GetId() }}').submit();
+
+
+                }
+        );
         {% endif %}
-        
     },
     {% else %}
     drawCallback: function (settings) {
-        if(settings.json)
+        if (settings.json)
         {
             $(this).closest('.ibo-panel').find('.ibo-datatable--result-count').html(settings.json.recordsTotal);
         }
@@ -129,12 +140,25 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }
-        
+
         // Disable hyperlinks if necessary
         {% if oUIBlock.GetOption("disable_hyperlinks") is same as true %}
         $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
             e.preventDefault();
         });
+        {% else %}
+
+        $('#{{ oUIBlock.GetId() }}_wrapper').find('.object-in-basket').on('click',
+                function () {
+                    console.warn('ici');
+                    sUrl = $(this).attr('data-href');
+                    $('#basket{{ oUIBlock.GetId() }}').attr('action', sUrl);
+                    $('#basket{{ oUIBlock.GetId() }}').submit();
+
+
+                }
+        );
+
         {% endif %}
     },
     {% endif %}
@@ -435,17 +459,19 @@ if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable'))
 }
 $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings(aOptions{{ sListIDForVarSuffix }});
 
-if(window.ResizeObserver){
-        let oTable{{ sListIDForVarSuffix }}ResizeTimeout = null;
-        const oTable{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function(){
-            clearTimeout(oTable{{ sListIDForVarSuffix }}ResizeTimeout);
-            oTable{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function(){
-                $('#{{ oUIBlock.GetId() }}').DataTable().columns.adjust();
-            }, 120);
-        });
-        oTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
+if (window.ResizeObserver)
+{
+    let oTable{{ sListIDForVarSuffix }}ResizeTimeout = null;
+    const oTable{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function () {
+        clearTimeout(oTable{{ sListIDForVarSuffix }}ResizeTimeout);
+        oTable{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function () {
+            $('#{{ oUIBlock.GetId() }}').DataTable().columns.adjust();
+        }, 120);
+    });
+    oTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
 }
 
 {% if oUIBlock.HasRowActions() %}
-    {% include 'base/components/datatable/row-actions/handler.js.twig' %}
+{% include 'base/components/datatable/row-actions/handler.js.twig' %}
 {% endif %}
+console.warn('ici-lala');

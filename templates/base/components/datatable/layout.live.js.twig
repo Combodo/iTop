@@ -1,9 +1,18 @@
 {% if oUIBlock.GetOption("select_mode") is not empty %}
-    var oSelectedItems{{ oUIBlock.GetOption('sListId')|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) }} = [];
-    {% if oUIBlock.GetOption("sSelectedRows") is not empty %}
-        oSelectedItems{{ oUIBlock.GetOption('sListId')|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) }} = {{ oUIBlock.GetOption('sSelectedRows')|raw }};
-    {% endif %}
+var oSelectedItems{{ oUIBlock.GetOption('sListId')|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) }} = [];
+{% if oUIBlock.GetOption("sSelectedRows") is not empty %}
+oSelectedItems{{ oUIBlock.GetOption('sListId')|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) }} = {{ oUIBlock.GetOption('sSelectedRows')|raw }};
+{% endif %}
 {% endif %}
 
 var bSelectAllowed{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) }} = false;
 
+$('body').append($('<form/>')
+        .attr({'method': 'post', 'id': 'basket{{ oUIBlock.GetId() }}'})
+        .append($('<input/>')
+                .attr({'type': 'hidden', 'name': 'filter', 'value': "{{ oUIBlock.GetFilter()|raw }}"})
+        )
+        .append($('<input/>')
+                .attr({'type': 'hidden', 'name': 'back_url', 'value': window.location.href})
+        )
+);

@@ -49,21 +49,22 @@ class PageContentFactory
 	/**
 	 * Make a standard object details page with the form in the middle and the logs / activity in the side panel
 	 *
-	 * @param \DBObject   $oObject
-	 * @param string      $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
-	 *
 	 * @see cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
+	 *
+	 * @param string $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
+	 *
+	 * @param \DBObject $oObject
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent
 	 * @throws \CoreException
 	 */
-	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE, $sFilter = null, $aList = [])
+	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE, $sFilter = null, $aList = [], $sBackUrl = null)
 	{
 		$oLayout = new PageContentWithSideContent();
 
 
 		if ($sFilter != null) {
-			$oNavigationBlock = NavigationUIBlockFactory::MakeStandard($oObject, $sFilter, $aList);
+			$oNavigationBlock = NavigationUIBlockFactory::MakeStandard($oObject, $sFilter, $aList, $sBackUrl);
 			if ($oNavigationBlock != null) {
 				$oLayout->AddSubBlock($oNavigationBlock);
 			}

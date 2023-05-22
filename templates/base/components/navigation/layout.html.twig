@@ -5,10 +5,12 @@
             {% block iboNavigation %}
                 <form id="ibo-form-navigation" class="ibo-navigation-form" method="post">
                     <input type="hidden" name="listNavigation" value="{{ oUIBlock.GetList() }}"/>
+                    <input type="hidden" name="filter" value="{{ oUIBlock.GetFilter() }}"/>
+                    <input type="hidden" name="back-url" value="{{ oUIBlock.GetBackUrl()|raw }}"/>
                     <div class="ibo-form-navigation--nav fas fa-angle-up" id="{{ oUIBlock.GetId() }}-back"></div>
                     {% if oUIBlock.HasPrec() %}
                         <div class="ibo-form-navigation--nav fas fa-angle-double-left" id="{{ oUIBlock.GetId() }}-first"></div>
-                        <div class="ibo-form-navigation--nav fas fa-angle-left" id="{{oUIBlock.GetId() }}-prev"></div>
+                        <div class="ibo-form-navigation--nav fas fa-angle-left" id="{{ oUIBlock.GetId() }}-prev"></div>
                     {% else %}
                         &#160;&#160;&#160;
                     {% endif %}

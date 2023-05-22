@@ -51,6 +51,7 @@ class Navigation extends UIContentBlock
 	protected $iIdLast = 0;
 	protected $aList = [];
 	protected $sFilter;
+	protected $sBackUrl;
 	protected $sClass;
 
 	/**
@@ -61,16 +62,17 @@ class Navigation extends UIContentBlock
 	 * @param string $sColorScheme Color scheme code such as "success", "failure", "active", ... {@see css/backoffice/components/_panel.scss}
 	 * @param string|null $sId
 	 */
-	public function __construct(string $sClass, int $iIdx, array $aList, string $sFilter = '', ?string $sId = null)
+	public function __construct(string $sClass, int $iIdx, array $aList, string $sFilter, string $sBackUrl, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->iCount = count($aList);
-		if ( $this->iCount == 0) {
+		if ($this->iCount == 0) {
 			return new UIContentBlock();
 		}
 		$this->sClass = $sClass;
 		$this->aList = $aList;
 		$this->sFilter = $sFilter;
+		$this->sBackUrl = $sBackUrl;
 		$this->iIdx = $iIdx;
 		if ($this->iIdx>0) {
 			$this->iIdFirst = $aList[0];
@@ -100,39 +102,56 @@ class Navigation extends UIContentBlock
 
 	private function GetUrlFromId($iId)
 	{
-		$sUrl = iTopStandardURLMaker::MakeObjectURL($this->sClass, $iId).'&filter='.urlencode($this->sFilter);
+		$sUrl = iTopStandardURLMaker::MakeObjectURL($this->sClass, $iId);
 		return $sUrl;
 	}
+
 	/**
-	 * @return int|mixed
+	 * @return string
 	 */
-	public function GetUrlFirst()
+	public function GetUrlFirst(): string
 	{
-		return $this->GetUrlFromId( $this->iIdFirst);
+		return $this->GetUrlFromId($this->iIdFirst);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetUrlPrev(): string
+	{
+		return $this->GetUrlFromId($this->iIdPrev);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetUrlNext(): string
+	{
+		return $this->GetUrlFromId($this->iIdNext);
 	}
 
 	/**
 	 * @return int|mixed
 	 */
-	public function GetUrlPrev()
+	public function GetUrlLast(): string
 	{
-		return $this->GetUrlFromId( $this->iIdPrev);
+		return $this->GetUrlFromId($this->iIdLast);
 	}
 
 	/**
-	 * @return int|mixed
+	 * @return string
 	 */
-	public function GetUrlNext()
+	public function GetBackUrl(): string
 	{
-		return $this->GetUrlFromId( $this->iIdNext);
+		return $this->sBackUrl;
 	}
 
 	/**
-	 * @return int|mixed
+	 * @return string
 	 */
-	public function GetUrlLast()
+	public function GetFilter(): string
 	{
-		return $this->GetUrlFromId( $this->iIdLast);
+		return $this->sFilter;
 	}
 
 	/**
@@ -141,11 +160,6 @@ class Navigation extends UIContentBlock
 	public function GetList(): string
 	{
 		return json_encode($this->aList);
-	}
-
-	public function GetUrlSearch(){
-		$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
-		return "{$sAbsoluteUrl}pages/UI.php?operation=search&filter=".urlencode(urlencode('["'.$this->sFilter.'",[],[]]'));
 	}
 
 	/**

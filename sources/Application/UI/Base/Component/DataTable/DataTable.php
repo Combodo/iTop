@@ -48,6 +48,7 @@ class DataTable extends UIContentBlock
 	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
+	protected $sFilter;
 	/**
 	 * @var string
 	 */
@@ -222,7 +223,24 @@ class DataTable extends UIContentBlock
 	}
 
 	/**
+	 * @return string
+	 */
+	public function GetFilter()
+	{
+		return $this->sFilter;
+	}
+
+	/**
+	 * @param string $sFilter
+	 */
+	public function setFilter($sFilter): void
+	{
+		$this->sFilter = $sFilter;
+	}
+
+	/**
 	 *  Get $aInitDisplayData
+	 *
 	 * @return array
 	 */
 	public function GetInitDisplayData(): array

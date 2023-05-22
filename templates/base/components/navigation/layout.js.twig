@@ -1,16 +1,16 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 console.warn('ICI');
-$('#{{ oUIBlock.GetId() }}-back').on('click', function() {
-    window.location = '{{ oUIBlock.GetUrlSearch()|raw }}';
+$('#{{ oUIBlock.GetId() }}-back').on('click', function () {
+    window.location = '{{ oUIBlock.GetBackUrl()|raw }}';
 });
 
-$('#{{ oUIBlock.GetId() }}-first').on('click', function() {
-    $('#ibo-form-navigation').attr('action',  ' {{ oUIBlock.GetUrlFirst() | raw}} ');
+$('#{{ oUIBlock.GetId() }}-first').on('click', function () {
+    $('#ibo-form-navigation').attr('action', ' {{ oUIBlock.GetUrlFirst() | raw }} ');
     $('#ibo-form-navigation').submit();
 });
 
-$('#{{ oUIBlock.GetId() }}-prev').on('click', function() {
+$('#{{ oUIBlock.GetId() }}-prev').on('click', function () {
     $('#ibo-form-navigation').attr('action', ' {{ oUIBlock.GetUrlPrev()| raw }} ');
     $('#ibo-form-navigation').submit();
 });

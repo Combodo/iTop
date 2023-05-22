@@ -62,7 +62,7 @@ class AjaxRenderController
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public static function GetDataForTable(DBObjectSet $oSet, array $aClassAliases, array $aColumnsLoad, string $sIdName = "", array $aExtraParams = [], int $iDrawNumber = 1)
+	public static function GetDataForTable(DBObjectSet $oSet, array $aClassAliases, array $aColumnsLoad, string $sIdName = "", array $aExtraParams = [], int $iDrawNumber = 1, bool $bInBasket = false)
 	{
 		if (isset($aExtraParams['show_obsolete_data'])) {
 			$bShowObsoleteData = $aExtraParams['show_obsolete_data'];
@@ -72,7 +72,7 @@ class AjaxRenderController
 		$oSet->SetShowObsoleteData($bShowObsoleteData);
 		$aResult["draw"] = $iDrawNumber;
 		$aResult["recordsTotal"] = $oSet->Count();
-		$aResult["recordsFiltered"] = $aResult["recordsTotal"] ;
+		$aResult["recordsFiltered"] = $aResult["recordsTotal"];
 		$aResult["data"] = [];
 		while ($aObject = $oSet->FetchAssoc()) {
 			$aObj = [];
@@ -80,7 +80,7 @@ class AjaxRenderController
 				if (isset($aObject[$sAlias]) && !is_null($aObject[$sAlias])) {
 					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/_key_/raw"] = $aObject[$sAlias]->GetKey();
-					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink(null, true, null, false, $oSet->GetFilter()->ToOQL(true));
+					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink(null, true, null, false, $bInBasket);
 					$aObj[$sAlias."/friendlyname"] = $aObject[$sAlias]->Get('friendlyname');
 
 					// N°5943 Protection against $aColumnsLoad having less class aliases than $aClassAliases, this is in case the method's consumer isn't passing data correctly
@@ -490,7 +490,7 @@ class AjaxRenderController
 		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aQueryParams, null, $iEnd - $iStart, $iStart);
 		$oSet->OptimizeColumnLoad($aColumnsLoad);
 
-		return self::GetDataForTable($oSet, $aClassAliases, $aColumnsLoad, $sIdName, $aExtraParams, $iDrawNumber);
+		return self::GetDataForTable($oSet, $aClassAliases, $aColumnsLoad, $sIdName, $aExtraParams, $iDrawNumber, true);
 	}
 
 	/**

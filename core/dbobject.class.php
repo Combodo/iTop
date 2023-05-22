@@ -1315,7 +1315,7 @@ abstract class DBObject implements iDisplay
      * @throws \CoreException
      * @throws \DictExceptionMissingString
      */
-	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false, $bObsolete = false, $bIgnorePreview = false, $sFilter = null)
+	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false, $bObsolete = false, $bIgnorePreview = false, $bInBasket = false)
 	{
 		if ($sObjKey <= 0) {
 			return '<em>'.Dict::S('UI:UndefinedObject').'</em>';
@@ -1377,10 +1377,11 @@ abstract class DBObject implements iDisplay
 		}
 
 		if ($bClickable && (strlen($sUrl) > 0)) {
-			if ($sFilter != null) {
-				$sUrl = $sUrl.'&filter='.$sFilter;
+			if ($bInBasket) {
+				$sHLink = "<a class=\"object-ref-link object-in-basket\" data-href=\"$sUrl\">$sIcon$sHtmlLabel</a>";
+			} else {
+				$sHLink = "<a class=\"object-ref-link\" href=\"$sUrl\" >$sIcon$sHtmlLabel</a>";
 			}
-			$sHLink = "<a class=\"object-ref-link\" href=\"$sUrl\">$sIcon$sHtmlLabel</a>";
 		} else {
 			$sHLink = $sIcon.$sHtmlLabel;
 		}
@@ -1408,7 +1409,7 @@ abstract class DBObject implements iDisplay
      * @throws CoreException
      * @throws DictExceptionMissingString
      */
-	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true, $sLabel = null, $bIgnorePreview = false, $sFilter = null)
+	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true, $sLabel = null, $bIgnorePreview = false, $bInBasket = false)
 	{
 		if ($sLabel === null) {
 			$sLabel = $this->GetName();
@@ -1416,7 +1417,7 @@ abstract class DBObject implements iDisplay
 		$bArchived = $this->IsArchived();
 		$bObsolete = $this->IsObsolete();
 
-		return self::MakeHyperLink(get_class($this), $this->GetKey(), $sLabel, $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete, $bIgnorePreview, $sFilter);
+		return self::MakeHyperLink(get_class($this), $this->GetKey(), $sLabel, $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete, $bIgnorePreview, $bInBasket);
 	}
 
     /**

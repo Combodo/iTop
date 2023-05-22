@@ -436,7 +436,8 @@ try
 						}
 
 						//N°1386 - Advanced Search: Navigation in list - Browse this list
-						$sFilter = utils::ReadParam('filter', null, false, 'raw');
+						$sBackUrl = utils::ReadPostedParam('back_url', '', false, 'raw');
+						$sFilter = utils::ReadPostedParam('filter', null, false, 'raw');
 						$sList = utils::ReadPostedParam('listNavigation', null, false, 'string');
 						$aList = [];
 						if ($sList != null) {
@@ -445,7 +446,7 @@ try
 
 						$sClassLabel = MetaModel::GetName($sClass);
 						$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-						$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW, $sFilter, $aList));
+						$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW, $sFilter, $aList, $sBackUrl));
 						$oObj->DisplayDetails($oP);
 					}
 				}

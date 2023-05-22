@@ -585,17 +585,18 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
-		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
+		$oDataTable->SetFilter($oSet->GetFilter()->ToOQL(true));
+		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams, 1, true));
 
 		// row actions
 		if (isset($aExtraParams['row_actions'])) {
 			$oDataTable->SetRowActions($aExtraParams['row_actions']);
 		}
 
-		if (isset($aExtraParams['creation_in_modal_js_handler'])){
+		if (isset($aExtraParams['creation_in_modal_js_handler'])) {
 			$oDataTable->SetModalCreationHandler($aExtraParams['creation_in_modal_js_handler']);
 		}
-		
+
 		return $oDataTable;
 	}
 
