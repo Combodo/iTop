@@ -706,6 +706,18 @@ abstract class AttributeDefinition
 	}
 
 	/**
+	 * @param mixed $proposedValue
+	 *
+	 * @return bool True if $proposedValue is an actual value set in the attribute, false is the attribute remains "empty"
+	 * @since 3.0.3, 3.1.0 N°5784
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Default implementation, we don't really know what type $proposedValue will be
+		return is_null($proposedValue);
+	}
+
+	/**
 	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
 	 *
 	 * @param $proposedValue
@@ -1383,6 +1395,15 @@ class AttributeDashboard extends AttributeDefinition
 	public function GetValue($oHostObject)
 	{
 		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Always return false for now, we don't consider a custom version of a dashboard
+		return false;
 	}
 }
 
@@ -2233,6 +2254,22 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		return false;
 	}
+
+	/**
+	 * @inheritDoc
+	 * @param \ormLinkSet $proposedValue
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormLinkSet))
+		{
+			return parent::HasAValue($proposedValue);
+		}
+
+		// We test if there is at least 1 item in the linkset (new or existing), not if an item is being added to it.
+		return $proposedValue->Count() > 0;
+	}
 }
 
 /**
@@ -2614,6 +2651,14 @@ class AttributeInteger extends AttributeDBField
 		return is_null($proposedValue);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return utils::IsNotNullOrEmptyString($proposedValue);
+	}
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
@@ -2711,6 +2756,14 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 	public function IsNull($proposedValue)
 	{
 		return ($proposedValue == 0);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return ((int) $proposedValue) !== 0;
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -2910,6 +2963,14 @@ class AttributeDecimal extends AttributeDBField
 	public function IsNull($proposedValue)
 	{
 		return is_null($proposedValue);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return utils::IsNotNullOrEmptyString($proposedValue);
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -3321,6 +3382,14 @@ class AttributeString extends AttributeDBField
 	public function IsNull($proposedValue)
 	{
 		return ($proposedValue == '');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return utils::IsNotNullOrEmptyString($proposedValue);
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -4477,6 +4546,22 @@ class AttributeCaseLog extends AttributeLongText
 
 		return ($proposedValue->GetText() == '');
 	}
+
+	/**
+	 * @inheritDoc
+	 * @param \ormCaseLog $proposedValue
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormCaseLog)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		// We test if there is at least 1 entry in the log, not if the user is adding one
+		return $proposedValue->GetEntryCount() > 0;
+	}
+
 
 	public function ScalarToSQL($value)
 	{
@@ -6798,6 +6883,14 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return ($proposedValue == 0);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return ((int) $proposedValue) !== 0;
+	}
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
@@ -7530,6 +7623,16 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->IsNull($proposedValue);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+
+		return $oExtAttDef->HasAValue($proposedValue);
+	}
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
@@ -7664,6 +7767,17 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeURL extends AttributeString
 {
+	/**
+	 * @var string
+	 * SCHEME....... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH......................... GET............................................ ANCHOR..........................
+	 * Example: http://User:passWord@127.0.0.1:8888/patH/Page.php?arrayArgument[2]=something:blah20#myAnchor
+	 * @link http://www.php.net/manual/fr/function.preg-match.php#93824 regexp source
+	 * @since 3.0.1 N°4515 handle Alfresco and Sharepoint URLs
+	 * @since 3.0.3 moved from Config to AttributeURL constant
+	 */
+	public const DEFAULT_VALIDATION_PATTERN = /** @lang RegExp */
+		'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.,-]*)?(#[a-zA-Z0-9_.-][a-zA-Z0-9+\$_.-]*)?';
+
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
@@ -8104,6 +8218,20 @@ class AttributeBlob extends AttributeDefinition
 
 		return $oFormField;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		if (false === ($proposedValue instanceof ormDocument)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		// Empty file (no content, just a filename) are supported since PR {@link https://github.com/Combodo/combodo-email-synchro/pull/17}, so we check for both empty content and empty filename to determine that a document has no value
+		return utils::IsNotNullOrEmptyString($proposedValue->GetData()) && utils::IsNotNullOrEmptyString($proposedValue->GetFileName());
+	}
+
 
 }
 
@@ -9131,6 +9259,17 @@ class AttributeStopWatch extends AttributeDefinition
 
 		return $sRet;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// A stopwatch always has a value
+		return true;
+	}
+
+
 }
 
 /**
@@ -9616,6 +9755,23 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 		return '*****';
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormPassword)) {
+			// On object creation, the attribute value is "" instead of an ormPassword...
+			if (is_string($proposedValue)) {
+				return utils::IsNotNullOrEmptyString($proposedValue);
+			}
+			return parent::HasAValue($proposedValue);
+		}
+
+		return $proposedValue->IsEmpty() === false;
+	}
+
 }
 
 // Indexed array having two dimensions
@@ -9664,6 +9820,15 @@ class AttributeTable extends AttributeDBField
 	{
 		return (count($proposedValue) == 0);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		return count($proposedValue) > 0;
+	}
+
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
@@ -10184,6 +10349,18 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 		/** @var \ormSet $proposedValue */
 		return $proposedValue->Count() == 0;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		if (false === ($proposedValue instanceof ormSet)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		return $proposedValue->Count() > 0;
 	}
 
 	/**
@@ -12893,6 +13070,21 @@ class AttributeCustomFields extends AttributeDefinition
 
 		return $bEquals;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormCustomFieldsValue)) {
+			return parent::HasAValue($proposedValue);
+		}
+
+		return count($proposedValue->GetValues()) > 0;
+	}
+
+
 }
 
 class AttributeArchiveFlag extends AttributeBoolean

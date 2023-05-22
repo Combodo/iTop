@@ -6,7 +6,6 @@ use AttributeDate;
 use AttributeDateTime;
 use Dict;
 use Exception;
-use MetaModel;
 use Twig_Environment;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -109,22 +108,6 @@ class TwigExtension
 		$oTwigEnv->addFunction(new Twig_SimpleFunction('is_development_environment', function()
 		{
 			return utils::IsDevelopmentEnvironment();
-		}));
-
-		// Function to get configuration parameter
-		// Usage in twig: {{ get_config_parameter('foo') }}
-		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_config_parameter', function($sParamName)
-		{
-			$oConfig = MetaModel::GetConfig();
-			return $oConfig->Get($sParamName);
-		}));
-
-		// Function to get a module setting
-		// Usage in twig: {{ get_module_setting(<MODULE_CODE>, <PROPERTY_CODE> [, <DEFAULT_VALUE>]) }}
-		// since 3.0.0, but see N°4034 for upcoming evolutions in the 3.1
-		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_module_setting', function (string $sModuleCode, string $sPropertyCode, $defaultValue = null) {
-			$oConfig = MetaModel::GetConfig();
-			return $oConfig->GetModuleSetting($sModuleCode, $sPropertyCode, $defaultValue);
 		}));
 
 		// Function to get the URL of a static page in a module

@@ -389,11 +389,13 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle) {
 		var oColumns = $('#'+sDataTableName).DataTable().ajax.params()['columns'];
 		for (var j in oColumns) {
 			if (oColumns[j]['data']) {
-				var sCode = oColumns[j]['data'].split("/");
-				if (sCode[1] == '_key_') {
-					sCode[1] = 'id';
+				if (oColumns[j]['data']!='id') {
+					var sCode = oColumns[j]['data'].split("/");
+					if (sCode[1] == '_key_') {
+						sCode[1] = 'id';
+					}
+					aFields.push(sCode[0]+'.'+sCode[1]);
 				}
-				aFields.push(sCode[0]+'.'+sCode[1]);
 			} else {
 				for (var k in oColumns[j]) {
 					if (oColumns[j][k].checked) {
@@ -792,8 +794,12 @@ const CombodoTooltip = {
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
 		const oOptions = {};
 
-		// First, check if the tooltip isn't already instantiated
-		if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
+		// First, check if the jQuery element actually represent DOM elements
+		if (oElem.length === 0) {
+			return false;
+		}
+		// Then, check if the tooltip isn't already instantiated
+		else if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
 			return false;
 		}
 		else if((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === true) && (oElem[0]._tippy !== undefined)){

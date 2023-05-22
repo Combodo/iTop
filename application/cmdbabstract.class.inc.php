@@ -3054,7 +3054,16 @@ EOF
 
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
 		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_form&class='.$sClass.'&'.$oAppContext->GetForLink();
-		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').on('click', function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)} );");
+
+		$sCancelButtonOnClickScript = "let fOnClick{$this->m_iFormId}CancelButton = ";
+		if(isset($aExtraParams['js_handlers']['cancel_button_on_click'])){
+			$sCancelButtonOnClickScript .= $aExtraParams['js_handlers']['cancel_button_on_click'];
+		} else {
+			$sCancelButtonOnClickScript .= "function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)};";
+		}
+		$sCancelButtonOnClickScript .= "$('#form_{$this->m_iFormId} button.cancel').on('click', fOnClick{$this->m_iFormId}CancelButton);";
+		$oPage->add_ready_script($sCancelButtonOnClickScript);
+		
 
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
@@ -3374,13 +3383,14 @@ EOF
 			// Consider only the "expected" fields for the target state
 			if (array_key_exists($sAttCode, $aExpectedAttributes)) {
 				$iExpectCode = $aExpectedAttributes[$sAttCode];
+
 				// Prompt for an attribute if
 				// - the attribute must be changed or must be displayed to the user for confirmation
 				// - or the field is mandatory and currently empty
 				if (($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
-					(($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) == ''))) {
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					(($iExpectCode & OPT_ATT_MANDATORY) && (false === $this->HasAValue($sAttCode)))) {
 					$aArgs = array('this' => $this);
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					// If the field is mandatory, set it to the only possible value
 					if ((!$oAttDef->IsNullAllowed()) || ($iExpectCode & OPT_ATT_MANDATORY)) {
 						if ($oAttDef->IsExternalKey()) {
@@ -3409,32 +3419,35 @@ EOF
 							}
 						}
 					}
+					$sInputType = '';
+					$sInputId   = 'att_'.$iFieldIndex;
 					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
-						$this->Get($sAttCode), $this->GetEditValue($sAttCode), 'att_'.$iFieldIndex, '', $iExpectCode,
-						$aArgs);
-					$aAttrib = array(
+						$this->Get($sAttCode), $this->GetEditValue($sAttCode), $sInputId, '', $iExpectCode,
+						$aArgs, true, $sInputType);
+					$aAttrib    = array(
 						'label' => '<span>'.$oAttDef->GetLabel().'</span>',
 						'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>",
 					);
 
 					//add attrib for data-attribute
 					// Prepare metadata attributes
-					$sAttCode = $oAttDef->GetCode();
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					$sAttCode     = $oAttDef->GetCode();
+					$oAttDef      = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					$sAttDefClass = get_class($oAttDef);
-					$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
+					$sAttLabel    = MetaModel::GetLabel($sClass, $sAttCode);
 
-					$aAttrib['attcode'] = $sAttCode;
-					$aAttrib['atttype'] = $sAttDefClass;
+					$aAttrib['attcode']  = $sAttCode;
+					$aAttrib['atttype']  = $sAttDefClass;
 					$aAttrib['attlabel'] = $sAttLabel;
 					// - Attribute flags
-					$aAttrib['attflags'] = $this->GetFormAttributeFlags($sAttCode) ;
+					$aAttrib['attflags'] = $this->GetFormAttributeFlags($sAttCode);
 					// - How the field should be rendered
-					$aAttrib['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+					$aAttrib['layout']    = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+					$aAttrib['inputid']   = $sInputId;
+					$aAttrib['inputtype'] = $sInputType;
 					// - For simple fields, we get the raw (stored) value as well
 					$bExcludeRawValue = false;
-					foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
-					{
+					foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
 						if (is_a($sAttDefClass, $sAttDefClassToExclude, true)) {
 							$bExcludeRawValue = true;
 							break;
@@ -3442,8 +3455,8 @@ EOF
 					}
 					$aAttrib['value_raw'] = ($bExcludeRawValue === false) ? $this->Get($sAttCode) : '';
 
-					$aDetails[] = $aAttrib;
-					$aFieldsMap[$sAttCode] = 'att_'.$iFieldIndex;
+					$aDetails[]            = $aAttrib;
+					$aFieldsMap[$sAttCode] = $sInputId;
 					$iFieldIndex++;
 					$bExistFieldToDisplay = true;
 				}
@@ -3667,7 +3680,7 @@ HTML;
 					$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
 					$sDisplayUrl = $oDocument->GetDisplayURL(get_class($this), $this->GetKey(), $sAttCode);
 
-					$sDownloadLabel = Dict::Format('UI:DownloadDocument_');
+					$sDownloadLabel = Dict::S('UI:DownloadDocument_');
 					$sDownloadUrl = $oDocument->GetDownloadURL(get_class($this), $this->GetKey(), $sAttCode);
 
 					$sDisplayValue = <<<HTML

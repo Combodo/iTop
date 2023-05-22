@@ -566,7 +566,7 @@ class ActionEmail extends ActionNotification
 				// Prefix
 				$sPrefix = sprintf('%s_%s_%d', $sAppName, $sObjClass, $sObjId);
 				if ($sHeaderName === static::ENUM_HEADER_NAME_MESSAGE_ID) {
-					$sPrefix .= sprintf('_%f', microtime(true /* get as float*/));
+					$sPrefix .= sprintf('_%F', microtime(true /* get as float*/));
 				}
 				// Suffix
 				$sSuffix = sprintf('@%s.openitop.org', MetaModel::GetEnvironmentId());

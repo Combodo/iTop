@@ -37,7 +37,7 @@ iTop also offers mass import tools to help you being even more efficient.
  - [iTop Forums][1]: community support
  - [iTop Tickets][2]: for feature requests and bug reports
  - [Releases download][3]
- - [Software requirements][4]
+ - [iTop requirements][4]
  - [Documentation][5] covering both iTop and its official extensions
  - [iTop Hub][6] : discover and install extensions !
 
@@ -45,7 +45,7 @@ iTop also offers mass import tools to help you being even more efficient.
 [1]: https://sourceforge.net/p/itop/discussion/
 [2]: https://sourceforge.net/p/itop/tickets/
 [3]: https://sourceforge.net/projects/itop/files/itop/
-[4]: https://www.itophub.io/wiki/page?id=latest:install:upgrading_itop
+[4]: https://www.itophub.io/wiki/page?id=latest:install:requirements
 [5]: https://www.itophub.io/wiki
 [6]: https://store.itophub.io/en_US/
 

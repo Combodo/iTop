@@ -21,6 +21,19 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactor
  */
 class PDFBulkExport extends HTMLBulkExport
 {
+	/**
+	 * @var string For sample purposes
+	 * @internal
+	 * @since 2.7.8
+	 */
+	const ENUM_OUTPUT_TYPE_SAMPLE = 'sample';
+	/**
+	 * @var string For the real export
+	 * @internal
+	 * @since 2.7.8
+	 */
+	const ENUM_OUTPUT_TYPE_REAL = 'real';
+
 	public function DisplayUsage(Page $oP)
 	{
 		$oP->p(" * pdf format options:");
@@ -197,46 +210,46 @@ EOF
 		return $sPDF;
 	}
 
+	/**
+	 * @inheritDoc
+	 * @since 2.7.8
+	 */
+	protected function GetSampleData($oObj, $sAttCode)
+	{
+		if ($sAttCode !== 'id')
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+
+			// As sample data will be displayed in the web browser, AttributeImage needs to be rendered with a regular HTML format, meaning its "src" looking like "data:image/png;base64,iVBORw0KGgoAAAANSUh..."
+			// Whereas for the PDF generation it needs to be rendered with a TCPPDF-compatible format, meaning its "src" looking like "@iVBORw0KGgoAAAANSUh..."
+			if ($oAttDef instanceof AttributeImage) {
+				return $this->GetAttributeImageValue($oObj, $sAttCode, static::ENUM_OUTPUT_TYPE_SAMPLE);
+			}
+		}
+		return parent::GetSampleData($oObj, $sAttCode);
+	}
+
+	/**
+	 * @param \DBObject $oObj
+	 * @param string $sAttCode
+	 *
+	 * @return int|string
+	 * @throws \Exception
+	 */
 	protected function GetValue($oObj, $sAttCode)
 	{
-		switch($sAttCode)
-		{
+		switch ($sAttCode) {
 			case 'id':
 				$sRet = parent::GetValue($oObj, $sAttCode);
 				break;
 
 			default:
 				$value = $oObj->Get($sAttCode);
-				if ($value instanceof ormDocument)
-				{
+				if ($value instanceof ormDocument) {
 					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 					if ($oAttDef instanceof AttributeImage)
 					{
-						// To limit the image size in the PDF output, we have to enforce the size as height/width because max-width/max-height have no effect
-						//
-						$iDefaultMaxWidthPx = 48;
-						$iDefaultMaxHeightPx = 48;
-						if ($value->IsEmpty())
-						{
-							$iNewWidth = $iDefaultMaxWidthPx;
-							$iNewHeight = $iDefaultMaxHeightPx;
-
-							$sUrl = $oAttDef->Get('default_image');
-						}
-						else
-						{
-							list($iWidth, $iHeight) = utils::GetImageSize($value->GetData());
-							$iMaxWidthPx = min($iDefaultMaxWidthPx, $oAttDef->Get('display_max_width'));
-							$iMaxHeightPx = min($iDefaultMaxHeightPx, $oAttDef->Get('display_max_height'));
-
-							$fScale = min($iMaxWidthPx / $iWidth, $iMaxHeightPx / $iHeight);
-							$iNewWidth = $iWidth * $fScale;
-							$iNewHeight = $iHeight * $fScale;
-
-							$sUrl = 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
-						}
-						$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="width: '.$iNewWidth.'px; height: '.$iNewHeight.'px">' : '';
-						$sRet = '<div class="ibo-input-image--image-view">'.$sRet.'</div>';
+						$sRet = $this->GetAttributeImageValue($oObj, $sAttCode, static::ENUM_OUTPUT_TYPE_REAL);
 					}
 					else
 					{
@@ -248,6 +261,76 @@ EOF
 					$sRet = parent::GetValue($oObj, $sAttCode);
 				}
 		}
+		return $sRet;
+	}
+
+	/**
+	 * @param \DBObject $oObj
+	 * @param string $sAttCode
+	 * @param string $sOutputType {@see \PDFBulkExport::ENUM_OUTPUT_TYPE_SAMPLE}, {@see \PDFBulkExport::ENUM_OUTPUT_TYPE_REAL}
+	 *
+	 * @return string Rendered value of $oAttDef / $oValue according to the desired $sOutputType
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 2.7.8 N°2244 method creation
+	 * @since 2.7.9 N°5588 signature change to get the object so that we can log all the needed information
+	 */
+	protected function GetAttributeImageValue(DBObject $oObj, string $sAttCode, string $sOutputType)
+	{
+		$oValue = $oObj->Get($sAttCode);
+		$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+
+		// To limit the image size in the PDF output, we have to enforce the size as height/width because max-width/max-height have no effect
+		//
+		$iDefaultMaxWidthPx = 48;
+		$iDefaultMaxHeightPx = 48;
+		if ($oValue->IsEmpty()) {
+			$iNewWidth = $iDefaultMaxWidthPx;
+			$iNewHeight = $iDefaultMaxHeightPx;
+
+			$sUrl = $oAttDef->Get('default_image');
+		} else {
+			$iMaxWidthPx = min($iDefaultMaxWidthPx, $oAttDef->Get('display_max_width'));
+			$iMaxHeightPx = min($iDefaultMaxHeightPx, $oAttDef->Get('display_max_height'));
+
+			list($iWidth, $iHeight) = utils::GetImageSize($oValue->GetData());
+			if ((is_null($iWidth)) || (is_null($iHeight)) || ($iWidth === 0) || ($iHeight === 0)) {
+				// Avoid division by zero exception (SVGs, corrupted images, ...)
+				$iNewWidth = $iDefaultMaxWidthPx;
+				$iNewHeight = $iDefaultMaxHeightPx;
+
+				$sAttCode = $oAttDef->GetCode();
+				IssueLog::Warning('AttributeImage: Cannot read image size', LogChannels::EXPORT, [
+					'ObjClass'        => get_class($oObj),
+					'ObjKey'          => $oObj->GetKey(),
+					'ObjFriendlyName' => $oObj->GetName(),
+					'AttCode'         => $sAttCode,
+				]);
+			} else {
+				$fScale = min($iMaxWidthPx / $iWidth, $iMaxHeightPx / $iHeight);
+				$iNewWidth = $iWidth * $fScale;
+				$iNewHeight = $iHeight * $fScale;
+			}
+
+			$sValueAsBase64 = base64_encode($oValue->GetData());
+			switch ($sOutputType) {
+				case static::ENUM_OUTPUT_TYPE_SAMPLE:
+					$sUrl = 'data:'.$oValue->GetMimeType().';base64,'.$sValueAsBase64;
+					break;
+
+				case static::ENUM_OUTPUT_TYPE_REAL:
+				default:
+					// TCPDF requires base64-encoded images to be rendered without the usual "data:<MIMETYPE>;base64" header but with an "@"
+					// @link https://tcpdf.org/examples/example_009/
+					$sUrl = '@'.$sValueAsBase64;
+					break;
+			}
+		}
+
+		$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="width: '.$iNewWidth.'px; height: '.$iNewHeight.'px;">' : '';
+		$sRet = '<div class="ibo-input-image--image-view">'.$sRet.'</div>';
+
 		return $sRet;
 	}
 

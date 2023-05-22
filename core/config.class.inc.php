@@ -29,7 +29,7 @@ define('ITOP_APPLICATION_SHORT', 'iTop');
  *
  * @see ITOP_CORE_VERSION to get iTop core version
  */
-define('ITOP_VERSION', '3.0.1-dev');
+define('ITOP_VERSION', '3.0.3-dev');
 
 define('ITOP_VERSION_NAME', 'Fullmoon');
 define('ITOP_REVISION', 'svn');
@@ -480,6 +480,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
+		'link_set_max_edit_ext_key' => [
+			'type'                => 'integer',
+			'description'         => 'Maximum number of items in the link that allow editing the remote external key. Above that limit, remote external key cannot be edited. Mind that setting this limit too high can have a negative impact on performances.',
+			'default'             => 50,
+			'value'               => 50,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
 		'tag_set_item_separator' => [
 			'type' => 'string',
 			'description' => 'Tag set from string: tag label separator',
@@ -576,12 +584,28 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_css'                                => [
-			'type'                => 'string',
-			'description'         => 'CSS that will override the standard stylesheet used for the notifications',
-			'default'             => "",
-			'value'               => "",
+		'email_transport_smtp.allow_self_signed' => array(
+			'type'                => 'bool',
+			'description'         => 'Allow self signed peer certificates',
+			'default'             => false,
+			'value'               => false,
 			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		),
+		'email_transport_smtp.verify_peer' => array(
+			'type'                => 'bool',
+			'description'         => 'Verify peer certificate',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		),
+		'email_css' => [
+			'type' => 'string',
+			'description' => 'CSS that will override the standard stylesheet used for the notifications',
+			'default' => "",
+			'value' => "",
+			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
 		'email_default_sender_address' => [
@@ -883,16 +907,11 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'url_validation_pattern' => [
-			'type' => 'string',
-			'description' => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
-			'default' => /** @lang RegExp */
-			'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z0-9_.-][a-zA-Z0-9+\$_.-]*)?',
-			// SCHEME....... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH......................... GET............................................ ANCHOR..........................
-			// Example: http://User:passWord@127.0.0.1:8888/patH/Page.php?arrayArgument[2]=something:blah20#myAnchor
-			// RegExp source: http://www.php.net/manual/fr/function.preg-match.php#93824
-			// Update with N°4515
-			'value' => '',
-			'source_of_value' => '',
+			'type'                => 'string',
+			'description'         => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
+			'default'             => AttributeURL::DEFAULT_VALIDATION_PATTERN,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
 		'email_validation_pattern' => [

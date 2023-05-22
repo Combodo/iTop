@@ -603,23 +603,17 @@ class BulkChange
 			$iFlags = ($oTargetObj->IsNew())
 				? $oTargetObj->GetInitialStateAttributeFlags($sAttCode, $aReasons)
 				: $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
-			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) ) {
+			if ((($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ($oTargetObj->Get($sAttCode) != $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues))) {
 				$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Readonly', $sAttCode, $oTargetObj->Get($sAttCode), $aRowData[$iCol]);
-			}
-			else if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
-			{
-				try
-				{
+			} else if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect()) {
+				try {
 					$oSet = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 					$oTargetObj->Set($sAttCode, $oSet);
 				}
-				catch(CoreException $e)
-				{
+				catch (CoreException $e) {
 					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Format', $e->getMessage());
 				}
-			}
-			else
-			{
+			} else {
 				$value = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 				if (is_null($value) && (strlen($aRowData[$iCol]) > 0))
 				{
@@ -1234,7 +1228,7 @@ class BulkChange
 					}
 					else
 					{
-						$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=');
+						$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=', true);
 					}
 				}
 				if ($bSkipQuery)

@@ -396,6 +396,8 @@ abstract class DBObject implements iDisplay
 		$this->m_aOrigValues = array();
 		$this->m_aLoadedAtt = array();
 		$this->m_bCheckStatus = true;
+		$this->m_aCheckIssues = [];
+		$this->m_bSecurityIssue = [];
 
 		// Get the key
 		//
@@ -1929,7 +1931,7 @@ abstract class DBObject implements iDisplay
 				/** @var \AttributeExternalKey $oAtt */
 				$sTargetClass = $oAtt->GetTargetClass();
 				if (false === MetaModel::IsObjectInDB($sTargetClass, $toCheck)) {
-					return "Target object not found (".$sTargetClass.".::".$toCheck.")";
+					return "Target object not found ({$sTargetClass}::{$toCheck})";
 				}
 			}
 			if ($oAtt->IsHierarchicalKey())
@@ -2790,12 +2792,6 @@ abstract class DBObject implements iDisplay
 		$this->DoComputeValues();
 		$this->OnInsert();
 
-		if ($this->m_iKey < 0)
-		{
-			// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
-			$this->m_iKey = null; 
-		}
-
 		// If not automatically computed, then check that the key is given by the caller
 		if (!MetaModel::IsAutoIncrementKey($sRootClass))
 		{
@@ -2810,6 +2806,12 @@ abstract class DBObject implements iDisplay
 		if (!$bRes)
 		{
 			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
+		}
+
+		if ($this->m_iKey < 0)
+		{
+			// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
+			$this->m_iKey = null;
 		}
 
 		// Stop watches
@@ -2923,13 +2925,14 @@ abstract class DBObject implements iDisplay
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
 		while ($oTrigger = $oSet->Fetch())
 		{
-			/** @var \Trigger $oTrigger */
+			/** @var \TriggerOnObjectCreate $oTrigger */
 			try
 			{
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
 			catch(Exception $e)
 			{
+				$oTrigger->LogException($e, $this);
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
@@ -3394,6 +3397,7 @@ abstract class DBObject implements iDisplay
 						$oTrigger->DoActivate($this->ToArgs('this'));
 					}
 					catch (Exception $e) {
+						$oTrigger->LogException($e, $this);
 						utils::EnrichRaisedException($oTrigger, $e);
 					}
 				}
@@ -3573,13 +3577,13 @@ abstract class DBObject implements iDisplay
 			$aParams);
 		while ($oTrigger = $oSet->Fetch())
 		{
-			/** @var \Trigger $oTrigger */
+			/** @var \TriggerOnObjectDelete $oTrigger */
 			try
 			{
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
-			catch(Exception $e)
-			{
+			catch(Exception $e) {
+				$oTrigger->LogException($e, $this);
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
@@ -3968,6 +3972,7 @@ abstract class DBObject implements iDisplay
 					$oTrigger->DoActivate($this->ToArgs('this'));
 				}
 				catch (Exception $e) {
+					$oTrigger->LogException($e, $this);
 					utils::EnrichRaisedException($oTrigger, $e);
 				}
 			}
@@ -3979,6 +3984,7 @@ abstract class DBObject implements iDisplay
 					$oTrigger->DoActivate($this->ToArgs('this'));
 				}
 				catch (Exception $e) {
+					$oTrigger->LogException($e, $this);
 					utils::EnrichRaisedException($oTrigger, $e);
 				}
 			}
@@ -3993,6 +3999,20 @@ abstract class DBObject implements iDisplay
 		}
 
 		return $bSuccess;
+	}
+
+	/**
+	 * @param string $sAttCode
+	 *
+	 * @return bool True if $sAttCode has an actual value set, false is the attribute remains "empty"
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.0.3, 3.1.0 N°5784
+	 */
+	public function HasAValue(string $sAttCode): bool
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		return $oAttDef->HasAValue($this->Get($sAttCode));
 	}
 
 	/**

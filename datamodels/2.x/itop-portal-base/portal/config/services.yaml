@@ -30,6 +30,7 @@ parameters:
   # Used in templates
   combodo.current_environment:        '%env(string:COMBODO_CURRENT_ENVIRONMENT)%'
   combodo.absolute_url:               '%env(string:COMBODO_ABSOLUTE_URL)%'
+  combodo.conf.app_icon_url:          '%env(string:COMBODO_CONF_APP_ICON_URL)%'
   combodo.modules.absolute_url:       '%env(string:COMBODO_MODULES_ABSOLUTE_URL)%'
   combodo.modules.absolute_path:      !php/const MODULESROOT
   combodo.portal.base.absolute_url:   '%env(string:COMBODO_PORTAL_BASE_ABSOLUTE_URL)%'

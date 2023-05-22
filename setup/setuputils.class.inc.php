@@ -102,7 +102,7 @@ class SetupUtils
 	const PHP_NEXT_MIN_VERSION = '7.4.0'; // Allow us to use more modern libs / code; will be default PHP version on main Linux distrib LTS
 	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for next iTop version
 	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '8.0.0';
+	const PHP_NOT_VALIDATED_VERSION = '8.1.0';
 
 	const MIN_MEMORY_LIMIT = '32M';
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
@@ -151,6 +151,14 @@ class SetupUtils
 		}
 		$aWritableDirsErrors = self::CheckWritableDirs($aWritableDirs);
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
+		// Check temp dir (N°5235) : as this path isn't under APPROOT we are doing a custom check and not using \SetupUtils::CheckWritableDirs
+		$sTmpDir = static::GetTmpDir();
+		clearstatcache(true, $sTmpDir);
+		if (is_writable($sTmpDir)) {
+			$aResult[] = new CheckResult(CheckResult::INFO, "The temp directory is writable by the application.");
+		} else {
+			$aResult[] = new CheckResult(CheckResult::WARNING, "The temp directory <b>'".$sTmpDir."'</b> is not writable by the application. Change its permission or use another dir (sys_temp_dir option in php.ini).");
+		}
 
 		$aMandatoryExtensions = self::GetPHPMandatoryExtensions();
 		$aOptionalExtensions = self::GetPHPOptionalExtensions();
@@ -1659,6 +1667,18 @@ JS
 	}
 
 	/**
+	 * @param array $aModules List of available module codes
+	 *
+	 * @return bool true if the Hub connector is installed
+	 *
+	 * @since 2.7.8 3.0.3 3.1.0 N°5758 method creation
+	 */
+	public static function IsConnectableToITopHub($aModules)
+	{
+		return array_key_exists('itop-hub-connector', $aModules);
+	}
+
+	/**
 	 * @param array $aModules Available modules with code as key and metadata array as values
 	 *    Same structure as the one returned by {@link \RunTimeEnvironment::AnalyzeInstallation}
 	 * @param string $sExtensionsDir In the setup, get value with the 'extensions_dir' parameter
@@ -1869,21 +1889,30 @@ JS
 
 	public static function GetVersionManifest($sInstalledVersion)
 	{
-		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches))
-		{
+		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches)) {
 			return APPROOT.'datamodels/'.$aMatches[1].'.x/manifest-'.$sInstalledVersion.'.xml';
 		}
+
 		return false;
 	}
 
+	/**
+	 * Check paths relative to APPROOT : is existing, is dir, is writable
+	 *
+	 * @param string[] $aWritableDirs list of dirs to check, relative to APPROOT (for example : `['log','conf','data']`)
+	 *
+	 * @return array<string, \CheckResult> full path as key, CheckResult error as value
+	 *
+	 * @uses \is_dir()
+	 * @uses \is_writable()
+	 * @uses \file_exists()
+	 */
 	public static function CheckWritableDirs($aWritableDirs)
 	{
 		$aNonWritableDirs = array();
-		foreach($aWritableDirs as $sDir)
-		{
+		foreach ($aWritableDirs as $sDir) {
 			$sFullPath = APPROOT.$sDir;
-			if (is_dir($sFullPath) && !is_writable($sFullPath))
-			{
+			if (is_dir($sFullPath) && !is_writable($sFullPath)) {
 				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, "The directory <b>'".APPROOT.$sDir."'</b> exists but is not writable for the application.");
 			}
 			else if (file_exists($sFullPath) && !is_dir($sFullPath))

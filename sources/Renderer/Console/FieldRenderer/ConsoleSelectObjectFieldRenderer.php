@@ -123,6 +123,20 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 				{
 					$oOutput->AddCssFile($sFile);
 				}
+				$oOutput->AddJs(
+				<<<EOF
+	                    $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
+                    	var me = this;
+
+                        $(this).closest(".field_set").trigger("field_change", {
+                            id: $(me).attr("id"),
+                            name: $(me).closest(".form_field").attr("data-field-id"),
+                            value: $(me).val()
+                        })
+                        .closest('.form_handler').trigger('value_change');
+                    });
+EOF
+				);
 			}
 			elseif($this->oField->GetControlType() == SelectObjectField::CONTROL_RADIO_VERTICAL)
 			{
@@ -226,9 +240,8 @@ EOF
 JS
 				);
 			}
-
-
 		}
+
 		$oOutput->AddHtml((BlockRenderer::RenderBlockTemplates($oBlock)));
 		// JS Form field widget construct
 		$aValidators = array();

@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '3.0.2-rc1',
-        'version' => '3.0.2.0-RC1',
+        'pretty_version' => 'dev-develop',
+        'version' => 'dev-develop',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'c5d5379c492059a80eb72cc1dab148dd6e82705f',
+        'reference' => '05efe40a2a415dba06d4dba615df89f455904377',
         'name' => 'combodo/itop',
         'dev' => true,
     ),
     'versions' => array(
         'combodo/itop' => array(
-            'pretty_version' => '3.0.2-rc1',
-            'version' => '3.0.2.0-RC1',
+            'pretty_version' => 'dev-develop',
+            'version' => 'dev-develop',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'c5d5379c492059a80eb72cc1dab148dd6e82705f',
+            'reference' => '05efe40a2a415dba06d4dba615df89f455904377',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -62,12 +62,12 @@
             'dev_requirement' => false,
         ),
         'firebase/php-jwt' => array(
-            'pretty_version' => 'v5.5.1',
-            'version' => '5.5.1.0',
+            'pretty_version' => 'v6.4.0',
+            'version' => '6.4.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../firebase/php-jwt',
             'aliases' => array(),
-            'reference' => '83b609028194aa042ea33b5af2d41a7427de80e6',
+            'reference' => '4dd1e007f22a927ac77da5a3fbb067b42d3bc224',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(

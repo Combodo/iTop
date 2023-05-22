@@ -15,7 +15,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  * Class ColumnUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column
+ * @package UIBlockExtensibilityAPI
  * @since 3.0.0
  * @api
  */
@@ -26,6 +26,12 @@ class ColumnUIBlockFactory extends AbstractUIBlockFactory
 	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Column::class;
 
+	/**
+	 * @api
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column
+	 */
 	public static function MakeStandard(?string $sId = null)
 	{
 		$oInput = new Column($sId);
@@ -33,6 +39,13 @@ class ColumnUIBlockFactory extends AbstractUIBlockFactory
 		return $oInput;
 	}
 
+	/**
+	 * @api
+	 * @param \Combodo\iTop\Application\UI\Base\UIBlock $oBlock
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column
+	 */
 	public static function MakeForBlock(UIBlock $oBlock, ?string $sId = null)
 	{
 		$oInput = new Column($sId);

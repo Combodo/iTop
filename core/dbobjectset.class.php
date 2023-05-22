@@ -141,7 +141,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	{
 		$sRet = '';
 		$this->Rewind();
-		$sRet .= "Set (".$this->m_oFilter->ToOQL().")<br/>\n";
+		$sRet .= "Set (".$this->m_oFilter->ToOQL(true).")<br/>\n";
         $sRet .= "Query: <pre style=\"font-size: smaller; display:inline;\">".$this->m_oFilter->MakeSelectQuery().")</pre>\n";
 		
 		$sRet .= $this->Count()." records<br/>\n";
@@ -154,6 +154,7 @@ class DBObjectSet implements iDBObjectSetIterator
 			}
 			$sRet .= "</ul>\n";
 		}
+		$this->Rewind();
 		return $sRet;
 	}
 

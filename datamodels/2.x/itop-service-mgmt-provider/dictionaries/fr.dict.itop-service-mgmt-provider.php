@@ -98,9 +98,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Contract/Attribute:organization_name' => 'Nom client',
 	'Class:Contract/Attribute:organization_name+' => 'Nom commun',
 	'Class:Contract/Attribute:contacts_list' => 'Contacts',
-	'Class:Contract/Attribute:contacts_list+' => '',
+	'Class:Contract/Attribute:contacts_list+' => 'Tous les contacts for ce contrat client',
 	'Class:Contract/Attribute:documents_list' => 'Documents',
-	'Class:Contract/Attribute:documents_list+' => '',
+	'Class:Contract/Attribute:documents_list+' => 'Tous les documents for ce contrat client',
 	'Class:Contract/Attribute:description' => 'Description',
 	'Class:Contract/Attribute:description+' => '',
 	'Class:Contract/Attribute:start_date' => 'Date de début',
@@ -147,11 +147,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CustomerContract' => 'Contrat client',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
-	'Class:CustomerContract/Attribute:services_list+' => '',
+	'Class:CustomerContract/Attribute:services_list+' => 'Tous les services achetés pour ce contrat',
 	'Class:CustomerContract/Attribute:functionalcis_list' => 'CIs',
-	'Class:CustomerContract/Attribute:functionalcis_list+' => '',
+	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Tous les éléments de configuration couverts par ce contrat',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Contrats fournisseur',
-	'Class:CustomerContract/Attribute:providercontracts_list+' => '',
+	'Class:CustomerContract/Attribute:providercontracts_list+' => 'Tous les contrats fournisseurs permettant de délivrer ces services pour ce contrat (contrats sous-jacents)',
 ));
 
 //
@@ -162,7 +162,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ProviderContract' => 'Contrat fournisseur',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
-	'Class:ProviderContract/Attribute:functionalcis_list+' => '',
+	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Tous les éléments de configuration couverts par ce contrat fournisseur',
 	'Class:ProviderContract/Attribute:sla' => 'Niveau de service',
 	'Class:ProviderContract/Attribute:sla+' => 'Accord de niveau de service (SLA)',
 	'Class:ProviderContract/Attribute:coverage' => 'Couverture',
@@ -232,7 +232,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ServiceFamily/Attribute:icon' => 'Icône',
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
-	'Class:ServiceFamily/Attribute:services_list+' => '',
+	'Class:ServiceFamily/Attribute:services_list+' => 'Tous les services de cette catégorie',
 ));
 
 //
@@ -255,9 +255,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Service/Attribute:servicefamily_name' => 'Nom Famille de service',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Documents',
-	'Class:Service/Attribute:documents_list+' => '',
+	'Class:Service/Attribute:documents_list+' => 'Tous les documents liés à ce service',
 	'Class:Service/Attribute:contacts_list' => 'Contacts',
-	'Class:Service/Attribute:contacts_list+' => '',
+	'Class:Service/Attribute:contacts_list+' => 'Tous les contacts pour ce service',
 	'Class:Service/Attribute:status' => 'Statut',
 	'Class:Service/Attribute:status+' => '',
 	'Class:Service/Attribute:status/Value:implementation' => 'implémentation',
@@ -269,9 +269,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Service/Attribute:icon' => 'Icône',
 	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Contrats client',
-	'Class:Service/Attribute:customercontracts_list+' => '',
+	'Class:Service/Attribute:customercontracts_list+' => 'Tous les contrats clients qui ont acquis ce service',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Sous catégories de service',
-	'Class:Service/Attribute:servicesubcategories_list+' => '',
+	'Class:Service/Attribute:servicesubcategories_list+' => 'Toutes les sous catégories de service pour ce service',
 ));
 
 //
@@ -357,9 +357,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SLA/Attribute:organization_name' => 'Nom fournisseur',
 	'Class:SLA/Attribute:organization_name+' => 'Nom commun',
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
-	'Class:SLA/Attribute:slts_list+' => '',
+	'Class:SLA/Attribute:slts_list+' => 'Tous les objectifs pour ce niveau de service',
 	'Class:SLA/Attribute:customercontracts_list' => 'Contrats clients',
-	'Class:SLA/Attribute:customercontracts_list+' => '',
+	'Class:SLA/Attribute:customercontracts_list+' => 'Tous les contrats clients utilisant ce niveau de service',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Impossible de sauvegarder le lien avec le contrat client %1$s et le service %2$s : un SLA existe déjà.',
 ));
 
@@ -502,9 +502,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DeliveryModel/Attribute:description' => 'Description',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacts',
-	'Class:DeliveryModel/Attribute:contacts_list+' => '',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'Tous les contacts (Equipe ou Personne) pour ce modèle de support',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Clients',
-	'Class:DeliveryModel/Attribute:customers_list+' => '',
+	'Class:DeliveryModel/Attribute:customers_list+' => 'Tous les clients ayant ce modèle de support',
 ));
 
 //

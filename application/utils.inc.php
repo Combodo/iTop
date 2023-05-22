@@ -158,7 +158,7 @@ class utils
 			self::$m_aParamsFromFile = array();
 		}
 
-		$aParamLines = explode("\n", $sParams);
+		$aParamLines = explode("\n", $sParams ?? '');
 		foreach ($aParamLines as $sLine)
 		{
 			$sLine = trim($sLine);
@@ -1467,19 +1467,19 @@ class utils
 				$oDashboard = $param;
 				$sDashboardId = $oDashboard->GetId();
 				$sDashboardFile = $oDashboard->GetDefinitionFile();
+				$sDashboardFileRelative = utils::LocalPath($sDashboardFile);
 				$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
 				$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
 				$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
-				$sDashboardFileJS = addslashes($sDashboardFile);
-				$sDashboardFileURL = urlencode($sDashboardFile);
+				$sDashboardFileJS = addslashes($sDashboardFileRelative);
+				$sDashboardFileURL = urlencode($sDashboardFileRelative);
 				$sUploadDashboardTransactId = utils::GetNewTransactionId();
 				$aResult = array(
 					new SeparatorPopupMenuItem(),
 					new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sDashboardId.'&file='.$sDashboardFileURL),
 					new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sDashboardId', file: '$sDashboardFileJS', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn', transaction: '$sUploadDashboardTransactId' })"),
 				);
-				if ($oDashboard->GetReloadURL())
-				{
+				if ($oDashboard->GetReloadURL()) {
 					$aResult[] = new SeparatorPopupMenuItem();
 					$aResult[] = new URLPopupMenuItem('UI:Menu:PrintableVersion', Dict::S('UI:Menu:PrintableVersion'), $oDashboard->GetReloadURL().'&printable=1', '_blank');
 				}
@@ -1687,7 +1687,7 @@ class utils
 			// If cURL is available, let's use it, since it provides a greater control over the various HTTP/SSL options
 			// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
 			// by setting the SSLVERSION to 3 as done below.
-			$aHeaders = explode("\n", $sOptionnalHeaders);
+			$aHeaders = explode("\n", $sOptionnalHeaders ?? '');
 			// N°3267 - Webservices: Fix optional headers not being taken into account
 			//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
 			$aHTTPHeaders = array();
@@ -1865,19 +1865,36 @@ class utils
 	}
 
 	/**
+	 * @param string $sValue value encoded with {@see self::EscapeHtml()}
+	 *
+	 * @return string decoded value
+	 *
+	 * @uses \htmlspecialchars_decode()
+	 * @link https://www.php.net/manual/en/function.htmlspecialchars-decode.php
+	 * @since 3.0.3 3.1.0 N°6020 method creation
+	 */
+	public static function EscapedHtmlDecode($sValue)
+	{
+		return htmlspecialchars_decode(
+			$sValue,
+			ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5
+		);
+	}
+
+	/**
 	 * Convert a string containing some (valid) HTML markup to plain text
+	 *
 	 * @param string $sHtml
+	 *
 	 * @return string
 	 */
 	public static function HtmlToText($sHtml)
 	{
-		try
-		{
+		try {
 			//return '<?xml encoding="UTF-8">'.$sHtml;
 			return \Html2Text\Html2Text::convert('<?xml encoding="UTF-8">'.$sHtml);
 		}
-		catch(Exception $e)
-		{
+		catch (Exception $e) {
 			return $e->getMessage();
 		}
 	}
@@ -2254,7 +2271,7 @@ class utils
 				$aParams = array();
 				foreach(explode('&', $sQuery) as $sChunk)
 				{
-					$aParts = explode('=', $sChunk);
+					$aParts = explode('=', $sChunk ?? '');
 					if (count($aParts) != 2) continue;
 					$aParams[$aParts[0]] = urldecode($aParts[1]);
 				}
@@ -2401,7 +2418,7 @@ class utils
 		$aCleanHeaders = array();
 		foreach( $aHeaders as $sKey => $sValue )
 		{
-			$aTokens = explode(':', $sValue, 2);
+			$aTokens = explode(':', $sValue ?? '', 2);
 			if(isset($aTokens[1]))
 			{
 				$aCleanHeaders[trim($aTokens[0])] = trim($aTokens[1]);
@@ -2745,12 +2762,18 @@ HTML;
 					$bSkipped = true;
 				}
 				else {
-					foreach ($aExcludedPath as $sExcludedPath) {
-						// Note: We use '#' as delimiters as usual '/' is often used in paths.
-						if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
-							$bSkipped = true;
-							break;
+					$sPHPFile = self::LocalPath($sPHPFile);
+					if ($sPHPFile !== false) {
+						$sPHPFile = '/'.$sPHPFile; // for regex
+						foreach ($aExcludedPath as $sExcludedPath) {
+							// Note: We use '#' as delimiters as usual '/' is often used in paths.
+							if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
+								$bSkipped = true;
+								break;
+							}
 						}
+					} else {
+						$bSkipped = true; // file not found
 					}
 				}
 				
@@ -2788,7 +2811,7 @@ HTML;
 		$aResultPref = [];
 		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
 		// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
+		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 
 		foreach ($aShortcutClasses as $cShortcutPlugin) {
 			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();
@@ -2796,7 +2819,7 @@ HTML;
 				$sKey = isset($aShortcutPrefs[$aShortcutKey['id']]) ? $aShortcutPrefs[$aShortcutKey['id']] : $aShortcutKey['key'];
 
 				// Format key for display
-				$aKeyParts = explode('+', $sKey);
+				$aKeyParts = explode('+', $sKey ?? '');
 				$aFormattedKeyParts = [];
 				foreach ($aKeyParts as $sKeyPart) {
 					$aFormattedKeyParts[] = ucfirst(trim($sKeyPart));

@@ -14,9 +14,9 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class FileSelectUIBlockFactory
  *
  * @author Eric Espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Input\FileSelect
- * @since 3.0.0
+ * @package UIBlockExtensibilityAPI
  * @api
+ * @since 3.0.0
  */
 class FileSelectUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -26,6 +26,7 @@ class FileSelectUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = FileSelect::class;
 
 	/**
+	 * @api
 	 * @param string $sName
 	 * @param string|null $sId
 	 *

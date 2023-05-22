@@ -304,7 +304,7 @@ class DisplayBlock
 			}
 		}
 	}
-	
+
 	public function GetFilter()
 	{
 		return $this->m_oFilter;
@@ -1045,9 +1045,19 @@ JS
 			$aCount = $aCounts[$sStateValue];
 			$sHyperlink = $aCount['link'];
 			$sCountLabel = $aCount['label'];
-			$oPill = PillFactory::MakeForState($sClass, $sStateValue)
-				->SetTooltip($sStateLabel)
-				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".utils::HtmlEntities($sStateLabel)."</span>");
+
+			$oPill = PillFactory::MakeForState($sClass, $sStateValue);
+			// N°5849 - Unencode label for ExternalKey attribute because friendlyname is already html encoded thanks to DBObject::GetName() in AttributeExternalKey::GetAllowedValues(). (A fix in this function may have too much impact).
+			if ($oAttDef instanceof AttributeExternalKey) {
+				$sPillTooltip = utils::HtmlEntityDecode($sStateLabel);
+				$sPillLabel = $sStateLabel;
+			} else {
+				$sPillTooltip = $sStateLabel;
+				$sPillLabel = utils::HtmlEntities($sStateLabel);
+			}
+			$oPill->SetTooltip($sPillTooltip)
+				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".$sPillLabel."</span>");
+
 			if ($sHyperlink != '-') {
 				$oPill->SetUrl($sHyperlink);
 			}
@@ -1601,6 +1611,7 @@ JS
 
 			$iTotalCount = 0;
 			$aURLs = array();
+
 			foreach ($aRes as $iRow => $aRow) {
 				$sValue = $aRow['grouped_by_1'];
 				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
@@ -1610,6 +1621,7 @@ JS
 					'label_html' => $sHtmlValue,
 					'value' => (float)$aRow[$sFctVar],
 				);
+
 
 				// Build the search for this subset
 				$oSubsetSearch = $this->m_oFilter->DeepClone();
@@ -1627,9 +1639,13 @@ JS
 
 		switch ($sChartType) {
 			case 'bars':
-				$aNames = array();
+				$iMaxNbCharsInLabel = 0;
+				$aNames = [];
 				foreach ($aValues as $idx => $aValue) {
 					$aNames[$idx] = $aValue['label'];
+					if ($iMaxNbCharsInLabel < mb_strlen($aValue['label'])) {
+						$iMaxNbCharsInLabel = mb_strlen($aValue['label']);
+					}
 				}
 				$oBlock = new BlockChartAjaxBars();
 				$oBlock->sJSNames = json_encode($aNames);
@@ -1637,21 +1653,31 @@ JS
 				$oBlock->sId = $sId;
 				$oBlock->sJSURLs = $sJSURLs;
 				$oBlock->sURLForRefresh = str_replace("'", "\'", $sUrl);
+				$oBlock->iMaxNbCharsInLabel = $iMaxNbCharsInLabel;
 				break;
 
 			case 'pie':
-				$aColumns = array();
-				$aNames = array();
+				$aColumns = [];
+				$aNames = [];
 				foreach ($aValues as $idx => $aValue) {
 					$aColumns[] = array('series_'.$idx, (float)$aValue['value']);
 					$aNames['series_'.$idx] = $aValue['label'];
 				}
+
+				$iNbLinesToAddForName = 0;
+				if (count($aNames) > 50) {
+					// Calculation of the number of legends line add to the height of the graph to have a maximum of 5 legend columns
+					$iNbLinesIncludedInChartHeight = 10;
+					$iNbLinesToAddForName = ceil(count($aNames) / 5) - $iNbLinesIncludedInChartHeight;
+				}
+
 				$oBlock = new BlockChartAjaxPie();
 				$oBlock->sJSColumns = json_encode($aColumns);
 				$oBlock->sJSNames = json_encode($aNames);
 				$oBlock->sId = $sId;
 				$oBlock->sJSURLs = $sJSURLs;
 				$oBlock->sURLForRefresh = str_replace("'", "\'", $sUrl);
+				$oBlock->iNbLinesToAddForName = $iNbLinesToAddForName;
 				break;
 		}
 		if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {

@@ -52,7 +52,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:FAQCategory/Attribute:name' => '名前',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
 ));
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:ProblemManagement' => '問題管理',

@@ -25,7 +25,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class AlertUIBlockFactory
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\Alert
+ * @package UIBlockExtensibilityAPI
  * @since 3.0.0
  * @api
  *
@@ -41,6 +41,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a basis Alert component
 	 *
+	 * @api
 	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
 	 * @param string|null $sId id of the html block
@@ -55,6 +56,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component for informational messages
 	 *
+	 * @api
 	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
 	 * @param string|null $sId id of the html block
@@ -70,6 +72,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component for successful messages
 	 *
+	 * @api
 	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
 	 * @param string|null $sId
@@ -84,6 +87,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component for warning messages
 	 *
+	 * @api
 	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
 	 * @param string|null $sId id of the html block
@@ -98,6 +102,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component for danger messages
 	 *
+	 * @api
 	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
 	 * @param string|null $sId id of the html block
@@ -112,6 +117,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component for failure messages
 	 *
+	 * @api
 	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
 	 * @param string|null $sId id of the html block
@@ -126,6 +132,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component with primary color scheme
 	 *
+	 * @api
 	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
 	 * @param string|null $sId id of the html block
@@ -140,6 +147,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component with secondary color scheme
 	 *
+	 * @api
 	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
 	 * @param string|null $sId id of the html block

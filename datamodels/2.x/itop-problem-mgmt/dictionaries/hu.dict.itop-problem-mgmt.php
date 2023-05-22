@@ -107,7 +107,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Problem/Attribute:resolution_date' => 'Megoldás dátuma',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Ismert hibák',
-	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:knownerrors_list+' => 'All the known errors that are linked to this problem~~',
 	'Class:Problem/Attribute:related_request_list' => 'Related requests~~',
 	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
 	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',

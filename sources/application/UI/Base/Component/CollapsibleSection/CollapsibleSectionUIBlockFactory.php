@@ -14,9 +14,9 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * Class CollapsibleSectionUIBlockFactory
  *
  * @author Pierre Goiffon <pierre.goiffon@combodo.com>
- * @package Combodo\iTop\Application\UI\Base\Component\CollapsibleSection
- * @since 3.0.0
+ * @package UIBlockExtensibilityAPI
  * @api
+ * @since 3.0.0
  */
 class CollapsibleSectionUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -26,6 +26,7 @@ class CollapsibleSectionUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = CollapsibleSection::class;
 
 	/**
+	 * @api
 	 * @param string $sTitle
 	 * @param string|null $sId
 	 *

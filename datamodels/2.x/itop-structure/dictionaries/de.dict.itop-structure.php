@@ -94,9 +94,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Location/Attribute:country' => 'Land',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'Geräte',
-	'Class:Location/Attribute:physicaldevice_list+' => '',
+	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => 'Kontakte',
-	'Class:Location/Attribute:person_list+' => '',
+	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
 ));
 
 //
@@ -131,7 +131,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contact/Attribute:function' => 'Funktion',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'CIs',
-	'Class:Contact/Attribute:cis_list+' => '',
+	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => 'Typ',
 	'Class:Contact/Attribute:finalclass+' => '',
 ));
@@ -160,9 +160,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person/Attribute:manager_name' => 'Manager-Name',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'Teams',
-	'Class:Person/Attribute:team_list+' => '',
+	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
-	'Class:Person/Attribute:tickets_list+' => '',
+	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager-Name (lesbar)',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Bild',
@@ -181,9 +181,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
 	'Class:Team/Attribute:persons_list' => 'Mitglieder',
-	'Class:Team/Attribute:persons_list+' => '',
+	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
-	'Class:Team/Attribute:tickets_list+' => '',
+	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
 ));
 
 //
@@ -216,7 +216,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Document/Attribute:status/Value:published' => 'Veröffentlicht',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs',
-	'Class:Document/Attribute:cis_list+' => '',
+	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Dokumenttyp',
 	'Class:Document/Attribute:finalclass+' => '',
 ));

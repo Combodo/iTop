@@ -1,5 +1,11 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+var iChartDefaultHeight = 200,
+        iChartLegendHeight = 6 * {{ oUIBlock.iMaxNbCharsInLabel }},
+        iChartTotalHeight = iChartDefaultHeight+iChartLegendHeight;
+$('#my_chart_{{ oUIBlock.sId }}').height(iChartTotalHeight+'px');
+
 var chart = c3.generate({
     bindto: d3.select('#my_chart_{{ oUIBlock.sId }}'),
     data: {

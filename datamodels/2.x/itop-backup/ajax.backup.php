@@ -137,6 +137,9 @@ try
 		 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
 		 */
 		case 'restore_get_token':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
+
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
 			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
 			if ($oRestoreMutex->IsLocked())
@@ -149,12 +152,7 @@ try
 			$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
 			file_put_contents($sTokenFile, $sFile);
 
-			$oPage->add_ready_script(
-				<<<JS
-$("#restore_token").val('$sToken');
-JS
-			);
-
+			$oPage->SetData(['token' => $sToken]);
 			$oPage->output();
 			break;
 

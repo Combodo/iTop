@@ -4,7 +4,7 @@
   "type": "project",
   "license": "AGPL-3.0-only",
   "require": {
-    "php": ">=7.1.3 <8.0.0",
+    "php": ">=7.1.3 <8.1.0",
     "ext-ctype": "*",
     "ext-dom": "*",
     "ext-gd": "*",
@@ -13,6 +13,7 @@
     "ext-mysqli": "*",
     "ext-soap": "*",
     "combodo/tcpdf": "~6.4.4",
+    "firebase/php-jwt": "~6.4.0",
     "guzzlehttp/guzzle": "^6.5.8",
     "laminas/laminas-mail": "^2.11",
     "laminas/laminas-servicemanager": "^3.5",

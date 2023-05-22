@@ -52,7 +52,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQCategory/Attribute:name' => 'Nom',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Toutes les questions fréquemment posées liées à cette catégorie',
 ));
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ProblemManagement' => 'Gestion des problèmes',

@@ -110,7 +110,7 @@ class apcFile
 	 */
 	static public function GetCacheFileName($sKey = '')
 	{
-		$sPath = str_replace(array(' ', '/', '\\', '.'), '-', $sKey);
+		$sPath = str_replace(array(' ', '/', '\\', '.'), '-', $sKey ?? '');
 		return utils::GetCachePath().'apc-emul/'.$sPath;
 	}
 

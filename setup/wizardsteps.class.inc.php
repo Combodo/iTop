@@ -645,10 +645,7 @@ EOF
 			);
 			if ($oMutex->IsLocked())
 			{
-				$oPage->add(<<<HTML
-<div class="message">An iTop cron process is being executed on the target database. iTop cron process will be stopped during the setup execution.</div>
-HTML
-				);
+				$oPage->add('<div class="message">'.ITOP_APPLICATION.' cron process is being executed on the target database. '.ITOP_APPLICATION.' cron process will be stopped during the setup execution.</div>');
 			}
 		}
 	}
@@ -697,15 +694,17 @@ class WizStepLicense extends WizardStep
 	}
 
 	/**
-	 * @return bool
+	 * @return bool true if we need to display a GDPR confirmation
 	 * @throws \Exception
-	 * @since 2.7.7 3.0.2 3.1.0
+	 * @since 2.7.7 3.0.2 3.1.0 N°5037 method creation
+	 * @since 2.7.8 3.0.3 3.1.0 N°5758 rename from NeedsRgpdConsent to NeedsGdprConsent
 	 */
-	private function NeedsRgpdConsent()
+	private function NeedsGdprConsent()
 	{
 		$sMode = $this->oWizard->GetParameter('install_mode');
 		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
-		return $sMode == 'install' && !SetupUtils::IsProductVersion($aModules);
+
+		return (($sMode === 'install') && SetupUtils::IsConnectableToITopHub($aModules));
 	}
 
     /**
@@ -741,12 +740,12 @@ CSS
 	    $oPage->add('</fieldset>');
 	    $sChecked = ($this->oWizard->GetParameter('accept_license', 'no') == 'yes') ? ' checked ' : '';
 	    $oPage->add('<div class="setup-accept-licenses"><input class="check_select" type="checkbox" name="accept_license" id="accept" value="yes" '.$sChecked.'><label for="accept">I accept the terms of the licenses of the '.count($aLicenses).' components mentioned above.</label></div>');
-	    if ($this->NeedsRgpdConsent()) {
+	    if ($this->NeedsGdprConsent()) {
 		    $oPage->add('<br>');
 		    $oPage->add('<fieldset>');
 		    $oPage->add('<legend>European General Data Protection Regulation</legend>');
-		    $oPage->add('<div class="ibo-setup-licenses--components-list">iTop software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).<p></p>
-By installing iTop you agree that some information will be collected by Combodo to help you manage your instances and for statistical purposes.
+		    $oPage->add('<div class="ibo-setup-licenses--components-list">'.ITOP_APPLICATION.' software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).<p></p>
+By installing '.ITOP_APPLICATION.' you agree that some information will be collected by Combodo to help you manage your instances and for statistical purposes.
 This data remains anonymous until it is associated to a user account on iTop Hub.</p>
 <p>List of collected data available in our <a target="_blank" href="https://www.itophub.io/page/data-privacy">Data privacy section.</a></p><br></div>');
 		    $oPage->add('<input type="checkbox" class="check_select" id="rgpd_consent">');
@@ -1432,7 +1431,7 @@ class WizStepModulesChoice extends WizardStep
 		}
 		catch(MissingDependencyException $e)
 		{
-			$oPage->warning($e->getHtmlDesc());
+			$oPage->warning($e->getHtmlDesc(), $e->getMessage());
 		}
 
 		$this->bUpgrade = ($this->oWizard->GetParameter('install_mode') != 'install');
