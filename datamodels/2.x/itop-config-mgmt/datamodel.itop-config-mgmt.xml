@@ -1243,6 +1243,28 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="rack_id">
+              <rank>40</rank>
+            </item>
+            <item id="networkdevicetype_id">
+              <rank>60</rank>
+            </item>
+            <item id="model_id">
+              <rank>80</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -1564,6 +1586,28 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="rack_id">
+              <rank>40</rank>
+            </item>
+            <item id="enclosure_id">
+              <rank>50</rank>
+            </item>
+            <item id="model_id">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>
@@ -1720,6 +1764,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -1862,6 +1919,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>
@@ -2189,6 +2259,28 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="system_id">
+              <rank>30</rank>
+            </item>
+            <item id="software_id">
+              <rank>40</rank>
+            </item>
+            <item id="softwarelicence_id">
+              <rank>50</rank>
+            </item>
+            <item id="description">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -2323,6 +2415,28 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="system_id">
+              <rank>30</rank>
+            </item>
+            <item id="software_id">
+              <rank>40</rank>
+            </item>
+            <item id="softwarelicence_id">
+              <rank>50</rank>
+            </item>
+            <item id="description">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -2457,6 +2571,28 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="system_id">
+              <rank>30</rank>
+            </item>
+            <item id="software_id">
+              <rank>40</rank>
+            </item>
+            <item id="softwarelicence_id">
+              <rank>50</rank>
+            </item>
+            <item id="description">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -2578,6 +2714,28 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="system_id">
+              <rank>30</rank>
+            </item>
+            <item id="software_id">
+              <rank>40</rank>
+            </item>
+            <item id="softwarelicence_id">
+              <rank>50</rank>
+            </item>
+            <item id="description">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="OtherSoftware" _delta="define">
@@ -2689,6 +2847,28 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="system_id">
+              <rank>30</rank>
+            </item>
+            <item id="software_id">
+              <rank>40</rank>
+            </item>
+            <item id="softwarelicence_id">
+              <rank>50</rank>
+            </item>
+            <item id="description">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="MiddlewareInstance" _delta="define">
@@ -2811,6 +2991,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="middleware_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>
@@ -2829,6 +3025,7 @@
           </attributes>
           <complementary_attributes>
             <attribute id="organization_name"></attribute>
+            <attribute id="dbserver_name"></attribute>
           </complementary_attributes>
         </naming>
         <style>
@@ -2931,6 +3128,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="dbserver_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>
@@ -3040,11 +3253,14 @@
             <item id="org_id">
               <rank>20</rank>
             </item>
-            <item id="business_criticity">
+            <item id="webserver_id">
               <rank>30</rank>
             </item>
-            <item id="move2production">
+            <item id="business_criticity">
               <rank>40</rank>
+            </item>
+            <item id="move2production">
+              <rank>50</rank>
             </item>
           </items>
         </search>
@@ -3053,14 +3269,36 @@
             <item id="org_id">
               <rank>10</rank>
             </item>
-            <item id="business_criticity">
+            <item id="webserver_id">
               <rank>20</rank>
             </item>
-            <item id="move2production">
+            <item id="business_criticity">
               <rank>30</rank>
+            </item>
+            <item id="move2production">
+              <rank>40</rank>
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="webserver_id">
+              <rank>20</rank>
+            </item>
+            <item id="url">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>
@@ -3177,16 +3415,16 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="vendor">
+            <item id="version">
               <rank>20</rank>
             </item>
-            <item id="version">
+            <item id="vendor">
               <rank>30</rank>
             </item>
-            <item id="documents_list">
+            <item id="type">
               <rank>40</rank>
             </item>
-            <item id="type">
+            <item id="documents_list">
               <rank>50</rank>
             </item>
             <item id="softwareinstance_list">
@@ -3234,14 +3472,27 @@
             <item id="vendor">
               <rank>10</rank>
             </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+        <summary>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
             <item id="version">
+              <rank>10</rank>
+            </item>
+            <item id="vendor">
               <rank>20</rank>
             </item>
             <item id="type">
               <rank>30</rank>
             </item>
           </items>
-        </list>
+        </summary>
       </presentation>
     </class>
     <class id="Patch" _delta="define">
@@ -3393,10 +3644,10 @@
             <item id="functionalcis_list">
               <rank>30</rank>
             </item>
-            <item id="description">
+            <item id="osversion_id">
               <rank>40</rank>
             </item>
-            <item id="osversion_id">
+            <item id="description">
               <rank>50</rank>
             </item>
           </items>
@@ -3406,10 +3657,10 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="description">
+            <item id="osversion_id">
               <rank>20</rank>
             </item>
-            <item id="osversion_id">
+            <item id="description">
               <rank>30</rank>
             </item>
           </items>
@@ -3424,6 +3675,16 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="osversion_id">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="SoftwarePatch" _delta="define">
@@ -3517,6 +3778,16 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="software_id">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Licence" _delta="define">
@@ -3853,6 +4124,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="osversion_id">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="SoftwareLicence" _delta="define">
@@ -3990,6 +4274,23 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="software_id">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="licence_key">
+              <rank>70</rank>
+            </item>
+          </items>
+
+        </summary>
       </presentation>
     </class>
     <class id="lnkDocumentToLicence" _delta="define">
@@ -4441,6 +4742,16 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="brand_id">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="NetworkDeviceType" _delta="define">
@@ -5338,6 +5649,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="ip">
+              <rank>10</rank>
+            </item>
+            <item id="ip_mask">
+              <rank>20</rank>
+            </item>
+            <item id="subnet_name">
+              <rank>25</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="VLAN" _delta="define">
@@ -5353,6 +5683,9 @@
           <attributes>
             <attribute id="vlan_tag"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="org_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-hierarchy.svg</icon>
@@ -5457,6 +5790,16 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkSubnetToVLAN" _delta="define">
@@ -6664,6 +7007,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="parent_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkGroupToCI" _delta="define">

@@ -308,6 +308,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="phonenumber">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>140</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="MobilePhone" _delta="define">
@@ -482,6 +501,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="phonenumber">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>140</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="IPPhone" _delta="define">
@@ -633,6 +668,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="phonenumber">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>140</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Tablet" _delta="define">
@@ -780,6 +834,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="PC" _delta="define">
@@ -1034,6 +1107,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Printer" _delta="define">
@@ -1218,6 +1307,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Peripheral" _delta="define">
@@ -1366,6 +1471,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
   </classes>

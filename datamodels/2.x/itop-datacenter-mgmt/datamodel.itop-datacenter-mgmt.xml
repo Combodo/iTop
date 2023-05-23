@@ -185,6 +185,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="nb_u">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Enclosure" _delta="define">
@@ -368,6 +384,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="rack_id">
+              <rank>30</rank>
+            </item>
+            <item id="nb_u">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <relations>
         <relation id="impacts">
@@ -704,6 +736,16 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="PDU" _delta="define">
@@ -723,6 +765,7 @@
             <attribute id="organization_name"></attribute>
             <attribute id="location_name"/>
             <attribute id="rack_name"/>
+            <attribute id="powerstart_name"/>
           </complementary_attributes>
         </naming>
         <style>
@@ -893,6 +936,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="rack_id">
+              <rank>30</rank>
+            </item>
+            <item id="powerstart_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>

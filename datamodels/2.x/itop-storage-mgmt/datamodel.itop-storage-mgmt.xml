@@ -240,6 +240,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -487,6 +500,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="model_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -735,6 +761,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -983,6 +1022,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="model_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -1102,6 +1154,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="nas_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-map-as-drive.svg</icon>
@@ -1146,6 +1202,10 @@
         <field id="nas_name" xsi:type="AttributeExternalField">
           <extkey_attcode>nas_id</extkey_attcode>
           <target_attcode>name</target_attcode>
+        </field>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>nas_id</extkey_attcode>
+          <target_attcode>location_name</target_attcode>
         </field>
       </fields>
       <presentation>
@@ -1194,6 +1254,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="nas_id">
+              <rank>30</rank>
+            </item>
+            <item id="raid_level">
+              <rank>40</rank>
+            </item>
+            <item id="size">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>
@@ -1321,6 +1397,9 @@
             <attribute id="storagesystem_name"/>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="lun_id"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-hdd.svg</icon>
@@ -1453,6 +1532,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="lun_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="storagesystem_id">
+              <rank>40</rank>
+            </item>
+            <item id="raid_level">
+              <rank>50</rank>
+            </item>
+            <item id="size">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
