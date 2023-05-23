@@ -47,8 +47,7 @@ abstract class CustomFieldsHandler {
 	 *
 	 * @param $sAttCode
 	 */
-	final public function __construct($sAttCode)
-	{
+	final public function __construct($sAttCode) {
 		$this->sAttCode = $sAttCode;
 		$this->aValues = null;
 	}
@@ -56,11 +55,39 @@ abstract class CustomFieldsHandler {
 	abstract public function BuildForm(DBObject $oHostObject, $sFormId);
 
 	/**
+	 * @returns true|string true if no error found, error message otherwise
+	 * @throws \ApplicationException if {@link static::$oForm} attribute not initialized yet
+	 * @since 3.1.0 N°6322 N°1150 Add template_id checks
+	 */
+	public function Validate(DBObject $oHostObject) {
+		if (false === isset($this->oForm)) {
+			throw new ApplicationException('oForm attribute not init yet. You must call BuildForm before this method !');
+		}
+
+		try {
+			$this->oForm->Validate();
+			if ($this->oForm->GetValid()) {
+				$ret = true;
+			}
+			else {
+				$aMessages = array();
+				foreach ($this->oForm->GetErrorMessages() as $sFieldId => $aFieldMessages) {
+					$aMessages[] = $sFieldId.': '.implode(', ', $aFieldMessages);
+				}
+				$ret = 'Invalid value: '.implode(', ', $aMessages);
+			}
+		} catch (Exception $e) {
+			$ret = $e->getMessage();
+		}
+
+		return $ret;
+	}
+
+	/**
 	 *
 	 * @return \Combodo\iTop\Form\Form
 	 */
-	public function GetForm()
-	{
+	public function GetForm() {
 		return $this->oForm;
 	}
 
@@ -69,16 +96,14 @@ abstract class CustomFieldsHandler {
 		$this->aValues = $aValues;
 	}
 
-	static public function GetPrerequisiteAttributes($sClass = null)
-	{
+	public static function GetPrerequisiteAttributes($sClass = null) {
 		return array();
 	}
 
 	/**
 	 * List the available verbs for 'GetForTemplate'
 	 */
-	static public function EnumTemplateVerbs()
-	{
+	public static function EnumTemplateVerbs() {
 		return array();
 	}
 

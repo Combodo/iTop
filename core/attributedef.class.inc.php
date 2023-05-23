@@ -13245,27 +13245,11 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function CheckValue(DBObject $oHostObject, $value)
 	{
-		try
-		{
+		try {
 			$oHandler = $this->GetHandler($value->GetValues());
 			$oHandler->BuildForm($oHostObject, '');
-			$oForm = $oHandler->GetForm();
-			$oForm->Validate();
-			if ($oForm->GetValid())
-			{
-				$ret = true;
-			}
-			else
-			{
-				$aMessages = array();
-				foreach($oForm->GetErrorMessages() as $sFieldId => $aFieldMessages)
-				{
-					$aMessages[] = $sFieldId.': '.implode(', ', $aFieldMessages);
-				}
-				$ret = 'Invalid value: '.implode(', ', $aMessages);
-			}
-		} catch (Exception $e)
-		{
+			$ret = $oHandler->Validate($oHostObject);
+		} catch (Exception $e) {
 			$ret = $e->getMessage();
 		}
 
