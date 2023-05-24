@@ -31,7 +31,9 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
+//
+// Menu, fieldsets, UI, messages translations
+//
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:ServiceManagement' => 'Service Management',
 	'Menu:ServiceManagement+' => 'Service Management Overview',
@@ -59,8 +61,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:DeliveryModel+' => 'Delivery models',
 	'Menu:ServiceFamily' => 'Service families',
 	'Menu:ServiceFamily+' => 'Service families',
-));
 
+	'Contract:baseinfo' => 'General information',
+	'Contract:moreinfo' => 'Contractual information',
+	'Contract:cost'     => 'Cost information',
+));
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',

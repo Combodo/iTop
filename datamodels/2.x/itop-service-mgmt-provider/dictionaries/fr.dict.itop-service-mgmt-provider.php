@@ -20,7 +20,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
-// Class: ContractType
+// Menu, fieldsets, UI, messages translations
 //
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ServiceManagement' => 'Gestion des services',
@@ -49,8 +49,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:DeliveryModel+' => 'Modèles de support',
 	'Menu:ServiceFamily' => 'Familles de service',
 	'Menu:ServiceFamily+' => 'Familles de service',
-));
 
+	'Contract:baseinfo' => 'Information générale',
+	'Contract:moreinfo' => 'Aspects contractuels',
+	'Contract:cost'     => 'Coûts',
+));
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',

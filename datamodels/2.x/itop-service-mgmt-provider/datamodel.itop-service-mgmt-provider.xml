@@ -279,6 +279,9 @@ public function PrefillSearchForm(&$aContextParam)
             <item id="provider_id">
               <rank>30</rank>
             </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
           </items>
         </default_search>
         <search>
@@ -457,50 +460,74 @@ public function PrefillSearchForm(&$aContextParam)
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:Contract:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="provider_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="contracttype_id">
+                      <rank>40</rank>
+                    </item>
+                    <item id="description">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
               <rank>20</rank>
+              <items>
+                <item id="fieldset:Contract:moreinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="status">
+                      <rank>10</rank>
+                    </item>
+                    <item id="start_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_date">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Contract:cost">
+                  <items>
+                    <item id="cost">
+                      <rank>40</rank>
+                    </item>
+                    <item id="cost_currency">
+                      <rank>50</rank>
+                    </item>
+                    <item id="cost_unit">
+                      <rank>60</rank>
+                    </item>
+                    <item id="billing_frequency">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="contacts_list">
-              <rank>30</rank>
-            </item>
-            <item id="documents_list">
-              <rank>40</rank>
-            </item>
-            <item id="description">
-              <rank>50</rank>
-            </item>
-            <item id="start_date">
-              <rank>60</rank>
-            </item>
-            <item id="end_date">
-              <rank>70</rank>
-            </item>
-            <item id="cost">
-              <rank>80</rank>
-            </item>
-            <item id="cost_currency">
-              <rank>90</rank>
-            </item>
-            <item id="billing_frequency">
               <rank>100</rank>
             </item>
-            <item id="cost_unit">
+            <item id="documents_list">
               <rank>110</rank>
             </item>
-            <item id="provider_id">
-              <rank>120</rank>
-            </item>
-            <item id="status">
-              <rank>130</rank>
-            </item>
-            <item id="contracttype_id">
-              <rank>140</rank>
-            </item>
             <item id="services_list">
-              <rank>150</rank>
+              <rank>140</rank>
             </item>
             <item id="functionalcis_list">
               <rank>160</rank>
@@ -626,56 +653,80 @@ public function PrefillSearchForm(&$aContextParam)
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:Contract:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="provider_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="contracttype_id">
+                      <rank>40</rank>
+                    </item>
+                    <item id="description">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
               <rank>20</rank>
+              <items>
+                <item id="fieldset:Contract:moreinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="status">
+                      <rank>10</rank>
+                    </item>
+                    <item id="start_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_date">
+                      <rank>30</rank>
+                    </item>
+                    <item id="sla">
+                      <rank>40</rank>
+                    </item>
+                    <item id="coverage">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Contract:cost">
+                  <items>
+                    <item id="cost">
+                      <rank>40</rank>
+                    </item>
+                    <item id="cost_currency">
+                      <rank>50</rank>
+                    </item>
+                    <item id="cost_unit">
+                      <rank>60</rank>
+                    </item>
+                    <item id="billing_frequency">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="contacts_list">
-              <rank>30</rank>
-            </item>
-            <item id="documents_list">
-              <rank>40</rank>
-            </item>
-            <item id="description">
-              <rank>50</rank>
-            </item>
-            <item id="start_date">
-              <rank>60</rank>
-            </item>
-            <item id="end_date">
-              <rank>70</rank>
-            </item>
-            <item id="cost">
-              <rank>80</rank>
-            </item>
-            <item id="cost_currency">
-              <rank>90</rank>
-            </item>
-            <item id="billing_frequency">
               <rank>100</rank>
             </item>
-            <item id="cost_unit">
+            <item id="documents_list">
               <rank>110</rank>
-            </item>
-            <item id="provider_id">
-              <rank>120</rank>
             </item>
             <item id="functionalcis_list">
               <rank>130</rank>
-            </item>
-            <item id="sla">
-              <rank>140</rank>
-            </item>
-            <item id="coverage">
-              <rank>150</rank>
-            </item>
-            <item id="status">
-              <rank>160</rank>
-            </item>
-            <item id="contracttype_id">
-              <rank>170</rank>
             </item>
           </items>
         </details>

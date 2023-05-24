@@ -19,8 +19,9 @@
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 //
-// Class: ContractType
+// Menu, fieldsets, UI, messages translations
 //
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ServiceManagement' => 'Gestion des services',
@@ -50,6 +51,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ServiceFamily+' => 'Familles de service',
 	'Menu:Procedure' => 'Catalogue des procédures',
 	'Menu:Procedure+' => 'Catalogue des procédures',
+
+	'Contract:baseinfo' => 'Information générale',
+	'Contract:moreinfo' => 'Aspects contractuels',
+	'Contract:cost'     => 'Coûts',
 ));
 
 //
