@@ -36,8 +36,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	// Add
 	'UI:Links:Add:Button'                           => 'Ajouter',
-	'UI:Links:Add:Button+'                          => 'Ajouter un(e) %4$s',
-	'UI:Links:Add:Modal:Title'                      => 'Ajouter un(e) %4$s à %2$s',
+	'UI:Links:Add:Button+'                          => 'Ajouter un %4$s',
+	'UI:Links:Add:Modal:Title'                      => 'Ajouter un %4$s à %2$s',
 
 	// Modify link
 	'UI:Links:ModifyLink:Button'                    => 'Modifier',
@@ -51,8 +51,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	// Remove
 	'UI:Links:Remove:Button'                        => 'Retirer',
-	'UI:Links:Remove:Button+'                       => 'Retirer cet(te) %4$s',
-	'UI:Links:Remove:Modal:Title'                   => 'Retirer un(e) %4$s de %1$s',
+	'UI:Links:Remove:Button+'                       => 'Retirer cet %4$s',
+	'UI:Links:Remove:Modal:Title'                   => 'Retirer un %4$s de %1$s',
 	'UI:Links:Remove:Modal:Message'                 => 'Voulez-vous vraiment retirer %5$s de %2$s ?',
 
 	// Delete

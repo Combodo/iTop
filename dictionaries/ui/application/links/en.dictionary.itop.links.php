@@ -21,7 +21,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	// Placeholders
 	// $%1s : host object class name
-	// $%2s : host object firendlyname
+	// $%2s : host object friendlyname
 	// $%3s : current tab name
 	// $%4s : remote object class name
 	// $%5s : remote object friendlyname
