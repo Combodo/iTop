@@ -1526,7 +1526,7 @@ public function PrefillSearchForm(&$aContextParam)
           </attributes>
           <complementary_attributes>
             <attribute id="service_provider"></attribute>
-            <attribute id="status"></attribute>
+            <attribute id="request_type"></attribute>
           </complementary_attributes>
         </naming>
         <fields_semantic>

@@ -26,6 +26,9 @@
           <attributes>
             <attribute id="ref"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="title"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-comments.svg</icon>
@@ -444,6 +447,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="title">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkContactToTicket" _delta="define">
