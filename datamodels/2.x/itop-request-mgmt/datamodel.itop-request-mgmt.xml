@@ -20,6 +20,9 @@
           <attributes>
             <attribute id="ref"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="title"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>

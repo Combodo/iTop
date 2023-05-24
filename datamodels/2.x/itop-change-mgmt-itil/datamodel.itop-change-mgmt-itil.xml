@@ -20,6 +20,9 @@
           <attributes>
             <attribute id="ref"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="title"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -1281,6 +1284,9 @@
           <attributes>
             <attribute id="ref"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="title"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-change-routine.svg</icon>
@@ -2079,6 +2085,9 @@
           <attributes>
             <attribute id="ref"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="title"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-change-approved.svg</icon>
@@ -3082,6 +3091,9 @@
           <attributes>
             <attribute id="ref"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="title"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-change-normal.svg</icon>
@@ -3777,6 +3789,9 @@
           <attributes>
             <attribute id="ref"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="title"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-change-emergency.svg</icon>
