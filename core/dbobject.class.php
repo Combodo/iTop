@@ -1116,29 +1116,25 @@ abstract class DBObject implements iDisplay
      *
      * @see \Combodo\iTop\Form\Field\Field for rendering in portal forms
      */
-	public function GetAsHTML($sAttCode, $bLocalize = true)
+	public function GetAsHTML($sAttCode, $bLocalize = true, $bInBasket = false)
 	{
 		$sClass = get_class($this);
 		$oAtt = MetaModel::GetAttributeDef($sClass, $sAttCode);
 
-		if ($oAtt->IsExternalKey(EXTKEY_ABSOLUTE))
-		{
+		if ($oAtt->IsExternalKey(EXTKEY_ABSOLUTE)) {
 			//return $this->Get($sAttCode.'_friendlyname');
 			/** @var \AttributeExternalKey $oAtt */
 			$sTargetClass = $oAtt->GetTargetClass(EXTKEY_ABSOLUTE);
 			$iTargetKey = $this->Get($sAttCode);
-			if ($iTargetKey < 0)
-			{
+			if ($iTargetKey < 0) {
 				// the key points to an object that exists only in memory... no hyperlink points to it yet
 				return '';
-			}
-			else
-			{
+			} else {
 				$sHtmlLabel = utils::EscapeHtml($this->Get($sAttCode.'_friendlyname'));
 				$bArchived = $this->IsArchived($sAttCode);
 				$bObsolete = $this->IsObsolete($sAttCode);
 
-				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel, null, true, $bArchived, $bObsolete);
+				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel, null, true, $bArchived, $bObsolete, false, $bInBasket);
 			}
 		}
 

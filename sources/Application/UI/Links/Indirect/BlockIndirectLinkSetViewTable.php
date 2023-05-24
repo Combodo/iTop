@@ -120,8 +120,12 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		$sAttributeLinkedSetIndirectAttCode = $oAttributeLinkedSetIndirectDefinition->GetCode();
 		$sAttributeLinkedSetIndirectLinkedClass = $oAttributeLinkedSetIndirectDefinition->GetTargetClass();
 
+		\IssueLog::Error('AttributeLinkedSetIndirectAttCode:'.$sAttributeLinkedSetIndirectAttCode);
+		\IssueLog::Error('AttributeLinkedSetIndirectLinkedClass:'.$sAttributeLinkedSetIndirectLinkedClass);
+
 		$aAttCodesToDisplay = MetaModel::GetAttributeLinkedSetIndirectDatatableAttCodesToDisplay($this->sObjectClass, $this->sAttCode, $sAttributeLinkedSetIndirectLinkedClass, $sAttributeLinkedSetIndirectAttCode);
-		/** @noinspection PhpUnnecessaryLocalVariableInspection *//** @noinspection OneTimeUseVariablesInspection */
+		/** @noinspection PhpUnnecessaryLocalVariableInspection */
+		/** @noinspection OneTimeUseVariablesInspection */
 		$sAttCodesToDisplay = implode(',', $aAttCodesToDisplay);
 
 		return $sAttCodesToDisplay;

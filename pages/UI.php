@@ -438,7 +438,7 @@ try
 						//N°1386 - Advanced Search: Navigation in list - Browse this list
 						$sBackUrl = utils::ReadPostedParam('back_url', '', false, 'raw');
 						$sFilter = utils::ReadPostedParam('filter', null, false, 'raw');
-						$sList = utils::ReadPostedParam('listNavigation', null, false, 'string');
+						$sList = utils::ReadPostedParam('list_navigation', null, false, 'string');
 						$aList = [];
 						if ($sList != null) {
 							$aList = json_decode($sList);

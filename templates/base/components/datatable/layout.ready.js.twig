@@ -111,7 +111,6 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             e.preventDefault();
         });
         {% else %}
-
         $('#{{ oUIBlock.GetId() }}_wrapper').find('.object-in-basket').on('click',
                 function (event) {
                     event.preventDefault();
@@ -150,7 +149,6 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             e.preventDefault();
         });
         {% else %}
-
         $('#{{ oUIBlock.GetId() }}_wrapper').find('.object-in-basket').on('click',
                 function (event) {
                     event.preventDefault();
@@ -164,7 +162,6 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                     $('#basket{{ oUIBlock.GetId() }}').submit();
                 }
         );
-
         {% endif %}
     },
     {% endif %}
@@ -480,4 +477,3 @@ if (window.ResizeObserver)
 {% if oUIBlock.HasRowActions() %}
 {% include 'base/components/datatable/row-actions/handler.js.twig' %}
 {% endif %}
-console.warn('ici-lala');

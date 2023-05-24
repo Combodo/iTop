@@ -62,7 +62,7 @@ class AjaxRenderController
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public static function GetDataForTable(DBObjectSet $oSet, array $aClassAliases, array $aColumnsLoad, string $sIdName = "", array $aExtraParams = [], int $iDrawNumber = 1, bool $bInBasket = false)
+	public static function GetDataForTable(DBObjectSet $oSet, array $aClassAliases, array $aColumnsLoad, string $sIdName = "", array $aExtraParams = [], int $iDrawNumber = 1, string $sLinkToBasket = "")
 	{
 		if (isset($aExtraParams['show_obsolete_data'])) {
 			$bShowObsoleteData = $aExtraParams['show_obsolete_data'];
@@ -80,7 +80,7 @@ class AjaxRenderController
 				if (isset($aObject[$sAlias]) && !is_null($aObject[$sAlias])) {
 					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/_key_/raw"] = $aObject[$sAlias]->GetKey();
-					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink(null, true, null, false, $bInBasket);
+					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink(null, true, null, false, ($sLinkToBasket === $sAlias));
 					$aObj[$sAlias."/friendlyname"] = $aObject[$sAlias]->Get('friendlyname');
 
 					// N°5943 Protection against $aColumnsLoad having less class aliases than $aClassAliases, this is in case the method's consumer isn't passing data correctly
@@ -95,14 +95,13 @@ class AjaxRenderController
 					}
 
 					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
-						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode, true, ($sLinkToBasket === $sAlias."/".$sAttCode));
+
 						$bExcludeRawValue = false;
 						// Only retrieve raw (stored) value for simple fields
-						foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
-						{
+						foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
 							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-							if (is_a($oAttDef, $sAttDefClassToExclude, true))
-							{
+							if (is_a($oAttDef, $sAttDefClassToExclude, true)) {
 								$bExcludeRawValue = true;
 								break;
 							}
@@ -490,7 +489,9 @@ class AjaxRenderController
 		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aQueryParams, null, $iEnd - $iStart, $iStart);
 		$oSet->OptimizeColumnLoad($aColumnsLoad);
 
-		return self::GetDataForTable($oSet, $aClassAliases, $aColumnsLoad, $sIdName, $aExtraParams, $iDrawNumber, true);
+		$sLinkToBasket = utils::ReadParam('basket', '', false, 'string');
+
+		return self::GetDataForTable($oSet, $aClassAliases, $aColumnsLoad, $sIdName, $aExtraParams, $iDrawNumber, $sLinkToBasket);
 	}
 
 	/**

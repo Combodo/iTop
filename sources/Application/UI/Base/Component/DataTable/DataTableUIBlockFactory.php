@@ -572,21 +572,32 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 
 		$aExtraParams['table_id'] = $sTableId;
 		$aExtraParams['list_id'] = $sListId;
+		$oFilter = $oSet->GetFilter();
+
+		$sBasketAliasClass = $oFilter->GetFirstJoinedClassAlias();
+		if ($sBasketAliasClass === 'Link') {
+			$sLinkToBasket = $sBasketAliasClass.'/'.$sTargetAttr;
+			$sBasketAliasClass = 'Remote';
+		} else {
+			$sLinkToBasket = $sBasketAliasClass;
+		}
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
 		$oDataTable->SetAjaxData([
 			"operation"     => 'search',
-			"filter"        => $oSet->GetFilter()->serialize(),
+			"filter"        => $oFilter->serialize(),
 			"columns"       => $oCustomSettings->aColumns,
 			"extra_params"  => $aExtraParams,
 			"class_aliases" => $aClassAliases,
 			"select_mode"   => $sSelectMode,
+			"basket"        => $sLinkToBasket,
 		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
-		$oDataTable->SetFilter($oSet->GetFilter()->ToOQL(true));
-		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams, 1, true));
+		$oFilter->SetSelectedClasses([$sBasketAliasClass]);
+		$oDataTable->SetFilter($oFilter->ToOQL(true));
+		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams, 1, $sLinkToBasket));
 
 		// row actions
 		if (isset($aExtraParams['row_actions'])) {

@@ -52,19 +52,22 @@ class PageContentFactory
 	 * @see cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
 	 *
 	 * @param string $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
+	 * @param string $sBasketFilter filter to find list of objects in basket
+	 * @param array $aBasketList list of id of objects in basket
+	 * @param string $sBackUrl url to go back to list of ojects in basket
 	 *
 	 * @param \DBObject $oObject
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent
 	 * @throws \CoreException
 	 */
-	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE, $sFilter = null, $aList = [], $sBackUrl = null)
+	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE, $sBasketFilter = null, $aBasketList = [], $sBackUrl = null)
 	{
 		$oLayout = new PageContentWithSideContent();
 
 
-		if ($sFilter != null) {
-			$oNavigationBlock = NavigationUIBlockFactory::MakeStandard($oObject, $sFilter, $aList, $sBackUrl);
+		if ($sBasketFilter != null) {
+			$oNavigationBlock = NavigationUIBlockFactory::MakeStandard($oObject, $sBasketFilter, $aBasketList, $sBackUrl);
 			if ($oNavigationBlock != null) {
 				$oLayout->AddSubBlock($oNavigationBlock);
 			}
