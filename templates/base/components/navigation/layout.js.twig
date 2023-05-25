@@ -2,7 +2,13 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 $('#{{ oUIBlock.GetId() }}-back').on('click', function () {
-    window.location = '{{ oUIBlock.GetBackUrl()|raw }}';
+    $('#ibo-form-navigation').attr('action', ' {{ oUIBlock.GetBackUrl() | raw }} ');
+
+    JSON.parse('{{ oUIBlock.GetPostedFields() | raw }}', (key, value) => {
+        $('#ibo-form-navigation').append($('<input/>').attr({'type': 'hidden', 'name': key, 'value': value}));
+    });
+
+    $('#ibo-form-navigation').submit();
 });
 
 $('#{{ oUIBlock.GetId() }}-first').on('click', function () {

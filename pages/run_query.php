@@ -216,10 +216,12 @@ JS
 
 	if ($oFilter) {
 		//--- Query filter
-		$oPanelResult= PanelUIBlockFactory::MakeWithBrandingSecondaryColor(Dict::S('UI:RunQuery:QueryResults'));
+		$oPanelResult = PanelUIBlockFactory::MakeWithBrandingSecondaryColor(Dict::S('UI:RunQuery:QueryResults'));
 		$oP->AddSubBlock($oPanelResult);
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
 		$oPanelResult->AddSubBlock($oResultBlock->GetDisplay($oP, 'runquery'));
+		//Added in order to go back to search from navigation in the basket
+		$oP->AddSubBlock(DataTableUIBlockFactory::MakeParamForBasket(['encoding' => $sEncoding, 'expression' => $sExpression]));
 
 		// Breadcrumb
 		//$iCount = $oResultBlock->GetDisplayedCount();

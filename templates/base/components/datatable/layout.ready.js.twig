@@ -462,6 +462,16 @@ if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable'))
 }
 $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings(aOptions{{ sListIDForVarSuffix }});
 
+$('body').append($('<form/>')
+        .attr({'method': 'post', 'id': 'basket{{ oUIBlock.GetId() }}'})
+        .append($('<input/>')
+                .attr({'type': 'hidden', 'name': 'filter', 'value': "{{ oUIBlock.GetFilter()|raw }}"})
+        )
+        .append($('<input/>')
+                .attr({'type': 'hidden', 'name': 'back_url', 'value': window.location.href})
+        )
+);
+
 if (window.ResizeObserver)
 {
     let oTable{{ sListIDForVarSuffix }}ResizeTimeout = null;

@@ -55,19 +55,20 @@ class PageContentFactory
 	 * @param string $sBasketFilter filter to find list of objects in basket
 	 * @param array $aBasketList list of id of objects in basket
 	 * @param string $sBackUrl url to go back to list of ojects in basket
+	 * @param string $sPostedFieldsForBackUrl fields to post for come back to main page
 	 *
 	 * @param \DBObject $oObject
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent
 	 * @throws \CoreException
 	 */
-	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE, $sBasketFilter = null, $aBasketList = [], $sBackUrl = null)
+	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE, $sBasketFilter = null, $aBasketList = [], $sBackUrl = null, $sPostedFieldsForBackUrl = "")
 	{
 		$oLayout = new PageContentWithSideContent();
 
 
 		if ($sBasketFilter != null) {
-			$oNavigationBlock = NavigationUIBlockFactory::MakeStandard($oObject, $sBasketFilter, $aBasketList, $sBackUrl);
+			$oNavigationBlock = NavigationUIBlockFactory::MakeStandard($oObject, $sBasketFilter, $aBasketList, $sBackUrl, $sPostedFieldsForBackUrl);
 			if ($oNavigationBlock != null) {
 				$oLayout->AddSubBlock($oNavigationBlock);
 			}

@@ -48,7 +48,7 @@ class NavigationUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeStandard($oObject, string $sFilter, array $aList = [], string $sBackUrl = '')
+	public static function MakeStandard($oObject, string $sFilter, array $aList = [], string $sBackUrl = '', $sPostedFieldsForBackUrl = "")
 	{
 		if ($sFilter != null && count($aList) === 0) {
 			$oFilter = DBObjectSearch::FromOQL($sFilter);
@@ -60,7 +60,7 @@ class NavigationUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		$iIdx = array_search($oObject->GetKey(), $aList);
-		$oNavigationBlock = new Navigation(get_class($oObject), $iIdx, $aList, $sFilter, $sBackUrl);
+		$oNavigationBlock = new Navigation(get_class($oObject), $iIdx, $aList, $sFilter, $sBackUrl, $sPostedFieldsForBackUrl);
 
 		return $oNavigationBlock;
 	}

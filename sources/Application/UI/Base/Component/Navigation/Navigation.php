@@ -53,6 +53,7 @@ class Navigation extends UIContentBlock
 	protected $sFilter;
 	protected $sBackUrl;
 	protected $sClass;
+	protected $sPostedFields;
 
 	/**
 	 * Panel constructor.
@@ -62,7 +63,7 @@ class Navigation extends UIContentBlock
 	 * @param string $sColorScheme Color scheme code such as "success", "failure", "active", ... {@see css/backoffice/components/_panel.scss}
 	 * @param string|null $sId
 	 */
-	public function __construct(string $sClass, int $iIdx, array $aList, string $sFilter, string $sBackUrl, ?string $sId = null)
+	public function __construct(string $sClass, int $iIdx, array $aList, string $sFilter, string $sBackUrl, string $sPostedFieldsForBackUrl = "", ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->iCount = count($aList);
@@ -82,6 +83,7 @@ class Navigation extends UIContentBlock
 			$this->iIdNext = $aList[$iIdx + 1];
 			$this->iIdLast = $aList[$this->iCount - 1];
 		}
+		$this->sPostedFields = $sPostedFieldsForBackUrl;
 	}
 
 	/**
@@ -89,7 +91,15 @@ class Navigation extends UIContentBlock
 	 */
 	public function GetIdx(): int
 	{
-		return $this->iIdx+1;
+		return $this->iIdx + 1;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetPostedFields(): string
+	{
+		return $this->sPostedFields;
 	}
 
 	/**

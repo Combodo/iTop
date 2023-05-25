@@ -899,10 +899,18 @@ JS;
 		return $oTable;
 	}
 
+	public static function MakeParamForBasket(array $aPostedFields)
+	{
+		$oBlock = new DataTableBasket($aPostedFields);
+
+		return $oBlock;
+	}
+
 	/**
 	 * @return array
 	 */
-	public static function GetAllowedParams(): array
+	public
+	static function GetAllowedParams(): array
 	{
 		return [
 			'surround_with_panel',
@@ -953,4 +961,5 @@ JS;
 			/** Don't provide the standard object creation feature */
 		];
 	}
+
 }

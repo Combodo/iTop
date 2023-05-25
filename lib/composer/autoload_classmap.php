@@ -225,6 +225,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletHeaderStatic' => $baseDir . '/sources/Application/UI/Base/Component/Dashlet/DashletHeaderStatic.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletPlainText' => $baseDir . '/sources/Application/UI/Base/Component/Dashlet/DashletPlainText.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTable' => $baseDir . '/sources/Application/UI/Base/Component/DataTable/DataTable.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableBasket' => $baseDir . '/sources/Application/UI/Base/Component/DataTable/DataTableBasket.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableSettings' => $baseDir . '/sources/Application/UI/Base/Component/DataTable/DataTableSettings.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableUIBlockFactory' => $baseDir . '/sources/Application/UI/Base/Component/DataTable/DataTableUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\StaticTable\\FormTableRow\\FormTableRow' => $baseDir . '/sources/Application/UI/Base/Component/DataTable/StaticTable/FormTableRow/FormTableRow.php',
