@@ -40,6 +40,36 @@
       <presentation/>
       <methods/>
     </class>
+    <class id="WelcomePopupAcknowledge" _delta="define">
+      <parent>DBObject</parent>
+      <properties>
+        <comment>/* Acknowledge welcome popup messages */</comment>
+        <abstract>false</abstract>
+        <category></category>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_welcome_popup_acknowledge</db_table>
+      </properties>
+      <fields>
+        <field id="message_uuid" xsi:type="AttributeString">
+          <sql>message_uuid</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="user_id" xsi:type="AttributeExternalKey">
+          <sql>user_id</sql>
+          <target_class>User</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_SILENT</on_target_delete>
+        </field>
+        <field id="acknowledge_date" xsi:type="AttributeDateTime">
+          <sql>acknowledge_date</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <presentation/>
+      <methods/>
+    </class>
   </classes>
   <portals>
     <portal id="backoffice" _delta="define">

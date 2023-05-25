@@ -2297,3 +2297,46 @@ interface iBackupExtraFilesExtension
 	 */
 	public function GetExtraFilesRelPaths(): array;
 }
+
+
+/**
+ * Interface to provide messages to be displayed in the "Welcome Popup"
+ *
+ * @api
+ * @private
+ * @since 3.1.0
+ */
+interface iWelcomePopup
+{
+	// Importance for ordering messages
+	// Just two levels since less important messages have nothing to do in the welcome popup
+	const IMPORTANCE_CRITICAL = 0;
+	const IMPORTANCE_HIGH = 1;
+	/**
+	 * @return [['importance' => IMPORTANCE_CRITICAL|IMPORTANCE_HIGH, 'id' => '...', 'title' => '', 'html' => '', 'twig' => '']]
+	 */
+	public function GetMessages();
+	/**
+	 * The message specified by the given Id has been acknowledged by the current user
+	 * @param string $sMessageId
+	 */
+	public function AcknowledgeMessage(string $sMessageId): void;
+}
+
+/**
+ * Inherit from this class to provide messages to be displayed in the "Welcome Popup"
+ *
+ * @api
+ * @since 3.1.0
+ */
+abstract class AbstractWelcomePopup implements iWelcomePopup
+{
+	public function GetMessages()
+	{
+		return [];
+	}
+	public function AcknowledgeMessage(string $sMessageId): void
+	{
+		return;
+	}
+}

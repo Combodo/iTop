@@ -19,6 +19,7 @@ use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Controller\PreferencesController;
+use Combodo\iTop\Controller\WelcomePopupController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 use Combodo\iTop\Service\Router\Router;
@@ -2569,6 +2570,25 @@ EOF
 			case 'object.modify':
 				$oController = new ObjectController();
 				$oPage = $oController->OperationModify();
+				break;
+
+			//--------------------------------
+			// WelcomePopupMenu
+			//--------------------------------
+			case 'welcome_popup.acknowledge_message':
+				$oPage = new JsonPage();
+				try {
+					$oController = new WelcomePopupController();
+					$oController->AcknowledgeMessage();
+					$aResult = ['success' => true];
+				}
+				catch (Exception $oException) {
+					$aResult = [
+						'success'       => false,
+						'error_message' => $oException->getMessage(),
+					];
+				}
+				$oPage->SetData($aResult);
 				break;
 
 			default:
