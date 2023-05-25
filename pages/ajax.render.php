@@ -14,6 +14,7 @@ use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
 use Combodo\iTop\Controller\PreferencesController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
+use Combodo\iTop\Controller\WelcomePopupController;
 
 require_once('../approot.inc.php');
 
@@ -2690,8 +2691,28 @@ EOF
 			$oAjaxRenderController->GetMenusCount($oPage);
 			break;
 
-		default:
-			$oPage->p("Invalid query.");
+			//--------------------------------
+			// WelcomePopupMenu
+			//--------------------------------
+			case 'welcome_popup.acknowledge_message':
+				$oPage = new JsonPage();
+				try {
+					$oController = new WelcomePopupController();
+					$oController->AcknowledgeMessage();
+					$aResult = ['success' => true];
+				}
+				catch (Exception $oException) {
+					$aResult = [
+						'success'       => false,
+						'error_message' => $oException->getMessage(),
+					];
+				}
+				$oPage->SetData($aResult);
+				break;
+				
+			default:
+				$oPage->p("Invalid query.");
+		}
 	}
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();

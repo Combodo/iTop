@@ -17,7 +17,9 @@ $ibo-welcome-popup--text--options--bottom: 10px !default;
 
 #welcome_popup{
   display: flex;
-  
+}
+.ibo-welcome-popup--columns{
+	display: flex;
 }
 .ibo-welcome-popup--image{
   display: flex;
@@ -44,7 +46,39 @@ $ibo-welcome-popup--text--options--bottom: 10px !default;
     }
   }
 }
-.ibo-welcome-popup--text--options{
-  position: absolute;
-  bottom: $ibo-welcome-popup--text--options--bottom;
+.ibo-welcome-popup--dialog {
+	width: 60rem;
+}
+.ibo-welcome-popup--content {
+	width: 100%; 
+	.ibo-welcome-popup--message {
+		width: 100%;
+		min-height: 12rem;
+	}
+	.ibo-welcome-popup--button {
+		width: 100%;
+		text-align: center;
+		padding-top: 1rem;
+		position: absolute;
+		bottom: 4.5rem;
+	}
+}
+.ibo-welcome-popup--indicators {
+	width: 100%;
+	display: block;
+	text-align: center;
+	padding-top: 1.5rem;
+	padding-bottom: 0;
+	height: 3rem;
+	.ibo-welcome-popup--indicator {
+		width: 1rem;
+		height: 1rem;
+		border-radius: 0.5rem;
+		background-color: $ibo-color-secondary-600;
+		display: inline-block;
+		cursor: pointer;
+	}
+	.ibo-welcome-popup--active {
+		background-color: $ibo-color-information-600 !important;
+	}
 }

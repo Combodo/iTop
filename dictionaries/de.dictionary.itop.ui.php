@@ -365,6 +365,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
 
 <div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
+	'UI:WelcomePopup:Button:Acknowledge' => 'Ok, verwerfen Sie diese Nachricht',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Offene Requests: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'An mich gestellte Benutzeranfragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Offene Incidents: %1$d',
