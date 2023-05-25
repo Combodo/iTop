@@ -549,7 +549,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		// Pages length
 		$aOptions['iPageSize'] = 10;
 		if ($oCustomSettings->iDefaultPageSize > 0) {
-			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
+			$aOptions['iPageSize'] = (int)$oCustomSettings->iDefaultPageSize;
 		}
 
 		// Max height is only set if necessary, otherwise we want the list to occupy all the height it can depending on its pagination

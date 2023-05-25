@@ -419,7 +419,7 @@ var aOptions{{ sListIDForVarSuffix }} = {
     sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
     sSelectedItemsName: "oSelectedItems{{ sListIDForVarSuffix }}",
     sViewLink: '{{ oUIBlock.GetOption("bViewLink") }}',
-    iPageSize: ' {{ iPageSize }}',
+    iPageSize: {{ iPageSize }},
     oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw }}'),
     sTableId: '{{ oUIBlock.GetOption("sTableId") }}',
     sRenderUrl: "{{ oUIBlock.GetAjaxUrl() }}",
