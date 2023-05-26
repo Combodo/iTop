@@ -1203,6 +1203,14 @@
           <extkey_attcode>nas_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>nas_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>nas_id</extkey_attcode>
+          <target_attcode>location_id</target_attcode>
+        </field>
         <field id="location_name" xsi:type="AttributeExternalField">
           <extkey_attcode>nas_id</extkey_attcode>
           <target_attcode>location_name</target_attcode>
@@ -1214,17 +1222,23 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="description">
+            <item id="nas_id">
               <rank>20</rank>
             </item>
-            <item id="nas_id">
+            <item id="location_id">
               <rank>30</rank>
             </item>
-            <item id="raid_level">
+            <item id="org_id">
               <rank>40</rank>
             </item>
-            <item id="size">
+            <item id="description">
               <rank>50</rank>
+            </item>
+            <item id="raid_level">
+              <rank>60</rank>
+            </item>
+            <item id="size">
+              <rank>70</rank>
             </item>
           </items>
         </details>
@@ -1256,17 +1270,17 @@
         </list>
         <summary>
           <items>
-            <item id="description">
+            <item id="nas_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
               <rank>20</rank>
             </item>
-            <item id="nas_id">
+            <item id="org_id">
               <rank>30</rank>
             </item>
             <item id="raid_level">
               <rank>40</rank>
-            </item>
-            <item id="size">
-              <rank>50</rank>
             </item>
           </items>
         </summary>
@@ -1330,6 +1344,14 @@
           <extkey_attcode>datacenterdevice_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>datacenterdevice_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>datacenterdevice_id</extkey_attcode>
+          <target_attcode>location_id</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -1341,14 +1363,20 @@
             <item id="datacenterdevice_id">
               <rank>20</rank>
             </item>
-            <item id="speed">
+            <item id="location_id">
               <rank>30</rank>
             </item>
-            <item id="topology">
+            <item id="org_id">
               <rank>40</rank>
             </item>
-            <item id="wwn">
+            <item id="speed">
               <rank>50</rank>
+            </item>
+            <item id="topology">
+              <rank>60</rank>
+            </item>
+            <item id="wwn">
+              <rank>70</rank>
             </item>
           </items>
         </details>
@@ -1381,6 +1409,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="wwn">
+              <rank>10</rank>
+            </item>
+            <item id="datacenterdevice_id">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="LogicalVolume" _delta="define">
@@ -1452,6 +1496,18 @@
           <extkey_attcode>storagesystem_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>storagesystem_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>storagesystem_id</extkey_attcode>
+          <target_attcode>location_id</target_attcode>
+        </field>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>storagesystem_id</extkey_attcode>
+          <target_attcode>location_name</target_attcode>
+        </field>
         <field id="servers_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkServerToVolume</linked_class>
           <ext_key_to_me>volume_id</ext_key_to_me>
@@ -1480,23 +1536,29 @@
             <item id="lun_id">
               <rank>20</rank>
             </item>
-            <item id="description">
+            <item id="storagesystem_id">
               <rank>30</rank>
             </item>
-            <item id="storagesystem_id">
+            <item id="location_id">
               <rank>40</rank>
             </item>
-            <item id="raid_level">
+            <item id="org_id">
               <rank>50</rank>
             </item>
-            <item id="size">
+            <item id="description">
               <rank>60</rank>
             </item>
-            <item id="servers_list">
+            <item id="raid_level">
               <rank>70</rank>
             </item>
-            <item id="virtualdevices_list">
+            <item id="size">
               <rank>80</rank>
+            </item>
+            <item id="servers_list">
+              <rank>90</rank>
+            </item>
+            <item id="virtualdevices_list">
+              <rank>100</rank>
             </item>
           </items>
         </details>
@@ -1508,11 +1570,17 @@
             <item id="lun_id">
               <rank>20</rank>
             </item>
-            <item id="storagesystem_id">
+            <item id="raid_level">
               <rank>30</rank>
             </item>
-            <item id="raid_level">
+            <item id="storagesystem_id">
               <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>70</rank>
+            </item>
+            <item id="org_id">
+              <rank>80</rank>
             </item>
           </items>
         </search>
@@ -1530,11 +1598,20 @@
             <item id="size">
               <rank>40</rank>
             </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
         <summary>
           <items>
             <item id="lun_id">
+              <rank>10</rank>
+            </item>
+            <item id="raid_level">
               <rank>20</rank>
             </item>
             <item id="description">
@@ -1543,10 +1620,10 @@
             <item id="storagesystem_id">
               <rank>40</rank>
             </item>
-            <item id="raid_level">
+            <item id="location_id">
               <rank>50</rank>
             </item>
-            <item id="size">
+            <item id="org_id">
               <rank>60</rank>
             </item>
           </items>

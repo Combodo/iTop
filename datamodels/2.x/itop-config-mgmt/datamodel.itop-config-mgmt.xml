@@ -6152,6 +6152,14 @@
           <extkey_attcode>connectableci_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>connectableci_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>connectableci_id</extkey_attcode>
+          <target_attcode>location_id</target_attcode>
+        </field>
         <field id="vlans_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkPhysicalInterfaceToVLAN</linked_class>
           <ext_key_to_me>physicalinterface_id</ext_key_to_me>
@@ -6172,26 +6180,32 @@
             <item id="connectableci_id">
               <rank>20</rank>
             </item>
-            <item id="ipaddress">
+            <item id="location_id">
               <rank>30</rank>
             </item>
-            <item id="macaddress">
+            <item id="org_id">
               <rank>40</rank>
             </item>
-            <item id="comment">
+            <item id="ipaddress">
               <rank>50</rank>
             </item>
-            <item id="ipgateway">
+            <item id="macaddress">
               <rank>60</rank>
             </item>
-            <item id="ipmask">
+            <item id="comment">
               <rank>70</rank>
             </item>
-            <item id="speed">
+            <item id="ipgateway">
               <rank>80</rank>
             </item>
-            <item id="vlans_list">
+            <item id="ipmask">
               <rank>90</rank>
+            </item>
+            <item id="speed">
+              <rank>100</rank>
+            </item>
+            <item id="vlans_list">
+              <rank>110</rank>
             </item>
           </items>
         </details>
@@ -6233,6 +6247,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="ipaddress">
+              <rank>10</rank>
+            </item>
+            <item id="connectableci_id">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkPhysicalInterfaceToVLAN" _delta="define">
