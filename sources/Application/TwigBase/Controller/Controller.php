@@ -168,17 +168,19 @@ abstract class Controller extends AbstractController
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
-			$sMethodName = 'Operation'.utils::ToCamelCase($this->m_sOperation);
 			$oKPI = new ExecutionKPI();
 			$oKPI->ComputeAndReport('Starting operation '.$this->m_sOperation);
-			if (method_exists($this, $sMethodName))
-			{
-				$this->$sMethodName();
+
+			if ($this->CallOperation(utils::ToCamelCase($this->m_sOperation))) {
+				return;
 			}
-			else
-			{
-				$this->DisplayBadRequest();
+
+			// Fallback to unchanged names for compatibility
+			if ($this->CallOperation($this->m_sOperation)) {
+				return;
 			}
+
+			$this->DisplayBadRequest();
 		}
 		catch (Exception $e)
 		{
