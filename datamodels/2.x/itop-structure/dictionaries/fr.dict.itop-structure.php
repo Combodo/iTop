@@ -396,11 +396,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // n:n relations custom labels : nom de classe féminin
 //
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Person/Attribute:team_list/UI:links:Add:Button+'       => 'Ajouter une %4$s',
+	'Class:Person/Attribute:team_list/UI:Links:Add:Button+'       => 'Ajouter une %4$s',
 	'Class:Person/Attribute:team_list/UI:Links:Add:Modal:Title'   => 'Ajouter une %4$s à %2$s',
 	'Class:Person/Attribute:team_list/UI:Links:Remove:Button+'    => 'Retirer cette %4$s',
 	'Class:Person/Attribute:team_list/UI:links:Remove:Title'      => 'Retirer une %4$s',
-	'Class:Team/Attribute:persons_list/UI:links:Add:Button+'      => 'Ajouter une %4$s',
+	'Class:Team/Attribute:persons_list/UI:Links:Add:Button+'      => 'Ajouter une %4$s',
 	'Class:Team/Attribute:persons_list/UI:Links:Add:Modal:Title'  => 'Ajouter une %4$s à %2$s',
 	'Class:Team/Attribute:persons_list/UI:Links:Remove:Button+'   => 'Retirer cette %4$s',
 	'Class:Team/Attribute:persons_list/UI:links:Remove:Title'     => 'Retirer une %4$s',

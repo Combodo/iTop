@@ -1585,19 +1585,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:links:Add:Button+' => 'Ajouter une %4$s',
+'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
 'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
 'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
 'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-'Class:FunctionalCI/Attribute:applicationsolution_list/UI:links:Add:Button+' => 'Ajouter une %4$s',
+'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
 'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
 'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
 'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:links:Add:Button+' => 'Ajouter une %4$s',
+'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
 'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
 'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
 'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-'Class:VLAN/Attribute:physicalinterfaces_list/UI:links:Add:Button+' => 'Ajouter une %4$s',
+'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
 'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
 'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
 'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
