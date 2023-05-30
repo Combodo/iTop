@@ -3066,7 +3066,7 @@ abstract class DBObject implements iDisplay
 			$this->DoComputeValues();
 			$this->OnInsert();
 
-			$this->FireEventBeforeObjectCreate();
+			$this->FireEventBeforeWrite();
 
 			// If not automatically computed, then check that the key is given by the caller
 			if (!MetaModel::IsAutoIncrementKey($sRootClass)) {
@@ -3167,7 +3167,7 @@ abstract class DBObject implements iDisplay
 			MetaModel::StartReentranceProtection($this);
 
 			try {
-				$this->FireEventCreateDone();
+				$this->FireEventAfterWrite([], true);
 				$this->AfterInsert();
 
 				// Activate any existing trigger
@@ -3278,7 +3278,7 @@ abstract class DBObject implements iDisplay
 			$this->ComputeStopWatchesDeadline(false);
 			$this->OnUpdate();
 
-			$this->FireEventBeforeObjectUpdate();
+			$this->FireEventBeforeWrite();
 
 			// Freeze the changes at this point
 			$this->InitPreviousValuesForUpdatedAttributes();
@@ -3457,7 +3457,7 @@ abstract class DBObject implements iDisplay
 			$this->m_aModifiedAtt = array();
 			$bModifiedByUpdateDone = false;
 			try {
-				$this->FireEventUpdateDone($aChanges);
+				$this->FireEventAfterWrite($aChanges, false);
 				$this->AfterUpdate();
 				// Save the status as it is reset just after...
 				$bModifiedByUpdateDone = $this->IsModified();
@@ -6061,37 +6061,17 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function FireEventBeforeObjectCreate()
+	protected function FireEventBeforeWrite()
 	{
 	}
 
 	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
-	protected function FireEventCreateDone(): void
-	{
-	}
-
-	/////////////
-	/// UPDATE
-	///
-
-	/**
-	 * @return void
-	 * @since 3.1.0
-	 */
-	protected function FireEventBeforeObjectUpdate()
-	{
-	}
-
-	/**
-	 * @param array $aChanges
+	 * @param bool $bIsNew
 	 *
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function FireEventUpdateDone(array $aChanges): void
+	protected function FireEventAfterWrite(array $aChanges, bool $bIsNew): void
 	{
 	}
 

@@ -92,7 +92,7 @@
     <class id="ClassWithEventListeners">
       <event_listeners>
         <event_listener id="OnUserRequestUpdateDone" _delta="define">
-          <event>EVENT_DB_UPDATE_DONE</event>
+          <event>EVENT_DB_AFTER_UPDATE</event>
           <callback>OnUpdateDone</callback>
           <rank>0</rank>
         </event_listener>

@@ -186,6 +186,27 @@
     </menu>
   </menus>
   <events>
+    <event id="EVENT_DB_BEFORE_WRITE" _delta="define">
+      <description>An object is about to be written into the database. The object can be modified.</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <replaces>DBObject::OnInsert</replaces>
+      <event_data>
+        <event_datum id="object">
+          <description>The object inserted</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="is_new">
+          <description>Creation flag</description>
+          <type>boolean</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
     <event id="EVENT_DB_CHECK_TO_WRITE" _delta="define">
       <description>Check an object before it is written into the database (no change possible). Call DBObject::AddCheckIssue() to signal an issue</description>
       <sources>
@@ -197,22 +218,9 @@
           <description>The object to check</description>
           <type>DBObject</type>
         </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_BEFORE_CREATE" _delta="define">
-      <description>An object is about to be created into the database. The object can be modified.</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>DBObject::OnInsert</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object inserted</description>
-          <type>DBObject</type>
+        <event_datum id="is_new">
+          <description>Creation flag</description>
+          <type>boolean</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
@@ -220,8 +228,8 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_DB_CREATE_DONE" _delta="define">
-      <description>An object has been created into the database. The modifications can be propagated to other objects.</description>
+    <event id="EVENT_DB_AFTER_WRITE" _delta="define">
+      <description>An object has been written into the database. The modifications can be propagated to other objects.</description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>
       </sources>
@@ -231,39 +239,13 @@
           <description>The object inserted</description>
           <type>DBObject</type>
         </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
+        <event_datum id="is_new">
+          <description>Creation flag</description>
+          <type>boolean</type>
         </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_BEFORE_UPDATE" _delta="define">
-      <description>An object is about to be updated into the database. The object can be modified.</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>DBObject::OnUpdate</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object updated</description>
-          <type>DBObject</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
-    <event id="EVENT_DB_UPDATE_DONE" _delta="define">
-      <description>An object has been updated into the database and reloaded.</description>
-      <sources>
-        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
-      </sources>
-      <replaces>DBObject::AfterUpdate</replaces>
-      <event_data>
-        <event_datum id="object">
-          <description>The object updated</description>
-          <type>DBObject</type>
+        <event_datum id="changes">
+          <description>For updates, the list of changes done during this operation</description>
+          <type>array</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
@@ -288,7 +270,7 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_DB_DELETE_DONE" _delta="define">
+    <event id="EVENT_DB_AFTER_DELETE" _delta="define">
       <description>An object has been deleted into the database</description>
       <sources>
         <source id="cmdbAbstractObject">cmdbAbstractObject</source>

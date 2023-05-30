@@ -47,7 +47,7 @@ class CRUDEventTest extends ItopDataTestCase
 	}
 
 	/**
-	 * Check that the 3 events EVENT_DB_COMPUTE_VALUES, EVENT_DB_CHECK_TO_WRITE and EVENT_DB_CREATE_DONE are called on insert
+	 * Check that the 3 events EVENT_DB_COMPUTE_VALUES, EVENT_DB_CHECK_TO_WRITE and EVENT_DB_AFTER_WRITE are called on insert
 	 *
 	 * @return void
 	 * @throws \Exception
@@ -61,12 +61,13 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->assertIsObject($oOrg);
 		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
 		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_CREATE_DONE]);
-		$this->assertEquals(3, self::$iEventCalls);
+		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
+		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
+		$this->assertEquals(4, self::$iEventCalls);
 	}
 
 	/**
-	 * Check that the 3 events EVENT_DB_COMPUTE_VALUES, EVENT_DB_CHECK_TO_WRITE and EVENT_DB_UPDATE_DONE are called on update
+	 * Check that the 3 events EVENT_DB_COMPUTE_VALUES, EVENT_DB_CHECK_TO_WRITE and EVENT_DB_AFTER_WRITE are called on update
 	 *
 	 * @return void
 	 * @throws \Exception
@@ -84,8 +85,9 @@ class CRUDEventTest extends ItopDataTestCase
 
 		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
 		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_UPDATE_DONE]);
-		$this->assertEquals(3, self::$iEventCalls);
+		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
+		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
+		$this->assertEquals(4, self::$iEventCalls);
 	}
 
 	/**
@@ -210,7 +212,7 @@ class CRUDEventTest extends ItopDataTestCase
 	}
 
 	/**
-	 * Modify one object during EVENT_DB_CREATE_DONE
+	 * Modify one object during EVENT_DB_AFTER_WRITE
 	 * Check that all the events are sent (CREATE + UPDATE)
 	 * Check that the modification is saved in DB
 	 *
@@ -221,7 +223,7 @@ class CRUDEventTest extends ItopDataTestCase
 	{
 		$oEventReceiver = new CRUDEventReceiver();
 		// Set the person's first name during Compute Values
-		$oEventReceiver->AddCallback(EVENT_DB_CREATE_DONE, Person::class, 'SetPersonFirstName');
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFirstName');
 		$oEventReceiver->RegisterCRUDListeners();
 
 		$oPerson = $this->CreatePerson(1);
@@ -229,9 +231,9 @@ class CRUDEventTest extends ItopDataTestCase
 
 		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
 		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_CREATE_DONE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_UPDATE_DONE]);
-		$this->assertEquals(6, self::$iEventCalls);
+		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
+		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
+		$this->assertEquals(8, self::$iEventCalls);
 
 		// Read the object explicitly from the DB to check that the first name has been set
 		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT Person WHERE id=:id'), [], ['id' => $oPerson->GetKey()]);
@@ -240,7 +242,7 @@ class CRUDEventTest extends ItopDataTestCase
 	}
 
 	/**
-	 * Modify one object during EVENT_DB_UPDATE_DONE
+	 * Modify one object during EVENT_DB_AFTER_WRITE
 	 * Check that all the events are sent (UPDATE + UPDATE again)
 	 * Check that the modification is saved in DB
 	 *
@@ -254,7 +256,7 @@ class CRUDEventTest extends ItopDataTestCase
 
 		$oEventReceiver = new CRUDEventReceiver();
 		// Set the person's first name during Compute Values
-		$oEventReceiver->AddCallback(EVENT_DB_UPDATE_DONE, Person::class, 'SetPersonFirstName');
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFirstName');
 		$oEventReceiver->RegisterCRUDListeners();
 
 		$oPerson->Set('function', 'test'.rand());
@@ -262,8 +264,9 @@ class CRUDEventTest extends ItopDataTestCase
 
 		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
 		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_UPDATE_DONE]);
-		$this->assertEquals(6, self::$iEventCalls);
+		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
+		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
+		$this->assertEquals(8, self::$iEventCalls);
 
 		// Read the object explicitly from the DB to check that the first name has been set
 		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT Person WHERE id=:id'), [], ['id' => $oPerson->GetKey()]);
@@ -272,8 +275,8 @@ class CRUDEventTest extends ItopDataTestCase
 	}
 
 	/**
-	 * Modify one object during EVENT_DB_UPDATE_DONE
-	 * Check that the CRUD is protected against infinite loops (when modifying an object in its EVENT_DB_UPDATE_DONE)
+	 * Modify one object during EVENT_DB_AFTER_WRITE
+	 * Check that the CRUD is protected against infinite loops (when modifying an object in its EVENT_DB_AFTER_WRITE)
 	 *
 	 *
 	 * @return void
@@ -288,8 +291,8 @@ class CRUDEventTest extends ItopDataTestCase
 
 		$oEventReceiver = new CRUDEventReceiver();
 		// Set the person's first name during Compute Values
-		$oEventReceiver->AddCallback(EVENT_DB_UPDATE_DONE, Person::class, 'SetPersonFirstName', 100);
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_UPDATE_DONE);
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFirstName', 100);
+		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE);
 
 		$oPerson->Set('function', 'test'.rand());
 		$oPerson->DBUpdate();
@@ -338,8 +341,9 @@ class CRUDEventTest extends ItopDataTestCase
 		// 1 insert for Team, 3 insert for lnkPersonToTeam
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CREATE_DONE]);
-		$this->assertEquals(12, self::$iEventCalls);
+		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
+		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
+		$this->assertEquals(16, self::$iEventCalls);
 	}
 
 	/**
@@ -374,7 +378,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->debug("\n-------------> Test Starts HERE\n");
 		$oEventReceiver = new CRUDEventReceiver();
 		// Create a new role and add it to the newly created lnkPersonToTeam
-		$oEventReceiver->AddCallback(EVENT_DB_CREATE_DONE, lnkPersonToTeam::class, 'AddRoleToLink');
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, lnkPersonToTeam::class, 'AddRoleToLink');
 		$oEventReceiver->RegisterCRUDListeners();
 
 		// Create the team
@@ -385,9 +389,9 @@ class CRUDEventTest extends ItopDataTestCase
 		// 1 for Team, 1 for lnkPersonToTeam, 1 for ContactType and 1 for the update of lnkPersonToTeam
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_COMPUTE_VALUES]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(3, self::$aEventCalls[EVENT_DB_CREATE_DONE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_UPDATE_DONE]);
-		$this->assertEquals(12, self::$iEventCalls);
+		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
+		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
+		$this->assertEquals(16, self::$iEventCalls);
 
 		// Read the object explicitly from the DB to check that the role has been set
 		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT Team WHERE id=:id'), [], ['id' => $oTeam->GetKey()]);
@@ -400,7 +404,7 @@ class CRUDEventTest extends ItopDataTestCase
 	}
 
 	/**
-	 * Check that updates during EVENT_DB_CREATE_DONE are postponed to the end of all events and only one update is done
+	 * Check that updates during EVENT_DB_AFTER_WRITE are postponed to the end of all events and only one update is done
 	 *
 	 * @return void
 	 * @throws \Exception
@@ -409,24 +413,21 @@ class CRUDEventTest extends ItopDataTestCase
 	{
 		$oEventReceiver = new CRUDEventReceiver();
 		// Set the person's function after the creation
-		$oEventReceiver->AddCallback(EVENT_DB_CREATE_DONE, Person::class, 'SetPersonFunction');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_CREATE_DONE);
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFunction');
+		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE);
 
 		// Intentionally register twice so 2 modifications will be done
 		$oEventReceiver = new CRUDEventReceiver();
-		$oEventReceiver->AddCallback(EVENT_DB_CREATE_DONE, Person::class, 'SetPersonFirstName');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_CREATE_DONE);
-		// Used to count the updates
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_UPDATE_DONE);
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFirstName');
+		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE);
 
 		self::$iEventCalls = 0;
 		$oPerson = $this->CreatePerson(1);
 		$this->assertIsObject($oPerson);
 		// 2 for insert => 2 modifications generate ONE update
-		// 1 for update (if 2 updates were done 2 events were counted)
-		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_CREATE_DONE]);
-		$this->assertEquals(1, self::$aEventCalls[EVENT_DB_UPDATE_DONE]);
-		$this->assertEquals(3, self::$iEventCalls);
+		// 2 for update (if 2 updates were done then 4 events would have been counted)
+		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
+		$this->assertEquals(4, self::$iEventCalls);
 	}
 
 
@@ -457,16 +458,16 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
 		$oEventReceiver->CleanCallbacks();
 
-		$oEventReceiver->AddCallback(EVENT_DB_CREATE_DONE, Person::class, 'CheckCrudStack');
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_CREATE_DONE);
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'CheckCrudStack');
+		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE);
 		$this->CreatePerson(3);
 		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
 		$oEventReceiver->CleanCallbacks();
 
 		// Insert a Team with new lnkPersonToTeam - in the lnkPersonToTeam event we check that Team CRUD operation is ongoing
-		$oEventReceiver->AddCallback(EVENT_DB_CREATE_DONE, Person::class, 'CheckUpdateInLnk');
+		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'CheckUpdateInLnk');
 		$sLinkedClass = lnkPersonToTeam::class;
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_CREATE_DONE, $sLinkedClass);
+		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE, $sLinkedClass);
 		// Prepare the link for the insertion with the team
 		$aLinkedObjectsArray = [];
 		$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
@@ -552,9 +553,9 @@ class CRUDEventReceiver extends ClassesWithDebug
 			EventService::RegisterListener(EVENT_DB_COMPUTE_VALUES, [$this, 'OnEvent']);
 			EventService::RegisterListener(EVENT_DB_CHECK_TO_WRITE, [$this, 'OnEvent']);
 			EventService::RegisterListener(EVENT_DB_CHECK_TO_DELETE, [$this, 'OnEvent']);
-			EventService::RegisterListener(EVENT_DB_CREATE_DONE, [$this, 'OnEvent']);
-			EventService::RegisterListener(EVENT_DB_UPDATE_DONE, [$this, 'OnEvent']);
-			EventService::RegisterListener(EVENT_DB_DELETE_DONE, [$this, 'OnEvent']);
+			EventService::RegisterListener(EVENT_DB_BEFORE_WRITE, [$this, 'OnEvent']);
+			EventService::RegisterListener(EVENT_DB_AFTER_WRITE, [$this, 'OnEvent']);
+			EventService::RegisterListener(EVENT_DB_AFTER_DELETE, [$this, 'OnEvent']);
 
 			return;
 		}

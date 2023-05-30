@@ -5874,54 +5874,28 @@ JS
 	 */
 	final protected function FireEventCheckToWrite(): void
 	{
-		$this->FireEvent(EVENT_DB_CHECK_TO_WRITE);
+		$this->FireEvent(EVENT_DB_CHECK_TO_WRITE, ['is_new' => $this->IsNew()]);
 	}
 
-	final protected function FireEventBeforeObjectCreate()
+	final protected function FireEventBeforeWrite()
 	{
-		$this->FireEvent(EVENT_DB_BEFORE_CREATE);
-	}
-
-	/**
-	 * @return void
-	 * @throws \CoreException
-	 *
-	 * @since 3.1.0
-	 */
-	final protected function FireEventCreateDone(): void
-	{
-		$this->NotifyAttachedObjectsOnLinkClassModification();
-		$this->FireEventDbLinksChangedForCurrentObject();
-		$this->FireEvent(EVENT_DB_CREATE_DONE);
-	}
-
-	/////////////
-	/// UPDATE
-	///
-
-
-	/**
-	 * @return void
-	 * @throws \CoreException
-	 */
-	final protected function FireEventBeforeObjectUpdate()
-	{
-		$this->FireEvent(EVENT_DB_BEFORE_UPDATE);
+		$this->FireEvent(EVENT_DB_BEFORE_WRITE, ['is_new' => $this->IsNew()]);
 	}
 
 	/**
 	 * @param array $aChanges
+	 * @param bool $bIsNew
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @since 3.1.0
 	 */
-	final protected function FireEventUpdateDone(array $aChanges): void
+	final protected function FireEventAfterWrite(array $aChanges, bool $bIsNew): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
 		$this->FireEventDbLinksChangedForCurrentObject();
-		$this->FireEvent(EVENT_DB_UPDATE_DONE, ['changes' => $aChanges]);
+		$this->FireEvent(EVENT_DB_AFTER_WRITE, ['is_new' => $bIsNew, 'changes' => $aChanges]);
 	}
 
 	//////////////
@@ -5950,7 +5924,7 @@ JS
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
 		$this->FireEventDbLinksChangedForCurrentObject();
-		$this->FireEvent(EVENT_DB_DELETE_DONE);
+		$this->FireEvent(EVENT_DB_AFTER_DELETE);
 	}
 
 	/**
