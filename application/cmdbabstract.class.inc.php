@@ -5920,7 +5920,7 @@ JS
 	 *
 	 * @since 3.1.0
 	 */
-	final protected function FireEventDeleteDone(): void
+	final protected function FireEventAfterDelete(): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
 		$this->FireEventDbLinksChangedForCurrentObject();

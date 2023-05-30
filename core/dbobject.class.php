@@ -3824,7 +3824,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		$this->FireEventDeleteDone();
+		$this->FireEventAfterDelete();
 		$this->AfterDelete();
 
 
@@ -6093,7 +6093,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.1.0
 	 */
-	protected function FireEventDeleteDone(): void
+	protected function FireEventAfterDelete(): void
 	{
 	}
 
