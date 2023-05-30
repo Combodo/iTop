@@ -20,7 +20,7 @@ $('.ibo-welcome-popup--indicator').click(function() {
 });
 $('.ibo-welcome-popup--button').click('button', function() {
 	const id = $(this).attr('data-message-uuid');
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'welcome_popup.acknowledge_message', message_uuid: id});
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'welcome_popup_acknowledge_message', message_uuid: id});
 	const escaped_id = id.replace(/\\/g, '\\\\');;  // All backslashes must be doubled in a jQuery selector
 	$('.ibo-welcome-popup--message[data-message-uuid="'+escaped_id+'"]').remove();
 	if($('.ibo-welcome-popup--message').length == 0) {

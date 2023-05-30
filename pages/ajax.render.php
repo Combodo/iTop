@@ -2691,33 +2691,31 @@ EOF
 			$oAjaxRenderController->GetMenusCount($oPage);
 			break;
 
-			//--------------------------------
-			// WelcomePopupMenu
-			//--------------------------------
-			case 'welcome_popup.acknowledge_message':
-				$oPage = new JsonPage();
-				try {
-					$oController = new WelcomePopupController();
-					$oController->AcknowledgeMessage();
-					$aResult = ['success' => true];
-				}
-				catch (Exception $oException) {
-					$aResult = [
-						'success'       => false,
-						'error_message' => $oException->getMessage(),
-					];
-				}
-				$oPage->SetData($aResult);
-				break;
+		//--------------------------------
+		// WelcomePopupMenu
+		//--------------------------------
+		case 'welcome_popup_acknowledge_message':
+			$oPage = new JsonPage();
+			try {
+				$oController = new WelcomePopupController();
+				$oController->AcknowledgeMessage();
+				$aResult = ['success' => true];
+			}
+			catch (Exception $oException) {
+				$aResult = [
+					'success'       => false,
+					'error_message' => $oException->getMessage(),
+				];
+			}
+			$oPage->SetData($aResult);
+			break;
 				
-			default:
-				$oPage->p("Invalid query.");
-		}
+		default:
+			$oPage->p("Invalid query.");
 	}
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
-} catch (Exception $e)
-{
+} catch (Exception $e) {
 	// note: transform to cope with XSS attacks
 	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());

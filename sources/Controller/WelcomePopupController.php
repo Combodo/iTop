@@ -9,7 +9,7 @@ use utils;
  * @since 3.1.0
  *
  */
-class WelcomePopupController extends AbstractController
+class WelcomePopupController
 {
 	/**
 	 * Operation: welcome_popup.acknowledge_message
