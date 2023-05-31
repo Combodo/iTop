@@ -391,6 +391,11 @@ class LoginWebPage extends NiceWebPage
 		Session::Unset('can_logoff');
 		Session::Unset('archive_mode');
 		Session::Unset('impersonate_user');
+		Session::Unset('PluginProperties');
+		Session::Unset('UrlMakerClass');
+		Session::Unset('itop_env');
+		Session::Unset('obj_messages');
+		Session::Unset('profile_list');
 		UserRights::_ResetSessionCache();
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!
