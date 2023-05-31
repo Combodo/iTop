@@ -224,6 +224,10 @@ class DBUnionSearch extends DBSearch
 	}
 
 	/**
+	 * Set the selected classes for this query.
+	 * The selected classes can be either in the selected classes of all the queries,
+	 * or they should exist in all the sub-queries of the union.
+	 *
 	 * @param array $aSelectedClasses array of aliases
 	 *
 	 * @throws \Exception
@@ -236,22 +240,31 @@ class DBUnionSearch extends DBSearch
 		$aAliasesToColumn = array_flip(array_keys($oFirstSearch->GetSelectedClasses()));
 		foreach ($aSelectedClasses as $sSelectedAlias) {
 			if (!isset($aAliasesToColumn[$sSelectedAlias])) {
-				throw new CoreException("SetSelectedClasses: Invalid class alias $sSelectedAlias");
+				// The selected class is not in the selected classes of the union,
+				// try to delegate the feature to the sub-queries
+				$aSelectedColumns = [];
+				break;
 			}
 			$aSelectedColumns[] = $aAliasesToColumn[$sSelectedAlias];
 		}
 
 		// 1 - change for each search
-		foreach ($this->aSearches as $iPos => $oSearch)
-		{
+		foreach ($this->aSearches as $iPos => $oSearch) {
 			$aCurrentSelectedAliases = [];
-			foreach ($aSelectedColumns as $iColumn) {
-				$aCurrentSelectedAliases[] = $this->aColumnToAliases[$iColumn][$iPos];
+			if (count($aSelectedColumns) === 0) {
+				// Default to the list of aliases given
+				$aCurrentSelectedAliases = $aSelectedClasses;
+			} else {
+				// Map the aliases for each query
+				foreach ($aSelectedColumns as $iColumn) {
+					$aCurrentSelectedAliases[] = $this->aColumnToAliases[$iColumn][$iPos];
+				}
 			}
 
 			// Throws an exception if not valid
 			$oSearch->SetSelectedClasses($aCurrentSelectedAliases);
 		}
+
 		// 2 - update the lowest common ancestors
 		$this->ComputeSelectedClasses();
 	}

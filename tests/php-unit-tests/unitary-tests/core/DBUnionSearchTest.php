@@ -115,9 +115,9 @@ class DBUnionSearchTest extends ItopDataTestCase
 	{
 		return [
 			[
-				'sSourceOQL' => "SELECT P1, L1 FROM Person AS P1 JOIN Location AS L1 ON P1.location_id = L1.id WHERE L1.id = 1",
+				'sSourceOQL'  => "SELECT P1, L1 FROM Person AS P1 JOIN Location AS L1 ON P1.location_id = L1.id WHERE L1.id = 1",
 				'sClassAlias' => "L1",
-				'sFilterOQL' => "SELECT Location AS L2 WHERE L2.id = 2 UNION SELECT Location AS L3 WHERE L3.id = 3",
+				'sFilterOQL'  => "SELECT Location AS L2 WHERE L2.id = 2 UNION SELECT Location AS L3 WHERE L3.id = 3",
 				'sExpected'   => "SELECT `P1`, `L1` FROM Person AS `P1` JOIN Location AS `L1` ON `P1`.location_id = `L1`.id WHERE ((`L1`.`id` = 1) AND (`L1`.`id` = 2)) UNION SELECT `P1`, `L1` FROM Person AS `P1` JOIN Location AS `L1` ON `P1`.location_id = `L1`.id WHERE ((`L1`.`id` = 1) AND (`L1`.`id` = 3))",
 			],
 			[
@@ -156,6 +156,36 @@ class DBUnionSearchTest extends ItopDataTestCase
 				'sClassAlias' => 'O2',
 				'sFilterOQL'  => 'SELECT Organization AS O1 WHERE O1.id = 2 UNION SELECT Organization AS O2 WHERE O2.id = 3',
 				'sExpected'   => "SELECT `P1`, `O2` FROM Person AS `P1` JOIN Organization AS `O1` ON `P1`.org_id = `O1`.id JOIN Location AS `L1` ON `P1`.location_id = `L1`.id JOIN Organization AS `O2` ON `L1`.org_id = `O2`.id WHERE (((((`L1`.`name` != '') AND (`P1`.`name` != '')) AND (`O1`.`name` != '')) AND (`O2`.`name` != '')) AND (`O2`.`id` = 2)) UNION SELECT `P1`, `O2` FROM Person AS `P1` JOIN Organization AS `O1` ON `P1`.org_id = `O1`.id JOIN Location AS `L1` ON `P1`.location_id = `L1`.id JOIN Organization AS `O2` ON `L1`.org_id = `O2`.id WHERE (((((`L1`.`name` != '') AND (`P1`.`name` != '')) AND (`O1`.`name` != '')) AND (`O2`.`name` != '')) AND (`O2`.`id` = 3))",
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider SetSelectedClassesProvider
+	 * @param $sOQL
+	 * @param $sSelectedClass
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function testSetSelectedClasses(string $sOQL, array $aSelectedClasses, string $sExpectedOQL)
+	{
+		$oSearch = DBSearch::FromOQL($sOQL);
+		$this->debug($oSearch->ToOQL());
+		$this->debug("Set selected classes to [ ".implode(" ,", $aSelectedClasses)." ]");
+		$oSearch->SetSelectedClasses($aSelectedClasses);
+		$this->debug($oSearch->ToOQL());
+		$this->assertEquals($sExpectedOQL, $oSearch->ToOQL());
+	}
+
+	public function SetSelectedClassesProvider()
+	{
+		return [
+			'N°6151' => [
+				'OQL'             => "SELECT P FROM Person AS P JOIN User AS U ON U.contactid = P.id UNION SELECT P FROM Person AS P JOIN User AS U ON U.contactid = P.id",
+				'SelectedClasses' => ['U'],
+				'Expected OQL'    => "SELECT `U` FROM Person AS `P` JOIN User AS `U` ON `U`.contactid = `P`.id WHERE 1 UNION SELECT `U` FROM Person AS `P` JOIN User AS `U` ON `U`.contactid = `P`.id WHERE 1",
 			],
 		];
 	}
