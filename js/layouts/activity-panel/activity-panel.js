@@ -234,16 +234,7 @@ $(function()
 					me._onLoadAllEntriesButtonClick(oEvent);
 				});
 
-				// Page exit
-				// - Show confirm dialog if draft entries
-				if (window.onbeforeunload === null) {
-					window.onbeforeunload = function (oEvent) {
-						if (true === me._HasDraftEntries()) {
-							return true;
-						}
-					};
-				}
-				// - Processing / cleanup when the leaving page
+				// Processing / cleanup when the leaving page
 				$(window).on('unload', function() {
 					if (true === me._HasDraftEntries()) {
 						return me._onUnload();
@@ -428,6 +419,9 @@ $(function()
 				// Put draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').addClass(this.css_classes.is_draft);
 
+				// Register leave handler blockers
+				this._RegisterLeaveHandlerBlockers();
+
 				if (this.options.lock_enabled === true) {
 					// Request lock
 					this._RequestLock();
@@ -445,6 +439,11 @@ $(function()
 			_onEmptyEntryForm: function (sCaseLogAttCode) {
 				// Remove draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_draft);
+
+				// Unregister leave handler blockers (only in view mode, otherwise it would remove blocker on main form fields as well)
+				if (this._GetHostObjectMode() === 'view') {
+					this._UnregisterLeaveHandlerBlockers();
+				}
 
 				if (this.options.lock_enabled === true) {
 					// Cancel lock if all forms empty
@@ -1010,6 +1009,53 @@ $(function()
 			{
 				return this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]')
 			},
+
+			// - Helpers on leave handler
+			/**
+			 * Register leave handler blockers for the activity panel
+			 * @see js/leave_handler.js
+			 * @since 3.1.0
+			 */
+			_RegisterLeaveHandlerBlockers: function () {
+				const sBlockerId = this._GetLeaveHandlerBlockerID();
+
+				// On page leave
+				$('body').trigger('register_blocker.itop', {
+					'sBlockerId': sBlockerId,
+					'sTargetElemSelector': 'document',
+					'oTargetElemSelector': document,
+					'sEventName': 'beforeunload'
+				});
+
+				// On modal close if we are in one
+				const oModalElem = this.element.closest('[data-role="ibo-modal"]');
+				if (oModalElem.length !== 0) {
+					$('body').trigger('register_blocker.itop', {
+						'sBlockerId': sBlockerId,
+						'sTargetElemSelector': '#' + oModalElem.attr('id'),
+						'oTargetElemSelector': '#' + oModalElem.attr('id'),
+						'sEventName': 'dialogbeforeclose'
+					});
+				}
+			},
+			/**
+			 * Unregister leave handler blockers for the activity panel
+			 * @see js/leave_handler.js
+			 * @since 3.1.0
+			 */
+			_UnregisterLeaveHandlerBlockers: function () {
+				$('body').trigger('unregister_blocker.itop', {
+					'sBlockerId': this._GetLeaveHandlerBlockerID()
+				});
+			},
+			/**
+			 * @returns {String} The leave blocker identifier to use with {@see leave_handler.js} for the activity panel
+			 * @since 3.1.0
+			 */
+			_GetLeaveHandlerBlockerID: function () {
+				return this._GetHostObjectClass() + ':' + this._GetHostObjectID();
+			},
+
 			// - Helpers on object lock
 			/**
 			 * Initialize the lock watcher on a regular basis

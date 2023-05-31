@@ -51,6 +51,7 @@ class ActivityPanel extends UIBlock
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/jquery.ba-bbq.min.js',
+		'js/leave_handler.js',
 		'js/layouts/activity-panel/activity-panel.js',
 	];
 

@@ -2949,8 +2949,7 @@ JS
 		}
 
 		// Prepare blocker protection to avoid loosing data
-		$sBlockerId = uniqid($sClass.':'.$iKey.':', true);
-		$sConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
+		$sBlockerId = $sClass.':'.$iKey; // Important: This must have the synthax format as in js/layouts/activity-panel/activity-panel.js
 		$sJSToken = json_encode($sOwnershipToken);
 		$oPage->add_ready_script(<<<JS
 // Try to release concurrent lock when leaving the page
