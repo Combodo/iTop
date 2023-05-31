@@ -8,9 +8,14 @@ function GoBack()
 
 function DoCheckPwd()
 {
-    if ($('#new_pwd').val() != $('#retype_new_pwd').val())
+    var new_pwd = $('#new_pwd').val();
+    if (new_pwd !== $('#retype_new_pwd').val())
     {
         alert('{{ 'UI:Login:RetypePwdDoesNotMatch'|dict_s }}');
+        return false;
+    }
+    if (new_pwd === $('#old_pwd').val()) {
+        alert('{{ 'UI:Login:PasswordNotChanged'|dict_s }}');
         return false;
     }
     return true;

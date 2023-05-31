@@ -575,6 +575,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:LogOff:ClickHereToLoginAgain'              => 'Cliquez ici pour vous reconnecter...',
 	'UI:ChangePwdMenu'                             => 'Changer de mot de passe...',
 	'UI:Login:PasswordChanged'                     => 'Mot de passe mis à jour !',
+	'UI:Login:PasswordNotChanged'                  => 'Erreur : le mot de passe est identique !',
 	'UI:AccessRO-All'                              => ITOP_APPLICATION_SHORT.' est en lecture seule',
 	'UI:AccessRO-Users'                            => ITOP_APPLICATION_SHORT.' est en lecture seule pour les utilisateurs finaux',
 	'UI:ApplicationEnvironment'                    => 'Environnement applicatif: %1$s',

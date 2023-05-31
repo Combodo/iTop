@@ -142,6 +142,11 @@ class PasswordFormManager extends FormManager
 								$aData['valid'] = false;
 								$aData['messages']['error'] += array('confirm_password' => array(Dict::S('UI:Login:RetypePwdDoesNotMatch')));
 							}
+							elseif ($sNewPassword === $sOldPassword)
+							{
+								$aData['valid'] = false;
+								$aData['messages']['error'] += array('new_password' => array(Dict::S('UI:Login:PasswordNotChanged')));
+							}
 							else
 							{
 								try {
