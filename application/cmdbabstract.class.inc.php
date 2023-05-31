@@ -2955,9 +2955,6 @@ JS
 		$oPage->add_ready_script(<<<JS
 // Try to release concurrent lock when leaving the page
 $(window).on('unload',function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
-window.onbeforeunload = function() {
-	// N°6307 just an empty function to disable activity-panel.js handler
-};
 
 // Leave handler for the current form (check if in a modal or not)
 // Note: We use a self-invoking function to avoid making unique vars. names to avoid collision (this can be called multiple time if modal forms are displayed)
