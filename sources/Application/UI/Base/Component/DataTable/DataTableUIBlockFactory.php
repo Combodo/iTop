@@ -935,6 +935,8 @@ JS;
 			/** bool to perform a creation of a new object of this type in a modal */
 			'creation_in_modal_tooltip',
 			/** creation in modal button tooltip */
+			'creation_in_modal_form_title',
+			/** creation in modal form title */
 			'creation_in_modal_js_handler',
 			/** Handler to call when trying to create a new object in modal */
 			'creation_disallowed',

@@ -78,6 +78,11 @@ $(function()
 			// retrieve new button
 			const $NewButton = $('[name="UI:Links:New"]', this.element);
 			const sButtonTooltipContent = $NewButton.attr('data-tooltip-content');
+			let sButtonTitleContent = $NewButton.attr('data-modal-title');
+
+			let aParams = {
+				form_title: sButtonTitleContent
+			}
 
 			// retrieve context parameters
 			const sClass = $Table.closest('[data-role="ibo-block-links-table"]').attr('data-link-class');
@@ -93,7 +98,8 @@ $(function()
 				if(data.success){
 					me.$tableSettingsDialog.DataTableSettings('DoRefresh');
 				}
-			});
+			},
+				aParams);
 		},
 
 		/**
@@ -114,12 +120,13 @@ $(function()
 			sButtonTitleContent = sButtonTitleContent.replaceAll('{item}', sRemoteFriendlyname);
 
 			// Specify that external key to host object will be readonly
-			let aReadOnlyParams = {
+			let aParams = {
 				'readonly': {
 				}
+
 			}
-			aReadOnlyParams['readonly'][this.options.external_key_to_me] = 1;
-			aReadOnlyParams['form_title'] = sButtonTitleContent;
+			aParams['readonly'][this.options.external_key_to_me] = 1;
+			aParams['form_title'] = sButtonTitleContent;
 
 			// link object modification
 			iTopObjectWorker.ModifyObject(sButtonTooltipContent, this.options.link_class, sLinkedObjectKey, function () {
@@ -130,7 +137,7 @@ $(function()
 					me.$tableSettingsDialog.DataTableSettings('DoRefresh');
 				}
 			},
-				aReadOnlyParams);
+				aParams);
 		},
 
 	});

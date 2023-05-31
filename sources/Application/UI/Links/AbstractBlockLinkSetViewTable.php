@@ -43,8 +43,10 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	];
 
 	// Dictionnary entries
-	public const BUTTON_TOOLTIP                    = 'UI:Links:Add:Button+';
+	public const DICT_ADD_BUTTON_TOOLTIP           = 'UI:Links:Add:Button+';
+	public const DICT_ADD_MODAL_TITLE              = 'UI:Links:Add:Modal:Title';
 	public const DICT_CREATE_BUTTON_TOOLTIP        = 'UI:Links:Create:Button+';
+	public const DICT_CREATE_MODAL_TITLE           = 'UI:Links:Create:Modal:Title';
 	public const DICT_MODIFY_LINK_BUTTON_TOOLTIP   = 'UI:Links:ModifyLink:Button+';
 	public const DICT_MODIFY_LINK_MODAL_TITLE      = 'UI:Links:ModifyLink:Modal:Title';
 	public const DICT_MODIFY_OBJECT_BUTTON_TOOLTIP = 'UI:Links:ModifyObject:Button+';

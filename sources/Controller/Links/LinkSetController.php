@@ -142,6 +142,7 @@ class LinkSetController extends AbstractController
 		$sAttCode = utils::ReadParam('att_code', '', false, 'raw');
 		$sClass = utils::ReadParam('host_class', '', false, 'class');
 		$sId = utils::ReadParam('host_id', '', false, 'integer');
+		$sFormTitle = utils::ReadPostedParam('form_title', null, utils::ENUM_SANITIZATION_FILTER_STRING);
 
 		// For security reasons: check that the "proposed" class is actually a subclass of the linked class
 		// and that the current user is allowed to create objects of this class
@@ -202,17 +203,7 @@ class LinkSetController extends AbstractController
 				}
 JS;
 
-
-			// Form title
-			/** @var \AttributeLinkedSet $oLinksetDef */
-			$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			$oHostObj = MetaModel::GetObject($sClass, $sId);
-			$sFormTitle = $oLinksetDef->SearchSpecificLabel('UI:Links:Add:Modal:Title', '', true,
-				MetaModel::GetName($sClass),
-				$oHostObj->Get('friendlyname'),
-				$oLinksetDef->GetLabel(),
-				MetaModel::GetName(LinkSetModel::GetTargetClass($oLinksetDef)));
-
+			
 			$aExtraParams = [
 				'noRelations'           => true,
 				'hide_transitions'      => true,

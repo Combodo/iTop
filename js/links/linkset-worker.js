@@ -53,19 +53,25 @@ const iTopLinkSetWorker = new function(){
 	 * @param {string} sHostObjectId
 	 * @param oOnModalCloseCallback
 	 * @param oOnFormSubmittedCallback
+	 * @param {Object} aAdditionalData
 	 */
-	const CallAjaxCreateLinkedObject = function(sModalTitle, sClass, sAttCode, sHostObjectClass, sHostObjectId, oOnModalCloseCallback = null, oOnFormSubmittedCallback = null){
+	const CallAjaxCreateLinkedObject = function(sModalTitle, sClass, sAttCode, sHostObjectClass, sHostObjectId, oOnModalCloseCallback = null, oOnFormSubmittedCallback = null, aAdditionalData = []){
+
+		let aData = $.extend(
+			{
+				class: sClass,
+				att_code: sAttCode,
+				host_class: sHostObjectClass,
+				host_id: sHostObjectId
+			},
+			aAdditionalData
+		);
 
 		let oOptions = {
 			title: sModalTitle,
 			content: {
 				endpoint: `${ROUTER_BASE_URL}?route=${ROUTE_LINK_SET_CREATE_OBJECT}`,
-				data: {
-					class: sClass,
-					att_code: sAttCode,
-					host_class: sHostObjectClass,
-					host_id: sHostObjectId
-				}
+				data: aData,
 			},
 			extra_options: {
 				callback_on_modal_close: oOnModalCloseCallback

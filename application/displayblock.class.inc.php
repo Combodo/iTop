@@ -2321,10 +2321,15 @@ class MenuBlock extends DisplayBlock
 					false
 				);
 
+				// creation form title
+				if (array_key_exists('creation_in_modal_form_title', $aExtraParams)) {
+					$oAddLinkActionButton->AddDataAttribute('modal-title', $aExtraParams['creation_in_modal_form_title']);
+				}
+
 				// - If we are used in a Datatable, 'datatable_' will be prefixed to our $sId, so we do the same here
 				$sRealId = $sId;
-				if(in_array($this->m_sStyle, [static::ENUM_STYLE_LIST, 'links', static::ENUM_STYLE_LIST_IN_OBJECT])){
-					$sRealId = 'datatable_' . $sId;
+				if (in_array($this->m_sStyle, [static::ENUM_STYLE_LIST, 'links', static::ENUM_STYLE_LIST_IN_OBJECT])) {
+					$sRealId = 'datatable_'.$sId;
 				}
 				$oAddLinkActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button'])
 					->SetOnClickJsCode("$('#$sRealId').trigger('open_creation_modal.object.itop');");

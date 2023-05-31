@@ -53,7 +53,8 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			&& $this->oAttDef->GetEditMode() != LINKSET_EDITMODE_NONE
 			&& $this->bIsAllowCreate) {
 			$aExtraParams['creation_in_modal'] = true;
-			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::DICT_CREATE_BUTTON_TOOLTIP);
+			$aExtraParams['creation_in_modal_tooltip'] = $this->oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE ? $this->GetDictionaryEntry(static::DICT_ADD_BUTTON_TOOLTIP) : $this->GetDictionaryEntry(static::DICT_CREATE_BUTTON_TOOLTIP);
+			$aExtraParams['creation_in_modal_form_title'] = $this->oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE ? $this->GetDictionaryEntry(static::DICT_ADD_MODAL_TITLE) : $this->GetDictionaryEntry(static::DICT_CREATE_MODAL_TITLE);
 			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
 		} else {
 			$aExtraParams['creation_disallowed'] = true;
@@ -111,13 +112,13 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 					'color'         => Button::ENUM_COLOR_SCHEME_DESTRUCTIVE,
 					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement);",
 					'confirmation'  => [
-						'title'                          => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_TITLE),
-						'message'                        => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_MESSAGE),
-							'confirm_button_class'       => 'ibo-is-danger',
-							'row_data'                   => "{$this->sTargetClass}/hyperlink",
-							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
-						],
-					);
+						'title'                      => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_TITLE),
+						'message'                    => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_MESSAGE),
+						'confirm_button_class'       => 'ibo-is-danger',
+						'row_data'                   => "{$this->sTargetClass}/hyperlink",
+						'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
+					],
+				);
 				}
 				break;
 

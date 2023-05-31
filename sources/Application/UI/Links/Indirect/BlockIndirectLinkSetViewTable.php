@@ -63,7 +63,8 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		if (!$this->oAttDef->GetReadOnly()
 			&& $this->bIsAllowCreate) {
 			$aExtraParams['creation_in_modal'] = true;
-			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::BUTTON_TOOLTIP);
+			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::DICT_ADD_BUTTON_TOOLTIP);
+			$aExtraParams['creation_in_modal_form_title'] = $this->GetDictionaryEntry(static::DICT_ADD_MODAL_TITLE);
 			$aExtraParams['creation_in_modal_js_handler'] = "{$this->GetWidgetName()}.links_view_table('CreateLinkedObject');";
 		} else {
 			$aExtraParams['creation_disallowed'] = true;
