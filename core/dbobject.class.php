@@ -3495,7 +3495,7 @@ abstract class DBObject implements iDisplay
 				// Activate any existing trigger
 				// - TriggerOnObjectMention
 				// Forgotten by the fix of N°3245
-				$this->ActivateOnMentionTriggers(false);
+				$this->ActivateOnMentionTriggers(false, $aChanges);
 			}
 			catch (Exception $e)
 			{
@@ -3569,6 +3569,7 @@ abstract class DBObject implements iDisplay
 	 * Activate TriggerOnObjectMention triggers for the current object
 	 *
 	 * @param bool $bNewlyCreatedObject
+	 * @param array $aChanges Hash array of att. code => att. value of the changed attributes
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -3576,11 +3577,12 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 * @since 3.0.1 N°4741
+	 * @since 3.1.0 N°6307 Add $aChanges parameter
 	 */
-	private function ActivateOnMentionTriggers(bool $bNewlyCreatedObject): void
+	private function ActivateOnMentionTriggers(bool $bNewlyCreatedObject, array $aChanges = []): void
 	{
 		$sClass = get_class($this);
-		$aChanges = $bNewlyCreatedObject ? $this->m_aOrigValues : $this->ListChanges();
+		$aChanges = $bNewlyCreatedObject ? $this->m_aOrigValues : $aChanges;
 
 		// 1 - Check if any caselog updated
 		$aUpdatedLogAttCodes = [];
