@@ -480,7 +480,7 @@ class utils
 
 			// For URL
 			case static::ENUM_SANITIZATION_FILTER_URL:
-				$retValue = filter_var($value, FILTER_SANITIZE_URL);
+				$retValue = filter_var($value, FILTER_VALIDATE_URL);
 				break;
 
 			default:

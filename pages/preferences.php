@@ -811,7 +811,7 @@ try {
 				foreach ($aShortcutClasses as $cShortcutPlugin) {
 					foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
 						$sKey = utils::ReadParam($aShortcutKey['id'], $aShortcutKey['key'], true, 'raw_data');
-						$aShortcutPrefs[$aShortcutKey['id']] = strtolower($sKey);
+						$aShortcutPrefs[$aShortcutKey['id']] = strtolower(utils::HtmlEntities($sKey));
 					}
 				}
 				appUserPreferences::SetPref('keyboard_shortcuts', $aShortcutPrefs);

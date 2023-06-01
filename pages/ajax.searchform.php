@@ -55,7 +55,7 @@ try
 
     if (array_key_exists('table_inner_id', $aListParams))
     {
-        $sListId = $aListParams['table_inner_id'];
+        $sListId = utils::HtmlEntities($aListParams['table_inner_id']);
     }
 
 	if (array_key_exists('json', $aListParams))
