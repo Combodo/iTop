@@ -242,3 +242,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution du ticket (ev_autoresolve) vers les requêtes et incidents fils, et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
 	'Tickets:Related:OpenIncidents' => 'Incidents ouverts',
 ));
+
+// 1:n relations custom labels for tooltip and pop-up title
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+));

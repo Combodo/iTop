@@ -530,3 +530,26 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Nom Rôle',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
 ));
+
+
+// 1:n relations custom labels for tooltip and pop-up title
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:ServiceFamily/Attribute:services_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:ServiceFamily/Attribute:services_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:ServiceFamily/Attribute:services_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:ServiceFamily/Attribute:services_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
+	'Class:ServiceFamily/Attribute:services_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:ServiceFamily/Attribute:services_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+));

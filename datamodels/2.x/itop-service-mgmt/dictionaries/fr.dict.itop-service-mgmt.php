@@ -489,3 +489,31 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Nom Rôle',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
 ));
+
+// 1:n relations custom labels for tooltip and pop-up title
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Service/Attribute:services_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Service/Attribute:services_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Service/Attribute:services_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Service/Attribute:services_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:Service/Attribute:services_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Service/Attribute:services_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+));

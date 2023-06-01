@@ -235,3 +235,26 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Objectif calculé à partir d\'un SLT de type TTR',
 ));
 
+
+// 1:n relations custom labels for tooltip and pop-up title
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Person/Attribute:tickets_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Person/Attribute:tickets_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
+	'Class:Person/Attribute:tickets_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Person/Attribute:tickets_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Team/Attribute:tickets_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Team/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:Team/Attribute:tickets_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Team/Attribute:tickets_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+));
+

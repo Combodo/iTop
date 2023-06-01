@@ -46,7 +46,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Modify object
 	'UI:Links:ModifyObject:Button'                  => 'Modify',
 	'UI:Links:ModifyObject:Button+'                 => 'Modify this object',
-	'UI:Links:ModifyObject:Modal:Title'             => 'Modify %5$s',
+	'UI:Links:ModifyObject:Modal:Title'             => '%5$s',
 
 	// Remove
 	'UI:Links:Remove:Button'                        => 'Remove',

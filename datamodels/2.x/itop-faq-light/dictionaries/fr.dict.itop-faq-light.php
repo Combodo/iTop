@@ -66,3 +66,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:FAQ:Title' => 'Foire Aux Questions',
 	'Brick:Portal:FAQ:Title+' => '<p>Vous êtes pressé&nbsp;?</p><p>Consultez la liste des questions les plus fréquentes et vous trouverez (peut-être) immédiatement la réponse à votre besoin.</p>',
 ));
+
+// 1:n relations custom labels for tooltip and pop-up title
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+));

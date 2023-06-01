@@ -124,3 +124,26 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Problem/Stimulus:ev_close' => 'Fermer',
 	'Class:Problem/Stimulus:ev_close+' => '',
 ));
+
+
+// 1:n relations custom labels for tooltip and pop-up title
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+));
