@@ -361,7 +361,8 @@ class utils
 
 			// For URL
 			case 'url':
-				$retValue = filter_var($value, FILTER_SANITIZE_URL);
+                // N°6350 - returns only valid URLs
+				$retValue = filter_var($value, FILTER_VALIDATE_URL);
 				break;
 
 			default:
