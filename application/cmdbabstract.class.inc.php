@@ -3006,7 +3006,7 @@ JS
 			$oToolbarButtons->AddCSSClass('ibo-toolbar-top');
 			$oObjectDetails->AddToolbarBlock($oToolbarButtons);
 			// Allow form title customization
-			if (array_key_exists('form_title', $aExtraParams)) {
+			if (array_key_exists('form_title', $aExtraParams) && $aExtraParams['form_title'] !== null) {
 				$oObjectDetails->SetTitle($aExtraParams['form_title']);
 			}
 		}

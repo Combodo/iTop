@@ -2322,7 +2322,7 @@ class MenuBlock extends DisplayBlock
 				);
 
 				// creation form title
-				if (array_key_exists('creation_in_modal_form_title', $aExtraParams)) {
+				if (array_key_exists('creation_in_modal_form_title', $aExtraParams) && $aExtraParams['creation_in_modal_form_title'] !== null) {
 					$oAddLinkActionButton->AddDataAttribute('modal-title', $aExtraParams['creation_in_modal_form_title']);
 				}
 
