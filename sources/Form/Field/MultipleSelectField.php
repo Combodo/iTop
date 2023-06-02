@@ -28,5 +28,16 @@ class MultipleSelectField extends SelectField
 {
 	/** @inheritDoc */
 	const DEFAULT_MULTIPLE_VALUES_ENABLED = true;
+	const DEFAULT_STARTS_WITH_NULL_CHOICE = false;
 
+	function SetCurrentValue($currentValue)
+	{
+		if ($currentValue != null) {
+			$this->currentValue = $currentValue;
+		} else {
+			$this->currentValue = "";
+		}
+
+		return $this;
+	}
 }

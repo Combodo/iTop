@@ -10,11 +10,14 @@ use Combodo\iTop\Form\Field\DateTimeField;
 use Combodo\iTop\Form\Field\DurationField;
 use Combodo\iTop\Form\Field\HiddenField;
 use Combodo\iTop\Form\Field\LabelField;
+use Combodo\iTop\Form\Field\MultipleSelectField;
+use Combodo\iTop\Form\Field\MultipleSelectObjectField;
 use Combodo\iTop\Form\Field\RadioField;
 use Combodo\iTop\Form\Field\SelectField;
 use Combodo\iTop\Form\Field\SelectObjectField;
 use Combodo\iTop\Form\Field\StringField;
 use Combodo\iTop\Form\Field\SubFormField;
+use Combodo\iTop\Form\Field\TagSetField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Renderer\Console\FieldRenderer\ConsoleSelectObjectFieldRenderer;
 use Combodo\iTop\Renderer\Console\FieldRenderer\ConsoleSimpleFieldRenderer;
@@ -78,14 +81,34 @@ class ConsoleFieldRendererMappings implements iFieldRendererMappingsExtension
 				'field_renderer' => ConsoleSelectObjectFieldRenderer::class,
 			],
 			[
-				'field' => SubFormField::class,
-				'form_renderer' => ConsoleFormRenderer::class,
+				'field'          => SubFormField::class,
+				'form_renderer'  => ConsoleFormRenderer::class,
 				'field_renderer' => ConsoleSubFormFieldRenderer::class,
 			],
 			[
-				'field' => DateTimeField::class,
-				'form_renderer' => ConsoleFormRenderer::class,
+				'field'          => DateTimeField::class,
+				'form_renderer'  => ConsoleFormRenderer::class,
 				'field_renderer' => ConsoleSimpleFieldRenderer::class,
+			],
+			[
+				'field'          => MultipleSelectField::class,
+				'form_renderer'  => ConsoleFormRenderer::class,
+				'field_renderer' => ConsoleSimpleFieldRenderer::class,
+			],
+			[
+				'field'          => MultipleSelectObjectField::class,
+				'form_renderer'  => ConsoleFormRenderer::class,
+				'field_renderer' => ConsoleSelectObjectFieldRenderer::class,
+			],
+			[
+				'field'          => TagSetField::class,
+				'form_renderer'  => ConsoleFormRenderer::class,
+				'field_renderer' => ConsoleSimpleFieldRenderer::class,
+			],
+			[
+				'field'          => TagSetObjectField::class,
+				'form_renderer'  => ConsoleFormRenderer::class,
+				'field_renderer' => ConsoleSelectObjectFieldRenderer::class,
 			],
 		];
 	}

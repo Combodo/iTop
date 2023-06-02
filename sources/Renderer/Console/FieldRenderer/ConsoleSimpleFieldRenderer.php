@@ -51,6 +51,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 	{
 		$oOutput = parent::Render();
 		$sFieldClass = get_class($this->oField);
+		\IssueLog::Error($this->oField->GetLabel().':render simple:'.$sFieldClass);
 
 		if ($sFieldClass == 'Combodo\\iTop\\Form\\Field\\HiddenField')
 		{
@@ -99,24 +100,22 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 			switch ($sFieldClass)
 			{
 				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content"]);
 
 					$sDateTimeFormat = $this->oField->GetPHPDateTimeFormat();
 					$oFormat = new DateTimeFormat($sDateTimeFormat);
 					$sPlaceHolder = $oFormat->ToPlaceholder();
-					if ($this->oField->GetReadOnly())
-					{
-						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+					if ($this->oField->GetReadOnly()) {
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 						$oValue->AddSubBlock(new Html($this->oField->GetCurrentValue()));
-					}
-					else {
+					} else {
 						$oField = UIContentBlockUIBlockFactory::MakeStandard("", ["field_input_zone", "field_input_datetime", "ibo-input-field-wrapper", "ibo-input-datetime-wrapper"]);
 						$oValue->AddSubBlock($oField);
 						$oField->AddSubBlock(new Html('<input class="date-pick ibo-input ibo-input-date" type="text" placeholder="'.utils::EscapeHtml($sPlaceHolder).'" id="'.$this->oField->GetGlobalId().'" value="'.utils::EscapeHtml($this->oField->GetCurrentValue()).'" autocomplete="off"/>'));
 						$oField->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
 					$oBlock->AddSubBlock($oValue);
-				break;
+					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\LabelField':
 					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",[""]);
@@ -175,8 +174,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 								$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, $sJsConfig);
 EOF
 							);
-							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null))
-							{
+							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null)) {
 								$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
 							}
 						}
@@ -186,25 +184,21 @@ EOF
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content","ibo-input-field-wrapper"]);
-					if ($this->oField->GetReadOnly())
-					{
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content", "ibo-input-field-wrapper"]);
+					if ($this->oField->GetReadOnly()) {
 						$aChoices = $this->oField->GetChoices();
-						$sCurrentLabel = isset($aChoices[$this->oField->GetCurrentValue()]) ? $aChoices[$this->oField->GetCurrentValue()] : '' ;
-						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+						$sCurrentLabel = isset($aChoices[$this->oField->GetCurrentValue()]) ? $aChoices[$this->oField->GetCurrentValue()] : '';
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 						$oValue->AddSubBlock(new Html($sCurrentLabel));
-					}
-					else
-					{
-						$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
+					} else {
+						$oSelect = SelectUIBlockFactory::MakeForSelect("", $this->oField->GetGlobalId());
 						$oSelect->AddCSSClass('ibo-input-field-wrapper');
 						if ($this->oField->GetMultipleValuesEnabled()) {
 							$oSelect->SetIsMultiple(true);
 						}
-						foreach ($this->oField->GetChoices() as $sChoice => $sLabel)
-						{
+						foreach ($this->oField->GetChoices() as $sChoice => $sLabel) {
 							// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
-							$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sChoice,$sLabel, ($this->oField->GetCurrentValue() == $sChoice)));
+							$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sChoice, $sLabel, ($this->oField->GetCurrentValue() == $sChoice)));
 						}
 						$oValue->AddSubBlock($oSelect);
 						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
@@ -212,25 +206,118 @@ EOF
 					$oBlock->AddSubBlock($oValue);
 					break;
 
-				case 'Combodo\\iTop\\Form\\Field\\RadioField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
-					if ($this->oField->GetReadOnly())
-					{
+				case 'Combodo\\iTop\\Form\\Field\\TagSetField':
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content", "ibo-input-field-wrapper"]);
+					if ($this->oField->GetReadOnly()) {
 						$aChoices = $this->oField->GetChoices();
-						$sCurrentLabel = isset($aChoices[$this->oField->GetCurrentValue()]) ? $aChoices[$this->oField->GetCurrentValue()] : '' ;
-						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+						$sCurrentLabel = isset($aChoices[$this->oField->GetCurrentValue()]) ? $aChoices[$this->oField->GetCurrentValue()] : '';
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 						$oValue->AddSubBlock(new Html($sCurrentLabel));
+					} else {
+						$oSelect = SelectUIBlockFactory::MakeForSelect("", $this->oField->GetGlobalId());
+						$oSelect->SetIsMultiple(true);
+						$oSelect->AddCSSClass('ibo-input-field-wrapper');
+						\IssueLog::Error('valeur:'.json_encode($this->oField->GetCurrentValue()));
+						foreach ($this->oField->GetChoices() as $sChoice => $sLabel) {
+							// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
+							$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sChoice, $sLabel, in_array($sChoice, $this->oField->GetCurrentValue()) === true));
+						}
+						$oValue->AddSubBlock($oSelect);
+						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
-					else
-					{
+					$oBlock->AddSubBlock($oValue);
+					$oOutput->AddJs(
+						<<<JS
+							 $("#{$this->oField->GetGlobalId()}").selectize({
+							    maxItems: null,
+							    sortField: 'text',
+							    onChange: function(value){
+							                  var me = this.\$input;
+							                  me.trigger("field_change", {
+							                            id: me.attr("id"),
+							                            name: me.closest(".form_field").attr("data-field-id"),
+							                            value: JSON.stringify(me.val())
+							                        })
+							                        .closest('.form_handler').trigger('value_change');
+							                  console.warn('chanegement');
+							    },
+							});
+							 $("#{$this->oField->GetGlobalId()}").closest('div').addClass('ibo-input-select-wrapper--with-buttons');
+JS
+					);
+					break;
+
+				case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content"]);
+					if ($this->oField->GetReadOnly()) {
+						$aChoices = $this->oField->GetChoices();
+						$sCurrentLabel = isset($aChoices[$this->oField->GetCurrentValue()]) ? $aChoices[$this->oField->GetCurrentValue()] : '';
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(new Html($sCurrentLabel));
+					} else {
+						$aValues = $this->oField->GetCurrentValue();
+						//	$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", implode(',', $this->oField->GetCurrentValue()), $this->oField->GetGlobalId()));
+						$iId = 1;
+						foreach ($this->oField->GetChoices() as $sChoice => $sLabel) {
+							$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel($sLabel, ''.$this->oField->GetGlobalId(), $sChoice, $this->oField->GetGlobalId().'_'.$iId, "checkbox");
+							$oCheckBox->GetInput()->SetIsChecked(in_array($sChoice, $aValues) === true);
+							$oCheckBox->SetBeforeInput(false);
+							$oCheckBox->GetInput()->AddCSSClass('ibo-input--label-right');
+							$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
+							$oValue->AddSubBlock($oCheckBox);
+							$iId++;
+						}
+						$oOutput->AddJs(
+							<<<JS
+								  $("[name={$this->oField->GetGlobalId()}]").off("change").on("change", function(){
+			
+			                        $("[name={$this->oField->GetGlobalId()}]").closest(".field_set").trigger("field_change", {
+			                            id: $("[name={$this->oField->GetGlobalId()}]").attr("id"),
+			                            name: $("[name={$this->oField->GetGlobalId()}]").closest(".form_field").attr("data-field-id"),
+			                            value: $("[name={$this->oField->GetGlobalId()}]").val()
+			                        })
+			                        .closest('.form_handler').trigger('value_change');
+			                    });
+	JS
+						);
+						/*	$oOutput->AddJs(
+								<<<JS
+									  $("[name=checkbox_{$this->oField->GetGlobalId()}]").off("change").on("change", function(){
+										 var aValues = [];
+										 $("[name=checkbox_{$this->oField->GetGlobalId()}]").each(function(){ if (this.checked){ aValues.push($(this).val()); }});
+										 $("#{$this->oField->GetGlobalId()}").val(aValues.toString());
+
+										$("#{$this->oField->GetGlobalId()}").closest(".field_set").trigger("field_change", {
+											id: $("{$this->oField->GetGlobalId()}").attr("id"),
+											name: $("{$this->oField->GetGlobalId()}").closest(".form_field").attr("data-field-id"),
+											value: $("{$this->oField->GetGlobalId()}").val()
+										})
+										.closest('.form_handler').trigger('value_change');
+									});
+		JS
+							);*/
+
+
+						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
+						$oBlock->AddSubBlock($oValue);
+					}
+					break;
+
+				case 'Combodo\\iTop\\Form\\Field\\RadioField':
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content"]);
+					if ($this->oField->GetReadOnly()) {
+						$aChoices = $this->oField->GetChoices();
+						$sCurrentLabel = isset($aChoices[$this->oField->GetCurrentValue()]) ? $aChoices[$this->oField->GetCurrentValue()] : '';
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(new Html($sCurrentLabel));
+					} else {
 						$bVertical = true;
 						$idx = 0;
 						$bMandatory = $this->oField->GetMandatory();
 						$value = $this->oField->GetCurrentValue();
 						$sId = $this->oField->GetGlobalId();
 						$aChoices = $this->oField->GetChoices();
-						foreach ($aChoices as $sChoice => $sLabel)
-						{
+						foreach ($aChoices as $sChoice => $sLabel) {
 							if ((count($aChoices) == 1) && $bMandatory) {
 								// When there is only once choice, select it by default
 								$sSelected = 'checked';
@@ -400,6 +487,8 @@ EOF
  $("#{$this->oField->GetGlobalId()}").selectize({
     sortField: 'text',
     onChange: function(value){
+    
+							                  console.warn('lala');
     			 var me = this.\$input;
                 me.closest(".field_set").trigger("field_change", {
                     id: me.attr("id"),
@@ -469,8 +558,7 @@ EOF
                     $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field($sFormFieldOptions);
 EOF
 		);
-		switch ($sFieldClass)
-		{
+		switch ($sFieldClass) {
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 				$oOutput->AddJs(
 					<<<EOF
@@ -478,6 +566,13 @@ EOF
 EOF
 				);
 				break;
+			case 'Combodo\\iTop\\Form\\Field\\TagSetField':
+				//case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+				$oOutput->AddJs(
+					<<<EOF
+				$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field('option', 'get_current_value_callback', function(me){console.warn('bobb'); return $(me.element).find('select').val();});
+	EOF
+				);
 		}
 
 		$oOutput->AddJs(

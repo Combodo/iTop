@@ -7,22 +7,22 @@ namespace Composer\Autoload;
 class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
 {
     public static $files = array (
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
-        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
-        'c9d07b32a2e02bc0fc582d4f0c1b56cc' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/autoload.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
+        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
-        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
+        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        'c9d07b32a2e02bc0fc582d4f0c1b56cc' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/autoload.php',
+        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
+        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -54,7 +54,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
             'Symfony\\Component\\VarExporter\\' => 30,
             'Symfony\\Component\\VarDumper\\' => 28,
             'Symfony\\Component\\String\\' => 25,
-            'Symfony\\Component\\Stopwatch\\' => 28,
             'Symfony\\Component\\Routing\\' => 26,
             'Symfony\\Component\\HttpKernel\\' => 29,
             'Symfony\\Component\\HttpFoundation\\' => 33,
@@ -68,7 +67,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Config\\' => 25,
             'Symfony\\Component\\Cache\\' => 24,
-            'Symfony\\Bundle\\WebProfilerBundle\\' => 33,
             'Symfony\\Bundle\\TwigBundle\\' => 26,
             'Symfony\\Bundle\\FrameworkBundle\\' => 31,
             'Symfony\\Bridge\\Twig\\' => 20,
@@ -189,10 +187,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         array (
             0 => __DIR__ . '/..' . '/symfony/string',
         ),
-        'Symfony\\Component\\Stopwatch\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/stopwatch',
-        ),
         'Symfony\\Component\\Routing\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/routing',
@@ -244,10 +238,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Component\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/cache',
-        ),
-        'Symfony\\Bundle\\WebProfilerBundle\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/web-profiler-bundle',
         ),
         'Symfony\\Bundle\\TwigBundle\\' => 
         array (
@@ -766,6 +756,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Form\\Field\\LinkedSetField' => __DIR__ . '/../..' . '/sources/Form/Field/LinkedSetField.php',
         'Combodo\\iTop\\Form\\Field\\MultipleChoicesField' => __DIR__ . '/../..' . '/sources/Form/Field/MultipleChoicesField.php',
         'Combodo\\iTop\\Form\\Field\\MultipleSelectField' => __DIR__ . '/../..' . '/sources/Form/Field/MultipleSelectField.php',
+        'Combodo\\iTop\\Form\\Field\\MultipleSelectObjectField' => __DIR__ . '/../..' . '/sources/Form/Field/MultipleSelectObjectField.php',
         'Combodo\\iTop\\Form\\Field\\PasswordField' => __DIR__ . '/../..' . '/sources/Form/Field/PasswordField.php',
         'Combodo\\iTop\\Form\\Field\\PhoneField' => __DIR__ . '/../..' . '/sources/Form/Field/PhoneField.php',
         'Combodo\\iTop\\Form\\Field\\RadioField' => __DIR__ . '/../..' . '/sources/Form/Field/RadioField.php',
@@ -814,7 +805,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Service\\Events\\EventServiceLog' => __DIR__ . '/../..' . '/sources/Service/Events/EventServiceLog.php',
         'Combodo\\iTop\\Service\\Events\\iEventServiceSetup' => __DIR__ . '/../..' . '/sources/Service/Events/iEventServiceSetup.php',
         'Combodo\\iTop\\Service\\Links\\LinkSetDataTransformer' => __DIR__ . '/../..' . '/sources/Service/Links/LinkSetDataTransformer.php',
-        'Combodo\\iTop\\Service\\Links\\LinkSetHelper' => __DIR__ . '/../..' . '/sources/Service/Links/LinkSetHelper.php',
         'Combodo\\iTop\\Service\\Links\\LinkSetModel' => __DIR__ . '/../..' . '/sources/Service/Links/LinkSetModel.php',
         'Combodo\\iTop\\Service\\Links\\LinkSetRepository' => __DIR__ . '/../..' . '/sources/Service/Links/LinkSetRepository.php',
         'Combodo\\iTop\\Service\\Links\\LinksBulkDataPostProcessor' => __DIR__ . '/../..' . '/sources/Service/Links/LinksBulkDataPostProcessor.php',
@@ -2067,17 +2057,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Bundle\\TwigBundle\\DependencyInjection\\TwigExtension' => __DIR__ . '/..' . '/symfony/twig-bundle/DependencyInjection/TwigExtension.php',
         'Symfony\\Bundle\\TwigBundle\\TemplateIterator' => __DIR__ . '/..' . '/symfony/twig-bundle/TemplateIterator.php',
         'Symfony\\Bundle\\TwigBundle\\TwigBundle' => __DIR__ . '/..' . '/symfony/twig-bundle/TwigBundle.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\Controller\\ExceptionPanelController' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/Controller/ExceptionPanelController.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\Controller\\ProfilerController' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/Controller/ProfilerController.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\Controller\\RouterController' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/Controller/RouterController.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\Csp\\ContentSecurityPolicyHandler' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/Csp/ContentSecurityPolicyHandler.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\Csp\\NonceGenerator' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/Csp/NonceGenerator.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\DependencyInjection\\Configuration' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/DependencyInjection/Configuration.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\DependencyInjection\\WebProfilerExtension' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/DependencyInjection/WebProfilerExtension.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\EventListener\\WebDebugToolbarListener' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/EventListener/WebDebugToolbarListener.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\Profiler\\TemplateManager' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/Profiler/TemplateManager.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/Twig/WebProfilerExtension.php',
-        'Symfony\\Bundle\\WebProfilerBundle\\WebProfilerBundle' => __DIR__ . '/..' . '/symfony/web-profiler-bundle/WebProfilerBundle.php',
         'Symfony\\Component\\Cache\\Adapter\\AbstractAdapter' => __DIR__ . '/..' . '/symfony/cache/Adapter/AbstractAdapter.php',
         'Symfony\\Component\\Cache\\Adapter\\AbstractTagAwareAdapter' => __DIR__ . '/..' . '/symfony/cache/Adapter/AbstractTagAwareAdapter.php',
         'Symfony\\Component\\Cache\\Adapter\\AdapterInterface' => __DIR__ . '/..' . '/symfony/cache/Adapter/AdapterInterface.php',
@@ -2897,10 +2876,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Component\\Routing\\RouteCompilerInterface' => __DIR__ . '/..' . '/symfony/routing/RouteCompilerInterface.php',
         'Symfony\\Component\\Routing\\Router' => __DIR__ . '/..' . '/symfony/routing/Router.php',
         'Symfony\\Component\\Routing\\RouterInterface' => __DIR__ . '/..' . '/symfony/routing/RouterInterface.php',
-        'Symfony\\Component\\Stopwatch\\Section' => __DIR__ . '/..' . '/symfony/stopwatch/Section.php',
-        'Symfony\\Component\\Stopwatch\\Stopwatch' => __DIR__ . '/..' . '/symfony/stopwatch/Stopwatch.php',
-        'Symfony\\Component\\Stopwatch\\StopwatchEvent' => __DIR__ . '/..' . '/symfony/stopwatch/StopwatchEvent.php',
-        'Symfony\\Component\\Stopwatch\\StopwatchPeriod' => __DIR__ . '/..' . '/symfony/stopwatch/StopwatchPeriod.php',
         'Symfony\\Component\\String\\AbstractString' => __DIR__ . '/..' . '/symfony/string/AbstractString.php',
         'Symfony\\Component\\String\\AbstractUnicodeString' => __DIR__ . '/..' . '/symfony/string/AbstractUnicodeString.php',
         'Symfony\\Component\\String\\ByteString' => __DIR__ . '/..' . '/symfony/string/ByteString.php',
@@ -3045,6 +3020,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'TCPDF_STATIC' => __DIR__ . '/..' . '/combodo/tcpdf/include/tcpdf_static.php',
         'TabManager' => __DIR__ . '/../..' . '/sources/Application/WebPage/TabManager.php',
         'TabularBulkExport' => __DIR__ . '/../..' . '/core/tabularbulkexport.class.inc.php',
+        'TagSet' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/TagSet.php',
         'TagSetFieldData' => __DIR__ . '/../..' . '/core/tagsetfield.class.inc.php',
         'TemplateMenuNode' => __DIR__ . '/../..' . '/application/menunode.class.inc.php',
         'TemplateString' => __DIR__ . '/../..' . '/core/templatestring.class.inc.php',

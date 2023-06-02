@@ -24,20 +24,6 @@ namespace Combodo\iTop\Form\Field;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class TagSetField extends SelectField
+class TagSetObjectField extends MultipleSelectObjectField
 {
-	/** @inheritDoc */
-	const DEFAULT_MULTIPLE_VALUES_ENABLED = true;
-	const DEFAULT_STARTS_WITH_NULL_CHOICE = false;
-
-	function SetCurrentValue($currentValue)
-	{
-		if ($currentValue != null) {
-			$this->currentValue = $currentValue;
-		} else {
-			$this->currentValue = "";
-		}
-
-		return $this;
-	}
 }

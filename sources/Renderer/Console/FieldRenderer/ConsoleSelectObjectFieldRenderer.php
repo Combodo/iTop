@@ -51,29 +51,27 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 		$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
 		$oBlock->AddDataAttribute("input-id", $this->oField->GetGlobalId());
 
+		$sFieldClass = get_class($this->oField);
+		\IssueLog::Error($this->oField->GetLabel().':render select multi:'.$sFieldClass);
 		$sEditType = 'none';
-		if ($this->oField->GetReadOnly())
-		{
-			$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\readonly");
+		if ($this->oField->GetReadOnly()) {
+			$oBlock->AddDataAttribute("input-type", "Combodo\\iTop\\Form\\Field\\SelectObjectField\readonly");
 			$oSearch = $this->oField->GetSearch()->DeepClone();
 			$oSearch->AddCondition('id', $this->oField->GetCurrentValue());
 			$oSet = new DBObjectSet($oSearch);
 			$oObject = $oSet->Fetch();
-			if ($oObject)
-			{
+			if ($oObject) {
 				$sCurrentLabel = $oObject->Get('friendlyname');
-			}
-			else
-			{
+			} else {
 				$sCurrentLabel = '';
 			}
 			$oValue = UIContentBlockUIBlockFactory::MakeStandard();
-			$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+			$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", $this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 			$oValue->AddSubBlock(new Html($sCurrentLabel));
 			$oBlock->SetValue($oValue);
-		}
-		else
-		{
+		} else {
+
+
 			$oSearch = $this->oField->GetSearch()->DeepClone();
 			$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 
@@ -86,110 +84,267 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 
 			$iMaxComboLength = $this->oField->GetMaximumComboLength();
 			$iCount = $oAllowedValues->Count();
-			if ($iCount > $iMaxComboLength)
-			{
-				// Auto-complete
-				//
-				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Autocomplete");
-				$sEditType = 'autocomplete';
-				$aExtKeyParams = array();
-				$aExtKeyParams['iFieldSize'] = 10;
-				$aExtKeyParams['iMinChars'] = $this->oField->GetMinAutoCompleteChars();
-				$sFieldName = $this->oField->GetGlobalId();
-				$sFieldId = $sFieldName;
-				$sFormPrefix = '';
-				$oWidget = new UIExtKeyWidget($sTargetClass, $sFieldId, '', true);
-				$aArgs = array();
-				$sTitle = $this->oField->GetLabel();
 
-				$oPage = new CaptureWebPage();
-				$sHTMLValue = $oWidget->DisplaySelect($oPage, $iMaxComboLength, false /* $bAllowTargetCreation */, $sTitle, $oSet, $this->oField->GetCurrentValue(), $this->oField->GetMandatory(), $sFieldName, $sFormPrefix, $aArgs);
-				$oValue = UIContentBlockUIBlockFactory::MakeStandard();
-				$oValue->AddSubBlock(new Html($sHTMLValue));
-				$oValue->AddSubBlock(new Html($oPage->GetHtml()));
-				$oBlock->AddSubBlock($oValue);
+			switch ($sFieldClass) {
+				case 'Combodo\\iTop\\Form\\Field\\MultipleSelectObjectField':
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content"]);
+					$bVertical = true;
+					$idx = 0;
+					$aValues = $this->oField->GetCurrentValue();
+					$sId = $this->oField->GetGlobalId();
 
-				$oOutput->AddJs($oPage->GetJS());
-				$oOutput->AddJs($oPage->GetReadyJS());
-				foreach ($oPage->GetCSS() as $sCss)
-				{
-					$oOutput->AddCss($sCss);
-				}
-				foreach ($oPage->GetJSFiles() as $sFile)
-				{
-					$oOutput->AddJsFile($sFile);
-				}
-				foreach ($oPage->GetCSSFiles() as $sFile)
-				{
-					$oOutput->AddCssFile($sFile);
-				}
-				$oOutput->AddJs(
-				<<<EOF
-	                    $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
-                    	var me = this;
+					// N°4792 - load only the required fields
+					$aFieldsToLoad = [];
 
-                        $(this).closest(".field_set").trigger("field_change", {
-                            id: $(me).attr("id"),
-                            name: $(me).closest(".form_field").attr("data-field-id"),
-                            value: $(me).val()
-                        })
-                        .closest('.form_handler').trigger('value_change');
-                    });
+					$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
+					$sFormatAdditionalField = $aComplementAttributeSpec[0];
+					$aAdditionalField = $aComplementAttributeSpec[1];
+					$bAddingValue = false;
+
+					if (count($aAdditionalField) > 0) {
+						$sClassAllowed = $oAllowedValues->GetClass();
+						$bAddingValue = true;
+						$aFieldsToLoad[$sClassAllowed] = $aAdditionalField;
+					}
+					$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+					if (!empty($sObjectImageAttCode)) {
+						$aFieldsToLoad[$sClassAllowed][] = $sObjectImageAttCode;
+					}
+					$aFieldsToLoad[$sClassAllowed][] = 'friendlyname';
+					$oAllowedValues->OptimizeColumnLoad($aFieldsToLoad);
+					$bInitValue = false;
+					while ($oObj = $oAllowedValues->Fetch()) {
+						/*$aOption = [];
+						$aOption['value'] = $oObj->GetKey();
+						$aOption['label'] = $oObj->GetName();
+						$aOption['search_label'] = utils::HtmlEntityDecode($oObj->GetName());
+
+						if ($oObj->IsObsolete()) {
+							$aOption['obsolescence_flag'] = "1";
+						}
+						if ($bAddingValue) {
+							$aArguments = [];
+							foreach ($aAdditionalField as $sAdditionalField) {
+								array_push($aArguments, $oObj->Get($sAdditionalField));
+							}
+							$aOption['additional_field'] = utils::HtmlEntities(vsprintf($sFormatAdditionalField, $aArguments));
+						}
+						if (!empty($sObjectImageAttCode)) {
+							// Try to retrieve image for contact
+							// @var \ormDocument $oImage
+							$oImage = $oObj->Get($sObjectImageAttCode);
+							if (!$oImage->IsEmpty()) {
+								$aOption['picture_url'] = $oImage->GetDisplayURL($sClassAllowed, $oObj->GetKey(), $sObjectImageAttCode);
+								$aOption['initials'] = '';
+							} else {
+								$aOption['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oObj->Get('friendlyname')));
+							}
+						}*/
+						$sLabel = $oObj->GetName();
+						$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "checkbox_".$sId, $oObj->GetKey(), "{$sId}", "checkbox");
+						if (in_array($oObj->GetKey(), $aValues, true)) {
+							$oCheckBox->GetInput()->SetIsChecked(true);
+						}
+						$oCheckBox->SetBeforeInput(false);
+						$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
+						$oValue->AddSubBlock($oCheckBox);
+						if ($bVertical) {
+							$oValue->AddSubBlock(new Html("<br>"));
+						}
+						$oOutput->AddJs(
+							<<<EOF
+	                    $("#{$sId}_{$idx}").off("change").on("change", function(){
+	                        $('#{$sId}').val(this.value).trigger('change');
+	                    });
 EOF
-				);
-			}
-			elseif($this->oField->GetControlType() == SelectObjectField::CONTROL_RADIO_VERTICAL)
-			{
-				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Radio");
-				// Radio buttons (vertical)
-				//
-				$sEditType = 'radio';
-				$bVertical = true;
-				$idx = 0;
-				$bMandatory = $this->oField->GetMandatory();
-				$value = $this->oField->GetCurrentValue();
-				$sId = $this->oField->GetGlobalId();
-
-				$oValue = UIContentBlockUIBlockFactory::MakeStandard();
-
-				while ($oObject = $oSet->Fetch())
-				{
-					$iObject = $oObject->GetKey();
-					$sLabel = $oObject->Get('friendlyname');
-					if (($iCount == 1) && $bMandatory)
-					{
-						// When there is only once choice, select it by default
-						$sSelected = 'checked';
-                        $value = $iObject;
+						);
+						$idx++;
 					}
-					else
-					{
-						$sSelected = ($value == $iObject) ? 'checked' : '';
+					$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("", json_encode($aValues), $sId));
+					$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
+					$oBlock->AddSubBlock($oValue);
+					break;
+				case 'Combodo\\iTop\\Form\\Field\\TagSetObjectField':
+					/** @var \ormSet $value code qui vient des tagset
+					 * $sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
+					 * $sEscapedJson = utils::EscapeHtml($sJson);
+					 * $sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
+					 *
+					 * // handle form validation
+					 * $aEventsList[] = 'change';
+					 * $aEventsList[] = 'validate';
+					 * $sNullValue = '';
+					 * $sFieldToValidateId = $sFieldToValidateId.AttributeSet::EDITABLE_INPUT_ID_SUFFIX;
+					 *
+					 * // generate form HTML output
+					 * $sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$sFieldToValidateId}\"></span>";
+					 * $sHTMLValue = '<div class="field_input_zone field_input_set ibo-input-wrapper ibo-input-tagset-wrapper" data-validation="untouched"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
+					 * $sScript = "$('#$iId').set_widget({inputWidgetIdSuffix: '".AttributeSet::EDITABLE_INPUT_ID_SUFFIX."'});";
+					 * $oPage->add_ready_script($sScript);*/
+
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content"]);
+					$bVertical = true;
+					$idx = 0;
+					$aValues = $this->oField->GetCurrentValue();
+					$sId = $this->oField->GetGlobalId();
+
+					// N°4792 - load only the required fields
+					$aFieldsToLoad = [];
+
+					$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
+					$sFormatAdditionalField = $aComplementAttributeSpec[0];
+					$aAdditionalField = $aComplementAttributeSpec[1];
+					$bAddingValue = false;
+
+					if (count($aAdditionalField) > 0) {
+						$sClassAllowed = $oAllowedValues->GetClass();
+						$bAddingValue = true;
+						$aFieldsToLoad[$sClassAllowed] = $aAdditionalField;
 					}
-					$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_$sId", $iObject, "{$sId}_{$iObject}", "radio");
-					$oRadioCustom->AddCSSClass('ibo-input-field-wrapper');
-					$oRadioCustom->GetInput()->SetIsChecked($sSelected);
-					$oRadioCustom->SetBeforeInput(false);
-					$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
-					$oValue->AddSubBlock($oRadioCustom);
+					$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+					if (!empty($sObjectImageAttCode)) {
+						$aFieldsToLoad[$sClassAllowed][] = $sObjectImageAttCode;
+					}
+					$aFieldsToLoad[$sClassAllowed][] = 'friendlyname';
+					$oAllowedValues->OptimizeColumnLoad($aFieldsToLoad);
+
+					$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel($this->oField->GetLabel(), $this->oField->GetDescription(), $this->oField->GetGlobalId());
+					while ($oObj = $oAllowedValues->Fetch()) {
+						$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
+							$oObj->GetKey(),
+							$oObj->GetName(),
+							in_array($oObj->GetKey(), $aValues, true))
+						);
+					}
 					$oOutput->AddJs(
-						<<<EOF
+						<<<JS
+					$oOutput->AddJs(
+						<<<JS
+							 $("#{$this->oField->GetGlobalId()}").selectize({
+							    sortField: 'text',
+							    onChange: function(value){
+							    
+							                  console.warn('chane');
+							                  var me = this.\$input;
+							                  me.trigger("field_change", {
+							                            id: me.attr("id"),
+							                            name: me.closest(".form_field").attr("data-field-id"),
+							                            value: me.val()
+							                        })
+							                        .closest('.form_handler').trigger('value_change');
+							    },
+								inputClass: 'ibo-input-vanilla ibo-input ibo-input-selectize',	
+							});
+							 $("#{$this->oField->GetGlobalId()}").closest('div').addClass('ibo-input-select-wrapper--with-buttons');
+							  $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
+		                        var me = this;
+		
+		                        $(this).closest(".field_set").trigger("field_change", {
+		                            id: $(me).attr("id"),
+		                            name: $(me).closest(".form_field").attr("data-field-id"),
+		                            value: $(me).val()
+		                        })
+		                        .closest('.form_handler').trigger('value_change');
+		                    });
+JS
+					);
+
+
+					$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
+					$oBlock->AddSubBlock($oValue);
+					break;
+				default:
+					if ($iCount > $iMaxComboLength) {
+
+						// Auto-complete
+						//
+						$oBlock->AddDataAttribute("input-type", "Combodo\\iTop\\Form\\Field\\SelectObjectField\\Autocomplete");
+						$sEditType = 'autocomplete';
+						$sFieldName = $this->oField->GetGlobalId();
+						$sFieldId = $sFieldName;
+						$sFormPrefix = '';
+						$oWidget = new UIExtKeyWidget($sTargetClass, $sFieldId, '', true);
+						$aArgs = array();
+						$sTitle = $this->oField->GetLabel();
+
+						$oPage = new CaptureWebPage();
+						$sHTMLValue = $oWidget->DisplaySelect($oPage, $iMaxComboLength, false /* $bAllowTargetCreation */, $sTitle, $oSet, $this->oField->GetCurrentValue(), $this->oField->GetMandatory(), $sFieldName, $sFormPrefix, $aArgs);
+						$oValue = UIContentBlockUIBlockFactory::MakeStandard();
+						$oValue->AddSubBlock(new Html($sHTMLValue));
+						$oValue->AddSubBlock(new Html($oPage->GetHtml()));
+						$oBlock->AddSubBlock($oValue);
+
+						$oOutput->AddJs($oPage->GetJS());
+						$oOutput->AddJs($oPage->GetReadyJS());
+						foreach ($oPage->GetCSS() as $sCss) {
+							$oOutput->AddCss($sCss);
+						}
+						foreach ($oPage->GetJSFiles() as $sFile) {
+							$oOutput->AddJsFile($sFile);
+						}
+						foreach ($oPage->GetCSSFiles() as $sFile) {
+							$oOutput->AddCssFile($sFile);
+						}
+						$oOutput->AddJs(
+							<<<EOF
+					                    $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
+				                        var me = this;
+				
+				                        $(this).closest(".field_set").trigger("field_change", {
+				                            id: $(me).attr("id"),
+				                            name: $(me).closest(".form_field").attr("data-field-id"),
+				                            value: $(me).val()
+				                        })
+				                        .closest('.form_handler').trigger('value_change');
+				                    });
+				EOF
+						);
+					} elseif ($this->oField->GetControlType() == SelectObjectField::CONTROL_RADIO_VERTICAL) {
+						$oBlock->AddDataAttribute("input-type", "Combodo\\iTop\\Form\\Field\\SelectObjectField\\Radio");
+						// Radio buttons (vertical)
+						//
+						$sEditType = 'radio';
+						$bVertical = true;
+						$idx = 0;
+						$bMandatory = $this->oField->GetMandatory();
+						$value = $this->oField->GetCurrentValue();
+						$sId = $this->oField->GetGlobalId();
+
+						$oValue = UIContentBlockUIBlockFactory::MakeStandard();
+
+						while ($oObject = $oSet->Fetch()) {
+							$iObject = $oObject->GetKey();
+							$sLabel = $oObject->Get('friendlyname');
+							if (($iCount == 1) && $bMandatory) {
+								// When there is only once choice, select it by default
+								$sSelected = 'checked';
+								$value = $iObject;
+							} else {
+								$sSelected = ($value == $iObject) ? 'checked' : '';
+							}
+							$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_$sId", $iObject, "{$sId}_{$iObject}", "radio");
+							$oRadioCustom->AddCSSClass('ibo-input-field-wrapper');
+							$oRadioCustom->GetInput()->SetIsChecked($sSelected);
+							$oRadioCustom->SetBeforeInput(false);
+							$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
+							$oValue->AddSubBlock($oRadioCustom);
+							$oOutput->AddJs(
+								<<<EOF
 	                    $("#{$sId}_{$iObject}").off("change").on("change", function(){
 	                        $('#{$sId}').val(this.value).trigger('change');
 	                    });
 EOF
-					);
-					if ($bVertical)
-					{
-						$oValue->AddSubBlock(new Html("<br>"));
-					}
-					$idx++;
-				}
-				$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden($sId,$value,$sId));
-				$oBlock->AddSubBlock($oValue);
-				$oBlock->AddSubBlock(new Html('<span class="form_validation"></span>'));
-				$oOutput->AddJs(
-					<<<EOF
+							);
+							if ($bVertical) {
+								$oValue->AddSubBlock(new Html("<br>"));
+							}
+							$idx++;
+						}
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden($sId, $value, $sId));
+						$oBlock->AddSubBlock($oValue);
+						$oBlock->AddSubBlock(new Html('<span class="form_validation"></span>'));
+						$oOutput->AddJs(
+							<<<EOF
 	                    $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
                     	var me = this;
 
@@ -201,28 +356,25 @@ EOF
                         .closest('.form_handler').trigger('value_change');
                     });
 EOF
-				);
-			}
-			else
-			{
-				// Drop-down select
-				//
-				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Select");
-				$sEditType = 'select';
-				$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
-				$oSelect->AddCSSClass('ibo-input-select-placeholder');
-				$oBlock->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard(null,['ibo-input-field-wrapper'])->AddSubBlock($oSelect));
-				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('',Dict::S('UI:SelectOne'), false ));
-				while ($oObject = $oSet->Fetch())
-				{
-					$iObject = $oObject->GetKey();
-					$sLabel = $oObject->Get('friendlyname');
-					// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iObject,$sLabel, ($this->oField->GetCurrentValue() == $iObject)));
-				}
-				$oBlock->AddSubBlock(new Html('<span class="form_validation"></span>'));
-				$oOutput->AddJs(
-					<<<JS
+						);
+					} else {
+						// Drop-down select
+						//
+						$oBlock->AddDataAttribute("input-type", "Combodo\\iTop\\Form\\Field\\SelectObjectField\\Select");
+						$sEditType = 'select';
+						$oSelect = SelectUIBlockFactory::MakeForSelect("", $this->oField->GetGlobalId());
+						$oSelect->AddCSSClass('ibo-input-select-placeholder');
+						$oBlock->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard(null, ['ibo-input-field-wrapper'])->AddSubBlock($oSelect));
+						$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('', Dict::S('UI:SelectOne'), false));
+						while ($oObject = $oSet->Fetch()) {
+							$iObject = $oObject->GetKey();
+							$sLabel = $oObject->Get('friendlyname');
+							// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
+							$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iObject, $sLabel, ($this->oField->GetCurrentValue() == $iObject)));
+						}
+						$oBlock->AddSubBlock(new Html('<span class="form_validation"></span>'));
+						$oOutput->AddJs(
+							<<<JS
  $("#{$this->oField->GetGlobalId()}").selectize({
     sortField: 'text',
     onChange: function(value){
@@ -238,28 +390,26 @@ EOF
 });
  $("#{$this->oField->GetGlobalId()}").closest('div').addClass('ibo-input-select-wrapper--with-buttons');
 JS
+						);
+					}
+			}
+
+			$oOutput->AddHtml((BlockRenderer::RenderBlockTemplates($oBlock)));
+			// JS Form field widget construct
+			$aValidators = array();
+			foreach ($this->oField->GetValidators() as $oValidator) {
+				if ($oValidator::GetName() == 'notemptyextkey') {
+					// The autocomplete widget returns an empty string if the value is undefined (and the select has been aligned with this behavior)
+					$oValidator = new MandatoryValidator();
+				}
+				$aValidators[$oValidator::GetName()] = array(
+					'reg_exp' => $oValidator->GetRegExp(),
+					'message' => Dict::S($oValidator->GetErrorMessage()),
 				);
 			}
-		}
-
-		$oOutput->AddHtml((BlockRenderer::RenderBlockTemplates($oBlock)));
-		// JS Form field widget construct
-		$aValidators = array();
-		foreach ($this->oField->GetValidators() as $oValidator)
-		{
-			if ($oValidator::GetName() == 'notemptyextkey')
-			{
-				// The autocomplete widget returns an empty string if the value is undefined (and the select has been aligned with this behavior)
-				$oValidator = new MandatoryValidator();
-			}
-			$aValidators[$oValidator::GetName()] = array(
-				'reg_exp' => $oValidator->GetRegExp(),
-				'message' => Dict::S($oValidator->GetErrorMessage())
-			);
-		}
-		$sValidators = json_encode($aValidators);
-		$sFormFieldOptions =
-<<<EOF
+			$sValidators = json_encode($aValidators);
+			$sFormFieldOptions =
+				<<<EOF
 {
 	validators: $sValidators,
 	on_validation_callback: function(me, oResult) {
@@ -279,14 +429,14 @@ JS
 		}
 	}
 }
-EOF
-			;
+EOF;
 
-		$oOutput->AddJs(
-			<<<EOF
+			$oOutput->AddJs(
+				<<<EOF
                     $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field($sFormFieldOptions);
 EOF
-		);
+			);
+		}
 		switch ($sEditType)
 		{
 			case 'autocomplete':
