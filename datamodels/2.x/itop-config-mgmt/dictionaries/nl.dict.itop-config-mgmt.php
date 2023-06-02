@@ -16,15 +16,11 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @author	LinProfs <info@linprofs.com>
- * 
- * Linux & Open Source Professionals
- * http://www.linprofs.com
- *
- * @author Hipska (2018, 2019)
+ * @author LinProfs <info@linprofs.com>
+ * @author Thomas Casteleyn <info@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
