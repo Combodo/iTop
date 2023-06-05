@@ -29,6 +29,7 @@ use BinaryExpression;
 use Combodo\iTop\Portal\Brick\CreateBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
+use Combodo\iTop\Renderer\Bootstrap\FieldRenderer\BsLinkedSetFieldRenderer;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
@@ -1312,14 +1313,20 @@ class ObjectController extends BrickController
 		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 		$oScopeValidator = $this->get('scope_validator');
 
-		$aData = array();
+		// Data array
+		$aData = array(
+			'js_inline'  => '',
+			'css_inline' => '',
+		);
 
 		// Retrieving parameters
 		$sObjectClass = $oRequestManipulator->ReadParam('sObjectClass', '');
+		$sLinkClass = $oRequestManipulator->ReadParam('sLinkClass', '');
 		$aObjectIds = $oRequestManipulator->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW);
 		$aObjectAttCodes = $oRequestManipulator->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW);
-		if (empty($sObjectClass) || empty($aObjectIds) || empty($aObjectAttCodes))
-		{
+		$aLinkAttCodes = $oRequestManipulator->ReadParam('aLinkAttCodes', array(), FILTER_UNSAFE_RAW);
+
+		if (empty($sObjectClass) || empty($aObjectIds) || empty($aObjectAttCodes)) {
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass, aObjectIds and aObjectAttCodes expected, "'.$sObjectClass.'", "'.implode('/',
 					$aObjectIds).'" given.');
 			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid request data, some information are missing');
@@ -1338,15 +1345,35 @@ class ObjectController extends BrickController
 
 		// Checking that id is in the AttCodes
 		// Note: We do that AFTER the array is used in OptimizeColumnLoad() because the function doesn't support this anymore.
-		if (!in_array('id', $aObjectAttCodes))
-		{
+		if (!in_array('id', $aObjectAttCodes)) {
 			$aObjectAttCodes = array_merge(array('id'), $aObjectAttCodes);
 		}
 
 		// Retrieving objects
-		while ($oObject = $oSet->Fetch())
-		{
-			$aData['items'][] = $this->PrepareObjectInformation($oObject, $aObjectAttCodes);
+		while ($oObject = $oSet->Fetch()) {
+			// Prepare link data
+			$aObjectData = $this->PrepareObjectInformation($oObject, $aObjectAttCodes);
+			// New link object (needed for renderers)
+			$oNewLink = new $sLinkClass();
+			foreach ($aLinkAttCodes as $sAttCode) {
+				$oAttDef = MetaModel::GetAttributeDef($sLinkClass, $sAttCode);
+				$oField = $oAttDef->MakeFormField($oNewLink);
+				$sFieldRendererClass = BsLinkedSetFieldRenderer::GetFieldRendererClass($oField);
+				$sValue = $oAttDef->GetAsHTML($oNewLink->Get($sAttCode));
+				if ($sFieldRendererClass !== null) {
+					$oFieldRenderer = new $sFieldRendererClass($oField);
+					$oFieldOutput = $oFieldRenderer->Render();
+					$sValue = $oFieldOutput->GetHtml();
+				}
+				$aObjectData['attributes'][$sAttCode] = [
+					'att_code'   => $sAttCode,
+					'value'      => $sValue,
+					'css_inline' => $oFieldOutput->GetCss(),
+					'js_inline'  => $oFieldOutput->GetJs(),
+				];
+			}
+
+			$aData['items'][] = $aObjectData;
 		}
 
 		return new JsonResponse($aData);
@@ -1356,7 +1383,7 @@ class ObjectController extends BrickController
 	 * Prepare a DBObject information as an array for a client side usage (typically, add a row in a table)
 	 *
 	 * @param \DBObject $oObject
-	 * @param array     $aAttCodes
+	 * @param array $aAttCodes
 	 *
 	 * @return array
 	 *
@@ -1372,8 +1399,8 @@ class ObjectController extends BrickController
 
 		$sObjectClass = get_class($oObject);
 		$aObjectData = array(
-			'id' => $oObject->GetKey(),
-			'name' => $oObject->GetName(),
+			'id'         => $oObject->GetKey(),
+			'name'       => $oObject->GetName(),
 			'attributes' => array(),
 		);
 

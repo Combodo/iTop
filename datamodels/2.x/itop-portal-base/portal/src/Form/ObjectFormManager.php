@@ -44,6 +44,7 @@ use Exception;
 use ExceptionLog;
 use InlineImage;
 use IssueLog;
+use LogChannels;
 use MetaModel;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -859,7 +860,10 @@ class ObjectFormManager extends FormManager
 						foreach ($aAttCodesToDisplay as $sAttCodeToDisplay)
 						{
 							$oAttDefToDisplay = MetaModel::GetAttributeDef($oField->GetTargetClass(), $sAttCodeToDisplay);
-							$aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
+							$aAttributesToDisplay[$sAttCodeToDisplay] = [
+								'label'     => $oAttDefToDisplay->GetLabel(),
+								'mandatory' => !$oAttDefToDisplay->IsNullAllowed(),
+							];
 						}
 						$oField->SetAttributesToDisplay($aAttributesToDisplay);
 					}
@@ -869,7 +873,7 @@ class ObjectFormManager extends FormManager
 
 						/** @var \ormLinkSet $oFieldOriginalSet */
 						$oFieldOriginalSet = $oField->GetCurrentValue();
-						while ($oLink = $oFieldOriginalSet->Fetch()) {
+						foreach ($oFieldOriginalSet as $oLink) {
 							if ($oField->IsIndirect()) {
 								$iRemoteKey = $oLink->Get($oAttDef->GetExtKeyToRemote());
 							} else {
@@ -1099,7 +1103,7 @@ class ObjectFormManager extends FormManager
 	{
 		$aData = parent::OnSubmit($aArgs);
 
-		if (! $aData['valid']) {
+		if (!$aData['valid']) {
 			return $aData;
 		}
 
@@ -1282,6 +1286,15 @@ class ObjectFormManager extends FormManager
 										$oLink = MetaModel::NewObject($sLinkedClass);
 										$oLink->Set($oAttDef->GetExtKeyToRemote(), $iObjKey);
 										$oLink->Set($oAttDef->GetExtKeyToMe(), $this->oObject->GetKey());
+										// Set link attributes values...
+										foreach ($aObjdata as $sLinkAttCode => $oAttValue) {
+											if (!is_scalar($oAttValue)) {
+												IssueLog::Debug("ObjectFormManager::OnUpdate invalid link attribute value, $sLinkAttCode is not a scalar value", LogChannels::PORTAL);
+												continue;
+											}
+											$oLink->Set($sLinkAttCode, $oAttValue);
+										}
+										$oLinkSet->AddItem($oLink);
 									}
 									// ... or adding remote object when linkset id direct
 									else
@@ -1290,15 +1303,36 @@ class ObjectFormManager extends FormManager
 										$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false, true);
 									}
 
-									if ($oLink !== null)
-									{
+									if ($oLink !== null) {
 										$oLinkSet->AddItem($oLink);
 									}
 								}
 							}
 
 							// Checking links to modify
-							// TODO: Not implemented yet as we can't change lnk properties in the portal
+							if ($oAttDef->IsIndirect() && isset($value['current'])) {
+								foreach ($value['current'] as $iObjKey => $aObjData) {
+									if ($iObjKey < 0) {
+										continue;
+									}
+									$oLink = null;
+									$oLinkSet->Rewind();
+									foreach ($oLinkSet as $oItem) {
+										if ($oItem->Get('id') != $iObjKey) {
+											continue;
+										}
+										$oLink = $oItem;
+										foreach ($aObjData as $sLinkAttCode => $oAttValue) {
+											if (!is_scalar($oAttValue)) {
+												IssueLog::Debug("ObjectFormManager::OnUpdate invalid link attribute value, $sLinkAttCode is not a scalar value", LogChannels::PORTAL);
+												continue;
+											}
+											$oLink->Set($sLinkAttCode, $oAttValue);
+										}
+										$oLinkSet->ModifyItem($oLink);
+									}
+								}
+							}
 
 							// Setting value in the object
 							$this->oObject->Set($sAttCode, $oLinkSet);

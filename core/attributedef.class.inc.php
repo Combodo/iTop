@@ -2385,43 +2385,59 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		if ($oFormField === null)
 		{
-            $sFormFieldClass = static::GetFormFieldClass();
-            $oFormField = new $sFormFieldClass($this->GetCode());
-        }
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
 
-        // Setting target class
+		// Setting target class
 		if (!$this->IsIndirect()) {
-            $sTargetClass = $this->GetLinkedClass();
-        } else {
-            /** @var \AttributeExternalKey $oRemoteAttDef */
-            /** @var \AttributeLinkedSetIndirect $this */
-            $oRemoteAttDef = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
-            $sTargetClass = $oRemoteAttDef->GetTargetClass();
+			$sTargetClass = $this->GetLinkedClass();
+		} else {
+			/** @var \AttributeExternalKey $oRemoteAttDef */
+			/** @var \AttributeLinkedSetIndirect $this */
+			$oRemoteAttDef = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
+			$sTargetClass = $oRemoteAttDef->GetTargetClass();
 
-            /** @var \AttributeLinkedSetIndirect $this */
-            $oFormField->SetExtKeyToRemote($this->GetExtKeyToRemote());
-        }
-        $oFormField->SetTargetClass($sTargetClass);
-        $oFormField->SetIndirect($this->IsIndirect());
-        // Setting attcodes to display
-        $aAttCodesToDisplay = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetClass, 'list'));
-        // - Adding friendlyname attribute to the list is not already in it
-        $sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetClass);
-        if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay)) {
-            $aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
-        }
-        // - Adding attribute labels
-        $aAttributesToDisplay = array();
-        foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
-            $oAttDefToDisplay = MetaModel::GetAttributeDef($sTargetClass, $sAttCodeToDisplay);
-            $aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
-        }
-        $oFormField->SetAttributesToDisplay($aAttributesToDisplay);
+			/** @var \AttributeLinkedSetIndirect $this */
+			$oFormField->SetExtKeyToRemote($this->GetExtKeyToRemote());
+		}
+		$oFormField->SetTargetClass($sTargetClass);
+		$oFormField->SetLinkedClass($this->GetLinkedClass());
+		$oFormField->SetIndirect($this->IsIndirect());
+		// Setting attcodes to display
+		$aAttCodesToDisplay = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetClass, 'list'));
+		// - Adding friendlyname attribute to the list is not already in it
+		$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetClass);
+		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay)) {
+			$aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
+		}
+		// - Adding attribute properties
+		$aAttributesToDisplay = array();
+		foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
+			$oAttDefToDisplay = MetaModel::GetAttributeDef($sTargetClass, $sAttCodeToDisplay);
+			$aAttributesToDisplay[$sAttCodeToDisplay] = [
+				'label'     => $oAttDefToDisplay->GetLabel(),
+				'mandatory' => !$oAttDefToDisplay->IsNullAllowed(),
+			];
+		}
+		$oFormField->SetAttributesToDisplay($aAttributesToDisplay);
 
-        parent::MakeFormField($oObject, $oFormField);
+		// Append lnk attributes (filtered from zlist)
+		$aLnkAttDefToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($this->m_sHostClass, $this->m_sCode);
+		$aLnkAttributesToDisplay = array();
+		foreach ($aLnkAttDefToDisplay as $oLnkAttDefToDisplay) {
+			$aLnkAttributesToDisplay[$oLnkAttDefToDisplay->GetCode()] = [
+				'sortable'  => false,
+				'label'     => $oLnkAttDefToDisplay->GetLabel(),
+				'mandatory' => !$oLnkAttDefToDisplay->IsNullAllowed(),
+			];
+		}
+		$oFormField->SetLnkAttributesToDisplay($aLnkAttributesToDisplay);
 
-        return $oFormField;
-    }
+		parent::MakeFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
 
     public function IsPartOfFingerprint()
     {
