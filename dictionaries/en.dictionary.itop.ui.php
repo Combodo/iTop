@@ -20,22 +20,23 @@
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:AuditCategory' => 'Audit Category',
-	'Class:AuditCategory+' => 'A section inside the overall audit',
-	'Class:AuditCategory/Attribute:name' => 'Category Name',
-	'Class:AuditCategory/Attribute:name+' => 'Short name for this category',
-	'Class:AuditCategory/Attribute:description' => 'Audit Category Description',
-	'Class:AuditCategory/Attribute:description+' => 'Long description for this audit category',
-	'Class:AuditCategory/Attribute:definition_set' => 'Definition Set',
-	'Class:AuditCategory/Attribute:definition_set+' => 'OQL expression defining the set of objects to audit',
-	'Class:AuditCategory/Attribute:rules_list' => 'Audit Rules',
-	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category',
-	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Error tolerance (OK)',
-	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Allowed percentage of invalid objects at which the result is still displayed as OK (green)',
-	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error tolerance (warning)',
-	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Allowed percentage of invalid objects at which the result is still displayed as a warning (orange)',
-	'Class:AuditCategory/Attribute:domains_list' => 'Domains',
-	'Class:AuditCategory/Attribute:domains_list+' => 'List of domains linked to this category',
+	'Class:AuditCategory'                                    => 'Audit Category',
+	'Class:AuditCategory+'                                   => 'Audit category defines a scope of objects which needs to be audited.
+It groups all audit rules applying to that object scope',
+	'Class:AuditCategory/Attribute:name'                     => 'Category Name',
+	'Class:AuditCategory/Attribute:name+'                    => 'Identify a scope of objects to audit',
+	'Class:AuditCategory/Attribute:description'              => 'Description',
+	'Class:AuditCategory/Attribute:description+'             => 'Long description for this audit category',
+	'Class:AuditCategory/Attribute:definition_set'           => 'Object scope',
+	'Class:AuditCategory/Attribute:definition_set+'          => 'OQL query defining the set of objects to audit',
+	'Class:AuditCategory/Attribute:rules_list'               => 'Audit rules',
+	'Class:AuditCategory/Attribute:rules_list+'              => 'Audit rules using the object scope of this category',
+	'Class:AuditCategory/Attribute:ok_error_tolerance'       => 'Warning threshold',
+	'Class:AuditCategory/Attribute:ok_error_tolerance+'      => 'Percentage of invalid objects below which the result is a warning (orange)',
+	'Class:AuditCategory/Attribute:warning_error_tolerance'  => 'Error threshold',
+	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)',
+	'Class:AuditCategory/Attribute:domains_list'             => 'Domains',
+	'Class:AuditCategory/Attribute:domains_list+'            => 'Domains which includes this category',
 ));
 
 //
@@ -43,27 +44,27 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:AuditRule' => 'Audit Rule',
-	'Class:AuditRule+' => 'A rule to check for a given Audit category',
-	'Class:AuditRule/Attribute:name' => 'Rule Name',
-	'Class:AuditRule/Attribute:name+' => 'Short name for this rule',
-	'Class:AuditRule/Attribute:description' => 'Audit Rule Description',
-	'Class:AuditRule/Attribute:description+' => 'Long description for this audit rule',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code',
-	'Class:AuditRule/Attribute:query' => 'Query to Run',
-	'Class:AuditRule/Attribute:query+' => 'The OQL expression to run',
-	'Class:AuditRule/Attribute:valid_flag' => 'Valid objects?',
-	'Class:AuditRule/Attribute:valid_flag+' => 'True if the rule returns the valid objects, false otherwise',
-	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'true',
-	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'false',
-	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'false',
-	'Class:AuditRule/Attribute:category_id' => 'Category',
-	'Class:AuditRule/Attribute:category_id+' => 'The category for this rule',
-	'Class:AuditRule/Attribute:category_name' => 'Category',
-	'Class:AuditRule/Attribute:category_name+' => 'Name of the category for this rule',
+	'Class:AuditRule'                                   => 'Audit Rule',
+	'Class:AuditRule+'                                  => 'An audit rule corresponds a single check within an audit category.
+It is applied on the scope of objects defined by the audit category',
+	'Class:AuditRule/Attribute:name'                    => 'Rule name',
+	'Class:AuditRule/Attribute:name+'                   => 'Short name for this rule',
+	'Class:AuditRule/Attribute:description'             => 'Description',
+	'Class:AuditRule/Attribute:description+'            => 'What is checked? How should it be fixed? Who should do it? ...',
+	'Class:AuditRule/Attribute:query'                   => 'Query to run',
+	'Class:AuditRule/Attribute:query+'                  => 'The OQL expression to run. Returned classes must be aligned with those of the category\'s scope',
+	'Class:AuditRule/Attribute:valid_flag'              => 'Returned objects: ',
+	'Class:AuditRule/Attribute:valid_flag+'             => 'Does the query to run returns valid or invalid objects?
+"Valid objects": then objects in error are those part of the scope and not in the list of valid objects,
+"Invalid objects": then objects in error are the invalid objects which are part of the scope',
+	'Class:AuditRule/Attribute:valid_flag/Value:true'   => 'Valid objects',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+'  => 'Then objects in error are those part of the scope and not in the list of valid objects',
+	'Class:AuditRule/Attribute:valid_flag/Value:false'  => 'Invalid objects',
+	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'Then objects in error are the invalid objects which are part of the scope',
+	'Class:AuditRule/Attribute:category_id'             => 'Category',
+	'Class:AuditRule/Attribute:category_id+'            => 'The category of this rule',
+	'Class:AuditRule/Attribute:category_name'           => 'Category name',
+	'Class:AuditRule/Attribute:category_name+'          => 'Name of the category of this rule',
 ));
 
 //
@@ -72,7 +73,8 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditDomain'                            => 'Audit Domain',
-	'Class:AuditDomain+'                           => '',
+	'Class:AuditDomain+'                           => 'Audit domains allow to group the audit categories.
+Domain usually correspond to who is responsible for checking and fixing errors',
 	'Class:AuditDomain/Attribute:name'             => 'Name',
 	'Class:AuditDomain/Attribute:name+'            => 'Its a segmentation of the Audit by who is in charge of fixing it or just interested',
 	'Class:AuditDomain/Attribute:description'      => 'Description',
@@ -80,7 +82,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditDomain/Attribute:icon'             => 'Icon',
 	'Class:AuditDomain/Attribute:icon+'            => '',
 	'Class:AuditDomain/Attribute:categories_list'  => 'Categories',
-	'Class:AuditDomain/Attribute:categories_list+' => 'Linked audit categories',
+	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.',
 ));
 
 //
@@ -1102,37 +1104,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s',
 
-	'Menu:AuditCategories' => 'Audit Categories',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Audit Categories',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Audit Categories',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:RunQueriesMenu' => 'Run Queries',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Run any query',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:QueryMenu' => 'Query phrasebook',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Query phrasebook',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:DataAdministration' => 'Data Administration',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Data Administration',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UniversalSearchMenu' => 'Universal Search',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Search for anything...',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UserManagementMenu' => 'User Management',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'User management',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:ProfilesMenu' => 'Profiles',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Profiles',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profiles',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UserAccountsMenu' => 'User accounts',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'User accounts',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'User accounts',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => 'Properties',
@@ -1748,9 +1719,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:ExportMenu+'            => 'Export the results of any query in HTML, CSV or XML',
 	'Menu:NotificationsMenu'      => 'Notifications',
 	'Menu:NotificationsMenu+'     => 'Configure notifications',
-	'Menu:AuditCategories'        => 'Audit categories',
+	'Menu:AuditCategories'        => 'Audit',
 	'Menu:AuditCategories+'       => 'Define new audits',
-	'Menu:Notifications:Title'    => 'Audit categories',
+	'Menu:AuditCategories:Title'  => 'Audit configuration',
+	//	'Menu:Notifications:Title'    => 'Audit categories', // code and label aren't coherent! Is it used?
 	'Menu:RunQueriesMenu'         => 'Run queries',
 	'Menu:RunQueriesMenu+'        => 'Write and execute any OQL query',
 	'Menu:QueryMenu'              => 'Query phrasebook',
@@ -1769,4 +1741,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:UserManagement'         => 'User management',
 	'Menu:Queries'                => 'Queries',
 	'Menu:ConfigurationTools'     => 'Configuration',
+
 ));
