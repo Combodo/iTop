@@ -4,16 +4,24 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:AuditCategory' => 'Catégorie d\'audit',
-	'Class:AuditCategory+' => 'Une section de l\'audit',
-	'Class:AuditCategory/Attribute:name' => 'Nom',
-	'Class:AuditCategory/Attribute:name+' => 'Nom raccourci',
-	'Class:AuditCategory/Attribute:description' => 'Description',
-	'Class:AuditCategory/Attribute:description+' => 'Description',
-	'Class:AuditCategory/Attribute:definition_set' => 'Ensemble de définition',
-	'Class:AuditCategory/Attribute:definition_set+' => 'Expression OQL qui défini le périmètre d\'application de l\'audit',
-	'Class:AuditCategory/Attribute:rules_list' => 'Règles d\'audit',
-	'Class:AuditCategory/Attribute:rules_list+' => 'Règles d\'audit pour cette catégorie',
+	'Class:AuditCategory'                                    => 'Catégorie d\'audit',
+	'Class:AuditCategory+'                                   => 'La catégorie d\'audit définit un ensemble d\'objets qui doivent être audité.
+Elle regroupe toutes les régles qui s\'appliquent au même périmètre d\'objets',
+	'Class:AuditCategory/Attribute:name'                     => 'Nom',
+	'Class:AuditCategory/Attribute:name+'                    => 'Identifie un ensemble d\'objets à auditer',
+	'Class:AuditCategory/Attribute:description'              => 'Description',
+	'Class:AuditCategory/Attribute:description+'             => '',
+	'Class:AuditCategory/Attribute:definition_set'           => 'Périmètre',
+	'Class:AuditCategory/Attribute:definition_set+'          => 'Requête OQL retournant les objets qui sont dans le périmètre d\'application de cet audit',
+	'Class:AuditCategory/Attribute:rules_list'               => 'Règles d\'audit',
+	'Class:AuditCategory/Attribute:rules_list+'              => 'Les règles d\'audit qui utilisent le périmètre de cette catégorie',
+	'Class:AuditCategory/Attribute:ok_error_tolerance'       => 'Seuil d\'alerte',
+	'Class:AuditCategory/Attribute:ok_error_tolerance+'      => 'Pourcentage d\'objets en erreur au dela duquel le résultat est à surveiller (orange)',
+	'Class:AuditCategory/Attribute:warning_error_tolerance'  => 'Seuil d\'erreur',
+	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Pourcentage d\'objets en erreur au dela duquel le résultat est en erreur (rouge)',
+	'Class:AuditCategory/Attribute:domains_list'             => 'Domaines',
+	'Class:AuditCategory/Attribute:domains_list+'            => 'Domaines incluant cette catégorie d\'audit',
+
 ));
 
 //
@@ -21,28 +29,65 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:AuditRule' => 'Règle d\'audit',
-	'Class:AuditRule+' => '',
-	'Class:AuditRule/Attribute:name' => 'Nom',
-	'Class:AuditRule/Attribute:name+' => '',
-	'Class:AuditRule/Attribute:description' => 'Description',
-	'Class:AuditRule/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Sous-classe d\'étiquette',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe de l\'objet',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Attribut',
-	'Class:AuditRule/Attribute:query' => 'Requête',
-	'Class:AuditRule/Attribute:query+' => 'Expression OQL de calcul des éléments incorrects',
-	'Class:AuditRule/Attribute:valid_flag' => 'Interprétation',
-	'Class:AuditRule/Attribute:valid_flag+' => 'La requête définit-elle les éléments valides ?',
-	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'Objets valides',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => '',
-	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'Objets incorrects',
-	'Class:AuditRule/Attribute:valid_flag/Value:false+' => '',
-	'Class:AuditRule/Attribute:category_id' => 'Catégorie',
-	'Class:AuditRule/Attribute:category_id+' => '',
-	'Class:AuditRule/Attribute:category_name' => 'Categorie',
-	'Class:AuditRule/Attribute:category_name+' => '',
+	'Class:AuditRule'                                   => 'Règle d\'audit',
+	'Class:AuditRule+'                                  => 'Une règle d\'audit correspond à une vérification particulière.
+Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audit',
+	'Class:AuditRule/Attribute:name'                    => 'Nom',
+	'Class:AuditRule/Attribute:name+'                   => 'Une vérification particulière',
+	'Class:AuditRule/Attribute:description'             => 'Description',
+	'Class:AuditRule/Attribute:description+'            => 'Qu\'est ce qu\'on vérifie ? Comment le corriger ? Qui doit le faire ? ...',
+	'Class:AuditRule/Attribute:query'                   => 'Requête',
+	'Class:AuditRule/Attribute:query+'                  => 'Requête OQL à executer. Les classes retournées doivent être cohérentes avec celles définies dans le périmètre de la catégorie',
+	'Class:AuditRule/Attribute:valid_flag'              => 'Objets retournés :',
+	'Class:AuditRule/Attribute:valid_flag+'             => 'Que retourne la requête ci-dessus ?
+"les objets valides" : alors les objets en erreur sont tout ceux du périmètre qui ne sont pas dans la liste des valides.
+"les objets invalides" : alors les objets en erreur sont les invalides qui font partie du périmètre.',
+	'Class:AuditRule/Attribute:valid_flag/Value:true'   => 'les objets valides',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+'  => 'Alors les objets en erreur sont tout ceux du périmètre qui ne sont pas dans la liste des objets valides',
+	'Class:AuditRule/Attribute:valid_flag/Value:false'  => 'les objets invalides',
+	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'Alors les objets en erreur sont les invalides qui font partie du périmètre',
+	'Class:AuditRule/Attribute:category_id'             => 'Catégorie',
+	'Class:AuditRule/Attribute:category_id+'            => '',
+	'Class:AuditRule/Attribute:category_name'           => 'Nom de la catégorie',
+	'Class:AuditRule/Attribute:category_name+'          => '',
 ));
+
+//
+// Class: AuditDomain
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:AuditDomain'                            => 'Domaine d\'audit',
+	'Class:AuditDomain+'                           => 'Un domaine permet de regrouper ensemble des catégories d\'audit.
+Cela recouvre en général, un domaine d\'intérêt ou de responsabilité',
+	'Class:AuditDomain/Attribute:name'             => 'Nom',
+	'Class:AuditDomain/Attribute:name+'            => 'C\'est un filtre sur les catégories d\'audit pour une population en charge de contrôler ou de fixer les erreurs',
+	'Class:AuditDomain/Attribute:description'      => 'Description',
+	'Class:AuditDomain/Attribute:description+'     => '',
+	'Class:AuditDomain/Attribute:icon'             => 'Icône',
+	'Class:AuditDomain/Attribute:icon+'            => '',
+	'Class:AuditDomain/Attribute:categories_list'  => 'Catégories',
+	'Class:AuditDomain/Attribute:categories_list+' => 'Catégories d\'audit incluses dans ce domaine. Cette inclusion n\'est pas exclusive.
+Lorsqu\'on execute l\'audit sur un domaine, toutes les catégories d\'audit incluses sont vérifiées en même temps et seulement celles là',
+));
+
+//
+// Class: lnkAuditCategoryToAuditDomain
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkAuditCategoryToAuditDomain'                          => 'Link AuditCategory / AuditDomain',
+	'Class:lnkAuditCategoryToAuditDomain+'                         => '',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id'    => 'Catégorie',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+'   => 'Catégorie d\'audit',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name'  => 'Nom de la catégorie',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name+' => 'Nom de la catégorie d\'audit',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id'      => 'Domaine',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+'     => 'Domaine d\'audit',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name'    => 'Nom du domain',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+'   => 'Nom du domain d\'audit',
+));
+
 
 //
 // Class: QueryOQL
@@ -1681,9 +1726,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ExportMenu+'            => 'Export des résultats d\'une requête en HTML, CSV ou XML',
 	'Menu:NotificationsMenu'      => 'Notifications',
 	'Menu:NotificationsMenu+'     => 'Configurer les Notifications',
-	'Menu:AuditCategories'        => 'Catégories d\'audit',
+	'Menu:AuditCategories'        => 'Configurer l\'audit',
 	'Menu:AuditCategories+'       => 'Définir de nouveaux audits',
-	'Menu:Notifications:Title'    => 'Catégories d\'audit',
+	'Menu:AuditCategories:Title'  => 'Configurer l\'audit',
+
+	//	'Menu:Notifications:Title'    => 'Catégories d\'audit',
 	'Menu:RunQueriesMenu'         => 'Requêtes OQL',
 	'Menu:RunQueriesMenu+'        => 'Executer une requête OQL',
 	'Menu:QueryMenu'              => 'Livre des requêtes',
