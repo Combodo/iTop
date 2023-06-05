@@ -831,6 +831,7 @@ class utilsTest extends ItopTestCase
 			'bad element_identifier' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, 'AD05nb+', 'AD05nb'],
 			'good url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schools.com', 'https://www.w3schools.com'],
 			'bad url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schoo��ls.co�m', null],
+			'url with injection' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<img zzz src=x onerror=alert(1) //>', null],
 			'raw_data' => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
 		];
 	}
