@@ -24,6 +24,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
+
 /**
  * Web page used for displaying the login form
  */
@@ -60,6 +63,11 @@ class LoginWebPage extends NiceWebPage
 
 	protected static $sHandlerClass = __class__;
 	private static $iOnExit;
+
+    const LOGIN_TYPES_CONFIG_WEB = 'allowed_login_types';
+    const LOGIN_TYPES_CONFIG_API = 'allowed_login_api_types';
+
+    private static $sLoginTypesConfigName = self::LOGIN_TYPES_CONFIG_WEB;
 
 	public static function RegisterHandler($sClass)
 	{
@@ -467,8 +475,8 @@ class LoginWebPage extends NiceWebPage
 			}
 			catch (Exception $e)
 			{
-				IssueLog::Error($e->getTraceAsString());
-				static::ResetSession();
+                IssueLog::Error('Login failed: '.$e->getTraceAsString());
+                static::ResetSession();
 				die($e->getMessage());
 			}
 		}
@@ -517,7 +525,7 @@ class LoginWebPage extends NiceWebPage
 		}
 
 		// Order and filter by the config list of allowed types (allowed_login_types)
-		$aAllowedLoginModes = array_merge(array('before'), MetaModel::GetConfig()->GetAllowedLoginTypes(), array('after'));
+		$aAllowedLoginModes = array_merge(array('before'), self::GetAllowedLoginTypes(), array('after'));
 		$aPlugins = array();
 		foreach ($aAllowedLoginModes as $sAllowedMode)
 		{
@@ -528,6 +536,19 @@ class LoginWebPage extends NiceWebPage
 		}
 		return $aPlugins;
 	}
+
+    public static function GetAllowedLoginTypes(): array
+    {
+        return explode('|', MetaModel::GetConfig()->Get(self::$sLoginTypesConfigName));
+    }
+
+    /**
+     * @param string $sLoginTypesConfigName
+     */
+    public static function SetLoginTypesConfigName(string $sLoginTypesConfigName): void
+    {
+        self::$sLoginTypesConfigName = $sLoginTypesConfigName;
+    }
 
 	/**
 	 * Advance Login Finite State Machine to the next step

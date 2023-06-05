@@ -51,7 +51,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (isset($_SESSION['login_mode']) && ($_SESSION['login_mode'] == 'basic'))
 		{
 			list($sAuthUser, $sAuthPwd) = $this->GetAuthUserAndPassword();
 			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $_SESSION['login_mode'], 'internal'))
@@ -67,7 +67,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (isset($_SESSION['login_mode']) && ($_SESSION['login_mode'] == 'basic'))
 		{
 			$sAuthUser = $_SESSION['auth_user'];
 			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', $_SESSION['login_mode']);
@@ -77,7 +77,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnError(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (isset($_SESSION['login_mode']) && ($_SESSION['login_mode'] == 'basic'))
 		{
 			LoginWebPage::HTTP401Error();
 		}
@@ -86,7 +86,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (isset($_SESSION['login_mode']) && ($_SESSION['login_mode'] == 'basic'))
 		{
 			$_SESSION['can_logoff'] = true;
 			return LoginWebPage::CheckLoggedUser($iErrorCode);

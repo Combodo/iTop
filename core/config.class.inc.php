@@ -1328,7 +1328,23 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-	);
+        'allowed_login_types' => [
+                'type' => 'string',
+                'description' => 'List of login types for web access separated by "|"',
+                'default' => DEFAULT_ALLOWED_LOGIN_TYPES,
+                'value' => DEFAULT_ALLOWED_LOGIN_TYPES,
+                'source_of_value' => '',
+                'show_in_conf_sample' => true,
+        ],
+        'allowed_login_api_types' => [
+                'type' => 'string',
+                'description' => 'List of login types for api access separated by "|"',
+                'default' => 'basic',
+                'value' => 'basic',
+                'source_of_value' => '',
+                'show_in_conf_sample' => true,
+        ],
+    );
 
 
 
@@ -1450,11 +1466,6 @@ class Config
 	 * @var string Langage code, default if the user language is undefined
 	 */
 	protected $m_sDefaultLanguage;
-
-	/**
-	 * @var string Type of login process allowed: form|basic|url|external
-	 */
-	protected $m_sAllowedLoginTypes;
 
 	/**
 	 * @var string Name of the PHP variable in which external authentication information is passed by the web server
@@ -1678,7 +1689,6 @@ class Config
 		$this->m_aModuleSettings = isset($MyModuleSettings) ? $MyModuleSettings : array();
 
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
-		$this->m_sAllowedLoginTypes = isset($MySettings['allowed_login_types']) ? trim($MySettings['allowed_login_types']) : DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = isset($MySettings['ext_auth_variable']) ? trim($MySettings['ext_auth_variable']) : DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : $this->m_sEncryptionKey;
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
@@ -1825,7 +1835,7 @@ class Config
 
 	public function GetAllowedLoginTypes()
 	{
-		return explode('|', $this->m_sAllowedLoginTypes);
+		return explode('|', $this->Get('allowed_login_types'));
 	}
 
 	public function GetExternalAuthenticationVariable()
@@ -1890,7 +1900,6 @@ class Config
 
 	public function SetAllowedLoginTypes($aAllowedLoginTypes)
 	{
-		$this->m_sAllowedLoginTypes = implode('|', $aAllowedLoginTypes);
 	}
 
 	public function SetExternalAuthenticationVariable($sExtAuthVariable)
@@ -1948,7 +1957,6 @@ class Config
 		$aSettings['fast_reload_interval'] = $this->m_iFastReloadInterval;
 		$aSettings['secure_connection_required'] = $this->m_bSecureConnectionRequired;
 		$aSettings['default_language'] = $this->m_sDefaultLanguage;
-		$aSettings['allowed_login_types'] = $this->m_sAllowedLoginTypes;
 		$aSettings['ext_auth_variable'] = $this->m_sExtAuthVariable;
 		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
 		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
@@ -2060,7 +2068,6 @@ class Config
 			// Old fashioned remaining values
 			$aOtherValues = array(
 				'default_language' => $this->m_sDefaultLanguage,
-				'allowed_login_types' => $this->m_sAllowedLoginTypes,
 				'ext_auth_variable' => $this->m_sExtAuthVariable,
 				'encryption_key' => $this->m_sEncryptionKey,
 				'encryption_library' => $this->m_sEncryptionLibrary,

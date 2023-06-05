@@ -80,6 +80,7 @@ try
         
 	$oKPI->ComputeAndReport('Data model loaded');
 
+    LoginWebPage::SetLoginTypesConfigName(LoginWebPage::LOGIN_TYPES_CONFIG_API);
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
         $oKPI->ComputeAndReport('User login');
         

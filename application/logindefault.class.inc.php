@@ -26,7 +26,7 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		unset($_SESSION['login_temp_auth_user']);
 
 		// Check if proposed login mode is present and allowed
-		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
+		$aAllowedLoginTypes = LoginWebPage::GetAllowedLoginTypes();
 		$sProposedLoginMode = utils::ReadParam('login_mode', '');
 		$index = array_search($sProposedLoginMode, $aAllowedLoginTypes);
 		if ($index !== false)
@@ -44,7 +44,7 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 	protected function OnReadCredentials(&$iErrorCode)
 	{
 		// Check if proposed login mode is present and allowed
-		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
+		$aAllowedLoginTypes = LoginWebPage::GetAllowedLoginTypes();
 		$sProposedLoginMode = utils::ReadParam('login_mode', '');
 		$index = array_search($sProposedLoginMode, $aAllowedLoginTypes);
 		if ($index !== false)
@@ -95,7 +95,8 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 		{
 			// If no plugin validated the user, exit
 			self::ResetLoginSession();
-			exit();
+            $iErrorCode = LoginWebPage::EXIT_CODE_NOTAUTHORIZED;
+            throw new Exception(Dict::S('UI:Login:Error:AccessRestricted'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
