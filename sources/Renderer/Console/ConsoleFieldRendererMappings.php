@@ -18,6 +18,7 @@ use Combodo\iTop\Form\Field\SelectObjectField;
 use Combodo\iTop\Form\Field\StringField;
 use Combodo\iTop\Form\Field\SubFormField;
 use Combodo\iTop\Form\Field\TagSetField;
+use Combodo\iTop\Form\Field\TagSetObjectField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Renderer\Console\FieldRenderer\ConsoleSelectObjectFieldRenderer;
 use Combodo\iTop\Renderer\Console\FieldRenderer\ConsoleSimpleFieldRenderer;

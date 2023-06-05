@@ -26,12 +26,14 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Form\Field\SelectObjectField;
 use Combodo\iTop\Form\Validator\MandatoryValidator;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\FieldRenderer;
 use DBObjectSet;
 use Dict;
+use MetaModel;
 use UIExtKeyWidget;
 
 /**
@@ -188,9 +190,7 @@ EOF
 					$aValues = $this->oField->GetCurrentValue();
 					$sId = $this->oField->GetGlobalId();
 
-					// N°4792 - load only the required fields
 					$aFieldsToLoad = [];
-
 					$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
 					$sFormatAdditionalField = $aComplementAttributeSpec[0];
 					$aAdditionalField = $aComplementAttributeSpec[1];
@@ -200,12 +200,14 @@ EOF
 						$sClassAllowed = $oAllowedValues->GetClass();
 						$bAddingValue = true;
 						$aFieldsToLoad[$sClassAllowed] = $aAdditionalField;
+
+						$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+						if (!empty($sObjectImageAttCode)) {
+							$aFieldsToLoad[$sClassAllowed][] = $sObjectImageAttCode;
+						}
+						$aFieldsToLoad[$sClassAllowed][] = 'friendlyname';
 					}
-					$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
-					if (!empty($sObjectImageAttCode)) {
-						$aFieldsToLoad[$sClassAllowed][] = $sObjectImageAttCode;
-					}
-					$aFieldsToLoad[$sClassAllowed][] = 'friendlyname';
+
 					$oAllowedValues->OptimizeColumnLoad($aFieldsToLoad);
 
 					$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel($this->oField->GetLabel(), $this->oField->GetDescription(), $this->oField->GetGlobalId());
@@ -213,7 +215,7 @@ EOF
 						$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
 							$oObj->GetKey(),
 							$oObj->GetName(),
-							in_array($oObj->GetKey(), $aValues, true))
+							is_null($aValues) ? false : in_array($oObj->GetKey(), $aValues, true) === true)
 						);
 					}
 					$oOutput->AddJs(

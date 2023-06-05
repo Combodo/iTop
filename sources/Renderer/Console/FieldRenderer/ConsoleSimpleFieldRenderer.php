@@ -220,7 +220,7 @@ EOF
 						\IssueLog::Error('valeur:'.json_encode($this->oField->GetCurrentValue()));
 						foreach ($this->oField->GetChoices() as $sChoice => $sLabel) {
 							// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
-							$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sChoice, $sLabel, in_array($sChoice, $this->oField->GetCurrentValue()) === true));
+							$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sChoice, $sLabel, is_null($this->oField->GetCurrentValue()) ? false : in_array($sChoice, $this->oField->GetCurrentValue()) === true));
 						}
 						$oValue->AddSubBlock($oSelect);
 						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
@@ -260,7 +260,7 @@ JS
 						$iId = 1;
 						foreach ($this->oField->GetChoices() as $sChoice => $sLabel) {
 							$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel($sLabel, ''.$this->oField->GetGlobalId(), $sChoice, $this->oField->GetGlobalId().'_'.$iId, "checkbox");
-							$oCheckBox->GetInput()->SetIsChecked(in_array($sChoice, $aValues) === true);
+							$oCheckBox->GetInput()->SetIsChecked(is_null($aValues) ? false : in_array($sChoice, $aValues) === true);
 							$oCheckBox->SetBeforeInput(false);
 							$oCheckBox->GetInput()->AddCSSClass('ibo-input--label-right');
 							$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
