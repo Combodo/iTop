@@ -140,7 +140,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:PhysicalDevice+' => '',
 	'Class:PhysicalDevice/Attribute:serialnumber' => '序列号',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
-	'Class:PhysicalDevice/Attribute:location_id' => '地理位置',
+	'Class:PhysicalDevice/Attribute:location_id' => '地点',
 	'Class:PhysicalDevice/Attribute:location_id+' => '',
 	'Class:PhysicalDevice/Attribute:location_name' => '名称',
 	'Class:PhysicalDevice/Attribute:location_name+' => '',
@@ -210,7 +210,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:MobilePhone' => '移动电话',
+	'Class:MobilePhone' => '手机',
 	'Class:MobilePhone+' => '',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '',
@@ -420,7 +420,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:PowerConnection' => '电源连接',
+	'Class:PowerConnection' => '供电线路',
 	'Class:PowerConnection+' => '',
 ));
 
@@ -1085,8 +1085,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Model/Attribute:type/Value:Enclosure+' => '机位',
 	'Class:Model/Attribute:type/Value:IPPhone' => 'IP电话',
 	'Class:Model/Attribute:type/Value:IPPhone+' => 'IP电话',
-	'Class:Model/Attribute:type/Value:MobilePhone' => '移动电话',
-	'Class:Model/Attribute:type/Value:MobilePhone+' => '移动电话',
+	'Class:Model/Attribute:type/Value:MobilePhone' => '手机',
+	'Class:Model/Attribute:type/Value:MobilePhone+' => '手机',
 	'Class:Model/Attribute:type/Value:NAS' => 'NAS',
 	'Class:Model/Attribute:type/Value:NAS+' => 'NAS',
 	'Class:Model/Attribute:type/Value:NetworkDevice' => '网络设备',
@@ -1558,8 +1558,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Server+' => '所有服务器',
 	'Menu:Printer' => '打印机',
 	'Menu:Printer+' => '所有打印机',
-	'Menu:MobilePhone' => '移动电话',
-	'Menu:MobilePhone+' => '所有移动电话',
+	'Menu:MobilePhone' => '手机',
+	'Menu:MobilePhone+' => '所有手机',
 	'Menu:PC' => '个人电脑',
 	'Menu:PC+' => '所有个人电脑',
 	'Menu:NewCI' => '新建配置项',
