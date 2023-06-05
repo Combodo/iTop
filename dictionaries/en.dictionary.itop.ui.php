@@ -631,7 +631,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:LogOff:ClickHereToLoginAgain'              => 'Click here to login again...',
 	'UI:ChangePwdMenu'                             => 'Change Password...',
 	'UI:Login:PasswordChanged'                     => 'Password successfully set!',
-	'UI:Login:PasswordNotChanged'                  => 'Error Password is the same!',
+	'UI:Login:PasswordNotChanged'                  => 'Error: Password is the same!',
 	'UI:AccessRO-All'                              => ITOP_APPLICATION.' is read-only',
 	'UI:AccessRO-Users'                            => ITOP_APPLICATION.' is read-only for end-users',
 	'UI:ApplicationEnvironment'                    => 'Application environment: %1$s',
