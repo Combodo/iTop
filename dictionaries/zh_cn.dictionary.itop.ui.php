@@ -145,7 +145,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:User' => '用户',
 	'Class:User+' => '用户登录名',
-	'Class:User/Attribute:finalclass' => '帐户类别',
+	'Class:User/Attribute:finalclass' => '账户类别',
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => '联系人 (个人)',
 	'Class:User/Attribute:contactid+' => '来自业务数据的个人明细信息',
@@ -227,7 +227,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_UserProfile+' => '用户的角色',
 	'Class:URP_UserProfile/Name' => '关联 %1$s 和 %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => '用户',
-	'Class:URP_UserProfile/Attribute:userid+' => '用户帐户',
+	'Class:URP_UserProfile/Attribute:userid+' => '用户账户',
 	'Class:URP_UserProfile/Attribute:userlogin' => '登录名',
 	'Class:URP_UserProfile/Attribute:userlogin+' => '用户的登录名',
 	'Class:URP_UserProfile/Attribute:profileid' => '角色',
@@ -248,7 +248,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_UserOrg+' => '可以访问的组织',
 	'Class:URP_UserOrg/Name' => '关联 %1$s 和 %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => '用户',
-	'Class:URP_UserOrg/Attribute:userid+' => '用户帐户',
+	'Class:URP_UserOrg/Attribute:userid+' => '用户账户',
 	'Class:URP_UserOrg/Attribute:userlogin' => '登录名',
 	'Class:URP_UserOrg/Attribute:userlogin+' => '用户的登录名',
 	'Class:URP_UserOrg/Attribute:allowed_org_id' => '组织',
@@ -1126,11 +1126,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ProfilesMenu:Title' => '角色',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => '用户帐户',
+	'Menu:UserAccountsMenu' => '用户账户',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => '用户帐户',
+	'Menu:UserAccountsMenu+' => '用户账户',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => '用户帐户',
+	'Menu:UserAccountsMenu:Title' => '用户账户',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
@@ -1759,12 +1759,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UniversalSearchMenu+'   => '搜索所有...',
 	'Menu:UserManagementMenu'     => '用户管理',
 	'Menu:UserManagementMenu+'    => 'Who can connect to '.ITOP_APPLICATION_SHORT.' and what can they do?~~',
-	'Menu:ProfilesMenu'           => '角色~~',
-	'Menu:ProfilesMenu+'          => 'View existing Profiles',
-	'Menu:ProfilesMenu:Title'     => '角色~~',
-	'Menu:UserAccountsMenu'       => '用户帐户',
-	'Menu:UserAccountsMenu+'      => '用户帐户',
+	'Menu:ProfilesMenu'           => '首选项',
+	'Menu:ProfilesMenu+'          => 'View existing Profiles~~',
+	'Menu:ProfilesMenu:Title'     => '首选项',
+	'Menu:UserAccountsMenu'       => '用户账户',
 	'Menu:UserAccountsMenu+'      => 'Handling '.ITOP_APPLICATION_SHORT.' users and their access rights~~',
+	'Menu:UserAccountsMenu:Title' => '用户账户',
 	'Menu:MyShortcuts'            => '我的快捷方式',
 	'Menu:UserManagement'         => '用户管理',
 	'Menu:Queries'                => '查询',
