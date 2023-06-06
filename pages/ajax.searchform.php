@@ -37,10 +37,7 @@ try
 	$oKPI->ComputeAndReport('Data model loaded');
 	$oKPI = new ExecutionKPI();
 
-	if (LoginWebPage::EXIT_CODE_OK != LoginWebPage::DoLoginEx('backoffice', false, LoginWebPage::EXIT_RETURN))
-	{
-		throw new SecurityException('You must be logged in');
-	}
+	LoginWebPage::DoLogin();
 
 	$sParams = utils::ReadParam('params', '', false, 'raw_data');
 	if (!$sParams)

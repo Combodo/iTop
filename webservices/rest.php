@@ -80,10 +80,12 @@ try
         
 	$oKPI->ComputeAndReport('Data model loaded');
 
-	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
-        $oKPI->ComputeAndReport('User login');
-        
-        if ($iRet == LoginWebPage::EXIT_CODE_OK)
+    // N°6358 - force credentials for REST calls
+    LoginWebPage::ResetSession(true);
+	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+    $oKPI->ComputeAndReport('User login');
+
+    if ($iRet == LoginWebPage::EXIT_CODE_OK)
 	{
 		// Extra validation of the profile
 		if ((MetaModel::GetConfig()->Get('secure_rest_services') == true) && !UserRights::HasProfile('REST Services User'))
@@ -94,7 +96,7 @@ try
 	}
 	if ($iRet != LoginWebPage::EXIT_CODE_OK)
 	{
-		switch($iRet)
+        switch($iRet)
 		{
 			case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
 			throw new Exception("Missing parameter 'auth_user'", RestResult::MISSING_AUTH_USER);

@@ -35,7 +35,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'external')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'external')
 		{
 			$sAuthUser = $this->GetAuthUser();
 			if (!UserRights::CheckCredentials($sAuthUser, '', $_SESSION['login_mode'], 'external'))
@@ -51,7 +51,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'external')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'external')
 		{
 			$sAuthUser = $_SESSION['auth_user'];
 			LoginWebPage::OnLoginSuccess($sAuthUser, 'external', $_SESSION['login_mode']);
@@ -61,7 +61,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'external')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'external')
 		{
 			$_SESSION['can_logoff'] = false;
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
@@ -71,8 +71,13 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnError(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'external')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'external')
 		{
+            $iOnExit = LoginWebPage::getIOnExit();
+            if ($iOnExit === LoginWebPage::EXIT_RETURN)
+            {
+                return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
+            }
 			LoginWebPage::HTTP401Error();
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
