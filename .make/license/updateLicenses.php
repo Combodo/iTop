@@ -22,7 +22,7 @@
 $iTopFolder = __DIR__."/../../";
 $xmlFilePath = $iTopFolder."setup/licenses/community-licenses.xml";
 
-$jqExec = shell_exec("jq -V"); // --help param is mandatory otherwise the script will freeze
+$jqExec = shell_exec("jq -V"); // a param is mandatory otherwise the script will freeze
 if ((null === $jqExec) || (false === $jqExec)) {
 	echo "/!\ JQ is required but cannot be launched :( \n";
 	echo "Check this script PHPDoc block for instructions\n";
