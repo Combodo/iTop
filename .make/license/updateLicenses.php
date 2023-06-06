@@ -26,7 +26,7 @@ $jqExec = shell_exec("jq --help"); // --help param is mandatory otherwise the sc
 if ((null === $jqExec) || (false === $jqExec)) {
 	echo "/!\ JQ is required but cannot be launched :( \n";
 	echo "Check this script PHPDoc block for instructions\n";
-	die - 1;
+	die(-1);
 }
 
 
