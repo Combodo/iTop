@@ -23,11 +23,11 @@
 *
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Relation:impacts/Description' => 'Elemente betroffen von',
-	'Relation:impacts/DownStream' => 'Auswirkung ...',
-	'Relation:impacts/DownStream+' => 'Elemente betroffen von',
-	'Relation:impacts/UpStream' => 'Hängt ab von ...',
-	'Relation:impacts/UpStream+' => 'Betroffene Elemente',
+	'Relation:impacts/Description'    => 'Elemente betroffen von',
+	'Relation:impacts/DownStream'     => 'Auswirkung ...',
+	'Relation:impacts/DownStream+'    => 'Elemente betroffen von',
+	'Relation:impacts/UpStream'       => 'Hängt ab von ...',
+	'Relation:impacts/UpStream+'      => 'Betroffene Elemente',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Elemente, von denen dieses Element abhängt.',
 	'Relation:depends on/DownStream' => 'Hängt ab von ...',

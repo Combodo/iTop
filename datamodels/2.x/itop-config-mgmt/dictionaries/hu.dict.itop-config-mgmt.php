@@ -31,7 +31,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Relation:depends on/UpStream' => 'Hatások',
 	'Relation:impacts/LoadData' => 'Adat betöltés',
 	'Relation:impacts/NoFilteredData' => 'kérjük, válassza ki az objektumokat a grafikus nézetben',
-));
+    'Relation:impacts/FilteredData'   => 'Filtered data~~',));
 
 
 // Dictionnay conventions
