@@ -1581,6 +1581,9 @@ EOF
 		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
 		$oUiSearchBlock->SetIsCollapsible(true);
 		$oUiSearchBlock->GetTitleBlock()->SetCSSClasses(['ibo-panel--subtitle']);
+		$oFilterImageBlock = \Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory::MakeStandard('alert_filtered_list', ['fas', 'fa-filter', 'ibo-panel--header-left', 'ibo-is-hidden']);
+		$oFilterImageBlock->SetDataAttributes(['tooltip-content' => Dict::S("Relation:impacts/FilteredData")]);
+		$oUiSearchBlock->AddTitleBlock($oFilterImageBlock);
 		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
 			<<<EOF
 		

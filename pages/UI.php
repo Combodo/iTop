@@ -274,7 +274,6 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 	$oP->SetCurrentTab('UI:RelationshipList');
 	$oImpactedObject = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects", ['ibo-is-visible']);
 	$oP->AddSubBlock($oImpactedObject);
-	$oImpactedObject->AddSubBlock(AlertUIBlockFactory::MakeForWarning(Dict::S("Relation:impacts/FilteredData"), '', "alert_filtered_list")->SetIsHidden(true));
 	$oImpactedObjectList = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists", ['ibo-is-visible']);
 	$oImpactedObject->AddSubBlock($oImpactedObjectList);
 	$oImpactedObjectList->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists_placeholder", ['ibo-is-visible']));
