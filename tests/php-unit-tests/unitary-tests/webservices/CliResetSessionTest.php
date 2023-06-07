@@ -109,7 +109,7 @@ class CliResetSessionTest extends ItopDataTestCase
 				'sConfiguredLoginModes' => 'form|external|basic|url',
 				'sForcedLoginMode' => 'url',
 			],
-			'cas / cas forced' => [
+			'nominal / cas forced' => [
 				'sConfiguredLoginModes' => 'form|external|basic|cas',
 				'sForcedLoginMode' => 'cas',
 			],
