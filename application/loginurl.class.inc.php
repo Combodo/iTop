@@ -40,7 +40,7 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'url')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'url')
 		{
 			$_SESSION['login_temp_auth_user'] =  utils::ReadParam('auth_user', '', false, 'raw_data');
 		}
@@ -49,7 +49,7 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'url')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'url')
 		{
 			$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 			$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
@@ -66,7 +66,7 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'url')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'url')
 		{
 			$sAuthUser = $_SESSION['auth_user'];
 			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', $_SESSION['login_mode']);
@@ -76,7 +76,7 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnError(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'url')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'url')
 		{
 			$this->bErrorOccurred = true;
 		}
