@@ -29,6 +29,7 @@
     </admin_account>
     <language>EN US</language>
     <selected_modules type="array">
+    <item>authent-cas</item>
       <item>authent-external</item>
       <item>authent-local</item>
       <item>itop-backup</item>
