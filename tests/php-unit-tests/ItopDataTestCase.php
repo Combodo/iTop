@@ -455,7 +455,7 @@ class ItopDataTestCase extends ItopTestCase
 		/** @var DBObjectSet $oSet */
 		$oSet = $oUser->Get('profile_list');
 		$oSet->AddObject($oUserProfile);
-		$oUser = $this->updateObject('UserLocal', $oUser->GetKey(), array(
+		$oUser = $this->updateObject('User', $oUser->GetKey(), array(
 			'profile_list' => $oSet,
 		));
 		$this->debug("Updated {$oUser->GetName()} ({$oUser->GetKey()})");
