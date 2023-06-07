@@ -56,6 +56,22 @@ class MFCompiler
 
 	/**
 	 * @var string
+	 * @since 3.1.0
+	 */
+	protected const ENUM_ATTRIBUTE_ENUM_SORT_TYPE_CODE = 'code';
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected const ENUM_ATTRIBUTE_ENUM_SORT_TYPE_LABEL = 'label';
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	protected const ENUM_ATTRIBUTE_ENUM_SORT_TYPE_RANK = 'rank';
+
+	/**
+	 * @var string
 	 * @see self::GenerateStyleDataFromNode
 	 * @internal
 	 * @since 3.0.0
@@ -2096,68 +2112,14 @@ EOF
 			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeEnum') {
-			$oValues = $oField->GetUniqueElement('values');
-			$oValueNodes = $oValues->getElementsByTagName('value');
-			$aValues = [];
-			$aStyledValues = [];
-			foreach ($oValueNodes as $oValue) {
-				// New in 3.0 the format of values changed
-				$sCode = $this->GetMandatoryPropString($oValue, 'code', false);
-				$aValues[] = $sCode;
-				$oStyleNode = $oValue->GetOptionalElement('style');
-				if ($oStyleNode) {
-					$aEnumStyleData = $this->GenerateStyleDataFromNode($oStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode, $sCode);
-					$aStyledValues[] = $aEnumStyleData['orm_style_instantiation'];
-					$sCss .= $aEnumStyleData['scss'];
-				}
-			}
-			$sValues = '"'.implode(',', $aValues).'"';
-			$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
-			if (count($aStyledValues) > 0) {
-				$sStyledValues = '['.implode(',', $aStyledValues).']';
-				$aParameters['styled_values'] = "$sStyledValues";
-			}
-			$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
-			$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
-			if ($oDefaultStyleNode) {
-				$aEnumStyleData = $this->GenerateStyleDataFromNode($oDefaultStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode);
-				$aParameters['default_style'] = $aEnumStyleData['orm_style_instantiation'];
-				$sCss .= $aEnumStyleData['scss'];
-			}
+			$this->CompileAttributeEnumValues($sModuleRelativeDir, $sClass, $sAttCode, $oField, $aParameters, $sCss);
 			$this->CompileCommonProperty('display_style', $oField, $aParameters, $sModuleRelativeDir, 'list');
 			$this->CompileCommonProperty('sql', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeMetaEnum') {
-			$oValues = $oField->GetUniqueElement('values');
-			$oValueNodes = $oValues->getElementsByTagName('value');
-			$aValues = [];
-			$aStyledValues = [];
-			foreach ($oValueNodes as $oValue) {
-				// New in 3.0 the format of values changed
-				$sCode = $this->GetMandatoryPropString($oValue, 'code', false);
-				$aValues[] = $sCode;
-				$oStyleNode = $oValue->GetOptionalElement('style');
-				if ($oStyleNode) {
-					$aEnumStyleData = $this->GenerateStyleDataFromNode($oStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode, $sCode);
-					$aStyledValues[] = $aEnumStyleData['orm_style_instantiation'];
-					$sCss .= $aEnumStyleData['scss'];
-				}
-			}
-			$sValues = '"'.implode(',', $aValues).'"';
-			$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
-			if (count($aStyledValues) > 0) {
-				$sStyledValues = '['.implode(',', $aStyledValues).']';
-				$aParameters['styled_values'] = "$sStyledValues";
-			}
-			$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
-			$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
-			if ($oDefaultStyleNode) {
-				$aEnumStyleData = $this->GenerateStyleDataFromNode($oDefaultStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode);
-				$aParameters['default_style'] = $aEnumStyleData['orm_style_instantiation'];
-				$sCss .= $aEnumStyleData['scss'];
-			}
+			$this->CompileAttributeEnumValues($sModuleRelativeDir, $sClass, $sAttCode, $oField, $aParameters, $sCss);
 			$this->CompileCommonProperty('sql', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
 			$this->CompileCommonProperty('mappings', $oField, $aParameters, $sModuleRelativeDir);
@@ -2505,6 +2467,78 @@ EOF
 			}
 		}
 		$aParameters['depends_on'] = $sDependencies;
+	}
+
+	protected function CompileAttributeEnumValues(string $sModuleRelativeDir, string $sClass, string $sAttCode, DOMElement $oField, array &$aParameters, string &$sCss): void
+	{
+		$sSortType = $oField->GetChildText('sort_type');
+		if (utils::IsNullOrEmptyString($sSortType)) {
+			$sSortType = static::ENUM_ATTRIBUTE_ENUM_SORT_TYPE_CODE;
+		}
+
+		$oValues = $oField->GetUniqueElement('values');
+		$oValueNodes = $oValues->getElementsByTagName('value');
+		$aValues = [];
+		$aValuesWithRank = [];
+		$aValuesWithoutRank = [];
+		$aStyledValues = [];
+		foreach ($oValueNodes as $oValue) {
+			// Value's code
+			$sCode = $this->GetMandatoryPropString($oValue, 'code', false);
+			$sRankAsString = $this->GetPropNumber($oValue, 'rank');
+			// Consider value as ranked only if it is the desired sort type, this is to avoid issues if a <rank> node is left when sort type isn't "rank"
+			if (utils::IsNotNullOrEmptyString($sRankAsString) && ($sSortType === static::ENUM_ATTRIBUTE_ENUM_SORT_TYPE_RANK)){
+				$aValuesWithRank[$sCode] = (float) $sRankAsString;
+		    } else {
+				$aValuesWithoutRank[$sCode] = true;
+			}
+
+			// Value's style
+			$oStyleNode = $oValue->GetOptionalElement('style');
+			if ($oStyleNode) {
+				$aEnumStyleData = $this->GenerateStyleDataFromNode($oStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode, $sCode);
+				$aStyledValues[] = $aEnumStyleData['orm_style_instantiation'];
+				$sCss .= $aEnumStyleData['scss'];
+			}
+		}
+
+		// Order values
+		$aSortedValues = [];
+		$sLocalizedSortAsPHPParam = '';
+		switch ($sSortType) {
+			case static::ENUM_ATTRIBUTE_ENUM_SORT_TYPE_RANK:
+				// Sort ranked values then append unranked values sorted by their code
+				asort($aValuesWithRank);
+				ksort($aValuesWithoutRank);
+				$aSortedValues = array_merge(array_keys($aValuesWithRank), array_keys($aValuesWithoutRank));
+				break;
+
+			case static::ENUM_ATTRIBUTE_ENUM_SORT_TYPE_LABEL:
+				// Sort by labels is delegated at runtime for one main reason:
+				// Default language (fallback -eg. english- if no dict entry for the current language -eg. italian-) can change at anytime in the configuration file -eg. from english to french-
+				// if that was to happen, users would not understand why they have labels from in english instead of french, which would cause support questions / investigations.
+				$sLocalizedSortAsPHPParam = ', true';
+			default:
+				// Sort values by their code
+				ksort($aValuesWithoutRank);
+				$aSortedValues = array_keys($aValuesWithoutRank);
+				break;
+		}
+
+		$sValuesAsPHPParam = '"'.implode(',', $aSortedValues).'"';
+		$aParameters['allowed_values'] = "new ValueSetEnum($sValuesAsPHPParam $sLocalizedSortAsPHPParam)";
+		if (count($aStyledValues) > 0) {
+			$sStyledValues = '['.implode(',', $aStyledValues).']';
+			$aParameters['styled_values'] = "$sStyledValues";
+		}
+
+		// Default style for values
+		$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
+		if ($oDefaultStyleNode) {
+			$aEnumStyleData = $this->GenerateStyleDataFromNode($oDefaultStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode);
+			$aParameters['default_style'] = $aEnumStyleData['orm_style_instantiation'];
+			$sCss .= $aEnumStyleData['scss'];
+		}
 	}
 
 	/**
@@ -3415,7 +3449,7 @@ EOF;
 			
 			$aThemes[$sThemeId] = [
 				'theme_parameters' => $aThemeParameters,
-				'precompiled_stylesheet' => $oTheme->GetChildText('precompiled_stylesheet', '')
+				'precompiled_stylesheet' => $oTheme->GetChildText('precompiled_stylesheet', ''),
 			];
 		}
 
@@ -3523,7 +3557,7 @@ EOF;
 
 				$aDirToCheck = [
 					$sSourceDir,
-					APPROOT . DIRECTORY_SEPARATOR . 'extensions/'
+					APPROOT . DIRECTORY_SEPARATOR . 'extensions/',
 				];
 
 				$iDataXmlFileLastModified = 0;

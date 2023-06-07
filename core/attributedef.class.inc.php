@@ -5918,6 +5918,14 @@ class AttributeEnum extends AttributeString
 			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
 
+		// Sort by label only if necessary
+		// See N°1646 and {@see \MFCompiler::CompileAttributeEnumValues()} for complete information as for why sort on labels is done at runtime while other sorting are done at compile time
+		/** @var \ValueSetEnum $oValueSetDef */
+		$oValueSetDef = $this->GetValuesDef();
+		if ($oValueSetDef->IsSortedByValues()) {
+			asort($aLocalizedValues);
+		}
+
 		return $aLocalizedValues;
 	}
 
