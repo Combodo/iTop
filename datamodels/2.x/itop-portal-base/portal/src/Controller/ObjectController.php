@@ -1365,7 +1365,7 @@ class ObjectController extends BrickController
 					$oFieldOutput = $oFieldRenderer->Render();
 					$sValue = $oFieldOutput->GetHtml();
 				}
-				$aObjectData['attributes'][$sAttCode] = [
+				$aObjectData['attributes']['lnk__'.$sAttCode] = [
 					'att_code'   => $sAttCode,
 					'value'      => $sValue,
 					'css_inline' => $oFieldOutput->GetCss(),

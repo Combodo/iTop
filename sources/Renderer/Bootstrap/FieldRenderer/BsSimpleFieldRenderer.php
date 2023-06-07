@@ -23,8 +23,13 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
+use Combodo\iTop\Form\Field\DateField;
+use Combodo\iTop\Form\Field\DateTimeField;
+use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Form\Field\MultipleChoicesField;
 use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Form\Validator\MandatoryValidator;
+use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Renderer\RenderingOutput;
 use Dict;
 use InlineImage;
@@ -63,57 +68,62 @@ class BsSimpleFieldRenderer extends BsFieldRenderer
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
 				case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
 					// Opening container
-					$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . '">');
+				$oOutput->AddHtml('<div class="form-group form_group_small '.$sFieldMandatoryClass.'">');
 
-					// Label
-					$oOutput->AddHtml('<div class="form_field_label">');
-					if ($this->oField->GetLabel() !== '') {
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
-					}
-					$oOutput->AddHtml('</div>');
+				// Label
+				$oOutput->AddHtml('<div class="form_field_label">');
+				if ($this->oField->GetLabel() !== '') {
+					$oOutput->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+				}
+				$oOutput->AddHtml('</div>');
 
-					// Value
-					$oOutput->AddHtml('<div class="form_field_control">');
-					// - Help block
-					$oOutput->AddHtml('<div class="help-block"></div>');
-					// - Value regarding the field type
-					switch($sFieldClass) {
-						case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
-							$oOutput->AddHtml('<div class="input-group date" id="datepicker_' . $this->oField->GetGlobalId() . '">');
-							$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
-							$oOutput->AddHtml('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
-							$oOutput->AddHtml('</div>');
-							$sJSFormat = json_encode($this->oField->GetJSDateTimeFormat());
-							$sLocale = Dict::S('Portal:Calendar-FirstDayOfWeek');
-							$oOutput->AddJs(
-								<<<EOF
+				// Value
+				$oOutput->AddHtml('<div class="form_field_control">');
+				// - Help block
+				$oOutput->AddHtml('<div class="help-block"></div>');
+
+				// Prepare input validations tags
+				$sInputTags = $this->ComputeInputValidationTags($this->oField);
+
+				// - Value regarding the field type
+				switch ($sFieldClass) {
+					case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+						$oOutput->AddHtml('<div class="input-group date" id="datepicker_'.$this->oField->GetGlobalId().'">');
+						$oOutput->AddHtml('<input type="text" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('" class="form-control" maxlength="255" '.$sInputTags.'/>');
+						$oOutput->AddHtml('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
+						$oOutput->AddHtml('</div>');
+						$sJSFormat = json_encode($this->oField->GetJSDateTimeFormat());
+						$sLocale = Dict::S('Portal:Calendar-FirstDayOfWeek');
+						$oOutput->AddJs(
+							<<<EOF
                                 					$('#datepicker_{$this->oField->GetGlobalId()}').datetimepicker({format: $sJSFormat, locale: '$sLocale'});
 EOF
-							);
-							break;
+						);
+						break;
 
-						case 'Combodo\\iTop\\Form\\Field\\PasswordField':
-							$oOutput->AddHtml('<input type="password" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" autocomplete="off" />');
-							break;
+					case 'Combodo\\iTop\\Form\\Field\\PasswordField':
+						$oOutput->AddHtml('<input type="password" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" autocomplete="off" />');
+						break;
 
-						case 'Combodo\\iTop\\Form\\Field\\StringField':
-						case 'Combodo\\iTop\\Form\\Field\\UrlField':
-						case 'Combodo\\iTop\\Form\\Field\\EmailField':
-						case 'Combodo\\iTop\\Form\\Field\\PhoneField':
-							$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
-							break;
+					case 'Combodo\\iTop\\Form\\Field\\StringField':
+					case 'Combodo\\iTop\\Form\\Field\\UrlField':
+					case 'Combodo\\iTop\\Form\\Field\\EmailField':
+					case 'Combodo\\iTop\\Form\\Field\\PhoneField':
+						$oOutput->AddHtml('<input type="text" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="')->AddHtml($this->oField->GetCurrentValue(),
+							true)->AddHtml('" class="form-control" maxlength="255" '.$sInputTags.'/>');
+						break;
 
-						case 'Combodo\\iTop\\Form\\Field\\SelectField':
-						case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
-							$oOutput->AddHtml('<select id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" ' . ( ($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '' ) . ' class="form-control">');
-							foreach ($this->oField->GetChoices() as $sChoice => $sLabel) {
-								// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
-								$sSelectedAtt = ($this->oField->GetCurrentValue() == $sChoice) ? 'selected' : '';
-								$oOutput->AddHtml('<option value="' . $sChoice . '" ' . $sSelectedAtt . ' >')->AddHtml($sLabel)->AddHtml('</option>');
-							}
-							$oOutput->AddHtml('</select>');
-							break;
-					}
+					case 'Combodo\\iTop\\Form\\Field\\SelectField':
+					case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+						$oOutput->AddHtml('<select id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" '.(($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '').' class="form-control">');
+						foreach ($this->oField->GetChoices() as $sChoice => $sLabel) {
+							// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
+							$sSelectedAtt = ($this->oField->GetCurrentValue() == $sChoice) ? 'selected' : '';
+							$oOutput->AddHtml('<option value="'.$sChoice.'" '.$sSelectedAtt.' >')->AddHtml($sLabel)->AddHtml('</option>');
+						}
+						$oOutput->AddHtml('</select>');
+						break;
+				}
 					$oOutput->AddHtml('</div>');
 
 					// Closing container
@@ -723,6 +733,36 @@ $('[data-field-id="{$this->oField->GetId()}"][data-form-path="{$this->oField->Ge
 JS
 			);
 		}
+	}
+
+	/**
+	 * @param \Combodo\iTop\Form\Field\Field $oField
+	 *
+	 * @return string
+	 */
+	private function ComputeInputValidationTags(Field $oField): string
+	{
+		// Result tags
+		$sTags = '';
+
+		// Iterate throw validators...
+		foreach ($oField->GetValidators() as $oValidator) {
+
+			// Validator
+			if (get_class($oValidator) === Validator::class) {
+				if (!($oField instanceof DateField || $oField instanceof DateTimeField)) { // unrecognized regular expression
+					$sTags .= ' pattern="'.$oValidator->GetRegExp().'" ';
+				}
+			}
+
+			// Mandatory validator
+			if ($oValidator instanceof MandatoryValidator) {
+				$sTags .= ' required ';
+			}
+
+		}
+
+		return $sTags;
 	}
 
 }

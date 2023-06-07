@@ -103,6 +103,12 @@ $(function()
 			oEvent.preventDefault();
 			var me = this;
 
+			// Prevent form submit if input in invalid state
+			// @see Bug N°803 - Allow display & edition of attributes on n:n relations on Portal
+			if($('input:invalid', this.element).length > 0){
+				return;
+			}
+
 			// EasterEgg : Vibrate on submit
 			if(window.navigator.vibrate)
 			{

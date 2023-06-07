@@ -2416,23 +2416,25 @@ class AttributeLinkedSet extends AttributeDefinition
 		foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
 			$oAttDefToDisplay = MetaModel::GetAttributeDef($sTargetClass, $sAttCodeToDisplay);
 			$aAttributesToDisplay[$sAttCodeToDisplay] = [
-				'label'     => $oAttDefToDisplay->GetLabel(),
-				'mandatory' => !$oAttDefToDisplay->IsNullAllowed(),
+				'att_code' => $sAttCodeToDisplay,
+				'label'    => $oAttDefToDisplay->GetLabel(),
 			];
 		}
 		$oFormField->SetAttributesToDisplay($aAttributesToDisplay);
 
 		// Append lnk attributes (filtered from zlist)
-		$aLnkAttDefToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($this->m_sHostClass, $this->m_sCode);
-		$aLnkAttributesToDisplay = array();
-		foreach ($aLnkAttDefToDisplay as $oLnkAttDefToDisplay) {
-			$aLnkAttributesToDisplay[$oLnkAttDefToDisplay->GetCode()] = [
-				'sortable'  => false,
-				'label'     => $oLnkAttDefToDisplay->GetLabel(),
-				'mandatory' => !$oLnkAttDefToDisplay->IsNullAllowed(),
-			];
+		if ($this->IsIndirect()) {
+			$aLnkAttDefToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($this->m_sHostClass, $this->m_sCode);
+			$aLnkAttributesToDisplay = array();
+			foreach ($aLnkAttDefToDisplay as $oLnkAttDefToDisplay) {
+				$aLnkAttributesToDisplay[$oLnkAttDefToDisplay->GetCode()] = [
+					'att_code'  => $oLnkAttDefToDisplay->GetCode(),
+					'label'     => $oLnkAttDefToDisplay->GetLabel(),
+					'mandatory' => !$oLnkAttDefToDisplay->IsNullAllowed(),
+				];
+			}
+			$oFormField->SetLnkAttributesToDisplay($aLnkAttributesToDisplay);
 		}
-		$oFormField->SetLnkAttributesToDisplay($aLnkAttributesToDisplay);
 
 		parent::MakeFormField($oObject, $oFormField);
 
@@ -3136,7 +3138,7 @@ class AttributeDecimal extends AttributeDBField
 		$iPrecision = $this->Get('decimals');
 		$iNbIntegerDigits = $iNbDigits - $iPrecision - 1; // -1 because the first digit is treated separately in the pattern below
 
-		return "^[-+]?[0-9]\d{0,$iNbIntegerDigits}(\.\d{0,$iPrecision})?$";
+		return "^[\-\+]?[0-9]\d{0,$iNbIntegerDigits}(\.\d{0,$iPrecision})?$";
 	}
 
 	public function GetBasicFilterOperators()

@@ -53,15 +53,16 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
 		$sFieldDescriptionForHTMLTag = ($this->oField->HasDescription()) ? 'data-tooltip-content="'.utils::HtmlEntities($this->oField->GetDescription()).'"' : '';
 
-		// Merge lnk and remote class attributes to display
-		$aAttributesToDisplay = array_merge($this->oField->GetLnkAttributesToDisplay(), $this->oField->GetAttributesToDisplay());
+		// Retrieve link and remote attributes
+		$aAttributesToDisplay = $this->oField->GetAttributesToDisplay();
+		$aLnkAttributesToDisplay = $this->oField->GetLnkAttributesToDisplay();
 		$iLinkAttributesToDisplayCount = count($this->oField->GetLnkAttributesToDisplay()) + 1;
 
 		// Vars to build the table
 		$sAttributesToDisplayAsJson = json_encode($aAttributesToDisplay);
+		$sLnkAttributesToDisplayAsJson = json_encode($aLnkAttributesToDisplay);
 		$sAttCodesToDisplayAsJson = json_encode($this->oField->GetAttributesToDisplay(true));
 		$sLnkAttCodesToDisplayAsJson = json_encode($this->oField->GetLnkAttributesToDisplay(true));
-
 
 		$aItems = array();
 		$aItemIds = array();
@@ -161,6 +162,7 @@ EOF
 				$('#{$sTableId} > tbody').html('<tr><td class="datatables_overlay" colspan="100">' + $('#page_overlay').html() + '</td></tr>');
 
 				// Prepares data for datatables
+				var oLnkColumnProperties_{$this->oField->GetGlobalId()} = {$sLnkAttributesToDisplayAsJson};
 				var oColumnProperties_{$this->oField->GetGlobalId()} = {$sAttributesToDisplayAsJson};
 				var oRawDatas_{$this->oField->GetGlobalId()} = {$sItemsAsJson};
 				var oTable_{$this->oField->GetGlobalId()};
@@ -196,33 +198,68 @@ EOF
 						});
 					}
 
-					for(sKey in oColumnProperties_{$this->oField->GetGlobalId()})
+					for(sKey in oLnkColumnProperties_{$this->oField->GetGlobalId()})
 					{
-                        aColumnProperties = oColumnProperties_{$this->oField->GetGlobalId()}[sKey];
+                        aColumnProperties = oLnkColumnProperties_{$this->oField->GetGlobalId()}[sKey];
+                                                 
 						// Level main column
 						aColumnsDefinition.push({
 							"width": "auto",
 							"searchable": true,
-							"sortable": !aColumnProperties.sortable,
+							"sortable": false,
 							"title": aColumnProperties.label,
 							"defaultContent": "",
 							"type": "html",
-							"data": "attributes."+sKey+".att_code",
+							"data": "attributes.lnk__" + sKey,
 							"className": aColumnProperties.mandatory ? 'mandatory' : '',
 							"render": function(data, type, row){
 								var cellElem;
-
+                                                                
 								// Preparing the cell data
-								if(row.attributes[data].url !== undefined)
+								if(data.url !== undefined)
 								{
 									cellElem = $('<a></a>');
-									cellElem.attr('href', row.attributes[data].url);
+									cellElem.attr('href', data.url);
 								}
 								else
 								{
 									cellElem = $('<span></span>');
 								}
-								cellElem.html('<span>' + row.attributes[data].value + '</span>');
+								cellElem.html('<span>' + data.value + '</span>');
+                                
+								return cellElem.prop('outerHTML');
+							},
+						});
+					}
+                    
+                    for(sKey in oColumnProperties_{$this->oField->GetGlobalId()})
+					{
+                        aColumnProperties = oColumnProperties_{$this->oField->GetGlobalId()}[sKey];
+                        
+						// Level main column
+						aColumnsDefinition.push({
+							"width": "auto",
+							"searchable": true,
+							"sortable": true,
+							"title": aColumnProperties.label,
+							"defaultContent": "",
+							"type": "html",
+							"data": "attributes." + sKey,
+							"className": aColumnProperties.mandatory ? 'mandatory' : '',
+							"render": function(data, type, row){
+								var cellElem;
+                                
+								// Preparing the cell data
+								if(data.url !== undefined)
+								{
+									cellElem = $('<a></a>');
+									cellElem.attr('href', data.url);
+								}
+								else
+								{
+									cellElem = $('<span></span>');
+								}
+								cellElem.html('<span>' + data.value + '</span>');
                                 
 								return cellElem.prop('outerHTML');
 							},
@@ -445,9 +482,12 @@ JS
 										oTable_{$this->oField->GetGlobalId()}.draw();
                                         
                                         // Execute inline js for each attributes renderers
-		                                for(key in oData.items[i].attributes){
-		                                    eval(oData.items[i].attributes[key].js_inline)
-		                                }
+                                        for(let i in oData.items)
+										{
+			                                for(let key in oData.items[i].attributes){
+			                                    eval(oData.items[i].attributes[key].js_inline)
+			                                }
+                                        }
                                         
 										// Updating input
 						                updateInputValue_{$this->oField->GetGlobalId()}();
@@ -663,10 +703,10 @@ JS
 			);
 
 			// Link attributes to display
-			$this->PrepareItem($oItem, $this->oField->GetLinkedClass(), $this->oField->GetLnkAttributesToDisplay(true), true, $aItemProperties, $oOutput);
+			$this->PrepareItem($oItem, $this->oField->GetLinkedClass(), $this->oField->GetLnkAttributesToDisplay(true), true, $aItemProperties, 'lnk__');
 
 			// Remote attributes to display
-			$this->PrepareItem($oRemoteItem, $this->oField->GetTargetClass(), $this->oField->GetAttributesToDisplay(true), false, $aItemProperties, $oOutput);
+			$this->PrepareItem($oRemoteItem, $this->oField->GetTargetClass(), $this->oField->GetAttributesToDisplay(true), false, $aItemProperties);
 
 			// Remap objects to avoid added item to be considered as current item when form validation isn't valid
 			// and form reconstruct
@@ -725,7 +765,7 @@ JS
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	protected function PrepareItem(DBObject $oItem, string $sClass, array $aAttributesCodesToDisplay, bool $bIsEditable, array &$aItemProperties, $oOutput)
+	protected function PrepareItem(DBObject $oItem, string $sClass, array $aAttributesCodesToDisplay, bool $bIsEditable, array &$aItemProperties, string $sAttribueKeyPrefix = '')
 	{
 		// Iterate throw attributes...
 		foreach ($aAttributesCodesToDisplay as $sAttCode) {
@@ -780,7 +820,8 @@ JS
 					}
 				}
 
-				$aItemProperties['attributes'][$sAttCode] = $aAttProperties;
+				$aItemProperties['attributes'][$sAttribueKeyPrefix.$sAttCode] = $aAttProperties;
+
 			}
 		}
 	}
