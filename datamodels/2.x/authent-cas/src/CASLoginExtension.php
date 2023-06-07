@@ -120,6 +120,11 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 	{
 		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'cas')
 		{
+			if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+				// Not allowed if not already connected
+				return LoginWebPage::LOGIN_FSM_CONTINUE;
+			}
+
 			unset($_SESSION['phpCAS']);
 			if ($iErrorCode != LoginWebPage::EXIT_CODE_MISSINGLOGIN)
 			{
@@ -162,7 +167,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		{
 			phpCAS::setLogger(new CASLogger(APPROOT.'log/cas.log'));
 		}
-		
+
 		// Initialize phpCAS
 		$sCASVersion = Config::Get('cas_version');
 		$sCASHost = Config::Get('cas_host');
