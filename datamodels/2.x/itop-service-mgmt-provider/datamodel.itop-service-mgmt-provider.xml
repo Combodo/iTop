@@ -176,15 +176,19 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>20</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>10</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>30</rank>
             </value>
           </values>
           <sql>status</sql>
@@ -1188,15 +1192,19 @@ public function PrefillSearchForm(&$aContextParam)
           <read_only>false</read_only>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>20</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>10</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>30</rank>
             </value>
           </values>
           <sql>status</sql>
@@ -1588,15 +1596,19 @@ public function PrefillSearchForm(&$aContextParam)
           <display_style>radio_horizontal</display_style>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>20</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>10</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>30</rank>
             </value>
           </values>
           <sql>status</sql>
