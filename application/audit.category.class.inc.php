@@ -74,15 +74,23 @@ class AuditCategory extends cmdbAbstractObject
 	public function GetReportColor($iTotal, $iErrors)
 	{
 		$sResult = 'red';
-		if ( ($iTotal == 0) || ($iErrors / $iTotal) <= ($this->Get('ok_error_tolerance') / 100) )
-		{
+		if ( ($iTotal == 0) || ($iErrors / $iTotal) <= ($this->Get('ok_error_tolerance') / 100) ) {
 			$sResult = 'green';
-		}
-		else if ( ($iErrors / $iTotal) <= ($this->Get('warning_error_tolerance') / 100) )
-		{
+		} else if (($iErrors / $iTotal) <= ($this->Get('warning_error_tolerance') / 100)) {
 			$sResult = 'orange';
 		}
+
 		return $sResult;
+	}
+
+	public static function GetShortcutActions($sFinalClass)
+	{
+		$aShortcutActions = parent::GetShortcutActions($sFinalClass);
+		if (!in_array('UI:Menu:RunAudit', $aShortcutActions)) {
+			$aShortcutActions[] = 'UI:Menu:RunAudit';
+		}
+
+		return $aShortcutActions;
 	}
 }
 ?>
