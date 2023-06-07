@@ -80,6 +80,11 @@ class LoginBasic extends AbstractLoginFSMExtension
 	{
 		if (Session::Get('login_mode') == 'basic')
 		{
+            $iOnExit = LoginWebPage::getIOnExit();
+            if ($iOnExit === LoginWebPage::EXIT_RETURN)
+            {
+                return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
+            }
 			LoginWebPage::HTTP401Error();
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;

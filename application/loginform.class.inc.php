@@ -44,6 +44,10 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 					exit;
 				}
 
+                if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+                    return LoginWebPage::LOGIN_FSM_CONTINUE;
+                }
+
 				// No credentials yet, display the form
 				$oPage = LoginWebPage::NewLoginWebPage();
 				$oPage->DisplayLoginForm($this->bForceFormOnError);

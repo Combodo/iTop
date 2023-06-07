@@ -282,10 +282,38 @@ if (utils::IsModeCLI())
 else
 {
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
-
 	//N°6022 - Make synchro scripts work by http via token authentication with SYNCHRO scopes
 	$oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
-	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	LoginWebPage::ResetSession(true);
+    $iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+    if ($iRet !== LoginWebPage::EXIT_CODE_OK) {
+        switch ($iRet) {
+            case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
+                $oP->p("Missing parameter 'auth_user'");
+                break;
+
+            case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
+                $oP->p("Missing parameter 'auth_pwd'");
+                break;
+
+            case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
+                $oP->p('Invalid login');
+                break;
+
+            case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
+                $oP->p('Portal user is not allowed');
+                break;
+
+            case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
+                $oP->p('This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)');
+                break;
+
+            default:
+                $oP->p("Unknown authentication error (retCode=$iRet)");
+        }
+        $oP->output();
+        exit -1;
+    }
 
 	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 }
