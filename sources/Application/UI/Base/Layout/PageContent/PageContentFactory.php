@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\PageContent;
 
 
 use cmdbAbstractObject;
+use Combodo\iTop\Application\UI\Base\Component\Navigation\NavigationUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use DBObject;
@@ -48,22 +49,30 @@ class PageContentFactory
 	/**
 	 * Make a standard object details page with the form in the middle and the logs / activity in the side panel
 	 *
-	 * @param \DBObject   $oObject
-	 * @param string      $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
-	 *
 	 * @see cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
+	 *
+	 * @param string $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
+	 * @param string $sBasketFilter filter to find list of objects in basket
+	 * @param array $aBasketList list of id of objects in basket
+	 * @param string $sBackUrl url to go back to list of ojects in basket
+	 * @param string $sPostedFieldsForBackUrl fields to post for come back to main page
+	 *
+	 * @param \DBObject $oObject
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent
 	 * @throws \CoreException
 	 */
-	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE)
+	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE, $sBasketFilter = null, $aBasketList = [], $sBackUrl = null, $sPostedFieldsForBackUrl = "")
 	{
 		$oLayout = new PageContentWithSideContent();
 
-		// Add object details layout
-		// TODO 3.0.0 see N°3518
-		//$oObjectDetails = ObjectFactory::MakeDetails($oObject, $sMode);
-		//$oLayout->AddMainBlock($oObjectDetails);
+
+		if ($sBasketFilter != null) {
+			$oNavigationBlock = NavigationUIBlockFactory::MakeStandard($oObject, $sBasketFilter, $aBasketList, $sBackUrl, $sPostedFieldsForBackUrl);
+			if ($oNavigationBlock != null) {
+				$oLayout->AddSubBlock($oNavigationBlock);
+			}
+		}
 
 		// Add object activity layout
 		$oActivityPanel = ActivityPanelFactory::MakeForObjectDetails($oObject, $sMode);

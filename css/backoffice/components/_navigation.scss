@@ -1,0 +1,29 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+.ibo-navigation {
+  position: relative;
+
+  .ibo-navigation-form {
+    display: flex;
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    .ibo-form-navigation--total {
+      text-align: center;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+
+    .ibo-form-navigation--nav  {
+      margin-left: 5px;
+      margin-right: 10px;
+      padding-top: 3px;
+    }
+  }
+
+}

@@ -572,30 +572,42 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 
 		$aExtraParams['table_id'] = $sTableId;
 		$aExtraParams['list_id'] = $sListId;
+		$oFilter = $oSet->GetFilter();
+
+		$sBasketAliasClass = $oFilter->GetFirstJoinedClassAlias();
+		if ($sBasketAliasClass === 'Link') {
+			$sLinkToBasket = $sBasketAliasClass.'/'.$sTargetAttr;
+			$sBasketAliasClass = 'Remote';
+		} else {
+			$sLinkToBasket = $sBasketAliasClass;
+		}
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
 		$oDataTable->SetAjaxData([
 			"operation"     => 'search',
-			"filter"        => $oSet->GetFilter()->serialize(),
+			"filter"        => $oFilter->serialize(),
 			"columns"       => $oCustomSettings->aColumns,
 			"extra_params"  => $aExtraParams,
 			"class_aliases" => $aClassAliases,
 			"select_mode"   => $sSelectMode,
+			"basket"        => $sLinkToBasket,
 		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
-		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
+		$oFilter->SetSelectedClasses([$sBasketAliasClass]);
+		$oDataTable->SetFilter($oFilter->ToOQL(true));
+		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams, 1, $sLinkToBasket));
 
 		// row actions
 		if (isset($aExtraParams['row_actions'])) {
 			$oDataTable->SetRowActions($aExtraParams['row_actions']);
 		}
 
-		if (isset($aExtraParams['creation_in_modal_js_handler'])){
+		if (isset($aExtraParams['creation_in_modal_js_handler'])) {
 			$oDataTable->SetModalCreationHandler($aExtraParams['creation_in_modal_js_handler']);
 		}
-		
+
 		return $oDataTable;
 	}
 
@@ -887,10 +899,18 @@ JS;
 		return $oTable;
 	}
 
+	public static function MakeParamForBasket(array $aPostedFields)
+	{
+		$oBlock = new DataTableBasket($aPostedFields);
+
+		return $oBlock;
+	}
+
 	/**
 	 * @return array
 	 */
-	public static function GetAllowedParams(): array
+	public
+	static function GetAllowedParams(): array
 	{
 		return [
 			'surround_with_panel',
@@ -943,4 +963,5 @@ JS;
 			/** Don't provide the standard object creation feature */
 		];
 	}
+
 }

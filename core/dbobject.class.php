@@ -1116,29 +1116,25 @@ abstract class DBObject implements iDisplay
      *
      * @see \Combodo\iTop\Form\Field\Field for rendering in portal forms
      */
-	public function GetAsHTML($sAttCode, $bLocalize = true)
+	public function GetAsHTML($sAttCode, $bLocalize = true, $bInBasket = false)
 	{
 		$sClass = get_class($this);
 		$oAtt = MetaModel::GetAttributeDef($sClass, $sAttCode);
 
-		if ($oAtt->IsExternalKey(EXTKEY_ABSOLUTE))
-		{
+		if ($oAtt->IsExternalKey(EXTKEY_ABSOLUTE)) {
 			//return $this->Get($sAttCode.'_friendlyname');
 			/** @var \AttributeExternalKey $oAtt */
 			$sTargetClass = $oAtt->GetTargetClass(EXTKEY_ABSOLUTE);
 			$iTargetKey = $this->Get($sAttCode);
-			if ($iTargetKey < 0)
-			{
+			if ($iTargetKey < 0) {
 				// the key points to an object that exists only in memory... no hyperlink points to it yet
 				return '';
-			}
-			else
-			{
+			} else {
 				$sHtmlLabel = utils::EscapeHtml($this->Get($sAttCode.'_friendlyname'));
 				$bArchived = $this->IsArchived($sAttCode);
 				$bObsolete = $this->IsObsolete($sAttCode);
 
-				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel, null, true, $bArchived, $bObsolete);
+				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel, null, true, $bArchived, $bObsolete, false, $bInBasket);
 			}
 		}
 
@@ -1315,14 +1311,15 @@ abstract class DBObject implements iDisplay
      * @throws \CoreException
      * @throws \DictExceptionMissingString
      */
-	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false, $bObsolete = false, $bIgnorePreview = false)
+	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false, $bObsolete = false, $bIgnorePreview = false, $bInBasket = false)
 	{
-		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
+		if ($sObjKey <= 0) {
+			return '<em>'.Dict::S('UI:UndefinedObject').'</em>';
+		} // Objects built in memory have negative IDs
 
 		// Safety net
 		//
-		if (empty($sHtmlLabel))
-		{
+		if (empty($sHtmlLabel)) {
 			// If the object if not issued from a query but constructed programmatically
 			// the label may be empty. In this case run a query to get the object's friendly name
 			$sObjOql = 'SELECT '.$sObjClass.' WHERE id='.$sObjKey;
@@ -1367,9 +1364,7 @@ abstract class DBObject implements iDisplay
 		if ($sFA == '')
 		{
 			$sIcon = '';
-		}
-		else
-		{
+		} else {
 			if ($bClickable) {
 				$sIcon = "<span class=\"object-ref-icon text_decoration\"><span class=\"fas $sFA fa-1x fa-fw\"></span></span>";
 			} else {
@@ -1377,19 +1372,21 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		if ($bClickable && (strlen($sUrl) > 0))
-		{
-			$sHLink = "<a class=\"object-ref-link\" href=\"$sUrl\">$sIcon$sHtmlLabel</a>";
-		}
-		else
-		{
+		if ($bClickable && (strlen($sUrl) > 0)) {
+			if ($bInBasket) {
+				$sHLink = "<a class=\"object-ref-link object-in-basket\" href=\"$sUrl\">$sIcon$sHtmlLabel</a>";
+			} else {
+				$sHLink = "<a class=\"object-ref-link\" href=\"$sUrl\" >$sIcon$sHtmlLabel</a>";
+			}
+		} else {
 			$sHLink = $sIcon.$sHtmlLabel;
 		}
 		$sPreview = '';
-		if(SummaryCardService::IsAllowedForClass($sObjClass) && $bIgnorePreview === false){
-			$sPreview = SummaryCardService::GetHyperlinkMarkup($sObjClass, $sObjKey); 
+		if (SummaryCardService::IsAllowedForClass($sObjClass) && $bIgnorePreview === false) {
+			$sPreview = SummaryCardService::GetHyperlinkMarkup($sObjClass, $sObjKey);
 		}
 		$sRet = "<span class=\"object-ref $sSpanClass\" $sPreview title=\"$sHint\">$sHLink</span>";
+
 		return $sRet;
 	}
 
@@ -1408,15 +1405,15 @@ abstract class DBObject implements iDisplay
      * @throws CoreException
      * @throws DictExceptionMissingString
      */
-	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true, $sLabel = null, $bIgnorePreview = false)
+	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true, $sLabel = null, $bIgnorePreview = false, $bInBasket = false)
 	{
-	    if($sLabel === null)
-        {
-            $sLabel = $this->GetName();
-        }
+		if ($sLabel === null) {
+			$sLabel = $this->GetName();
+		}
 		$bArchived = $this->IsArchived();
 		$bObsolete = $this->IsObsolete();
-		return self::MakeHyperLink(get_class($this), $this->GetKey(), $sLabel, $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete, $bIgnorePreview);
+
+		return self::MakeHyperLink(get_class($this), $this->GetKey(), $sLabel, $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete, $bIgnorePreview, $bInBasket);
 	}
 
     /**
