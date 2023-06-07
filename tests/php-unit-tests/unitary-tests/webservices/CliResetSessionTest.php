@@ -205,7 +205,7 @@ JSON;
 		list($iHttpCode, $sOutput) = $this->CallRestApi($aPostFields, null, $sUri);
 		$this->debug($sOutput);
 		$this->assertEquals("200", $iHttpCode);
-		$this->assertContains("Invalid login", $sOutput);
+		$this->assertTrue(str_contains($sOutput, 'Invalid login'));
 	}
 
 	/**
