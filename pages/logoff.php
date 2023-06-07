@@ -96,5 +96,11 @@ if ($bLoginDebug)
 	IssueLog::Info("--> Display logout page");
 }
 
+LoginWebPage::ResetSession(true);
+if ($bLoginDebug) {
+    $sSessionLog = session_id().' '.utils::GetSessionLog();
+    IssueLog::Info("SESSION: $sSessionLog");
+}
+
 $oPage = LoginWebPage::NewLoginWebPage();
 $oPage->DisplayLogoutPage($bPortal);

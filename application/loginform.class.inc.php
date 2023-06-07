@@ -43,6 +43,10 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 					exit;
 				}
 
+                if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+                    return LoginWebPage::LOGIN_FSM_CONTINUE;
+                }
+
 				// No credentials yet, display the form
 				$oPage = LoginWebPage::NewLoginWebPage();
 				$oPage->DisplayLoginForm($this->bForceFormOnError);
@@ -62,7 +66,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'form')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'form')
 		{
 			$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
 			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
@@ -82,7 +86,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'form')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'form')
 		{
 			$sAuthUser = $_SESSION['auth_user'];
 			// Store 'auth_user' in session for further use
@@ -96,7 +100,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnError(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'form')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'form')
 		{
 			$this->bForceFormOnError = true;
 		}
@@ -108,7 +112,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnConnected(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'form')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'form')
 		{
 			$_SESSION['can_logoff'] = true;
 			return LoginWebPage::CheckLoggedUser($iErrorCode);

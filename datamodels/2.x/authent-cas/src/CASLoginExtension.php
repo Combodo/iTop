@@ -47,6 +47,11 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
+        if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+            // Not allowed if not already connected
+            return LoginWebPage::LOGIN_FSM_CONTINUE;
+        }
+
 		if (!isset($_SESSION['login_mode']) || ($_SESSION['login_mode'] == 'cas'))
 		{
 			static::InitCASClient();
@@ -71,7 +76,8 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 						return LoginWebPage::LOGIN_FSM_ERROR;
 					}
 				}
-				$_SESSION['login_mode'] = 'cas';
+
+                $_SESSION['login_mode'] = 'cas';
 				phpCAS::forceAuthentication(); // Redirect to CAS and exit
 			}
 		}
@@ -80,7 +86,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'cas')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'cas')
 		{
 			if (!isset($_SESSION['auth_user']))
 			{
@@ -97,7 +103,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'cas')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'cas')
 		{
 			$sAuthUser = $_SESSION['auth_user'];
 			if (!LoginWebPage::CheckUser($sAuthUser))
@@ -112,7 +118,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnError(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'cas')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'cas')
 		{
 			unset($_SESSION['phpCAS']);
 			if ($iErrorCode != LoginWebPage::EXIT_CODE_MISSINGLOGIN)
@@ -127,7 +133,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'cas')
+		if (isset($_SESSION['login_mode']) && $_SESSION['login_mode'] == 'cas')
 		{
 			$_SESSION['can_logoff'] = true;
 			return LoginWebPage::CheckLoggedUser($iErrorCode);

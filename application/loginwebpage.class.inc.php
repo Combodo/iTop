@@ -32,7 +32,7 @@ class LoginWebPage extends NiceWebPage
 {
 	const EXIT_PROMPT = 0;
 	const EXIT_HTTP_401 = 1;
-	const EXIT_RETURN = 2;
+	const EXIT_RETURN = 2; // Non interactive mode (ajax, rest, ...)
 	
 	const EXIT_CODE_OK = 0;
 	const EXIT_CODE_MISSINGLOGIN = 1;
@@ -352,14 +352,20 @@ class LoginWebPage extends NiceWebPage
 		$this->output();
 	}
 
-	public static function ResetSession()
+	public static function ResetSession($bFullCleanup = false)
 	{
-		// Unset all of the session variables.
-		unset($_SESSION['auth_user']);
-		unset($_SESSION['login_state']);
-		unset($_SESSION['can_logoff']);
-		unset($_SESSION['archive_mode']);
-		unset($_SESSION['impersonate_user']);
+        if ($bFullCleanup) {
+            // Unset all of the session variables.
+            foreach (array_keys($_SESSION) as $sKey) {
+                unset($_SESSION[$sKey]);
+            }
+        } else {
+            unset($_SESSION['auth_user']);
+            unset($_SESSION['login_state']);
+            unset($_SESSION['can_logoff']);
+            unset($_SESSION['archive_mode']);
+            unset($_SESSION['impersonate_user']);
+        }
 		UserRights::_ResetSessionCache();
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!
@@ -931,7 +937,7 @@ class LoginWebPage extends NiceWebPage
 		}
 		else
 		{
-			if ($iOnExit == self::EXIT_RETURN)
+			if ($iOnExit === self::EXIT_RETURN)
 			{
 				return self::EXIT_CODE_PORTALUSERNOTAUTHORIZED;
 			}
@@ -987,7 +993,7 @@ class LoginWebPage extends NiceWebPage
 		{
 			if ($bMustBeAdmin && !UserRights::IsAdministrator())
 			{
-				if ($iOnExit == self::EXIT_RETURN)
+				if ($iOnExit === self::EXIT_RETURN)
 				{
 					return self::EXIT_CODE_MUSTBEADMIN;
 				}
@@ -1003,7 +1009,7 @@ class LoginWebPage extends NiceWebPage
 			}
 			$iRet = call_user_func(array(self::$sHandlerClass, 'ChangeLocation'), $sRequestedPortalId, $iOnExit);
 		}
-		if ($iOnExit == self::EXIT_RETURN)
+		if ($iOnExit === self::EXIT_RETURN)
 		{
 			return $iRet;
 		}
