@@ -589,7 +589,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ResetPwd-Ready' => 'Das Passwort wurde geändert. ',
 	'UI:ResetPwd-Login' => 'Klicken Sie hier um sich einzuloggen...',
 
-	'UI:Login:About'                               => 'Über',
+	'UI:Login:About'                               => 'iTop Powered by Combodo',
 	'UI:Login:ChangeYourPassword'                  => 'Ändern Sie Ihr Passwort',
 	'UI:Login:OldPasswordPrompt'                   => 'Altes Passwort',
 	'UI:Login:NewPasswordPrompt'                   => 'Neues Passwort',
