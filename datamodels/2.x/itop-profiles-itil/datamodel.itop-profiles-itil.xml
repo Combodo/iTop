@@ -146,6 +146,11 @@
           <class id="SynchroReplica"/>
         </classes>
       </group>
+      <group id="History">
+        <classes>
+          <class id="CMDBChangeOp"/>
+        </classes>
+      </group>
       <group id="AdminTools">
         <classes>
           <class id="ResourceAdminMenu"/>
