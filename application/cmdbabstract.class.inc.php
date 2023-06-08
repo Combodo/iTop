@@ -3067,7 +3067,10 @@ EOF
 
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
-		$sState = $this->GetState();
+		$sLifecycleStateForWizardHelper = '';
+		if (MetaModel::HasLifecycle($sClass)) {
+			$sLifecycleStateForWizardHelper = $this->GetState();
+		}
 		$sSessionStorageKey = $sClass.'_'.$iKey;
 		$sTempId = utils::GetUploadTempId($iTransactionId);
 		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
@@ -3077,7 +3080,7 @@ EOF
 		sessionStorage.removeItem('$sSessionStorageKey');
 		
 		// Create the object once at the beginning of the page...
-		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sState');
+		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sLifecycleStateForWizardHelper');
 		oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
 		oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
 EOF
