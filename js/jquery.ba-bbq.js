@@ -1,4 +1,9 @@
 /*!
+ * Combodo: issued from https://github.com/cee-chen/jquery-bbq
+ * fork from http://github.com/cowboy/jquery-bbq/
+ */
+
+/*!
  * jQuery BBQ: Back Button & Query Library - v1.3pre - 8/26/2010
  * http://benalman.com/projects/jquery-bbq-plugin/
  * 
