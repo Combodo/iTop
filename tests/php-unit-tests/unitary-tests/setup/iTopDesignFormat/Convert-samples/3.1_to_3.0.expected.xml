@@ -61,6 +61,16 @@
         <field id="status" xsi:type="AttributeLinkedSetIndirect"/>
       </fields>
     </class>
+    <class id="ClassWithAttributeLinkedSetWithConstraint">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSet"/>
+      </fields>
+    </class>
+    <class id="ClassWithAttributeLinkedSetIndirectWithConstraint">
+      <fields>
+        <field id="status" xsi:type="AttributeLinkedSetIndirect"/>
+      </fields>
+    </class>
     <class id="ClassWithAttributeEnumSorted">
       <fields>
         <field id="enum_unsorted" xsi:type="AttributeEnum">

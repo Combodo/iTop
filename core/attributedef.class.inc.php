@@ -1727,6 +1727,15 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/**
+	 * @return bool true if host object has constraints
+	 * @since 3.1.0 N°6228
+	 */
+	public function GetHasConstraint()
+	{
+		return $this->GetOptional('with_constrain', false);
+	}
+
+	/**
 	 * @return boolean
 	 * @since 3.1.0 N°5563
 	 */

@@ -482,6 +482,12 @@
           <type>boolean</type>
           <default>true</default>
         </property>
+        <property id="with_constrain">
+          <php_param>with_constrain</php_param>
+          <mandatory>false</mandatory>
+          <type>boolean</type>
+          <default>false</default>
+        </property>
         <property id="on_target_delete">
           <php_param>on_target_delete</php_param>
           <mandatory>false</mandatory>
