@@ -3354,8 +3354,10 @@ EOF
 		];
 
 		// The list of candidate fields is made of the ordered list of "details" attributes + other attributes
+		// First attributes from the "details" zlist as they were sorted...
 		$aList = $this->FlattenZList(MetaModel::GetZListItems($sClass, 'details'));
-		//Add forgotten attributes to the list
+
+		// ... then append forgotten attributes
 		foreach (MetaModel::GetAttributesList($sClass) as $sAttCode) {
 			if (!in_array($sAttCode, $aList)) {
 				$aList[] = $sAttCode;
