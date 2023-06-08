@@ -46,6 +46,7 @@ use Server;
 use TagSetFieldData;
 use Ticket;
 use URP_UserProfile;
+use User;
 use VirtualHost;
 use VirtualMachine;
 use XMLDataLoader;
@@ -456,7 +457,7 @@ class ItopDataTestCase extends ItopTestCase
 		/** @var DBObjectSet $oSet */
 		$oSet = $oUser->Get('profile_list');
 		$oSet->AddObject($oUserProfile);
-		$oUser = $this->updateObject('User', $oUser->GetKey(), array(
+		$oUser = $this->updateObject(User::class, $oUser->GetKey(), array(
 			'profile_list' => $oSet,
 		));
 		$this->debug("Updated {$oUser->GetName()} ({$oUser->GetKey()})");
