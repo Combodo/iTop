@@ -3058,9 +3058,9 @@ EOF
 
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
-		$sState = '';
+		$sLifecycleStateForWizardHelper = '';
 		if (MetaModel::HasLifecycle($sClass)) {
-			$sState = $this->GetState();
+			$sLifecycleStateForWizardHelper = $this->GetState();
 		}
 		$sSessionStorageKey = $sClass.'_'.$iKey;
 		$sTempId = utils::GetUploadTempId($iTransactionId);
@@ -3071,7 +3071,7 @@ EOF
 		sessionStorage.removeItem('$sSessionStorageKey');
 		
 		// Create the object once at the beginning of the page...
-		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sState');
+		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sLifecycleStateForWizardHelper');
 		oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
 		oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
 EOF
