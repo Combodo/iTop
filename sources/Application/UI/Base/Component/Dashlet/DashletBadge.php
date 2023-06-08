@@ -9,6 +9,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Dashlet;
 
 
 use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
+use utils;
 
 class DashletBadge extends DashletContainer
 {
@@ -30,7 +31,7 @@ class DashletBadge extends DashletContainer
 	/** @var string */
 	protected $sClassLabel;
 	/** @var string */
-	protected $sClassDescription;
+	protected $sClassDescription = '';
 
 	/** @var string */
 	protected $sCreateActionUrl;
@@ -61,7 +62,6 @@ class DashletBadge extends DashletContainer
 		$this->sHyperlink = $sHyperlink;
 		$this->iCount = $iCount;
 		$this->sClassLabel = $sClassLabel;
-		$this->sClassDescription = $sClassLabel;
 		$this->sCreateActionUrl = $sCreateActionUrl;
 		$this->sCreateActionLabel = $sCreateActionLabel;
 		$this->aRefreshParams = $aRefreshParams;
@@ -204,6 +204,14 @@ class DashletBadge extends DashletContainer
 		$this->sClassDescription = $sClassDescription;
 	}
 
+	/**
+	 * @return bool
+	 * @since 3.1.0
+	 */
+	public function HasClassDescription(): bool
+	{
+		return utils::IsNotNullOrEmptyString($this->sClassDescription);
+	}
 
 	public function GetJSRefresh(): string
 	{
