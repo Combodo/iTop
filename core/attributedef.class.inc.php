@@ -1732,7 +1732,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function GetHasConstraint()
 	{
-		return $this->GetOptional('with_constrain', false);
+		return $this->GetOptional('with_constraint', false);
 	}
 
 	/**

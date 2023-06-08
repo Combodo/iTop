@@ -248,8 +248,8 @@ abstract class User extends cmdbAbstractObject
 			"depends_on"      => array(),
 		)));
 
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list",array("linked_class" => "URP_UserProfile", "ext_key_to_me" => "userid", "ext_key_to_remote" => "profileid", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), "display_style" => 'property', "with_constrain" => true)));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class" => "URP_UserOrg", "ext_key_to_me" => "userid", "ext_key_to_remote" => "allowed_org_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), 'with_constrain' => true)));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list",array("linked_class" => "URP_UserProfile", "ext_key_to_me" => "userid", "ext_key_to_remote" => "profileid", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), "display_style" => 'property', "with_constraint" => true)));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class" => "URP_UserOrg", "ext_key_to_me" => "userid", "ext_key_to_remote" => "allowed_org_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), 'with_constraint' => true)));
 		MetaModel::Init_AddAttribute(new AttributeCaseLog("log", array("sql" => 'log', "is_null_allowed" => true, "default_value" => '', "allowed_values" => null, "depends_on" => array(), "always_load_in_tables" => false)));
 
 		// Display lists

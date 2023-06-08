@@ -92,14 +92,14 @@
     <class id="ClassWithAttributeLinkedSetWithConstraint">
       <fields>
         <field id="status" xsi:type="AttributeLinkedSet">
-          <with_constrain>true</with_constrain>
+          <with_constraint>true</with_constraint>
         </field>
       </fields>
     </class>
     <class id="ClassWithAttributeLinkedSetIndirectWithConstraint">
       <fields>
         <field id="status" xsi:type="AttributeLinkedSetIndirect">
-          <with_constrain>true</with_constrain>
+          <with_constraint>true</with_constraint>
         </field>
       </fields>
     </class>
