@@ -3621,8 +3621,7 @@ abstract class MetaModel
 	{
 		MyHelpers::CheckKeyInArray('list code', $sListCode, self::$m_aListInfos);
 
-		if (!$sTargetClass)
-		{
+		if (!$sTargetClass) {
 			$sTargetClass = self::GetCallersPHPClass("Init");
 		}
 

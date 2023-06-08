@@ -1540,7 +1540,7 @@ EOF;
 				// $oField
 				$sAttCode = $oField->getAttribute('id');
 				$sAttType = $oField->getAttribute('xsi:type');
-		
+
 
 				$aParameters = $this->CompileAttribute($sAttType, $oField, $sModuleRelativeDir, $sClass, $sAttCode, $sCss, $aTagFieldsInfo, $sTempTargetDir);
 
@@ -1854,20 +1854,16 @@ EOF;
 				$this->aCustomListsCodes[] = $sListCode;
 			}
 
-			$sZlists .= "\n" . $this->GeneratePhpCodeForZlist($sListCode, $oListNode);
+			$sZlists .= "\n".$this->GeneratePhpCodeForZlist($sListCode, $oListNode);
 		}
 
 		// Methods
 		$oMethods = $oClass->GetUniqueElement('methods');
-		foreach($oMethods->getElementsByTagName('method') as $oMethod)
-		{
+		foreach ($oMethods->getElementsByTagName('method') as $oMethod) {
 			$sMethodCode = $oMethod->GetChildText('code');
-			if ($sMethodComment = $oMethod->GetChildText('comment', null))
-			{
+			if ($sMethodComment = $oMethod->GetChildText('comment', null)) {
 				$sMethods .= "\n\t$sMethodComment\n".$sMethodCode."\n";
-			}
-			else
-			{
+			} else {
 				$sMethods .= "\n\n".$sMethodCode."\n";
 			}
 		}
