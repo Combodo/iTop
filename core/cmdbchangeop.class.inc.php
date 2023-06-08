@@ -52,17 +52,17 @@ class CMDBChangeOp extends DBObject implements iCMDBChangeOp
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "optype",
-			'indexes' => array(
+			'indexes'             => array(
 				array('objclass', 'objkey'),
-			)
+			),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -121,13 +121,13 @@ class CMDBChangeOpCreate extends CMDBChangeOp
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_create",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_create",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -157,13 +157,13 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_delete",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_delete",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -198,13 +198,13 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -231,13 +231,13 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt_scalar",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt_scalar",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -290,14 +290,14 @@ class CMDBChangeOpSetAttributeTagSet extends CMDBChangeOpSetAttribute
     {
         $aParams = array
         (
-            "category" => "core/cmdb",
-            "key_type" => "",
-            "name_attcode" => "change",
-            "state_attcode" => "",
-            "reconc_keys" => array(),
-            "db_table" => "priv_changeop_setatt_tagset",
-            "db_key_field" => "id",
-            "db_finalclass_field" => "",
+	        "category"            => "core/cmdb, grant_by_profile",
+	        "key_type"            => "",
+	        "name_attcode"        => "change",
+	        "state_attcode"       => "",
+	        "reconc_keys"         => array(),
+	        "db_table"            => "priv_changeop_setatt_tagset",
+	        "db_key_field"        => "id",
+	        "db_finalclass_field" => "",
         );
         MetaModel::Init_Params($aParams);
         MetaModel::Init_InheritAttributes();
@@ -350,7 +350,7 @@ class CMDBChangeOpSetAttributeURL extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category"            => "core/cmdb",
+			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
@@ -419,13 +419,13 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt_data",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt_data",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -498,13 +498,13 @@ class CMDBChangeOpSetAttributeOneWayPassword extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt_pwd",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt_pwd",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -561,13 +561,13 @@ class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt_encrypted",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt_encrypted",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -627,13 +627,13 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt_text",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt_text",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -695,13 +695,13 @@ class CMDBChangeOpSetAttributeLongText extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt_longtext",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt_longtext",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -760,13 +760,13 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt_html",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt_html",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -824,13 +824,13 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt_log",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt_log",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -903,13 +903,13 @@ class CMDBChangeOpPlugin extends CMDBChangeOp
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_plugin",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_plugin",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -944,13 +944,13 @@ abstract class CMDBChangeOpSetAttributeLinks extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_links",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_links",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -977,13 +977,13 @@ class CMDBChangeOpSetAttributeLinksAddRemove extends CMDBChangeOpSetAttributeLin
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_links_addremove",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_links_addremove",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -1044,13 +1044,13 @@ class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_links_tune",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_links_tune",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -1134,13 +1134,13 @@ class CMDBChangeOpSetAttributeCustomFields extends CMDBChangeOpSetAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_setatt_custfields",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_setatt_custfields",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
