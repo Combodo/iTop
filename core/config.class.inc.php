@@ -946,6 +946,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'lifecycle.transitions_sort_type' => [
+			'type'                => 'string',
+			'description'         => 'How transitions will be sorted in the GUI. Possible values are "xml", "alphabetic", "fixed" or "relative"',
+			'default'             => DBObject::DEFAULT_TRANSITIONS_SORT_TYPE,
+			'value'               => DBObject::DEFAULT_TRANSITIONS_SORT_TYPE,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
 		'url_validation_pattern' => [
 			'type'                => 'string',
 			'description'         => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',

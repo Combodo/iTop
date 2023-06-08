@@ -506,7 +506,6 @@ class ValueSetEnum extends ValueSetDefinition
 	 */
 	public function SortValues(array &$aValues): void
 	{
-		// TODO: Add unit test
 		// Force sort by values only if necessary
 		if ($this->bSortByValue) {
 			asort($aValues);
