@@ -34,6 +34,8 @@ class ActionEmailTest extends ItopDataTestCase
 	{
 		parent::setUp();
 
+		$this->RequireOnceItopFile('application/Html2Text.php');
+
 		static::$oActionEmail = MetaModel::NewObject('ActionEmail', [
 			'name' => 'Test action',
 			'status' => 'disabled',
@@ -45,7 +47,7 @@ class ActionEmailTest extends ItopDataTestCase
 		$sHtml =
 <<<HTML
 <body>
-	<table>
+	<table data-something-that-would-be-removed-by-the-sanitizer-through-ckeditor-but-that-will-stay-with-the-template="bar">
 		<tr><td>Formatted eMail</td></tr>
 		<tr><td>\$content\$</td></tr>
 </body>
@@ -160,7 +162,6 @@ HTML
 		$oLog = null;
 		
 		$aEmailContent = $this->InvokeNonPublicMethod('\ActionEmail', 'PrepareMessageContent', $oActionEmail, [$aContext, &$oLog]);
-		//print_r($aEmailContent);
 		foreach($aFieldsToCheck as $sCode => $expectedValue) {
 			$this->assertEquals($expectedValue, $aEmailContent[$sCode]);
 		}
@@ -227,7 +228,7 @@ HTML
 				['body' => 
 <<<HTML
 <body>
-	<table>
+	<table data-something-that-would-be-removed-by-the-sanitizer-through-ckeditor-but-that-will-stay-with-the-template="bar">
 		<tr><td>Formatted eMail</td></tr>
 		<tr><td><p>Ticket "Test UserRequest" created.</p></td></tr>
 </body>

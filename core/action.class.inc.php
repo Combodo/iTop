@@ -336,7 +336,7 @@ class ActionEmail extends ActionNotification
 		try
 		{
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
-			if($this->Get('bypass_notify') === 'no') {
+			if ($this->Get('bypass_notify') === 'no') {
 				// In theory it is possible to notify *any* kind of object, 
 				// as long as there is an email attribute in the class
 				// So let's not assume that the selected class is a Person
@@ -529,6 +529,7 @@ class ActionEmail extends ActionNotification
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \Exception
+	 * @since 3.1.0 N°918
 	 */
 	protected function PrepareMessageContent($aContextArgs, &$oLog): array
 	{
@@ -543,13 +544,13 @@ class ActionEmail extends ActionNotification
 			'subject' => '',
 			'body' => '',
 			'references' => '',
-			'in_reply_to' => '',
 			'message_id' => '',
+			'in_reply_to' => '',
 			'attachments' => [],
 		];
 		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
 		$sPreviousLanguage = Dict::GetUserLanguage();
-		$aPreviousPluginProperties = ApplicationContext::GetPluginProperties($sPluginClass);
+		$aPreviousPluginProperties = ApplicationContext::GetPluginProperties('QueryLocalizerPlugin');
 		if ($this->Get('language') !== '') {
 			// If a language is specified for this action, force this language
 			// when rendering all placeholders inside this message
@@ -580,7 +581,7 @@ class ActionEmail extends ActionNotification
 			/**  @var ormDocument $oHtmlTemplate */
 			$oHtmlTemplate = $this->Get('html_template');
 			if (!$oHtmlTemplate->IsEmpty() && (false !== mb_strpos($oHtmlTemplate->GetData(), static::TEMPLATE_BODY_CONTENT))) {
-				$sBody = str_replace(static::TEMPLATE_BODY_CONTENT, $sBody, $oHtmlTemplate->GetData()); // str_replace is ok as long as both strings are UTF-8
+				$sBody = \Html2Text\mb_str_replace(static::TEMPLATE_BODY_CONTENT, $sBody, $oHtmlTemplate->GetData());
 			}
 			$aMessageContent['body'] = MetaModel::ApplyParams($sBody, $aContextArgs);
 			
