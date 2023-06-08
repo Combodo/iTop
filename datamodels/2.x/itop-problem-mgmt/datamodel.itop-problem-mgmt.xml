@@ -43,9 +43,11 @@
       </properties>
       <fields>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="new">
               <code>new</code>
+              <rank>10</rank>
               <style>
                 <main_color>$ibo-lifecycle-new-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
@@ -54,6 +56,7 @@
             </value>
             <value id="assigned">
               <code>assigned</code>
+              <rank>60</rank>
               <style>
                 <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
@@ -62,6 +65,7 @@
             </value>
             <value id="resolved">
               <code>resolved</code>
+              <rank>100</rank>
               <style>
                 <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
@@ -70,6 +74,7 @@
             </value>
             <value id="closed">
               <code>closed</code>
+              <rank>100</rank>
               <style>
                 <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>

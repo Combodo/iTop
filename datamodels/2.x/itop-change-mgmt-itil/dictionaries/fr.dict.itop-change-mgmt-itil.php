@@ -64,9 +64,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Change' => 'Ticket de changement',
+	'Class:Change' => 'Ticket de Changement',
 	'Class:Change+' => '',
-	'Class:Change/Attribute:status' => 'Etat',
+	'Class:Change/Attribute:status' => 'Statut',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'Nouveau',
 	'Class:Change/Attribute:status/Value:new+' => '',
@@ -167,7 +167,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:RoutineChange' => 'Ticket de Changement de Routine',
+	'Class:RoutineChange' => 'Changement de Routine',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Valider',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
@@ -233,7 +233,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:NormalChange' => 'Ticket de Changement Normal',
+	'Class:NormalChange' => 'Changement Normal',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Date d\'acceptation',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
@@ -268,7 +268,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EmergencyChange' => 'Ticket de Changement d\'Urgence',
+	'Class:EmergencyChange' => 'Changement d\'Urgence',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valider',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',

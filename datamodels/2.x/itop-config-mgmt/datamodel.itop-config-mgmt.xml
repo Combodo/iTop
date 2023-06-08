@@ -52,15 +52,19 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="business_criticity" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="high">
               <code>high</code>
+              <rank>10</rank>
             </value>
             <value id="medium">
               <code>medium</code>
+              <rank>20</rank>
             </value>
             <value id="low">
               <code>low</code>
+              <rank>30</rank>
             </value>
           </values>
           <sql>business_criticity</sql>
@@ -3363,6 +3367,7 @@
           <read_only>false</read_only>
         </field>
         <field id="type" xsi:type="AttributeEnum">
+          <sort_type>label</sort_type>
           <values>
             <value id="Middleware">
               <code>Middleware</code>
@@ -4634,6 +4639,7 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="type" xsi:type="AttributeEnum">
+          <sort_type>label</sort_type>
           <values>
             <value id="NetworkDevice">
               <code>NetworkDevice</code>

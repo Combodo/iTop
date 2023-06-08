@@ -113,7 +113,7 @@
           <class id="ResourceRunQueriesMenu"/>
         </classes>
       </group>
-      <group id="User">
+      <group id="User" _delta="define">
         <classes>
           <!-- This class list is also present in AdminTools group -->
           <class id="User"/>
@@ -122,7 +122,7 @@
           <class id="URP_Profiles"/>
         </classes>
       </group>
-      <group id="Audit">
+      <group id="Audit" _delta="define">
         <classes>
           <!-- This class list is also present in AdminTools group -->
           <class id="AuditCategory"/>
@@ -130,7 +130,7 @@
           <class id="ResourceRunQueriesMenu"/>
         </classes>
       </group>
-      <group id="Query">
+      <group id="Query" _delta="define">
         <classes>
           <!-- This class list is also present in AdminTools group -->
           <class id="Query"/>
@@ -138,7 +138,7 @@
           <class id="ResourceRunQueriesMenu"/>
         </classes>
       </group>
-      <group id="SynchroData">
+      <group id="SynchroData" _delta="define">
         <classes>
           <!-- This class list is also present in AdminTools group -->
           <class id="SynchroDataSource"/>
@@ -146,12 +146,12 @@
           <class id="SynchroReplica"/>
         </classes>
       </group>
-      <group id="History">
+      <group id="History" _delta="define">
         <classes>
           <class id="CMDBChangeOp"/>
         </classes>
       </group>
-      <group id="AdminTools">
+      <group id="AdminTools" _delta="define">
         <classes>
           <class id="ResourceAdminMenu"/>
           <class id="ResourceRunQueriesMenu"/>

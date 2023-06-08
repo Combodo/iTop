@@ -44,17 +44,29 @@
       </properties>
       <fields>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="approved">approved
               <code>approved</code>
-              <style><main_color>$ibo-lifecycle-success-state-primary-color</main_color><complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color><decoration_classes>fas fa-user-check</decoration_classes></style>
+              <rank>60</rank>
+              <style>
+                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-user-check</decoration_classes>
+              </style>
             </value>
             <value id="assigned">assigned
               <code>assigned</code>
-              <style><main_color>$ibo-lifecycle-neutral-state-primary-color</main_color><complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color><decoration_classes/></style>
+              <rank>40</rank>
+              <style>
+                <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="closed">
               <code>closed</code>
+              <rank>100</rank>
               <style>
                 <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
@@ -63,12 +75,15 @@
             </value>
             <value id="implemented">
               <code>implemented</code>
+              <rank>80</rank>
             </value>
             <value id="monitored">
               <code>monitored</code>
+              <rank>90</rank>
             </value>
             <value id="new">
               <code>new</code>
+              <rank>10</rank>
               <style>
                 <main_color>$ibo-lifecycle-new-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
@@ -77,6 +92,7 @@
             </value>
             <value id="notapproved">
               <code>notapproved</code>
+              <rank>70</rank>
               <style>
                 <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
@@ -85,6 +101,7 @@
             </value>
             <value id="plannedscheduled">
               <code>plannedscheduled</code>
+              <rank>50</rank>
               <style>
                 <main_color>$ibo-lifecycle-waiting-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-waiting-state-secondary-color</complementary_color>
@@ -93,6 +110,7 @@
             </value>
             <value id="rejected">
               <code>rejected</code>
+              <rank>30</rank>
               <style>
                 <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
@@ -101,6 +119,7 @@
             </value>
             <value id="validated">
               <code>validated</code>
+              <rank>20</rank>
               <style>
                 <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
