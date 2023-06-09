@@ -149,6 +149,7 @@
       <group id="History" _delta="define">
         <classes>
           <class id="CMDBChangeOp"/>
+          <class id="CMDBChange"/>
         </classes>
       </group>
       <group id="AdminTools" _delta="define">
