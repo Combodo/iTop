@@ -628,13 +628,13 @@ class CMDBChangeOpAttachmentAdded extends CMDBChangeOp
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_attachment_added",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_attachment_added",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -696,13 +696,13 @@ class CMDBChangeOpAttachmentRemoved extends CMDBChangeOp
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "",
-			"name_attcode" => "change",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_changeop_attachment_removed",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_changeop_attachment_removed",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);

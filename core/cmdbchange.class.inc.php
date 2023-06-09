@@ -19,17 +19,17 @@ class CMDBChange extends DBObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "date",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_change",
-			"db_key_field" => "id",
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "date",
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
+			"db_table"            => "priv_change",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-			'indexes' => array(
+			'indexes'             => array(
 				array('origin'),
-			)
+			),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
