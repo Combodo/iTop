@@ -751,7 +751,7 @@ class ObjectFormManager extends FormManager
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\LinkedSetField'))) {
 						/** @var \Combodo\iTop\Form\Field\LinkedSetField $oField */
 						if ($this->oFormHandlerHelper !== null) {
-							$oField->SetInformationEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_get_information_json'));
+							$oField->SetInformationEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_get_information_for_linked_set_json'));
 						}
 					}
 					// - Field that require to apply scope on its DM OQL

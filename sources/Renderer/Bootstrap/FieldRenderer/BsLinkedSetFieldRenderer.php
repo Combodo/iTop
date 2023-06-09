@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use ApplicationContext;
 use AttributeFriendlyName;
+use Combodo\iTop\Form\Field\DateTimeField;
 use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Renderer\Bootstrap\BsFieldRendererMappings;
 use Combodo\iTop\Renderer\FieldRenderer;
@@ -311,6 +312,12 @@ EOF
 								});
 							});
                             
+                            // Prevent row selection on input click
+                            $('input,select,textarea,.input-group-addon', oRow).on('click', function(oEvent){
+								// Prevents row selection
+								oEvent.stopPropagation();
+                            });
+                            
                             // Store attributes inline css and js
                             for (var key in oData.attributes) {
 							 	const aElement = oData.attributes[key];
@@ -394,14 +401,35 @@ JS
 			);
 
 			// Additional features if in edition mode
-			if (!$this->oField->GetReadOnly())
-			{
-                // Attaching JS widget
-                $sObjectInformationsUrl = $this->oField->GetInformationEndpoint();
-                $oOutput->AddJs(
-	                <<<JS
+			if (!$this->oField->GetReadOnly()) {
+				$aErrorMessagesMandatory = Dict::S('Core:Validator:Mandatory');
+				$aErrorMessagesDefault = Dict::S('Core:Validator:Default');
+				// Attaching JS widget
+				$sObjectInformationsUrl = $this->oField->GetInformationEndpoint();
+				$oOutput->AddJs(
+					<<<JS
                 $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field({
 					'validators': {$this->GetValidatorsAsJson()},
+					'on_validation_callback': function(){
+                        	const aLinkedSetInputs = $('#{$sFieldWrapperId} input', this.element);
+							aLinkedSetInputs.each(function(e){
+								const oInput = $(this);
+								const aInputValidity = oInput[0].validity;
+								const oFormField = oInput.closest('.form_field_control');
+								if(aInputValidity.valueMissing){
+									 oFormField.toggleClass('has-error', true);
+									 $('.help-block', oFormField).html('$aErrorMessagesMandatory');
+								}
+								else if(aInputValidity.patternMismatch){
+									 oFormField.toggleClass('has-error', true);
+									 $('.help-block', oFormField).html('$aErrorMessagesDefault');
+								}
+                                else{
+                                     oFormField.toggleClass('has-error', false);
+									 $('.help-block', oFormField).empty();
+                                }
+							});
+					},
 					'get_current_value_callback': function(me, oEvent, oData){
                         
                     	// Read linked set value as array
@@ -459,6 +487,7 @@ JS
 									aObjectIds: aObjectIds,
 									aObjectAttCodes: $sAttCodesToDisplayAsJson,
 									aLinkAttCodes: $sLnkAttCodesToDisplayAsJson,
+									sDateTimePickerWidgetParent: '#table_{$this->oField->GetGlobalId()}_wrapper'
 								},
 								function(oData){
                                     
@@ -703,7 +732,7 @@ JS
 			);
 
 			// Link attributes to display
-			$this->PrepareItem($oItem, $this->oField->GetLinkedClass(), $this->oField->GetLnkAttributesToDisplay(true), true, $aItemProperties, 'lnk__');
+			$this->PrepareItem($oItem, $this->oField->GetLinkedClass(), $this->oField->GetLnkAttributesToDisplay(true), !$this->oField->GetReadOnly(), $aItemProperties, 'lnk__');
 
 			// Remote attributes to display
 			$this->PrepareItem($oRemoteItem, $this->oField->GetTargetClass(), $this->oField->GetAttributesToDisplay(true), false, $aItemProperties);
@@ -784,6 +813,11 @@ JS
 				if ($bIsEditable) {
 
 					$oField = $oAttDef->MakeFormField($oItem);
+
+					// Prevent datetimepicker popup to be truncated
+					if ($oField instanceof DateTimeField) {
+						$oField->SetDateTimePickerWidgetParent('#table_'.$this->oField->GetGlobalId().'_wrapper');
+					}
 
 					$sFieldRendererClass = static::GetFieldRendererClass($oField);
 

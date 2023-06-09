@@ -9,6 +9,7 @@ use Combodo\iTop\Application\UI\Links\Set\BlockLinkSetDisplayAsProperty;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\Validator\LinkedSetValidator;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Renderer\BlockRenderer;
@@ -2445,6 +2446,8 @@ class AttributeLinkedSet extends AttributeDefinition
 			}
 			$oFormField->SetLnkAttributesToDisplay($aLnkAttributesToDisplay);
 		}
+
+		$oFormField->AddValidator(new LinkedSetValidator());
 
 		parent::MakeFormField($oObject, $oFormField);
 

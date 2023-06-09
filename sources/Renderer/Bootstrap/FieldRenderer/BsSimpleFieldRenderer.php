@@ -88,6 +88,15 @@ class BsSimpleFieldRenderer extends BsFieldRenderer
 				// - Value regarding the field type
 				switch ($sFieldClass) {
 					case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+
+						/* @see N°803 - Allow display & edition of attributes on n:n relations on Portal
+						 * LinkedSetFieldRenderer allow modification of link attributes, the default widget positioning truncates the popup.
+						 */
+						$sParent = '';
+						if ($this->oField->GetDateTimePickerWidgetParent() != null) {
+							$sParent = ", widgetParent: '{$this->oField->GetDateTimePickerWidgetParent()}'";
+						}
+
 						$oOutput->AddHtml('<div class="input-group date" id="datepicker_'.$this->oField->GetGlobalId().'">');
 						$oOutput->AddHtml('<input type="text" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('" class="form-control" maxlength="255" '.$sInputTags.'/>');
 						$oOutput->AddHtml('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
@@ -96,7 +105,7 @@ class BsSimpleFieldRenderer extends BsFieldRenderer
 						$sLocale = Dict::S('Portal:Calendar-FirstDayOfWeek');
 						$oOutput->AddJs(
 							<<<EOF
-                                					$('#datepicker_{$this->oField->GetGlobalId()}').datetimepicker({format: $sJSFormat, locale: '$sLocale'});
+                                					$('#datepicker_{$this->oField->GetGlobalId()}').datetimepicker({format: $sJSFormat, locale: '$sLocale' $sParent});
 EOF
 						);
 						break;

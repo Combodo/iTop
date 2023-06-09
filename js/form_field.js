@@ -186,6 +186,24 @@ $(function()
 								}
 							}
 						}
+						else if(sValidatorType === 'LinkedSetValidator'){
+							// Prevent form submit if inputs are invalid state
+							// @see Bug N°803 - Allow display & edition of attributes on n:n relations on Portal
+							oResult.error_messages.push(oValidator.message);
+							const aLinkedSetInvalidInputs = $('input:invalid', this.element);
+							if(aLinkedSetInvalidInputs.length > 0){
+								aLinkedSetInvalidInputs.each(function(e){
+									const $Input = $(this);
+									const aInputValidity = $Input[0].validity;
+									if(aInputValidity.valueMissing){
+										oResult.is_valid = false;
+									}
+									if(aInputValidity.patternMismatch){
+										oResult.is_valid = false;
+									}
+								});
+							}
+						}
 						else
 						{
 							var oRegExp = new RegExp(oValidator.reg_exp, "g");

@@ -75,6 +75,11 @@ p_object_get_information_json:
   defaults:
     _controller: 'Combodo\iTop\Portal\Controller\ObjectController::GetInformationAsJsonAction'
 
+p_object_get_information_for_linked_set_json:
+  path: '/object/get-information-for-linked-set/json'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::GetInformationForLinkedSetAsJsonAction'
+
 p_object_document_display:
   path: '/object/document/display/{sObjectClass}/{sObjectId}/{sObjectField}'
   defaults:
