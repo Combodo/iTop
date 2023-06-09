@@ -243,7 +243,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Stimulus:ev_autoclose+' => '',
 	'Class:UserRequest/Stimulus:ev_resolve' => 'Marquer comme résolu',
 	'Class:UserRequest/Stimulus:ev_resolve+' => '',
-	'Class:UserRequest/Stimulus:ev_close' => 'Clore cette requête',
+	'Class:UserRequest/Stimulus:ev_close' => 'Clore cette demande',
 	'Class:UserRequest/Stimulus:ev_close+' => '',
 	'Class:UserRequest/Stimulus:ev_reopen' => 'Ré-ouvrir',
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
