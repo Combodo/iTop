@@ -212,7 +212,7 @@ EOF
 							"defaultContent": "",
 							"type": "html",
 							"data": "attributes.lnk__" + sKey,
-							"className": aColumnProperties.mandatory ? 'mandatory' : '',
+							"className": {$sIsEditable} && aColumnProperties.mandatory ? 'mandatory' : '',
 							"render": function(data, type, row){
 								var cellElem;
                                                                 
