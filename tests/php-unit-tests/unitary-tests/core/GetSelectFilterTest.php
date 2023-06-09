@@ -5,10 +5,13 @@ namespace Combodo\iTop\Test\UnitTest\Webservices;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 use DBObjectSet;
-use Exception;
 use MetaModel;
+use URP_Profiles;
+use URP_UserProfile;
+use User;
+use UserInternal;
+use UserLocal;
 use UserRightsProfile;
-use utils;
 
 
 /**
@@ -47,16 +50,19 @@ class GetSelectFilterTest extends ItopDataTestCase
 		}
 	}
 
-	public function testGetSelectFilter()
-	{
+	public function testGetSelectFilter() {
 		$oUserRights = new UserRightsProfile();
 		$aClasses = get_declared_classes();
-		$aUserClasses = ['User'];
-		$aUserLocalAncestors = ['User', 'UserInternal', 'UserLocal'];
-		foreach($aClasses as $sClass)
-		{
-			if (is_subclass_of($sClass, 'User'))
-			{
+		$aUserClasses = [User::class];
+		$aUserLocalAncestors = [User::class, UserInternal::class, UserLocal::class];
+		foreach ($aClasses as $sClass) {
+			if (false === MetaModel::IsValidClass($sClass)) {
+				// Some helper classes, children of User, are used as php_parent in the XML, and thus are not part of the datamodel
+				// eg: AbstractApplicationToken in the authent-token module (N°6388)
+				// We don't want to test those classes !
+				continue;
+			}
+			if (is_subclass_of($sClass, User::class)) {
 				$aUserClasses[] = $sClass;
 			}
 		}
@@ -68,10 +74,10 @@ class GetSelectFilterTest extends ItopDataTestCase
 
 		$oConfig->Set('security.hide_administrators', false);
 
-		$oFilterProfiles = $oUserRights->GetSelectFilter($this->oUser, 'URP_Profiles');
+		$oFilterProfiles = $oUserRights->GetSelectFilter($this->oUser, URP_Profiles::class);
 		if ($oFilterProfiles === true)
 		{
-			$oFilterProfiles = new DBObjectSearch('URP_Profiles');
+			$oFilterProfiles = new DBObjectSearch(URP_Profiles::class);
 		}
 		$oSet = new DBObjectSet($oFilterProfiles);
 		$bAdminProfileFound = false;
@@ -105,10 +111,10 @@ class GetSelectFilterTest extends ItopDataTestCase
 			$this->assertEquals($bAdminUserFound, true);
 		}
 
-		$oFilterLnkProfiles = $oUserRights->GetSelectFilter($this->oUser, 'URP_UserProfile');
+		$oFilterLnkProfiles = $oUserRights->GetSelectFilter($this->oUser, URP_UserProfile::class);
 		if ($oFilterLnkProfiles === true)
 		{
-			$oFilterLnkProfiles = new DBObjectSearch('URP_UserProfile');
+			$oFilterLnkProfiles = new DBObjectSearch(URP_UserProfile::class);
 		}
 		$oSet = new DBObjectSet($oFilterLnkProfiles);
 		// There should some lnk referencing either our administrator account or the Administrator profile
@@ -134,8 +140,8 @@ class GetSelectFilterTest extends ItopDataTestCase
 		// via GetSelectFilter
 		$oConfig->Set('security.hide_administrators', true);
 
-		$oFilterProfiles = $oUserRights->GetSelectFilter($this->oUser, 'URP_Profiles');
-		$this->assertNotEquals($oFilterProfiles,true); // This class must be filtered
+		$oFilterProfiles = $oUserRights->GetSelectFilter($this->oUser, URP_Profiles::class);
+		$this->assertNotEquals($oFilterProfiles, true); // This class must be filtered
 		$oSet = new DBObjectSet($oFilterProfiles);
 		while($oProfile = $oSet->Fetch())
 		{
@@ -152,8 +158,8 @@ class GetSelectFilterTest extends ItopDataTestCase
 			}
 		}
 
-		$oFilterLnkProfiles = $oUserRights->GetSelectFilter($this->oUser, 'URP_UserProfile');
-		$this->assertNotEquals($oFilterLnkProfiles,true); // This class must be filtered
+		$oFilterLnkProfiles = $oUserRights->GetSelectFilter($this->oUser, URP_UserProfile::class);
+		$this->assertNotEquals($oFilterLnkProfiles, true); // This class must be filtered
 		$oSet = new DBObjectSet($oFilterLnkProfiles);
 		// There should be no lnk referencing either our administrator account or the profile Administrator
 		while($oLnk = $oSet->Fetch())
