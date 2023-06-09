@@ -245,7 +245,7 @@ try
 			$sDescription = get_class($oAuditRule).": ".$oAuditRule->GetName();
 			$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, $sDescription, '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
+			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('UI:Audit:Interactive:Button:Back'), "./audit.php?".$oAppContext->GetForLink());
 			$oP->AddUiBlock($oBackButton);
 			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
 			$sBlockId = 'audit_errors';
@@ -258,9 +258,9 @@ try
 			break;
 
 		case 'selection':
-			$oP->SetBreadCrumbEntry('ui-tool-auditselection', Dict::S('Menu:Audit'), Dict::S('UI:Audit:InteractiveAudit:Selection'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:InteractiveAudit:Selection')));
-			$oP->AddUiBlock(new Text(Dict::S('UI:Audit:InteractiveAudit:Selection+')));
+			$oP->SetBreadCrumbEntry('ui-tool-auditselection', Dict::S('UI:Audit:Interactive:Selection:BreadCrumb'), Dict::S('UI:Audit:Interactive:Selection:BreadCrumb+'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:Interactive:Selection:Title')));
+			$oP->AddUiBlock(new Text(Dict::S('UI:Audit:Interactive:Selection:SubTitle')));
 
 			// Header block to select all audit categories
 			$oCategoriesSet = new DBObjectSet(new DBObjectSearch('AuditCategory'));
@@ -277,7 +277,7 @@ try
 					'../images/icons/icons8-audit.svg',
 					utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit",
 					$iCategoryCount,
-					Dict::S('UI:Audit:InteractiveAudit:Selection:All')
+					Dict::S('UI:Audit:Interactive:Selection:BadgeAll')
 				));
 			$oDashboardColumn->AddUIBlock($oAllCategoriesDashlet);
 			$oP->AddUiBlock($oDashboardRow);
@@ -318,29 +318,37 @@ try
 		default:
 			$sDomainKey = utils::ReadParam('domain', '');
 			$sCategories = utils::ReadParam('categories', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);  // May contain commas
+			// Default case, full audit
 			$oCategoriesSet = new DBObjectSet(new DBObjectSearch('AuditCategory'));
-			$sSubTitle = Dict::S('UI:Audit:InteractiveAudit:AllCategories');
-			$sBreadCrumbLabel = Dict::S('Menu:Audit');
-			$sBreadCrumbDescription = Dict::S('UI:Audit:InteractiveAudit');
-			if (!empty($sCategories)) {
+			$sTitle = Dict::S('UI:Audit:Interactive:All:Title');
+			$sSubTitle = Dict::S('UI:Audit:Interactive:All:SubTitle');
+			$sBreadCrumbLabel = Dict::S('UI:Audit:Interactive:All:BreadCrumb');
+			$sBreadCrumbTooltip = Dict::S('UI:Audit:Interactive:All:BreadCrumb+');
+
+			if (!empty($sCategories)) {  // Case with a set of categories
 				$oCategoriesSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditCategory WHERE id IN (:categories)", array('categories' => explode(',', $sCategories))));
-				$sSubTitle = Dict::Format('UI:Audit:InteractiveAudit:SelectedCategories', $oCategoriesSet->Count());
-				$sBreadCrumbLabel = Dict::S('UI:Audit:InteractiveAudit:ForCategories');
-			} elseif (!empty($sDomainKey)) {
+				$sCategories = implode(", ", $oCategoriesSet->GetColumnAsArray('name'));
+				$oCategoriesSet->Rewind();
+				$sTitle = Dict::Format('UI:Audit:Interactive:Categories:Title', $sCategories);
+				$sSubTitle = Dict::Format('UI:Audit:Interactive:Categories:SubTitle', $oCategoriesSet->Count());
+				$sBreadCrumbLabel = Dict::Format('UI:Audit:Interactive:Categories:BreadCrumb', $oCategoriesSet->Count());
+				$sBreadCrumbTooltip = Dict::Format('UI:Audit:Interactive:Categories:BreadCrumb+', $sCategories);
+
+			} elseif (!empty($sDomainKey)) {  // Case with a single Domain
 				$oAuditDomain = MetaModel::GetObject('AuditDomain', $sDomainKey);
 				$oCategoriesSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditCategory AS c JOIN lnkAuditCategoryToAuditDomain AS lnk ON lnk.category_id = c.id WHERE lnk.domain_id = :domain", array('domain' => $oAuditDomain->GetKey())));
-				$sSubTitle = Dict::Format('UI:Audit:InteractiveAudit:SelectedDomain', $oAuditDomain->GetName());
-				$sBreadCrumbLabel = $oAuditDomain->GetName();
+				$sDomainName = $oAuditDomain->GetName();
+				$sTitle = Dict::Format('UI:Audit:Interactive:Domain:Title', $sDomainName);
+				$sSubTitle = Dict::Format('UI:Audit:Interactive:Domain:SubTitle', $sDomainName);
+				$sBreadCrumbLabel = Dict::Format('UI:Audit:Interactive:Domain:BreadCrumb', $sDomainName);
+				$sBreadCrumbTooltip = Dict::Format('UI:Audit:Interactive:Domain:BreadCrumb+', $sDomainName);
 			}
 
-			$oP->SetBreadCrumbEntry('ui-tool-audit', $sBreadCrumbLabel, $sSubTitle, '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-
-			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-stethoscope fa-lg', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
+			$oP->SetBreadCrumbEntry('ui-tool-audit', $sBreadCrumbLabel, $sBreadCrumbTooltip, '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+			$oBackButton = ButtonUIBlockFactory::MakeLinkNeutral("./audit.php?".$oAppContext->GetForLink(), Dict::S('UI:Audit:Interactive:Button:Back'), 'fas fa-chevron-left');
 			$oP->AddUiBlock($oBackButton);
-			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:InteractiveAudit')));
-
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle));
 			$oP->AddUiBlock(new Text($sSubTitle));
-
 
 			$oTotalBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-audit.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsAudited'));
 			$oErrorBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-delete.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsInError'));
@@ -374,8 +382,6 @@ try
 
 			$oP->AddUiBlock($oDashboardRow);
 
-
-			$oRouter = \Combodo\iTop\Service\Router\Router::GetInstance();
 			$aAuditCategoryPanels = [];
 			/** @var AuditCategory $oAuditCategory */
 			while ($oAuditCategory = $oCategoriesSet->fetch()) {
@@ -387,10 +393,7 @@ try
 				// Add a button in the above toolbar
 				$sAuditCategoryClass = get_class($oAuditCategory);
 				if (UserRights::IsActionAllowed($sAuditCategoryClass, UR_ACTION_READ)) {
-					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-eye', Dict::S('UI:Audit:ViewRules'), ApplicationContext::MakeObjectUrl($sAuditCategoryClass, $oAuditCategory->GetKey()).'&#ObjectProperties=tab_ClassAuditCategoryAttributerules_list'));
-				}
-				if (UserRights::IsActionAllowed($sAuditCategoryClass, UR_ACTION_MODIFY)) {
-					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-pen', Dict::S('UI:Audit:ModifyCategory'), $oRouter->GenerateUrl('object.modify', ['class' => $sAuditCategoryClass, 'id' => $oAuditCategory->GetKey()])));
+					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-wrench fa-lg', Dict::S('UI:Audit:ViewRules'), ApplicationContext::MakeObjectUrl($sAuditCategoryClass, $oAuditCategory->GetKey()).'&#ObjectProperties=tab_ClassAuditCategoryAttributerules_list'),);
 				}
 				$aResults = array();
 				try {
