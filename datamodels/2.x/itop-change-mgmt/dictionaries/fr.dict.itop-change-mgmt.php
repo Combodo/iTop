@@ -66,7 +66,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change' => 'Ticket de Changement',
 	'Class:Change+' => '',
-	'Class:Change/Attribute:status' => 'Statut',
+	'Class:Change/Attribute:status' => 'Etat',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'Nouveau',
 	'Class:Change/Attribute:status/Value:new+' => '',

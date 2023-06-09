@@ -64,7 +64,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
-	'Class:Incident/Attribute:status' => 'Statut',
+	'Class:Incident/Attribute:status' => 'Etat',
 	'Class:Incident/Attribute:status+' => '',
 	'Class:Incident/Attribute:status/Value:new' => 'Nouveau',
 	'Class:Incident/Attribute:status/Value:new+' => '',

@@ -40,7 +40,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OAuthClient/Attribute:provider+' => '',
 	'Class:OAuthClient/Attribute:name' => 'Login',
 	'Class:OAuthClient/Attribute:name+' => 'L\'adresse email à utiliser chez ce fournisseur',
-	'Class:OAuthClient/Attribute:status' => 'Statut',
+	'Class:OAuthClient/Attribute:status' => 'Etat',
 	'Class:OAuthClient/Attribute:status+' => 'Après la création, effectuer l\'action \'Créer un jeton d\'accès...\' pour activer ce client OAuth',
 	'Class:OAuthClient/Attribute:status/Value:active' => 'Jeton d\'accès créé',
 	'Class:OAuthClient/Attribute:status/Value:inactive' => 'Pas de jeton d\'accès',

@@ -57,7 +57,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest' => 'Demande Utilisateur',
 	'Class:UserRequest+' => '',
-	'Class:UserRequest/Attribute:status' => 'Statut',
+	'Class:UserRequest/Attribute:status' => 'Etat',
 	'Class:UserRequest/Attribute:status+' => '',
 	'Class:UserRequest/Attribute:status/Value:new' => 'Nouveau',
 	'Class:UserRequest/Attribute:status/Value:new+' => '',
