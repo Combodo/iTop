@@ -63,12 +63,16 @@
     </class>
     <class id="ClassWithAttributeLinkedSetWithConstraint">
       <fields>
-        <field id="status" xsi:type="AttributeLinkedSet"/>
+        <field id="status" xsi:type="AttributeLinkedSet">
+          <with_php_constraint>true</with_php_constraint>
+        </field>
       </fields>
     </class>
     <class id="ClassWithAttributeLinkedSetIndirectWithConstraint">
       <fields>
-        <field id="status" xsi:type="AttributeLinkedSetIndirect"/>
+        <field id="status" xsi:type="AttributeLinkedSetIndirect">
+          <with_php_constraint>true</with_php_constraint>
+        </field>
       </fields>
     </class>
     <class id="ClassWithAttributeEnumSorted">

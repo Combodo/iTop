@@ -482,8 +482,8 @@
           <type>boolean</type>
           <default>true</default>
         </property>
-        <property id="with_constraint">
-          <php_param>with_constraint</php_param>
+        <property id="with_php_constraint">
+          <php_param>with_php_constraint</php_param>
           <mandatory>false</mandatory>
           <type>boolean</type>
           <default>false</default>

@@ -1132,11 +1132,6 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/display_style");
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/display_style");
 
-		// N°6228 - Remove last Profil of a User / Exceed SaaS User quota without control
-		// - Remove with_constraint
-		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/with_constraint");
-		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/with_constraint");
-
 		// N°2783 - Custom zlists
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/presentation/custom_presentations");
 		$this->RemoveNodeFromXPath("/itop_design/meta/presentation/custom_presentations");

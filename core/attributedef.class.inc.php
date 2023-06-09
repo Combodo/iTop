@@ -1727,12 +1727,13 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/**
-	 * @return bool true if host object has constraints
+	 * Indicates if the current Attribute has constraints (php constraints or datamodel constraints)
+	 * @return bool true if Attribute has constraints
 	 * @since 3.1.0 N°6228
 	 */
 	public function GetHasConstraint()
 	{
-		return $this->GetOptional('with_constraint', false);
+		return $this->GetOptional('with_php_constraint', false);
 	}
 
 	/**
