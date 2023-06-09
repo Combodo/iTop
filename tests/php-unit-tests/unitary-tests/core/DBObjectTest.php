@@ -679,9 +679,21 @@ class DBObjectTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @covers \DBObject::EnumTransitions
+	 * @group itop-community
+	 *
+	 * @covers       \DBObject::EnumTransitions
 	 * @dataProvider EnumTransitionsProvider
+	 *
+	 * @param string $sObjClass
+	 * @param array $aObjData
+	 * @param string|null $sObjCurrentState
+	 * @param string $sSortType
+	 * @param array $aExpectedSortedStimuli
+	 *
 	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
 	public function testEnumTransitions(string $sObjClass, array $aObjData, ?string $sObjCurrentState, string $sSortType, array $aExpectedSortedStimuli): void
 	{
