@@ -1083,6 +1083,7 @@ JS
 			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
 			$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 		}
+
 		// Summary details
 		$aCounts = array();
 		$aStateLabels = array();
@@ -1129,6 +1130,18 @@ JS
 		}
 
 		$oBlock = new UIContentBlockWithJSRefreshCallback(null, ["ibo-dashlet-header-dynamic--container"]);
+
+		// N°6394 Make sure to sort elements as defined in the datamodel
+		if (utils::IsNotNullOrEmptyString($sStateAttrCode)) {
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
+			$aAllowedValues = $oAttDef->GetAllowedValues();
+			$AllowedValuesKeys = array_keys($aAllowedValues);
+
+			uksort($aStateLabels, function ($sKey1, $sKey2) use ($AllowedValuesKeys) {
+				return array_search($sKey1, $AllowedValuesKeys) > array_search($sKey2, $AllowedValuesKeys) ? 1 : -1;
+			});
+		}
+
 		foreach ($aStateLabels as $sStateValue => $sStateLabel) {
 			$aCount = $aCounts[$sStateValue];
 			$sHyperlink = $aCount['link'];
