@@ -339,6 +339,11 @@
           <default_value>no</default_value>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="tenant" xsi:type="AttributeString">
+          <sql>tenant</sql>
+          <default_value>common</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <presentation>
         <details>
@@ -364,14 +369,17 @@
                     <item id="redirect_url">
                       <rank>50</rank>
                     </item>
-                    <item id="client_id">
+                    <item id="tenant">
                       <rank>60</rank>
                     </item>
-                    <item id="client_secret">
+                    <item id="client_id">
                       <rank>70</rank>
                     </item>
-                    <item id="mailbox_list">
+                    <item id="client_secret">
                       <rank>80</rank>
+                    </item>
+                    <item id="mailbox_list">
+                      <rank>90</rank>
                     </item>
                   </items>
                 </item>
