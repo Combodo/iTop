@@ -55,6 +55,9 @@ class BsSimpleFieldRenderer extends BsFieldRenderer
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
 		$sFieldDescriptionForHTMLTag = ($this->oField->HasDescription()) ? 'data-tooltip-content="'.utils::HtmlEntities($this->oField->GetDescription()).'"' : '';
 
+		// Prepare input validations tags
+		$sInputTags = $this->ComputeInputValidationTags($this->oField);
+
 		// Rendering field in edition mode
 		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden()) {
 			// HTML content
@@ -82,9 +85,6 @@ class BsSimpleFieldRenderer extends BsFieldRenderer
 				// - Help block
 				$oOutput->AddHtml('<div class="help-block"></div>');
 
-				// Prepare input validations tags
-				$sInputTags = $this->ComputeInputValidationTags($this->oField);
-
 				// - Value regarding the field type
 				switch ($sFieldClass) {
 					case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
@@ -111,7 +111,7 @@ EOF
 						break;
 
 					case 'Combodo\\iTop\\Form\\Field\\PasswordField':
-						$oOutput->AddHtml('<input type="password" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" autocomplete="off" />');
+						$oOutput->AddHtml('<input type="password" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" autocomplete="off" '.$sInputTags.'/>');
 						break;
 
 					case 'Combodo\\iTop\\Form\\Field\\StringField':
@@ -124,7 +124,7 @@ EOF
 
 					case 'Combodo\\iTop\\Form\\Field\\SelectField':
 					case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
-						$oOutput->AddHtml('<select id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" '.(($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '').' class="form-control">');
+					$oOutput->AddHtml('<select id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" '.(($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '').' class="form-control"  '.$sInputTags.'>');
 						foreach ($this->oField->GetChoices() as $sChoice => $sLabel) {
 							// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
 							$sSelectedAtt = ($this->oField->GetCurrentValue() == $sChoice) ? 'selected' : '';
@@ -148,29 +148,29 @@ EOF
 
 					// Label
 					$oOutput->AddHtml('<div class="form_field_label">');
-					if ($this->oField->GetLabel() !== '') {
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
-					}
-					$oOutput->AddHtml('</div>');
+				if ($this->oField->GetLabel() !== '') {
+					$oOutput->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+				}
+				$oOutput->AddHtml('</div>');
 
-					// Value
-					$oOutput->AddHtml('<div class="form_field_control">');
-					// - Help block
-					$oOutput->AddHtml('<div class="help-block"></div>');
-					// First the edition area
-					$oOutput->AddHtml('<div>');
-					$oOutput->AddHtml('<textarea id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" class="form-control" rows="8">' . $this->oField->GetCurrentValue() . '</textarea>');
-					$oOutput->AddHtml('</div>');
-					// Then the previous entries if necessary
-					if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField') {
-						$this->PreparingCaseLogEntries($oOutput);
-					}
-					$oOutput->AddHtml('</div>');
+				// Value
+				$oOutput->AddHtml('<div class="form_field_control">');
+				// - Help block
+				$oOutput->AddHtml('<div class="help-block"></div>');
+				// First the edition area
+				$oOutput->AddHtml('<div>');
+				$oOutput->AddHtml('<textarea id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" class="form-control" rows="8"  '.$sInputTags.'>'.$this->oField->GetCurrentValue().'</textarea>');
+				$oOutput->AddHtml('</div>');
+				// Then the previous entries if necessary
+				if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField') {
+					$this->PreparingCaseLogEntries($oOutput);
+				}
+				$oOutput->AddHtml('</div>');
 
-					// Closing container
-					$oOutput->AddHtml('</div>');
+				// Closing container
+				$oOutput->AddHtml('</div>');
 
-					// Some additional stuff if we are displaying it with a rich editor
+				// Some additional stuff if we are displaying it with a rich editor
 					if ($bRichEditor) {
 						$aConfig = utils::GetCkeditorPref();
 						$aConfig['extraPlugins'] = 'codesnippet';

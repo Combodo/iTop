@@ -358,17 +358,26 @@ class LinkedSetField extends Field
 		/** @var ormLinkSet $oSet */
 		$oSet = $this->GetCurrentValue();
 
+		// retrieve displayed attributes
+		$aAttributesToDisplayCodes = $this->GetLnkAttributesToDisplay(true);
+
+		// validate each links...
 		/** @var \DBObject $oItem */
 		foreach ($oSet as $oItem) {
-			list($bRes, $aIssues) = $oItem->CheckToWrite();
-			if ($bRes === false) {
-				foreach ($aIssues as $sIssue) {
-					$sItem = $oItem->Get('friendlyname') != '' ? $oItem->Get('friendlyname') : Dict::S('UI:Links:NewItem');
-					$this->AddErrorMessage('<b>'.$sItem.' : </b>'.$sIssue);
+			$aChanges = $oItem->ListChanges();
+			foreach ($aChanges as $sAttCode => $value) {
+				if (!in_array($sAttCode, $aAttributesToDisplayCodes)) {
+					continue;
 				}
-				$bValid = false;
+				$res = $oItem->CheckValue($sAttCode);
+				if ($res !== true) {
+					$sAttLabel = $this->GetLabel($sAttCode);
+					$sItem = $oItem->Get('friendlyname') != '' ? $oItem->Get('friendlyname') : Dict::S('UI:Links:NewItem');
+					$sIssue = Dict::Format('Core:CheckValueError', $sAttLabel, $sAttCode, $res);
+					$this->AddErrorMessage('<b>'.$sItem.' : </b>'.$sIssue);
+					$bValid = false;
+				}
 			}
-
 		}
 
 		$oSet->Rewind();

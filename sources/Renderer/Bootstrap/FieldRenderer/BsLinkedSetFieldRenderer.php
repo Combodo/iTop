@@ -136,7 +136,7 @@ EOF
 			$sLabelGeneralCheckbox = utils::EscapeHtml(Dict::S('Core:BulkExport:CheckAll').' / '.Dict::S('Core:BulkExport:UncheckAll'));
 			$sSelectionOptionHtml = ($this->oField->GetReadOnly()) ? 'false' : '{"style": "multi"}';
 			$sSelectionInputGlobalHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" id="'.$this->oField->GetGlobalId().'_check_all" name="'.$this->oField->GetGlobalId().'_check_all" title="'.$sLabelGeneralCheckbox.'" /></span>';
-			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="'.$this->oField->GetGlobalId().'" /></span>';
+			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" data-type="row-selection" name="'.$this->oField->GetGlobalId().'" /></span>';
 			// - Output
 			$oOutput->AddJs(
 				<<<JS
@@ -314,8 +314,10 @@ EOF
                             
                             // Prevent row selection on input click
                             $('input,select,textarea,.input-group-addon', oRow).on('click', function(oEvent){
-								// Prevents row selection
-								oEvent.stopPropagation();
+                                if($(this).data('type') !== 'row-selection'){
+                                    // Prevents row selection
+									oEvent.stopPropagation();
+                                }
                             });
                             
                             // Store attributes inline css and js
@@ -411,7 +413,7 @@ JS
                 $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field({
 					'validators': {$this->GetValidatorsAsJson()},
 					'on_validation_callback': function(){
-                        	const aLinkedSetInputs = $('#{$sFieldWrapperId} input', this.element);
+                        	const aLinkedSetInputs = $('#{$sFieldWrapperId} input,select,textarea', this.element);
 							aLinkedSetInputs.each(function(e){
 								const oInput = $(this);
 								const aInputValidity = oInput[0].validity;
