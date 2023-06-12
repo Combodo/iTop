@@ -192,14 +192,14 @@ HTML
 				['to' => "SELECT Person WHERE email='some.valid@email.com'"],
 				['to' => 'some.valid@email.com'],
 			],
-			'simple-to-oql_ignoring_bypass_notify' => [
+			'simple-to-oql_ignoring_ignore_notify' => [
 				'EN US',
 				['to' => "SELECT Person WHERE email='some.valid2@email.com'"],
 				['to' => 'some.valid2@email.com'], // contact2 has 'notify' set to 'no' BUT by default when don't care
 			],
 			'simple-to-oql-not-bypassing-notify' => [
 				'EN US',
-				['to' => "SELECT Person WHERE email='some.valid2@email.com'", 'bypass_notify' => 'no'],
+				['to' => "SELECT Person WHERE email='some.valid2@email.com'", 'ignore_notify' => 'no'],
 				['to' => ''], // contact2 has 'notify' set to 'no'
 			],
 			'subject-with-localized-placeholder (default behavior)' => [
