@@ -948,7 +948,7 @@ class Config
 		],
 		'lifecycle.transitions_sort_type' => [
 			'type'                => 'string',
-			'description'         => 'How transitions will be sorted in the GUI. Possible values are "xml", "alphabetic", "fixed" or "relative"',
+			'description'         => 'How transitions will be sorted in the GUI. Possible values are "xml", "alphabetical", "fixed" or "relative"',
 			'default'             => DBObject::DEFAULT_TRANSITIONS_SORT_TYPE,
 			'value'               => DBObject::DEFAULT_TRANSITIONS_SORT_TYPE,
 			'source_of_value'     => '',
