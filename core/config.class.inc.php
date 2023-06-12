@@ -1638,8 +1638,8 @@ class Config
 		'audit.enable_selection_landing_page' => [
 			'type'                => 'bool',
 			'description'         => 'If true audit categories must be selected before results are computed (use this setting in case of a lot of audit categories)',
-			'default'             => false,
-			'value'               => false,
+			'default'             => true,
+			'value'               => true,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],

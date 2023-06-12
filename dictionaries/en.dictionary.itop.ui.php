@@ -780,6 +780,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Interactive:Selection:BreadCrumb+'  => 'Selection of an Audit to run',
 	'UI:Audit:Interactive:Selection:BadgeAll'     => 'All categories',
 	'UI:Audit:Interactive:Button:Back'            => 'Back to the audit',
+	'UI:Audit:Interactive:Button:Configuration'   => 'Audit configuration',
 
 	'UI:Audit:ViewRules'                           => 'Check the rules',
 	'UI:Audit:HeaderAuditRule'                     => 'Audit Rule',
