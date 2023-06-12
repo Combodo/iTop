@@ -77,6 +77,7 @@ $(function()
 							sBreadCrumbHtml += '<div class="breadcrumb-item breadcrumb-current" breadcrumb-entry="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+sLabel+'</span></div>';
 						} else {
 							var sSanitizedUrl = StripArchiveArgument(oEntry['url']);
+							sSanitizedUrl = EncodeHtml(sSanitizedUrl, false);
 							sBreadCrumbHtml += '<div class="breadcrumb-item"><a class="breadcrumb-link" breadcrumb-entry="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+sLabel+'</span></a></div>';
 						}
 					}
