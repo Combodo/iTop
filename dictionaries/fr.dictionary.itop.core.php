@@ -583,7 +583,7 @@ En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 	'ActionEmail:preview_tab'                              => 'Aperçu',
 	'ActionEmail:preview_tab+'                             => 'Aperçu du modèle de mèl',
 	'ActionEmail:preview_warning'                          => 'Le mèl peut s\'afficher différement dans les clients mèl par rapport à cet aperçu dans votre navigateur.',
-	'ActionEmail:preview_more_info'                        => 'Pour plus d\'informations sur les fonctionnalités CSS supportées par les différents client mèl, consultez <a target="_blank" href="https://www.caniemail.com">www.caniemail.com</a>',
+	'ActionEmail:preview_more_info'                        => 'Pour plus d\'informations sur les fonctionnalités CSS supportées par les différents client mèl, consultez %1$s.',
 	'ActionEmail:content_placeholder_missing'              => 'The mot-clé "%1$s" ne figure pas dans le modèle HTML. Le contenu du champ "%2$s" ne sera pas intégré dans les mèls générés.',
 ));
 

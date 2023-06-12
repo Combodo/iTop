@@ -583,7 +583,7 @@ While editing, click on the magnifier to get pertinent examples',
 	'ActionEmail:preview_tab'                              => 'Preview',
 	'ActionEmail:preview_tab+'                             => 'Preview of the eMail template',
 	'ActionEmail:preview_warning'                          => 'The actual eMail may look different in the eMail client than this preview in your browser.',
-	'ActionEmail:preview_more_info'                        => 'For more information about the CSS features supported by the different eMail clients, refer to <a target="_blank" href="https://www.caniemail.com">www.caniemail.com</a>',
+	'ActionEmail:preview_more_info'                        => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s',
 	'ActionEmail:content_placeholder_missing'              => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.',
 ));
 

@@ -169,6 +169,10 @@ HTML
 		$oLog = null;
 		
 		$aEmailContent = $this->InvokeNonPublicMethod('\ActionEmail', 'PrepareMessageContent', $oActionEmail, [$aContext, &$oLog]);
+		// Normalize the content of the body to simplify the comparison, useful when status == test
+		$aEmailContent['body'] = preg_replace('/title="[^"]+"/', 'title="****"', $aEmailContent['body']);
+		$aEmailContent['body'] = preg_replace('/class="object-ref-link" href="[^"]+"/', 'class="object-ref-link" href="****"', $aEmailContent['body']);
+		$aEmailContent['body'] = preg_replace('/References: <[^>]+>/', 'References: ****', $aEmailContent['body']);
 		foreach($aFieldsToCheck as $sCode => $expectedValue) {
 			$this->assertEquals($expectedValue, $aEmailContent[$sCode]);
 		}
@@ -221,6 +225,30 @@ HTML
 				'EN US',
 				['body' => '<p>Ticket "$this->title$" created.</p>'],
 				['body' => '<p>Ticket "Test UserRequest" created.</p>'],
+			],
+			'simple-body-with-placeholder-TEST-mode' => [
+				'EN US',
+				['body' => '<p>Ticket "$this->title$" created.</p>', 'status' => 'test'],
+				['body' => 
+<<<HTML
+<p>Ticket "Test UserRequest" created.</p><div style="border: dashed;">
+<h1>Testing email notification <span class="object-ref "  title="****"><a class="object-ref-link" href="****">Test action</a></span></h1>
+<p>The email should be sent with the following properties
+<ul>
+<li>TO: </li>
+<li>CC: </li>
+<li>BCC: </li>
+<li>From: unit-test@openitop.org</li>
+<li>Reply-To: </li>
+<li>References: ****</li>
+</ul>
+</p>
+</div>
+
+HTML
+					,
+					'subject' => 'TEST[Test subject]',
+				],
 			],
 			'more-complex-body-and-title-with-placeholder' => [
 				'EN US',

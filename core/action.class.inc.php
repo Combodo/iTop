@@ -231,7 +231,17 @@ class ActionEmail extends ActionNotification
 	 * @since 3.1.0
 	 */
 	const TEMPLATE_BODY_CONTENT = '$content$';
-
+	/**
+	 * Wraps the 'body' of the message for previewing inside an IFRAME -- i.e. without any of the iTop stylesheets being applied
+	 * @var string
+	 * @since 3.1.0
+	 */
+	const CONTENT_HIGHLIGHT = '<div style="border:2px dashed #6800ff;position:relative;padding:2px;margin-top:14px;"><div style="background-color:#6800ff;color:#fff;font-family:Courier New, sans-serif;font-size:14px;line-height:16px;padding:3px;display:block;position:absolute;top:-22px;right:0;">$content$</div>%s</div>';
+	/**
+	 * Wraps a placeholder of the email's body for previewing inside an IFRAME -- i.e. without any of the iTop stylesheets being applied
+	 * @var string
+	 */
+	const FIELD_HIGHLIGHT = '<span style="background-color:#6800ff;color:#fff;font-size:smaller;font-family:Courier New, sans-serif;padding:2px;">\\$$1\\$</span>';
 	/**
 	 * @inheritDoc
 	 */
@@ -499,6 +509,7 @@ class ActionEmail extends ActionNotification
 			}
 			else
 			{
+				$aErrors = [];
 				$iRes = $oEmail->Send($aErrors, false, $oLog); // allow asynchronous mode
 				switch ($iRes)
 				{
@@ -636,9 +647,9 @@ class ActionEmail extends ActionNotification
 			$sTestBody .= "</ul>\n";
 			$sTestBody .= "</p>\n";
 			$sTestBody .= "</div>\n";
-			$aEmailContentEmail['subject'] = 'TEST['.$aMessageContent['subject'].']';
-			$aEmailContentEmail['body'] = $sTestBody;
-			$aEmailContentEmail['to'] = $this->Get('test_recipient');
+			$aMessageContent['subject'] = 'TEST['.$aMessageContent['subject'].']';
+			$aMessageContent['body'] = $sTestBody;
+			$aMessageContent['to'] = $this->Get('test_recipient');
 		}
 		// Note: N°4849 We pass the "References" identifier instead of the "Message-ID" on purpose as we want notifications emails to group around the triggering iTop object, not just the users' replies to the notification
 		$aMessageContent['in_reply_to'] = $aMessageContent['references'];
@@ -715,8 +726,7 @@ class ActionEmail extends ActionNotification
 			if (false !== mb_strpos($sHtmlTemplate, static::TEMPLATE_BODY_CONTENT)) {
 				if ($bHighlightPlaceholders) {
 					// Highlight the $content$ block
-					//	$sBody = '<div style="border:2px dashed #6800ff;position:relative;padding:2px;"><div style="background-color:#6800ff;color:#fff;font-family:Courier New, sans-serif;font-size:14px;line-height:16px;padding:3px;display:block;position:absolute;top:-22px;right:0;">'.Dict::S('Class:ActionEmail/Attribute:body').'</div>'.$sBody.'</div>';
-					$sBody = '<div style="border:2px dashed #6800ff;position:relative;padding:2px;"><div style="background-color:#6800ff;color:#fff;font-family:Courier New, sans-serif;font-size:14px;line-height:16px;padding:3px;display:block;position:absolute;top:-22px;right:0;">$content$</div>'.$sBody.'</div>';
+					$sBody = sprintf(static::CONTENT_HIGHLIGHT, $sBody);
 				}
 				$sBody = str_replace(static::TEMPLATE_BODY_CONTENT, $sBody, $oHtmlTemplate->GetData()); // str_replace is ok as long as both strings are well-formed UTF-8
 			} else {
@@ -725,14 +735,14 @@ class ActionEmail extends ActionNotification
 		}
 		if($bHighlightPlaceholders) {
 			// Highlight all placeholders
-			$sBody = preg_replace('/\\$([^$]+)\\$/', '<span style="background-color:#6800ff;color:#fff;font-size:smaller;font-family:Courier New, sans-serif;padding:2px;">\\$$1\\$</span>', $sBody);
+			$sBody = preg_replace('/\\$([^$]+)\\$/', static::FIELD_HIGHLIGHT, $sBody);
 		}
 		return $sBody;
 	}
 	
 	/**
 	 * @since 3.1.0 N°4849
-	 * {@inheritDoc}
+	 * @inheritDoc
 	 * @see cmdbAbstractObject::DisplayBareRelations()
 	 */
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
@@ -747,7 +757,7 @@ class ActionEmail extends ActionNotification
 
 	/**
 	 * @since 3.1.0
-	 * {@inheritDoc}
+	 * @inheritDoc
 	 * @see cmdbAbstractObject::DoCheckToWrite()
 	 */
 	public function DoCheckToWrite()
