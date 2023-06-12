@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 
 /**
  * Persistent classes (internal): user defined actions
@@ -264,7 +265,7 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values" => new ValueSetEnum('low,normal,high'), "sql" => "importance", "default_value" => 'normal', "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeBlob("html_template", array("is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
-		MetaModel::Init_AddAttribute(new AttributeEnum("bypass_notify", array("allowed_values" => new ValueSetEnum('yes,no'), "sql" => "bypass_notify", "default_value" => 'yes', "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("ignore_notify", array("allowed_values" => new ValueSetEnum('yes,no'), "sql" => "ignore_notify", "default_value" => 'yes', "is_null_allowed" => false, "depends_on" => array())));
 		
 
 		// Display lists
@@ -292,7 +293,7 @@ class ActionEmail extends ActionNotification
 					2 => 'reply_to',
 					3 => 'reply_to_label',
 					4 => 'test_recipient',
-					5 => 'bypass_notify',
+					5 => 'ignore_notify',
 					6 => 'to',
 					7 => 'cc',
 					8 => 'bcc',
@@ -336,7 +337,7 @@ class ActionEmail extends ActionNotification
 		try
 		{
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
-			if ($this->Get('bypass_notify') === 'no') {
+			if ($this->Get('ignore_notify') === 'no') {
 				// In theory it is possible to notify *any* kind of object, 
 				// as long as there is an email attribute in the class
 				// So let's not assume that the selected class is a Person
@@ -576,13 +577,7 @@ class ActionEmail extends ActionNotification
 			$aMessageContent['reply_to_label'] = MetaModel::ApplyParams($this->Get('reply_to_label'), $aContextArgs);
 			
 			$aMessageContent['subject'] = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
-			$sBody = $this->Get('body');
-
-			/**  @var ormDocument $oHtmlTemplate */
-			$oHtmlTemplate = $this->Get('html_template');
-			if (!$oHtmlTemplate->IsEmpty() && (false !== mb_strpos($oHtmlTemplate->GetData(), static::TEMPLATE_BODY_CONTENT))) {
-				$sBody = \Html2Text\mb_str_replace(static::TEMPLATE_BODY_CONTENT, $sBody, $oHtmlTemplate->GetData());
-			}
+			$sBody = $this->BuildMessageBody(false);
 			$aMessageContent['body'] = MetaModel::ApplyParams($sBody, $aContextArgs);
 			
 			$oObj = $aContextArgs['this->object()'];
@@ -668,7 +663,7 @@ class ActionEmail extends ActionNotification
 	 *
 	 * @return string The formatted identifier for $sHeaderName based on $oObject
 	 * @throws \Exception
-	 * @since 3.0.1 N°4849
+	 * @since 3.1.0 N°4849
 	 */
 	protected function GenerateIdentifierForHeaders(DBObject $oObject, string $sHeaderName): string
 	{
@@ -702,5 +697,67 @@ class ActionEmail extends ActionNotification
 			'Action' => get_class($this).'::'.$this->GetKey().' ('.$this->GetRawName().')',
 		]);
 		throw new Exception($sErrorMessage);
+	}
+	
+	/**
+	 * Compose the body of the message from the 'body' attribute and the HTML template (if any)
+	 * @since 3.1.0 N°4849
+	 * @param bool $bHighlightPlaceholders If true add some extra HTML around placeholders to highlight them 
+	 * @return string
+	 */
+	protected function BuildMessageBody(bool $bHighlightPlaceholders = false): string
+	{
+		$sBody = $this->Get('body');
+		/**  @var ormDocument $oHtmlTemplate */
+		$oHtmlTemplate = $this->Get('html_template');
+		if ($oHtmlTemplate && !$oHtmlTemplate->IsEmpty()) {
+			$sHtmlTemplate = $oHtmlTemplate->GetData();
+			if (false !== mb_strpos($sHtmlTemplate, static::TEMPLATE_BODY_CONTENT)) {
+				if ($bHighlightPlaceholders) {
+					// Highlight the $content$ block
+					//	$sBody = '<div style="border:2px dashed #6800ff;position:relative;padding:2px;"><div style="background-color:#6800ff;color:#fff;font-family:Courier New, sans-serif;font-size:14px;line-height:16px;padding:3px;display:block;position:absolute;top:-22px;right:0;">'.Dict::S('Class:ActionEmail/Attribute:body').'</div>'.$sBody.'</div>';
+					$sBody = '<div style="border:2px dashed #6800ff;position:relative;padding:2px;"><div style="background-color:#6800ff;color:#fff;font-family:Courier New, sans-serif;font-size:14px;line-height:16px;padding:3px;display:block;position:absolute;top:-22px;right:0;">$content$</div>'.$sBody.'</div>';
+				}
+				$sBody = str_replace(static::TEMPLATE_BODY_CONTENT, $sBody, $oHtmlTemplate->GetData()); // str_replace is ok as long as both strings are well-formed UTF-8
+			} else {
+				$sBody = $oHtmlTemplate->GetData();
+			}
+		}
+		if($bHighlightPlaceholders) {
+			// Highlight all placeholders
+			$sBody = preg_replace('/\\$([^$]+)\\$/', '<span style="background-color:#6800ff;color:#fff;font-size:smaller;font-family:Courier New, sans-serif;padding:2px;">\\$$1\\$</span>', $sBody);
+		}
+		return $sBody;
+	}
+	
+	/**
+	 * @since 3.1.0 N°4849
+	 * {@inheritDoc}
+	 * @see cmdbAbstractObject::DisplayBareRelations()
+	 */
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		parent::DisplayBareRelations($oPage, false);
+		if (!$bEditMode) {
+			$oPage->SetCurrentTab('action_email__preview', Dict::S('ActionEmail:preview_tab'), Dict::S('ActionEmail:preview_tab+'));
+			$sBody = $this->BuildMessageBody(true);
+			TwigHelper::RenderIntoPage($oPage, APPROOT.'/', 'templates/datamodel/ActionEmail/email-notification-preview', ['iframe_content' => $sBody]);
+		}
+	}
+
+	/**
+	 * @since 3.1.0
+	 * {@inheritDoc}
+	 * @see cmdbAbstractObject::DoCheckToWrite()
+	 */
+	public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+		$oHtmlTemplate = $this->Get('html_template');
+		if ($oHtmlTemplate && !$oHtmlTemplate->IsEmpty()) {
+			if (false === mb_strpos($oHtmlTemplate->GetData(), static::TEMPLATE_BODY_CONTENT)) {
+				$this->m_aCheckWarnings[] = Dict::Format('ActionEmail:content_placeholder_missing', static::TEMPLATE_BODY_CONTENT, Dict::S('Class:ActionEmail/Attribute:body'));
+			}
+		}
 	}
 }

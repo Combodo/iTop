@@ -7,6 +7,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Exception;
 use MetaModel;
 use utils;
+use Dict;
 
 /**
  * @runTestsInSeparateProcesses
@@ -30,6 +31,9 @@ class ActionEmailTest extends ItopDataTestCase
 	/** @var \UserRequest|null Temp ormDocument for tests */
 	protected static $oUserRequest = null;
 	
+	/** @var string[] Dict formatted message, because the Dict class is not available in providers */ 
+	protected static $aWarningMessages;
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -43,7 +47,7 @@ class ActionEmailTest extends ItopDataTestCase
 			'subject' => 'Test subject',
 			'body' => 'Test body',
 		]);
-		
+
 		$sHtml =
 <<<HTML
 <body>
@@ -53,13 +57,17 @@ class ActionEmailTest extends ItopDataTestCase
 </body>
 HTML
 		;
-		
+
 		static::$oActionEmail->DBInsert();
 		static::$oDocument = new \ormDocument($sHtml, 'text/html', 'sample.html');
 		static::$oUserRequest =  MetaModel::NewObject('UserRequest', [
 			'title' => 'Test UserRequest',
 			'description' => '<p>Multi-line<br/>description</p>'
 		]);
+
+		static::$aWarningMessages = [
+			'warning-missing-content' => Dict::Format('ActionEmail:content_placeholder_missing', '$content$', Dict::S('Class:ActionEmail/Attribute:body')) 
+		];
 	}
 
 	/**
@@ -101,7 +109,6 @@ HTML
 				$this->assertEquals($sExpectedIdentifier, $sTestedIdentifier);
 				break;
 		}
-
 	}
 
 	public function GenerateIdentifierForHeadersProvider()
@@ -236,5 +243,54 @@ HTML
 				],
 			],
 		];
+	}
+
+	/**
+	 * @dataProvider doCheckToWriteProvider
+	 * @param string $sBody
+	 * @param string $sHtmlTemplate
+	 * @param string[] $aExpectedWarnings
+	 */
+	public function testDoCheckToWrite(string $sBody, ?string $sHtmlTemplate, $expectedWarnings)
+	{
+		$oActionEmail = new ActionEmail();
+		// Set mandatory fields
+		$oActionEmail->Set('name', 'test');
+		$oActionEmail->Set('subject', 'Ga Bu Zo Meu');
+		// Set the fields for testing
+		$oActionEmail->Set('body', $sBody);
+		if ($sHtmlTemplate !== null) {
+			$oDoc = new \ormDocument($sHtmlTemplate, 'text/html', 'template.html');
+			$oActionEmail->Set('html_template', $oDoc);
+		}
+		$oActionEmail->DoCheckToWrite();
+		$aWarnings = $this->GetNonPublicProperty($oActionEmail, 'm_aCheckWarnings');
+		if ($expectedWarnings === null) {
+			$this->assertEquals($aWarnings, $expectedWarnings);
+		} else {
+			// The warning messages are localized, but the provider functions does not
+			// have access to the Dict class, so let's replace the value given by the 
+			// provider by a statically precomputed and localized message
+			foreach($expectedWarnings as $index => $sMessageKey) {
+				$expectedWarnings[$index] = static::$aWarningMessages[$sMessageKey];
+			}
+			$this->assertEquals($aWarnings, $expectedWarnings);
+		}
+	}
+
+	public function doCheckToWriteProvider()
+	{
+		return [
+			'no warnings' => [
+				'<p>Some text here</p>',
+				'<div>$content$</div>',
+				null
+			],			
+			'$content$ missing' => [
+				'<p>Some text here</p>',
+				'<div>no placeholder</div>',
+				[ 'warning-missing-content' ]
+			],
+		];	
 	}
 }
