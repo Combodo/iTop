@@ -857,8 +857,7 @@ class ObjectFormManager extends FormManager
 						}
 						// - Adding attribute labels
 						$aAttributesToDisplay = array();
-						foreach ($aAttCodesToDisplay as $sAttCodeToDisplay)
-						{
+						foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
 							$oAttDefToDisplay = MetaModel::GetAttributeDef($oField->GetTargetClass(), $sAttCodeToDisplay);
 							$aAttributesToDisplay[$sAttCodeToDisplay] = [
 								'att_code' => $sAttCodeToDisplay,
@@ -866,6 +865,12 @@ class ObjectFormManager extends FormManager
 							];
 						}
 						$oField->SetAttributesToDisplay($aAttributesToDisplay);
+
+						// Link attributes to display
+						if ($oField->IsIndirect()) {
+							$sClass = get_class($this->oObject);
+							$oField->SetLnkAttributesToDisplay($this->GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode));
+						}
 					}
 					//    - Filtering links regarding scopes
 					if ($this->oFormHandlerHelper !== null) {
@@ -1536,10 +1541,65 @@ class ObjectFormManager extends FormManager
 
 	/**
 	 * @param array $aHiddenFieldsId
+	 *
 	 * @since 2.7.5
 	 */
 	public function SetHiddenFieldsId($aHiddenFieldsId)
 	{
 		$this->aHiddenFieldsId = $aHiddenFieldsId;
+	}
+
+	/**
+	 * Inspired from MetaModel::GetZListAttDefsFilteredForIndirectLinkClass
+	 * Retrieve link attributes to display from portal configuration.
+	 *
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @since 3.1
+	 *
+	 */
+	private function GetZListAttDefsFilteredForIndirectLinkClass(string $sClass, string $sAttCode): array
+	{
+		$aAttCodesToPrint = [];
+
+		$oLinkedSetAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sLinkedClass = $oLinkedSetAttDef->GetLinkedClass();
+		$sExtKeyToRemote = $oLinkedSetAttDef->GetExtKeyToRemote();
+		$sExtKeyToMe = $oLinkedSetAttDef->GetExtKeyToMe();
+
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+		$sDefaultState = MetaModel::GetDefaultState($sClass);
+
+		foreach (ApplicationHelper::GetLoadedListFromClass($this->oFormHandlerHelper->getCombodoPortalConf()['lists'], $sLinkedClass, 'list') as $sLnkAttCode) {
+
+			$oLnkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sLnkAttCode);
+			if ($sStateAttCode == $sLnkAttCode) {
+				// State attribute is always hidden from the UI
+				continue;
+			}
+			if (($sLnkAttCode == $sExtKeyToMe)
+				|| ($sLnkAttCode == $sExtKeyToRemote)
+				|| ($sLnkAttCode == 'finalclass')) {
+				continue;
+			}
+			if (!($oLnkAttDef->IsWritable())) {
+				continue;
+			}
+
+			$iFlags = MetaModel::GetAttributeFlags($sLinkedClass, $sDefaultState, $sLnkAttCode);
+			if (!($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY)) {
+				$aAttCodesToPrint[$sLnkAttCode] = [
+					'att_code'  => $sLnkAttCode,
+					'label'     => $oLnkAttDef->GetLabel(),
+					'mandatory' => !$oLnkAttDef->IsNullAllowed(),
+				];
+			}
+
+		}
+
+		return $aAttCodesToPrint;
 	}
 }
