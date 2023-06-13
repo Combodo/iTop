@@ -21,7 +21,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  *
- * @author Hipska (2018, 2019)
+ * @author Thomas Casteleyn <info@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
@@ -32,13 +32,13 @@
 //////////////////////////////////////////////////////////////////////
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Relation:impacts/Description' => 'Elementen hebben impact op',
+	'Relation:impacts/Description' => 'Elementen met impact van',
 	'Relation:impacts/DownStream' => 'Impact op...',
-	'Relation:impacts/DownStream+' => 'Elementen hebben impact op',
+	'Relation:impacts/DownStream+' => 'Elementen geïmpacteerd door',
 	'Relation:impacts/UpStream' => 'Is afhankelijk van...',
-	'Relation:impacts/UpStream+' => 'Elementen waar dit object impact op heeft',
+	'Relation:impacts/UpStream+' => 'Elementen met impact op',
 	// Legacy entries
-	'Relation:depends on/Description' => 'Elementen waarvan dit object afhankelijk van is',
+	'Relation:depends on/Description' => 'Elementen afhankelijk van',
 	'Relation:depends on/DownStream' => 'Is afhankelijk van...',
 	'Relation:depends on/UpStream' => 'Impact op...',
 	'Relation:impacts/LoadData'       => 'Load data~~',
