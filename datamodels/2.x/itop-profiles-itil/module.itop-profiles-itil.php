@@ -36,6 +36,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
+			'src/UserProfilesEventListener.php'
 		),
 		'webservice' => array(
 			//'webservices.itop-profiles-itil.php',
