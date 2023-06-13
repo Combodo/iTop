@@ -108,9 +108,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Class:User/Attribute:status/Value:enabled' => 'Engedélyezett',
     'Class:User/Attribute:status/Value:disabled' => 'Letiltott',
 
-    'Class:User/Error:LoginMustBeUnique' => 'A felhasználónévnek egyedinek kell lennie - %1s már létezik.',
+    'Class:User/Error:LoginMustBeUnique' => 'A felhasználónévnek egyedinek kell lennie - "%1s" már létezik.',
     'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Legalább egy profilt a felhasználóhoz kell rendelni.',
-    'Class:User/Error:ProfileNotAllowed' => 'A %1$s profil nem adható hozzá, le lesz tiltva',
+    'Class:User/Error:ProfileNotAllowed' => 'A "%1$s" profil nem adható hozzá, le lesz tiltva',
     'Class:User/Error:StatusChangeIsNotAllowed' => 'A saját felhasználó státuszának cseréje nem engedélyezett',
     'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Az engedélyezett szervezeteknek tartalmazniuk kell a felhasználói szervezetet',
     'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'A profilok jelenlegi listája nem ad elegendő hozzáférési jogot (a felhasználók már nem módosíthatók)',
@@ -362,15 +362,15 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 <div>Ez a verzió egy vadonatúj, modern és könnyen hozzáférhető backoffice dizájnnal rendelkezik..</div>
 
 <div>Megtartottuk az '.ITOP_APPLICATION.' alapvető funkcióit és modernizáltuk őket, hogy megszerettessük önnel.
-Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élveztük a megtervezéssét és létrehozását.</div>
+Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élveztük a megtervezését és létrehozását.</div>
 
 <div>Szabja testre az '.ITOP_APPLICATION.' beállításait a kényelmesebb használathoz.</div>',
-    'UI:WelcomeMenu:AllOpenRequests' => 'Összes nyitott kérelem: %1$d',
+    'UI:WelcomeMenu:AllOpenRequests' => 'Nyitott kérelmek: %1$d',
     'UI:WelcomeMenu:MyCalls' => 'Saját kérelmek',
     'UI:WelcomeMenu:OpenIncidents' => 'Nyitott incidensek: %1$d',
     'UI:WelcomeMenu:AllConfigItems' => 'Konfigurációs elemek: %1$d',
     'UI:WelcomeMenu:MyIncidents' => 'Hozzám rendelt incidensek',
-    'UI:AllOrganizations' => 'Összes Szervezeti egység',
+    'UI:AllOrganizations' => 'Szervezeti egységek',
     'UI:YourSearch' => 'Saját keresések',
     'UI:LoggedAsMessage' => 'Bejelentkezve %1$s (%2$s)',
     'UI:LoggedAsMessage+Admin' => 'Bejelentkezve %1$s (%2$s, Administrator)',
@@ -427,17 +427,17 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:Error:MandatoryTemplateParameter_object_id' => 'object_id paraméter kötelező a link_attr megadásánál. Ellenőrizze a sablon definíciót.',
     'UI:Error:MandatoryTemplateParameter_target_attr' => 'target_attr paraméter kötelező a link_attr megadásánál. Ellenőrizze a sablon definíciót.',
     'UI:Error:MandatoryTemplateParameter_group_by' => 'group_by paraméter kötelező. Ellenőrizze a sablon definíciót.',
-    'UI:Error:InvalidGroupByFields' => 'Csoportosításnál használt érvénytelen mezők: %1$s.',
-    'UI:Error:UnsupportedStyleOfBlock' => 'Hiba: nem támogatott stílus tömb: %1$s.',
+    'UI:Error:InvalidGroupByFields' => 'Csoportosításnál használt érvénytelen mezők: "%1$s".',
+    'UI:Error:UnsupportedStyleOfBlock' => 'Hiba: nem támogatott stílus tömb: "%1$s".',
     'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Nem megfelelő kapcsolat meghatározás: kapcsolódó osztály: %1$s nem külső kulcs a %2$s osztályban',
     'UI:Error:Object_Class_Id_NotFound' => 'Objektum: %1$s:%2$d nem található.',
     'UI:Error:WizardCircularReferenceInDependencies' => 'Hiba: Körkörös hivatkozás az egymásra mutató mezők között. Ellenőrizze az adatmodellt.',
-    'UI:Error:UploadedFileTooBig' => 'A feltöltendő fájl túl nagy. (Maximális méret: %1$s). Ellenőrizze a PHP konfigurációs fájlban az upload_max_filesize és post_max_size beállításokat.',
+    'UI:Error:UploadedFileTooBig' => 'Feltöltendő fájl túl nagy. (Maximális méret: %1$s). Ellenőrizze a PHP konfigurációs fájlban az upload_max_filesize és post_max_size beállításokat.',
     'UI:Error:UploadedFileTruncated.' => 'Feltöltött fájl átméretezett!',
     'UI:Error:NoTmpDir' => 'Az átmeneti könyvtár nem meghatározott.',
-    'UI:Error:CannotWriteToTmp_Dir' => 'Az átmeneti fájl nem írható. upload_tmp_dir = %1$s.',
-    'UI:Error:UploadStoppedByExtension_FileName' => 'A feltöltés megállt a fájl kiterjesztése miatt. (Eredeti fájl név = %1$s).',
-    'UI:Error:UploadFailedUnknownCause_Code' => 'Fájl feltöltés sikertelen ismeretlen hiba miatt. (Hibakód = %1$s).',
+    'UI:Error:CannotWriteToTmp_Dir' => 'Az átmeneti fájl nem írható. upload_tmp_dir = "%1$s".',
+    'UI:Error:UploadStoppedByExtension_FileName' => 'Feltöltés megállt a fájl kiterjesztés miatt. (Eredeti fájl név = "%1$s").',
+    'UI:Error:UploadFailedUnknownCause_Code' => 'Fájl feltöltés sikertelen ismeretlen hiba miatt. (Hibakód = "%1$s").',
 
     'UI:Error:1ParametersMissing' => 'Hiba: a következő paramétert meg kell adni ennél a műveletnél: %1$s.',
     'UI:Error:2ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s és %2$s.',
@@ -454,7 +454,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:Error:BulkModifyNotAllowedOn_Class' => 'Az osztály objektumainak tömeges frissítése nem engedélyezett %1$s',
     'UI:Error:ObjectAlreadyCloned' => 'Hiba: az objektum már klónozott!',
     'UI:Error:ObjectAlreadyCreated' => 'Hiba: az objektum már létrehozva!',
-    'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Hiba: érvénytelen stimulus %1$s a következő objektum %2$s következő állapotában %3$s.',
+    'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Hiba: érvénytelen stimulus "%1$s" a következő objektum %2$s következő állapotában "%3$s".',
     'UI:Error:InvalidDashboardFile' => 'Hiba: Érvénytelen műszerfal fájl',
     'UI:Error:InvalidDashboard' => 'Hiba: Érvénytelen műszerfal',
     'UI:Error:MaintenanceMode' => 'Az alkalmazás jelenleg karbantartás alatt van',
@@ -532,7 +532,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:Login:ResetPwdFailed' => 'Sikertelen email küldés: %1$s',
     'UI:Login:SeparatorOr' => 'Vagy',
 
-    'UI:ResetPwd-Error-WrongLogin' => '%1$s nem érvényes fiók',
+    'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' nem érvényes fiók',
     'UI:ResetPwd-Error-NotPossible' => 'a külső fiókok jelszava itt nem állítható vissza.',
     'UI:ResetPwd-Error-FixedPwd' => 'a fiók nem teszi lehetővé a jelszó visszaállítását.',
     'UI:ResetPwd-Error-NoContact' => 'a fiók nem személyhez tartozik',
@@ -578,12 +578,12 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:CSVImport:FieldName'                       => 'Mező %1$d',
     'UI:CSVImport:DataLine1'                       => 'Adatsor 1',
     'UI:CSVImport:DataLine2'                       => 'Adatsor 2',
-    'UI:CSVImport:idField'                         => 'id (elsődeges kulcs)',
+    'UI:CSVImport:idField'                         => 'id (elsődleges kulcs)',
     'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - tömeges betöltés',
     'UI:Title:BulkImport+'                         => '',
     'UI:Title:BulkSynchro_nbItem_ofClass_class'    => '%2$s osztály %1$d objektumának szinkronizációja',
     'UI:CSVImport:ClassesSelectOne'                => '-- válasszon ki egyet --',
-    'UI:CSVImport:ErrorExtendedAttCode'            => 'Belső hiba: %1$s nem megfelelő kód, mert %2$s nem külső kulcsa a %3$s osztálynak',
+    'UI:CSVImport:ErrorExtendedAttCode'            => 'Belső hiba: "%1$s" nem megfelelő kód, mert "%2$s" nem külső kulcsa a "%3$s" osztálynak',
     'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objektumok változatlanok maradnak.',
     'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objektumok fognak megváltozni.',
     'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objektumok hozzáadásra kerülnek.',
@@ -634,8 +634,8 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 
     'UI:CSVReport-Value-Modified' => 'Módosítva',
     'UI:CSVReport-Value-SetIssue' => 'Érvénytelen érték az attribútumhoz',
-    'UI:CSVReport-Value-ChangeIssue' => '%1$s egy érvénytelen érték',
-    'UI:CSVReport-Value-NoMatch' => 'Nincs egyezés a %1$s értékhez',
+    'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' egy érvénytelen érték',
+    'UI:CSVReport-Value-NoMatch' => 'Nincs egyezés a \'%1$s\' értékhez',
     'UI:CSVReport-Value-Missing' => 'Hiányzó kötelező érték',
     'UI:CSVReport-Value-Ambiguous' => 'Kétértelműség: %1$s objektumban találva',
     'UI:CSVReport-Row-Unchanged' => 'változatlan',
@@ -646,10 +646,10 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:CSVReport-Value-Issue-Null' => 'A nulla nem engedélyezett',
     'UI:CSVReport-Value-Issue-NotFound' => 'Az objektum nincs meg',
     'UI:CSVReport-Value-Issue-FoundMany' => '%1$d egyezés található',
-    'UI:CSVReport-Value-Issue-Readonly' => 'A %1$s attribútum csak olvasható (jelenlegi érték: %2$s, várható érték: %3$s)',
+    'UI:CSVReport-Value-Issue-Readonly' => 'A \'%1$\'s attribútum csak olvasható (jelenlegi érték: %2$s, várható érték: %3$s)',
     'UI:CSVReport-Value-Issue-Format' => 'A bevitel feldolgozása sikertelen: %1$s',
-    'UI:CSVReport-Value-Issue-NoMatch' => 'A %1$s attribútum nem várt értéket kapott: nincs egyezés, ellenőrizze a beírást',
-    'UI:CSVReport-Value-Issue-Unknown' => 'A %1$s attribútum nem várt értéket kapott: %2$s',
+    'UI:CSVReport-Value-Issue-NoMatch' => 'A \'%1$s\' attribútum nem várt értéket kapott: nincs egyezés, ellenőrizze a beírást',
+    'UI:CSVReport-Value-Issue-Unknown' => 'A \'%1$s\' attribútum nem várt értéket kapott: %2$s',
     'UI:CSVReport-Row-Issue-Inconsistent' => 'Egymással nem konzisztens attribútumok: %1$s',
     'UI:CSVReport-Row-Issue-Attribute' => 'Nem várt attribútum érték(ek)',
     'UI:CSVReport-Row-Issue-MissingExtKey' => 'Nem lehetett létrehozni hiányzó külső kulcs(ok) miatt: %1$s',
@@ -723,10 +723,10 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:Schema:AbstractClass' => 'Absztrakt osztály: nem példányosítható belőle objektum.',
     'UI:Schema:NonAbstractClass' => 'Nem absztrakt osztály: objektum példányosítható belőle.',
     'UI:Schema:ClassHierarchyTitle' => 'Osztály hierarchia',
-    'UI:Schema:AllClasses' => 'Összes osztály',
+    'UI:Schema:AllClasses' => 'Osztályok',
     'UI:Schema:ExternalKey_To' => 'Külső kulcs %1$s-hoz',
     'UI:Schema:Columns_Description' => 'Oszlopok: <em>%1$s</em>',
-    'UI:Schema:Default_Description' => 'Alapértelmezett: %1$s',
+    'UI:Schema:Default_Description' => 'Alapértelmezett: "%1$s"',
     'UI:Schema:NullAllowed' => 'Null érték engedélyezett',
     'UI:Schema:NullNotAllowed' => 'Null érték nem engedélyezett',
     'UI:Schema:Attributes' => 'Attribútumok',
@@ -782,7 +782,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:Schema:DisplaySelector/Label' => 'Címke',
     'UI:Schema:DisplaySelector/Code' => 'Kód',
     'UI:Schema:Attribute/Filter' => 'Szűrő',
-    'UI:Schema:DefaultNullValue' => 'Alapértelmezett null érték : %1$s',
+    'UI:Schema:DefaultNullValue' => 'Alapértelmezett null érték : "%1$s"',
     'UI:LinksWidget:Autocomplete+' => '',
     'UI:Edit:SearchQuery' => 'Válasszon egy előre megadott lekérdezést',
     'UI:Edit:TestQuery' => 'Teszt lekérdezés',
@@ -812,7 +812,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:Delete:Deleted' => 'törölve',
     'UI:Delete:AutomaticallyDeleted' => 'automatikusan törölve',
     'UI:Delete:AutomaticResetOf_Fields' => ' következő mezők automatikus újratöltése: %1$s',
-    'UI:Delete:CleaningUpRefencesTo_Object' => 'Összes referencia tisztítása %1$s...',
+    'UI:Delete:CleaningUpRefencesTo_Object' => 'Referenciák tisztítása %1$s...',
     'UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class' => '%2$s osztály %1$d objektumára mutató referenciák tisztítása',
     'UI:Delete:Done+' => '',
     'UI:Delete:_Name_Class_Deleted' => '%1$s - %2$s törölve.',
@@ -849,10 +849,10 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:SearchResultsTitle' => 'Keresés eredményei',
     'UI:SearchResultsTitle+' => 'Szöveges keresés eredményei',
     'UI:Search:NoSearch' => 'Nincs keresés',
-    'UI:Search:NeedleTooShort' => 'A %1$s kereső karakterlánc túl rövid. Legalább %2$d karaktert írjon be.',
-    'UI:Search:Ongoing' => '%1$s keresése',
+    'UI:Search:NeedleTooShort' => 'A \\"%1$s\\" kereső karakterlánc túl rövid. Legalább %2$d karaktert írjon be.',
+    'UI:Search:Ongoing' => '\\"%1$s\\" keresése',
     'UI:Search:Enlarge' => 'Keresés kibővítése',
-    'UI:FullTextSearchTitle_Text' => '%1$s keresés eredményei:',
+    'UI:FullTextSearchTitle_Text' => '"%1$s" keresés eredményei:',
     'UI:Search:Count_ObjectsOf_Class_Found' => '%2$s osztály %1$d objektuma',
     'UI:Search:NoObjectFound' => 'Objektum nem található',
     'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s módosítása',
@@ -868,7 +868,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
     'UI:BulkDeleteTitle' => 'Válassza ki a törölni kívánt objektumokat:',
     'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' objektum létrehozva.',
     'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s létrehozva.',
-    'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Alkalmazva %1$s objektumon: %2$s.Kinduló állapot: %3$s cél állapot: %4$s.',
+    'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Alkalmazva %1$s objektumon: %2$s. Kiinduló állapot: %3$s cél állapot: %4$s.',
     'UI:ObjectCouldNotBeWritten' => 'Az objektum írása sikertelen: %1$s',
     'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Végzetes hiba',
     'UI:SystemIntrusion' => 'Hozzáférés megtagadva. A művelet végrehajtása nem engedélyezett.',
@@ -1006,14 +1006,14 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
     'UI:TagAdminMenu:NoTags' => 'Nincs címkemező konfigurálva',
     'UI:TagSetFieldData:Error' => 'Hiba: %1$s',
 
-    'Menu:AuditCategories' => 'Audit-kategóriák',// Duplicated into itop-welcome-itil (will be removed from here...)
+    'Menu:AuditCategories' => 'Audit kategóriák',// Duplicated into itop-welcome-itil (will be removed from here...)
     'Menu:AuditCategories+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
-    'Menu:Notifications:Title' => 'Audit-kategóriák',// Duplicated into itop-welcome-itil (will be removed from here...)
+    'Menu:Notifications:Title' => 'Audit kategóriák',// Duplicated into itop-welcome-itil (will be removed from here...)
 
     'Menu:RunQueriesMenu' => 'Lekérdezés futtatás',// Duplicated into itop-welcome-itil (will be removed from here...)
     'Menu:RunQueriesMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-    'Menu:QueryMenu' => 'Lekérdezés-gyűjtemény',// Duplicated into itop-welcome-itil (will be removed from here...)
+    'Menu:QueryMenu' => 'Lekérdezés gyűjtemény',// Duplicated into itop-welcome-itil (will be removed from here...)
     'Menu:QueryMenu+' => 'Query phrasebook~~',// Duplicated into itop-welcome-itil (will be removed from here...)
 
     'Menu:DataAdministration' => 'Adat adminisztráció',// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1141,9 +1141,9 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
     'UI:BulkModify_Count_DistinctValues' => '%1$d eltérő értékek:',
     'UI:BulkModify:Value_Exists_N_Times' => '%1$s *, %2$d *',
     'UI:BulkModify:N_MoreValues' => '%1$d további értékei ...',
-    'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Kísérlet a következő csak olvaható mező beállítására: %1$s',
+    'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Kísérlet a következő csak olvasható mező beállítására: %1$s',
     'UI:FailedToApplyStimuli' => 'A művelet sikertelen',
-    'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: %3$s osztály %2$d objketumainak módosítása',
+    'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: %3$s osztály %2$d objektumainak módosítása',
     'UI:CaseLogTypeYourTextHere' => 'Írjon ide:',
     'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
     'UI:CaseLog:InitialValue' => 'Kezdeti érték:',
@@ -1203,8 +1203,8 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
     'UI:Button:MoveUp' => 'Feljebb',
     'UI:Button:MoveDown' => 'Lejjebb',
 
-    'UI:OQL:UnknownClassAndFix' => 'Ismeretlen osztály: %1$s. Próbálja meg %2$s -t helyette',
-    'UI:OQL:UnknownClassNoFix' => 'Ismeretlen osztály: %1$s',
+    'UI:OQL:UnknownClassAndFix' => 'Ismeretlen osztály: \\"%1$s\\". Próbálja meg \\"%2$s\\" -t helyette',
+    'UI:OQL:UnknownClassNoFix' => 'Ismeretlen osztály: \\"%1$s\\"',
 
     'UI:Dashboard:EditCustom' => 'Egyéni verzió szerkesztése...',
     'UI:Dashboard:CreateCustom' => 'Egyéni verzió létrehozása...',
@@ -1242,13 +1242,13 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
     'UI:DashletUnknown:Label' => 'Ismeretlen',
     'UI:DashletUnknown:Description' => 'Ismeretlen műszer (talán eltávolították)',
     'UI:DashletUnknown:RenderText:View' => 'Nem lehet megjeleníteni ezt a műszert.',
-    'UI:DashletUnknown:RenderText:Edit' => 'Nem lehet megjeleníteni ezt a műszert (%1$s osztály). Ellenőriztesse a rendszergazdával, hogy elérhető-e.',
-    'UI:DashletUnknown:RenderNoDataText:Edit' => 'Nincs előnézet ehhez a műszerhez (%1$s osztály).',
+    'UI:DashletUnknown:RenderText:Edit' => 'Nem lehet megjeleníteni ezt a műszert ("%1$s" osztály). Ellenőriztesse a rendszergazdával, hogy elérhető-e.',
+    'UI:DashletUnknown:RenderNoDataText:Edit' => 'Nincs előnézet ehhez a műszerhez ("%1$s" osztály).',
     'UI:DashletUnknown:Prop-XMLConfiguration' => 'Konfiguráció (nyers XML)',
 
     'UI:DashletProxy:Label' => 'Proxy',
     'UI:DashletProxy:Description' => 'Proxy műszer',
-    'UI:DashletProxy:RenderNoDataText:Edit' => 'Nincs előnézet ehhez a harmadik féltől származó műszerhez (%1$s osztály).',
+    'UI:DashletProxy:RenderNoDataText:Edit' => 'Nincs előnézet ehhez a harmadik féltől származó műszerhez ("%1$s" osztály).',
     'UI:DashletProxy:Prop-XMLConfiguration' => 'Konfiguráció (nyers XML)',
 
     'UI:DashletPlainText:Label' => 'Szöveg',
@@ -1547,10 +1547,10 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
     'UI:Search:Criteria:Operator:Default:Equals' => 'Egyenlő',
     'UI:Search:Criteria:Operator:Default:Between' => 'Közötte',
     //   - String widget
-    'UI:Search:Criteria:Operator:String:Contains' => 'Tartalmazza',
+    'UI:Search:Criteria:Operator:String:Contains' => 'Tartalmaz',
     'UI:Search:Criteria:Operator:String:StartsWith' => 'Kezdődik',
     'UI:Search:Criteria:Operator:String:EndsWith' => 'Végződik',
-    'UI:Search:Criteria:Operator:String:RegExp' => 'Reguláris kifejezés',
+    'UI:Search:Criteria:Operator:String:RegExp' => 'Regul. kifejezés',
     //   - Numeric widget
     'UI:Search:Criteria:Operator:Numeric:Equals' => 'Egyenlő',// => '=',
     'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Nagyobb',// => '>',
@@ -1623,7 +1623,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'UI:Newsroom:Preferences' => 'Hírfolyam beállítások',
     'UI:Newsroom:ConfigurationLink' => 'Konfiguráció',
     'UI:Newsroom:ResetCache' => 'Gyorstár ürítése',
-    'UI:Newsroom:DisplayMessagesFor_Provider' => '%1$s üzeneteinek mutatása',
+    'UI:Newsroom:DisplayMessagesFor_Provider' => '%1$s üzeneteinek megjelenítése',
     'UI:Newsroom:DisplayAtMost_X_Messages' => 'Mutasson %1$s üzenetet a %2$s menüben.',
 ));
 
@@ -1644,13 +1644,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'Menu:ExportMenu+' => '',
     'Menu:NotificationsMenu' => 'Értesítések',
     'Menu:NotificationsMenu+' => '',
-    'Menu:AuditCategories' => 'Audit-kategóriák',
+    'Menu:AuditCategories' => 'Audit kategóriák',
     'Menu:AuditCategories+' => '',
-    'Menu:Notifications:Title' => 'Audit-kategóriák',
+    'Menu:Notifications:Title' => 'Audit kategóriák',
     'Menu:RunQueriesMenu'         => 'Lekérdezés futtatás',
     'Menu:RunQueriesMenu+'        => '',
-    'Menu:QueryMenu'              => 'Lekérdezés-gyűjtemény',
-    'Menu:QueryMenu+'             => 'Lekérdezés-gyűjtemény',
+    'Menu:QueryMenu'              => 'Lekérdezés gyűjtemény',
+    'Menu:QueryMenu+'             => 'Lekérdezések gyűjteménye',
     'Menu:UniversalSearchMenu'    => 'Univerzális keresés',
     'Menu:UniversalSearchMenu+'   => '',
     'Menu:UserManagementMenu'     => 'Felhasználókezelés',
