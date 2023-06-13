@@ -84,8 +84,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Location' => '地理位置',
-	'Class:Location+' => '任何类型的地理位置: 区域, 国家, 城市, 位置, 建筑, 楼层, 房间, 机架,...',
+	'Class:Location' => '地点',
+	'Class:Location+' => '任何类型的地点: 区域, 国家, 城市, 位置, 建筑, 楼层, 房间, 机架,...',
 	'Class:Location/Attribute:name' => '名称',
 	'Class:Location/Attribute:name+' => '',
 	'Class:Location/Attribute:status' => '状态',
@@ -163,9 +163,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/Attribute:first_name+' => '',
 	'Class:Person/Attribute:employee_number' => '员工编号',
 	'Class:Person/Attribute:employee_number+' => '',
-	'Class:Person/Attribute:mobile_phone' => '移动电话',
+	'Class:Person/Attribute:mobile_phone' => '手机',
 	'Class:Person/Attribute:mobile_phone+' => '',
-	'Class:Person/Attribute:location_id' => '地理位置',
+	'Class:Person/Attribute:location_id' => '地点',
 	'Class:Person/Attribute:location_id+' => '',
 	'Class:Person/Attribute:location_name' => '名称',
 	'Class:Person/Attribute:location_name+' => '',
@@ -350,7 +350,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Team+' => '所有团队',
 	'Menu:Document' => '文档',
 	'Menu:Document+' => '所有文档',
-	'Menu:Location' => '地理位置',
+	'Menu:Location' => '地点',
 	'Menu:Location+' => '所有位置',
 	'Menu:NewContact' => '新建联系人',
 	'Menu:NewContact+' => '新建联系人',

@@ -69,7 +69,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 // Lost attachments
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'DBTools:LostAttachments' => '缺失附件',
+	'DBTools:LostAttachments' => '附件缺失',
 	'DBTools:LostAttachments:Disclaimer' => '可以在此搜索数据库中丢失或错放的附件.这不是数据恢复工具,其无法恢复已删除的数据.',
 
 	'DBTools:LostAttachments:Button:Analyze' => '分析',

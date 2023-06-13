@@ -37,7 +37,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopUpdate:UI:CheckUpdate' => '校验升级文件',
 	'iTopUpdate:UI:ConfirmInstallFile' => '即将安装 %1$s',
 	'iTopUpdate:UI:DoUpdate' => '升级',
-	'iTopUpdate:UI:CurrentVersion' => '当前安装的版本',
+	'iTopUpdate:UI:CurrentVersion' => '当前版本',
 	'iTopUpdate:UI:NewVersion' => '新安装的版本',
     'iTopUpdate:UI:Back' => '返回',
     'iTopUpdate:UI:Cancel' => '取消',
