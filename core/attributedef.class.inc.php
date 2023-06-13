@@ -6214,7 +6214,7 @@ class AttributeDateTime extends AttributeDBField
 	/**
 	 * Load the 3 settings: date format, time format and data_time format from the configuration
 	 */
-	protected static function LoadFormatFromConfig()
+	public static function LoadFormatFromConfig()
 	{
 		$aFormats = MetaModel::GetConfig()->Get('date_and_time_format');
 		$sLang = Dict::GetUserLanguage();
@@ -8343,7 +8343,7 @@ class AttributeBlob extends AttributeDefinition
 			$aValues[$this->GetCode().'_data'] = '';
 			$aValues[$this->GetCode().'_mimetype'] = '';
 			$aValues[$this->GetCode().'_filename'] = '';
-			$aValues[$this->GetCode().'_downloads_count'] = ''; // Note: Should this be set to \ormDocument::DEFAULT_DOWNLOADS_COUNT ?
+			$aValues[$this->GetCode().'_downloads_count'] = \ormDocument::DEFAULT_DOWNLOADS_COUNT;
 		}
 
 		return $aValues;
