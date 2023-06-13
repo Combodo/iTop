@@ -253,13 +253,7 @@ class SelectObjectField extends Field
 		if ($this->GetReadOnly() === false) {
 			$sCurrentValueForExtKey = $this->currentValue;
 			if (utils::IsNotNullOrEmptyString($sCurrentValueForExtKey) && ($sCurrentValueForExtKey !== 0)) {
-				$oSearchForExistingCurrentValue = $this->oSearch->DeepClone();
-				$oSearchForExistingCurrentValue->AddCondition('id', $sCurrentValueForExtKey, '=');
-				$oCheckIdAgainstCurrentValueExpression = new BinaryExpression(
-					new FieldExpression('id', $oSearchForExistingCurrentValue->GetClassAlias()), '=', new ScalarExpression($sCurrentValueForExtKey)
-				);
-				$oSearchForExistingCurrentValue->AddConditionExpression($oCheckIdAgainstCurrentValueExpression);
-				$oSetForExistingCurrentValue = new DBObjectSet($oSearchForExistingCurrentValue);
+				$oSetForExistingCurrentValue = $this->GetObjectsSet();
 				$iObjectsCount = $oSetForExistingCurrentValue->CountWithLimit(1);
 
 				if ($iObjectsCount === 0) {
@@ -282,20 +276,27 @@ class SelectObjectField extends Field
 	 *
 	 * @throws \CoreException
 	 */
-	public function VerifyCurrentValue(bool $bAlways = false)
-	{
-		if (!$this->GetReadOnly() || $bAlways)
-		{
-			$oValuesScope = $this->GetSearch()->DeepClone();
-			$oBinaryExp = new BinaryExpression(new FieldExpression('id', $oValuesScope->GetClassAlias()), '=',
-				new ScalarExpression($this->currentValue));
-			$oValuesScope->AddConditionExpression($oBinaryExp);
-			$oValuesSet = new DBObjectSet($oValuesScope);
+	public function VerifyCurrentValue(bool $bAlways = false) {
+		if (!$this->GetReadOnly() || $bAlways) {
+			$oValuesSet = $this->GetObjectsSet();
 
-			if ($oValuesSet->Count() === 0)
-			{
+			if ($oValuesSet->Count() === 0) {
 				$this->currentValue = null;
 			}
 		}
+	}
+
+	final protected function GetObjectsSet() {
+		$sCurrentValueForExtKey = $this->currentValue;
+
+		$oSearchForExistingCurrentValue = $this->oSearch->DeepClone();
+		$oCheckIdAgainstCurrentValueExpression = new BinaryExpression(
+			new FieldExpression('id', $oSearchForExistingCurrentValue->GetClassAlias()),
+			'=',
+			new ScalarExpression($sCurrentValueForExtKey)
+		);
+		$oSearchForExistingCurrentValue->AddConditionExpression($oCheckIdAgainstCurrentValueExpression);
+
+		return new DBObjectSet($oSearchForExistingCurrentValue);
 	}
 }
