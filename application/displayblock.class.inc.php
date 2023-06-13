@@ -1134,7 +1134,7 @@ JS
 		// N°6394 Make sure to sort elements as defined in the datamodel
 		if (utils::IsNotNullOrEmptyString($sStateAttrCode)) {
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
-			$aAllowedValues = $oAttDef->GetAllowedValues();
+			$aAllowedValues = $oAttDef->GetAllowedValues() ?? [];
 			$AllowedValuesKeys = array_keys($aAllowedValues);
 
 			uksort($aStateLabels, function ($sKey1, $sKey2) use ($AllowedValuesKeys) {
