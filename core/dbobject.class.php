@@ -1581,10 +1581,9 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Helper to get the friendly name in a safe manner for displaying inside a web page
 	 *
-	 * @internal
 	 * @return string
 	 * @throws \CoreException
-	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 * @since 3.0.0 N°4106 Method should be overloaded anymore for performances reasons. It will be set final in 3.1.0 (N°4107)
 	 * @since 3.0.0 N°580 New $sType parameter
 	 *
 	 */
