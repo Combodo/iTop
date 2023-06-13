@@ -23,6 +23,7 @@ namespace Combodo\iTop\Form\Field;
 use BinaryExpression;
 use Closure;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
+use ContextTag;
 use DBObjectSet;
 use DBSearch;
 use FieldExpression;
@@ -250,7 +251,9 @@ class SelectObjectField extends Field
 	}
 
 	public function Validate() {
-		if ($this->GetReadOnly() === false) {
+		if ((ContextTag::Check(ContextTag::TAG_REST)) && ($this->GetReadOnly() === false)) {
+			// Only doing the check when coming from the REST API, as the user portal might send invalid values (see VerifyCurrentValue() method below)
+			// Also do not check read only fields, are they are send with a null value when submitting request template from the console
 			$sCurrentValueForExtKey = $this->currentValue;
 			if (utils::IsNotNullOrEmptyString($sCurrentValueForExtKey) && ($sCurrentValueForExtKey !== 0)) {
 				$oSetForExistingCurrentValue = $this->GetObjectsSet();
@@ -271,6 +274,9 @@ class SelectObjectField extends Field
 	/**
 	 * Resets current value if not among allowed ones.
 	 * By default, reset is done ONLY when the field is not read-only.
+	 *
+	 * Called conditionally from {@see \Combodo\iTop\Portal\Form\ObjectFormManager::Build}
+	 * This check isn't in the Validate method as we don't want to check for untouched and invalid values (value was set in the past, it is now invalid, but the user didn't change it)
 	 *
 	 * @param boolean $bAlways Set to true to verify even when the field is read-only.
 	 *
