@@ -1777,7 +1777,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		try {
 
 			/** @var ormLinkSet $sValue */
-			if ($sValue->Count() === 0) {
+			if (is_null($sValue) || $sValue->Count() === 0) {
 				return '';
 			}
 
