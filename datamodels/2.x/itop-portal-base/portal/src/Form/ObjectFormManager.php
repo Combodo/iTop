@@ -1550,7 +1550,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
-	 * Inspired from MetaModel::GetZListAttDefsFilteredForIndirectLinkClass
+	 * Inspired from {@see \MetaModel::GetZListAttDefsFilteredForIndirectLinkClass}
 	 * Retrieve link attributes to display from portal configuration.
 	 *
 	 * @param string $sClass
@@ -1558,7 +1558,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @return array
 	 * @throws \CoreException
-	 * @since 3.1
+	 * @since 3.1.0 N°6398
 	 *
 	 */
 	private function GetZListAttDefsFilteredForIndirectLinkClass(string $sClass, string $sAttCode): array
