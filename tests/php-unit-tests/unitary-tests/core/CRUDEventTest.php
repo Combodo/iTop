@@ -482,7 +482,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
 	}
 
-	public function testLinksChanged()
+	public function testLinksAdded()
 	{
 		// Create a Person
 		$oPerson = $this->CreatePerson(1);
@@ -502,6 +502,27 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
 	}
 
+	public function testLinksDeleted()
+	{
+		// Create a Person
+		$oPerson = $this->CreatePerson(1);
+
+		// Create a Team
+		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeamWithLinkToAPerson', 'org_id' => $this->getTestOrgId()]);
+		$oTeam->DBInsert();
+
+		// Create a link between Person and Team => generate 2 EVENT_DB_LINKS_CHANGED
+		$oLnk = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson->GetKey(), 'team_id' => $oTeam->GetKey()]);
+		$oLnk->DBInsert();
+
+		// Start receiving events
+		$oEventReceiver = new CRUDEventReceiver();
+		$oEventReceiver->RegisterCRUDListeners();
+
+		$oLnk->DBDelete();
+
+		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
+	}
 }
 
 /**
