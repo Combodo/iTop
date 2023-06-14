@@ -783,7 +783,7 @@ class ObjectFormManager extends FormManager
 					{
 						// Note: We can't do this in AttributeExternalKey::MakeFormField() in the Field::SetOnFinalizeCallback() because at this point we have no information about the portal scope and ignore_silos flag, hence it always applies silos.
 						// As a workaround we have to manually check if the field's current value is among the scope
-						$oField->VerifyCurrentValue();
+						$oField->ResetCurrentValueIfNotAmongAllowedValues();
 					}
 					// - Field that require processing on their subfields
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\SubFormField')))
@@ -820,7 +820,7 @@ class ObjectFormManager extends FormManager
 									if (in_array(get_class($oCustomField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField')))
 									{
 										/** @var \Combodo\iTop\Form\Field\SelectObjectField $oCustomField */
-										$oCustomField->VerifyCurrentValue();
+										$oCustomField->ResetCurrentValueIfNotAmongAllowedValues();
 									}
 								}
 							}
