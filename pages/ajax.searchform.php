@@ -52,7 +52,7 @@ try
 
     if (array_key_exists('table_inner_id', $aListParams))
     {
-        $sListId = utils::HtmlEntities($aListParams['table_inner_id']);
+        $sListId = utils::Sanitize($aListParams['table_inner_id'], '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
     }
 
 	if (array_key_exists('json', $aListParams))
