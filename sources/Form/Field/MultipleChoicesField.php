@@ -82,16 +82,11 @@ abstract class MultipleChoicesField extends Field
 	 */
 	public function SetCurrentValue($currentValue)
 	{
-		if (is_array($currentValue))
-		{
+		if (is_array($currentValue)) {
 			$this->currentValue = $currentValue;
-		}
-		elseif (is_null($currentValue))
-		{
+		} elseif (is_null($currentValue)) {
 			$this->currentValue = array();
-		}
-		else
-		{
+		} else {
 			$this->currentValue = array($currentValue);
 		}
 		return $this;

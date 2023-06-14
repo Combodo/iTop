@@ -118,9 +118,11 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\LabelField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",[""]);
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("", [""]);
 					$oBlock->AddSubBlock($oValue);
-					$oValue->AddSubBlock(new Text($this->oField->GetCurrentValue()));
+					if (utils::IsNotNullOrEmptyString($this->oField->GetCurrentValue())) {
+						$oValue->AddSubBlock(new Text($this->oField->GetCurrentValue()));
+					}
 					$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					break;
 
@@ -241,6 +243,7 @@ EOF
 							                        .closest('.form_handler').trigger('value_change');
 							                  console.warn('chanegement');
 							    },
+                                itemClass: 'attribute-set-item',
 							});
 							 $("#{$this->oField->GetGlobalId()}").closest('div').addClass('ibo-input-select-wrapper--with-buttons');
 JS
@@ -485,18 +488,19 @@ EOF
 				$oOutput->AddJs(
 					<<<EOF
  $("#{$this->oField->GetGlobalId()}").selectize({
-    sortField: 'text',
-    onChange: function(value){
+			    sortField: 'text',
+			    onChange: function(value){
     
 							                  console.warn('lala');
-    			 var me = this.\$input;
-                me.closest(".field_set").trigger("field_change", {
-                    id: me.attr("id"),
-                    name: me.closest(".form_field").attr("data-field-id"),
-                    value: me.val()
-                })
-                .closest('.form_handler').trigger('value_change');
-    }
+        			 var me = this.\$input;
+                    me.closest(".field_set").trigger("field_change", {
+		                    id: me.attr("id"),
+		                    name: me.closest(".form_field").attr("data-field-id"),
+		                    value: me.val()
+		                })
+                     .closest('.form_handler').trigger('value_change');
+                },
+                itemClass: 'attribute-set-item'
 });
 EOF
 				);

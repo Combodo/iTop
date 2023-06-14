@@ -26,6 +26,7 @@ namespace Combodo\iTop\Form\Field;
  */
 class TagSetObjectField extends MultipleSelectObjectField
 {
+	const DEFAULT_MULTIPLE_VALUES_ENABLED = true;
 
 	function SetCurrentValue($currentValue)
 	{

@@ -75,43 +75,38 @@ $(function()
 		getCurrentValue: function()
 		{
 			var value = null;
-			
-			this.element.find(':input').each(function(iIndex, oElem){
-				if($(oElem).is(':hidden') || $(oElem).is(':text') || $(oElem).is(':password') || $(oElem).is('textarea'))
-				{
-					value = $(oElem).val();
-				}
-				else if($(oElem).is('select'))
-				{
-					if($(oElem).is('select[multiple]'))
-					{
-						value = [];
-						$(oElem).find('option:selected').each(function(){
-							value.push($(this).val());
-						});
-					}
-					else
-					{
+			if (this.element.attr('data-input-type') == 'tagset') {
+				value = [];
+
+				this.element.find('select').find('option:selected').each(function (iIndex, oElem) {
+					value.push($(this).val());
+				});
+			} else {
+				this.element.find(':input').each(function (iIndex, oElem) {
+					if ($(oElem).is(':text') || $(oElem).is(':password') || $(oElem).is('textarea')) {
 						value = $(oElem).val();
+					} else if ($(oElem).is(':hidden') || $(oElem).is('select')) {
+						if ($(oElem).is('select[multiple]')) {
+							value = [];
+							$(oElem).find('option:selected').each(function () {
+								value.push($(this).val());
+							});
+						} else {
+							value = $(oElem).val();
+						}
+					} else if ($(oElem).is(':checkbox') || $(oElem).is(':radio')) {
+						if (value === null) {
+							value = [];
+						}
+						if ($(oElem).is(':checked')) {
+							value.push($(oElem).val());
+						}
+					} else {
+						console.log('Form field : Input type not handle yet.');
 					}
-				}
-				else if($(oElem).is(':checkbox') || $(oElem).is(':radio'))
-				{
-					if(value === null)
-					{
-						value = [];
-					}
-					if($(oElem).is(':checked'))
-					{
-						value.push($(oElem).val());
-					}
-				}
-				else
-				{
-					console.log('Form field : Input type not handle yet.');
-				}
-			});
-			
+				});
+			}
+
 			return value;
 		},
 		validate: function(oEvent, oData)

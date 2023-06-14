@@ -36,7 +36,7 @@ use utils;
  * @author Romain Quetiez <romain.quetiez@combodo.com>
  * @since 2.3.0
  */
-class SelectObjectField extends Field
+class SelectObjectField extends MultipleChoicesField
 {
 	/** @var int CONTROL_SELECT */
 	const CONTROL_SELECT = 1;

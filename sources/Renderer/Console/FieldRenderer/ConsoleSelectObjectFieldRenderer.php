@@ -185,10 +185,7 @@ EOF
 					 * $oPage->add_ready_script($sScript);*/
 
 					$oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content"]);
-					$bVertical = true;
-					$idx = 0;
 					$aValues = $this->oField->GetCurrentValue();
-					$sId = $this->oField->GetGlobalId();
 
 					$aFieldsToLoad = [];
 					$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
@@ -209,49 +206,60 @@ EOF
 					}
 
 					$oAllowedValues->OptimizeColumnLoad($aFieldsToLoad);
-
+//MAYBE USE INPUT SET ?
 					$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel($this->oField->GetLabel(), $this->oField->GetDescription(), $this->oField->GetGlobalId());
+					$oSelect->SetIsMultiple(true);
 					while ($oObj = $oAllowedValues->Fetch()) {
 						$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
 							$oObj->GetKey(),
 							$oObj->GetName(),
-							is_null($aValues) ? false : in_array($oObj->GetKey(), $aValues, true) === true)
+							(is_null($aValues) || !is_array($aValues)) ? false : in_array($oObj->GetKey(), $aValues, true) === true)
 						);
 					}
-					$oOutput->AddJs(
-						<<<JS
+
 					$oOutput->AddJs(
 						<<<JS
 							 $("#{$this->oField->GetGlobalId()}").selectize({
+								maxItems: null,
 							    sortField: 'text',
 							    onChange: function(value){
-							    
-							                  console.warn('chane');
-							                  var me = this.\$input;
-							                  me.trigger("field_change", {
-							                            id: me.attr("id"),
-							                            name: me.closest(".form_field").attr("data-field-id"),
-							                            value: me.val()
-							                        })
-							                        .closest('.form_handler').trigger('value_change');
+					                  console.warn('chane');
+					                  var me = this.\$input;
+					                  me.trigger("field_change", {
+					                            id: me.attr("id"),
+					                            name: me.closest(".form_field").attr("data-field-id"),
+					                            value: me.val()
+					                        })
+					                        .closest('.form_handler').trigger('change');
+					                        
+			                        $(me).closest(".field_set").trigger("field_change", {
+			                            id: $(me).attr("id"),
+			                            name: $(me).closest(".form_field").attr("data-field-id"),
+			                            value: $(me).val()
+			                        })
+			                        .closest('.form_handler').trigger('value_change');
+							    }, 
+							     loadingClass: '',
+                                itemClass: 'item attribute-set-item',
+								inputClass: 'attribute-set ibo-input ibo-input-selectize',	
+								render: {
+							                        option: function(option) {
+							            return CombodoGlobalToolbox.RenderTemplate('#{$this->oField->GetGlobalId()}_options_template', option, this.settings.optionClass)[0].outerHTML;
+							        },
+							                        item: function (item) {
+							            return CombodoGlobalToolbox.RenderTemplate('#{$this->oField->GetGlobalId()}_items_template', item, this.settings.itemClass)[0].outerHTML;
+							        },
 							    },
-								inputClass: 'ibo-input-vanilla ibo-input ibo-input-selectize',	
 							});
 							 $("#{$this->oField->GetGlobalId()}").closest('div').addClass('ibo-input-select-wrapper--with-buttons');
 							  $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
 		                        var me = this;
-		
-		                        $(this).closest(".field_set").trigger("field_change", {
-		                            id: $(me).attr("id"),
-		                            name: $(me).closest(".form_field").attr("data-field-id"),
-		                            value: $(me).val()
-		                        })
-		                        .closest('.form_handler').trigger('value_change');
+
 		                    });
 JS
 					);
 
-
+					$oValue->AddSubBlock($oSelect);
 					$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					$oBlock->AddSubBlock($oValue);
 					break;
@@ -387,8 +395,19 @@ EOF
                             value: me.val()
                         })
                         .closest('.form_handler').trigger('value_change');
-    },
-	inputClass: 'ibo-input-vanilla ibo-input ibo-input-selectize',	
+     },  
+     loadingClass: '',
+     itemClass: 'item attribute-set-item',
+	 inputClass: 'ibo-input-vanilla ibo-input ibo-input-selectize',	
+	 plugins: {
+                'combodo_update_operations' : {
+			            initial: ["5"],
+			        },
+                'combodo_auto_position' : {
+                         maxDropDownHeight: 300,         
+                },
+                'remove_button' : {},
+            },
 });
  $("#{$this->oField->GetGlobalId()}").closest('div').addClass('ibo-input-select-wrapper--with-buttons');
 JS
@@ -396,6 +415,7 @@ JS
 					}
 			}
 
+			$oBlock->AddDataAttribute("input-type", $sFieldClass);
 			$oOutput->AddHtml((BlockRenderer::RenderBlockTemplates($oBlock)));
 			// JS Form field widget construct
 			$aValidators = array();
