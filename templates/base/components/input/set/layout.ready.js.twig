@@ -19,7 +19,7 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     plugins: {
         {# PLUGIN update operations  #}
         'combodo_update_operations' : {
-            initial: {{ oUIBlock.GetInitialValue()|raw }},
+            initial: {{ oUIBlock.GetInitialValue()|raw }}
         },
         {# PLUGIN combodo auto position  #}
         'combodo_auto_position' : {
@@ -42,7 +42,7 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
             tooltip_links_will_be_deleted_from_x_objects: '{{ 'UI:Links:Bulk:LinkWillBeDeletedFromXObjects'|dict_s }}',
             tooltip_links_exist_for_all_objects: '{{ 'UI:Links:Bulk:LinkExistForAllObjects'|dict_s }}',
             tooltip_links_exist_for_one_object: '{{ 'UI:Links:Bulk:LinkExistForOneObject'|dict_s }}',
-            tooltip_links_exist_for_x_objects: '{{ 'UI:Links:Bulk:LinkExistForXObjects'|dict_s }}',
+            tooltip_links_exist_for_x_objects: '{{ 'UI:Links:Bulk:LinkExistForXObjects'|dict_s }}'
         },
         {% endif %}
         {# PLUGIN remove button  #}
@@ -200,7 +200,7 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
     },
 
     {# plugin combodo_add_button #}
-    {% if oUIBlock.HasAddOptionButton() %}
+    {% if oUIBlock.HasAddOptionButton() and oUIBlock.HasAddOptionButtonJsOnClick() %}
     onAdd: function(){
         {{ oUIBlock.GetAddOptionButtonJsOnClick()|raw }}
 
