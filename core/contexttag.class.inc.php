@@ -63,6 +63,9 @@ class ContextTag
 	 * @since 3.1.0 N°6047
 	 */
 	public const TAG_IMPORT    = 'Import';
+		/**
+	 * @since 3.1.0 N°6047
+	 */
 	public const TAG_EXPORT    = 'Export';
 
 	/**
