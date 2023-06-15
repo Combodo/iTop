@@ -48,6 +48,7 @@ use Server;
 use TagSetFieldData;
 use Ticket;
 use URP_UserProfile;
+use User;
 use UserRequest;
 use VirtualHost;
 use VirtualMachine;
@@ -482,7 +483,7 @@ class ItopDataTestCase extends ItopTestCase
 		/** @var \ormLinkSet $oSet */
 		$oSet = $oUser->Get('profile_list');
 		$oSet->AddItem($oUserProfile);
-		$oUser = $this->updateObject('UserLocal', $oUser->GetKey(), array(
+		$oUser = $this->updateObject(User::class, $oUser->GetKey(), array(
 			'profile_list' => $oSet,
 		));
 		$this->debug("Updated {$oUser->GetName()} ({$oUser->GetKey()})");
