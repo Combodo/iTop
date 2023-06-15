@@ -22,4 +22,5 @@
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserLDAP' => 'Usuário externo via LDAP',
 	'Class:UserLDAP+' => '',
+	'UserLDAP:server' => 'LDAP specifics~~',
 ));

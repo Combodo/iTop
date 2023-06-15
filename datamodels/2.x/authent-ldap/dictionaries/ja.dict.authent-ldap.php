@@ -23,4 +23,5 @@
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserLDAP' => 'LDAP ユーザー',
 	'Class:UserLDAP+' => 'LDAP認証ユーザー',
+	'UserLDAP:server' => 'LDAP specifics~~',
 ));

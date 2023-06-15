@@ -33,6 +33,7 @@
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkFunctionalCIToTicket' => 'Relación EC Funcional y Ticket',
 	'Class:lnkFunctionalCIToTicket+' => 'Relación EC Funcional y Ticket',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => 'Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Ref.',
@@ -50,7 +51,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Calculado',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'No impactado',
 ));
-
 
 //
 // Class: FunctionalCI

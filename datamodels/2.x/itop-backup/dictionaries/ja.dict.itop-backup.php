@@ -21,10 +21,8 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-
 	'bkp-backup-running' => 'A backup is running. Please wait...~~',
 	'bkp-restore-running' => 'A restore is running. Please wait...~~',
-
 	'Menu:BackupStatus' => 'Scheduled backups~~',
 	'bkp-status-title' => 'Scheduled Backups~~',
 	'bkp-status-checks' => 'Settings and checks~~',

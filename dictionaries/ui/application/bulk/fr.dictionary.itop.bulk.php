@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 Dict::Add('FR FR', 'French', 'Français', array(
 
 	// Bulk modify

@@ -38,7 +38,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopHub:AutoSubmit' => 'Não me pergunte novamente. Da próxima vez, vá para o iTop Hub automaticamente',
 	'UI:About:RemoteExtensionSource' => 'iTop Hub',
 	'iTopHub:Explanation' => 'Ao clicar neste botão, você será redirecionado para o iTop Hub',
-
 	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s de espaço livre em disco em %2$s',
 	'iTopHub:FailedToCheckFreeDiskSpace' => 'Falha ao verificar o espaço livre em disco',
 	'iTopHub:BackupOk' => 'Backup concluído com sucesso',
@@ -48,7 +47,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopHub:CompiledOK' => 'Compilação bem-sucedida',
 	'iTopHub:ConfigurationSafelyReverted' => 'Erro detectado durante a implantação!<br/>A configuração do '.ITOP_APPLICATION_SHORT.' NÃO foi modificada',
 	'iTopHub:FailAuthent' => 'Autenticação falhou para esta ação',
-
 	'iTopHub:InstalledExtensions' => 'Extensões implantadas nesta instância',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensões implantadas manualmente',
 	'iTopHub:ExtensionCategory:Manual+' => 'As seguintes extensões foram implantadas copiando-as manualmente no diretório %1$s do '.ITOP_APPLICATION_SHORT.':',
@@ -58,7 +56,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopHub:NoExtensionInThisCategory+' => 'Acesse o iTop Hub para encontrar as extensões que ajudarão você a personalizar e adaptar o '.ITOP_APPLICATION_SHORT.' aos seus processos !',
 	'iTopHub:ExtensionNotInstalled' => 'Não instalado',
 	'iTopHub:GetMoreExtensions' => 'Obter extensões do iTop Hub...',
-
 	'iTopHub:LandingWelcome' => 'Parabéns! As extensões a seguir foram baixadas do iTop Hub e implantadas no seu '.ITOP_APPLICATION_SHORT,
 	'iTopHub:GoBackToITopBtn' => 'Voltar para o '.ITOP_APPLICATION_SHORT,
 	'iTopHub:Uncompressing' => 'Descompactando extensão(ões)...',
@@ -67,7 +64,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopHub:DBBackupSentence' => 'Faça um backup do banco de dados e configuração do '.ITOP_APPLICATION_SHORT.' antes de atualizar',
 	'iTopHub:DeployBtn' => 'Implantar !',
 	'iTopHub:DatabaseBackupProgress' => 'Backup da instância...',
-
 	'iTopHub:InstallationEffect:Install' => 'Versão: %1$s será instalada.',
 	'iTopHub:InstallationEffect:NoChange' => 'Versão: %1$s já está instalada. Nenhuma alteração realizada',
 	'iTopHub:InstallationEffect:Upgrade' => 'Será <b>atualizada</b> da versão %1$s para a versão %2$s',
@@ -77,7 +73,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopHub:InstallationEffect:MissingDependencies' => 'Esta extensão não pode ser instalada por causa de dependências não atendidas',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => 'A extensão requer o(s) módulo(s): %1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => 'Instalação bem-sucedida!',
-
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s versão: %2$s',
 	'iTopHub:InstallationStatus:Installed' => 'Instalado',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Versão %1$s <b>NÃO</b> instalada',

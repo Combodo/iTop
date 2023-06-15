@@ -23,7 +23,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopHub:AutoSubmit' => 'Ne plus me demander. La prochaine fois, aller sur iTop Hub automatiquement.',
 	'UI:About:RemoteExtensionSource' => 'iTop Hub',
 	'iTopHub:Explanation' => 'En cliquant sur ce bouton, vous serez redirigé vers iTop Hub.',
-
 	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s d\'espace disque disponible sur %2$s.',
 	'iTopHub:FailedToCheckFreeDiskSpace' => 'Echec de la vérification de l\'espace disque.',
 	'iTopHub:BackupOk' => 'Sauvegarde Ok.',
@@ -33,7 +32,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopHub:CompiledOK' => 'Compilation réussie.',
 	'iTopHub:ConfigurationSafelyReverted' => 'Une erreur a été détectée durant le déploiement!<br/>La configuration d\'iTop n\'a PAS été modifiée.',
 	'iTopHub:FailAuthent' => 'Échec d\'authentification pour cette action',
-
 	'iTopHub:InstalledExtensions' => 'Extensions déployées sur cette instance',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensions déployées manuellement',
 	'iTopHub:ExtensionCategory:Manual+' => 'Les extensions ci-dessous ont été déployées en les copiant manuellement dans le répertoire %1$s d\''.ITOP_APPLICATION_SHORT.':',
@@ -43,7 +41,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopHub:NoExtensionInThisCategory+' => 'Avec iTop Hub trouvez en quelques clics les extensions qui vous permettront de construire un iTop sur mesure qui se conforme à vos processus !',
 	'iTopHub:ExtensionNotInstalled' => 'Non installée',
 	'iTopHub:GetMoreExtensions' => 'Obtenir des extensions depuis iTop Hub...',
-
 	'iTopHub:LandingWelcome' => 'Félicitations! Les extensions ci-dessous ont été téléchargées depuis iTop Hub et installées sur cette instance d\''.ITOP_APPLICATION_SHORT.'.',
 	'iTopHub:GoBackToITopBtn' => 'Retourner dans '.ITOP_APPLICATION_SHORT,
 	'iTopHub:Uncompressing' => 'Décompression des extensions...',
@@ -52,7 +49,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopHub:DBBackupSentence' => 'Faire une sauvegarde de la base de données et des paramétrages d\''.ITOP_APPLICATION_SHORT,
 	'iTopHub:DeployBtn' => 'Déployer !',
 	'iTopHub:DatabaseBackupProgress' => 'Sauvegarde de l\'instance...',
-
 	'iTopHub:InstallationEffect:Install' => 'Version: %1$s sera installée.',
 	'iTopHub:InstallationEffect:NoChange' => 'Version: %1$s déjà installée. Rien ne changera.',
 	'iTopHub:InstallationEffect:Upgrade' => 'Sera <b>mise à jour</b> de version %1$s en version %2$s.',
@@ -62,7 +58,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopHub:InstallationEffect:MissingDependencies' => 'Cette extension ne peut pas être installée à cause de ses dépendences.',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => 'Cette extension nécessite le(s) module(s): %1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => 'Installation réussie !',
-
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Installée',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NON</b> installée.',

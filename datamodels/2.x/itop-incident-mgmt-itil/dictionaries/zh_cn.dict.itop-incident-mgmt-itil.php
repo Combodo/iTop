@@ -110,6 +110,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => '低',
 	'Class:Incident/Attribute:origin' => '来源',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => '邮件',
 	'Class:Incident/Attribute:origin/Value:mail+' => '邮件',
 	'Class:Incident/Attribute:origin/Value:monitoring' => '监控',
@@ -231,7 +235,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Stimulus:ev_reopen' => '重新打开',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => '不能分配父级事件给自己',
-
 	'Class:Incident/Method:ResolveChildTickets' => '解决子工单',
 	'Class:Incident/Method:ResolveChildTickets+' => '级联解决子Ticket(事件自动解决),和调整以下内容保持一至: 服务, 团队, 办理人, 解决方案',
 	'Tickets:Related:OpenIncidents' => '打开的事件',

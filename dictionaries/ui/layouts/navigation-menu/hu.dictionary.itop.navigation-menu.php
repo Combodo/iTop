@@ -26,7 +26,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Írja be a kulcsszavakat a menük szűréséhez',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Az összes menücsoport találatai megjelennek',
 	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Nincs eredmény erre a menüszűrőre',
-    'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Üdv, %1$s!',
+	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Üdv, %1$s!',
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s névjegyképe',
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Felhasználói menü megnyitása',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Menüpontok szűrése',

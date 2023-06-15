@@ -21,7 +21,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-
 	'Menu:ConfigEditor' => '编辑配置文件',
 	'config-edit-title' => '配置文件编辑器',
 	'config-edit-intro' => '编辑配置文件时请务必格外小心.',
@@ -35,4 +34,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'config-parse-error' => '第 %2$d 行: %1$s.<br/>配置文件尚未更新.',
 	'config-current-line' => '正在编辑第 %1$s 行',
 	'config-saved-warning-db-password' => '保存成功, 但因为数据库密码中包含不支持的字符,配置文件备份不会成功.',
+	'config-error-transaction' => 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.~~',
+	'config-error-file-changed' => 'Error: The Configuration file has changed since you opened it and cannot be saved. Refresh and apply your changes again.~~',
+	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the configuration file cannot be edited.~~',
+	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT.' interactive edition of the configuration as been disabled. See <code>\'config_editor\' => \'disabled\'</code> in the configuration file.~~',
 ));

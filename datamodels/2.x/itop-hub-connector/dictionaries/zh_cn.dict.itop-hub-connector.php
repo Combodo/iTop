@@ -38,7 +38,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:AutoSubmit' => '不再询问. 下次自动进入iTop Hub .',
 	'UI:About:RemoteExtensionSource' => 'iTop Hub',
 	'iTopHub:Explanation' => '点击这个按钮您将被引导至iTop Hub.',
-
 	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s 可用磁盘空间位于 %2$s.',
 	'iTopHub:FailedToCheckFreeDiskSpace' => '检查可用磁盘空间失败.',
 	'iTopHub:BackupOk' => '备份成功.',
@@ -48,7 +47,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:CompiledOK' => '编译成功.',
 	'iTopHub:ConfigurationSafelyReverted' => '安装时发生错误!<br/>iTop配置将不会改变.',
 	'iTopHub:FailAuthent' => '认证失败.',
-
 	'iTopHub:InstalledExtensions' => '本机已安装的扩展',
 	'iTopHub:ExtensionCategory:Manual' => '手动安装的扩展',
 	'iTopHub:ExtensionCategory:Manual+' => '下列已安装的扩展是手动将文件放置到 %1$s 目录的:',
@@ -58,7 +56,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:NoExtensionInThisCategory+' => '浏览iTop Hub,去寻找符合您喜欢的扩展吧.',
 	'iTopHub:ExtensionNotInstalled' => '未安装',
 	'iTopHub:GetMoreExtensions' => '从iTop Hub获取扩展...',
-
 	'iTopHub:LandingWelcome' => '恭喜! 下列来自iTop Hub的扩展已被下载并安装到本机.',
 	'iTopHub:GoBackToITopBtn' => '返回'.ITOP_APPLICATION_SHORT,
 	'iTopHub:Uncompressing' => '扩展解压中...',
@@ -67,7 +64,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:DBBackupSentence' => '在升级之前,备份数据库和 '.ITOP_APPLICATION_SHORT.' 配置文件',
 	'iTopHub:DeployBtn' => '安装 !',
 	'iTopHub:DatabaseBackupProgress' => '本机备份...',
-
 	'iTopHub:InstallationEffect:Install' => 'Version: %1$s 将被安装.',
 	'iTopHub:InstallationEffect:NoChange' => 'Version: %1$s 已安装. 保持不变.',
 	'iTopHub:InstallationEffect:Upgrade' => '将从 version %1$s <b>升级</b> 到 version %2$s.',
@@ -77,7 +73,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:InstallationEffect:MissingDependencies' => '扩展无法安装,因为未知的依赖.',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => '此扩展依赖模块: %1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => '安装成功!',
-
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s 版本: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => '已安装',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>未</b> 安装.',

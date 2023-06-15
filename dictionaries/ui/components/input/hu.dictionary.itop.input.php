@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Input
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Component:Input:Password:DoesNotMatch' => 'A jelszavak nem egyeznek',

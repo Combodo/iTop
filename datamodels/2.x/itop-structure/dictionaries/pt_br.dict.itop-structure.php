@@ -100,6 +100,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Contact' => 'Contato',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Nome',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Status',
@@ -137,6 +138,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person' => 'Pessoa',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Último nome',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Primeiro nome',
@@ -157,6 +159,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person/Attribute:team_list+' => 'Todas as equipes que essa pessoa pertence',
 	'Class:Person/Attribute:tickets_list' => 'Solicitações',
 	'Class:Person/Attribute:tickets_list+' => 'Todos as solicitações que essa pessoa solicitou',
+	'Class:Person/Attribute:user_list' => 'Users~~',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nome amigável do gerente',
 	'Class:Person/Attribute:manager_id_friendlyname+' => 'Nome amigável do gerente do usuário correspondente',
 	'Class:Person/Attribute:picture' => 'Imagem',
@@ -165,6 +169,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person/UniquenessRule:employee_number' => 'Já existe uma pessoa na organização \'$this->org_name$\' com o mesmo número de colaborador',
 	'Class:Person/UniquenessRule:name+' => 'O nome do colaborador deve ser único dentro de sua organização',
 	'Class:Person/UniquenessRule:name' => 'Já existe uma pessoa na organização \'$this->org_name$\' com o mesmo nome',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
 ));
 
 //
@@ -174,6 +179,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Team' => 'Equipe',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Membros',
 	'Class:Team/Attribute:persons_list+' => 'Todas as pessoas que pertencem a essa equipe',
 	'Class:Team/Attribute:tickets_list' => 'Solicitações',
@@ -187,6 +193,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document' => 'Documento',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Nome',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organização',
@@ -286,6 +293,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkPersonToTeam' => 'Link Pessoa / Equipe',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
+	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Equipe',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Nome da equipe',
@@ -349,6 +358,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Person:info' => 'Informações gerais',
 	'User:info' => 'Informações gerais',
+	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Informações pessoais',
 	'Person:notifiy' => 'Notificações',
 ));

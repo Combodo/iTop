@@ -21,10 +21,8 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-
 	'bkp-backup-running' => 'A backup is running. Please wait...~~',
 	'bkp-restore-running' => 'A restore is running. Please wait...~~',
-
 	'Menu:BackupStatus' => 'Scheduled Backups~~',
 	'bkp-status-title' => 'Scheduled Backups~~',
 	'bkp-status-checks' => 'Settings and checks~~',

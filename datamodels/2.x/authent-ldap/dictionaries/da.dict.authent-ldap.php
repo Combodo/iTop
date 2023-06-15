@@ -23,4 +23,5 @@
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserLDAP' => 'LDAP-Bruger',
 	'Class:UserLDAP+' => 'Bruger der godkendes via LDAP',
+	'UserLDAP:server' => 'LDAP specifics~~',
 ));

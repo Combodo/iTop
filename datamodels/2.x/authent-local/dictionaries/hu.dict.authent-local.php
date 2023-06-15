@@ -24,7 +24,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserLocal+' => '',
 	'Class:UserLocal/Attribute:password' => 'Jelszó',
 	'Class:UserLocal/Attribute:password+' => '',
-
 	'Class:UserLocal/Attribute:expiration' => 'Jelszó lejárati ideje',
 	'Class:UserLocal/Attribute:expiration+' => 'Jelszó lejárati státusz (bővítmény szükséges hozzá)',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Lejár',
@@ -35,11 +34,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'Egyszeri jelszó',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'A felhasználó nem változtathat jelszót.',
-    'Class:UserLocal/Attribute:password_renewed_date' => 'Jelszó megújítás ideje',
+	'Class:UserLocal/Attribute:password_renewed_date' => 'Jelszó megújítás ideje',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'A jelszó legutóbbi módosításának időpontja',
-
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'A jelszónak legalább 8 karakterből kell állnia, és tartalmaznia kell nagybetűket, kisbetűket, numerikus és speciális karaktereket.',
-
 	'UserLocal:password:expiration' => 'Az alábbi mezőkhöz egy bővítmény szükséges',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'A jelszó lejárati idejének beállítása "Egyszeri jelszóra" nem engedélyezett a saját Felhasználó számára.',
 ));

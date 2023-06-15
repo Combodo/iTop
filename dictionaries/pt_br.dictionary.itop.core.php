@@ -23,57 +23,42 @@
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:DeletedObjectLabel' => '%1s (excluído)',
-	'Core:DeletedObjectTip'   => 'O objeto foi excluído em %1$s (%2$s)',
-
+	'Core:DeletedObjectTip' => 'O objeto foi excluído em %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Objeto não encontrado (classe: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'O objeto não pode ser encontrado. Ele pode ter sido eliminado há algum tempo e o log foi removido desde então',
-
 	'Core:UniquenessDefaultError' => 'Regra de exclusividade \'%1$s\' com erro',
-	'Core:CheckConsistencyError'  => 'Regras de consistência não seguidas: %1$s',
-	'Core:CheckValueError'        => 'Valor inesperado para o atributo \'%1$s\' (%2$s) : %3$s~~',
-
+	'Core:CheckConsistencyError' => 'Regras de consistência não seguidas: %1$s',
+	'Core:CheckValueError' => 'Valor inesperado para o atributo \'%1$s\' (%2$s) : %3$s~~',
 	'Core:AttributeLinkedSet' => 'Array de objetos',
 	'Core:AttributeLinkedSet+' => 'Quaisquer tipos de objetos da mesma classe ou subclasses',
-
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicatas no campo \'%1$s\' : %2$s',
-
 	'Core:AttributeDashboard' => 'Painel do '.ITOP_APPLICATION_SHORT,
 	'Core:AttributeDashboard+' => '',
-
-	'Core:AttributePhoneNumber'  => 'Número de telefone',
+	'Core:AttributePhoneNumber' => 'Número de telefone',
 	'Core:AttributePhoneNumber+' => '',
-
 	'Core:AttributeObsolescenceDate' => 'Data de obsolescência',
 	'Core:AttributeObsolescenceDate+' => '',
-
 	'Core:AttributeTagSet' => 'Lista de tags',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'clique para adicionar',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s de %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s de classes filhas)',
-
 	'Core:AttributeCaseLog' => 'Log',
 	'Core:AttributeCaseLog+' => '',
-
 	'Core:AttributeMetaEnum' => 'Enum Computado',
 	'Core:AttributeMetaEnum+' => 'Exibir Strings alfanuméricas computadas',
-
 	'Core:AttributeLinkedSetIndirect' => 'Array de objetos (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Qualquer tipo de objetos [subclasse] da mesma classe',
-
 	'Core:AttributeInteger' => 'Inteiro',
 	'Core:AttributeInteger+' => 'Valor numérico (não pode ser negativo)',
-
 	'Core:AttributeDecimal' => 'Decimal',
 	'Core:AttributeDecimal+' => 'Valor decimal (não pode ser negativo)',
-
 	'Core:AttributeBoolean' => 'Booleano',
 	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Sim',
 	'Core:AttributeBoolean/Value:no' => 'Não',
-
 	'Core:AttributeArchiveFlag' => 'Flag de arquivamento',
 	'Core:AttributeArchiveFlag/Value:yes' => 'Sim',
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Este objeto é visível apenas no modo de arquivamento',
@@ -82,7 +67,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeArchiveFlag/Label+' => '',
 	'Core:AttributeArchiveDate/Label' => 'Data de arquivamento',
 	'Core:AttributeArchiveDate/Label+' => '',
-
 	'Core:AttributeObsolescenceFlag' => 'Flag de obsolescência',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Sim',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Este objeto será excluído da análise de impacto e ocultado dos resultados de pesquisa',
@@ -91,54 +75,38 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeObsolescenceFlag/Label+' => 'Calculado dinamicamente com base em outros atributos do objeto',
 	'Core:AttributeObsolescenceDate/Label' => 'Data de obsolescência',
 	'Core:AttributeObsolescenceDate/Label+' => 'Data aproximada em que o objeto foi considerado obsoleto',
-
 	'Core:AttributeString' => 'String',
 	'Core:AttributeString+' => 'Sequência alfanumérica',
-
 	'Core:AttributeClass' => 'Classe',
 	'Core:AttributeClass+' => '',
-
 	'Core:AttributeApplicationLanguage' => 'Idioma do usuário',
 	'Core:AttributeApplicationLanguage+' => 'Idioma e país (por exemplo: EN US)',
-
 	'Core:AttributeFinalClass' => 'Classe (automática)',
 	'Core:AttributeFinalClass+' => 'Classe real do objeto (criada automaticamente pelo sistema)',
-
 	'Core:AttributePassword' => 'Senha',
 	'Core:AttributePassword+' => 'Senha para o dispositivo externo',
-
 	'Core:AttributeEncryptedString' => 'String encriptada',
 	'Core:AttributeEncryptedString+' => 'String encriptada com uma chave local',
 	'Core:AttributeEncryptUnknownLibrary' => 'Biblioteca de criptografia especificada (%1$s) desconhecida',
 	'Core:AttributeEncryptFailedToDecrypt' => '** erro de decriptação **',
-
 	'Core:AttributeText' => 'Texto',
 	'Core:AttributeText+' => 'Cadeia de caracteres Multi-linha',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'String HTML',
-
 	'Core:AttributeEmailAddress' => 'Endereço de e-mail',
 	'Core:AttributeEmailAddress+' => '',
-
 	'Core:AttributeIPAddress' => 'Endereço IP',
 	'Core:AttributeIPAddress+' => '',
-
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Expressão Object Query Language (OQL)',
-
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => 'Lista de sequências alfanuméricas pré-definidas',
-
 	'Core:AttributeTemplateString' => 'String do modelo',
 	'Core:AttributeTemplateString+' => 'String de uma linha, contendo espaços reservados para dados do '.ITOP_APPLICATION_SHORT,
-
 	'Core:AttributeTemplateText' => 'Texto do modelo',
 	'Core:AttributeTemplateText+' => 'Texto contendo espaços reservados para dados do '.ITOP_APPLICATION_SHORT,
-
 	'Core:AttributeTemplateHTML' => 'HTML do modelo',
 	'Core:AttributeTemplateHTML+' => 'Código HTML contendo espaços reservados para dados do '.ITOP_APPLICATION_SHORT,
-
 	'Core:AttributeDateTime' => 'Data/hora',
 	'Core:AttributeDateTime+' => 'Data e hora (ano-mês-dia hh:mm:ss)',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -156,7 +124,6 @@ Operadores:<br/>
 <p>
 Se o tempo for omitido, o padrão é 00:00:00
 </p>',
-
 	'Core:AttributeDate' => 'Data',
 	'Core:AttributeDate+' => 'Data (ano-mês-dia)',
 	'Core:AttributeDate?SmartSearch' => '
@@ -171,43 +138,30 @@ Operadores:<br/>
 	<b>&lt;</b><em>data</em><br/>
 	<b>[</b><em>data</em>,<em>data</em><b>]</b>
 </p>',
-
 	'Core:AttributeDeadline' => 'Prazo determinado',
 	'Core:AttributeDeadline+' => 'Data, apresentada relativamente ao tempo atual',
-
 	'Core:AttributeExternalKey' => 'Chave externa',
 	'Core:AttributeExternalKey+' => 'Chave externa (ou foreign)',
-
 	'Core:AttributeHierarchicalKey' => 'Chave hierárquica',
 	'Core:AttributeHierarchicalKey+' => 'Chave externa (ou foreign key) para o objeto pai',
-
 	'Core:AttributeExternalField' => 'Campo externo',
 	'Core:AttributeExternalField+' => 'Campo mapeado para uma chave externa',
-
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => 'URL absoluto ou relativo como texto',
-
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => 'Qualquer conteúdo binário (documento)',
-
 	'Core:AttributeOneWayPassword' => 'Senha criptografada',
 	'Core:AttributeOneWayPassword+' => 'Uma senha encriptada de uma só via (one-way)',
-
 	'Core:AttributeTable' => 'Tabela',
 	'Core:AttributeTable+' => 'Matriz indexada com duas dimensões',
-
 	'Core:AttributePropertySet' => 'Propriedades',
 	'Core:AttributePropertySet+' => 'Lista de propriedades sem categoria (nome e valor)',
-
 	'Core:AttributeFriendlyName' => 'Nome amigável',
 	'Core:AttributeFriendlyName+' => 'Atributo criado automaticamente; o nome amigável é baseado nos diferentes atributos do objeto',
-
 	'Core:FriendlyName-Label' => 'Nome amigável',
 	'Core:FriendlyName-Description' => '',
-
 	'Core:AttributeTag' => 'Etiquetas',
 	'Core:AttributeTag+' => '',
-	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
@@ -485,6 +439,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Action' => 'Ação personalizada',
 	'Class:Action+' => 'Ações definidas pelo usuário',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Nome',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => 'Descrição',
@@ -552,6 +507,22 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Alta',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:language' => 'Language~~',
+	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
+	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
+	'ActionEmail:main' => 'Message~~',
+	'ActionEmail:trigger' => 'Triggers~~',
+	'ActionEmail:recipients' => 'Contacts~~',
+	'ActionEmail:preview_tab' => 'Preview~~',
+	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
+	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
+	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
+	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
 ));
 
 //
@@ -561,6 +532,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Trigger' => 'Gatilho',
 	'Class:Trigger+' => 'Manipulador de eventos personalizado',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Descrição',
 	'Class:Trigger/Attribute:description+' => 'Uma descrição curta',
 	'Class:Trigger/Attribute:action_list' => 'Ações desencadeadas',
@@ -569,6 +541,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Contexto',
 	'Class:Trigger/Attribute:context+' => 'Contexto para permitir o acionamento do gatilho',
+	'Class:Trigger/Attribute:complement' => 'Additional information~~',
+	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
 ));
 
 //
@@ -665,6 +639,17 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 ));
 
 //
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 
@@ -700,11 +685,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Synchro Data Source
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:SynchroDataSource' => 'Fonte de Sincronização de Dados',
 	'Class:SynchroDataSource/Attribute:name' => 'Nome',
 	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Descrição',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Classe alvo',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class~~',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Usuário',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contato para notificação',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contato para notificar em caso de erro',
@@ -713,6 +700,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'Hiperlink de aplicativo',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hiperlink para o objeto na aplicação externa com a qual o '.ITOP_APPLICATION_SHORT.' é sincronizado (se aplicável). As substituições possíveis: $this->attribute$ e $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Política de reconciliação',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
+"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervalo de obsolescência programada',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Um objeto é considerado obsoleto se não aparecer nos dados além desse tempo',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Ação sobre zero',
@@ -732,6 +721,33 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Quanto tempo um objeto obsoleto é mantido antes de ser excluído',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Tabela do banco de dados',
 	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Nome da tabela para armazenar os dados de sincronização. Se for deixado vazio, um nome padrão será computado',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Em homologação',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Em produção',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Restrição de escopo',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Use os atributos',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Use o campo primary_key',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Criar',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Erro',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Erro',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Atualizar',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Criar',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Erro',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Pegue o primeiro (ao acaso?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Política de exclusão',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'What to do when a replica becomes obsolete:
+"Ignore": do nothing, the associated object remains as is in iTop.
+"Delete": Delete the associated object in iTop (and the replica in the data table).
+"Update": Update the associated object as specified by the Update rules (see below).
+"Update then Delete": apply the "Update rules". When Retention Duration expires, execute a "Delete" ~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Excluir',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorar',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Atualizar',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Atualizar então Excluir',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Exibir atributos',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Somente administradores',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Todos os usuários',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Ninguém',
 	'SynchroDataSource:Description' => 'Descrição',
 	'SynchroDataSource:Reconciliation' => 'Pesquisa &amp; reconciliação',
 	'SynchroDataSource:Deletion' => 'Regras de exclusão',
@@ -756,8 +772,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:Synchro:NeverRun' => 'Esta sincronização nunca foi executada. Sem registro ainda',
 	'Core:Synchro:SynchroEndedOn_Date' => 'A última sincronização terminou em %1$s',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'A sincronização iniciou em %1$s ainda está em execução...',
-	'Menu:DataSources' => 'Fontes de Sincronização de Dados', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'Lista de Fontes de Sincronização de Dados', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources' => 'Fontes de Sincronização de Dados',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'Lista de Fontes de Sincronização de Dados',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignoradas (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Desaparecido (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Saindo (%1$s)',
@@ -821,29 +839,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Valor anterior',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Case Log~~',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Última entrada',
-	'Class:SynchroDataSource' => 'Fonte de Sincronização de Dados',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Em homologação',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Obsoleto',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Em produção',
-	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Restrição de escopo',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Use os atributos',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Use o campo primary_key',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Criar',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Erro',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Erro',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Atualizar',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Criar',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Erro',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Pegue o primeiro (ao acaso?)',
-	'Class:SynchroDataSource/Attribute:delete_policy' => 'Política de exclusão',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Excluir',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorar',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Atualizar',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Atualizar então Excluir',
-	'Class:SynchroDataSource/Attribute:attribute_list' => 'Exibir atributos',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Somente administradores',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Todos os usuários',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Ninguém',
 	'Class:SynchroAttribute' => 'Atributo de sincronização',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Fonte de dados',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Código do atributo',
@@ -904,19 +899,16 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Preferências',
 	'Core:ExecProcess:Code1' => 'Comando incorreto ou comando terminou com erros (por exemplo, nome do script errado)',
 	'Core:ExecProcess:Code255' => 'Erro PHP (parsing, ou runtime)',
-
-	// Attribute Duration
+    // Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
-
-	// Explain working time computing
+    // Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Tempo decorrido (armazenado como \\"%1$s\\")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tempo gasto para \\"%1$s\\"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Prazo para \\"%1$s\\" em %2$d%%',
-
-	// Bulk export
+    // Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Parâmetro ausente \\"%1$s\\"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Valor inválido para o parâmetro \\"query\\". Não há nenhum entrada no livro de consultas correspondente ao ID: \\"%1$s\\"',
 	'Core:BulkExport:ExportFormatPrompt' => 'Formato de exportação:',
@@ -968,20 +960,34 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Formato padrão (%1$s), por exemplo: %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Formato personalizado: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Página %1$s',
-	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
+	'Core:DateTime:Placeholder_d' => 'DD',
+    // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D',
+    // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM',
+    // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M',
+    // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY',
+    // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY',
+    // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh',
+    // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h',
+    // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh',
+    // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h',
+    // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm',
+    // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM',
+    // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm',
+    // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss',
+    // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Formato inválido',
 	'Core:Validator:Mandatory' => 'Por favor, preencha este campo',
 	'Core:Validator:MustBeInteger' => 'Deve ser um número inteiro',
@@ -994,7 +1000,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TagSetFieldData' => '%2$s para classe %1$s',
 	'Class:TagSetFieldData+' => '',
-
 	'Class:TagSetFieldData/Attribute:code' => 'Código',
 	'Class:TagSetFieldData/Attribute:code+' => 'Código interno. Deve conter pelo menos 3 caracteres alfanuméricos',
 	'Class:TagSetFieldData/Attribute:label' => 'Rótulo',
@@ -1004,7 +1009,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Classe da etiqueta',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe de objeto',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Código de atributo',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Tags em uso não podem ser deletadas',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'O código de tag ou rótulo devem ser únicos',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'O código de tag deve conter entre 3 e %1$d caracteres alfanuméricos',
@@ -1091,8 +1095,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Última tentativa',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Formato inválido para a configuração de "async_task_retries[%1$s]". Esperando um array com as seguintes chaves: %2$s',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Formato inválido para a configuração de "async_task_retries[%1$s]": chave inesperada "%2$s". Esperando somente as seguintes chaves: %3$s',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Formato inválido para a configuração de "async_task_retries[%1$s]". Esperando um array com as seguintes chaves: %2$s',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Formato inválido para a configuração de "async_task_retries[%1$s]": chave inesperada "%2$s". Esperando somente as seguintes chaves: %3$s',
 ));
 
 //
@@ -1130,11 +1134,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ResourceSystemMenu' => 'Menu de Recursos do Sistema',
 	'Class:ResourceSystemMenu+' => '',
 ));
-
-
-
-
 // Additional language entries not present in English dict
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
- 'INTERNAL:JQuery-DatePicker:LangCode' => 'pt-BR',
+	'INTERNAL:JQuery-DatePicker:LangCode' => 'pt-BR'
 ));
+
+
+
