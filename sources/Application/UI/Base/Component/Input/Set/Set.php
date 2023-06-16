@@ -206,6 +206,16 @@ class Set extends AbstractInput
 	}
 
 	/**
+	 * HasAddOptionButtonJsOnClick.
+	 *
+	 * @return bool
+	 */
+	public function HasAddOptionButtonJsOnClick(): bool
+	{
+		return $this->sAddOptionButtonJsOnClick != null;
+	}
+
+	/**
 	 * GetAddOptionButtonJsOnClick.
 	 *
 	 * @return string

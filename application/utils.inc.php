@@ -2904,7 +2904,8 @@ HTML;
 				if ($sClassNameFilter !== '' && strpos($sPHPClass, $sClassNameFilter) === false) {
 					$bSkipped = true;
 				}
-				else {
+				// For some PHP classes we don't have their file path as they are already in memory, so we never filter on their paths
+				elseif (utils::IsNotNullOrEmptyString($sPHPFile)) {
 					$sPHPFile = self::LocalPath($sPHPFile);
 					if ($sPHPFile !== false) {
 						$sPHPFile = '/'.$sPHPFile; // for regex
