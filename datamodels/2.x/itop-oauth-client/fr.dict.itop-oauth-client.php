@@ -109,7 +109,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OAuthClientGoogle/Attribute:used_scope' => 'Niveaux d\'accès utilisés',
 	'Class:OAuthClientGoogle/Attribute:used_scope+' => '',
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple' => 'Simple',
-	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple+' => '~~',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple+' => '',
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced' => 'Avancé',
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced+' => '',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp' => 'Utilisé pour SMTP',

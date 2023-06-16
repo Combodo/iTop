@@ -84,7 +84,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToTicket' => 'Lien Contact / Ticket',
 	'Class:lnkContactToTicket+' => '',
-	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
+	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Référence',

@@ -51,7 +51,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Pendant toute la durée de la mise à jour, l\'application sera en lecture seule.',
 	'iTopUpdate:UI:Status' => 'Versions installées',
 	'iTopUpdate:UI:Action' => 'Mettre à jour',
-	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup~~',
+	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup',
 	'iTopUpdate:UI:History' => 'Historique des versions',
 	'iTopUpdate:UI:Progress' => 'Progression de la mise à jour',
 	'iTopUpdate:UI:DoBackup:Label' => 'Sauvegarde de la base de données',
@@ -71,8 +71,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Attention : la mise à jour de l\'application peut échouer : %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Des fichiers modifiés ont été détectés</b>, une mise à jour partielle ne peut pas être effectuée.<br />Suivez la <a target="_blank" href="%2$s"> procedure</a> pour mettre à jour manuellement votre iTop. Vous devez utiliser la page <a href="%1$s">d\'installation</a> pour mettre à jour l\'application.',
 	'iTopUpdate:UI:CheckInProgress' => 'Veuillez patienter pendant la vérification d\'intégrité',
-	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
-	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
+	'iTopUpdate:UI:SetupLaunch' => 'Lancer le Setup',
+	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?',
 
 	// Setup Messages
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Prêt pour l\\installation',
