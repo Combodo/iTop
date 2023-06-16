@@ -20,10 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
-
-
-
 // Dictionnary conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -35,8 +31,6 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 // Class:<class_name>/UniquenessRule:<rule_code>
 // Class:<class_name>/UniquenessRule:<rule_code>+
-
-
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -44,12 +38,9 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
-
 //
 // Class: Organization
 //
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Organization' => '组织',
 	'Class:Organization+' => '',
@@ -119,6 +110,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Contact' => '联系人',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => '名称',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => '状态',
@@ -157,6 +149,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person' => '个人',
 	'Class:Person+' => '',
 	'Class:Person/Name' => '%2$s %1$s',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => '姓',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => '名',
@@ -177,6 +170,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/Attribute:team_list+' => '这个人归属的所有团队',
 	'Class:Person/Attribute:tickets_list' => '工单',
 	'Class:Person/Attribute:tickets_list+' => '此人发起的所有工单',
+	'Class:Person/Attribute:user_list' => 'Users~~',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => '直属上级姓名',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => '头像',
@@ -185,6 +180,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/UniquenessRule:employee_number' => '\'$this->org_name$\' 内已经有人占用了这个员工号',
 	'Class:Person/UniquenessRule:name+' => '同一组织内的员工姓名必须唯一',
 	'Class:Person/UniquenessRule:name' => '\'$this->org_name$\' 内已经有人叫这个名字',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~'
 ));
 
 //
@@ -194,6 +190,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Team' => '团队',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => '成员',
 	'Class:Team/Attribute:persons_list+' => '此团队包含的所有成员',
 	'Class:Team/Attribute:tickets_list' => '工单',
@@ -207,6 +204,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document' => '文档',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => '名称',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => '组织',
@@ -306,6 +304,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkPersonToTeam' => '关联 个体/团队',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
+	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => '团队',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => '团队名称',
@@ -369,6 +369,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Person:info' => '基本信息',
 	'User:info' => '基本信息',
+	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => '个人信息',
 	'Person:notifiy' => '通知',
 ));

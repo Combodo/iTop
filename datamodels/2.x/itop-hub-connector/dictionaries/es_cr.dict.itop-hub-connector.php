@@ -39,7 +39,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopHub:AutoSubmit' => 'No me pregunte otra vez. Siguiente ocasión ir automáticamente a iTop Hub.',
 	'UI:About:RemoteExtensionSource' => 'iTop Hub',
 	'iTopHub:Explanation' => 'Dando click a este botón, usted será redireccionado a iTop Hub.',
-
 	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s espacio libre en disco en %2$s.',
 	'iTopHub:FailedToCheckFreeDiskSpace' => 'Falló en revisar disponibilidad de espacio libre en disco.',
 	'iTopHub:BackupOk' => 'Respaldo Ok.',
@@ -49,7 +48,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopHub:CompiledOK' => 'Compilación éxitosa.',
 	'iTopHub:ConfigurationSafelyReverted' => 'Error detectado durante la instalación!<br/>La configuración de '.ITOP_APPLICATION_SHORT.' NO fue modificada.',
 	'iTopHub:FailAuthent' => 'Autenticación fallida para esta acciónn.',
-
 	'iTopHub:InstalledExtensions' => 'Extensiones instaladas en esta instancia',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensiones instaladas manualmente',
 	'iTopHub:ExtensionCategory:Manual+' => 'Las siguientes extensiones fueron instaladas copiandolas manualmente en el directorio %1$s de '.ITOP_APPLICATION_SHORT.':',
@@ -59,7 +57,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopHub:NoExtensionInThisCategory+' => 'Navegue en iTop Hub para encontrar aquellas que le ayuden a personalizar y adaptar '.ITOP_APPLICATION_SHORT.' a sus procesos !',
 	'iTopHub:ExtensionNotInstalled' => 'No instalada',
 	'iTopHub:GetMoreExtensions' => 'Obtener extensiones de iTop Hub...',
-
 	'iTopHub:LandingWelcome' => '¡Felicidades! Las siguientes extensiones fueron descargadas de iTop Hub e instaladas en su '.ITOP_APPLICATION_SHORT.'.',
 	'iTopHub:GoBackToITopBtn' => 'Regresar a '.ITOP_APPLICATION_SHORT,
 	'iTopHub:Uncompressing' => 'Descomprimiendo extensiones...',
@@ -68,7 +65,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopHub:DBBackupSentence' => 'Realice un respaldo de la base de datos y configuración de '.ITOP_APPLICATION_SHORT.' antes de actualizar.',
 	'iTopHub:DeployBtn' => 'Instalar !',
 	'iTopHub:DatabaseBackupProgress' => 'Respaldo de Instancia...',
-
 	'iTopHub:InstallationEffect:Install' => 'Version: %1$s será instalada.',
 	'iTopHub:InstallationEffect:NoChange' => 'Version: %1$s ya está instalada. Nada por cambiar.',
 	'iTopHub:InstallationEffect:Upgrade' => 'Se <b>actualizará</b> de la versión %1$s a la versión %2$s.',
@@ -78,7 +74,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopHub:InstallationEffect:MissingDependencies' => 'Esta extensión no puede ser instalad porque no cumple con las dependencias.',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => 'La extensión require el/los módulo(s): %1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => '¡Instalación éxitosa!',
-
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s versión: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Instalada',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Versión %1$s <b>NO</b> está instalada.',

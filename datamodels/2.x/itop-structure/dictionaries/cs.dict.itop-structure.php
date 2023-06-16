@@ -107,6 +107,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Název',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Stav',
@@ -144,6 +145,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Person' => 'Osoba',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Příjmení',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Jméno',
@@ -164,6 +166,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Person/Attribute:team_list+' => 'Všechny týmy, kterých je tato osoba členem',
 	'Class:Person/Attribute:tickets_list' => 'Tikety',
 	'Class:Person/Attribute:tickets_list+' => 'Všechny tikety, které tato osoba zadala',
+	'Class:Person/Attribute:user_list' => 'Users~~',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Popisný název vedoucího',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Picture~~',
@@ -172,6 +176,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
 ));
 
 //
@@ -181,6 +186,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Team' => 'Tým',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Členové',
 	'Class:Team/Attribute:persons_list+' => 'Všichni členové týmu',
 	'Class:Team/Attribute:tickets_list' => 'Tikety',
@@ -194,6 +200,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Název',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organizace',
@@ -293,6 +300,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkPersonToTeam' => 'Spojení (Osoba / Tým)',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
+	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Tým',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Název týmu',
@@ -356,6 +365,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Person:info' => 'Obecné informace',
 	'User:info' => 'Obecné informace',
+	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Osobní informace',
 	'Person:notifiy' => 'Upozornění',
 ));

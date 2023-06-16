@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -30,8 +29,6 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:ServiceManagement' => 'Zarządzanie usługami',
 	'Menu:ServiceManagement+' => 'Omówienie zarządzania usługami',
@@ -60,6 +57,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:ServiceFamily+' => 'Rodziny usług',
 	'Menu:Procedure' => 'Katalog procedur',
 	'Menu:Procedure+' => 'Katalog wszystkich procedur',
+	'Contract:baseinfo' => 'General information~~',
+	'Contract:moreinfo' => 'Contractual information~~',
+	'Contract:cost' => 'Cost information~~',
 ));
 
 //
@@ -173,6 +173,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkContactToContract' => 'Połączenie Kontakt / Umowa',
 	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Umowa',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Nazwa umowy',
@@ -190,6 +191,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkContractToDocument' => 'Połączenie Umowa / Dokument',
 	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Umowa',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Nazwa umowy',
@@ -222,6 +224,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Service' => 'Usługa',
 	'Class:Service+' => '',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Nazwa',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Dostawca',
@@ -265,6 +268,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkDocumentToService' => 'Połączenie Dokument / Usługa',
 	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Usługa',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Nazwa usługi',
@@ -282,6 +286,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkContactToService' => 'Połączenie Kontakt / Usługa',
 	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Usługa',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
 	'Class:lnkContactToService/Attribute:service_name' => 'Nazwa usługi',
@@ -299,6 +304,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ServiceSubcategory' => 'Podkategoria usługi',
 	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nazwa',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Opis',
@@ -384,6 +390,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => 'godzin',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minut',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minut',
+	'Class:SLT/Attribute:slas_list' => 'SLAs~~',
+	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT~~',
 ));
 
 //
@@ -393,6 +401,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkSLAToSLT' => 'Połączenie SLA / SLT',
 	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'Umowa SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'Nazwa umowy SLA',
@@ -420,6 +429,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkCustomerContractToService' => 'Połączenie Umowa z klientem / Usługa',
 	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Umowa z klientem',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Nazwa umowy z klientem',
@@ -441,6 +451,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkProviderContractToService' => 'Połączenie Umowa z dostawcą / Usługa',
 	'Class:lnkProviderContractToService+' => '',
+	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Usługa',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:service_name' => 'Nazwa usługi',
@@ -479,6 +490,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkDeliveryModelToContact' => 'Połączenie Model obsługi / Kontakt',
 	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Model obsługi',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Nazwa modelu obsługi',

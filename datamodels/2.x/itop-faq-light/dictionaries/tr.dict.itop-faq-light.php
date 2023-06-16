@@ -87,7 +87,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:FAQCategory+' => 'Tüm SSS kategorileri',
 	'Menu:FAQ' => 'SSS',
 	'Menu:FAQ+' => 'Tüm SSS',
-
 	'Brick:Portal:FAQ:Menu' => 'SSS',
 	'Brick:Portal:FAQ:Title' => 'Sıkça Sorulan Sorular',
 	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>~~',

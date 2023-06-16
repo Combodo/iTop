@@ -23,10 +23,8 @@
 *
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-
 	'bkp-backup-running' => 'Backup wird durchgeführt. Bitte warten ...',
 	'bkp-restore-running' => 'Wiederherstellung läuft. Bitte warten ...',
-
 	'Menu:BackupStatus' => 'Geplante Backups',
 	'bkp-status-title' => 'Geplante Backups',
 	'bkp-status-checks' => 'Einstellungen und Prüfungen',

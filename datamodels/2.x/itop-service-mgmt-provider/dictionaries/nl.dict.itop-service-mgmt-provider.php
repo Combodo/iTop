@@ -42,7 +42,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per servicelevel',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten per status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen verlopen',
-
 	'Menu:ProviderContract' => 'Leverancierscontracten',
 	'Menu:ProviderContract+' => 'Leverancierscontracten',
 	'Menu:CustomerContract' => 'Klantencontracten',
@@ -61,8 +60,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:DeliveryModel+' => 'Leveringsmodellen',
 	'Menu:ServiceFamily' => 'Servicecategorieën',
 	'Menu:ServiceFamily+' => 'Servicecategorieën',
+	'Contract:baseinfo' => 'General information~~',
+	'Contract:moreinfo' => 'Contractual information~~',
+	'Contract:cost' => 'Cost information~~',
 ));
-
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',
@@ -188,6 +189,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkContactToContract' => 'Link Contact / Contract',
 	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Contract',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Naam contract',
@@ -205,6 +207,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkContractToDocument' => 'Link Contract / Document',
 	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contract',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Naam contract',
@@ -222,6 +225,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'Link Functioneel CI / Leverancierscontract',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Leverancierscontract',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Naam Leverancierscontract',
@@ -254,6 +258,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Service' => 'Service',
 	'Class:Service+' => '',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Naam',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Leverancier',
@@ -293,6 +298,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkDocumentToService' => 'Link Document / Service',
 	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Service',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Naam service',
@@ -310,6 +316,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkContactToService' => 'Link Contact / Service',
 	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Service',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
 	'Class:lnkContactToService/Attribute:service_name' => 'Naam service',
@@ -327,6 +334,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ServiceSubcategory' => 'Subcategorie service',
 	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Naam',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Omschrijving',
@@ -423,6 +431,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT',
 	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'Naam SLA',
@@ -450,6 +459,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkCustomerContractToService' => 'Link Klantencontract / Service',
 	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Klantencontract',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Naam klantencontract',
@@ -471,6 +481,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkCustomerContractToProviderContract' => 'Link Klantencontract / Leverancierscontract',
 	'Class:lnkCustomerContractToProviderContract+' => '',
+	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Klantencontract',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => 'Naam klantencontract',
@@ -488,6 +499,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkCustomerContractToFunctionalCI' => 'Link Klantencontract / Functioneel CI',
 	'Class:lnkCustomerContractToFunctionalCI+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Klantencontract',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Naam klantencontract',
@@ -526,6 +538,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkDeliveryModelToContact' => 'Link Leveringsmodel / Contact',
 	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Leveringsmodel',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Naam leveringsmodel',

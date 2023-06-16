@@ -38,6 +38,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Otevřené požadavky podle typu',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Otevřené požadavky podle zákazníka',
 	'Class:UserRequest:KnownErrorList' => 'Známé chyby',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 ));
 
 // Dictionnay conventions
@@ -113,6 +114,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => '',
 	'Class:UserRequest/Attribute:origin' => 'Původ',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'email',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'monitoring',
@@ -246,7 +251,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Čeká na schválení',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Požadavek nemůže být nadřazený sám sobě',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Vyřešit podřízené tikety',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));

@@ -29,7 +29,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserLocal+' => 'Gebruiker die aanmeldt met gegevens aangemaakt in het gebruikersbeheer van '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Wachtwoord',
 	'Class:UserLocal/Attribute:password+' => 'Het wachtwoord waarmee de gebruiker zich aanmeldt bij '.ITOP_APPLICATION_SHORT,
-
 	'Class:UserLocal/Attribute:expiration' => 'Wachtwoord verloopt',
 	'Class:UserLocal/Attribute:expiration+' => 'Of het wachtwoord al dan niet verlopen is (vereist een extensie vooraleer dit werkt)',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Kan verlopen',
@@ -42,9 +41,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'De gebruiker kan dit wachtwoord niet veranderen.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Wachtwoord laatst aangepast',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Tijdstip waarop het wachtwoord het laatst aangepast werd.',
-
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Het wachtwoord bestaat uit minstens 8 tekens en bestaat uit een mix van minstens 1 hoofdletter, kleine letter, cijfer en speciaal teken.',
-
 	'UserLocal:password:expiration' => 'De velden hieronder vereisen een extensie.',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Je kan geen eenmalig wachtwoord instellen voor je eigen gebruiker.',
 ));

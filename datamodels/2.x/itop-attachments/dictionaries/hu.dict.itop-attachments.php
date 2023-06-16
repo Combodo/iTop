@@ -35,7 +35,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Attachments:NoAttachment' => 'Nincs melléklet. ',
 	'Attachments:PreviewNotAvailable' => 'Az előnézet nem érhető el ilyen típusú melléklethez',
 	'Attachments:Error:FileTooLarge' => 'Túl nagy a fájl a feltöltéshez. %1$s',
-    'Attachments:Error:UploadedFileEmpty' => 'A kapott fájl üres, ezért nem csatolható. Vagy egy üres fájlt húzott be, vagy kérdezze meg a rendszergazdát, hátha az iTop szerver lemeze telt meg.',
+	'Attachments:Error:UploadedFileEmpty' => 'A kapott fájl üres, ezért nem csatolható. Vagy egy üres fájlt húzott be, vagy kérdezze meg a rendszergazdát, hátha az iTop szerver lemeze telt meg.',
 	'Attachments:Render:Icons' => 'Mutassa ikonként',
 	'Attachments:Render:Table' => 'Mutassa listaként',
 	'UI:Attachments:DropYourFileHint' => 'Húzza a fájlokat erre a területre',
@@ -56,9 +56,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => 'Elem',
 	'Class:Attachment/Attribute:item_id+' => '~~',
-    'Class:Attachment/Attribute:item_org_id' => 'Elem szervezeti egység',
+	'Class:Attachment/Attribute:item_org_id' => 'Elem szervezeti egység',
 	'Class:Attachment/Attribute:item_org_id+' => '~~',
-    'Class:Attachment/Attribute:contents' => 'Tartalom',
+	'Class:Attachment/Attribute:contents' => 'Tartalom',
 	'Class:Attachment/Attribute:contents+' => '~~',
 ));
 
@@ -66,20 +66,30 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Attachments:File:Thumbnail' => 'Ikon',
 	'Attachments:File:Name' => 'Fájlnév',
-    'Attachments:File:Date' => 'Feltöltés dátuma',
+	'Attachments:File:Date' => 'Feltöltés dátuma',
 	'Attachments:File:Uploader' => 'Feltöltötte ',
 	'Attachments:File:Size' => 'Méret',
 	'Attachments:File:MimeType' => 'Típus',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
 ));
 //
 // Class: Attachment
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-    'Class:Attachment/Attribute:creation_date' => 'Létrehozás dátuma',
+	'Class:Attachment/Attribute:creation_date' => 'Létrehozás dátuma',
 	'Class:Attachment/Attribute:creation_date+' => '~~',
-    'Class:Attachment/Attribute:user_id' => 'Felhasználó',
+	'Class:Attachment/Attribute:user_id' => 'Felhasználó',
 	'Class:Attachment/Attribute:user_id+' => '~~',
-    'Class:Attachment/Attribute:contact_id' => 'Kapcsolattartó',
+	'Class:Attachment/Attribute:contact_id' => 'Kapcsolattartó',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 ));

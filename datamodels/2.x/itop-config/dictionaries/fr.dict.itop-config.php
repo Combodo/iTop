@@ -6,7 +6,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('FR FR', 'French', 'Français', array(
-
 	'Menu:ConfigEditor' => 'Configuration générale',
 	'config-edit-title' => 'Éditeur du Fichier de Configuration',
 	'config-edit-intro' => 'Attention: une configuration incorrecte peut rendre '.ITOP_APPLICATION_SHORT.' inopérant pour tous les utilisateurs!',

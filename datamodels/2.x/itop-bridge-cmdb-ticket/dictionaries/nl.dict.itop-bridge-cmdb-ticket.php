@@ -33,6 +33,7 @@
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkFunctionalCIToTicket' => 'Link Functioneel CI / Ticket',
 	'Class:lnkFunctionalCIToTicket+' => '',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Referentie',

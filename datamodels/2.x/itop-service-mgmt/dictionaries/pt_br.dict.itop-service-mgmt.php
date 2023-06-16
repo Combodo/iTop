@@ -58,6 +58,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ServiceFamily+' => 'Lista de família de serviços',
 	'Menu:Procedure' => 'Catálogo de procedimentos',
 	'Menu:Procedure+' => '',
+	'Contract:baseinfo' => 'General information~~',
+	'Contract:moreinfo' => 'Contractual information~~',
+	'Contract:cost' => 'Cost information~~',
 ));
 
 //
@@ -171,6 +174,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkContactToContract' => 'Link Contato / Contrato',
 	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Contrato',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Nome do contrato',
@@ -188,6 +192,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkContractToDocument' => 'Link Contrato / Documento',
 	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contrato',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Nome do contrato',
@@ -220,6 +225,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Service' => 'Serviço',
 	'Class:Service+' => '',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Nome',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Provedor',
@@ -263,6 +269,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDocumentToService' => 'Link Documento / Serviço',
 	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Serviço',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Nome serviço',
@@ -280,6 +287,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkContactToService' => 'Link Contato / Serviço',
 	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Serviço',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
 	'Class:lnkContactToService/Attribute:service_name' => 'Nome do serviço',
@@ -297,6 +305,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ServiceSubcategory' => 'Subcategorias de serviço',
 	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nome',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Descrição',
@@ -382,6 +391,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => '',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'Minutos',
 	'Class:SLT/Attribute:unit/Value:minutes+' => '',
+	'Class:SLT/Attribute:slas_list' => 'SLAs~~',
+	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT~~',
 ));
 
 //
@@ -391,6 +402,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT',
 	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'Nome do SLA',
@@ -418,6 +430,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkCustomerContractToService' => 'Link Contrato de cliente / Serviço',
 	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Contrato de cliente',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Nome do contrato de cliente',
@@ -439,6 +452,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkProviderContractToService' => 'Link Contrato de provedor / Serviço',
 	'Class:lnkProviderContractToService+' => '',
+	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Serviço',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:service_name' => 'Nome do serviço',
@@ -477,6 +491,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDeliveryModelToContact' => 'Link Modelo de entrega / Contato',
 	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Modelo de entrega',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Nome do modelo de entrega',

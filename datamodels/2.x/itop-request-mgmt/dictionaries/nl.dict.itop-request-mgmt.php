@@ -42,6 +42,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Open verzoeken per soort',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open verzoeken per organisatie',
 	'Class:UserRequest:KnownErrorList' => 'Gekende fouten',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 	'Menu:UserRequest:MyWorkOrders' => 'Werkopdrachten toegewezen aan mij',
 	'Menu:UserRequest:MyWorkOrders+' => 'Alle werkopdrachten toegewezen aan mij',
 	'Class:Problem:KnownProblemList' => 'Gekende fouten',
@@ -282,7 +283,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:SelectLanguage' => 'Verander je taal',
 	'Portal:LanguageChangedTo_Lang' => 'Taal veranderd naar',
 	'Portal:ChooseYourFavoriteLanguage' => 'Kies je voorkeurstaal',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Los subverzoeken op',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem de kenmerken over wat betreft service, team, agent, oplossing',
 ));

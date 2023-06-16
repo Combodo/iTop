@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Input
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',

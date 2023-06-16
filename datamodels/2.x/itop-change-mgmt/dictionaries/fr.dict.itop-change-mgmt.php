@@ -139,7 +139,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:outage/Value:yes' => 'Oui',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
 ));
-
 // 1:n relations custom labels for tooltip and pop-up title
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:child_changes_list/UI:Links:Create:Button+' => 'Créer un %4$s',
@@ -165,6 +164,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
 	'Class:Change/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
 ));
-

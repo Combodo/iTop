@@ -112,6 +112,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => '',
 	'Class:Incident/Attribute:origin' => 'Herkunft',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => 'Mail',
 	'Class:Incident/Attribute:origin/Value:mail+' => '',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -233,7 +237,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Wiedereröffnen',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Kann Incident-Ticket nicht als eigenes Parent-Ticket verwenden',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 	'Tickets:Related:OpenIncidents' => 'Offene Incidents',

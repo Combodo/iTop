@@ -98,6 +98,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkErrorToFunctionalCI' => 'Link Erro Conhecido / IC',
 	'Class:lnkErrorToFunctionalCI+' => 'Infraestrutura associada a este erro conhecido',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
@@ -117,6 +118,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDocumentToError' => 'Link Documentos / Erros',
 	'Class:lnkDocumentToError+' => 'Uma ligação entre um documento e um erro conhecido',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Documento',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Nome do documento',

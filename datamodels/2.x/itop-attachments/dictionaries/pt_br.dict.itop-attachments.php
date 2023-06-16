@@ -73,6 +73,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Attachments:File:Uploader' => 'Enviado por',
 	'Attachments:File:Size' => 'Tamanho',
 	'Attachments:File:MimeType' => 'Tipo',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
 ));
 //
 // Class: Attachment
@@ -85,4 +86,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Identificador do contato',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 ));

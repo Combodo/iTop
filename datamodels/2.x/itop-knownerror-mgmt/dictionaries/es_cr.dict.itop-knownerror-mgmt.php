@@ -15,7 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
- /**
+/**
  * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
@@ -99,6 +99,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkErrorToFunctionalCI' => 'Relación Error Conocido y EC Funcional',
 	'Class:lnkErrorToFunctionalCI+' => 'Relación Error Conocido y EC Funcional',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'EC',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => 'Elemento de Configuración',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI',
@@ -118,6 +119,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDocumentToError' => 'Relación Documento y Error Conocido',
 	'Class:lnkDocumentToError+' => 'Relación Documento y Error Conocido',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Documento',
 	'Class:lnkDocumentToError/Attribute:document_id+' => 'Documento',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Documento',

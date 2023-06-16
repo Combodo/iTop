@@ -110,6 +110,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Nazwa',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Status',
@@ -147,6 +148,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Person' => 'Osoba',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Nazwisko',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Imię',
@@ -167,6 +169,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Person/Attribute:team_list+' => 'Wszystkie zespoły, do których należy ta osoba',
 	'Class:Person/Attribute:tickets_list' => 'Zgłoszenia',
 	'Class:Person/Attribute:tickets_list+' => 'Wszystkie zgłoszenia, które ta osoba założyła',
+	'Class:Person/Attribute:user_list' => 'Users~~',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Przyjazna nazwa menedżera',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Zdjęcie',
@@ -175,6 +179,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Person/UniquenessRule:employee_number' => 'W organizacji \'$this->org_name$\' istnieje już osoba o tym samym numerze pracownika',
 	'Class:Person/UniquenessRule:name+' => 'Imię i nazwisko pracownika powinno być unikalne w jego organizacji',
 	'Class:Person/UniquenessRule:name' => 'W organizacji \'$this->org_name$\' istnieje już osoba o takiej samej nazwie',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
 ));
 
 //
@@ -184,6 +189,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Team' => 'Zespół',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Członkowie',
 	'Class:Team/Attribute:persons_list+' => 'Wszystkie osoby należące do tego zespołu',
 	'Class:Team/Attribute:tickets_list' => 'Zgłoszenia',
@@ -197,6 +203,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Nazwa',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organizacja',
@@ -296,6 +303,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkPersonToTeam' => 'Połączenie osoba / zespół',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
+	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Zespół',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Nazwa zespołu',
@@ -359,6 +368,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Person:info' => 'Informacje ogólne',
 	'User:info' => 'Informacje ogólne',
+	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Informacje osobiste',
 	'Person:notifiy' => 'Powiadomienie',
 ));

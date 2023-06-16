@@ -3,7 +3,6 @@
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:RequestManagement' => '服务台',
 	'Menu:RequestManagement+' => '服务台',
@@ -35,6 +34,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => '打开的需求(按类型)',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => '打开的需求(按客户)',
 	'Class:UserRequest:KnownErrorList' => '已知错误',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 ));
 
 // Dictionnay conventions
@@ -110,6 +110,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => '低',
 	'Class:UserRequest/Attribute:origin' => '来自',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => '邮件',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '邮件',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => '监控',
@@ -243,7 +247,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '等待批准',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => '无法分配父级需求到本身',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
 	'Class:UserRequest/Method:ResolveChildTickets+' => '将此解决方案直接挪给子需求(自动解决), 包括下列字段: 服务, 团队, 办理人, 解决方案信息',
 ));

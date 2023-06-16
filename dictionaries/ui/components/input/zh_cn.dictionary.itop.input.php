@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Input
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Component:Input:Password:DoesNotMatch' => '密码不匹配',

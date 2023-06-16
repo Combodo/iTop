@@ -21,10 +21,8 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-
 	'bkp-backup-running' => 'Kopia zapasowa jest uruchomiona. Proszę czekać...',
 	'bkp-restore-running' => 'Trwa przywracanie. Proszę czekać...',
-
 	'Menu:BackupStatus' => 'Kopie zapasowe',
 	'bkp-status-title' => 'Kopie zapasowe',
 	'bkp-status-checks' => 'Ustawienia i kontrole',

@@ -250,7 +250,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Attendre une approbation',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'La demande parente ne peut pas être assignée à elle même',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution de la demande (ev_autoresolve), et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
 ));
@@ -261,7 +260,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Organization:Overview:MyUserRequests' => 'Mes Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:Tickets' => 'Les Tickets de cette organisation',
 ));
-
 // 1:n relations custom labels for tooltip and pop-up title
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',
@@ -269,6 +267,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
 	'Class:UserRequest/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
 	'Class:UserRequest/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:UserRequest/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:UserRequest/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
 ));
-

@@ -10,57 +10,42 @@
  */
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:DeletedObjectLabel' => '%1ы (удален)',
-	'Core:DeletedObjectTip'   => 'Объект был удален %1$s (%2$s)',
-
+	'Core:DeletedObjectTip' => 'Объект был удален %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Объект не найден (class: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip'   => 'Объект не удается найти. Возможно, он был удален некоторое время назад, и журнал с тех пор был очищен.',
-
+	'Core:UnknownObjectTip' => 'Объект не удается найти. Возможно, он был удален некоторое время назад, и журнал с тех пор был очищен.',
 	'Core:UniquenessDefaultError' => 'Ошибка правила уникальности \'%1$s\'',
-	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
-	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
-
-	'Core:AttributeLinkedSet'  => 'Массив объектов (1-n)',
+	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
+	'Core:AttributeLinkedSet' => 'Массив объектов (1-n)',
 	'Core:AttributeLinkedSet+' => 'Список объектов заданного класса, указывающих на текущий объект',
-
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
-
-	'Core:AttributeDashboard'  => 'Дашборд',
+	'Core:AttributeDashboard' => 'Дашборд',
 	'Core:AttributeDashboard+' => '',
-
-	'Core:AttributePhoneNumber'  => 'Номер телефона',
+	'Core:AttributePhoneNumber' => 'Номер телефона',
 	'Core:AttributePhoneNumber+' => '',
-
 	'Core:AttributeObsolescenceDate' => 'Дата устаревания',
 	'Core:AttributeObsolescenceDate+' => '',
-
 	'Core:AttributeTagSet' => 'Список тегов',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'нажмите, чтобы добавить',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
-
 	'Core:AttributeCaseLog' => 'Журнал',
 	'Core:AttributeCaseLog+' => '',
-
 	'Core:AttributeMetaEnum' => 'Вычисляемый enum',
 	'Core:AttributeMetaEnum+' => '',
-
 	'Core:AttributeLinkedSetIndirect' => 'Массив объектов (n-n)',
 	'Core:AttributeLinkedSetIndirect+' => 'Список объектов заданного класса, связанные с текущим объектом через промежуточный класс',
-
 	'Core:AttributeInteger' => 'Целое',
 	'Core:AttributeInteger+' => 'Целочисленное значение (может быть отрицательным)',
-
 	'Core:AttributeDecimal' => 'Десятичное',
 	'Core:AttributeDecimal+' => 'Десятичное значение (может быть отрицательным)',
-
 	'Core:AttributeBoolean' => 'Логическое',
 	'Core:AttributeBoolean+' => 'Да/Нет',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Да',
 	'Core:AttributeBoolean/Value:no' => 'Нет',
-
 	'Core:AttributeArchiveFlag' => 'Архивный флаг',
 	'Core:AttributeArchiveFlag/Value:yes' => 'Да',
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Этот объект виден только в режиме архива',
@@ -69,7 +54,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeArchiveFlag/Label+' => '',
 	'Core:AttributeArchiveDate/Label' => 'Дата архивирования',
 	'Core:AttributeArchiveDate/Label+' => '',
-
 	'Core:AttributeObsolescenceFlag' => 'Устаревший флаг',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Да',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Этот объект исключен из анализа влияния и скрыт из результатов поиска',
@@ -78,54 +62,38 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeObsolescenceFlag/Label+' => 'Вычисляется динамически на основании значений других атрибутов',
 	'Core:AttributeObsolescenceDate/Label' => 'Дата устаревания',
 	'Core:AttributeObsolescenceDate/Label+' => 'Приблизительная дата, с которой объект считается устаревшим',
-
 	'Core:AttributeString' => 'Строка',
 	'Core:AttributeString+' => 'Текстовая строка',
-
 	'Core:AttributeClass' => 'Класс',
 	'Core:AttributeClass+' => 'Класс объекта',
-
 	'Core:AttributeApplicationLanguage' => 'Язык пользователя',
 	'Core:AttributeApplicationLanguage+' => 'Язык и страна (EN US)',
-
 	'Core:AttributeFinalClass' => 'Класс (авто)',
 	'Core:AttributeFinalClass+' => 'Реальный класс объекта (автоматически создаваемый ядром)',
-
 	'Core:AttributePassword' => 'Пароль',
 	'Core:AttributePassword+' => 'Пароль внешнего устройства',
-
 	'Core:AttributeEncryptedString' => 'Зашифрованная строка',
 	'Core:AttributeEncryptedString+' => 'Строка, зашифрованная локальным ключом',
 	'Core:AttributeEncryptUnknownLibrary' => 'Заданная библиотека шифрования (%1$s) неизвестна',
 	'Core:AttributeEncryptFailedToDecrypt' => '** ошибка расшифровки **',
-
 	'Core:AttributeText' => 'Текст',
 	'Core:AttributeText+' => 'Многострочный текст',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => '',
-
 	'Core:AttributeEmailAddress' => 'Email',
 	'Core:AttributeEmailAddress+' => 'Email адрес',
-
 	'Core:AttributeIPAddress' => 'IP адрес',
 	'Core:AttributeIPAddress+' => '',
-
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Выражение языка запроса объекта (Object Query Language)',
-
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => 'Список предопределенных тестовых строк',
-
 	'Core:AttributeTemplateString' => 'Шаблон строки',
 	'Core:AttributeTemplateString+' => 'Строка, содержащая плейсхолдеры',
-
 	'Core:AttributeTemplateText' => 'Шаблон текста',
 	'Core:AttributeTemplateText+' => 'Текст, содержащий плейсхолдеры',
-
 	'Core:AttributeTemplateHTML' => 'Шаблон HTML',
 	'Core:AttributeTemplateHTML+' => 'HTML, содержащий плейсхолдеры',
-
 	'Core:AttributeDateTime' => 'Дата/время',
 	'Core:AttributeDateTime+' => 'Дата и время (гггг-мм-дд чч:мм:сс)',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -143,7 +111,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 <p>
 Если время не указано, по умолчанию используется 00:00:00
 </p>',
-
 	'Core:AttributeDate' => 'Дата',
 	'Core:AttributeDate+' => 'Дата (гггг-мм-дд)',
 	'Core:AttributeDate?SmartSearch' => '
@@ -158,43 +125,30 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	<b>&lt;</b><em>дата</em><br/>
 	<b>[</b><em>дата</em>,<em>дата</em><b>]</b>
 </p>',
-
 	'Core:AttributeDeadline' => 'Крайний срок',
 	'Core:AttributeDeadline+' => 'Дата, отображаемая относительно текущего времени',
-
 	'Core:AttributeExternalKey' => 'Внешний ключ',
 	'Core:AttributeExternalKey+' => '',
-
 	'Core:AttributeHierarchicalKey' => 'Иерархический ключ',
 	'Core:AttributeHierarchicalKey+' => 'Внешний ключ к родителю',
-
 	'Core:AttributeExternalField' => 'Внешнее поле',
 	'Core:AttributeExternalField+' => 'Поле, сопоставленное с внешним ключом',
-
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => 'Абсолютный или относительный URL в виде текстовой строки',
-
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => 'Любой двоичный контент (документ)',
-
 	'Core:AttributeOneWayPassword' => 'Хэшированный пароль',
 	'Core:AttributeOneWayPassword+' => 'Зашифрованный (хэшированный) пароль',
-
 	'Core:AttributeTable' => 'Таблица',
 	'Core:AttributeTable+' => 'Индексированный массив с двумя измерениями',
-
 	'Core:AttributePropertySet' => 'Свойства',
 	'Core:AttributePropertySet+' => 'Список нетипизированных свойств (имя и значение)',
-
 	'Core:AttributeFriendlyName' => 'Полное название',
 	'Core:AttributeFriendlyName+' => 'Атрибут создается автоматически; полное название вычисляется из нескольких атрибутов',
-
 	'Core:FriendlyName-Label' => 'Полное название',
 	'Core:FriendlyName-Description' => 'Полное название',
-
 	'Core:AttributeTag' => 'Тег',
 	'Core:AttributeTag+' => '',
-	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
@@ -472,6 +426,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Action' => 'Действие',
 	'Class:Action+' => 'Действие, определённое пользователем',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Название',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => 'Описание',
@@ -539,6 +494,22 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Высокая',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:language' => 'Language~~',
+	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
+	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
+	'ActionEmail:main' => 'Message~~',
+	'ActionEmail:trigger' => 'Triggers~~',
+	'ActionEmail:recipients' => 'Contacts~~',
+	'ActionEmail:preview_tab' => 'Preview~~',
+	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
+	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
+	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
+	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
 ));
 
 //
@@ -548,6 +519,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Trigger' => 'Триггер',
 	'Class:Trigger+' => 'Пользовательский обработчик событий',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Описание',
 	'Class:Trigger/Attribute:description+' => 'Описание триггера',
 	'Class:Trigger/Attribute:action_list' => 'Действия триггера',
@@ -556,6 +528,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Контекст',
 	'Class:Trigger/Attribute:context+' => 'Контекст, в котором будет срабатывать триггер',
+	'Class:Trigger/Attribute:complement' => 'Additional information~~',
+	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
 ));
 
 //
@@ -652,6 +626,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 ));
 
 //
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 
@@ -687,11 +672,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Synchro Data Source
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:SynchroDataSource' => 'Источник синхронизации данных',
 	'Class:SynchroDataSource/Attribute:name' => 'Название',
 	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Описание',
 	'Class:SynchroDataSource/Attribute:status' => 'Статус',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Целевой класс',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class~~',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Пользователь',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Контакт для уведомления',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Контакт для уведомления в случае ошибки',
@@ -700,6 +687,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'Приложение (ссылка)',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Гиперссылка на объект в приложение-источнике данных. Возможные шаблоны: $this->attribute$ и $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Политика сопоставления',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
+"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Интервал устаревания',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Объект будет считаться устаревшим, если данные о нем в таблице синхронизации не обновлялись в течение этого интервала.',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Действие при нуле',
@@ -719,6 +708,33 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Сколько времени хранятся устаревшие объекты, прежде чем будут удалены',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Таблица данных',
 	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Имя таблицы для хранения данных синхронизации. Если оставить поле пустым, будет назначено имя по умолчанию.',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Внедрение',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Эксплуатация',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Объем ограничений',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Использовать атрибуты',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Использовать primary_key значение',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Создать',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Ошибка',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Ошибка',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Обновить',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Создать',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Ошибка',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Использовать первый (случайно)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Устаревшие объекты',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'What to do when a replica becomes obsolete:
+"Ignore": do nothing, the associated object remains as is in iTop.
+"Delete": Delete the associated object in iTop (and the replica in the data table).
+"Update": Update the associated object as specified by the Update rules (see below).
+"Update then Delete": apply the "Update rules". When Retention Duration expires, execute a "Delete" ~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Удалить',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Игнорировать',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Обновить',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Обновить, затем удалить',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Атрибуты',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Только администраторы',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Пользователи с правами на удаление',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Никто',
 	'SynchroDataSource:Description' => 'Описание',
 	'SynchroDataSource:Reconciliation' => 'Поиск и сопоставление',
 	'SynchroDataSource:Deletion' => 'Устаревание и удаление',
@@ -743,8 +759,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Synchro:NeverRun' => 'Синхронизация не запускалась. Логи отсутсвуют.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Синхронизация была закончена в %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Синхронизация запущена в %1$s, сейчас в процессе...',
-	'Menu:DataSources' => 'Синхронизация данных', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources' => 'Синхронизация данных',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => '',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Игнор. (%1$s)~~',
 	'Core:Synchro:label_repl_disappeared' => 'Невид. (%1$s)~~',
 	'Core:Synchro:label_repl_existing' => 'Existing (%1$s)~~',
@@ -808,29 +826,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Предыдущее значение~~',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Лог',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Посл.значение',
-	'Class:SynchroDataSource' => 'Источник синхронизации данных',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Внедрение',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Устаревший',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Эксплуатация',
-	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Объем ограничений',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Использовать атрибуты',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Использовать primary_key значение',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Создать',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Ошибка',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Ошибка',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Обновить',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Создать',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Ошибка',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Использовать первый (случайно)',
-	'Class:SynchroDataSource/Attribute:delete_policy' => 'Устаревшие объекты',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Удалить',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Игнорировать',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Обновить',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Обновить, затем удалить',
-	'Class:SynchroDataSource/Attribute:attribute_list' => 'Атрибуты',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Только администраторы',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Пользователи с правами на удаление',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Никто',
 	'Class:SynchroAttribute' => 'Синх.характеристики~~',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Синхронизация данных',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Код атрибута',
@@ -891,19 +886,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Предпочтения',
 	'Core:ExecProcess:Code1' => 'Неверная команда или команда завершена с ошибкой (возможно, неверное имя скрипта)',
 	'Core:ExecProcess:Code255' => 'Ошибка PHP (parsing, or runtime)~~',
-
-	// Attribute Duration
+    // Attribute Duration
 	'Core:Duration_Seconds' => '%1$d с',
 	'Core:Duration_Minutes_Seconds' => '%1$d мин %2$d с',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$d ч %2$d мин %3$d с',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s д %2$d ч %3$d мин %4$d с',
-
-	// Explain working time computing
+    // Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%',
-
-	// Bulk export
+    // Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Отсутствует параметр "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Недопустимое значение параметра "query". В Книге запросов отсутствует запись с id: "%1$s".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Формат экспорта:',
@@ -955,20 +947,34 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Формат по умолчанию (%1$s), например %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Пользовательский формат: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Страница %1$s',
-	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
+	'Core:DateTime:Placeholder_d' => 'DD',
+    // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D',
+    // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM',
+    // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M',
+    // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY',
+    // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY',
+    // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh',
+    // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h',
+    // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh',
+    // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h',
+    // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm',
+    // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM',
+    // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm',
+    // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss',
+    // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Неправильный формат',
 	'Core:Validator:Mandatory' => 'Пожалуйста, заполните это поле',
 	'Core:Validator:MustBeInteger' => 'Должно быть целым числом',
@@ -981,7 +987,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:TagSetFieldData' => '%2$s для класса %1$s',
 	'Class:TagSetFieldData+' => '',
-
 	'Class:TagSetFieldData/Attribute:code' => 'Код',
 	'Class:TagSetFieldData/Attribute:code+' => 'Внутренний код. Должен содержать не менее 3 цифробуквенных символа.',
 	'Class:TagSetFieldData/Attribute:label' => 'Метка',
@@ -991,7 +996,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Класс тега',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Класс объекта',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Код поля',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Используемые теги не могут быть удалены',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Коды и метки тегов должны быть уникальными',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Код тега должен содержать от 3 до %1$d цифробуквенных символов',
@@ -1078,8 +1082,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //

@@ -100,6 +100,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkErrorToFunctionalCI' => 'Spojení (Chyba / Funkční konfigurační položka)',
 	'Class:lnkErrorToFunctionalCI+' => 'Konfigurační položky vztahující se k chybě',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'Konfigurační položka',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Název konfigurační položky',
@@ -119,6 +120,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDocumentToError' => 'Spojení (Dokument / Chyba)',
 	'Class:lnkDocumentToError+' => 'Spojení mezi dokumentem a známou chybou',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Dokument',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Název dokumentu',

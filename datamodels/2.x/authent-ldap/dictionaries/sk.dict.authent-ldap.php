@@ -35,4 +35,5 @@
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:UserLDAP' => 'LDAP užívateľ',
 	'Class:UserLDAP+' => '',
+	'UserLDAP:server' => 'LDAP specifics~~',
 ));
