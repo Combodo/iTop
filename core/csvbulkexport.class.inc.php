@@ -164,7 +164,7 @@ class CSVBulkExport extends TabularBulkExport
 
 				foreach ($aQualifiers as $sVal => $sLabel) {
 					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text-qualifier", utils::EscapeHtml($sVal), $sLabel, "radio");
-					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
+					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawQualifier));
 					$oRadio->SetBeforeInput(false);
 					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
 					$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
