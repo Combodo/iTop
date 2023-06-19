@@ -43,6 +43,12 @@
 
 class SimpleCrypt
 {
+	/**
+	 * @var \SimpleCrypt
+	 * @since 3.1.0 N°5388
+	 */
+	protected $oEngine;
+
 	public static function GetNewDefaultParams()
 	{
 		if(function_exists('sodium_crypto_secretbox_open') && function_exists('random_bytes')){
@@ -62,6 +68,7 @@ class SimpleCrypt
 		$sEngineName = 'SimpleCrypt' . $sEngineName . 'Engine';
 		return $sEngineName::GetNewDefaultParams();
 	}
+
     /**
      * Constructor
      * @param string $sEngineName Engine for encryption. Values: Simple, Mcrypt, Sodium or OpenSSL
