@@ -198,7 +198,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ApprovedChange' => 'Changements pré-approuvés',
+	'Class:ApprovedChange' => 'Changement pré-approuvé',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Date d\'approbation',
 	'Class:ApprovedChange/Attribute:approval_date+' => '',
@@ -268,7 +268,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EmergencyChange' => 'Changement d\'Urgence',
+	'Class:EmergencyChange' => 'Changement urgent',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valider',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',

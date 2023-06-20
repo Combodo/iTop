@@ -1723,14 +1723,14 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:DataSources'            => 'Synchronization Data Sources',
-	'Menu:DataSources+'           => 'Mapping logic for batch import of external data',
-	'Menu:AuditCategories'        => 'Audit',
-	'Menu:AuditCategories+'       => 'Define new audits',
+	'Menu:DataSources+'           => 'Data synchro used for batch import of external data',
+	'Menu:AuditCategories'        => 'Audit configuration',
+	'Menu:AuditCategories+'       => 'Define rules to audit the quality of '.ITOP_APPLICATION_SHORT.' data',
 	'Menu:AuditCategories:Title'  => 'Audit configuration',
 	'Menu:RunQueriesMenu'         => 'Run queries',
 	'Menu:RunQueriesMenu+'        => 'Write and execute any OQL query',
 	'Menu:QueryMenu'              => 'Query phrasebook',
-	'Menu:QueryMenu+'             => 'Create stored queries',
+	'Menu:QueryMenu+'             => 'Reusable stored queries',
 	'Menu:UniversalSearchMenu'    => 'Universal search',
 	'Menu:UniversalSearchMenu+'   => 'Search objects of any class including abstract',
 	'Menu:UserManagementMenu'     => 'User management',
