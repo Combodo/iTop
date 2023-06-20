@@ -722,6 +722,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:AlertMultipleMapping'       => 'Please make sure that a target field is mapped only once.',
 	'UI:CSVImport:AlertNoSearchCriteria'      => 'Please select at least one search criteria',
 	'UI:CSVImport:Encoding'                   => 'Character encoding',
+	'UI:CSVImport:ViewAllPossibleValues'      => 'View all possible values',
+	'UI:CSVImport:ViewAllAmbiguousValues'     => 'View all ambiguous values',
 	'UI:UniversalSearchTitle'                 => ITOP_APPLICATION_SHORT.' - Universal Search',
 	'UI:UniversalSearch:Error'                => 'Error: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass'  => 'Select the class to search: ',

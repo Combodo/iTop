@@ -695,6 +695,8 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:CSVImport:AlertMultipleMapping' => 'Veuillez vous assurer que chaque champ cible est sélectionné une seule fois.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Veuillez choisir au moins une clef de recherche.',
 	'UI:CSVImport:Encoding' => 'Encodage des caractères',
+	'UI:CSVImport:ViewAllPossibleValues'      => 'Voir toutes les valeurs possibles',
+	'UI:CSVImport:ViewAllAmbiguousValues'     => 'Voir toutes les valeurs ambigues',
 	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Recherche universelle',
 	'UI:UniversalSearch:Error' => 'Erreur : %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Sélectionnez le type d\'objets à rechercher : ',

@@ -485,25 +485,33 @@ try {
 							break;
 
 						case 'CellStatus_SearchIssue':
-							$aTableRow[$sClassName.'/'.$sAttCode] = sprintf("%s%s%s%s%s%s",
-								'<a href="',
-								$oCellStatus->GetSearchLinkUrl(),
-								'"><div class="ibo-csv-import--cell-error">',
-								Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue),
-								GetDivAlert($oCellStatus->GetDescription()),
-								'<i class="fas fa-search"></i></div><a/>'
-							);
+							$sMessage = Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue);
+							$sDivAlert = GetDivAlert($oCellStatus->GetDescription());
+							$sAllowedValuesLinkUrl = $oCellStatus->GetAllowedValuesLinkUrl();
+							$sAllowedValuesLinkLabel = Dict::S('UI:CSVImport:ViewAllPossibleValues');
+							$aTableRow[$sClassName.'/'.$sAttCode] =
+								<<<HTML
+								<div class="ibo-csv-import--cell-error">
+									$sMessage
+									$sDivAlert
+									<a class="ibo-button ibo-is-regular ibo-is-neutral" target="_blank" href="$sAllowedValuesLinkUrl"><i class="fas fa-search"></i>&nbsp;$sAllowedValuesLinkLabel</a>
+								</div>
+HTML;
 							break;
 
 						case 'CellStatus_Ambiguous':
-							$aTableRow[$sClassName.'/'.$sAttCode] = sprintf("%s%s%s%s%s%s",
-								'<a href="',
-								$oCellStatus->GetSearchLinkUrl(),
-								'"><i class="fas fa-search"/><div class="ibo-csv-import--cell-error">',
-								Dict::Format('UI:CSVReport-Object-Ambiguous', $sHtmlValue),
-								GetDivAlert($oCellStatus->GetDescription()),
-								'<i class="fas fa-search"></i></div><a/>'
-							);
+							$sMessage = Dict::Format('UI:CSVReport-Object-Ambiguous', $sHtmlValue);
+							$sDivAlert = GetDivAlert($oCellStatus->GetDescription());
+							$sSearchLinkUrl = $oCellStatus->GetSearchLinkUrl();
+							$sSearchLinkLabel = Dict::S('UI:CSVImport:ViewAllAmbiguousValues');
+							$aTableRow[$sClassName.'/'.$sAttCode] =
+								<<<HTML
+								<div class="ibo-csv-import--cell-error">
+									$sMessage
+									$sDivAlert
+									<a class="ibo-button ibo-is-regular ibo-is-neutral" target="_blank" href="$sSearchLinkUrl"><i class="fas fa-search"></i>&nbsp;$sSearchLinkLabel</a>
+								</div>
+HTML;
 							break;
 
 						case 'CellStatus_Modify':
@@ -592,7 +600,7 @@ try {
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_created').on('click', function(){ToggleRows('ibo-csv-import--row-added')})");
 
-		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<i class="fas fa-exclamation-triangle" style="color:#A33; background-color: #FFF0F0;">&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors).'</i></i>', '', "1", "show_errors", "checkbox");
+		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<span style="color:#A33; background-color: #FFF0F0;"><i class="fas fa-exclamation-triangle"></i>&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors) . '</span>', '', "1", "show_errors", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
