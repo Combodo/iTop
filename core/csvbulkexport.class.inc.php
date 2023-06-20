@@ -163,8 +163,8 @@ class CSVBulkExport extends TabularBulkExport
 				$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" name="other-text-qualifier" value="'.utils::EscapeHtml($sOtherQualifier).'"/>';
 
 				foreach ($aQualifiers as $sVal => $sLabel) {
-					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text-qualifier", utils::EscapeHtml($sVal), $sLabel, "radio");
-					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
+					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text-qualifier", $sVal, $sLabel, "radio");
+					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawQualifier));
 					$oRadio->SetBeforeInput(false);
 					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
 					$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
