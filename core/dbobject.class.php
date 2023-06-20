@@ -1503,7 +1503,7 @@ abstract class DBObject implements iDisplay
      *
      * @api
      * 
-     * @return int|null
+     * @return string|null
      */
 	public function GetKey()
 	{
@@ -2820,7 +2820,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * @param string $sTableClass
 	 *
-	 * @return bool|int false if nothing to persist (no change), new key value otherwise
+	 * @return bool|string false if nothing to persist (no change), new key value otherwise
 	 * @throws \CoreException
 	 * @throws \MySQLException
 	 */
@@ -2903,7 +2903,7 @@ abstract class DBObject implements iDisplay
 		if (empty($this->m_iKey))
 		{
 			// Take the autonumber
-			$this->m_iKey = $iNewKey;
+			$this->m_iKey = "$iNewKey";
 		}
 		return $this->m_iKey;
 	}
@@ -3055,7 +3055,7 @@ abstract class DBObject implements iDisplay
      * @api
      * @see DBWrite
      *
-	 * @return int|null inserted object key
+	 * @return string|null inserted object key
      *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException

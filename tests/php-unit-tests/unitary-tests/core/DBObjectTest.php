@@ -520,7 +520,8 @@ class DBObjectTest extends ItopDataTestCase
 		$oPerson = $this->CreatePersonInstance();
 
 		// Insert without Reload
-		$oPerson->DBInsert();
+		$key = $oPerson->DBInsert();
+		$this->assertSame($key, $oPerson->GetKey());
 
 		// Get initial values
 		$aValues1 = [];
@@ -539,6 +540,9 @@ class DBObjectTest extends ItopDataTestCase
 
 		// 1st Reload
 		$oPerson->Reload(true);
+		// N°6281 - Rest API core/create key value is no more between quote
+		$this->assertSame($key, $oPerson->GetKey());
+
 		$sPerson2 = print_r($oPerson, true);
 		$this->assertNotEquals($sPerson1, $sPerson2);
 
