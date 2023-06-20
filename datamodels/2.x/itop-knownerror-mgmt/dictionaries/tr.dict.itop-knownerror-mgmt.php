@@ -99,6 +99,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkErrorToFunctionalCI' => 'Hata / İşlevsel CI bağla',
 	'Class:lnkErrorToFunctionalCI+' => ' Bilinen bir hatayla ilgili alt bilgi',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI Adı',
@@ -118,6 +119,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkDocumentToError' => 'Belge / hata bağla',
 	'Class:lnkDocumentToError+' => 'Bir belge ile bilinen bir hata arasındaki bağlantı',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Belge',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Belge Adı',

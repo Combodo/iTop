@@ -98,6 +98,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => 'Низкая',
 	'Class:Incident/Attribute:origin' => 'Источник',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => 'Почта',
 	'Class:Incident/Attribute:origin/Value:mail+' => 'Почта',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Мониторинг',
@@ -219,7 +223,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Вновь открыть',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Невозможно назначить этот же инцидент в качестве родительского',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Каскадное решение дочерних тикетов (ev_autoresolve) с установкой следующих параметров: услуга, команда, агент, информация о решении.',
 	'Tickets:Related:OpenIncidents' => 'Открытые инциденты',

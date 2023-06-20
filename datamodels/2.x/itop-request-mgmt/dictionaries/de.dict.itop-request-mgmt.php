@@ -37,6 +37,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Offene Benutzeranfragen nach Typ',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Offene Benutzeranfragen nach Organisation',
 	'Class:UserRequest:KnownErrorList' => 'Known Errors',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 	'Menu:UserRequest:MyWorkOrders' => 'Mir zugeordnete Arbeitsaufträge',
 	'Menu:UserRequest:MyWorkOrders+' => '',
 	'Class:Problem:KnownProblemList' => 'Bekannte Problems',
@@ -118,6 +119,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => '',
 	'Class:UserRequest/Attribute:origin' => 'Herkunft',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -273,7 +278,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:SelectLanguage' => 'Ändern Sie Ihre Spracheinstellung',
 	'Portal:LanguageChangedTo_Lang' => 'Spracheinstellung geändert auf: ',
 	'Portal:ChooseYourFavoriteLanguage' => 'Wählen Sie Ihre bevorzugte Sprache',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 ));

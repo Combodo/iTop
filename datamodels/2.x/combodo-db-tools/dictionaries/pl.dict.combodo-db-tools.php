@@ -41,14 +41,12 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'DBTools:IntegrityCheck' => 'Sprawdzanie integralności',
 	'DBTools:FetchCheck' => 'Sprawdzenie przestrzeni (długie)',
 	'DBTools:SelectAnalysisType' => 'Wybierz typ analizy',
-
 	'DBTools:Analyze' => 'Analiza',
 	'DBTools:Details' => 'Pokaż szczegóły',
 	'DBTools:ShowAll' => 'Pokaż wszystkie błędy',
-
 	'DBTools:Inconsistencies' => 'Niespójności bazy danych',
 	'DBTools:DetailedErrorTitle' => '%2$s błąd(y) w klasie %1$s: %3$s',
-
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Osierocony rekord w `%1$s`, powinien mieć swój odpowiednik w tabeli `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Nieprawidłowy klucz zewnętrzny %1$s (kolumna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Brak klucza zewnętrznego %1$s (kolumna: `%2$s.%3$s`)',
@@ -71,24 +69,19 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'DBTools:LostAttachments' => 'Utracone załączniki',
 	'DBTools:LostAttachments:Disclaimer' => 'Tutaj możesz przeszukiwać bazę danych w poszukiwaniu zagubionych załączników. To NIE jest narzędzie do odzyskiwania danych, nie pobiera usuniętych danych.',
-
 	'DBTools:LostAttachments:Button:Analyze' => 'Analiza',
 	'DBTools:LostAttachments:Button:Restore' => 'Przywróć',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Tej czynności nie można cofnąć, potwierdź, że chcesz przywrócić wybrane pliki.',
 	'DBTools:LostAttachments:Button:Busy' => 'Proszę czekać...',
-
 	'DBTools:LostAttachments:Step:Analyze' => 'Najpierw wyszukaj zagubione załączniki, analizując bazę danych.',
-
 	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Wynik analizy:',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Świetnie! Wszystko wydaje się być na właściwym miejscu.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Niektóre załączniki (%1$d) wydają się być zagubione. Spójrz na poniższą listę i zaznacz te, które chcesz przenieść.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Nazwa pliku',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Aktualna lokalizacja',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Przenieś do...',
-
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Wyniki przywracania:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d załączniki zostały przywrócone.',
-
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Zapisane jako obraz w treści',
 	'DBTools:LostAttachments:History' => 'Załącznik "%1$s" przywrócony za pomocą narzędzi DB'
 ));

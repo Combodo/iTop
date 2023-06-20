@@ -34,6 +34,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Richieste aperte per tipo',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Richieste aperte dal cliente',
 	'Class:UserRequest:KnownErrorList' => 'Errori Conosiuti',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 ));
 
 // Dictionnay conventions
@@ -109,6 +110,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Bassa',
 	'Class:UserRequest/Attribute:origin' => 'Origine',
 	'Class:UserRequest/Attribute:origin+' => '~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'Mail',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -242,7 +247,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'In attesa di approvazione',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '~~',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Non si può assegnare una richiesta padre a se stesso',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Risoluzione a cascata delle richieste figlie (ev_autoresolve), e allineare le seguenti caratteristiche: servizio, team, agente e risoluzione',
 ));

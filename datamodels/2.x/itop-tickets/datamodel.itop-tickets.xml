@@ -1393,6 +1393,15 @@
             </scope>
           </scopes>
         </class>
+        <class id="lnkContactToTicket" _delta="define">
+          <lists>
+            <!-- Note: since 3.1.0, many to many attributes are displayed automatically, an empty list avoid this -->
+            <list id="list">
+              <items>
+              </items>
+            </list>
+          </lists>
+        </class>
       </classes>
       <action_rules>
         <action_rule id="contact-to-userrequest" _delta="define">

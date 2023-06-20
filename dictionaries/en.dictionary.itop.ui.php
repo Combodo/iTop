@@ -384,6 +384,29 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Expression:Unit:Short:YEAR' => 'y',
 ));
 
+//
+// Duplicated into itop-welcome-itil ( will be removed from here...)
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'Menu:WelcomeMenu' => 'Welcome',
+	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenuPage' => 'Welcome',
+	'Menu:WelcomeMenuPage+' => 'Welcome to '.ITOP_APPLICATION_SHORT,
+	'Menu:AdminTools' => 'Administration',
+	'Menu:AdminTools+' => 'Administration tools',
+	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile',
+	'Menu:CSVImportMenu' => 'CSV import',
+	'Menu:CSVImportMenu+' => 'Bulk creation or update',
+	'Menu:DataModelMenu' => 'Data model',
+	'Menu:DataModelMenu+' => 'Overview of the data model',
+	'Menu:ExportMenu' => 'Export',
+	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML',
+	'Menu:NotificationsMenu' => 'Notifications',
+	'Menu:NotificationsMenu+' => 'Configuration of the Notifications',
+	'Menu:MyShortcuts' => 'My Shortcuts',
+	'Menu:DataAdministration' => 'Data administration',
+	'Menu:DataAdministration+' => '',
+));
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -393,10 +416,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'BooleanLabel:yes' => 'yes',
 	'BooleanLabel:no' => 'no',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
-	'Menu:WelcomeMenu' => 'Welcome',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT,// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Welcome',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'Welcome to '.ITOP_APPLICATION_SHORT,// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Welcome to '.ITOP_APPLICATION_SHORT,
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' is a complete, OpenSource, IT Operational Portal.</p>
@@ -1023,9 +1042,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'No lifecycle has been defined for this class',
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
 
-	'Menu:AdminTools' => 'Administration',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => 'Administration tools',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
@@ -1071,17 +1087,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI-ContactsMenu-ContactsByType' => 'Contacts by type',
 	'UI-ContactsMenu-ContactsByStatus' => 'Contacts by status',
 
-	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => 'Bulk creation or update',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:DataModelMenu' => 'Data model',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Overview of the data model',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:NotificationsMenu' => 'Notifications',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Configuration of the Notifications',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuration of the Notifications',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' the notifications are fully customizable. They are based on two sets of objects: <i>triggers and actions</i>.</p>
@@ -1461,8 +1466,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ShortcutRenameDlg:Title'                           => 'Rename the shortcut',
 	'UI:ShortcutListDlg:Title'                             => 'Create a shortcut for the list',
 	'UI:ShortcutDelete:Confirm'                            => 'Please confirm that wou wish to delete the shortcut(s).',
-	'Menu:MyShortcuts'                                     => 'My Shortcuts',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut'                                       => 'Shortcut',
 	'Class:Shortcut+'                                      => '',
 	'Class:Shortcut/Attribute:name'                        => 'Name',
@@ -1720,28 +1723,14 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:DataSources'            => 'Synchronization Data Sources',
-	'Menu:DataSources+'           => 'Mapping logic for batch import of external data',
-	'Menu:WelcomeMenu'            => 'Welcome',
-	'Menu:WelcomeMenu+'           => 'Welcome to '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage'        => 'Welcome',
-	'Menu:WelcomeMenuPage+'       => 'Welcome to '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools'             => 'Administration',
-	'Menu:AdminTools+'            => 'Administration tools',
-	'Menu:AdminTools?'            => 'Tools accessible only to users having the administrator profile',
-	'Menu:DataModelMenu'          => 'Data model',
-	'Menu:DataModelMenu+'         => 'Overview of the data model',
-	'Menu:ExportMenu'             => 'Export',
-	'Menu:ExportMenu+'            => 'Export the results of any query in HTML, CSV or XML',
-	'Menu:NotificationsMenu'      => 'Notifications',
-	'Menu:NotificationsMenu+'     => 'Configure notifications',
-	'Menu:AuditCategories'        => 'Audit',
-	'Menu:AuditCategories+'       => 'Define new audits',
+	'Menu:DataSources+'           => 'Data synchro used for batch import of external data',
+	'Menu:AuditCategories'        => 'Audit configuration',
+	'Menu:AuditCategories+'       => 'Define rules to audit the quality of '.ITOP_APPLICATION_SHORT.' data',
 	'Menu:AuditCategories:Title'  => 'Audit configuration',
-	//	'Menu:Notifications:Title'    => 'Audit categories', // code and label aren't coherent! Is it used?
 	'Menu:RunQueriesMenu'         => 'Run queries',
 	'Menu:RunQueriesMenu+'        => 'Write and execute any OQL query',
 	'Menu:QueryMenu'              => 'Query phrasebook',
-	'Menu:QueryMenu+'             => 'Create stored queries',
+	'Menu:QueryMenu+'             => 'Reusable stored queries',
 	'Menu:UniversalSearchMenu'    => 'Universal search',
 	'Menu:UniversalSearchMenu+'   => 'Search objects of any class including abstract',
 	'Menu:UserManagementMenu'     => 'User management',
@@ -1752,7 +1741,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:UserAccountsMenu'       => 'User accounts',
 	'Menu:UserAccountsMenu+'      => 'Handling '.ITOP_APPLICATION_SHORT.' users and their access rights',
 	'Menu:UserAccountsMenu:Title' => 'User accounts',
-	'Menu:MyShortcuts'            => 'My shortcuts',
 	'Menu:UserManagement'         => 'User management',
 	'Menu:Queries'                => 'Queries',
 	'Menu:ConfigurationTools'     => 'Configuration',

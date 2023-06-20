@@ -67,6 +67,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 
 	// User rights
 	private bool $bIsAllowCreate;
+	private bool $bIsAllowModify;
 	private bool $bIsAllowDelete;
 
 	/**

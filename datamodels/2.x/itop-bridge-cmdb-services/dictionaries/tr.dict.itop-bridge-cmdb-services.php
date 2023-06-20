@@ -30,10 +30,10 @@
 //
 // Class: lnkFunctionalCIToProviderContract
 //
-
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'İşlevsel CI / Sağlayıcı Sözleşmesi bağla',
 	'Class:lnkFunctionalCIToProviderContract+' => '~~',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Sağlayıcı Sözleşmesi',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Sağlayıcı Sözleşme Adı',
@@ -51,6 +51,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkFunctionalCIToService' => 'İşlevsel CI / servis bağla',
 	'Class:lnkFunctionalCIToService+' => '~~',
+	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Servis',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '~~',
 	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Servis Adı',

@@ -32,7 +32,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Relation:depends on/Description' => 'Eléments dont dépend',
 	'Relation:depends on/DownStream' => 'Dépend de...',
 	'Relation:depends on/UpStream' => 'Impacte...',
-	'Relation:impacts/LoadData'       => 'Charger les données',
+	'Relation:impacts/LoadData' => 'Charger les données',
 	'Relation:impacts/NoFilteredData' => 'Veuillez sélectionner des objets dans l\'onglet Graph',
 ));
 
@@ -81,6 +81,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI Fonctionel',
 	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
@@ -137,6 +138,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PhysicalDevice' => 'Matériel physique',
 	'Class:PhysicalDevice+' => '',
+	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Numéro de série',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
 	'Class:PhysicalDevice/Attribute:location_id' => 'Site',
@@ -176,6 +178,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '',
+	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
 	'Class:Rack/Attribute:nb_u' => 'NB Unité',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Matériels',
@@ -242,6 +245,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ConnectableCI' => 'CI connecté',
 	'Class:ConnectableCI+' => '',
+	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Equipements réseaux',
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Tous les équipements réseaux connectés à ce matériel',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interfaces réseaux',
@@ -255,6 +259,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DatacenterDevice' => 'Matériel Datacenter',
 	'Class:DatacenterDevice+' => '',
+	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '',
 	'Class:DatacenterDevice/Attribute:rack_name' => 'Nom Rack',
@@ -293,6 +298,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkDevice' => 'Equipement réseau',
 	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Type',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Nom Type',
@@ -314,6 +320,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Server' => 'Serveur',
 	'Class:Server+' => '',
+	'Class:Server/ComplementaryName' => '%1$s - %2$s',
 	'Class:Server/Attribute:osfamily_id' => 'Famille OS',
 	'Class:Server/Attribute:osfamily_id+' => '',
 	'Class:Server/Attribute:osfamily_name' => 'Nom Famille OS',
@@ -341,6 +348,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:StorageSystem' => 'Système de stockage',
 	'Class:StorageSystem+' => '',
+	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumes logiques',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Tous les volumes logiques dans ce système de stockage',
 ));
@@ -352,6 +360,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SANSwitch' => 'Switch SAN',
 	'Class:SANSwitch+' => '',
+	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Matériels connectés',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Tous les matériels connectés à ce switch SAN',
 ));
@@ -363,6 +372,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TapeLibrary' => 'Bandothèque',
 	'Class:TapeLibrary+' => '',
+	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Bandes',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Toutes les bandes dans cette bandothèque',
 ));
@@ -374,6 +384,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
+	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Systèmes de fichier NAS',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Tous les systèmes de fichier dans ce NAS',
 ));
@@ -385,6 +396,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PC' => 'PC',
 	'Class:PC+' => '',
+	'Class:PC/ComplementaryName' => '%1$s - %2$s',
 	'Class:PC/Attribute:osfamily_id' => 'Famille OS',
 	'Class:PC/Attribute:osfamily_id+' => '',
 	'Class:PC/Attribute:osfamily_name' => 'Nom Famille OS',
@@ -412,6 +424,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Printer' => 'Imprimante',
 	'Class:Printer+' => '',
+	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
 ));
 
 //
@@ -421,6 +434,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PowerConnection' => 'Connexion électrique',
 	'Class:PowerConnection+' => '',
+	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
 ));
 
 //
@@ -430,6 +444,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PowerSource' => 'Arrivée électrique',
 	'Class:PowerSource+' => '',
+	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Toutes les PDUs de cette arrivée électrique',
 ));
@@ -441,6 +456,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '',
+	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
 	'Class:PDU/Attribute:rack_id+' => '',
 	'Class:PDU/Attribute:rack_name' => 'Nom rack',
@@ -458,6 +474,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Peripheral' => 'Périphérique',
 	'Class:Peripheral+' => '',
+	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s',
 ));
 
 //
@@ -467,6 +484,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Enclosure' => 'Chassis',
 	'Class:Enclosure+' => '',
+	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => '',
 	'Class:Enclosure/Attribute:rack_name' => 'Nom rack',
@@ -585,7 +603,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PCSoftware' => 'Logiciel PC',
-	'Class:PCSoftware+' => '~~',
+	'Class:PCSoftware+' => 'Application logicielle sur PC',
 ));
 
 //
@@ -604,6 +622,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:MiddlewareInstance' => 'Instance Middleware',
 	'Class:MiddlewareInstance+' => '',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nom Middleware',
@@ -617,6 +636,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DatabaseSchema' => 'Instance de base de données',
 	'Class:DatabaseSchema+' => '',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Serveur de base de données',
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Nom Serveur de base de données',
@@ -630,6 +650,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:WebApplication' => 'Application Web',
 	'Class:WebApplication+' => '',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
 	'Class:WebApplication/Attribute:webserver_id' => 'Serveur Web',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Nom Serveur Web',
@@ -710,6 +731,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VirtualMachine' => 'Machine virtuelle',
 	'Class:VirtualMachine+' => '',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
 	'Class:VirtualMachine/Attribute:virtualhost_id' => 'vCluster / Hyperviseur',
 	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
 	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Nom Host',
@@ -770,6 +792,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkServerToVolume' => 'Lien Serveur / Volume',
 	'Class:lnkServerToVolume+' => '',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume logique',
 	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
 	'Class:lnkServerToVolume/Attribute:volume_name' => 'Nom Volume logique',
@@ -789,6 +812,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkVirtualDeviceToVolume' => 'Lien Device virtuel / Volume',
 	'Class:lnkVirtualDeviceToVolume+' => '',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume logique',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Nom Volume logique',
@@ -808,6 +832,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkSanToDatacenterDevice' => 'Lien San / Device',
 	'Class:lnkSanToDatacenterDevice+' => '',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'Switch SAN',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Nom Switch SAN',
@@ -869,6 +894,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Software' => 'Logiciel',
 	'Class:Software+' => '',
+	'Class:Software/ComplementaryName' => '%1$s - %2$s',
 	'Class:Software/Attribute:name' => 'Nom',
 	'Class:Software/Attribute:name+' => '',
 	'Class:Software/Attribute:vendor' => 'Vendeur',
@@ -986,6 +1012,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OSLicence' => 'Licence OS',
 	'Class:OSLicence+' => '',
+	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'Version OS',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'Nom Version OS',
@@ -1003,6 +1030,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SoftwareLicence' => 'Licence Logiciel',
 	'Class:SoftwareLicence+' => '',
+	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Logiciel',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Nom Logiciel',
@@ -1018,6 +1046,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
 	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
 	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Nom Licence',
@@ -1070,6 +1099,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Model' => 'Modèle',
 	'Class:Model+' => '',
+	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Marque',
 	'Class:Model/Attribute:brand_id+' => '',
 	'Class:Model/Attribute:brand_name' => 'Nom marque',
@@ -1149,6 +1179,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToPatch' => 'Lien Document / Patch',
 	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
 	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Nom patch',
@@ -1166,6 +1197,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Lien Instance logiciel / Patch logiciel',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Patch logiciel',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Nom patch logiciel',
@@ -1183,6 +1215,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkFunctionalCIToOSPatch' => 'Lien CI Fonctionel / Patch OS',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Patch OS',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'Nom Patch OS',
@@ -1200,6 +1233,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToSoftware' => 'Lien Document / Logiciel',
 	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Logiciel',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Nom logiciel',
@@ -1217,10 +1251,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Subnet' => 'Subnet',
 	'Class:Subnet+' => '',
+	'Class:Subnet/Name' => '%1$s/%2$s',
+	'Class:Subnet/ComplementaryName' => '%1$s - %2$s',
 	'Class:Subnet/Attribute:description' => 'Description',
 	'Class:Subnet/Attribute:description+' => '',
 	'Class:Subnet/Attribute:subnet_name' => 'Nom de subnet',
-	'Class:Subnet/Attribute:subnet_name+' => '~~',
+	'Class:Subnet/Attribute:subnet_name+' => '',
 	'Class:Subnet/Attribute:org_id' => 'Organisation',
 	'Class:Subnet/Attribute:org_id+' => '',
 	'Class:Subnet/Attribute:org_name' => 'Nom organisation',
@@ -1261,6 +1297,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkSubnetToVLAN' => 'Lien Subnet / VLAN',
 	'Class:lnkSubnetToVLAN+' => '',
+	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'Subnet IP',
@@ -1295,8 +1332,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'Adresse IP',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
-
-
 	'Class:IPInterface/Attribute:macaddress' => 'Adresse MAC',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Commentaire',
@@ -1316,6 +1351,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PhysicalInterface' => 'Interface physique',
 	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface/Name' => '%2$s %1$s',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Matériel',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Nom matériel',
@@ -1331,6 +1367,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Lien Interface réseau / VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Interface réseau',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Nom interface réseau',
@@ -1385,6 +1422,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkConnectableCIToNetworkDevice' => 'Lien Device / Equipement réseau',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Equipement réseau',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Nom Equipement réseau',
@@ -1412,6 +1450,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Lien Solution Applicative / CI Fonctionel',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Solution applicative',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Nom Solution applicative',
@@ -1429,6 +1468,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Lien Solution Applicative / Processus métier',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Processus métier',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Nom Processus métier',
@@ -1446,6 +1486,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Group' => 'Groupe',
 	'Class:Group+' => '',
+	'Class:Group/ComplementaryName' => '%1$s - %2$s',
 	'Class:Group/Attribute:name' => 'Nom',
 	'Class:Group/Attribute:name+' => '',
 	'Class:Group/Attribute:status' => 'Etat',
@@ -1465,7 +1506,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Group/Attribute:type' => 'Type',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Groupe parent',
-
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Nom groupe parent',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1482,6 +1522,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkGroupToCI' => 'Lien Groupe / CI',
 	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI/Name' => '%1$s / %2$s',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Groupe',
 	'Class:lnkGroupToCI/Attribute:group_id+' => '',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Nom du groupe',
@@ -1519,6 +1560,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToFunctionalCI' => 'Lien Document / CI Fonctionel',
 	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
@@ -1579,11 +1621,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Software' => 'Catalogue des logiciels de références',
 	'Menu:Software+' => 'Catalogue des logiciels de références',
 ));
-
 //
 // n:n relations custom labels : nom de class féminin
 //
-
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
@@ -1600,9 +1640,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
 	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
 	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s'
 ));
-
 // 1:n relations custom labels for tooltip and pop-up title
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
@@ -1760,8 +1799,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:WebServer/Attribute:webapp_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
 	'Class:WebServer/Attribute:webapp_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:WebServer/Attribute:webapp_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:WebServer/Attribute:webapp_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:WebServer/Attribute:webapp_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
 ));
-
-
 ?>

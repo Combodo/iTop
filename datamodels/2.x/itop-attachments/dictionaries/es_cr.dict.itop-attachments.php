@@ -15,7 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
- /**
+/**
  * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
@@ -74,6 +74,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Attachments:File:Uploader' => 'Cargado por',
 	'Attachments:File:Size' => 'Tamaño',
 	'Attachments:File:MimeType' => 'Tipo',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
 ));
 //
 // Class: Attachment
@@ -86,4 +87,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Id del Contacto',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 ));

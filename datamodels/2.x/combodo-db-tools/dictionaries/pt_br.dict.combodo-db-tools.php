@@ -41,14 +41,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'DBTools:IntegrityCheck' => 'Verificação de integridade',
 	'DBTools:FetchCheck' => 'Verificação de consulta (longa)',
 	'DBTools:SelectAnalysisType' => 'Selecione o tipo de análise',
-
 	'DBTools:Analyze' => 'Analisar',
 	'DBTools:Details' => 'Exibir detalhes',
 	'DBTools:ShowAll' => 'Exibir todos os erros',
-
 	'DBTools:Inconsistencies' => 'Inconsistências no banco de dados',
 	'DBTools:DetailedErrorTitle' => '%2$s erro(s) na classe %1$s: %3$s',
-
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Item orfão em `%1$s`, ele deveria ter seu registro irmão na tabela `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Chave externa inválida %1$s (coluna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Chave externa ausente %1$s (coluna: `%2$s.%3$s`)',
@@ -71,24 +69,19 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'DBTools:LostAttachments' => 'Anexos perdidos',
 	'DBTools:LostAttachments:Disclaimer' => 'Aqui você procurará no seu banco de dados por anexos perdidos. Isto NÃO é uma ferramenta de recuperação de dados, pois não busca dados apagados',
-
 	'DBTools:LostAttachments:Button:Analyze' => 'Analisar',
 	'DBTools:LostAttachments:Button:Restore' => 'Recuperar',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Esta ação não pode ser desfeita, você confirma que quer recuperar os arquivos selecionados?',
 	'DBTools:LostAttachments:Button:Busy' => 'Aguarde...',
-
 	'DBTools:LostAttachments:Step:Analyze' => 'Primeiro, vamos procurar por anexos perdidos através da análise do banco de dados',
-
 	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Resultado da análise:',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Ótimo! Tudo parece estar nos seus devidos lugares (Nenhum anexo perdido foi encontrado)',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Alguns anexos (%1$d) parecem estar perdidos. Verifique a lista abaixo e escolha os que você deseja mover',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Nome do arquivo',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Local atual',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Mover para',
-
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultado da restauração:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d anexo(s) recuperado(s)',
-
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Armazenar como imagem embutida',
 	'DBTools:LostAttachments:History' => 'Anexo "%1$s" recuperado com as Ferramentas de Banco de Dados'
 ));

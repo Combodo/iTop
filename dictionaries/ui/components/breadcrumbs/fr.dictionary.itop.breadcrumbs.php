@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Global search
 Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Pages précédentes',

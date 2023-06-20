@@ -35,6 +35,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Requerimientos Abiertos por Tipo',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requerimientos Abiertos por Cliente',
 	'Class:UserRequest:KnownErrorList' => 'Errores Conocidos',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 ));
 
 // Dictionnay conventions
@@ -110,6 +111,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Baja',
 	'Class:UserRequest/Attribute:origin' => 'Origen',
 	'Class:UserRequest/Attribute:origin+' => 'Origen',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Correo-e',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'Correo-e',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoreo',
@@ -243,7 +248,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Esperando Aprobación',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => 'Esperando Aprobación',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'No puede asignarse el requerimiento Padre a si mismo',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Resolver tickets hijos',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
 ));

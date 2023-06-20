@@ -111,6 +111,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => '',
 	'Class:Incident/Attribute:origin' => 'Origem',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => 'E-mail',
 	'Class:Incident/Attribute:origin/Value:mail+' => '',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoramento',
@@ -232,7 +236,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Re-abrir',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Não é possível atribuir o incidente pai ao próprio incidente',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (resolver solicitações filhas)',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Conecte a solução a solicitação filha (ev_autoresolve) e alinhe as seguintes características: serviço, equipe, agente, informação da solução',
 	'Tickets:Related:OpenIncidents' => 'Incidentes abertos',

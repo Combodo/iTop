@@ -37,7 +37,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserLocal+' => 'Użytkownik uwierzytelniony przez '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Hasło',
 	'Class:UserLocal/Attribute:password+' => 'Ciąg uwierzytelniania użytkownika',
-
 	'Class:UserLocal/Attribute:expiration' => 'Wygaśnięcie hasła',
 	'Class:UserLocal/Attribute:expiration+' => 'Stan wygaśnięcia hasła (wymaga rozszerzenia, aby zadziałało)',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Może wygasnąć',
@@ -50,9 +49,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Hasło nie może być zmienione przez użytkownika.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Odnowienie hasła',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Kiedy ostatnio zmieniano hasło',
-
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Hasło musi mieć co najmniej 8 znaków i zawierać duże, małe litery, cyfry i znaki specjalne.',
-
 	'UserLocal:password:expiration' => 'Poniższe pola wymagają rozszerzenia',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Ustawienie wygaśnięcia hasła "Hasło jednorazowe" nie jest dozwolone dla własnego użytkownika',
 ));

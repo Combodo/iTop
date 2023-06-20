@@ -8,10 +8,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-
 	'bkp-backup-running' => 'Probíhá záloha. Vyčkejte prosím...',
 	'bkp-restore-running' => 'Probíhá obnova ze zálohy. Vyčkejte prosím...',
-
 	'Menu:BackupStatus' => 'Plánované zálohování',
 	'bkp-status-title' => 'Plánované zálohování',
 	'bkp-status-checks' => 'Nastavení testy',

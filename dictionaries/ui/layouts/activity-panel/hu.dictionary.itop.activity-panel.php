@@ -50,7 +50,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Kattintson a gombra az értesítések tábla megnyitásához és további információkért.',
 
 	// Placeholder
-    'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Itt nyugalom van, még nincs aktivitás.',
+	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Itt nyugalom van, még nincs aktivitás.',
 
 	// Closed cover
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Tevékenység panel',

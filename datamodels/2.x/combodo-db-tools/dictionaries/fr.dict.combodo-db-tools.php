@@ -37,15 +37,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'DBTools:IntegrityCheck' => 'Contrôle d\'intégrité',
 	'DBTools:FetchCheck' => 'Contrôle de récupération (long)',
 	'DBTools:SelectAnalysisType' => 'Type d\'analyse',
-
 	'DBTools:Analyze' => 'Analyser',
 	'DBTools:Details' => 'Afficher détails',
 	'DBTools:ShowAll' => 'Afficher toutes les erreurs',
-
 	'DBTools:Inconsistencies' => 'Incohérences de base de données',
 	'DBTools:DetailedErrorTitle' => '%2$s erreur(s) dans la classe %1$s : %3$s',
 	'DBTools:DetailedErrorLimit' => 'Liste limitée à %1$s erreurs',
-
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Enregistrement orphelin dans `%1$s`, il devrait avoir son équivalent dans la table `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Clé externe invalide %1$s (colonne: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Clé externe manquante %1$s (colonne: `%2$s.%3$s`)',
@@ -68,24 +65,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'DBTools:LostAttachments' => 'Pièces jointes perdues',
 	'DBTools:LostAttachments:Disclaimer' => 'Ici vous pouvez retrouver des pièces jointes perdues ou égarées dans votre base de données. Ceci n\'est PAS un outil de récupération des données, il ne récupère pas les données effacées.',
-
 	'DBTools:LostAttachments:Button:Analyze' => 'Analyser',
 	'DBTools:LostAttachments:Button:Restore' => 'Restaurer',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Cet action ne peut être annuler, veuillez confirmer que vous voulez restaurer les fichiers sélectionnés.',
 	'DBTools:LostAttachments:Button:Busy' => 'Patientez ...',
-
 	'DBTools:LostAttachments:Step:Analyze' => 'Tout d\'abord, scannez la base de données à la recherche de pièces jointes perdues/égarées.',
-
 	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Résultat de l\'analyse :',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Parfait ! Il semble que tout soit en ordre.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Certaines pièces jointes (%1$d) semblent être au mauvais endroit. Examinez la liste suivante et cochez celles que vous souhaitez déplacer.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Nom de fichier',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Emplacement actuel',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Déplacer vers ...',
-
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Résultats de la restauration :',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d pièces jointes ont été restaurées.',
-
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stockée comme "InlineImage"',
 	'DBTools:LostAttachments:History' => 'Pièce jointe "%1$s" restaurée avec l\'outil de BDD'
 ));

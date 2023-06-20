@@ -41,14 +41,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'DBTools:IntegrityCheck' => 'Integrity check~~',
 	'DBTools:FetchCheck' => 'Fetch Check (long)~~',
 	'DBTools:SelectAnalysisType' => 'Select analysis type~~',
-
 	'DBTools:Analyze' => 'Analyze~~',
 	'DBTools:Details' => 'Show Details~~',
 	'DBTools:ShowAll' => 'Show All Errors~~',
-
 	'DBTools:Inconsistencies' => 'Database inconsistencies~~',
 	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
-
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`~~',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Invalid external key %1$s (column: `%2$s.%3$s`)~~',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Missing external key %1$s (column: `%2$s.%3$s`)~~',
@@ -71,24 +69,19 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'DBTools:LostAttachments' => 'Lost attachments~~',
 	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, is does not retrieve deleted data.~~',
-
 	'DBTools:LostAttachments:Button:Analyze' => 'Analyze~~',
 	'DBTools:LostAttachments:Button:Restore' => 'Restore~~',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'This action cannot be undone, please confirm that you want to restore the selected files.~~',
 	'DBTools:LostAttachments:Button:Busy' => 'Please wait...~~',
-
 	'DBTools:LostAttachments:Step:Analyze' => 'First, search for lost/misplaced attachments by analyzing the database.~~',
-
 	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analyze results:~~',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Great! Every thing seems to be at the right place.~~',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Some attachments (%1$d) seem to be misplaced. Take a look at the following list and check the ones you would like to move.~~',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Filename~~',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Current location~~',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Move to...~~',
-
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Restore results:~~',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d attachments were restored.~~',
-
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stored as inline image~~',
 	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools~~'
 ));

@@ -33,6 +33,7 @@
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkFunctionalCIToTicket' => 'İşlevsel CI / Çağrı kaydı bağla',
 	'Class:lnkFunctionalCIToTicket+' => '~~',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Çağrı Kaydı',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Ref',

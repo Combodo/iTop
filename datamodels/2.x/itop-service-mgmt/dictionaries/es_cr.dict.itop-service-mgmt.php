@@ -15,7 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
- /**
+/**
  * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
@@ -59,6 +59,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ServiceFamily+' => 'Familias de servicio',
 	'Menu:Procedure' => 'Catálogo de procedimientos',
 	'Menu:Procedure+' => 'Catálogo de procedimientos',
+	'Contract:baseinfo' => 'General information~~',
+	'Contract:moreinfo' => 'Contractual information~~',
+	'Contract:cost' => 'Cost information~~',
 ));
 
 //
@@ -172,6 +175,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkContactToContract' => 'Relación Contacto y Contrato',
 	'Class:lnkContactToContract+' => 'Relación Contacto y Contrato',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Contrato',
 	'Class:lnkContactToContract/Attribute:contract_id+' => 'Contrato',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Contrato',
@@ -189,6 +193,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkContractToDocument' => 'Relación Contrato y Documento',
 	'Class:lnkContractToDocument+' => 'Relación Contrato y Documento',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contrato',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => 'Contrato',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Contrato',
@@ -221,6 +226,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Service' => 'Servicio',
 	'Class:Service+' => 'Servicio',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Nombre',
 	'Class:Service/Attribute:name+' => 'Nombre del Servicio',
 	'Class:Service/Attribute:org_id' => 'Proveedor',
@@ -264,6 +270,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDocumentToService' => 'Relación Documento y Servicio',
 	'Class:lnkDocumentToService+' => 'Relación Documento y Servicio',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Servicio',
 	'Class:lnkDocumentToService/Attribute:service_id+' => 'Servicio',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Servicio',
@@ -281,6 +288,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkContactToService' => 'Relación Contacto y Servicio',
 	'Class:lnkContactToService+' => 'Relación Contacto y Servicio',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Servicio',
 	'Class:lnkContactToService/Attribute:service_id+' => 'Servicio',
 	'Class:lnkContactToService/Attribute:service_name' => 'Servicio',
@@ -298,6 +306,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ServiceSubcategory' => 'Subcategoría',
 	'Class:ServiceSubcategory+' => 'Subcategoría',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nombre',
 	'Class:ServiceSubcategory/Attribute:name+' => 'Nombre de la Subcategoria',
 	'Class:ServiceSubcategory/Attribute:description' => 'Descripción',
@@ -383,6 +392,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => 'Horas',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'Minutos',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'Minutos',
+	'Class:SLT/Attribute:slas_list' => 'SLAs~~',
+	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT~~',
 ));
 
 //
@@ -392,6 +403,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkSLAToSLT' => 'Relación SLA y SLT',
 	'Class:lnkSLAToSLT+' => 'Relación SLA y SLT',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA',
@@ -419,6 +431,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkCustomerContractToService' => 'Relación Acuerdo con Cliente y Servicio',
 	'Class:lnkCustomerContractToService+' => 'Relación Acuerdo con Cliente y Servicio',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Acuerdo con Cliente',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => 'Acuerdo con Cliente',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Acuerdo con Cliente',
@@ -440,6 +453,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkProviderContractToService' => 'Relación Contrato con Proveedor y Servicio',
 	'Class:lnkProviderContractToService+' => 'Relación Contrato con Proveedor y Servicio',
+	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Servicio',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => 'Servicio',
 	'Class:lnkProviderContractToService/Attribute:service_name' => 'Servicio',
@@ -478,6 +492,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDeliveryModelToContact' => 'Relación Modelo de Entrega y Contacto',
 	'Class:lnkDeliveryModelToContact+' => 'Relación Modelo de Entrega y Contacto',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Modelo de Entrega',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => 'Modelo de Entrega',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Modelo de Entrega',

@@ -14,6 +14,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AuditCategory/Attribute:definition_set+' => '監査するべきオブジェクトの集合を定義するOQL式',
 	'Class:AuditCategory/Attribute:rules_list' => '監査ルール',
 	'Class:AuditCategory/Attribute:rules_list+' => 'このカテゴリの監査ルール',
+	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',
+	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Percentage of invalid objects below which the result is a warning (orange)~~',
+	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
+	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
+	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
 ));
 
 //
@@ -41,7 +47,42 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AuditRule/Attribute:category_id' => 'カテゴリ',
 	'Class:AuditRule/Attribute:category_id+' => 'このルールのカテゴリ',
 	'Class:AuditRule/Attribute:category_name' => 'カテゴリ',
-	'Class:AuditRule/Attribute:category_name+' => 'このルールのカテゴリ名',
+	'Class:AuditRule/Attribute:category_name+' => 'このルールのカテゴリ名'
+));
+
+//
+// Class: AuditDomain
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:AuditDomain' => 'Audit Domain~~',
+	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
+Domain usually correspond to who is responsible for checking and fixing errors~~',
+	'Class:AuditDomain/Attribute:name' => 'Name~~',
+	'Class:AuditDomain/Attribute:name+' => 'Its a segmentation of the Audit by who is in charge of fixing it or just interested~~',
+	'Class:AuditDomain/Attribute:description' => 'Description~~',
+	'Class:AuditDomain/Attribute:description+' => '~~',
+	'Class:AuditDomain/Attribute:icon' => 'Icon~~',
+	'Class:AuditDomain/Attribute:icon+' => '~~',
+	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
+	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
+));
+
+//
+// Class: lnkAuditCategoryToAuditDomain
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
+	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+' => 'Audit Category~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name' => 'Category name~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name+' => 'Audit category name~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id' => 'Domain~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
 ));
 
 //
@@ -59,6 +100,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
 	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
 	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
+	'Class:Query/Attribute:export_count' => 'Export counter~~',
+	'Class:Query/Attribute:export_count+' => 'Counter reflecting the number of time this query has been executed~~',
+	'Class:Query/Attribute:export_last_date' => 'Last export~~',
+	'Class:Query/Attribute:export_last_date+' => 'Date and time of the last export execution~~',
+	'Class:Query/Attribute:export_last_user_id' => 'User~~',
+	'Class:Query/Attribute:export_last_user_id+' => 'The user who executed the last export~~',
+	'Class:Query/Attribute:export_last_user_contact' => 'Contact~~',
+	'Class:Query/Attribute:export_last_user_contact+' => 'The contact who executed the last export~~',
+	'Query:baseinfo' => 'General information~~',
+	'Query:exportInfo' => 'Export information~~',
 	'Class:QueryOQL/Attribute:fields' => 'フィールド',
 	'Class:QueryOQL/Attribute:fields+' => 'エクスポートする属性（またはエイリアス属性,alias.attribute）のコンマ区切り(CSV)リスト',
 	'Class:QueryOQL' => 'OQL クエリ',
@@ -107,7 +158,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.~~',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled~~',
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
-
 	'Class:User/Error:LoginMustBeUnique' => 'ログイン名は一意でないといけません。- "%1s" はすでに使われています。',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => '少なくとも1件のプロフィールがこのユーザに指定されなければなりません。',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
@@ -316,6 +366,29 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Expression:Unit:Short:YEAR' => 'y~~',
 ));
 
+//
+// Duplicated into itop-welcome-itil ( will be removed from here...)
+//
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Menu:WelcomeMenu' => 'ようこそ',
+	'Menu:WelcomeMenu+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
+	'Menu:WelcomeMenuPage' => 'ようこそ',
+	'Menu:WelcomeMenuPage+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
+	'Menu:AdminTools' => '管理ツール',
+	'Menu:AdminTools+' => '管理ツール',
+	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。',
+	'Menu:CSVImportMenu' => 'CSV インポート',
+	'Menu:CSVImportMenu+' => '一括作成/一括更新',
+	'Menu:DataModelMenu' => 'データモデル',
+	'Menu:DataModelMenu+' => 'データモデル概要',
+	'Menu:ExportMenu' => 'エクスポート',
+	'Menu:ExportMenu+' => '任意のクエリ結果をHTML、CSV、XMLでエクスポートする',
+	'Menu:NotificationsMenu' => '通知',
+	'Menu:NotificationsMenu+' => '通知の設定',
+	'Menu:MyShortcuts' => '私のショートカット',
+	'Menu:DataAdministration' => 'データ管理',
+	'Menu:DataAdministration+' => 'データ管理',
+));
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -325,12 +398,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'BooleanLabel:yes' => 'はい',
 	'BooleanLabel:no' => 'いいえ',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
-	'Menu:WelcomeMenu' => 'ようこそ',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'ようこそ',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
-
 	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.'は、オープンソースの、完結したIT運用ポータルです。</p>
 <ul>以下を含みます。
 <li>ITインベントリを文書化し、管理するための完全なCMDB(構成管理データベース)。</li>
@@ -341,7 +409,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 <li>ITの概観を素早く得るためのダッシュボード。</li>
 </ul>
 <p>すべてのモジュールはお互いに独立しており、別個にセットアップが可能です。</p>',
-
 	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.'はサービスプロバイダ志向であり、ITエンジニアが複数の顧客や組織を簡単に管理できるようになります。
 <ul>iTopは、機能豊富な下記のビジネスプロセスのセットを提供します。
 <li>IT管理の実効性の強化。</li>
@@ -357,7 +424,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 <li>ITの中でもっとも重要な財産である「文書化」の管理。</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
 <div>This version features a brand new modern and accessible backoffice design.</div>
 
@@ -378,6 +445,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:GlobalSearch' => '検索',
 	'UI:Button:Search' => '　検索　',
 	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:Confirm' => ' Confirm ~~',
 	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' クエリ',
 	'UI:Button:Ok' => 'OK',
@@ -418,7 +486,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
 	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
 	'UI:InputFile:SelectFile' => 'Select a file~~',
-
 	'UI:SearchToggle' => '検索（トグル↓↑)',
 	'UI:ClickToCreateNew' => '新規 %1$s を作成~~',
 	'UI:SearchFor_Class' => '%1$s オブジェクトを検索',
@@ -438,7 +505,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:CannotWriteToTmp_Dir' => '一時ファイルをディスクに書き込めません。upload_tmp_dir = "%1$s"',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'extensionにより、アップロードを停止しました。(オリジナルのファイル名は"%1$s"です)。',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'ファイルのアップロードに失敗しました。原因は不明(エラーコード: "%1$s")です。',
-
 	'UI:Error:1ParametersMissing' => 'エラー: この操作には下記のパラメータを指定する必要があります：%1$s',
 	'UI:Error:2ParametersMissing' => 'エラー：この操作には、下記のパラメータを指定する必要があります：%1$s , %2$s',
 	'UI:Error:3ParametersMissing' => 'エラー：この操作には、下記のパラメータを指定する必要があります：%1$s, %2$s, %3$s',
@@ -460,9 +526,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
-
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
-
 	'UI:GroupBy:Count' => 'カウント',
 	'UI:GroupBy:Count+' => '要素数',
 	'UI:CountOfObjects' => '%1$d 個のオブジェクトが条件にマッチしました。',
@@ -491,6 +555,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:OtherActions' => 'その他の実行',
 	'UI:Menu:Transitions' => 'Transitions~~',
 	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
+	'UI:Menu:View' => 'View this object~~',
 	'UI:Menu:New' => '新規...',
 	'UI:Menu:Add' => '追加...',
 	'UI:Menu:Manage' => '管理...',
@@ -499,6 +564,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Modify' => '修正...',
 	'UI:Menu:Delete' => '削除...',
 	'UI:Menu:BulkDelete' => '削除...',
+	'UI:Menu:BulkDelete_Class' => 'Delete %1$s objects...~~',
+	'UI:Menu:BulkDelete_Link' => 'Delete %1$s...~~',
+	'UI:Menu:BulkDelete_Remote' => 'Delete %1$s...~~',
 	'UI:UndefinedObject' => '未定義',
 	'UI:Document:OpenInNewWindow:Download' => '新規ウィンドウで開く: %1$s、 ダウンロード: %2$s',
 	'UI:SplitDateTime-Date' => '日付',
@@ -531,7 +599,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
 	'UI:Login:SeparatorOr' => 'Or~~',
-
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
 	'UI:ResetPwd-Error-FixedPwd' => 'the account does not allow password reset.~~',
@@ -542,50 +609,49 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
-
 	'UI:ResetPwd-Title' => 'Reset password~~',
 	'UI:ResetPwd-Error-InvalidToken' => 'Sorry, either the password has already been reset, or you have received several emails. Please make sure that you use the link provided in the very last email received.~~',
 	'UI:ResetPwd-Error-EnterPassword' => 'Enter a new password for the account \'%1$s\'.~~',
 	'UI:ResetPwd-Ready' => 'The password has been changed.~~',
 	'UI:ResetPwd-Login' => 'Click here to login...~~',
-
-	'UI:Login:About'                               => '',
-	'UI:Login:ChangeYourPassword'                  => 'パスワードを変更してください',
-	'UI:Login:OldPasswordPrompt'                   => '古いパスワード',
-	'UI:Login:NewPasswordPrompt'                   => '新しいパスワード',
-	'UI:Login:RetypeNewPasswordPrompt'             => '新しいパスワードを再度入力してください。',
-	'UI:Login:IncorrectOldPassword'                => 'エラー：既存パスワードが正しくありません。',
-	'UI:LogOffMenu'                                => 'ログオフ',
-	'UI:LogOff:ThankYou'                           => ITOP_APPLICATION_SHORT.'をご利用いただき、ありがとうございます。',
-	'UI:LogOff:ClickHereToLoginAgain'              => '再度ログインするにはここをクリックしてください...',
-	'UI:ChangePwdMenu'                             => 'パスワードを変更する...',
-	'UI:Login:PasswordChanged'                     => 'パスワードは変更されました。',
-	'UI:AccessRO-All'                              => ITOP_APPLICATION_SHORT.'は参照専用です。',
-	'UI:AccessRO-Users'                            => 'エンドユーザの方は'.ITOP_APPLICATION_SHORT.'は参照専用です。',
-	'UI:ApplicationEnvironment'                    => 'アプリケーション環境: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch'               => '2度入力された新しいパスワードが一致しません!',
-	'UI:Button:Login'                              => ITOP_APPLICATION_SHORT.'へ入る',
-	'UI:Login:Error:AccessRestricted'              => ITOP_APPLICATION_SHORT.'へのアクセスは制限されています。'.ITOP_APPLICATION_SHORT.'管理者に問い合わせしてください。',
-	'UI:Login:Error:AccessAdmin'                   => '管理者権限をもつユーザにアクセスが制限されています。'.ITOP_APPLICATION_SHORT.'管理者に問い合わせしてください。',
-	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization~~',
+	'UI:Login:About' => '',
+	'UI:Login:ChangeYourPassword' => 'パスワードを変更してください',
+	'UI:Login:OldPasswordPrompt' => '古いパスワード',
+	'UI:Login:NewPasswordPrompt' => '新しいパスワード',
+	'UI:Login:RetypeNewPasswordPrompt' => '新しいパスワードを再度入力してください。',
+	'UI:Login:IncorrectOldPassword' => 'エラー：既存パスワードが正しくありません。',
+	'UI:LogOffMenu' => 'ログオフ',
+	'UI:LogOff:ThankYou' => ITOP_APPLICATION_SHORT.'をご利用いただき、ありがとうございます。',
+	'UI:LogOff:ClickHereToLoginAgain' => '再度ログインするにはここをクリックしてください...',
+	'UI:ChangePwdMenu' => 'パスワードを変更する...',
+	'UI:Login:PasswordChanged' => 'パスワードは変更されました。',
+	'UI:Login:PasswordNotChanged' => 'Error: Password is the same!~~',
+	'UI:AccessRO-All' => ITOP_APPLICATION_SHORT.'は参照専用です。',
+	'UI:AccessRO-Users' => 'エンドユーザの方は'.ITOP_APPLICATION_SHORT.'は参照専用です。',
+	'UI:ApplicationEnvironment' => 'アプリケーション環境: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch' => '2度入力された新しいパスワードが一致しません!',
+	'UI:Button:Login' => ITOP_APPLICATION_SHORT.'へ入る',
+	'UI:Login:Error:AccessRestricted' => ITOP_APPLICATION_SHORT.'へのアクセスは制限されています。'.ITOP_APPLICATION_SHORT.'管理者に問い合わせしてください。',
+	'UI:Login:Error:AccessAdmin' => '管理者権限をもつユーザにアクセスが制限されています。'.ITOP_APPLICATION_SHORT.'管理者に問い合わせしてください。',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
-	'UI:Login:Error:NoValidProfiles'               => 'No valid profile provided~~',
-	'UI:CSVImport:MappingSelectOne'                => '-- 選択ください --',
-	'UI:CSVImport:MappingNotApplicable'            => '--このフィールドを無視する --',
-	'UI:CSVImport:NoData'                          => '空のデータセット..., データを提供してください。',
-	'UI:Title:DataPreview'                         => 'データプレビュー',
-	'UI:CSVImport:ErrorOnlyOneColumn'              => 'エラー：このデータにはカラムが1つしか含まれていません。適切なセパレータ文字を選択しましたか。',
-	'UI:CSVImport:FieldName'                       => 'フィールド %1$d',
-	'UI:CSVImport:DataLine1'                       => 'データ行 1',
-	'UI:CSVImport:DataLine2'                       => 'データ行 2',
-	'UI:CSVImport:idField'                         => 'ID (主キー)',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
+	'UI:CSVImport:MappingSelectOne' => '-- 選択ください --',
+	'UI:CSVImport:MappingNotApplicable' => '--このフィールドを無視する --',
+	'UI:CSVImport:NoData' => '空のデータセット..., データを提供してください。',
+	'UI:Title:DataPreview' => 'データプレビュー',
+	'UI:CSVImport:ErrorOnlyOneColumn' => 'エラー：このデータにはカラムが1つしか含まれていません。適切なセパレータ文字を選択しましたか。',
+	'UI:CSVImport:FieldName' => 'フィールド %1$d',
+	'UI:CSVImport:DataLine1' => 'データ行 1',
+	'UI:CSVImport:DataLine2' => 'データ行 2',
+	'UI:CSVImport:idField' => 'ID (主キー)',
 	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - バルクインポート',
-	'UI:Title:BulkImport+'                         => 'CSV インポートウィザード',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => '%2$s クラスの %1$d オブジェクトを同期',
-	'UI:CSVImport:ClassesSelectOne'                => '--選択してください --',
-	'UI:CSVImport:ErrorExtendedAttCode'            => '内部エラー： "%2$s" は"%3$s"クラスの外部キーではないので、"%1$s" は誤ったコードです。',
-	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d オブジェクトは変更されません。',
-	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d オブジェクトが修正されます。',
+	'UI:Title:BulkImport+' => 'CSV インポートウィザード',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class' => '%2$s クラスの %1$d オブジェクトを同期',
+	'UI:CSVImport:ClassesSelectOne' => '--選択してください --',
+	'UI:CSVImport:ErrorExtendedAttCode' => '内部エラー： "%2$s" は"%3$s"クラスの外部キーではないので、"%1$s" は誤ったコードです。',
+	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d オブジェクトは変更されません。',
+	'UI:CSVImport:ObjectsWillBeModified' => '%1$d オブジェクトが修正されます。',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d オブジェクトが追加されます。',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d オブジェクトにエラーがあります。',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d オブジェクトは変更されていません。',
@@ -631,11 +697,14 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - ユニバーサル検索',
 	'UI:UniversalSearch:Error' => 'エラー：%1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => '検索するクラスを選択してください。',
-
 	'UI:CSVReport-Value-Modified' => '修正済み',
 	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
+	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
+	'UI:CSVReport-Value-NoMatch-NoObject' => 'There are no \'%1$s\' objects~~',
+	'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => 'There are no \'%1$s\' objects found with your current profile~~',
+	'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => 'There are some \'%1$s\' objects not visible with your current profile~~',
 	'UI:CSVReport-Value-Missing' => '必須の値がありません',
 	'UI:CSVReport-Value-Ambiguous' => 'あいまいな値:  %1$s オブジェクト',
 	'UI:CSVReport-Row-Unchanged' => '未変更',
@@ -649,15 +718,16 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Value-Issue-Readonly' => '属性 \'%1$s\' は、読み取り専用で、修正出来ません(現在の値: %2$s, 要求された値: %3$s)',
 	'UI:CSVReport-Value-Issue-Format' => '入力処理の失敗: %1$s',
 	'UI:CSVReport-Value-Issue-NoMatch' => '属性 \'%1$s\' への予期されない値 : マッチしません、文字列チェック',
+	'UI:CSVReport-Value-Issue-AllowedValues' => 'Allowed \'%1$s\' value(s): %2$s~~',
 	'UI:CSVReport-Value-Issue-Unknown' => '属性 \'%1$s\' への予期されない値: %2$s',
 	'UI:CSVReport-Row-Issue-Inconsistent' => '属性がお互いに整合しません: %1$s',
 	'UI:CSVReport-Row-Issue-Attribute' => '予期されない属性値',
 	'UI:CSVReport-Row-Issue-MissingExtKey' => '作成できません, 外部キーがありません: %1$s',
 	'UI:CSVReport-Row-Issue-DateFormat' => '間違ったデータフォーマット',
+	'UI:CSVReport-Row-Issue-ExpectedDateFormat' => 'Expected format: %1$s~~',
 	'UI:CSVReport-Row-Issue-Reconciliation' => '調整に失敗しました',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'あいまいな調整',
 	'UI:CSVReport-Row-Issue-Internal' => '内部エラー: %1$s, %2$s',
-
 	'UI:CSVReport-Icon-Unchanged' => '未変更',
 	'UI:CSVReport-Icon-Modified' => '修正済み',
 	'UI:CSVReport-Icon-Missing' => '不足',
@@ -672,14 +742,32 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Stats-Errors' => '%1$.0f %% ロードされたオブジェクトはエラーがあり、無視されます。',
 	'UI:CSVReport-Stats-Created' => '%1$.0f %% ロードされたオブジェクトは作成されます。',
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% of ロードされたオブジェクトは修正されます。',
-
 	'UI:CSVExport:AdvancedMode' => 'アドバンスドモード',
 	'UI:CSVExport:AdvancedMode+' => 'アドバンスドモードでは、エキスポートのためにいくつかのカラムが追加されます。: オブジェクトのid, 外部キーの id ,そして調整属性。',
 	'UI:CSVExport:LostChars' => 'エンコーディングの課題',
 	'UI:CSVExport:LostChars+' => 'ダウンロードファイルは %1$s でエンコードされます. iTop はこのフォーマットと整合性のない文字を検出しました。 これらの文字は代りの文字になります。（たとえばアクセント付き文字からはアクセント記号が無くなります。または、削除されます。 Webブラウザからコピー／ペーストが出来ます。 あるいは、システム管理者にエンコードの変更を問い合わせください。 (See parameter \'csv_file_default_charset\').',
-
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB 監査',
 	'UI:Audit:InteractiveAudit' => '対話型監査',
+	'UI:Audit:Interactive:All:Title' => 'Audit results~~',
+	'UI:Audit:Interactive:All:SubTitle' => 'Full audit: includes all rules, all categories, all domains~~',
+	'UI:Audit:Interactive:All:BreadCrumb' => 'Full audit~~',
+	'UI:Audit:Interactive:All:BreadCrumb+' => 'Audit results for all rules~~',
+	'UI:Audit:Interactive:Categories:Title' => 'Audit results for categories: %1$s~~',
+	'UI:Audit:Interactive:Categories:SubTitle' => 'Audit results for all the rules belonging to one of those %1$s categories~~',
+	'UI:Audit:Interactive:Categories:BreadCrumb' => 'Categories~~',
+	'UI:Audit:Interactive:Categories:BreadCrumb+' => 'Audit categories: %1$s~~',
+	'UI:Audit:Interactive:Domain:Title' => 'Audit results for Domain: %1$s~~',
+	'UI:Audit:Interactive:Domain:SubTitle' => 'Audit results for all the rules belonging to a category related to the domain: %1$s~~',
+	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s~~',
+	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit for Domain: %1$s~~',
+	'UI:Audit:Interactive:Selection:Title' => 'Selection of an audit~~',
+	'UI:Audit:Interactive:Selection:SubTitle' => 'Select a domain to get the results limited to this domain or select "All categories" to get a full audit (can take time or even fail if too much data to audit)~~',
+	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selection~~',
+	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Selection of an Audit to run~~',
+	'UI:Audit:Interactive:Selection:BadgeAll' => 'All categories~~',
+	'UI:Audit:Interactive:Button:Back' => 'Back to the audit~~',
+	'UI:Audit:Interactive:Button:Configuration' => 'Audit configuration~~',
+	'UI:Audit:ViewRules' => 'Check the rules~~',
 	'UI:Audit:HeaderAuditRule' => '監査ルール',
 	'UI:Audit:HeaderNbObjects' => 'オブジェクト数',
 	'UI:Audit:HeaderNbErrors' => 'エラー数',
@@ -695,8 +783,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
 	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
-
-
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQLクエリ評価',
 	'UI:RunQuery:QueryExamples' => 'クエリの例',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
@@ -715,7 +801,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'An error occured while running the query~~',
 	'UI:Query:UrlForExcel' => 'MS-Excel Webクエリに使用するURL',
-	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
+	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'.Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' オブジェクトスキーマ',
 	'UI:Schema:TitleForClass' => '%1$s schema~~',
 	'UI:Schema:CategoryMenuItem' => 'カテゴリ <b>%1$s</b>',
@@ -735,7 +821,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:Label' => 'ラベル',
 	'UI:Schema:Label+' => '属性のラベル',
 	'UI:Schema:Type' => '型',
-
 	'UI:Schema:Type+' => '属性のデータ型',
 	'UI:Schema:Origin' => 'オリジン',
 	'UI:Schema:Origin+' => 'この属性が定義されているベースクラス',
@@ -783,6 +868,16 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
+	'UI:Schema:Events' => 'Events~~',
+	'UI:Schema:Events:Defined' => 'Defined events~~',
+	'UI:Schema:Events:NoEvent' => 'No event defined~~',
+	'UI:Schema:Events:Listeners' => 'Event listeners~~',
+	'UI:Schema:Events:NoListener' => 'No event listener~~',
+	'UI:Schema:Events:Event' => 'Event~~',
+	'UI:Schema:Events:Description' => 'Description~~',
+	'UI:Schema:Events:Listener' => 'Listener~~',
+	'UI:Schema:Events:Rank' => 'Rank~~',
+	'UI:Schema:Events:Module' => 'Module~~',
 	'UI:LinksWidget:Autocomplete+' => '最初の3文字をタイプしてください...',
 	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Test query',
@@ -874,7 +969,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:SystemIntrusion' => 'アクセスが拒否されました。あなたが許可されていない操作を実行しようとしています。',
 	'UI:FatalErrorMessage' => '致命的なエラー、ITOPを続行することはできません。',
 	'UI:Error_Details' => 'エラー：%1$s',
-
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' ユーザ管理 - プロフィールプロジェクション',
 	'UI:UserManagement:Class' => 'クラス',
 	'UI:UserManagement:Class+' => 'オブジェクトのクラス',
@@ -909,66 +1003,42 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserManagement:NoLifeCycleApplicable' => '該当なし',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'このクラスにはライフサイクルは定義されていません。',
 	'UI:UserManagement:GrantMatrix' => '権限マトリクス',
-
-	'Menu:AdminTools' => '管理ツール',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => '管理ツール',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System~~',
-
 	'UI:ChangeManagementMenu' => '変更管理',
 	'UI:ChangeManagementMenu+' => '変更管理',
 	'UI:ChangeManagementMenu:Title' => '変更管理概要',
 	'UI-ChangeManagementMenu-ChangesByType' => 'タイプ別変更',
 	'UI-ChangeManagementMenu-ChangesByStatus' => '状態別変更',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'まだ割り当てられていない変更',
-
 	'UI:ConfigurationManagementMenu' => '構成管理',
 	'UI:ConfigurationManagementMenu+' => '構成管理',
 	'UI:ConfigurationManagementMenu:Title' => 'インフラ概要',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'タイプ別のインフラ',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => '状態別のインフラ',
-
 	'UI:ConfigMgmtMenuOverview:Title' => '構成管理ダッシュボード',
 	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '状態別構成項目(CI)',
 	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'タイプ別構成項目(CI)',
-
 	'UI:RequestMgmtMenuOverview:Title' => '要求管理ダッシュボード',
 	'UI-RequestManagementOverview-RequestByService' => 'サービス別要求',
 	'UI-RequestManagementOverview-RequestByPriority' => '優先度別要求',
 	'UI-RequestManagementOverview-RequestUnassigned' => 'エージェントへ未割り当て要求',
-
 	'UI:IncidentMgmtMenuOverview:Title' => 'インシデント管理ダッシュボード',
 	'UI-IncidentManagementOverview-IncidentByService' => 'サービス別インシデント',
 	'UI-IncidentManagementOverview-IncidentByPriority' => '優先度別インシデント',
 	'UI-IncidentManagementOverview-IncidentUnassigned' => 'エージェントへ未割り当てインシデント',
-
 	'UI:ChangeMgmtMenuOverview:Title' => '変更管理ダッシュボード',
 	'UI-ChangeManagementOverview-ChangeByType' => 'タイプ別変更内容',
 	'UI-ChangeManagementOverview-ChangeUnassigned' => 'エージェントへ未割り当て変更内容',
 	'UI-ChangeManagementOverview-ChangeWithOutage' => '変更に伴う停止',
-
 	'UI:ServiceMgmtMenuOverview:Title' => 'サービス管理ダッシュボード',
 	'UI-ServiceManagementOverview-CustomerContractToRenew' => '30日以内に契約更新が必要な顧客',
 	'UI-ServiceManagementOverview-ProviderContractToRenew' => '30日以内に契約更新が必要なプロバイダ',
-
 	'UI:ContactsMenu' => '連絡先',
 	'UI:ContactsMenu+' => '連絡先',
 	'UI:ContactsMenu:Title' => '連絡先概要',
 	'UI-ContactsMenu-ContactsByLocation' => '場所別連絡先',
 	'UI-ContactsMenu-ContactsByType' => 'タイプ別連絡先',
 	'UI-ContactsMenu-ContactsByStatus' => '状態別連絡先',
-
-	'Menu:CSVImportMenu' => 'CSV インポート',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => '一括作成/一括更新',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:DataModelMenu' => 'データモデル',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'データモデル概要',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:ExportMenu' => 'エクスポート',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => '任意のクエリ結果をHTML、CSV、XMLでエクスポートする',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:NotificationsMenu' => '通知',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => '通知の設定',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => '通知の設定',
 	'UI:NotificationsMenu:Help' => 'ヘルプ',
 	'UI:NotificationsMenu:HelpContent' => '<p>'.ITOP_APPLICATION_SHORT.'では、通知はすべてカスタマイズが可能です。通知は<i>トリガーとアクション</i>という二つのオブジェクトがベースになっています。
@@ -999,53 +1069,18 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
 	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => '利用可能アクション',
-
 	'Menu:TagAdminMenu' => 'Tags configuration~~',
 	'Menu:TagAdminMenu+' => 'Tags values management~~',
 	'UI:TagAdminMenu:Title' => 'Tags configuration~~',
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
-
-	'Menu:AuditCategories' => '監査カテゴリ',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => '監査カテゴリ',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => '監査カテゴリ',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:RunQueriesMenu' => 'クエリ実行',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => '任意のクエリを実行',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:QueryMenu' => 'クエリのフレーズブック',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'クエリのフレーズブック',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:DataAdministration' => 'データ管理',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'データ管理',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UniversalSearchMenu' => '全検索',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => '何か...検索',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UserManagementMenu' => 'ユーザ管理',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'ユーザ管理',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:ProfilesMenu' => 'プロフィール',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'プロフィール',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'プロフィール',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UserAccountsMenu' => 'ユーザアカウント',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'ユーザアカウント',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-
 	'UI:iTopVersion:Short' => '%1$sバージョン%2$s',
 	'UI:iTopVersion:Long' => '%1$sバージョン%2$s-%3$s ビルド%4$s',
 	'UI:PropertiesTab' => 'プロパティ',
-
 	'UI:OpenDocumentInNewWindow_' => 'Open~~',
 	'UI:DownloadDocument_' => 'Download~~',
 	'UI:Document:NoPreview' => 'このタイプの文書はプレビューできません。',
 	'UI:Download-CSV' => 'ダウンロード-CSV %1$s',
-
 	'UI:DeadlineMissedBy_duration' => '%1$s によって消去されました。',
 	'UI:Deadline_LessThan1Min' => ' < 1分',
 	'UI:Deadline_Minutes' => '%1$d 分',
@@ -1124,9 +1159,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Enum:Undefined' => '未定義',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s 日 %2$s 時 %3$s 分 %4$s 秒',
 	'UI:ModifyAllPageTitle' => '全てを修正',
+	'UI:Modify_ObjectsOf_Class' => 'Modifying objects of class %1$s~~',
 	'UI:Modify_N_ObjectsOf_Class' => 'クラス%2$Sの%1$dオブジェクトを修正',
 	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'クラス%2$sの%3$d中%1$dを修正',
 	'UI:Menu:ModifyAll' => '修正...',
+	'UI:Menu:ModifyAll_Class' => 'Modify %1$s objects...~~',
+	'UI:Menu:ModifyAll_Link' => 'Modify %1$s...~~',
+	'UI:Menu:ModifyAll_Remote' => 'Modify %1$s...~~',
 	'UI:Button:ModifyAll' => '全て修正',
 	'UI:Button:PreviewModifications' => '修正をプレビュー >>',
 	'UI:ModifiedObject' => '修正されたオブジェクト',
@@ -1186,7 +1225,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
 	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
 	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
-
 	'UI:ConfigureThisList' => 'このリストを構成...',
 	'UI:ListConfigurationTitle' => 'リストコンフィギュレーション',
 	'UI:ColumnsAndSortOrder' => 'カラムと並び順:',
@@ -1202,10 +1240,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
 	'UI:Button:MoveUp' => '上へ',
 	'UI:Button:MoveDown' => '下へ',
-
 	'UI:OQL:UnknownClassAndFix' => '未知のクラス "%1$s"。 代りに "%2$s" を試すことが出来ます。',
 	'UI:OQL:UnknownClassNoFix' => '未知のクラス "%1$s"',
-
 	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
@@ -1216,13 +1252,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ImportDashboardText' => 'インポートするダッシュボードファイルを選択ください。:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
-
-
 	'UI:DashletCreation:Title' => '新しいダッシュレットを作成',
 	'UI:DashletCreation:Dashboard' => 'ダッシュボード',
 	'UI:DashletCreation:DashletType' => 'ダッシュレットタイプ',
 	'UI:DashletCreation:EditNow' => 'ダッシュレットの編集',
-
 	'UI:DashboardEdit:Title' => 'ダッシュボードエディター',
 	'UI:DashboardEdit:DashboardTitle' => '題名',
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh~~',
@@ -1230,38 +1263,31 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds~~',
 	'UI:DashboardEdit:Revert' => 'Revert~~',
 	'UI:DashboardEdit:Apply' => 'Apply~~',
-
 	'UI:DashboardEdit:Layout' => 'レイアウト',
 	'UI:DashboardEdit:Properties' => 'ダッシュボードプロパティ',
 	'UI:DashboardEdit:Dashlets' => '利用可能なダッシュレット',
 	'UI:DashboardEdit:DashletProperties' => 'ダッシュレットプロパティ',
-
 	'UI:Form:Property' => 'プロパティ',
 	'UI:Form:Value' => '値',
-
 	'UI:DashletUnknown:Label' => 'Unknown~~',
 	'UI:DashletUnknown:Description' => 'Unknown dashlet (might have been uninstalled)~~',
 	'UI:DashletUnknown:RenderText:View' => 'Unable to render this dashlet.~~',
 	'UI:DashletUnknown:RenderText:Edit' => 'Unable to render this dashlet (class "%1$s"). Check with your administrator if it is still available.~~',
 	'UI:DashletUnknown:RenderNoDataText:Edit' => 'No preview available for this dashlet (class "%1$s").~~',
 	'UI:DashletUnknown:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)~~',
-
 	'UI:DashletProxy:Label' => 'Proxy~~',
 	'UI:DashletProxy:Description' => 'Proxy dashlet~~',
 	'UI:DashletProxy:RenderNoDataText:Edit' => 'No preview available for this third-party dashlet (class "%1$s").~~',
 	'UI:DashletProxy:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)~~',
-
 	'UI:DashletPlainText:Label' => 'テキスト',
 	'UI:DashletPlainText:Description' => 'プレーンテキスト (フォーマットなし)',
 	'UI:DashletPlainText:Prop-Text' => 'テキスト',
 	'UI:DashletPlainText:Prop-Text:Default' => 'ここにテキストを入力ください...',
-
 	'UI:DashletObjectList:Label' => 'オブジェクトリスト',
 	'UI:DashletObjectList:Description' => 'オブジェクトリストダッシュレット',
 	'UI:DashletObjectList:Prop-Title' => '題名',
 	'UI:DashletObjectList:Prop-Query' => 'クエリ',
 	'UI:DashletObjectList:Prop-Menu' => 'メニュー',
-
 	'UI:DashletGroupBy:Prop-Title' => '題名',
 	'UI:DashletGroupBy:Prop-Query' => 'クエリ',
 	'UI:DashletGroupBy:Prop-Style' => 'スタイル',
@@ -1275,24 +1301,20 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (週の日)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (月の日)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'グループ化されるオブジェクトのフィールドを選択ください。',
-
 	'UI:DashletGroupByPie:Label' => '円グラフ',
 	'UI:DashletGroupByPie:Description' => '円グラフ',
 	'UI:DashletGroupByBars:Label' => '棒グラフ',
 	'UI:DashletGroupByBars:Description' => '棒グラフ',
 	'UI:DashletGroupByTable:Label' => 'グループ化 (table)による',
 	'UI:DashletGroupByTable:Description' => 'リスト (フィールドでグループ化)',
-
-	// New in 2.5
+    // New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function~~',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute~~',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction~~',
 	'UI:DashletGroupBy:Prop-OrderField' => 'Order by~~',
 	'UI:DashletGroupBy:Prop-Limit' => 'Limit~~',
-
 	'UI:DashletGroupBy:Order:asc' => 'Ascending~~',
 	'UI:DashletGroupBy:Order:desc' => 'Descending~~',
-
 	'UI:GroupBy:count' => 'Count~~',
 	'UI:GroupBy:count+' => 'Number of elements~~',
 	'UI:GroupBy:sum' => 'Sum~~',
@@ -1303,14 +1325,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:GroupBy:min+' => 'Minimum of %1$s~~',
 	'UI:GroupBy:max' => 'Maximum~~',
 	'UI:GroupBy:max+' => 'Maximum of %1$s~~',
-	// ---
-
+    // ---
 	'UI:DashletHeaderStatic:Label' => 'ヘッダー',
 	'UI:DashletHeaderStatic:Description' => '水平セパレータの表示',
 	'UI:DashletHeaderStatic:Prop-Title' => '題名',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => '連絡先',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'アイコン',
-
 	'UI:DashletHeaderDynamic:Label' => '統計付ヘッダー',
 	'UI:DashletHeaderDynamic:Description' => '状態付ヘッダー (..によるグループ化)',
 	'UI:DashletHeaderDynamic:Prop-Title' => '題名',
@@ -1321,11 +1341,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:DashletHeaderDynamic:Prop-Query' => 'クエリ',
 	'UI:DashletHeaderDynamic:Prop-GroupBy' => 'グループ化(Group by)',
 	'UI:DashletHeaderDynamic:Prop-Values' => '値',
-
 	'UI:DashletBadge:Label' => 'バッジ',
 	'UI:DashletBadge:Description' => '新規/検索付オブジェクトアイコン',
 	'UI:DashletBadge:Prop-Class' => 'クラス',
-
 	'DayOfWeek-Sunday' => '日',
 	'DayOfWeek-Monday' => '月',
 	'DayOfWeek-Tuesday' => '火',
@@ -1345,8 +1363,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Month-10' => 'October~~',
 	'Month-11' => 'November~~',
 	'Month-12' => 'December~~',
-
-	// Short version for the DatePicker
+    // Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su~~',
 	'DayOfWeek-Monday-Min' => 'Mo~~',
 	'DayOfWeek-Tuesday-Min' => 'Tu~~',
@@ -1366,13 +1383,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Month-10-Short' => 'Oct~~',
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
-	'Calendar-FirstDayOfWeek' => '0~~',// 0 = Sunday, 1 = Monday, etc...
-
+	'Calendar-FirstDayOfWeek' => '0~~',
+    // 0 = Sunday, 1 = Monday, etc...
 	'UI:Menu:ShortcutList' => 'ショートカットを作成',
+	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'ショートカットの名前変更',
 	'UI:ShortcutListDlg:Title' => 'このリストのショートカットを作成',
 	'UI:ShortcutDelete:Confirm' => 'このショートカットを本当に削除してもいいですか。',
-	'Menu:MyShortcuts' => '私のショートカット',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'ショートカット',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => '名前',
@@ -1386,12 +1403,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate~~',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Automatic refresh interval (seconds)~~',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'The minimum allowed is %1$d seconds~~',
-
 	'UI:FillAllMandatoryFields' => '全ての必須フィールドを入力ください。',
 	'UI:ValueMustBeSet' => 'Please specify a value~~',
 	'UI:ValueMustBeChanged' => 'Please change the value~~',
 	'UI:ValueInvalidFormat' => 'Invalid format~~',
-
 	'UI:CSVImportConfirmTitle' => 'Please confirm the operation~~',
 	'UI:CSVImportConfirmMessage' => 'Are you sure you want to do this?~~',
 	'UI:CSVImportError_items' => 'Errors: %1$d~~',
@@ -1417,11 +1432,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 <tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
 <tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
 </table>~~',
-
 	'UI:Button:Remove' => 'Remove~~',
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...~~',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s~~',
-
 	'UI:AboutBox' => 'About '.ITOP_APPLICATION_SHORT.'...~~',
 	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT.'~~',
 	'UI:About:DataModel' => 'Data model~~',
@@ -1431,12 +1444,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:About:ManualExtensionSource' => 'Extension~~',
 	'UI:About:Extension_Version' => 'Version: %1$s~~',
 	'UI:About:RemoteExtensionSource' => 'Data~~',
-
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.~~',
 	'UI:DisconnectedDlgTitle' => 'Warning!~~',
 	'UI:LoginAgain' => 'Login again~~',
 	'UI:StayOnThePage' => 'Stay on this page~~',
-
 	'ExcelExporter:ExportMenu' => 'Excel Export...~~',
 	'ExcelExporter:ExportDialogTitle' => 'Excel Export~~',
 	'ExcelExporter:ExportButton' => 'Export~~',
@@ -1449,7 +1460,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'ExcelExport:Statistics' => 'Statistics~~',
 	'portal:legacy_portal' => 'End-User Portal~~',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface~~',
-
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
 	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.~~',
@@ -1457,43 +1467,36 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
-
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 	'UI:Menu:PrintableVersion' => 'Printer friendly version~~',
-
 	'UI:BrowseInlineImages' => 'Browse images...~~',
 	'UI:UploadInlineImageLegend' => 'Upload a new image~~',
 	'UI:SelectInlineImageToUpload' => 'Select the image to upload~~',
 	'UI:AvailableInlineImagesLegend' => 'Available images~~',
 	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.~~',
-
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
 	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
-
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
-
-	// Search form
+    // Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
 	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
-	// - Add new criteria button
+    // - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used~~',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
-
-	// - Criteria header actions
+    // - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:Criteria:Remove' => 'Remove~~',
 	'UI:Search:Criteria:Locked' => 'Locked~~',
-
-	// - Criteria titles
-	//   - Default widget
+    // - Criteria titles
+    //   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty~~',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty~~',
@@ -1515,53 +1518,57 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s~~',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s~~',
-	//   - Numeric widget
-	//   None yet
-	//   - DateTime widget
+    //   - Numeric widget
+    //   None yet
+    //   - DateTime widget
 	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s~~',
-	//   - Enum widget
+    //   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
-	//   - TagSet widget
+    //   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-	//   - External key widget
+    //   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-	//   - Hierarchical key widget
+    //   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
-
-	// - Criteria operators
-	//   - Default widget
+    // - Criteria operators
+    //   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty~~',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty~~',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals~~',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Between~~',
-	//   - String widget
+    //   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains~~',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with~~',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
-	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',// => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',// => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',// > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',// => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',// > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',// => '≠',
-	//   - Tag Set Widget
+    //   - Numeric widget
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',
+    // => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',
+    // => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',
+    // > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',
+    // => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',
+    // > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',
+    // => '≠',
+    //   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
-
-	// - Other translations
+    // - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
 	'UI:Search:Value:Search:Placeholder' => 'Search...~~',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
@@ -1569,8 +1576,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Value:Autocomplete:NoResult' => 'No result.~~',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none~~',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles~~',
-
-	// - Widget other translations
+    // - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From~~',
 	'UI:Search:Criteria:Numeric:Until' => 'To~~',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any~~',
@@ -1584,10 +1590,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Any date~~',
 	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Any date~~',
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Children of the selected objects will be included.~~',
-
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
-
 	'UI:StateChanged' => 'State changed~~',
 ));
 
@@ -1598,16 +1602,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
-
 	'Expression:Unit:Short:DAY' => 'd~~',
 	'Expression:Unit:Short:WEEK' => 'w~~',
 	'Expression:Unit:Short:MONTH' => 'm~~',
 	'Expression:Unit:Short:YEAR' => 'y~~',
-
 	'Expression:Unit:Long:DAY' => 'day(s)~~',
 	'Expression:Unit:Long:HOUR' => 'hour(s)~~',
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
-
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
 ));
@@ -1631,46 +1632,32 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:DataSources' => '同期データソース',
 	'Menu:DataSources+' => '全ての同期データソース',
-	'Menu:WelcomeMenu' => 'ようこそ',
-	'Menu:WelcomeMenu+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
-	'Menu:WelcomeMenuPage' => 'ようこそ',
-	'Menu:WelcomeMenuPage+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
-	'Menu:AdminTools' => '管理ツール',
-	'Menu:AdminTools+' => '管理ツール',
-	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。',
-	'Menu:DataModelMenu' => 'データモデル',
-	'Menu:DataModelMenu+' => 'データモデル概要',
-	'Menu:ExportMenu' => 'エクスポート',
-	'Menu:ExportMenu+' => '任意のクエリ結果をHTML、CSV、XMLでエクスポートする',
-	'Menu:NotificationsMenu' => '通知',
-	'Menu:NotificationsMenu+' => '通知の設定',
 	'Menu:AuditCategories' => '監査カテゴリ',
 	'Menu:AuditCategories+' => '監査カテゴリ',
 	'Menu:Notifications:Title' => '監査カテゴリ',
-	'Menu:RunQueriesMenu'         => 'クエリ実行',
-	'Menu:RunQueriesMenu+'        => '任意のクエリを実行',
-	'Menu:QueryMenu'              => 'クエリのフレーズブック',
-	'Menu:QueryMenu+'             => 'クエリのフレーズブック',
-	'Menu:UniversalSearchMenu'    => '全検索',
-	'Menu:UniversalSearchMenu+'   => '何か...検索',
-	'Menu:UserManagementMenu'     => 'ユーザ管理',
-	'Menu:UserManagementMenu+'    => 'ユーザ管理',
-	'Menu:ProfilesMenu'           => 'プロフィール',
-	'Menu:ProfilesMenu+'          => 'プロフィール',
-	'Menu:ProfilesMenu:Title'     => 'プロフィール',
-	'Menu:UserAccountsMenu'       => 'ユーザアカウント',
-	'Menu:UserAccountsMenu+'      => 'ユーザアカウント',
+	'Menu:AuditCategories:Title' => 'Audit configuration~~',
+	'Menu:RunQueriesMenu' => 'クエリ実行',
+	'Menu:RunQueriesMenu+' => '任意のクエリを実行',
+	'Menu:QueryMenu' => 'クエリのフレーズブック',
+	'Menu:QueryMenu+' => 'クエリのフレーズブック',
+	'Menu:UniversalSearchMenu' => '全検索',
+	'Menu:UniversalSearchMenu+' => '何か...検索',
+	'Menu:UserManagementMenu' => 'ユーザ管理',
+	'Menu:UserManagementMenu+' => 'ユーザ管理',
+	'Menu:ProfilesMenu' => 'プロフィール',
+	'Menu:ProfilesMenu+' => 'プロフィール',
+	'Menu:ProfilesMenu:Title' => 'プロフィール',
+	'Menu:UserAccountsMenu' => 'ユーザアカウント',
+	'Menu:UserAccountsMenu+' => 'ユーザアカウント',
 	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
-	'Menu:MyShortcuts'            => '私のショートカット',
-	'Menu:UserManagement'         => 'User Management~~',
-	'Menu:Queries'                => 'Queries~~',
-	'Menu:ConfigurationTools'     => 'Configuration~~',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~'
 ));
-
 // Additional language entries not present in English dict
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard'   => 'Custom~~',
-	'UI:Dashboard:Edit'           => 'このページを編集...',
-	'UI:Dashboard:Revert'         => '元のバージョンに戻す...',
+	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Dashboard:Edit' => 'このページを編集...',
+	'UI:Dashboard:Revert' => '元のバージョンに戻す...'
 ));
