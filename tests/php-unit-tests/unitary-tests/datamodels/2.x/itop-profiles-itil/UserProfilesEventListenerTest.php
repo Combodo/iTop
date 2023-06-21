@@ -377,6 +377,23 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
 	}
 
+	public function testUserProfilesEventListenerInit_badlyconfigured(){
+		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, "a string instead of an array");
+
+		$oUserProfilesEventListener = new UserProfilesEventListener();
+		$oUserProfilesEventListener->Init();
+
+		$this->assertFalse($oUserProfilesEventListener->IsRepairmentEnabled());
+	}
+
+	public function testUserProfilesEventListenerInit_specifically_disabled(){
+		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, []);
+		$oUserProfilesEventListener = new UserProfilesEventListener();
+		$oUserProfilesEventListener->Init();
+
+		$this->assertFalse($oUserProfilesEventListener->IsRepairmentEnabled());
+	}
+
 	public function CustomizedPortalsProvider(){
 		return [
 			'console + customized portal' => [
@@ -411,7 +428,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 			'backoffice'
 		];
 
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', 'poweruserportal-repair-profile', 'Portal user');
+		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, ['Portal power user' => 'Portal user']);
 
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init($aPortalDispatcherData);
@@ -426,12 +443,36 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 			'backoffice'
 		];
 
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', 'poweruserportal-repair-profile', 'Dummy Profile');
+		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, ['Portal power user' => 'Dummy Profile']);
 
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init($aPortalDispatcherData);
 
 		$this->assertFalse($oUserProfilesEventListener->IsRepairmentEnabled());
+	}
+
+	public function testInit_ConfWithOneWarningProfile() {
+		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
+			['Change Supervisor' => 'Administrator', 'Portal power user' => null]);
+		$oUserProfilesEventListener = new UserProfilesEventListener();
+		$oUserProfilesEventListener->Init();
+		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
+	}
+
+	public function testInit_ConfWithFurtherWarningProfiles() {
+		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
+			['Change Supervisor' => null, 'Portal power user' => null]);
+		$oUserProfilesEventListener = new UserProfilesEventListener();
+		$oUserProfilesEventListener->Init();
+		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
+	}
+
+	public function testInit_ConfWithFurtherWarningProfilesAndOneRepairment() {
+		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
+			['Portal power user' => null, 'Change Supervisor' => null, 'Administrator' => "REST Services User"]);
+		$oUserProfilesEventListener = new UserProfilesEventListener();
+		$oUserProfilesEventListener->Init();
+		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
 	}
 
 	public function testRepairProfiles_WithAnotherFallbackProfile()
@@ -442,7 +483,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser->Set('password', 'ABCD1234@gabuzomeu');
 		$oUser->Set('language', 'EN US');
 
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', 'poweruserportal-repair-profile', 'Change Supervisor');
+		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, ['Portal power user' => 'Change Supervisor']);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
 		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
@@ -458,5 +499,53 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 
 		$this->assertContains('Change Supervisor', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 		$this->assertContains('Portal power user', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+	}
+
+	public function testRepairProfiles_MultiRepairmentConf()
+	{
+		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
+			[
+				'Administrator' => 'REST Services User',
+				'Portal power user' => 'Change Supervisor'
+			]
+		);
+		$oUserProfilesEventListener = new UserProfilesEventListener();
+		$oUserProfilesEventListener->Init();
+		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
+
+		$oUser = new \UserLocal();
+		$sLogin = 'testUserLocalCreationWithPortalPowerUserProfile-'.uniqid();
+		$oUser->Set('login', $sLogin);
+		$oUser->Set('password', 'ABCD1234@gabuzomeu');
+		$oUser->Set('language', 'EN US');
+		$this->CreateUserForProfileTesting($oUser, ['Portal power user'], false);
+		$oUserProfilesEventListener->RepairProfiles($oUser);
+
+		$oUserProfileList = $oUser->Get('profile_list');
+		$aProfilesAfterCreation=[];
+		while (($oProfile = $oUserProfileList->Fetch()) != null){
+			$aProfilesAfterCreation[] = $oProfile->Get('profile');
+		}
+
+		$this->assertContains('Change Supervisor', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+		$this->assertContains('Portal power user', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+
+		$oUser2 = new \UserLocal();
+		$sLogin = 'testUserLocalCreationWithPortalPowerUserProfile-'.uniqid();
+		$oUser2->Set('login', $sLogin);
+		$oUser2->Set('password', 'ABCD1234@gabuzomeu');
+		$oUser2->Set('language', 'EN US');
+
+		$this->CreateUserForProfileTesting($oUser2, ['Administrator'], false);
+		$oUserProfilesEventListener->RepairProfiles($oUser2);
+
+		$oUserProfileList = $oUser2->Get('profile_list');
+		$aProfilesAfterCreation=[];
+		while (($oProfile = $oUserProfileList->Fetch()) != null){
+			$aProfilesAfterCreation[] = $oProfile->Get('profile');
+		}
+
+		$this->assertContains('Administrator', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+		$this->assertContains('REST Services User', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 	}
 }

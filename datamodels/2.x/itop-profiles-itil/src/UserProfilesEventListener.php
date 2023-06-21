@@ -24,8 +24,11 @@ define('POWER_USER_PORTAL_PROFILE_NAME', 'Portal power user');
  */
 class UserProfilesEventListener implements iEventServiceSetup
 {
-	private $oUserPortalProfile;
+	const USERPROFILE_REPAIR_ITOP_PARAM_NAME = 'poweruserportal-repair-profile';
 	private $bIsRepairmentEnabled = false;
+
+	//map: non standalone profile name => repairing profile id
+	private $aNonStandaloneProfilesMap = [];
 
 	/**
 	 * @inheritDoc
@@ -87,13 +90,16 @@ class UserProfilesEventListener implements iEventServiceSetup
 			$aPortalDispatcherData = \PortalDispatcherData::GetData();
 		}
 
-		$sRepairmentProfile = \utils::GetConfig()->GetModuleSetting('itop-profiles-itil', 'poweruserportal-repair-profile', null);
+		$aNonStandaloneProfiles = \utils::GetConfig()->GetModuleSetting('itop-profiles-itil', self::USERPROFILE_REPAIR_ITOP_PARAM_NAME, null);
 
-		if (is_null($sRepairmentProfile) && count($aPortalDispatcherData) > 2){
-			//when there are further portals we dont want to force a specific portal by repairing the associated profiles to a user
-			$this->bIsRepairmentEnabled = false;
-			return;
-		} else{
+		//when there are customized portals on an itop, choosing a specific profile means choosing which portal user will access
+		//in that case, itop administrator has to specify it via itop configuration. we dont use default profiles repairment otherwise
+		if (is_null($aNonStandaloneProfiles)){
+			if (count($aPortalDispatcherData) > 2){
+				$this->bIsRepairmentEnabled = false;
+				return;
+			}
+
 			$aPortalNames = array_keys($aPortalDispatcherData);
 			sort($aPortalNames);
 			if ($aPortalNames !== ['backoffice', 'itop-portal']){
@@ -102,28 +108,25 @@ class UserProfilesEventListener implements iEventServiceSetup
 			}
 		}
 
-		if (is_null($sRepairmentProfile)){
-			$sRepairmentProfile = PORTAL_PROFILE_NAME;
+		if (is_null($aNonStandaloneProfiles)){
+			//default configuration in the case there are no customized portals
+			$aNonStandaloneProfiles = [ POWER_USER_PORTAL_PROFILE_NAME => PORTAL_PROFILE_NAME ];
+		}
+
+		if (! is_array($aNonStandaloneProfiles)){
+			\IssueLog::Error(sprintf("%s is badly configured. it should be an array.", self::USERPROFILE_REPAIR_ITOP_PARAM_NAME), null, [self::USERPROFILE_REPAIR_ITOP_PARAM_NAME => $aNonStandaloneProfiles]);
+			$this->bIsRepairmentEnabled = false;
+			return;
+		}
+
+		if (empty($aNonStandaloneProfiles)){
+			//feature specifically disabled in itop configuration
+			$this->bIsRepairmentEnabled = false;
+			return;
 		}
 
 		try {
-			$sOQL = sprintf("SELECT URP_Profiles WHERE name = '%s'", $sRepairmentProfile);
-			$oSearch = \DBSearch::FromOQL($sOQL);
-			$oSearch->AllowAllData();
-			$oSet = new \DBObjectSet($oSearch);
-			if ($oSet->Count() !== 1) {
-				//user portal profile does not exist
-				//current iTop is customized enough to disable repairment
-				$this->bIsRepairmentEnabled = false;
-				return;
-			}
-
-			$this->oUserPortalProfile = $oSet->Fetch();
-			if (is_null($this->oUserPortalProfile)){
-				//may be not required. preventive code to disable repairment
-				$this->bIsRepairmentEnabled = false;
-				return;
-			}
+			$this->FetchRepairingProfileIds($aNonStandaloneProfiles);
 		} catch (\Exception $e) {
 			IssueLog::Error('Exception when searching user portal profile', LogChannels::DM_CRUD, [
 				'exception_message' => $e->getMessage(),
@@ -136,6 +139,43 @@ class UserProfilesEventListener implements iEventServiceSetup
 		$this->bIsRepairmentEnabled = true;
 	}
 
+	public function FetchRepairingProfileIds(array $aNonStandaloneProfiles) : void {
+		$aProfilesToSearch = array_unique(array_values($aNonStandaloneProfiles));
+		if(($iIndex = array_search(null, $aProfilesToSearch)) !== false) {
+			unset($aProfilesToSearch[$iIndex]);
+		}
+
+		if (1 === count($aProfilesToSearch)){
+			$sInCondition = sprintf('"%s"', array_pop($aProfilesToSearch));
+		} else {
+			$sInCondition = sprintf('"%s"', implode('","', $aProfilesToSearch));
+		}
+
+		$sOql = "SELECT URP_Profiles WHERE name IN ($sInCondition)";
+		$oSearch = \DBSearch::FromOQL($sOql);
+		$oSearch->AllowAllData();
+		$oSet = new \DBObjectSet($oSearch);
+		$aProfiles = [];
+		while(($oProfile = $oSet->Fetch()) != null) {
+			$sProfileName = $oProfile->Get('name');
+			$aProfiles[$sProfileName] = $oProfile->GetKey();
+		}
+
+		$this->aNonStandaloneProfilesMap = [];
+		foreach ($aNonStandaloneProfiles as $sNonStandaloneProfileName => $sRepairProfileName) {
+			if (is_null($sRepairProfileName)) {
+				$this->aNonStandaloneProfilesMap[$sNonStandaloneProfileName] = null;
+				continue;
+			}
+
+			if (!array_key_exists($sRepairProfileName, $aProfiles)) {
+				throw new \Exception(sprintf("%s is badly configured. profile $sRepairProfileName does not exist.", self::USERPROFILE_REPAIR_ITOP_PARAM_NAME));
+			}
+
+			$this->aNonStandaloneProfilesMap[$sNonStandaloneProfileName] = $aProfiles[$sRepairProfileName];
+		}
+	}
+
 	public function RepairProfiles(\User $oUser) : void
 	{
 		if (!is_null($oUser))
@@ -143,14 +183,20 @@ class UserProfilesEventListener implements iEventServiceSetup
 			$oCurrentUserProfileSet = $oUser->Get('profile_list');
 			if ($oCurrentUserProfileSet->Count() === 1){
 				$oProfile = $oCurrentUserProfileSet->Fetch();
+				$sSingleProfileName = $oProfile->Get('profile');
 
-				if (POWER_USER_PORTAL_PROFILE_NAME === $oProfile->Get('profile')){
-					//add portal user
-					// power portal user is not a standalone profile (it will break console UI)
-					$oUserProfile = new \URP_UserProfile();
-					$oUserProfile->Set('profileid', $this->oUserPortalProfile->GetKey());
-					$oCurrentUserProfileSet->AddItem($oUserProfile);
-					$oUser->Set('profile_list', $oCurrentUserProfileSet);
+				if (array_key_exists($sSingleProfileName, $this->aNonStandaloneProfilesMap)) {
+					$sRepairingProfileId = $this->aNonStandaloneProfilesMap[$sSingleProfileName];
+					if (is_null($sRepairingProfileId)){
+						//notify current user via session messages that there will be an issue
+						//without preventing from commiting
+					} else {
+						//completing profiles profiles by adding repairing one : by default portal user to a power portal user
+						$oUserProfile = new \URP_UserProfile();
+						$oUserProfile->Set('profileid', $sRepairingProfileId);
+						$oCurrentUserProfileSet->AddItem($oUserProfile);
+						$oUser->Set('profile_list', $oCurrentUserProfileSet);
+					}
 				}
 			}
 		}
