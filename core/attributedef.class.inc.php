@@ -3873,6 +3873,12 @@ class AttributeApplicationLanguage extends AttributeString
 		{
 			$aLanguageCodes[$sLangCode] = $aInfo['description'].' ('.$aInfo['localized_description'].')';
 		}
+
+		// N°6462 This should be sorted directly in \Dict during the compilation but we can't for 2 reasons:
+		// - Additional languages can be added on the fly even though it is not recommended
+		// - Formatting is done at run time (just above)
+		natcasesort($aLanguageCodes);
+
 		$aParams["allowed_values"] = new ValueSetEnum($aLanguageCodes);
 		parent::__construct($sCode, $aParams);
 	}
