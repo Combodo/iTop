@@ -2927,52 +2927,7 @@ abstract class MetaModel
 		}
 
 		self::$m_sTablePrefix = $sTablePrefix;
-
-		// Build the list of available extensions
-		//
-		$aInterfaces = [
-			'iApplicationUIExtension',
-			'iPreferencesExtension',
-			'iApplicationObjectExtension',
-			'iLoginFSMExtension',
-			'iLoginUIExtension',
-			'iLogoutExtension',
-			'iQueryModifier',
-			'iOnClassInitialization',
-			'iPopupMenuExtension',
-			'iPageUIExtension',
-			'iPageUIBlockExtension',
-			'iBackofficeLinkedScriptsExtension',
-			'iBackofficeEarlyScriptExtension',
-			'iBackofficeScriptExtension',
-			'iBackofficeInitScriptExtension',
-			'iBackofficeReadyScriptExtension',
-			'iBackofficeLinkedStylesheetsExtension',
-			'iBackofficeStyleExtension',
-			'iBackofficeDictEntriesExtension',
-			'iBackofficeDictEntriesPrefixesExtension',
-			'iPortalUIExtension',
-			'ModuleHandlerApiInterface',
-			'iNewsroomProvider',
-			'iModuleExtension',
-		];
-		foreach($aInterfaces as $sInterface)
-		{
-			self::$m_aExtensionClassNames[$sInterface] = array();
-		}
-
-		foreach(get_declared_classes() as $sPHPClass)
-		{
-			$oRefClass = new ReflectionClass($sPHPClass);
-			$oExtensionInstance = null;
-			foreach($aInterfaces as $sInterface)
-			{
-				if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable())
-				{
-					self::$m_aExtensionClassNames[$sInterface][$sPHPClass] = $sPHPClass;
-				}
-			}
-		}
+		self::InitExtensions();
 
 		// Initialize the classes (declared attributes, etc.)
 		//
@@ -7640,6 +7595,56 @@ abstract class MetaModel
 	{
 		if (isset(self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()])) {
 			unset(self::$m_aReentranceProtection[get_class($oObject)][$oObject->GetKey()]);
+		}
+	}
+
+	/**
+	 * For test purpose
+	 * @throws \ReflectionException
+	 * @since 3.1.0
+	 */
+	public static function InitExtensions()
+	{
+		// Build the list of available extensions
+		//
+		$aInterfaces = [
+			'iApplicationUIExtension',
+			'iPreferencesExtension',
+			'iApplicationObjectExtension',
+			'iLoginFSMExtension',
+			'iLoginUIExtension',
+			'iLogoutExtension',
+			'iQueryModifier',
+			'iOnClassInitialization',
+			'iPopupMenuExtension',
+			'iPageUIExtension',
+			'iPageUIBlockExtension',
+			'iBackofficeLinkedScriptsExtension',
+			'iBackofficeEarlyScriptExtension',
+			'iBackofficeScriptExtension',
+			'iBackofficeInitScriptExtension',
+			'iBackofficeReadyScriptExtension',
+			'iBackofficeLinkedStylesheetsExtension',
+			'iBackofficeStyleExtension',
+			'iBackofficeDictEntriesExtension',
+			'iBackofficeDictEntriesPrefixesExtension',
+			'iPortalUIExtension',
+			'ModuleHandlerApiInterface',
+			'iNewsroomProvider',
+			'iModuleExtension',
+		];
+		foreach ($aInterfaces as $sInterface) {
+			self::$m_aExtensionClassNames[$sInterface] = array();
+		}
+
+		foreach (get_declared_classes() as $sPHPClass) {
+			$oRefClass = new ReflectionClass($sPHPClass);
+			$oExtensionInstance = null;
+			foreach ($aInterfaces as $sInterface) {
+				if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable()) {
+					self::$m_aExtensionClassNames[$sInterface][$sPHPClass] = $sPHPClass;
+				}
+			}
 		}
 	}
 }
