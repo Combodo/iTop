@@ -1970,6 +1970,7 @@ SQL;
 
 	/**
 	 * @param string $sValue
+	 * @param bool $bDoubleEncode Whether to double encode the value or not
 	 *
 	 * @return string passed value with only characters having a special meaning in HTML escaped as entities
 	 *    Since 3.0.0 we were using for this {@link HtmlEntities} but it was overkill and leads to double escaping !
@@ -1977,14 +1978,15 @@ SQL;
 	 * @uses \htmlspecialchars()
 	 * @link https://www.php.net/manual/fr/function.htmlspecialchars.php
 	 * @since 3.0.0 N°3623
+	 * @since 3.1.0 N°6405 Add $bDoubleEncode parameter
 	 */
-	public static function EscapeHtml($sValue)
+	public static function EscapeHtml($sValue, bool $bDoubleEncode = false)
 	{
 		return htmlspecialchars(
 			$sValue ?? '',
 			ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5,
 			WebPage::PAGES_CHARSET,
-			false
+			$bDoubleEncode
 		);
 	}
 
