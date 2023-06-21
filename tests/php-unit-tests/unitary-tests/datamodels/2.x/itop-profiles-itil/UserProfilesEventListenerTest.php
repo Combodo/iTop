@@ -377,13 +377,27 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
 	}
 
-	public function testUserProfilesEventListenerInit_furtherportals_norepairmentconfigured(){
-		$aPortalDispatcherData = [
-			'itop-portal',
-			'customer-portal',
-			'backoffice'
+	public function CustomizedPortalsProvider(){
+		return [
+			'console + customized portal' => [
+				'aPortalDispatcherData' => [
+					'customer-portal',
+					'backoffice'
+				]],
+			'console + itop portal + customized portal' => [
+				'aPortalDispatcherData' => [
+					'itop-portal',
+					'customer-portal',
+					'backoffice'
+				]
+			],
 		];
+	}
 
+	/**
+	 * @dataProvider CustomizedPortalsProvider
+	 */
+	public function testUserProfilesEventListenerInit_furtherportals_norepairmentconfigured($aPortalDispatcherData){
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init($aPortalDispatcherData);
 

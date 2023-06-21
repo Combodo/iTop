@@ -89,10 +89,17 @@ class UserProfilesEventListener implements iEventServiceSetup
 
 		$sRepairmentProfile = \utils::GetConfig()->GetModuleSetting('itop-profiles-itil', 'poweruserportal-repair-profile', null);
 
-		if (is_null($sRepairmentProfile) && sizeof($aPortalDispatcherData) > 2){
+		if (is_null($sRepairmentProfile) && count($aPortalDispatcherData) > 2){
 			//when there are further portals we dont want to force a specific portal by repairing the associated profiles to a user
 			$this->bIsRepairmentEnabled = false;
 			return;
+		} else{
+			$aPortalNames = array_keys($aPortalDispatcherData);
+			sort($aPortalNames);
+			if ($aPortalNames !== ['backoffice', 'itop-portal']){
+				$this->bIsRepairmentEnabled = false;
+				return;
+			}
 		}
 
 		if (is_null($sRepairmentProfile)){
