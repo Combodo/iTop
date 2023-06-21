@@ -97,7 +97,7 @@ abstract class ValueSetDefinition
 	public function SortValues(array &$aValues): void
 	{
 		// Sort alphabetically on values
-		asort($aValues);
+		natcasesort($aValues);
 	}
 
 	abstract protected function LoadValues($aArgs);
@@ -465,11 +465,11 @@ class ValueSetEnum extends ValueSetDefinition
 {
 	protected $m_values;
 	/**
-	 * @var bool $bSortByValue If true, values will be sorted at runtime, otherwise it is sorted at compile time in a predefined order.
+	 * @var bool $bSortByValues If true, values will be sorted at runtime (on their values, not their keys), otherwise it is sorted at compile time in a predefined order.
 	 *                         {@see \MFCompiler::CompileAttributeEnumValues()} for complete reasons.
 	 * @since 3.1.0 N°1646
 	 */
-	protected bool $bSortByValue;
+	protected bool $bSortByValues;
 
 	/**
 	 * @param array|string $Values
@@ -477,20 +477,20 @@ class ValueSetEnum extends ValueSetDefinition
 	 *
 	 * @since 3.1.0 N°1646 Add $bLocalizedSort parameter
 	 */
-	public function __construct($Values, bool $bSortByValue = false)
+	public function __construct($Values, bool $bSortByValues = false)
 	{
 		$this->m_values = $Values;
-		$this->bSortByValue = $bSortByValue;
+		$this->bSortByValues = $bSortByValues;
 	}
 
 	/**
-	 * @see \ValueSetEnum::$bSortByValue
+	 * @see \ValueSetEnum::$bSortByValues
 	 * @return bool
 	 * @since 3.1.0 N°1646
 	 */
 	public function IsSortedByValues(): bool
 	{
-		return $this->bSortByValue;
+		return $this->bSortByValues;
 	}
 
 	// Helper to export the data model
@@ -507,8 +507,8 @@ class ValueSetEnum extends ValueSetDefinition
 	public function SortValues(array &$aValues): void
 	{
 		// Force sort by values only if necessary
-		if ($this->bSortByValue) {
-			asort($aValues);
+		if ($this->bSortByValues) {
+			natcasesort($aValues);
 			return;
 		}
 
@@ -548,9 +548,13 @@ class ValueSetEnum extends ValueSetDefinition
 
 class ValueSetEnumPadded extends ValueSetEnum
 {
-	public function __construct($Values)
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0 N°6448 Add $bSortByValues parameter
+	 */
+	public function __construct($Values, bool $bSortByValues = false)
 	{
-		parent::__construct($Values);
+		parent::__construct($Values, $bSortByValues);
 		if (is_string($Values))
 		{
 			$this->LoadValues(null);
@@ -562,6 +566,7 @@ class ValueSetEnumPadded extends ValueSetEnum
 		$aPaddedValues = array();
 		foreach ($this->m_aValues as $sKey => $sVal)
 		{
+			// Pad keys to the min. length required by the \AttributeSet
 			$sKey = str_pad($sKey, 3, '_', STR_PAD_LEFT);
 			$aPaddedValues[$sKey] = $sVal;
 		}
@@ -610,7 +615,7 @@ class ValueSetEnumClasses extends ValueSetEnum
 	public function __construct($sCategories = '', $sAdditionalValues = '')
 	{
 		$this->m_sCategories = $sCategories;
-		parent::__construct($sAdditionalValues);
+		parent::__construct($sAdditionalValues, true /* Classes are always sorted alphabetically */);
 	}
 
 	protected function LoadValues($aArgs)
