@@ -37,6 +37,14 @@ abstract class CellChangeSpec
 		return $this->m_proposedValue;
 	}
 
+	/**
+	 * @since 3.1.0 N°5305
+	 */
+	public function SetDisplayableValue(string $sDisplayableValue)
+	{
+		$this->m_proposedValue = $sDisplayableValue;
+	}
+
 	public function GetOql()
 	{
 		return $this->m_sOql;

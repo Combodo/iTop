@@ -474,6 +474,7 @@ try {
 					if (isset($aExternalKeysByColumn[$iNumber - 1])) {
 						$sExtKeyName = $aExternalKeysByColumn[$iNumber - 1];
 						$oExtKeyCellStatus = $aResRow[$sExtKeyName];
+						$oExtKeyCellStatus->SetDisplayableValue($oCellStatus->GetDisplayableValue());
 						$oCellStatus = $oExtKeyCellStatus;
 					}
 					$sHtmlValue = $oCellStatus->GetDisplayableValue();
