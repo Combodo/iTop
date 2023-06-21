@@ -11302,6 +11302,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 			}
 			$aAllowedAttributes[$sAttCode] = $sLabel;
 		}
+		// N°6460 Always sort on the labels, not on the datamodel definition order
+		natcasesort($aAllowedAttributes);
+
 		return $aAllowedAttributes;
 	}
 
