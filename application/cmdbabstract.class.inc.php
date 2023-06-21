@@ -6021,14 +6021,16 @@ JS
 		// - we have a EVENT_DB_LINKS_CHANGED listener on Ticket that will update impacted items, so it will create new lnkApplicationSolutionToFunctionalCI
 		// We want to avoid launching the listener twice, first here, and secondly after saving the Ticket in the listener
 		// By disabling the event to be fired, we can remove the current object from the attribute !
-		/** @noinspection PhpRedundantOptionalArgumentInspection */
-		$oObject = MetaModel::GetObject($sClass, $sId, true);
-		self::SetEventDBLinksChangedBlocked(true);
-		MetaModel::StartReentranceProtection($oObject);
-		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
-		MetaModel::StopReentranceProtection($oObject);
-		if ($oObject->IsModified()) {
-			$oObject->DBUpdate();
+		$oObject = MetaModel::GetObject($sClass, $sId, false);
+		// N°6408 The object can have been deleted
+		if (!is_null($oObject)) {
+			self::SetEventDBLinksChangedBlocked(true);
+			MetaModel::StartReentranceProtection($oObject);
+			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
+			MetaModel::StopReentranceProtection($oObject);
+			if ($oObject->IsModified()) {
+				$oObject->DBUpdate();
+			}
 		}
 		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 		cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
