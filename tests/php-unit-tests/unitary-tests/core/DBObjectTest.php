@@ -116,13 +116,13 @@ class DBObjectTest extends ItopDataTestCase
 		$oOrg->DBUpdate();
 
 		$this->assertCount(0, $oOrg->ListChanges());
-		$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
+		$this->assertCount(1, $oOrg->ListPreviousValuesForUpdatedAttributes());
 
 		$oOrg->Set('name', $oOrg->Get('name'));
 		$this->assertCount(0, $oOrg->ListChanges());
 		$oOrg->DBUpdate();
 		$this->assertCount(0, $oOrg->ListChanges());
-		$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
+		$this->assertCount(1, $oOrg->ListPreviousValuesForUpdatedAttributes());
 
 		$oOrg->DBDelete();
 
@@ -132,7 +132,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oOrg->Set('code', strtoupper('testListPreviousValuesForUpdatedAttributes'));
 		$oOrg->DBUpdate();
 		$oOrg->DBUpdate();
-		$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
+		$this->assertCount(1, $oOrg->ListPreviousValuesForUpdatedAttributes());
 	}
 
 	/**
