@@ -86,13 +86,13 @@ class lnkAuditCategoryToAuditDomain extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "application, grant_by_profile",
-			"key_type" => "autoincrement",
-			"name_attcode" => "",
-			"state_attcode" => "",
-			"reconc_keys" => array('category_id', 'domain_id'),
-			"db_table" => "priv_link_audit_category_domain",
-			"db_key_field" => "id",
+			"category"            => "application, grant_by_profile",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('category_id', 'domain_id'),
+			"db_table"            => "priv_link_audit_category_domain",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 			"is_link" => true,
 		);
