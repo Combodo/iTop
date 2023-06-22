@@ -8349,7 +8349,7 @@ class AttributeBlob extends AttributeDefinition
 			$aValues[$this->GetCode().'_data'] = '';
 			$aValues[$this->GetCode().'_mimetype'] = '';
 			$aValues[$this->GetCode().'_filename'] = '';
-			$aValues[$this->GetCode().'_downloads_count'] = \ormDocument::DEFAULT_DOWNLOADS_COUNT;
+			$aValues[$this->GetCode().'_downloads_count'] = ormDocument::DEFAULT_DOWNLOADS_COUNT;
 		}
 
 		return $aValues;
