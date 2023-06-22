@@ -24,12 +24,12 @@
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ServiceManagement' => 'Service Management',
-	'Menu:ServiceManagement+' => 'Service Management-Übersicht',
+	'Menu:ServiceManagement+' => 'Service-Management-Übersicht',
 	'Menu:Service:Overview' => 'Übersicht',
-	'Menu:Service:Overview+' => '',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Verträge nach Service Level',
+	'Menu:Service:Overview+' => 'Überblick über das Service-Management',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Verträge nach Service-Level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Verträge nach Status',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Verträge, die in weniger als 30 Tagen enden',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Verträge, die in weniger als 30 Tagen auslaufen',
 	'Menu:ProviderContract' => 'Provider-Verträge',
 	'Menu:ProviderContract+' => 'Provider-Verträge',
 	'Menu:CustomerContract' => 'Kundenverträge',
@@ -39,20 +39,20 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:Service' => 'Services',
 	'Menu:Service+' => 'Services',
 	'Menu:ServiceElement' => 'Service-Elemente',
-	'Menu:ServiceElement+' => '',
+	'Menu:ServiceElement+' => 'Service-Elemente',
 	'Menu:SLA' => 'SLAs',
-	'Menu:SLA+' => 'Service Level Agreements',
+	'Menu:SLA+' => 'Service Level Agreements (SLAs)',
 	'Menu:SLT' => 'SLTs',
-	'Menu:SLT+' => 'Service Level Targets',
+	'Menu:SLT+' => 'Service Level Targets (SLTs)',
 	'Menu:DeliveryModel' => 'Delivery-Modelle',
-	'Menu:DeliveryModel+' => '',
+	'Menu:DeliveryModel+' => 'Delivery-Modelle',
 	'Menu:ServiceFamily' => 'Service-Familien',
-	'Menu:ServiceFamily+' => '',
+	'Menu:ServiceFamily+' => 'Service-Familien',
 	'Menu:Procedure' => 'Verfahrens-Katalog',
 	'Menu:Procedure+' => '',
-	'Contract:baseinfo' => 'General information~~',
-	'Contract:moreinfo' => 'Contractual information~~',
-	'Contract:cost' => 'Cost information~~',
+	'Contract:baseinfo' => 'Allgemeine Informationen',
+	'Contract:moreinfo' => 'Vertragliche Informationen',
+	'Contract:cost' => 'Kosteninformation',
 ));
 
 //
@@ -89,9 +89,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contract/Attribute:organization_name' => 'Kunden-Name',
 	'Class:Contract/Attribute:organization_name+' => '',
 	'Class:Contract/Attribute:contacts_list' => 'Kontakte',
-	'Class:Contract/Attribute:contacts_list+' => 'All the contacts for this customer contract~~',
+	'Class:Contract/Attribute:contacts_list+' => 'Alle Kontakte für diesen Kundenvertrag',
 	'Class:Contract/Attribute:documents_list' => 'Dokumente',
-	'Class:Contract/Attribute:documents_list+' => 'All the documents for this customer contract~~',
+	'Class:Contract/Attribute:documents_list+' => 'Alle Dokumente für diesen Kundenvertrag',
 	'Class:Contract/Attribute:description' => 'Beschreibung',
 	'Class:Contract/Attribute:description+' => '',
 	'Class:Contract/Attribute:start_date' => 'Anfangsdatum',
@@ -127,7 +127,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contract/Attribute:status/Value:production' => 'Produktion',
 	'Class:Contract/Attribute:status/Value:production+' => '',
 	'Class:Contract/Attribute:finalclass' => 'Typ',
-	'Class:Contract/Attribute:finalclass+' => '',
+	'Class:Contract/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
 ));
 //
 // Class: CustomerContract
@@ -137,7 +137,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CustomerContract' => 'Kundenvertrag',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
-	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract~~',
+	'Class:CustomerContract/Attribute:services_list+' => 'Alle für diesen Vertrag erworbenen Services',
 ));
 
 //
@@ -148,7 +148,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ProviderContract' => 'Provider-Vertrag',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
-	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this provider contract~~',
+	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Alle CIs, die von diesem Provider-Vertrag abgedeckt werden',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement',
 	'Class:ProviderContract/Attribute:coverage' => 'Abdeckung',
@@ -166,7 +166,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkContactToContract' => 'Verknüpfung Kontakt/Vertrag',
 	'Class:lnkContactToContract+' => '',
-	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Vertrag',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Vertrags-Name',
@@ -184,7 +184,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkContractToDocument' => 'Verknüpfung Vertrag/Dokument',
 	'Class:lnkContractToDocument+' => '',
-	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Vertrag',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Vertrags-Name',
@@ -207,7 +207,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ServiceFamily/Attribute:icon' => 'Icon',
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
-	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
+	'Class:ServiceFamily/Attribute:services_list+' => 'Alle Services dieser Kategorie',
 ));
 
 //
@@ -217,7 +217,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Service' => 'Service',
 	'Class:Service+' => '',
-	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Name',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Anbieter',
@@ -231,9 +231,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Service/Attribute:description' => 'Beschreibung',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:documents_list' => 'Dokumente',
-	'Class:Service/Attribute:documents_list+' => 'All the documents linked to the service~~',
+	'Class:Service/Attribute:documents_list+' => 'Alle mit dem Service verknüpften Dokumente~',
 	'Class:Service/Attribute:contacts_list' => 'Kontakte',
-	'Class:Service/Attribute:contacts_list+' => 'All the contacts for this service~~',
+	'Class:Service/Attribute:contacts_list+' => 'Alle mit dem Service verknüpften Kontakte',
 	'Class:Service/Attribute:status' => 'Status',
 	'Class:Service/Attribute:status+' => '',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implementation',
@@ -244,14 +244,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Service/Attribute:status/Value:production+' => '',
 	'Class:Service/Attribute:icon' => 'Icon',
 	'Class:Service/Attribute:icon+' => '',
-	'Class:Service/Attribute:customercontracts_list' => 'Kunden-Verträge',
-	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service~~',
+	'Class:Service/Attribute:customercontracts_list' => 'Kundenverträge',
+	'Class:Service/Attribute:customercontracts_list+' => 'Alle Kundenverträge, die diesen Service verwenden',
 	'Class:Service/Attribute:providercontracts_list' => 'Provider-Verträge',
-	'Class:Service/Attribute:providercontracts_list+' => 'All the provider contracts to support this service~~',
+	'Class:Service/Attribute:providercontracts_list+' => 'Alle Anbieterverträge zur Unterstützung dieses Services',
 	'Class:Service/Attribute:functionalcis_list' => 'Benötigte CIs',
-	'Class:Service/Attribute:functionalcis_list+' => 'All the configuration items that are used to provide this service~~',
+	'Class:Service/Attribute:functionalcis_list+' => 'Alle CIs, die zur Bereitstellung dieses Services verwendet werden',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Service-Subkategorien',
-	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
+	'Class:Service/Attribute:servicesubcategories_list+' => 'Alle Service-Unterkategorien für diesen Service',
 ));
 
 //
@@ -261,7 +261,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDocumentToService' => 'Verknüpfung Dokument/Service',
 	'Class:lnkDocumentToService+' => '',
-	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Service',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Service-Name',
@@ -279,7 +279,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkContactToService' => 'Verknüpfung Kontakt/Service',
 	'Class:lnkContactToService+' => '',
-	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s',
 	'Class:lnkContactToService/Attribute:service_id' => 'Service',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
 	'Class:lnkContactToService/Attribute:service_name' => 'Service-Name',
@@ -297,7 +297,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ServiceSubcategory' => 'Service-Unterkategorien',
 	'Class:ServiceSubcategory+' => '',
-	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Name',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Beschreibung',
@@ -338,10 +338,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SLA/Attribute:organization_name' => 'Provider-Name',
 	'Class:SLA/Attribute:organization_name+' => '',
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
-	'Class:SLA/Attribute:slts_list+' => 'Service Level Targets:',
-	'Class:SLA/Attribute:customercontracts_list' => 'Kunden-Verträge',
-	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA~~',
-	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Konnte den Link zwischen Kundevertrag %1$s und Service %2$s speichern: SLA existiert bereits',
+	'Class:SLA/Attribute:slts_list+' => 'Service Level Targets',
+	'Class:SLA/Attribute:customercontracts_list' => 'Kundenverträge',
+	'Class:SLA/Attribute:customercontracts_list+' => 'Alle Kundenverträge, die diese SLA verwenden',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Die Verknüpfung zwischen Kundenvertrag %1$s und Service %2$s konnte nicht gespeichert werden: SLA existiert bereits',
 ));
 
 //
@@ -350,41 +350,41 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SLT' => 'SLT',
-	'Class:SLT+' => '',
+	'Class:SLT+' => 'Service-Level-Target (SLT)',
 	'Class:SLT/Attribute:name' => 'Name',
 	'Class:SLT/Attribute:name+' => '',
 	'Class:SLT/Attribute:priority' => 'Priorität',
 	'Class:SLT/Attribute:priority+' => '',
 	'Class:SLT/Attribute:priority/Value:1' => 'Kritisch',
-	'Class:SLT/Attribute:priority/Value:1+' => '',
+	'Class:SLT/Attribute:priority/Value:1+' => 'Kritisch',
 	'Class:SLT/Attribute:priority/Value:2' => 'Hoch',
-	'Class:SLT/Attribute:priority/Value:2+' => '',
+	'Class:SLT/Attribute:priority/Value:2+' => 'Hoch',
 	'Class:SLT/Attribute:priority/Value:3' => 'Mittel',
-	'Class:SLT/Attribute:priority/Value:3+' => '',
+	'Class:SLT/Attribute:priority/Value:3+' => 'Mittel',
 	'Class:SLT/Attribute:priority/Value:4' => 'Niedrig',
-	'Class:SLT/Attribute:priority/Value:4+' => '',
+	'Class:SLT/Attribute:priority/Value:4+' => 'Niedrig',
 	'Class:SLT/Attribute:request_type' => 'Request-Typ',
 	'Class:SLT/Attribute:request_type+' => '',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'Incident',
-	'Class:SLT/Attribute:request_type/Value:incident+' => '',
+	'Class:SLT/Attribute:request_type/Value:incident+' => 'Incident',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'Service-Request',
-	'Class:SLT/Attribute:request_type/Value:service_request+' => '',
+	'Class:SLT/Attribute:request_type/Value:service_request+' => 'Service-Request',
 	'Class:SLT/Attribute:metric' => 'Metrik',
 	'Class:SLT/Attribute:metric+' => '',
-	'Class:SLT/Attribute:metric/Value:tto' => 'TTO (Time To Own)',
-	'Class:SLT/Attribute:metric/Value:tto+' => '',
-	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR (Time To Resolve)',
-	'Class:SLT/Attribute:metric/Value:ttr+' => '',
+	'Class:SLT/Attribute:metric/Value:tto' => 'TTO',
+	'Class:SLT/Attribute:metric/Value:tto+' => 'TTO (Time To Own)',
+	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR',
+	'Class:SLT/Attribute:metric/Value:ttr+' => 'TTR (Time To Resolve)',
 	'Class:SLT/Attribute:value' => 'Wert',
 	'Class:SLT/Attribute:value+' => '',
 	'Class:SLT/Attribute:unit' => 'Einheit',
 	'Class:SLT/Attribute:unit+' => '',
 	'Class:SLT/Attribute:unit/Value:hours' => 'Stunden',
-	'Class:SLT/Attribute:unit/Value:hours+' => '',
+	'Class:SLT/Attribute:unit/Value:hours+' => 'Stunden',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'Minuten',
-	'Class:SLT/Attribute:unit/Value:minutes+' => '',
-	'Class:SLT/Attribute:slas_list' => 'SLAs~~',
-	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT~~',
+	'Class:SLT/Attribute:unit/Value:minutes+' => 'Minuten',
+	'Class:SLT/Attribute:slas_list' => 'SLAs',
+	'Class:SLT/Attribute:slas_list+' => 'Alle Service Level Agreements, die diese SLT verwenden',
 ));
 
 //
@@ -394,7 +394,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkSLAToSLT' => 'Verknüpfung SLA/SLT',
 	'Class:lnkSLAToSLT+' => '',
-	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA-Name',
@@ -422,7 +422,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkCustomerContractToService' => 'Verknüpfung Kunden-Vertrag/Service',
 	'Class:lnkCustomerContractToService+' => '',
-	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Kunden-Vertrag',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Kundenvertrags-Name',
@@ -444,7 +444,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkProviderContractToService' => 'Verknüpfung Provider-Vertrag/Service',
 	'Class:lnkProviderContractToService+' => '',
-	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s~~',
+	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Service',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:service_name' => 'Service-Name',
@@ -471,9 +471,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:DeliveryModel/Attribute:description' => 'Beschreibung',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakte',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model~~',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'Alle Kontakte (Teams and Person) für dieses Delivery-Modell',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Kunden',
-	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
+	'Class:DeliveryModel/Attribute:customers_list+' => 'Alle Kunden mit diesem Delivery-Modell',
 ));
 
 //
@@ -483,7 +483,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDeliveryModelToContact' => 'Verknüpfung Delivery-Modell/Kontakt',
 	'Class:lnkDeliveryModelToContact+' => '',
-	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Delivery-Modell',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Delivery-Modell-Name',

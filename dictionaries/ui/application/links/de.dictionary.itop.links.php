@@ -24,51 +24,51 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
  // $%3s : current tab name
  // $%4s : remote object class name
  // $%5s : remote object friendlyname
-	'UI:Links:Object:New:Modal:Title' => 'Create an object~~',
+	'UI:Links:Object:New:Modal:Title' => 'Ein Objekt erstellen',
 
 	// Create
-	'UI:Links:Create:Button' => 'Create~~',
-	'UI:Links:Create:Button+' => 'Create a %4$s~~',
-	'UI:Links:Create:Modal:Title' => 'Create a %4$s in %2$s~~',
+	'UI:Links:Create:Button' => 'Erstellen',
+	'UI:Links:Create:Button+' => '%4$s erstellen',
+	'UI:Links:Create:Modal:Title' => '%4$s in %2$s erstellen',
 
 	// Add
-	'UI:Links:Add:Button' => 'Add~~',
-	'UI:Links:Add:Button+' => 'Add a %4$s~~',
-	'UI:Links:Add:Modal:Title' => 'Add a %4$s to %2$s~~',
+	'UI:Links:Add:Button' => 'Hinzufügen',
+	'UI:Links:Add:Button+' => '%4$s hinzufügen',
+	'UI:Links:Add:Modal:Title' => '%4$s zu %2$s hinzufügen',
 
 	// Modify link
-	'UI:Links:ModifyLink:Button' => 'Modify~~',
-	'UI:Links:ModifyLink:Button+' => 'Modify this link~~',
-	'UI:Links:ModifyLink:Modal:Title' => 'Modify the link between %2$s and %5$s~~',
+	'UI:Links:ModifyLink:Button' => 'Bearbeiten',
+	'UI:Links:ModifyLink:Button+' => 'Diese Verknüpfung bearbeiten',
+	'UI:Links:ModifyLink:Modal:Title' => 'Verknüpfung zwischen %2$s und %5$s bearbeiten',
 
 	// Modify object
-	'UI:Links:ModifyObject:Button' => 'Modify~~',
-	'UI:Links:ModifyObject:Button+' => 'Modify this object~~',
-	'UI:Links:ModifyObject:Modal:Title' => '%5$s~~',
+	'UI:Links:ModifyObject:Button' => 'Bearbeiten',
+	'UI:Links:ModifyObject:Button+' => 'Dieses Objekt bearbeiten',
+	'UI:Links:ModifyObject:Modal:Title' => '%5$s',
 
 	// Remove
-	'UI:Links:Remove:Button' => 'Remove~~',
-	'UI:Links:Remove:Button+' => 'Remove this %4$s~~',
-	'UI:Links:Remove:Modal:Title' => 'Remove a %4$s from its %1$s~~',
-	'UI:Links:Remove:Modal:Message' => 'Do you really want to remove %5$s from %2$s?~~',
+	'UI:Links:Remove:Button' => 'entfernen',
+	'UI:Links:Remove:Button+' => '%4$s entfernen',
+	'UI:Links:Remove:Modal:Title' => '%4$s aus %1$s entfernen',
+	'UI:Links:Remove:Modal:Message' => 'Möchten Sie wirklich %5$s aus %2$s entfernen',
 
 	// Delete
-	'UI:Links:Delete:Button' => 'Delete~~',
-	'UI:Links:Delete:Button+' => 'Delete this %4$s~~',
-	'UI:Links:Delete:Modal:Title' => 'Delete a %4$s~~',
-	'UI:Links:Delete:Modal:Message' => 'Do you really want to delete %5$s?~~',
+	'UI:Links:Delete:Button' => 'Löschen',
+	'UI:Links:Delete:Button+' => '%4$s löschen',
+	'UI:Links:Delete:Modal:Title' => 'Löschen von %4$s',
+	'UI:Links:Delete:Modal:Message' => 'Wollen Sie %5$s wirklich löschen?',
 
 	// Bulk
-	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects' => 'Add to all objects~~',
-	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Remove from all objects~~',
-	'UI:Links:Bulk:LinkWillBeCreatedFor1Object' => 'Add to one object~~',
-	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object' => 'Remove from one object~~',
-	'UI:Links:Bulk:LinkWillBeCreatedForXObjects' => 'Add {count} objects~~',
-	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects' => 'Remove {count} objects~~',
-	'UI:Links:Bulk:LinkExistForAllObjects' => 'All objets are already linked~~',
-	'UI:Links:Bulk:LinkExistForOneObject' => 'One object is linked~~',
-	'UI:Links:Bulk:LinkExistForXObjects' => '{count} objects are linked~~',
+	'UI:Links:Bulk:LinkWillBeCreatedForAllObjects' => 'Zu allen Objekten hinzufügen',
+	'UI:Links:Bulk:LinkWillBeDeletedFromAllObjects' => 'Aus allen Objekten entfernen',
+	'UI:Links:Bulk:LinkWillBeCreatedFor1Object' => 'Zu einem Objekt hinzufügen',
+	'UI:Links:Bulk:LinkWillBeDeletedFrom1Object' => 'Aus einem Objekt entfernen',
+	'UI:Links:Bulk:LinkWillBeCreatedForXObjects' => 'Hinzufügen von {count} Objekten',
+	'UI:Links:Bulk:LinkWillBeDeletedFromXObjects' => 'Entfernen von {count} Objekten',
+	'UI:Links:Bulk:LinkExistForAllObjects' => 'Alle Objekte sind bereits verknüpft',
+	'UI:Links:Bulk:LinkExistForOneObject' => 'Ein Objekt ist verknüpft',
+	'UI:Links:Bulk:LinkExistForXObjects' => '{count} Objekte sind verknüpft',
 
 	// New item
-	'UI:Links:NewItem' => 'New item~~',
+	'UI:Links:NewItem' => 'Neues Element',
 ));

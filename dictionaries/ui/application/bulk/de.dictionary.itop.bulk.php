@@ -19,6 +19,6 @@
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 	// Bulk modify
-	'UI:Bulk:modify:IncompatibleAttribute' => 'This attribute can\'t be edited in bulk context~~',
+	'UI:Bulk:modify:IncompatibleAttribute' => 'Dieses Attribut kann in einer Massenänderung nicht bearbeitet werden.',
 
 ));

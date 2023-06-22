@@ -94,9 +94,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Location/Attribute:country' => 'Land',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'Geräte',
-	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
+	'Class:Location/Attribute:physicaldevice_list+' => 'Alle Geräte an diesem Standort',
 	'Class:Location/Attribute:person_list' => 'Kontakte',
-	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
+	'Class:Location/Attribute:person_list+' => 'Alle Kontakte, die sich an diesem Standort befinden',
 ));
 
 //
@@ -106,7 +106,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => '',
-	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Name',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Status',
@@ -124,17 +124,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contact/Attribute:phone' => 'Telefonnummer',
 	'Class:Contact/Attribute:phone+' => '',
 	'Class:Contact/Attribute:notify' => 'Benachrichtigung',
-	'Class:Contact/Attribute:notify+' => '',
+	'Class:Contact/Attribute:notify+' => 'Attribut, das bei der Suche nach Empfängern von Benachrichtigungen verwendet werden kann',
 	'Class:Contact/Attribute:notify/Value:no' => 'Nein',
-	'Class:Contact/Attribute:notify/Value:no+' => '',
+	'Class:Contact/Attribute:notify/Value:no+' => 'Nein',
 	'Class:Contact/Attribute:notify/Value:yes' => 'Ja',
-	'Class:Contact/Attribute:notify/Value:yes+' => '',
+	'Class:Contact/Attribute:notify/Value:yes+' => 'Ja',
 	'Class:Contact/Attribute:function' => 'Funktion',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'CIs',
-	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
+	'Class:Contact/Attribute:cis_list+' => 'Alle mit diesem Kontakt verknüpften CIs',
 	'Class:Contact/Attribute:finalclass' => 'Typ',
-	'Class:Contact/Attribute:finalclass+' => '',
+	'Class:Contact/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
 ));
 
 //
@@ -144,7 +144,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person' => 'Person',
 	'Class:Person+' => '',
-	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Name',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Vorname',
@@ -162,11 +162,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person/Attribute:manager_name' => 'Manager-Name',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'Teams',
-	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
+	'Class:Person/Attribute:team_list+' => 'Alle Teams, denen diese Person angehört',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
-	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
-	'Class:Person/Attribute:user_list' => 'Users~~',
-	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
+	'Class:Person/Attribute:tickets_list+' => 'Alle Tickets, bei denen diese Person der Melder ist',
+	'Class:Person/Attribute:user_list' => 'Benutzer',
+	'Class:Person/Attribute:user_list+' => 'Alle Benutzer, die mit dieser Person verbunden sind',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager-Name (lesbar)',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Bild',
@@ -175,7 +175,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person/UniquenessRule:employee_number' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit der gleichen Personalnummer',
 	'Class:Person/UniquenessRule:name+' => 'Innerhalb einer Organisation muss der Name einer Person eindeutig sein',
 	'Class:Person/UniquenessRule:name' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit dem gleichen Namen',
-	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
+	'Class:Person/Error:ChangingOrgDenied' => 'Es ist nicht möglich, dieser Person der Organisation \'%1$s\' zuzuordnen, da dies seinen Zugang zum Benutzerportal unterbinden würde, da sein zugehöriger Benutzer nicht für diese Organisation zugelassen ist.',
 ));
 
 //
@@ -185,11 +185,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
-	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Mitglieder',
-	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
+	'Class:Team/Attribute:persons_list+' => 'Alle Personen, die zu diesem Team gehören',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
-	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
+	'Class:Team/Attribute:tickets_list+' => 'Alle diesem Team zugewiesenen Tickets',
 ));
 
 //
@@ -199,7 +199,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => '',
-	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Name',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organisation',
@@ -223,9 +223,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Document/Attribute:status/Value:published' => 'Veröffentlicht',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs',
-	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
-	'Class:Document/Attribute:finalclass' => 'Dokumenttyp',
-	'Class:Document/Attribute:finalclass+' => '',
+	'Class:Document/Attribute:cis_list+' => 'Alle mit diesem Dokument verknüpften CIs',
+	'Class:Document/Attribute:finalclass' => 'Unterklasse von Dokument',
+	'Class:Document/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
 ));
 
 //
@@ -271,7 +271,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Typology/Attribute:name' => 'Name',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Typ',
-	'Class:Typology/Attribute:finalclass+' => '',
+	'Class:Typology/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
 ));
 
 //
@@ -299,8 +299,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkPersonToTeam' => 'Verknüpfung Person/Team',
 	'Class:lnkPersonToTeam+' => '',
-	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
-	'Class:lnkPersonToTeam/Name+' => '~~',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
+	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Teamname',
@@ -310,7 +310,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Personenname',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Rolle',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => 'Eine Rolle aus einer Typologie möglicher Rollen',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rollenname',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
 ));
@@ -354,7 +354,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ConfigManagement:Shortcuts' => 'Shortcuts',
 	'Menu:ConfigManagement:AllContacts' => 'Alle Kontakte: %1$d',
 	'Menu:Typology' => 'Typologie-Konfiguration',
-	'Menu:Typology+' => '',
+	'Menu:Typology+' => 'Typologie-Konfiguration',
 	'UI_WelcomeMenu_AllConfigItems' => 'Zusammenfassung',
 	'Menu:ConfigManagement:Typology' => 'Typologie-Konfiguration',
 ));
@@ -364,7 +364,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Person:info' => 'Allgemeine Informationen',
 	'User:info' => 'Allgemeine Informationen',
-	'User:profiles' => 'Profiles (minimum one)~~',
+	'User:profiles' => 'Profile (mindestens eines)',
 	'Person:personal_info' => 'Persönliche Informationen',
 	'Person:notifiy' => 'Benachrichtigungen',
 ));

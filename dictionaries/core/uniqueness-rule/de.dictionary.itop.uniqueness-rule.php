@@ -21,5 +21,5 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s is already linked to %3$s: %4$s, duplicates are not allowed on this relation.~~',
+	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s ist bereits mit einer/einem %3$s verknüpft: %4$s, doppelte Einträge sind in dieser Verknüpfung nicht erlaubt.',
 ]);

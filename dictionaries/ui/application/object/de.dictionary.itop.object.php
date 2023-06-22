@@ -17,5 +17,5 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'UI:Object:Modal:Title' => 'Create an object~~',
+	'UI:Object:Modal:Title' => 'Ein Objekt erstellen',
 ));
