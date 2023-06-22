@@ -30,7 +30,7 @@ use ormLinkSet;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since 2.3.0
  */
-class LinkedSetField extends Field
+class LinkedSetField extends AbstractSimpleField
 {
 	/** @var bool DEFAULT_INDIRECT */
 	const DEFAULT_INDIRECT = false;

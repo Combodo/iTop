@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Test\UnitTest\Sources\Form\Field;
 
 use Combodo\iTop\Form\Field\StringField;
+use Combodo\iTop\Form\Field\SubFormField;
 use Combodo\iTop\Form\Validator\CustomRegexpValidator;
 use Combodo\iTop\Form\Validator\IntegerValidator;
 use Combodo\iTop\Form\Validator\MandatoryValidator;
@@ -79,5 +80,24 @@ class FieldTest extends ItopTestCase
 		$this->assertFalse($oField->Validate());
 		$this->assertCount(1, $oField->GetErrorMessages());
 		$this->assertSame($sFirstValidatorInvalidResultErrorMsg, $oField->GetErrorMessages()[0]);
+	}
+
+	public function testSubFormFieldValidation(): void
+	{
+		$oSubFormField = new SubFormField('test_subformfield');
+
+		$oField = new StringField('test_field');
+		$oField->SetMandatory(true);
+
+		$oSubFormField->GetForm()->AddField($oField);
+
+		$bIsSubFormFieldValid = $oSubFormField->Validate();
+		$this->assertFalse($bIsSubFormFieldValid);
+		$this->assertCount(1, $oSubFormField->GetErrorMessages());
+
+		$oField->SetCurrentValue('test string');
+		$bIsSubFormFieldValidAfterFieldUpdate = $oSubFormField->Validate();
+		$this->assertTrue($bIsSubFormFieldValidAfterFieldUpdate);
+		$this->assertCount(0, $oSubFormField->GetErrorMessages());
 	}
 }

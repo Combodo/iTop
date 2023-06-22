@@ -366,26 +366,26 @@ abstract class Field
             }
         }
 
-        $this->bMandatory = $bMandatory;
+		$this->bMandatory = $bMandatory;
 
-        return $this;
-    }
+		return $this;
+	}
 
     /**
      * @return AbstractValidator
      * @since 3.1.0 N°6414
      */
-    protected function GetMandatoryValidatorInstance(): AbstractValidator
-    {
-        return new MandatoryValidator();
-    }
+	protected function GetMandatoryValidatorInstance(): AbstractValidator
+	{
+		return new MandatoryValidator();
+	}
 
-    /**
-     * Sets if the field is must change or not.
-     * Note: This not implemented yet! Just a pre-conception for CaseLogField
-     *
-     * @param boolean $bMustChange
-     *
+	/**
+	 * Sets if the field is must change or not.
+	 * Note: This not implemented yet! Just a pre-conception for CaseLogField
+	 *
+	 * @param boolean $bMustChange
+	 *
 	 * @return $this
 	 * @todo Implement
 	 */
@@ -583,29 +583,5 @@ abstract class Field
 	 * @uses SetValid()
 	 * @uses AddErrorMessage()
 	 */
-	public function Validate()
-	{
-		$this->SetValid(true);
-		$this->EmptyErrorMessages();
-
-		if ($this->bValidationDisabled) {
-			return $this->GetValid();
-		}
-
-		$bEmpty = (($this->GetCurrentValue() === null) || ($this->GetCurrentValue() === ''));
-
-		if (!$bEmpty || $this->GetMandatory()) {
-			foreach ($this->GetValidators() as $oValidator) {
-				[$bIsFieldValid, $sValidationErrorMessage] = $oValidator->Validate($this->GetCurrentValue());
-
-				/** @var bool $bIsFieldValid */
-				if (false === $bIsFieldValid) {
-					$this->SetValid(false);
-					$this->AddErrorMessage($sValidationErrorMessage);
-				}
-			}
-		}
-
-		return $this->GetValid();
-	}
+	abstract public function Validate();
 }

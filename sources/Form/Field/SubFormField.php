@@ -19,8 +19,8 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use \Closure;
-use \Combodo\iTop\Form\Form;
+use Closure;
+use Combodo\iTop\Form\Form;
 
 /**
  * Description of SubFormField
@@ -29,7 +29,7 @@ use \Combodo\iTop\Form\Form;
  */
 class SubFormField extends Field
 {
-	protected $oForm;
+    protected $oForm;
 
     /**
      * @inheritDoc
@@ -61,12 +61,12 @@ class SubFormField extends Field
 		return $this;
 	}
 
-	/**
-	 * Checks the validators to see if the field's current value is valid.
-	 * Then sets $bValid and $aErrorMessages.
-	 *
-	 * @return boolean
-	 */
+    /**
+     * Checks the validators to see if the field's current value is valid.
+     * Then sets $bValid and $aErrorMessages.
+     *
+     * @inheritDoc
+     */
 	public function Validate()
 	{
 		return $this->oForm->Validate();
@@ -124,13 +124,13 @@ class SubFormField extends Field
 	 * @param boolean $bMandatory
 	 */
 	public function SetMandatory(bool $bMandatory)
-	{
-		foreach ($this->oForm->GetFields() as $oField)
-		{
-			$oField->SetMandatory($bMandatory);
-		}
-		parent::SetMandatory($bMandatory);
-	}
+    {
+        foreach ($this->oForm->GetFields() as $oField) {
+            $oField->SetMandatory($bMandatory);
+        }
+
+        return parent::SetMandatory($bMandatory);
+    }
 
 	/**
 	 * Sets the read-only flag on all the fields on the form
@@ -144,7 +144,7 @@ class SubFormField extends Field
 			$oField->SetReadOnly($bReadOnly);
 			$oField->SetMandatory(false);
 		}
-		parent::SetReadOnly($bReadOnly);
+        return parent::SetReadOnly($bReadOnly);
 	}
 
 	/**
@@ -158,7 +158,7 @@ class SubFormField extends Field
 		{
 			$oField->SetHidden($bHidden);
 		}
-		parent::SetHidden($bHidden);
+        return parent::SetHidden($bHidden);
 	}
 
 	/**
