@@ -205,7 +205,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:parent_incident_ref' => '父级事件编号',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
 	'Class:UserRequest/Attribute:related_request_list' => '子需求',
-	'Class:UserRequest/Attribute:related_request_list+' => '此父级需求相关的所有子需求',
+	'Class:UserRequest/Attribute:related_request_list+' => '此父级需求相关的所有衍生需求',
 	'Class:UserRequest/Attribute:public_log' => '评论',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => '用户满意度',
@@ -218,7 +218,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => '不满意',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4' => '非常不满意',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '非常不满意',
-	'Class:UserRequest/Attribute:user_comment' => '用户留言',
+	'Class:UserRequest/Attribute:user_comment' => '用户评论',
 	'Class:UserRequest/Attribute:user_comment+' => '',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'parent_request_id_friendlyname',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
@@ -246,9 +246,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '等待批准',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
-	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => '无法分配父级需求到本身',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => '无法分配父级需求给自己',
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
-	'Class:UserRequest/Method:ResolveChildTickets+' => '将此解决方案直接挪给子需求(自动解决), 包括下列字段: 服务, 团队, 办理人, 解决方案信息',
+	'Class:UserRequest/Method:ResolveChildTickets+' => '递归解决子工单(自动解决),并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案信息',
 ));
 
 
