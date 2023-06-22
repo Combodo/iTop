@@ -94,7 +94,18 @@ class lnkAuditCategoryToAuditDomain extends cmdbAbstractObject
 			"db_table"            => "priv_link_audit_category_domain",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-			"is_link" => true,
+			"is_link"             => true,
+			'uniqueness_rules'    => array(
+				'no_duplicate' => array(
+					'attributes'  => array(
+						0 => 'category_id',
+						1 => 'domain_id',
+					),
+					'filter'      => '',
+					'disabled'    => false,
+					'is_blocking' => true,
+				),
+			),
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("category_id", array("targetclass" => "AuditCategory", "jointype" => '', "allowed_values" => null, "sql" => "category_id", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array())));
