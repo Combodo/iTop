@@ -64,7 +64,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Change' => 'Ticket de changement',
+	'Class:Change' => 'Ticket de Changement',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Etat',
 	'Class:Change/Attribute:status+' => '',
@@ -80,10 +80,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:status/Value:approved+' => '',
 	'Class:Change/Attribute:status/Value:closed' => 'Fermé',
 	'Class:Change/Attribute:status/Value:closed+' => '',
-	'Class:Change/Attribute:category' => 'Categorie',
+	'Class:Change/Attribute:category' => 'Catégorie',
 	'Class:Change/Attribute:category+' => '',
-	'Class:Change/Attribute:category/Value:application' => 'application',
-	'Class:Change/Attribute:category/Value:application+' => 'application',
+	'Class:Change/Attribute:category/Value:application' => 'Application',
+	'Class:Change/Attribute:category/Value:application+' => 'Application',
 	'Class:Change/Attribute:category/Value:hardware' => 'Matériel',
 	'Class:Change/Attribute:category/Value:hardware+' => 'Matériel',
 	'Class:Change/Attribute:category/Value:network' => 'Réseau',
@@ -92,8 +92,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:category/Value:other+' => 'Autre',
 	'Class:Change/Attribute:category/Value:software' => 'Logiciel',
 	'Class:Change/Attribute:category/Value:software+' => 'Logiciel',
-	'Class:Change/Attribute:category/Value:system' => 'système',
-	'Class:Change/Attribute:category/Value:system+' => 'système',
+	'Class:Change/Attribute:category/Value:system' => 'Système',
+	'Class:Change/Attribute:category/Value:system+' => 'Système',
 	'Class:Change/Attribute:reject_reason' => 'Raison du rejet',
 	'Class:Change/Attribute:reject_reason+' => '',
 	'Class:Change/Attribute:changemanager_id' => 'Responsable du changement',
@@ -110,7 +110,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:approval_date+' => '',
 	'Class:Change/Attribute:fallback_plan' => 'Plan de secours',
 	'Class:Change/Attribute:fallback_plan+' => '',
-	'Class:Change/Attribute:related_request_list' => 'Requêtes liées',
+	'Class:Change/Attribute:related_request_list' => 'Demandes liées',
 	'Class:Change/Attribute:related_request_list+' => 'Toutes les demandes utilisateurs liées à ce changement',
 	'Class:Change/Attribute:related_incident_list' => 'Incidents liés',
 	'Class:Change/Attribute:related_incident_list+' => 'Tous les incidents liés à ce changement',
@@ -139,7 +139,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:outage/Value:yes' => 'Oui',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
 ));
-
 // 1:n relations custom labels for tooltip and pop-up title
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:child_changes_list/UI:Links:Create:Button+' => 'Créer un %4$s',
@@ -165,6 +164,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
 	'Class:Change/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
 ));
-

@@ -53,7 +53,13 @@ abstract class ValueSetDefinition
 		return $sAllowedValues;
 	}
 
-
+	/**
+	 * @param array  $aArgs
+	 * @param string $sContains
+	 * @param string $sOperation for the values {@see static::LoadValues()}
+	 *
+	 * @return array hash array of keys => values
+	 */
 	public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
 	{
 		if (!$this->m_bIsLoaded)
@@ -78,9 +84,20 @@ abstract class ValueSetDefinition
 				}
 			}
 		}
-		// Sort on the display value
-		asort($aRet);
+		$this->SortValues($aRet);
 		return $aRet;
+	}
+
+	/**
+	 * @param array $aValues Values to sort in the form keys => values
+	 *
+	 * @return void
+	 * @since 3.1.0 N°1646 Create method
+	 */
+	public function SortValues(array &$aValues): void
+	{
+		// Sort alphabetically on values
+		natcasesort($aValues);
 	}
 
 	abstract protected function LoadValues($aArgs);
@@ -189,11 +206,7 @@ class ValueSetObjects extends ValueSetDefinition
 	}
 
     /**
-     * @param        $aArgs
-     * @param string $sContains
-     * @param string $sOperation for the values @see self::LoadValues()
-     *
-     * @return array
+     * @inheritDoc
      * @throws CoreException
      * @throws OQLException
      */
@@ -451,10 +464,33 @@ class ValueSetObjects extends ValueSetDefinition
 class ValueSetEnum extends ValueSetDefinition
 {
 	protected $m_values;
+	/**
+	 * @var bool $bSortByValues If true, values will be sorted at runtime (on their values, not their keys), otherwise it is sorted at compile time in a predefined order.
+	 *                         {@see \MFCompiler::CompileAttributeEnumValues()} for complete reasons.
+	 * @since 3.1.0 N°1646
+	 */
+	protected bool $bSortByValues;
 
-	public function __construct($Values)
+	/**
+	 * @param array|string $Values
+	 * @param bool $bLocalizedSort
+	 *
+	 * @since 3.1.0 N°1646 Add $bLocalizedSort parameter
+	 */
+	public function __construct($Values, bool $bSortByValues = false)
 	{
 		$this->m_values = $Values;
+		$this->bSortByValues = $bSortByValues;
+	}
+
+	/**
+	 * @see \ValueSetEnum::$bSortByValues
+	 * @return bool
+	 * @since 3.1.0 N°1646
+	 */
+	public function IsSortedByValues(): bool
+	{
+		return $this->bSortByValues;
 	}
 
 	// Helper to export the data model
@@ -464,6 +500,27 @@ class ValueSetEnum extends ValueSetDefinition
 		return $this->m_aValues;
 	}
 
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0 N°1646 Overload method
+	 */
+	public function SortValues(array &$aValues): void
+	{
+		// Force sort by values only if necessary
+		if ($this->bSortByValues) {
+			natcasesort($aValues);
+			return;
+		}
+
+		// Don't sort values as we rely on the order defined during compilation
+		return;
+	}
+
+	/**
+	 * @param array|string $aArgs
+	 *
+	 * @return true
+	 */
 	protected function LoadValues($aArgs)
 	{
 		if (is_array($this->m_values))
@@ -491,9 +548,13 @@ class ValueSetEnum extends ValueSetDefinition
 
 class ValueSetEnumPadded extends ValueSetEnum
 {
-	public function __construct($Values)
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0 N°6448 Add $bSortByValues parameter
+	 */
+	public function __construct($Values, bool $bSortByValues = false)
 	{
-		parent::__construct($Values);
+		parent::__construct($Values, $bSortByValues);
 		if (is_string($Values))
 		{
 			$this->LoadValues(null);
@@ -505,6 +566,7 @@ class ValueSetEnumPadded extends ValueSetEnum
 		$aPaddedValues = array();
 		foreach ($this->m_aValues as $sKey => $sVal)
 		{
+			// Pad keys to the min. length required by the \AttributeSet
 			$sKey = str_pad($sKey, 3, '_', STR_PAD_LEFT);
 			$aPaddedValues[$sKey] = $sVal;
 		}
@@ -553,7 +615,7 @@ class ValueSetEnumClasses extends ValueSetEnum
 	public function __construct($sCategories = '', $sAdditionalValues = '')
 	{
 		$this->m_sCategories = $sCategories;
-		parent::__construct($sAdditionalValues);
+		parent::__construct($sAdditionalValues, true /* Classes are always sorted alphabetically */);
 	}
 
 	protected function LoadValues($aArgs)

@@ -238,7 +238,7 @@ class ApplicationContext
 	{
 		$aContextInputBlocks = [];
 		foreach ($this->aValues as $sName => $sValue) {
-			$aContextInputBlocks[] = InputUIBlockFactory::MakeForHidden("c[$sName]", utils::EscapeHtml($sValue));
+			$aContextInputBlocks[] = InputUIBlockFactory::MakeForHidden("c[$sName]", $sValue);
 		}
 		return $aContextInputBlocks;
 	}

@@ -1113,13 +1113,13 @@ class iTopDesignFormat
 		$oXPath = new DOMXPath($this->oDocument);
 
 		// N°5563 AttributeLinkedSet
-		// - remove relation_type & read_only (added in 3.1)
-		// - restore edit_mode attribute from legacy_edit_mode attribute
+		// - Remove relation_type & read_only (added in 3.1)
+		// - Restore edit_mode attribute from legacy_edit_mode attribute
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/read_only");
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/relation_type");
 
 		// N°5563 AttributeLinkedSetIndirect
-		// - remove read_only attribute (added in 3.1)
+		// - Remove read_only attribute (added in 3.1)
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/read_only");
 
 		// N°4756 - Ease extensibility for CRUD operations : Event Service
@@ -1128,13 +1128,19 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath('/itop_design/classes//class/event_listeners');
 
 		// N°3190 - Edit n:n LinkedSetIndirect in object details using a tagset-like widget
-		// - remove display style
+		// - Remove display style
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/display_style");
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/display_style");
 
-		// N°2783 Custom zlists
+		// N°2783 - Custom zlists
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/presentation/custom_presentations");
 		$this->RemoveNodeFromXPath("/itop_design/meta/presentation/custom_presentations");
+
+		// N°1646 - Enum: logical ordering defined in datamodel (dashlet, list, transition menu...)
+		// - Remove sort type
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/sort_type");
+		// - Remove rank in values
+		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/values/value/rank");
 	}
 
 	/**

@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('FR FR', 'French', 'Français', [
 	'Core:ormValue:ormDocument:DownloadsCount' => '%1s',
 	'Core:ormValue:ormDocument:DownloadsCount+' => 'Téléchargé %1$s fois',

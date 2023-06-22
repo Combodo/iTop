@@ -43,14 +43,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'DBTools:IntegrityCheck' => 'Integriteitscheck',
 	'DBTools:FetchCheck' => 'Opvraag-check (fetch) (long)',
 	'DBTools:SelectAnalysisType' => 'Selecteer soort analyse',
-
 	'DBTools:Analyze' => 'Analyseer',
 	'DBTools:Details' => 'Toon details',
 	'DBTools:ShowAll' => 'Toon alle fouten',
-
 	'DBTools:Inconsistencies' => 'Inconsistenties in database',
 	'DBTools:DetailedErrorTitle' => '%2$s fout(en) in klasse %1$s: %3$s',
-
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Wees-record in "%1$s", het zou een verwant record moeten hebben in de tabel "%2$s"',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Ongeldige externe sleutel %1$s (kolom: "%2$s.%3$s")',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Ontbrekende externe sleutel %1$s (kolom: "%2$s.%3$s")',
@@ -73,24 +71,19 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'DBTools:LostAttachments' => 'Verloren bijlages',
 	'DBTools:LostAttachments:Disclaimer' => 'Zoek hier verloren or verkeerd geplaatste bijlages. Dit is geen recovery-tool, het kan geen gewiste data herstellen.',
-
 	'DBTools:LostAttachments:Button:Analyze' => 'Analyseer',
 	'DBTools:LostAttachments:Button:Restore' => 'Herstel',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Deze actie kan niet ongedaan worden gemaakt. Bevestig dat je de bijlages wil herstellen.',
 	'DBTools:LostAttachments:Button:Busy' => 'Even geduld...',
-
 	'DBTools:LostAttachments:Step:Analyze' => 'Zoek eerst verloren/verkeerd geplaatste bijlages door de database te analyseren.',
-
 	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Resultaten analyse:',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Perfect, alles lijkt op de juiste plaats te staan!',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Somme bijlages (%1$d) lijken verkeerd te staan. Overloop de lijst en duid aan welke je wil verplaatsen.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Bestandsnaam',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Huidige locatie',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Verplaats naar ...',
-
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultaten herstel:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d bijlages werden hersteld.',
-
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Opgeslagen als afbeelding in tekst',
 	'DBTools:LostAttachments:History' => 'Bijlage "%1$s" werd hersteld met de databasetools'
 ));

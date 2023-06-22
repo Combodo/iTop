@@ -48,29 +48,33 @@ catch(Exception $e)
 	exit(EXIT_CODE_FATAL);
 }
 
-if (utils::IsModeCLI()) 
+/**
+ * @since 3.1.0 N°6047
+ */
+$oCtx = new ContextTag(ContextTag::TAG_EXPORT);
+if (utils::IsModeCLI())
 {
 	$oP = new CLIPage("iTop - Export");
 	SetupUtils::CheckPhpAndExtensionsForCli($oP, EXIT_CODE_FATAL);
 
 	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data');
-	$sAuthPwd = utils::ReadParam('auth_pwd', null, true /* Allow CLI */, 'raw_data'); 
+	$sAuthPwd = utils::ReadParam('auth_pwd', null, true /* Allow CLI */, 'raw_data');
 
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) 
-	{ 
-		UserRights::Login($sAuthUser); // Login & set the user's language 
-	} 
-	else 
-	{ 
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
+	{
+		UserRights::Login($sAuthUser); // Login & set the user's language
+	}
+	else
+	{
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
-		$oP->output(); 
+		$oP->output();
 		exit(EXIT_CODE_ERROR);
 	}
-} 
-else 
+}
+else
 {
-	require_once(APPROOT.'/application/loginwebpage.class.inc.php'); 
-	LoginWebPage::DoLogin(); // Check user rights and prompt if needed 
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 }
 ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 
@@ -111,7 +115,7 @@ if (strlen($sExpression) == 0)
 			if (strlen($sFields) == 0)
 			{
 				$sFields = trim($oQuery->Get('fields'));
-			} 
+			}
 		}
 	}
 }
@@ -279,13 +283,13 @@ if (!empty($sExpression))
 				}
 				$oP->add($sOutputData);
 				break;
-				
+
 				case 'spreadsheet':
 				$oP = new WebPage("iTop - Export for spreadsheet");
 
 				// Integration within MS-Excel web queries + HTTPS + IIS:
 				// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
-				// Then the fix is to force the reset of header values Pragma and Cache-control 
+				// Then the fix is to force the reset of header values Pragma and Cache-control
 				header("Pragma:", true);
 				header("Cache-control:", true);
 
@@ -298,12 +302,12 @@ if (!empty($sExpression))
 				$oP = new XMLPage("iTop - Export", true /* passthrough */);
 				cmdbAbstractObject::DisplaySetAsXML($oP, $oSet, array('localize_values' => $bLocalize));
 				break;
-				
+
 				case 'xlsx':
 				$oP = new AjaxPage('');
 				$oExporter = new ExcelExporter();
 				$oExporter->SetObjectList($oFilter);
-				
+
 				// Run the export by chunk of 1000 objects to limit memory usage
 				$oExporter->SetChunkSize(1000);
 				do
@@ -311,7 +315,7 @@ if (!empty($sExpression))
 					$aStatus = $oExporter->Run(); // process one chunk
 				}
 				while( ($aStatus['code'] != 'done') && ($aStatus['code'] != 'error'));
-				
+
 				if ($aStatus['code'] == 'done')
 				{
 					$oP->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -324,7 +328,7 @@ if (!empty($sExpression))
 					$oP->add('Error, xlsx export failed: '.$aStatus['message']);
 				}
 				break;
-				
+
 				default:
 				$oP = new WebPage("iTop - Export");
 				$oP->add("Unsupported format '$sFormat'. Possible values are: html, csv, spreadsheet or xml.");
@@ -336,13 +340,13 @@ if (!empty($sExpression))
 		$oP = new WebPage("iTop - Export");
 		$oP->p("Error the query can not be executed.");
 		if ($e instanceof CoreException)
-		{		
+		{
 			$oP->p($e->GetHtmlDesc());
 		}
 		else
 		{
 			$oP->p($e->getMessage());
-		}		
+		}
 	}
 }
 if (!$oP)
@@ -356,7 +360,7 @@ if (!$oP)
 	else
 	{
 		$oP = new WebPage("iTop - Export");
-	} 
+	}
 	$oP->p("General purpose export page.");
 	$oP->p("Parameters:");
 	$oP->p(" * expression: an OQL expression (URL encoded if needed)");

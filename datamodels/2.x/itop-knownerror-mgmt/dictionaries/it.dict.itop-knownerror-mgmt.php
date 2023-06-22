@@ -98,6 +98,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkErrorToFunctionalCI' => 'Link Errore /CIFunzionale',
 	'Class:lnkErrorToFunctionalCI+' => 'Infra impattata dal errore conosciuto',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI Nome',
@@ -117,6 +118,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDocumentToError' => 'Link Documento / Errore',
 	'Class:lnkDocumentToError+' => 'Link tra il documento e l\'errore conosciuto',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Documenti',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Nome dei documenti',

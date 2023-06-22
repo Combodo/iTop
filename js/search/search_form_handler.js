@@ -440,7 +440,7 @@ $(function()
 
 			// Header part
 			var oHeaderElem = $('<div class="sfm_header"></div>')
-				.append('<a class="sfm_toggler" aria-label="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" data-tooltip-content="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fas fa-plus"></span></a>')
+				.append('<a class="sfm_toggler" aria-label="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" data-tooltip-content="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fas fa-filter"><span class="sfm_tg_icon fas fa-plus fa-xs"></span></a>')
 				.appendTo(this.elements.more_criterion);
 
 			// Content part

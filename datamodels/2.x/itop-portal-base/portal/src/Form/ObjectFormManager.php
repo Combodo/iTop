@@ -44,6 +44,7 @@ use Exception;
 use ExceptionLog;
 use InlineImage;
 use IssueLog;
+use LogChannels;
 use MetaModel;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -750,7 +751,7 @@ class ObjectFormManager extends FormManager
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\LinkedSetField'))) {
 						/** @var \Combodo\iTop\Form\Field\LinkedSetField $oField */
 						if ($this->oFormHandlerHelper !== null) {
-							$oField->SetInformationEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_get_information_json'));
+							$oField->SetInformationEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_get_information_for_linked_set_json'));
 						}
 					}
 					// - Field that require to apply scope on its DM OQL
@@ -856,12 +857,20 @@ class ObjectFormManager extends FormManager
 						}
 						// - Adding attribute labels
 						$aAttributesToDisplay = array();
-						foreach ($aAttCodesToDisplay as $sAttCodeToDisplay)
-						{
+						foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
 							$oAttDefToDisplay = MetaModel::GetAttributeDef($oField->GetTargetClass(), $sAttCodeToDisplay);
-							$aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
+							$aAttributesToDisplay[$sAttCodeToDisplay] = [
+								'att_code' => $sAttCodeToDisplay,
+								'label'    => $oAttDefToDisplay->GetLabel(),
+							];
 						}
 						$oField->SetAttributesToDisplay($aAttributesToDisplay);
+
+						// Link attributes to display
+						if ($oField->IsIndirect()) {
+							$sClass = get_class($this->oObject);
+							$oField->SetLnkAttributesToDisplay($this->GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode));
+						}
 					}
 					//    - Filtering links regarding scopes
 					if ($this->oFormHandlerHelper !== null) {
@@ -869,7 +878,7 @@ class ObjectFormManager extends FormManager
 
 						/** @var \ormLinkSet $oFieldOriginalSet */
 						$oFieldOriginalSet = $oField->GetCurrentValue();
-						while ($oLink = $oFieldOriginalSet->Fetch()) {
+						foreach ($oFieldOriginalSet as $oLink) {
 							if ($oField->IsIndirect()) {
 								$iRemoteKey = $oLink->Get($oAttDef->GetExtKeyToRemote());
 							} else {
@@ -1099,7 +1108,7 @@ class ObjectFormManager extends FormManager
 	{
 		$aData = parent::OnSubmit($aArgs);
 
-		if (! $aData['valid']) {
+		if (!$aData['valid']) {
 			return $aData;
 		}
 
@@ -1282,6 +1291,15 @@ class ObjectFormManager extends FormManager
 										$oLink = MetaModel::NewObject($sLinkedClass);
 										$oLink->Set($oAttDef->GetExtKeyToRemote(), $iObjKey);
 										$oLink->Set($oAttDef->GetExtKeyToMe(), $this->oObject->GetKey());
+										// Set link attributes values...
+										foreach ($aObjdata as $sLinkAttCode => $oAttValue) {
+											if (!is_scalar($oAttValue)) {
+												IssueLog::Debug("ObjectFormManager::OnUpdate invalid link attribute value, $sLinkAttCode is not a scalar value", LogChannels::PORTAL);
+												continue;
+											}
+											$oLink->Set($sLinkAttCode, $oAttValue);
+										}
+										$oLinkSet->AddItem($oLink);
 									}
 									// ... or adding remote object when linkset id direct
 									else
@@ -1290,15 +1308,36 @@ class ObjectFormManager extends FormManager
 										$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false, true);
 									}
 
-									if ($oLink !== null)
-									{
+									if ($oLink !== null) {
 										$oLinkSet->AddItem($oLink);
 									}
 								}
 							}
 
 							// Checking links to modify
-							// TODO: Not implemented yet as we can't change lnk properties in the portal
+							if ($oAttDef->IsIndirect() && isset($value['current'])) {
+								foreach ($value['current'] as $iObjKey => $aObjData) {
+									if ($iObjKey < 0) {
+										continue;
+									}
+									$oLink = null;
+									$oLinkSet->Rewind();
+									foreach ($oLinkSet as $oItem) {
+										if ($oItem->Get('id') != $iObjKey) {
+											continue;
+										}
+										$oLink = $oItem;
+										foreach ($aObjData as $sLinkAttCode => $oAttValue) {
+											if (!is_scalar($oAttValue)) {
+												IssueLog::Debug("ObjectFormManager::OnUpdate invalid link attribute value, $sLinkAttCode is not a scalar value", LogChannels::PORTAL);
+												continue;
+											}
+											$oLink->Set($sLinkAttCode, $oAttValue);
+										}
+										$oLinkSet->ModifyItem($oLink);
+									}
+								}
+							}
 
 							// Setting value in the object
 							$this->oObject->Set($sAttCode, $oLinkSet);
@@ -1502,10 +1541,65 @@ class ObjectFormManager extends FormManager
 
 	/**
 	 * @param array $aHiddenFieldsId
+	 *
 	 * @since 2.7.5
 	 */
 	public function SetHiddenFieldsId($aHiddenFieldsId)
 	{
 		$this->aHiddenFieldsId = $aHiddenFieldsId;
+	}
+
+	/**
+	 * Inspired from {@see \MetaModel::GetZListAttDefsFilteredForIndirectLinkClass}
+	 * Retrieve link attributes to display from portal configuration.
+	 *
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @since 3.1.0 N°6398
+	 *
+	 */
+	private function GetZListAttDefsFilteredForIndirectLinkClass(string $sClass, string $sAttCode): array
+	{
+		$aAttCodesToPrint = [];
+
+		$oLinkedSetAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sLinkedClass = $oLinkedSetAttDef->GetLinkedClass();
+		$sExtKeyToRemote = $oLinkedSetAttDef->GetExtKeyToRemote();
+		$sExtKeyToMe = $oLinkedSetAttDef->GetExtKeyToMe();
+
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+		$sDefaultState = MetaModel::GetDefaultState($sClass);
+
+		foreach (ApplicationHelper::GetLoadedListFromClass($this->oFormHandlerHelper->getCombodoPortalConf()['lists'], $sLinkedClass, 'list') as $sLnkAttCode) {
+
+			$oLnkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sLnkAttCode);
+			if ($sStateAttCode == $sLnkAttCode) {
+				// State attribute is always hidden from the UI
+				continue;
+			}
+			if (($sLnkAttCode == $sExtKeyToMe)
+				|| ($sLnkAttCode == $sExtKeyToRemote)
+				|| ($sLnkAttCode == 'finalclass')) {
+				continue;
+			}
+			if (!($oLnkAttDef->IsWritable())) {
+				continue;
+			}
+
+			$iFlags = MetaModel::GetAttributeFlags($sLinkedClass, $sDefaultState, $sLnkAttCode);
+			if (!($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY)) {
+				$aAttCodesToPrint[$sLnkAttCode] = [
+					'att_code'  => $sLnkAttCode,
+					'label'     => $oLnkAttDef->GetLabel(),
+					'mandatory' => !$oLnkAttDef->IsNullAllowed(),
+				];
+			}
+
+		}
+
+		return $aAttCodesToPrint;
 	}
 }

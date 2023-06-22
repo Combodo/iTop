@@ -64,6 +64,32 @@ require_once('mutex.class.inc.php');
  */
 abstract class DBObject implements iDisplay
 {
+	/**
+	 * @var string For sorting based on the XML order (like in iTop 3.0 and older)
+	 * @since 3.1.0 N°1345
+	 */
+	public const ENUM_TRANSITIONS_SORT_TYPE_XML = 'xml';
+	/**
+	 * @var string For sorting based on the transitions labels
+	 * @since 3.1.0 N°1345
+	 */
+	public const ENUM_TRANSITIONS_SORT_TYPE_ALPHABETICAL = 'alphabetical';
+	/**
+	 * @var string For sorting based on the arrival states rank, ascending sort
+	 * @since 3.1.0 N°1345
+	 */
+	public const ENUM_TRANSITIONS_SORT_TYPE_FIXED = 'fixed';
+	/**
+	 * @var string For sorting based on the arrival states rank but depending on the current state (first transitions to states with higher ranks, then transitions to states with lower ranks)
+	 * @since 3.1.0 N°1345
+	 */
+	public const ENUM_TRANSITIONS_SORT_TYPE_RELATIVE = 'relative';
+	/**
+	 * @var string Default sort type of the transitions
+	 * @since 3.1.0 N°1345
+	 */
+	public const DEFAULT_TRANSITIONS_SORT_TYPE = self::ENUM_TRANSITIONS_SORT_TYPE_RELATIVE;
+
 	private static $m_aMemoryObjectsByClass = array();
 
 	/** @var array class => array of ('table' => array of (array of <sql_value>)) */
@@ -1477,7 +1503,7 @@ abstract class DBObject implements iDisplay
      *
      * @api
      * 
-     * @return int|null
+     * @return string|null
      */
 	public function GetKey()
 	{
@@ -1630,10 +1656,9 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Helper to get the friendly name in a safe manner for displaying inside a web page
 	 *
-	 * @internal
 	 * @return string
 	 * @throws \CoreException
-	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 * @since 3.0.0 N°4106 Method should not be overloaded anymore for performances reasons. It will be set final in 3.1.0 (N°4107)
 	 * @since 3.0.0 N°580 New $sType parameter
 	 *
 	 */
@@ -2795,7 +2820,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * @param string $sTableClass
 	 *
-	 * @return bool|int false if nothing to persist (no change), new key value otherwise
+	 * @return bool|string false if nothing to persist (no change), new key value otherwise
 	 * @throws \CoreException
 	 * @throws \MySQLException
 	 */
@@ -2878,7 +2903,7 @@ abstract class DBObject implements iDisplay
 		if (empty($this->m_iKey))
 		{
 			// Take the autonumber
-			$this->m_iKey = $iNewKey;
+			$this->m_iKey = "$iNewKey";
 		}
 		return $this->m_iKey;
 	}
@@ -3030,7 +3055,7 @@ abstract class DBObject implements iDisplay
      * @api
      * @see DBWrite
      *
-	 * @return int|null inserted object key
+	 * @return string|null inserted object key
      *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
@@ -3939,11 +3964,83 @@ abstract class DBObject implements iDisplay
 	public function EnumTransitions()
 	{
 		$sClass = get_class($this);
-		if (!MetaModel::HasLifecycle($sClass)) return array();
+		if (!MetaModel::HasLifecycle($sClass)) {
+			return [];
+		}
 
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$sState = $this->Get($sStateAttCode);
-		return MetaModel::EnumTransitions($sClass, $sState);
+		$aTransitions = MetaModel::EnumTransitions($sClass, $sState);
+
+		if (count($aTransitions) === 0) {
+			return $aTransitions;
+		}
+
+		// Try to sort transitions depending on the configuration
+		$sSortType = utils::GetConfig()->Get('lifecycle.transitions_sort_type');
+		switch ($sSortType) {
+			case static::ENUM_TRANSITIONS_SORT_TYPE_XML:
+				$aSortedTransitions = $aTransitions;
+				break;
+
+			case static::ENUM_TRANSITIONS_SORT_TYPE_ALPHABETICAL:
+				$aSortedTransitions = $aTransitions;
+				$aStimuli = MetaModel::EnumStimuli($sClass);
+
+				// Sort $aSortedTransitions based on labels from $aStimuli
+				uksort($aSortedTransitions, function($sKey1, $sKey2) use ($aStimuli) {
+					// If any transition is not in $aStimuli, put it at the end even though it's a weird situation
+					if ((false === isset($aStimuli[$sKey1])) || (false === isset($aStimuli[$sKey2]))) {
+						return 1;
+					}
+					return $aStimuli[$sKey1]->GetLabel() > $aStimuli[$sKey2]->GetLabel() ? 1 : -1;
+				});
+				break;
+
+			case static::ENUM_TRANSITIONS_SORT_TYPE_FIXED:
+			case static::ENUM_TRANSITIONS_SORT_TYPE_RELATIVE:
+				$aSortedTransitions = $aTransitions;
+
+				// Get states sorted as defined in the datamodel
+				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
+				$aAllowedValues = $oAttDef->GetAllowedValues();
+				$aStatesSortFromDatamodel = array_keys($aAllowedValues);
+
+				// Sort $aSortedTransitions based on the states sort from the datamodel
+				uksort($aSortedTransitions, function($sKey1, $sKey2) use ($aSortedTransitions, $aStatesSortFromDatamodel) {
+					$sTargetState1 = $aSortedTransitions[$sKey1]['target_state'];
+					$sTargetState2 = $aSortedTransitions[$sKey2]['target_state'];
+
+					return array_search($sTargetState1, $aStatesSortFromDatamodel) > array_search($sTargetState2, $aStatesSortFromDatamodel) ? 1 : -1;
+				});
+
+				if ($sSortType === static::ENUM_TRANSITIONS_SORT_TYPE_RELATIVE) {
+					// Find current state position
+					$sCurrentState = $this->Get($sStateAttCode);
+					$iCurrentStatePos = array_search($sCurrentState, $aStatesSortFromDatamodel);
+
+					foreach ($aSortedTransitions as $sStimulusCode => $aTransitionDef) {
+						// Leave state with higher ranks than the current's in their positions
+						if (array_search($aTransitionDef['target_state'], $aStatesSortFromDatamodel) >= $iCurrentStatePos) {
+							continue;
+						}
+
+						// Remove transition from beginning of the array and move it back at the end
+						array_shift($aSortedTransitions);
+						$aSortedTransitions = array_merge($aSortedTransitions, [$sStimulusCode => $aTransitionDef]);
+					}
+				}
+				break;
+
+			default:
+				$aSortedTransitions = $aTransitions;
+				IssueLog::Error('Could not sort object transitions as the sort type is not correct. Check "lifecycle.transitions_sort_type" conf. parameter.', LogChannels::CORE, [
+					'lifecycle.transitions_sort_type' => $sSortType,
+				]);
+		}
+
+		return $aSortedTransitions;
 	}
 
     /**

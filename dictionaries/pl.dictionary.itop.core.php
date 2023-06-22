@@ -22,57 +22,42 @@
  */
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:DeletedObjectLabel' => '%1s (usunięto)',
-	'Core:DeletedObjectTip'   => 'Obiekt został usunięty w dniu %1$s (%2$s)',
-
+	'Core:DeletedObjectTip' => 'Obiekt został usunięty w dniu %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Nie znaleziono obiektu (klasa: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip'   => 'Nie można znaleźć obiektu. Być może został usunięty jakiś czas temu, a od tego czasu dziennik został wyczyszczony.',
-
+	'Core:UnknownObjectTip' => 'Nie można znaleźć obiektu. Być może został usunięty jakiś czas temu, a od tego czasu dziennik został wyczyszczony.',
 	'Core:UniquenessDefaultError' => 'Błąd zasady niepowtarzalności \'%1$s\'',
-	'Core:CheckConsistencyError'  => 'Nie przestrzegano zasad spójności: %1$s',
-	'Core:CheckValueError'        => 'Nieoczekiwana wartość atrybutu \'%1$s\' (%2$s) : %3$s',
-
-	'Core:AttributeLinkedSet'  => 'Tablica obiektów',
+	'Core:CheckConsistencyError' => 'Nie przestrzegano zasad spójności: %1$s',
+	'Core:CheckValueError' => 'Nieoczekiwana wartość atrybutu \'%1$s\' (%2$s) : %3$s',
+	'Core:AttributeLinkedSet' => 'Tablica obiektów',
 	'Core:AttributeLinkedSet+' => 'Wszelkiego rodzaju obiekty tej samej klasy lub podklasy',
-
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplikaty w polu \'%1$s\' : %2$s',
-
-	'Core:AttributeDashboard'  => 'Pulpit',
+	'Core:AttributeDashboard' => 'Pulpit',
 	'Core:AttributeDashboard+' => '',
-
-	'Core:AttributePhoneNumber'  => 'Numer telefonu',
+	'Core:AttributePhoneNumber' => 'Numer telefonu',
 	'Core:AttributePhoneNumber+' => '',
-
 	'Core:AttributeObsolescenceDate' => 'Data utraty ważności',
 	'Core:AttributeObsolescenceDate+' => '',
-
 	'Core:AttributeTagSet' => 'Lista tagów',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'kliknij, aby dodać',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s od %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s z klas podrzędnych)',
-
 	'Core:AttributeCaseLog' => 'Log',
 	'Core:AttributeCaseLog+' => '',
-
 	'Core:AttributeMetaEnum' => 'Obliczone wyliczenie',
 	'Core:AttributeMetaEnum+' => '',
-
 	'Core:AttributeLinkedSetIndirect' => 'Tablica obiektów (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Dowolny rodzaj obiektów [podklasa] tej samej klasy',
-
 	'Core:AttributeInteger' => 'Liczba całkowita',
 	'Core:AttributeInteger+' => 'Wartość liczbowa (może być ujemna)',
-
 	'Core:AttributeDecimal' => 'Wartość dziesiętna',
 	'Core:AttributeDecimal+' => 'Wartość dziesiętna (może być ujemna)',
-
 	'Core:AttributeBoolean' => 'Wartość logiczna',
 	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Tak',
 	'Core:AttributeBoolean/Value:no' => 'Nie',
-
 	'Core:AttributeArchiveFlag' => 'Flaga archiwum',
 	'Core:AttributeArchiveFlag/Value:yes' => 'Tak',
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Ten obiekt jest widoczny tylko w trybie archiwum',
@@ -81,7 +66,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:AttributeArchiveFlag/Label+' => '',
 	'Core:AttributeArchiveDate/Label' => 'Data archiwizacji',
 	'Core:AttributeArchiveDate/Label+' => '',
-
 	'Core:AttributeObsolescenceFlag' => 'Flaga utraty ważności',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Tak',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Ten obiekt jest wykluczony z analizy wpływu i ukryty w wynikach wyszukiwania',
@@ -90,54 +74,38 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:AttributeObsolescenceFlag/Label+' => 'Obliczane dynamicznie na innych atrybutach',
 	'Core:AttributeObsolescenceDate/Label' => 'Data utraty ważności',
 	'Core:AttributeObsolescenceDate/Label+' => 'Przybliżona data, w której obiekt został uznany za wycofany',
-
 	'Core:AttributeString' => 'Ciąg',
 	'Core:AttributeString+' => 'Ciąg alfanumeryczny',
-
 	'Core:AttributeClass' => 'Klasa',
 	'Core:AttributeClass+' => '',
-
 	'Core:AttributeApplicationLanguage' => 'Język użutkownika',
 	'Core:AttributeApplicationLanguage+' => 'Język i kraj (EN US)',
-
 	'Core:AttributeFinalClass' => 'Klasa (auto)',
 	'Core:AttributeFinalClass+' => 'Prawdziwa klasa obiektu (automatycznie tworzona)',
-
 	'Core:AttributePassword' => 'Hasło',
 	'Core:AttributePassword+' => 'Hasło urządzenia zewnętrznego',
-
 	'Core:AttributeEncryptedString' => 'Zaszyfrowany ciąg',
 	'Core:AttributeEncryptedString+' => 'Łańcuch zaszyfrowany kluczem lokalnym',
 	'Core:AttributeEncryptUnknownLibrary' => 'Określono nieznaną bibliotekę szyfrowania (%1$s)',
 	'Core:AttributeEncryptFailedToDecrypt' => '** Błąd deszyfrowania **',
-
 	'Core:AttributeText' => 'Tekst',
 	'Core:AttributeText+' => 'Wielowierszowy ciąg znaków',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'Ciąg HTML',
-
 	'Core:AttributeEmailAddress' => 'Adres e-mail',
 	'Core:AttributeEmailAddress+' => '',
-
 	'Core:AttributeIPAddress' => 'Adres IP',
 	'Core:AttributeIPAddress+' => '',
-
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Język wyrażeń zapytania obiektowego OQL',
-
 	'Core:AttributeEnum' => 'Typ wyliczeniowy',
 	'Core:AttributeEnum+' => 'Lista predefiniowanych ciągów alfanumerycznych',
-
 	'Core:AttributeTemplateString' => 'Ciąg szablonu',
 	'Core:AttributeTemplateString+' => 'Ciąg zawierający symbole zastępcze',
-
 	'Core:AttributeTemplateText' => 'Tekst szablonu',
 	'Core:AttributeTemplateText+' => 'Tekst zawierający symbole zastępcze',
-
 	'Core:AttributeTemplateHTML' => 'Szablon HTML',
 	'Core:AttributeTemplateHTML+' => 'HTML zawierający symbole zastępcze',
-
 	'Core:AttributeDateTime' => 'Data/czas',
 	'Core:AttributeDateTime+' => 'Data i czas (rok-miesiąc-dzień gg:mm:ss)',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -155,7 +123,6 @@ Operatory:<br/>
 <p>
 Jeśli czas zostanie pominięty, domyślnie to 00:00:00
 </p>',
-
 	'Core:AttributeDate' => 'Data',
 	'Core:AttributeDate+' => 'Data (rok-miesiąc-dzień)',
 	'Core:AttributeDate?SmartSearch' => '
@@ -170,43 +137,30 @@ Operatory:<br/>
 	<b>&lt;</b><em>data</em><br/>
 	<b>[</b><em>data</em>,<em>data</em><b>]</b>
 </p>',
-
 	'Core:AttributeDeadline' => 'Ostateczny termin',
 	'Core:AttributeDeadline+' => 'Data wyświetlana w stosunku do aktualnego czasu',
-
 	'Core:AttributeExternalKey' => 'Klucz zewnętrzny',
 	'Core:AttributeExternalKey+' => 'Klucz zewnętrzny (lub obcy)',
-
 	'Core:AttributeHierarchicalKey' => 'Klucz hierarchiczny',
 	'Core:AttributeHierarchicalKey+' => 'Klucz zewnętrzny (lub obcy) do rodzica',
-
 	'Core:AttributeExternalField' => 'Pole zewnętrzne',
 	'Core:AttributeExternalField+' => 'Pole mapowane na klucz zewnętrzny',
-
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => 'Bezwzględny lub względny adres URL jako ciąg tekstowy',
-
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => 'Dowolna zawartość binarna (dokument)',
-
 	'Core:AttributeOneWayPassword' => 'Hasło jednokierunkowe',
 	'Core:AttributeOneWayPassword+' => 'Hasło zaszyfrowane (mieszane) w jedną stronę',
-
 	'Core:AttributeTable' => 'Tabela',
 	'Core:AttributeTable+' => 'Tablica indeksowana mająca dwa wymiary',
-
 	'Core:AttributePropertySet' => 'Właściwości',
 	'Core:AttributePropertySet+' => 'Lista nietypowych właściwości (nazwa i wartość)',
-
 	'Core:AttributeFriendlyName' => 'Przyjazna nazwa',
 	'Core:AttributeFriendlyName+' => 'Atrybut tworzony automatycznie; przyjazna nazwa jest obliczana po kilku atrybutach',
-
 	'Core:FriendlyName-Label' => 'Pełna nazwa',
 	'Core:FriendlyName-Description' => 'Pełna nazwa',
-
 	'Core:AttributeTag' => 'Tagi',
 	'Core:AttributeTag+' => '',
-	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchronizacja',
 	'Core:Context=Setup' => 'Instalacja',
@@ -484,6 +438,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Action' => 'Działanie własne',
 	'Class:Action+' => 'Działanie zdefiniowane przez użytkownika',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Nazwa',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => 'Opis',
@@ -551,6 +506,22 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'wysoka',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:language' => 'Language~~',
+	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
+	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
+	'ActionEmail:main' => 'Message~~',
+	'ActionEmail:trigger' => 'Triggers~~',
+	'ActionEmail:recipients' => 'Contacts~~',
+	'ActionEmail:preview_tab' => 'Preview~~',
+	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
+	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
+	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
+	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
 ));
 
 //
@@ -560,6 +531,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Trigger' => 'Wyzwalacz',
 	'Class:Trigger+' => 'Niestandardowa obsługa zdarzeń',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Opis',
 	'Class:Trigger/Attribute:description+' => 'jedna linia opisu',
 	'Class:Trigger/Attribute:action_list' => 'Działania wyzwalacza',
@@ -568,6 +540,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Trigger/Attribute:finalclass+' => 'Nazwa ostatniej klasy',
 	'Class:Trigger/Attribute:context' => 'Kontekst',
 	'Class:Trigger/Attribute:context+' => 'Kontekst umożliwiający uruchomienie wyzwalacza',
+	'Class:Trigger/Attribute:complement' => 'Additional information~~',
+	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
 ));
 
 //
@@ -664,6 +638,17 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 ));
 
 //
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 
@@ -699,11 +684,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 // Synchro Data Source
 //
 Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Class:SynchroDataSource' => 'Źródło danych synchronizacji',
 	'Class:SynchroDataSource/Attribute:name' => 'Nazwa',
 	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Opis',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Klasa docelowa',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class~~',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Użytkownik',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Kontakt do powiadomienia',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Kontakt do powiadomienia w przypadku błędu',
@@ -712,6 +699,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'Hiperłącze do aplikacji',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hiperłącze do obiektu '.ITOP_APPLICATION_SHORT.' w zewnętrznej aplikacji, z którą '.ITOP_APPLICATION_SHORT.' jest zsynchronizowany (jeśli dotyczy). Możliwe symbole zastępcze: $this->attribute$ i $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Polityka uzgadniania',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
+"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Pełen interwał ładowania',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Całkowite przeładowanie wszystkich danych musi następować co najmniej tak często, jak określono w tym miejscu',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Działanie dla zera',
@@ -731,6 +720,33 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Czas przechowywania wycofanego obiektu przed usunięciem',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Tabela danych',
 	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Nazwa tabeli do przechowywania danych synchronizacji. Jeśli pozostanie puste, zostanie obliczona nazwa domyślna.',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Wdrażane',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Wycofane',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Użytkowane',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Ograniczenie zakresu',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Użycie atrybutów',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Użycie pola primary_key',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Utwórz',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Błąd',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Błąd',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Zmień',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Utwórz',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Błąd',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Weź pierwszy (losowy?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Zasada usuwania',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'What to do when a replica becomes obsolete:
+"Ignore": do nothing, the associated object remains as is in iTop.
+"Delete": Delete the associated object in iTop (and the replica in the data table).
+"Update": Update the associated object as specified by the Update rules (see below).
+"Update then Delete": apply the "Update rules". When Retention Duration expires, execute a "Delete" ~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Usuń',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignoruj',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Zmień',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Zaktualizuj, a potem Usuń',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Lista atrybutów',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Tylko administratorzy',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Każdy mógże usunąć te obiekty',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Nikt',
 	'SynchroDataSource:Description' => 'Opis',
 	'SynchroDataSource:Reconciliation' => 'Wyszukiwanie &amp; uzgodnione',
 	'SynchroDataSource:Deletion' => 'Zasady usuwania',
@@ -755,8 +771,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:Synchro:NeverRun' => 'Synchronizacja nigdy nie został uruchomiona. Nie ma jeszcze dziennika.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Ostatnia synchronizacja zakończyła się w dniu %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Synchronizacja rozpoczęta w dniu %1$s nadal działa...',
-	'Menu:DataSources' => 'Źródła danych synchronizacji', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'Wszystkie źródła danych synchronizacji', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources' => 'Źródła danych synchronizacji',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'Wszystkie źródła danych synchronizacji',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Zignorowano (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Zaginięte (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Istniejące (%1$s)',
@@ -820,29 +838,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Poprzednia wartość',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Dziennik przypadku',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Ostatni wpis',
-	'Class:SynchroDataSource' => 'Źródło danych synchronizacji',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Wdrażane',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Wycofane',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Użytkowane',
-	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Ograniczenie zakresu',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Użycie atrybutów',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Użycie pola primary_key',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Utwórz',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Błąd',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Błąd',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Zmień',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Utwórz',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Błąd',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Weź pierwszy (losowy?)',
-	'Class:SynchroDataSource/Attribute:delete_policy' => 'Zasada usuwania',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Usuń',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignoruj',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Zmień',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Zaktualizuj, a potem Usuń',
-	'Class:SynchroDataSource/Attribute:attribute_list' => 'Lista atrybutów',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Tylko administratorzy',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Każdy mógże usunąć te obiekty',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Nikt',
 	'Class:SynchroAttribute' => 'Atrybut synchronizacji',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Źródło danych synchronizacji',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Kod atrybutu',
@@ -903,19 +898,16 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Preferencje',
 	'Core:ExecProcess:Code1' => 'Niewłaściwe polecenie lub polecenie zakończone błędami (np. zła nazwa skryptu)',
 	'Core:ExecProcess:Code255' => 'Błąd PHP (parsowanie lub środowisko uruchomieniowe)',
-
-	// Attribute Duration
+    // Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
-
-	// Explain working time computing
+    // Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Czas, który upłynął (przechowywany jako "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Czas spędzony dla "%1$s"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Ostateczny termin dla "%1$s" w %2$d%%',
-
-	// Bulk export
+    // Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Brak parametru "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Nieprawidłowa wartość parametru "query". Nie ma słownika zapytań odpowiadającego identyfikatorowi: "%1$s".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Format eksportu:',
@@ -967,20 +959,34 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Domyślny format (%1$s), np. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Własny format: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Strona %1$s',
-	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
+	'Core:DateTime:Placeholder_d' => 'DD',
+    // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D',
+    // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM',
+    // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M',
+    // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY',
+    // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY',
+    // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh',
+    // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h',
+    // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh',
+    // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h',
+    // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm',
+    // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM',
+    // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm',
+    // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss',
+    // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Zły format',
 	'Core:Validator:Mandatory' => 'Proszę wypełnić to pole',
 	'Core:Validator:MustBeInteger' => 'Musi być liczbą całkowitą',
@@ -993,7 +999,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TagSetFieldData' => '%2$s dla klasy %1$s',
 	'Class:TagSetFieldData+' => '',
-
 	'Class:TagSetFieldData/Attribute:code' => 'Kod',
 	'Class:TagSetFieldData/Attribute:code+' => 'Kod wewnętrzny. Musi zawierać co najmniej 3 znaki alfanumeryczne',
 	'Class:TagSetFieldData/Attribute:label' => 'Etykieta',
@@ -1003,7 +1008,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Klasa Tagu',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Klasa obiektu',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Kod pola',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Nie można usunąć używanych tagów',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Kody tagów lub etykiety muszą być unikalne',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Kod tagu musi zawierać od 3 do %1$d znaków alfanumerycznych, zaczynając od litery.',
@@ -1090,8 +1094,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Ostatnia próba',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Nieprawidłowy format konfiguracji "async_task_retries[%1$s]". Oczekuje się tablicy z następującymi kluczami: %2$s',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Nieprawidłowy format konfiguracji "async_task_retries[%1$s]": nieoczekiwany klucz "%2$s". Oczekuje się tylko następujących kluczy: %3$s',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Nieprawidłowy format konfiguracji "async_task_retries[%1$s]". Oczekuje się tablicy z następującymi kluczami: %2$s',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Nieprawidłowy format konfiguracji "async_task_retries[%1$s]": nieoczekiwany klucz "%2$s". Oczekuje się tylko następujących kluczy: %3$s',
 ));
 
 //

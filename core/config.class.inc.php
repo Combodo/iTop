@@ -946,6 +946,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'lifecycle.transitions_sort_type' => [
+			'type'                => 'string',
+			'description'         => 'How transitions will be sorted in the GUI. Possible values are "xml", "alphabetical", "fixed" or "relative"',
+			'default'             => DBObject::DEFAULT_TRANSITIONS_SORT_TYPE,
+			'value'               => DBObject::DEFAULT_TRANSITIONS_SORT_TYPE,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
 		'url_validation_pattern' => [
 			'type'                => 'string',
 			'description'         => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
@@ -1630,8 +1638,8 @@ class Config
 		'audit.enable_selection_landing_page' => [
 			'type'                => 'bool',
 			'description'         => 'If true audit categories must be selected before results are computed (use this setting in case of a lot of audit categories)',
-			'default'             => false,
-			'value'               => false,
+			'default'             => true,
+			'value'               => true,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],

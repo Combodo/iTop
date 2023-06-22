@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Form\Field;
 
 use Closure;
+use ContextTag;
 use utils;
 
 /**
@@ -211,14 +212,13 @@ abstract class MultipleChoicesField extends Field
 		return $this;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public function Validate() {
 		$this->SetValid(true);
 		$this->EmptyErrorMessages();
 
-		if ($this->GetReadOnly() === false) {
+		if ((ContextTag::Check(ContextTag::TAG_REST)) && ($this->GetReadOnly() === false)) {
+			// Only doing the check when coming from the REST API, as the user portal might send invalid values (see VerifyCurrentValue() method below)
+			// Also do not check read only fields, are they are send with a null value when submitting request template from the console
 			if (count($this->currentValue) > 0) {
 				foreach ($this->currentValue as $sCode => $value) {
 					if (utils::IsNullOrEmptyString($value)) {

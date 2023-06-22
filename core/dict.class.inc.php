@@ -106,10 +106,10 @@ class Dict
 	}
 
 	/**
-	 * Returns a localised string from the dictonary
+	 * Returns a localised string from the dictionary
 	 *
 	 * @param string $sStringCode The code identifying the dictionary entry
-	 * @param string $sDefault Default value if there is no match in the dictionary
+	 * @param string $sDefault Default value if there is no match in the dictionary, if no default provided, returns $sStringCode unchanged
 	 * @param bool $bUserLanguageOnly False to allow the use of the default language as a fallback, true otherwise
 	 *
 	 * @return string

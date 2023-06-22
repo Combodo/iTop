@@ -32,6 +32,8 @@ class DateTimeField extends StringField
 	protected $sPHPDateTimeFormat;
 	/** @var bool */
 	protected $bDateOnly;
+	/** @var string|null $sDateTimePickerWidgetParent @since 3.1 */
+	private ?string $sDateTimePickerWidgetParent = null;
 
 	/**
 	 * @inheritDoc
@@ -107,4 +109,34 @@ class DateTimeField extends StringField
 		return $this->bDateOnly;
 	}
 
+
+	/**
+	 * Allow date time picker widget popup to be positioned relative to a specific dom element.
+	 *
+	 * @see N°803 - Allow display & edition of attributes on n:n relations on Portal
+	 * LinkedSetFieldRenderer allow modification of link attributes, the default widget positioning truncates the popup.
+	 *
+	 * @param string $sParent
+	 *
+	 * @return void
+	 * @since 3.1
+	 *
+	 */
+	public function SetDateTimePickerWidgetParent(string $sParent): DateTimeField
+	{
+		$this->sDateTimePickerWidgetParent = $sParent;
+
+		return $this;
+	}
+
+	/**
+	 *
+	 * @return string|null
+	 * @since 3.1
+	 *
+	 */
+	public function GetDateTimePickerWidgetParent(): ?string
+	{
+		return $this->sDateTimePickerWidgetParent;
+	}
 }

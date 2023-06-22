@@ -831,6 +831,7 @@ class utilsTest extends ItopTestCase
 			'bad element_identifier' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, 'AD05nb+', 'AD05nb'],
 			'good url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schools.com', 'https://www.w3schools.com'],
 			'bad url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schoo��ls.co�m', null],
+			'url with injection' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<img zzz src=x onerror=alert(1) //>', null],
 			'raw_data' => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
 		];
 	}
@@ -840,17 +841,19 @@ class utilsTest extends ItopTestCase
 	 *
 	 * @dataProvider escapeHtmlProvider
 	 */
-	public function testEscapeHtml($sInput, $sExpectedEscaped)
+	public function testEscapeHtml($sInput, $sExpectedEscaped, $bDoubleEncode = false)
 	{
 		if (is_null($sExpectedEscaped)) {
 			$sExpectedEscaped = $sInput;
 		}
 
-		$sEscaped = utils::EscapeHtml($sInput);
+		$sEscaped = utils::EscapeHtml($sInput, $bDoubleEncode);
 		self::assertSame($sExpectedEscaped, $sEscaped);
 
 		$sEscapedDecoded = utils::EscapedHtmlDecode($sEscaped);
-		self::assertSame($sInput, $sEscapedDecoded);
+		if (false === $bDoubleEncode) {
+			self::assertSame($sInput, $sEscapedDecoded);
+		}
 	}
 
 	public function escapeHtmlProvider()
@@ -858,8 +861,17 @@ class utilsTest extends ItopTestCase
 		return [
 			'no escape' => ['abcdefghijklmnop', null],
 			'&amp;'     => ['abcdefghijklmnop&0123456789', 'abcdefghijklmnop&amp;0123456789'],
-			['"double quotes"', '&quot;double quotes&quot;'],
-			["'simple quotes'", '&apos;simple quotes&apos;'],
+			'double quotes' => ['"double quotes"', '&quot;double quotes&quot;'],
+			'simple quotes' => ["'simple quotes'", '&apos;simple quotes&apos;'],
+			'no double encode' => [
+				'<root><title>Foo & Bar</title></root>',
+				'&lt;root&gt;&lt;title&gt;Foo &amp; Bar&lt;/title&gt;&lt;/root&gt;'
+			],
+			'double encode forced (for XML mostly)' => [
+				'<root><title>Foo &amp; Bar</title></root>',
+				'&lt;root&gt;&lt;title&gt;Foo &amp;amp; Bar&lt;/title&gt;&lt;/root&gt;',
+				true
+			],
 		];
 	}
 }

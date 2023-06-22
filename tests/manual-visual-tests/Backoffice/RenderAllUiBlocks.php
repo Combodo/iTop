@@ -334,7 +334,8 @@ $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Fieldset/field examples', 2
 $oDashletFieldset1 = new FieldSet('Fieldset 1');
 $oDashletField1 = FieldUIBlockFactory::MakeStandard('Field A');
 $oDashletInput1 = InputUIBlockFactory::MakeStandard('text', 'input1', 'Input 1');
-$oDashletField2 = FieldUIBlockFactory::MakeStandard('Field B');
+$oDashletField2 = FieldUIBlockFactory::MakeStandard('Field B (with a description in a tooltip)')
+	->SetDescription('Description for the field B');
 $oDashletInput2 = InputUIBlockFactory::MakeStandard('text', 'input2', 'Input 2');
 $oDashletField3 = FieldUIBlockFactory::MakeStandard('Field C');
 $oDashletInput3 = InputUIBlockFactory::MakeStandard('text', 'input3', 'Input 3');

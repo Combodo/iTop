@@ -21,6 +21,8 @@
 namespace Combodo\iTop\Form\Field;
 
 use Closure;
+use Dict;
+use ormLinkSet;
 
 /**
  * Description of LinkedSetField
@@ -35,10 +37,12 @@ class LinkedSetField extends Field
 	/** @var bool DEFAULT_DISPLAY_OPENED */
 	const DEFAULT_DISPLAY_OPENED = false;
 	/** @var bool DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS */
-	const DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS = false; 
-	
+	const DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS = false;
+
 	/** @var string $sTargetClass */
 	protected $sTargetClass;
+	/** @var string $sLinkedClass */
+	protected $sLinkedClass;
 	/** @var string $sExtKeyToRemote */
 	protected $sExtKeyToRemote;
 	/** @var bool $bIndirect */
@@ -51,6 +55,8 @@ class LinkedSetField extends Field
 	protected $aLimitedAccessItemIDs;
 	/** @var array $aAttributesToDisplay */
 	protected $aAttributesToDisplay;
+	/** @var array $aLnkAttributesToDisplay */
+	protected $aLnkAttributesToDisplay;
 	/** @var string $sSearchEndpoint */
 	protected $sSearchEndpoint;
 	/** @var string $sInformationEndpoint */
@@ -68,6 +74,7 @@ class LinkedSetField extends Field
 		$this->bDisplayLimitedAccessItems = static::DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS;
 		$this->aLimitedAccessItemIDs = array();
 		$this->aAttributesToDisplay = array();
+		$this->aLnkAttributesToDisplay = array();
 		$this->sSearchEndpoint = null;
 		$this->sInformationEndpoint = null;
 
@@ -92,6 +99,31 @@ class LinkedSetField extends Field
 	public function SetTargetClass(string $sTargetClass)
 	{
 		$this->sTargetClass = $sTargetClass;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @since 3.1
+	 *
+	 */
+	public function GetLinkedClass()
+	{
+		return $this->sLinkedClass;
+	}
+
+	/**
+	 *
+	 * @since 3.1
+	 *
+	 * @param string $sLinkedClass
+	 *
+	 * @return $this
+	 */
+	public function SetLinkedClass(string $sLinkedClass)
+	{
+		$this->sLinkedClass = $sLinkedClass;
 
 		return $this;
 	}
@@ -238,6 +270,35 @@ class LinkedSetField extends Field
 	}
 
 	/**
+	 * Returns a hash array of attributes to be displayed in the linkedset in the form $sAttCode => $sAttLabel
+	 *
+	 * @since 3.1
+	 *
+	 * @param boolean $bAttCodesOnly If set to true, will return only the attcodes
+	 *
+	 * @return array
+	 */
+	public function GetLnkAttributesToDisplay(bool $bAttCodesOnly = false)
+	{
+		return ($bAttCodesOnly) ? array_keys($this->aLnkAttributesToDisplay) : $this->aLnkAttributesToDisplay;
+	}
+
+	/**
+	 *
+	 * @since 3.1
+	 *
+	 * @param array $aAttributesToDisplay
+	 *
+	 * @return $this
+	 */
+	public function SetLnkAttributesToDisplay(array $aAttributesToDisplay)
+	{
+		$this->aLnkAttributesToDisplay = $aAttributesToDisplay;
+
+		return $this;
+	}
+
+	/**
 	 * @return string|null
 	 */
 	public function GetSearchEndpoint()
@@ -287,5 +348,40 @@ class LinkedSetField extends Field
 	public function IsLimitedAccessItem(int $iItemID)
 	{
 		return in_array($iItemID, $this->aLimitedAccessItemIDs, false);
+	}
+
+	/** @inheritdoc @since 3.1 */
+	public function Validate()
+	{
+		$bValid = parent::Validate();
+
+		/** @var ormLinkSet $oSet */
+		$oSet = $this->GetCurrentValue();
+
+		// retrieve displayed attributes
+		$aAttributesToDisplayCodes = $this->GetLnkAttributesToDisplay(true);
+
+		// validate each links...
+		/** @var \DBObject $oItem */
+		foreach ($oSet as $oItem) {
+			$aChanges = $oItem->ListChanges();
+			foreach ($aChanges as $sAttCode => $value) {
+				if (!in_array($sAttCode, $aAttributesToDisplayCodes)) {
+					continue;
+				}
+				$res = $oItem->CheckValue($sAttCode);
+				if ($res !== true) {
+					$sAttLabel = $this->GetLabel($sAttCode);
+					$sItem = $oItem->Get('friendlyname') != '' ? $oItem->Get('friendlyname') : Dict::S('UI:Links:NewItem');
+					$sIssue = Dict::Format('Core:CheckValueError', $sAttLabel, $sAttCode, $res);
+					$this->AddErrorMessage('<b>'.$sItem.' : </b>'.$sIssue);
+					$bValid = false;
+				}
+			}
+		}
+
+		$oSet->Rewind();
+
+		return $bValid;
 	}
 }

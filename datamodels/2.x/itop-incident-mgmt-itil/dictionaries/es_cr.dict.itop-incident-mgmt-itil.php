@@ -15,7 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
- /**
+/**
  * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
@@ -112,6 +112,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => 'Baja',
 	'Class:Incident/Attribute:origin' => 'Origen',
 	'Class:Incident/Attribute:origin+' => 'Origen',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => 'Correo-e',
 	'Class:Incident/Attribute:origin/Value:mail+' => 'Correo-e',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoreo',
@@ -233,7 +237,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Reabrir',
 	'Class:Incident/Stimulus:ev_reopen+' => 'Reabrir',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'No puede asignarse el incidente Padre a si mismo',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'Resolver tickets hijos',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
 	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',

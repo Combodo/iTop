@@ -66,20 +66,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Organization/Attribute:name+' => 'Nom commun',
 	'Class:Organization/Attribute:code' => 'Code',
 	'Class:Organization/Attribute:code+' => 'Organisation code (Siret, DUNS,...)',
-	'Class:Organization/Attribute:status' => 'Statut',
+	'Class:Organization/Attribute:status' => 'Etat',
 	'Class:Organization/Attribute:status+' => '',
-	'Class:Organization/Attribute:status/Value:active' => 'active',
-	'Class:Organization/Attribute:status/Value:active+' => 'active',
-	'Class:Organization/Attribute:status/Value:inactive' => 'inactive',
-	'Class:Organization/Attribute:status/Value:inactive+' => 'Inactive',
+	'Class:Organization/Attribute:status/Value:active' => 'Actif',
+	'Class:Organization/Attribute:status/Value:active+' => '',
+	'Class:Organization/Attribute:status/Value:inactive' => 'Inactif',
+	'Class:Organization/Attribute:status/Value:inactive+' => '',
 	'Class:Organization/Attribute:parent_id' => 'Organisation Parent',
 	'Class:Organization/Attribute:parent_id+' => 'Organisation parent',
 	'Class:Organization/Attribute:parent_name' => 'Nom du parent',
 	'Class:Organization/Attribute:parent_name+' => 'Nom de l\'organisation parente',
 	'Class:Organization/Attribute:deliverymodel_id' => 'Modèle de support',
-	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
+	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nom modèle de support',
-	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
+	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Nom commun',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
 	'Class:Organization/Attribute:overview' => 'Tableau de bord',
@@ -97,12 +97,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Location+' => 'Tout type de lieu: Région, Pays, Ville, Site, batiment, Bureau,...',
 	'Class:Location/Attribute:name' => 'Nom',
 	'Class:Location/Attribute:name+' => '',
-	'Class:Location/Attribute:status' => 'Statut',
+	'Class:Location/Attribute:status' => 'Etat',
 	'Class:Location/Attribute:status+' => '',
 	'Class:Location/Attribute:status/Value:active' => 'Actif',
-	'Class:Location/Attribute:status/Value:active+' => 'Actif',
+	'Class:Location/Attribute:status/Value:active+' => '',
 	'Class:Location/Attribute:status/Value:inactive' => 'Inactif',
-	'Class:Location/Attribute:status/Value:inactive+' => 'Inactif',
+	'Class:Location/Attribute:status/Value:inactive+' => '',
 	'Class:Location/Attribute:org_id' => 'Organisation',
 	'Class:Location/Attribute:org_id+' => '',
 	'Class:Location/Attribute:org_name' => 'Nom organisation',
@@ -128,14 +128,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Contact' => 'Contact',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Nom',
 	'Class:Contact/Attribute:name+' => '',
-	'Class:Contact/Attribute:status' => 'Statut',
+	'Class:Contact/Attribute:status' => 'Etat',
 	'Class:Contact/Attribute:status+' => '',
 	'Class:Contact/Attribute:status/Value:active' => 'Actif',
-	'Class:Contact/Attribute:status/Value:active+' => 'Actif',
+	'Class:Contact/Attribute:status/Value:active+' => '',
 	'Class:Contact/Attribute:status/Value:inactive' => 'Inactif',
-	'Class:Contact/Attribute:status/Value:inactive+' => 'Inactif',
+	'Class:Contact/Attribute:status/Value:inactive+' => '',
 	'Class:Contact/Attribute:org_id' => 'Organisation',
 	'Class:Contact/Attribute:org_id+' => '',
 	'Class:Contact/Attribute:org_name' => 'Nom organisation',
@@ -165,8 +166,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Person' => 'Personne',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Nom',
-	'Class:Person/Attribute:name+' => '~~',
+	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Prénom',
 	'Class:Person/Attribute:first_name+' => '',
 	'Class:Person/Attribute:employee_number' => 'Numéro d\'employé',
@@ -206,6 +208,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Team' => 'Equipe',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Membres',
 	'Class:Team/Attribute:persons_list+' => 'Toutes les personnes appartenant à cette équipe',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
@@ -219,6 +222,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document' => 'Document',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Nom',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organisation',
@@ -233,7 +237,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document/Attribute:version+' => '',
 	'Class:Document/Attribute:description' => 'Description',
 	'Class:Document/Attribute:description+' => '',
-	'Class:Document/Attribute:status' => 'Statut',
+	'Class:Document/Attribute:status' => 'Etat',
 	'Class:Document/Attribute:status+' => '',
 	'Class:Document/Attribute:status/Value:draft' => 'Brouillon',
 	'Class:Document/Attribute:status/Value:draft+' => '',
@@ -318,6 +322,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkPersonToTeam' => 'Lien Personne / Equipe',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
+	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Equipe',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => 'Une équipe à laquelle appartient la personne',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Nom Equipe',
@@ -391,22 +397,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'theme:fullmoon' => 'Full moon',
 	'theme:test-red' => 'Instance de test (Rouge)',
 ));
-
 //
 // n:n relations custom labels : nom de classe féminin
 //
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Person/Attribute:team_list/UI:Links:Add:Button+'       => 'Ajouter une %4$s',
-	'Class:Person/Attribute:team_list/UI:Links:Add:Modal:Title'   => 'Ajouter une %4$s à %2$s',
-	'Class:Person/Attribute:team_list/UI:Links:Remove:Button+'    => 'Retirer cette %4$s',
-	'Class:Person/Attribute:team_list/UI:Links:Remove:Modal:Title'  => 'Retirer une %4$s',
-	'Class:Team/Attribute:persons_list/UI:Links:Add:Button+'      => 'Ajouter une %4$s',
-	'Class:Team/Attribute:persons_list/UI:Links:Add:Modal:Title'  => 'Ajouter une %4$s à %2$s',
-	'Class:Team/Attribute:persons_list/UI:Links:Remove:Button+'   => 'Retirer cette %4$s',
-	'Class:Team/Attribute:persons_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
+	'Class:Person/Attribute:team_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
+	'Class:Person/Attribute:team_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Person/Attribute:team_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Person/Attribute:team_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
+	'Class:Team/Attribute:persons_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
+	'Class:Team/Attribute:persons_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Team/Attribute:persons_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Team/Attribute:persons_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s'
 ));
-
-
 // 1:n relations custom labels for tooltip and pop-up title
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Location/Attribute:person_list/UI:Links:Create:Button+' => 'Créer une %4$s',
@@ -420,7 +423,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Person/Attribute:user_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
 	'Class:Person/Attribute:user_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
 	'Class:Person/Attribute:user_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Person/Attribute:user_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-
+	'Class:Person/Attribute:user_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s'
 ));
-

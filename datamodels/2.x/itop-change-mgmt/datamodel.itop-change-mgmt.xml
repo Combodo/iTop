@@ -43,9 +43,11 @@
       </properties>
       <fields>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="new">
               <code>new</code>
+              <rank>10</rank>
               <style>
                 <main_color>$ibo-lifecycle-new-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
@@ -54,6 +56,7 @@
             </value>
             <value id="assigned">
               <code>assigned</code>
+              <rank>40</rank>
               <style>
                 <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
@@ -62,9 +65,11 @@
             </value>
             <value id="planned">
               <code>planned</code>
+              <rank>50</rank>
             </value>
             <value id="approved">
               <code>approved</code>
+              <rank>60</rank>
               <style>
                 <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
@@ -73,6 +78,7 @@
             </value>
             <value id="closed">
               <code>closed</code>
+              <rank>100</rank>
               <style>
                 <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
@@ -81,6 +87,7 @@
             </value>
             <value id="rejected">
               <code>rejected</code>
+              <rank>30</rank>
               <style>
                 <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
                 <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
@@ -98,6 +105,7 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="category" xsi:type="AttributeEnum">
+          <sort_type>label</sort_type>
           <values>
             <value id="hardware">
               <code>hardware</code>

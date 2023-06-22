@@ -390,6 +390,11 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle) {
 		for (var j in oColumns) {
 			if (oColumns[j]['data']) {
 				if (oColumns[j]['data']!='id') {
+					// Ignore columns that seem not to contain an attribute
+					if (typeof oColumns[j]['data'] !== 'string') {
+						continue;
+					}
+
 					var sCode = oColumns[j]['data'].split("/");
 					if (sCode[1] == '_key_') {
 						sCode[1] = 'id';

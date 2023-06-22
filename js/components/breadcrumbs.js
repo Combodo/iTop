@@ -121,6 +121,7 @@ $(function()
 							sBreadcrumbsItemHtml += '<span class="ibo-is-current" data-role="" data-breadcrumb-entry-number="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+sLabel+'</span></span>';
 						} else {
 							var sSanitizedUrl = StripArchiveArgument(oEntry['url']);
+							sSanitizedUrl = CombodoSanitizer.EscapeHtml(sSanitizedUrl, false);
 							sBreadcrumbsItemHtml += '<a class="" data-role="" data-breadcrumb-entry-number="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+sLabel+'</span></a>';
 						}
 					}

@@ -49,6 +49,11 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
+		if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+			// Not allowed if not already connected
+			return LoginWebPage::LOGIN_FSM_CONTINUE;
+		}
+
 		if (empty(Session::Get('login_mode')) || Session::Get('login_mode') == static::LOGIN_MODE)
 		{
 			static::InitCASClient();
@@ -114,6 +119,10 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		if (Session::Get('login_mode') == static::LOGIN_MODE)
 		{
 			Session::Unset('phpCAS');
+			if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+				// don't display the login page
+				return LoginWebPage::LOGIN_FSM_CONTINUE;
+			}
 			if ($iErrorCode != LoginWebPage::EXIT_CODE_MISSINGLOGIN)
 			{
 				$oLoginWebPage = new LoginWebPage();

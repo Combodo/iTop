@@ -30,10 +30,10 @@
 //
 // Class: lnkFunctionalCIToProviderContract
 //
-
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract~~',
 	'Class:lnkFunctionalCIToProviderContract+' => '~~',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider contract~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Provider contract Name~~',
@@ -51,6 +51,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkFunctionalCIToService' => 'Link FunctionalCI / Service~~',
 	'Class:lnkFunctionalCIToService+' => '~~',
+	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service~~',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '~~',
 	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Service Name~~',

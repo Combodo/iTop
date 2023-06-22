@@ -667,7 +667,7 @@ class DashletUnknown extends Dashlet
 	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerLongTextField('xml', Dict::S('UI:DashletUnknown:Prop-XMLConfiguration'), $this->sOriginalDashletXML);
+		$oField = new DesignerXMLField('xml', Dict::S('UI:DashletUnknown:Prop-XMLConfiguration'), $this->sOriginalDashletXML);
 		$oForm->AddField($oField);
 	}
 
@@ -869,7 +869,7 @@ class DashletPlainText extends Dashlet
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sText = $this->aProperties['text'];
-		$sText = utils::EscapeHtml($sText);
+		$sText = utils::EscapeHtml(Dict::S($sText));
 		$sText = str_replace(array("\r\n", "\n", "\r"), "<br/>", $sText);
 
 		$sId = 'plaintext_'.($bEditMode ? 'edit_' : '').$this->sId;

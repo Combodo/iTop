@@ -33,6 +33,7 @@
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkFunctionalCIToTicket' => 'Связь Функциональная КЕ/Тикет',
 	'Class:lnkFunctionalCIToTicket+' => '',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Тикет',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Тикет',

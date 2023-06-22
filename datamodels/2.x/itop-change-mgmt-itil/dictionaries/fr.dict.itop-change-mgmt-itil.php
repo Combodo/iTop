@@ -64,7 +64,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Change' => 'Ticket de changement',
+	'Class:Change' => 'Ticket de Changement',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Etat',
 	'Class:Change/Attribute:status+' => '',
@@ -167,7 +167,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:RoutineChange' => 'Ticket de Changement de Routine',
+	'Class:RoutineChange' => 'Changement de Routine',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Valider',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
@@ -198,7 +198,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ApprovedChange' => 'Changements pré-approuvés',
+	'Class:ApprovedChange' => 'Changement pré-approuvé',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Date d\'approbation',
 	'Class:ApprovedChange/Attribute:approval_date+' => '',
@@ -233,7 +233,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:NormalChange' => 'Ticket de Changement Normal',
+	'Class:NormalChange' => 'Changement Normal',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Date d\'acceptation',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
@@ -268,7 +268,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EmergencyChange' => 'Ticket de Changement d\'Urgence',
+	'Class:EmergencyChange' => 'Changement urgent',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valider',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
@@ -293,7 +293,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Fermer',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 ));
-
 // 1:n relations custom labels for tooltip and pop-up title
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:child_changes_list/UI:Links:Create:Button+' => 'Créer un %4$s',
@@ -319,6 +318,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
 	'Class:Change/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
 ));
-

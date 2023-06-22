@@ -34,6 +34,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Open requests by type~~',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open requests by organization~~',
 	'Class:UserRequest:KnownErrorList' => 'Known Errors~~',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 	'Menu:UserRequest:MyWorkOrders' => 'Work orders assigned to me~~',
 	'Menu:UserRequest:MyWorkOrders+' => 'All work orders assigned to me~~',
 	'Class:Problem:KnownProblemList' => 'Known problems~~',
@@ -115,6 +116,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'low~~',
 	'Class:UserRequest/Attribute:origin' => 'Origin~~',
 	'Class:UserRequest/Attribute:origin+' => '~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'email~~',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'email~~',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'monitoring~~',
@@ -270,7 +275,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Portal:SelectLanguage' => 'Change you language~~',
 	'Portal:LanguageChangedTo_Lang' => 'Language changed to~~',
 	'Portal:ChooseYourFavoriteLanguage' => 'Choose your favorite language~~',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));

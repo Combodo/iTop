@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'theme:darkmoon' => 'Luna Obscura',
 ));

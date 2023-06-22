@@ -37,4 +37,5 @@
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:UserLDAP' => 'LDAP kullanıcısı',
 	'Class:UserLDAP+' => 'Yetki kontrolü LDAP tarafından yapılan',
+	'UserLDAP:server' => 'LDAP specifics~~',
 ));

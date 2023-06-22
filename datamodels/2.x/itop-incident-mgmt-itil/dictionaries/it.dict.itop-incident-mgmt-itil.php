@@ -110,6 +110,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => 'Bassa',
 	'Class:Incident/Attribute:origin' => 'Origine',
 	'Class:Incident/Attribute:origin+' => '~~',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => 'Mail',
 	'Class:Incident/Attribute:origin/Value:mail+' => 'Mail',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -231,7 +235,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Ri-Apri',
 	'Class:Incident/Stimulus:ev_reopen+' => '~~',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Non si può assegnare una richiesta padre a se stesso',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Risoluzione a cascata delle richieste figlie (ev_autoresolve), e allineare le seguenti caratteristiche: servizio, team, agente e risoluzione',
 	'Tickets:Related:OpenIncidents' => 'Incidenti aperti',

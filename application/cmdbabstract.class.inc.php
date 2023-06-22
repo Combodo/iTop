@@ -3085,7 +3085,10 @@ JS
 
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
-		$sState = $this->GetState();
+		$sLifecycleStateForWizardHelper = '';
+		if (MetaModel::HasLifecycle($sClass)) {
+			$sLifecycleStateForWizardHelper = $this->GetState();
+		}
 		$sSessionStorageKey = $sClass.'_'.$iKey;
 		$sTempId = utils::GetUploadTempId($iTransactionId);
 		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
@@ -3095,7 +3098,7 @@ JS
 		sessionStorage.removeItem('$sSessionStorageKey');
 		
 		// Create the object once at the beginning of the page...
-		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sState');
+		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sLifecycleStateForWizardHelper');
 		oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
 		oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
 EOF
@@ -3389,22 +3392,15 @@ EOF
 		];
 
 		// The list of candidate fields is made of the ordered list of "details" attributes + other attributes
-		$aAttributes = array();
-		foreach ($this->FlattenZList(MetaModel::GetZListItems($sClass, 'details')) as $sAttCode) {
-			$aAttributes[$sAttCode] = true;
-		}
+		// First attributes from the "details" zlist as they were sorted...
+		$aList = $this->FlattenZList(MetaModel::GetZListItems($sClass, 'details'));
+
+		// ... then append forgotten attributes
 		foreach (MetaModel::GetAttributesList($sClass) as $sAttCode) {
-			if (!array_key_exists($sAttCode, $aAttributes)) {
-				$aAttributes[$sAttCode] = true;
+			if (!in_array($sAttCode, $aList)) {
+				$aList[] = $sAttCode;
 			}
 		}
-		// Order the fields based on their dependencies, set the fields for which there is only one possible value
-		// and perform this in the order of dependencies to avoid dead-ends
-		$aDeps = array();
-		foreach ($aAttributes as $sAttCode => $trash) {
-			$aDeps[$sAttCode] = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
-		}
-		$aList = $this->OrderDependentFields($aDeps);
 
 		$bExistFieldToDisplay = false;
 		foreach ($aList as $sAttCode) {
@@ -6025,14 +6021,16 @@ JS
 		// - we have a EVENT_DB_LINKS_CHANGED listener on Ticket that will update impacted items, so it will create new lnkApplicationSolutionToFunctionalCI
 		// We want to avoid launching the listener twice, first here, and secondly after saving the Ticket in the listener
 		// By disabling the event to be fired, we can remove the current object from the attribute !
-		/** @noinspection PhpRedundantOptionalArgumentInspection */
-		$oObject = MetaModel::GetObject($sClass, $sId, true);
-		self::SetEventDBLinksChangedBlocked(true);
-		MetaModel::StartReentranceProtection($oObject);
-		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
-		MetaModel::StopReentranceProtection($oObject);
-		if ($oObject->IsModified()) {
-			$oObject->DBUpdate();
+		$oObject = MetaModel::GetObject($sClass, $sId, false);
+		// N°6408 The object can have been deleted
+		if (!is_null($oObject)) {
+			self::SetEventDBLinksChangedBlocked(true);
+			MetaModel::StartReentranceProtection($oObject);
+			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
+			MetaModel::StopReentranceProtection($oObject);
+			if ($oObject->IsModified()) {
+				$oObject->DBUpdate();
+			}
 		}
 		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 		cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);

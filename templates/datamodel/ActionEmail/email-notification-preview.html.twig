@@ -1,0 +1,13 @@
+{% apply spaceless %}
+{% UIAlert ForWarning{sTitle:'', sContent: '', sId: null} %}
+<div id="branding-error-alert-content">
+<div style="display:flex;flex-align: stretch;">
+<div style="margin-right:1em"><span class="fas fa-2x fa-exclamation-triangle"></span></div>
+<div>{{ 'ActionEmail:preview_warning'|dict_s }}<br/>{{ 'ActionEmail:preview_more_info'|dict_format('<a href="https://www.caniemail.com" target="_blank">www.canimeail.com</a>')|raw }}</div>
+</div>
+</div>
+{% EndUIAlert %}
+<div style="display:flex;align-items:stretch;height:50rem;margin-top:0.5rem;">
+<iframe width="100%" sandbox srcdoc="{{ iframe_content }}"></iframe>
+</div>
+{% endapply %}

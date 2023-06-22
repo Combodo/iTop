@@ -116,13 +116,13 @@ class DBObjectTest extends ItopDataTestCase
 		$oOrg->DBUpdate();
 
 		$this->assertCount(0, $oOrg->ListChanges());
-		$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
+		$this->assertCount(1, $oOrg->ListPreviousValuesForUpdatedAttributes());
 
 		$oOrg->Set('name', $oOrg->Get('name'));
 		$this->assertCount(0, $oOrg->ListChanges());
 		$oOrg->DBUpdate();
 		$this->assertCount(0, $oOrg->ListChanges());
-		$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
+		$this->assertCount(1, $oOrg->ListPreviousValuesForUpdatedAttributes());
 
 		$oOrg->DBDelete();
 
@@ -132,7 +132,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oOrg->Set('code', strtoupper('testListPreviousValuesForUpdatedAttributes'));
 		$oOrg->DBUpdate();
 		$oOrg->DBUpdate();
-		$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
+		$this->assertCount(1, $oOrg->ListPreviousValuesForUpdatedAttributes());
 	}
 
 	/**
@@ -520,7 +520,8 @@ class DBObjectTest extends ItopDataTestCase
 		$oPerson = $this->CreatePersonInstance();
 
 		// Insert without Reload
-		$oPerson->DBInsert();
+		$key = $oPerson->DBInsert();
+		$this->assertSame($key, $oPerson->GetKey());
 
 		// Get initial values
 		$aValues1 = [];
@@ -539,6 +540,9 @@ class DBObjectTest extends ItopDataTestCase
 
 		// 1st Reload
 		$oPerson->Reload(true);
+		// N°6281 - Rest API core/create key value is no more between quote
+		$this->assertSame($key, $oPerson->GetKey());
+
 		$sPerson2 = print_r($oPerson, true);
 		$this->assertNotEquals($sPerson1, $sPerson2);
 
@@ -676,6 +680,155 @@ class DBObjectTest extends ItopDataTestCase
 		$oPerson->SetReadWrite();
 
 		$oPerson->Set('email', 'test1@combodo.com');
+	}
+
+	/**
+	 * @group itop-community
+	 *
+	 * @covers       \DBObject::EnumTransitions
+	 * @dataProvider EnumTransitionsProvider
+	 *
+	 * @param string $sObjClass
+	 * @param array $aObjData
+	 * @param string|null $sObjCurrentState
+	 * @param string $sSortType
+	 * @param array $aExpectedSortedStimuli
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public function testEnumTransitions(string $sObjClass, array $aObjData, ?string $sObjCurrentState, string $sSortType, array $aExpectedSortedStimuli): void
+	{
+		// Create temp object
+		$oObject = MetaModel::NewObject($sObjClass, $aObjData);
+
+		// Force current state if necessary
+		if (false === is_null($sObjCurrentState)) {
+			$oObject->Set('status', $sObjCurrentState);
+		}
+
+		// Force sort type
+		$oConfig = MetaModel::GetConfig();
+		$oConfig->Set('lifecycle.transitions_sort_type', $sSortType);
+
+		// Retrieve sorted transitions
+		$aTestedSortedTransitions = $oObject->EnumTransitions();
+
+		// Compare arrays keys as they reflect the order and as arrays values are not scalars
+		$aTestedSortedStimuli = array_keys($aTestedSortedTransitions);
+		$this->assertEquals($aExpectedSortedStimuli, $aTestedSortedStimuli, 'Transitions are not ordered as expected');
+	}
+
+	public function EnumTransitionsProvider(): array
+	{
+		$sUserRequestClassName = 'UserRequest';
+		$aUserRequestData = [
+			'org_id' => 3,
+			'caller_id' => 3,
+			'title' => 'Test for EnumTransitions method',
+			'description' => 'Hello there!',
+		];
+
+		return [
+			'UserRequest - XML sort' => [
+				$sUserRequestClassName,
+				$aUserRequestData,
+				null,
+				'xml',
+				[
+					'ev_assign',
+				    'ev_timeout',
+				    'ev_wait_for_approval',
+				    'ev_autoresolve',
+				],
+			],
+			'UserRequest - XML sort when in specific state' => [
+				$sUserRequestClassName,
+				$aUserRequestData,
+				'assigned',
+				'xml',
+				[
+					'ev_pending',
+				    'ev_resolve',
+				    'ev_reassign',
+				    'ev_timeout',
+				    'ev_autoresolve',
+				],
+			],
+			'UserRequest - Alphabetical (labels not codes) sort' => [
+				$sUserRequestClassName,
+				$aUserRequestData,
+				null,
+				'alphabetical',
+				[
+					'ev_assign',
+				    'ev_autoresolve',
+				    'ev_timeout',
+				    'ev_wait_for_approval',
+				],
+			],
+			'UserRequest - Alphabetical (labels not codes) sort when in specific state' => [
+				$sUserRequestClassName,
+				$aUserRequestData,
+				'assigned',
+				'alphabetical',
+				[
+				    'ev_autoresolve',
+					'ev_resolve',
+				    'ev_pending',
+				    'ev_reassign',
+				    'ev_timeout',
+				],
+			],
+			'UserRequest - Fixed sort' => [
+				$sUserRequestClassName,
+				$aUserRequestData,
+				null,
+				'fixed',
+				[
+				    'ev_wait_for_approval',
+					'ev_assign',
+				    'ev_timeout',
+				    'ev_autoresolve',
+				],
+			],
+			'UserRequest - Fixed sort when in specific state' => [
+				$sUserRequestClassName,
+				$aUserRequestData,
+				'resolved',
+				'fixed',
+				[
+					'ev_reopen',
+					'ev_autoresolve',
+					'ev_close',
+				],
+			],
+			'UserRequest - Relative sort' => [
+				$sUserRequestClassName,
+				$aUserRequestData,
+				null,
+				'relative',
+				[
+				    'ev_wait_for_approval',
+					'ev_assign',
+				    'ev_timeout',
+				    'ev_autoresolve',
+				],
+			],
+			'UserRequest - Relative sort when in specific state' => [
+				$sUserRequestClassName,
+				$aUserRequestData,
+				'resolved',
+				'relative',
+				[
+					'ev_autoresolve',
+					'ev_close',
+					'ev_reopen',
+				],
+			],
+		];
 	}
 
 	/**

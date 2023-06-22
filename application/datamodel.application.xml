@@ -100,11 +100,20 @@
       <enable_class>URP_Profiles</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
-    <menu id="AuditCategories" xsi:type="OQLMenuNode" _delta="define">
+    <menu id="AuditCategories" xsi:type="DashboardMenuNode" _delta="define">
       <rank>20</rank>
       <parent>AdminTools</parent>
-      <oql><![CDATA[SELECT AuditCategory]]></oql>
-      <do_search>1</do_search>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title>Menu:WelcomeMenuPage</title>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
       <enable_class>AuditCategory</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>

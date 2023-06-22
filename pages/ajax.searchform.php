@@ -18,10 +18,7 @@ try
 	$oKPI->ComputeAndReport('Data model loaded');
 	$oKPI = new ExecutionKPI();
 
-	if (LoginWebPage::EXIT_CODE_OK != LoginWebPage::DoLoginEx('backoffice', false, LoginWebPage::EXIT_RETURN))
-	{
-		throw new SecurityException('You must be logged in');
-	}
+	LoginWebPage::DoLogin();
 
 	$sParams = utils::ReadParam('params', '', false, 'raw_data');
 	if (!$sParams)
@@ -55,7 +52,7 @@ try
 
     if (array_key_exists('table_inner_id', $aListParams))
     {
-        $sListId = utils::HtmlEntities($aListParams['table_inner_id']);
+        $sListId = utils::Sanitize($aListParams['table_inner_id'], '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
     }
 
 	if (array_key_exists('json', $aListParams))

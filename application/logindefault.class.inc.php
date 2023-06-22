@@ -79,7 +79,7 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	{
 		self::ResetLoginSession();
 		$iOnExit = LoginWebPage::getIOnExit();
-		if ($iOnExit == LoginWebPage::EXIT_RETURN)
+		if ($iOnExit === LoginWebPage::EXIT_RETURN)
 		{
 			return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
 		}
@@ -95,6 +95,12 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	{
 		if (!Session::IsSet('login_mode'))
 		{
+            // N°6358 - if EXIT_RETURN was asked, send an error
+            if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+                $iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
+                return LoginWebPage::LOGIN_FSM_ERROR;
+            }
+
 			// If no plugin validated the user, exit
 			self::ResetLoginSession();
 			exit();

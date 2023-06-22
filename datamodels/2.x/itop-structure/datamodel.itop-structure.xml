@@ -1367,15 +1367,19 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="draft">
               <code>draft</code>
+              <rank>10</rank>
             </value>
             <value id="published">
               <code>published</code>
+              <rank>20</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>30</rank>
             </value>
           </values>
           <sql>status</sql>

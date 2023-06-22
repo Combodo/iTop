@@ -106,6 +106,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Name',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Status',
@@ -143,6 +144,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person' => 'Person',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Name',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Vorname',
@@ -163,6 +165,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
+	'Class:Person/Attribute:user_list' => 'Users~~',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager-Name (lesbar)',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Bild',
@@ -171,6 +175,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person/UniquenessRule:employee_number' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit der gleichen Personalnummer',
 	'Class:Person/UniquenessRule:name+' => 'Innerhalb einer Organisation muss der Name einer Person eindeutig sein',
 	'Class:Person/UniquenessRule:name' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit dem gleichen Namen',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
 ));
 
 //
@@ -180,6 +185,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Mitglieder',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
@@ -193,6 +199,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Name',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organisation',
@@ -292,6 +299,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkPersonToTeam' => 'Verknüpfung Person/Team',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
+	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Teamname',
@@ -355,6 +364,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Person:info' => 'Allgemeine Informationen',
 	'User:info' => 'Allgemeine Informationen',
+	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Persönliche Informationen',
 	'Person:notifiy' => 'Benachrichtigungen',
 ));

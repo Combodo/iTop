@@ -9,6 +9,7 @@ use Combodo\iTop\Application\UI\Links\Set\BlockLinkSetDisplayAsProperty;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\Validator\LinkedSetValidator;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Renderer\BlockRenderer;
@@ -1727,6 +1728,16 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/**
+	 * Indicates if the current Attribute has constraints (php constraints or datamodel constraints)
+	 * @return bool true if Attribute has constraints
+	 * @since 3.1.0 N°6228
+	 */
+	public function GetHasConstraint()
+	{
+		return $this->GetOptional('with_php_constraint', false);
+	}
+
+	/**
 	 * @return boolean
 	 * @since 3.1.0 N°5563
 	 */
@@ -1766,7 +1777,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		try {
 
 			/** @var ormLinkSet $sValue */
-			if ($sValue->Count() === 0) {
+			if (is_null($sValue) || $sValue->Count() === 0) {
 				return '';
 			}
 
@@ -2385,43 +2396,63 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		if ($oFormField === null)
 		{
-            $sFormFieldClass = static::GetFormFieldClass();
-            $oFormField = new $sFormFieldClass($this->GetCode());
-        }
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
 
-        // Setting target class
+		// Setting target class
 		if (!$this->IsIndirect()) {
-            $sTargetClass = $this->GetLinkedClass();
-        } else {
-            /** @var \AttributeExternalKey $oRemoteAttDef */
-            /** @var \AttributeLinkedSetIndirect $this */
-            $oRemoteAttDef = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
-            $sTargetClass = $oRemoteAttDef->GetTargetClass();
+			$sTargetClass = $this->GetLinkedClass();
+		} else {
+			/** @var \AttributeExternalKey $oRemoteAttDef */
+			/** @var \AttributeLinkedSetIndirect $this */
+			$oRemoteAttDef = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
+			$sTargetClass = $oRemoteAttDef->GetTargetClass();
 
-            /** @var \AttributeLinkedSetIndirect $this */
-            $oFormField->SetExtKeyToRemote($this->GetExtKeyToRemote());
-        }
-        $oFormField->SetTargetClass($sTargetClass);
-        $oFormField->SetIndirect($this->IsIndirect());
-        // Setting attcodes to display
-        $aAttCodesToDisplay = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetClass, 'list'));
-        // - Adding friendlyname attribute to the list is not already in it
-        $sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetClass);
-        if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay)) {
-            $aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
-        }
-        // - Adding attribute labels
-        $aAttributesToDisplay = array();
-        foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
-            $oAttDefToDisplay = MetaModel::GetAttributeDef($sTargetClass, $sAttCodeToDisplay);
-            $aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
-        }
-        $oFormField->SetAttributesToDisplay($aAttributesToDisplay);
+			/** @var \AttributeLinkedSetIndirect $this */
+			$oFormField->SetExtKeyToRemote($this->GetExtKeyToRemote());
+		}
+		$oFormField->SetTargetClass($sTargetClass);
+		$oFormField->SetLinkedClass($this->GetLinkedClass());
+		$oFormField->SetIndirect($this->IsIndirect());
+		// Setting attcodes to display
+		$aAttCodesToDisplay = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetClass, 'list'));
+		// - Adding friendlyname attribute to the list is not already in it
+		$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetClass);
+		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay)) {
+			$aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
+		}
+		// - Adding attribute properties
+		$aAttributesToDisplay = array();
+		foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
+			$oAttDefToDisplay = MetaModel::GetAttributeDef($sTargetClass, $sAttCodeToDisplay);
+			$aAttributesToDisplay[$sAttCodeToDisplay] = [
+				'att_code' => $sAttCodeToDisplay,
+				'label'    => $oAttDefToDisplay->GetLabel(),
+			];
+		}
+		$oFormField->SetAttributesToDisplay($aAttributesToDisplay);
 
-        parent::MakeFormField($oObject, $oFormField);
+		// Append lnk attributes (filtered from zlist)
+		if ($this->IsIndirect()) {
+			$aLnkAttDefToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($this->m_sHostClass, $this->m_sCode);
+			$aLnkAttributesToDisplay = array();
+			foreach ($aLnkAttDefToDisplay as $oLnkAttDefToDisplay) {
+				$aLnkAttributesToDisplay[$oLnkAttDefToDisplay->GetCode()] = [
+					'att_code'  => $oLnkAttDefToDisplay->GetCode(),
+					'label'     => $oLnkAttDefToDisplay->GetLabel(),
+					'mandatory' => !$oLnkAttDefToDisplay->IsNullAllowed(),
+				];
+			}
+			$oFormField->SetLnkAttributesToDisplay($aLnkAttributesToDisplay);
+		}
 
-        return $oFormField;
-    }
+		$oFormField->AddValidator(new LinkedSetValidator());
+
+		parent::MakeFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
 
     public function IsPartOfFingerprint()
     {
@@ -3120,7 +3151,7 @@ class AttributeDecimal extends AttributeDBField
 		$iPrecision = $this->Get('decimals');
 		$iNbIntegerDigits = $iNbDigits - $iPrecision - 1; // -1 because the first digit is treated separately in the pattern below
 
-		return "^[-+]?[0-9]\d{0,$iNbIntegerDigits}(\.\d{0,$iPrecision})?$";
+		return "^[\-\+]?[0-9]\d{0,$iNbIntegerDigits}(\.\d{0,$iPrecision})?$";
 	}
 
 	public function GetBasicFilterOperators()
@@ -3842,6 +3873,12 @@ class AttributeApplicationLanguage extends AttributeString
 		{
 			$aLanguageCodes[$sLangCode] = $aInfo['description'].' ('.$aInfo['localized_description'].')';
 		}
+
+		// N°6462 This should be sorted directly in \Dict during the compilation but we can't for 2 reasons:
+		// - Additional languages can be added on the fly even though it is not recommended
+		// - Formatting is done at run time (just above)
+		natcasesort($aLanguageCodes);
+
 		$aParams["allowed_values"] = new ValueSetEnum($aLanguageCodes);
 		parent::__construct($sCode, $aParams);
 	}
@@ -5900,6 +5937,14 @@ class AttributeEnum extends AttributeString
 			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
 
+		// Sort by label only if necessary
+		// See N°1646 and {@see \MFCompiler::CompileAttributeEnumValues()} for complete information as for why sort on labels is done at runtime while other sorting are done at compile time
+		/** @var \ValueSetEnum $oValueSetDef */
+		$oValueSetDef = $this->GetValuesDef();
+		if ($oValueSetDef->IsSortedByValues()) {
+			asort($aLocalizedValues);
+		}
+
 		return $aLocalizedValues;
 	}
 
@@ -6175,7 +6220,7 @@ class AttributeDateTime extends AttributeDBField
 	/**
 	 * Load the 3 settings: date format, time format and data_time format from the configuration
 	 */
-	protected static function LoadFormatFromConfig()
+	public static function LoadFormatFromConfig()
 	{
 		$aFormats = MetaModel::GetConfig()->Get('date_and_time_format');
 		$sLang = Dict::GetUserLanguage();
@@ -8304,7 +8349,7 @@ class AttributeBlob extends AttributeDefinition
 			$aValues[$this->GetCode().'_data'] = '';
 			$aValues[$this->GetCode().'_mimetype'] = '';
 			$aValues[$this->GetCode().'_filename'] = '';
-			$aValues[$this->GetCode().'_downloads_count'] = ''; // Note: Should this be set to \ormDocument::DEFAULT_DOWNLOADS_COUNT ?
+			$aValues[$this->GetCode().'_downloads_count'] = \ormDocument::DEFAULT_DOWNLOADS_COUNT;
 		}
 
 		return $aValues;
@@ -8680,8 +8725,11 @@ class AttributeImage extends AttributeBlob
 		}
 		else
 		{
-			$oFormField->SetDownloadUrl($this->Get('default_image'));
-			$oFormField->SetDisplayUrl($this->Get('default_image'));
+			$oDefaultImage = $this->Get('default_image');
+			if (is_object($oDefaultImage) && !$oDefaultImage->IsEmpty()) {
+				$oFormField->SetDownloadUrl($oDefaultImage);
+				$oFormField->SetDisplayUrl($oDefaultImage);
+			}
 		}
 
 		return $oFormField;
@@ -11260,6 +11308,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 			}
 			$aAllowedAttributes[$sAttCode] = $sLabel;
 		}
+		// N°6460 Always sort on the labels, not on the datamodel definition order
+		natcasesort($aAllowedAttributes);
+
 		return $aAllowedAttributes;
 	}
 

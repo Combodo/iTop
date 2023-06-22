@@ -25,6 +25,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AuditCategory/Attribute:definition_set+' => 'OQL výraz definující množinu objektů pro audit',
 	'Class:AuditCategory/Attribute:rules_list' => 'Pravidla pro audit',
 	'Class:AuditCategory/Attribute:rules_list+' => 'Pravidla pro tuto kategorii auditu',
+	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',
+	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Percentage of invalid objects below which the result is a warning (orange)~~',
+	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
+	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
+	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
 ));
 
 //
@@ -52,7 +58,42 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AuditRule/Attribute:category_id' => 'Kategorie',
 	'Class:AuditRule/Attribute:category_id+' => 'Kategorie pro toto pravidlo',
 	'Class:AuditRule/Attribute:category_name' => 'Kategorie',
-	'Class:AuditRule/Attribute:category_name+' => 'Název kategorie pro toto pravidlo',
+	'Class:AuditRule/Attribute:category_name+' => 'Název kategorie pro toto pravidlo'
+));
+
+//
+// Class: AuditDomain
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:AuditDomain' => 'Audit Domain~~',
+	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
+Domain usually correspond to who is responsible for checking and fixing errors~~',
+	'Class:AuditDomain/Attribute:name' => 'Name~~',
+	'Class:AuditDomain/Attribute:name+' => 'Its a segmentation of the Audit by who is in charge of fixing it or just interested~~',
+	'Class:AuditDomain/Attribute:description' => 'Description~~',
+	'Class:AuditDomain/Attribute:description+' => '~~',
+	'Class:AuditDomain/Attribute:icon' => 'Icon~~',
+	'Class:AuditDomain/Attribute:icon+' => '~~',
+	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
+	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
+));
+
+//
+// Class: lnkAuditCategoryToAuditDomain
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
+	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+' => 'Audit Category~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name' => 'Category name~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name+' => 'Audit category name~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id' => 'Domain~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
+	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
 ));
 
 //
@@ -70,6 +111,16 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
 	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
 	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
+	'Class:Query/Attribute:export_count' => 'Export counter~~',
+	'Class:Query/Attribute:export_count+' => 'Counter reflecting the number of time this query has been executed~~',
+	'Class:Query/Attribute:export_last_date' => 'Last export~~',
+	'Class:Query/Attribute:export_last_date+' => 'Date and time of the last export execution~~',
+	'Class:Query/Attribute:export_last_user_id' => 'User~~',
+	'Class:Query/Attribute:export_last_user_id+' => 'The user who executed the last export~~',
+	'Class:Query/Attribute:export_last_user_contact' => 'Contact~~',
+	'Class:Query/Attribute:export_last_user_contact+' => 'The contact who executed the last export~~',
+	'Query:baseinfo' => 'General information~~',
+	'Query:exportInfo' => 'Export information~~',
 	'Class:QueryOQL/Attribute:fields' => 'Atributy',
 	'Class:QueryOQL/Attribute:fields+' => 'Seznam atributů oddělených čárkami',
 	'Class:QueryOQL' => 'OQL dotaz',
@@ -118,7 +169,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:User/Attribute:status+' => '',
 	'Class:User/Attribute:status/Value:enabled' => 'Aktivní',
 	'Class:User/Attribute:status/Value:disabled' => 'Neaktivní',
-
 	'Class:User/Error:LoginMustBeUnique' => 'Uživatelské jméno musí být jedinečné - "%1s" je již použito.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Uživateli musí být přidělen alespoň jeden profil.',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
@@ -327,6 +377,29 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Expression:Unit:Short:YEAR' => 'y~~',
 ));
 
+//
+// Duplicated into itop-welcome-itil ( will be removed from here...)
+//
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Menu:WelcomeMenu' => 'Vítejte',
+	'Menu:WelcomeMenu+' => 'Vítejte v '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenuPage' => 'Vítejte',
+	'Menu:WelcomeMenuPage+' => 'Vítejte v '.ITOP_APPLICATION_SHORT,
+	'Menu:AdminTools' => 'Administrace',
+	'Menu:AdminTools+' => 'Nástroje pro administraci',
+	'Menu:AdminTools?' => 'Nástroje přístupné pouze uživatelům, kteří mají potřbná oprávnění',
+	'Menu:CSVImportMenu' => 'CSV import',
+	'Menu:CSVImportMenu+' => 'Hromadné vytvoření nebo aktualizace',
+	'Menu:DataModelMenu' => 'Datový model',
+	'Menu:DataModelMenu+' => 'Přehled datového modelu',
+	'Menu:ExportMenu' => 'Exportovat',
+	'Menu:ExportMenu+' => 'Exportovat výsledky jakéhokoli dotazu do HTML, CSV nebo XML',
+	'Menu:NotificationsMenu' => 'Upozornění',
+	'Menu:NotificationsMenu+' => 'Konfigurace upozornění',
+	'Menu:MyShortcuts' => 'Mé odkazy',
+	'Menu:DataAdministration' => 'Správa dat',
+	'Menu:DataAdministration+' => 'Správa dat',
+));
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
@@ -336,12 +409,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'BooleanLabel:yes' => 'ano',
 	'BooleanLabel:no' => 'ne',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
-	'Menu:WelcomeMenu' => 'Vítejte',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'Vítejte v '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Vítejte',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'Vítejte v '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Vítejte v '.ITOP_APPLICATION_SHORT,
-
 	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' je komplexní „opensource” provozní IT portál.</p>
 <ul>Obsahuje:
 <li>Kompletní CMDB (databázi pro správu konfigurací) sloužící pro dokumentování a správu evidovaného IT.</li>
@@ -352,7 +420,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 <li>Úvodní obrazovku poskytující rychlý a aktuální přehled o Vašem IT.</li>
 </ul>
 <p>Každý modul může být nastaven "krok za krokem" nezávisle na ostatních modulech.</p>',
-
 	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' je servisně orientovaný produkt, který umožňuje správcům IT velmi jednoduše spravovat více zákazníků nebo organizací.
 <ul>iTop přináší mnoho dalších výhod umožňujících "optimální" nastavení podnikových procesů které:
 <li>Zvyšují účinnost řízení IT.</li>
@@ -368,7 +435,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 <li>Spravovat Vaše nejdůležitější IT aktivum - Dokumentaci.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
 <div>This version features a brand new modern and accessible backoffice design.</div>
 
@@ -389,6 +456,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:GlobalSearch' => 'Hledat',
 	'UI:Button:Search' => ' Hledat ',
 	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:Confirm' => ' Confirm ~~',
 	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' Query ',
 	'UI:Button:Ok' => 'Ok',
@@ -429,7 +497,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
 	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
 	'UI:InputFile:SelectFile' => 'Select a file~~',
-
 	'UI:SearchToggle' => 'Hledání',
 	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)~~',
 	'UI:SearchFor_Class' => 'Hledat objekty třídy %1$s',
@@ -449,7 +516,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:CannotWriteToTmp_Dir' => 'Nemohu zapisovat do dočasného adresáře (tmp). upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Nahrávání zastaveno díky příponě. (Původní jméno souboru = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Nahrávání selhalo z neznámé příčiny. (Kód chyby = "%1$s").',
-
 	'UI:Error:1ParametersMissing' => 'Chyba: pro tuto operaci musí být uveden následující parametr: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Chyba: pro tuto operaci musí být uvedeny následující parametry: %1$s a %2$s.',
 	'UI:Error:3ParametersMissing' => 'Chyba: pro tuto operaci musí být uvedeny následující parametry: %1$s, %2$s a %3$s.',
@@ -471,9 +537,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
-
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
-
 	'UI:GroupBy:Count' => 'Množství',
 	'UI:GroupBy:Count+' => 'Množství prvků',
 	'UI:CountOfObjects' => 'Počet objektů odpovídajícíh ktritériím: %1$d',
@@ -502,6 +566,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:OtherActions' => 'Další akce',
 	'UI:Menu:Transitions' => 'Transitions~~',
 	'UI:Menu:OtherTransitions' => 'Other transitions~~',
+	'UI:Menu:View' => 'View this object~~',
 	'UI:Menu:New' => 'Nový...',
 	'UI:Menu:Add' => 'Přidat...',
 	'UI:Menu:Manage' => 'Spravovat...',
@@ -510,6 +575,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Modify' => 'Upravit...',
 	'UI:Menu:Delete' => 'Odstranit...',
 	'UI:Menu:BulkDelete' => 'Odstranit...',
+	'UI:Menu:BulkDelete_Class' => 'Delete %1$s objects...~~',
+	'UI:Menu:BulkDelete_Link' => 'Delete %1$s...~~',
+	'UI:Menu:BulkDelete_Remote' => 'Delete %1$s...~~',
 	'UI:UndefinedObject' => 'nedefinováno',
 	'UI:Document:OpenInNewWindow:Download' => 'Otevřít v novém okně: %1$s, Stáhnout: %2$s',
 	'UI:SplitDateTime-Date' => 'datum',
@@ -542,7 +610,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Login:ResetPassword' => 'Zaslat nyní!',
 	'UI:Login:ResetPwdFailed' => 'Chyba při odesílání emailu: %1$s',
 	'UI:Login:SeparatorOr' => 'Or~~',
-
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' není platné uživatelské jméno',
 	'UI:ResetPwd-Error-NotPossible' => 'obnova hesla u externích účtů není možná.',
 	'UI:ResetPwd-Error-FixedPwd' => 'obnova hesla u tohoto účtu není povolená.',
@@ -553,50 +620,49 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Obnovení hesla pro '.ITOP_APPLICATION_SHORT,
 	'UI:ResetPwd-EmailBody' => '<body><p>Vyžádali jste obovení hesla pro '.ITOP_APPLICATION_SHORT.'.</p><p>Pokračujte kliknutím na následující <a href="%1$s">jednorázový odkaz</a> a zadejte nové heslo.</p>',
-
 	'UI:ResetPwd-Title' => 'Obnovení hesla',
 	'UI:ResetPwd-Error-InvalidToken' => 'Omlouváme se, ale heslo již bylo obnoveno nebo jste obdrželi více emailů. Ujistěte se, že používate odkaz z posledního emailu který jste obdrželi.',
 	'UI:ResetPwd-Error-EnterPassword' => 'Vložte nové heslo k účtu \'%1$s\'.',
 	'UI:ResetPwd-Ready' => 'Heslo bylo obnoveno.',
 	'UI:ResetPwd-Login' => 'Pro přihlášení klikněte zde...',
-
-	'UI:Login:About'                               => '',
-	'UI:Login:ChangeYourPassword'                  => 'Změnit heslo',
-	'UI:Login:OldPasswordPrompt'                   => 'Původní heslo',
-	'UI:Login:NewPasswordPrompt'                   => 'Nové heslo',
-	'UI:Login:RetypeNewPasswordPrompt'             => 'Znovu nové heslo',
-	'UI:Login:IncorrectOldPassword'                => 'Chyba: původní heslo je nesprávné',
-	'UI:LogOffMenu'                                => 'Odhlásit',
+	'UI:Login:About' => '',
+	'UI:Login:ChangeYourPassword' => 'Změnit heslo',
+	'UI:Login:OldPasswordPrompt' => 'Původní heslo',
+	'UI:Login:NewPasswordPrompt' => 'Nové heslo',
+	'UI:Login:RetypeNewPasswordPrompt' => 'Znovu nové heslo',
+	'UI:Login:IncorrectOldPassword' => 'Chyba: původní heslo je nesprávné',
+	'UI:LogOffMenu' => 'Odhlásit',
 	'UI:LogOff:ThankYou' => 'Děkujeme za užívání '.ITOP_APPLICATION_SHORT,
-	'UI:LogOff:ClickHereToLoginAgain'              => 'Klikněte zde pro nové přihlášení...',
-	'UI:ChangePwdMenu'                             => 'Změnit heslo',
-	'UI:Login:PasswordChanged'                     => 'Heslo nastaveno úspěšně!',
+	'UI:LogOff:ClickHereToLoginAgain' => 'Klikněte zde pro nové přihlášení...',
+	'UI:ChangePwdMenu' => 'Změnit heslo',
+	'UI:Login:PasswordChanged' => 'Heslo nastaveno úspěšně!',
+	'UI:Login:PasswordNotChanged' => 'Error: Password is the same!~~',
 	'UI:AccessRO-All' => ITOP_APPLICATION_SHORT.' je pouze ke čtení',
 	'UI:AccessRO-Users' => ITOP_APPLICATION_SHORT.' je pouze ke čtení pro koncové uživatele',
-	'UI:ApplicationEnvironment'                    => 'Aplikační prostředí: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch'               => 'Nová hesla se neshodují!',
-	'UI:Button:Login'                              => 'Přihlásit',
-	'UI:Login:Error:AccessRestricted'              => 'Přístup je omezen. Kontaktujte administrátora.',
-	'UI:Login:Error:AccessAdmin'                   => 'Přístup vyhrazen osobám s administrátorskými právy. Kontaktujte administrátora.',
-	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization~~',
+	'UI:ApplicationEnvironment' => 'Aplikační prostředí: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch' => 'Nová hesla se neshodují!',
+	'UI:Button:Login' => 'Přihlásit',
+	'UI:Login:Error:AccessRestricted' => 'Přístup je omezen. Kontaktujte administrátora.',
+	'UI:Login:Error:AccessAdmin' => 'Přístup vyhrazen osobám s administrátorskými právy. Kontaktujte administrátora.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
-	'UI:Login:Error:NoValidProfiles'               => 'No valid profile provided~~',
-	'UI:CSVImport:MappingSelectOne'                => '-- zvolte jednu z možností --',
-	'UI:CSVImport:MappingNotApplicable'            => '-- ignorovat --',
-	'UI:CSVImport:NoData'                          => 'Žádná data!',
-	'UI:Title:DataPreview'                         => 'Náhled dat',
-	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Chyba: Data obsahují pouze jeden sloupec. Zvolili jste odpovídající znak pro oddělení položek?',
-	'UI:CSVImport:FieldName'                       => 'Pole %1$d',
-	'UI:CSVImport:DataLine1'                       => '1. řádek dat',
-	'UI:CSVImport:DataLine2'                       => '2. řádek dat',
-	'UI:CSVImport:idField'                         => 'id (primární klíč)',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
+	'UI:CSVImport:MappingSelectOne' => '-- zvolte jednu z možností --',
+	'UI:CSVImport:MappingNotApplicable' => '-- ignorovat --',
+	'UI:CSVImport:NoData' => 'Žádná data!',
+	'UI:Title:DataPreview' => 'Náhled dat',
+	'UI:CSVImport:ErrorOnlyOneColumn' => 'Chyba: Data obsahují pouze jeden sloupec. Zvolili jste odpovídající znak pro oddělení položek?',
+	'UI:CSVImport:FieldName' => 'Pole %1$d',
+	'UI:CSVImport:DataLine1' => '1. řádek dat',
+	'UI:CSVImport:DataLine2' => '2. řádek dat',
+	'UI:CSVImport:idField' => 'id (primární klíč)',
 	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - hromadný import',
-	'UI:Title:BulkImport+'                         => 'Průvodce importem CSV',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronizace %1$d objektů třídy %2$s',
-	'UI:CSVImport:ClassesSelectOne'                => '-- zvolte jednu z možností --',
-	'UI:CSVImport:ErrorExtendedAttCode'            => 'Interní chyba: "%1$s" je nesprávný kód, protože "%2$s" není externím klíčem třídy "%3$s"',
-	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objekt(ů) zůstane nezměněno.',
-	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objekt(ů) bude upraveno.',
+	'UI:Title:BulkImport+' => 'Průvodce importem CSV',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronizace %1$d objektů třídy %2$s',
+	'UI:CSVImport:ClassesSelectOne' => '-- zvolte jednu z možností --',
+	'UI:CSVImport:ErrorExtendedAttCode' => 'Interní chyba: "%1$s" je nesprávný kód, protože "%2$s" není externím klíčem třídy "%3$s"',
+	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objekt(ů) zůstane nezměněno.',
+	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objekt(ů) bude upraveno.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objekt(ů) bude přidáno.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d objekt(ů) bude mít chyby.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objekt(ů) zůstalo nezměněných.',
@@ -642,11 +708,14 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Univerzální hledání',
 	'UI:UniversalSearch:Error' => 'Chyba: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Vyberte třídu pro hledání: ',
-
 	'UI:CSVReport-Value-Modified' => 'Upraveno',
 	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
+	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
+	'UI:CSVReport-Value-NoMatch-NoObject' => 'There are no \'%1$s\' objects~~',
+	'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => 'There are no \'%1$s\' objects found with your current profile~~',
+	'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => 'There are some \'%1$s\' objects not visible with your current profile~~',
 	'UI:CSVReport-Value-Missing' => 'Chybí povinná hodnota',
 	'UI:CSVReport-Value-Ambiguous' => 'Nejednoznačné: nalezeno %1$s objektů',
 	'UI:CSVReport-Row-Unchanged' => 'nezměněn',
@@ -660,15 +729,16 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Value-Issue-Readonly' => 'Atribut \'%1$s\' je pouze ke čtení a nemůže být upraven (stávající hodnota: %2$s, navrhovaná hodnota: %3$s)',
 	'UI:CSVReport-Value-Issue-Format' => 'Nepodařilo se zpracovat vstup: %1$s',
 	'UI:CSVReport-Value-Issue-NoMatch' => 'Neočekávaná hodnota atributu \'%1$s\': nenalezena shoda, zkontrolujte zadání',
+	'UI:CSVReport-Value-Issue-AllowedValues' => 'Allowed \'%1$s\' value(s): %2$s~~',
 	'UI:CSVReport-Value-Issue-Unknown' => 'Neočekávaná hodnota atributu \'%1$s\': %2$s',
 	'UI:CSVReport-Row-Issue-Inconsistent' => 'Atributy spolu nejsou v souladu: %1$s',
 	'UI:CSVReport-Row-Issue-Attribute' => 'Neočekávané hodnoty atributů',
 	'UI:CSVReport-Row-Issue-MissingExtKey' => 'Nemůže být vytvořen z důvodu chybějícího externího klíče: %1$s',
 	'UI:CSVReport-Row-Issue-DateFormat' => 'špatný formát data',
+	'UI:CSVReport-Row-Issue-ExpectedDateFormat' => 'Expected format: %1$s~~',
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'sladění selhalo',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'nejednoznačné sladění',
 	'UI:CSVReport-Row-Issue-Internal' => 'Interní chyba: %1$s, %2$s',
-
 	'UI:CSVReport-Icon-Unchanged' => 'Nezměněno',
 	'UI:CSVReport-Icon-Modified' => 'Upraveno',
 	'UI:CSVReport-Icon-Missing' => 'Chybí',
@@ -683,14 +753,32 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Stats-Errors' => '%1$.0f %% načtených objektů obsahuje chyby a bude ignorováno.',
 	'UI:CSVReport-Stats-Created' => '%1$.0f %% načtených objektů bude vytvořeno.',
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% načtených objektů bude upraveno.',
-
 	'UI:CSVExport:AdvancedMode' => 'Pokročilý režim',
 	'UI:CSVExport:AdvancedMode+' => 'V pokročilém režimu jsou vyexportovány další sloupce: id objektu, id externích klíčů a jejich slaďovacích atributů.',
 	'UI:CSVExport:LostChars' => 'Problém s kódováním',
 	'UI:CSVExport:LostChars+' => 'CSV soubor bude kódován v %1$s. '.ITOP_APPLICATION_SHORT.' zjistil, že některé charaktery nejsou s tímto kódováním kompatibilní. Tyto znaky budou nahrazeny zástupným znakem, nebo budou vynechány. Kontaktujte administrátora pro změnu kódování (parametr \'csv_file_default_charset\').',
-
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Audit',
 	'UI:Audit:InteractiveAudit' => 'Interaktivní Audit',
+	'UI:Audit:Interactive:All:Title' => 'Audit results~~',
+	'UI:Audit:Interactive:All:SubTitle' => 'Full audit: includes all rules, all categories, all domains~~',
+	'UI:Audit:Interactive:All:BreadCrumb' => 'Full audit~~',
+	'UI:Audit:Interactive:All:BreadCrumb+' => 'Audit results for all rules~~',
+	'UI:Audit:Interactive:Categories:Title' => 'Audit results for categories: %1$s~~',
+	'UI:Audit:Interactive:Categories:SubTitle' => 'Audit results for all the rules belonging to one of those %1$s categories~~',
+	'UI:Audit:Interactive:Categories:BreadCrumb' => 'Categories~~',
+	'UI:Audit:Interactive:Categories:BreadCrumb+' => 'Audit categories: %1$s~~',
+	'UI:Audit:Interactive:Domain:Title' => 'Audit results for Domain: %1$s~~',
+	'UI:Audit:Interactive:Domain:SubTitle' => 'Audit results for all the rules belonging to a category related to the domain: %1$s~~',
+	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s~~',
+	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit for Domain: %1$s~~',
+	'UI:Audit:Interactive:Selection:Title' => 'Selection of an audit~~',
+	'UI:Audit:Interactive:Selection:SubTitle' => 'Select a domain to get the results limited to this domain or select "All categories" to get a full audit (can take time or even fail if too much data to audit)~~',
+	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selection~~',
+	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Selection of an Audit to run~~',
+	'UI:Audit:Interactive:Selection:BadgeAll' => 'All categories~~',
+	'UI:Audit:Interactive:Button:Back' => 'Back to the audit~~',
+	'UI:Audit:Interactive:Button:Configuration' => 'Audit configuration~~',
+	'UI:Audit:ViewRules' => 'Check the rules~~',
 	'UI:Audit:HeaderAuditRule' => 'Pravidlo auditu',
 	'UI:Audit:HeaderNbObjects' => 'Počet objektů',
 	'UI:Audit:HeaderNbErrors' => 'Počet chyb',
@@ -706,8 +794,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
 	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
-
-
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Vyhodnocení OQL dotazu',
 	'UI:RunQuery:QueryExamples' => 'Příklady dotazů',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
@@ -746,7 +832,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:Label' => 'Název',
 	'UI:Schema:Label+' => 'Název atributu',
 	'UI:Schema:Type' => 'Typ',
-
 	'UI:Schema:Type+' => 'Datový typ atributu',
 	'UI:Schema:Origin' => 'Původ',
 	'UI:Schema:Origin+' => 'Základní třída, ve které je tento atribut definován',
@@ -794,6 +879,16 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
+	'UI:Schema:Events' => 'Events~~',
+	'UI:Schema:Events:Defined' => 'Defined events~~',
+	'UI:Schema:Events:NoEvent' => 'No event defined~~',
+	'UI:Schema:Events:Listeners' => 'Event listeners~~',
+	'UI:Schema:Events:NoListener' => 'No event listener~~',
+	'UI:Schema:Events:Event' => 'Event~~',
+	'UI:Schema:Events:Description' => 'Description~~',
+	'UI:Schema:Events:Listener' => 'Listener~~',
+	'UI:Schema:Events:Rank' => 'Rank~~',
+	'UI:Schema:Events:Module' => 'Module~~',
 	'UI:LinksWidget:Autocomplete+' => 'Zadejte první tři znaky...',
 	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Otestovat dotaz',
@@ -885,7 +980,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:SystemIntrusion' => 'Přístup odepřen. Vyžadujete operaci, která vám není povolena.',
 	'UI:FatalErrorMessage' => 'Závažná chyba, '.ITOP_APPLICATION_SHORT.' nemůže pokračovat.',
 	'UI:Error_Details' => 'Chyba: %1$s',
-
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' správa uživatelů - projekce profilů',
 	'UI:UserManagement:Class' => 'Třída',
 	'UI:UserManagement:Class+' => 'Třída objektů',
@@ -920,66 +1014,42 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserManagement:NoLifeCycleApplicable' => 'nedefinováno',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Pro tuto třídu nebyl definován žádný životní cyklus',
 	'UI:UserManagement:GrantMatrix' => 'Matice oprávnění',
-
-	'Menu:AdminTools' => 'Administrace',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => 'Nástroje pro administraci',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Nástroje přístupné pouze uživatelům, kteří mají potřbná oprávnění',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System~~',
-
 	'UI:ChangeManagementMenu' => 'Řízení změn',
 	'UI:ChangeManagementMenu+' => 'Řízení změn',
 	'UI:ChangeManagementMenu:Title' => 'Přehled změn',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Změny podle typu',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Změny podle stavu',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Nepřidělené změny',
-
 	'UI:ConfigurationManagementMenu' => 'Správa konfigurací',
 	'UI:ConfigurationManagementMenu+' => 'Správa konfigurací',
 	'UI:ConfigurationManagementMenu:Title' => 'Přehled infrastruktury',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Objekty infrastruktury podle typu',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Objekty infrastruktury podle stavu',
-
 	'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard pro správu konfigurací (Configuration management)',
 	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Konfigurační položky podle stavu',
 	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Konfigurační položky podle typu',
-
 	'UI:RequestMgmtMenuOverview:Title' => 'Dashboard pro správu požadavků (Request management)',
 	'UI-RequestManagementOverview-RequestByService' => 'Požadavky uživatelů podle služby',
 	'UI-RequestManagementOverview-RequestByPriority' => 'Požadavky uživatelů podle priority',
 	'UI-RequestManagementOverview-RequestUnassigned' => 'Nepřidělené požadavky',
-
 	'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard pro správu incidentů (Incident management)',
 	'UI-IncidentManagementOverview-IncidentByService' => 'Incidenty podle služby',
 	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidenty podle priority',
 	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Nepřidělené incidenty',
-
 	'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard pro řízení změn (Change management)',
 	'UI-ChangeManagementOverview-ChangeByType' => 'Změny podle typu',
 	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Nepřidělené změny',
 	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Výpadky z důvodu změn',
-
 	'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard pro správu služeb (Service Management)',
 	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Smlouvy se zákazníky k obnovení do 30 dní',
 	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Smlouvy s poskytovateli k obnovení do 30 dní',
-
 	'UI:ContactsMenu' => 'Kontakty',
 	'UI:ContactsMenu+' => 'Kontakty',
 	'UI:ContactsMenu:Title' => 'Přehled kontaktů',
 	'UI-ContactsMenu-ContactsByLocation' => 'Kontakty podle umístění',
 	'UI-ContactsMenu-ContactsByType' => 'Kontakty podle typu',
 	'UI-ContactsMenu-ContactsByStatus' => 'Kontakty podle stavu',
-
-	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => 'Hromadné vytvoření nebo aktualizace',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:DataModelMenu' => 'Datový model',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Přehled datového modelu',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:ExportMenu' => 'Exportovat',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => 'Exportovat výsledky jakéhokoli dotazu do HTML, CSV nebo XML',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:NotificationsMenu' => 'Upozornění',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Konfigurace upozornění',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Konfigurace upozornění',
 	'UI:NotificationsMenu:Help' => 'Nápověda',
 	'UI:NotificationsMenu:HelpContent' => '<p>Upozornění v '.ITOP_APPLICATION_SHORT.' jsou plně nastavitelné. Jsou založena na dvou druzích objektů: <i>triggery (spouštěče) a akce</i>.</p>
@@ -1008,53 +1078,18 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
 	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Dostupné akce',
-
 	'Menu:TagAdminMenu' => 'Tags configuration~~',
 	'Menu:TagAdminMenu+' => 'Tags values management~~',
 	'UI:TagAdminMenu:Title' => 'Tags configuration~~',
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
-
-	'Menu:AuditCategories' => 'Kategorie auditu',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Kategorie auditu',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Kategorie auditu',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:RunQueriesMenu' => 'Provést dotaz',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Provést dotaz',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:QueryMenu' => 'Knihovna dotazů',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Knihovna dotazů',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:DataAdministration' => 'Správa dat',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Správa dat',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UniversalSearchMenu' => 'Univerzální hledání',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Hledejte cokoli...',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UserManagementMenu' => 'Správa uživatelů',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'Správa uživatelů',// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:ProfilesMenu' => 'Profily (Role)',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Profily (Role)',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profily (Role)',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-
-	'Menu:UserAccountsMenu' => 'Uživatelské účty',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Uživatelské účty',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Uživatelské účty',
-	// Duplicated into itop-welcome-itil (will be removed from here...)
-
 	'UI:iTopVersion:Short' => '%1$s verze %2$s',
 	'UI:iTopVersion:Long' => '%1$s verze %2$s-%3$s ze dne %4$s',
 	'UI:PropertiesTab' => 'Vlastnosti',
-
 	'UI:OpenDocumentInNewWindow_' => 'Otevřít~~',
 	'UI:DownloadDocument_' => 'Stáhnout~~',
 	'UI:Document:NoPreview' => 'Pro tento typ dokumentu není k dispozici žádný náhled',
 	'UI:Download-CSV' => 'Stáhnout %1$s',
-
 	'UI:DeadlineMissedBy_duration' => 'Zmeškáno o %1$s',
 	'UI:Deadline_LessThan1Min' => 'méně než 1 min',
 	'UI:Deadline_Minutes' => '%1$d min',
@@ -1097,7 +1132,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => 'Počet zasažených objektů: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Prahová hranice: %1$d / %2$d',
 	'Portal:Title' => ITOP_APPLICATION_SHORT.' uživatelský portál',
-	'Portal:NoRequestMgmt' => 'Byli jste přesměrováni na tuto stránku, protože k vašemu účtu je přidělen profil \'Portal user\'. '.ITOP_APPLICATION_SHORT.' však nebyl nainstalován s funkcí \'Request Management\'. Kontaktujte prosím vašeho administrátora.',
+	'Portal:NoRequestMgmt' => 'Byli jste přesměrováni na tuto stránku, protože k vašemu účtu je přidělen profil \'Portal user\'. '.ITOP_APPLICATION_SHORT.' však nebyl nainstalován s funkcí \'Request Management\'.Kontaktujte prosím vašeho administrátora.',
 	'Portal:Refresh' => 'Obnovit',
 	'Portal:Back' => 'Zpět',
 	'Portal:WelcomeUserOrg' => 'Vítejte, %1$s (%2$s)',
@@ -1133,9 +1168,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Enum:Undefined' => 'Nedefinováno',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$sd %2$sh %3$sm %4$ss',
 	'UI:ModifyAllPageTitle' => 'Upravit vše',
+	'UI:Modify_ObjectsOf_Class' => 'Modifying objects of class %1$s~~',
 	'UI:Modify_N_ObjectsOf_Class' => 'Úprava %1$d objektů třídy %2$s',
 	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'Úprava %1$d objektů třídy %2$s ze %3$d',
 	'UI:Menu:ModifyAll' => 'Upravit...',
+	'UI:Menu:ModifyAll_Class' => 'Modify %1$s objects...~~',
+	'UI:Menu:ModifyAll_Link' => 'Modify %1$s...~~',
+	'UI:Menu:ModifyAll_Remote' => 'Modify %1$s...~~',
 	'UI:Button:ModifyAll' => 'Upravit vše',
 	'UI:Button:PreviewModifications' => 'Náhled úprav >>',
 	'UI:ModifiedObject' => 'Objekt upraven',
@@ -1195,7 +1234,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
 	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
 	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
-
 	'UI:ConfigureThisList' => 'Konfigurovat tento seznam...',
 	'UI:ListConfigurationTitle' => 'Konfigurace seznamu',
 	'UI:ColumnsAndSortOrder' => 'Sloupce a jejich řazení:',
@@ -1211,10 +1249,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
 	'UI:Button:MoveUp' => 'Posunout nahoru',
 	'UI:Button:MoveDown' => 'Posunout dolů',
-
 	'UI:OQL:UnknownClassAndFix' => 'Neznámá třída "%1$s". Můžete zkusit "%2$s".',
 	'UI:OQL:UnknownClassNoFix' => 'Neznámá třída "%1$s"',
-
 	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
@@ -1225,13 +1261,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ImportDashboardText' => 'Vyberte šablonu dashboardu k importu:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
-
-
 	'UI:DashletCreation:Title' => 'Vytvořit nový dashlet',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',
 	'UI:DashletCreation:DashletType' => 'Typ dashletu',
 	'UI:DashletCreation:EditNow' => 'Upravit dashboard',
-
 	'UI:DashboardEdit:Title' => 'Upravit dashboard',
 	'UI:DashboardEdit:DashboardTitle' => 'Nadpis',
 	'UI:DashboardEdit:AutoReload' => 'Automatické obnovování',
@@ -1239,38 +1272,31 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:DashboardEdit:AutoReloadSec+' => 'Minimální povolená hodnota je %1$d sekund',
 	'UI:DashboardEdit:Revert' => 'Revert~~',
 	'UI:DashboardEdit:Apply' => 'Apply~~',
-
 	'UI:DashboardEdit:Layout' => 'Uspořádání',
 	'UI:DashboardEdit:Properties' => 'Dashboard - vlastnosti',
 	'UI:DashboardEdit:Dashlets' => 'Dostupné dashlety',
 	'UI:DashboardEdit:DashletProperties' => 'Dashlet - vlastnosti',
-
 	'UI:Form:Property' => 'Vlastnost',
 	'UI:Form:Value' => 'Hodnota',
-
 	'UI:DashletUnknown:Label' => 'Unknown~~',
 	'UI:DashletUnknown:Description' => 'Unknown dashlet (might have been uninstalled)~~',
 	'UI:DashletUnknown:RenderText:View' => 'Unable to render this dashlet.~~',
 	'UI:DashletUnknown:RenderText:Edit' => 'Unable to render this dashlet (class "%1$s"). Check with your administrator if it is still available.~~',
 	'UI:DashletUnknown:RenderNoDataText:Edit' => 'No preview available for this dashlet (class "%1$s").~~',
 	'UI:DashletUnknown:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)~~',
-
 	'UI:DashletProxy:Label' => 'Proxy~~',
 	'UI:DashletProxy:Description' => 'Proxy dashlet~~',
 	'UI:DashletProxy:RenderNoDataText:Edit' => 'No preview available for this third-party dashlet (class "%1$s").~~',
 	'UI:DashletProxy:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)~~',
-
 	'UI:DashletPlainText:Label' => 'Text',
 	'UI:DashletPlainText:Description' => 'Prostý text (bez formátování)',
 	'UI:DashletPlainText:Prop-Text' => 'Text',
 	'UI:DashletPlainText:Prop-Text:Default' => 'Vložte text...',
-
 	'UI:DashletObjectList:Label' => 'Seznam objektů',
 	'UI:DashletObjectList:Description' => '',
 	'UI:DashletObjectList:Prop-Title' => 'Titul',
 	'UI:DashletObjectList:Prop-Query' => 'Dotaz',
 	'UI:DashletObjectList:Prop-Menu' => 'Menu',
-
 	'UI:DashletGroupBy:Prop-Title' => 'Titul',
 	'UI:DashletGroupBy:Prop-Query' => 'Dotaz',
 	'UI:DashletGroupBy:Prop-Style' => 'Styl',
@@ -1284,24 +1310,20 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (den týdne)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (den měsíce)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Vyberte prosím pole, podle kterého budou objekty seskupeny',
-
 	'UI:DashletGroupByPie:Label' => 'Koláčový graf',
 	'UI:DashletGroupByPie:Description' => 'Koláčový graf',
 	'UI:DashletGroupByBars:Label' => 'Sloupcový graf',
 	'UI:DashletGroupByBars:Description' => 'Sloupcový graf',
 	'UI:DashletGroupByTable:Label' => 'Seskupit dle (tabulka)',
 	'UI:DashletGroupByTable:Description' => 'Seznam (seskupeno dle pole)',
-
-	// New in 2.5
+    // New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function~~',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute~~',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction~~',
 	'UI:DashletGroupBy:Prop-OrderField' => 'Order by~~',
 	'UI:DashletGroupBy:Prop-Limit' => 'Limit~~',
-
 	'UI:DashletGroupBy:Order:asc' => 'Ascending~~',
 	'UI:DashletGroupBy:Order:desc' => 'Descending~~',
-
 	'UI:GroupBy:count' => 'Count~~',
 	'UI:GroupBy:count+' => 'Number of elements~~',
 	'UI:GroupBy:sum' => 'Sum~~',
@@ -1312,14 +1334,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:GroupBy:min+' => 'Minimum of %1$s~~',
 	'UI:GroupBy:max' => 'Maximum~~',
 	'UI:GroupBy:max+' => 'Maximum of %1$s~~',
-	// ---
-
+    // ---
 	'UI:DashletHeaderStatic:Label' => 'Hlavička',
 	'UI:DashletHeaderStatic:Description' => 'Zobrazí horizontální oddělovač',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Titul',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kontakty',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Ikona',
-
 	'UI:DashletHeaderDynamic:Label' => 'Hlavička se statistikami',
 	'UI:DashletHeaderDynamic:Description' => 'Hlavička se statistikami',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Titul',
@@ -1330,11 +1350,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:DashletHeaderDynamic:Prop-Query' => 'Dotaz',
 	'UI:DashletHeaderDynamic:Prop-GroupBy' => 'Seskupit dle',
 	'UI:DashletHeaderDynamic:Prop-Values' => 'Hodnoty',
-
 	'UI:DashletBadge:Label' => 'Ikona',
 	'UI:DashletBadge:Description' => 'Ikona objektu se schopností vytvářet a hledat',
 	'UI:DashletBadge:Prop-Class' => 'Třída',
-
 	'DayOfWeek-Sunday' => 'Neděle',
 	'DayOfWeek-Monday' => 'Pondělí',
 	'DayOfWeek-Tuesday' => 'Úterý',
@@ -1354,8 +1372,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Month-10' => 'Říjen',
 	'Month-11' => 'Listopad',
 	'Month-12' => 'Prosinec',
-
-	// Short version for the DatePicker
+    // Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Ne',
 	'DayOfWeek-Monday-Min' => 'Po',
 	'DayOfWeek-Tuesday-Min' => 'Út',
@@ -1375,13 +1392,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Month-10-Short' => 'Říj',
 	'Month-11-Short' => 'Lis',
 	'Month-12-Short' => 'Pro',
-	'Calendar-FirstDayOfWeek' => '1',// 0 = Sunday, 1 = Monday, etc...
-
+	'Calendar-FirstDayOfWeek' => '1',
+    // 0 = Sunday, 1 = Monday, etc...
 	'UI:Menu:ShortcutList' => 'Vytvořit odkaz',
+	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'Přejmenovat odkaz',
 	'UI:ShortcutListDlg:Title' => 'Vytvořit odkaz na seznam',
 	'UI:ShortcutDelete:Confirm' => 'Potvrďte prosím, že chcete odkaz odstranit.',
-	'Menu:MyShortcuts' => 'Mé odkazy',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Odkaz',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Název',
@@ -1395,12 +1412,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Vlastní interval',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Interval pro automatické obnovování (v sekundách)',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'Minimální povolená hodnota je %1$d sekund',
-
 	'UI:FillAllMandatoryFields' => 'Vyplňte prosím všechna povinná pole.',
 	'UI:ValueMustBeSet' => 'Toto pole je poviné',
 	'UI:ValueMustBeChanged' => 'Hodnota musí být změněna',
 	'UI:ValueInvalidFormat' => 'Nesprávný formát',
-
 	'UI:CSVImportConfirmTitle' => 'Potvrďte prosím operaci',
 	'UI:CSVImportConfirmMessage' => 'Jste si jisti, že to chcete udělat?',
 	'UI:CSVImportError_items' => 'Chyby: %1$d',
@@ -1426,11 +1441,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
       <tr><td>i</td><td>minuty (2 znaky, např. 00..59)</td></tr>
       <tr><td>s</td><td>sekundy (2 znaky, např. 00..59)</td></tr>
     </table>',
-
 	'UI:Button:Remove' => 'Odstranit',
 	'UI:AddAnExisting_Class' => 'Přidat objekty typu %1$s...',
 	'UI:SelectionOf_Class' => 'Výběr objektů typu %1$s',
-
 	'UI:AboutBox' => 'O '.ITOP_APPLICATION_SHORT.'...',
 	'UI:About:Title' => 'O '.ITOP_APPLICATION_SHORT,
 	'UI:About:DataModel' => 'Datový model',
@@ -1440,12 +1453,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:About:ManualExtensionSource' => 'Extension~~',
 	'UI:About:Extension_Version' => 'Version: %1$s~~',
 	'UI:About:RemoteExtensionSource' => 'Data~~',
-
 	'UI:DisconnectedDlgMessage' => 'Byli jste odpojeni. Pokud chcete aplikaci nadále používat, musíte se znovu přihlásit.',
 	'UI:DisconnectedDlgTitle' => 'Varování!',
 	'UI:LoginAgain' => 'Znovu přihlásit',
 	'UI:StayOnThePage' => 'Zůstat na této stránce',
-
 	'ExcelExporter:ExportMenu' => 'Export do Excelu',
 	'ExcelExporter:ExportDialogTitle' => 'Export do Excelu',
 	'ExcelExporter:ExportButton' => 'Export',
@@ -1458,7 +1469,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'ExcelExport:Statistics' => 'Statistiky',
 	'portal:legacy_portal' => 'Uživatelský portál',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office',
-
 	'UI:CurrentObjectIsLockedBy_User' => 'Objekt je uzamčen, protože ho nyní upravuje %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Objekt právě upravuje %1$s. Vaše úpravy nemohou být odeslány, protože by byly přepsány.',
 	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.~~',
@@ -1466,43 +1476,36 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CurrentObjectLockExpired_Explanation' => 'Objekt byl znovu odemčen. Nemůžete odeslat své úpravy, protože objekt mezitím mohl být upraven někým jiným.',
 	'UI:ConcurrentLockKilled' => 'Váš zámek tohoto objektu byl odstraněn někým jiným.',
 	'UI:Menu:KillConcurrentLock' => 'Odtranit zámek. (Znemožní uložení úprav osobě, která zámek vytvořila)',
-
 	'UI:Menu:ExportPDF' => 'PDF export',
 	'UI:Menu:PrintableVersion' => 'Verze pro tisk',
-
 	'UI:BrowseInlineImages' => 'Procházet obrázky...',
 	'UI:UploadInlineImageLegend' => 'Nahrát nový obrázek',
 	'UI:SelectInlineImageToUpload' => 'Vyberte obrázek',
 	'UI:AvailableInlineImagesLegend' => 'Dostupné obrázky',
 	'UI:NoInlineImage' => 'Na serveru není dostupný žádný obrázek. Nahrajte nějaký pomocí tlačítka výše.',
-
 	'UI:ToggleFullScreen' => 'Přepnout zobrazení',
 	'UI:Button:ResetImage' => 'Obnovit původní obrázek',
 	'UI:Button:RemoveImage' => 'Odebrat obrázek',
 	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'Úprava obrázků není v tomto režimu podporována.',
-
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
-
-	// Search form
+    // Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
 	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
-	// - Add new criteria button
+    // - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used~~',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
-
-	// - Criteria header actions
+    // - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:Criteria:Remove' => 'Remove~~',
 	'UI:Search:Criteria:Locked' => 'Locked~~',
-
-	// - Criteria titles
-	//   - Default widget
+    // - Criteria titles
+    //   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty~~',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty~~',
@@ -1524,53 +1527,57 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s~~',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s~~',
-	//   - Numeric widget
-	//   None yet
-	//   - DateTime widget
+    //   - Numeric widget
+    //   None yet
+    //   - DateTime widget
 	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s~~',
-	//   - Enum widget
+    //   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
-	//   - TagSet widget
+    //   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-	//   - External key widget
+    //   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-	//   - Hierarchical key widget
+    //   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
-
-	// - Criteria operators
-	//   - Default widget
+    // - Criteria operators
+    //   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty~~',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty~~',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals~~',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Between~~',
-	//   - String widget
+    //   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains~~',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with~~',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
-	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',// => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',// => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',// > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',// => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',// > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',// => '≠',
-	//   - Tag Set Widget
+    //   - Numeric widget
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',
+    // => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',
+    // => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',
+    // > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',
+    // => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',
+    // > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',
+    // => '≠',
+    //   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
-
-	// - Other translations
+    // - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
 	'UI:Search:Value:Search:Placeholder' => 'Search...~~',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
@@ -1578,8 +1585,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Value:Autocomplete:NoResult' => 'No result.~~',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none~~',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles~~',
-
-	// - Widget other translations
+    // - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From~~',
 	'UI:Search:Criteria:Numeric:Until' => 'To~~',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any~~',
@@ -1593,10 +1599,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Any date~~',
 	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Any date~~',
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Children of the selected objects will be included.~~',
-
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
-
 	'UI:StateChanged' => 'State changed~~',
 ));
 
@@ -1607,16 +1611,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
-
 	'Expression:Unit:Short:DAY' => 'd~~',
 	'Expression:Unit:Short:WEEK' => 'w~~',
 	'Expression:Unit:Short:MONTH' => 'm~~',
 	'Expression:Unit:Short:YEAR' => 'y~~',
-
 	'Expression:Unit:Long:DAY' => 'day(s)~~',
 	'Expression:Unit:Long:HOUR' => 'hour(s)~~',
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
-
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
 ));
@@ -1640,46 +1641,32 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:DataSources' => 'Zdroje dat pro synchronizaci',
 	'Menu:DataSources+' => 'Všechny zdroje dat pro synchronizaci',
-	'Menu:WelcomeMenu' => 'Vítejte',
-	'Menu:WelcomeMenu+' => 'Vítejte v '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Vítejte',
-	'Menu:WelcomeMenuPage+' => 'Vítejte v '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Administrace',
-	'Menu:AdminTools+' => 'Nástroje pro administraci',
-	'Menu:AdminTools?' => 'Nástroje přístupné pouze uživatelům, kteří mají potřbná oprávnění',
-	'Menu:DataModelMenu' => 'Datový model',
-	'Menu:DataModelMenu+' => 'Přehled datového modelu',
-	'Menu:ExportMenu' => 'Exportovat',
-	'Menu:ExportMenu+' => 'Exportovat výsledky jakéhokoli dotazu do HTML, CSV nebo XML',
-	'Menu:NotificationsMenu' => 'Upozornění',
-	'Menu:NotificationsMenu+' => 'Konfigurace upozornění',
 	'Menu:AuditCategories' => 'Kategorie auditu',
 	'Menu:AuditCategories+' => 'Kategorie auditu',
 	'Menu:Notifications:Title' => 'Kategorie auditu',
-	'Menu:RunQueriesMenu'         => 'Provést dotaz',
-	'Menu:RunQueriesMenu+'        => 'Provést dotaz',
-	'Menu:QueryMenu'              => 'Knihovna dotazů',
-	'Menu:QueryMenu+'             => 'Knihovna dotazů',
-	'Menu:UniversalSearchMenu'    => 'Univerzální hledání',
-	'Menu:UniversalSearchMenu+'   => 'Hledejte cokoli...',
-	'Menu:UserManagementMenu'     => 'Správa uživatelů',
-	'Menu:UserManagementMenu+'    => 'Správa uživatelů',
-	'Menu:ProfilesMenu'           => 'Profily (Role)',
-	'Menu:ProfilesMenu+'          => 'Profily (Role)',
-	'Menu:ProfilesMenu:Title'     => 'Profily (Role)',
-	'Menu:UserAccountsMenu'       => 'Uživatelské účty',
-	'Menu:UserAccountsMenu+'      => 'Uživatelské účty',
+	'Menu:AuditCategories:Title' => 'Audit configuration~~',
+	'Menu:RunQueriesMenu' => 'Provést dotaz',
+	'Menu:RunQueriesMenu+' => 'Provést dotaz',
+	'Menu:QueryMenu' => 'Knihovna dotazů',
+	'Menu:QueryMenu+' => 'Knihovna dotazů',
+	'Menu:UniversalSearchMenu' => 'Univerzální hledání',
+	'Menu:UniversalSearchMenu+' => 'Hledejte cokoli...',
+	'Menu:UserManagementMenu' => 'Správa uživatelů',
+	'Menu:UserManagementMenu+' => 'Správa uživatelů',
+	'Menu:ProfilesMenu' => 'Profily (Role)',
+	'Menu:ProfilesMenu+' => 'Profily (Role)',
+	'Menu:ProfilesMenu:Title' => 'Profily (Role)',
+	'Menu:UserAccountsMenu' => 'Uživatelské účty',
+	'Menu:UserAccountsMenu+' => 'Uživatelské účty',
 	'Menu:UserAccountsMenu:Title' => 'Uživatelské účty',
-	'Menu:MyShortcuts'            => 'Mé odkazy',
-	'Menu:UserManagement'         => 'User Management~~',
-	'Menu:Queries'                => 'Queries~~',
-	'Menu:ConfigurationTools'     => 'Configuration~~',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~'
 ));
-
 // Additional language entries not present in English dict
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard'   => 'Custom~~',
-	'UI:Dashboard:Edit'           => 'Upravit tuto stránku...',
-	'UI:Dashboard:Revert'         => 'Vrátit se k původní verzi...',
+	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Dashboard:Edit' => 'Upravit tuto stránku...',
+	'UI:Dashboard:Revert' => 'Vrátit se k původní verzi...'
 ));

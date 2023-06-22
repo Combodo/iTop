@@ -74,6 +74,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkErrorToFunctionalCI' => 'Lien Erreur / CI',
 	'Class:lnkErrorToFunctionalCI+' => 'Lien entre une erreur et un ci',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
@@ -93,6 +94,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToError' => 'Lien Documents / Errors',
 	'Class:lnkDocumentToError+' => 'Lien entre un document et une erreur',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Nom Document',

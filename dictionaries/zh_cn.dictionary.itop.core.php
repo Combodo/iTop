@@ -23,9 +23,9 @@
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
-	'Core:DeletedObjectTip'   => '对象已被删除于 %1$s (%2$s)',
-
+	'Core:DeletedObjectTip' => '对象已被删除于 %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => '对象找不到 (class: %1$s, id: %2$d)',
+<<<<<<< HEAD
 	'Core:UnknownObjectTip'   => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
 
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
@@ -35,45 +35,46 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeLinkedSet'  => '对象数组',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass~~',
 
+=======
+	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
+	'Core:AttributeLinkedSet' => '对象数组',
+	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass~~',
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
-
-	'Core:AttributeDashboard'  => '仪表盘',
+	'Core:AttributeDashboard' => '仪表盘',
 	'Core:AttributeDashboard+' => '',
-
-	'Core:AttributePhoneNumber'  => '电话号码',
+	'Core:AttributePhoneNumber' => '电话号码',
 	'Core:AttributePhoneNumber+' => '',
-
 	'Core:AttributeObsolescenceDate' => '报废日期',
 	'Core:AttributeObsolescenceDate+' => '',
-
 	'Core:AttributeTagSet' => '清单',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => '请点击这里添加',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
-
 	'Core:AttributeCaseLog' => '日志',
 	'Core:AttributeCaseLog+' => '',
-
 	'Core:AttributeMetaEnum' => 'Computed enum~~',
 	'Core:AttributeMetaEnum+' => '~~',
-
 	'Core:AttributeLinkedSetIndirect' => '对象数组(N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class~~',
+<<<<<<< HEAD
 
+=======
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 	'Core:AttributeInteger' => '整数',
 	'Core:AttributeInteger+' => '整数值(可以为负)',
-
 	'Core:AttributeDecimal' => '小数',
 	'Core:AttributeDecimal+' => '小数(可以为负)',
-
 	'Core:AttributeBoolean' => '布尔',
 	'Core:AttributeBoolean+' => '布尔',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => '是',
 	'Core:AttributeBoolean/Value:no' => '否',
-
 	'Core:AttributeArchiveFlag' => '是否归档',
 	'Core:AttributeArchiveFlag/Value:yes' => '是',
 	'Core:AttributeArchiveFlag/Value:yes+' => '此对象仅在归档模式可见',
@@ -82,7 +83,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeArchiveFlag/Label+' => '',
 	'Core:AttributeArchiveDate/Label' => '归档日期',
 	'Core:AttributeArchiveDate/Label+' => '',
-
 	'Core:AttributeObsolescenceFlag' => '是否废弃',
 	'Core:AttributeObsolescenceFlag/Value:yes' => '是',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
@@ -91,54 +91,57 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
 	'Core:AttributeObsolescenceDate/Label' => '废弃时间',
 	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
+<<<<<<< HEAD
 
+=======
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 	'Core:AttributeString' => '字符串',
 	'Core:AttributeString+' => '字符串',
-
 	'Core:AttributeClass' => '类',
 	'Core:AttributeClass+' => '类别',
-
 	'Core:AttributeApplicationLanguage' => '用户语言',
 	'Core:AttributeApplicationLanguage+' => '语言和国家地区(EN US)',
-
 	'Core:AttributeFinalClass' => '类 (auto)',
 	'Core:AttributeFinalClass+' => 'Real class of the object (automatically created by the core)',
-
 	'Core:AttributePassword' => '密码',
 	'Core:AttributePassword+' => '外部设备的密码',
+<<<<<<< HEAD
 
+=======
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 	'Core:AttributeEncryptedString' => '加密字符串',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key~~',
 	'Core:AttributeEncryptUnknownLibrary' => '未知的加密库 (%1$s)',
 	'Core:AttributeEncryptFailedToDecrypt' => '** 解密错误 **',
-
 	'Core:AttributeText' => '文本',
 	'Core:AttributeText+' => '多行字符串',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'HTML字符串',
-
 	'Core:AttributeEmailAddress' => '邮箱地址',
 	'Core:AttributeEmailAddress+' => '邮箱地址',
-
 	'Core:AttributeIPAddress' => 'IP地址',
 	'Core:AttributeIPAddress+' => 'IP地址',
-
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Object Query Langage expression~~',
+<<<<<<< HEAD
 
 	'Core:AttributeEnum' => 'Enum~~',
 	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings~~',
 
+=======
+	'Core:AttributeEnum' => 'Enum~~',
+	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings~~',
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 	'Core:AttributeTemplateString' => '字符模板',
 	'Core:AttributeTemplateString+' => '包含占位符的字符串',
-
 	'Core:AttributeTemplateText' => '文字模板',
 	'Core:AttributeTemplateText+' => '包含占位符的文本',
-
 	'Core:AttributeTemplateHTML' => 'HTML模板',
 	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders~~',
+<<<<<<< HEAD
 
+=======
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 	'Core:AttributeDateTime' => '日期/时间',
 	'Core:AttributeDateTime+' => 'Date and time (年-月-日 时:分:秒)',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -156,7 +159,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 <p>
 如果不写具体时间,则默认00:00:00
 </p>',
-
 	'Core:AttributeDate' => '日期',
 	'Core:AttributeDate+' => '日期 (年-月-日)',
 	'Core:AttributeDate?SmartSearch' => '
@@ -171,12 +173,11 @@ Operators:<br/>
 	<b>&lt;</b><em>日期</em><br/>
 	<b>[</b><em>日期</em>,<em>日期</em><b>]</b>
 </p>',
-
 	'Core:AttributeDeadline' => '截止日期',
 	'Core:AttributeDeadline+' => '日期, 显示与当前的相对时间',
-
 	'Core:AttributeExternalKey' => '外键',
 	'Core:AttributeExternalKey+' => 'External (or foreign) key~~',
+<<<<<<< HEAD
 
 	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
 	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
@@ -187,27 +188,35 @@ Operators:<br/>
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => 'Absolute or relative URL as a text string~~',
 
+=======
+	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
+	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
+	'Core:AttributeExternalField' => '外部字段',
+	'Core:AttributeExternalField+' => 'Field mapped to an external key~~',
+	'Core:AttributeURL' => 'URL',
+	'Core:AttributeURL+' => 'Absolute or relative URL as a text string~~',
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => '任何二进制内容(文档)',
-
 	'Core:AttributeOneWayPassword' => '单向密码',
 	'Core:AttributeOneWayPassword+' => '单向加密(或哈希) 的密码',
-
 	'Core:AttributeTable' => '表',
 	'Core:AttributeTable+' => '带索引的二维数组',
-
 	'Core:AttributePropertySet' => '属性',
 	'Core:AttributePropertySet+' => 'List of untyped properties (name and value)~~',
+<<<<<<< HEAD
 
 	'Core:AttributeFriendlyName' => '通用名称',
 	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes~~',
 
+=======
+	'Core:AttributeFriendlyName' => '通用名称',
+	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes~~',
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 	'Core:FriendlyName-Label' => '全称',
 	'Core:FriendlyName-Description' => '全称',
-
 	'Core:AttributeTag' => '标签',
 	'Core:AttributeTag+' => '标签',
-	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => '同步',
 	'Core:Context=Setup' => '安装向导',
@@ -483,6 +492,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+<<<<<<< HEAD
 	'Class:Action'                                  => '自定义操作',
 	'Class:Action+'                                 => '用户定义的操作',
 	'Class:Action/ComplementaryName'                => '%1$s: %2$s',
@@ -497,6 +507,22 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Action/Attribute:status/Value:enabled'   => '正式',
 	'Class:Action/Attribute:status/Value:enabled+'  => '正式生产',
 	'Class:Action/Attribute:status/Value:disabled'  => '停用',
+=======
+	'Class:Action' => '自定义操作',
+	'Class:Action+' => '用户定义的操作',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s',
+	'Class:Action/Attribute:name' => '名称',
+	'Class:Action/Attribute:name+' => '',
+	'Class:Action/Attribute:description' => '描述',
+	'Class:Action/Attribute:description+' => '',
+	'Class:Action/Attribute:status' => '状态',
+	'Class:Action/Attribute:status+' => '是否正式环境?',
+	'Class:Action/Attribute:status/Value:test' => '测试',
+	'Class:Action/Attribute:status/Value:test+' => '测试',
+	'Class:Action/Attribute:status/Value:enabled' => '正式',
+	'Class:Action/Attribute:status/Value:enabled+' => '正式生产',
+	'Class:Action/Attribute:status/Value:disabled' => '停用',
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 	'Class:Action/Attribute:status/Value:disabled+' => '停用',
 	'Class:Action/Attribute:trigger_list' => '相关的触发器',
 	'Class:Action/Attribute:trigger_list+' => '此操作关联的触发器',
@@ -519,6 +545,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+<<<<<<< HEAD
 	'Class:ActionEmail'                                    => '邮件通知',
 	'Class:ActionEmail+'                                   => '',
 	'Class:ActionEmail/Attribute:status+'                  => 'This status drives who will be notified: 
@@ -554,6 +581,43 @@ While editing, click on the magnifier to get pertinent examples~~',
 	'Class:ActionEmail/Attribute:subject+'                 => 'Title of the email. Can contain placeholders like $this->attribute_code$',
 	'Class:ActionEmail/Attribute:body'                     => '正文',
 	'Class:ActionEmail/Attribute:body+'                    => 'Contents of the email. Can contain placeholders like:
+=======
+	'Class:ActionEmail' => '邮件通知',
+	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
+- Being tested: just the Test recipient, 
+- In production: all (To, cc and Bcc) 
+- Inactive: no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => '仅测试收件人会被通知',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => '通知所有人, 包含抄送和秘抄',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
+	'Class:ActionEmail/Attribute:test_recipient' => '测试收件人',
+	'Class:ActionEmail/Attribute:test_recipient+' => 'Destination email address used instead of To, Cc and Bcc when notification is being tested~~',
+	'Class:ActionEmail/Attribute:from' => 'From (email)~~',
+	'Class:ActionEmail/Attribute:from+' => 'Either a static email address or a placeholder like $this->agent_id->email$.
+The latest may not be accepted by some email servers.~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Either a static label or a placeholder like $this->agent_id->friendlyname$',
+	'Class:ActionEmail/Attribute:reply_to' => 'Reply to (email)~~',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Either a static email address or a placeholder like $this->team_id->email$.
+If omitted the From (email) is used.~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Either a static label or a placeholder like $this->team_id->friendlyname$.
+If omitted the From (label) is used.~~',
+	'Class:ActionEmail/Attribute:to' => '收件人',
+	'Class:ActionEmail/Attribute:to+' => 'To: an OQL query returning objects having an email field.
+While editing, click on the magnifier to get pertinent examples~~',
+	'Class:ActionEmail/Attribute:cc' => '抄送',
+	'Class:ActionEmail/Attribute:cc+' => 'Carbon Copy: an OQL query returning objects having an email field.
+While editing, click on the magnifier to get pertinent examples~~',
+	'Class:ActionEmail/Attribute:bcc' => '秘抄',
+	'Class:ActionEmail/Attribute:bcc+' => 'Blind Carbon Copy: an OQL query returning objects having an email field. 
+While editing, click on the magnifier to get pertinent examples~~',
+	'Class:ActionEmail/Attribute:subject' => '主题',
+	'Class:ActionEmail/Attribute:subject+' => 'Title of the email. Can contain placeholders like $this->attribute_code$',
+	'Class:ActionEmail/Attribute:body' => '正文',
+	'Class:ActionEmail/Attribute:body+' => 'Contents of the email. Can contain placeholders like:
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 - $this->attribute_code$ any attribute of the object triggering the notification,
 - $this->html(attribute_code)$ same as above but displayed in html format,
 - $this->hyperlink()$ hyperlink in the console to the object triggering the notification,
@@ -561,6 +625,7 @@ While editing, click on the magnifier to get pertinent examples~~',
 - $this->head_html(case_log_attribute)$ last reply in html format of a caselog attribute,
 - $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
 - $current_contact->attribute$ attribute of the Person who triggered the notification~~',
+<<<<<<< HEAD
 	'Class:ActionEmail/Attribute:importance'               => '重要性',
 	'Class:ActionEmail/Attribute:importance+'              => 'Importance flag set on the generated email~~',
 	'Class:ActionEmail/Attribute:importance/Value:low'     => '低',
@@ -572,6 +637,32 @@ While editing, click on the magnifier to get pertinent examples~~',
 	'ActionEmail:main'                                     => '消息',
 	'ActionEmail:trigger'                                  => '触发器',
 	'ActionEmail:recipients'                               => '联系人',
+=======
+	'Class:ActionEmail/Attribute:importance' => '重要性',
+	'Class:ActionEmail/Attribute:importance+' => 'Importance flag set on the generated email~~',
+	'Class:ActionEmail/Attribute:importance/Value:low' => '低',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:normal' => '普通',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:high' => '高',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:language' => 'Language~~',
+	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
+	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
+	'ActionEmail:main' => '消息',
+	'ActionEmail:trigger' => '触发器',
+	'ActionEmail:recipients' => '联系人',
+	'ActionEmail:preview_tab' => 'Preview~~',
+	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
+	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
+	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
+	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 ));
 
 //
@@ -579,6 +670,7 @@ While editing, click on the magnifier to get pertinent examples~~',
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+<<<<<<< HEAD
     'Class:Trigger'                        => '触发器',
     'Class:Trigger+'                       => 'Custom event handler~~',
     'Class:Trigger/ComplementaryName'      => '%1$s, %2$s',
@@ -592,6 +684,21 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'Class:Trigger/Attribute:context+'     => 'Context to allow the trigger to start~~',
     'Class:Trigger/Attribute:complement'   => '其它信息',
     'Class:Trigger/Attribute:complement+'  => 'Further information as provided in english, by this trigger~~',
+=======
+	'Class:Trigger' => '触发器',
+	'Class:Trigger+' => 'Custom event handler~~',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
+	'Class:Trigger/Attribute:description' => '描述',
+	'Class:Trigger/Attribute:description+' => '简短描述',
+	'Class:Trigger/Attribute:action_list' => '触发的操作',
+	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated~~',
+	'Class:Trigger/Attribute:finalclass' => 'Trigger sub-class~~',
+	'Class:Trigger/Attribute:finalclass+' => '根属性名称',
+	'Class:Trigger/Attribute:context' => '上下文',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:complement' => '其它信息',
+	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 ));
 
 //
@@ -734,6 +841,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Synchro Data Source
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+<<<<<<< HEAD
 	'Class:SynchroDataSource'                                                       => '数据源同步',
 	'Class:SynchroDataSource/Attribute:name'                                        => '名称',
 	'Class:SynchroDataSource/Attribute:name+'                                       => '',
@@ -790,10 +898,69 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first'         => 'Take the first one (random?)',
 	'Class:SynchroDataSource/Attribute:delete_policy'                               => '删除策略',
 	'Class:SynchroDataSource/Attribute:delete_policy+'                              => 'What to do when a replica becomes obsolete:
+=======
+	'Class:SynchroDataSource' => '数据源同步',
+	'Class:SynchroDataSource/Attribute:name' => '名称',
+	'Class:SynchroDataSource/Attribute:name+' => '',
+	'Class:SynchroDataSource/Attribute:description' => '描述',
+	'Class:SynchroDataSource/Attribute:status' => '状态',
+	'Class:SynchroDataSource/Attribute:scope_class' => 'Target class~~',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class',
+	'Class:SynchroDataSource/Attribute:user_id' => '用户',
+	'Class:SynchroDataSource/Attribute:notify_contact_id' => '联系人',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact to notify in case of error~~',
+	'Class:SynchroDataSource/Attribute:url_icon' => '图标的超链接',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which '.ITOP_APPLICATION_SHORT.' is synchronized.
+This icon is shown in the tooltip of the “Lock” symbol on '.ITOP_APPLICATION_SHORT.' synchronized object~~',
+	'Class:SynchroDataSource/Attribute:url_application' => '应用的超链接',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink to the object in the external application corresponding to a synchronized '.ITOP_APPLICATION_SHORT.' object. 
+Possible placeholders: $this->attribute$ and $replica->primary_key$.
+The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of any synchronized '.ITOP_APPLICATION_SHORT.' object~~',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy~~',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
+"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
+	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Full load interval~~',
+	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'A complete reload of all data must occur at least as often as specified here~~',
+	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Action on zero~~',
+	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Action taken when the search returns no object~~',
+	'Class:SynchroDataSource/Attribute:action_on_one' => 'Action on one~~',
+	'Class:SynchroDataSource/Attribute:action_on_one+' => 'Action taken when the search returns exactly one object~~',
+	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Action on many~~',
+	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Action taken when the search returns more than one object~~',
+	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Users allowed~~',
+	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Who is allowed to delete synchronized objects~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Nobody',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Administrators only',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'All allowed users',
+	'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Update rules',
+	'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'A list of "field_name:value;":
+"field_name" must be a valid field of the Target class.
+"value" must be an authorised value for that field.~~',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Retention Duration~~',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'How much time an obsolete object is kept before being deleted',
+	'Class:SynchroDataSource/Attribute:database_table_name' => 'Data table',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Name of the table to store the synchronization data. If left empty, a default name will be computed.',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => '上线',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => '废弃',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => '生产',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Scope restriction',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Use the attributes',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Use the primary_key field',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Create',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Error',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Error',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Update',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Create',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Error',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Take the first one (random?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => '删除策略',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'What to do when a replica becomes obsolete:
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 "Ignore": do nothing, the associated object remains as is in iTop.
 "Delete": Delete the associated object in iTop (and the replica in the data table).
 "Update": Update the associated object as specified by the Update rules (see below).
 "Update then Delete": apply the "Update rules". When Retention Duration expires, execute a "Delete" ~~',
+<<<<<<< HEAD
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete'                  => '删除',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore'                  => '忽略',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:update'                  => '更新',
@@ -922,6 +1089,135 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Class:SynchroLog/Attribute:stats_nb_obj_created'                          => 'Nb objects created',
 	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors'                   => 'Nb or errors while creating',
 	'Class:SynchroLog/Attribute:stats_nb_obj_updated'                          => 'Nb objects updated',
+=======
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => '删除',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => '忽略',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => '更新',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => '先更新再删除',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Attributes List~~',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Administrators only',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Everybody allowed to delete such objects',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Nobody',
+	'SynchroDataSource:Description' => '描述',
+	'SynchroDataSource:Reconciliation' => 'Search &amp; reconciliation~~',
+	'SynchroDataSource:Deletion' => 'Deletion rules~~',
+	'SynchroDataSource:Status' => '状态',
+	'SynchroDataSource:Information' => '基本信息',
+	'SynchroDataSource:Definition' => 'Definition',
+	'Core:SynchroAttributes' => '属性',
+	'Core:SynchroStatus' => '状态',
+	'Core:Synchro:ErrorsLabel' => 'Errors~~',
+	'Core:Synchro:CreatedLabel' => 'Created~~',
+	'Core:Synchro:ModifiedLabel' => 'Modified~~',
+	'Core:Synchro:UnchangedLabel' => 'Unchanged~~',
+	'Core:Synchro:ReconciledErrorsLabel' => 'Errors~~',
+	'Core:Synchro:ReconciledLabel' => 'Reconciled~~',
+	'Core:Synchro:ReconciledNewLabel' => 'Created~~',
+	'Core:SynchroReconcile:Yes' => 'Yes',
+	'Core:SynchroReconcile:No' => 'No',
+	'Core:SynchroUpdate:Yes' => 'Yes',
+	'Core:SynchroUpdate:No' => 'No',
+	'Core:Synchro:LastestStatus' => '最新状态',
+	'Core:Synchro:History' => 'Synchronization History~~',
+	'Core:Synchro:NeverRun' => 'This synchro was never run. No log yet.~~',
+	'Core:Synchro:SynchroEndedOn_Date' => 'The latest synchronization ended on %1$s.~~',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'The synchronization started on %1$s is still running...~~',
+	'Core:Synchro:label_repl_ignored' => 'Ignored (%1$s)',
+	'Core:Synchro:label_repl_disappeared' => 'Disappeared (%1$s)',
+	'Core:Synchro:label_repl_existing' => 'Existing (%1$s)',
+	'Core:Synchro:label_repl_new' => '新建 (%1$s)',
+	'Core:Synchro:label_obj_deleted' => '已删除 (%1$s)',
+	'Core:Synchro:label_obj_obsoleted' => '已废弃 (%1$s)',
+	'Core:Synchro:label_obj_disappeared_errors' => 'Errors (%1$s)',
+	'Core:Synchro:label_obj_disappeared_no_action' => 'No Action (%1$s)',
+	'Core:Synchro:label_obj_unchanged' => 'Unchanged (%1$s)',
+	'Core:Synchro:label_obj_updated' => 'Updated (%1$s)',
+	'Core:Synchro:label_obj_updated_errors' => 'Errors (%1$s)',
+	'Core:Synchro:label_obj_new_unchanged' => 'Unchanged (%1$s)',
+	'Core:Synchro:label_obj_new_updated' => 'Updated (%1$s)',
+	'Core:Synchro:label_obj_created' => 'Created (%1$s)',
+	'Core:Synchro:label_obj_new_errors' => 'Errors (%1$s)',
+	'Core:SynchroLogTitle' => '%1$s - %2$s',
+	'Core:Synchro:Nb_Replica' => 'Replica processed: %1$s',
+	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'At Least one reconciliation key must be specified, or the reconciliation policy must be to use the primary key.~~',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete~~',
+	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete objects are to be updated, but no update is specified.~~',
+	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.~~',
+	'Core:SynchroReplica:PublicData' => 'Public Data~~',
+	'Core:SynchroReplica:PrivateDetails' => 'Private Details~~',
+	'Core:SynchroReplica:BackToDataSource' => 'Go Back to the Synchro Data Source: %1$s~~',
+	'Core:SynchroReplica:ListOfReplicas' => 'List of Replica~~',
+	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primary Key)~~',
+	'Core:SynchroAtt:attcode' => '属性',
+	'Core:SynchroAtt:attcode+' => 'Field of the object~~',
+	'Core:SynchroAtt:reconciliation' => 'Reconciliation ?~~',
+	'Core:SynchroAtt:reconciliation+' => 'Used for searching~~',
+	'Core:SynchroAtt:update' => 'Update ?~~',
+	'Core:SynchroAtt:update+' => 'Used to update the object~~',
+	'Core:SynchroAtt:update_policy' => 'Update Policy~~',
+	'Core:SynchroAtt:update_policy+' => 'Behavior of the updated field~~',
+	'Core:SynchroAtt:reconciliation_attcode' => 'Reconciliation Key~~',
+	'Core:SynchroAtt:reconciliation_attcode+' => 'Attribute Code for the External Key Reconciliation~~',
+	'Core:SyncDataExchangeComment' => '(Data Synchro)~~',
+	'Core:Synchro:ListOfDataSources' => 'List of data sources:~~',
+	'Core:Synchro:LastSynchro' => 'Last synchronization:~~',
+	'Core:Synchro:ThisObjectIsSynchronized' => 'This object is synchronized with an external data source~~',
+	'Core:Synchro:TheObjectWasCreatedBy_Source' => 'The object was <b>created</b> by the external data source %1$s~~',
+	'Core:Synchro:TheObjectCanBeDeletedBy_Source' => 'The object <b>can be deleted</b> by the external data source %1$s~~',
+	'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => 'You <b>cannot delete the object</b> because it is owned by the external data source %1$s~~',
+	'TitleSynchroExecution' => 'Execution of the synchronization~~',
+	'Class:SynchroDataSource:DataTable' => 'Database table: %1$s~~',
+	'Core:SyncDataSourceObsolete' => 'The data source is marked as obsolete. Operation cancelled.~~',
+	'Core:SyncDataSourceAccessRestriction' => 'Only adminstrators or the user specified in the data source can execute this operation. Operation cancelled.',
+	'Core:SyncTooManyMissingReplicas' => 'All records have been untouched for some time (all of the objects could be deleted). Please check that the process that writes into the synchronization table is still running. Operation cancelled.',
+	'Core:SyncSplitModeCLIOnly' => 'The synchronization can be executed in chunks only if run in mode CLI~~',
+	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s replicas, %2$s error(s), %3$s warning(s).~~',
+	'Core:SynchroReplica:TargetObject' => 'Synchronized Object: %1$s~~',
+	'Class:AsyncSendEmail' => 'Email (asynchronous)~~',
+	'Class:AsyncSendEmail/Attribute:to' => '收件人',
+	'Class:AsyncSendEmail/Attribute:subject' => '主题',
+	'Class:AsyncSendEmail/Attribute:body' => '正文',
+	'Class:AsyncSendEmail/Attribute:header' => 'Header~~',
+	'Class:CMDBChangeOpSetAttributeOneWayPassword' => 'Encrypted Password~~',
+	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd' => 'Previous Value~~',
+	'Class:CMDBChangeOpSetAttributeEncrypted' => 'Encrypted Field~~',
+	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Previous Value~~',
+	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Case Log~~',
+	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Last Entry~~',
+	'Class:SynchroAttribute' => 'Synchro Attribute~~',
+	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Synchro Data Source~~',
+	'Class:SynchroAttribute/Attribute:attcode' => 'Attribute Code~~',
+	'Class:SynchroAttribute/Attribute:update' => 'Update',
+	'Class:SynchroAttribute/Attribute:reconcile' => 'Reconcile',
+	'Class:SynchroAttribute/Attribute:update_policy' => 'Update Policy',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'Locked',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'Unlocked',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Initialize if empty',
+	'Class:SynchroAttribute/Attribute:finalclass' => 'Class',
+	'Class:SynchroAttExtKey' => 'Synchro Attribute (ExtKey)',
+	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Reconciliation Attribute',
+	'Class:SynchroAttLinkSet' => 'Synchro Attribute (Linkset)',
+	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Rows separator',
+	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Attributes separator',
+	'Class:SynchroLog' => 'Synchr Log',
+	'Class:SynchroLog/Attribute:sync_source_id' => 'Synchro Data Source',
+	'Class:SynchroLog/Attribute:start_date' => '开始日期',
+	'Class:SynchroLog/Attribute:end_date' => '结束日期',
+	'Class:SynchroLog/Attribute:status' => '状态',
+	'Class:SynchroLog/Attribute:status/Value:completed' => '已完成',
+	'Class:SynchroLog/Attribute:status/Value:error' => 'Error',
+	'Class:SynchroLog/Attribute:status/Value:running' => 'Still Running',
+	'Class:SynchroLog/Attribute:stats_nb_replica_seen' => 'Nb replica seen',
+	'Class:SynchroLog/Attribute:stats_nb_replica_total' => 'Nb replica total',
+	'Class:SynchroLog/Attribute:stats_nb_obj_deleted' => 'Nb objects deleted',
+	'Class:SynchroLog/Attribute:stats_nb_obj_deleted_errors' => 'Nb of errors while deleting',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted' => 'Nb objects obsoleted',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => 'Nb of errors while obsoleting',
+	'Class:SynchroLog/Attribute:stats_nb_obj_created' => 'Nb objects created',
+	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => 'Nb or errors while creating',
+	'Class:SynchroLog/Attribute:stats_nb_obj_updated' => 'Nb objects updated',
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 	'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => 'Nb errors while updating~~',
 	'Class:SynchroLog/Attribute:stats_nb_replica_reconciled_errors' => 'Nb of errors during reconciliation~~',
 	'Class:SynchroLog/Attribute:stats_nb_replica_disappeared_no_action' => 'Nb replica disappeared~~',
@@ -1040,7 +1336,6 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
 	'Class:TagSetFieldData+' => '~~',
-
 	'Class:TagSetFieldData/Attribute:code' => '代码',
 	'Class:TagSetFieldData/Attribute:code+' => '内部代码. 必须至少包含3个数字或字母',
 	'Class:TagSetFieldData/Attribute:label' => '标签',
@@ -1050,7 +1345,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~~~',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => '已使用的标签无法删除',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters, starting with a letter.~~',
@@ -1137,8 +1431,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //
@@ -1176,9 +1470,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '',
 ));
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 96f1bd3646a30da80e9699ffc95bf2cb9012d96f
 // Additional language entries not present in English dict
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
- 'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
+	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN'
 ));
+
+
+

@@ -60,6 +60,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Attachments:File:Uploader' => 'Пользователь',
 	'Attachments:File:Size' => 'Размер',
 	'Attachments:File:MimeType' => 'Тип',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
 ));
 //
 // Class: Attachment
@@ -72,4 +73,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Контакт',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 ));
