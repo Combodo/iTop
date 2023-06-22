@@ -31,6 +31,8 @@ use DBObjectSet;
 use DeprecatedCallsLog;
 use Dict;
 use DisplayBlock;
+use IssueLog;
+use LogChannels;
 use MenuBlock;
 use MetaModel;
 use UserRights;
@@ -386,6 +388,18 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				// Then display all the attributes linked to the other end of the relationship
 				$aLists[$sAlias] = $aDisplayList;
 			}
+		}
+
+		// N°6356 Check if there is at least 1 class remaining to display
+		if (count($aLists) === 0) {
+			IssueLog::Debug('Could not find any class / attribute to display in the list. Did you ensure the selected classes have the requested zlist? As a fallback, we will just display the friendlyname for the first selected class.', LogChannels::DATATABLE, [
+				'selected_classes' => $aClassAliases,
+				'zlist' => $sZListName,
+			]);
+
+			$sFirstClassAlias = array_keys($aClassAliases)[0];
+			$aAuthorizedClasses[$sFirstClassAlias] = $aClassAliases[$sFirstClassAlias];
+			$aLists[$sFirstClassAlias] = [];
 		}
 
 		$oDefaultSettings = DataTableSettings::GetDataModelSettings($aAuthorizedClasses, $bViewLink, $aLists);
