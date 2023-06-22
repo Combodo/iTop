@@ -102,19 +102,14 @@ if (!function_exists('sys_get_temp_dir'))
 }
 
 
-/**
- * @param int $iRefTime Reference date time as a unix timestamp
- *
- * @return string Absolute path to the backup file, WITHOUT the file extension (`.tar.gz`)
- * @throws \Exception
- */
+
 function MakeArchiveFileName($iRefTime = null)
 {
 	$sDefaultBackupFileName = sys_get_temp_dir().'/'."__DB__-%Y-%m-%d";
 	$sBackupFile =  utils::ReadParam('backup_file', $sDefaultBackupFileName, true, 'raw_data');
 
 	$oBackup = new DBBackup();
-	$oDateTime = $iRefTime !== null ? DateTime::createFromFormat('U', $iRefTime) : new DateTime();
+	$oDateTime = $iRefTime !== null ? new DateTime($iRefTime) : new DateTime();
 	$sBackupFile = $oBackup->MakeName($sBackupFile, $oDateTime);
 
 	return $sBackupFile;

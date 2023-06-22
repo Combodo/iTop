@@ -146,13 +146,13 @@ class DBBackup
 	/**
 	 * Create a normalized backup name, depending on the current date/time and Database
 	 *
-	 * @param string $sNameSpec Name and path, eventually containing itop placeholders + time formatting following the strftime() format {@link https://www.php.net/manual/fr/function.strftime.php}
+	 * @param string sNameSpec Name and path, eventually containing itop placeholders + time formatting following the strftime() format {@link https://www.php.net/manual/fr/function.strftime.php}
 	 * @param \DateTime|null $oDateTime Date time to use for the name
 	 *
-	 * @return string Name of the backup file WITHOUT the file extension (eg. `.tar.gz`)
-	 * @since 3.1.0 N°5279 Add $oDateTime parameter
+	 * @return string
+	 * @since 3.1.0 N°5279 Add $oDtaeaTime parameter
 	 */
-	public function MakeName(string $sNameSpec = "__DB__-%Y-%m-%d", DateTime $oDateTime = null)
+	public function MakeName($sNameSpec = "__DB__-%Y-%m-%d", DateTime $oDateTime = null)
 	{
 		if ($oDateTime === null) {
 			$oDateTime = new DateTime();
