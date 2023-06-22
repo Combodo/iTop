@@ -24,7 +24,7 @@ namespace Combodo\iTop\Form\Field;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-abstract class TextField extends Field
+abstract class TextField extends AbstractSimpleField
 {
 
 }

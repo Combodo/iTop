@@ -32,7 +32,7 @@ use utils;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since 2.3.0
  */
-abstract class MultipleChoicesField extends Field
+abstract class MultipleChoicesField extends AbstractSimpleField
 {
 	/** @var bool DEFAULT_MULTIPLE_VALUES_ENABLED */
 	const DEFAULT_MULTIPLE_VALUES_ENABLED = false;

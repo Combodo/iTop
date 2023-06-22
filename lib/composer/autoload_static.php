@@ -750,6 +750,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Core\\MetaModel\\HierarchicalKey' => __DIR__ . '/../..' . '/sources/Core/MetaModel/HierarchicalKey.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\DesignElement' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
+        'Combodo\\iTop\\Form\\Field\\AbstractSimpleField' => __DIR__ . '/../..' . '/sources/Form/Field/AbstractSimpleField.php',
         'Combodo\\iTop\\Form\\Field\\BlobField' => __DIR__ . '/../..' . '/sources/Form/Field/BlobField.php',
         'Combodo\\iTop\\Form\\Field\\CaseLogField' => __DIR__ . '/../..' . '/sources/Form/Field/CaseLogField.php',
         'Combodo\\iTop\\Form\\Field\\CheckboxField' => __DIR__ . '/../..' . '/sources/Form/Field/CheckboxField.php',

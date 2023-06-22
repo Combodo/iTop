@@ -24,7 +24,7 @@ namespace Combodo\iTop\Form\Field;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class SetField extends Field
+class SetField extends AbstractSimpleField
 {
 
 }

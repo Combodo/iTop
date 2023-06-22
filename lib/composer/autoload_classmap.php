@@ -386,6 +386,7 @@ return array(
     'Combodo\\iTop\\Core\\MetaModel\\HierarchicalKey' => $baseDir . '/sources/Core/MetaModel/HierarchicalKey.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\DesignElement' => $baseDir . '/core/designdocument.class.inc.php',
+    'Combodo\\iTop\\Form\\Field\\AbstractSimpleField' => $baseDir . '/sources/Form/Field/AbstractSimpleField.php',
     'Combodo\\iTop\\Form\\Field\\BlobField' => $baseDir . '/sources/Form/Field/BlobField.php',
     'Combodo\\iTop\\Form\\Field\\CaseLogField' => $baseDir . '/sources/Form/Field/CaseLogField.php',
     'Combodo\\iTop\\Form\\Field\\CheckboxField' => $baseDir . '/sources/Form/Field/CheckboxField.php',

@@ -19,13 +19,13 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use Str;
 use AttributeDuration;
+use Str;
 
 /**
  * Description of StringField
  */
-class DurationField extends Field
+class DurationField extends AbstractSimpleField
 {
 
 	/**
