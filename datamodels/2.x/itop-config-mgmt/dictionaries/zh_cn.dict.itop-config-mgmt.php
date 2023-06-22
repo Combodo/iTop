@@ -149,8 +149,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:PhysicalDevice/Attribute:location_name+' => '',
 	'Class:PhysicalDevice/Attribute:status' => '状态',
 	'Class:PhysicalDevice/Attribute:status+' => '',
-	'Class:PhysicalDevice/Attribute:status/Value:implementation' => '上线',
-	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => '上线',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation' => '生效',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => '生效',
 	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => '废弃',
 	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => '废弃',
 	'Class:PhysicalDevice/Attribute:status/Value:production' => '生产',
@@ -178,15 +178,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Rack' => '机柜',
+	'Class:Rack' => '机架',
 	'Class:Rack+' => '',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:Rack/Attribute:nb_u' => '机柜高度',
+	'Class:Rack/Attribute:nb_u' => '机架高度',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => '设备',
-	'Class:Rack/Attribute:device_list+' => '此机柜托管的所有物理设备',
-	'Class:Rack/Attribute:enclosure_list' => '机位',
-	'Class:Rack/Attribute:enclosure_list+' => '此机柜上的所有机位',
+	'Class:Rack/Attribute:device_list+' => '此机架托管的所有物理设备',
+	'Class:Rack/Attribute:enclosure_list' => '机柜',
+	'Class:Rack/Attribute:enclosure_list+' => '此机架上的所有机柜',
 ));
 
 //
@@ -194,7 +194,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TelephonyCI' => '电讯配置项',
+	'Class:TelephonyCI' => '通讯配置项',
 	'Class:TelephonyCI+' => '',
 	'Class:TelephonyCI/Attribute:phonenumber' => '电话号码',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '',
@@ -262,13 +262,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DatacenterDevice' => '数据中心设备',
 	'Class:DatacenterDevice+' => '',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:DatacenterDevice/Attribute:rack_id' => '机柜',
+	'Class:DatacenterDevice/Attribute:rack_id' => '机架',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '',
-	'Class:DatacenterDevice/Attribute:rack_name' => '机柜名称',
+	'Class:DatacenterDevice/Attribute:rack_name' => '机架名称',
 	'Class:DatacenterDevice/Attribute:rack_name+' => '',
-	'Class:DatacenterDevice/Attribute:enclosure_id' => '机位',
+	'Class:DatacenterDevice/Attribute:enclosure_id' => '机柜',
 	'Class:DatacenterDevice/Attribute:enclosure_id+' => '',
-	'Class:DatacenterDevice/Attribute:enclosure_name' => '机位名称',
+	'Class:DatacenterDevice/Attribute:enclosure_name' => '机柜名称',
 	'Class:DatacenterDevice/Attribute:enclosure_name+' => '',
 	'Class:DatacenterDevice/Attribute:nb_u' => '高度',
 	'Class:DatacenterDevice/Attribute:nb_u+' => '',
@@ -282,8 +282,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DatacenterDevice/Attribute:powerB_id+' => '',
 	'Class:DatacenterDevice/Attribute:powerB_name' => '电源B名称',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => '光纤端口',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '此设备的所有光纤端口',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => '光纤接口',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '此设备的所有光纤接口',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
 	'Class:DatacenterDevice/Attribute:san_list+' => '所有连接到这台设备的SAN交换机',
 	'Class:DatacenterDevice/Attribute:redundancy' => '冗余',
@@ -459,9 +459,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
-	'Class:PDU/Attribute:rack_id' => '机柜',
+	'Class:PDU/Attribute:rack_id' => '机架',
 	'Class:PDU/Attribute:rack_id+' => '',
-	'Class:PDU/Attribute:rack_name' => '机柜名称',
+	'Class:PDU/Attribute:rack_name' => '机架名称',
 	'Class:PDU/Attribute:rack_name+' => '',
 	'Class:PDU/Attribute:powerstart_id' => '上级电源',
 	'Class:PDU/Attribute:powerstart_id+' => '',
@@ -484,17 +484,17 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Enclosure' => '机位',
+	'Class:Enclosure' => '机柜',
 	'Class:Enclosure+' => '',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
-	'Class:Enclosure/Attribute:rack_id' => '机柜',
+	'Class:Enclosure/Attribute:rack_id' => '机架',
 	'Class:Enclosure/Attribute:rack_id+' => '',
-	'Class:Enclosure/Attribute:rack_name' => '机柜名称',
+	'Class:Enclosure/Attribute:rack_name' => '机架名称',
 	'Class:Enclosure/Attribute:rack_name+' => '',
 	'Class:Enclosure/Attribute:nb_u' => '高度',
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => '设备',
-	'Class:Enclosure/Attribute:device_list+' => '此机位的所有设备',
+	'Class:Enclosure/Attribute:device_list+' => '此机柜的所有设备',
 ));
 
 //
@@ -671,8 +671,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:VirtualDevice+' => '',
 	'Class:VirtualDevice/Attribute:status' => '状态',
 	'Class:VirtualDevice/Attribute:status+' => '',
-	'Class:VirtualDevice/Attribute:status/Value:implementation' => '上线',
-	'Class:VirtualDevice/Attribute:status/Value:implementation+' => '上线',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => '生效',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => '生效',
 	'Class:VirtualDevice/Attribute:status/Value:obsolete' => '废弃',
 	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => '废弃',
 	'Class:VirtualDevice/Attribute:status/Value:production' => '生产',
@@ -699,7 +699,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Hypervisor' => 'Hypervisor',
+	'Class:Hypervisor' => '虚拟化管理器',
 	'Class:Hypervisor+' => '',
 	'Class:Hypervisor/Attribute:farm_id' => '集群',
 	'Class:Hypervisor/Attribute:farm_id+' => '',
@@ -718,12 +718,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Farm' => '集群',
 	'Class:Farm+' => '',
-	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisor',
-	'Class:Farm/Attribute:hypervisor_list+' => '集群由哪些Hypervisor 组成',
+	'Class:Farm/Attribute:hypervisor_list' => '虚拟化管理器',
+	'Class:Farm/Attribute:hypervisor_list+' => '集群由哪些虚拟化管理器组成',
 	'Class:Farm/Attribute:redundancy' => '高可用性',
-	'Class:Farm/Attribute:redundancy/disabled' => '所有Hypervisor 正常,集群才正常',
-	'Class:Farm/Attribute:redundancy/count' => '至少 %1$s 个Hypervisor 是正常的,集群才是正常的',
-	'Class:Farm/Attribute:redundancy/percent' => '至少 %1$s %% 的Hypervisor 是正常的,集群才正常',
+	'Class:Farm/Attribute:redundancy/disabled' => '所有虚拟化管理器正常,集群才正常',
+	'Class:Farm/Attribute:redundancy/count' => '至少 %1$s 个虚拟化管理器是正常的,集群才是正常的',
+	'Class:Farm/Attribute:redundancy/percent' => '至少 %1$s %% 的虚拟化管理器是正常的,集群才正常',
 ));
 
 //
@@ -1112,8 +1112,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Model/Attribute:type/Value:PowerSource+' => '电源',
 	'Class:Model/Attribute:type/Value:DiskArray' => '磁盘阵列',
 	'Class:Model/Attribute:type/Value:DiskArray+' => '磁盘阵列',
-	'Class:Model/Attribute:type/Value:Enclosure' => '机位',
-	'Class:Model/Attribute:type/Value:Enclosure+' => '机位',
+	'Class:Model/Attribute:type/Value:Enclosure' => '机柜',
+	'Class:Model/Attribute:type/Value:Enclosure+' => '机柜',
 	'Class:Model/Attribute:type/Value:IPPhone' => 'IP电话',
 	'Class:Model/Attribute:type/Value:IPPhone+' => 'IP电话',
 	'Class:Model/Attribute:type/Value:MobilePhone' => '手机',
@@ -1130,8 +1130,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Model/Attribute:type/Value:Peripheral+' => '配件',
 	'Class:Model/Attribute:type/Value:Printer' => '打印机',
 	'Class:Model/Attribute:type/Value:Printer+' => '打印机',
-	'Class:Model/Attribute:type/Value:Rack' => '机柜',
-	'Class:Model/Attribute:type/Value:Rack+' => '机柜',
+	'Class:Model/Attribute:type/Value:Rack' => '机架',
+	'Class:Model/Attribute:type/Value:Rack+' => '机架',
 	'Class:Model/Attribute:type/Value:SANSwitch' => 'SAN交换机',
 	'Class:Model/Attribute:type/Value:SANSwitch+' => 'SAN交换机',
 	'Class:Model/Attribute:type/Value:Server' => '服务器',
@@ -1403,7 +1403,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:FiberChannelInterface' => '光纤通道接口',
+	'Class:FiberChannelInterface' => '光纤接口',
 	'Class:FiberChannelInterface+' => '',
 	'Class:FiberChannelInterface/Attribute:speed' => '速率',
 	'Class:FiberChannelInterface/Attribute:speed+' => '',
@@ -1493,8 +1493,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Group/Attribute:name+' => '',
 	'Class:Group/Attribute:status' => '状态',
 	'Class:Group/Attribute:status+' => '',
-	'Class:Group/Attribute:status/Value:implementation' => '上线',
-	'Class:Group/Attribute:status/Value:implementation+' => '上线',
+	'Class:Group/Attribute:status/Value:implementation' => '生效',
+	'Class:Group/Attribute:status/Value:implementation+' => '生效',
 	'Class:Group/Attribute:status/Value:obsolete' => '废弃',
 	'Class:Group/Attribute:status/Value:obsolete+' => '废弃',
 	'Class:Group/Attribute:status/Value:production' => '生产',

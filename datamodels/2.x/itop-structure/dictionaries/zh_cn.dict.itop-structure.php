@@ -225,7 +225,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:status/Value:draft+' => '',
 	'Class:Document/Attribute:status/Value:obsolete' => '废弃',
 	'Class:Document/Attribute:status/Value:obsolete+' => '',
-	'Class:Document/Attribute:status/Value:published' => '已发布',
+	'Class:Document/Attribute:status/Value:published' => '正式',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => '配置项',
 	'Class:Document/Attribute:cis_list+' => '此文档关联的所有配置项',

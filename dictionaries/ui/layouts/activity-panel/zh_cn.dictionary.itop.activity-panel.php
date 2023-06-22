@@ -16,6 +16,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 // Activity panel
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => '展开',
@@ -33,14 +34,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => '状态变化',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => '显示/隐藏 状态变化',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => '编辑',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => '显示/隐藏 字段编辑',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => '显示/隐藏 编辑',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => '全部打开',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => '全部关闭',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => '正在查看此条目的人数',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => '此日志的消息数',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => '看过的人数',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => '显示日志条数',
 
 	// Compose button
-	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => '撰写新的条目',
+	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => '撰写新的日志',
 
 	// Case log entry
 	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => '保存多个条目',
