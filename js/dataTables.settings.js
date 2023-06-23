@@ -267,7 +267,8 @@ $(function () {
 				for (k in this.aDlgStateParams) {
 					this.originalState[this.aDlgStateParams[k]] = this.options[this.aDlgStateParams[k]];
 				}
-				this.originalState.oFields = $('#datatable_dlg_' + this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
+				this.originalState.iDefaultPageSize = $('#datatable_dlg_'+this.options.sListId).find('input[name=page_size]').val();
+				this.originalState.oFields = $('#datatable_dlg_'+this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
 			},
 			_restoreDlgState: function () {
 				var dlgElement = $('#datatable_dlg_' + this.options.sListId);
