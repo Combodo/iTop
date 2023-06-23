@@ -144,8 +144,8 @@ try
 {
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
-
 	require_once(APPROOT.'/application/startup.inc.php');
+	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 	$bSelectionAuditRulesByDefault = utils::GetConfig()->Get('audit.enable_selection_landing_page');
 	$operation = utils::ReadParam('operation', $bSelectionAuditRulesByDefault ? 'selection' : 'audit');

@@ -584,6 +584,12 @@ class LogChannels
 	public const DM_CRUD = 'DMCRUD';
 
 	/**
+	 * @var string Everything related to the datamodel CRUD
+	 * @since 3.1.0
+	 */
+	public const WEB_REQUEST = 'WebRequest';
+
+	/**
 	 * @var string Everything related to the event service
 	 * @since 3.1.0
 	 */

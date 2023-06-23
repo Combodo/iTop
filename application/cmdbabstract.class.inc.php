@@ -4513,6 +4513,7 @@ HTML;
 	 */
 	public function DBInsertNoReload()
 	{
+		$this->LogCRUDEnter(__METHOD__);
 		try {
 			$res = parent::DBInsertNoReload();
 
@@ -4521,6 +4522,8 @@ HTML;
 			// Invoke extensions after insertion (the object must exist, have an id, etc.)
 			/** @var \iApplicationObjectExtension $oExtensionInstance */
 			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
+				$sExtensionClass = get_class($oExtensionInstance);
+				$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBInsert()");
 				$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
 			}
 		} finally {
@@ -4530,6 +4533,7 @@ HTML;
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
+		$this->LogCRUDExit(__METHOD__);
 		return $res;
 	}
 
@@ -4558,7 +4562,13 @@ HTML;
 
 	public function DBUpdate()
 	{
+		$this->LogCRUDEnter(__METHOD__);
+
 		try {
+			if (count($this->ListChanges()) === 0) {
+				$this->LogCRUDExit(__METHOD__);
+				return $this->GetKey();
+			}
 			$res = parent::DBUpdate();
 
 			$this->SetWarningsAsSessionMessages('update');
@@ -4568,7 +4578,7 @@ HTML;
 			if (!MetaModel::StartReentranceProtection($this)) {
 				$sClass = get_class($this);
 				$sKey = $this->GetKey();
-				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
+				$this->LogCRUDExit(__METHOD__, 'Rejected (reentrance)');
 
 				return $res;
 			}
@@ -4577,6 +4587,8 @@ HTML;
 				// Invoke extensions after the update (could be before)
 				/** @var \iApplicationObjectExtension $oExtensionInstance */
 				foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
+					$sExtensionClass = get_class($oExtensionInstance);
+					$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBUpdate()");
 					$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
 				}
 			}
@@ -4587,7 +4599,7 @@ HTML;
 			$aChanges = $this->ListChanges();
 			if (count($aChanges) != 0) {
 				$this->iUpdateLoopCount++;
-				if ($this->iUpdateLoopCount > self::MAX_UPDATE_LOOP_COUNT) {
+				if ($this->iUpdateLoopCount >= self::MAX_UPDATE_LOOP_COUNT) {
 					$sClass = get_class($this);
 					$sKey = $this->GetKey();
 					$aPlugins = [];
@@ -4595,9 +4607,11 @@ HTML;
 						$aPlugins[] = get_class($oExtensionInstance);
 					}
 					$sPlugins = implode(', ', $aPlugins);
-					IssueLog::Error("CRUD: DBUpdate $sClass::$sKey Update loop detected plugins: $sPlugins", LogChannels::DM_CRUD);
+					$this->LogCRUDError(__METHOD__, "Update loop detected among plugins: $sPlugins");
 				} else {
-					return $this->DBUpdate();
+					$sKey = $this->DBUpdate();
+					$this->LogCRUDExit(__METHOD__);
+					return $sKey;
 				}
 			}
 		} finally {
@@ -4605,6 +4619,7 @@ HTML;
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
+		$this->LogCRUDExit(__METHOD__);
 
 		return $res;
 	}
@@ -4628,6 +4643,7 @@ HTML;
 
 	public function DBDelete(&$oDeletionPlan = null)
 	{
+		$this->LogCRUDEnter(__METHOD__);
 		try {
 			parent::DBDelete($oDeletionPlan);
 		}  finally {
@@ -4637,6 +4653,7 @@ HTML;
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
+		$this->LogCRUDExit(__METHOD__);
 
 		return $oDeletionPlan;
 	}
@@ -4665,9 +4682,12 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
-			if ($oExtensionInstance->OnIsModified($this))
-			{
+			$sExtensionClass = get_class($oExtensionInstance);
+			if ($oExtensionInstance->OnIsModified($this)) {
+				$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnIsModified() -> true");
 				return true;
+			} else {
+				$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnIsModified() -> false");
 			}
 		}
 
@@ -6028,7 +6048,7 @@ JS
 			MetaModel::StartReentranceProtection($oObject);
 			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
 			MetaModel::StopReentranceProtection($oObject);
-			if ($oObject->IsModified()) {
+			if (count($oObject->ListChanges()) !== 0) {
 				$oObject->DBUpdate();
 			}
 		}

@@ -95,7 +95,7 @@ final class EventService
 		self::$aEventListeners[$sEvent] = $aEventCallbacks;
 
 		$sSource = self::GetSourcesAsString($sEventSource);
-		EventServiceLog::Debug("Registering Listener '$sName' for event '$sEvent' source '$sSource' from '$sModuleId'");
+		EventServiceLog::Trace("Registering Listener '$sName' for event '$sEvent' source '$sSource' from '$sModuleId'");
 
 		return $sId;
 	}

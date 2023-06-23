@@ -49,7 +49,7 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 		self::$iCalls = 0;
 	}
 
-	public function testUpdateReentranceProtection()
+	public function testExtensionCalled()
 	{
 		// Check that extension is called
 		$oPerson = $this->CreatePerson(1);
@@ -58,6 +58,11 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 		self::ResetCallCount();
 		$oPerson->DBUpdate();
 		$this->assertEquals(1, self::$iCalls);
+	}
+
+	public function testUpdateReentranceProtection()
+	{
+		$oPerson = $this->CreatePerson(1);
 
 		// Check that loop limit is 10
 		$i = 15;

@@ -24,6 +24,7 @@ require_once('../approot.inc.php');
 // Needed to read the parameters (with sanitization)
 require_once(APPROOT.'application/utils.inc.php');
 require_once(APPROOT.'core/metamodel.class.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 utils::InitTimeZone();
 

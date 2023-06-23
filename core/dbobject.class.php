@@ -601,6 +601,10 @@ abstract class DBObject implements iDisplay
      */
 	public function Set($sAttCode, $value)
 	{
+		if (!utils::StartsWith(get_class($this), 'CMDBChange') && $this->GetKey() > 0) {
+			$this->LogCRUDEnter(__METHOD__, "$sAttCode => $value");
+		}
+
 		$sMessage = $this->IsReadOnly();
 		if ($sMessage !== false) {
 			throw new CoreException($sMessage);
@@ -622,6 +626,9 @@ abstract class DBObject implements iDisplay
 			// First time Set is called... ensure that the object gets fully loaded
 			// Otherwise we would lose the values on a further Reload
 			//           + consistency does not make sense !
+			$sFullyLoaded = $this->m_bFullyLoaded ? 'true' : 'false';
+			$sDirty = $this->m_bDirty ? 'true' : 'false';
+			$this->LogCRUDDebug(__METHOD__, "IsInDB: $this->m_bIsInDB, FullyLoaded: $sFullyLoaded, Dirty: $sDirty");
 			$this->Reload();
 		}
 
@@ -2926,6 +2933,8 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBInsert()
 	{
+		$this->LogCRUDEnter(__METHOD__);
+
 		$this->DBInsertNoReload();
 
 		foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded) {
@@ -2939,6 +2948,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
+		$this->LogCRUDExit(__METHOD__);
 		return $this->m_iKey;
 	}
 
@@ -3217,7 +3227,7 @@ abstract class DBObject implements iDisplay
 				MetaModel::StopReentranceProtection($this);
 			}
 
-			if ($this->IsModified()) {
+			if ((count($this->ListChanges()) !== 0)) {
 				$this->DBUpdate();
 			}
 		}
@@ -3283,6 +3293,7 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBUpdate()
 	{
+		$this->LogCRUDEnter(__METHOD__);
 		if (!$this->m_bIsInDB)
 		{
 			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
@@ -3291,7 +3302,7 @@ abstract class DBObject implements iDisplay
 		$sClass = get_class($this);
 		$sKey = $this->GetKey();
 		if (!MetaModel::StartReentranceProtection($this)) {
-			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
+			$this->LogCRUDExit(__METHOD__, 'Rejected (reentrance)');
 
 			return false;
 		}
@@ -3311,7 +3322,7 @@ abstract class DBObject implements iDisplay
 			if (count($aChanges) == 0)
 			{
 				// Attempting to update an unchanged object
-				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Aborted (no change)", LogChannels::DM_CRUD);
+				$this->LogCRUDExit(__METHOD__, 'Aborted (no change)');
 
 				return $this->m_iKey;
 			}
@@ -3485,7 +3496,7 @@ abstract class DBObject implements iDisplay
 				$this->FireEventAfterWrite($aChanges, false);
 				$this->AfterUpdate();
 				// Save the status as it is reset just after...
-				$bModifiedByUpdateDone = $this->IsModified();
+				$bModifiedByUpdateDone = (count($this->ListChanges()) !== 0);
 
 				// Reset original values although the object has not been reloaded
 				foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded) {
@@ -3524,6 +3535,7 @@ abstract class DBObject implements iDisplay
 			}
 			catch (Exception $e)
 			{
+				$this->LogCRUDExit(__METHOD__, 'Error: '.$e->getMessage());
 				$aErrors = [$e->getMessage()];
 				throw new CoreException($e->getMessage(), ['id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors]);
 			}
@@ -3534,11 +3546,12 @@ abstract class DBObject implements iDisplay
 			$this->RemoveCurrentObjectInCrudStack();
 		}
 
-		if ($this->IsModified() || $bModifiedByUpdateDone) {
+		if ((count($this->ListChanges()) !== 0) || $bModifiedByUpdateDone) {
 			// Controlled reentrance
 			$this->DBUpdate();
 		}
 
+		$this->LogCRUDExit(__METHOD__);
 		return $this->m_iKey;
 	}
 
@@ -3718,6 +3731,7 @@ abstract class DBObject implements iDisplay
 	private function DBDeleteSingleTable($sTableClass)
 	{
 		$sTable = MetaModel::DBGetTable($sTableClass);
+		$this->LogCRUDEnter(__METHOD__, ' table: '.$sTable);
 		// Abstract classes or classes having no specific attribute do not have an associated table
 		if ($sTable == '') return;
 
@@ -3726,6 +3740,7 @@ abstract class DBObject implements iDisplay
 
 		$sDeleteSQL = "DELETE FROM `$sTable` WHERE $sPKField = $sKey";
 		CMDBSource::DeleteFrom($sDeleteSQL);
+		$this->LogCRUDExit(__METHOD__, ' table: '.$sTable);
 	}
 
     /**
@@ -3740,8 +3755,10 @@ abstract class DBObject implements iDisplay
      */
 	protected function DBDeleteSingleObject()
 	{
+		$this->LogCRUDEnter(__METHOD__);
 		if (MetaModel::DBIsReadOnly())
 		{
+			$this->LogCRUDExit(__METHOD__, 'DB is read-only');
 			return;
 		}
 
@@ -3847,6 +3864,7 @@ abstract class DBObject implements iDisplay
 						}
 					}
 				}
+				$this->LogCRUDError(__METHOD__, ' Error: '.$e->getMessage());
 				throw $e;
 			}
 		}
@@ -3859,6 +3877,8 @@ abstract class DBObject implements iDisplay
 		// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
 		// objects, reported as bug N°926)
 		// Thought the key is not reset, using DBInsert or DBWrite will create an object having the same characteristics and a new ID. DBUpdate is protected
+
+		$this->LogCRUDExit(__METHOD__);
 	}
 
     /**
@@ -3885,6 +3905,8 @@ abstract class DBObject implements iDisplay
      */
 	public function DBDelete(&$oDeletionPlan = null)
 	{
+		$this->LogCRUDEnter(__METHOD__);
+
 		static $iLoopTimeLimit = null;
 		if ($iLoopTimeLimit == null)
 		{
@@ -3900,6 +3922,7 @@ abstract class DBObject implements iDisplay
 		if ($oDeletionPlan->FoundStopper())
 		{
 			$aIssues = $oDeletionPlan->GetIssues();
+			$this->LogCRUDError(__METHOD__, ' Errors: '.implode(', ', $aIssues));
 			throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));
 		}
 
@@ -3950,6 +3973,7 @@ abstract class DBObject implements iDisplay
 
 		set_time_limit(intval($iPreviousTimeLimit));
 
+		$this->LogCRUDExit(__METHOD__);
 		return $oDeletionPlan;
 	}
 
@@ -6320,6 +6344,38 @@ abstract class DBObject implements iDisplay
 	final protected static function IsCrudStackEmpty(): bool
 	{
 		return count(self::$m_aCrudStack) === 0;
+	}
+
+	protected function LogCRUDEnter($sFunction, $sComment = '')
+	{
+		$sClass = get_class($this);
+		$sKey = $this->GetKey();
+		$sPadding = str_pad('', count(self::$m_aCrudStack), '-');
+		IssueLog::Trace("CRUD +$sPadding> $sFunction $sClass:$sKey $sComment", LogChannels::DM_CRUD);
+	}
+
+	protected function LogCRUDExit($sFunction, $sComment = '')
+	{
+		$sClass = get_class($this);
+		$sKey = $this->GetKey();
+		$sPadding = str_pad('', count(self::$m_aCrudStack), '-');
+		IssueLog::Trace("CRUD <$sPadding+ $sFunction $sClass:$sKey $sComment", LogChannels::DM_CRUD);
+	}
+
+	protected function LogCRUDDebug($sFunction, $sComment = '')
+	{
+		$sClass = get_class($this);
+		$sKey = $this->GetKey();
+		$sPadding = str_pad('', count(self::$m_aCrudStack), '-');
+		IssueLog::Debug("CRUD --$sPadding $sFunction $sClass:$sKey $sComment", LogChannels::DM_CRUD);
+	}
+
+	protected function LogCRUDError($sFunction, $sComment = '')
+	{
+		$sClass = get_class($this);
+		$sKey = $this->GetKey();
+		$sPadding = str_pad('', count(self::$m_aCrudStack), '!');
+		IssueLog::Error("CRUD !!$sPadding Error $sFunction $sClass:$sKey $sComment", LogChannels::DM_CRUD);
 	}
 }
 

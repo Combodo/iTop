@@ -20,7 +20,7 @@
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
-
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 $sFullUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 $sICOFullUrl = utils::GetAbsoluteUrlAppRoot().'/images/favicon.ico';

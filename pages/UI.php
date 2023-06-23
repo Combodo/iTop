@@ -301,7 +301,7 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
-
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 try
 {
 	$oKPI = new ExecutionKPI();
