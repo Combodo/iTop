@@ -53,8 +53,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:SLT+' => '服务等级目标',
 	'Menu:DeliveryModel' => '交付模式',
 	'Menu:DeliveryModel+' => '交付模式',
-	'Menu:ServiceFamily' => '服务族',
-	'Menu:ServiceFamily+' => '服务族',
+	'Menu:ServiceFamily' => '服务系列',
+	'Menu:ServiceFamily+' => '服务系列',
 	'Menu:Procedure' => '流程清单',
 	'Menu:Procedure+' => '所有流程清单',
 	'Contract:baseinfo' => 'General information~~',
@@ -207,7 +207,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:ServiceFamily' => '服务族',
+	'Class:ServiceFamily' => '服务系列',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => '名称',
 	'Class:ServiceFamily/Attribute:name+' => '',
@@ -231,9 +231,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Service/Attribute:org_id+' => '',
 	'Class:Service/Attribute:organization_name' => '供应商名称',
 	'Class:Service/Attribute:organization_name+' => '',
-	'Class:Service/Attribute:servicefamily_id' => '服务族',
+	'Class:Service/Attribute:servicefamily_id' => '服务系列',
 	'Class:Service/Attribute:servicefamily_id+' => '',
-	'Class:Service/Attribute:servicefamily_name' => '服务族名称',
+	'Class:Service/Attribute:servicefamily_name' => '服务系列名称',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:description' => '描述',
 	'Class:Service/Attribute:description+' => '',

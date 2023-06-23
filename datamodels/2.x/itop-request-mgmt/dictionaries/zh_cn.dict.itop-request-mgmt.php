@@ -276,7 +276,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:LanguageChangedTo_Lang' => '语言更改为',
 	'Portal:ChooseYourFavoriteLanguage' => '选择您喜欢的语言',
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
-	'Class:UserRequest/Method:ResolveChildTickets+' => '级联解决子需求(需求自动解决),并使用以下需求的内容:服务,团队,办理人,解决方案',
+	'Class:UserRequest/Method:ResolveChildTickets+' => '递归解决子工单(自动解决),并调整相关字段与父级工单保持一致: 服务,团队,办理人,解决方案',
 ));
 
 
