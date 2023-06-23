@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -21,18 +21,21 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-
-	'Menu:ConfigEditor' => 'Configuration~~',
-	'config-edit-title' => 'Configuration File Editor~~',
-	'config-edit-intro' => 'Be very cautious when editing the configuration file.~~',
-	'config-apply' => 'Apply~~',
-	'config-apply-title' => 'Apply (Ctrl+S)~~',
-	'config-cancel' => 'Reset~~',
-	'config-saved' => 'Successfully recorded.~~',
-	'config-confirm-cancel' => 'Your changes will be lost.~~',
-	'config-no-change' => 'No change: the file has been left unchanged.~~',
-	'config-reverted' => 'The configuration has been reverted.~~',
-	'config-parse-error' => 'Line %2$d: %1$s.<br/>The file has NOT been updated.~~',
-	'config-current-line' => 'Editing line: %1$s~~',
-	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.~~',
+	'Menu:ConfigEditor' => 'Konfiguráció szerkesztő',
+	'config-edit-title' => 'Konfigurációs fájl szerkesztő',
+	'config-edit-intro' => 'Legyen nagyon óvatos a konfiguráció szerkesztésénél!',
+	'config-apply' => 'Alkalmaz',
+	'config-apply-title' => 'Alkalmaz (Ctrl+S)',
+	'config-cancel' => 'Visszaállítás',
+	'config-saved' => 'Sikeresen elmentve.',
+	'config-confirm-cancel' => 'A változtatások elvesznek.',
+	'config-no-change' => 'Nincs változtatás: a fájl változatlan maradt.',
+	'config-reverted' => 'A konfiguráció vissza lett állítva.',
+	'config-parse-error' => '%2$d sor: %1$s.<br/>A fájl NEM frissült',
+	'config-current-line' => 'Szerkesztett sor: %1$s',
+	'config-saved-warning-db-password' => 'Sikeresen elmentve, de a biztonsági mentés nem fog működni az adatbázis jelszavában szereplő nem támogatott karakterek miatt.',
+	'config-error-transaction' => 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.~~',
+	'config-error-file-changed' => 'Error: The Configuration file has changed since you opened it and cannot be saved. Refresh and apply your changes again.~~',
+	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the configuration file cannot be edited.~~',
+	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT.' interactive edition of the configuration as been disabled. See <code>\'config_editor\' => \'disabled\'</code> in the configuration file.~~',
 ));

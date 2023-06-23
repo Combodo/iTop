@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -31,11 +31,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'portal:itop-portal' => 'Portail standard', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
 	'Page:DefaultTitle' => '%1$s - Portail utilisateur',
 	'Brick:Portal:UserProfile:Title' => 'Mon profil',
-	'Brick:Portal:NewRequest:Title' => 'Nouvelle requête',
-	'Brick:Portal:NewRequest:Title+' => '<p>Besoin d\'assistance&nbsp;?</p><p>Choisissez un service (assistance ou dépannage) et soumettez votre requête à nos équipes de support.</p>',
-	'Brick:Portal:OngoingRequests:Title' => 'Requêtes en cours',
-	'Brick:Portal:OngoingRequests:Title+' => '<p>Suivez vos requêtes en cours.</p><p>Consultez l\'avancement, ajoutez des commentaires ou des pièces jointes, validez la solution.</p>',
+	'Brick:Portal:NewRequest:Title' => 'Nouvelle demande',
+	'Brick:Portal:NewRequest:Title+' => '<p>Besoin d\'assistance&nbsp;?</p><p>Choisissez un service (assistance ou dépannage) et soumettez votre demande à nos équipes de support.</p>',
+	'Brick:Portal:OngoingRequests:Title' => 'Demandes en cours',
+	'Brick:Portal:OngoingRequests:Title+' => '<p>Suivez vos demandes en cours.</p><p>Consultez l\'avancement, ajoutez des commentaires ou des pièces jointes, validez la solution.</p>',
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Ouvertes',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Résolues',
-	'Brick:Portal:ClosedRequests:Title' => 'Requêtes fermées',
+	'Brick:Portal:ClosedRequests:Title' => 'Demandes fermées',
 ));

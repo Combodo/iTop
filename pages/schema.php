@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -12,12 +12,14 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent;
+use Combodo\iTop\Service\Events\EventService;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('DataModelMenu');
 
@@ -264,13 +266,100 @@ function DisplayTriggers($oPage, $sClass)
 	cmdbAbstractObject::DisplaySet($oPage, $oSet, array('block_id' => 'triggers'));
 }
 
+function DisplayEvents(WebPage $oPage, $sClass)
+{
+	$aEvents = EventService::GetEventsByClass($sClass);
+	$aColumns = [
+		'event'       => ['label' => Dict::S('UI:Schema:Events:Event')],
+		'description' => ['label' => Dict::S('UI:Schema:Events:Description')],
+	];
+	$aRows = [];
+	foreach ($aEvents as $sEvent => $aEventInfo) {
+		/** @var \Combodo\iTop\Service\Events\Description\EventDescription $oDesc */
+		$oDesc = $aEventInfo['description'];
+		$aRows[] = [
+			'event'       => $sEvent,
+			'description' => $oDesc->GetDescription(),
+		];
+	}
+	$oTable = DataTableUIBlockFactory::MakeForStaticData(Dict::S('UI:Schema:Events:Defined'), $aColumns, $aRows);
+	$oPage->AddSubBlock($oTable);
 
+	$aSources = [];
+	if (MetaModel::IsAbstract($sClass)) {
+		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
+			if (!MetaModel::IsAbstract($sChildClass)) {
+				$oObject = MetaModel::NewObject($sChildClass);
+				$aSources[] = $oObject->GetObjectUniqId();
+				break;
+			}
+		}
+		foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
+			$aSources[] = $sParentClass;
+		}
+	} else {
+		$oObject = MetaModel::NewObject($sClass);
+		$aSources[] = $oObject->GetObjectUniqId();
+		foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
+				$aSources[] = $sParentClass;
+		}
+	}
+	$aListeners = [];
+	foreach (array_keys($aEvents) as $sEvent) {
+		$aListeners = array_merge($aListeners, EventService::GetListeners($sEvent, $aSources));
+	}
+	usort($aListeners, function ($a, $b) {
+		if ($a['event'] == $b['event']) {
+			if ($a['priority'] == $b['priority']) {
+				return 0;
+			}
+
+			return ($a['priority'] > $b['priority']) ? 1 : -1;
+		}
+		return ($a['event'] > $b['event']) ? 1 : -1;
+	});
+	$aColumns = [
+		'event'    => ['label' => Dict::S('UI:Schema:Events:Event')],
+		'listener' => ['label' => Dict::S('UI:Schema:Events:Listener')],
+		'priority' => ['label' => Dict::S('UI:Schema:Events:Rank')],
+		'module'   => ['label' => Dict::S('UI:Schema:Events:Module')],
+	];
+	$aRows = [];
+	$oReflectionClass = new ReflectionClass($sClass);
+	foreach ($aListeners as $aListener) {
+		if (is_object($aListener['callback'][0])) {
+			$sListenerClass = $sClass;
+			if ($aListener['callback'][0] != $sClass) {
+				$oListenerReflectionClass = new ReflectionClass(get_class($aListener['callback'][0]));
+				if (!$oListenerReflectionClass->isSubclassOf($sClass)) {
+					$sListenerClass = $oListenerReflectionClass->getName();
+				} elseif (!$oReflectionClass->hasMethod($aListener['callback'][1])) {
+					continue;
+				}
+			}
+			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
+		} else {
+			$sListener = $aListener['callback'].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
+		}
+		$aRows[] = [
+			'event'    => $aListener['event'],
+			'listener' => $sListener,
+			'priority' => $aListener['priority'],
+			'module'   => $aListener['module'],
+		];
+	}
+
+	$oTable = DataTableUIBlockFactory::MakeForStaticData(Dict::S('UI:Schema:Events:Listeners'), $aColumns, $aRows);
+	$oPage->AddSubBlock($oTable);
+
+}
 /**
  * Display the list of classes from the business model
  */
 function DisplayClassesList($oPage, $oLayout, $sContext)
 {
-
+	$sSelectedClass = utils::ReadParam('class', '', false, 'class');
+	
 	$oLayout->AddSideHtml("<label for='search-model'>".Dict::S('UI:Schema:ClassFilter')."</label><br>");
 	
 	$oListSearch = new Select("ibo-datamodel-viewer--class-search");
@@ -296,7 +385,7 @@ function DisplayClassesList($oPage, $oLayout, $sContext)
 		}
 		$sLabelClassName = MetaModel::GetName($sClassName);
 
-		$oOptionSearch = SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, "$sLabelClassName ($sClassName)", false);
+		$oOptionSearch = SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, "$sLabelClassName ($sClassName)", $sClassName === $sSelectedClass);
 		$oListSearch->AddOption($oOptionSearch);
 		//Fetch classes names for autocomplete purpose
 		// - Encode as JSON to escape quotes and other characters
@@ -308,14 +397,42 @@ function DisplayClassesList($oPage, $oLayout, $sContext)
 	$oLayout->AddSideBlock($oListSearch);
 	$oPage->add_ready_script(
 		<<<JS
+let DatamodelViewerFilterList = function(sFilter){
+	if(sFilter !== ""){
+		var search_result = [];
+			$('#ibo-datamodel-viewer--classes-list--list').find("li").each(function(){
+			if( ! ~$(this).children("a").text().toLowerCase().indexOf(sFilter.toLowerCase())){
+				$(this).hide();
+			}
+			else{
+				search_result.push($(this));
+			}
+		});
+		search_result.forEach(function(e){
+			e.show();
+			e.find('ul > li').show();
+			e.parents().show();
+		});
+	}
+	else{
+		$('#ibo-datamodel-viewer--classes-list--list').find("li").each(function(){
+			$(this).show();
+		});
+	}
+};
+
 $('#ibo-datamodel-viewer--class-search').selectize({
     sortField: 'text',
     onChange: function(value){
     			    var preUrl = "?operation=details_class&class=";
 			var sufUrl = "&c[menu]=DataModelMenu";
 			window.location = preUrl + value + sufUrl;
-    }
+    },
+    onType: DatamodelViewerFilterList,
+    maxOptions: 7,
 });
+
+DatamodelViewerFilterList('$sSelectedClass');
 JS
 	);
 
@@ -1031,6 +1148,9 @@ EOF
 
 	$oPage->SetCurrentTab('UI:Schema:Triggers');
 	DisplayTriggers($oPage, $sClass);
+
+	$oPage->SetCurrentTab('UI:Schema:Events');
+	DisplayEvents($oPage, $sClass);
 
 	$oPage->SetCurrentTab();
 	$oPage->SetCurrentTabContainer();

@@ -1,0 +1,36 @@
+/*!
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Used on all ancestors when an element needs to be fullscreen (see .ibo-is-fullscreen) */
+html.ibo-has-fullscreen-descendant {
+  position: fixed !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+body.ibo-has-fullscreen-descendant {
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+.ibo-has-fullscreen-descendant {
+  position: static !important;
+  overflow: visible !important;
+  z-index: 1050 !important;
+}
+
+/* Used on a fullscreen element (see .ibo-has-fullscreen-descendant) */
+.ibo-is-fullscreen {
+  position: absolute;
+  top: 0 !important;
+  left: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  z-index: 1050;
+}

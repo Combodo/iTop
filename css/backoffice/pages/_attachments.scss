@@ -1,14 +1,10 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 $ibo-attachment--datatable--icon-preview--max-height: 44px !default;
 $ibo-attachment--datatable--icon-preview--max-width: $ibo-attachment--datatable--icon-preview--max-height !default;
-
-$ibo-attachment--datatable--line-height: $ibo-attachment--datatable--icon-preview--max-height !default;
-
-$ibo-attachment--datatable--first-column--line-height: 0px !default;
 
 $ibo-attachment--drag-in--border: 2px $ibo-color-grey-400 dashed !default;
 $ibo-attachment--upload-file--drop-zone-hint--max-height: 200px !default;
@@ -33,10 +29,7 @@ $ibo-attachment--tab-header--drop-in--icon--color: $ibo-color-blue-600 !default;
   max-width: $ibo-attachment--datatable--icon-preview--max-width;
 }
 .ibo-attachment--datatable tbody tr td {
-  line-height: $ibo-attachment--datatable--line-height;
-}
-.ibo-attachment--datatable tbody tr td:nth-child(1){
-  line-height: $ibo-attachment--datatable--first-column--line-height;
+  vertical-align: middle;
 }
 
 .ibo-attachment--upload-file--drop-zone-hint{

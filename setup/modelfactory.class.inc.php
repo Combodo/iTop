@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -139,7 +139,15 @@ class MFModule
 	 */
 	protected $sAutoSelect;
 	/**
-	 * @var array
+	 * @see ModelFactory::FindModules init of this structure from the module.*.php files
+	 * @var array{
+	 *          business: string[],
+	 *          webservices: string[],
+	 *          addons: string[],
+	 *     }
+	 * Warning, there are naming mismatches between this structure and the module.*.php :
+	 * - `business` here correspond to `datamodel` in module.*.php
+	 * - `webservices` here correspond to `webservice` in module.*.php
 	 */
 	protected $aFilesToInclude;
 
@@ -167,6 +175,10 @@ class MFModule
 		$this->bAutoSelect = $bAutoSelect;
 		$this->sAutoSelect = 'false';
 		$this->aFilesToInclude = array('addons' => array(), 'business' => array(), 'webservices' => array(),);
+
+		if (is_null($sRootDir)) {
+			return;
+		}
 
 		// Scan the module's root directory to find the datamodel(*).xml files
 		if ($hDir = opendir($sRootDir))
@@ -318,6 +330,14 @@ class MFModule
 	public function GetFilesToInclude($sCategory)
 	{
 		return $this->aFilesToInclude[$sCategory];
+	}
+
+	public function AddFileToInclude($sCategory, $sFile)
+	{
+		if (in_array($sFile, $this->aFilesToInclude[$sCategory], true)) {
+			return;
+		}
+		$this->aFilesToInclude[$sCategory][] = $sFile;
 	}
 
 }
@@ -563,6 +583,8 @@ class ModelFactory
 		$this->oRoot->AppendChild($this->oMenus);
 
 		$this->oMeta = $this->oDOMDocument->CreateElement('meta');
+		$this->oRoot->AppendChild($this->oMeta);
+		$this->oMeta = $this->oDOMDocument->CreateElement('events');
 		$this->oRoot->AppendChild($this->oMeta);
 
 		foreach ($aRootNodeExtensions as $sElementName)
@@ -844,6 +866,14 @@ class ModelFactory
 						$oNode->SetAttribute('_created_in', $sModuleName);
 					}
 				}
+				$oNodeList = $oXPath->query('/itop_design/events/event');
+				foreach ($oNodeList as $oNode)
+				{
+					if ($oNode->getAttribute('_created_in') == '')
+					{
+						$oNode->SetAttribute('_created_in', $sModuleName);
+					}
+				}
 				$oNodeList = $oXPath->query('/itop_design/menus/menu');
 				foreach ($oNodeList as $oNode)
 				{
@@ -961,9 +991,9 @@ class ModelFactory
 		catch (Exception $e) {
 			$aLoadedModuleNames = array();
 			foreach (self::$aLoadedModules as $oLoadedModule) {
-				$aLoadedModuleNames[] = $oLoadedModule->GetName();
+				$aLoadedModuleNames[] = $oLoadedModule->GetName().':'.$oLoadedModule->GetVersion();
 			}
-			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',',
+			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(', ',
 					$aLoadedModuleNames));
 		}
 	}
@@ -1237,6 +1267,19 @@ EOF
 	}
 
 	/**
+	 * List all events from the DOM, for a given module
+	 *
+	 * @param string $sModuleName
+	 *
+	 * @return \DOMNodeList
+	 * @throws Exception
+	 */
+	public function ListEvents($sModuleName)
+	{
+		return $this->GetNodes("/itop_design/events/event[@_created_in='$sModuleName']");
+	}
+
+	/**
 	 * List all classes from the DOM, for a given module
 	 *
 	 * @param string $sModuleName
@@ -1338,7 +1381,7 @@ EOF
 		{
 			return null;
 		}
-		$oClassNode = self::$aLoadedClasses[$sClassName];
+		$oClassNode = $this->GetClass($sClassName);
 		/** @var \MFElement|null $oFieldNode */
 		$oFieldNode = $this->GetNodes("fields/field[@id='$sAttCode']", $oClassNode)->item(0);
 		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetChildText('parent')))
@@ -1675,162 +1718,6 @@ EOF
 
 		return $aResult;
 	}
-
-	public function TestAlteration()
-	{
-		$sDOMOriginal = 'undefined';
-		$sDOMModified = 'undefined';
-		$sDOMRebuilt = 'undefined';
-		$sDeltaXML = 'undefined';
-		try
-		{
-			$sHeader = '<?xml version="1.0" encoding="utf-8"?'.'>';
-			$sOriginalXML =
-				<<<EOF
-$sHeader
-<itop_design>
-	<a id="first a">
-		<b>Text</b>
-		<c id="1">
-			<d>D1</d>
-			<d>D2</d>
-		</c>
-	</a>
-	<a id="second a">
-		<parent>first a</parent>
-	</a>
-	<a id="third a">
-		<parent>first a</parent>
-		<x>blah</x>
-	</a>
-</itop_design>
-EOF;
-
-			$this->oDOMDocument = new MFDocument();
-			$this->oDOMDocument->loadXML($sOriginalXML);
-
-			// DOM Get the original values, then modify its contents by the mean of the API
-			$oRoot = $this->GetNodes('//itop_design')->item(0);
-			//$oRoot->Dump();
-			$sDOMOriginal = $oRoot->Dump(true);
-
-			$oNode = $oRoot->GetNodes('a/b')->item(0);
-			$oNew = $this->oDOMDocument->CreateElement('b', 'New text');
-			$oNode->parentNode->RedefineChildNode($oNew);
-
-			$oNode = $oRoot->GetNodes('a/c')->item(0);
-			$oNewC = $this->oDOMDocument->CreateElement('c');
-			$oNewC->setAttribute('id', '1');
-			$oNode->parentNode->RedefineChildNode($oNewC);
-
-			$oNewC->appendChild($this->oDOMDocument->CreateElement('d', 'x'));
-			$oNewC->appendChild($this->oDOMDocument->CreateElement('d', 'y'));
-			$oNewC->appendChild($this->oDOMDocument->CreateElement('d', 'z'));
-			$oNamedNode = $this->oDOMDocument->CreateElement('z');
-			$oNamedNode->setAttribute('id', 'abc');
-			$oNewC->AddChildNode($oNamedNode);
-			$oNewC->AddChildNode($this->oDOMDocument->CreateElement('r', 'to be replaced'));
-
-			// Alter this "modified node", no flag should be set in its subnodes
-			$oNewC->Rename('blah');
-			$oNewC->Rename('foo');
-			$oNewC->AddChildNode($this->oDOMDocument->CreateElement('y', '(no flag)'));
-			$oNewC->AddChildNode($this->oDOMDocument->CreateElement('x', 'To delete programmatically'));
-			$oSubNode = $oNewC->GetUniqueElement('z');
-			$oSubNode->Rename('abcdef');
-			$oSubNode = $oNewC->GetUniqueElement('x');
-			$oSubNode->Delete();
-			$oNewC->RedefineChildNode($this->oDOMDocument->CreateElement('r', 'replacement'));
-
-			$oNode = $oRoot->GetNodes("//a[@id='second a']")->item(0);
-			$oNode->Rename('el 2o A');
-			$oNode->Rename('el secundo A');
-			$oNew = $this->oDOMDocument->CreateElement('e', 'Something new here');
-			$oNode->AddChildNode($oNew);
-			$oNewA = $this->oDOMDocument->CreateElement('a');
-			$oNewA->setAttribute('id', 'new a');
-			$oNode->AddChildNode($oNewA);
-			$oSubnode = $this->oDOMDocument->CreateElement('parent', 'el secundo A');
-			$oSubnode->setAttribute('id', 'to be changed');
-			$oNewA->AddChildNode($oSubnode);
-			$oNewA->AddChildNode($this->oDOMDocument->CreateElement('f', 'Welcome to the newcomer'));
-			$oNewA->AddChildNode($this->oDOMDocument->CreateElement('x', 'To delete programmatically'));
-
-			// Alter this "new a", as it is new, no flag should be set
-			$oNewA->Rename('new_a');
-			$oSubNode = $oNewA->GetUniqueElement('parent');
-			$oSubNode->Rename('alter ego');
-			$oNewA->RedefineChildNode($this->oDOMDocument->CreateElement('f', 'dummy data'));
-			$oSubNode = $oNewA->GetUniqueElement('x');
-			$oSubNode->Delete();
-
-			$oNode = $oRoot->GetNodes("//a[@id='third a']")->item(0);
-			$oNode->Delete();
-
-			//$oRoot->Dump();
-			$sDOMModified = $oRoot->Dump(true);
-
-			// Compute the delta
-			//
-			$sDeltaXML = $this->GetDelta();
-			//echo "<pre>\n";
-			//echo htmlentities($sDeltaXML);
-			//echo "</pre>\n";
-
-			// Reiterating - try to remake the DOM by applying the computed delta
-			//
-			$this->oDOMDocument = new MFDocument();
-			$this->oDOMDocument->loadXML($sOriginalXML);
-			$oRoot = $this->GetNodes('//itop_design')->item(0);
-			//$oRoot->Dump();
-			echo "<h4>Rebuild the DOM - Delta applied...</h4>\n";
-			$oDeltaDoc = new MFDocument();
-			$oDeltaDoc->loadXML($sDeltaXML);
-
-			//$oDeltaDoc->Dump();
-			//$this->oDOMDocument->Dump();
-			$oDeltaRoot = $oDeltaDoc->childNodes->item(0);
-			$this->LoadDelta($oDeltaRoot, $this->oDOMDocument);
-			//$oRoot->Dump();
-			$sDOMRebuilt = $oRoot->Dump(true);
-		}
-		catch (Exception $e)
-		{
-			echo "<h1>Exception: ".$e->getMessage()."</h1>\n";
-			echo "<pre>\n";
-			debug_print_backtrace();
-			echo "</pre>\n";
-		}
-		$sArrStyle = "font-size: 40;";
-		echo "<table>\n";
-		echo " <tr>\n";
-		echo "  <td width=\"50%\">\n";
-		echo "   <h4>DOM - Original values</h4>\n";
-		echo "   <pre>".htmlentities($sDOMOriginal)."</pre>\n";
-		echo "  </td>\n";
-		echo "  <td width=\"50%\" align=\"left\" valign=\"center\"><span style=\"$sArrStyle\">&rArr; &rArr; &rArr;</span></td>\n";
-		echo " </tr>\n";
-		echo " <tr><td align=\"center\"><span style=\"$sArrStyle\">&dArr;</div></td><td align=\"center\"><span style=\"$sArrStyle\"><span style=\"$sArrStyle\">&dArr;</div></div></td></tr>\n";
-		echo " <tr>\n";
-		echo "  <td width=\"50%\">\n";
-		echo "   <h4>DOM - Altered with various changes</h4>\n";
-		echo "   <pre>".htmlentities($sDOMModified)."</pre>\n";
-		echo "  </td>\n";
-		echo "  <td width=\"50%\">\n";
-		echo "   <h4>DOM - Rebuilt from the Delta</h4>\n";
-		echo "   <pre>".htmlentities($sDOMRebuilt)."</pre>\n";
-		echo "  </td>\n";
-		echo " </tr>\n";
-		echo " <tr><td align=\"center\"><span style=\"$sArrStyle\">&dArr;</div></td><td align=\"center\"><span style=\"$sArrStyle\">&uArr;</div></td></tr>\n";
-		echo "  <td width=\"50%\">\n";
-		echo "   <h4>Delta (Computed by ModelFactory)</h4>\n";
-		echo "   <pre>".htmlentities($sDeltaXML)."</pre>\n";
-		echo "  </td>\n";
-		echo "  <td width=\"50%\" align=\"left\" valign=\"center\"><span style=\"$sArrStyle\">&rArr; &rArr; &rArr;</span></td>\n";
-		echo " </tr>\n";
-		echo "</table>\n";
-	} // TEST !
-
 
 	/**
 	 * Extracts some nodes from the DOM
@@ -2177,8 +2064,13 @@ class MFElement extends Combodo\iTop\DesignElement
 			if ($oExisting->getAttribute('_alteration') != 'removed') {
 				$sPath = MFDocument::GetItopNodePath($oNode);
 				$iLine = $oNode->getLineNo();
-				throw new MFException($sPath.' at line '.$iLine.": could not be added (already exists)", MFException::COULD_NOT_BE_ADDED,
-					$iLine, $sPath);
+				$sExistingPath = MFDocument::GetItopNodePath($oExisting);
+				$iExistingLine = $oExisting->getLineNo();
+				
+				$sExceptionMessage = <<<EOF
+`{$sPath}` at line {$iLine} could not be added : already exists in `{$sExistingPath}` at line {$iExistingLine}
+EOF;
+				throw new MFException($sExceptionMessage, MFException::COULD_NOT_BE_ADDED, $iLine, $sPath);
 			}
 			$oExisting->ReplaceWithSingleNode($oNode);
 			$sFlag = 'replaced';
@@ -2306,6 +2198,9 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Replaces a node by another one, making sure that recursive nodes are preserved
 	 *
 	 * @param MFElement $oNewNode The replacement
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 rename method (from `ReplaceWith` to `ReplaceWithSingleNode`) to avoid collision with parent `\DOMElement::replaceWith` method (different method modifier and parameters :
+	 * throws fatal error in PHP 8.0)
 	 */
 	protected function ReplaceWithSingleNode($oNewNode)
 	{
@@ -2514,6 +2409,8 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 * @return string
 	 * @throws \Exception
 	 */
+	// Return type union is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
 	public function saveXML(DOMNode $node = null, $options = 0)
 	{
 		$oRootNode = $this->firstChild;
@@ -2537,12 +2434,14 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 *
 	 * @param string $sName
 	 * @param null $value
-	 * @param null $namespaceURI
+	 * @param string $namespaceURI
 	 *
 	 * @return \MFElement
 	 * @throws \Exception
+	 *
+	 * @since 3.1.0 N°4517 $namespaceURI parameter must be empty string by default so
 	 */
-	function createElement($sName, $value = null, $namespaceURI = null)
+	function createElement($sName, $value = null, $namespaceURI = '')
 	{
 		/** @var \MFElement $oElement */
 		$oElement = $this->importNode(new MFElement($sName, null, $namespaceURI));

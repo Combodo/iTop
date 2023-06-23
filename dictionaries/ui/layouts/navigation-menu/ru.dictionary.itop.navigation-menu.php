@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -30,4 +30,5 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Фотография',
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open user menu~~',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Фильтр пунктов меню',
+
 ));

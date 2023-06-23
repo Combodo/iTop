@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -448,7 +448,7 @@ class LogFileNameBuilderFactory
 /**
  * File logging
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @since 2.7.0 N°2518 N°2793 file log rotation
  */
@@ -542,13 +542,81 @@ class FileLog
  */
 class LogChannels
 {
-	public const CLI          = 'CLI';
-	public const CONSOLE      = 'console';
-	public const DEADLOCK     = 'DeadLock';
+	public const APC = 'apc';
+
+	/**
+	 * @var string Everything related to the backup / restore
+	 * @since 3.1.0
+	 */
+	public const BACKUP = 'backup';
+
+	/**
+	 * @since 3.0.0
+	 */
+	public const CLI = 'CLI';
+
+	/**
+	 * @var string
+	 * @since 2.7.7 N°4558 use this new channel when logging DB transactions
+	 * @since 3.0.0 logs info in CMDBSource (see commit a117906f)
+	 */
+	public const CMDB_SOURCE = 'cmdbsource';
+
+	/**
+	 * @since 3.0.0
+	 */
+	public const CONSOLE = 'console';
+
+	public const CORE = 'core';
+
+	/**
+	 * @var string Everything related to the datatable component
+	 * @since 3.1.0
+	 */
+	public const DATATABLE = 'Datatable';
+
+	public const DEADLOCK = 'DeadLock';
+
+	/**
+	 * @var string Everything related to the datamodel CRUD
+	 * @since 3.1.0
+	 */
+	public const DM_CRUD = 'DMCRUD';
+
+	/**
+	 * @var string Everything related to the datamodel CRUD
+	 * @since 3.1.0
+	 */
+	public const WEB_REQUEST = 'WebRequest';
+
+	/**
+	 * @var string Everything related to the event service
+	 * @since 3.1.0
+	 */
+	public const EVENT_SERVICE = 'EventService';
+
+	/**
+	 * @var string
+	 * @since 2.7.9 3.0.3 3.1.0 N°5588
+	 */
+	public const EXPORT = 'export';
+
 	public const INLINE_IMAGE = 'InlineImage';
+
+	/**
+	 * @var string
+	 * @since 3.0.1 N°4849
+	 * @since 2.7.7 N°4635
+	 */
+	public const NOTIFICATIONS = 'notifications';
+
 	public const PORTAL       = 'portal';
-	public const CMDB_SOURCE  = 'cmdbsource';
-	public const CORE         = 'core';
+
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ROUTER = 'router';
 }
 
 
@@ -556,12 +624,12 @@ abstract class LogAPI
 {
 	public const CHANNEL_DEFAULT = '';
 
-	public const LEVEL_ERROR = 'Error';
+	public const LEVEL_ERROR   = 'Error';
 	public const LEVEL_WARNING = 'Warning';
-	public const LEVEL_INFO = 'Info';
-	public const LEVEL_OK = 'Ok';
-	public const LEVEL_DEBUG = 'Debug';
-	public const LEVEL_TRACE = 'Trace';
+	public const LEVEL_INFO    = 'Info';
+	public const LEVEL_OK      = 'Ok';
+	public const LEVEL_DEBUG   = 'Debug';
+	public const LEVEL_TRACE   = 'Trace';
 
 	/**
 	 * @see     GetMinLogLevel
@@ -589,7 +657,22 @@ abstract class LogAPI
 	);
 
 	public const ENUM_CONFIG_PARAM_FILE = 'log_level_min';
-	public const ENUM_CONFIG_PARAM_DB = 'log_level_min.write_in_db';
+	public const ENUM_CONFIG_PARAM_DB   = 'log_level_min.write_in_db';
+
+
+	/**
+	 * Parameter to enable log purge.
+	 *
+	 * @since 3.1.0
+	 */
+	public const ENUM_CONFIG_PARAM_PURGE_ENABLED = 'log_purge.enabled';
+
+	/**
+	 * Parameter to define day we want to keep old log files.
+	 *
+	 * @since 3.1.0
+	 */
+	public const ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS = 'log_purge.max_keep_days';
 
 	/**
 	 * @var \Config attribute allowing to mock config in the tests
@@ -691,6 +774,7 @@ abstract class LogAPI
 	/**
 	 * @throws \ConfigException if log wrongly configured
 	 * @uses GetMinLogLevel
+	 * @since 3.0.0 N°3731
 	 */
 	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel, string $sConfigKey = self::ENUM_CONFIG_PARAM_FILE): bool
 	{
@@ -928,7 +1012,9 @@ class ToolsLog extends LogAPI
 
 /**
  * @see \CMDBSource::LogDeadLock()
- * @since 2.7.1
+ * @since 2.7.1 PR #139
+ *
+ * @link https://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html
  */
 class DeadLockLog extends LogAPI
 {
@@ -953,10 +1039,10 @@ class DeadLockLog extends LogAPI
 	{
 		switch ($iMysqlErrorNo)
 		{
-			case 1205:
+			case CMDBSource::MYSQL_ERRNO_WAIT_TIMEOUT:
 				return self::CHANNEL_WAIT_TIMEOUT;
 				break;
-			case 1213:
+			case CMDBSource::MYSQL_ERRNO_DEADLOCK:
 				return self::CHANNEL_DEADLOCK_FOUND;
 				break;
 			default:
@@ -986,15 +1072,28 @@ class DeadLockLog extends LogAPI
 
 
 /**
- * @since 3.0.0 N°3731
+ * Starting with the WARNING level we will log in a dedicated file (/log/deprecated-calls.log) :
+ * - iTop deprecated files or code
+ * - protected trigger_error calls with E_DEPRECATED or E_USER_DEPRECATED
+ *
+ * For the last category, if {@see utils::IsDevelopmentEnvironment()} is true we will do a trigger_error()
+ *
+ * @since 3.0.0 N°3731 first implementation
+ * @link https://www.itophub.io/wiki/page?id=latest:admin:log:channels#deprecated_calls channel used
  */
 class DeprecatedCallsLog extends LogAPI
 {
 	public const ENUM_CHANNEL_PHP_METHOD = 'deprecated-php-method';
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ENUM_CHANNEL_PHP_ENDPOINT = 'deprecated-php-endpoint';
 	public const ENUM_CHANNEL_PHP_LIBMETHOD = 'deprecated-php-libmethod';
 	public const ENUM_CHANNEL_FILE = 'deprecated-file';
 	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP_METHOD;
 
+	/** @var string Warning this constant won't be used directly ! To see the real default level check {@see GetLevelDefault()} */
 	public const LEVEL_DEFAULT = self::LEVEL_ERROR;
 
 	/** @var \FileLog we want our own instance ! */
@@ -1028,16 +1127,19 @@ class DeprecatedCallsLog extends LogAPI
 	 * @uses \set_error_handler() to catch deprecated notices
 	 *
 	 * @since 3.0.0 N°3002 logs deprecated notices in called code
+	 * @since 3.0.4 N°6274 do not set handler when in PHPUnit context (otherwise PHP notices won't be caught)
 	 */
-	public static function Enable($sTargetFile = null): void
-	{
+	public static function Enable($sTargetFile = null): void {
 		if (empty($sTargetFile)) {
 			$sTargetFile = APPROOT.'log/deprecated-calls.log';
 		}
 		parent::Enable($sTargetFile);
 
-		if (static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)) {
-			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler']);
+		if (
+			(false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))
+			&& static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)
+		) {
+			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler'], E_DEPRECATED | E_USER_DEPRECATED);
 		}
 	}
 
@@ -1069,7 +1171,12 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
-		$iStackDeprecatedMethodLevel = 2; // level 0 = current method, level 1 = @trigger_error, level 2 = method containing the `trigger_error` call
+		$iStackDeprecatedMethodLevel = 2; // level 0 = current method, level 1 = @trigger_error, level 2 = method containing the `trigger_error` call (can be either 'trigger_deprecation' or the faulty method), level 3 = In some cases, method containing the 'trigger_deprecation' call
+		// In case current level is actually a 'trigger_deprecation' call, try to go one level further to get the real deprecated method
+		if (array_key_exists($iStackDeprecatedMethodLevel, $aStack) && ($aStack[$iStackDeprecatedMethodLevel]['function'] === 'trigger_deprecation') && array_key_exists($iStackDeprecatedMethodLevel + 1, $aStack)) {
+			$iStackDeprecatedMethodLevel++;
+		}
+
 		$sDeprecatedObject = $aStack[$iStackDeprecatedMethodLevel]['class'];
 		$sDeprecatedMethod = $aStack[$iStackDeprecatedMethodLevel]['function'];
 		if (($sDeprecatedObject === __CLASS__) && ($sDeprecatedMethod === 'Log')) {
@@ -1114,7 +1221,6 @@ class DeprecatedCallsLog extends LogAPI
 	 * - else call parent method
 	 *
 	 * In other words, when in dev mode all deprecated calls will be logged to file
-	 *
 	 */
 	protected static function GetLevelDefault(string $sConfigKey)
 	{
@@ -1130,13 +1236,20 @@ class DeprecatedCallsLog extends LogAPI
 	}
 
 	/**
-	 * @throws \ConfigException
+	 * @since 3.0.1 3.1.0 N°4725 silently handles ConfigException
+	 * @since 3.0.4 3.1.0 N°4725 remove forgotten throw PHPDoc annotation
+	 *
 	 * @link https://www.php.net/debug_backtrace
 	 * @uses \debug_backtrace()
 	 */
 	public static function NotifyDeprecatedFile(?string $sAdditionalMessage = null): void
 	{
-		if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
+				return;
+			}
+		}
+		catch (ConfigException $e) {
 			return;
 		}
 
@@ -1198,6 +1311,35 @@ class DeprecatedCallsLog extends LogAPI
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
 	}
 
+	/**
+	 * @param string|null $sAdditionalMessage
+	 * @since 3.1.0
+	 */
+	public static function NotifyDeprecatedPhpEndpoint(?string $sAdditionalMessage = null): void
+	{
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_ENDPOINT)) {
+				return;
+			}
+		}
+		catch (ConfigException $e) {
+			return;
+		}
+
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+		$iStackDeprecatedMethodLevel = 0; // level 0 = current method, level 1 = method containing the `NotifyDeprecatedPhpMethod` call
+		$sDeprecatedUrl = $_SERVER['REQUEST_URI'];
+		$sCallerFile = $aStack[$iStackDeprecatedMethodLevel]['file'];
+		$sCallerLine = $aStack[$iStackDeprecatedMethodLevel]['line'];
+		$sMessage = "Call to endpoint {$sDeprecatedUrl} in {$sCallerFile}#L{$sCallerLine}";
+
+		if (!is_null($sAdditionalMessage)) {
+			$sMessage .= ' : '.$sAdditionalMessage;
+		}
+
+		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_ENDPOINT);
+	}
+
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
 	{
 		if (true === utils::IsDevelopmentEnvironment()) {
@@ -1235,8 +1377,7 @@ class LogFileRotationProcess implements iScheduledProcess
 	{
 		$sLogFileNameBuilder = $this->GetLogFileNameBuilderClassName();
 
-		foreach (self::LOGFILES_TO_ROTATE as $sLogFileName)
-		{
+		foreach (self::LOGFILES_TO_ROTATE as $sLogFileName) {
 			$sLogFileFullPath = APPROOT
 				.DIRECTORY_SEPARATOR.'log'
 				.DIRECTORY_SEPARATOR.$sLogFileName;
@@ -1246,6 +1387,77 @@ class LogFileRotationProcess implements iScheduledProcess
 			$oLogFileNameBuilder->ResetLastModifiedDateForFile();
 			$oLogFileNameBuilder->CheckAndRotateLogFile();
 		}
+
+		// Purge logs if purge enabled
+		if (MetaModel::GetConfig()->Get(LogAPI::ENUM_CONFIG_PARAM_PURGE_ENABLED)) {
+			$this->PurgeLogs();
+		}
+	}
+
+	/**
+	 * PurgeLogs.
+	 *
+	 * Purge test last modification time of file in log folder and delete
+	 * files that haven't modifications since {@see \LogAPI::ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS}
+	 *
+	 * @return array process feedback
+	 * @since 3.1.0
+	 */
+	public function PurgeLogs(): array
+	{
+		// result
+		$aFilesResult = array();
+
+		// Max keep days
+		$iMaxDays = MetaModel::GetConfig()->Get(LogAPI::ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS);
+
+		// Files iterator (*.*)
+		$oIterator = new \GlobIterator(APPROOT.'log'.DIRECTORY_SEPARATOR.'/*.*');
+		$aLogFiles = iterator_to_array($oIterator);
+
+		// Reference date
+		$oDateNow = new DateTime('now');
+
+		// Iterate throw files...
+		foreach ($aLogFiles as $oLogFile) {
+
+			// File real path
+			$sFileRealPath = $oLogFile->getRealPath();
+
+			// Compute number of days since last modification
+			$oDateFileLastModification = new DateTime();
+			$oDateFileLastModification->setTimestamp($oLogFile->getMTime());
+			$iDays = intval($oDateFileLastModification->diff($oDateNow)->format('%a'));
+
+			// File process status
+			$aFileResult = [
+				'file_name'                    => $sFileRealPath,
+				'days_since_last_modification' => $iDays,
+				'deleted'                      => false,
+				'error'                        => null,
+			];
+
+			// Delete file older than max last modified in days
+			if ($iDays > $iMaxDays) {
+
+				// unlink file
+				if (!is_writable($sFileRealPath)) {
+					$aFileResult['error'] = Dict::S('itop-log-mgmt:UI:Error:file_read_only');
+				} // unlink OK
+				else if (unlink($sFileRealPath)) {
+					$aFileResult['deleted'] = true;
+				} // unlink KO
+				else {
+					$aFileResult['error'] = Dict::S('itop-log-mgmt:UI:Error:unknown_error');
+				}
+
+			}
+
+			// append result
+			$aFilesResult[] = $aFileResult;
+		}
+
+		return $aFilesResult;
 	}
 
 	/**
@@ -1253,12 +1465,10 @@ class LogFileRotationProcess implements iScheduledProcess
 	 */
 	public function GetNextOccurrence()
 	{
-		try
-		{
+		try {
 			$sLogFileNameBuilder = $this->GetLogFileNameBuilderClassName();
 		}
-		catch (ProcessException $e)
-		{
+		catch (ProcessException $e) {
 			return new DateTime('3000-01-01');
 		}
 

@@ -1,9 +1,8 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:RequestManagement' => 'Pomoc techniczna',
 	'Menu:RequestManagement+' => 'Pomoc techniczna',
@@ -21,8 +20,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:UserRequest:Shortcuts+' => '',
 	'Menu:UserRequest:MyRequests' => 'Zgłoszenia przypisane do mnie',
 	'Menu:UserRequest:MyRequests+' => 'Zgłoszenia przypisane do mnie (jako Agent)',
-	'Menu:UserRequest:MySupportRequests' => "Moje telefony wsparcia",
-	'Menu:UserRequest:MySupportRequests+' => "Moje telefony wsparcia",
+	'Menu:UserRequest:MySupportRequests' => 'Moje telefony wsparcia',
+	'Menu:UserRequest:MySupportRequests+' => 'Moje telefony wsparcia',
 	'Menu:UserRequest:EscalatedRequests' => 'Gorące prośby',
 	'Menu:UserRequest:EscalatedRequests+' => 'Gorące prośby',
 	'Menu:UserRequest:OpenRequests' => 'Wszystkie otwarte zgłoszenia',
@@ -35,6 +34,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Otwarte zgłoszenia według typu',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Otwarte zgłoszenia według klientów',
 	'Class:UserRequest:KnownErrorList' => 'Znane błędy',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 ));
 
 // Dictionnay conventions
@@ -80,7 +80,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserRequest/Attribute:request_type+' => '',
 	'Class:UserRequest/Attribute:request_type/Value:service_request' => 'Zgłoszenie serwisowe',
 	'Class:UserRequest/Attribute:request_type/Value:service_request+' => 'Zgłoszenie serwisowe',
-	'Class:UserRequest/Attribute:impact' => 'Wpływ',
+	'Class:UserRequest/Attribute:impact' => 'Dotyczy',
 	'Class:UserRequest/Attribute:impact+' => '',
 	'Class:UserRequest/Attribute:impact/Value:1' => 'Wydział',
 	'Class:UserRequest/Attribute:impact/Value:1+' => '',
@@ -110,6 +110,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'niska',
 	'Class:UserRequest/Attribute:origin' => 'Pochodzenie',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'e-mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'e-mail',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'monitoring',
@@ -243,7 +247,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Do zatwierdzenia',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Nie można przypisać zgłoszenia nadrzędnego do samego siebie',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Połącz rozwiązanie kaskadowo do żądań podrzędnych (ev_autoresolve) i dopasuj następujące cechy zgłoszenia: usługa, zespół, agent, informacje o rozwiązaniu',
 ));

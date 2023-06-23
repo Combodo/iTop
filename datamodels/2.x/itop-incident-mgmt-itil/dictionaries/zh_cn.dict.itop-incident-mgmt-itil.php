@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -110,14 +110,18 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => '低',
 	'Class:Incident/Attribute:origin' => '来源',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => '邮件',
 	'Class:Incident/Attribute:origin/Value:mail+' => '邮件',
 	'Class:Incident/Attribute:origin/Value:monitoring' => '监控',
 	'Class:Incident/Attribute:origin/Value:monitoring+' => '监控',
 	'Class:Incident/Attribute:origin/Value:phone' => '电话',
 	'Class:Incident/Attribute:origin/Value:phone+' => '电话',
-	'Class:Incident/Attribute:origin/Value:portal' => 'portal',
-	'Class:Incident/Attribute:origin/Value:portal+' => 'portal',
+	'Class:Incident/Attribute:origin/Value:portal' => '门户',
+	'Class:Incident/Attribute:origin/Value:portal+' => '门户',
 	'Class:Incident/Attribute:service_id' => '服务',
 	'Class:Incident/Attribute:service_id+' => '',
 	'Class:Incident/Attribute:service_name' => '服务名称',
@@ -164,8 +168,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Attribute:resolution_code+' => '',
 	'Class:Incident/Attribute:resolution_code/Value:assistance' => '外部支持',
 	'Class:Incident/Attribute:resolution_code/Value:assistance+' => '外部支持',
-	'Class:Incident/Attribute:resolution_code/Value:bug fixed' => 'bug 修复',
-	'Class:Incident/Attribute:resolution_code/Value:bug fixed+' => 'bug 修复',
+	'Class:Incident/Attribute:resolution_code/Value:bug fixed' => '缺陷修复',
+	'Class:Incident/Attribute:resolution_code/Value:bug fixed+' => '缺陷修复',
 	'Class:Incident/Attribute:resolution_code/Value:hardware repair' => '硬件维修',
 	'Class:Incident/Attribute:resolution_code/Value:hardware repair+' => '硬件维修',
 	'Class:Incident/Attribute:resolution_code/Value:other' => '其它',
@@ -188,14 +192,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Attribute:parent_change_id+' => '',
 	'Class:Incident/Attribute:parent_change_ref' => '变更编号',
 	'Class:Incident/Attribute:parent_change_ref+' => '',
-	'Class:Incident/Attribute:parent_problem_id' => 'Parent problem id~~',
+	'Class:Incident/Attribute:parent_problem_id' => '父级问题',
 	'Class:Incident/Attribute:parent_problem_id+' => '~~',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
+	'Class:Incident/Attribute:parent_problem_ref' => '父级问题编号',
 	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
 	'Class:Incident/Attribute:related_request_list' => '相关需求',
-	'Class:Incident/Attribute:related_request_list+' => '该事件相关的所有需求',
-	'Class:Incident/Attribute:child_incidents_list' => '衍生事件',
-	'Class:Incident/Attribute:child_incidents_list+' => '该事件相关的所有子事件',
+	'Class:Incident/Attribute:related_request_list+' => '此事件相关的所有需求',
+	'Class:Incident/Attribute:child_incidents_list' => '子事件',
+	'Class:Incident/Attribute:child_incidents_list+' => '此事件相关的所有衍生事件',
 	'Class:Incident/Attribute:public_log' => '评论',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => '用户满意度',
@@ -210,7 +214,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Attribute:user_satisfaction/Value:4+' => '非常不满意',
 	'Class:Incident/Attribute:user_comment' => '用户评论',
 	'Class:Incident/Attribute:user_comment+' => '',
-	'Class:Incident/Attribute:parent_incident_id_friendlyname' => '好记的父级事件ID名称',
+	'Class:Incident/Attribute:parent_incident_id_friendlyname' => '父级事件名称',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
 	'Class:Incident/Stimulus:ev_assign' => '分配',
 	'Class:Incident/Stimulus:ev_assign+' => '',
@@ -230,9 +234,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Stimulus:ev_close+' => '',
 	'Class:Incident/Stimulus:ev_reopen' => '重新打开',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
-	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => '不能分配父级事件给自己',
-
+	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => '无法分配父级事件给自己',
 	'Class:Incident/Method:ResolveChildTickets' => '解决子工单',
-	'Class:Incident/Method:ResolveChildTickets+' => '级联解决子Ticket(事件自动解决),和调整以下内容保持一至: 服务, 团队, 办理人, 解决方案',
+	'Class:Incident/Method:ResolveChildTickets+' => '递归解决子工单(自动解决),并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案',
 	'Tickets:Related:OpenIncidents' => '打开的事件',
 ));

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -27,14 +27,10 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 
-if (!defined('__DIR__')) {
-	define('__DIR__', dirname(__FILE__));
-}
 if (!defined('APPROOT')) {
 	require_once(__DIR__.'/../../approot.inc.php');
 }
 require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/itopwebpage.class.inc.php');
 
 require_once(APPROOT.'application/startup.inc.php');
 
@@ -426,11 +422,10 @@ function LaunchBackupNow()
 
 	if (confirm('$sConfirmBackup'))
 	{
-		if(!$('#waitbackup').length)
-		{
-			$('body').append($('<div class="mt-5 text-nowrap" title="$sBackUpNow" id="waitbackup"><i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitBackup</div>'));
-		}
-		$('#waitbackup').dialog();
+		const oModal = CombodoModal.OpenModal({
+				title: '$sBackUpNow',
+				content: '<i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitBackup'
+		});
 
 		var oParams = {};
 		oParams.operation = 'backup';
@@ -439,13 +434,13 @@ function LaunchBackupNow()
 			if (data.search(/error|exceptio|notice|warning/i) != -1)
 			{
 				$('#backup_errors').html(data);
-				$('#backup_errors').show();
+				$('#backup_errors').removeClass('ibo-is-hidden');
 			}
 			else
 			{
 				window.location.reload();
 			}
-			$('#waitbackup').dialog('close');
+			oModal.dialog('close');
 		});
 	}
 }
@@ -455,11 +450,11 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 	{
 		return;
 	}
-	if(!$('#waitrestore').length)
-		{
-			$('body').append($('<div class="mt-5 text-nowrap" title="$sRestore" id="waitrestore"><i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitRestore</div>'));
-		}
-	$('#waitrestore').dialog();
+
+	const oModal = CombodoModal.OpenModal({
+		title: '$sRestore',
+		content: '<i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitRestore'
+	});
 
 	$('#backup_success').addClass('ibo-is-hidden');
 	$('#backup_errors').addClass('ibo-is-hidden');
@@ -471,7 +466,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 	$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
 
 		// Get the value of restore_token
-		$('#backup_errors').append(data);
+		$('#restore_token').val(data.token);
 
 		var oParams = {};
 		oParams.operation = 'restore_exec';
@@ -489,11 +484,11 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 					$('#backup_success').html('$sRestoreDone');
 					$('#backup_success').removeClass('ibo-is-hidden');
 				}
-				$('#waitrestore').dialog('close');
+				oModal.dialog('close');
 			});
 		} else {
 			$('button.restore').prop('disabled', true);
-			$('#waitrestore').dialog('close');
+			oModal.dialog('close');
 		}
 	});
 }

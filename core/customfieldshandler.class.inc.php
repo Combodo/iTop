@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
+// Copyright (C) 2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,20 +16,29 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-use Combodo\iTop\Form\Form;
-use Combodo\iTop\Form\FormManager;
-
 /**
  * Base class to implement a handler for AttributeCustomFields
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-abstract class CustomFieldsHandler
-{
+abstract class CustomFieldsHandler {
+	/** @var string $sAttCode */
 	protected $sAttCode;
+	/** @var array{
+	 *          legacy: int,
+	 *          extradata_id: string,
+	 *          _template_name: string,
+	 *          template_id: string,
+	 *          template_data: string,
+	 *          user_data: array<string, mixed>,
+	 *          current_template_id: string,
+	 *          current_template_data: string,
+	 *     } $aValues same as {@see \ormCustomFieldsValue::$aCurrentValues}
+	 */
 	protected $aValues;
+	/** @var \Combodo\iTop\Form\Form $oForm */
 	protected $oForm;
 
 	/**
@@ -38,8 +47,7 @@ abstract class CustomFieldsHandler
 	 *
 	 * @param $sAttCode
 	 */
-	final public function __construct($sAttCode)
-	{
+	final public function __construct($sAttCode) {
 		$this->sAttCode = $sAttCode;
 		$this->aValues = null;
 	}
@@ -47,11 +55,39 @@ abstract class CustomFieldsHandler
 	abstract public function BuildForm(DBObject $oHostObject, $sFormId);
 
 	/**
+	 * @returns true|string true if no error found, error message otherwise
+	 * @throws \ApplicationException if {@link static::$oForm} attribute not initialized yet
+	 * @since 3.1.0 N°6322 N°1150 Add template_id checks
+	 */
+	public function Validate(DBObject $oHostObject) {
+		if (false === isset($this->oForm)) {
+			throw new ApplicationException('oForm attribute not init yet. You must call BuildForm before this method !');
+		}
+
+		try {
+			$this->oForm->Validate();
+			if ($this->oForm->GetValid()) {
+				$ret = true;
+			}
+			else {
+				$aMessages = array();
+				foreach ($this->oForm->GetErrorMessages() as $sFieldId => $aFieldMessages) {
+					$aMessages[] = $sFieldId.': '.implode(', ', $aFieldMessages);
+				}
+				$ret = 'Invalid value: '.implode(', ', $aMessages);
+			}
+		} catch (Exception $e) {
+			$ret = $e->getMessage();
+		}
+
+		return $ret;
+	}
+
+	/**
 	 *
 	 * @return \Combodo\iTop\Form\Form
 	 */
-	public function GetForm()
-	{
+	public function GetForm() {
 		return $this->oForm;
 	}
 
@@ -60,16 +96,14 @@ abstract class CustomFieldsHandler
 		$this->aValues = $aValues;
 	}
 
-	static public function GetPrerequisiteAttributes($sClass = null)
-	{
+	public static function GetPrerequisiteAttributes($sClass = null) {
 		return array();
 	}
 
 	/**
 	 * List the available verbs for 'GetForTemplate'
 	 */
-	static public function EnumTemplateVerbs()
-	{
+	public static function EnumTemplateVerbs() {
 		return array();
 	}
 
@@ -101,12 +135,44 @@ abstract class CustomFieldsHandler
 	 * @param string $sSeparator
 	 * @param string $sTextQualifier
 	 * @param bool|true $bLocalize
+	 *
 	 * @return mixed
 	 */
 	abstract public function GetAsCSV($aValues, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true);
 
 	/**
+	 * @param $aValues
+	 *
+	 * @return array|null
+	 *
+	 * @since 3.1.0 N°1150 Method creation
+	 */
+	public function GetAsJSON($aValues)
+	{
+		// Other GetAsCSV/GetAsHTML/GetAsXML methods are abstract, but were here from the start
+		// To ensure backward compatibility with older extensions, we are defining a default impl for this method
+		// Older extensions might have children classes without this new method
+		return null;
+	}
+
+	/**
+	 * @param \stdClass|null $json
+	 * @param string $sAttCode
+	 *
+	 * @return \ormCustomFieldsValue|null
+	 *
+	 * @since 3.1.0 N°1150 Method creation
+	 */
+	public function FromJSONToValue(?stdClass $json, string $sAttCode): ?ormCustomFieldsValue
+	{
+		// Default impl doing nothing, to avoid errors on children not having this method
+		return null;
+	}
+
+
+	/**
 	 * @param DBObject $oHostObject
+	 *
 	 * @return array Associative array id => value
 	 */
 	abstract public function ReadValues(DBObject $oHostObject);

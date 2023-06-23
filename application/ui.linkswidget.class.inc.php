@@ -1,23 +1,23 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit\BlockIndirectLinksEdit;
-use Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog\BlockObjectPickerDialog;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinkSetEditTable;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 require_once(APPROOT.'application/displayblock.class.inc.php');
 
-class UILinksWidget 
+class UILinksWidget
 {
 	protected $m_sClass;
 	protected $m_sAttCode;
 	protected $m_sNameSuffix;
-	protected $m_iInputId;
+	protected $m_sInputId;
 	protected $m_aAttributes;
 	protected $m_sExtKeyToRemote;
 	protected $m_sExtKeyToMe;
@@ -33,7 +33,7 @@ class UILinksWidget
 	 *
 	 * @param string $sClass
 	 * @param string $sAttCode AttributeLinkedSetIndirect attcode
-	 * @param int $iInputId
+	 * @param string $sInputId
 	 * @param string $sNameSuffix
 	 * @param bool $bDuplicatesAllowed
 	 *
@@ -41,13 +41,14 @@ class UILinksWidget
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 */
-	public function __construct($sClass, $sAttCode, $iInputId, $sNameSuffix = '', $bDuplicatesAllowed = false)
+	public function __construct($sClass, $sAttCode, $sInputId, $sNameSuffix = '', $bDuplicatesAllowed = false)
 	{
 		$this->m_sClass = $sClass;
 		$this->m_sAttCode = $sAttCode;
+		$this->m_sInputId = $sInputId;
 		$this->m_sNameSuffix = $sNameSuffix;
-		$this->m_iInputId = $iInputId;
 		$this->m_bDuplicatesAllowed = $bDuplicatesAllowed;
+
 		$this->m_aEditableFields = array();
 
 		/** @var AttributeLinkedSetIndirect $oAttDef */
@@ -63,7 +64,7 @@ class UILinksWidget
 		$this->m_aEditableFields = array();
 		$this->m_aTableConfig = array();
 		$this->m_aTableConfig['form::checkbox'] = array(
-			'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".$this->m_iInputId.".OnSelectChange();\">",
+			'label'       => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".$this->m_sInputId.".OnSelectChange();\">",
 			'description' => Dict::S('UI:SelectAllToggle+'),
 		);
 
@@ -91,234 +92,13 @@ class UILinksWidget
 		}
 	}
 
-	/**
-	 * A one-row form for editing a link record
-	 *
-	 * @param WebPage $oP Web page used for the ouput
-	 * @param DBObject $oLinkedObj Remote object
-	 * @param DBObject|int $linkObjOrId Either the lnk object or a unique number for new link records to add
-	 * @param array $aArgs Extra context arguments
-	 * @param DBObject $oCurrentObj The object to which all the elements of the linked set refer to
-	 * @param int $iUniqueId A unique identifier of new links
-	 * @param boolean $bReadOnly Display link as editable or read-only. Default is false (editable)
-	 *
-	 * @return array The HTML fragment of the one-row form
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \Exception
-	 */
-	protected function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false)
-	{
-		$sPrefix = "$this->m_sAttCode{$this->m_sNameSuffix}";
-		$aRow = array();
-		$aFieldsMap = array();
-		$iKey = 0;
-
-		if (is_object($linkObjOrId) && (!$linkObjOrId->IsNew()))
-		{
-			$iKey = $linkObjOrId->GetKey();
-			$iRemoteObjKey = $linkObjOrId->Get($this->m_sExtKeyToRemote);
-			$sPrefix .= "[$iKey][";
-			$sNameSuffix = "]"; // To make a tabular form
-			$aArgs['prefix'] = $sPrefix;
-			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}{$iKey}";
-			$aArgs['this'] = $linkObjOrId;
-
-			if ($bReadOnly)
-			{
-				$aRow['form::checkbox'] = "";
-				foreach ($this->m_aEditableFields as $sFieldCode)
-				{
-					$sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
-					$aRow[$sFieldCode] = $sDisplayValue;
-				}
-			}
-			else
-			{
-				$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$iKey\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$iKey\">";
-				foreach ($this->m_aEditableFields as $sFieldCode)
-				{
-					$sSafeFieldId = $this->GetFieldId($linkObjOrId->GetKey(), $sFieldCode);
-					$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $linkObjOrId, $oP, $sNameSuffix, $sSafeFieldId);
-					$aFieldsMap[$sFieldCode] = $sSafeFieldId;
-				}
-			}
-
-			$sState = $linkObjOrId->GetState();
-			$sRemoteKeySafeFieldId = $this->GetFieldId($aArgs['this']->GetKey(), $this->m_sExtKeyToRemote);;
-		}
-		else
-		{
-			// form for creating a new record
-			if (is_object($linkObjOrId))
-			{
-				// New link existing only in memory
-				$oNewLinkObj = $linkObjOrId;
-				$iRemoteObjKey = $oNewLinkObj->Get($this->m_sExtKeyToRemote);
-				$oNewLinkObj->Set($this->m_sExtKeyToMe,
-					$oCurrentObj); // Setting the extkey with the object also fills the related external fields
-			}
-			else
-			{
-				$iRemoteObjKey = $linkObjOrId;
-				$oNewLinkObj = MetaModel::NewObject($this->m_sLinkedClass);
-				$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, $iRemoteObjKey);
-				$oNewLinkObj->Set($this->m_sExtKeyToRemote,
-					$oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
-				$oNewLinkObj->Set($this->m_sExtKeyToMe,
-					$oCurrentObj); // Setting the extkey with the object also fills the related external fields
-			}
-			$sPrefix .= "[-$iUniqueId][";
-			$sNameSuffix = "]"; // To make a tabular form
-			$aArgs['prefix'] = $sPrefix;
-			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}_".($iUniqueId < 0 ? -$iUniqueId : $iUniqueId);
-			$aArgs['this'] = $oNewLinkObj;
-			$sInputValue = $iUniqueId > 0 ? "-$iUniqueId" : "$iUniqueId";
-			$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"0\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$sInputValue\">";
-
-			if ($iUniqueId > 0)
-			{
-				// Rows created with ajax call need OnLinkAdded call.
-				//
-				$oP->add_ready_script(
-					<<<EOF
-PrepareWidgets();
-oWidget{$this->m_iInputId}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
-EOF
-				);
-			}
-			else
-			{
-				// Rows added before loading the form don't have to call OnLinkAdded.
-				// Listeners are already present and DOM is not recreated
-				$iPositiveUniqueId = -$iUniqueId;
-				$oP->add_ready_script(<<<EOF
-oWidget{$this->m_iInputId}.AddLink($iPositiveUniqueId, $iRemoteObjKey);
-EOF
-				);
-			}
-
-			foreach($this->m_aEditableFields as $sFieldCode)
-			{
-				$sSafeFieldId = $this->GetFieldId($iUniqueId, $sFieldCode);
-				$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $oNewLinkObj, $oP, $sNameSuffix, $sSafeFieldId);
-				$aFieldsMap[$sFieldCode] = $sSafeFieldId;
-
-				$sValue = $oNewLinkObj->Get($sFieldCode);
-				$oP->add_ready_script(
-					<<<JS
-oWidget{$this->m_iInputId}.OnValueChange($iKey, $iUniqueId, '$sFieldCode', '$sValue');
-JS
-				);
-			}
-
-			$sState = '';
-			$sRemoteKeySafeFieldId = $this->GetFieldId($iUniqueId, $this->m_sExtKeyToRemote);
-		}
-
-		if (!$bReadOnly)
-		{
-			$sExtKeyToMeId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToMe);
-			$aFieldsMap[$this->m_sExtKeyToMe] = $sExtKeyToMeId;
-			$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oCurrentObj->GetKey()."\">";
-
-			$sExtKeyToRemoteId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToRemote);
-			$aFieldsMap[$this->m_sExtKeyToRemote] = $sExtKeyToRemoteId;
-			$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToRemoteId\" value=\"$iRemoteObjKey\">";
-		}
-
-		// Adding fields from remote class
-		// all fields are embedded in a span + added to $aFieldsMap array so that we can refresh them after extkey change
-		$aRemoteFieldsMap = [];
-		foreach (MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
-		{
-			$sSafeFieldId = $this->GetFieldId($aArgs['this']->GetKey(), $sFieldCode);
-			$aRow['static::'.$sFieldCode] = "<span id='field_$sSafeFieldId'>".$oLinkedObj->GetAsHTML($sFieldCode).'</span>';
-			$aRemoteFieldsMap[$sFieldCode] = $sSafeFieldId;
-		}
-		// id field is needed so that remote object could be load server side
-		$aRemoteFieldsMap['id'] = $sRemoteKeySafeFieldId;
-
-		// Generate WizardHelper to update dependant fields
-		$this->AddWizardHelperInit($oP, $aArgs['wizHelper'], $this->m_sLinkedClass, $sState, $aFieldsMap);
-		//instantiate specific WizarHelper instance for remote class fields refresh
-		$bHasExtKeyUpdatingRemoteClassFields = (
-			array_key_exists('replaceDependenciesByRemoteClassFields', $aArgs)
-			&& ($aArgs['replaceDependenciesByRemoteClassFields'])
-		);
-		if ($bHasExtKeyUpdatingRemoteClassFields)
-		{
-			$this->AddWizardHelperInit($oP, $aArgs['wizHelperRemote'], $this->m_sRemoteClass, $sState, $aRemoteFieldsMap);
-		}
-
-		return $aRow;
-	}
-
-	private function AddRowForFieldCode(&$aRow, $sFieldCode, &$aArgs, $oLnk, $oP, $sNameSuffix, $sSafeFieldId): void
-	{
-		if (($sFieldCode === $this->m_sExtKeyToRemote))
-		{
-			// current field is the lnk extkey to the remote class
-			$aArgs['replaceDependenciesByRemoteClassFields'] = true;
-			$sRowFieldCode = 'static::key';
-			$aArgs['wizHelperRemote'] = $aArgs['wizHelper'].'_remote';
-			$aRemoteAttDefs = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($this->m_sRemoteClass);
-			$aRemoteCodes = array_map(
-				function ($value) {
-					return $value->GetCode();
-				},
-				$aRemoteAttDefs
-			);
-			$aArgs['remoteCodes'] = $aRemoteCodes;
-		}
-		else
-		{
-			$aArgs['replaceDependenciesByRemoteClassFields'] = false;
-			$sRowFieldCode = $sFieldCode;
-		}
-		$sValue = $oLnk->Get($sFieldCode);
-		$sDisplayValue = $oLnk->GetEditValue($sFieldCode);
-		$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-
-		$aRow[$sRowFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'
-			.cmdbAbstractObject::GetFormElementForField(
-				$oP,
-				$this->m_sLinkedClass,
-				$sFieldCode,
-				$oAttDef,
-				$sValue,
-				$sDisplayValue,
-				$sSafeFieldId,
-				$sNameSuffix,
-				0,
-				$aArgs
-			)
-			.'</div></div></div>';
-	}
-
 	private function GetFieldId($iLnkId, $sFieldCode, $bSafe = true)
 	{
-		$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$iLnkId.']';
+		$sFieldId = $this->m_sInputId.'_'.$sFieldCode.'['.$iLnkId.']';
 
 		return ($bSafe) ? utils::GetSafeId($sFieldId) : $sFieldId;
 	}
 
-	private function AddWizardHelperInit($oP, $sWizardHelperVarName, $sWizardHelperClass, $sState, $aFieldsMap): void
-	{
-		$iFieldsCount = count($aFieldsMap);
-		$sJsonFieldsMap = json_encode($aFieldsMap);
-
-		$oP->add_script(
-			<<<JS
-var $sWizardHelperVarName = new WizardHelper('$sWizardHelperClass', '', '$sState');
-$sWizardHelperVarName.SetFieldsMap($sJsonFieldsMap);
-$sWizardHelperVarName.SetFieldsCount($iFieldsCount);
-$sWizardHelperVarName.SetReturnNotEditableFields(true);
-$sWizardHelperVarName.SetWizHelperJsVarName('$sWizardHelperVarName');
-JS
-		);
-	}
 
 	/**
 	 * Display the table with the form for editing all the links at once
@@ -356,84 +136,10 @@ JS
 	 */
 	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj): string
 	{
-		$sLinkedSetId = "{$this->m_sAttCode}{$this->m_sNameSuffix}";
-
-		$oBlock = new BlockIndirectLinksEdit("linkedset_{$sLinkedSetId}", ["ibo-block-indirect-links--edit"]);
-
-		$oBlock->sLinkedSetId = $sLinkedSetId;
-		$oBlock->sClass = $this->m_sClass;
-		$oBlock->sAttCode = $this->m_sAttCode;
-		$oBlock->iInputId = $this->m_iInputId;
-		$oBlock->sNameSuffix = $this->m_sNameSuffix;
-		$oBlock->bDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
-		$oBlock->oWizHelper = 'oWizardHelper'.$sFormPrefix;
-		$oBlock->sExtKeyToRemote = $this->m_sExtKeyToRemote;
-		// Don't automatically launch the search if the table is huge
-		$oBlock->bJSDoSearch = utils::IsHighCardinality($this->m_sRemoteClass) ? 'false' : 'true';
-		$oBlock->sFormPrefix = $sFormPrefix;
-		$oBlock->sRemoteClass = $this->m_sRemoteClass;
-
-		$oValue->Rewind();
-		$aForm = array();
-		$iAddedId = -1; // Unique id for new links
-		while ($oCurrentLink = $oValue->Fetch())
-		{
-			// We try to retrieve the remote object as usual
-			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote),
-				false /* Must not be found */);
-			// If successful, it means that we can edit its link
-			if ($oLinkedObj !== null) {
-				$bReadOnly = false;
-			} // Else we retrieve it without restrictions (silos) and will display its link as readonly
-			else {
-				$bReadOnly = true;
-				$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */, true);
-			}
-
-			if ($oCurrentLink->IsNew()) {
-				$key = $iAddedId--;
-			} else {
-				$key = $oCurrentLink->GetKey();
-			}
-			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
-		}
-		$oDataTable = DataTableUIBlockFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aForm);
-		$oDataTable->SetOptions(['select_mode' => 'custom']);
-		$oBlock->AddSubBlock($oDataTable);
-
-		$oBlock->AddControls();
+		$oBlock = new BlockIndirectLinkSetEditTable($this);
+		$oBlock->InitTable($oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $this->m_aTableConfig);
 
 		return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
-	}
-
-	/**
-	 * @param string $sClass
-	 * @param string $sAttCode
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	protected static function GetTargetClass($sClass, $sAttCode)
-	{
-		/** @var AttributeLinkedSet $oAttDef */
-		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		$sLinkedClass = $oAttDef->GetLinkedClass();
-		$sTargetClass = '';
-		switch(get_class($oAttDef))
-		{
-			case 'AttributeLinkedSetIndirect':
-			/** @var AttributeExternalKey $oLinkingAttDef */
-			/** @var AttributeLinkedSetIndirect $oAttDef */
-			$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
-			$sTargetClass = $oLinkingAttDef->GetTargetClass();
-			break;
-
-			case 'AttributeLinkedSet':
-			$sTargetClass = $sLinkedClass;
-			break;
-		}
-		
-		return $sTargetClass;
 	}
 
 	/**
@@ -465,15 +171,10 @@ JS
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 
-		$sLinkedSetId = "{$this->m_sAttCode}{$this->m_sNameSuffix}";
-
-		$oBlock = new BlockObjectPickerDialog();
+		$oBlock = new BlockObjectPickerDialog($this);
 		$oPage->AddUiBlock($oBlock);
 
-		$oBlock->sLinkedSetId = $sLinkedSetId;
-		$oBlock->iInputId = $this->m_iInputId;
-		$oBlock->sLinkedClassName = MetaModel::GetName($this->m_sLinkedClass);
-		$oBlock->sClassName = MetaModel::GetName($this->m_sClass);
+		$sLinkedSetId = $oBlock->oUILinksWidget->GetLinkedSetId();
 
 		$oDisplayBlock = new DisplayBlock($oFilter, 'search', false);
 		$oBlock->AddSubBlock($oDisplayBlock->GetDisplay($oPage, "SearchFormToAdd_{$sLinkedSetId}",
@@ -542,7 +243,8 @@ JS
 		foreach ($aLinkedObjectIds as $iObjectId) {
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj)) {
-				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
+				$oBlock = new BlockIndirectLinkSetEditTable($this);
+				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
 				$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aRow, -$iAdditionId);
 				$oP->AddUiBlock($oRow);
 				$iAdditionId++;
@@ -566,10 +268,12 @@ JS
 		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
 
 		$iAdditionId = $iMaxAddedId + 1;
+		$bAllowRemoteExtKeyEdit = count($aLinkedObjectIds) <= utils::GetConfig()->Get('link_set_max_edit_ext_key');
 		foreach ($aLinkedObjectIds as $iObjectId) {
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj)) {
-				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
+				$oBlock = new BlockIndirectLinkSetEditTable($this);
+				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId, false /* Default value */, $bAllowRemoteExtKeyEdit); // Not yet created link get negative Ids
 				$aData = [];
 				foreach ($aRow as $item) {
 					$aData[] = $item;
@@ -630,24 +334,77 @@ JS
 							/** @var AttributeExternalKey $oAttDef */
 							$sTargetClass = $oAttDef->GetTargetClass();
 							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
-							if ($sHierarchicalKeyCode !== false)
-							{
+							if ($sHierarchicalKeyCode !== false) {
 								$oFilter = new DBObjectSearch($sTargetClass);
 								$oFilter->AddCondition('id', $defaultValue);
 								$oHKFilter = new DBObjectSearch($sTargetClass);
 								$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
 								$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
 							}
-						} catch (Exception $e)
-						{
 						}
-					}
-					else
-					{
+						catch (Exception $e) {
+						}
+					} else {
 						$oSearch->AddCondition($sAttCode, $defaultValue);
 					}
 				}
 			}
 		}
 	}
+
+	public function GetLinkedSetId(): string
+	{
+		return "{$this->m_sAttCode}{$this->m_sNameSuffix}";
+	}
+
+	public function GetClass(): string
+	{
+		return $this->m_sClass;
+	}
+
+	public function GetLinkedClass(): string
+	{
+		return $this->m_sLinkedClass;
+	}
+
+	public function GetAttCode(): string
+	{
+		return $this->m_sAttCode;
+	}
+
+	public function GetInputId(): string
+	{
+		return $this->m_sInputId;
+	}
+
+	public function GetNameSuffix(): string
+	{
+		return $this->m_sNameSuffix;
+	}
+
+	public function IsDuplicatesAllowed(): bool
+	{
+		return $this->m_bDuplicatesAllowed;
+	}
+
+	public function GetExternalKeyToRemote(): string
+	{
+		return $this->m_sExtKeyToRemote;
+	}
+
+	public function GetExternalKeyToMe(): string
+	{
+		return $this->m_sExtKeyToMe;
+	}
+
+	public function GetRemoteClass(): string
+	{
+		return $this->m_sRemoteClass;
+	}
+
+	public function GetEditableFields(): array
+	{
+		return $this->m_aEditableFields;
+	}
+
 }

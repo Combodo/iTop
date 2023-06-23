@@ -1,11 +1,12 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Edit displayed object~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Delete displayed object~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Create a new object (with same class as displayed object)~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Save displayed object~~',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Megjelenített objektum szerkesztése',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Megjelenített objektum törlése',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Új objektum létrehozása (a megjelenített objektummal azonos osztályú)',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Megjelenített objektum mentése',
+	'UI:Layout:ObjectDetails:New:Modal:Title' => 'Creation of an object~~',
 ]);

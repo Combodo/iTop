@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -121,6 +121,7 @@ $(function()
 							sBreadcrumbsItemHtml += '<span class="ibo-is-current" data-role="" data-breadcrumb-entry-number="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+sLabel+'</span></span>';
 						} else {
 							var sSanitizedUrl = StripArchiveArgument(oEntry['url']);
+							sSanitizedUrl = CombodoSanitizer.EscapeHtml(sSanitizedUrl, false);
 							sBreadcrumbsItemHtml += '<a class="" data-role="" data-breadcrumb-entry-number="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+sLabel+'</span></a>';
 						}
 					}
@@ -149,7 +150,9 @@ $(function()
 			this.element.find(this.js_selectors.previous_items_list_toggler).off('click');
 
 			// Remove observers
-			this.items_observer.disconnect();
+			if (this.items_observer !== null) {
+				this.items_observer.disconnect();
+			}
 
 			// Clear any existing entries in the markup
 			this.element.find(this.js_selectors.item).remove();

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2012-2021 Combodo SARL
+// Copyright (C) 2012-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -29,7 +29,7 @@ require_once(APPROOT.'application/forms.class.inc.php');
 /**
  * Base class for all 'dashlets' (i.e. widgets to be inserted into a dashboard)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 abstract class Dashlet
@@ -262,7 +262,7 @@ abstract class Dashlet
 			}
 		} catch (OqlException $e) {
 			$oDashletContainer->AddCSSClass("dashlet-content");
-			$oDashletContainer->AddHtml('<p>'.$e->GetUserFriendlyDescription().'</p>');
+			$oDashletContainer->AddHtml('<p>'.utils::HtmlEntities($e->GetUserFriendlyDescription()).'</p>');
 		} catch (Exception $e) {
 			$oDashletContainer->AddCSSClass("dashlet-content");
 			$oDashletContainer->AddHtml('<p>'.$e->getMessage().'</p>');
@@ -667,7 +667,7 @@ class DashletUnknown extends Dashlet
 	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerLongTextField('xml', Dict::S('UI:DashletUnknown:Prop-XMLConfiguration'), $this->sOriginalDashletXML);
+		$oField = new DesignerXMLField('xml', Dict::S('UI:DashletUnknown:Prop-XMLConfiguration'), $this->sOriginalDashletXML);
 		$oForm->AddField($oField);
 	}
 
@@ -869,7 +869,7 @@ class DashletPlainText extends Dashlet
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sText = $this->aProperties['text'];
-		$sText = utils::EscapeHtml($sText);
+		$sText = utils::EscapeHtml(Dict::S($sText));
 		$sText = str_replace(array("\r\n", "\n", "\r"), "<br/>", $sText);
 
 		$sId = 'plaintext_'.($bEditMode ? 'edit_' : '').$this->sId;

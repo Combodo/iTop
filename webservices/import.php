@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -27,7 +27,6 @@
 // - not outputing xml when a wrong input is given (class, attribute names)
 //
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
@@ -207,6 +206,10 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 /////////////////////////////////
 // Main program
 
+/**
+ * @since 3.1.0 N°6047
+ */
+$oCtx = new ContextTag(ContextTag::TAG_IMPORT);
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage("iTop - Bulk import");
@@ -225,14 +228,14 @@ catch(Exception $e)
 {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->output();
-	exit -2;
+	exit(-2);
 }
 
 if (utils::IsModeCLI())
 {
 	// Next steps:
 	//   specific arguments: 'csvfile'
-	//   
+	//
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
 	$sCsvFile = ReadMandatoryParam($oP, 'csvfile', 'raw_data');
@@ -244,14 +247,14 @@ if (utils::IsModeCLI())
 	{
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 		$oP->output();
-		exit -1;
+		exit(-1);
 	}
 
 	if (!is_readable($sCsvFile))
 	{
 		$oP->p("Input file could not be found or could not be read: '$sCsvFile'");
 		$oP->output();
-		exit -1;
+		exit(-1);
 	}
 	$sCSVData = file_get_contents($sCsvFile);
 
@@ -259,7 +262,36 @@ if (utils::IsModeCLI())
 else
 {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+    LoginWebPage::ResetSession(true);
+	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+    if ($iRet !== LoginWebPage::EXIT_CODE_OK) {
+        switch ($iRet) {
+            case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
+                $oP->p("Missing parameter 'auth_user'");
+                break;
+
+            case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
+                $oP->p("Missing parameter 'auth_pwd'");
+                break;
+
+            case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
+                $oP->p('Invalid login');
+                break;
+
+            case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
+                $oP->p('Portal user is not allowed');
+                break;
+
+            case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
+                $oP->p('This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)');
+                break;
+
+            default:
+                $oP->p("Unknown authentication error (retCode=$iRet)");
+        }
+        $oP->output();
+        exit -1;
+    }
 
 	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 }
@@ -273,7 +305,7 @@ try
 	//
 	// Read parameters
 	//
-	$sClass = ReadMandatoryParam($oP, 'class', 'raw_data'); // do not filter as a valid class, we want to produce the report "wrong class" ourselves 
+	$sClass = ReadMandatoryParam($oP, 'class', 'raw_data'); // do not filter as a valid class, we want to produce the report "wrong class" ourselves
 	$sSep = ReadParam($oP, 'separator', 'raw_data');
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
 	$sCharSet = ReadParam($oP, 'charset', 'raw_data');
@@ -326,7 +358,7 @@ try
 	{
 		$sDateFormat = null;
 	}
-	
+
 	if ($sCharSet == '')
 	{
 		$sCharSet = MetaModel::GetConfig()->Get('csv_file_default_charset');
@@ -444,7 +476,7 @@ try
 	{
 		$sUTF8Data = iconv($sCharSet, 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
 	}
-	$oCSVParser = new CSVParser($sUTF8Data, $sSep, $sQualifier); 
+	$oCSVParser = new CSVParser($sUTF8Data, $sSep, $sQualifier);
 
 	// Limitation: as the attribute list is in the first line, we can not match external key by a third-party attribute
 	$aRawFieldList = $oCSVParser->ListFields();
@@ -466,7 +498,7 @@ try
 			// Remove any trailing "star" character before the arrow (->)
 			// A star character at the end can be used to indicate a mandatory field
 			$sFieldName = $aMatches[1].'->'.$aMatches[2];
-		}	
+		}
 		if (array_key_exists(strtolower($sFieldName), $aKnownColumnNames))
 		{
 			$aColumns = $aKnownColumnNames[strtolower($sFieldName)];
@@ -488,7 +520,7 @@ try
 			throw new BulkLoadException("Unknown column: '$sSafeName'. Possible columns: ".implode(', ', array_keys($aKnownColumnNames)));
 		}
 	}
-	// Note: at this stage the list of fields is supposed to be made of attcodes (and the symbol '->')	
+	// Note: at this stage the list of fields is supposed to be made of attcodes (and the symbol '->')
 
 	$aAttList = array();
 	$aExtKeys = array();
@@ -713,17 +745,12 @@ try
 	}
 	else
 	{
-		if (strlen($sComment) > 0)
-		{
+		if (strlen($sComment) > 0) {
 			$sMoreInfo = CMDBChange::GetCurrentUserName().', Web Service (CSV) - '.$sComment;
-		}
-		else
-		{
+		} else {
 			$sMoreInfo = CMDBChange::GetCurrentUserName().', Web Service (CSV)';
 		}
-		CMDBObject::SetTrackInfo($sMoreInfo);
-		CMDBObject::SetTrackOrigin('csv-import.php');
-		
+		CMDBObject::SetCurrentChangeFromParams($sMoreInfo, 'csv-import.php');
 		$oMyChange = CMDBObject::GetCurrentChange();
 	}
 
@@ -758,7 +785,7 @@ try
 			break;
 		case 'RowStatus_Issue':
 			$iCountErrors++;
-			break;		
+			break;
 		}
 
 		if ($bWritten)
@@ -837,7 +864,7 @@ try
 				$aDisplayConfig["$iCol"] = array("label"=>$sAttCode, "description"=>$sLabel);
 			}
 		}
-	
+
 		$aResultDisp = array(); // to be displayed
 		foreach($aRes as $iRow => $aRowData)
 		{
@@ -864,14 +891,16 @@ try
 			foreach($aRowData as $key => $value)
 			{
 				$sKey = (string) $key;
-	
+
 				if ($sKey == '__STATUS__') continue;
+				//__ERRORS__ used by tests only
+				if ($sKey == '__ERRORS__') continue;
 				if ($sKey == 'finalclass') continue;
 				if ($sKey == 'id') continue;
-	
+
 				if (is_object($value))
 				{
-					$aRowDisp["$sKey"] = $value->GetDisplayableValue().$value->GetDescription();
+					$aRowDisp["$sKey"] = $value->GetDisplayableValueAndDescription();
 				}
 				else
 				{
@@ -885,15 +914,15 @@ try
 }
 catch(BulkLoadException $e)
 {
-	$oP->add_comment($e->getMessage());		
+	$oP->add_comment($e->getMessage());
 }
 catch(SecurityException $e)
 {
-	$oP->add_comment($e->getMessage());		
+	$oP->add_comment($e->getMessage());
 }
 catch(Exception $e)
 {
-	$oP->add_comment((string)$e);		
+	$oP->add_comment((string)$e);
 }
 
 $oP->output();

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
 * @author       Benjamin Planque <benjamin.planque@combodo.com>
-* @copyright   Copyright (C) 2010-2021 Combodo SARL
+* @copyright   Copyright (C) 2010-2023 Combodo SARL
 * @license     http://opensource.org/licenses/AGPL-3.0
 */
 //////////////////////////////////////////////////////////////////////
@@ -33,6 +33,7 @@
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkFunctionalCIToTicket' => 'Verknüpfung FunctionalCI/Ticket',
 	'Class:lnkFunctionalCIToTicket+' => '',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Referenz',
@@ -52,48 +53,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 ));
 
 //
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Verknüpfung FunctionalCI/Provider-Vertrag',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider-Vertrag',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Provider-Vertragsname',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI-Name',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkFunctionalCIToService' => 'Verknüpfung FunctionalCI/Service',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Service-Name',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI-Name',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
-));
-
-//
 // Class: FunctionalCI
 //
-
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Provider-Verträge',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
-	'Class:FunctionalCI/Attribute:services_list' => 'Services',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
 ));

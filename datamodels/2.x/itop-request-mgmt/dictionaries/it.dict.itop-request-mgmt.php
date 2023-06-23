@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
@@ -34,6 +34,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Richeiste aperte per tipo',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Richeiste aperte per organizzazione',
 	'Class:UserRequest:KnownErrorList' => 'Errori conosciuti',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 	'Menu:UserRequest:MyWorkOrders' => 'Work Order assegnati a me',
 	'Menu:UserRequest:MyWorkOrders+' => 'Tutti i work order assegnati a me',
 	'Class:Problem:KnownProblemList' => 'Problemi conosciuti',
@@ -115,6 +116,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Bassa',
 	'Class:UserRequest/Attribute:origin' => 'Origine',
 	'Class:UserRequest/Attribute:origin+' => '~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'Mail',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -270,7 +275,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Portal:SelectLanguage' => 'Cambiare lingua',
 	'Portal:LanguageChangedTo_Lang' => 'Lingua cambiata in',
 	'Portal:ChooseYourFavoriteLanguage' => 'Selezionate la vostra lingua preferita',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Risolve ticket figli',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Inoltra la risolzuione ai ticket collegati ev_autosolve), e allinea le caratteriche della richiesta: Servizio, team , agente e informazioni della risoluzione',
 ));

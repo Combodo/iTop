@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -72,6 +72,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Attachments:File:Uploader' => 'Uploaded by~~',
 	'Attachments:File:Size' => 'Size~~',
 	'Attachments:File:MimeType' => 'Type~~',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
 ));
 //
 // Class: Attachment
@@ -84,4 +85,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 ));

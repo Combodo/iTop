@@ -1,0 +1,7 @@
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+window.addEventListener("message", function (event){
+    event.source.postMessage(window.location.href, event.origin);
+    window.close();
+}, false);

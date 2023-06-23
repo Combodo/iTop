@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (C) 2010-2021 Combodo SARL
+ * Copyright (C) 2010-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -60,7 +60,7 @@ class UISearchFormForeignKeys
 
 		$oPage->add(<<<HTML
 <form id="ObjectsAddForm_{$this->m_iInputId}">
-    <div id="SearchResultsToAdd_{$this->m_iInputId}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
+    <div id="SearchResultsToAdd_{$this->m_iInputId}" style="vertical-align:top;height:100%;overflow:auto;padding:0;border:0;">
         <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
     </div>
     <input type="hidden" id="count_{$this->m_iInputId}" value="0"/>

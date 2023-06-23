@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% set sListId = oUIBlock.GetOption('sListId') %}
 {% set sListIDForVarSuffix = ('' ~ sListId)|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
@@ -82,7 +82,11 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             }
         }
     },
-    drawCallback: function () {
+    drawCallback: function (settings) {
+        if(settings.json)
+        {
+            $(this).closest('.ibo-panel').find('.ibo-datatable--result-count').html(settings.json.recordsTotal);
+        }
         if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
         {
             $(this).closest('.dataTables_wrapper').find('.checkAll')[0].checked = true;
@@ -100,13 +104,21 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         }
 
         $(this).closest('.dataTables_wrapper').unblock();
+
+        // Disable hyperlinks if necessary
+        {% if oUIBlock.GetOption("disable_hyperlinks") is not same as false %}
         $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
-            //disable select action when there is a link
-            e.stopPropagation();
-        });
+                e.preventDefault();
+            });
+        {% endif %}
+        
     },
     {% else %}
-    drawCallback: function () {
+    drawCallback: function (settings) {
+        if(settings.json)
+        {
+            $(this).closest('.ibo-panel').find('.ibo-datatable--result-count').html(settings.json.recordsTotal);
+        }
         $(this).closest('.dataTables_wrapper').unblock();
         // Hiding pagination if only one page
         if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
@@ -117,6 +129,13 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }
+        
+        // Disable hyperlinks if necessary
+        {% if oUIBlock.GetOption("disable_hyperlinks") is same as true %}
+        $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
+            e.preventDefault();
+        });
+        {% endif %}
     },
     {% endif %}
     rowId: "id",
@@ -139,7 +158,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                 '<span class="row_input"><input type="checkbox" style="display: none;" onclick="checkAllDataTable(\'{{ oUIBlock.GetId() }}\',this.checked,\'{{ oUIBlock.GetOption("sListId") }}\');" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}"/></span>'
             {% endif %},
             type: "html",
-            data: "",
+            data: "id",
             render: function (data, type, row) {
                 let oCheckboxElem =
                 {% if oUIBlock.GetOption("select_mode") != "single" %}
@@ -189,6 +208,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             }
         },
         {% endfor %}
+        {% if oUIBlock.HasRowActions() %}
+            getRowActionsColumnDefinition('{{ oUIBlock.GetId() }}'),
+        {% endif %}
     ],
     ajax: $.fn.dataTable.pipeline({
                 url: "{{ oUIBlock.GetAjaxUrl() }}",
@@ -205,7 +227,6 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         }
     },
     initComplete: function () {
-        this.api().columns.adjust().draw();
         if (this.api().page.info().pages < 2)
         {
             this.closest('.dataTables_wrapper').find('.dataTables_length').hide();
@@ -332,12 +353,25 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% endfor %}
         {% endif %}
         {% endif %}
+        
+        // Set header and body datatables status as loaded
+        this.attr('data-status', 'loaded');
+        this.closest('.dataTables_scroll').find('.dataTables_scrollHead .ibo-datatable').attr('data-status', 'loaded');
     }
 });
 
 oTable{{ sListIDForVarSuffix }}.select();
 
+$('#{{ oUIBlock.GetId() }}').on('refresh.datatable.itop', function (){
+    oTable{{ sListIDForVarSuffix }}.clearPipeline();
+    oTable{{ sListIDForVarSuffix }}.ajax.reload(null, false);
+});
 
+{% if oUIBlock.GetModalCreationHandler() is not empty %}
+$('body').on('open_creation_modal.object.itop','#{{ oUIBlock.GetId() }}', function (){
+    {{ oUIBlock.GetModalCreationHandler() | raw}}
+});
+{% endif %}
 
 {% if oUIBlock.GetOption('sCountSelector') is not empty %}
 $('#{{ sListId }} [name="selectionCount"]').bind('change', function () {
@@ -360,7 +394,23 @@ $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
                 {
                     $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgCancel');
                 }
-            }
+            },
+            buttons: [
+                {
+                    text: "{{ 'UI:Button:Cancel'|dict_s }}",
+                    class: "ibo-is-alternative ibo-is-neutral",
+                    click: function() {
+                        $(this).dialog( "close" );
+                    }
+                },
+                {
+                    text: "{{ 'UI:Button:Ok'|dict_s }}",
+                    class: "ibo-is-regular ibo-is-primary",
+                    click: function() {
+                        $(this).DataTableSettings('onDlgOk');
+                    }
+                }
+            ]
         });
 
 var aOptions{{ sListIDForVarSuffix }} = {
@@ -369,13 +419,14 @@ var aOptions{{ sListIDForVarSuffix }} = {
     sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
     sSelectedItemsName: "oSelectedItems{{ sListIDForVarSuffix }}",
     sViewLink: '{{ oUIBlock.GetOption("bViewLink") }}',
-    iPageSize: ' {{ iPageSize }}',
+    iPageSize: {{ iPageSize }},
     oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw }}'),
     sTableId: '{{ oUIBlock.GetOption("sTableId") }}',
     sRenderUrl: "{{ oUIBlock.GetAjaxUrl() }}",
     oData: {{ oUIBlock.GetJsonAjaxData() |raw }},
     oDefaultSettings: {{ oUIBlock.GetOption("oDefaultSettings")|raw }},
     oLabels: {moveup: "{{ 'UI:Button:MoveUp'|dict_s }}", movedown: "{{ 'UI:Button:MoveDown'|dict_s }}"},
+    bHasRowActions: {{ oUIBlock.HasRowActions()|var_export }},
 };
 
 if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable'))
@@ -394,3 +445,7 @@ if(window.ResizeObserver){
         });
         oTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
 }
+
+{% if oUIBlock.HasRowActions() %}
+    {% include 'base/components/datatable/row-actions/handler.js.twig' %}
+{% endif %}

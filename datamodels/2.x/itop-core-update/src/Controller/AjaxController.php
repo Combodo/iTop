@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -13,18 +13,56 @@ use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 use Combodo\iTop\DBTools\Service\DBToolsUtils;
 use Combodo\iTop\FilesInformation\Service\FileNotExistException;
 use Combodo\iTop\FilesInformation\Service\FilesInformation;
+use ContextTag;
 use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use SecurityException;
 use SetupUtils;
 use utils;
 
 class AjaxController extends Controller
 {
+	public const ROUTE_NAMESPACE = 'core_update_ajax';
+	protected $oCtxCoreUpdate;
+
+	/**
+	 * @param $sViewPath
+	 * @param $sModuleName
+	 * @param $aAdditionalPaths
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
+	 */
+	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
+	{
+		if (!defined('MODULESROOT'))
+		{
+			define('MODULESROOT', APPROOT.'env-production/');
+		}
+
+		require_once(MODULESROOT.'itop-core-update/src/Service/RunTimeEnvironmentCoreUpdater.php');
+		require_once(MODULESROOT.'itop-core-update/src/Service/CoreUpdater.php');
+		require_once(MODULESROOT.'itop-core-update/src/Controller/AjaxController.php');
+
+		MetaModel::LoadConfig(utils::GetConfig());
+
+		$sViewPath = MODULESROOT.'itop-core-update/templates';
+		$sModuleName = 'itop-core-update';
+		parent::__construct($sViewPath, $sModuleName, $aAdditionalPaths);
+
+		$this->DisableInDemoMode();
+		$this->AllowOnlyAdmin();
+		$this->CheckAccess();
+		$this->oCtxCoreUpdate = new ContextTag(ContextTag::TAG_SETUP);
+	}
+
 	public function OperationCanUpdateCore()
 	{
-		$aParams = array();
+		$aParams = [];
 
 		try
 		{
@@ -38,7 +76,9 @@ class AjaxController extends Controller
 			else
 			{
 				$sLink = utils::GetAbsoluteUrlAppRoot().'setup/';
-				$aParams['sMessage']  = Dict::Format('iTopUpdate:UI:CannotUpdateUseSetup', $sLink);
+				$sLinkManualUpdate = 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Ainstall%3Aupgrading_itop#manually';
+				$aParams['sMessage']  = Dict::Format('iTopUpdate:UI:CannotUpdateUseSetup', $sLink, $sLinkManualUpdate);
+				$aParams['sMessageDetails']  = $sMessage;
 			}
 		} catch (FileNotExistException $e)
 		{
@@ -55,7 +95,7 @@ class AjaxController extends Controller
 
 	public function OperationGetItopDiskSpace()
 	{
-		$aParams = array();
+		$aParams = [];
 		$aParams['iItopDiskSpace'] = FilesInformation::GetItopDiskSpace();
 		$aParams['sItopDiskSpace'] = utils::BytesToFriendlyFormat($aParams['iItopDiskSpace']);
 		$this->DisplayJSONPage($aParams);
@@ -63,7 +103,7 @@ class AjaxController extends Controller
 
 	public function OperationGetDBDiskSpace()
 	{
-		$aParams = array();
+		$aParams = [];
 		$aParams['iDBDiskSpace'] = DBToolsUtils::GetDatabaseSize();
 		$aParams['sDBDiskSpace'] = utils::BytesToFriendlyFormat($aParams['iDBDiskSpace']);
 		$this->DisplayJSONPage($aParams);
@@ -71,14 +111,14 @@ class AjaxController extends Controller
 
 	public function OperationGetCurrentVersion()
 	{
-		$aParams = array();
+		$aParams = [];
 		$aParams['sVersion'] = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
 		$this->DisplayJSONPage($aParams);
 	}
 
 	public function OperationEnterMaintenance()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -95,7 +135,7 @@ class AjaxController extends Controller
 
 	public function OperationExitMaintenance()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken(true);
@@ -112,7 +152,7 @@ class AjaxController extends Controller
 
 	public function OperationBackup()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -129,7 +169,7 @@ class AjaxController extends Controller
 
 	public function OperationFilesArchive()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -146,7 +186,7 @@ class AjaxController extends Controller
 
 	public function OperationCopyFiles()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -164,7 +204,7 @@ class AjaxController extends Controller
 
 	public function OperationCheckCompile()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -183,7 +223,7 @@ class AjaxController extends Controller
 
 	public function OperationCompile()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
@@ -202,20 +242,37 @@ class AjaxController extends Controller
 
 	public function OperationUpdateDatabase()
 	{
-		$aParams = array();
+		$aParams = [];
 		try
 		{
 			SetupUtils::CheckSetupToken();
 			CoreUpdater::UpdateDatabase();
 			$iResponseCode = 200;
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			IssueLog::Error("Compile: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();
 			$iResponseCode = 500;
 		}
 
 		$this->DisplayJSONPage($aParams, $iResponseCode);
+	}
+
+	/**
+	 * @throws \SecurityException if CSRF token invalid
+	 *
+	 * @since 3.1.0 N°4919
+	 */
+	public function OperationLaunchSetup()
+	{
+		$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
+		if (false === utils::IsTransactionValid($sTransactionId)) {
+			throw new SecurityException('Access forbidden');
+		}
+
+		$sConfigFile = APPCONF.'production/config-itop.php';
+		@chmod($sConfigFile, 0770); // Allow overwriting the file
+
+		header('Location: ../setup/');
 	}
 }

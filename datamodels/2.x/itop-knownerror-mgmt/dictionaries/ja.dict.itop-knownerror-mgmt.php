@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
@@ -59,9 +59,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:KnownError/Attribute:version' => 'バージョン',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'CI',
-	'Class:KnownError/Attribute:ci_list+' => '',
+	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
 	'Class:KnownError/Attribute:document_list' => '文書',
-	'Class:KnownError/Attribute:document_list+' => '',
+	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
 ));
 
 //
@@ -71,6 +71,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkErrorToFunctionalCI' => 'リンク エラー/機能的CI',
 	'Class:lnkErrorToFunctionalCI+' => '既知のエラーに関連するインフラ',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI名',
@@ -90,6 +91,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkDocumentToError' => 'リンク 文書/エラー',
 	'Class:lnkDocumentToError+' => '文書と既知のエラー間のリンク',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => '文書',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => '文書名',

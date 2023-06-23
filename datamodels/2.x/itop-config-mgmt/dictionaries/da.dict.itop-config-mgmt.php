@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -30,6 +30,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Relation:depends on/Description' => 'Elementer, som afhænger af dette element',
 	'Relation:depends on/DownStream' => 'Afhænger af ...',
 	'Relation:depends on/UpStream' => 'Påvirker ...',
+	'Relation:impacts/LoadData' => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 
@@ -77,6 +79,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkContactToFunctionalCI' => 'Sammenhæng Kontakt/FunctionalCI',
 	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI navn',
@@ -113,16 +116,17 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:FunctionalCI/Attribute:move2production' => 'Overgået til produktions dato',
 	'Class:FunctionalCI/Attribute:move2production+' => 'Dato for overgang til produktion',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Kontakter',
-	'Class:FunctionalCI/Attribute:contacts_list+' => '',
+	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contacts for this configuration item~~',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Dokumenter',
-	'Class:FunctionalCI/Attribute:documents_list+' => '',
+	'Class:FunctionalCI/Attribute:documents_list+' => 'All the documents linked to this configuration item~~',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Applikations løsning',
-	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
+	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'All the application solutions depending on this configuration item~~',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
-	'Class:FunctionalCI/Attribute:softwares_list+' => '',
+	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the softwares installed on this configuration item~~',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Type',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
+	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
 ));
 
 //
@@ -132,6 +136,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:PhysicalDevice' => 'Fysiske enheder',
 	'Class:PhysicalDevice+' => '',
+	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Seriennummer',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
 	'Class:PhysicalDevice/Attribute:location_id' => 'Placering',
@@ -171,12 +176,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '',
+	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Rack/Attribute:nb_u' => 'NB U',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Enheder',
-	'Class:Rack/Attribute:device_list+' => '',
+	'Class:Rack/Attribute:device_list+' => 'All the physical devices racked into this rack~~',
 	'Class:Rack/Attribute:enclosure_list' => 'Enclosures',
-	'Class:Rack/Attribute:enclosure_list+' => '',
+	'Class:Rack/Attribute:enclosure_list+' => 'All the enclosures in this rack~~',
 ));
 
 //
@@ -237,10 +243,11 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ConnectableCI' => 'Forbindbare CI',
 	'Class:ConnectableCI+' => 'Fysiske CI',
+	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Netværks enheder',
-	'Class:ConnectableCI/Attribute:networkdevice_list+' => '',
+	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device~~',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Netværks interfaces',
-	'Class:ConnectableCI/Attribute:physicalinterface_list+' => '',
+	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'All the physical network interfaces~~',
 ));
 
 //
@@ -250,6 +257,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:DatacenterDevice' => 'Datacenterenhed',
 	'Class:DatacenterDevice+' => '',
+	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '',
 	'Class:DatacenterDevice/Attribute:rack_name' => 'Racknavn',
@@ -271,9 +279,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'PowerB kildenavn',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC Porte',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'All the fiber channel interfaces for this device~~',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
-	'Class:DatacenterDevice/Attribute:san_list+' => '',
+	'Class:DatacenterDevice/Attribute:san_list+' => 'All the SAN switches connected to this device~~',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy~~',
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up~~',
 	// Unused yet
@@ -288,12 +296,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:NetworkDevice' => 'Netværks enhed',
 	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Netværks type',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Netværktypenavn',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Enhed',
-	'Class:NetworkDevice/Attribute:connectablecis_list+' => '',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'All the devices connected to this network device~~',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOS Version',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOS versionsnavn',
@@ -309,6 +318,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Server' => 'Server',
 	'Class:Server+' => '',
+	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Server/Attribute:osfamily_id' => 'OS Familie',
 	'Class:Server/Attribute:osfamily_id+' => '',
 	'Class:Server/Attribute:osfamily_name' => 'OS familienavn',
@@ -326,7 +336,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Server/Attribute:ram' => 'RAM',
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logical Volumes',
-	'Class:Server/Attribute:logicalvolumes_list+' => '',
+	'Class:Server/Attribute:logicalvolumes_list+' => 'All the logical volumes connected to this server~~',
 ));
 
 //
@@ -336,8 +346,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:StorageSystem' => 'Storage-System',
 	'Class:StorageSystem+' => '',
+	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logical Volumes',
-	'Class:StorageSystem/Attribute:logicalvolume_list+' => '',
+	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system~~',
 ));
 
 //
@@ -347,8 +358,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SANSwitch' => 'SAN-Switch',
 	'Class:SANSwitch+' => '',
+	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Enhed',
-	'Class:SANSwitch/Attribute:datacenterdevice_list+' => '',
+	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'All the devices connected to this SAN switch~~',
 ));
 
 //
@@ -358,8 +370,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:TapeLibrary' => 'Tape-Library',
 	'Class:TapeLibrary+' => '',
+	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Bånd',
-	'Class:TapeLibrary/Attribute:tapes_list+' => '',
+	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library~~',
 ));
 
 //
@@ -369,8 +382,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
+	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'NAS filsystem liste',
-	'Class:NAS/Attribute:nasfilesystem_list+' => '',
+	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS~~',
 ));
 
 //
@@ -380,6 +394,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:PC' => 'PC',
 	'Class:PC+' => '',
+	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PC/Attribute:osfamily_id' => 'OS-Familie',
 	'Class:PC/Attribute:osfamily_id+' => '',
 	'Class:PC/Attribute:osfamily_name' => 'OS familienavn',
@@ -407,6 +422,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Printer' => 'Printer',
 	'Class:Printer+' => '',
+	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -416,6 +432,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:PowerConnection' => 'Strømtilslutning',
 	'Class:PowerConnection+' => '',
+	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -425,8 +442,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:PowerSource' => 'Strømkilde',
 	'Class:PowerSource+' => '',
+	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
-	'Class:PowerSource/Attribute:pdus_list+' => '',
+	'Class:PowerSource/Attribute:pdus_list+' => 'All the PDUs using this power source~~',
 ));
 
 //
@@ -436,6 +454,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '',
+	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
 	'Class:PDU/Attribute:rack_id+' => '',
 	'Class:PDU/Attribute:rack_name' => 'Racknavn',
@@ -453,6 +472,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Peripheral' => 'Perifer enhed',
 	'Class:Peripheral+' => '',
+	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -462,6 +482,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Enclosure' => 'Enclosure',
 	'Class:Enclosure+' => '',
+	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => '',
 	'Class:Enclosure/Attribute:rack_name' => 'Racknavn',
@@ -469,7 +490,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Enclosure/Attribute:nb_u' => 'NB U',
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'Enhed',
-	'Class:Enclosure/Attribute:device_list+' => '',
+	'Class:Enclosure/Attribute:device_list+' => 'All the devices in this enclosure~~',
 ));
 
 //
@@ -480,9 +501,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ApplicationSolution' => 'Anvendelsområde',
 	'Class:ApplicationSolution+' => 'Hvilken applikations løsning anvendes den i?',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
-	'Class:ApplicationSolution/Attribute:functionalcis_list+' => '',
+	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution~~',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Forretningsprocesser',
-	'Class:ApplicationSolution/Attribute:businessprocess_list+' => '',
+	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'All the business processes depending on this application solution~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Aktiv',
@@ -549,7 +570,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware-Instans(er)',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => '',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware~~',
 ));
 
 //
@@ -560,7 +581,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:DBServer' => 'DB Server',
 	'Class:DBServer+' => '',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB Schema',
-	'Class:DBServer/Attribute:dbschema_list+' => '',
+	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server~~',
 ));
 
 //
@@ -571,7 +592,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:WebServer' => 'Web Server',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Web Applikationer',
-	'Class:WebServer/Attribute:webapp_list+' => '',
+	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server~~',
 ));
 
 //
@@ -599,6 +620,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:MiddlewareInstance' => 'Middleware instans',
 	'Class:MiddlewareInstance+' => '',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware navn',
@@ -612,6 +634,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:DatabaseSchema' => 'Datenbase schema',
 	'Class:DatabaseSchema+' => '',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB-Server',
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'DB servernavn',
@@ -625,6 +648,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:WebApplication' => 'Webapplikation',
 	'Class:WebApplication+' => '',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:WebApplication/Attribute:webserver_id' => 'Web server',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Web servernavn',
@@ -652,7 +676,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Lager',
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => '',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logiske Volumes',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => '',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'All the logical volumes used by this device~~',
 ));
 
 //
@@ -663,7 +687,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:VirtualHost' => 'Host',
 	'Class:VirtualHost+' => '',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuelle Maskiner',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => '',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host~~',
 ));
 
 //
@@ -691,7 +715,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Farm' => 'Farm',
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisorer',
-	'Class:Farm/Attribute:hypervisor_list+' => '',
+	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm~~',
 	'Class:Farm/Attribute:redundancy' => 'High availability~~',
 	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
 	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
@@ -705,6 +729,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:VirtualMachine' => 'Virtuel Maskine',
 	'Class:VirtualMachine+' => '',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Host',
 	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
 	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Hostnavn',
@@ -728,7 +753,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:VirtualMachine/Attribute:managementip' => 'IP~~',
 	'Class:VirtualMachine/Attribute:managementip+' => '~~',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Netværks interface',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => '',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces~~',
 ));
 
 //
@@ -753,9 +778,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Storage systemnavn',
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
 	'Class:LogicalVolume/Attribute:servers_list' => 'Server',
-	'Class:LogicalVolume/Attribute:servers_list+' => '',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'All the servers using this volume~~',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuelle enheder',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => '',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'All the virtual devices using this volume~~',
 ));
 
 //
@@ -765,6 +790,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkServerToVolume' => 'Sammenhæng Server/Volume',
 	'Class:lnkServerToVolume+' => '',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
 	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
 	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
 	'Class:lnkServerToVolume/Attribute:volume_name' => 'Volume navn',
@@ -784,6 +810,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkVirtualDeviceToVolume' => 'Sammenhæng virtuel enhed/volume',
 	'Class:lnkVirtualDeviceToVolume+' => '',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Volume navn',
@@ -803,6 +830,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkSanToDatacenterDevice' => 'Sammenhæng SAN/Datacenterenhed',
 	'Class:lnkSanToDatacenterDevice+' => '',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN Switch',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN Switchnavn',
@@ -864,6 +892,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Software' => 'Software',
 	'Class:Software+' => '',
+	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Software/Attribute:name' => 'Navn',
 	'Class:Software/Attribute:name+' => '',
 	'Class:Software/Attribute:vendor' => 'Producent',
@@ -871,7 +900,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Software/Attribute:version' => 'Version',
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Dokument',
-	'Class:Software/Attribute:documents_list+' => '',
+	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software~~',
 	'Class:Software/Attribute:type' => 'Type',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server',
@@ -885,11 +914,11 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Software/Attribute:type/Value:WebServer' => 'Web server',
 	'Class:Software/Attribute:type/Value:WebServer+' => '',
 	'Class:Software/Attribute:softwareinstance_list' => 'Software Instanser',
-	'Class:Software/Attribute:softwareinstance_list+' => '',
+	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software~~',
 	'Class:Software/Attribute:softwarepatch_list' => 'Software Patches',
-	'Class:Software/Attribute:softwarepatch_list+' => '',
+	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software~~',
 	'Class:Software/Attribute:softwarelicence_list' => 'Software Licenser',
-	'Class:Software/Attribute:softwarelicence_list+' => '',
+	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software~~',
 ));
 
 //
@@ -902,7 +931,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Patch/Attribute:name' => 'Navn',
 	'Class:Patch/Attribute:name+' => '',
 	'Class:Patch/Attribute:documents_list' => 'Dokumenter',
-	'Class:Patch/Attribute:documents_list+' => '',
+	'Class:Patch/Attribute:documents_list+' => 'All the documents linked to this patch~~',
 	'Class:Patch/Attribute:description' => 'Beskrivelse',
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Type',
@@ -917,7 +946,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:OSPatch' => 'OS-Patch',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Enhed',
-	'Class:OSPatch/Attribute:functionalcis_list+' => '',
+	'Class:OSPatch/Attribute:functionalcis_list+' => 'All the systems where this patch is installed~~',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS Version',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS versionsnavn',
@@ -936,7 +965,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SoftwarePatch/Attribute:software_name' => 'Software navn',
 	'Class:SoftwarePatch/Attribute:software_name+' => '',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Software Instanser',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => '',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'All the systems where this software patch is installed~~',
 ));
 
 //
@@ -949,7 +978,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Licence/Attribute:name' => 'Navn',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Dokumenter',
-	'Class:Licence/Attribute:documents_list+' => '',
+	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this license~~',
 	'Class:Licence/Attribute:org_id' => 'Ejer',
 	'Class:Licence/Attribute:org_id+' => '',
 	'Class:Licence/Attribute:organization_name' => 'Organisationsnavn',
@@ -981,14 +1010,15 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:OSLicence' => 'OS-Licens',
 	'Class:OSLicence+' => '',
+	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS-Version',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS versionsnavn',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuelle Maskiner',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => '',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this license is used~~',
 	'Class:OSLicence/Attribute:servers_list' => 'Server',
-	'Class:OSLicence/Attribute:servers_list+' => '',
+	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this license is used~~',
 ));
 
 //
@@ -998,12 +1028,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SoftwareLicence' => 'Software-Licens',
 	'Class:SoftwareLicence+' => '',
+	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Software navn',
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software Instanser',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => '',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this license is used~~',
 ));
 
 //
@@ -1013,6 +1044,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDocumentToLicence' => 'Sammenhæng Dokument/Licens',
 	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licens',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
 	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Licensnavn',
@@ -1053,7 +1085,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Brand' => 'Mærke',
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Fysisk enhed',
-	'Class:Brand/Attribute:physicaldevices_list+' => '',
+	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand~~',
 	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
 	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
 ));
@@ -1065,6 +1097,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Model' => 'Model',
 	'Class:Model+' => '',
+	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Model/Attribute:brand_id' => 'Mærke',
 	'Class:Model/Attribute:brand_id+' => '',
 	'Class:Model/Attribute:brand_name' => 'Mærkenavn',
@@ -1108,7 +1141,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Model/Attribute:type/Value:Phone' => 'Telephone~~',
 	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
 	'Class:Model/Attribute:physicaldevices_list' => 'Fyisk enhed',
-	'Class:Model/Attribute:physicaldevices_list+' => '',
+	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model~~',
 	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
 ));
@@ -1121,7 +1154,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:NetworkDeviceType' => 'Netværksenhed type',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Netværks enheder',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => '',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type~~',
 ));
 
 //
@@ -1144,6 +1177,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDocumentToPatch' => 'Sammenhæng Dokument/Patch',
 	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
 	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Patch navn',
@@ -1161,6 +1195,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Sammenhæng Software-Instans/Softeware-Patch',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Software Patch',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Software Patch navn',
@@ -1178,6 +1213,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkFunctionalCIToOSPatch' => 'Sammenhæng FunctionalCI/OS-Patch',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'OS Patch',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'OS-Patch-Navn',
@@ -1195,6 +1231,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDocumentToSoftware' => 'Sammenhæng Dokument/Software',
 	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Software',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Software navn',
@@ -1212,6 +1249,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Subnet' => 'Subnet',
 	'Class:Subnet+' => '',
+	'Class:Subnet/Name' => '%1$s/%2$s~~',
+	'Class:Subnet/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Subnet/Attribute:description' => 'Beskrivelse',
 	'Class:Subnet/Attribute:description+' => '',
 	'Class:Subnet/Attribute:subnet_name' => 'Subnet name~~',
@@ -1256,6 +1295,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkSubnetToVLAN' => 'Link Subnet / VLAN~~',
 	'Class:lnkSubnetToVLAN+' => '~~',
+	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'Subnet IP~~',
@@ -1290,8 +1330,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP Adresse',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
-
-
 	'Class:IPInterface/Attribute:macaddress' => 'MAC Adresse',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Kommentar',
@@ -1311,6 +1349,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:PhysicalInterface' => 'Fysiske interface',
 	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Enhed',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Enhedsnavn',
@@ -1326,6 +1365,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Link PhysicalInterface / VLAN~~',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '~~',
+	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Physical Interface~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Physical Interface Name~~',
@@ -1380,6 +1420,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkConnectableCIToNetworkDevice' => 'Sammenhæng ConnectableCI/NetworkDevice',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Netværks enhed',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Netværksenhed navn',
@@ -1407,6 +1448,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Sammenhæng Applikationssuite/FunctionalCI',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Applikations løsning',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Applikations løsning navn',
@@ -1424,6 +1466,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Sammenhæng Applikationssuite/Forretningsproces',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Forretningsproces',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Forretningsproces navn',
@@ -1441,6 +1484,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Group' => 'Gruppe',
 	'Class:Group+' => '',
+	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Group/Attribute:name' => 'Navn',
 	'Class:Group/Attribute:name+' => '',
 	'Class:Group/Attribute:status' => 'Status',
@@ -1460,12 +1504,11 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Group/Attribute:type' => 'Typ',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Parent id',
-
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Navn',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'Forbundne CIs',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent Gruppe',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
 ));
@@ -1477,6 +1520,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkGroupToCI' => 'Gruppe/CI',
 	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Gruppe',
 	'Class:lnkGroupToCI/Attribute:group_id+' => '',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Navn',
@@ -1498,6 +1542,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Server:otherinfo' => 'Øvrig Information',
 	'Server:power' => 'Power supply~~',
 	'Class:Subnet/Tab:IPUsage' => 'IP Brug',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet are used or not~~',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces der har en IP i området: <em>%1$s</em> til <em>%2$s</em>',
 	'Class:Subnet/Tab:FreeIPs' => 'Ledige IP',
 	'Class:Subnet/Tab:FreeIPs-count' => 'Ledige IP: %1$s',
@@ -1513,6 +1558,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDocumentToFunctionalCI' => 'Sammenhæng Dokument/FunctionalCI',
 	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI navn',

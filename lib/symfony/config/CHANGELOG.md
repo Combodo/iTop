@@ -1,6 +1,57 @@
 CHANGELOG
 =========
 
+5.3.0
+-----
+
+ * Add support for generating `ConfigBuilder` for extensions
+
+5.1.0
+-----
+
+ * updated the signature of method `NodeDefinition::setDeprecated()` to `NodeDefinition::setDeprecation(string $package, string $version, string $message)`
+ * updated the signature of method `BaseNode::setDeprecated()` to `BaseNode::setDeprecation(string $package, string $version, string $message)`
+ * deprecated passing a null message to `BaseNode::setDeprecated()` to un-deprecate a node
+ * deprecated `BaseNode::getDeprecationMessage()`, use `BaseNode::getDeprecation()` instead
+
+5.0.0
+-----
+
+ * Dropped support for constructing a `TreeBuilder` without passing root node information.
+ * Removed the `root()` method in `TreeBuilder`, pass the root node information to the constructor instead
+ * Added method `getChildNodeDefinitions()` to ParentNodeDefinitionInterface
+ * Removed `FileLoaderLoadException`, use `LoaderLoadException` instead
+
+4.4.0
+-----
+
+ * added a way to exclude patterns of resources from being imported by the `import()` method
+
+4.3.0
+-----
+
+ * deprecated using environment variables with `cannotBeEmpty()` if the value is validated with `validate()`
+ * made `Resource\*` classes final and not implement `Serializable` anymore
+ * deprecated the `root()` method in `TreeBuilder`, pass the root node information to the constructor instead
+
+4.2.0
+-----
+
+ * deprecated constructing a `TreeBuilder` without passing root node information
+ * renamed `FileLoaderLoadException` to `LoaderLoadException`
+
+4.1.0
+-----
+
+ * added `setPathSeparator` method to `NodeBuilder` class
+ * added third `$pathSeparator` constructor argument to `BaseNode`
+ * the `Processor` class has been made final
+
+4.0.0
+-----
+
+ * removed `ConfigCachePass`
+
 3.4.0
 -----
 

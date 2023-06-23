@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="StorageSystem" _delta="define">
       <parent>DatacenterDevice</parent>
@@ -14,6 +14,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-server-storage.svg</icon>
@@ -34,6 +38,8 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>property</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -62,12 +68,6 @@
             </item>
             <item id="san_list">
               <rank>80</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>90</rank>
-            </item>
-            <item id="services_list">
-              <rank>100</rank>
             </item>
             <item id="col:col1">
               <rank>110</rank>
@@ -240,6 +240,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -265,6 +278,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-switch-san.svg</icon>
@@ -285,6 +302,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>datacenterdevice_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -310,12 +328,6 @@
             </item>
             <item id="datacenterdevice_list">
               <rank>70</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>80</rank>
-            </item>
-            <item id="services_list">
-              <rank>90</rank>
             </item>
             <item id="col:col1">
               <rank>100</rank>
@@ -488,6 +500,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="model_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -513,6 +538,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-tape-library.svg</icon>
@@ -533,6 +562,8 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>property</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -559,12 +590,6 @@
             <item id="networkdevice_list">
               <rank>70</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>80</rank>
-            </item>
-            <item id="services_list">
-              <rank>90</rank>
-            </item>
             <item id="col:col1">
               <rank>100</rank>
               <items>
@@ -736,6 +761,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -761,6 +799,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-nas.svg</icon>
@@ -781,6 +823,8 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>property</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -807,12 +851,6 @@
             <item id="nasfilesystem_list">
               <rank>70</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>80</rank>
-            </item>
-            <item id="services_list">
-              <rank>90</rank>
-            </item>
             <item id="col:col1">
               <rank>100</rank>
               <items>
@@ -984,6 +1022,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="model_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -1103,6 +1154,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="nas_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-map-as-drive.svg</icon>
@@ -1148,6 +1203,18 @@
           <extkey_attcode>nas_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>nas_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>nas_id</extkey_attcode>
+          <target_attcode>location_id</target_attcode>
+        </field>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>nas_id</extkey_attcode>
+          <target_attcode>location_name</target_attcode>
+        </field>
       </fields>
       <presentation>
         <details>
@@ -1155,17 +1222,23 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="description">
+            <item id="nas_id">
               <rank>20</rank>
             </item>
-            <item id="nas_id">
+            <item id="location_id">
               <rank>30</rank>
             </item>
-            <item id="raid_level">
+            <item id="org_id">
               <rank>40</rank>
             </item>
-            <item id="size">
+            <item id="description">
               <rank>50</rank>
+            </item>
+            <item id="raid_level">
+              <rank>60</rank>
+            </item>
+            <item id="size">
+              <rank>70</rank>
             </item>
           </items>
         </details>
@@ -1195,6 +1268,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="nas_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="raid_level">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>
@@ -1255,6 +1344,14 @@
           <extkey_attcode>datacenterdevice_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>datacenterdevice_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>datacenterdevice_id</extkey_attcode>
+          <target_attcode>location_id</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -1266,14 +1363,20 @@
             <item id="datacenterdevice_id">
               <rank>20</rank>
             </item>
-            <item id="speed">
+            <item id="location_id">
               <rank>30</rank>
             </item>
-            <item id="topology">
+            <item id="org_id">
               <rank>40</rank>
             </item>
-            <item id="wwn">
+            <item id="speed">
               <rank>50</rank>
+            </item>
+            <item id="topology">
+              <rank>60</rank>
+            </item>
+            <item id="wwn">
+              <rank>70</rank>
             </item>
           </items>
         </details>
@@ -1306,6 +1409,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="wwn">
+              <rank>10</rank>
+            </item>
+            <item id="datacenterdevice_id">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="LogicalVolume" _delta="define">
@@ -1322,6 +1441,9 @@
             <attribute id="storagesystem_name"/>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="lun_id"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-hdd.svg</icon>
@@ -1374,6 +1496,18 @@
           <extkey_attcode>storagesystem_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>storagesystem_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>storagesystem_id</extkey_attcode>
+          <target_attcode>location_id</target_attcode>
+        </field>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>storagesystem_id</extkey_attcode>
+          <target_attcode>location_name</target_attcode>
+        </field>
         <field id="servers_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkServerToVolume</linked_class>
           <ext_key_to_me>volume_id</ext_key_to_me>
@@ -1381,6 +1515,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>server_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
         <field id="virtualdevices_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkVirtualDeviceToVolume</linked_class>
@@ -1389,6 +1524,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>virtualdevice_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -1400,23 +1536,29 @@
             <item id="lun_id">
               <rank>20</rank>
             </item>
-            <item id="description">
+            <item id="storagesystem_id">
               <rank>30</rank>
             </item>
-            <item id="storagesystem_id">
+            <item id="location_id">
               <rank>40</rank>
             </item>
-            <item id="raid_level">
+            <item id="org_id">
               <rank>50</rank>
             </item>
-            <item id="size">
+            <item id="description">
               <rank>60</rank>
             </item>
-            <item id="servers_list">
+            <item id="raid_level">
               <rank>70</rank>
             </item>
-            <item id="virtualdevices_list">
+            <item id="size">
               <rank>80</rank>
+            </item>
+            <item id="servers_list">
+              <rank>90</rank>
+            </item>
+            <item id="virtualdevices_list">
+              <rank>100</rank>
             </item>
           </items>
         </details>
@@ -1428,11 +1570,17 @@
             <item id="lun_id">
               <rank>20</rank>
             </item>
-            <item id="storagesystem_id">
+            <item id="raid_level">
               <rank>30</rank>
             </item>
-            <item id="raid_level">
+            <item id="storagesystem_id">
               <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>70</rank>
+            </item>
+            <item id="org_id">
+              <rank>80</rank>
             </item>
           </items>
         </search>
@@ -1450,8 +1598,36 @@
             <item id="size">
               <rank>40</rank>
             </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="lun_id">
+              <rank>10</rank>
+            </item>
+            <item id="raid_level">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="storagesystem_id">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -1476,16 +1652,30 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="volume_id"/>
+            <attribute id="server_name"/>
+            <attribute id="volume_name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="volume_id"/>
             <attribute id="server_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="server_id"/>
+              <attribute id="volume_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="volume_id" xsi:type="AttributeExternalKey">
@@ -1518,10 +1708,10 @@
       <presentation>
         <details>
           <items>
-            <item id="volume_id">
+            <item id="server_id">
               <rank>10</rank>
             </item>
-            <item id="server_id">
+            <item id="volume_id">
               <rank>20</rank>
             </item>
             <item id="size_used">
@@ -1541,10 +1731,10 @@
         </search>
         <list>
           <items>
-            <item id="volume_id">
+            <item id="server_id">
               <rank>10</rank>
             </item>
-            <item id="server_id">
+            <item id="volume_id">
               <rank>20</rank>
             </item>
             <item id="size_used">
@@ -1566,16 +1756,30 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="san_id"/>
+            <attribute id="san_name"/>
+            <attribute id="datacenterdevice_name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="san_id"/>
             <attribute id="datacenterdevice_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="san_id"/>
+              <attribute id="datacenterdevice_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="san_id" xsi:type="AttributeExternalKey">

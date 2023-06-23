@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'itop-tickets/3.0.0',
+	'itop-tickets/3.1.0',
 	array(
 		// Identification
 		//
@@ -23,7 +23,6 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'main.itop-tickets.php',
-			'model.itop-tickets.php',
 		),
 		'data.struct' => array(
 	//		'data.struct.ta-actions.xml',
@@ -76,7 +75,7 @@ class TicketsInstaller extends ModuleInstallerAPI
 				&& version_compare($sPreviousVersion, '3.0.0', '<'))) {
 			$oDataLoader = new XMLDataLoader();
 
-			CMDBObject::SetTrackInfo("Initialization");
+			CMDBObject::SetTrackInfo("Initialization TicketsInstaller");
 			$oMyChange = CMDBObject::GetCurrentChange();
 
 			$sLang = null;

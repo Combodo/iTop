@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="VirtualDevice" _delta="define">
       <parent>FunctionalCI</parent>
@@ -14,11 +14,16 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
-            <state_attribute>status</state_attribute>
+          <state_attribute>status</state_attribute>
         </fields_semantic>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -33,18 +38,23 @@
       </properties>
       <fields>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="production">
               <code>production</code>
+              <rank>30</rank>
             </value>
             <value id="implementation">
               <code>implementation</code>
+              <rank>20</rank>
             </value>
             <value id="stock">
               <code>stock</code>
+              <rank>10</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>40</rank>
             </value>
           </values>
           <sql>status</sql>
@@ -59,6 +69,7 @@
           <count_max>0</count_max>
           <ext_key_to_remote>volume_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -150,8 +161,13 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -168,6 +184,8 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -268,6 +286,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-hypervisor.svg</icon>
@@ -349,12 +370,6 @@
             <item id="virtualmachine_list">
               <rank>120</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>130</rank>
-            </item>
-            <item id="services_list">
-              <rank>140</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -392,6 +407,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="server_id">
+              <rank>20</rank>
+            </item>
+            <item id="farm_id">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
       <relations>
@@ -417,6 +451,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-farm.svg</icon>
@@ -436,6 +473,8 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="redundancy" xsi:type="AttributeRedundancySettings">
           <sql>redundancy</sql>
@@ -488,12 +527,6 @@
             <item id="virtualmachine_list">
               <rank>110</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>120</rank>
-            </item>
-            <item id="services_list">
-              <rank>130</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -528,6 +561,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>
@@ -544,6 +590,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="virtualhost_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-virtual-machine.svg</icon>
@@ -626,6 +676,8 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>property</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="managementip" xsi:type="AttributeIPAddress">
           <sql>managementip</sql>
@@ -653,12 +705,6 @@
             </item>
             <item id="logicalvolumes_list">
               <rank>60</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>70</rank>
-            </item>
-            <item id="services_list">
-              <rank>80</rank>
             </item>
             <item id="col:col1">
               <rank>90</rank>
@@ -761,6 +807,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="virtualhost_id">
+              <rank>20</rank>
+            </item>
+            <item id="managementip">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>
@@ -800,6 +865,10 @@
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>virtualmachine_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
         <field id="virtualmachine_name" xsi:type="AttributeExternalField">
           <extkey_attcode>virtualmachine_id</extkey_attcode>
           <target_attcode>name</target_attcode>
@@ -810,28 +879,31 @@
         <details>
           <items>
             <item id="name">
-              <rank>5</rank>
-            </item>
-            <item id="ipaddress">
               <rank>10</rank>
             </item>
-            <item id="macaddress">
+            <item id="virtualmachine_id">
               <rank>20</rank>
             </item>
-            <item id="comment">
-              <rank>30</rank>
-            </item>
-            <item id="ipgateway">
+            <item id="org_id">
               <rank>40</rank>
             </item>
-            <item id="ipmask">
+            <item id="ipaddress">
               <rank>50</rank>
             </item>
-            <item id="speed">
+            <item id="macaddress">
               <rank>60</rank>
             </item>
-            <item id="virtualmachine_id">
+            <item id="comment">
               <rank>70</rank>
+            </item>
+            <item id="ipgateway">
+              <rank>80</rank>
+            </item>
+            <item id="ipmask">
+              <rank>90</rank>
+            </item>
+            <item id="speed">
+              <rank>100</rank>
             </item>
           </items>
         </details>
@@ -876,6 +948,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="ipaddress">
+              <rank>10</rank>
+            </item>
+            <item id="macaddress">
+              <rank>20</rank>
+            </item>
+            <item id="virtualmachine_id">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Server">
@@ -901,7 +989,7 @@
               <dashlet id="38" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:virtualization</title>
-                  <icon>../images/icons/icons8-old-vmware-logo.svg</icon>
+                <icon>../images/icons/icons8-old-vmware-logo.svg</icon>
               </dashlet>
               <dashlet id="39" xsi:type="DashletBadge">
                 <rank>1</rank>

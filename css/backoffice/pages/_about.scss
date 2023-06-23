@@ -1,0 +1,20 @@
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+$ibo-about-box--top-part--children--padding-y: $ibo-spacing-500 !default;
+$ibo-about-box--top-part--children--padding-x: $ibo-spacing-400 !default;
+$ibo-about-box--top-part--children--margin-y: auto !default;
+$ibo-about-box--top-part--children--margin-x: auto !default;
+$ibo-about-box--top-part--children--width: 50% !default;
+
+.ibo-about-box--top-part{
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  > div{
+    padding: $ibo-about-box--top-part--children--padding-y $ibo-about-box--top-part--children--padding-x;
+    margin: $ibo-about-box--top-part--children--margin-y $ibo-about-box--top-part--children--margin-x;
+    width: $ibo-about-box--top-part--children--width;
+  }
+}

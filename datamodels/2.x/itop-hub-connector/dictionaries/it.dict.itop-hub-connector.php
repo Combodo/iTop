@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -38,7 +38,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'iTopHub:AutoSubmit' => 'Don\'t ask me again. Next time, go to iTop Hub automatically.~~',
 	'UI:About:RemoteExtensionSource' => 'iTop Hub~~',
 	'iTopHub:Explanation' => 'By clicking this button you will be redirected to iTop Hub.~~',
-
 	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s free disk space in %2$s.~~',
 	'iTopHub:FailedToCheckFreeDiskSpace' => 'Failed to check free disk space.~~',
 	'iTopHub:BackupOk' => 'Backup Ok.~~',
@@ -48,7 +47,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'iTopHub:CompiledOK' => 'Compilation successful.~~',
 	'iTopHub:ConfigurationSafelyReverted' => 'Error detected during deployment!<br/>'.ITOP_APPLICATION_SHORT.' configuration has NOT been modified.~~',
 	'iTopHub:FailAuthent' => 'Authentication failed for this action.~~',
-
 	'iTopHub:InstalledExtensions' => 'Extensions deployed on this instance~~',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensions deployed manually~~',
 	'iTopHub:ExtensionCategory:Manual+' => 'The following extensions have been deployed by copying them manually in the %1$s directory of '.ITOP_APPLICATION_SHORT.':~~',
@@ -58,7 +56,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'iTopHub:NoExtensionInThisCategory+' => 'Browse iTop Hub to find the extensions that will help you customize and adapt '.ITOP_APPLICATION_SHORT.' to your processes !~~',
 	'iTopHub:ExtensionNotInstalled' => 'Not installed~~',
 	'iTopHub:GetMoreExtensions' => 'Get extensions from iTop Hub...~~',
-
 	'iTopHub:LandingWelcome' => 'Congratulations! The following extensions were downloaded from iTop Hub and deployed into your '.ITOP_APPLICATION_SHORT.'.~~',
 	'iTopHub:GoBackToITopBtn' => 'Go Back to '.ITOP_APPLICATION_SHORT.'~~',
 	'iTopHub:Uncompressing' => 'Uncompressing extensions...~~',
@@ -67,7 +64,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'iTopHub:DBBackupSentence' => 'Do a backup of the database and '.ITOP_APPLICATION_SHORT.' configuration before updating~~',
 	'iTopHub:DeployBtn' => 'Deploy !~~',
 	'iTopHub:DatabaseBackupProgress' => 'Instance backup...~~',
-
 	'iTopHub:InstallationEffect:Install' => 'Version: %1$s will be installed.~~',
 	'iTopHub:InstallationEffect:NoChange' => 'Version: %1$s already installed. Nothing will change.~~',
 	'iTopHub:InstallationEffect:Upgrade' => 'Will be <b>upgraded</b> from version %1$s to version %2$s.~~',
@@ -77,7 +73,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'iTopHub:InstallationEffect:MissingDependencies' => 'This extension cannot be installed because of unmet dependencies.~~',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => 'The extension requires the module(s): %1$s~~',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => 'Installation successful!~~',
-
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.~~',
 	'iTopHub:InstallationStatus:Installed' => 'Installed~~',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NOT</b> installed.~~',

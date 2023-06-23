@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -11,7 +11,7 @@ define('UTF8_BOM', chr(239).chr(187).chr(191)); // 0xEF, 0xBB, 0xBF
 
 /**
  * CellChangeSpec
- * A series of classes, keeping the information about a given cell: could it be changed or not (and why)?  
+ * A series of classes, keeping the information about a given cell: could it be changed or not (and why)?
  *
  * @package     iTopORM
  */
@@ -37,9 +37,28 @@ abstract class CellChangeSpec
 		return $this->m_proposedValue;
 	}
 
+	/**
+	 * @since 3.1.0 N°5305
+	 */
+	public function SetDisplayableValue(string $sDisplayableValue)
+	{
+		$this->m_proposedValue = $sDisplayableValue;
+	}
+
 	public function GetOql()
 	{
 		return $this->m_sOql;
+	}
+
+	/**
+	 * @since 3.1.0 N°5305
+	 */
+	public function GetDisplayableValueAndDescription(): string
+	{
+		return sprintf("%s%s",
+			$this->GetDisplayableValue(),
+			$this->GetDescription()
+		);
 	}
 
 	abstract public function GetDescription();
@@ -86,26 +105,109 @@ class CellStatus_Issue extends CellStatus_Modify
 		parent::__construct($proposedValue, $previousValue);
 	}
 
-	public function GetDescription()
+	public function GetDisplayableValue()
 	{
 		if (is_null($this->m_proposedValue))
 		{
-			return Dict::Format('UI:CSVReport-Value-SetIssue', $this->m_sReason);
+			return Dict::Format('UI:CSVReport-Value-SetIssue');
 		}
-		return Dict::Format('UI:CSVReport-Value-ChangeIssue', $this->m_proposedValue, $this->m_sReason);
+		return Dict::Format('UI:CSVReport-Value-ChangeIssue', \utils::EscapeHtml($this->m_proposedValue));
+	}
+
+	public function GetDescription()
+	{
+		return $this->m_sReason;
+	}
+	/*
+	 * @since 3.1.0 N°5305
+	 */
+	public function GetDisplayableValueAndDescription(): string
+	{
+		return sprintf("%s. %s",
+			$this->GetDisplayableValue(),
+			$this->GetDescription()
+		);
 	}
 }
 
 class CellStatus_SearchIssue extends CellStatus_Issue
 {
-	public function __construct()
+	/** @var string|null $m_sAllowedValues */
+	private $m_sAllowedValues;
+
+	/**
+	 * @since 3.1.0 N°5305
+	 * @var string $sSerializedSearch
+	 */
+	private $sSerializedSearch;
+
+	/** @var string|null $m_sTargetClass */
+	private $m_sTargetClass;
+
+	/**
+	 * @since 3.1.0 N°5305
+	 * @var string $sAllowedValuesSearch
+	 */
+	private $sAllowedValuesSearch;
+
+	/**
+	 * CellStatus_SearchIssue constructor.
+	 * @since 3.1.0 N°5305
+	 *
+	 * @param string $sOql : main message
+	 * @param string $sReason : main message
+	 * @param null $sClass : used for additional message that provides allowed values for current class $sClass
+	 * @param null $sAllowedValues : used for additional message that provides allowed values $sAllowedValues for current class
+	 * @param string|null $sAllowedValuesSearch : used to search all allowed values
+	 */
+	public function __construct($sSerializedSearch, $sReason, $sClass=null, $sAllowedValues=null, string $sAllowedValuesSearch=null)
 	{
-		parent::__construct(null, null, null);
+		parent::__construct(null, null, $sReason);
+		$this->sSerializedSearch = $sSerializedSearch;
+		$this->m_sAllowedValues = $sAllowedValues;
+		$this->m_sTargetClass = $sClass;
+		$this->sAllowedValuesSearch = $sAllowedValuesSearch;
+	}
+
+	public function GetDisplayableValue()
+	{
+		if (null === $this->m_sReason) {
+			return Dict::Format('UI:CSVReport-Value-NoMatch', '');
+		}
+
+		return $this->m_sReason;
 	}
 
 	public function GetDescription()
 	{
-		return Dict::S('UI:CSVReport-Value-NoMatch');
+		if (\utils::IsNullOrEmptyString($this->m_sAllowedValues) ||
+			\utils::IsNullOrEmptyString($this->m_sTargetClass)) {
+			return '';
+		}
+
+		return Dict::Format('UI:CSVReport-Value-NoMatch-PossibleValues', $this->m_sTargetClass, $this->m_sAllowedValues);
+	}
+
+	/**
+	 * @since 3.1.0 N°5305
+	 * @return string
+	 */
+	public function GetSearchLinkUrl()
+	{
+		return sprintf("UI.php?operation=search&filter=%s",
+			rawurlencode($this->sSerializedSearch)
+		);
+	}
+
+	/**
+	 * @since 3.1.0 N°5305
+	 * @return null|string
+	 */
+	public function GetAllowedValuesLinkUrl(): ?string
+	{
+		return sprintf("UI.php?operation=search&filter=%s",
+			rawurlencode($this->sAllowedValuesSearch)
+		);
 	}
 }
 
@@ -126,11 +228,24 @@ class CellStatus_NullIssue extends CellStatus_Issue
 class CellStatus_Ambiguous extends CellStatus_Issue
 {
 	protected $m_iCount;
+	/**
+	 * @since 3.1.0 N°5305
+	 * @var string
+	 */
+	protected $sSerializedSearch;
 
-	public function __construct($previousValue, $iCount, $sOql)
+	/**
+	 * @since 3.1.0 N°5305
+	 *
+	 * @param $previousValue
+	 * @param int $iCount
+	 * @param string $sSerializedSearch
+	 *
+	 */
+	public function __construct($previousValue, $iCount, $sSerializedSearch)
 	{
 		$this->m_iCount = $iCount;
-		$this->m_sQuery = $sOql;
+		$this->sSerializedSearch = $sSerializedSearch;
 		parent::__construct(null, $previousValue, '');
 	}
 
@@ -139,12 +254,23 @@ class CellStatus_Ambiguous extends CellStatus_Issue
 		$sCount = $this->m_iCount;
 		return Dict::Format('UI:CSVReport-Value-Ambiguous', $sCount);
 	}
+
+	/**
+	 * @since 3.1.0 N°5305
+	 * @return string
+	 */
+	public function GetSearchLinkUrl()
+	{
+		return sprintf("UI.php?operation=search&filter=%s",
+			rawurlencode($this->sSerializedSearch)
+		);
+	}
 }
 
 
 /**
  * RowStatus
- * A series of classes, keeping the information about a given row: could it be changed or not (and why)?  
+ * A series of classes, keeping the information about a given row: could it be changed or not (and why)?
  *
  * @package     iTopORM
  */
@@ -211,6 +337,26 @@ class RowStatus_Issue extends RowStatus
 	}
 }
 
+/**
+ * class dedicated to testability
+ * not used/ignored in csv imports UI/CLI
+ * @since 3.1.0 N°5305
+ */
+class RowStatus_Error extends RowStatus
+{
+	/** @var string */
+	protected $m_sError;
+
+	public function __construct($sError)
+	{
+		$this->m_sError = $sError;
+	}
+
+	public function GetDescription()
+	{
+		return $this->m_sError;
+	}
+}
 
 /**
  * BulkChange
@@ -220,17 +366,35 @@ class RowStatus_Issue extends RowStatus
  */
 class BulkChange
 {
-	protected $m_sClass; 
+	/** @var string */
+	protected $m_sClass;
 	protected $m_aData; // Note: hereafter, iCol maybe actually be any acceptable key (string)
 	// #@# todo: rename the variables to sColIndex
-	protected $m_aAttList; // attcode => iCol
-	protected $m_aExtKeys; // aExtKeys[sExtKeyAttCode][sExtReconcKeyAttCode] = iCol;
-	protected $m_aReconcilKeys; // attcode (attcode = 'id' for the pkey)
-	protected $m_sSynchroScope; // OQL - if specified, then the missing items will be reported
-	protected $m_aOnDisappear; // array of attcode => value, values to be set when an object gets out of scope (ignored if no scope has been defined)
-	protected $m_sDateFormat; // Date format specification, see DateTime::createFromFormat
-	protected $m_bLocalizedValues; // Values in the data set are localized (see AttributeEnum)
-	protected $m_aExtKeysMappingCache; // Cache for resolving external keys based on the given search criterias
+	/** @var array<string, string> attcode as key, iCol as value */
+	protected $m_aAttList;
+	/** @var array<string, array<string, string>> sExtKeyAttCode as key, array of sExtReconcKeyAttCode/iCol as value */
+	protected $m_aExtKeys;
+	/** @var string[] list of attcode (attcode = 'id' for the pkey) */
+	protected $m_aReconcilKeys;
+	/** @var string OQL - if specified, then the missing items will be reported */
+	protected $m_sSynchroScope;
+	/**
+	 * @var array<string, mixed> attcode as key, attvalue as value. Values to be set when an object gets out of scope
+	 *                          (ignored if no scope has been defined)
+	 */
+	protected $m_aOnDisappear;
+	/**
+	 * @see DateTime::createFromFormat
+	 * @var string Date format specification
+	 */
+	protected $m_sDateFormat;
+	/**
+	 * @see AttributeEnum
+	 * @var boolean true if Values in the data set are localized
+	 */
+	protected $m_bLocalizedValues;
+	/** @var array Cache for resolving external keys based on the given search criterias */
+	protected $m_aExtKeysMappingCache;
 
 	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys, $sSynchroScope = null, $aOnDisappear = null, $sDateFormat = null, $bLocalize = false)
 	{
@@ -261,30 +425,30 @@ class BulkChange
 		$this->m_sReportCsvSep = $sSeparator;
 		$this->m_sReportCsvDelimiter = $sDelimiter;
 	}
-   
+
 	protected function ResolveExternalKey($aRowData, $sAttCode, &$aResults)
 	{
 		$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 		$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
-		foreach ($this->m_aExtKeys[$sAttCode] as $sForeignAttCode => $iCol)
+		foreach ($this->m_aExtKeys[$sAttCode] as $sReconKeyAttCode => $iCol)
 		{
-			if ($sForeignAttCode == 'id')
+			if ($sReconKeyAttCode == 'id')
 			{
 				$value = (int) $aRowData[$iCol];
 			}
 			else
 			{
 				// The foreign attribute is one of our reconciliation key
-				$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sForeignAttCode);
+				$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sReconKeyAttCode);
 				$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 			}
-			$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
+			$oReconFilter->AddCondition($sReconKeyAttCode, $value, '=');
 			$aResults[$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 		}
 
 		$oExtObjects = new CMDBObjectSet($oReconFilter);
 		$aKeys = $oExtObjects->ToArray();
-		return array($oReconFilter->ToOql(), $aKeys);
+		return array($oReconFilter, $aKeys);
 	}
 
 	// Returns true if the CSV data specifies that the external key must be left undefined
@@ -318,10 +482,10 @@ class BulkChange
 	{
 		$aResults = array();
 		$aErrors = array();
-	
+
 		// External keys reconciliation
 		//
-		foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
+		foreach($this->m_aExtKeys as $sAttCode => $aReconKeys)
 		{
 			// Skip external keys used for the reconciliation process
 			// if (!array_key_exists($sAttCode, $this->m_aAttList)) continue;
@@ -330,7 +494,7 @@ class BulkChange
 
 			if ($this->IsNullExternalKeySpec($aRowData, $sAttCode))
 			{
-				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+				foreach ($aReconKeys as $sReconKeyAttCode => $iCol)
 				{
 					// Default reporting
 					// $aRowData[$iCol] is always null
@@ -352,25 +516,24 @@ class BulkChange
 				$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
 
 				$aCacheKeys = array();
-				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+				foreach ($aReconKeys as $sReconKeyAttCode => $iCol)
 				{
 					// The foreign attribute is one of our reconciliation key
-					if ($sForeignAttCode == 'id')
+					if ($sReconKeyAttCode == 'id')
 					{
 						$value = $aRowData[$iCol];
 					}
 					else
 					{
-						$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sForeignAttCode);
+						$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sReconKeyAttCode);
 						$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 					}
 					$aCacheKeys[] = $value;
-					$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
+					$oReconFilter->AddCondition($sReconKeyAttCode, $value, '=');
 					$aResults[$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 				}
 				$sCacheKey = implode('_|_', $aCacheKeys); // Unique key for this query...
 				$iForeignKey = null;
-				$sOQL = '';
 				// TODO: check if *too long* keys can lead to collisions... and skip the cache in such a case...
 				if (!array_key_exists($sAttCode, $this->m_aExtKeysMappingCache))
 				{
@@ -379,9 +542,8 @@ class BulkChange
 				if (array_key_exists($sCacheKey, $this->m_aExtKeysMappingCache[$sAttCode]))
 				{
 					// Cache hit
-					$iCount = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['c'];
+					$iObjectFoundCount = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['c'];
 					$iForeignKey = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['k'];
-					$sOQL = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['oql'];
 					// Record the hit
 					$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['h']++;
 				}
@@ -389,34 +551,35 @@ class BulkChange
 				{
 					// Cache miss, let's initialize it
 					$oExtObjects = new CMDBObjectSet($oReconFilter);
-					$iCount = $oExtObjects->Count();
-					if ($iCount == 1)
+					$iObjectFoundCount = $oExtObjects->Count();
+					if ($iObjectFoundCount == 1)
 					{
 						$oForeignObj = $oExtObjects->Fetch();
 						$iForeignKey = $oForeignObj->GetKey();
 					}
 					$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey] = array(
-						'c' => $iCount,
+						'c' => $iObjectFoundCount,
 						'k' => $iForeignKey,
 						'oql' => $oReconFilter->ToOql(),
 						'h' => 0, // number of hits on this cache entry
 					);
 				}
-				switch($iCount)
+				switch($iObjectFoundCount)
 				{
 					case 0:
-					$aErrors[$sAttCode] = Dict::S('UI:CSVReport-Value-Issue-NotFound');
-					$aResults[$sAttCode]= new CellStatus_SearchIssue();
-					break;
-					
+						$oCellStatus_SearchIssue = $this->GetCellSearchIssue($oReconFilter);
+						$aResults[$sAttCode] = $oCellStatus_SearchIssue;
+						$aErrors[$sAttCode] = Dict::S('UI:CSVReport-Value-Issue-NotFound');
+						break;
+
 					case 1:
-					// Do change the external key attribute
-					$oTargetObj->Set($sAttCode, $iForeignKey);
-					break;
-					
+						// Do change the external key attribute
+						$oTargetObj->Set($sAttCode, $iForeignKey);
+						break;
+
 					default:
-					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-FoundMany', $iCount);
-					$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $iCount, $sOQL);
+						$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-FoundMany', $iObjectFoundCount);
+						$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $iObjectFoundCount, $oReconFilter->serialize());
 				}
 			}
 
@@ -433,7 +596,7 @@ class BulkChange
 					else
 					{
 						$aResults[$sAttCode]= new CellStatus_Modify($iForeignObj, $oTargetObj->GetOriginal($sAttCode));
-						foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+						foreach ($aReconKeys as $sReconKeyAttCode => $iCol)
 						{
 							// Report the change on reconciliation values as well
 							$aResults[$iCol] = new CellStatus_Modify(utils::HtmlEntities($aRowData[$iCol]));
@@ -446,7 +609,7 @@ class BulkChange
 				}
 			}
 		}
-	
+
 		// Set the object attributes
 		//
 		foreach ($this->m_aAttList as $sAttCode => $iCol)
@@ -467,7 +630,7 @@ class BulkChange
 			$iFlags = ($oTargetObj->IsNew())
 				? $oTargetObj->GetInitialStateAttributeFlags($sAttCode, $aReasons)
 				: $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
-			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) ) {
+			if ((($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ($oTargetObj->Get($sAttCode) != $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues))) {
 				$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Readonly', $sAttCode, $oTargetObj->Get($sAttCode), $aRowData[$iCol]);
 			}
 			else if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
@@ -487,7 +650,13 @@ class BulkChange
 				$value = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 				if (is_null($value) && (strlen($aRowData[$iCol]) > 0))
 				{
-					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-NoMatch', $sAttCode);
+					if ($oAttDef instanceof AttributeEnum || $oAttDef instanceof AttributeTagSet){
+						/** @var AttributeDefinition $oAttributeDefinition */
+						$oAttributeDefinition = $oAttDef;
+						$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-AllowedValues', $sAttCode, implode(',', $oAttributeDefinition->GetAllowedValues()));
+					} else {
+						$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-NoMatch', $sAttCode);
+					}
 				}
 				else
 				{
@@ -504,7 +673,7 @@ class BulkChange
 				}
 			}
 		}
-	
+
 		// Reporting on fields
 		//
 		$aChangedFields = $oTargetObj->ListChanges();
@@ -556,7 +725,7 @@ class BulkChange
 				}
 			}
 		}
-	
+
 		// Checks
 		//
 		$res = $oTargetObj->CheckConsistency();
@@ -567,12 +736,102 @@ class BulkChange
 		}
 		return $aResults;
 	}
-	
+
+	/**
+	 * search with current permissions did not match
+	 * let's search why and give some more feedbacks to the user through proper labels
+	 *
+	 * @param DBObjectSearch $oDbSearchWithConditions search used to find external key
+	 *
+	 * @return \CellStatus_SearchIssue
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 3.1.0 N°5305
+	 */
+	protected function GetCellSearchIssue($oDbSearchWithConditions) : CellStatus_SearchIssue {
+		//current search with current permissions did not match
+		//let's search why and give some more feedback to the user
+
+		$sSerializedSearch = $oDbSearchWithConditions->serialize();
+
+		// Count all objects with all permissions without any condition
+		$oDbSearchWithoutAnyCondition = new DBObjectSearch($oDbSearchWithConditions->GetClass());
+		$oDbSearchWithoutAnyCondition->AllowAllData(true);
+		$oExtObjectSet = new CMDBObjectSet($oDbSearchWithoutAnyCondition);
+		$iAllowAllDataObjectCount = $oExtObjectSet->Count();
+
+		if ($iAllowAllDataObjectCount === 0) {
+			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject', $oDbSearchWithConditions->GetClass());
+			return new CellStatus_SearchIssue($sSerializedSearch, $sReason);
+		}
+
+		// Count all objects with current user permissions
+		$oDbSearchWithoutAnyCondition->AllowAllData(false);
+		$oExtObjectSetWithCurrentUserPermissions = new CMDBObjectSet($oDbSearchWithoutAnyCondition);
+		$iCurrentUserRightsObjectCount = $oExtObjectSetWithCurrentUserPermissions->Count();
+		$sAllowedValuesOql = $oDbSearchWithoutAnyCondition->serialize();
+
+		if ($iCurrentUserRightsObjectCount === 0){
+			// No objects visible by current user
+			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser', $oDbSearchWithConditions->GetClass());
+			return new CellStatus_SearchIssue($sSerializedSearch, $sReason);
+		}
+
+		try{
+			$aDisplayedAllowedValues = [];
+			// Possibles values are displayed to UI user. we have to limit the amount of displayed values
+			$oExtObjectSetWithCurrentUserPermissions->SetLimit(4);
+			for($i = 0; $i < 3; $i++){
+				/** @var \DBObject $oVisibleObject */
+				$oVisibleObject = $oExtObjectSetWithCurrentUserPermissions->Fetch();
+				if (is_null($oVisibleObject)){
+					break;
+				}
+
+				$aCurrentAllowedValueFields = [];
+				foreach ($oDbSearchWithConditions->GetInternalParams() as $sForeignAttCode => $sValue){
+					$aCurrentAllowedValueFields[] = $oVisibleObject->Get($sForeignAttCode);
+				}
+				$aDisplayedAllowedValues[] = implode(" ", $aCurrentAllowedValueFields);
+
+			}
+			$allowedValues = implode(", ", $aDisplayedAllowedValues);
+			if ($oExtObjectSetWithCurrentUserPermissions->Count() > 3){
+				$allowedValues .= "...";
+			}
+		} catch(Exception $e) {
+			IssueLog::Error("failure during CSV import when fetching few visible objects: ", null,
+				[ 'target_class' => $oDbSearchWithConditions->GetClass(), 'criteria' => $oDbSearchWithConditions->GetCriteria(), 'message' => $e->getMessage()]
+			);
+			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser', $oDbSearchWithConditions->GetClass());
+			return new CellStatus_SearchIssue($sSerializedSearch, $sReason);
+		}
+
+		if ($iAllowAllDataObjectCount != $iCurrentUserRightsObjectCount) {
+			// No match and some objects NOT visible by current user. including current search maybe...
+			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser', $oDbSearchWithConditions->GetClass());
+			return new CellStatus_SearchIssue($sSerializedSearch, $sReason, $oDbSearchWithConditions->GetClass(), $allowedValues, $sAllowedValuesOql);
+		}
+
+		// No match. This is not linked to any right issue
+		// Possible values: DD,DD
+		$aCurrentValueFields = [];
+		foreach ($oDbSearchWithConditions->GetInternalParams() as $sValue){
+			$aCurrentValueFields[] = $sValue;
+		}
+		$value =implode(" ", $aCurrentValueFields);
+		$sReason = Dict::Format('UI:CSVReport-Value-NoMatch', $value);
+		return new CellStatus_SearchIssue($sSerializedSearch, $sReason, $oDbSearchWithConditions->GetClass(), $allowedValues, $sAllowedValuesOql);
+	}
+
 	protected function PrepareMissingObject(&$oTargetObj, &$aErrors)
 	{
 		$aResults = array();
 		$aErrors = array();
-	
+
 		// External keys
 		//
 		foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
@@ -585,7 +844,7 @@ class BulkChange
 				$aResults[$iCol] = new CellStatus_Void('?');
 			}
 		}
-	
+
 		// Update attributes
 		//
 		foreach($this->m_aOnDisappear as $sAttCode => $value)
@@ -596,7 +855,7 @@ class BulkChange
 			}
 			$oTargetObj->Set($sAttCode, $value);
 		}
-	
+
 		// Reporting on fields
 		//
 		$aChangedFields = $oTargetObj->ListChanges();
@@ -616,7 +875,7 @@ class BulkChange
 				$aResults[$iCol]= new CellStatus_Void($oTargetObj->Get($sAttCode));
 			}
 		}
-	
+
 		// Checks
 		//
 		$res = $oTargetObj->CheckConsistency();
@@ -674,14 +933,16 @@ class BulkChange
 		}
 
 		$aResult[$iRow] = $this->PrepareObject($oTargetObj, $aRowData, $aErrors);
-	
+
 		if (count($aErrors) > 0)
 		{
 			$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
+			//__ERRORS__ used by tests only
+			$aResult[$iRow]["__ERRORS__"] = new RowStatus_Error($sErrors);
 			return $oTargetObj;
 		}
-	
+
 		// Check that any external key will have a value proposed
 		$aMissingKeys = array();
 		foreach (MetaModel::GetExternalKeys($this->m_sClass) as $sExtKeyAttCode => $oExtKey)
@@ -689,7 +950,7 @@ class BulkChange
 			if (!$oExtKey->IsNullAllowed())
 			{
 				if (!array_key_exists($sExtKeyAttCode, $this->m_aExtKeys) && !array_key_exists($sExtKeyAttCode, $this->m_aAttList))
-				{ 
+				{
 					$aMissingKeys[] = $oExtKey->GetLabel();
 				}
 			}
@@ -745,14 +1006,16 @@ class BulkChange
 		{
 			$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
+			//__ERRORS__ used by tests only
+			$aResult[$iRow]["__ERRORS__"] = new RowStatus_Error($sErrors);
 			return;
 		}
-	
+
 		$aChangedFields = $oTargetObj->ListChanges();
 		if (count($aChangedFields) > 0)
 		{
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Modify(count($aChangedFields));
-	
+
 			// Optionaly record the results
 			//
 			if ($oChange)
@@ -794,9 +1057,11 @@ class BulkChange
 		{
 			$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
+			//__ERRORS__ used by tests only
+			$aResult[$iRow]["__ERRORS__"] = new RowStatus_Error($sErrors);
 			return;
 		}
-	
+
 		$aChangedFields = $oTargetObj->ListChanges();
 		if (count($aChangedFields) > 0)
 		{
@@ -821,7 +1086,7 @@ class BulkChange
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Disappeared(0);
 		}
 	}
-	
+
 	public function Process(CMDBChange $oChange = null)
 	{
 		if ($oChange)
@@ -866,7 +1131,7 @@ class BulkChange
 			foreach ($this->m_aAttList as $sAttCode => $iCol)
 			{
 				if ($sAttCode == 'id') continue;
-				
+
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 				if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 				{
@@ -881,14 +1146,18 @@ class BulkChange
 								$sFormat = $sDateFormat;
 							}
 							$oFormat = new DateTimeFormat($sFormat);
+							$sDateExample = $oFormat->Format(new DateTime('2022-10-23 16:25:33'));
 							$sRegExp = $oFormat->ToRegExpr('/');
-							if (!preg_match($sRegExp, $this->m_aData[$iRow][$iCol]))
+							$sErrorMsg = Dict::Format('UI:CSVReport-Row-Issue-ExpectedDateFormat', $sDateExample);
+							if (!preg_match($sRegExp, $sValue))
 							{
 								$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+								$aResult[$iRow][$iCol] = new CellStatus_Issue(utils::HtmlEntities($sValue), null, $sErrorMsg);
+
 							}
 							else
 							{
-								$oDate = DateTime::createFromFormat($sFormat, $this->m_aData[$iRow][$iCol]);
+								$oDate = DateTime::createFromFormat($sFormat, $sValue);
 								if ($oDate !== false)
 								{
 									$sNewDate = $oDate->format($oAttDef->GetInternalFormat());
@@ -898,7 +1167,7 @@ class BulkChange
 								{
 									// Leave the cell unchanged
 									$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
-									$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, utils::HtmlEntities($this->m_aData[$iRow][$iCol]), Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+									$aResult[$iRow][$iCol] = new CellStatus_Issue($sValue, null, $sErrorMsg);
 								}
 							}
 						}
@@ -919,133 +1188,112 @@ class BulkChange
 		}
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		foreach($this->m_aData as $iRow => $aRowData)
-		{
-			set_time_limit(intval($iLoopTimeLimit));
-			if (isset($aResult[$iRow]["__STATUS__"]))
-			{
-				// An issue at the earlier steps - skip the rest
-				continue;
+
+		// Avoid too many events
+		cmdbAbstractObject::SetEventDBLinksChangedBlocked(true);
+		try {
+			foreach ($this->m_aData as $iRow => $aRowData) {
+				set_time_limit(intval($iLoopTimeLimit));
+				if (isset($aResult[$iRow]["__STATUS__"])) {
+					// An issue at the earlier steps - skip the rest
+					continue;
+				}
+				try {
+					$oReconciliationFilter = new DBObjectSearch($this->m_sClass);
+					$bSkipQuery = false;
+					foreach ($this->m_aReconcilKeys as $sAttCode) {
+						$valuecondition = null;
+						if (array_key_exists($sAttCode, $this->m_aExtKeys)) {
+							if ($this->IsNullExternalKeySpec($aRowData, $sAttCode)) {
+								$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+								if ($oExtKey->IsNullAllowed()) {
+									$valuecondition = $oExtKey->GetNullValue();
+									$aResult[$iRow][$sAttCode] = new CellStatus_Void($oExtKey->GetNullValue());
+								} else {
+									$aResult[$iRow][$sAttCode] = new CellStatus_NullIssue();
+								}
+							} else {
+								// The value has to be found or verified
+
+								/** var DBObjectSearch $oReconFilter */
+								list($oReconFilter, $aMatches) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
+
+								if (count($aMatches) == 1) {
+									$oRemoteObj = reset($aMatches); // first item
+									$valuecondition = $oRemoteObj->GetKey();
+									$aResult[$iRow][$sAttCode] = new CellStatus_Void($oRemoteObj->GetKey());
+								} elseif (count($aMatches) == 0) {
+									$oCellStatus_SearchIssue = $this->GetCellSearchIssue($oReconFilter);
+									$aResult[$iRow][$sAttCode] = $oCellStatus_SearchIssue;
+								} else {
+									$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $oReconFilter->serialize());
+								}
+							}
+						} else {
+							// The value is given in the data row
+							$iCol = $this->m_aAttList[$sAttCode];
+							if ($sAttCode == 'id') {
+								$valuecondition = $aRowData[$iCol];
+							} else {
+								$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+								$valuecondition = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
+							}
+						}
+						if (is_null($valuecondition)) {
+							$bSkipQuery = true;
+						} else {
+							$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=', true);
+						}
+					}
+					if ($bSkipQuery) {
+						$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Reconciliation'));
+					} else {
+						$oReconciliationSet = new CMDBObjectSet($oReconciliationFilter);
+						switch ($oReconciliationSet->Count()) {
+							case 0:
+								$oTargetObj = $this->CreateObject($aResult, $iRow, $aRowData, $oChange);
+								// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
+								$aVisited[] = $oTargetObj->GetKey();
+								break;
+							case 1:
+								$oTargetObj = $oReconciliationSet->Fetch();
+								$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
+								// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
+								if (!is_null($this->m_sSynchroScope)) {
+									$aVisited[] = $oTargetObj->GetKey();
+								}
+								break;
+							default:
+								// Found several matches, ambiguous
+								$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Ambiguous'));
+								$aResult[$iRow]["id"] = new CellStatus_Ambiguous(0, $oReconciliationSet->Count(), $oReconciliationFilter->serialize());
+								$aResult[$iRow]["finalclass"] = 'n/a';
+						}
+					}
+				} catch (Exception $e) {
+					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-Internal', get_class($e), $e->getMessage()));
+				}
 			}
-			try
-			{
-				$oReconciliationFilter = new DBObjectSearch($this->m_sClass);
-				$bSkipQuery = false;
-				foreach($this->m_aReconcilKeys as $sAttCode)
-				{
-					$valuecondition = null;
-					if (array_key_exists($sAttCode, $this->m_aExtKeys))
-					{
-						if ($this->IsNullExternalKeySpec($aRowData, $sAttCode))
-						{
-							$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-							if ($oExtKey->IsNullAllowed())
-							{
-								$valuecondition = $oExtKey->GetNullValue();
-								$aResult[$iRow][$sAttCode] = new CellStatus_Void($oExtKey->GetNullValue());
-							}
-							else
-							{
-								$aResult[$iRow][$sAttCode] = new CellStatus_NullIssue();
-							}
-						}
-						else
-						{
-							// The value has to be found or verified
-							list($sQuery, $aMatches) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
-		
-							if (count($aMatches) == 1)
-							{
-								$oRemoteObj = reset($aMatches); // first item
-								$valuecondition = $oRemoteObj->GetKey();
-								$aResult[$iRow][$sAttCode] = new CellStatus_Void($oRemoteObj->GetKey());
-							} 					
-							elseif (count($aMatches) == 0)
-							{
-								$aResult[$iRow][$sAttCode] = new CellStatus_SearchIssue();
-							} 					
-							else
-							{
-								$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $sQuery);
-							}
-						} 					
-					}
-					else
-					{
-						// The value is given in the data row
-						$iCol = $this->m_aAttList[$sAttCode];
-						if ($sAttCode == 'id')
-						{
-							$valuecondition = $aRowData[$iCol];
-						}
-						else
-						{
-							$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-							$valuecondition = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
-						}
-					}
-					if (is_null($valuecondition))
-					{
-						$bSkipQuery = true;
-					}
-					else
-					{
-						$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=');
-					}
-				}
-				if ($bSkipQuery)
-				{
-					$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Reconciliation'));
-				}
-				else
-				{
-					$oReconciliationSet = new CMDBObjectSet($oReconciliationFilter);
-					switch($oReconciliationSet->Count())
-					{
-					case 0:
-						$oTargetObj = $this->CreateObject($aResult, $iRow, $aRowData, $oChange);
-						// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
-						$aVisited[] = $oTargetObj->GetKey();
-						break;
-					case 1:
-						$oTargetObj = $oReconciliationSet->Fetch();
-						$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
-						// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
-						if (!is_null($this->m_sSynchroScope))
-						{
-							$aVisited[] = $oTargetObj->GetKey();
-						}
-						break;
-					default:
-						// Found several matches, ambiguous
-						$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Ambiguous'));
-						$aResult[$iRow]["id"]= new CellStatus_Ambiguous(0, $oReconciliationSet->Count(), $oReconciliationFilter->ToOql());
-						$aResult[$iRow]["finalclass"]= 'n/a';
+
+			if (!is_null($this->m_sSynchroScope)) {
+				// Compute the delta between the scope and visited objects
+				$oScopeSearch = DBObjectSearch::FromOQL($this->m_sSynchroScope);
+				$oScopeSet = new DBObjectSet($oScopeSearch);
+				while ($oObj = $oScopeSet->Fetch()) {
+					$iObj = $oObj->GetKey();
+					if (!in_array($iObj, $aVisited)) {
+						set_time_limit(intval($iLoopTimeLimit));
+						$iRow++;
+						$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
 					}
 				}
 			}
-			catch (Exception $e)
-			{
-				$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-Internal', get_class($e), $e->getMessage()));
-			}
+		} finally {
+			// Send all the retained events for further computations
+			cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
+			cmdbAbstractObject::FireEventDbLinksChangedForAllObjects();
 		}
 
-		if (!is_null($this->m_sSynchroScope))
-		{
-			// Compute the delta between the scope and visited objects
-			$oScopeSearch = DBObjectSearch::FromOQL($this->m_sSynchroScope);
-			$oScopeSet = new DBObjectSet($oScopeSearch);
-			while ($oObj = $oScopeSet->Fetch())
-			{
-				$iObj = $oObj->GetKey();
-				if (!in_array($iObj, $aVisited))
-				{
-					set_time_limit(intval($iLoopTimeLimit));
-					$iRow++;
-					$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
-				}
-			}
-		}
 		set_time_limit(intval($iPreviousTimeLimit));
 
 		// Fill in the blanks - the result matrix is expected to be 100% complete
@@ -1110,7 +1358,7 @@ class BulkChange
 			}
 		}
 		$oBulkChanges->Seek(0);
-	
+
 		$aDetails = array();
 		while ($oChange = $oBulkChanges->Fetch())
 		{
@@ -1274,7 +1522,7 @@ EOF
 							$oOldTarget = MetaModel::GetObject($oAttDef->GetTargetClass(), $oOperation->Get('oldvalue'));
 							$sOldValue = $oOldTarget->GetHyperlink();
 						}
-						
+
 						$sNewValue = Dict::S('UI:UndefinedObject');
 						if ($oOperation->Get('newvalue') != 0)
 						{
@@ -1300,11 +1548,11 @@ EOF
 				}
 				else
 				{
-					$aAttributes[$sAttCode] = 1;				
+					$aAttributes[$sAttCode] = 1;
 				}
 			}
 		}
-		
+
 		$aDetails = array();
 		foreach($aObjects as $iUId => $aObjData)
 		{
@@ -1356,6 +1604,6 @@ EOF
 			$aConfig[$sAttCode] = array('label' => MetaModel::GetLabel($sClass, $sAttCode), 'description' => MetaModel::GetDescription($sClass, $sAttCode));
 		}
 		$oPage->table($aConfig, $aDetails);
-	}	
+	}
 }
 

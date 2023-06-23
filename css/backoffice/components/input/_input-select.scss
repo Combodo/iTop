@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -61,8 +61,11 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 
     input {
       border-width: 0px;
-      border-color: white;
+      color: inherit;
+      border-color: $ibo-color-white-100;
       padding-left: $ibo-input-select--padding-x;
+
+      @extend %ibo-font-ral-nor-150;
     }
 
     > [data-value] {
@@ -101,6 +104,13 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
   > input {
     background-color: unset;
     border: unset;
+    &:focus{
+      outline: none !important; /* Overwrite browsers default focus outline */
+    }
+  }
+  
+  &.input-active{
+    border: 1px solid $ibo-input--focus--border-color;
   }
 }
 .ibo-input-select-wrapper{

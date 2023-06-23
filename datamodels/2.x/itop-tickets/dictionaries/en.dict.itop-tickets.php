@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -98,12 +98,15 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkContactToTicket' => 'Link Contact / Ticket',
 	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Ref',
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Contact',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'Contact Email',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
 	'Class:lnkContactToTicket/Attribute:role' => 'Role (text)',
@@ -247,13 +250,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Goal based on a SLT of type TTR',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:Document/Attribute:contracts_list' => 'Contracts',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document',
-));

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Attachments:TabTitle_Count' => 'Załączniki (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Załączniki',
@@ -69,6 +68,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Attachments:File:Uploader' => 'Przesłany przez',
 	'Attachments:File:Size' => 'Rozmiar',
 	'Attachments:File:MimeType' => 'Typ',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
 ));
 //
 // Class: Attachment
@@ -81,4 +81,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Id kontaktu',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 ));

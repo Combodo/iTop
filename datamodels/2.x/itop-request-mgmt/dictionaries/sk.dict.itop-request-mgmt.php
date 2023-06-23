@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
@@ -34,6 +34,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Otvorené požiadavky podľa typu',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Otvorené požiadavky podľa organizácie',
 	'Class:UserRequest:KnownErrorList' => 'Známe chyby',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 	'Menu:UserRequest:MyWorkOrders' => 'Pracovné príkazy pridelené mne',
 	'Menu:UserRequest:MyWorkOrders+' => '',
 	'Class:Problem:KnownProblemList' => 'Známe problémy',
@@ -115,6 +116,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => '',
 	'Class:UserRequest/Attribute:origin' => 'Pôvod',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Dohľad',
@@ -202,7 +207,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Referencia na zmenu',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Podriadené požiadavky',
-	'Class:UserRequest/Attribute:related_request_list+' => '',
+	'Class:UserRequest/Attribute:related_request_list+' => 'All the requests that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:public_log' => 'Verejný záznam',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Spokojnosť užívateľa',
@@ -270,7 +275,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Portal:SelectLanguage' => 'Zmeň svoj jazyk',
 	'Portal:LanguageChangedTo_Lang' => 'Jazyk zmenený na',
 	'Portal:ChooseYourFavoriteLanguage' => 'Vyberte si svoj obľúbený jazyk',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));

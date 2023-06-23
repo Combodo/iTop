@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -23,6 +23,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Preferences:General:Title' => 'Основные',
 	'UI:Preferences:General:Theme' => 'Тема',
 	'UI:Preferences:General:Theme:DefaultThemeLabel' => '%1$s (по умолчанию)',
+	'UI:Favorites:General:ShowSummaryCards' => 'Show summary cards~~',
+	'UI:Favorites:General:ShowSummaryCards+' => 'When hovering an hyperlink targeting an object, display a short summary of the object, if available for that class~~',
 	'UI:Preferences:Lists:Title' => 'Списки',
 	'UI:Preferences:RichText:Title' => 'Текстовый редактор',
 	'UI:Preferences:RichText:ToolbarState' => 'Панель инструментов по умолчанию',
@@ -34,6 +36,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Title' => 'Сочетания клавиш',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint' => 'Введите сочетание клавиш',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip' => 'Записать сочетание клавиш',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset' => 'Reset~~',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset:Tooltip' => 'Back to default keyboard shortcut~~',
 	'UI:Preferences:Tabs:Title' => 'Вкладки',
 	'UI:Preferences:Tabs:Layout:Label' => 'Расположение',
 	'UI:Preferences:Tabs:Layout:Horizontal' => 'Горизонтальное',

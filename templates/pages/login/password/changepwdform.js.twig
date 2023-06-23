@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 function GoBack()
@@ -8,9 +8,14 @@ function GoBack()
 
 function DoCheckPwd()
 {
-    if ($('#new_pwd').val() != $('#retype_new_pwd').val())
+    var new_pwd = $('#new_pwd').val();
+    if (new_pwd !== $('#retype_new_pwd').val())
     {
         alert('{{ 'UI:Login:RetypePwdDoesNotMatch'|dict_s }}');
+        return false;
+    }
+    if (new_pwd === $('#old_pwd').val()) {
+        alert('{{ 'UI:Login:PasswordNotChanged'|dict_s }}');
         return false;
     }
     return true;

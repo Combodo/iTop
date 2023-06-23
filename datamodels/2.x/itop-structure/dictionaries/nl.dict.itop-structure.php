@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,9 +22,9 @@
  * http://www.linprofs.com
  *
  * @author Hipska (2018, 2019)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -106,6 +106,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Contact' => 'Contact',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Naam',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Status',
@@ -143,6 +144,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Person' => 'Persoon',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Achternaam',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Voornaam',
@@ -163,6 +165,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Person/Attribute:team_list+' => 'Alle teams waarvan deze persoon lid is',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'Alle tickets waarvan deze persoon de aanvrager is',
+	'Class:Person/Attribute:user_list' => 'Users~~',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Herkenbare naam manager',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Foto',
@@ -171,6 +175,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Person/UniquenessRule:employee_number' => 'Er is al een persoon in de organisatie \'$this->org_name$\' met hetzelfde identificatienummer',
 	'Class:Person/UniquenessRule:name+' => 'De naam moet uniek zijn binnen een organisatie',
 	'Class:Person/UniquenessRule:name' => 'Er is al een persoon in de organisatie \'$this->org_name$\' met dezelfde naam',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
 ));
 
 //
@@ -180,6 +185,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Leden',
 	'Class:Team/Attribute:persons_list+' => 'Alle personen die lid zijn van dit team',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
@@ -193,6 +199,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Document' => 'Document',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Naam',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organisatie',
@@ -292,6 +299,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkPersonToTeam' => 'Link Persoon / Team',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
+	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Naam team',
@@ -354,13 +363,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Person:info' => 'Globale informatie',
-	'UserLocal:info' => 'Globale informatie',
+	'User:info' => 'Globale informatie',
+	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Persoonlijke informatie',
 	'Person:notifiy' => 'Notificeer',
 ));
 
 // Themes
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'theme:fullmoon' => 'Full moon~~',
-	'theme:test-red' => 'Test instance (Red)~~',
+	'theme:fullmoon' => 'Full moon',
+	'theme:test-red' => 'Test instance (Red)',
 ));

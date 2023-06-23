@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="TelephonyCI" _delta="define">
       <parent>PhysicalDevice</parent>
@@ -14,6 +14,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="phonenumber"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-phone.svg</icon>
@@ -168,6 +172,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="phonenumber"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-telephone.svg</icon>
@@ -232,12 +240,6 @@
             </item>
             <item id="documents_list">
               <rank>160</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>180</rank>
-            </item>
-            <item id="services_list">
-              <rank>190</rank>
             </item>
           </items>
         </details>
@@ -306,6 +308,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="phonenumber">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>140</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="MobilePhone" _delta="define">
@@ -321,6 +342,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="phonenumber"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-mobile.svg</icon>
@@ -403,12 +428,6 @@
             <item id="documents_list">
               <rank>180</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>200</rank>
-            </item>
-            <item id="services_list">
-              <rank>210</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -482,6 +501,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="phonenumber">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>140</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="IPPhone" _delta="define">
@@ -497,6 +532,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="phonenumber"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-office-phone.svg</icon>
@@ -562,12 +601,6 @@
             <item id="documents_list">
               <rank>160</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>180</rank>
-            </item>
-            <item id="services_list">
-              <rank>190</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -635,6 +668,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="phonenumber">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>140</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Tablet" _delta="define">
@@ -650,6 +702,9 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-smartphone-tablet.svg</icon>
@@ -712,12 +767,6 @@
             <item id="documents_list">
               <rank>160</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>170</rank>
-            </item>
-            <item id="services_list">
-              <rank>180</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -785,6 +834,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="PC" _delta="define">
@@ -800,6 +868,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-laptop.svg</icon>
@@ -880,12 +952,6 @@
             </item>
             <item id="networkdevice_list">
               <rank>50</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>60</rank>
-            </item>
-            <item id="services_list">
-              <rank>70</rank>
             </item>
             <item id="col:col1">
               <rank>80</rank>
@@ -1041,6 +1107,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Printer" _delta="define">
@@ -1056,6 +1138,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-print.svg</icon>
@@ -1084,12 +1170,6 @@
             </item>
             <item id="networkdevice_list">
               <rank>50</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>60</rank>
-            </item>
-            <item id="services_list">
-              <rank>70</rank>
             </item>
             <item id="col:col1">
               <rank>80</rank>
@@ -1227,6 +1307,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Peripheral" _delta="define">
@@ -1242,6 +1338,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-electronics.svg</icon>
@@ -1303,12 +1403,6 @@
             </item>
             <item id="documents_list">
               <rank>150</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>170</rank>
-            </item>
-            <item id="services_list">
-              <rank>180</rank>
             </item>
           </items>
         </details>
@@ -1377,6 +1471,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+            <item id="model_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
   </classes>
@@ -1390,7 +1500,7 @@
               <dashlet id="25" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:EndUsers</title>
-                  <icon>../images/icons/icons8-team.svg</icon>
+                <icon>../images/icons/icons8-team.svg</icon>
               </dashlet>
               <dashlet id="26" xsi:type="DashletBadge">
                 <rank>1</rank>

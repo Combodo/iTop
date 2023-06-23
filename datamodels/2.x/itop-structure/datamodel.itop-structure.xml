@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -7,7 +7,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
@@ -285,10 +285,31 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
       <presentation>
+        <summary>
+          <items>
+            <item id="address">
+              <rank>10</rank>
+            </item>
+            <item id="postal_code">
+              <rank>20</rank>
+            </item>
+            <item id="city">
+              <rank>30</rank>
+            </item>
+            <item id="country">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="name">
@@ -386,6 +407,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="email"></attribute>
+            <attribute id="org_name"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -578,6 +603,10 @@
             <attribute id="first_name"/>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="email"></attribute>
+            <attribute id="org_id_friendlyname"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <image_attribute>picture</image_attribute>
@@ -617,6 +646,13 @@
           </rule>
         </uniqueness_rules>
       </properties>
+      <event_listeners>
+        <event_listener id="CheckUsersUpdate">
+          <event>EVENT_DB_CHECK_TO_WRITE</event>
+          <callback>CheckUsersOnUpdate</callback>
+          <rank>1</rank>
+        </event_listener>
+      </event_listeners>
       <fields>
         <field id="picture" xsi:type="AttributeImage">
           <display_max_width>96</display_max_width>
@@ -674,9 +710,53 @@
           <count_max>0</count_max>
           <ext_key_to_remote>team_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
+        </field>
+        <field id="user_list" xsi:type="AttributeLinkedSet">
+          <linked_class>User</linked_class>
+          <ext_key_to_me>contactid</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods>
+        <method id="CheckUsersOnUpdate">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[  	public function CheckUsersOnUpdate(Combodo\iTop\Service\Events\EventData $oEventData)
+  	{
+        // This method can block the Person modification, by adding a Check Issue
+        $aChanges = $this->ListChanges();
+        // Current User may not be allowed to see User class, so we can't use $this->Get('user_list')
+        $oSearch = new DBObjectSearch('User');
+        $oSearch->AddCondition('contactid', $this->GetKey(), '=');
+        $oSearch->AllowAllData();
+        $oUserSet = new DBObjectSet($oSearch);
+
+        // The organization's person was changed and it has associated Users
+        if (array_key_exists('org_id', $aChanges) && ($oUserSet->Count() > 0)) {
+            while($oUser = $oUserSet->Fetch())
+            {
+                $oAddon = UserRights::GetModuleInstance();
+                $aOrgs = $oAddon->GetUserOrgs($oUser,'Organization');
+                $oSet = $oUser->Get('profile_list');
+                $aProfiles = $oSet->GetColumnAsArray('profile');
+
+                // User is not allowed on the new Organization and has 'Portal user' Profile and is enabled
+                if ((count($aOrgs) > 0) && !in_array($this->Get('org_id'), $aOrgs) &&  in_array('Portal user',$aProfiles) && ($oUser->Get('status') === 'enabled'))
+                {   // Let's block the Person modification,
+                    // replace by $this->AddCheckWarning(...) if you don't want to block the modification
+                    $this->AddCheckIssue(Dict::Format('Class:Person/Error:ChangingOrgDenied', $this->Get('org_id_friendlyname')));
+                }
+            }
+        }
+  	}
+]]></code>
+        </method>
         <method id="CheckToDelete">
           <static>false</static>
           <access>public</access>
@@ -755,10 +835,32 @@
         </method>
       </methods>
       <presentation>
+        <summary>
+          <items>
+            <item id="function">
+              <rank>10</rank>
+            </item>
+            <item id="phone">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="team_list">
               <rank>10</rank>
+            </item>
+            <item id="user_list">
+              <rank>55</rank>
             </item>
             <item id="col:col1">
               <rank>40</rank>
@@ -900,6 +1002,11 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="function"></attribute>
+            <attribute id="org_id_friendlyname"></attribute>
+          </complementary_attributes>
+
         </naming>
         <style>
           <icon>../../images/icons/icons8-team.svg</icon>
@@ -921,10 +1028,27 @@
           <count_max>0</count_max>
           <ext_key_to_remote>person_id</ext_key_to_remote>
           <duplicates/>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
       <presentation>
+        <summary>
+          <items>
+            <item id="function">
+              <rank>10</rank>
+            </item>
+            <item id="phone">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="name">
@@ -1008,17 +1132,30 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="team_id"/>
-            <attribute id="person_id"/>
+            <attribute id="person_id_friendlyname"/>
+            <attribute id="team_name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="team_id"/>
             <attribute id="person_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="team_id"/>
+              <attribute id="person_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="team_id" xsi:type="AttributeExternalKey">
@@ -1056,10 +1193,10 @@
       <presentation>
         <details>
           <items>
-            <item id="team_id">
+            <item id="person_id">
               <rank>10</rank>
             </item>
-            <item id="person_id">
+            <item id="team_id">
               <rank>20</rank>
             </item>
             <item id="role_id">
@@ -1109,7 +1246,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1167,6 +1306,11 @@
         <db_final_class_field>finalclass</db_final_class_field>
         <naming>
           <attributes/>
+          <complementary_attributes>
+            <attribute id="org_name"></attribute>
+            <attribute id="status"></attribute>
+            <attribute id="documenttype_name"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -1223,15 +1367,19 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="draft">
               <code>draft</code>
+              <rank>10</rank>
             </value>
             <value id="published">
               <code>published</code>
+              <rank>20</rank>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
+              <rank>30</rank>
             </value>
           </values>
           <sql>status</sql>
@@ -1633,7 +1781,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1680,7 +1830,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1873,6 +2025,14 @@
         <precompiled_stylesheet>itop-structure/precompiled-themes/test-red/main.css</precompiled_stylesheet>
       </theme>
     </themes>
+    <themes_common>
+      <variables>
+        </variables>
+      <imports>
+        </imports>
+      <stylesheets>
+        </stylesheets>
+    </themes_common>
   </branding>
   <user_rights>
     <groups>
@@ -1880,4 +2040,5 @@
     <profiles>
     </profiles>
   </user_rights>
+  <constants/>
 </itop_design>

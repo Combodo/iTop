@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Global search
 Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Pages précédentes',

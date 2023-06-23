@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 <div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-is-{{ oUIBlock.GetLayout() }}{% if oUIBlock.GetIsScrollable() %} ibo-is-scrollable{% endif %}"
      data-role="ibo-tab-container" data-status="loading">
@@ -22,10 +22,15 @@
                             {% elseif oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
                                 <li class="ibo-tab-container--tab-header" data-role="ibo-tab-container--tab-header"
                                     data-tab-id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
-                                    data-tab-type="{{ oTab.GetType() }}">
+                                    data-tab-type="{{ oTab.GetType() }}"
+                                    {% if oTab.HasDescription() == true %}
+                                        data-tooltip-content="{{ oTab.GetDescription() }}"
+                                        {# Delay display to avoid having all tooltips appearing when mouse is just passing through the tabs #}
+                                        data-tooltip-show-delay="500"
+                                    {% endif %}>
                                     <a href="#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                                        class="ibo-tab-container--tab-toggler" data-role="ibo-tab-container--tab-toggler">
-                                        <span class="ibo-tab-container--tab-toggler-label" data-role="ibo-tab-container--tab-toggler-label" title="{{ oTab.GetTitle() }}">{{ oTab.GetTitle() }}</span>
+                                        <span class="ibo-tab-container--tab-toggler-label" data-role="ibo-tab-container--tab-toggler-label">{{ oTab.GetTitle() }}</span>
                                     </a>
                                 </li>
                             {% endif %}
@@ -41,7 +46,14 @@
                         <div class="ibo-tab-container--extra-tabs-list ibo-is-hidden" data-role="ibo-tab-container--extra-tabs-list">
                             {% for oTab in oUIBlock.GetSubBlocks() %}
                                 <a href="#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
-                                   class="ibo-tab-container--extra-tab-toggler" data-role="ibo-tab-container--extra-tab-toggler">
+                                   class="ibo-tab-container--extra-tab-toggler" data-role="ibo-tab-container--extra-tab-toggler"
+                                    {% if oTab.HasDescription() == true %}
+                                        {# Display both title and description as the title could be truncated if too long #}
+                                        data-tooltip-content="{{ '<div class="ibo-tab-container--extra-tab-toggler--tooltip-title">'|escape }}{{ oTab.GetTitle() }}{{ '</div><div class="ibo-tab-container--extra-tab-toggler--tooltip-description">'|escape }}{{ oTab.GetDescription() }}{{ '</div>'|escape }}"
+                                        data-tooltip-html-enabled="true"
+                                        {# Delay display to avoid having all tooltips appearing when mouse is just passing through the tabs #}
+                                        data-tooltip-show-delay="300"
+                                    {% endif %}>
                                     <span>{{ oTab.GetTitle() }}</span>
                                 </a>
                             {% endfor %}
@@ -65,7 +77,7 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <div id="{{ oUIBlock.GetId() }}--tab-container-list" class="ibo-tab-container--tab-container-list{" data-role="ibo-tab-container--tab-container-list">
+                <div id="{{ oUIBlock.GetId() }}--tab-container-list" class="ibo-tab-container--tab-container-list" data-role="ibo-tab-container--tab-container-list">
                 {% for oTab in oUIBlock.GetSubBlocks() %}
                     <div id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                          class="ibo-tab-container--tab-container">

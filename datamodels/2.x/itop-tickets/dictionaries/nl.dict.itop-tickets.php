@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,9 +21,9 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  * 
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -100,12 +100,15 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkContactToTicket' => 'Link Contact / Ticket',
 	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Ref',
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Contact',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name~~',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'E-mailadres contact',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rol',
@@ -181,6 +184,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:cmdbAbstractObject/Method:SetCurrentDate+' => 'Stel de veldwaarde in op de huidige datum',
 	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1' => 'Doelveld',
 	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1+' => 'Het veld dat voor het huidige object ingesteld moet worden',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull' => 'SetCurrentDateIfNull',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull+' => 'Vult het huidige tijdstip in als het veld leeg is.',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1' => 'Doelveld',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1+' => 'Het veld dat voor het huidige object ingesteld moet worden',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser' => 'Stel in op huidige gebruiker',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser+' => 'Stel de veldwaarde in op de huidige gebruiker',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1' => 'Doelveld',
@@ -197,6 +204,34 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2+' => 'Het veld waarin de referentiedatum opgegeven is',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3' => 'Werkuren',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Laat leeg om te berekenen op basis van het standaard werkschema, of stel in op "DefaultWorkingTimeComputer" om een 24x7-tijdschema af te dwingen.',
+	'Class:cmdbAbstractObject/Method:SetIfNull' => 'SetIfNull',
+	'Class:cmdbAbstractObject/Method:SetIfNull+' => 'Stel de veldwaarde in op een voorgedefinieerde waarde, als het veld leeg is.',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1' => 'Doelveld',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1+' => 'Het veld dat voor het huidige object ingesteld moet worden',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:2' => 'Waarde',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:2+' => 'De waarde die ingesteld moet worden',
+	'Class:cmdbAbstractObject/Method:AddValue' => 'AddValue',
+	'Class:cmdbAbstractObject/Method:AddValue+' => 'Voeg een voorgedefinieerde waarde toe aan een veld',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:1' => 'Doelveld',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:1+' => 'Het veld dat voor het huidige object ingesteld moet worden',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:2' => 'Waarde',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:2+' => 'Decimale waarde die toegevoegd moet worden. Dit kan ook een negatieve waarde zijn.',
+	'Class:cmdbAbstractObject/Method:SetComputedDate' => 'SetComputedDate',
+	'Class:cmdbAbstractObject/Method:SetComputedDate+' => 'Stel de veldwaarde in op een tijdstip berekend aan de hand van een ander veld met extra logica toegepast.',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:1' => 'Doelveld',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:1+' => 'Het veld dat voor het huidige object ingesteld moet worden',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:2' => 'Aanpassing',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:2+' => 'Aanpassing in tekstvorm (moet in het Engels), bv. "+3 days"',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:3' => 'Bronveld',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:3+' => 'Het veld waarop het nieuwe tijd gebaseerd is',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull' => 'SetComputedDateIfNull',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull+' => 'Stel in op een tijdstip berekend aan de hand van een ander veld met extra logica toegepast, als het veld leeg is.',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1' => 'Doelveld',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1+' => 'Het veld dat voor het huidige object ingesteld moet worden',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2' => 'Aanpassing',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2+' => 'Aanpassing in tekstvorm (moet in het Engels), bv. "+3 days"',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3' => 'Bronveld',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3+' => 'Het veld waarop het nieuwe tijd gebaseerd is',
 	'Class:cmdbAbstractObject/Method:Reset' => 'Reset',
 	'Class:cmdbAbstractObject/Method:Reset+' => 'Reset een veld naar de standaardwaarde.',
 	'Class:cmdbAbstractObject/Method:Reset/Param:1' => 'Doelveld',
@@ -217,13 +252,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Doel gebaseerd op een SLT (TTR)',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:Document/Attribute:contracts_list' => 'Contracten',
-	'Class:Document/Attribute:contracts_list+' => 'Alle contracten gerelateerd aan dit document',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'Alle services gerelateerd aan dit document.',
-));

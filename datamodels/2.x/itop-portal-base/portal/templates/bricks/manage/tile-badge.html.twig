@@ -9,7 +9,7 @@
                 class="tile tile_badge{# vertical-center#}"
                 id="brick-{{ oBrick.GetId }}"
                 data-brick-id="{{ oBrick.GetId }}"
-                {% if oBrick.GetDescription is not empty %} data-toggle="tooltip" data-original-title="{{ oBrick.GetDescription|dict_s|raw }}"{% endif %}
+                {% if oBrick.GetDescription is not empty %} data-tooltip-html-enabled="true"  data-tooltip-content="{{ oBrick.GetDescription|dict_s|raw }}"{% endif %}
                 >
             <div>
                 <div>

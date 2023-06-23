@@ -13,9 +13,7 @@
 # ArchiveTar
 /pear/archive_tar/docs
 /pear/archive_tar/scripts
-/pear/archive_tar/tests
 /pear/archive_tar/sync-php4
-/pear/console_getopt/tests
 
 # Emogrifier
 /pelago/emogrifier/.github

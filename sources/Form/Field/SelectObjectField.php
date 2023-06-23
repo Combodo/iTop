@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -23,11 +23,13 @@ namespace Combodo\iTop\Form\Field;
 use BinaryExpression;
 use Closure;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
+use ContextTag;
 use DBObjectSet;
 use DBSearch;
 use FieldExpression;
 use MetaModel;
 use ScalarExpression;
+use utils;
 
 /**
  * Description of SelectObjectField
@@ -237,41 +239,70 @@ class SelectObjectField extends Field
 	/**
 	 * @return int
 	 */
-	public function GetControlType()
-	{
+	public function GetControlType() {
 		return $this->iControlType;
 	}
 
 	/**
 	 * @return string|null
 	 */
-	public function GetSearchEndpoint()
-	{
+	public function GetSearchEndpoint() {
 		return $this->sSearchEndpoint;
+	}
+
+	public function Validate() {
+		if ((ContextTag::Check(ContextTag::TAG_REST)) && ($this->GetReadOnly() === false)) {
+			// Only doing the check when coming from the REST API, as the user portal might send invalid values (see VerifyCurrentValue() method below)
+			// Also do not check read only fields, are they are send with a null value when submitting request template from the console
+			$sCurrentValueForExtKey = $this->currentValue;
+			if (utils::IsNotNullOrEmptyString($sCurrentValueForExtKey) && ($sCurrentValueForExtKey !== 0)) {
+				$oSetForExistingCurrentValue = $this->GetObjectsSet();
+				$iObjectsCount = $oSetForExistingCurrentValue->CountWithLimit(1);
+
+				if ($iObjectsCount === 0) {
+					$this->SetValid(false);
+					$this->AddErrorMessage("Value $sCurrentValueForExtKey does not match the corresponding filter set");
+
+					return $this->GetValid();
+				}
+			}
+		}
+
+		return parent::Validate();
 	}
 
 	/**
 	 * Resets current value if not among allowed ones.
 	 * By default, reset is done ONLY when the field is not read-only.
 	 *
+	 * Called conditionally from {@see \Combodo\iTop\Portal\Form\ObjectFormManager::Build}
+	 * This check isn't in the Validate method as we don't want to check for untouched and invalid values (value was set in the past, it is now invalid, but the user didn't change it)
+	 *
 	 * @param boolean $bAlways Set to true to verify even when the field is read-only.
 	 *
 	 * @throws \CoreException
 	 */
-	public function VerifyCurrentValue(bool $bAlways = false)
-	{
-		if (!$this->GetReadOnly() || $bAlways)
-		{
-			$oValuesScope = $this->GetSearch()->DeepClone();
-			$oBinaryExp = new BinaryExpression(new FieldExpression('id', $oValuesScope->GetClassAlias()), '=',
-				new ScalarExpression($this->currentValue));
-			$oValuesScope->AddConditionExpression($oBinaryExp);
-			$oValuesSet = new DBObjectSet($oValuesScope);
+	public function VerifyCurrentValue(bool $bAlways = false) {
+		if (!$this->GetReadOnly() || $bAlways) {
+			$oValuesSet = $this->GetObjectsSet();
 
-			if ($oValuesSet->Count() === 0)
-			{
+			if ($oValuesSet->Count() === 0) {
 				$this->currentValue = null;
 			}
 		}
+	}
+
+	final protected function GetObjectsSet() {
+		$sCurrentValueForExtKey = $this->currentValue;
+
+		$oSearchForExistingCurrentValue = $this->oSearch->DeepClone();
+		$oCheckIdAgainstCurrentValueExpression = new BinaryExpression(
+			new FieldExpression('id', $oSearchForExistingCurrentValue->GetClassAlias()),
+			'=',
+			new ScalarExpression($sCurrentValueForExtKey)
+		);
+		$oSearchForExistingCurrentValue->AddConditionExpression($oCheckIdAgainstCurrentValueExpression);
+
+		return new DBObjectSet($oSearchForExistingCurrentValue);
 	}
 }

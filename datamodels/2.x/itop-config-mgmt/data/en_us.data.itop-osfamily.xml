@@ -1,0 +1,48 @@
+<Set>
+    <OSFamily alias="OSFamily" id="1">
+        <name>Arch</name>
+        <finalclass>OS Family</finalclass>
+        <friendlyname>Arch</friendlyname>
+    </OSFamily>
+    <OSFamily alias="OSFamily" id="2">
+        <name>Debian</name>
+        <finalclass>OS Family</finalclass>
+        <friendlyname>Debian</friendlyname>
+    </OSFamily>
+    <OSFamily alias="OSFamily" id="3">
+        <name>Oracle Linux</name>
+        <finalclass>OS Family</finalclass>
+        <friendlyname>Oracle Linux</friendlyname>
+    </OSFamily>
+    <OSFamily alias="OSFamily" id="4">
+        <name>Red Hat</name>
+        <finalclass>OS Family</finalclass>
+        <friendlyname>Red Hat</friendlyname>
+    </OSFamily>
+    <OSFamily alias="OSFamily" id="5">
+        <name>Ubuntu</name>
+        <finalclass>OS Family</finalclass>
+        <friendlyname>Ubuntu</friendlyname>
+    </OSFamily>
+    <OSFamily alias="OSFamily" id="6">
+        <name>Ubuntu server</name>
+        <finalclass>OS Family</finalclass>
+        <friendlyname>Ubuntu server</friendlyname>
+    </OSFamily>
+    <OSFamily alias="OSFamily" id="7">
+        <name>vCenter Server</name>
+        <finalclass>OS Family</finalclass>
+        <friendlyname>vCenter Server</friendlyname>
+    </OSFamily>
+    <OSFamily alias="OSFamily" id="8">
+        <name>Windows</name>
+        <finalclass>OS Family</finalclass>
+        <friendlyname>Windows</friendlyname>
+    </OSFamily>
+    <OSFamily alias="OSFamily" id="9">
+        <name>Windows server</name>
+        <finalclass>OS Family</finalclass>
+        <friendlyname>Windows server</friendlyname>
+    </OSFamily>
+</Set>
+

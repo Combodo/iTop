@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * DB Server abstraction
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -157,7 +157,7 @@ class CMDBSource
 		$iPort = null;
 		self::InitServerAndPort($sDbHost, $sServer, $iPort);
 
-		$iFlags = null;
+		$iFlags = 0;
 
 		// *some* errors (like connection errors) will throw mysqli_sql_exception instead of generating warnings printed to the output
 		// but some other errors will still cause the query() method to return false !!!
@@ -166,7 +166,6 @@ class CMDBSource
 		try
 		{
 			$oMysqli = new mysqli();
-			$oMysqli->init();
 
 			if ($bTlsEnabled)
 			{
@@ -350,14 +349,22 @@ class CMDBSource
 
 	}
 
+	/**
+	 * Get the version of the database server.
+	 *
+	 * @return string
+	 * @throws \MySQLException
+	 *
+	 * @uses \CMDBSource::QueryToScalar() so needs a connection opened !
+	 */
 	public static function GetDBVersion()
 	{
-		$aVersions = self::QueryToCol('SELECT Version() as version', 'version');
-		return $aVersions[0];
+		return static::QueryToScalar('SELECT VERSION()', 0);
 	}
 
 	/**
-	 * @return string
+	 * @deprecated Use `CMDBSource::GetDBVersion` instead.
+	 * @uses mysqli_get_server_info
 	 */
 	public static function GetServerInfo()
 	{
@@ -367,8 +374,10 @@ class CMDBSource
 	/**
 	 * Get the DB vendor between MySQL and its main forks
 	 * @return string
+	 *
+	 * @uses \CMDBSource::GetServerVariable() so needs a connection opened !
 	 */
-	static public function GetDBVendor()
+	public static function GetDBVendor()
 	{
 		$sDBVendor = static::ENUM_DB_VENDOR_MYSQL;
 		
@@ -672,13 +681,13 @@ class CMDBSource
 	private static function StartTransaction()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+
 		$bHasExistingTransactions = self::IsInsideTransaction();
 		if (!$bHasExistingTransactions) {
-			IssueLog::Trace("START TRANSACTION $sCaller", LogChannels::CMDB_SOURCE);
+			IssueLog::Trace("START TRANSACTION was sent to the DB", LogChannels::CMDB_SOURCE, ['stacktrace' => $aStackTrace]);
 			self::DBQuery('START TRANSACTION');
 		} else {
-			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") START TRANSACTION $sCaller", LogChannels::CMDB_SOURCE);
+			IssueLog::Trace("START TRANSACTION ignored as a transaction is already opened", LogChannels::CMDB_SOURCE, ['stacktrace' => $aStackTrace]);
 		}
 
 		self::AddTransactionLevel();
@@ -697,7 +706,11 @@ class CMDBSource
 	private static function Commit()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if(isset($aStackTrace[2]['class']) && isset($aStackTrace[2]['function'])) {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		} else {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].') ';
+		}
 		if (!self::IsInsideTransaction()) {
 			// should not happen !
 			IssueLog::Error("No Transaction COMMIT $sCaller", LogChannels::CMDB_SOURCE);
@@ -731,7 +744,11 @@ class CMDBSource
 	private static function Rollback()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if(isset($aStackTrace[2]['class']) && isset($aStackTrace[2]['function'])) {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		} else {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].') ';
+		}
 		if (!self::IsInsideTransaction()) {
 			// should not happen !
 			IssueLog::Error("No Transaction ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
@@ -1491,19 +1508,13 @@ class CMDBSource
 	 * Returns the value of the specified server variable
 	 * @param string $sVarName Name of the server variable
 	 * @return mixed Current value of the variable
-	 */	   	
+	 * @throws \MySQLQueryHasNoResultException|\MySQLException
+	 */
 	public static function GetServerVariable($sVarName)
 	{
-		$result = '';
-		$sSql = "SELECT @@$sVarName as theVar";
-		$aRows = self::QueryToArray($sSql);
-		if (count($aRows) > 0)
-		{
-			$result = $aRows[0]['theVar'];
-		}
-		return $result;
+		$sSql = 'SELECT @@'.$sVarName;
+		return static::QueryToScalar($sSql, 0) ?: '';
 	}
-
 
 	/**
 	 * Returns the privileges of the current user
@@ -1599,5 +1610,23 @@ class CMDBSource
 		}
 
 		return 'ALTER DATABASE'.CMDBSource::GetSqlStringColumnDefinition().';';
+	}
+
+	/**
+	 * Check which mysql client option (--ssl or --ssl-mode) to be used for encrypted connection
+	 *
+	 * @return bool true if --ssl-mode should be used, false otherwise
+	 * @throws \MySQLException
+	 *
+	 * @link https://dev.mysql.com/doc/refman/5.7/en/connection-options.html#encrypted-connection-options "Command Options for Encrypted Connections"
+	 */
+	public static function IsSslModeDBVersion()
+	{
+		if (static::GetDBVendor() === static::ENUM_DB_VENDOR_MYSQL)
+		{
+			//Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
+			return version_compare(static::GetDBVersion(), '5.7.11', '>=');
+		}
+		return false;
 	}
 }

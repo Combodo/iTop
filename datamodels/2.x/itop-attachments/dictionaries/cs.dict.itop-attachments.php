@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
  *
  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
@@ -75,6 +75,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Attachments:File:Uploader' => 'Uploaded by~~',
 	'Attachments:File:Size' => 'Size~~',
 	'Attachments:File:MimeType' => 'Type~~',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
 ));
 //
 // Class: Attachment
@@ -87,4 +88,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 ));

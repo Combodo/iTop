@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -25,6 +25,7 @@ use AttributeDuration;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
@@ -53,13 +54,48 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 		if ($sFieldClass == 'Combodo\\iTop\\Form\\Field\\HiddenField')
 		{
-			$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
+			$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="'.utils::EscapeHtml($this->oField->GetCurrentValue()).'"/>');
 		}
 		else
 		{
 			$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
-			$oBlock->AddDataAttribute("input-id",$this->oField->GetGlobalId());
-			$oBlock->AddDataAttribute("input-type",$sFieldClass);
+			$oBlock->SetAttLabel($this->oField->GetLabel())
+				->AddDataAttribute("input-id",$this->oField->GetGlobalId())
+				->AddDataAttribute("input-type",$sFieldClass);
+
+			// Propagate data attribute from Field to UIBlock
+			// Note: This might no longer be necessary after the upcoming attributes rework project
+			foreach ($this->oField->GetMetadata() as $sMetadataKey => $sMetadataValue) {
+				switch ($sMetadataKey) {
+					// Important: Only some data attributes can be overloaded, this is done on purpose (eg. "input-type" set previously by an AttributeCustomFields)
+					case 'attribute-code':
+					case 'attribute-type':
+					case 'input-type':
+						if (utils::IsNotNullOrEmptyString($sMetadataValue)) {
+							switch ($sMetadataKey) {
+								case 'attribute-code':
+									$oBlock->SetAttCode($sMetadataValue);
+									break;
+
+								case 'attribute-type':
+									$oBlock->SetAttType($sMetadataValue ?? '');
+									break;
+
+								case 'input-type':
+									$oBlock->AddDataAttribute($sMetadataKey, $sMetadataValue ?? '');
+									break;
+							}
+						}
+						break;
+
+					default:
+						if (false === $oBlock->HasDataAttribute($sMetadataKey)) {
+							$oBlock->AddDataAttribute($sMetadataKey, $sMetadataValue ?? '');
+						}
+						break;
+		       }
+			}
+
 			switch ($sFieldClass)
 			{
 				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
@@ -73,11 +109,10 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
 						$oValue->AddSubBlock(new Html($this->oField->GetCurrentValue()));
 					}
-					else
-					{
-						$oField = UIContentBlockUIBlockFactory::MakeStandard("",["field_input_zone", "field_input_datetime", "ibo-input-field-wrapper", "ibo-input-datetime-wrapper"]);
+					else {
+						$oField = UIContentBlockUIBlockFactory::MakeStandard("", ["field_input_zone", "field_input_datetime", "ibo-input-field-wrapper", "ibo-input-datetime-wrapper"]);
 						$oValue->AddSubBlock($oField);
-						$oField->AddSubBlock(new Html('<input class="date-pick ibo-input ibo-input-date" type="text" placeholder="'.htmlentities($sPlaceHolder, ENT_QUOTES, 'UTF-8').'" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" autocomplete="off"/>'));
+						$oField->AddSubBlock(new Html('<input class="date-pick ibo-input ibo-input-date" type="text" placeholder="'.utils::EscapeHtml($sPlaceHolder).'" id="'.$this->oField->GetGlobalId().'" value="'.utils::EscapeHtml($this->oField->GetCurrentValue()).'" autocomplete="off"/>'));
 						$oField->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
 					$oBlock->AddSubBlock($oValue);
@@ -111,15 +146,17 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
 
-					$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
-					$oText->AddCSSClass('ibo-input-field-wrapper ibo-input');
-					$oValue->AddSubBlock($oText);
+
 					if ($this->oField->GetReadOnly())
 					{
-						$oText->SetIsDisabled(true);
+						$oValue->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard())->AddSubBlock(HtmlFactory::MakeHtmlContent($this->oField->GetCurrentValue()));
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(), $this->oField->GetGlobalId()));
 					}
 					else
 					{
+						$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
+						$oText->AddCSSClasses(['ibo-input-field-wrapper', 'ibo-input']);
+						$oValue->AddSubBlock($oText);
 						// Some additional stuff if we are displaying it with a rich editor
 						if ($bRichEditor)
 						{

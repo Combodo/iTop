@@ -1,11 +1,11 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /*
  * @author Hipska (2018, 2019)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:RequestManagement' => 'Helpdesk',
@@ -38,6 +38,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Open verzoeken per soort',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open verzoeken per organisatie',
 	'Class:UserRequest:KnownErrorList' => 'Gekende fouten',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 ));
 
 // Dictionnay conventions
@@ -113,6 +114,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Laag',
 	'Class:UserRequest/Attribute:origin' => 'Oorsprong',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'Persoonlijk',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Mondeling, in persoon',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Chat',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'E-mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'E-mail',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -246,7 +251,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Wacht op goedkeuring',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kan het verzoek niet aan zichzelf toewijzen als hoofdincident',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (los subverzoeken op)',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem deze kenmerken over: service, team, agent, oplossing',
 ));

@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -109,13 +109,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:fallback_plan' => '回滚计划',
 	'Class:Change/Attribute:fallback_plan+' => '',
 	'Class:Change/Attribute:related_request_list' => '相关需求',
-	'Class:Change/Attribute:related_request_list+' => '该变更相关的所有用户需求',
+	'Class:Change/Attribute:related_request_list+' => '此变更相关的所有用户需求',
 	'Class:Change/Attribute:related_incident_list' => '相关事件',
-	'Class:Change/Attribute:related_incident_list+' => '该变更相关的所有事件',
+	'Class:Change/Attribute:related_incident_list+' => '此变更相关的所有事件',
 	'Class:Change/Attribute:related_problems_list' => '相关问题',
-	'Class:Change/Attribute:related_problems_list+' => '该变更相关的所有问题',
+	'Class:Change/Attribute:related_problems_list+' => '此变更相关的所有问题',
 	'Class:Change/Attribute:child_changes_list' => '子变更',
-	'Class:Change/Attribute:child_changes_list+' => '该变更相关的所有子变更',
+	'Class:Change/Attribute:child_changes_list+' => '此变更相关的所有子变更',
 	'Class:Change/Attribute:parent_id_friendlyname' => '父级变更昵称',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Stimulus:ev_assign' => '分配',

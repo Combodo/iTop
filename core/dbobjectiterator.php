@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * A set of persistent objects, could be heterogeneous as long as the objects in the set have a common ancestor class 
  *
  * @package     iTopORM
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 interface iDBObjectSetIterator extends Countable
@@ -38,7 +38,7 @@ interface iDBObjectSetIterator extends Countable
 	 *
 	 * @return int
 	 */
-	public function Count();
+	public function Count(): int;
 
 	/**
 	 * Reset the cursor to the first item in the collection. Equivalent to Seek(0)
@@ -52,7 +52,7 @@ interface iDBObjectSetIterator extends Countable
 	 *
 	 * @param int $iRow
 	 */
-	public function Seek($iPosition);
+	public function Seek($iPosition): void;
 
 	/**
 	 * Fetch the object at the current position in the collection and move the cursor to the next position.

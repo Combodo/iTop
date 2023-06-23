@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -60,9 +60,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:KnownError/Attribute:version' => 'Version',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
-	'Class:KnownError/Attribute:ci_list+' => '',
+	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Dokumenter',
-	'Class:KnownError/Attribute:document_list+' => '',
+	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
 ));
 
 //
@@ -72,6 +72,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkErrorToFunctionalCI' => 'Sammenhæng Fejl/FunctionalCI',
 	'Class:lnkErrorToFunctionalCI+' => '',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI-Navn',
@@ -91,6 +92,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDocumentToError' => 'Sammenhæng Dokumenter/Fejl',
 	'Class:lnkDocumentToError+' => '',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Dokument',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Dokumentnavn',

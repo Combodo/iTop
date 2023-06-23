@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -31,6 +31,8 @@ use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
+use CoreCannotSaveObjectException;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
@@ -39,10 +41,11 @@ use Dict;
 use DOMDocument;
 use DOMXPath;
 use Exception;
+use ExceptionLog;
 use InlineImage;
 use IssueLog;
+use LogChannels;
 use MetaModel;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
@@ -65,8 +68,6 @@ class ObjectFormManager extends FormManager
 	/** @var string ENUM_MODE_APPLY_STIMULUS */
 	const ENUM_MODE_APPLY_STIMULUS = 'apply_stimulus';
 
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $oContainer */
-	protected $oContainer;
 	/** @var \cmdbAbstractObject $oObject */
 	protected $oObject;
 	/** @var string $sMode */
@@ -79,39 +80,52 @@ class ObjectFormManager extends FormManager
 	protected $aCallbackUrls = array();
 	/**
 	 * List of hidden fields, used for form update (eg. remove them from the form regarding they dependencies)
+	 *
 	 * @var array $aHiddenFieldsId
 	 * @since 2.7.5
 	 */
 	protected $aHiddenFieldsId = array();
 
 	/**
-	 * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
-	 * - formobject_class : The class of the object that is being edited/viewed
-	 * - formmode : view|edit|create
-	 * - values for parent
+	 * @var ObjectFormHandlerHelper $oFormHandlerHelper
+	 * @since 3.1.0 Replace container. Allow access to others applications services.
+	 */
+	private $oFormHandlerHelper;
+
+
+	/**
+	 * @param string|array $formManagerData value of the formmanager_data portal parameter, either JSON or object
 	 *
-	 * @param bool $bTrustContent if false then won't allow TWIG content
+	 * @return array formmanager_data as a PHP array
+	 *
+	 * @since 2.7.6 3.0.0 N°4384 method creation : factorize as this is used twice now
+	 * @since 2.7.7 3.0.1 N°4867 now only used once, but we decided to keep this method anyway
+	 */
+	public static function DecodeFormManagerData($formManagerData)
+	{
+		if (is_array($formManagerData)) {
+			return $formManagerData;
+		}
+
+		return json_decode($formManagerData, true);
+	}
+
+	/**
+	 * @param string $sJson JSON data that must contain at least :
+	 *       - formobject_class : The class of the object that is being edited/viewed
+	 *       - formmode : view|edit|create
+	 *       - values for parent
+	 *
+	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager new instance init from JSON data
 	 *
 	 * @inheritDoc
 	 * @throws \Exception
-	 * @throws \SecurityException if twig content is present and $bTrustContent is false
+	 * @since 2.7.6 3.0.0 N°4384 new $bTrustContent parameter
+	 * @since 2.7.7 3.0.1 N°4867 remove param $bTrustContent
 	 */
-	public static function FromJSON($sJson, $bTrustContent = false)
+	public static function FromJSON($sJson)
 	{
-		if (is_array($sJson)) {
-			$aJson = $sJson;
-		} else {
-			$aJson = json_decode($sJson, true);
-		}
-
-		if (false === $bTrustContent) {
-			/** @noinspection NestedPositiveIfStatementsInspection */
-			if (isset($aJson['formproperties']['layout']['type']) && ($aJson['formproperties']['layout']['type'] === 'twig')) {
-				// There will be an IssueLog above in the hierarchy due to the exception, but we are logging here so that we can output the JSON data !
-				IssueLog::Error('Portal received a query with forbidden twig content!', \LogChannels::PORTAL, ['formmanager_data' => $aJson]);
-				throw new \SecurityException('Twig content not allowed in this context!');
-			}
-		}
+		$aJson = static::DecodeFormManagerData($sJson);
 
 		/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 		$oFormManager = parent::FromJSON($sJson);
@@ -166,54 +180,15 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
-	 * @param string $sPostedFormManagerData received data from the browser
-	 * @param array $aOriginalFormProperties data generated server side
-	 *
-	 * @return bool true if the data are identical
-	 *
-	 * @since 2.7.6 3.0.0 N°4384 check formmanager_data
-	 */
-	public static function CanTrustFormLayoutContent($sPostedFormManagerData, $aOriginalFormProperties)
-	{
-		$aPostedFormManagerData = json_decode($sPostedFormManagerData, true);
-		$sPostedFormLayoutType = (isset($aPostedFormManagerData['formproperties']['layout']['type'])) ? $aPostedFormManagerData['formproperties']['layout']['type'] : '';
-
-		if ($sPostedFormLayoutType === 'xhtml') {
-			return true;
-		}
-
-		// we need to parse the content so that autoclose tags are returned correctly (`<div />` => `<div></div>`)
-		$oHtmlDocument = new \DOMDocument();
-
-		$sPostedFormLayoutContent = (isset($aPostedFormManagerData['formproperties']['layout']['content'])) ? $aPostedFormManagerData['formproperties']['layout']['content'] : '';
-		$oHtmlDocument->loadXML('<root>'.$sPostedFormLayoutContent.'</root>');
-		$sPostedFormLayoutRendered = $oHtmlDocument->saveHTML();
-
-		$sOriginalFormLayoutContent = (isset($aOriginalFormProperties['layout']['content'])) ? $aOriginalFormProperties['layout']['content'] : '';
-		$oHtmlDocument->loadXML('<root>'.$sOriginalFormLayoutContent.'</root>');
-		$sOriginalFormLayoutContentRendered = $oHtmlDocument->saveHTML();
-
-		return ($sPostedFormLayoutRendered === $sOriginalFormLayoutContentRendered);
-	}
-
-	/**
-	 *
-	 * @return \Symfony\Component\DependencyInjection\ContainerInterface
-	 */
-	public function GetContainer()
-	{
-		return $this->oContainer;
-	}
-
-	/**
-	 *
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
+	 * @param \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oFormHandlerHelper
 	 *
 	 * @return $this
+	 * @since 3.1.0
+	 *
 	 */
-	public function SetContainer(ContainerInterface $oContainer)
+	public function SetObjectFormHandlerHelper(ObjectFormHandlerHelper $oFormHandlerHelper)
 	{
-		$this->oContainer = $oContainer;
+		$this->oFormHandlerHelper = $oFormHandlerHelper;
 
 		return $this;
 	}
@@ -454,28 +429,21 @@ class ObjectFormManager extends FormManager
 				break;
 		}
 		// - The layout
-		if ($this->aFormProperties['layout'] !== null)
-		{
+		if ($this->aFormProperties['layout'] !== null) {
 			// Checking if we need to render the template from twig to html in order to parse the fields
-			if ($this->aFormProperties['layout']['type'] === 'twig')
-			{
-				if ($this->oContainer !== null)
-				{
+			if ($this->aFormProperties['layout']['type'] === 'twig') {
+
+				if ($this->oFormHandlerHelper !== null) {
 					/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oObjectFormHandler */
-					$oObjectFormHandler = $this->oContainer->get('object_form_handler');
-					$sRendered = $oObjectFormHandler->RenderFormFromTwig(
+					$sRendered = $this->oFormHandlerHelper->RenderFormFromTwig(
 						$oForm->GetId(),
 						$this->aFormProperties['layout']['content'],
 						array('oRenderer' => $this->oRenderer, 'oObject' => $this->oObject)
 					);
-				}
-				else
-				{
+				} else {
 					$sRendered = 'Form not rendered because of missing container';
 				}
-			}
-			else
-			{
+			} else {
 				$sRendered = $this->aFormProperties['layout']['content'];
 			}
 
@@ -685,7 +653,7 @@ class ObjectFormManager extends FormManager
 
 			/** @var Field $oField */
 			$oField = null;
-			if (is_callable(get_class($oAttDef).'::MakeFormField'))
+			if (is_callable([$oAttDef, 'MakeFormField']))
 			{
 				$oField = $oAttDef->MakeFormField($this->oObject);
 			}
@@ -767,42 +735,36 @@ class ObjectFormManager extends FormManager
 					}
 					// - Field that require a search endpoint
 					if (in_array(get_class($oField),
-						array('Combodo\\iTop\\Form\\Field\\SelectObjectField', 'Combodo\\iTop\\Form\\Field\\LinkedSetField')))
-					{
+						array('Combodo\\iTop\\Form\\Field\\SelectObjectField', 'Combodo\\iTop\\Form\\Field\\LinkedSetField'))) {
 						/** @var \Combodo\iTop\Form\Field\SelectObjectField|\Combodo\iTop\Form\Field\LinkedSetField $oField */
-						if ($this->oContainer !== null)
-						{
-							$sSearchEndpoint = $this->oContainer->get('url_generator')->generate('p_object_search_generic', array(
-								'sTargetAttCode' => $oAttDef->GetCode(),
+						if ($this->oFormHandlerHelper !== null) {
+							$sSearchEndpoint = $this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_search_generic', array(
+								'sTargetAttCode'   => $oAttDef->GetCode(),
 								'sHostObjectClass' => get_class($this->oObject),
-								'sHostObjectId' => ($this->oObject->IsNew()) ? null : $this->oObject->GetKey(),
-								'ar_token' => $this->GetActionRulesToken(),
+								'sHostObjectId'    => ($this->oObject->IsNew()) ? null : $this->oObject->GetKey(),
+								'ar_token'         => $this->GetActionRulesToken(),
 							));
 							$oField->SetSearchEndpoint($sSearchEndpoint);
 						}
 					}
 					// - Field that require an information endpoint
-					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\LinkedSetField')))
-					{
+					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\LinkedSetField'))) {
 						/** @var \Combodo\iTop\Form\Field\LinkedSetField $oField */
-						if ($this->oContainer !== null)
-						{
-							$oField->SetInformationEndpoint($this->oContainer->get('url_generator')->generate('p_object_get_information_json'));
+						if ($this->oFormHandlerHelper !== null) {
+							$oField->SetInformationEndpoint($this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_get_information_for_linked_set_json'));
 						}
 					}
 					// - Field that require to apply scope on its DM OQL
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField')))
 					{
 						/** @var \Combodo\iTop\Form\Field\SelectObjectField $oField */
-						if ($this->oContainer !== null)
-						{
+						if ($this->oFormHandlerHelper !== null) {
 							$oScopeOriginal = ($oField->GetSearch() !== null) ? $oField->GetSearch() : DBSearch::FromOQL($oAttDef->GetValuesDef()->GetFilterExpression());
 
 							/** @var \DBSearch $oScopeSearch */
-							$oScopeSearch = $this->oContainer->get('scope_validator')->GetScopeFilterForProfiles(UserRights::ListProfiles(),
+							$oScopeSearch = $this->oFormHandlerHelper->GetScopeValidator()->GetScopeFilterForProfiles(UserRights::ListProfiles(),
 								$oScopeOriginal->GetClass(), UR_ACTION_READ);
-							if ($oScopeSearch === null)
-							{
+							if ($oScopeSearch === null) {
 								IssueLog::Info(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' has no scope query for '.$oScopeOriginal->GetClass().' class.');
 								throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 							}
@@ -842,15 +804,14 @@ class ObjectFormManager extends FormManager
 									if (in_array(get_class($oCustomField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField')))
 									{
 										/** @var \Combodo\iTop\Form\Field\SelectObjectField $oCustomField */
-										if ($this->oContainer !== null)
-										{
+										if ($this->oFormHandlerHelper->getUrlGenerator() !== null) {
 
-											$sSearchEndpoint = $this->oContainer->get('url_generator')->generate('p_object_search_generic',
+											$sSearchEndpoint = $this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_search_generic',
 												array(
-													'sTargetAttCode' => $oAttDef->GetCode(),
+													'sTargetAttCode'   => $oAttDef->GetCode(),
 													'sHostObjectClass' => get_class($this->oObject),
-													'sHostObjectId' => ($this->oObject->IsNew()) ? null : $this->oObject->GetKey(),
-													'ar_token' => $this->GetActionRulesToken(),
+													'sHostObjectId'    => ($this->oObject->IsNew()) ? null : $this->oObject->GetKey(),
+													'ar_token'         => $this->GetActionRulesToken(),
 												));
 											$oCustomField->SetSearchEndpoint($sSearchEndpoint);
 										}
@@ -885,46 +846,46 @@ class ObjectFormManager extends FormManager
 					/** @var \Combodo\iTop\Form\Field\LinkedSetField $oField */
 					/** @var \AttributeLinkedSetIndirect $oAttDef */
 					//   - Overriding attributes to display
-					if ($this->oContainer !== null)
-					{
+					if ($this->oFormHandlerHelper !== null) {
 						// Note : This snippet is inspired from AttributeLinkedSet::MakeFormField()
-						$aAttCodesToDisplay = ApplicationHelper::GetLoadedListFromClass($this->oContainer->getParameter('combodo.portal.instance.conf')['lists'],
+						$aAttCodesToDisplay = ApplicationHelper::GetLoadedListFromClass($this->oFormHandlerHelper->getCombodoPortalConf()['lists'],
 							$oField->GetTargetClass(), 'list');
 						// - Adding friendlyname attribute to the list is not already in it
 						$sTitleAttCode = 'friendlyname';
-						if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay))
-						{
+						if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay)) {
 							$aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
 						}
 						// - Adding attribute labels
 						$aAttributesToDisplay = array();
-						foreach ($aAttCodesToDisplay as $sAttCodeToDisplay)
-						{
+						foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
 							$oAttDefToDisplay = MetaModel::GetAttributeDef($oField->GetTargetClass(), $sAttCodeToDisplay);
-							$aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
+							$aAttributesToDisplay[$sAttCodeToDisplay] = [
+								'att_code' => $sAttCodeToDisplay,
+								'label'    => $oAttDefToDisplay->GetLabel(),
+							];
 						}
 						$oField->SetAttributesToDisplay($aAttributesToDisplay);
+
+						// Link attributes to display
+						if ($oField->IsIndirect()) {
+							$sClass = get_class($this->oObject);
+							$oField->SetLnkAttributesToDisplay($this->GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode));
+						}
 					}
 					//    - Filtering links regarding scopes
-					if ($this->oContainer !== null)
-					{
+					if ($this->oFormHandlerHelper !== null) {
 						$aLimitedAccessItemIDs = array();
 
 						/** @var \ormLinkSet $oFieldOriginalSet */
 						$oFieldOriginalSet = $oField->GetCurrentValue();
-						while ($oLink = $oFieldOriginalSet->Fetch())
-						{
-							if ($oField->IsIndirect())
-							{
+						foreach ($oFieldOriginalSet as $oLink) {
+							if ($oField->IsIndirect()) {
 								$iRemoteKey = $oLink->Get($oAttDef->GetExtKeyToRemote());
-							}
-							else
-							{
+							} else {
 								$iRemoteKey = $oLink->GetKey();
 							}
 
-							if (!$this->oContainer->get('security_helper')->IsActionAllowed(UR_ACTION_READ, $oField->GetTargetClass(), $iRemoteKey))
-							{
+							if (!$this->oFormHandlerHelper->getSecurityHelper()->IsActionAllowed(UR_ACTION_READ, $oField->GetTargetClass(), $iRemoteKey)) {
 								$aLimitedAccessItemIDs[] = $iRemoteKey;
 							}
 						}
@@ -946,23 +907,22 @@ class ObjectFormManager extends FormManager
 				if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\BlobField', 'Combodo\\iTop\\Form\\Field\\ImageField')))
 				{
 					//   - Overriding attributes to display
-					if ($this->oContainer !== null)
-					{
+					if ($this->oFormHandlerHelper !== null) {
 						// Override hardcoded URLs in ormDocument pointing to back office console
 						$oOrmDoc = $this->oObject->Get($sAttCode);
-						$sDisplayUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', [
+						$sDisplayUrl = $this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_document_display', [
 							'sObjectClass' => get_class($this->oObject),
-							'sObjectId' => $this->oObject->GetKey(),
+							'sObjectId'    => $this->oObject->GetKey(),
 							'sObjectField' => $sAttCode,
-							'cache' => 86400,
-							's' => $oOrmDoc->GetSignature(),
-							]);
-						$sDownloadUrl = $this->oContainer->get('url_generator')->generate('p_object_document_download', [
+							'cache'        => 86400,
+							's'            => $oOrmDoc->GetSignature(),
+						]);
+						$sDownloadUrl = $this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_document_download', [
 							'sObjectClass' => get_class($this->oObject),
-							'sObjectId' => $this->oObject->GetKey(),
+							'sObjectId'    => $this->oObject->GetKey(),
 							'sObjectField' => $sAttCode,
-							'cache' => 86400,
-							's' => $oOrmDoc->GetSignature(),
+							'cache'        => 86400,
+							's'            => $oOrmDoc->GetSignature(),
 						]);
 						/** @var \Combodo\iTop\Form\Field\BlobField $oField */
 						$oField->SetDisplayUrl($sDisplayUrl)
@@ -1049,11 +1009,11 @@ class ObjectFormManager extends FormManager
 				// set id to a unique key - avoid collisions with another attribute that could exist with the name 'attachments'
 				$oField = new FileUploadField('attachments_plugin');
 				$oField->SetLabel(Dict::S('Portal:Attachments'))
-					->SetUploadEndpoint($this->oContainer->get('url_generator')->generate('p_object_attachment_add'))
-					->SetDownloadEndpoint($this->oContainer->get('url_generator')->generate('p_object_attachment_download',
+					->SetUploadEndpoint($this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_attachment_add'))
+					->SetDownloadEndpoint($this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_attachment_download',
 						array('sAttachmentId' => '-sAttachmentId-')))
 					->SetTransactionId($oForm->GetTransactionId())
-					->SetAllowDelete($this->oContainer->getParameter('combodo.portal.instance.conf')['properties']['attachments']['allow_delete'])
+					->SetAllowDelete($this->oFormHandlerHelper->getCombodoPortalConf()['properties']['attachments']['allow_delete'])
 					->SetObject($this->oObject);
 
 				// Checking if we can edit attachments in the current state
@@ -1148,7 +1108,7 @@ class ObjectFormManager extends FormManager
 	{
 		$aData = parent::OnSubmit($aArgs);
 
-		if (! $aData['valid']) {
+		if (!$aData['valid']) {
 			return $aData;
 		}
 
@@ -1166,22 +1126,36 @@ class ObjectFormManager extends FormManager
 
 		$sObjectClass = get_class($this->oObject);
 
+		$bExceptionLogged = false;
 		try {
+			// modification flags
+			$bIsNew = $this->oObject->IsNew();
+			$bWasModified = $this->oObject->IsModified();
+			$bActivateTriggers = (!$bIsNew && $bWasModified);
+
 			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
-			$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
+			$bAllowWrite = $this->oFormHandlerHelper->getSecurityHelper()->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
 			if ($bAllowWrite) {
 				$this->oObject->AllowWrite(true);
 			}
 
 			// Writing object to DB
-			$bIsNew = $this->oObject->IsNew();
-			$bWasModified = $this->oObject->IsModified();
-			$bActivateTriggers = (!$bIsNew && $bWasModified);
 			try
 			{
 				$this->oObject->DBWrite();
 			}
+			catch (CoreCannotSaveObjectException $e) {
+				throw new Exception($e->getHtmlMessage());
+			}
 			catch (Exception $e) {
+				$aContext = [
+					'origin'    => __CLASS__.'::'.__METHOD__,
+					'obj_class' => get_class($this->oObject),
+					'obj_key' => $this->oObject->GetKey(),
+				];
+				ExceptionLog::LogException($e, $aContext);
+				$bExceptionLogged = true;
+
 				if ($bIsNew) {
 					throw new Exception(Dict::S('Portal:Error:ObjectCannotBeCreated'));
 				}
@@ -1204,7 +1178,7 @@ class ObjectFormManager extends FormManager
 			// Activating triggers only on update
 			if ($bActivateTriggers)
 			{
-				$sTriggersQuery = $this->oContainer->getParameter('combodo.portal.instance.conf')['properties']['triggers_query'];
+				$sTriggersQuery = $this->oFormHandlerHelper->getCombodoPortalConf()['properties']['triggers_query'];
 				if ($sTriggersQuery !== null)
 				{
 					$aParentClasses = MetaModel::EnumParentClasses($sObjectClass, ENUM_PARENT_CLASSES_ALL);
@@ -1241,11 +1215,12 @@ class ObjectFormManager extends FormManager
 				}
 			}
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			$aData['valid'] = false;
 			$aData['messages']['error'] += array('_main' => array($e->getMessage()));
-			IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
+			if (false === $bExceptionLogged) {
+				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
+			}
 		}
 
 		return $aData;
@@ -1316,6 +1291,15 @@ class ObjectFormManager extends FormManager
 										$oLink = MetaModel::NewObject($sLinkedClass);
 										$oLink->Set($oAttDef->GetExtKeyToRemote(), $iObjKey);
 										$oLink->Set($oAttDef->GetExtKeyToMe(), $this->oObject->GetKey());
+										// Set link attributes values...
+										foreach ($aObjdata as $sLinkAttCode => $oAttValue) {
+											if (!is_scalar($oAttValue)) {
+												IssueLog::Debug("ObjectFormManager::OnUpdate invalid link attribute value, $sLinkAttCode is not a scalar value", LogChannels::PORTAL);
+												continue;
+											}
+											$oLink->Set($sLinkAttCode, $oAttValue);
+										}
+										$oLinkSet->AddItem($oLink);
 									}
 									// ... or adding remote object when linkset id direct
 									else
@@ -1324,15 +1308,36 @@ class ObjectFormManager extends FormManager
 										$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false, true);
 									}
 
-									if ($oLink !== null)
-									{
+									if ($oLink !== null) {
 										$oLinkSet->AddItem($oLink);
 									}
 								}
 							}
 
 							// Checking links to modify
-							// TODO: Not implemented yet as we can't change lnk properties in the portal
+							if ($oAttDef->IsIndirect() && isset($value['current'])) {
+								foreach ($value['current'] as $iObjKey => $aObjData) {
+									if ($iObjKey < 0) {
+										continue;
+									}
+									$oLink = null;
+									$oLinkSet->Rewind();
+									foreach ($oLinkSet as $oItem) {
+										if ($oItem->Get('id') != $iObjKey) {
+											continue;
+										}
+										$oLink = $oItem;
+										foreach ($aObjData as $sLinkAttCode => $oAttValue) {
+											if (!is_scalar($oAttValue)) {
+												IssueLog::Debug("ObjectFormManager::OnUpdate invalid link attribute value, $sLinkAttCode is not a scalar value", LogChannels::PORTAL);
+												continue;
+											}
+											$oLink->Set($sLinkAttCode, $oAttValue);
+										}
+										$oLinkSet->ModifyItem($oLink);
+									}
+								}
+							}
 
 							// Setting value in the object
 							$this->oObject->Set($sAttCode, $oLinkSet);
@@ -1536,10 +1541,65 @@ class ObjectFormManager extends FormManager
 
 	/**
 	 * @param array $aHiddenFieldsId
+	 *
 	 * @since 2.7.5
 	 */
 	public function SetHiddenFieldsId($aHiddenFieldsId)
 	{
 		$this->aHiddenFieldsId = $aHiddenFieldsId;
+	}
+
+	/**
+	 * Inspired from {@see \MetaModel::GetZListAttDefsFilteredForIndirectLinkClass}
+	 * Retrieve link attributes to display from portal configuration.
+	 *
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @since 3.1.0 N°6398
+	 *
+	 */
+	private function GetZListAttDefsFilteredForIndirectLinkClass(string $sClass, string $sAttCode): array
+	{
+		$aAttCodesToPrint = [];
+
+		$oLinkedSetAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sLinkedClass = $oLinkedSetAttDef->GetLinkedClass();
+		$sExtKeyToRemote = $oLinkedSetAttDef->GetExtKeyToRemote();
+		$sExtKeyToMe = $oLinkedSetAttDef->GetExtKeyToMe();
+
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+		$sDefaultState = MetaModel::GetDefaultState($sClass);
+
+		foreach (ApplicationHelper::GetLoadedListFromClass($this->oFormHandlerHelper->getCombodoPortalConf()['lists'], $sLinkedClass, 'list') as $sLnkAttCode) {
+
+			$oLnkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sLnkAttCode);
+			if ($sStateAttCode == $sLnkAttCode) {
+				// State attribute is always hidden from the UI
+				continue;
+			}
+			if (($sLnkAttCode == $sExtKeyToMe)
+				|| ($sLnkAttCode == $sExtKeyToRemote)
+				|| ($sLnkAttCode == 'finalclass')) {
+				continue;
+			}
+			if (!($oLnkAttDef->IsWritable())) {
+				continue;
+			}
+
+			$iFlags = MetaModel::GetAttributeFlags($sLinkedClass, $sDefaultState, $sLnkAttCode);
+			if (!($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY)) {
+				$aAttCodesToPrint[$sLnkAttCode] = [
+					'att_code'  => $sLnkAttCode,
+					'label'     => $oLnkAttDef->GetLabel(),
+					'mandatory' => !$oLnkAttDef->IsNullAllowed(),
+				];
+			}
+
+		}
+
+		return $aAttCodesToPrint;
 	}
 }

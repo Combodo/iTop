@@ -11,12 +11,17 @@
 
 namespace Symfony\Component\DependencyInjection\Compiler;
 
+use Psr\Container\ContainerInterface as PsrContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Argument\BoundArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 use Symfony\Component\DependencyInjection\TypedReference;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\Service\ServiceProviderInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * Compiler pass to register tagged services that require a service locator.
@@ -25,7 +30,7 @@ use Symfony\Component\DependencyInjection\TypedReference;
  */
 class RegisterServiceSubscribersPass extends AbstractRecursivePass
 {
-    protected function processValue($value, $isRoot = false)
+    protected function processValue($value, bool $isRoot = false)
     {
         if (!$value instanceof Definition || $value->isAbstract() || $value->isSynthetic() || !$value->hasTag('container.service_subscriber')) {
             return parent::processValue($value, $isRoot);
@@ -63,29 +68,47 @@ class RegisterServiceSubscribersPass extends AbstractRecursivePass
             throw new InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $this->currentId, ServiceSubscriberInterface::class));
         }
         $class = $r->name;
-
+        $replaceDeprecatedSession = $this->container->has('.session.deprecated') && $r->isSubclassOf(AbstractController::class);
         $subscriberMap = [];
-        $declaringClass = (new \ReflectionMethod($class, 'getSubscribedServices'))->class;
 
         foreach ($class::getSubscribedServices() as $key => $type) {
-            if (!\is_string($type) || !preg_match('/^\??[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+(?:\\\\[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+)*+$/', $type)) {
-                throw new InvalidArgumentException(sprintf('"%s::getSubscribedServices()" must return valid PHP types for service "%s" key "%s", "%s" returned.', $class, $this->currentId, $key, \is_string($type) ? $type : \gettype($type)));
+            if (!\is_string($type) || !preg_match('/(?(DEFINE)(?<cn>[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+))(?(DEFINE)(?<fqcn>(?&cn)(?:\\\\(?&cn))*+))^\??(?&fqcn)(?:(?:\|(?&fqcn))*+|(?:&(?&fqcn))*+)$/', $type)) {
+                throw new InvalidArgumentException(sprintf('"%s::getSubscribedServices()" must return valid PHP types for service "%s" key "%s", "%s" returned.', $class, $this->currentId, $key, \is_string($type) ? $type : get_debug_type($type)));
             }
             if ($optionalBehavior = '?' === $type[0]) {
                 $type = substr($type, 1);
                 $optionalBehavior = ContainerInterface::IGNORE_ON_INVALID_REFERENCE;
             }
-            if (\is_int($key)) {
+            if (\is_int($name = $key)) {
                 $key = $type;
+                $name = null;
             }
             if (!isset($serviceMap[$key])) {
                 if (!$autowire) {
                     throw new InvalidArgumentException(sprintf('Service "%s" misses a "container.service_subscriber" tag with "key"/"id" attributes corresponding to entry "%s" as returned by "%s::getSubscribedServices()".', $this->currentId, $key, $class));
                 }
+                if ($replaceDeprecatedSession && SessionInterface::class === $type) {
+                    // This prevents triggering the deprecation when building the container
+                    // Should be removed in Symfony 6.0
+                    $type = '.session.deprecated';
+                }
                 $serviceMap[$key] = new Reference($type);
             }
 
-            $subscriberMap[$key] = new TypedReference($this->container->normalizeId($serviceMap[$key]), $type, $declaringClass, $optionalBehavior ?: ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE);
+            if ($name) {
+                if (false !== $i = strpos($name, '::get')) {
+                    $name = lcfirst(substr($name, 5 + $i));
+                } elseif (str_contains($name, '::')) {
+                    $name = null;
+                }
+            }
+
+            if (null !== $name && !$this->container->has($name) && !$this->container->has($type.' $'.$name)) {
+                $camelCaseName = lcfirst(str_replace(' ', '', ucwords(preg_replace('/[^a-zA-Z0-9\x7f-\xff]++/', ' ', $name))));
+                $name = $this->container->has($type.' $'.$camelCaseName) ? $camelCaseName : $name;
+            }
+
+            $subscriberMap[$key] = new TypedReference((string) $serviceMap[$key], $type, $optionalBehavior ?: ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $name);
             unset($serviceMap[$key]);
         }
 
@@ -94,7 +117,14 @@ class RegisterServiceSubscribersPass extends AbstractRecursivePass
             throw new InvalidArgumentException(sprintf('Service %s not exist in the map returned by "%s::getSubscribedServices()" for service "%s".', $message, $class, $this->currentId));
         }
 
-        $value->addTag('container.service_subscriber.locator', ['id' => (string) ServiceLocatorTagPass::register($this->container, $subscriberMap, $this->currentId)]);
+        $locatorRef = ServiceLocatorTagPass::register($this->container, $subscriberMap, $this->currentId);
+
+        $value->addTag('container.service_subscriber.locator', ['id' => (string) $locatorRef]);
+
+        $value->setBindings([
+            PsrContainerInterface::class => new BoundArgument($locatorRef, false),
+            ServiceProviderInterface::class => new BoundArgument($locatorRef, false),
+        ] + $value->getBindings());
 
         return parent::processValue($value);
     }

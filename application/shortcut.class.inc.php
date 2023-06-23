@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
  * Persistent class Shortcut and derived
  * Shortcuts of any kind
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -288,7 +288,8 @@ class ShortcutOQL extends Shortcut
 		$oPage->add_ready_script(
 <<<JS
 // Note: the title gets deleted by the validation mechanism
-$("#attr_auto_reload_sec").tooltip({items: 'input', content: '$sRateTitle'});
+$("#attr_auto_reload_sec").attr('data-tooltip-content', '$sRateTitle');
+CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 $("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 
 $('#attr_auto_reload').change( function(ev) {

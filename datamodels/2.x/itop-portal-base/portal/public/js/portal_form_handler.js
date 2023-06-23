@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -58,6 +58,8 @@ $(function()
 			if((this.options.cancel_url !== null) && (this.options.cancel_url !== ''))
 				this.options.cancel_rule.url = this.options.cancel_url;
 
+			this._bindEvents();
+
 			this._super();
 		},
    
@@ -79,12 +81,21 @@ $(function()
 		{
 			this._super( key, value );
 		},
+		_bindEvents: function() {
+			const me = this;
+
+			// Submit event from the form should be treated as a click on the submit button
+			// as it processes things before sending the request
+			this.element.on('submit', function(oEvent) {
+				me._onSubmitClick(oEvent);
+			});
+		},
+
 		// - Callback when some fields have been touched
 		_onFieldsTouched: function(oEvent)
 		{
 			this._super(oEvent);
-			$('body').trigger('register_blocker.portal.itop', {'sBlockerId': this.element.attr('id'), 'sTargetElemSelector': '#' + this.element.closest('.modal').attr('id'), 'oTargetElemSelector': '#' + this.element.closest('.modal').attr('id'), 'sEventName': 'hide.bs.modal'});
-			$('body').trigger('register_blocker.portal.itop', {'sBlockerId': this.element.attr('id'), 'sTargetElemSelector': 'document', 'oTargetElemSelector': document, 'sEventName': 'beforeunload'});
+			this._registerBlockers();
 		},
 		// Overload from parent class
 		_onSubmitClick: function(oEvent)
@@ -243,7 +254,7 @@ $(function()
 							// If everything is okay, we close the form and apply the submit rule.
 							if(oValidation.valid)
 							{
-								$('body').trigger('unregister_blocker.portal.itop', {'sBlockerId': me.element.attr('id')});
+								me._unregisterBlockers();
 
 								// Checking if we have to redirect to another page
 								if(sRuleType === 'redirect')
@@ -289,7 +300,7 @@ $(function()
 			if(me.options.field_set.field_set('option', 'touched_fields').length > 0)
 			{
 				me._disableFormBeforeLoading();
-				$('body').trigger('unregister_blocker.portal.itop', {'sBlockerId': me.element.attr('id')});
+				me._unregisterBlockers();
 				$.post(
 					me.options.endpoint,
 					{
@@ -385,7 +396,7 @@ $(function()
 				if(bRedirectInModal === true)
 				{
 					// Creating a new modal
-					CombodoPortalToolbox.OpenModal({
+					CombodoModal.OpenModal({
 						content: {
 							endpoint: sRedirectUrl,
 							data: {
@@ -421,6 +432,27 @@ $(function()
 				var sHomepageUrl = (this.options.base_url !== null) ? this.options.base_url : $('#sidebar .menu .brick_menu_item:first a').attr('href')
 				window.location.href = sHomepageUrl;
 			}
+		},
+		_registerBlockers: function()
+		{
+			$('body').trigger('register_blocker.itop', {
+				'sBlockerId': this.element.attr('id'),
+				'sTargetElemSelector': '#' + this.element.closest('.modal').attr('id'),
+				'oTargetElemSelector': '#' + this.element.closest('.modal').attr('id'),
+				'sEventName': 'hide.bs.modal'
+			});
+			$('body').trigger('register_blocker.itop', {
+				'sBlockerId': this.element.attr('id'),
+				'sTargetElemSelector': 'document',
+				'oTargetElemSelector': document,
+				'sEventName': 'beforeunload'
+			});
+		},
+		_unregisterBlockers: function()
+		{
+			$('body').trigger('unregister_blocker.itop', {
+				'sBlockerId': this.element.attr('id')
+			});
 		},
 		submit: function(oEvent)
 		{

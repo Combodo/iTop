@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -24,7 +24,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Datatables:Language:Info' => '_TOTAL_ Objekte',
 	'UI:Datatables:Language:InfoEmpty' => 'Keine Information',
 	'UI:Datatables:Language:EmptyTable' => 'Keine Daten in dieser Tabelle verfügbar',
+	'UI:Datatables:Language:Error' => 'Bei der Ausführung des Query ist ein Fehler aufgetreten',
 	'UI:Datatables:Language:DisplayLength:All' => 'Alle',
 	'UI:Datatables:Language:Sort:Ascending' => 'Aktivieren für aufsteigende Sortierung',
 	'UI:Datatables:Language:Sort:Descending' => 'Aktivieren für absteigende Sortierung',
+	'UI:Datatables:Column:RowActions:Label' => '~~',
+	'UI:Datatables:Column:RowActions:Description' => '~~',
+	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation~~',
+	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?~~',
 ));

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
@@ -73,6 +73,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: FAQCategory
 //
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQCategory' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory+' => 'Categoría de Preguntas y Respuesta Frecuentes',
@@ -82,8 +83,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
 ));
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Menu:ProblemManagement' => 'Gestión de problemas',
-	'Menu:ProblemManagement+' => 'Gestión de problemas',
+	'Menu:ProblemManagement' => 'Administración de problemas',
+	'Menu:ProblemManagement+' => 'GestAdministraciónión de problemas',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
 	'Menu:FAQCategory' => 'Categorías de FAQ',
 	'Menu:FAQCategory+' => 'Categorías FAQ',

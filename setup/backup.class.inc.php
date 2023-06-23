@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -146,18 +146,35 @@ class DBBackup
 	/**
 	 * Create a normalized backup name, depending on the current date/time and Database
 	 *
-	 * @param string sNameSpec Name and path, eventually containing itop placeholders + time formatting specs
+	 * @param string $sNameSpec Name and path, eventually containing itop placeholders + time formatting following the strftime() format {@link https://www.php.net/manual/fr/function.strftime.php}
+	 * @param \DateTime|null $oDateTime Date time to use for the name
 	 *
-	 * @return string
+	 * @return string Name of the backup file WITHOUT the file extension (eg. `.tar.gz`)
+	 * @since 3.1.0 N°5279 Add $oDateTime parameter
 	 */
-	public function MakeName($sNameSpec = "__DB__-%Y-%m-%d")
+	public function MakeName(string $sNameSpec = "__DB__-%Y-%m-%d", DateTime $oDateTime = null)
 	{
+		if ($oDateTime === null) {
+			$oDateTime = new DateTime();
+		}
+
 		$sFileName = $sNameSpec;
 		$sFileName = str_replace('__HOST__', $this->sDBHost, $sFileName);
 		$sFileName = str_replace('__DB__', $this->sDBName, $sFileName);
 		$sFileName = str_replace('__SUBNAME__', $this->sDBSubName, $sFileName);
-		// Transform %Y, etc.
-		$sFileName = strftime($sFileName);
+
+		// Transform date/time placeholders (%Y, %m, etc)
+		// N°5279 - As of PHP 8.1 strftime() is deprecated so we use \DateTime::format() instead
+		//
+		// IMPORTANT: We can't use \DateTime::format() directly on the whole filename as it would also format characters that are not supposed to be. eg. "__DB__-Y-m-d-production" would become "itopdb-2023-02-09-+01:00Thu, 09 Feb 2023 11:34:01 +0100202309"
+		$sFileName = preg_replace_callback(
+			'/(%[a-zA-Z])/',
+			function ($aMatches) use ($oDateTime) {
+				$sDateTimeFormatPlaceholder = utils::StrftimeFormatToDateTimeFormat($aMatches[0]);
+				return $oDateTime->format($sDateTimeFormatPlaceholder);
+			},
+			$sFileName,
+		);
 
 		return $sFileName;
 	}
@@ -205,11 +222,12 @@ class DBBackup
 	 *
 	 * @param string $sSourceConfigFile
 	 * @param string $sTmpFolder
+	 * @param bool $bSkipSQLDumpForTesting 
 	 *
 	 * @return array list of files to archive
 	 * @throws \Exception
 	 */
-	protected function PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder)
+	protected function PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder, $bSkipSQLDumpForTesting = false)
 	{
 		$aRet = array();
 		if (is_dir($sTmpFolder))
@@ -226,7 +244,7 @@ class DBBackup
 		{
 			$sFile = $sTmpFolder.'/config-itop.php';
 			$this->LogInfo("backup: adding resource '$sSourceConfigFile'");
-			copy($sSourceConfigFile, $sFile);
+			@copy($sSourceConfigFile, $sFile); // During unattended install config file may be absent
 			$aRet[] = $sFile;
 		}
 
@@ -247,14 +265,48 @@ class DBBackup
 			SetupUtils::copydir($sExtraDir, $sFile);
 			$aRet[] = $sFile;
 		}
-		$sDataFile = $sTmpFolder.'/itop-dump.sql';
-		$this->DoBackup($sDataFile);
-		$aRet[] = $sDataFile;
+		if (MetaModel::GetConfig() !== null) // During unattended install config file may be absent
+		{
+			$aExtraFiles = MetaModel::GetModuleSetting('itop-backup', 'extra_files', []);
+			foreach($aExtraFiles as $sExtraFileOrDir)
+			{
+				if(!file_exists(APPROOT.'/'.$sExtraFileOrDir)) {
+					continue; // Ignore non-existing files
+				}
+	
+				$sExtraFullPath = utils::RealPath(APPROOT.'/'.$sExtraFileOrDir, APPROOT);
+				if ($sExtraFullPath === false)
+				{
+					throw new Exception("Backup: Aborting, resource '$sExtraFileOrDir'. Considered as UNSAFE because not inside the iTop directory.");
+				}
+				if (is_dir($sExtraFullPath))
+				{
+					$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
+					$this->LogInfo("backup: adding directory '$sExtraFileOrDir'");
+					SetupUtils::copydir($sExtraFullPath, $sFile);
+					$aRet[] = $sFile;
+				}
+				elseif (file_exists($sExtraFullPath))
+				{
+					$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
+					$this->LogInfo("backup: adding file '$sExtraFileOrDir'");
+					@mkdir(dirname($sFile), 0755, true);
+					copy($sExtraFullPath, $sFile);
+					$aRet[] = $sFile;
+				}
+			}
+		}
+		if (!$bSkipSQLDumpForTesting)
+		{
+			$sDataFile = $sTmpFolder.'/itop-dump.sql';
+			$this->DoBackup($sDataFile);
+			$aRet[] = $sDataFile;
+		}
 
 		return $aRet;
 	}
 
-	protected static function EscapeShellArg($sValue)
+	public static function EscapeShellArg($sValue)
 	{
 		// Note: See comment from the 23-Apr-2004 03:30 in the PHP documentation
 		//    It suggests to rely on pctnl_* function instead of using escapeshellargs
@@ -461,13 +513,16 @@ EOF;
 
 
 	/**
-	 * @see https://dev.mysql.com/doc/refman/5.6/en/encrypted-connection-options.html
-	 *
 	 * @param Config $oConfig
 	 *
 	 * @return string TLS arguments for CLI programs such as mysqldump. Empty string if the config does not use TLS.
+	 * @throws \MySQLException
 	 *
-	 * @since 2.5.0
+	 * @uses \CMDBSource::IsSslModeDBVersion() so needs a connection opened !
+	 *
+	 * @since 2.5.0 N°1260
+	 * @since 2.6.2 2.7.0 N°2336 Call DB to get vendor and version (so CMDBSource must be init before calling this method)
+	 * @link https://dev.mysql.com/doc/refman/5.7/en/connection-options.html#encrypted-connection-options Command Options for Encrypted Connections
 	 */
 	public static function GetMysqlCliTlsOptions($oConfig)
 	{
@@ -477,13 +532,17 @@ EOF;
 			return '';
 		}
 		$sTlsOptions = '';
-
-		$sDBVendor = CMDBSource::GetDBVendor();
-		$sDBVersion = CMDBSource::GetDBVersion();
-		$sMysqlSSLModeVersion = '5.7.0'; //Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
-		if ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL && version_compare($sDBVersion, $sMysqlSSLModeVersion, '>='))
+		// Mysql 5.7.11 and upper deprecated --ssl and uses --ssl-mode instead
+		if (CMDBSource::IsSslModeDBVersion())
 		{
-			$sTlsOptions .= ' --ssl-mode=VERIFY_CA';
+			if(empty($oConfig->Get('db_tls.ca')))
+			{
+				$sTlsOptions .= ' --ssl-mode=REQUIRED';
+			}
+			else
+			{
+				$sTlsOptions .= ' --ssl-mode=VERIFY_CA';
+			}
 		}
 		else
 		{

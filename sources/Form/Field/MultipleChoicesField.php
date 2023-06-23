@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,6 +20,8 @@
 namespace Combodo\iTop\Form\Field;
 
 use Closure;
+use ContextTag;
+use utils;
 
 /**
  * Description of MultipleChoicesField
@@ -210,20 +212,29 @@ abstract class MultipleChoicesField extends Field
 		return $this;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function Validate()
-	{
+	public function Validate() {
 		$this->SetValid(true);
 		$this->EmptyErrorMessages();
 
-		foreach ($this->GetValidators() as $oValidator)
-		{
-			foreach ($this->currentValue as $value)
-			{
-				if (!preg_match($oValidator->GetRegExp(true), $value))
-				{
+		if ((ContextTag::Check(ContextTag::TAG_REST)) && ($this->GetReadOnly() === false)) {
+			// Only doing the check when coming from the REST API, as the user portal might send invalid values (see VerifyCurrentValue() method below)
+			// Also do not check read only fields, are they are send with a null value when submitting request template from the console
+			if (count($this->currentValue) > 0) {
+				foreach ($this->currentValue as $sCode => $value) {
+					if (utils::IsNullOrEmptyString($value)) {
+						continue;
+					}
+					if (false === array_key_exists($value, $this->aChoices)) {
+						$this->SetValid(false);
+						$this->AddErrorMessage("Value ({$value}) is not part of the field possible values list");
+					}
+				}
+			}
+		}
+
+		foreach ($this->GetValidators() as $oValidator) {
+			foreach ($this->currentValue as $value) {
+				if (!preg_match($oValidator->GetRegExp(true), $value)) {
 					$this->SetValid(false);
 					$this->AddErrorMessage($oValidator->GetErrorMessage());
 				}

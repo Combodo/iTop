@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,10 +15,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
- /**
+/**
  * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
@@ -96,12 +96,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkContactToTicket' => 'Relación Contacto y Ticket',
 	'Class:lnkContactToTicket+' => 'Relación Contacto y Ticket',
+	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => 'Ticket',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Ref',
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => 'Ref',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Contacto',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => 'Contacto',
+	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name~~',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'Correo Electrónico',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => 'Correo Electrónico',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rol',
@@ -177,6 +180,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:cmdbAbstractObject/Method:SetCurrentDate+' => 'Asignar fecha y hora actuales',
 	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1' => 'Campo Destino',
 	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1+' => 'El campo a asignar, en el objeto actual',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull' => 'SetCurrentDateIfNull~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull+' => 'Set an empty field with the current date and time~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1+' => 'The field to set, in the current object~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser' => 'Asignar Usuario actual',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser+' => 'Asignar Usuario actual',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1' => 'Campo Destino',
@@ -193,6 +200,34 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2+' => 'El campo desde el que se obtienen los datos referenciados',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3' => 'Horas Trabajadas',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Dejar vacio para utilizar el horario de trabajo estandar, o dejar por omisión para usar esquema 7x24',
+	'Class:cmdbAbstractObject/Method:SetIfNull' => 'SetIfNull~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull+' => 'Set a field only if it is empty, with a static value~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1+' => 'The field to set, in the current object~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:2' => 'Value~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:2+' => 'The value to set~~',
+	'Class:cmdbAbstractObject/Method:AddValue' => 'AddValue~~',
+	'Class:cmdbAbstractObject/Method:AddValue+' => 'Add a fixed value to a field~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:1+' => 'The field to modify, in the current object~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:2' => 'Value~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:2+' => 'Decimal value which will be added, can be negative~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate' => 'SetComputedDate~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate+' => 'Set a field with a date computed from another field with extra logic~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:1+' => 'The field to set, in the current object~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:2' => 'Modifier~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:2+' => 'Textual information to modify the source date, eg. "+3 days"~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:3' => 'Source field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:3+' => 'The field used as source to apply the Modifier logic~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull' => 'SetComputedDateIfNull~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull+' => 'Set non empty field with a date computed from another field with extra logic~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1+' => 'The field to set, in the current object~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2' => 'Modifier~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2+' => 'Textual information to modify the source date, eg. "+3 days"~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3' => 'Source field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3+' => 'The field used as source to apply the Modifier logic~~',
 	'Class:cmdbAbstractObject/Method:Reset' => 'Restablecer',
 	'Class:cmdbAbstractObject/Method:Reset+' => 'Restablecer a valor por omisión',
 	'Class:cmdbAbstractObject/Method:Reset/Param:1' => 'Campo Destino',
@@ -213,13 +248,3 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objetivo basado en SLT de tipo TTR',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Document/Attribute:contracts_list' => 'Contratos',
-	'Class:Document/Attribute:contracts_list+' => 'Contratos Referenciados con este Documento',
-	'Class:Document/Attribute:services_list' => 'Servicios',
-	'Class:Document/Attribute:services_list+' => 'Servicios Referenciados con este Documento',
-));

@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-full-itil/3.0.0',
+	'itop-full-itil/3.1.0',
 	array(
 		// Identification
 		//
@@ -23,8 +23,7 @@ SetupWebPage::AddModule(
 		'auto_select' => 'SetupInfo::ModuleIsSelected("itop-request-mgmt-itil") && SetupInfo::ModuleIsSelected("itop-incident-mgmt-itil")',
 		// Components
 		//
-		'datamodel' => array(//'model.itop-portal-full-itil.php'
-		),
+		'datamodel' => array(),
 		'webservice' => array(),
 		'data.struct' => array(// add your 'structure' definition XML files here,
 		),

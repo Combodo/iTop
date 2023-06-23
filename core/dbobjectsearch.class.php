@@ -1,21 +1,8 @@
 <?php
-// Copyright (c) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 /** @internal Dev hack for disabling some query build optimizations (Folding/Merging) */
 define('ENABLE_OPT', true);
@@ -413,28 +400,30 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
+	 * Important: If you need to add a condition on the same $sFilterCode several times with different $value values; do not use this method as the previous $value occurrences will be replaced by the last. Instead use:
+	 *  * {@see \DBObjectSearch::AddConditionExpression()} in loops to add conditions one by one
+	 *  * {@see \DBObjectSearch::AddConditionForInOperatorUsingParam()} for IN/NOT IN queries with lots of params at once
+	 *
 	 * @param string $sFilterCode
 	 * @param mixed $value
 	 * @param string $sOpCode operator to use : 'IN', 'NOT IN', 'Contains',' Begins with', 'Finishes with', ...
+	 *   If no operator is specified then :
+	 *     * for id field we will use "="
+	 *     * for other fields we will call the corresponding {@link AttributeDefinition::GetSmartConditionExpression} method impl
+	 *       to generate the expression
 	 * @param bool $bParseSearchString
 	 *
 	 * @throws \CoreException
-	 *
-	 * @see AddConditionForInOperatorUsingParam for IN/NOT IN queries with lots of params
 	 */
 	public function AddCondition($sFilterCode, $value, $sOpCode = null, $bParseSearchString = false)
 	{
-		MyHelpers::CheckKeyInArray('filter code in class: '.$this->GetClass(), $sFilterCode, MetaModel::GetClassFilterDefs($this->GetClass()));
+		MyHelpers::CheckKeyInArray('filter code in class: '.$this->GetClass(), $sFilterCode, MetaModel::GetFilterAttribList($this->GetClass()));
 
 		$oField = new FieldExpression($sFilterCode, $this->GetClassAlias());
-		if (empty($sOpCode))
-		{
-			if ($sFilterCode == 'id')
-			{
+		if (empty($sOpCode)) {
+			if ($sFilterCode == 'id') {
 				$sOpCode = '=';
-			}
-			else
-			{
+			} else {
 				$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sFilterCode);
 				$oNewCondition = $oAttDef->GetSmartConditionExpression($value, $oField, $this->m_aParams);
 				$this->AddConditionExpression($oNewCondition);
@@ -465,14 +454,14 @@ class DBObjectSearch extends DBSearch
 			if (!is_array($value)) $value = array($value);
 			if (count($value) === 0) throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
 			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
-			$sOQLCondition = $oField->Render()." IN $sListExpr";
+			$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
 			break;
 
 		case 'NOTIN':
 			if (!is_array($value)) $value = array($value);
             if (count($value) === 0) throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
 			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
-			$sOQLCondition = $oField->Render()." NOT IN $sListExpr";
+			$sOQLCondition = $oField->RenderExpression()." NOT IN $sListExpr";
 			break;
 
 		case 'Contains':
@@ -1099,22 +1088,39 @@ class DBObjectSearch extends DBSearch
 	public function Filter($sClassAlias, DBSearch $oFilter)
 	{
 		// If the conditions are the correct ones for Intersect
-		if (MetaModel::IsParentClass($oFilter->GetFirstJoinedClass(),$this->GetFirstJoinedClass()))
-		{
+		if (MetaModel::IsParentClass($oFilter->GetFirstJoinedClass(), $this->GetFirstJoinedClass())) {
 			return $this->Intersect($oFilter);
 		}
 
-		/** @var \DBObjectSearch $oFilteredSearch */
-		$oFilteredSearch = $this->DeepClone();
-		$oFilterExpression = self::FilterSubClass($oFilteredSearch, $sClassAlias, $oFilter, $this->m_aClasses);
-		if ($oFilterExpression === false)
-		{
-			throw new CoreException("Limitation: cannot filter search");
+		if ($oFilter instanceof DBUnionSearch) {
+			$aFilters = $oFilter->GetSearches();
+		} else {
+			$aFilters = [$oFilter];
 		}
 
-		$oFilteredSearch->AddConditionExpression($oFilterExpression);
+		$aSearches = [];
+		foreach ($aFilters as $oRightFilter) {
+			/** @var \DBObjectSearch $oFilteredSearch */
+			$oFilteredSearch = $this->DeepClone();
+			$oFilterExpression = self::FilterSubClass($oFilteredSearch, $sClassAlias, $oRightFilter, $this->m_aClasses);
+			if ($oFilterExpression === false) {
+				throw new CoreException("Limitation: cannot filter search");
+			}
 
-		return $oFilteredSearch;
+			$oFilteredSearch->AddConditionExpression($oFilterExpression);
+			$aSearches[] = $oFilteredSearch;
+		}
+
+		if (count($aSearches) == 0) {
+			throw new CoreException('Filtering '.$this->ToOQL().' by '.$oFilter->ToOQL().' failed');
+		}
+
+		if (count($aSearches) == 1) {
+			// return a DBObjectSearch
+			return $aSearches[0];
+		}
+
+		return new DBUnionSearch($aSearches);
 	}
 
 	/**
@@ -1181,21 +1187,9 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function Intersect(DBSearch $oFilter)
 	{
-		return $this->IntersectSubClass($oFilter, $this->m_aClasses);
-	}
-
-	/**
-	 * @param \DBSearch $oFilter
-	 * @param array $aRootClasses classes of the root search (for aliases)
-	 *
-	 * @return \DBUnionSearch|mixed
-	 * @throws \CoreException
-	 */
-	protected function IntersectSubClass(DBSearch $oFilter, $aRootClasses)
-	{
 		if ($oFilter instanceof DBUnionSearch)
 		{
-			// Develop! 
+			// Develop!
 			$aFilters = $oFilter->GetSearches();
 		}
 		else
@@ -1206,56 +1200,61 @@ class DBObjectSearch extends DBSearch
 		$aSearches = array();
 		foreach ($aFilters as $oRightFilter)
 		{
-			// Limitation: the queried class must be the first declared class
-			if ($oRightFilter->GetFirstJoinedClassAlias() != $oRightFilter->GetClassAlias())
-			{
-				throw new CoreException("Limitation: cannot merge two queries if the queried class ({$oRightFilter->GetClass()} AS {$oRightFilter->GetClassAlias()}) is not the first joined class ({$oRightFilter->GetFirstJoinedClass()} AS {$oRightFilter->GetFirstJoinedClassAlias()})");
-			}
-
-			/** @var \DBObjectSearch $oLeftFilter */
-			$oLeftFilter = $this->DeepClone();
-			$oRightFilter = $oRightFilter->DeepClone();
-
-			$bAllowAllData = ($oLeftFilter->IsAllDataAllowed() && $oRightFilter->IsAllDataAllowed());
-			if ($bAllowAllData)
-			{
-				$oLeftFilter->AllowAllData();
-			}
-
-			if ($oLeftFilter->GetFirstJoinedClass() != $oRightFilter->GetClass())
-			{
-				if (MetaModel::IsParentClass($oLeftFilter->GetFirstJoinedClass(), $oRightFilter->GetClass()))
-				{
-					// Specialize $oLeftFilter
-					$oLeftFilter->ChangeClass($oRightFilter->GetClass(), $oLeftFilter->GetFirstJoinedClassAlias());
-				}
-				elseif (MetaModel::IsParentClass($oRightFilter->GetFirstJoinedClass(), $oLeftFilter->GetClass()))
-				{
-					// Specialize $oRightFilter
-					$oRightFilter->ChangeClass($oLeftFilter->GetClass());
-				}
-				else
-				{
-					throw new CoreException("Attempting to merge a filter of class '{$oLeftFilter->GetClass()}' with a filter of class '{$oRightFilter->GetClass()}'");
-				}
-			}
-
-			$aAliasTranslation = array();
-			$oLeftFilter->RenameNestedQueriesAliasesInNameSpace($aRootClasses, $aAliasTranslation);
-			$oLeftFilter->MergeWith_InNamespace($oRightFilter, $aRootClasses, $aAliasTranslation);
-			$oRightFilter->RenameNestedQueriesAliasesInNameSpace($aRootClasses, $aAliasTranslation);
-			$oLeftFilter->TransferConditionExpression($oRightFilter, $aAliasTranslation);
-			$aSearches[] = $oLeftFilter;
+			$aSearches[] = $this->IntersectSubClass($oRightFilter, $this->m_aClasses);
 		}
+
 		if (count($aSearches) == 1)
 		{
 			// return a DBObjectSearch
 			return $aSearches[0];
 		}
-		else
-		{
-			return new DBUnionSearch($aSearches);
+
+		return new DBUnionSearch($aSearches);
+	}
+
+	/**
+	 * @param \DBObjectSearch $oRightFilter
+	 * @param array $aRootClasses classes of the root search (for aliases)
+	 *
+	 * @return \DBObjectSearch
+	 * @throws \CoreException
+	 */
+	protected function IntersectSubClass(DBObjectSearch $oRightFilter, array $aRootClasses): DBObjectSearch
+	{
+		// Limitation: the queried class must be the first declared class
+		if ($oRightFilter->GetFirstJoinedClassAlias() != $oRightFilter->GetClassAlias()) {
+			throw new CoreException("Limitation: cannot merge two queries if the queried class ({$oRightFilter->GetClass()} AS {$oRightFilter->GetClassAlias()}) is not the first joined class ({$oRightFilter->GetFirstJoinedClass()} AS {$oRightFilter->GetFirstJoinedClassAlias()})");
 		}
+
+		/** @var \DBObjectSearch $oLeftFilter */
+		$oLeftFilter = $this->DeepClone();
+		/** @var DBObjectSearch $oRightFilter */
+		$oRightFilter = $oRightFilter->DeepClone();
+
+		$bAllowAllData = ($oLeftFilter->IsAllDataAllowed() && $oRightFilter->IsAllDataAllowed());
+		if ($bAllowAllData) {
+			$oLeftFilter->AllowAllData();
+		}
+
+		if ($oLeftFilter->GetFirstJoinedClass() != $oRightFilter->GetClass()) {
+			if (MetaModel::IsParentClass($oLeftFilter->GetFirstJoinedClass(), $oRightFilter->GetClass())) {
+				// Specialize $oLeftFilter
+				$oLeftFilter->ChangeClass($oRightFilter->GetClass(), $oLeftFilter->GetFirstJoinedClassAlias());
+			} elseif (MetaModel::IsParentClass($oRightFilter->GetFirstJoinedClass(), $oLeftFilter->GetClass())) {
+				// Specialize $oRightFilter
+				$oRightFilter->ChangeClass($oLeftFilter->GetFirstJoinedClass());
+			} else {
+				throw new CoreException("Attempting to merge a filter of class '{$oLeftFilter->GetClass()}' with a filter of class '{$oRightFilter->GetClass()}'");
+			}
+		}
+
+		$aAliasTranslation = array();
+		$oLeftFilter->RenameNestedQueriesAliasesInNameSpace($aRootClasses, $aAliasTranslation);
+		$oLeftFilter->MergeWith_InNamespace($oRightFilter, $aRootClasses, $aAliasTranslation);
+		$oRightFilter->RenameNestedQueriesAliasesInNameSpace($aRootClasses, $aAliasTranslation);
+		$oLeftFilter->TransferConditionExpression($oRightFilter, $aAliasTranslation);
+
+		return $oLeftFilter;
 	}
 
 	/**
@@ -1368,7 +1367,7 @@ class DBObjectSearch extends DBSearch
 	public function GetQueryParams($bExcludeMagicParams = true)
 	{
 		$aParams = array();
-		$this->m_oSearchCondition->Render($aParams, true);
+		$this->m_oSearchCondition->RenderExpression(false, $aParams, true);
 
 		if ($bExcludeMagicParams)
 		{
@@ -1457,7 +1456,7 @@ class DBObjectSearch extends DBSearch
 
 		$sRes .= ' ' . $this->GetFirstJoinedClass() . ' AS `' . $this->GetFirstJoinedClassAlias() . '`';
 		$sRes .= $this->ToOQL_Joins();
-		$sRes .= " WHERE ".$this->m_oSearchCondition->Render($aParams, $bRetrofitParams);
+		$sRes .= " WHERE ".$this->m_oSearchCondition->RenderExpression(false, $aParams, $bRetrofitParams);
 
 		if ($bWithAllowAllFlag && $this->m_bAllowAllData)
 		{
@@ -1896,16 +1895,13 @@ class DBObjectSearch extends DBSearch
 		// Hide objects that are not visible to the current user
 		//
 		$oSearch = $this;
-		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
-		{
+		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered()) {
 			$oVisibleObjects = UserRights::GetSelectFilter($this->GetClass(), $this->GetModifierProperties('UserRightsGetSelectFilter'));
-			if ($oVisibleObjects === false)
-			{
+			if ($oVisibleObjects === false) {
 				// Make sure this is a valid search object, saying NO for all
 				$oVisibleObjects = DBObjectSearch::FromEmptySet($this->GetClass());
 			}
-			if (is_object($oVisibleObjects))
-			{
+			if (is_object($oVisibleObjects)) {
 				$oVisibleObjects->AllowAllData();
 				$oSearch = $this->Intersect($oVisibleObjects);
 				$oSearch->SetDataFiltered();
@@ -1925,63 +1921,49 @@ class DBObjectSearch extends DBSearch
 			if (isset($_SERVER['REQUEST_URI']))
 			{
 				$aContextData['sRequestUri'] = $_SERVER['REQUEST_URI'];
-			}
-			else if (isset($_SERVER['SCRIPT_NAME']))
-			{
+			} else if (isset($_SERVER['SCRIPT_NAME'])) {
 				$aContextData['sRequestUri'] = $_SERVER['SCRIPT_NAME'];
-			}
-			else
-			{
+			} else {
 				$aContextData['sRequestUri'] = '';
 			}
 
 			// Need to identify the query
 			$sOqlQuery = $oSearch->ToOql(false, null, true);
-			if ((strpos($sOqlQuery, '`id` IN (') !== false) || (strpos($sOqlQuery, '`id` NOT IN (') !== false))
-			{
+			if ((strpos($sOqlQuery, '`id` IN (') !== false) || (strpos($sOqlQuery, '`id` NOT IN (') !== false)) {
 				// Requests containing "id IN" are not worth caching
 				$bCanCache = false;
 			}
 
 			$aContextData['sOqlQuery'] = $sOqlQuery;
 
-			if (count($aModifierProperties))
-			{
+			if (count($aModifierProperties)) {
 				array_multisort($aModifierProperties);
 				$sModifierProperties = json_encode($aModifierProperties);
-			}
-			else
-			{
+			} else {
 				$sModifierProperties = '';
 			}
 			$aContextData['sModifierProperties'] = $sModifierProperties;
 
 			$sRawId = Dict::GetUserLanguage().'-'.$sOqlQuery.$sModifierProperties;
-			if (!is_null($aAttToLoad))
-			{
+			if (!is_null($aAttToLoad)) {
 				$sRawId .= json_encode($aAttToLoad);
 			}
 			$aContextData['aAttToLoad'] = $aAttToLoad;
-			if (!is_null($aGroupByExpr))
-			{
-				foreach($aGroupByExpr as $sAlias => $oExpr)
-				{
-					$sRawId .= 'g:'.$sAlias.'!'.$oExpr->Render();
+			if (!is_null($aGroupByExpr)) {
+				foreach ($aGroupByExpr as $sAlias => $oExpr) {
+					$sRawId .= 'g:'.$sAlias.'!'.$oExpr->RenderExpression();
 				}
 			}
-			if (!is_null($aSelectExpr))
-			{
-				foreach($aSelectExpr as $sAlias => $oExpr)
-				{
-					$sRawId .= 'se:'.$sAlias.'!'.$oExpr->Render();
+			if (!is_null($aSelectExpr)) {
+				foreach ($aSelectExpr as $sAlias => $oExpr) {
+					$sRawId .= 'se:'.$sAlias.'!'.$oExpr->RenderExpression();
 				}
 			}
 			$aContextData['aGroupByExpr'] = $aGroupByExpr;
 			$aContextData['aSelectExpr'] = $aSelectExpr;
 			$sRawId .= $bGetCount;
 			$aContextData['bGetCount'] = $bGetCount;
-			if (is_array($aSelectedClasses))
-			{
+			if (is_array($aSelectedClasses)) {
 				$sRawId .= implode(',', $aSelectedClasses); // Unions may alter the list of selected columns
 			}
 			$aContextData['aSelectedClasses'] = $aSelectedClasses;
@@ -2069,7 +2051,7 @@ class DBObjectSearch extends DBSearch
 	 * @param $sAttCode
 	 * @return \FunctionExpression|mixed|null
 	 * @throws \CoreException
-*/
+	*/
 	static public function GetPolymorphicExpression($sClass, $sAttCode)
 	{
 		$oExpression = ExpressionCache::GetCachedExpression($sClass, $sAttCode);
@@ -2092,17 +2074,13 @@ class DBObjectSearch extends DBSearch
 			// 3rd step - position the attributes in the hierarchy of classes
 			//
 			$oSubClassExp->Browse(function($oNode) use ($sSubClass) {
-				if ($oNode instanceof FieldExpression)
-				{
+				if ($oNode instanceof FieldExpression) {
 					$sAttCode = $oNode->GetName();
 					$oAttDef = MetaModel::GetAttributeDef($sSubClass, $sAttCode);
-					if ($oAttDef->IsExternalField())
-					{
+					if ($oAttDef->IsExternalField()) {
 						$sKeyAttCode = $oAttDef->GetKeyAttCode();
 						$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sKeyAttCode);
-					}
-					else
-					{
+					} else {
 						$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sAttCode);
 					}
 					$sParent = MetaModel::GetAttributeOrigin($sClassOfAttribute, $oNode->GetName());
@@ -2110,12 +2088,11 @@ class DBObjectSearch extends DBSearch
 				}
 			});
 
-			$sSignature = $oSubClassExp->Render();
-			if (!array_key_exists($sSignature, $aExpressions))
-			{
+			$sSignature = $oSubClassExp->RenderExpression();
+			if (!array_key_exists($sSignature, $aExpressions)) {
 				$aExpressions[$sSignature] = array(
 					'expression' => $oSubClassExp,
-					'classes' => array(),
+					'classes'    => array(),
 				);
 			}
 			$aExpressions[$sSignature]['classes'][] = $sSubClass;
@@ -2150,7 +2127,7 @@ class DBObjectSearch extends DBSearch
 		return $oExpression;
 	}
 
-	public function ListParameters()
+	function GetExpectedArguments(): array
 	{
 		return $this->GetCriteria()->ListParameters();
 	}

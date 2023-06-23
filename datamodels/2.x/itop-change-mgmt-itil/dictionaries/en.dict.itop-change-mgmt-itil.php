@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -65,7 +65,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
-	'Class:Change/Attribute:status' => 'Status',
+	'Class:Change/Attribute:status' => 'Etat',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'New',
 	'Class:Change/Attribute:status/Value:new+' => '',

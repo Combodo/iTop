@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-config-mgmt/3.0.0',
+	'itop-config-mgmt/3.1.0',
 	array(
 		// Identification
 		//
@@ -26,12 +26,12 @@ SetupWebPage::AddModule(
 			'main.itop-config-mgmt.php',
 		),
 		'data.struct' => array(
+			'data/en_us.data.itop-brand.xml',
+			'data/en_us.data.itop-osfamily.xml',
+			'data/en_us.data.itop-osversion.xml',
 		),
 		'data.sample' => array(
-			'data.sample.brand.xml',
 			'data.sample.model.xml',
-			'data.sample.osfamily.xml',
-			'data.sample.osversion.xml',
 			'data.sample.networkdevicetype.xml',
 			'data.sample.servers.xml',
 			'data.sample.nw-devices.xml',
@@ -42,7 +42,6 @@ SetupWebPage::AddModule(
 			'data.sample.webapp.xml',
 			'data.sample.applications.xml',
 			'data.sample.applicationsolutionci.xml',
-
 		),
 		
 		// Documentation

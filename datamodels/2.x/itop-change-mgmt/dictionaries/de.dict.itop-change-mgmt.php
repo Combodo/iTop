@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,9 +18,9 @@
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2021 Combodo SARL
+* @copyright     Copyright (C) 2023 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
-*		
+*
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ChangeManagement' => 'Change Management',
@@ -98,7 +98,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:reject_reason+' => '',
 	'Class:Change/Attribute:changemanager_id' => 'Change Manager',
 	'Class:Change/Attribute:changemanager_id+' => '',
-	'Class:Change/Attribute:changemanager_email' => 'Change Manager Email',
+	'Class:Change/Attribute:changemanager_email' => 'Change Manager E-Mail',
 	'Class:Change/Attribute:changemanager_email+' => '',
 	'Class:Change/Attribute:parent_id' => 'Parent Change',
 	'Class:Change/Attribute:parent_id+' => '',
@@ -111,13 +111,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:fallback_plan' => 'Fallback-Plan',
 	'Class:Change/Attribute:fallback_plan+' => '',
 	'Class:Change/Attribute:related_request_list' => 'Verwandte Requests',
-	'Class:Change/Attribute:related_request_list+' => '',
+	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
 	'Class:Change/Attribute:related_incident_list' => 'Verwandte Incidents',
-	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_incident_list+' => 'All the incidents linked to this change~~',
 	'Class:Change/Attribute:related_problems_list' => 'Verwandte Probleme',
-	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:related_problems_list+' => 'All the problems linked to this change~~',
 	'Class:Change/Attribute:child_changes_list' => 'Abgeleitete Changes',
-	'Class:Change/Attribute:child_changes_list+' => '',
+	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Stimulus:ev_assign' => 'Zuweisen',

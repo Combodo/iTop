@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -31,19 +31,19 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Menu:ServiceManagement' => 'Gestione del Servizio',
-	'Menu:ServiceManagement+' => 'Panoramica della Gestione del Servizio',
+	'Menu:ServiceManagement' => 'Gestione del servizio',
+	'Menu:ServiceManagement+' => 'Panoramica della gestione del servizio',
 	'Menu:Service:Overview' => 'Panoramica',
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratti per livello di servizio',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratti per stato',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratti che terminano in meno di 30 giorni',
-	'Menu:ProviderContract' => 'Contratti con Provider',
-	'Menu:ProviderContract+' => 'Contratti con Provider',
-	'Menu:CustomerContract' => 'Contratti con Clienti',
-	'Menu:CustomerContract+' => 'Contratti con Clienti',
-	'Menu:ServiceSubcategory' => 'Sottocategorie di Servizio',
-	'Menu:ServiceSubcategory+' => 'Sottocategorie di Servizio',
+	'Menu:ProviderContract' => 'Contratti con provider',
+	'Menu:ProviderContract+' => 'Contratti con provider',
+	'Menu:CustomerContract' => 'Contratti con clienti',
+	'Menu:CustomerContract+' => 'Contratti con clienti',
+	'Menu:ServiceSubcategory' => 'Sottocategorie di servizio',
+	'Menu:ServiceSubcategory+' => 'Sottocategorie di servizio',
 	'Menu:Service' => 'Servizi',
 	'Menu:Service+' => 'Servizi',
 	'Menu:ServiceElement' => 'Sevice elements~~',
@@ -58,6 +58,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:ServiceFamily+' => 'Service families~~',
 	'Menu:Procedure' => 'Procedures catalog~~',
 	'Menu:Procedure+' => 'All procedures catalog~~',
+	'Contract:baseinfo' => 'General information~~',
+	'Contract:moreinfo' => 'Contractual information~~',
+	'Contract:cost' => 'Cost information~~',
 ));
 
 //
@@ -171,6 +174,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkContactToContract' => 'Link Contact / Contract~~',
 	'Class:lnkContactToContract+' => '~~',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Contract~~',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Contract Name~~',
@@ -188,6 +192,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkContractToDocument' => 'Link Contract / Document~~',
 	'Class:lnkContractToDocument+' => '~~',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contract~~',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Contract Name~~',
@@ -220,6 +225,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Service' => 'Servizio',
 	'Class:Service+' => '',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Nome',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Provider',
@@ -263,6 +269,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDocumentToService' => 'Link Document / Service~~',
 	'Class:lnkDocumentToService+' => '~~',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Service~~',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Service Name~~',
@@ -280,6 +287,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkContactToService' => 'Link Contact / Service~~',
 	'Class:lnkContactToService+' => '~~',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Service~~',
 	'Class:lnkContactToService/Attribute:service_id+' => '~~',
 	'Class:lnkContactToService/Attribute:service_name' => 'Service Name~~',
@@ -297,6 +305,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ServiceSubcategory' => 'Sottocategorie del servizio',
 	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nome',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Descrizione',
@@ -382,6 +391,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => 'hours~~',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minutes~~',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes~~',
+	'Class:SLT/Attribute:slas_list' => 'SLAs~~',
+	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT~~',
 ));
 
 //
@@ -391,6 +402,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT~~',
 	'Class:lnkSLAToSLT+' => '~~',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA Name~~',
@@ -418,6 +430,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkCustomerContractToService' => 'Link Customer Contract / Service~~',
 	'Class:lnkCustomerContractToService+' => '~~',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Customer contract~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Customer contract Name~~',
@@ -439,6 +452,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkProviderContractToService' => 'Link Provider Contract / Service~~',
 	'Class:lnkProviderContractToService+' => '~~',
+	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Service~~',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => '~~',
 	'Class:lnkProviderContractToService/Attribute:service_name' => 'Service Name~~',
@@ -477,6 +491,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDeliveryModelToContact' => 'Link Delivery Model / Contact~~',
 	'Class:lnkDeliveryModelToContact+' => '~~',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Delivery model~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Delivery model name~~',

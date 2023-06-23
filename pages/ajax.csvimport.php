@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,7 +15,6 @@ use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
 
@@ -195,6 +194,7 @@ try
 	require_once(APPROOT.'/application/startup.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 
@@ -239,7 +239,7 @@ try
 					if (($bFirstLineAsHeader) && ($index == 1)) {
 						$aColumns[] = ["label" => sprintf($sFormat, $index)];
 						foreach ($aRow as $sCell) {
-							$aColumns[] = ["label" => htmlentities($sCell, ENT_QUOTES, 'UTF-8')];
+							$aColumns[] = ["label" => utils::EscapeHtml($sCell)];
 						}
 						$iNbCols = count($aRow);
 					} else {
@@ -249,7 +249,7 @@ try
 						}
 						$aTableRow[] = sprintf($sFormat, $index);
 						foreach ($aRow as $sCell) {
-							$aTableRow[] = htmlentities($sCell, ENT_QUOTES, 'UTF-8');
+							$aTableRow[] = utils::EscapeHtml($sCell);
 						}
 						$aTableData[$index] = $aTableRow;
 					}
@@ -323,8 +323,8 @@ try
 					$aTableRow['HeaderFields'] = utils::HtmlEntities($sField);
 					$aTableRow['HeaderMapipngs'] = BlockRenderer::RenderBlockTemplates(GetMappingForField($sClassName, $sField, $index, $bAdvanced, $sDefaultChoice));
 					$aTableRow['HeaderSearch'] = '<input id="search_'.$index.'" type="checkbox" name="search_field['.$index.']" value="1" />';
-					$aTableRow['DataLine1'] = (isset($aData[$iStartLine][$index - 1]) ? htmlentities($aData[$iStartLine][$index - 1], ENT_QUOTES, 'UTF-8') : '&nbsp;');
-					$aTableRow['DataLine2'] = (isset($aData[$iStartLine + 1][$index - 1]) ? htmlentities($aData[$iStartLine + 1][$index - 1], ENT_QUOTES, 'UTF-8') : '&nbsp;');
+					$aTableRow['DataLine1'] = (isset($aData[$iStartLine][$index - 1]) ? utils::EscapeHtml($aData[$iStartLine][$index - 1]) : '&nbsp;');
+					$aTableRow['DataLine2'] = (isset($aData[$iStartLine + 1][$index - 1]) ? utils::EscapeHtml($aData[$iStartLine + 1][$index - 1]) : '&nbsp;');
 					$aTableData[$index] = $aTableRow;
 					$index++;
 				}
@@ -404,7 +404,7 @@ EOF
 				if ($sDisposition == 'attachment') {
 					switch ($sFormat) {
 						case 'xlsx':
-							$oPage = new AjaxPage("");
+							$oPage = new DownloadPage("");
 							$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 							$oPage->SetContentDisposition('attachment', $sClassDisplayName.'.xlsx');
 							require_once(APPROOT.'/application/excelexporter.class.inc.php');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -27,6 +27,7 @@ require_once(APPROOT.'/application/application.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled("NotificationsMenu");
 
@@ -85,11 +86,15 @@ function DisplayActionsTab(iTopWebPage &$oP, string $sClassToDisplay, array $aCl
 			// New style
 			$sNbOfActionClassesTitle = MetaModel::GetName($sActionClass);
 		}
+
 		$oFilter = new DBObjectSearch($sActionClass);
 		$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
+
 		$aParams = array('panel_title' => $sNbOfActionClassesTitle);
+
+		$sBlockId = 'block_'.utils::Sanitize($sClassToDisplay, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER).'_'.$iBlock;
 		$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
-		$oBlock->Display($oP, 'block_action_'.$iBlock, $aParams);
+		$oBlock->Display($oP, $sBlockId, $aParams);
 		$iBlock++;
 	}
 }

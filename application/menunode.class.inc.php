@@ -1,11 +1,10 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/template.class.inc.php');
@@ -266,6 +265,14 @@ class ApplicationMenu
 			/** @var \MenuGroup $oMenuNode */
 			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
 
+			if (!($oMenuNode instanceof MenuGroup)) {
+				IssueLog::Error('Menu node was not displayed as a menu group as it is actually not a menu group', LogChannels::CONSOLE, [
+					'menu_node_class' => get_class($oMenuNode),
+					'menu_node_label' => $oMenuNode->GetLabel(),
+				]);
+				continue;
+			}
+
 			$aMenuGroups[] = [
 				'sId' => $oMenuNode->GetMenuID(),
 				'sIconCssClasses' => $oMenuNode->GetDecorationClasses(),
@@ -284,7 +291,17 @@ class ApplicationMenu
 	 * @param string $sMenuGroupIdx
 	 * @param array $aExtraParams
 	 *
-	 * @return array
+	 * @return array{
+	 *     array{
+	 *        sId: string,
+	 *        sTitle: string,
+	 *        sLabel: string,
+	 *        bHasCount: boolean,
+	 *        sUrl: string,
+	 *        bOpenInNewWindow: boolean,
+	 *        aSubMenuNodes: array
+	 *     }
+	 * } The aSubMenuNodes key contains the same structure recursively
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 * @since 3.0.0
@@ -313,12 +330,13 @@ class ApplicationMenu
 			}
 
 			$aSubMenuNodes[] = [
-				'sId' => $oSubMenuNode->GetMenuId(),
-				'sTitle' => $oSubMenuNode->GetTitle(),
-				'bHasCount' => $oSubMenuNode->HasCount(),
-				'sUrl' => $oSubMenuNode->GetHyperlink($aExtraParams),
+				'sId'              => $oSubMenuNode->GetMenuId(),
+				'sTitle'           => $oSubMenuNode->GetTitle(),
+				'sLabel'           => $oSubMenuNode->GetLabel(),
+				'bHasCount'        => $oSubMenuNode->HasCount(),
+				'sUrl'             => $oSubMenuNode->GetHyperlink($aExtraParams),
 				'bOpenInNewWindow' => $oSubMenuNode->IsHyperLinkInNewWindow(),
-				'aSubMenuNodes' => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
+				'aSubMenuNodes'    => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
 			];
 		}
 
@@ -654,8 +672,7 @@ abstract class MenuNode
 		$this->sMenuId = $sMenuId;
 		$this->iParentIndex = $iParentIndex;
 		$this->aReflectionProperties = array();
-		if (strlen($sEnableClass) > 0)
-		{
+		if (utils::IsNotNullOrEmptyString($sEnableClass)) {
 			$this->aReflectionProperties['enable_class'] = $sEnableClass;
 			$this->aReflectionProperties['enable_action'] = $iActionCode;
 			$this->aReflectionProperties['enable_permission'] = $iAllowedResults;
@@ -740,7 +757,7 @@ abstract class MenuNode
 	}
 
 	/**
-	 * @return string
+	 * @return string The "+" dictionary entry for this menu if exists, otherwise the Title (if we have a parent title, will output parentTitle / currentTitle)
 	 */
 	public function GetLabel()
 	{
@@ -752,7 +769,6 @@ abstract class MenuNode
 			} else {
 				$sRet = $this->GetTitle();
 			}
-			//$sRet = $this->GetTitle();
 		}
 		return $sRet;
 	}
@@ -1095,6 +1111,7 @@ class OQLMenuNode extends MenuNode
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
+		ContextTag::AddContext(ContextTag::TAG_OBJECT_SEARCH);
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
 		OQLMenuNode::RenderOQLSearch
 		(
@@ -1126,16 +1143,20 @@ class OQLMenuNode extends MenuNode
 	{
 		$sUsageId = utils::GetSafeId($sUsageId);
 		$oSearch = DBObjectSearch::FromOQL($sOql);
-
+		$sClass= 	$oSearch->GetClass();
+		$sIcon = MetaModel::GetClassIcon($sClass, false);
 		if ($bSearchPane) {
 			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => false], $aExtraParams);
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
+			$oPage->add("<div class='sf_results_area ibo-add-margin-top-250' data-target='search_results'>");
 		}
-
-		$oPage->add("<div class='sf_results_area' data-target='search_results'>");
-		$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
-		$oPage->AddUiBlock($oTitle);
+		else {
+			$oPage->add("<div class='sf_results_area' data-target='search_results'>");
+		}
+		$aExtraParams['panel_class'] =$sClass;
+		$aExtraParams['panel_title'] = $sTitle;
+		$aExtraParams['panel_icon'] = $sIcon;
 
 		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);

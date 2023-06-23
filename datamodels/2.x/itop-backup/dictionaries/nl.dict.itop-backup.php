@@ -2,11 +2,11 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * @author Hipska (2019)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  * This file is part of iTop.
  *
@@ -24,10 +24,8 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-
 	'bkp-backup-running' => 'Er wordt een backup gemaakt. Even geduld...',
 	'bkp-restore-running' => 'Er wordt een herstel uitgevoerd. Even geduld...',
-
 	'Menu:BackupStatus' => 'Geplande backups',
 	'bkp-status-title' => 'Geplande backups',
 	'bkp-status-checks' => 'Instellingen en controles',
@@ -52,6 +50,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'bkp-status-backups-manual' => 'Manuele backups',
 	'bkp-status-backups-none' => 'Nog geen backups beschikbaar',
 	'bkp-next-backup' => 'De volgende backup wordt gemaakt op <b>%1$s</b> (%2$s) om %3$s',
+	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Maak nu een backup',
 	'bkp-button-restore-now' => 'Herstel',
 	'bkp-confirm-backup' => 'Bevestig dat de backup nu gemaakt mag worden.',

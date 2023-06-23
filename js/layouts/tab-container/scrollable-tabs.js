@@ -377,4 +377,16 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 	setTab : function(tab){
 		this.active = tab;
 	},
+	// JQuery UI overload
+	disable: function(index){
+		const panel = this._getPanelForTab( this.tabs[index] );
+		panel.addClass('ibo-is-hidden'); // Do not use .hide() since it alters the tab state
+		this._super( index );        
+	},
+	// JQuery UI overload
+	enable: function(index) {
+		const panel = this._getPanelForTab( this.tabs[index] );
+		panel.removeClass('ibo-is-hidden'); // Do not use .show() since it alters the tab state
+		this._super( index );  
+	},
 });

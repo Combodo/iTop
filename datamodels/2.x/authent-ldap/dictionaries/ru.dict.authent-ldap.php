@@ -14,4 +14,5 @@
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserLDAP' => 'Пользователь LDAP',
 	'Class:UserLDAP+' => 'Пользователь, аутентифицируемый через LDAP',
+	'UserLDAP:server' => 'LDAP specifics~~',
 ));

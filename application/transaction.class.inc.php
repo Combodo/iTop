@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@ use Combodo\iTop\Application\Helper\Session;
  * which choice is configured via the parameter 'transaction_storage'
  *  
  * @package     iTop
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class privUITransaction
@@ -196,16 +196,19 @@ class privUITransactionSession
  */
 class privUITransactionFile
 {
+	/** @var int Value to use when no user logged */
+	const UNAUTHENTICATED_USER_ID = -666;
+
 	/**
-	 * @return int
-	 * @throws \SecurityException if no connected user
+	 * @return int current user id, or {@see self::UNAUTHENTICATED_USER_ID} if no user logged
 	 *
 	 * @since 2.6.5 2.7.6 3.0.0 N°4289 method creation
 	 */
-	private static function GetCurrentUserId() {
+	private static function GetCurrentUserId()
+	{
 		$iCurrentUserId = UserRights::GetConnectedUserId();
 		if ('' === $iCurrentUserId) {
-			throw new SecurityException('Cannot creation transaction_id when no user logged');
+			$iCurrentUserId = static::UNAUTHENTICATED_USER_ID;
 		}
 
 		return $iCurrentUserId;

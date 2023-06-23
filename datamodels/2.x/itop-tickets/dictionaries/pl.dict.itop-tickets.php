@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -30,12 +29,9 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
-
 //
 // Class: Ticket
 //
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Ticket' => 'Zgłoszenie',
 	'Class:Ticket+' => '',
@@ -98,12 +94,15 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkContactToTicket' => 'Połączenie Kontakt / Zgłoszenie',
 	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Zgłoszenie',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Powiązanie',
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Kontakt',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name~~',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'E-mail kontaktu',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rola (tekst)',
@@ -179,6 +178,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:cmdbAbstractObject/Method:SetCurrentDate+' => 'Ustaw pole z aktualną datą i godziną',
 	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1' => 'Pole docelowe',
 	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1+' => 'Pole do ustawienia w bieżącym obiekcie',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull' => 'Ustaw aktualną datę, jeśli wartość null',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull+' => 'Ustaw puste pole z bieżącą datą i godziną',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1' => 'Pole docelowe',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1+' => 'Pole do ustawienia w bieżącym obiekcie',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser' => 'SetCurrentUser',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser+' => 'Ustaw pole z aktualnie zalogowanym użytkownikiem',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1' => 'Pole docelowe',
@@ -195,6 +198,34 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2+' => 'Pole, z którego ma zostać pobrana data odniesienia',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3' => 'Godziny pracy',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Pozostaw puste, aby polegać na standardowym schemacie godzin pracy, lub ustaw na „DefaultWorkingTimeComputer”, aby wymusić schemat 24x7',
+	'Class:cmdbAbstractObject/Method:SetIfNull' => 'SetIfNull',
+	'Class:cmdbAbstractObject/Method:SetIfNull+' => 'Ustaw pole tylko wtedy, gdy jest puste, z wartością statyczną',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1' => 'Pole docelowe',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1+' => 'Pole do ustawienia w bieżącym obiekcie',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:2' => 'Wartość',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:2+' => 'Wartość do ustawienia',
+	'Class:cmdbAbstractObject/Method:AddValue' => 'AddValue',
+	'Class:cmdbAbstractObject/Method:AddValue+' => 'Dodaj stałą wartość do pola',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:1' => 'Pole docelowe',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:1+' => 'Pole do modyfikacji w bieżącym obiekcie',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:2' => 'Wartość',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:2+' => 'Wartość dziesiętna, która zostanie dodana, może być ujemna',
+	'Class:cmdbAbstractObject/Method:SetComputedDate' => 'SetComputedDate',
+	'Class:cmdbAbstractObject/Method:SetComputedDate+' => 'Ustaw pole z datą obliczoną z innego pola z dodatkową logiką',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:1' => 'Pole docelowe',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:1+' => 'Pole do ustawienia w bieżącym obiekcie',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:2' => 'Modyfikator',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:2+' => 'Informacje tekstowe umożliwiające modyfikację daty źródłowej, np. "+3 dni"',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:3' => 'Pole źródłowe',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:3+' => 'Pole używane jako źródło do zastosowania logiki modyfikatora',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull' => 'SetComputedDateIfNull',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull+' => 'Ustaw niepuste pole z datą obliczoną z innego pola z dodatkową logiką',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1' => 'Pole docelowe',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1+' => 'Pole do ustawienia w bieżącym obiekcie',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2' => 'Modyfikator',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2+' => 'Informacje tekstowe umożliwiające modyfikację daty źródłowej, np. "+3 dni"',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3' => 'Pole źródłowe',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3+' => 'Pole używane jako źródło do zastosowania logiki modyfikatora',
 	'Class:cmdbAbstractObject/Method:Reset' => 'Resetuj',
 	'Class:cmdbAbstractObject/Method:Reset+' => 'Zresetuj pole do wartości domyślnej',
 	'Class:cmdbAbstractObject/Method:Reset/Param:1' => 'Pole docelowe',
@@ -215,13 +246,3 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Cel oparty na SLT typu TTR',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Class:Document/Attribute:contracts_list' => 'Umowy',
-	'Class:Document/Attribute:contracts_list+' => 'Wszystkie umowy powiązane z tym dokumentem',
-	'Class:Document/Attribute:services_list' => 'Usługi',
-	'Class:Document/Attribute:services_list+' => 'Wszystkie usługi powiązane z tym dokumentem',
-));

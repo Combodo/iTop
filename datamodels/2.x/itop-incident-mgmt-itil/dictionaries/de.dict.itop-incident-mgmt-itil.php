@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2021 Combodo SARL
+* @copyright     Copyright (C) 2023 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
@@ -112,6 +112,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => '',
 	'Class:Incident/Attribute:origin' => 'Herkunft',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => 'Mail',
 	'Class:Incident/Attribute:origin/Value:mail+' => '',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -197,7 +201,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:related_request_list' => 'Kind-Requests',
 	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Abgeleitete Incidents',
-	'Class:Incident/Attribute:child_incidents_list+' => '',
+	'Class:Incident/Attribute:child_incidents_list+' => 'All the child incidents related to this incident~~',
 	'Class:Incident/Attribute:public_log' => 'Öffentliches Log',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Benutzerzufriedenheit',
@@ -233,7 +237,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Wiedereröffnen',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Kann Incident-Ticket nicht als eigenes Parent-Ticket verwenden',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 	'Tickets:Related:OpenIncidents' => 'Offene Incidents',

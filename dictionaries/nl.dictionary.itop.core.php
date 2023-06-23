@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,62 +22,49 @@
  * http://www.linprofs.com
  *
  * @author Hipska (2018, 2019)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2019 - 2020)
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2019 - 2022)
  * 
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:DeletedObjectLabel' => '%1s (verwijderd)',
 	'Core:DeletedObjectTip' => 'Het object is verwijderd op %1$s (%2$s)',
-
 	'Core:UnknownObjectLabel' => 'Object niet gevonden (klasse: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'Object kon niet worden gevonden. Het kan al eerder verwijderd zijn waardoor ook de historiek al gewist is.',
-
 	'Core:UniquenessDefaultError' => 'De regel \'%1$s\' die unieke waardes afdwingt, blokkeert deze actie',
-
+	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 	'Core:AttributeLinkedSet' => 'Reeks van objecten',
 	'Core:AttributeLinkedSet+' => 'Elke soort objecten van dezelfde klasse of subklasse',
-
-	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
-
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Dubbele records in het \'%1$s\' veld : %2$s',
 	'Core:AttributeDashboard' => 'Dashboard',
 	'Core:AttributeDashboard+' => '',
-
 	'Core:AttributePhoneNumber' => 'Telefoonnummer',
 	'Core:AttributePhoneNumber+' => '',
-
 	'Core:AttributeObsolescenceDate' => 'Buiten gebruik sinds',
 	'Core:AttributeObsolescenceDate+' => 'Tijdstip sinds wanneer dit object buiten gebruik is',
-
 	'Core:AttributeTagSet' => 'Lijst van tags',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'klik om toe te voegen',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s van %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s van subklasses)',
-
 	'Core:AttributeCaseLog' => 'Log',
 	'Core:AttributeCaseLog+' => '',
-
 	'Core:AttributeMetaEnum' => 'Afgeleide oplijsting',
 	'Core:AttributeMetaEnum+' => '',
-
 	'Core:AttributeLinkedSetIndirect' => 'Reeks van objecten (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Elke soort objecten (subklasse) van dezelfde klasse',
-
 	'Core:AttributeInteger' => 'Integer',
 	'Core:AttributeInteger+' => 'Numerieke waarde (kan negatief zijn)',
-
 	'Core:AttributeDecimal' => 'Decimaal',
 	'Core:AttributeDecimal+' => 'Decimale waarde (kan negatief zijn)',
-
 	'Core:AttributeBoolean' => 'Booleaanse (Ja/Nee) waarde',
 	'Core:AttributeBoolean+' => 'Booleaanse (Ja/Nee) waarde',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Ja',
 	'Core:AttributeBoolean/Value:no' => 'Nee',
-
 	'Core:AttributeArchiveFlag' => 'Gearchiveerd',
 	'Core:AttributeArchiveFlag/Value:yes' => 'Ja',
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Dit object is enkel zichtbaar in Archief-mode',
@@ -86,7 +73,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeArchiveFlag/Label+' => '',
 	'Core:AttributeArchiveDate/Label' => 'Gearchiveerd op',
 	'Core:AttributeArchiveDate/Label+' => '',
-
 	'Core:AttributeObsolescenceFlag' => 'Buiten dienst',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Ja',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Dit object is uitgesloten bij impactanalyses en verborgen in zoekresultaten.',
@@ -95,54 +81,38 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeObsolescenceFlag/Label+' => 'Automatisch toegepast op andere attributen',
 	'Core:AttributeObsolescenceDate/Label' => 'Buiten dienst sinds',
 	'Core:AttributeObsolescenceDate/Label+' => 'Datum bij benadering waarop het object als buiten dienst beschouwd werd',
-
 	'Core:AttributeString' => 'Tekstregel',
 	'Core:AttributeString+' => 'Alfanumerieke tekstregel',
-
 	'Core:AttributeClass' => 'Klasse',
-	'Core:AttributeClass+' => 'Klasse',
-
+	'Core:AttributeClass+' => '',
 	'Core:AttributeApplicationLanguage' => 'Taal van de gebruiker',
 	'Core:AttributeApplicationLanguage+' => 'Taal en land (EN US)',
-
 	'Core:AttributeFinalClass' => 'Klasse (auto)',
 	'Core:AttributeFinalClass+' => 'Echte klasse van het object (automatisch aangemaakt bij de kern)',
-
 	'Core:AttributePassword' => 'Wachtwoord',
 	'Core:AttributePassword+' => 'Wachtwoord van een extern apparaat',
-
 	'Core:AttributeEncryptedString' => 'Versleutelde tekstregel',
 	'Core:AttributeEncryptedString+' => 'Tekstregel versleuteld met een lokale sleutel (key)',
 	'Core:AttributeEncryptUnknownLibrary' => 'De encryptie-bibliotheek (%1$s) is onbekend',
 	'Core:AttributeEncryptFailedToDecrypt' => '** fout bij decryptie **',
-
 	'Core:AttributeText' => 'Tekstvak',
 	'Core:AttributeText+' => 'Meerdere regels tekst',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'HTML-code',
-
 	'Core:AttributeEmailAddress' => 'E-mailadres',
-	'Core:AttributeEmailAddress+' => 'E-mailadres',
-
+	'Core:AttributeEmailAddress+' => '',
 	'Core:AttributeIPAddress' => 'IP-adres',
-	'Core:AttributeIPAddress+' => 'IP-adres',
-
+	'Core:AttributeIPAddress+' => '',
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Object Query Language-expressie',
-
 	'Core:AttributeEnum' => 'Oplijsting',
 	'Core:AttributeEnum+' => 'Lijst van voorgedefineerde alfanumerieke waardes',
-
 	'Core:AttributeTemplateString' => 'Sjabloon tekstregel',
 	'Core:AttributeTemplateString+' => 'String die de plaatshouders bevat',
-
 	'Core:AttributeTemplateText' => 'Sjabloon tekstvak',
 	'Core:AttributeTemplateText+' => 'Tekst die de plaatshouders bevat',
-
 	'Core:AttributeTemplateHTML' => 'Sjabloon HTML',
 	'Core:AttributeTemplateHTML+' => 'HTML die de plaatshouders bevat',
-
 	'Core:AttributeDateTime' => 'Datum/tijd',
 	'Core:AttributeDateTime+' => 'Datum en tijd (jaar-maand-dag hh:mm:ss)',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -160,7 +130,6 @@ Operators:<br/>
 <p>
 Hier wordt standaard \'00:00:00\' van gemaakt als er geen tijd wordt opgegeven.
 </p>',
-
 	'Core:AttributeDate' => 'Datum',
 	'Core:AttributeDate+' => 'Datum (jaar-maand-dag)',
 	'Core:AttributeDate?SmartSearch' => '
@@ -175,43 +144,30 @@ Operators:<br/>
 	<b>&lt;</b><em>date</em><br/>
 	<b>[</b><em>date</em>,<em>date</em><b>]</b>
 </p>',
-
 	'Core:AttributeDeadline' => 'Deadline',
 	'Core:AttributeDeadline+' => 'Datum, relatief weergegeven ten opzichte van het huidige tijdstip',
-
 	'Core:AttributeExternalKey' => 'Externe sleutel (key)',
-	'Core:AttributeExternalKey+' => 'Externe sleutel (key)',
-
+	'Core:AttributeExternalKey+' => '',
 	'Core:AttributeHierarchicalKey' => 'Hiërarchische sleutel (key)',
 	'Core:AttributeHierarchicalKey+' => 'Externe sleutel naar het hoofdobject',
-
 	'Core:AttributeExternalField' => 'Extern veld',
 	'Core:AttributeExternalField+' => 'Veld dat verwijst naar een externe sleutel (key)',
-
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => 'Absolute of relatieve URL als een tekstregel',
-
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => 'Alle binaire inhoud (document)',
-
 	'Core:AttributeOneWayPassword' => 'Wachtwoord',
 	'Core:AttributeOneWayPassword+' => 'Gehasht wachtwoord (decryptie niet mogelijk)',
-
 	'Core:AttributeTable' => 'Tabel',
 	'Core:AttributeTable+' => 'Geïndexeerde reeks met twee dimensies',
-
 	'Core:AttributePropertySet' => 'Eigenschappen',
 	'Core:AttributePropertySet+' => 'Lijst van ongeschreven eigenschappen (naam en waarde)',
-
 	'Core:AttributeFriendlyName' => 'Herkenbare naam',
 	'Core:AttributeFriendlyName+' => 'Automatisch aangemaakt attribuut. De herkenbare naam is gebaseerd op verschillende attributen van het object.',
-
 	'Core:FriendlyName-Label' => 'Herkenbare naam',
 	'Core:FriendlyName-Description' => 'Herkenbare naam',
-
 	'Core:AttributeTag' => 'Tags',
-	'Core:AttributeTag+' => 'Tags',
-	
+	'Core:AttributeTag+' => '',
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
@@ -237,14 +193,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChange/Attribute:date+' => 'De datum en tijd waarop de aanpassingen zijn waargenomen ',
 	'Class:CMDBChange/Attribute:userinfo' => 'Info',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Info over wie/wat (bv. welke service) de aanpassing heeft doorgevoerd',
-	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
-	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Gebruikersinteractie in de GUI',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in de GUI',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Verwerking e-mail',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. databron',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Via een extensie',
 ));
 
 //
@@ -255,15 +211,15 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChangeOp' => 'Aanpassingsactie',
 	'Class:CMDBChangeOp+' => 'Opvolging van uitgevoerde aanpassingen',
 	'Class:CMDBChangeOp/Attribute:change' => 'Aanpassing',
-	'Class:CMDBChangeOp/Attribute:change+' => 'Aanpassing',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'Tijdstip',
 	'Class:CMDBChangeOp/Attribute:date+' => 'Tijdstip van de aanpassing',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Info',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Info over wie/wat (bv. welke service) de aanpassing heeft doorgevoerd',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'Objectklasse',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'Objectklasse',
+	'Class:CMDBChangeOp/Attribute:objclass+' => '',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'ID Object',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'ID Object',
+	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Soort',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
@@ -391,17 +347,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventNotificationEmail' => 'Gebeurtenis - versturen van e-mail',
 	'Class:EventNotificationEmail+' => 'Historiek van de e-mail die verstuurd is',
 	'Class:EventNotificationEmail/Attribute:to' => 'Aan',
-	'Class:EventNotificationEmail/Attribute:to+' => 'Aan',
+	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'CC',
-	'Class:EventNotificationEmail/Attribute:cc+' => 'CC',
+	'Class:EventNotificationEmail/Attribute:cc+' => '',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'BCC',
-	'Class:EventNotificationEmail/Attribute:bcc+' => 'BCC',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '',
 	'Class:EventNotificationEmail/Attribute:from' => 'Van',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Afzender van het bericht',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Onderwerp',
-	'Class:EventNotificationEmail/Attribute:subject+' => 'Onderwerp',
+	'Class:EventNotificationEmail/Attribute:subject+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Inhoud',
-	'Class:EventNotificationEmail/Attribute:body+' => 'Inhoud',
+	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Bijlagen',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
 ));
@@ -424,7 +380,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventIssue/Attribute:arguments_get' => 'URL-argumenten',
 	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET-argumenten',
 	'Class:EventIssue/Attribute:callstack' => 'Call stack',
-	'Class:EventIssue/Attribute:callstack+' => 'Call stack',
+	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Data',
 	'Class:EventIssue/Attribute:data+' => 'Meer informatie',
 ));
@@ -475,11 +431,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventLoginUsage' => 'Gebeurtenis - gebruik van login',
 	'Class:EventLoginUsage+' => 'Verbinding met de applicatie',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
-	'Class:EventLoginUsage/Attribute:user_id+' => 'Login',
+	'Class:EventLoginUsage/Attribute:user_id+' => '',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Gebruikersnaam',
-	'Class:EventLoginUsage/Attribute:contact_name+' => 'Gebruikersnaam',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'E-mailadres van de gebruiker',
-	'Class:EventLoginUsage/Attribute:contact_email+' => 'E-mailadres van de gebruiker',
+	'Class:EventLoginUsage/Attribute:contact_email+' => '',
 ));
 
 //
@@ -489,6 +445,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Action' => 'Actie',
 	'Class:Action+' => 'Door gebruiker gedefinieerde actie',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Naam',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => 'Beschrijving',
@@ -496,16 +453,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Action/Attribute:status' => 'Status',
 	'Class:Action/Attribute:status+' => 'De status van deze actie',
 	'Class:Action/Attribute:status/Value:test' => 'Wordt getest',
-	'Class:Action/Attribute:status/Value:test+' => 'Wordt getest',
+	'Class:Action/Attribute:status/Value:test+' => '',
 	'Class:Action/Attribute:status/Value:enabled' => 'In productie',
-	'Class:Action/Attribute:status/Value:enabled+' => 'In productie',
+	'Class:Action/Attribute:status/Value:enabled+' => '',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inactief',
-	'Class:Action/Attribute:status/Value:disabled+' => 'Inactief',
+	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Gerelateerde triggers',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers gelinkt aan deze actie',
 	'Class:Action/Attribute:finalclass' => 'Type',
 	'Class:Action/Attribute:finalclass+' => '',
-	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
+	'Action:WarningNoTriggerLinked' => 'Opgelet: er is geen trigger gelinkt aan deze actie. Zonder minstens 1 actieve trigger zal de actie nooit uitgevoerd worden.',
 ));
 
 //
@@ -526,7 +483,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Status bepaalt wie op de hoogte zal gesteld worden: enkel de testontvanger, iedereen (Aan, CC en BCC) of niemand',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Enkel de testontvanger zal op de hoogte gesteld worden',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Alle Aan, CC en BCC bestemingen zullen op de hoogte gesteld worden',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Alle Aan, CC en BCC bestemmingen zullen op de hoogte gesteld worden',
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'De e-mailmelding zal niet verstuurd worden',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testontvanger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Bestemming als de status op "Test" staat',
@@ -549,13 +506,29 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ActionEmail/Attribute:body' => 'Inhoud',
 	'Class:ActionEmail/Attribute:body+' => 'Inhoud van de e-mail',
 	'Class:ActionEmail/Attribute:importance' => 'Prioriteit',
-	'Class:ActionEmail/Attribute:importance+' => 'Prioriteit',
+	'Class:ActionEmail/Attribute:importance+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'Laag',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'Laag',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normaal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'Normaal',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Hoog',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'Hoog',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:language' => 'Language~~',
+	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
+	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
+	'ActionEmail:main' => 'Message~~',
+	'ActionEmail:trigger' => 'Triggers~~',
+	'ActionEmail:recipients' => 'Contacts~~',
+	'ActionEmail:preview_tab' => 'Preview~~',
+	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
+	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
+	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
+	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
 ));
 
 //
@@ -565,6 +538,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Aanleiding tot het uitvoeren van een actie',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Beschrijving',
 	'Class:Trigger/Attribute:description+' => 'Beschrijving in één regel',
 	'Class:Trigger/Attribute:action_list' => 'Getriggerde acties',
@@ -573,6 +547,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Context',
 	'Class:Trigger/Attribute:context+' => 'In welke context de trigger uitgevoerd kan worden',
+	'Class:Trigger/Attribute:complement' => 'Additional information~~',
+	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
 ));
 
 //
@@ -585,7 +561,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Toegepast op klasse',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter',
-	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Beperk de objecten (van de opgegeven klasse) die de trigger zullen activeren.',
 	'TriggerOnObject:WrongFilterQuery' => 'Verkeerde filter-query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'De filter-query moet verwijzen naar objecten van klasse "%1$s"',
 ));
@@ -662,10 +638,21 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
-	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
+	'Class:TriggerOnObjectMention' => 'Trigger (bij vermelden van object)',
+	'Class:TriggerOnObjectMention+' => 'Trigger bij vermelden (@xxx) van een object van de opgegeven klasse (of subklasse ervan) in een log',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filter',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Beperk de lijst van vermelde objecten die de trigger zullen activeren. Indien leeg, zullen alle objecten (van eender welke klasse) de trigger activeren.',
+));
+
+//
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
 ));
 
 //
@@ -704,19 +691,23 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Synchro Data Source
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:SynchroDataSource' => 'Synchronisatie-databron',
 	'Class:SynchroDataSource/Attribute:name' => 'Naam',
-	'Class:SynchroDataSource/Attribute:name+' => 'Naam',
+	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Beschrijving',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Doelklasse',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class~~',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Gebruiker',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Verwittig dit contact',
-	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Verwittig dit contact',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => '',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Pictogram (hyperlink)',
 	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink een pictogram die de applicatie voorstelt waarmee wordt gesynchroniseerd',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Applicatie (hyperlink)',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink naar de externe applicatie waarmee wordt gesynchroniseerd (indien van toepassing). Beschikbare plaatshouders: $this->attribute$ and $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation-beleid',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
+"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Vernieuwingsinterval',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Het volledige herladen van alle data moet minstens om deze tijd gebeuren.',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Actie bij nul',
@@ -736,6 +727,33 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Hoe lang een overbodig object wordt bewaard voordat het wordt verwijderd',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Datatabel',
 	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Naam van de tabel waarin de gesynchroniseerde data wordt opgeslagen. Als deze wordt leeggelaten, dan zal een standaard naam worden opgegeven.',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementatie',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Overbodig',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Productie',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Scope-beperking',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Gebruik de attributen',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Gebruik het veld primary_key (primaire sleutel)',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Maak aan',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Fout',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Fout',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Update',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Maak aan',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Fout',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Neem de eerste (willekeurig?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Verwijder Policy',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'What to do when a replica becomes obsolete:
+"Ignore": do nothing, the associated object remains as is in iTop.
+"Delete": Delete the associated object in iTop (and the replica in the data table).
+"Update": Update the associated object as specified by the Update rules (see below).
+"Update then Delete": apply the "Update rules". When Retention Duration expires, execute a "Delete" ~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Verwijder',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Negeer',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Update',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Update en dan verwijderen',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Lijst van attributen',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Alleen administrators',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Iedereen mag deze objecten verwijderen',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Niemand',
 	'SynchroDataSource:Description' => 'Beschrijving',
 	'SynchroDataSource:Reconciliation' => 'Zoeken &amp; reconciliation',
 	'SynchroDataSource:Deletion' => 'Regels voor het verwijderen',
@@ -760,8 +778,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Synchro:NeverRun' => 'Deze synchro heeft nog niet gelopen. Er is nog geen log.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'De laatste synchronisatie eindigde op %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'De synchronisatie is gestart op %1$s en is nog bezig...',
-	'Menu:DataSources' => 'Synchronisatie Databronnen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'Alle gesynchroniseerde Databronnen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources' => 'Synchronisatie Databronnen',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'Alle gesynchroniseerde Databronnen',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Genegeerd (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Verdwenen (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Bestaand (%1$s)',
@@ -825,29 +845,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Vorige waarde',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Case Log',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Meest recente invoer',
-	'Class:SynchroDataSource' => 'Synchronisatie-databron',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementatie',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Overbodig',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Productie',
-	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Scope-beperking',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Gebruik de attributen',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Gebruik het veld primary_key (primaire sleutel)',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Maak aan',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Fout',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Fout',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Update',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Maak aan',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Fout',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Neem de eerste (willekeurig?)',
-	'Class:SynchroDataSource/Attribute:delete_policy' => 'Verwijder Policy',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Verwijder',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Negeer',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Update',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Update en dan verwijderen',
-	'Class:SynchroDataSource/Attribute:attribute_list' => 'Lijst van attributen',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Alleen administrators',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Iedereen mag deze objecten verwijderen',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Niemand',
 	'Class:SynchroAttribute' => 'Synchro Attribuut',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Synchronisatie-databron',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Attribuutcode',
@@ -908,19 +905,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Voorkeuren',
 	'Core:ExecProcess:Code1' => 'Verkeerde commando of commando beëindigd met fouten (bijvoorbeeld verkeerde scriptnaam)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, of runtime)',
-
-	// Attribute Duration
+    // Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
-
-	// Explain working time computing
+    // Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Tijd voorbij (opgeslagen als "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tijd gespendeerd voor "%1$s"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline voor "%1$s" at %2$d%%',
-
-	// Bulk export
+    // Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Ontbrekende parameter "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Ongeldige waarde voor de parameter "query". Er is geen Query Phrasebook die overeenkomt met id: "%1$s".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export-formaat:',
@@ -972,20 +966,34 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Standaardformaat (%1$s), bv. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Aangepast formaat: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Pagina %1$s',
-	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
+	'Core:DateTime:Placeholder_d' => 'DD',
+    // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D',
+    // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM',
+    // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M',
+    // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY',
+    // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY',
+    // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh',
+    // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h',
+    // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh',
+    // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h',
+    // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm',
+    // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM',
+    // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm',
+    // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss',
+    // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Verkeerd formaat',
 	'Core:Validator:Mandatory' => 'Gelieve dit veld in te vullen',
 	'Core:Validator:MustBeInteger' => 'Dit moet een integer (geheel getal) zijn',
@@ -998,17 +1006,15 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TagSetFieldData' => '%2$s voor klasse %1$s',
 	'Class:TagSetFieldData+' => '',
-
 	'Class:TagSetFieldData/Attribute:code' => 'Code',
 	'Class:TagSetFieldData/Attribute:code+' => 'Interne code. Moet minstens 3 alfanumerieke tekens bevatten.',
 	'Class:TagSetFieldData/Attribute:label' => 'Label',
 	'Class:TagSetFieldData/Attribute:label+' => 'Label dat getoond wordt',
 	'Class:TagSetFieldData/Attribute:description' => 'Beschrijving',
-	'Class:TagSetFieldData/Attribute:description+' => 'Beschrijving',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tagklasse',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Objectklasse',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Veldcode',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Tags in gebruik kunnen niet verwijderd worden',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Codes en labels voor tags moeten uniek zijn.',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Codes voor tags bestaan uit 3 tot %1$d alfanumerieke tekens, startend met een letter.',
@@ -1095,6 +1101,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Laatste poging',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Ongeldig formaat bij de configuratie van "async_tasks_retries[%1$s]". Er wordt een Array verwacht met de volgende sleutels: %2$s',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Ongeldig formaat bij de configuratie van "async_tasks_retries[%1$s]": onverwachte sleutel "%2$s". Enkel deze sleutels worden verwacht: %3$s',
 ));
 
 //

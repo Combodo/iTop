@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
@@ -62,9 +62,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:KnownError/Attribute:version' => 'Version',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
-	'Class:KnownError/Attribute:ci_list+' => '',
+	'Class:KnownError/Attribute:ci_list+' => 'Tous les éléments de configuration liés à cette erreur connue',
 	'Class:KnownError/Attribute:document_list' => 'Documents',
-	'Class:KnownError/Attribute:document_list+' => '',
+	'Class:KnownError/Attribute:document_list+' => 'Tous les documents liés à cette erreur connue',
 ));
 
 //
@@ -74,6 +74,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkErrorToFunctionalCI' => 'Lien Erreur / CI',
 	'Class:lnkErrorToFunctionalCI+' => 'Lien entre une erreur et un ci',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
@@ -93,6 +94,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToError' => 'Lien Documents / Errors',
 	'Class:lnkDocumentToError+' => 'Lien entre un document et une erreur',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Nom Document',

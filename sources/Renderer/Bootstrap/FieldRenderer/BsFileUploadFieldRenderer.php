@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -183,12 +183,13 @@ JS
 			'{{iAttId}}',
 			'{{sLineStyle}}',
 			'{{sDocDownloadUrl}}',
-			'{{sIconClass}}',
+		     true,
 			'{{sAttachmentThumbUrl}}',
 			'{{sFileName}}',
 			'{{sAttachmentMeta}}',
 			'{{sFileSize}}',
 			'{{iFileSizeRaw}}',
+			'{{iFileDownloadsCount}}',
 			'{{sAttachmentDate}}',
 			'{{iAttachmentDateRaw}}',
 			$bIsDeleteAllowed
@@ -214,7 +215,7 @@ JS
 			function UpdateAttachmentsCount(iIncrement)
 			{
 				var countContainer = $("a#$sCollapseTogglerId>span.attachments-count"),
-					iCountCurrentValue = parseInt(countContainer.text());
+				iCountCurrentValue = parseInt(countContainer.text());
 				countContainer.text(iCountCurrentValue+iIncrement);
 			}
 
@@ -233,7 +234,6 @@ JS
 						var \$oAttachmentTBody = $(this).closest('.fileupload_field_content').find('.attachments_container table#$sAttachmentTableId>tbody'),
 							iAttId = data.result.att_id,
 							sDownloadLink = '{$this->oField->GetDownloadEndpoint()}'.replace(/-sAttachmentId-/, iAttId),
-							sIconClass = (data.result.preview == 'true') ? 'trigger-preview' : '',
 							sAttachmentMeta = '<input id="attachment_'+iAttId+'" type="hidden" name="attachments[]" value="'+iAttId+'"/>';
 
 						// hide "no attachment" line if present
@@ -247,30 +247,25 @@ JS
 							{search: "{{iAttId}}", replace:iAttId },
 							{search: "{{lineStyle}}", replace:'' },
 							{search: "{{sDocDownloadUrl}}", replace:sDownloadLink },
-							{search: "{{sIconClass}}", replace:sIconClass },
 							{search: "{{sAttachmentThumbUrl}}", replace:data.result.icon },
 							{search: "{{sFileName}}", replace: data.result.msg },
 							{search: "{{sAttachmentMeta}}", replace:sAttachmentMeta },
 							{search: "{{sFileSize}}", replace:data.result.file_size },
+							{search: "{{iFileDownloadsCount}}", replace:data.result.downloads_count },
 							{search: "{{sAttachmentDate}}", replace:data.result.creation_date },
 						];
-						var sAttachmentRow = attachmentRowTemplate;
+						var sAttachmentRow = attachmentRowTemplate   ;
 						$.each(replaces, function(indexInArray, value ) {
 							var re = new RegExp(value.search, 'gi');
 							sAttachmentRow = sAttachmentRow.replace(re, value.replace);
 						});
 						
-						\$oAttachmentTBody.append(sAttachmentRow);
-						// Preview tooltip
-						if(data.result.preview){
-							$('#display_attachment_'+data.result.att_id +' a.trigger-preview').tooltip({
-								container: 'body',
-								html: true,
-								title: function(){ 
-									return '<div class="attachment-tooltip"><img src="'+sDownloadLink+'"></div>'; 
-								}
-							});
+						var oElem = $(sAttachmentRow);
+						if(!data.result.preview){
+							oElem.find('[data-tooltip-html-enabled="true"]').removeAttr('data-tooltip-content');
+							oElem.find('[data-tooltip-html-enabled="true"]').removeAttr('data-tooltip-html-enabled');
 						}
+						\$oAttachmentTBody.append(oElem);
 						// Remove button handler
 						$('#display_attachment_'+data.result.att_id+' :button').on('click', function(oEvent){
 							oEvent.preventDefault();
@@ -310,15 +305,6 @@ JS
 				}
 			});
 
-
-			// Preview tooltip
-			$('table#$sAttachmentTableId>tbody>tr>td a.trigger-preview').each(function(iIndex, oElem){
-				$(oElem).parent().tooltip({
-					container: 'body',
-					html: true,
-					title: function(){ return '<div class="attachment-tooltip"><img src="'+$(oElem).attr('href')+'"></div>'; }
-				});
-			});
 			// Remove button handler
 			$('.attachments_container table#$sAttachmentTableId>tbody>tr>td :button').on('click', function(oEvent){
 				oEvent.preventDefault();
@@ -413,15 +399,14 @@ HTML
 
 				/** @var \ormDocument $oDoc */
 				$oDoc = $oAttachment->Get('contents');
-				$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
+				$sFileName = utils::EscapeHtml($oDoc->GetFileName());
 
 				$sDocDownloadUrl = str_replace('-sAttachmentId-', $iAttId, $this->oField->GetDownloadEndpoint());
 
 				$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
-				$sIconClass = '';
-				if ($oDoc->IsPreviewAvailable())
-				{
-					$sIconClass = 'trigger-preview';
+				$bHasPreview = false;
+				if ($oDoc->IsPreviewAvailable()) {
+					$bHasPreview = true;
 					$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', AbstractAttachmentsRenderer::DEFAULT_MAX_SIZE_FOR_PREVIEW);
 					if ($oDoc->GetSize() <= $iMaxSizeForPreview)
 					{
@@ -431,6 +416,7 @@ HTML
 
 				$iFileSizeRaw = $oDoc->GetSize();
 				$sFileSize = $oDoc->GetFormattedSize();
+				$iFileDownloadsCount = $oDoc->GetDownloadsCount();
 
 				$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 				$sAttachmentDate = '';
@@ -445,12 +431,13 @@ HTML
 					$iAttId,
 					$sLineStyle,
 					$sDocDownloadUrl,
-					$sIconClass,
+					$bHasPreview,
 					$sAttachmentThumbUrl,
 					$sFileName,
 					$sAttachmentMeta,
 					$sFileSize,
 					$iFileSizeRaw,
+					$iFileDownloadsCount,
 					$sAttachmentDate,
 					$iAttachmentDateRaw,
 					$bIsDeleteAllowed
@@ -477,6 +464,7 @@ HTML
 		$sTitleFileName = Dict::S('Attachments:File:Name');
 		$sTitleFileSize = Dict::S('Attachments:File:Size');
 		$sTitleFileDate = Dict::S('Attachments:File:Date');
+		$sTitleFileDownloadsCount = Dict::S('Attachments:File:DownloadsCount');
 
 		// Optional column
 		$sDeleteHeaderAsHtml = ($bIsDeleteAllowed) ? '<th role="delete" data-priority="1"></th>' : '';
@@ -487,6 +475,7 @@ HTML
 		<th role="filename" data-priority="1">$sTitleFileName</th>
 		<th role="formatted-size">$sTitleFileSize</th>
 		<th role="upload-date">$sTitleFileDate</th>
+		<th role="downloads-count">$sTitleFileDownloadsCount</th>
 		$sDeleteHeaderAsHtml
 	</thead>
 HTML;
@@ -496,7 +485,7 @@ HTML;
 	 * @param int $iAttId
 	 * @param string $sLineStyle
 	 * @param string $sDocDownloadUrl
-	 * @param string $sIconClass
+	 * @param bool $bHasPreview replace string $sIconClass since 3.0.1
 	 * @param string $sAttachmentThumbUrl
 	 * @param string $sFileName
 	 * @param string $sAttachmentMeta
@@ -510,8 +499,8 @@ HTML;
 	 * @since 2.7.0
 	 */
 	protected static function GetAttachmentTableRow(
-		$iAttId, $sLineStyle, $sDocDownloadUrl, $sIconClass, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
-		$iFileSizeRaw, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
+		$iAttId, $sLineStyle, $sDocDownloadUrl, $bHasPreview, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
+		$iFileSizeRaw, $iFileDownloadsCount, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
 	) {
 		$sDeleteCell = '';
 		if ($bIsDeleteAllowed)
@@ -519,16 +508,23 @@ HTML;
 			$sDeleteBtnLabel = Dict::S('Portal:Button:Delete');
 			$sDeleteCell = '<td role="delete"><input id="btn_remove_'.$iAttId.'" type="button" class="btn btn-xs btn-primary" value="'.$sDeleteBtnLabel.'"></td>';
 		}
+		$sHtml =  "<tr id=\"display_attachment_{$iAttId}\" class=\"attachment\" $sLineStyle>";
 
-		return <<<HTML
-	<tr id="display_attachment_{$iAttId}" class="attachment" $sLineStyle>
-	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass"><img $sIconClass src="$sAttachmentThumbUrl"></a></td>
-	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
-	  <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
-	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>
-	  $sDeleteCell
+		if($bHasPreview) {
+			$sHtml .= "<td role=\"icon\"><a href=\"$sDocDownloadUrl\" target=\"_blank\" data-tooltip-content=\"<img class='attachment-tooltip' src='{$sDocDownloadUrl}'>\" data-tooltip-html-enabled=true><img src=\"$sAttachmentThumbUrl\" ></a></td>";
+		} else {
+			$sHtml .= "<td role=\"icon\"><a href=\"$sDocDownloadUrl\" target=\"_blank\"><img src=\"$sAttachmentThumbUrl\" ></a></td>";
+		}
+
+		$sHtml .=  <<<HTML
+		<td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
+	    <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
+	    <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>
+	    <td role="downloads-count">$iFileDownloadsCount</td>
+	    $sDeleteCell
 	</tr>
 HTML;
+		return $sHtml;
 	}
 
 	/**

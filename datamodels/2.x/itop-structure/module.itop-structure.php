@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-structure/3.0.0',
+	'itop-structure/3.1.0',
 	array(
 		// Identification
 		//
@@ -22,7 +22,6 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'main.itop-structure.php',
-			'model.itop-structure.php',
 		),
 		'data.struct' => array(
 		),
@@ -95,8 +94,29 @@ if (!class_exists('StructureInstaller'))
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			if (version_compare($sPreviousVersion, '3.0.0', '<'))
-			{
+			// Search for existing TriggerOnObject where the Trigger string complement is empty and fed it with target_class field value
+			if (version_compare($sPreviousVersion, '3.1.0', '<')) {
+				SetupLog::Info("|  Feed computed field triggering_class on existing Triggers.");
+
+				$sTableToSet = MetaModel::DBGetTable('Trigger', 'complement');
+				$sTableToRead = MetaModel::DBGetTable('TriggerOnObject', 'target_class');
+				$oAttDefToSet = MetaModel::GetAttributeDef('Trigger', 'complement');
+				$oAttDefToRead = MetaModel::GetAttributeDef('TriggerOnObject', 'target_class');
+
+				$aColumnsToSets = array_keys($oAttDefToSet->GetSQLColumns());
+				$sColumnToSet = $aColumnsToSets[0]; // We know that a string has only one column
+				$aColumnsToReads = array_keys($oAttDefToRead->GetSQLColumns());
+				$sColumnToRead = $aColumnsToReads[0]; // We know that a string has only one column
+
+				$sRepair = "UPDATE $sTableToSet JOIN $sTableToRead ON $sTableToSet.id = $sTableToRead.id SET $sTableToSet.$sColumnToSet = CONCAT('class restriction: ',$sTableToRead.$sColumnToRead) WHERE $sTableToSet.$sColumnToSet = ''";
+				SetupLog::Debug(" |  | Query: ".$sRepair);
+				CMDBSource::Query($sRepair);
+				$iNbProcessed = CMDBSource::AffectedRows();
+				SetupLog::Info("|  | ".$iNbProcessed." triggers processed.");
+			}
+
+			// Add default configuration, so Persons are notified if mentioned on any Caselog
+			if (version_compare($sPreviousVersion, '3.0.0', '<')) {
 				SetupLog::Info("Adding default triggers/action for Person objects mentions. All DM classes with at least 1 log attribute will be concerned...");
 
 				$sPersonClass = 'Person';
@@ -172,7 +192,7 @@ if (!class_exists('StructureInstaller'))
 				// Build the corresponding action and link it to the triggers
 				if (count($aCreatedTriggerIds) > 0) {
 					$oAction = MetaModel::NewObject('ActionEmail');
-					$oAction->Set('name', 'Email mentioned person');
+					$oAction->Set('name', 'Notification to persons mentioned in logs');
 					$oAction->Set('status', 'enabled');
 					$oAction->Set('from', '$current_contact->email$');
 					$oAction->Set('to', 'SELECT Person WHERE id = :mentioned->id');

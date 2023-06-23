@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,11 +16,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 
 /**
  * Persistent classes (internal): user defined actions
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -43,22 +44,38 @@ abstract class Action extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array('name'),
-			"db_table" => "priv_action",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "realclass",
-			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-in-transit.svg'),
+			"category"                   => "grant_by_profile,core/cmdb",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "name",
+			"complementary_name_attcode" => array('finalclass', 'description'),
+			"state_attcode"              => "status",
+			"reconc_keys"                => array('name'),
+			"db_table"                   => "priv_action",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "realclass",
+			"style"                      => new ormStyle("ibo-dm-class--Action", "ibo-dm-class-alt--Action", "var(--ibo-dm-class--Action--main-color)", "var(--ibo-dm-class--Action--complementary-color)", null, '../images/icons/icons8-in-transit.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum(array('test'=>'Being tested' ,'enabled'=>'In production', 'disabled'=>'Inactive')), "sql"=>"status", "default_value"=>"test", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("trigger_list", array("linked_class"=>"lnkTriggerAction", "ext_key_to_me"=>"action_id", "ext_key_to_remote"=>"trigger_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values" => null, "sql" => "name", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array(
+			"allowed_values"  => new ValueSetEnum(array('test' => 'Being tested', 'enabled' => 'In production', 'disabled' => 'Inactive')),
+			"styled_values"   => [
+				'test'     => new ormStyle('ibo-dm-enum--Action-status-test', 'ibo-dm-enum-alt--Action-status-test', 'var(--ibo-dm-enum--Action-status-test--main-color)', 'var(--ibo-dm-enum--Action-status-test--complementary-color)', null, null),
+				'enabled'  => new ormStyle('ibo-dm-enum--Action-status-enabled', 'ibo-dm-enum-alt--Action-status-enabled', 'var(--ibo-dm-enum--Action-status-enabled--main-color)', 'var(--ibo-dm-enum--Action-status-enabled--complementary-color)', 'fas fa-check', null),
+				'disabled' => new ormStyle('ibo-dm-enum--Action-status-disabled', 'ibo-dm-enum-alt--Action-status-disabled', 'var(--ibo-dm-enum--Action-status-disabled--main-color)', 'var(--ibo-dm-enum--Action-status-disabled--complementary-color)', null, null),
+			],
+			"display_style"   => 'list',
+			"sql"             => "status",
+			"default_value"   => "test",
+			"is_null_allowed" => false,
+			"depends_on"      => array(),
+		)));
+
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("trigger_list",
+			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "action_id", "ext_key_to_remote" => "trigger_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => array(), "display_style" => 'property')));
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
@@ -66,10 +83,9 @@ abstract class Action extends cmdbAbstractObject
 		// - Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status'));
 		// Search criteria
-		// - Criteria of the std search form
+		// - Default criteria of the search form
 		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status'));
-		// - Criteria of the advanced search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
+
 	}
 
 	/**
@@ -168,13 +184,13 @@ abstract class ActionNotification extends Action
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array('name'),
-			"db_table" => "priv_action_notification",
-			"db_key_field" => "id",
+			"category"            => "grant_by_profile,core/cmdb",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "name",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('name'),
+			"db_table"            => "priv_action_notification",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
@@ -184,12 +200,12 @@ abstract class ActionNotification extends Action
 		// - Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'trigger_list'));
 		// - Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status'));
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'description', 'status'));
 		// Search criteria
 		// - Criteria of the std search form
 //		MetaModel::Init_SetZListItems('standard_search', array('name'));
-		// - Criteria of the advanced search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
+		// - Default criteria of the search form
+//		MetaModel::Init_SetZListItems('default_search', array('name'));
 	}
 }
 
@@ -201,47 +217,107 @@ abstract class ActionNotification extends Action
 class ActionEmail extends ActionNotification
 {
 	/**
+	 * @var string
+	 * @since 3.0.1
+	 */
+	const ENUM_HEADER_NAME_MESSAGE_ID = 'Message-ID';
+	/**
+	 * @var string
+	 * @since 3.0.1
+	 */
+	const ENUM_HEADER_NAME_REFERENCES = 'References';
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	const TEMPLATE_BODY_CONTENT = '$content$';
+	/**
+	 * Wraps the 'body' of the message for previewing inside an IFRAME -- i.e. without any of the iTop stylesheets being applied
+	 * @var string
+	 * @since 3.1.0
+	 */
+	const CONTENT_HIGHLIGHT = '<div style="border:2px dashed #6800ff;position:relative;padding:2px;margin-top:14px;"><div style="background-color:#6800ff;color:#fff;font-family:Courier New, sans-serif;font-size:14px;line-height:16px;padding:3px;display:block;position:absolute;top:-22px;right:0;">$content$</div>%s</div>';
+	/**
+	 * Wraps a placeholder of the email's body for previewing inside an IFRAME -- i.e. without any of the iTop stylesheets being applied
+	 * @var string
+	 */
+	const FIELD_HIGHLIGHT = '<span style="background-color:#6800ff;color:#fff;font-size:smaller;font-family:Courier New, sans-serif;padding:2px;">\\$$1\\$</span>';
+	/**
 	 * @inheritDoc
 	 */
 	public static function Init()
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb,application",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array('name'),
-			"db_table" => "priv_action_email",
-			"db_key_field" => "id",
+			"category"            => "grant_by_profile,core/cmdb,application",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "name",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('name'),
+			"db_table"            => "priv_action_email",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeEmailAddress("test_recipient", array("allowed_values"=>null, "sql"=>"test_recipient", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEmailAddress("test_recipient", array("allowed_values" => null, "sql" => "test_recipient", "default_value" => "", "is_null_allowed" => true, "depends_on" => array())));
 
-		MetaModel::Init_AddAttribute(new AttributeString("from", array("allowed_values"=>null, "sql"=>"from", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("from_label", array("allowed_values"=>null, "sql"=>"from_label", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("reply_to", array("allowed_values"=>null, "sql"=>"reply_to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("reply_to_label", array("allowed_values"=>null, "sql"=>"reply_to_label", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeOQL("to", array("allowed_values"=>null, "sql"=>"to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeOQL("cc", array("allowed_values"=>null, "sql"=>"cc", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeOQL("bcc", array("allowed_values"=>null, "sql"=>"bcc", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeTemplateString("subject", array("allowed_values"=>null, "sql"=>"subject", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeTemplateHTML("body", array("allowed_values"=>null, "sql"=>"body", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values"=>new ValueSetEnum('low,normal,high'), "sql"=>"importance", "default_value"=>'normal', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("from", array("allowed_values" => null, "sql" => "from", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeString("from_label", array("allowed_values" => null, "sql" => "from_label", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reply_to", array("allowed_values" => null, "sql" => "reply_to", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reply_to_label", array("allowed_values" => null, "sql" => "reply_to_label", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeOQL("to", array("allowed_values" => null, "sql" => "to", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeOQL("cc", array("allowed_values" => null, "sql" => "cc", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeOQL("bcc", array("allowed_values" => null, "sql" => "bcc", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeTemplateString("subject", array("allowed_values" => null, "sql" => "subject", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeTemplateHTML("body", array("allowed_values" => null, "sql" => "body", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values" => new ValueSetEnum('low,normal,high'), "sql" => "importance", "default_value" => 'normal', "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeBlob("html_template", array("is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
+		MetaModel::Init_AddAttribute(new AttributeEnum("ignore_notify", array("allowed_values" => new ValueSetEnum('yes,no'), "sql" => "ignore_notify", "default_value" => 'yes', "is_null_allowed" => false, "depends_on" => array())));
+		
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'test_recipient', 'from', 'from_label', 'reply_to', 'reply_to_label', 'to', 'cc', 'bcc', 'subject', 'body', 'importance', 'trigger_list'));
+		MetaModel::Init_SetZListItems('details', array(
+			'col:col1' => array(
+				'fieldset:ActionEmail:main'    => array(
+					0 => 'name',
+					1 => 'description',
+					2 => 'status',
+					3 => 'language',
+					4 => 'html_template',
+					5 => 'subject',
+					6 => 'body',
+					// 5 => 'importance', not handled when sending the mail, better hide it then
+				),
+				'fieldset:ActionEmail:trigger' => array(
+					0 => 'trigger_list',
+				),
+			),
+			'col:col2' => array(
+				'fieldset:ActionEmail:recipients' => array(
+					0 => 'from',
+					1 => 'from_label',
+					2 => 'reply_to',
+					3 => 'reply_to_label',
+					4 => 'test_recipient',
+					5 => 'ignore_notify',
+					6 => 'to',
+					7 => 'cc',
+					8 => 'bcc',
+				),
+			),
+		));
+
 		// - Attributes to be displayed for a list
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'to', 'subject'));
+		MetaModel::Init_SetZListItems('list', array('status', 'to', 'subject', 'language'));
 		// Search criteria
-		// - Criteria of the std search form
-		MetaModel::Init_SetZListItems('standard_search', array('name','description', 'status', 'subject'));
-		// - Criteria of the advanced search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
+		// - Standard criteria of the search
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'status', 'subject', 'language'));
+		// - Default criteria for the search
+		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status', 'subject', 'language'));
 	}
 
 	// count the recipients found
@@ -266,11 +342,20 @@ class ActionEmail extends ActionNotification
 	protected function FindRecipients($sRecipAttCode, $aArgs)
 	{
 		$sOQL = $this->Get($sRecipAttCode);
-		if (strlen($sOQL) == '') return '';
+		if (strlen($sOQL) === 0) return '';
 
 		try
 		{
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
+			if ($this->Get('ignore_notify') === 'no') {
+				// In theory it is possible to notify *any* kind of object, 
+				// as long as there is an email attribute in the class
+				// So let's not assume that the selected class is a Person
+				$sFirstSelectedClass = $oSearch->GetClass();
+				if (MetaModel::IsValidAttCode($sFirstSelectedClass, 'notify')) {
+					$oSearch->AddCondition('notify', 'yes');
+				}
+			}
 			$oSearch->AllowAllData();
 		}
 		catch (OQLException $e)
@@ -395,114 +480,27 @@ class ActionEmail extends ActionNotification
 	 */
 	protected function _DoExecute($oTrigger, $aContextArgs, &$oLog)
 	{
-		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
-		try
-		{
-			$this->m_iRecipients = 0;
-			$this->m_aMailErrors = array();
-
-			// Determine recipients
-			//
-			$sTo = $this->FindRecipients('to', $aContextArgs);
-			$sCC = $this->FindRecipients('cc', $aContextArgs);
-			$sBCC = $this->FindRecipients('bcc', $aContextArgs);
-
-			$sFrom = MetaModel::ApplyParams($this->Get('from'), $aContextArgs);
-			$sFromLabel = MetaModel::ApplyParams($this->Get('from_label'), $aContextArgs);
-			$sReplyTo = MetaModel::ApplyParams($this->Get('reply_to'), $aContextArgs);
-			$sReplyToLabel = MetaModel::ApplyParams($this->Get('reply_to_label'), $aContextArgs);
-
-			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
-			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
-
-			$oObj = $aContextArgs['this->object()'];
-			$sMessageId = sprintf('iTop_%s_%d_%f@%s.openitop.org', get_class($oObj), $oObj->GetKey(), microtime(true /* get as float*/),
-				MetaModel::GetEnvironmentId());
-			$sReference = '<'.$sMessageId.'>';
-		}
-		catch (Exception $e) {
-			/** @noinspection PhpUnhandledExceptionInspection */
-			throw $e;
-		}
-		finally {
-			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
-		}
-
-		if (!is_null($oLog)) {
-			// Note: we have to secure this because those values are calculated
-			// inside the try statement, and we would like to keep track of as
-			// many data as we could while some variables may still be undefined
-			if (isset($sTo)) {
-				$oLog->Set('to', $sTo);
-			}
-			if (isset($sCC)) {
-				$oLog->Set('cc', $sCC);
-			}
-			if (isset($sBCC)) {
-				$oLog->Set('bcc', $sBCC);
-			}
-			if (isset($sFrom)) {
-				$oLog->Set('from', $sFrom);
-			}
-			if (isset($sSubject)) {
-				$oLog->Set('subject', $sSubject);
-			}
-			if (isset($sBody)) {
-				$oLog->Set('body', $sBody);
-			}
-		}
 		$sStyles = file_get_contents(APPROOT.'css/email.css');
 		$sStyles .= MetaModel::GetConfig()->Get('email_css');
-
+		
 		$oEmail = new EMail();
-
-		if ($this->IsBeingTested())
-		{
-			$oEmail->SetSubject('TEST['.$sSubject.']');
-			$sTestBody = $sBody;
-			$sTestBody .= "<div style=\"border: dashed;\">\n";
-			$sTestBody .= "<h1>Testing email notification ".$this->GetHyperlink()."</h1>\n";
-			$sTestBody .= "<p>The email should be sent with the following properties\n";
-			$sTestBody .= "<ul>\n";
-			$sTestBody .= "<li>TO: $sTo</li>\n";
-			$sTestBody .= "<li>CC: $sCC</li>\n";
-			$sTestBody .= "<li>BCC: $sBCC</li>\n";
-			$sTestBody .= empty($sFromLabel) ? "<li>From: $sFrom</li>\n": "<li>From: $sFromLabel &lt;$sFrom&gt;</li>\n";
-			$sTestBody .= empty($sReplyToLabel) ? "<li>Reply-To: $sReplyTo</li>\n": "<li>Reply-To: $sReplyToLabel &lt;$sReplyTo&gt;</li>\n";
-			$sTestBody .= "<li>References: $sReference</li>\n";
-			$sTestBody .= "</ul>\n";
-			$sTestBody .= "</p>\n";
-			$sTestBody .= "</div>\n";
-			$oEmail->SetBody($sTestBody, 'text/html', $sStyles);
-			$oEmail->SetRecipientTO($this->Get('test_recipient'));
-			$oEmail->SetRecipientFrom($sFrom, $sFromLabel);
-			$oEmail->SetReferences($sReference);
-			$oEmail->SetMessageId($sMessageId);
+		
+		$aEmailContent = $this->PrepareMessageContent($aContextArgs, $oLog);
+		$oEmail->SetSubject($aEmailContent['subject']);
+		$oEmail->SetBody($aEmailContent['body'], 'text/html', $sStyles);
+		$oEmail->SetRecipientTO($aEmailContent['to']);
+		$oEmail->SetRecipientCC($aEmailContent['cc']);
+		$oEmail->SetRecipientBCC($aEmailContent['bcc']);
+		$oEmail->SetRecipientFrom($aEmailContent['from'], $aEmailContent['from_label']);
+		$oEmail->SetRecipientReplyTo($aEmailContent['reply_to'], $aEmailContent['reply_to_label']);
+		$oEmail->SetReferences($aEmailContent['references']);
+		$oEmail->SetMessageId($aEmailContent['message_id']);
+		$oEmail->SetInReplyTo($aEmailContent['in_reply_to']);
+		
+		foreach($aEmailContent['attachments'] as $aAttachment) {
+			$oEmail->AddAttachment($aAttachment['data'], $aAttachment['filename'], $aAttachment['mime_type']);
 		}
-		else
-		{
-			$oEmail->SetSubject($sSubject);
-			$oEmail->SetBody($sBody, 'text/html', $sStyles);
-			$oEmail->SetRecipientTO($sTo);
-			$oEmail->SetRecipientCC($sCC);
-			$oEmail->SetRecipientBCC($sBCC);
-			$oEmail->SetRecipientFrom($sFrom, $sFromLabel);
-			$oEmail->SetRecipientReplyTo($sReplyTo, $sReplyToLabel);
-			$oEmail->SetReferences($sReference);
-			$oEmail->SetMessageId($sMessageId);
-		}
-
-		if (isset($aContextArgs['attachments']))
-		{
-			$aAttachmentReport = array();
-			foreach($aContextArgs['attachments'] as $oDocument)
-			{
-				$oEmail->AddAttachment($oDocument->GetData(), $oDocument->GetFileName(), $oDocument->GetMimeType());
-				$aAttachmentReport[] = array($oDocument->GetFileName(), $oDocument->GetMimeType(), strlen($oDocument->GetData()));
-			}
-			$oLog->Set('attachments', $aAttachmentReport);
-		}
-
+		
 		if (empty($this->m_aMailErrors))
 		{
 			if ($this->m_iRecipients == 0)
@@ -511,31 +509,265 @@ class ActionEmail extends ActionNotification
 			}
 			else
 			{
+				$aErrors = [];
 				$iRes = $oEmail->Send($aErrors, false, $oLog); // allow asynchronous mode
 				switch ($iRes)
 				{
 					case EMAIL_SEND_OK:
 						return "Sent";
-	
+
 					case EMAIL_SEND_PENDING:
 						return "Pending";
-	
+
 					case EMAIL_SEND_ERROR:
 						return "Errors: ".implode(', ', $aErrors);
 				}
 			}
-		}
-		else
-		{
-			if (is_array($this->m_aMailErrors) && count($this->m_aMailErrors) > 0)
-			{
+		} else {
+			if (is_array($this->m_aMailErrors) && count($this->m_aMailErrors) > 0) {
 				$sError = implode(', ', $this->m_aMailErrors);
-			}
-			else
-			{
+			} else {
 				$sError = 'Unknown reason';
 			}
+
 			return 'Notification was not sent: '.$sError;
+		}
+	}
+
+	/**
+	 * @param array $aContextArgs
+	 * @param \EventNotification $oLog
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \Exception
+	 * @since 3.1.0 N°918
+	 */
+	protected function PrepareMessageContent($aContextArgs, &$oLog): array
+	{
+		$aMessageContent = [
+			'to' => '',
+			'cc' => '',
+			'bcc' => '',
+			'from' => '',
+			'from_label' => '',
+			'reply_to' => '',
+			'reply_to_label' => '',
+			'subject' => '',
+			'body' => '',
+			'references' => '',
+			'message_id' => '',
+			'in_reply_to' => '',
+			'attachments' => [],
+		];
+		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
+		$sPreviousLanguage = Dict::GetUserLanguage();
+		$aPreviousPluginProperties = ApplicationContext::GetPluginProperties('QueryLocalizerPlugin');
+		if ($this->Get('language') !== '') {
+			// If a language is specified for this action, force this language
+			// when rendering all placeholders inside this message
+			Dict::SetUserLanguage($this->Get('language'));
+			AttributeDateTime::LoadFormatFromConfig();
+			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', $this->Get('language'));
+		}
+
+		try
+		{
+			$this->m_iRecipients = 0;
+			$this->m_aMailErrors = array();
+			
+			// Determine recipients
+			//
+			$aMessageContent['to'] = $this->FindRecipients('to', $aContextArgs);
+			$aMessageContent['cc'] = $this->FindRecipients('cc', $aContextArgs);
+			$aMessageContent['bcc'] = $this->FindRecipients('bcc', $aContextArgs);
+			
+			$aMessageContent['from'] = MetaModel::ApplyParams($this->Get('from'), $aContextArgs);
+			$aMessageContent['from_label'] = MetaModel::ApplyParams($this->Get('from_label'), $aContextArgs);
+			$aMessageContent['reply_to'] = MetaModel::ApplyParams($this->Get('reply_to'), $aContextArgs);
+			$aMessageContent['reply_to_label'] = MetaModel::ApplyParams($this->Get('reply_to_label'), $aContextArgs);
+			
+			$aMessageContent['subject'] = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
+			$sBody = $this->BuildMessageBody(false);
+			$aMessageContent['body'] = MetaModel::ApplyParams($sBody, $aContextArgs);
+			
+			$oObj = $aContextArgs['this->object()'];
+			$aMessageContent['message_id'] = $this->GenerateIdentifierForHeaders($oObj, static::ENUM_HEADER_NAME_MESSAGE_ID);
+			$aMessageContent['references'] = $this->GenerateIdentifierForHeaders($oObj, static::ENUM_HEADER_NAME_REFERENCES);
+		}
+		catch (Exception $e) {
+			/** @noinspection PhpUnhandledExceptionInspection */
+			throw $e;
+		}
+		finally {
+			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
+			Dict::SetUserLanguage($sPreviousLanguage);
+			AttributeDateTime::LoadFormatFromConfig();
+			ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', $aPreviousPluginProperties['language_code'] ?? null);
+		}
+		
+		if (!is_null($oLog)) {
+			// Note: we have to secure this because those values are calculated
+			// inside the try statement, and we would like to keep track of as
+			// many data as we could while some variables may still be undefined
+			if (isset($aMessageContent['to'])) {
+				$oLog->Set('to', $aMessageContent['to']);
+			}
+			if (isset($aMessageContent['cc'])) {
+				$oLog->Set('cc', $aMessageContent['cc']);
+			}
+			if (isset($aMessageContent['bcc'])) {
+				$oLog->Set('bcc', $aMessageContent['bcc']);
+			}
+			if (isset($aMessageContent['from'])) {
+				$oLog->Set('from', $aMessageContent['from']);
+			}
+			if (isset($aMessageContent['subject'])) {
+				$oLog->Set('subject', $aMessageContent['subject']);
+			}
+			if (isset($aMessageContent['body'])) {
+				$oLog->Set('body', HTMLSanitizer::Sanitize($aMessageContent['body']));
+			}
+		}
+		$sStyles = file_get_contents(APPROOT.'css/email.css');
+		$sStyles .= MetaModel::GetConfig()->Get('email_css');
+		
+		if ($this->IsBeingTested()) {
+			$sTestBody = $aMessageContent['body'];
+			$sTestBody .= "<div style=\"border: dashed;\">\n";
+			$sTestBody .= "<h1>Testing email notification ".$this->GetHyperlink()."</h1>\n";
+			$sTestBody .= "<p>The email should be sent with the following properties\n";
+			$sTestBody .= "<ul>\n";
+			$sTestBody .= "<li>TO: {$aMessageContent['to']}</li>\n";
+			$sTestBody .= "<li>CC: {$aMessageContent['cc']}</li>\n";
+			$sTestBody .= "<li>BCC: {$aMessageContent['bcc']}</li>\n";
+			$sTestBody .= empty($aMessageContent['from_label']) ? "<li>From: {$aMessageContent['from']}</li>\n" : "<li>From: {$aMessageContent['from_label']} &lt;{$aMessageContent['from']}&gt;</li>\n";
+			$sTestBody .= empty($aMessageContent['reply_to_label']) ? "<li>Reply-To: {$aMessageContent['reply_to']}</li>\n" : "<li>Reply-To: {$aMessageContent['reply_to_label']} &lt;{$aMessageContent['reply_to']}&gt;</li>\n";
+			$sTestBody .= "<li>References: {$aMessageContent['references']}</li>\n";
+			$sTestBody .= "</ul>\n";
+			$sTestBody .= "</p>\n";
+			$sTestBody .= "</div>\n";
+			$aMessageContent['subject'] = 'TEST['.$aMessageContent['subject'].']';
+			$aMessageContent['body'] = $sTestBody;
+			$aMessageContent['to'] = $this->Get('test_recipient');
+		}
+		// Note: N°4849 We pass the "References" identifier instead of the "Message-ID" on purpose as we want notifications emails to group around the triggering iTop object, not just the users' replies to the notification
+		$aMessageContent['in_reply_to'] = $aMessageContent['references'];
+		
+		if (isset($aContextArgs['attachments']))
+		{
+			$aAttachmentReport = array();
+			foreach($aContextArgs['attachments'] as $oDocument)
+			{
+				$aMessageContent['attachments'][] = ['data' => $oDocument->GetData(), 'filename' => $oDocument->GetFileName(), 'mime_type' => $oDocument->GetMimeType()];
+				$aAttachmentReport[] = array($oDocument->GetFileName(), $oDocument->GetMimeType(), strlen($oDocument->GetData()));
+			}
+			$oLog->Set('attachments', $aAttachmentReport);
+		}
+		
+		return $aMessageContent;
+	}
+
+	/**
+	 * @param \DBObject $oObject
+	 * @param string $sHeaderName {@see \ActionEmail::ENUM_HEADER_NAME_REFERENCES}, {@see \ActionEmail::ENUM_HEADER_NAME_MESSAGE_ID}
+	 *
+	 * @return string The formatted identifier for $sHeaderName based on $oObject
+	 * @throws \Exception
+	 * @since 3.1.0 N°4849
+	 */
+	protected function GenerateIdentifierForHeaders(DBObject $oObject, string $sHeaderName): string
+	{
+		$sObjClass = get_class($oObject);
+		$sObjId = $oObject->GetKey();
+		$sAppName = utils::Sanitize(ITOP_APPLICATION_SHORT, '', utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME);
+
+		switch ($sHeaderName) {
+			case static::ENUM_HEADER_NAME_MESSAGE_ID:
+			case static::ENUM_HEADER_NAME_REFERENCES:
+				// Prefix
+				$sPrefix = sprintf('%s_%s_%d', $sAppName, $sObjClass, $sObjId);
+				if ($sHeaderName === static::ENUM_HEADER_NAME_MESSAGE_ID) {
+					$sPrefix .= sprintf('_%F', microtime(true /* get as float*/));
+				}
+				// Suffix
+				$sSuffix = sprintf('@%s.openitop.org', MetaModel::GetEnvironmentId());
+				// Identifier
+				$sIdentifier = $sPrefix.$sSuffix;
+				if ($sHeaderName === static::ENUM_HEADER_NAME_REFERENCES) {
+					$sIdentifier = "<$sIdentifier>";
+				}
+
+				return $sIdentifier;
+		}
+
+		// Requested header name invalid
+		$sErrorMessage = sprintf('%s: Could not generate identifier for header "%s", only %s are supported', static::class, $sHeaderName, implode(' / ', [static::ENUM_HEADER_NAME_MESSAGE_ID, static::ENUM_HEADER_NAME_REFERENCES]));
+		IssueLog::Error($sErrorMessage, LogChannels::NOTIFICATIONS, [
+			'Object' => $sObjClass.'::'.$sObjId.' ('.$oObject->GetRawName().')',
+			'Action' => get_class($this).'::'.$this->GetKey().' ('.$this->GetRawName().')',
+		]);
+		throw new Exception($sErrorMessage);
+	}
+	
+	/**
+	 * Compose the body of the message from the 'body' attribute and the HTML template (if any)
+	 * @since 3.1.0 N°4849
+	 * @param bool $bHighlightPlaceholders If true add some extra HTML around placeholders to highlight them 
+	 * @return string
+	 */
+	protected function BuildMessageBody(bool $bHighlightPlaceholders = false): string
+	{
+		$sBody = $this->Get('body');
+		/**  @var ormDocument $oHtmlTemplate */
+		$oHtmlTemplate = $this->Get('html_template');
+		if ($oHtmlTemplate && !$oHtmlTemplate->IsEmpty()) {
+			$sHtmlTemplate = $oHtmlTemplate->GetData();
+			if (false !== mb_strpos($sHtmlTemplate, static::TEMPLATE_BODY_CONTENT)) {
+				if ($bHighlightPlaceholders) {
+					// Highlight the $content$ block
+					$sBody = sprintf(static::CONTENT_HIGHLIGHT, $sBody);
+				}
+				$sBody = str_replace(static::TEMPLATE_BODY_CONTENT, $sBody, $oHtmlTemplate->GetData()); // str_replace is ok as long as both strings are well-formed UTF-8
+			} else {
+				$sBody = $oHtmlTemplate->GetData();
+			}
+		}
+		if($bHighlightPlaceholders) {
+			// Highlight all placeholders
+			$sBody = preg_replace('/\\$([^$]+)\\$/', static::FIELD_HIGHLIGHT, $sBody);
+		}
+		return $sBody;
+	}
+	
+	/**
+	 * @since 3.1.0 N°4849
+	 * @inheritDoc
+	 * @see cmdbAbstractObject::DisplayBareRelations()
+	 */
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		parent::DisplayBareRelations($oPage, false);
+		if (!$bEditMode) {
+			$oPage->SetCurrentTab('action_email__preview', Dict::S('ActionEmail:preview_tab'), Dict::S('ActionEmail:preview_tab+'));
+			$sBody = $this->BuildMessageBody(true);
+			TwigHelper::RenderIntoPage($oPage, APPROOT.'/', 'templates/datamodel/ActionEmail/email-notification-preview', ['iframe_content' => $sBody]);
+		}
+	}
+
+	/**
+	 * @since 3.1.0
+	 * @inheritDoc
+	 * @see cmdbAbstractObject::DoCheckToWrite()
+	 */
+	public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+		$oHtmlTemplate = $this->Get('html_template');
+		if ($oHtmlTemplate && !$oHtmlTemplate->IsEmpty()) {
+			if (false === mb_strpos($oHtmlTemplate->GetData(), static::TEMPLATE_BODY_CONTENT)) {
+				$this->m_aCheckWarnings[] = Dict::Format('ActionEmail:content_placeholder_missing', static::TEMPLATE_BODY_CONTENT, Dict::S('Class:ActionEmail/Attribute:body'));
+			}
 		}
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Measures operations duration, memory usage, etc. (and some other KPIs)
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -299,7 +299,7 @@ class ExecutionKPI
 	 */
 	private static function Push(ExecutionKPI $oExecutionKPI)
 	{
-		array_push(self::$m_aExecutionStack, $oExecutionKPI);
+		self::$m_aExecutionStack[] = $oExecutionKPI;
 	}
 
 	/**
@@ -449,4 +449,3 @@ class ExecutionKPI
 		return 0;
 	}
 }
-

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
@@ -81,12 +81,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkContactToTicket' => 'Link Contact / Ticket~~',
 	'Class:lnkContactToTicket+' => '~~',
+	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Ref~~',
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Contact~~',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '~~',
+	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name~~',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'Contact Email~~',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role' => 'Role (text)~~',
@@ -162,6 +165,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:cmdbAbstractObject/Method:SetCurrentDate+' => 'Set a field with the current date and time~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1' => 'Target Field~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1+' => 'The field to set, in the current object~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull' => 'SetCurrentDateIfNull~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull+' => 'Set an empty field with the current date and time~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1+' => 'The field to set, in the current object~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser' => 'SetCurrentUser~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser+' => 'Set a field with the currently logged in user~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1' => 'Target Field~~',
@@ -178,6 +185,34 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2+' => 'The field from which to get the reference date~~',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3' => 'Working Hours~~',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Leave empty to rely on the standard working hours scheme, or set to \\"DefaultWorkingTimeComputer\\" to force a 24x7 scheme~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull' => 'SetIfNull~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull+' => 'Set a field only if it is empty, with a static value~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1+' => 'The field to set, in the current object~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:2' => 'Value~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:2+' => 'The value to set~~',
+	'Class:cmdbAbstractObject/Method:AddValue' => 'AddValue~~',
+	'Class:cmdbAbstractObject/Method:AddValue+' => 'Add a fixed value to a field~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:1+' => 'The field to modify, in the current object~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:2' => 'Value~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:2+' => 'Decimal value which will be added, can be negative~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate' => 'SetComputedDate~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate+' => 'Set a field with a date computed from another field with extra logic~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:1+' => 'The field to set, in the current object~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:2' => 'Modifier~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:2+' => 'Textual information to modify the source date, eg. "+3 days"~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:3' => 'Source field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:3+' => 'The field used as source to apply the Modifier logic~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull' => 'SetComputedDateIfNull~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull+' => 'Set non empty field with a date computed from another field with extra logic~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1+' => 'The field to set, in the current object~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2' => 'Modifier~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2+' => 'Textual information to modify the source date, eg. "+3 days"~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3' => 'Source field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3+' => 'The field used as source to apply the Modifier logic~~',
 	'Class:cmdbAbstractObject/Method:Reset' => 'Reset~~',
 	'Class:cmdbAbstractObject/Method:Reset+' => 'Reset a field to its default value~~',
 	'Class:cmdbAbstractObject/Method:Reset/Param:1' => 'Target Field~~',
@@ -198,13 +233,3 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:Document/Attribute:contracts_list' => 'Contracts~~',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
-	'Class:Document/Attribute:services_list' => 'Services~~',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
-));

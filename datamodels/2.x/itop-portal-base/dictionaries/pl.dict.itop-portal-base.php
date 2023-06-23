@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Portal
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Page:DefaultTitle' => '%1$s portal użytkownika',
@@ -64,11 +63,12 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Portal:Calendar-FirstDayOfWeek' => 'en-us', //work with moment.js locales
 ));
 
-
 // Object form
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Zamknij ten wpis',
 	'Portal:Form:Close:Warning' => 'Chcesz opuścić ten formularz? Wprowadzone dane mogą zostać utracone',
+	'Portal:Error:ObjectCannotBeCreated' => 'Błąd: nie można utworzyć obiektu. Sprawdź powiązane obiekty i załączniki przed ponownym przesłaniem tego formularza.',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Błąd: nie można zaktualizować obiektu. Sprawdź powiązane obiekty i załączniki przed ponownym przesłaniem tego formularza.',
 ));
 
 // UserProfile brick

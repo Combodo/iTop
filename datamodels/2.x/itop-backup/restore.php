@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('APPROOT'))
 {
 	if (file_exists(__DIR__.'/../../approot.inc.php'))
@@ -30,10 +29,9 @@ if (!defined('APPROOT'))
 	}
 }
 require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
-require_once(dirname(__FILE__).'/dbrestore.class.inc.php');
+require_once(__DIR__.'/dbrestore.class.inc.php');
 
 /**
  * @since 3.0.0 N°4227 new class to handle iTop restore manually via a CLI command
@@ -70,7 +68,7 @@ function Usage($oP)
 		$oP->p('auth_user: login, must be administrator');
 		$oP->p('auth_pwd: ...');
 	}
-	$oP->p('backup_file [optional]: name of the file to store the backup into. Follows the PHP strftime format spec. The following placeholders are available: __HOST__, __DB__, __SUBNAME__');
+	$oP->p('backup_file [optional]: name of the file to store the backup into. Follows the PHP strftime() (https://www.php.net/manual/fr/function.strftime.php) format spec. The following placeholders are available: __HOST__, __DB__, __SUBNAME__');
 	$oP->p('mysql_bindir [optional]: specify the path for mysql executable');
 
 	if (utils::IsModeCLI())
@@ -132,7 +130,7 @@ function ExecuteMainOperation($oP){
 		exit;
 	}
 
-// Interpret strftime specifications (like %Y) and database placeholders
+	// Interpret strftime() specifications (like %Y) and database placeholders
 	$oRestore = new MyCliRestore($oP);
 	$oRestore->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 
@@ -147,4 +145,4 @@ function ExecuteMainOperation($oP){
 	}
 }
 
-require_once(dirname(__FILE__).'/common.cli-execution.php');
+require_once(__DIR__.'/common.cli-execution.php');

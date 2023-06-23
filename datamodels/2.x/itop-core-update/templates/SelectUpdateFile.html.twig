@@ -1,0 +1,105 @@
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+
+{% UIContentBlock Standard {'aContainerClasses':['ibo-update-core']} %}
+
+    {% UITitle ForPage {'sTitle':'iTopUpdate:UI:PageTitle'|dict_s} %}{% EndUITitle %}
+
+    <div class="ibo-v-spacer">&nbsp;</div>
+
+    {% UIContentBlock Standard {'aContainerClasses': ['display_block', 'display-files']} %}
+        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s} %}
+            {% UIAlert ForInformation {'sId':'header-requirements', 'IsCollapsible':false, 'IsClosable':false} %}
+                {% UIContentBlock Standard {'aContainerClasses':['ibo-update-core-header-requirements'], 'sId':'can-core-update'} %}
+                    {{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}
+                    {% UISpinner Standard {} %}
+                {% EndUIContentBlock %}
+                {%UICollapsibleSection Standard {'sId':'header-requirements-details','sTitle':'UI:Details+'|dict_s, 'IsCollapsible':true, 'IsClosable':false,'AddCSSClass':'ibo-is-hidden'} %}
+                    {% UIContentBlock Standard {'aContainerClasses':['ibo-update-core-header-requirements'], 'sId':'can-core-update-details'} %}
+                    {% EndUIContentBlock %}
+                {% EndUICollapsibleSection %}
+            {% EndUIAlert %}
+
+            {% UIField Standard {'sLabel':'iTopUpdate:UI:CurrentVersion'|dict_s} %}
+                {{ 'UI:iTopVersion:Long'|dict_format(constant('ITOP_APPLICATION'), constant('ITOP_VERSION'), constant('ITOP_REVISION'), constant('ITOP_BUILD_DATE')) }}
+            {% EndUIField %}
+
+            {% UIField Standard {'sLabel':'iTopUpdate:UI:DiskFreeSpace'|dict_s} %}
+                {{ sDiskFreeSpace }}
+            {% EndUIField %}
+
+            {% UIField Standard {'sLabel':'iTopUpdate:UI:ItopDiskSpace'|dict_s, 'ValueId':'itop-disk-space'} %}
+                {% UISpinner Standard {} %}
+            {% EndUIField %}
+
+            {% UIField Standard {'sLabel':'iTopUpdate:UI:DBDiskSpace'|dict_s, 'ValueId':'db-disk-space'} %}
+                {% UISpinner Standard {} %}
+            {% EndUIField %}
+
+            {% UIField Standard {'sLabel':'iTopUpdate:UI:FileUploadMaxSize'|dict_s} %}
+                {{ sFileUploadMaxSize }}
+            {% EndUIField %}
+
+        {% EndUIFieldSet %}
+
+        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:SelectUpdateFile'|dict_s, 'sId':'form-update-outer'} %}
+            {% UIForm Standard {} %}
+                {% UIInput ForHidden {'sName':'route', 'sValue':'core_update.confirm_update'} %}
+                {% UIInput ForHidden {'sName':'transaction_id', 'sValue':sTransactionId} %}
+
+                {% UIAlert ForFailure {'sId':'header-file-size', 'IsHidden':true} %}
+                    {% UIContentBlock Standard {'aContainerClasses':['ibo-file-size-error']} %}
+                        {{ 'iTopUpdate:Error:FileUploadMaxSizeTooSmall'|dict_s }}
+                    {% EndUIContentBlock %}
+                    {% UIContentBlock Standard {'aContainerClasses':['ibo-file-size-error']} %}
+                        {{ 'iTopUpdate:UI:PostMaxSize'|dict_format(sPostMaxSize) }}
+                    {% EndUIContentBlock %}
+                    {% UIContentBlock Standard {'aContainerClasses':['ibo-file-size-error']} %}
+                        {{ 'iTopUpdate:UI:UploadMaxFileSize'|dict_format(sUploadMaxSize) }}
+                    {% EndUIContentBlock %}
+                {% EndUIAlert %}
+
+            {% UIAlert ForInformation {'sId':'check-in-progress', 'IsHidden':false} %}
+                {{ 'iTopUpdate:UI:CheckInProgress'|dict_s }}
+            {% EndUIAlert %}
+
+                {% UIFileSelect Standard {sName: 'file', sId: 'file','AddCSSClass':'ibo-is-hidden'} %}
+
+                {% UIAlert ForWarning {'sId':'dobackup-warning', 'IsHidden':true} %}
+                    {{ 'iTopUpdate:UI:DoBackup:Warning'|dict_s }}
+                {% EndUIAlert %}
+
+                {% UIContentBlock Standard {'aContainerClasses':['ibo-font-ral-nor-150']} %}
+                    {% UIInput Standard {'sType':'checkbox', 'sId':'doBackup', 'sName':'doBackup', 'sValue':'1', 'IsChecked':true, 'CSSClasses':['ibo-input-checkbox', 'ibo-input--label-left'], 'Label':'iTopUpdate:UI:DoBackup:Label'|dict_s} %}
+                {% EndUIContentBlock %}
+
+                {% UIContentBlock Standard {'aContainerClasses':['ibo-font-ral-nor-150']} %}
+                    {% UIInput Standard {'sType':'checkbox', 'sId':'doFilesArchive', 'sName':'doFilesArchive', 'sValue':'1', 'IsChecked':true, 'CSSClasses':['ibo-input-checkbox', 'ibo-input--label-left'], 'Label':'iTopUpdate:UI:DoFilesArchive'|dict_s} %}
+                {% EndUIContentBlock %}
+
+                {% UIContentBlock Standard {'aContainerClasses':['ibo_check_update_submit']} %}
+                    {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:CheckUpdate'|dict_s, 'sId':'check-update', 'bIsSubmit':true, 'IsDisabled':true} %}
+                    {% UISpinner Standard {'sId':'submit-wait', 'IsHidden':true} %}
+                {% EndUIContentBlock %}
+
+            {% EndUIForm %}
+
+        {% EndUIFieldSet %}
+
+    {% if bIsSetupLaunchButtonEnabled %}
+        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Setup'|dict_s} %}
+            {% UIForm Standard {'sId':'launch-setup-form', Action:sLaunchSetupUrl} %}
+                {% UIButton ForDestructiveAction {'sLabel':'iTopUpdate:UI:SetupLaunch'|dict_s, 'sName':'launch-setup', 'sValue':'launch-setup', 'bIsSubmit':true, 'sId':'launch-setup'} %}
+            {% EndUIForm %}
+        {% EndUIFieldSet %}
+    {% endif %}
+
+        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:History'|dict_s} %}
+            {% UIDataTable ForRendering {'sListId':'iboupdatehistory', 'oSet':oSet} %}{% EndUIDataTable %}
+        {% EndUIFieldSet %}
+
+    {% EndUIContentBlock %}
+
+{% EndUIContentBlock %}
+{% endapply %}

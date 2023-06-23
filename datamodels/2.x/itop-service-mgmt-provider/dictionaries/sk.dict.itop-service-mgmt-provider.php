@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -37,7 +37,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'zmluvy podľa úrovne služby',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'zmluvy podla stavu',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'zmluvy končiace za menej ako 30 dní',
-
 	'Menu:ProviderContract' => 'Poskytovateľské zmluvy',
 	'Menu:ProviderContract+' => '',
 	'Menu:CustomerContract' => 'Zákaznícke zmluvy',
@@ -56,8 +55,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:DeliveryModel+' => '',
 	'Menu:ServiceFamily' => 'Rodiny služieb',
 	'Menu:ServiceFamily+' => '',
+	'Contract:baseinfo' => 'General information~~',
+	'Contract:moreinfo' => 'Contractual information~~',
+	'Contract:cost' => 'Cost information~~',
 ));
-
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',
@@ -105,9 +106,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Contract/Attribute:organization_name' => 'Meno zákazníka',
 	'Class:Contract/Attribute:organization_name+' => '',
 	'Class:Contract/Attribute:contacts_list' => 'Kontakty',
-	'Class:Contract/Attribute:contacts_list+' => '',
+	'Class:Contract/Attribute:contacts_list+' => 'All the contacts for this customer contract~~',
 	'Class:Contract/Attribute:documents_list' => 'Zoznam dokumentov',
-	'Class:Contract/Attribute:documents_list+' => '',
+	'Class:Contract/Attribute:documents_list+' => 'All the documents for this customer contract~~',
 	'Class:Contract/Attribute:description' => 'Popis',
 	'Class:Contract/Attribute:description+' => '',
 	'Class:Contract/Attribute:start_date' => 'Dátum začiatku',
@@ -154,7 +155,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:CustomerContract' => 'Zákaznícka zmluva',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Služby',
-	'Class:CustomerContract/Attribute:services_list+' => '',
+	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract~~',
 	'Class:CustomerContract/Attribute:functionalcis_list' => 'CIs~~',
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract~~',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Provider contracts~~',
@@ -169,7 +170,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ProviderContract' => 'Poskytovateľská zmluva',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'Zariadenia',
-	'Class:ProviderContract/Attribute:functionalcis_list+' => '',
+	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this provider contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => '',
 	'Class:ProviderContract/Attribute:coverage' => 'Časy pokrytia',
@@ -183,6 +184,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkContactToContract' => 'väzba - Kontakt / zmluva',
 	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'zmluva',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Názov zmluvy',
@@ -200,6 +202,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkContractToDocument' => 'väzba - zmluva / Dokument',
 	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'zmluva',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Názov zmluvy',
@@ -217,6 +220,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'väzba - Komponent / Poskytovateľská zmluva',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Poskytovateľská zmluva',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Názov poskytovateľského zmluvy',
@@ -239,7 +243,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
 	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Služby',
-	'Class:ServiceFamily/Attribute:services_list+' => '',
+	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
 ));
 
 //
@@ -249,6 +253,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Service' => 'Služby',
 	'Class:Service+' => '',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Názov',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Poskytovateľ',
@@ -262,9 +267,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Service/Attribute:servicefamily_name' => 'Názov rodiny služieb',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Dokumenty',
-	'Class:Service/Attribute:documents_list+' => '',
+	'Class:Service/Attribute:documents_list+' => 'All the documents linked to the service~~',
 	'Class:Service/Attribute:contacts_list' => 'Kontakty',
-	'Class:Service/Attribute:contacts_list+' => '',
+	'Class:Service/Attribute:contacts_list+' => 'All the contacts for this service~~',
 	'Class:Service/Attribute:status' => 'Stav',
 	'Class:Service/Attribute:status+' => '',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implementácia',
@@ -276,9 +281,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Service/Attribute:icon' => 'Icon~~',
 	'Class:Service/Attribute:icon+' => '~~',
 	'Class:Service/Attribute:customercontracts_list' => 'Zákaznícke zmluvy',
-	'Class:Service/Attribute:customercontracts_list+' => '',
+	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service~~',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Podkategórie služieb',
-	'Class:Service/Attribute:servicesubcategories_list+' => '',
+	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
 ));
 
 //
@@ -288,6 +293,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkDocumentToService' => 'väzba - Dokument / Služba',
 	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Služba',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Názov služby',
@@ -305,6 +311,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkContactToService' => 'väzba - Kontakt / Služba',
 	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Služba',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
 	'Class:lnkContactToService/Attribute:service_name' => 'Názov služby',
@@ -322,6 +329,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ServiceSubcategory' => 'Podkategória služieb',
 	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Názov',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Popis',
@@ -364,9 +372,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:SLA/Attribute:organization_name' => 'Názov organizácie poskytovateľa',
 	'Class:SLA/Attribute:organization_name+' => '',
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
-	'Class:SLA/Attribute:slts_list+' => '',
+	'Class:SLA/Attribute:slts_list+' => 'All the service level targets for this SLA~~',
 	'Class:SLA/Attribute:customercontracts_list' => 'Zákaznícke zmluvy',
-	'Class:SLA/Attribute:customercontracts_list+' => '',
+	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA~~',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
 ));
 
@@ -418,6 +426,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkSLAToSLT' => 'väzba - SLA / SLT',
 	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA Názov',
@@ -445,6 +454,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkCustomerContractToService' => 'väzba - Zákaznícka zmluva / Služba',
 	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Zákaznícka zmluva',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Názov zákazníckeho zmluvy',
@@ -466,6 +476,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkCustomerContractToProviderContract' => 'Link Customer Contract / Provider Contract~~',
 	'Class:lnkCustomerContractToProviderContract+' => '~~',
+	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Customer contract~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => 'Customer contract Name~~',
@@ -483,6 +494,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkCustomerContractToFunctionalCI' => 'Link Customer Contract / FunctionalCI~~',
 	'Class:lnkCustomerContractToFunctionalCI+' => '~~',
+	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Customer contract~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Customer contract Name~~',
@@ -509,9 +521,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:DeliveryModel/Attribute:description' => 'Popis',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakty',
-	'Class:DeliveryModel/Attribute:contacts_list+' => '',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Zákazníci',
-	'Class:DeliveryModel/Attribute:customers_list+' => '',
+	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 ));
 
 //
@@ -521,6 +533,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkDeliveryModelToContact' => 'väzba - Model dodávky / Kontakt',
 	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Model dodávky',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Názov typu dodávky',

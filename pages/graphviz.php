@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -24,6 +24,7 @@ require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 /**
@@ -154,5 +155,3 @@ else
 	header('Content-Disposition: inline; filename="'.$sClass.'.png"');
 	readfile($sImageFilePath);
 }
-
-?>

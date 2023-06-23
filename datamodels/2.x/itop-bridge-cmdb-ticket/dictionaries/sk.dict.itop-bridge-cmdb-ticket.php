@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
 * @author       Benjamin Planque <benjamin.planque@combodo.com>
-* @copyright   Copyright (C) 2010-2021 Combodo SARL
+* @copyright   Copyright (C) 2010-2023 Combodo SARL
 * @license     http://opensource.org/licenses/AGPL-3.0
 */
 //////////////////////////////////////////////////////////////////////
@@ -33,6 +33,7 @@
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkFunctionalCIToTicket' => 'väzba - Komponent / Ticket',
 	'Class:lnkFunctionalCIToTicket+' => '',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Referencia na Ticket',
@@ -52,48 +53,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 ));
 
 //
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'väzba - Komponent / Poskytovateľská zmluva',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Poskytovateľská zmluva',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Názov poskytovateľského zmluvy',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'Zariadenie',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Názov CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:lnkFunctionalCIToService' => 'väzba - Komponent / Služba',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Služba',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Názov služby',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'Zariadenie',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'Názov CI',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
-));
-
-//
 // Class: FunctionalCI
 //
-
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Poskytovateľské zmluvy',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
-	'Class:FunctionalCI/Attribute:services_list' => 'Služby',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickety',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
 ));

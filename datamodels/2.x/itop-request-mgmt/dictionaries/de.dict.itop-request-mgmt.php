@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /*
@@ -37,6 +37,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Offene Benutzeranfragen nach Typ',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Offene Benutzeranfragen nach Organisation',
 	'Class:UserRequest:KnownErrorList' => 'Known Errors',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 	'Menu:UserRequest:MyWorkOrders' => 'Mir zugeordnete Arbeitsaufträge',
 	'Menu:UserRequest:MyWorkOrders+' => '',
 	'Class:Problem:KnownProblemList' => 'Bekannte Problems',
@@ -118,6 +119,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => '',
 	'Class:UserRequest/Attribute:origin' => 'Herkunft',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -128,7 +133,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:origin/Value:portal+' => '',
 	'Class:UserRequest/Attribute:approver_id' => 'Genehmiger',
 	'Class:UserRequest/Attribute:approver_id+' => '',
-	'Class:UserRequest/Attribute:approver_email' => 'Genehmiger-Email',
+	'Class:UserRequest/Attribute:approver_email' => 'Genehmiger-E-Mail',
 	'Class:UserRequest/Attribute:approver_email+' => '',
 	'Class:UserRequest/Attribute:service_id' => 'Service',
 	'Class:UserRequest/Attribute:service_id+' => '',
@@ -178,7 +183,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:resolution_code/Value:assistance+' => '',
 	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed' => 'Bugfix',
 	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed+' => '',
-	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair' => 'Hardware-Reperatur',
+	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair' => 'Hardware-Reparatur',
 	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair+' => '',
 	'Class:UserRequest/Attribute:resolution_code/Value:other' => 'Andere',
 	'Class:UserRequest/Attribute:resolution_code/Value:other+' => '',
@@ -205,7 +210,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Referenz Change',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Abgeleitete Requests',
-	'Class:UserRequest/Attribute:related_request_list+' => '',
+	'Class:UserRequest/Attribute:related_request_list+' => 'All the requests that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:public_log' => 'Öffentliches Log',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Benutzerzufriedenheit',
@@ -260,7 +265,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:SelectServiceElementFrom_Service' => 'Wählen Sie ein Service-Element für %1$s',
 	'Portal:ListServices' => 'Liste der Services',
 	'Portal:TitleDetailsFor_Service' => 'Details für Service',
-	'Portal:Button:CreateRequestFromService' => 'EIne Benutzeranfrage betreffend dieses Dienstes erzeugen',
+	'Portal:Button:CreateRequestFromService' => 'Eine Benutzeranfrage betreffend dieses Dienstes erzeugen',
 	'Portal:ListOpenRequests' => 'Offene Benutzeranfragen auflisten',
 	'Portal:UserRequest:MoreInfo' => 'Weitere Informationen',
 	'Portal:Details-Service-Element' => 'Service-Elemente',
@@ -272,8 +277,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:NoOpenProblem' => 'Keine offenen Problems',
 	'Portal:SelectLanguage' => 'Ändern Sie Ihre Spracheinstellung',
 	'Portal:LanguageChangedTo_Lang' => 'Spracheinstellung geändert auf: ',
-	'Portal:ChooseYourFavoriteLanguage' => 'WÄhlen Sie Ihre bevorzugte Sprache',
-
+	'Portal:ChooseYourFavoriteLanguage' => 'Wählen Sie Ihre bevorzugte Sprache',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 ));

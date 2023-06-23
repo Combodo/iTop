@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -22,7 +22,15 @@
 
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
-define('ITOP_VERSION', '3.0.0-dev');
+
+/**
+ * Constant containing the application version
+ * Warning: this might be different from iTop core version!
+ *
+ * @see ITOP_CORE_VERSION to get iTop core version
+ */
+define('ITOP_VERSION', '3.1.0-dev');
+
 define('ITOP_VERSION_NAME', 'Fullmoon');
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
@@ -36,7 +44,7 @@ define('ACCESS_READONLY', 0);
 /**
  * Configuration read/write
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -105,54 +113,86 @@ class Config
 	 * @since 2.7.0 export_pdf_font param
 	 */
 	protected $m_aSettings = [
-		'log_level_min' => [
-			'type' => 'array',
-			'description' => 'Optional min log level, per channel.',
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+		'log_level_min'                      => [
+			'type'                => 'array',
+			'description'         => 'Optional min log level, per channel.',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_level_min.write_in_db' => [
-			'type' => 'array',
-			'description' => 'Optional min log level IN DB, per channel.',
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+		'log_level_min.write_in_db'          => [
+			'type'                => 'array',
+			'description'         => 'Optional min log level IN DB, per channel.',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'app_env_label' => [
-			'type' => 'string',
-			'description' => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+		'log_purge.enabled'       => [
+			'type'                => 'bool',
+			'description'         => 'Optional purge activation.',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'app_root_url' => [
-			'type' => 'string',
-			'description' => 'Root URL used for navigating within the application, or from an email to the application (you can put $SERVER_NAME$ as a placeholder for the server\'s name)',
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+		'log_purge.max_keep_days' => [
+			'type'                => 'integer',
+			'description'         => 'Optional purge number of days to keep logs.',
+			'default'             => 365,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'event_service.debug.filter_events'  => [
+			'type'                => 'array',
+			'description'         => 'List of events name to filter Event Service debug messages',
+			'default'             => [],
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'event_service.debug.filter_sources' => [
+			'type'                => 'array',
+			'description'         => 'List of event sources to filter Event Service debug messages',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'app_env_label'                      => [
+			'type'                => 'string',
+			'description'         => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'app_root_url'                       => [
+			'type'                => 'string',
+			'description'         => 'Root URL used for navigating within the application, or from an email to the application (you can put $SERVER_NAME$ as a placeholder for the server\'s name)',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'app_icon_url' => [
-			'type' => 'string',
-			'description' => 'Hyperlink to redirect the user when clicking on the application icon (in the main window, or login/logoff pages)',
-			'default' => 'http://www.combodo.com/itop',
-			'value' => '',
-			'source_of_value' => '',
+		'app_icon_url'                       => [
+			'type'                => 'string',
+			'description'         => 'Hyperlink to redirect the user when clicking on the application icon (in the main window, or login/logoff pages)',
+			'default'             => 'http://www.combodo.com/itop',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_host' => [
-			'type' => 'string',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_host'                            => [
+			'type'                => 'string',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_user' => [
+		'db_user'                            => [
 			'type' => 'string',
 			'default' => null,
 			'value' => '',
@@ -318,11 +358,11 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'allow_menu_on_linkset' => [
-			'type' => 'bool',
-			'description' => 'Display Action menus in view mode on any LinkedSet with edit_mode != none',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+			'type'                => 'bool',
+			'description'         => 'Display Action menus in view mode on any LinkedSet with edit_mode != none',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'allow_target_creation' => [
@@ -416,7 +456,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_filename_builder_impl' => [
+		'log_filename_builder_impl'             => [
 			'type' => 'string',
 			'description' => 'Name of the iLogFileNameBuilder to use',
 			'default' => 'MonthlyRotatingLogFileNameBuilder',
@@ -424,39 +464,47 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_rest_service' => [
-			'type' => 'bool',
-			'description' => 'Log the usage of the REST/JSON service',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'log_rest_service'                      => [
+			'type'                => 'bool',
+			'description'         => 'Log the usage of the REST/JSON service',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'synchro_trace' => [
-			'type' => 'string',
-			'description' => 'Synchronization details: none, display, save (includes \'display\')',
-			'default' => 'none',
-			'value' => 'none',
-			'source_of_value' => '',
+		'synchro_trace'                         => [
+			'type'                => 'string',
+			'description'         => 'Synchronization details: none, display, save (includes \'display\')',
+			'default'             => 'none',
+			'value'               => 'none',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_item_separator' => [
-			'type' => 'string',
-			'description' => 'Link set from string: line separator',
-			'default' => '|',
-			'value' => '|',
-			'source_of_value' => '',
+		'synchro_obsolete_replica_locks_object' => [
+			'type'                => 'bool',
+			'description'         => 'Obsolete synchro replicas prevent object modification by any mean (eg. anonymization)',
+			'default'             => true,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_attribute_separator' => [
-			'type' => 'string',
+		'link_set_item_separator'               => [
+			'type'                => 'string',
+			'description'         => 'Link set from string: line separator',
+			'default'             => '|',
+			'value'               => '|',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
+		'link_set_attribute_separator'          => [
+			'type'                => 'string',
 			'description' => 'Link set from string: attribute separator',
 			'default' => ';',
 			'value' => ';',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_value_separator' => [
+		'link_set_value_separator'              => [
 			'type' => 'string',
 			'description' => 'Link set from string: value separator (between the attcode and the value itself',
 			'default' => ':',
@@ -472,6 +520,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
+		'link_set_max_edit_ext_key' => [
+			'type'                => 'integer',
+			'description'         => 'Maximum number of items in the link that allow editing the remote external key. Above that limit, remote external key cannot be edited. Mind that setting this limit too high can have a negative impact on performances.',
+			'default'             => 50,
+			'value'               => 50,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
 		'tag_set_item_separator' => [
 			'type' => 'string',
 			'description' => 'Tag set from string: tag label separator',
@@ -481,12 +537,20 @@ class Config
 			'show_in_conf_sample' => true,
 		],
 		'cron_max_execution_time' => [
-			'type' => 'integer',
-			'description' => 'Duration (seconds) of the page cron.php, must be shorter than php setting max_execution_time and shorter than the web server response timeout',
-			'default' => 600,
-			'value' => 600,
-			'source_of_value' => '',
+			'type'                => 'integer',
+			'description'         => 'Duration (seconds) of the cron.php script : if exceeded the script will exit even if there are remaining tasks to process. Must be shorter than php max_execution_time setting (note than when using CLI, this is set to 0 by default which means unlimited). If cron.php is ran via web, it must be shorter than the web server response timeout.',
+			'default'             => 600,
+			'value'               => 600,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
+		],
+		'cron_task_max_execution_time' => [
+			'type' => 'integer',
+			'description' => 'Background tasks will use this value (integer) multiplicated by its periodicity (in seconds) as max duration per cron execution. 0 is unlimited time',
+			'default' => 0,
+			'value' => 0,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
 		],
 		'cron_sleep' => [
 			'type' => 'integer',
@@ -514,7 +578,7 @@ class Config
 		],
 		'email_transport' => [
 			'type' => 'string',
-			'description' => 'Mean to send emails: PHPMail (uses the function mail()) or SMTP (implements the client protocol)',
+			'description' => 'Mean to send emails: PHPMail (uses the function mail()), SMTP (implements the client protocol) or SMTP_OAuth (connect to the server using OAuth 2.0)',
 			'default' => "PHPMail",
 			'value' => "PHPMail",
 			'source_of_value' => '',
@@ -536,7 +600,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.encryption' => [
+		'email_transport_smtp.encryption'          => [
 			'type' => 'string',
 			'description' => 'tls or ssl (optional)',
 			'default' => "",
@@ -544,22 +608,38 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.username' => [
-			'type' => 'string',
-			'description' => 'Authentication user (optional)',
-			'default' => "",
-			'value' => "",
-			'source_of_value' => '',
+		'email_transport_smtp.username'            => [
+			'type'                => 'string',
+			'description'         => 'Authentication user (optional)',
+			'default'             => "",
+			'value'               => "",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.password' => [
-			'type' => 'string',
-			'description' => 'Authentication password (optional)',
-			'default' => "",
-			'value' => "",
-			'source_of_value' => '',
+		'email_transport_smtp.password'            => [
+			'type'                => 'string',
+			'description'         => 'Authentication password (optional)',
+			'default'             => "",
+			'value'               => "",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'email_transport_smtp.allow_self_signed' => array(
+			'type'                => 'bool',
+			'description'         => 'Allow self signed peer certificates',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		),
+		'email_transport_smtp.verify_peer' => array(
+			'type'                => 'bool',
+			'description'         => 'Verify peer certificate',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		),
 		'email_css' => [
 			'type' => 'string',
 			'description' => 'CSS that will override the standard stylesheet used for the notifications',
@@ -608,6 +688,13 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		/**
+		 * The timezone is automatically set using this parameter in \utils::InitTimeZone
+		 * This method is called almost everywhere, cause it's called in \MetaModel::LoadConfig and exec.php... but you might
+		 * need to get it yourself !
+		 *
+		 * @used-by utils::InitTimeZone()
+		 */
 		'timezone' => [
 			'type' => 'string',
 			'description' => 'Timezone (reference: http://php.net/manual/en/timezones.php). If empty, it will be left unchanged and MUST be explicitly configured in PHP',
@@ -851,15 +938,28 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'impact_analysis_lazy_loading' => [
+			'type'                => 'bool',
+			'description'         => 'In the impact analysis view: display the analysis or filter before display',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'lifecycle.transitions_sort_type' => [
+			'type'                => 'string',
+			'description'         => 'How transitions will be sorted in the GUI. Possible values are "xml", "alphabetical", "fixed" or "relative"',
+			'default'             => DBObject::DEFAULT_TRANSITIONS_SORT_TYPE,
+			'value'               => DBObject::DEFAULT_TRANSITIONS_SORT_TYPE,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
 		'url_validation_pattern' => [
-			'type' => 'string',
-			'description' => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
-			'default' => '(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z_.-][a-zA-Z0-9+\$_.-]*)?',
-			//            SHEME.......... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH........................ GET............................................ ANCHOR............................
-			// Example: http://User:passWord@127.0.0.1:8888/patH/Page.php?arrayArgument[2]=something:blah20#myAnchor
-			// Origin of this regexp: http://www.php.net/manual/fr/function.preg-match.php#93824
-			'value' => '',
-			'source_of_value' => '',
+			'type'                => 'string',
+			'description'         => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
+			'default'             => AttributeURL::DEFAULT_VALIDATION_PATTERN,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
 		'email_validation_pattern' => [
@@ -975,8 +1075,8 @@ class Config
 			'type' => 'integer',
 			'description' => 'Maximum length of the history table (in the "History" tab on each object) before it gets truncated. Latest modifications are displayed first.',
 			// examples... not used
-			'default' => 50,
-			'value' => 50,
+			'default' => 200,
+			'value' => 200,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
@@ -1175,7 +1275,7 @@ class Config
 		],
 		'compatibility.include_deprecated_js_files' => [
 			'type' => 'bool',
-			'description' => 'Include the deprecated JS files to ease usage of not migrated extensions',
+			'description' => 'Include the deprecated JS files (in iTop previous version) to ease usage of not migrated extensions',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -1191,7 +1291,7 @@ class Config
 		],
 		'compatibility.include_deprecated_css_files' => [
 			'type' => 'bool',
-			'description' => 'Include the deprecated CSS files to ease usage of not migrated extensions',
+			'description' => 'Include the deprecated CSS files (in iTop previous version) to ease usage of not migrated extensions',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -1200,6 +1300,14 @@ class Config
 		'navigation_menu.show_menus_count' => [
 			'type' => 'bool',
 			'description' => 'Display count badges for OQL menu entries',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'navigation_menu.show_organization_filter' => [
+			'type' => 'bool',
+			'description' => 'Display organization filter in menu',
 			'default' => true,
 			'value' => true,
 			'source_of_value' => '',
@@ -1383,6 +1491,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'allow_rest_services_via_tokens' => [
+			'type' => 'bool',
+			'description' => 'When set to true, REST endpoint token authorization works even with secure_rest_services set.',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'search_manual_submit' => [
 			'type' => 'array',
 			'description' => 'Force manual submit of search all requests',
@@ -1420,14 +1536,6 @@ class Config
 			'description' => 'If true then session id will be regenerated on each login, to prevent session fixation.',
 			'default' => true,
 			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'use_legacy_dbsearch' => [
-			'type' => 'bool',
-			'description' => 'If set, DBSearch will use legacy SQL query generation',
-			'default' => false,
-			'value' => false,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
@@ -1480,11 +1588,11 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'security.hide_administrators' => [
-			'type' => 'bool',
-			'description' => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+			'type'                => 'bool',
+			'description'         => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'behind_reverse_proxy' => [
@@ -1517,6 +1625,22 @@ class Config
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'setup.launch_button.enabled' => [
+			'type'                => 'bool',
+			'description'         => 'If true displays in the Application Upgrade screen a button allowing to launch the setup in a single click (no more manual config file permission change needed)',
+			'default'             => null,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'audit.enable_selection_landing_page' => [
+			'type'                => 'bool',
+			'description'         => 'If true audit categories must be selected before results are computed (use this setting in case of a lot of audit categories)',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 	];
@@ -1598,6 +1722,16 @@ class Config
 	public function Get($sPropCode)
 	{
 		return $this->m_aSettings[$sPropCode]['value'];
+	}
+
+	/**
+	 * @return mixed
+	 *
+	 * @since 3.0.1 N°4515
+	 */
+	public function GetDefault(string $sPropCode)
+	{
+		return $this->m_aSettings[$sPropCode]['default'];
 	}
 
 	/**
@@ -1826,9 +1960,9 @@ class Config
 		}
 		if (strlen($sNoise) > 0)
 		{
-			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack) 
+			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack)
 			throw new ConfigException('Syntax error in configuration file',
-				array('file' => $sConfigFile, 'error' => '<tt>'.htmlentities($sNoise, ENT_QUOTES, 'UTF-8').'</tt>'));
+				array('file' => $sConfigFile, 'error' => '<tt>'.utils::EscapeHtml($sNoise, ENT_QUOTES).'</tt>'));
 		}
 
 		if (!isset($MySettings) || !is_array($MySettings))
@@ -2211,7 +2345,7 @@ class Config
 		$oHandle = null;
 		$sConfig = null;
 
-		if (is_file($this->m_sFile))
+		if ($this->m_sFile !== null && is_file($this->m_sFile))
 		{
 			$oHandle = fopen($this->m_sFile, 'r');
 			$index = 0;
@@ -2386,9 +2520,14 @@ class Config
 	/**
 	 * Helper function to initialize a configuration from the page arguments
 	 *
+	 * @see \Parameters::GetParamForConfigArray() to get aParamValues from {@see Parameters} object hierarchy in setup
+	 * @see \WizardController::GetParamForConfigArray() to get aParamValues from {@see \WizardController} object hierarchy in setup
+	 *
 	 * @param array $aParamValues
-	 * @param string|null $sModulesDir
+	 * @param ?string $sModulesDir
 	 * @param bool $bPreserveModuleSettings
+	 *
+	 * @return void The current object is modified directly
 	 *
 	 * @throws \Exception
 	 * @throws \CoreException
@@ -2636,7 +2775,7 @@ class ConfigPlaceholdersResolver
 		}
 
 		$sPattern = '/\%(env|server)\((\w+)\)(?:\?:(\w*))?\%/'; //3 capturing groups, ie `%env(HTTP_PORT)?:8080%` produce: `env` `HTTP_PORT` and `8080`.
-		
+
 		if (! preg_match_all($sPattern, $rawValue, $aMatchesCollection, PREG_SET_ORDER))
 		{
 			return $rawValue;

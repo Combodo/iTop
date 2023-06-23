@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Exposes some Symfony parameters and services as an "app" global variable.
@@ -39,14 +40,14 @@ class AppVariable
         $this->requestStack = $requestStack;
     }
 
-    public function setEnvironment($environment)
+    public function setEnvironment(string $environment)
     {
         $this->environment = $environment;
     }
 
-    public function setDebug($debug)
+    public function setDebug(bool $debug)
     {
-        $this->debug = (bool) $debug;
+        $this->debug = $debug;
     }
 
     /**
@@ -68,7 +69,7 @@ class AppVariable
     /**
      * Returns the current user.
      *
-     * @return object|null
+     * @return UserInterface|null
      *
      * @see TokenInterface::getUser()
      */
@@ -84,13 +85,14 @@ class AppVariable
 
         $user = $token->getUser();
 
+        // @deprecated since Symfony 5.4, $user will always be a UserInterface instance
         return \is_object($user) ? $user : null;
     }
 
     /**
      * Returns the current request.
      *
-     * @return Request|null The HTTP request object
+     * @return Request|null
      */
     public function getRequest()
     {
@@ -104,21 +106,22 @@ class AppVariable
     /**
      * Returns the current session.
      *
-     * @return Session|null The session
+     * @return Session|null
      */
     public function getSession()
     {
         if (null === $this->requestStack) {
             throw new \RuntimeException('The "app.session" variable is not available.');
         }
+        $request = $this->getRequest();
 
-        return ($request = $this->getRequest()) ? $request->getSession() : null;
+        return $request && $request->hasSession() ? $request->getSession() : null;
     }
 
     /**
      * Returns the current app environment.
      *
-     * @return string The current environment string (e.g 'dev')
+     * @return string
      */
     public function getEnvironment()
     {
@@ -132,7 +135,7 @@ class AppVariable
     /**
      * Returns the current app debug mode.
      *
-     * @return bool The current debug mode
+     * @return bool
      */
     public function getDebug()
     {
@@ -154,8 +157,7 @@ class AppVariable
     public function getFlashes($types = null)
     {
         try {
-            $session = $this->getSession();
-            if (null === $session) {
+            if (null === $session = $this->getSession()) {
                 return [];
             }
         } catch (\RuntimeException $e) {

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,10 +15,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
- /**
+/**
  * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
@@ -35,6 +35,6 @@
 // Class: UserExternal
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:UserExternal' => 'Usuario Externo',
-	'Class:UserExternal+' => 'Usuario Autenticado fuera de '.ITOP_APPLICATION_SHORT,
+	'Class:UserExternal' => 'Usuario externo',
+	'Class:UserExternal+' => 'Usuario autenticado fuera de '.ITOP_APPLICATION_SHORT,
 ));

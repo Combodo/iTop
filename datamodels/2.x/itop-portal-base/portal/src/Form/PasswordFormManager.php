@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -141,6 +141,11 @@ class PasswordFormManager extends FormManager
 							{
 								$aData['valid'] = false;
 								$aData['messages']['error'] += array('confirm_password' => array(Dict::S('UI:Login:RetypePwdDoesNotMatch')));
+							}
+							elseif ($sNewPassword === $sOldPassword)
+							{
+								$aData['valid'] = false;
+								$aData['messages']['error'] += array('new_password' => array(Dict::S('UI:Login:PasswordNotChanged')));
 							}
 							else
 							{

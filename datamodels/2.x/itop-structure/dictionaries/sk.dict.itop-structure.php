@@ -2,7 +2,7 @@
 /**
  * Localized data
  * @author Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -87,9 +87,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Location/Attribute:country' => 'Štát',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'Zariadenia',
-	'Class:Location/Attribute:physicaldevice_list+' => '',
+	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => 'Kontakty',
-	'Class:Location/Attribute:person_list+' => '',
+	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
 ));
 
 //
@@ -99,6 +99,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => '',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Meno',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Stav',
@@ -124,7 +125,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Contact/Attribute:function' => 'Funkcia',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'Zariadenia',
-	'Class:Contact/Attribute:cis_list+' => '',
+	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => 'Typ kontaktu',
 	'Class:Contact/Attribute:finalclass+' => '',
 ));
@@ -136,6 +137,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Person' => 'Osoba',
 	'Class:Person+' => '',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Priezvisko',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Krstné meno',
@@ -153,9 +155,11 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Person/Attribute:manager_name' => 'Meno manažéra',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'Tímy',
-	'Class:Person/Attribute:team_list+' => '',
+	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'Tickety',
-	'Class:Person/Attribute:tickets_list+' => '',
+	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
+	'Class:Person/Attribute:user_list' => 'Users~~',
+	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Ľahko čitateľné meno manažéra',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Picture~~',
@@ -164,6 +168,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
 ));
 
 //
@@ -173,10 +178,11 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Team' => 'Tím',
 	'Class:Team+' => '',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Osoby',
-	'Class:Team/Attribute:persons_list+' => '',
+	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
 	'Class:Team/Attribute:tickets_list' => 'Tickety',
-	'Class:Team/Attribute:tickets_list+' => '',
+	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
 ));
 
 //
@@ -186,6 +192,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => '',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Názov',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Organizácia',
@@ -209,7 +216,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Document/Attribute:status/Value:published' => 'Publikovaný',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'Komponenty',
-	'Class:Document/Attribute:cis_list+' => '',
+	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Typ dokumentu',
 	'Class:Document/Attribute:finalclass+' => '',
 ));
@@ -285,6 +292,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkPersonToTeam' => 'väzba - Osoba / Tím',
 	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
+	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Tím',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Názov tímu',
@@ -347,7 +356,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Person:info' => 'Všeobecné informácie',
-	'UserLocal:info' => 'General information~~',
+	'User:info' => 'Všeobecné informácie',
+	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Upozornenie',
 ));

@@ -1,10 +1,7 @@
 <?php
-/**
- * iTop
- *
- * @copyright   Copyright (C) 2010,2021 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
- *
  */
 
 namespace Combodo\iTop\CoreUpdate\Service;
@@ -173,12 +170,12 @@ final class CoreUpdater
 			$oRuntimeEnv->InitDataModel($oConfig, true);
 
 			$sModulesDirToKeep = $oRuntimeEnv->GetBuildDir();
-			$aDirsToScanForModules = array(
+			$aDirsToScanForModules = [
 				$sModulesDirToKeep,
 				APPROOT.'extensions'
-			);
+			];
 			$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation($oConfig, $aDirsToScanForModules);
-			$aSelectedModules = array();
+			$aSelectedModules = [];
 			foreach ($aAvailableModules as $sModuleId => $aModule)
 			{
 				if (($sModuleId == ROOT_MODULE) || ($sModuleId == DATAMODEL_MODULE))
@@ -209,7 +206,7 @@ final class CoreUpdater
 					$oExtensionsMap->MarkAsChosen($oExtension->sCode);
 				}
 			}
-			$aSelectedExtensionCodes = array();
+			$aSelectedExtensionCodes = [];
 			foreach ($oExtensionsMap->GetChoices() as $oExtension)
 			{
 				$aSelectedExtensionCodes[] = $oExtension->sCode;
@@ -535,7 +532,8 @@ final class CoreUpdater
 			SetupLog::Info('itop-core-update: Archive extracted, check files integrity');
 
 			// Check files integrity
-			FilesIntegrity::CheckInstallationIntegrity(self::UPDATE_DIR.'web/');
+			$sRootPath = self::UPDATE_DIR.'web/';
+			FilesIntegrity::CheckInstallationIntegrity($sRootPath);
 
 			SetupLog::Info('itop-core-update: Files integrity OK');
 		} catch (Exception $e)
@@ -568,7 +566,7 @@ final class CoreUpdater
 			{
 				throw new Exception(Dict::S(Dict::S('iTopUpdate:Error:BadFileContent')));
 			}
-			$aValues = array();
+			$aValues = [];
 			foreach ($aMatches['name'] as $index => $sName)
 			{
 				$aValues[$sName] = $aMatches['value'][$index];

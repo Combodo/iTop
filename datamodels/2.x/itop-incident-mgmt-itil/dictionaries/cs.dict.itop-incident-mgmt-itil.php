@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
  *
  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
@@ -113,6 +113,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => '',
 	'Class:Incident/Attribute:origin' => 'Původ',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => 'email',
 	'Class:Incident/Attribute:origin/Value:mail+' => '',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'monitoring',
@@ -234,7 +238,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Znovu otevřít',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Incident nemůže být nadřazený sám sobě',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'Vyřešit podřízené tikety',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Otevřené incidenty',

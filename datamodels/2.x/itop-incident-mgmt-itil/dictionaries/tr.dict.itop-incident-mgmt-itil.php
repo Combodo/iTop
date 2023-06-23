@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -110,6 +110,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => 'low~~',
 	'Class:Incident/Attribute:origin' => 'Origin~~',
 	'Class:Incident/Attribute:origin+' => '~~',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => 'email~~',
 	'Class:Incident/Attribute:origin/Value:mail+' => 'email~~',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'monitoring~~',
@@ -231,7 +235,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Re-open~~',
 	'Class:Incident/Stimulus:ev_reopen+' => '~~',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Cannot assign the Parent incident to the incident itself~~',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',

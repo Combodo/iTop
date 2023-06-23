@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:ChangeManagement' => 'Zarządzanie zmianami',
 	'Menu:Change:Overview' => 'Przegląd',
@@ -95,7 +94,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Change/Attribute:requestor_email+' => '',
 	'Class:Change/Attribute:creation_date' => 'Data utworzenia',
 	'Class:Change/Attribute:creation_date+' => '',
-	'Class:Change/Attribute:impact' => 'Wpływ',
+	'Class:Change/Attribute:impact' => 'Dotyczy',
 	'Class:Change/Attribute:impact+' => '',
 	'Class:Change/Attribute:supervisor_group_id' => 'Zespół nadzorujący',
 	'Class:Change/Attribute:supervisor_group_id+' => '',

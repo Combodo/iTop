@@ -8,6 +8,7 @@ use PhpParser\Lexer;
 use PhpParser\Lexer\TokenEmulator\AttributeEmulator;
 use PhpParser\Lexer\TokenEmulator\EnumTokenEmulator;
 use PhpParser\Lexer\TokenEmulator\CoaleseEqualTokenEmulator;
+use PhpParser\Lexer\TokenEmulator\ExplicitOctalEmulator;
 use PhpParser\Lexer\TokenEmulator\FlexibleDocStringEmulator;
 use PhpParser\Lexer\TokenEmulator\FnTokenEmulator;
 use PhpParser\Lexer\TokenEmulator\MatchTokenEmulator;
@@ -36,7 +37,7 @@ class Emulative extends Lexer
     /**
      * @param mixed[] $options Lexer options. In addition to the usual options,
      *                         accepts a 'phpVersion' string that specifies the
-     *                         version to emulated. Defaults to newest supported.
+     *                         version to emulate. Defaults to newest supported.
      */
     public function __construct(array $options = [])
     {
@@ -55,6 +56,7 @@ class Emulative extends Lexer
             new AttributeEmulator(),
             new EnumTokenEmulator(),
             new ReadonlyTokenEmulator(),
+            new ExplicitOctalEmulator(),
         ];
 
         // Collect emulators that are relevant for the PHP version we're running

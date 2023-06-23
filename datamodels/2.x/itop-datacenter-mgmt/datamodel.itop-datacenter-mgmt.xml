@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="Rack" _delta="define">
       <parent>PhysicalDevice</parent>
@@ -14,6 +14,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-rack.svg</icon>
@@ -40,6 +44,8 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
         <field id="enclosure_list" xsi:type="AttributeLinkedSet">
           <linked_class>Enclosure</linked_class>
@@ -47,6 +53,8 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -107,12 +115,6 @@
             <item id="device_list">
               <rank>190</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>200</rank>
-            </item>
-            <item id="services_list">
-              <rank>210</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -183,6 +185,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="nb_u">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Enclosure" _delta="define">
@@ -198,6 +216,11 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+            <attribute id="rack_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-enclosure-for-servers.svg</icon>
@@ -232,6 +255,8 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -292,12 +317,6 @@
             <item id="device_list">
               <rank>190</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>200</rank>
-            </item>
-            <item id="services_list">
-              <rank>210</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -365,6 +384,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="rack_id">
+              <rank>30</rank>
+            </item>
+            <item id="nb_u">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <relations>
         <relation id="impacts">
@@ -389,6 +424,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-electrical.svg</icon>
@@ -451,12 +490,6 @@
             </item>
             <item id="documents_list">
               <rank>150</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>160</rank>
-            </item>
-            <item id="services_list">
-              <rank>170</rank>
             </item>
           </items>
         </details>
@@ -557,6 +590,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-electricity.svg</icon>
@@ -576,6 +613,8 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+          <relation_type>link</relation_type>
+          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -629,12 +668,6 @@
             </item>
             <item id="documents_list">
               <rank>160</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>180</rank>
-            </item>
-            <item id="services_list">
-              <rank>190</rank>
             </item>
           </items>
         </details>
@@ -703,6 +736,16 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="PDU" _delta="define">
@@ -718,6 +761,12 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="organization_name"></attribute>
+            <attribute id="location_name"/>
+            <attribute id="rack_name"/>
+            <attribute id="powerstart_name"/>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>../../images/icons/icons8-plug-socket.svg</icon>
@@ -817,12 +866,6 @@
             <item id="documents_list">
               <rank>170</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>190</rank>
-            </item>
-            <item id="services_list">
-              <rank>200</rank>
-            </item>
           </items>
         </details>
         <search>
@@ -893,6 +936,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="rack_id">
+              <rank>30</rank>
+            </item>
+            <item id="powerstart_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
       <methods/>
     </class>

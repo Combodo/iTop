@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /*
@@ -31,12 +31,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserRequest:OpenRequests+' => '',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Mir zugewiesene Benutzeranfragen',
 	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Benutzeranfragen der letzten 14 Tage nach Typ',
-	'UI-RequestManagementOverview-Last-14-days' => 'Anzahl Benutzeranfragen der letzen 14 Tage',
+	'UI-RequestManagementOverview-Last-14-days' => 'Anzahl Benutzeranfragen der letzten 14 Tage',
 	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Offene Benutzeranfragen nach Status',
 	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Offene Benutzeranfragen nach Bearbeiter',
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Offene Benutzeranfragen nach Typ',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Offene Benutzeranfragen nach Kunde',
 	'Class:UserRequest:KnownErrorList' => 'Known Errors',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 ));
 
 // Dictionnay conventions
@@ -112,6 +113,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => '',
 	'Class:UserRequest/Attribute:origin' => 'Herkunft',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoring',
@@ -122,7 +127,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:origin/Value:portal+' => '',
 	'Class:UserRequest/Attribute:approver_id' => 'Genehmiger',
 	'Class:UserRequest/Attribute:approver_id+' => '',
-	'Class:UserRequest/Attribute:approver_email' => 'Gemehhmiger-Email',
+	'Class:UserRequest/Attribute:approver_email' => 'Gemehhmiger-E-Mail',
 	'Class:UserRequest/Attribute:approver_email+' => '',
 	'Class:UserRequest/Attribute:service_id' => 'Service',
 	'Class:UserRequest/Attribute:service_id+' => '',
@@ -203,7 +208,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent-Incident-Referenz',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Abgeleitete Requests',
-	'Class:UserRequest/Attribute:related_request_list+' => '',
+	'Class:UserRequest/Attribute:related_request_list+' => 'All the requests that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:public_log' => 'Öffentliches Log',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Benutzerzufriedenheit',
@@ -245,7 +250,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Auf Genehmigung warten',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kann Ticket nicht als eigenes Parent-Ticket verwenden',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 ));

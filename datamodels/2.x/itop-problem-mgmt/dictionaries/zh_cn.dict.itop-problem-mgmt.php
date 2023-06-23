@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -130,11 +130,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Attribute:resolution_date' => '解决日期',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => '已知问题',
-	'Class:Problem/Attribute:knownerrors_list+' => '该问题相关的所有已知问题',
+	'Class:Problem/Attribute:knownerrors_list+' => '此问题相关的所有已知问题',
 	'Class:Problem/Attribute:related_request_list' => '相关需求',
-	'Class:Problem/Attribute:related_request_list+' => '该问题相关的所有需求',
+	'Class:Problem/Attribute:related_request_list+' => '此问题相关的所有需求',
 	'Class:Problem/Attribute:related_incident_list' => '相关事件',
-	'Class:Problem/Attribute:related_incident_list+' => '该问题相关的所有事件',
+	'Class:Problem/Attribute:related_incident_list+' => '此问题相关的所有事件',
 	'Class:Problem/Stimulus:ev_assign' => '分配',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => '重新分配',

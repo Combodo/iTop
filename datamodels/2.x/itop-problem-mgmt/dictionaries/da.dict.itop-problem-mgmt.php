@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -108,9 +108,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Problem/Attribute:resolution_date' => 'Dato løst',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Known Errors',
-	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:knownerrors_list+' => 'All the known errors that are linked to this problem~~',
 	'Class:Problem/Attribute:related_request_list' => 'Relateret Requests',
-	'Class:Problem/Attribute:related_request_list+' => '',
+	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
 	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
 	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 	'Class:Problem/Stimulus:ev_assign' => 'Tildel',

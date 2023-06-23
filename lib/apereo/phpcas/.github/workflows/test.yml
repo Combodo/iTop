@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - php: '7.2'
+            phpunit: '8' 
+          - php: '7.3'
+            phpunit: latest
+          - php: '7.4'
+            phpunit: latest
+          - php: '8.0'
+            phpunit: latest
+          - php: '8.1'
+            phpunit: latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: php-actions/composer@v6
+        with:
+          php_version: "${{ matrix.php-version.php }}"
+      - name: Run PHPUnit
+        uses: php-actions/phpunit@v3
+        with:
+          version: "${{ matrix.php-version.phpunit }}"
+          php_version: "${{ matrix.php-version.php }}"
+          php_extensions: xdebug
+          args: --verbose --coverage-clover=coverage.xml
+          bootstrap: vendor/autoload.php
+        env:
+          XDEBUG_MODE: coverage
+      - name: Report coverage
+        uses: codecov/codecov-action@v1
+        with:
+          files: coverage.xml

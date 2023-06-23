@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -37,12 +37,18 @@
  * a different one even if the key is the same.
  *
  * @author      Miguel Ros <rossoft@gmail.com>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class SimpleCrypt
 {
+	/**
+	 * @var \SimpleCrypt
+	 * @since 3.1.0 N°5388
+	 */
+	protected $oEngine;
+
 	public static function GetNewDefaultParams()
 	{
 		if(function_exists('sodium_crypto_secretbox_open') && function_exists('random_bytes')){
@@ -62,6 +68,7 @@ class SimpleCrypt
 		$sEngineName = 'SimpleCrypt' . $sEngineName . 'Engine';
 		return $sEngineName::GetNewDefaultParams();
 	}
+
     /**
      * Constructor
      * @param string $sEngineName Engine for encryption. Values: Simple, Mcrypt, Sodium or OpenSSL

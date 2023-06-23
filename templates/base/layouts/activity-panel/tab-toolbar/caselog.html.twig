@@ -4,7 +4,7 @@
 
 {% block bDataTabType %}caselog{% endblock %}
 
-{% block bExtraDataAttributes %}data-caselog-attribute-code="{{ sAttCode }}"data-caselog-attribute-label="{{ aData.title }}" data-caselog-rank="{{ loop.index }}"{% endblock %}
+{% block bExtraDataAttributes %}data-caselog-attribute-code="{{ sAttCode }}" data-caselog-attribute-label="{{ aData.title }}" data-caselog-rank="{{ loop.index }}"{% endblock %}
 
 {% block bTabToolbarFirstRow %}
 	{% if oUIBlock.HasCaseLogTabEntryForm(sAttCode) %}

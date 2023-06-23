@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,19 +24,4 @@ use Combodo\iTop\Renderer\FormRenderer;
 class ConsoleFormRenderer extends FormRenderer
 {
 	const DEFAULT_RENDERER_NAMESPACE = 'Combodo\\iTop\\Renderer\\Console\\FieldRenderer\\';
-
-	public function __construct(Form $oForm)
-	{
-		parent::__construct($oForm);
-		$this->AddSupportedField('HiddenField', 'ConsoleSimpleFieldRenderer');
-		$this->AddSupportedField('LabelField', 'ConsoleSimpleFieldRenderer');
-		$this->AddSupportedField('StringField', 'ConsoleSimpleFieldRenderer');
-		$this->AddSupportedField('SelectField', 'ConsoleSimpleFieldRenderer');
-		$this->AddSupportedField('TextAreaField', 'ConsoleSimpleFieldRenderer');
-		$this->AddSupportedField('RadioField', 'ConsoleSimpleFieldRenderer');
-		$this->AddSupportedField('DurationField', 'ConsoleSimpleFieldRenderer');
-		$this->AddSupportedField('SelectObjectField', 'ConsoleSelectObjectFieldRenderer');
-		$this->AddSupportedField('SubFormField', 'ConsoleSubFormFieldRenderer');
-		$this->AddSupportedField('DateTimeField', 'ConsoleSimpleFieldRenderer');
-	}
 }

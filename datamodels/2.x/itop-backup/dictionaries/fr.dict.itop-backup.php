@@ -2,14 +2,12 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2021 Combodo
+ * @copyright   Copyright (C) 2023 Combodo
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('FR FR', 'French', 'Français', array(
-
 	'bkp-backup-running' => 'Une sauvegarde est en cours. Veuillez patienter...',
 	'bkp-restore-running' => 'Une restauration des données est en cours. Veuillez patienter...',
-
 	'Menu:BackupStatus' => 'Sauvegardes',
 	'bkp-status-title' => 'Sauvegardes',
 	'bkp-status-checks' => 'Réglages et vérifications',
@@ -34,6 +32,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'bkp-status-backups-manual' => 'Sauvegardes manuelles',
 	'bkp-status-backups-none' => 'Aucune sauvegarde n\'a été faite jusqu\' à présent.',
 	'bkp-next-backup' => 'La prochaine sauvegarde aura lieu <b>%1$s</b> (%2$s) à %3$s',
+	'bkp-next-backup-unknown' => 'La prochaine sauvegarde <b>n\'est pas programmée</b>.',
 	'bkp-button-backup-now' => 'Sauvegarder maintenant !',
 	'bkp-button-restore-now' => 'Restaurer !',
 	'bkp-confirm-backup' => 'Veuillez confirmer que vous souhaiter effectuer une sauvegarde maintenant.',

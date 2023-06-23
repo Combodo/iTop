@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
@@ -64,7 +64,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Change' => 'Ticket de changement',
+	'Class:Change' => 'Ticket de Changement',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Etat',
 	'Class:Change/Attribute:status+' => '',
@@ -127,13 +127,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:parent_name' => 'Ref changement parent',
 	'Class:Change/Attribute:parent_name+' => '',
 	'Class:Change/Attribute:related_request_list' => 'Requêtes liées',
-	'Class:Change/Attribute:related_request_list+' => '',
+	'Class:Change/Attribute:related_request_list+' => 'Toutes les demandes utilisateurs liées à ce changement',
 	'Class:Change/Attribute:related_problems_list' => 'Problèmes liés',
-	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:related_problems_list+' => 'Tous les problèmes liés à ce changement',
 	'Class:Change/Attribute:related_incident_list' => 'Incidents liés',
-	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_incident_list+' => 'Tous les incidents liés à ce changement',
 	'Class:Change/Attribute:child_changes_list' => 'Changements fils',
-	'Class:Change/Attribute:child_changes_list+' => '',
+	'Class:Change/Attribute:child_changes_list+' => 'Tous les sous-changements liés à ce changement',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Nom commun du changement parent',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Type de changement',
@@ -167,7 +167,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:RoutineChange' => 'Ticket de Changement de Routine',
+	'Class:RoutineChange' => 'Changement de Routine',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Valider',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
@@ -198,7 +198,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ApprovedChange' => 'Changements pré-approuvés',
+	'Class:ApprovedChange' => 'Changement pré-approuvé',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Date d\'approbation',
 	'Class:ApprovedChange/Attribute:approval_date+' => '',
@@ -233,7 +233,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:NormalChange' => 'Ticket de Changement Normal',
+	'Class:NormalChange' => 'Changement Normal',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Date d\'acceptation',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
@@ -268,7 +268,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EmergencyChange' => 'Ticket de Changement d\'Urgence',
+	'Class:EmergencyChange' => 'Changement urgent',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valider',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
@@ -292,4 +292,31 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Fermer',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
+));
+// 1:n relations custom labels for tooltip and pop-up title
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Change/Attribute:child_changes_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Change/Attribute:child_changes_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Change/Attribute:child_changes_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Change/Attribute:child_changes_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:Change/Attribute:child_changes_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Change/Attribute:child_changes_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Change/Attribute:related_incident_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Change/Attribute:related_incident_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Change/Attribute:related_incident_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Change/Attribute:related_incident_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:Change/Attribute:related_incident_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Change/Attribute:related_incident_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Change/Attribute:related_problems_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Change/Attribute:related_problems_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Change/Attribute:related_problems_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Change/Attribute:related_problems_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+	'Class:Change/Attribute:related_problems_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Change/Attribute:related_problems_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Change/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Change/Attribute:related_request_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Change/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Change/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Change/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
 ));

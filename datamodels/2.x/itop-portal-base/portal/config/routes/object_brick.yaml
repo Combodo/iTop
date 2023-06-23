@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2021 Combodo SARL
+# Copyright (C) 2010-2023 Combodo SARL
 #
 #  This file is part of iTop.
 #
@@ -35,6 +35,11 @@ p_object_view:
   defaults:
     _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ViewAction'
 
+p_object_view_from_attribute:
+  path: '/object/view/{sObjectClass}/{sObjectAttCode}/{sObjectAttValue}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ViewFromAttributeAction'
+
 p_object_apply_stimulus:
   path: '/object/apply-stimulus/{sStimulusCode}/{sObjectClass}/{sObjectId}'
   defaults:
@@ -69,6 +74,11 @@ p_object_get_information_json:
   path: '/object/get-information/json'
   defaults:
     _controller: 'Combodo\iTop\Portal\Controller\ObjectController::GetInformationAsJsonAction'
+
+p_object_get_information_for_linked_set_json:
+  path: '/object/get-information-for-linked-set/json'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::GetInformationForLinkedSetAsJsonAction'
 
 p_object_document_display:
   path: '/object/document/display/{sObjectClass}/{sObjectId}/{sObjectField}'

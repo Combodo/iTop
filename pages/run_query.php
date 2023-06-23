@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -26,6 +26,7 @@ require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('RunQueriesMenu');
@@ -66,7 +67,7 @@ function ShowExamples($oP, $sExpression)
 			$sDisable = '';
 			if ($sOql == $sExpression) {
 				// this one is currently being tested, highlight it
-				$sHighlight = "background-color:yellow;";
+				$sHighlight = "ibo-run-query--highlight";
 				$sDisable = 'disabled';
 				// and remember we are testing a query of the list
 				$bUsingExample = true;
@@ -79,8 +80,8 @@ function ShowExamples($oP, $sExpression)
 			$oFormButton->AddSubBlock(new Html($sContext));
 			//$aDisplayData[$sTopic][] = array(
 			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
-				'desc' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
-				'oql' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
+				'desc' => "<div class=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
+				'oql' => "<div class=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
 				'go' => BlockRenderer::RenderBlockTemplates($oFormButton),
 			);
 		}
@@ -177,13 +178,14 @@ try
 	$oQueryTextArea->AddCSSClasses(['ibo-input-text', 'ibo-query-oql', 'ibo-is-code']);
 	$oQueryForm->AddSubBlock($oQueryTextArea);
 
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
-	$oP->add_ready_script(<<<EOF
+	$oP->add_ready_script(<<<JS
 $("#expression").select();
-$("#expression").on("keydown", null, "ctrl+return", function() {
-	$(this).closest("form").submit();
+$("#expression").on('keyup', function (oEvent) {
+    if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.key === 'Enter') {
+        $(this).closest('form').trigger('submit');
+    }
 });
-EOF
+JS
 	);
 
 	if (count($aArgs) > 0) {
@@ -265,7 +267,7 @@ EOF
 
 		$aOrderBy = MetaModel::GetOrderByDefault($sMainClass);
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
+		if ($oFilter instanceof DBObjectSearch) {
 			// OQL Developed for Count
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
@@ -280,7 +282,7 @@ EOF
 		$oCountResultQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($sSQL));
 		$aMoreInfoBlocks[] = $oCountResultQuerySet;
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
+		if ($oFilter instanceof DBObjectSearch) {
 			// OQL Developed
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
@@ -313,14 +315,20 @@ EOF
 					$sBefore = substr($sExpression, 0, $e->GetColumn());
 					$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
 					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
-					$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
+					$sFixedExpressionHtml = $sBefore.'<span class="ibo-run-query--highlight">'.$sSuggestedWord.'</span>'.$sAfter;
 					$sSyntaxErrorText .= "<p>Suggesting: $sFixedExpressionHtml</p>";
 					$oSyntaxErrorPanel->AddSubBlock(new Html($sSyntaxErrorText));
 
-					$sEscapedExpression = utils::EscapeHtml(addslashes($sFixedExpression));
+					$sEscapedExpression = json_encode(utils::EscapeHtml($sFixedExpression));
 					$oUseSuggestedQueryButton = ButtonUIBlockFactory::MakeForDestructiveAction('Use this query');
-					$oUseSuggestedQueryButton->SetOnClickJsCode("let \$oQueryTextarea = $('textarea[name=expression]');\$oQueryTextarea.val('$sEscapedExpression').focus();\$oQueryTextarea.closest('form').submit();");
-					$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
+					$oUseSuggestedQueryButton->SetOnClickJsCode(
+<<<JS
+let \$oQueryTextarea = $('textarea[name=expression]');
+\$oQueryTextarea.val($sEscapedExpression).focus();
+\$oQueryTextarea.closest('form').submit();
+JS
+					);
+						$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
 				} else {
 					$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getHtmlDesc()));
 				}

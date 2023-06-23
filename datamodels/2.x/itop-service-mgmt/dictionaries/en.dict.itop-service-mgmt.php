@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -31,10 +31,11 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
+// Menu, fieldsets, UI, messages translations
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Menu:ServiceManagement' => 'Service Management',
-	'Menu:ServiceManagement+' => 'Service Management Overview',
+	'Menu:ServiceManagement' => 'Service management',
+	'Menu:ServiceManagement+' => 'Service management overview',
 	'Menu:Service:Overview' => 'Overview',
 	'Menu:Service:Overview+' => '',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',
@@ -60,6 +61,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:ServiceFamily+' => 'Service families',
 	'Menu:Procedure' => 'Procedures catalog',
 	'Menu:Procedure+' => 'All procedures catalog',
+
+	'Contract:baseinfo' => 'General information',
+	'Contract:moreinfo' => 'Contractual information',
+	'Contract:cost'     => 'Cost information',
 ));
 
 //
@@ -173,6 +178,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkContactToContract' => 'Link Contact / Contract',
 	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Contract',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Contract Name',
@@ -190,6 +196,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkContractToDocument' => 'Link Contract / Document',
 	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contract',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Contract Name',
@@ -222,6 +229,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Service' => 'Service',
 	'Class:Service+' => '',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Name',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Provider',
@@ -265,6 +273,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDocumentToService' => 'Link Document / Service',
 	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Service',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Service Name',
@@ -282,6 +291,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkContactToService' => 'Link Contact / Service',
 	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s',
 	'Class:lnkContactToService/Attribute:service_id' => 'Service',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
 	'Class:lnkContactToService/Attribute:service_name' => 'Service Name',
@@ -299,6 +309,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:ServiceSubcategory' => 'Service Subcategory',
 	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Name',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Description',
@@ -341,7 +352,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
 	'Class:SLA/Attribute:slts_list+' => 'All the service level targets for this SLA',
 	'Class:SLA/Attribute:customercontracts_list' => 'Customer contracts',
-	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA',
+	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracted services using this SLA',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists',
 ));
 
@@ -384,6 +395,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => 'hours',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minutes',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes',
+	'Class:SLT/Attribute:slas_list' => 'SLAs',
+	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT',
 ));
 
 //
@@ -393,6 +406,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT',
 	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA Name',
@@ -420,6 +434,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkCustomerContractToService' => 'Link Customer Contract / Service',
 	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Customer contract',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Customer contract Name',
@@ -441,6 +456,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkProviderContractToService' => 'Link Provider Contract / Service',
 	'Class:lnkProviderContractToService+' => '',
+	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Service',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:service_name' => 'Service Name',
@@ -479,6 +495,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDeliveryModelToContact' => 'Link Delivery Model / Contact',
 	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Delivery model',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Delivery model name',

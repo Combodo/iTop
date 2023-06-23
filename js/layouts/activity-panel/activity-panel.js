@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -132,6 +132,7 @@ $(function()
 					this._InitializeLockWatcher();
 				}
 
+				this._InitializeCurrentTab();
 				this._ApplyEntriesFilters();
 				this._UpdateMessagesCounters();
 				this._UpdateFiltersCheckboxesFromOptions();
@@ -233,16 +234,7 @@ $(function()
 					me._onLoadAllEntriesButtonClick(oEvent);
 				});
 
-				// Page exit
-				// - Show confirm dialog if draft entries
-				if (window.onbeforeunload === null) {
-					window.onbeforeunload = function (oEvent) {
-						if (true === me._HasDraftEntries()) {
-							return true;
-						}
-					};
-				}
-				// - Processing / cleanup when the leaving page
+				// Processing / cleanup when the leaving page
 				$(window).on('unload', function() {
 					if (true === me._HasDraftEntries()) {
 						return me._onUnload();
@@ -279,6 +271,8 @@ $(function()
 			_onTabTitleClick: function (oEvent, oTabTitleElem) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
+				let oState = {};
+				const sId = this.element.attr('id');
 
 				const oTabTogglerElem = oTabTitleElem.closest(this.js_selectors.tab_toggler);
 				const sTabType = oTabTogglerElem.attr('data-tab-type');
@@ -293,12 +287,17 @@ $(function()
 				{
 					const sCaselogAttCode = oTabTogglerElem.attr('data-caselog-attribute-code');
 					this._ShowCaseLogTab(sCaselogAttCode);
+					oState[sId] = "caselog-"+sCaselogAttCode;
 				}
 				else
 				{
 					this.element.find(this.js_selectors.tab_toolbar + '[data-tab-type="activity"]').addClass(this.css_classes.is_active);
 					this._ShowActivityTab();
+					oState[sId] = "activity";
 				}
+
+				// Add current activity tab to url hash
+				$.bbq.pushState(oState);
 			},
 			/**
 			 * @param oInputElem {Object} jQuery object representing the filter's input
@@ -355,13 +354,22 @@ $(function()
 				const oActiveTabData = this._GetActiveTabData();
 				// If on a caselog tab, open its form if it has one
 				if ((this.enums.tab_types.caselog === oActiveTabData.type) && this._HasCaseLogEntryFormForTab(oActiveTabData.att_code)) {
-					// Note: Stop propogation to avoid the menu to be opened automatically by the popover handler, we will decide when it can opens below
+					// Note: Stop propagation to avoid the menu to be opened automatically by the popover handler
 					oEvent.stopImmediatePropagation();
 
 					this._ShowCaseLogTab(oActiveTabData.att_code);
 					this._ShowCaseLogsEntryForms();
 					this._SetFocusInCaseLogEntryForm(oActiveTabData.att_code);
 				}
+				// Else (activity tab) if only 1 clog tab, open it directly
+				else if (this._GetCaseLogEntryFormCount() === 1) {
+					// Note: Stop propagation to avoid the menu to be opened automatically by the popover handler
+					oEvent.stopImmediatePropagation();
+
+					// Simulate click on the only menu item
+					this.element.find(this.js_selectors.compose_menu_item+':first').trigger('click');
+				}
+
 				// Else, the compose menu will open automatically
 			},
 			/**
@@ -411,6 +419,9 @@ $(function()
 				// Put draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').addClass(this.css_classes.is_draft);
 
+				// Register leave handler blockers
+				this._RegisterLeaveHandlerBlockers();
+
 				if (this.options.lock_enabled === true) {
 					// Request lock
 					this._RequestLock();
@@ -428,6 +439,11 @@ $(function()
 			_onEmptyEntryForm: function (sCaseLogAttCode) {
 				// Remove draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_draft);
+
+				// Unregister leave handler blockers (only in view mode, otherwise it would remove blocker on main form fields as well)
+				if (this._GetHostObjectMode() === 'view') {
+					this._UnregisterLeaveHandlerBlockers();
+				}
 
 				if (this.options.lock_enabled === true) {
 					// Cancel lock if all forms empty
@@ -530,7 +546,7 @@ $(function()
 				$.post(
 					this.options.save_state_endpoint,
 					{
-						'operation': 'activity_panel_save_state',
+						'operation': 'activity_panel.save_state',
 						'object_class': this._GetHostObjectClass(),
 						'object_mode': this._GetHostObjectMode(),
 						'is_expanded': this.element.hasClass(this.css_classes.is_expanded),
@@ -589,6 +605,22 @@ $(function()
 				}
 
 				return oTabData;
+			},
+			/**
+			 * Set a tab active if it's specified in the url
+			 * @returns {void}
+			 * @private
+			 */
+			_InitializeCurrentTab : function(){
+				const sTabId = $.bbq.getState(this.element.attr('id'), true);
+				if(sTabId !== undefined){
+					if(sTabId.startsWith("caselog-")){
+						this._GetTabTogglerFromCaseLogAttCode(sTabId.replace("caselog-", "")).find(this.js_selectors.tab_title).trigger('click')
+					}
+					else if(sTabId === "activity"){
+						this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="activity"]').find(this.js_selectors.tab_title).trigger('click')
+					}
+				}
 			},
 			/**
 			 * @returns {Object} Active tab toolbar jQuery element
@@ -713,6 +745,14 @@ $(function()
 			},
 
 			// - Helpers on case logs entry forms
+			/**
+			 * @returns {integer} The number of caselog entry forms
+			 * @private
+			 * @since 3.1.0
+			 */
+			_GetCaseLogEntryFormCount: function () {
+				return this.element.find(this.js_selectors.caselog_entry_form).length;
+			},
 			/**
 			 * @param sCaseLogAttCode {string}
 			 * @returns {boolean} Return true if there is a case log for entry for the sCaseLogAttCode tab
@@ -895,7 +935,7 @@ $(function()
 
 				// Prepare parameters
 				let oParams = $.extend(oExtraInputs, {
-					operation: 'activity_panel_add_caselog_entries',
+					operation: 'activity_panel.add_caselog_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					transaction_id: this.options.transaction_id,
@@ -912,21 +952,23 @@ $(function()
 					'json'
 					)
 					.fail(function (oXHR, sStatus, sErrorThrown) {
-						// TODO 3.0.0: Maybe we could have a centralized dialog to display error messages?
-						alert(sErrorThrown);
+						CombodoModal.OpenErrorModal(sErrorThrown);
 					})
 					.done(function (oData) {
 						if (false === oData.data.success) {
-							// TODO 3.0.0: Same comment as the fail() callback
-							alert(oData.data.error_message);
+							CombodoModal.OpenErrorModal(oData.data.error_message);
 							return false;
 						}
 
-						// Update the feed
+						// Update the feed and tab toggler message counter
 						for (let sCaseLogAttCode in oData.data.entries) {
 							me._AddEntry(oData.data.entries[sCaseLogAttCode], 'start');
+							me._IncreaseTabTogglerMessagesCounter(sCaseLogAttCode);
 						}
 						me._ApplyEntriesFilters();
+
+						// Try to fix inline images width
+						CombodoInlineImage.FixImagesWidth();
 
 						// For now, we don't hide the forms as the user may want to add something else
 						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
@@ -942,6 +984,76 @@ $(function()
 						// Always, unfreeze case logs
 						me._UnfreezeCaseLogsEntryForms();
 					});
+			},
+			/**
+			 * Increase a tab toggler number of messages indicator given a caselog attribute code
+			 *
+			 * @param sCaseLogAttCode {string} A caselog attribute code
+			 * @return {void}
+			 * @private
+			 */
+			_IncreaseTabTogglerMessagesCounter: function(sCaseLogAttCode){
+				let oTabTogglerCounter = this._GetTabTogglerFromCaseLogAttCode(sCaseLogAttCode).find('[data-role="ibo-activity-panel--tab-title-messages-count"]');
+				let iNewCounterValue = parseInt(oTabTogglerCounter.attr('data-messages-count')) + 1;
+				
+				oTabTogglerCounter.attr('data-messages-count', iNewCounterValue).text(iNewCounterValue);
+			},
+			/**
+			 * Return tab toggler given a caselog attribute code
+			 *
+			 * @param sCaseLogAttCode {string} A caselog attribute code
+			 * @return {Object}
+			 * @private
+			 */
+			_GetTabTogglerFromCaseLogAttCode: function(sCaseLogAttCode)
+			{
+				return this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]')
+			},
+
+			// - Helpers on leave handler
+			/**
+			 * Register leave handler blockers for the activity panel
+			 * @see js/leave_handler.js
+			 * @since 3.1.0
+			 */
+			_RegisterLeaveHandlerBlockers: function () {
+				const sBlockerId = this._GetLeaveHandlerBlockerID();
+
+				// On page leave
+				$('body').trigger('register_blocker.itop', {
+					'sBlockerId': sBlockerId,
+					'sTargetElemSelector': 'document',
+					'oTargetElemSelector': document,
+					'sEventName': 'beforeunload'
+				});
+
+				// On modal close if we are in one
+				const oModalElem = this.element.closest('[data-role="ibo-modal"]');
+				if (oModalElem.length !== 0) {
+					$('body').trigger('register_blocker.itop', {
+						'sBlockerId': sBlockerId,
+						'sTargetElemSelector': '#' + oModalElem.attr('id'),
+						'oTargetElemSelector': '#' + oModalElem.attr('id'),
+						'sEventName': 'dialogbeforeclose'
+					});
+				}
+			},
+			/**
+			 * Unregister leave handler blockers for the activity panel
+			 * @see js/leave_handler.js
+			 * @since 3.1.0
+			 */
+			_UnregisterLeaveHandlerBlockers: function () {
+				$('body').trigger('unregister_blocker.itop', {
+					'sBlockerId': this._GetLeaveHandlerBlockerID()
+				});
+			},
+			/**
+			 * @returns {String} The leave blocker identifier to use with {@see leave_handler.js} for the activity panel
+			 * @since 3.1.0
+			 */
+			_GetLeaveHandlerBlockerID: function () {
+				return this._GetHostObjectClass() + ':' + this._GetHostObjectID();
 			},
 
 			// - Helpers on object lock
@@ -1074,8 +1186,7 @@ $(function()
 									sNewLockStatus = me.enums.lock_status.locked_by_someone_else;
 								} else if ('expired' === oData.operation) {
 									sNewLockStatus = me.enums.lock_status.unknown;
-									// TODO 3.0.0: Maybe we could use a centralized dialog to display error message?
-									alert(oData.popup_message);
+									CombodoModal.OpenErrorModal(oData.popup_message);
 								}
 							} else {
 								sNewLockStatus = me.enums.lock_status.locked_by_myself;
@@ -1211,7 +1322,6 @@ $(function()
 				});
 
 				this._UpdateEntryGroupsVisibility();
-				this._UpdateLoadMoreEntriesButtonVisibility();
 				this._UpdateMessagesCounters();
 			},
 			_ShowAllEntries: function()
@@ -1287,30 +1397,6 @@ $(function()
 				});
 			},
 			/**
-			 * Update the "load more entries" button visibility regarding the current filters
-			 *
-			 * @private
-			 * @return {void}
-			 */
-			_UpdateLoadMoreEntriesButtonVisibility: function () {
-				const oMoreButtonElem = this.element.find(this.js_selectors.load_more_entries);
-				const oAllButtonElem = this.element.find(this.js_selectors.load_all_entries);
-
-				// Check if button exists (if all entries have been loaded, we might have remove it
-				if (oMoreButtonElem.length === 0) {
-					return;
-				}
-
-				// Show button only if the states / edits filters are selected as log entries are always fully loaded
-				if (this._GetActiveTabToolbarElement().find(this.js_selectors.activity_filter + '[data-target-entry-types!="'+this.enums.entry_types.caselog+'"]:checked').length > 0) {
-					oMoreButtonElem.removeClass(this.css_classes.is_hidden);
-					oAllButtonElem.removeClass(this.css_classes.is_hidden);
-				} else {
-					oMoreButtonElem.addClass(this.css_classes.is_hidden);
-					oAllButtonElem.addClass(this.css_classes.is_hidden);
-				}
-			},
-			/**
 			 * Load the next entries and append them to the current ones
 			 *
 			 * IMPORTANT: For now the logic is naive, the entries come from 3 different sources : case logs, CMDB change ops and notifications.
@@ -1337,7 +1423,7 @@ $(function()
 
 				// Send XHR request
 				let oParams = {
-					operation: 'activity_panel_load_more_entries',
+					operation: 'activity_panel.load_more_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					last_loaded_entries_ids: this.options.last_loaded_entries_ids,
@@ -1349,13 +1435,11 @@ $(function()
 					'json'
 					)
 					.fail(function (oXHR, sStatus, sErroThrown) {
-						// TODO 3.0.0: Maybe we could have a centralized dialog to display error messages?
-						alert(sErrorThrown);
+						CombodoModal.OpenErrorModal(sErrorThrown);
 					})
 					.done(function (oData) {
 						if (false === oData.data.success) {
-							// TODO 3.0.0: Same comment as the fail() callback
-							alert(oData.data.error_message);
+							CombodoModal.OpenErrorModal(oData.data.error_message);
 							return false;
 						}
 

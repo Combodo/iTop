@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -20,12 +20,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 //////////////////////////////////////////////////////////////////////
 // Relations
 //////////////////////////////////////////////////////////////////////
 //
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Relation:impacts/Description' => 'Elementy, na które ma wpływ',
 	'Relation:impacts/DownStream' => 'Wpływa na...',
@@ -36,6 +34,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Relation:depends on/Description' => 'Elementy wpływające',
 	'Relation:depends on/DownStream' => 'Zależy od...',
 	'Relation:depends on/UpStream' => 'Wpływa na...',
+	'Relation:impacts/LoadData' => 'Załaduj dane',
+	'Relation:impacts/NoFilteredData' => 'proszę wybrać obiekty w widoku graficznym',
 ));
 
 
@@ -83,6 +83,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkContactToFunctionalCI' => 'Połączenie Kontakt / Konfiguracja',
 	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Konfiguracja',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Nazwa konfiguracji',
@@ -129,6 +130,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:FunctionalCI/Attribute:finalclass' => 'Podklasa konfiguracji',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Nazwa ostatniej klasy',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Aktywne zgłoszenia',
+	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
 ));
 
 //
@@ -138,6 +140,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:PhysicalDevice' => 'Urządzenie fizyczne',
 	'Class:PhysicalDevice+' => '',
+	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Numer seryjny',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
 	'Class:PhysicalDevice/Attribute:location_id' => 'Lokalizacja',
@@ -177,6 +180,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Rack' => 'Szafa',
 	'Class:Rack+' => '',
+	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Rack/Attribute:nb_u' => 'Półki szafy',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Urządzenia',
@@ -243,6 +247,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ConnectableCI' => 'Konfiguracje podłączeń',
 	'Class:ConnectableCI+' => 'Konfiguracje fizyczne',
+	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Urządzenia sieciowe',
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Wszystkie urządzenia sieciowe podłączone do tego urządzenia',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interfejsy sieciowe',
@@ -256,6 +261,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:DatacenterDevice' => 'Urządzenie Datacenter',
 	'Class:DatacenterDevice+' => '',
+	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Szafa',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '',
 	'Class:DatacenterDevice/Attribute:rack_name' => 'Nazwa szafy',
@@ -294,6 +300,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:NetworkDevice' => 'Urządzenie sieciowe',
 	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Typ urządzenia sieciowego',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Nazwa typu urządzenia sieciowego',
@@ -315,6 +322,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Server' => 'Serwer',
 	'Class:Server+' => '',
+	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Server/Attribute:osfamily_id' => 'Rodzina OS',
 	'Class:Server/Attribute:osfamily_id+' => '',
 	'Class:Server/Attribute:osfamily_name' => 'Nazwa rodziny OS',
@@ -342,6 +350,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:StorageSystem' => 'System pamięci masowej',
 	'Class:StorageSystem+' => '',
+	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Woluminy logiczne',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Wszystkie woluminy logiczne w tym systemie pamięci masowej',
 ));
@@ -353,6 +362,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:SANSwitch' => 'Przełącznik SAN',
 	'Class:SANSwitch+' => '',
+	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Urządzenia Datacenter',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Wszystkie urządzenia Datacenter podłączone do tego przełącznika SAN',
 ));
@@ -364,6 +374,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TapeLibrary' => 'Biblioteka taśm',
 	'Class:TapeLibrary+' => '',
+	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Taśmy',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Wszystkie taśmy w bibliotece taśm',
 ));
@@ -375,6 +386,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
+	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Systemy plików',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Wszystkie systemy plików na tym serwerze NAS',
 ));
@@ -386,6 +398,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:PC' => 'Komputer PC',
 	'Class:PC+' => '',
+	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PC/Attribute:osfamily_id' => 'Rodzina OS',
 	'Class:PC/Attribute:osfamily_id+' => '',
 	'Class:PC/Attribute:osfamily_name' => 'Nazwa rodziny OS',
@@ -413,6 +426,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Printer' => 'Drukarka',
 	'Class:Printer+' => '',
+	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -422,6 +436,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:PowerConnection' => 'Podłączenie zasilania',
 	'Class:PowerConnection+' => '',
+	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -431,6 +446,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:PowerSource' => 'Źródło zasilania',
 	'Class:PowerSource+' => '',
+	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDU',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Wszystkie PDU korzystające z tego źródła zasilania',
 ));
@@ -442,6 +458,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '',
+	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
 	'Class:PDU/Attribute:rack_id' => 'Szafa',
 	'Class:PDU/Attribute:rack_id+' => '',
 	'Class:PDU/Attribute:rack_name' => 'Nazwa szafy',
@@ -459,6 +476,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Peripheral' => 'Peryferia',
 	'Class:Peripheral+' => '',
+	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -468,6 +486,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Enclosure' => 'Obudowa',
 	'Class:Enclosure+' => '',
+	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Enclosure/Attribute:rack_id' => 'Szafa',
 	'Class:Enclosure/Attribute:rack_id+' => '',
 	'Class:Enclosure/Attribute:rack_name' => 'Nazwa szafy',
@@ -605,6 +624,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:MiddlewareInstance' => 'Instancja oprogramowania pośredniczącego',
 	'Class:MiddlewareInstance+' => '',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Oprogramowanie pośredniczące',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nazwa oprogramowania pośredniczącego',
@@ -618,6 +638,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:DatabaseSchema' => 'Schemat bazy danych',
 	'Class:DatabaseSchema+' => '',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Serwer bazy danych',
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Nazwa serwera bazy danych',
@@ -631,6 +652,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:WebApplication' => 'Aplikacja WWW',
 	'Class:WebApplication+' => '',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:WebApplication/Attribute:webserver_id' => 'Serwer WWW',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Nazwa serwera WWW',
@@ -711,6 +733,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:VirtualMachine' => 'Maszyna wirtualna',
 	'Class:VirtualMachine+' => '',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Host wirtualny',
 	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
 	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Nazwa hosta wirtualnego',
@@ -771,6 +794,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkServerToVolume' => 'Połączenie serwer / wolumin',
 	'Class:lnkServerToVolume+' => '',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
 	'Class:lnkServerToVolume/Attribute:volume_id' => 'Wolumin',
 	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
 	'Class:lnkServerToVolume/Attribute:volume_name' => 'Nazwa woluminu',
@@ -790,6 +814,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkVirtualDeviceToVolume' => 'Połączenie urządzenie wirtualne / wolumin',
 	'Class:lnkVirtualDeviceToVolume+' => '',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Wolumin',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Nazwa woluminu',
@@ -809,6 +834,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkSanToDatacenterDevice' => 'Połączenie przełącznik SAN / Datacenter',
 	'Class:lnkSanToDatacenterDevice+' => '',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'Przełącznik SAN',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Nazwa przełącznika SAN',
@@ -870,6 +896,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Software' => 'Oprogramowanie',
 	'Class:Software+' => '',
+	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Software/Attribute:name' => 'Nazwa',
 	'Class:Software/Attribute:name+' => '',
 	'Class:Software/Attribute:vendor' => 'Wydawca',
@@ -987,6 +1014,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:OSLicence' => 'Licencja OS',
 	'Class:OSLicence+' => '',
+	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'Wersja OS',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'Nazwa wersji OS',
@@ -1004,6 +1032,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:SoftwareLicence' => 'Licencja oprogramowania',
 	'Class:SoftwareLicence+' => '',
+	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Oprogramowanie',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Nazwa oprogramowania',
@@ -1019,6 +1048,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkDocumentToLicence' => 'Połączenie dokument / licencjia',
 	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licencja',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
 	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Nazwa licencji',
@@ -1071,6 +1101,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Model' => 'Model',
 	'Class:Model+' => '',
+	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Model/Attribute:brand_id' => 'Marka',
 	'Class:Model/Attribute:brand_id+' => '',
 	'Class:Model/Attribute:brand_name' => 'Nazwa marki',
@@ -1150,6 +1181,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkDocumentToPatch' => 'Połączenie dokument / poprawka',
 	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Poprawka',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
 	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Nazwa poprawki',
@@ -1167,6 +1199,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Połączenie instancja oprogramowania / poprawkę oprogramowania',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Poprawka oprogramowania',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Nazwa poprawki oprogramowania',
@@ -1184,6 +1217,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkFunctionalCIToOSPatch' => 'Połączenie Konfiguracja / Poprawka OS',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Poprawka OS',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'Nazwa poprawki OS',
@@ -1201,6 +1235,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkDocumentToSoftware' => 'Połączenie dokument / oprogramowanie',
 	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Oprogramowanie',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Nazwa oprogramowania',
@@ -1218,6 +1253,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Subnet' => 'Podsieć',
 	'Class:Subnet+' => '',
+	'Class:Subnet/Name' => '%1$s/%2$s~~',
+	'Class:Subnet/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Subnet/Attribute:description' => 'Opis',
 	'Class:Subnet/Attribute:description+' => '',
 	'Class:Subnet/Attribute:subnet_name' => 'Nazwa podsieci',
@@ -1262,6 +1299,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkSubnetToVLAN' => 'Połączenie podsieć / sieć VLAN',
 	'Class:lnkSubnetToVLAN+' => '',
+	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Podsieć',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'IP podsieci',
@@ -1296,8 +1334,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'Adres IP',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
-
-
 	'Class:IPInterface/Attribute:macaddress' => 'Adres MAC',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Komentarz',
@@ -1317,6 +1353,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:PhysicalInterface' => 'Interfejs fizyczny',
 	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Urządzenie',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Nazwa urządzenia',
@@ -1332,6 +1369,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Połączenie interfejs fizyczny / sieć VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Interfejs fizyczny',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Nazwa interfejsu fizycznego',
@@ -1386,6 +1424,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkConnectableCIToNetworkDevice' => 'Połączenie Konfiguracja podłączeń / Urządzenie sieciowe',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Urządzenie sieciowe',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Nazwa urządzenia sieciowego',
@@ -1413,6 +1452,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Połączenie Zastosowane rozwiązanie / Konfiguracja',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Zastosowane rozwiązanie',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Nazwa zastosowanego rozwiązania',
@@ -1430,6 +1470,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Połączenie Zastosowane rozwiązanie / proces biznesowy',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Proces biznesowy',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Nazwa procesu biznesowego',
@@ -1447,6 +1488,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Group' => 'Grupa',
 	'Class:Group+' => '',
+	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Group/Attribute:name' => 'Nazwa',
 	'Class:Group/Attribute:name+' => '',
 	'Class:Group/Attribute:status' => 'Status',
@@ -1466,7 +1508,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Group/Attribute:type' => 'Typ',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Grupa nadrzędna',
-
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Nazwa',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1483,6 +1524,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkGroupToCI' => 'Połączenie Grupa / Konfiguracja',
 	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Grupa',
 	'Class:lnkGroupToCI/Attribute:group_id+' => '',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Nazwa',
@@ -1504,6 +1546,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Server:otherinfo' => 'Inne informacje',
 	'Server:power' => 'Zasilanie',
 	'Class:Subnet/Tab:IPUsage' => 'Wykorzystanie adresu IP',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet are used or not~~',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Interfejsy z adresem IP w zakresie: <em>%1$s</em> do <em>%2$s</em>',
 	'Class:Subnet/Tab:FreeIPs' => 'Wolne adresy IP',
 	'Class:Subnet/Tab:FreeIPs-count' => 'Wolne adresy IP: %1$s',
@@ -1519,6 +1562,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkDocumentToFunctionalCI' => 'Połączenie Dokument / Konfiguracja',
 	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Konfiguracja',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Nazwa konfiguracji',

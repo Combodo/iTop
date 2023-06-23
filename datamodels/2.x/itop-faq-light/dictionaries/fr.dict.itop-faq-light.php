@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //
@@ -52,7 +52,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQCategory/Attribute:name' => 'Nom',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Toutes les questions fréquemment posées liées à cette catégorie',
 ));
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ProblemManagement' => 'Gestion des problèmes',
@@ -65,4 +65,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Foire Aux Questions',
 	'Brick:Portal:FAQ:Title+' => '<p>Vous êtes pressé&nbsp;?</p><p>Consultez la liste des questions les plus fréquentes et vous trouverez (peut-être) immédiatement la réponse à votre besoin.</p>',
+));
+// 1:n relations custom labels for tooltip and pop-up title
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
 ));

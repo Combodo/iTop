@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-service-mgmt-provider/3.0.0',
+	'itop-service-mgmt-provider/3.1.0',
 	array(
 		// Identification
 		//
@@ -22,7 +22,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-service-mgmt-provider.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-service-mgmt.xml',

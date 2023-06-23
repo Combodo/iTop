@@ -1,9 +1,10 @@
-{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {# Content Block #}
 {% apply spaceless %}
 
-    {% set bHasDiv = (oUIBlock.GetAdditionalCSSClassesAsString() or oUIBlock.GetDataAttributes() or oUIBlock.IsHidden()) %}
+    {# Important: We don't want the UIContentBlock have a div node based on the inherited CSS classes, otherwise the node would always be present, which is not what we want #}
+    {% set bHasDiv = (oUIBlock.GetAdditionalCSSClassesAsString() or  oUIBlock.GetDataAttributes() or oUIBlock.IsHidden() or oUIBlock.HasForcedDiv()) %}
 
     {% block iboContentBlockContainer %}
         {% if bHasDiv %}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -485,7 +485,11 @@ class ManageBrick extends PortalBrick
 		if (!$this->IsGroupingByDistinctValues($sName))
 		{
 			usort($this->aGrouping[$sName]['groups'], function ($a, $b) {
-				return $a['rank'] > $b['rank'];
+				if ($a['rank'] === $b['rank']) {
+					return 0;
+				}
+
+				return $a['rank'] > $b['rank'] ? 1 : -1;
 			});
 		}
 

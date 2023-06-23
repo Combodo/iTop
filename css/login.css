@@ -59,8 +59,8 @@ a:hover {
 	padding-right: 20px;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	height: 54px;
-	margin-top: 150px;
+	height: 94px;
+	margin-top: 110px;
 }
 
 #login-content {
@@ -75,9 +75,10 @@ a:hover {
 {
 	#login-logo {
 		margin-top: 0;
+		padding-top: 0;
 	}
 	#login-content {
-		margin-top: 74px;
+		margin-top: 94px;
 	}
 	h1 {
 		margin-top: 0;
@@ -86,7 +87,7 @@ a:hover {
 
 #login-logo img {
 	border: 0;
-	max-height: 54px;
+	max-height: 94px;
 }
 
 #login-form {

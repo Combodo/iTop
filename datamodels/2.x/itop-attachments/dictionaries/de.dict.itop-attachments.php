@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2021 Combodo SARL
+* @copyright     Copyright (C) 2023 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
@@ -74,6 +74,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Attachments:File:Uploader' => 'hochgeladen von',
 	'Attachments:File:Size' => 'Größe',
 	'Attachments:File:MimeType' => 'Typ',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
 ));
 //
 // Class: Attachment
@@ -86,4 +87,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Kontakt ID',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 ));

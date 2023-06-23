@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,60 +20,47 @@
  *
  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:DeletedObjectLabel' => '%1s (odstraněn)',
 	'Core:DeletedObjectTip' => 'Objekt byl odstraněn %1$s (%2$s)',
-
 	'Core:UnknownObjectLabel' => 'Objekt nenalezen (třída: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'Objekt nemohl být nalezen. Je možné, že byl odstraněn před nějakou dobou a protokol byl mezitím vyčištěn.',
-
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
-
+	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 	'Core:AttributeLinkedSet' => 'Pole objektů',
 	'Core:AttributeLinkedSet+' => 'Jakékoli objekty stejné třídy, nebo podtřídy',
-
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
-
 	'Core:AttributeDashboard' => 'Dashboard~~',
-	'Core:AttributeDashboard+' => '~~',
-
+	'Core:AttributeDashboard+' => '',
 	'Core:AttributePhoneNumber' => 'Phone number~~',
-	'Core:AttributePhoneNumber+' => '~~',
-
+	'Core:AttributePhoneNumber+' => '',
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate+' => '~~',
-
+	'Core:AttributeObsolescenceDate+' => '',
 	'Core:AttributeTagSet' => 'List of tags~~',
-	'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
-
 	'Core:AttributeCaseLog' => 'Log~~',
-	'Core:AttributeCaseLog+' => '~~',
-
+	'Core:AttributeCaseLog+' => '',
 	'Core:AttributeMetaEnum' => 'Computed enum~~',
-	'Core:AttributeMetaEnum+' => '~~',
-
+	'Core:AttributeMetaEnum+' => '',
 	'Core:AttributeLinkedSetIndirect' => 'Pole objektů (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Jakékoli objekty stejné třídy, nebo podtřídy',
-
 	'Core:AttributeInteger' => 'Celé číslo (integer)',
 	'Core:AttributeInteger+' => 'Celé číslo (může být záporné)',
-
 	'Core:AttributeDecimal' => 'Desetinné číslo (decimal)',
 	'Core:AttributeDecimal+' => 'Desetinné číslo (může být záporné)',
-
 	'Core:AttributeBoolean' => 'Boolean',
-	'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
 	'Core:AttributeBoolean/Value:no' => 'No~~',
-
 	'Core:AttributeArchiveFlag' => 'Archive flag~~',
 	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
 	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
@@ -82,7 +69,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:AttributeArchiveFlag/Label+' => '',
 	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
 	'Core:AttributeArchiveDate/Label+' => '',
-
 	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
@@ -91,54 +77,38 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
 	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
-
 	'Core:AttributeString' => 'Řetězec (string)',
 	'Core:AttributeString+' => 'Alfanumerický řetězec',
-
 	'Core:AttributeClass' => 'Třída (class)',
-	'Core:AttributeClass+' => 'Třída (class)',
-
+	'Core:AttributeClass+' => '',
 	'Core:AttributeApplicationLanguage' => 'Jazyk',
 	'Core:AttributeApplicationLanguage+' => 'Jazyk a země (CS CZ)',
-
 	'Core:AttributeFinalClass' => 'Třída (auto)',
 	'Core:AttributeFinalClass+' => 'Skutečná třída objektu (automaticky vytvořeno jádrem)',
-
 	'Core:AttributePassword' => 'Heslo',
 	'Core:AttributePassword+' => 'Heslo k externímu zařízení',
-
 	'Core:AttributeEncryptedString' => 'Šifrovaný řetězec',
 	'Core:AttributeEncryptedString+' => 'Řetězec šifrovaný lokálním klíčem',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
-
 	'Core:AttributeText' => 'Text',
 	'Core:AttributeText+' => 'Víceřádkový řetězec znaků',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'HTML řetězec',
-
 	'Core:AttributeEmailAddress' => 'Emailová addresa',
 	'Core:AttributeEmailAddress+' => 'Emailová addresa',
-
 	'Core:AttributeIPAddress' => 'IP adresa',
-	'Core:AttributeIPAddress+' => 'IP adresa',
-
+	'Core:AttributeIPAddress+' => '',
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Výraz v jazyce OQL',
-
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => 'Seznam předdefinovaných alfanumerických řetězců',
-
 	'Core:AttributeTemplateString' => 'Šablona - řetězec',
 	'Core:AttributeTemplateString+' => 'Řetězec obsahující zástupné symboly',
-
 	'Core:AttributeTemplateText' => 'Šablona - text',
 	'Core:AttributeTemplateText+' => 'Text obsahující zástupné symboly',
-
 	'Core:AttributeTemplateHTML' => 'Šablona - HTML',
 	'Core:AttributeTemplateHTML+' => 'HTML obsahující zástupné symboly',
-
 	'Core:AttributeDateTime' => 'Datum a čas',
 	'Core:AttributeDateTime+' => 'Datum a čas (rok-měsíc-den hh:mm:ss)',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -156,7 +126,6 @@ Operátory:<br/>
 <p>
 Je-li čas vynechán, bude nastaveno 00:00:00
 </p>',
-
 	'Core:AttributeDate' => 'Datum',
 	'Core:AttributeDate+' => 'Datum (rok-měsíc-den)',
 	'Core:AttributeDate?SmartSearch' => '
@@ -171,43 +140,30 @@ Operátory:<br/>
     <b>&lt;</b><em>datum</em><br/>
     <b>[</b><em>datum</em>,<em>datum</em><b>]</b>
 </p>',
-
 	'Core:AttributeDeadline' => 'Uzávěrka',
 	'Core:AttributeDeadline+' => 'Datum, zobrazeno relativně k aktuálnímu času',
-
 	'Core:AttributeExternalKey' => 'Externí klíč',
 	'Core:AttributeExternalKey+' => 'Externí (cizí) klíč',
-
 	'Core:AttributeHierarchicalKey' => 'Hierarchický klíč',
 	'Core:AttributeHierarchicalKey+' => 'Externí (cizí) klíč nadřízené položky',
-
 	'Core:AttributeExternalField' => 'Externí pole',
 	'Core:AttributeExternalField+' => 'Pole mapované na externí klíč',
-
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => 'Absolutní nebo relativní URL jako textový řetězec',
-
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => 'Jakýkoli binární obsah (dokument)',
-
 	'Core:AttributeOneWayPassword' => 'Jednosměrně šifrované heslo',
 	'Core:AttributeOneWayPassword+' => '',
-
 	'Core:AttributeTable' => 'Tabulka',
 	'Core:AttributeTable+' => 'Dvourozměrné indexované pole',
-
 	'Core:AttributePropertySet' => 'Vlastnosti',
 	'Core:AttributePropertySet+' => 'Seznam vlastností bez typu (název a hodnota)',
-
 	'Core:AttributeFriendlyName' => 'Popisný název',
 	'Core:AttributeFriendlyName+' => 'Atribut vyplněný automaticky; popisný název je složen z několika dalších atributů',
-
 	'Core:FriendlyName-Label' => 'Popisný název',
 	'Core:FriendlyName-Description' => 'Popisný název',
-
 	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => 'Tags~~',
-	
+	'Core:AttributeTag+' => '',
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',
@@ -251,7 +207,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:CMDBChangeOp' => 'Change Operation',
 	'Class:CMDBChangeOp+' => 'Tracking provozu změn',
 	'Class:CMDBChangeOp/Attribute:change' => 'změna',
-	'Class:CMDBChangeOp/Attribute:change+' => 'změna',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'datum',
 	'Class:CMDBChangeOp/Attribute:date+' => 'datum a čas změny',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'uživatel',
@@ -259,7 +215,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:CMDBChangeOp/Attribute:objclass' => 'třída objektů',
 	'Class:CMDBChangeOp/Attribute:objclass+' => 'třída objektů',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'ID objektu',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'ID objektu',
+	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'typ',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
@@ -485,6 +441,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Action' => 'Vlastní akce',
 	'Class:Action+' => '',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Název',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => 'Popis',
@@ -527,11 +484,11 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ActionEmail/Attribute:test_recipient' => 'Adresát pro test',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Cílová adresa pro případ, kdy je stav nastaven na "Testování"',
 	'Class:ActionEmail/Attribute:from' => 'Odesílatel~~',
-	'Class:ActionEmail/Attribute:from+' => '~~',
+	'Class:ActionEmail/Attribute:from+' => '',
 	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
 	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:reply_to' => 'Odpověď na~~',
-	'Class:ActionEmail/Attribute:reply_to+' => '~~',
+	'Class:ActionEmail/Attribute:reply_to+' => '',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
 	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'To',
@@ -552,6 +509,22 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'high',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:language' => 'Language~~',
+	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
+	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
+	'ActionEmail:main' => 'Message~~',
+	'ActionEmail:trigger' => 'Triggers~~',
+	'ActionEmail:recipients' => 'Contacts~~',
+	'ActionEmail:preview_tab' => 'Preview~~',
+	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
+	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
+	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
+	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
 ));
 
 //
@@ -561,6 +534,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => '',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Popis',
 	'Class:Trigger/Attribute:description+' => 'Krátký popis',
 	'Class:Trigger/Attribute:action_list' => 'Spouštěné akce',
@@ -569,6 +543,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Context~~',
 	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:complement' => 'Additional information~~',
+	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
 ));
 
 //
@@ -650,7 +626,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //
@@ -662,6 +638,17 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
+));
+
+//
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
 ));
 
 //
@@ -700,11 +687,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 // Synchro Data Source
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:SynchroDataSource' => 'Zdroje dat pro synchronizaci',
 	'Class:SynchroDataSource/Attribute:name' => 'Název',
 	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Popis',
 	'Class:SynchroDataSource/Attribute:status' => 'Stav',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Cílová třída',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class~~',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Uživatel',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Kontakt k upozornění',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => '',
@@ -713,6 +702,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'Aplikace',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hypertextový odkaz na '.ITOP_APPLICATION_SHORT.' objekt v externí aplikaci, se kterou je '.ITOP_APPLICATION_SHORT.' synchronizován (pokud je to relevantní). Možné zástupné symboly: $this->attribute$ a $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Způsob párování',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
+"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Interval mezi dvěma kompletními načteními',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Kompletní načtení všech dat musí proběhnout nejméně tak často, jak je uvedeno zde',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Akce pro nula výsledků',
@@ -732,6 +723,33 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'V případě, že je nastaveno pravidlo "Aktualizovat a odstranit", zastaralé objekty budou před smazáním zachovány po tuto dobu',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Tabulka dat',
 	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Název tabulky pro ukládání dat z tohoto zdroje. Bude vytvořen automaticky, pokud necháte pole prázdné.',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementace',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Zastaralý',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'V produkci',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Omezení rozsahu',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Použít atributy',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Použít pole primary_key',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Vytvořit nový',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Chyba',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Chyba',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Aktualizovat',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Vytvořit nový',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Chyba',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Vzít první (náhodný?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Pravidla odstraňování',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'What to do when a replica becomes obsolete:
+"Ignore": do nothing, the associated object remains as is in iTop.
+"Delete": Delete the associated object in iTop (and the replica in the data table).
+"Update": Update the associated object as specified by the Update rules (see below).
+"Update then Delete": apply the "Update rules". When Retention Duration expires, execute a "Delete" ~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Odstranit',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorovat',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Aktualizovat',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Aktualizovat a odstranit',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Seznam atributů',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Administrátoři',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Kdokoli',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Nikdo',
 	'SynchroDataSource:Description' => 'Popis',
 	'SynchroDataSource:Reconciliation' => 'Hledání a párování',
 	'SynchroDataSource:Deletion' => 'Pravidla odstraňování',
@@ -756,8 +774,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:Synchro:NeverRun' => 'Tato synchronizace ještě nebyla spuštěna. Žádné záznamy.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Poslední synchronizace skončila %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Synchronizace která byla spuštěna %1$s stále běží',
-	'Menu:DataSources' => 'Zdroje dat pro synchronizaci', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'Všechny zdroje dat pro synchronizaci', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources' => 'Zdroje dat pro synchronizaci',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'Všechny zdroje dat pro synchronizaci',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignorovaný (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Chybí (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Existující (%1$s)',
@@ -821,29 +841,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Předchozí hodnota',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Protokol událostí',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Poslední záznam',
-	'Class:SynchroDataSource' => 'Zdroje dat pro synchronizaci',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementace',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Zastaralý',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => 'V produkci',
-	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Omezení rozsahu',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Použít atributy',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Použít pole primary_key',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Vytvořit nový',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Chyba',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Chyba',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Aktualizovat',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Vytvořit nový',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Chyba',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Vzít první (náhodný?)',
-	'Class:SynchroDataSource/Attribute:delete_policy' => 'Pravidla odstraňování',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Odstranit',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorovat',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Aktualizovat',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Aktualizovat a odstranit',
-	'Class:SynchroDataSource/Attribute:attribute_list' => 'Seznam atributů',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Administrátoři',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Kdokoli',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Nikdo',
 	'Class:SynchroAttribute' => 'Atribut pro synchronizaci',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Zdroj dat pro synchronizaci',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Kód atributu',
@@ -904,19 +901,16 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Předvolby',
 	'Core:ExecProcess:Code1' => 'Chybní příkaz, nebo příkaz skončil s chybou (např chybný název skriptu)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing/runtime)',
-
-	// Attribute Duration
+    // Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
-
-	// Explain working time computing
+    // Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Uplynulý čas ("%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Čas strávený na "%1$s"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Uzávěrka pro "%1$s" v %2$d%%',
-
-	// Bulk export
+    // Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Chybějící parametr "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Chybná hodnota parametru "query". Neznám žádný záznam odpovídající následujícímu id: "%1$s".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Formát exportu:',
@@ -968,20 +962,34 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
 	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
-	'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D~~', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM~~', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M~~', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY~~', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY~~', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh~~', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h~~', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh~~', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h~~', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm~~', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM~~', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm~~', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss~~', // seconds, 2 digits 00..59
+	'Core:DateTime:Placeholder_d' => 'DD~~',
+    // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D~~',
+    // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM~~',
+    // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M~~',
+    // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY~~',
+    // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY~~',
+    // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh~~',
+    // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h~~',
+    // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh~~',
+    // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h~~',
+    // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm~~',
+    // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM~~',
+    // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm~~',
+    // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss~~',
+    // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Nesprávný formát',
 	'Core:Validator:Mandatory' => 'Vyplňte prosím toto pole',
 	'Core:Validator:MustBeInteger' => 'Musí být celé číslo',
@@ -993,18 +1001,16 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
-	'Class:TagSetFieldData+' => '~~',
-
+	'Class:TagSetFieldData+' => '',
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
 	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
 	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
@@ -1022,17 +1028,17 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:DBProperty' => 'DB property~~',
-	'Class:DBProperty+' => '~~',
+	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Name~~',
-	'Class:DBProperty/Attribute:name+' => '~~',
+	'Class:DBProperty/Attribute:name+' => '',
 	'Class:DBProperty/Attribute:description' => 'Description~~',
-	'Class:DBProperty/Attribute:description+' => '~~',
+	'Class:DBProperty/Attribute:description+' => '',
 	'Class:DBProperty/Attribute:value' => 'Value~~',
-	'Class:DBProperty/Attribute:value+' => '~~',
+	'Class:DBProperty/Attribute:value+' => '',
 	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
-	'Class:DBProperty/Attribute:change_date+' => '~~',
+	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
-	'Class:DBProperty/Attribute:change_comment+' => '~~',
+	'Class:DBProperty/Attribute:change_comment+' => '',
 ));
 
 //
@@ -1040,29 +1046,29 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:BackgroundTask' => 'Background task~~',
-	'Class:BackgroundTask+' => '~~',
+	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
-	'Class:BackgroundTask/Attribute:class_name+' => '~~',
+	'Class:BackgroundTask/Attribute:class_name+' => '',
 	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '',
 	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
 	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '',
 	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:running' => 'Running~~',
-	'Class:BackgroundTask/Attribute:running+' => '~~',
+	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'Status~~',
-	'Class:BackgroundTask/Attribute:status+' => '~~',
+	'Class:BackgroundTask/Attribute:status+' => '',
 ));
 
 //
@@ -1070,27 +1076,29 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AsyncTask' => 'Async. task~~',
-	'Class:AsyncTask+' => '~~',
+	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Created~~',
-	'Class:AsyncTask/Attribute:created+' => '~~',
+	'Class:AsyncTask/Attribute:created+' => '',
 	'Class:AsyncTask/Attribute:started' => 'Started~~',
-	'Class:AsyncTask/Attribute:started+' => '~~',
+	'Class:AsyncTask/Attribute:started+' => '',
 	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
-	'Class:AsyncTask/Attribute:planned+' => '~~',
+	'Class:AsyncTask/Attribute:planned+' => '',
 	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
-	'Class:AsyncTask/Attribute:event_id+' => '~~',
+	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
-	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:finalclass+' => '',
 	'Class:AsyncTask/Attribute:status' => 'Status~~',
-	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:status+' => '',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
-	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
 	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
-	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
-	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //
@@ -1099,7 +1107,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '~~',
+	'Class:AbstractResource+' => '',
 ));
 
 //
@@ -1108,7 +1116,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '~~',
+	'Class:ResourceAdminMenu+' => '',
 ));
 
 //
@@ -1117,7 +1125,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
-	'Class:ResourceRunQueriesMenu+' => '~~',
+	'Class:ResourceRunQueriesMenu+' => '',
 ));
 
 //
@@ -1126,7 +1134,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
-	'Class:ResourceSystemMenu+' => '~~',
+	'Class:ResourceSystemMenu+' => '',
 ));
 
 

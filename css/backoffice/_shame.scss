@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -42,4 +42,10 @@
 // N°2847 - Recolor svg illustrations with iTop's primary color
 .ibo-svg-illustration--container > svg *[fill="#6c63ff"]{
 	fill: $ibo-svg-illustration--fill;
+}
+
+// Workaround for a Safari (unsupported browser) issue: https://sourceforge.net/p/itop/discussion/itop-hub/thread/fc97ec4a10/?limit=25#1cc0/9930
+// Fix found here: https://stackoverflow.com/questions/40895387/z-index-not-working-on-safari-fine-on-firefox-and-chrome
+.ibo-navigation-menu.ibo-is-active .ibo-navigation-menu--drawer{
+    transform: translate3d(0,0,0);
 }

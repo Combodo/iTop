@@ -15,7 +15,7 @@
      data-attribute-flag-must-change="{{ oUIBlock.IsMustChange()|var_export }}"
      data-attribute-flag-must-prompt="{{ oUIBlock.IsMustPrompt()|var_export }}"
      data-attribute-flag-slave="{{ oUIBlock.IsSlave()|var_export }}"
-     data-value-raw="{{ aParams.value_raw }}"
+     data-value-raw="{{ oUIBlock.GetValueRaw() }}"
         {% if oUIBlock.GetDataAttributes() %}
             {% for sName, sValue in oUIBlock.GetDataAttributes() %}
                 data-{{ sName }}="{{ sValue }}"
@@ -23,6 +23,9 @@
         {% endif %}
 >
     <div class="ibo-field--label">{{ oUIBlock.GetLabel()|raw }}
+        {% if oUIBlock.HasDescription() %}
+            <span class="ibo-has-description" data-tooltip-content="{{ oUIBlock.GetDescription() }}" data-tooltip-max-width="600px" ></span>
+        {% endif %}
         {% if oUIBlock.GetLayout() == constant("Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\Field::ENUM_FIELD_LAYOUT_LARGE") %}
             {% if oUIBlock.GetComments() %}
                 <div class="ibo-field--comments">{{ oUIBlock.GetComments()|raw }}</div>

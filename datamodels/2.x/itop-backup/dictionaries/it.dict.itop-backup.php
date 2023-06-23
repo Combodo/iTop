@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -21,11 +21,9 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-
 	'bkp-backup-running' => 'A backup is running. Please wait...~~',
 	'bkp-restore-running' => 'A restore is running. Please wait...~~',
-
-	'Menu:BackupStatus' => 'Scheduled Backups~~',
+	'Menu:BackupStatus' => 'Scheduled backups~~',
 	'bkp-status-title' => 'Scheduled Backups~~',
 	'bkp-status-checks' => 'Settings and checks~~',
 	'bkp-mysqldump-ok' => 'mysqldump is present: %1$s~~',
@@ -49,6 +47,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'bkp-status-backups-manual' => 'Manual backups~~',
 	'bkp-status-backups-none' => 'No backup yet~~',
 	'bkp-next-backup' => 'The next backup will occur on <b>%1$s</b> (%2$s) at %3$s~~',
+	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Backup now!~~',
 	'bkp-button-restore-now' => 'Restore!~~',
 	'bkp-confirm-backup' => 'Please confirm that you do request the backup to occur right now.~~',

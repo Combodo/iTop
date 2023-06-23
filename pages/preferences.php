@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -24,6 +24,7 @@ use Combodo\iTop\Application\UI\Preferences\BlockShortcuts\BlockShortcuts;
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 /**
  * Displays the user's changeable preferences
@@ -110,6 +111,7 @@ function DisplayPreferences($oP)
 	$oMiscOptionsFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:FavoriteOtherSettings'), 'ibo-fieldset-for-misc-options');
 	$oSecondColumn->AddSubBlock($oMiscOptionsFieldset);
 	$oMiscOptionsFieldset->AddSubBlock(GetObsoleteDataFieldBlock());
+	$oMiscOptionsFieldset->AddSubBlock(GetSummaryCardsFieldBlock());
 
 	$oP->add_script(
 		<<<JS
@@ -140,7 +142,8 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 
 	$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), array(), 'grey', 'ibo-favorite-organizations');
-	$oFavoriteOrganizationsBlock->AddHtml(Dict::S('UI:FavoriteOrganizations+'));
+	$oFavoriteOrganizationsBlock->SetSubTitle(Dict::S('UI:FavoriteOrganizations+'));
+	$oFavoriteOrganizationsBlock->AddCSSClass('ibo-datatable-panel');
 	$oFavoriteOrganizationsForm = new Form();
 	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsForm);
 	// Favorite organizations: the organizations listed in the drop-down menu
@@ -194,6 +197,8 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 
 	$oShortcutsBlock = new BlockShortcuts(Dict::S('Menu:MyShortcuts'), array(), 'grey', 'ibo-shortcuts');
+	$oShortcutsBlock->AddCSSClass('ibo-datatable-panel');
+
 	$oShortcutsBlock->sIdShortcuts = 'shortcut_list';
 	$oShortcutsFilter = new DBObjectSearch('Shortcut');
 	$oShortcutsFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
@@ -419,7 +424,7 @@ $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]')
 	$.post(
 		GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 		{
-			'operation': 'preferences_set_user_picture',
+			'operation': 'preferences.set_user_picture',
 			'image_filename': $(this).attr('data-image-name')
 		}
 	)
@@ -671,6 +676,33 @@ HTML;
 	return new Html($sHtml);
 }
 
+
+/**
+ * @return \Combodo\iTop\Application\UI\Base\iUIBlock
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \MySQLException
+ * @since 3.1.0
+ */
+function GetSummaryCardsFieldBlock(): iUIBlock
+{
+	$bShow = appUserPreferences::GetPref('show_summary_cards', true);
+	$sSelectedForHtmlAttribute = $bShow ? 'checked="checked"' : '';
+
+	$sLabel = Dict::S('UI:Favorites:General:ShowSummaryCards');
+	$sLabelDescription = Dict::S('UI:Favorites:General:ShowSummaryCards+');
+	$sHtml = <<<HTML
+<p>
+	<label data-tooltip-content="{$sLabelDescription}">
+		<span>{$sLabel}</span>
+		<input type="checkbox" name="show_summary_cards" value="1" {$sSelectedForHtmlAttribute}>
+	</label>
+</p>
+HTML;
+
+	return new Html($sHtml);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Main program
@@ -763,6 +795,10 @@ try {
 				// - Obsolete data
 				$bShowObsoleteData = (bool)utils::ReadParam('show_obsolete_data', 0);
 				appUserPreferences::SetPref('show_obsolete_data', $bShowObsoleteData);
+				
+				// - Summary cards
+				$bShowSummaryCards = (bool)utils::ReadParam('show_summary_cards', 0);
+				appUserPreferences::SetPref('show_summary_cards', $bShowSummaryCards);
 
 				// Redirect to force a reload/display of the page in case language has been changed
 				$oAppContext = new ApplicationContext();
@@ -771,12 +807,12 @@ try {
 				break;
 			case 'apply_keyboard_shortcuts':
 				// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
-				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
+				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]'));
 				$aShortcutPrefs = [];
 				foreach ($aShortcutClasses as $cShortcutPlugin) {
 					foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
 						$sKey = utils::ReadParam($aShortcutKey['id'], $aShortcutKey['key'], true, 'raw_data');
-						$aShortcutPrefs[$aShortcutKey['id']] = strtolower($sKey);
+						$aShortcutPrefs[$aShortcutKey['id']] = strtolower(utils::HtmlEntities($sKey));
 					}
 				}
 				appUserPreferences::SetPref('keyboard_shortcuts', $aShortcutPrefs);

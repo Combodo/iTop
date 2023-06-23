@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:IncidentManagement' => 'Zarządzanie incydentami',
 	'Menu:IncidentManagement+' => 'Zarządzanie incydentami',
@@ -81,7 +80,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Incident/Attribute:status/Value:resolved+' => '',
 	'Class:Incident/Attribute:status/Value:closed' => 'Zamknięty',
 	'Class:Incident/Attribute:status/Value:closed+' => '',
-	'Class:Incident/Attribute:impact' => 'Wpływ',
+	'Class:Incident/Attribute:impact' => 'Dotyczy',
 	'Class:Incident/Attribute:impact+' => '',
 	'Class:Incident/Attribute:impact/Value:1' => 'Wydział',
 	'Class:Incident/Attribute:impact/Value:1+' => '',
@@ -111,6 +110,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => 'niska',
 	'Class:Incident/Attribute:origin' => 'Pochodzenie',
 	'Class:Incident/Attribute:origin+' => '',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
 	'Class:Incident/Attribute:origin/Value:mail' => 'e-mail',
 	'Class:Incident/Attribute:origin/Value:mail+' => 'e-mail',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'monitoring',
@@ -232,7 +235,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Otwórz ponownie',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Nie można przypisać zdarzenia nadrzędnego do samego zdarzenia',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'Rozpatrz zgłoszenia podrzędne',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Połącz rozwiązanie kaskadowo ze zgłoszeniem podrzędnym (ev_autoresolve) i dopasuj następujące cechy: usługa, zespół, agent, informacje o rozwiązaniu',
 	'Tickets:Related:OpenIncidents' => 'Otwarte incydenty',

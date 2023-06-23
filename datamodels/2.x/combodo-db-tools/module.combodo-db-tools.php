@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -24,7 +24,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'combodo-db-tools/3.0.0',
+	'combodo-db-tools/3.1.0',
 	array(
 		// Identification
 		//
@@ -42,7 +42,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.combodo-db-tools.php',
 			'src/Service/DBToolsUtils.php',
             'src/Service/DBAnalyzerUtils.php',
 		),

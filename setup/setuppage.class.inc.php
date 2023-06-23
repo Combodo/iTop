@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -75,28 +75,28 @@ class SetupPage extends NiceWebPage
 		return '';
 	}
 
-	public function info($sText)
+	public function info($sText, $sTextForLog = null)
 	{
-		$this->add("<p class=\"info\">$sText</p>\n");
-		SetupLog::Info($sText);
+		$this->add("<p class=\"info ibo-is-html-content\">$sText</p>\n");
+		SetupLog::Info($sTextForLog ?? $sText);
 	}
 
-	public function ok($sText)
+	public function ok($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-valid\"><span class=\"message-title\">Success:</span>$sText</div>");
-		SetupLog::Ok($sText);
+		$this->add("<div class=\"message message-valid ibo-is-html-content\"><span class=\"message-title\">Success:</span>$sText</div>");
+		SetupLog::Ok($sTextForLog ?? $sText);
 	}
 
-	public function warning($sText)
+	public function warning($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-warning\"><span class=\"message-title\">Warning:</span>$sText</div>");
-		SetupLog::Warning($sText);
+		$this->add("<div class=\"message message-warning ibo-is-html-content\"><span class=\"message-title\">Warning:</span>$sText</div>");
+		SetupLog::Warning($sTextForLog ?? $sText);
 	}
 
-	public function error($sText)
+	public function error($sText, $sTextForLog = null)
 	{
-		$this->add("<div class=\"message message-error\">$sText</div>");
-		SetupLog::Error($sText);
+		$this->add("<div class=\"message message-error ibo-is-html-content\">$sText</div>");
+		SetupLog::Error($sTextForLog ?? $sText);
 	}
 
 	public function form($aData)
@@ -157,7 +157,7 @@ class SetupPage extends NiceWebPage
 
 	public function output()
 	{
-		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
+		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/logos/logo-itop-simple-dark.svg?t='.utils::GetCacheBusterTimestamp();
 		$oSetupPage = UIContentBlockUIBlockFactory::MakeStandard();
 		$oHeader = UIContentBlockUIBlockFactory::MakeStandard('header', ['ibo-setup--header']);
 		$oSetupPage->AddSubBlock($oHeader);
@@ -170,51 +170,6 @@ class SetupPage extends NiceWebPage
 		$this->oContentLayout = $oSetupPage;
 
 		return parent::output();
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Error
-	 */
-	public static function log_error($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Error');
-		SetupLog::Error($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Warning
-	 */
-	public static function log_warning($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Warning');
-		SetupLog::Warning($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Info
-	 */
-	public static function log_info($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Info');
-		SetupLog::Info($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Ok
-	 */
-	public static function log_ok($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
-		SetupLog::Ok($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Ok
-	 */
-	public static function log($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
-		SetupLog::Ok($sText);
 	}
 
 	/**

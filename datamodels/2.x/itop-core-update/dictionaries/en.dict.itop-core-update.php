@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -54,6 +54,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
     'iTopUpdate:UI:Status' => 'Status',
     'iTopUpdate:UI:Action' => 'Update',
+    'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup',
     'iTopUpdate:UI:History' => 'Versions History',
     'iTopUpdate:UI:Progress' => 'Progress of the upgrade',
 
@@ -75,7 +76,13 @@ Dict::Add('EN US', 'English', 'English', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Application can be updated',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Application cannot be updated: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => 'You must use the <a href="%1$s">setup</a> to update the application.<br />Some modified files were detected, a partial update cannot be executed.',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a target="_blank" href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.',
+	'iTopUpdate:UI:CheckInProgress'=>'Please wait during integrity check',
+
+
+
+	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup',
+	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Ready to start',
@@ -106,8 +113,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:UI:RestoreArchive' => 'You can restore your application from the archive \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'You can restore the database from \'%1$s\'',
 	'iTopUpdate:UI:UpdateDone' => 'Upgrade successful',
-	'Menu:iTopUpdate' => 'Application Upgrade',
-	'Menu:iTopUpdate+' => 'Application Upgrade',
+	'Menu:iTopUpdate' => 'Application upgrade',
+	'Menu:iTopUpdate+' => 'Application upgrade',
 
     // Missing itop entries
     'Class:ModuleInstallation/Attribute:installed' => 'Installed on',

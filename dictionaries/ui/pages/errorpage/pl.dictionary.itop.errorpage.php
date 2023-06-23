@@ -1,0 +1,25 @@
+<?php
+/**
+ * Copyright (C) 2013-2023 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+// Navigation menu
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'UI:ErrorPage:UnstableVersion' => 'Używasz niestabilnej wersji, która może zawierać błędy. Jeśli uważasz, że ten błąd wystąpił z tego powodu, prześlij nam swoją opinię!',
+	'UI:ErrorPage:KittyDisclaimer' => 'Żaden kotek nie został ranny podczas tworzenia tego GIF-a i wydania.
+
+- Zespół R&amp;D',
+));

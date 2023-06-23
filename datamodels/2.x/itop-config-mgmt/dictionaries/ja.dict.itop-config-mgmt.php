@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
@@ -29,6 +29,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Relation:depends on/Description' => 'この要素が依存している要素',
 	'Relation:depends on/DownStream' => '依存...',
 	'Relation:depends on/UpStream' => 'インパクト...',
+	'Relation:impacts/LoadData' => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 
@@ -76,6 +78,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkContactToFunctionalCI' => 'リンク 連絡先/機能的CI',
 	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => '機能的ci',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => '機能的ci名',
@@ -112,16 +115,17 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:FunctionalCI/Attribute:move2production' => '本稼働開始日',
 	'Class:FunctionalCI/Attribute:move2production+' => '',
 	'Class:FunctionalCI/Attribute:contacts_list' => '連絡先',
-	'Class:FunctionalCI/Attribute:contacts_list+' => '',
+	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contacts for this configuration item~~',
 	'Class:FunctionalCI/Attribute:documents_list' => '文書',
-	'Class:FunctionalCI/Attribute:documents_list+' => '',
+	'Class:FunctionalCI/Attribute:documents_list+' => 'All the documents linked to this configuration item~~',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'アプリケーションソリューション',
-	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
+	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'All the application solutions depending on this configuration item~~',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'ソフトウエア',
-	'Class:FunctionalCI/Attribute:softwares_list+' => '',
+	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the softwares installed on this configuration item~~',
 	'Class:FunctionalCI/Attribute:finalclass' => 'CIタイプ',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
+	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
 ));
 
 //
@@ -131,6 +135,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:PhysicalDevice' => '物理的デバイス',
 	'Class:PhysicalDevice+' => '',
+	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'シリアル番号',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
 	'Class:PhysicalDevice/Attribute:location_id' => '場所',
@@ -170,12 +175,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Rack' => 'ラック',
 	'Class:Rack+' => '',
+	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Rack/Attribute:nb_u' => 'ユニット数',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'デバイス',
-	'Class:Rack/Attribute:device_list+' => '',
+	'Class:Rack/Attribute:device_list+' => 'All the physical devices racked into this rack~~',
 	'Class:Rack/Attribute:enclosure_list' => 'エンクロージャ',
-	'Class:Rack/Attribute:enclosure_list+' => '',
+	'Class:Rack/Attribute:enclosure_list+' => 'All the enclosures in this rack~~',
 ));
 
 //
@@ -236,10 +242,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ConnectableCI' => '接続可能なCI',
 	'Class:ConnectableCI+' => '物理的なCI',
+	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'ネットワークデバイス',
-	'Class:ConnectableCI/Attribute:networkdevice_list+' => '',
+	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device~~',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'ネットワークインターフェース',
-	'Class:ConnectableCI/Attribute:physicalinterface_list+' => '',
+	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'All the physical network interfaces~~',
 ));
 
 //
@@ -249,6 +256,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:DatacenterDevice' => 'データセンターデバイス',
 	'Class:DatacenterDevice+' => '',
+	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'ラック',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '',
 	'Class:DatacenterDevice/Attribute:rack_name' => 'ラック名',
@@ -270,9 +278,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:DatacenterDevice/Attribute:powerB_name' => '電源B名',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FCポート',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'All the fiber channel interfaces for this device~~',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SAN',
-	'Class:DatacenterDevice/Attribute:san_list+' => '',
+	'Class:DatacenterDevice/Attribute:san_list+' => 'All the SAN switches connected to this device~~',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy~~',
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up~~',
 	// Unused yet
@@ -287,12 +295,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:NetworkDevice' => 'ネットワークデバイス',
 	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'ネットワークタイプ',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'ネットワークタイプ名',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'デバイス',
-	'Class:NetworkDevice/Attribute:connectablecis_list+' => '',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'All the devices connected to this network device~~',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOSバージョン',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOSバージョン名',
@@ -308,6 +317,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Server' => 'サーバ',
 	'Class:Server+' => '',
+	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Server/Attribute:osfamily_id' => 'OSファミリ',
 	'Class:Server/Attribute:osfamily_id+' => '',
 	'Class:Server/Attribute:osfamily_name' => 'OSファミリ名',
@@ -325,7 +335,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Server/Attribute:ram' => 'RAM',
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => '論理ボリューム',
-	'Class:Server/Attribute:logicalvolumes_list+' => '',
+	'Class:Server/Attribute:logicalvolumes_list+' => 'All the logical volumes connected to this server~~',
 ));
 
 //
@@ -335,8 +345,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:StorageSystem' => 'ストレージシステム',
 	'Class:StorageSystem+' => '',
+	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => '論理ボリューム',
-	'Class:StorageSystem/Attribute:logicalvolume_list+' => '',
+	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system~~',
 ));
 
 //
@@ -346,8 +357,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:SANSwitch' => 'SANスイッチ',
 	'Class:SANSwitch+' => '',
+	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'デバイス',
-	'Class:SANSwitch/Attribute:datacenterdevice_list+' => '',
+	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'All the devices connected to this SAN switch~~',
 ));
 
 //
@@ -357,8 +369,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TapeLibrary' => 'テープライブラリ',
 	'Class:TapeLibrary+' => '',
+	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'テープ',
-	'Class:TapeLibrary/Attribute:tapes_list+' => '',
+	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library~~',
 ));
 
 //
@@ -368,8 +381,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
+	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'ファイルシステム',
-	'Class:NAS/Attribute:nasfilesystem_list+' => '',
+	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS~~',
 ));
 
 //
@@ -379,6 +393,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:PC' => 'PC',
 	'Class:PC+' => '',
+	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PC/Attribute:osfamily_id' => 'OSファミリ',
 	'Class:PC/Attribute:osfamily_id+' => '',
 	'Class:PC/Attribute:osfamily_name' => 'OSファミリ名',
@@ -406,6 +421,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Printer' => 'プリンター',
 	'Class:Printer+' => '',
+	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -415,6 +431,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:PowerConnection' => '電源接続',
 	'Class:PowerConnection+' => '',
+	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -424,8 +441,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:PowerSource' => '電源',
 	'Class:PowerSource+' => '',
+	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDU',
-	'Class:PowerSource/Attribute:pdus_list+' => '',
+	'Class:PowerSource/Attribute:pdus_list+' => 'All the PDUs using this power source~~',
 ));
 
 //
@@ -435,6 +453,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '',
+	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
 	'Class:PDU/Attribute:rack_id' => 'ラック',
 	'Class:PDU/Attribute:rack_id+' => '',
 	'Class:PDU/Attribute:rack_name' => 'ラック名',
@@ -452,6 +471,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Peripheral' => '周辺',
 	'Class:Peripheral+' => '',
+	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
 ));
 
 //
@@ -461,6 +481,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Enclosure' => 'エンクロージャ',
 	'Class:Enclosure+' => '',
+	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Enclosure/Attribute:rack_id' => 'ラック',
 	'Class:Enclosure/Attribute:rack_id+' => '',
 	'Class:Enclosure/Attribute:rack_name' => 'ラック名',
@@ -468,7 +489,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Enclosure/Attribute:nb_u' => 'ユニット数',
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'デバイス',
-	'Class:Enclosure/Attribute:device_list+' => '',
+	'Class:Enclosure/Attribute:device_list+' => 'All the devices in this enclosure~~',
 ));
 
 //
@@ -479,9 +500,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ApplicationSolution' => 'アプリケーションソリューション',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CI',
-	'Class:ApplicationSolution/Attribute:functionalcis_list+' => '',
+	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution~~',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'ビジネスプロセス',
-	'Class:ApplicationSolution/Attribute:businessprocess_list+' => '',
+	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'All the business processes depending on this application solution~~',
 	'Class:ApplicationSolution/Attribute:status' => '状態',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'アクティブ',
@@ -502,7 +523,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:BusinessProcess' => 'ビジネスプロセス',
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'アプリケーションソリューション',
-	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => '',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'All the application solutions that impact this business process~~',
 	'Class:BusinessProcess/Attribute:status' => '状態',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'アクティブ',
@@ -548,7 +569,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Middleware' => 'ミドルウエア',
 	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'ミドルウエアインスタンス',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => '',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware~~',
 ));
 
 //
@@ -559,7 +580,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:DBServer' => 'DBサーバ',
 	'Class:DBServer+' => '',
 	'Class:DBServer/Attribute:dbschema_list' => 'DBスキーマ',
-	'Class:DBServer/Attribute:dbschema_list+' => '',
+	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server~~',
 ));
 
 //
@@ -570,7 +591,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:WebServer' => 'Webサーバ',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Webアプリケーション',
-	'Class:WebServer/Attribute:webapp_list+' => '',
+	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server~~',
 ));
 
 //
@@ -598,6 +619,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:MiddlewareInstance' => 'ミドルウエアインスタンス',
 	'Class:MiddlewareInstance+' => '',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'ミドルウエア',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'ミドルウエア名',
@@ -611,6 +633,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:DatabaseSchema' => 'DBスキーマ',
 	'Class:DatabaseSchema+' => '',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DBサーバ',
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'DBサーバ名',
@@ -624,6 +647,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:WebApplication' => 'Webアプリケーション',
 	'Class:WebApplication+' => '',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:WebApplication/Attribute:webserver_id' => 'Webサーバ',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Webサーバ名',
@@ -651,7 +675,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock' => '保存',
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => '保存',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => '論理ボリューム',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => '',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'All the logical volumes used by this device~~',
 ));
 
 //
@@ -662,7 +686,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:VirtualHost' => '仮想ホスト',
 	'Class:VirtualHost+' => '',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => '仮想マシン',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => '',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host~~',
 ));
 
 //
@@ -690,7 +714,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Farm' => 'ファーム',
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'ハイパーバイザー',
-	'Class:Farm/Attribute:hypervisor_list+' => '',
+	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm~~',
 	'Class:Farm/Attribute:redundancy' => 'High availability~~',
 	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
 	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
@@ -704,6 +728,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:VirtualMachine' => '仮想マシン',
 	'Class:VirtualMachine+' => '',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:VirtualMachine/Attribute:virtualhost_id' => '仮想ホスト',
 	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
 	'Class:VirtualMachine/Attribute:virtualhost_name' => '仮想ホスト名',
@@ -727,7 +752,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:VirtualMachine/Attribute:managementip' => '管理ip',
 	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'ネットワークインターフェース',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => '',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces~~',
 ));
 
 //
@@ -752,9 +777,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:LogicalVolume/Attribute:storagesystem_name' => 'ストレージシステム名',
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
 	'Class:LogicalVolume/Attribute:servers_list' => 'サーバ',
-	'Class:LogicalVolume/Attribute:servers_list+' => '',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'All the servers using this volume~~',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => '仮想デバイス',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => '',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'All the virtual devices using this volume~~',
 ));
 
 //
@@ -764,6 +789,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkServerToVolume' => 'リンクサーバ/ボリューム',
 	'Class:lnkServerToVolume+' => '',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
 	'Class:lnkServerToVolume/Attribute:volume_id' => 'ボリューム',
 	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
 	'Class:lnkServerToVolume/Attribute:volume_name' => 'ボリューム名',
@@ -783,6 +809,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkVirtualDeviceToVolume' => 'リンク 仮想デバイス/ボリューム',
 	'Class:lnkVirtualDeviceToVolume+' => '',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'ボリューム',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'ボリューム名',
@@ -802,6 +829,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkSanToDatacenterDevice' => 'リンク San/データセンターデバイス',
 	'Class:lnkSanToDatacenterDevice+' => '',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SANスイッチ',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SANスイッチ名',
@@ -863,6 +891,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Software' => 'ソフトウエア',
 	'Class:Software+' => '',
+	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Software/Attribute:name' => '名前',
 	'Class:Software/Attribute:name+' => '',
 	'Class:Software/Attribute:vendor' => 'ベンダー',
@@ -870,7 +899,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Software/Attribute:version' => 'バージョン',
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => '文書',
-	'Class:Software/Attribute:documents_list+' => '',
+	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software~~',
 	'Class:Software/Attribute:type' => 'タイプ',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DBサーバ',
@@ -884,11 +913,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Software/Attribute:type/Value:WebServer' => 'Webサーバ',
 	'Class:Software/Attribute:type/Value:WebServer+' => 'Webサーバ',
 	'Class:Software/Attribute:softwareinstance_list' => 'ソフトウエアインスタンス',
-	'Class:Software/Attribute:softwareinstance_list+' => '',
+	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software~~',
 	'Class:Software/Attribute:softwarepatch_list' => 'ソフトウエアパッチ',
-	'Class:Software/Attribute:softwarepatch_list+' => '',
+	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software~~',
 	'Class:Software/Attribute:softwarelicence_list' => 'ソフトウエアライセンス',
-	'Class:Software/Attribute:softwarelicence_list+' => '',
+	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software~~',
 ));
 
 //
@@ -901,7 +930,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Patch/Attribute:name' => '名前',
 	'Class:Patch/Attribute:name+' => '',
 	'Class:Patch/Attribute:documents_list' => '文書',
-	'Class:Patch/Attribute:documents_list+' => '',
+	'Class:Patch/Attribute:documents_list+' => 'All the documents linked to this patch~~',
 	'Class:Patch/Attribute:description' => '説明',
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'タイプ',
@@ -916,7 +945,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:OSPatch' => 'OSパッチ',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'デバイス',
-	'Class:OSPatch/Attribute:functionalcis_list+' => '',
+	'Class:OSPatch/Attribute:functionalcis_list+' => 'All the systems where this patch is installed~~',
 	'Class:OSPatch/Attribute:osversion_id' => 'OSバージョン',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'OSバージョン名',
@@ -935,7 +964,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:SoftwarePatch/Attribute:software_name' => 'ソフトウエア名',
 	'Class:SoftwarePatch/Attribute:software_name+' => '',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'ソフトウエアインスタンス',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => '',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'All the systems where this software patch is installed~~',
 ));
 
 //
@@ -948,7 +977,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Licence/Attribute:name' => '名前',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => '文書',
-	'Class:Licence/Attribute:documents_list+' => '',
+	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this license~~',
 	'Class:Licence/Attribute:org_id' => '組織',
 	'Class:Licence/Attribute:org_id+' => '',
 	'Class:Licence/Attribute:organization_name' => '組織名',
@@ -980,14 +1009,15 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:OSLicence' => 'OSライセンス',
 	'Class:OSLicence+' => '',
+	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'OSバージョン',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'OSバージョン名',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => '仮想マシン',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => '',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this license is used~~',
 	'Class:OSLicence/Attribute:servers_list' => 'サーバ',
-	'Class:OSLicence/Attribute:servers_list+' => '',
+	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this license is used~~',
 ));
 
 //
@@ -997,12 +1027,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:SoftwareLicence' => 'ソフトウエアライセンス',
 	'Class:SoftwareLicence+' => '',
+	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SoftwareLicence/Attribute:software_id' => 'ソフトウエア',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
 	'Class:SoftwareLicence/Attribute:software_name' => 'ソフトウエア名',
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'ソフトウエアインスタンス',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => '',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this license is used~~',
 ));
 
 //
@@ -1012,6 +1043,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkDocumentToLicence' => 'リンク 文書/ライセンス',
 	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'ライセンス',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
 	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'ライセンス名',
@@ -1052,7 +1084,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Brand' => 'ブランド',
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => '物理デバイス',
-	'Class:Brand/Attribute:physicaldevices_list+' => '',
+	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand~~',
 	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
 	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
 ));
@@ -1064,6 +1096,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Model' => 'モデル',
 	'Class:Model+' => '',
+	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Model/Attribute:brand_id' => 'ブランド',
 	'Class:Model/Attribute:brand_id+' => '',
 	'Class:Model/Attribute:brand_name' => 'ブランド名',
@@ -1107,7 +1140,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Model/Attribute:type/Value:Phone' => '電話',
 	'Class:Model/Attribute:type/Value:Phone+' => '電話',
 	'Class:Model/Attribute:physicaldevices_list' => '物理デバイス',
-	'Class:Model/Attribute:physicaldevices_list+' => '',
+	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model~~',
 	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
 ));
@@ -1120,7 +1153,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:NetworkDeviceType' => 'ネットワークデバイスタイプ',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'ネットワークデバイス',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => '',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type~~',
 ));
 
 //
@@ -1143,6 +1176,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkDocumentToPatch' => 'リンク 文書/パッチ',
 	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'パッチ',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
 	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'パッチ名',
@@ -1160,6 +1194,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'リンク ソフトウエアインスタンス/ソフトウエアパッチ',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'ソフトウエアパッチ',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'ソフトウエアパッチ名',
@@ -1177,6 +1212,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkFunctionalCIToOSPatch' => 'リンク 機能的CI/OSパッチ',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'OSパッチ',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'OSパッチ名',
@@ -1194,6 +1230,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkDocumentToSoftware' => 'リンク 文書/ソフトウエア',
 	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'ソフトウエア',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'ソフトウエア名',
@@ -1211,6 +1248,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Subnet' => 'サブネット',
 	'Class:Subnet+' => '',
+	'Class:Subnet/Name' => '%1$s/%2$s~~',
+	'Class:Subnet/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Subnet/Attribute:description' => '説明',
 	'Class:Subnet/Attribute:description+' => '',
 	'Class:Subnet/Attribute:subnet_name' => 'Subnet name~~',
@@ -1255,6 +1294,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkSubnetToVLAN' => 'Link Subnet / VLAN~~',
 	'Class:lnkSubnetToVLAN+' => '~~',
+	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'Subnet IP~~',
@@ -1289,8 +1329,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IPアドレス',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
-
-
 	'Class:IPInterface/Attribute:macaddress' => 'MACアドレス',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'コメント',
@@ -1310,6 +1348,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:PhysicalInterface' => '物理インターフェース',
 	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'デバイス',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'デバイス名',
@@ -1325,6 +1364,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Link PhysicalInterface / VLAN~~',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '~~',
+	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Physical Interface~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Physical Interface Name~~',
@@ -1379,6 +1419,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkConnectableCIToNetworkDevice' => 'リンク 接続可能CI/ネットワークデバイス',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'ネットァークデバイス',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'ネットァークデバイス名',
@@ -1406,6 +1447,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'リンク アプリケーションソリューション/機能的CI',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'アプリケーションソリューション',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'アプリケーションソリューション名',
@@ -1423,6 +1465,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'リンク アプリケーション/ビジネスプロセス',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'ビジネスプロセス',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'ビジネスプロセス名',
@@ -1440,6 +1483,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Group' => 'グループ',
 	'Class:Group+' => '',
+	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Group/Attribute:name' => '名前',
 	'Class:Group/Attribute:name+' => '',
 	'Class:Group/Attribute:status' => '状態',
@@ -1459,12 +1503,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Group/Attribute:type' => 'タイプ',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => '親グループ',
-
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => '名前',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'リンクされたCI',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => '親グループ',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
 ));
@@ -1476,6 +1519,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkGroupToCI' => 'リンク グループ/CI',
 	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'グループ',
 	'Class:lnkGroupToCI/Attribute:group_id+' => '',
 	'Class:lnkGroupToCI/Attribute:group_name' => '名前名',
@@ -1497,6 +1541,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Server:otherinfo' => '他の情報',
 	'Server:power' => 'Power supply~~',
 	'Class:Subnet/Tab:IPUsage' => 'IP 利用',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet are used or not~~',
 	'Class:Subnet/Tab:IPUsage-explain' => 'インターフェースは、レンジ: <em>%1$s</em> から <em>%2$s</em>の中のIPを持っています。',
 	'Class:Subnet/Tab:FreeIPs' => 'フリーなIP',
 	'Class:Subnet/Tab:FreeIPs-count' => 'フリーIP: %1$s',
@@ -1512,6 +1557,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkDocumentToFunctionalCI' => 'リンク 文書/機能的CI',
 	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => '機能的ci',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => '機能的ci名',

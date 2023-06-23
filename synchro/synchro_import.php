@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Copyright (C) 2013-2023 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -22,11 +22,6 @@
 // - reconciliation is made on the column primary_key
 //
 
-if (!defined('__DIR__'))
-{
-	/** @noinspection DirectoryConstantCanBeUsedInspection */
-	define('__DIR__', dirname(__FILE__));
-}
 require_once __DIR__.'/../approot.inc.php';
 require_once APPROOT.'/application/application.inc.php';
 require_once APPROOT.'/application/startup.inc.php';
@@ -255,7 +250,7 @@ if (utils::IsModeCLI())
 {
 	// Next steps:
 	//   specific arguments: 'csvfile'
-	//   
+	//
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
 	$sCsvFile = ReadMandatoryParam($oP, 'csvfile', 'raw_data');
@@ -282,7 +277,38 @@ if (utils::IsModeCLI())
 else
 {
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
-	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	//N°6022 - Make synchro scripts work by http via token authentication with SYNCHRO scopes
+	$oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
+	LoginWebPage::ResetSession(true);
+    $iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+    if ($iRet !== LoginWebPage::EXIT_CODE_OK) {
+        switch ($iRet) {
+            case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
+                $oP->p("Missing parameter 'auth_user'");
+                break;
+
+            case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
+                $oP->p("Missing parameter 'auth_pwd'");
+                break;
+
+            case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
+                $oP->p('Invalid login');
+                break;
+
+            case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
+                $oP->p('Portal user is not allowed');
+                break;
+
+            case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
+                $oP->p('This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)');
+                break;
+
+            default:
+                $oP->p("Unknown authentication error (retCode=$iRet)");
+        }
+        $oP->output();
+        exit -1;
+    }
 
 	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 }
@@ -435,6 +461,7 @@ try
 
 	$aIsDateToTransform = array();
 	$aDateToTransformReport = array();
+	$aIsBinaryToTransform = array();
 	foreach ($aInputColumns as $iFieldId => $sInputColumn)
 	{
 		if (array_key_exists($sInputColumn, $aDateColumns))
@@ -450,12 +477,14 @@ try
 		if ($sInputColumn === 'primary_key')
 		{
 			$iPrimaryKeyCol = $iFieldId;
+			$aIsBinaryToTransform[$iFieldId] = false;
 			continue;
 		}
 		if (!array_key_exists($sInputColumn, $aColumns))
 		{
 			throw new ExchangeException("Unknown column '$sInputColumn' (class: '$sClass')");
 		}
+		$aIsBinaryToTransform[$iFieldId] = $aColumns[$sInputColumn] === 'LONGBLOB';
 	}
 	if (!isset($iPrimaryKeyCol))
 	{
@@ -535,6 +564,10 @@ try
 							$aValues[] = $sDate;
 						}
 					}
+					elseif ($aIsBinaryToTransform[$iCol])
+					{
+						$aValues[] = base64_decode($value);
+					}
 					else
 					{
 						$aValues[] = $value;
@@ -599,6 +632,10 @@ try
 						{
 							$aValuePairs[] = "`$sCol` = ".CMDBSource::Quote($sDate);
 						}
+					}
+					elseif ($aIsBinaryToTransform[$iCol])
+					{
+						$aValuePairs[] = "`$sCol` = FROM_BASE64(".CMDBSource::Quote($aRow[$iCol], true).")";
 					}
 					else
 					{

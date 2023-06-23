@@ -13,6 +13,8 @@ namespace Symfony\Component\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
+use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
@@ -26,8 +28,18 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  */
 final class ServiceLocatorTagPass extends AbstractRecursivePass
 {
-    protected function processValue($value, $isRoot = false)
+    use PriorityTaggedServiceTrait;
+
+    protected function processValue($value, bool $isRoot = false)
     {
+        if ($value instanceof ServiceLocatorArgument) {
+            if ($value->getTaggedIteratorArgument()) {
+                $value->setValues($this->findAndSortTaggedServices($value->getTaggedIteratorArgument(), $this->container));
+            }
+
+            return self::register($this->container, $value->getValues());
+        }
+
         if (!$value instanceof Definition || !$value->hasTag('container.service_locator')) {
             return parent::processValue($value, $isRoot);
         }
@@ -36,36 +48,41 @@ final class ServiceLocatorTagPass extends AbstractRecursivePass
             $value->setClass(ServiceLocator::class);
         }
 
-        $arguments = $value->getArguments();
-        if (!isset($arguments[0]) || !\is_array($arguments[0])) {
+        $services = $value->getArguments()[0] ?? null;
+
+        if ($services instanceof TaggedIteratorArgument) {
+            $services = $this->findAndSortTaggedServices($services, $this->container);
+        }
+
+        if (!\is_array($services)) {
             throw new InvalidArgumentException(sprintf('Invalid definition for service "%s": an array of references is expected as first argument when the "container.service_locator" tag is set.', $this->currentId));
         }
 
         $i = 0;
 
-        foreach ($arguments[0] as $k => $v) {
+        foreach ($services as $k => $v) {
             if ($v instanceof ServiceClosureArgument) {
                 continue;
             }
             if (!$v instanceof Reference) {
-                throw new InvalidArgumentException(sprintf('Invalid definition for service "%s": an array of references is expected as first argument when the "container.service_locator" tag is set, "%s" found for key "%s".', $this->currentId, \is_object($v) ? \get_class($v) : \gettype($v), $k));
+                throw new InvalidArgumentException(sprintf('Invalid definition for service "%s": an array of references is expected as first argument when the "container.service_locator" tag is set, "%s" found for key "%s".', $this->currentId, get_debug_type($v), $k));
             }
 
             if ($i === $k) {
-                unset($arguments[0][$k]);
+                unset($services[$k]);
 
                 $k = (string) $v;
                 ++$i;
             } elseif (\is_int($k)) {
                 $i = null;
             }
-            $arguments[0][$k] = new ServiceClosureArgument($v);
+            $services[$k] = new ServiceClosureArgument($v);
         }
-        ksort($arguments[0]);
+        ksort($services);
 
-        $value->setArguments($arguments);
+        $value->setArgument(0, $services);
 
-        $id = 'service_locator.'.ContainerBuilder::hash($value);
+        $id = '.service_locator.'.ContainerBuilder::hash($value);
 
         if ($isRoot) {
             if ($id !== $this->currentId) {
@@ -82,30 +99,25 @@ final class ServiceLocatorTagPass extends AbstractRecursivePass
 
     /**
      * @param Reference[] $refMap
-     * @param string|null $callerId
-     *
-     * @return Reference
      */
-    public static function register(ContainerBuilder $container, array $refMap, $callerId = null)
+    public static function register(ContainerBuilder $container, array $refMap, string $callerId = null): Reference
     {
         foreach ($refMap as $id => $ref) {
             if (!$ref instanceof Reference) {
-                throw new InvalidArgumentException(sprintf('Invalid service locator definition: only services can be referenced, "%s" found for key "%s". Inject parameter values using constructors instead.', \is_object($ref) ? \get_class($ref) : \gettype($ref), $id));
+                throw new InvalidArgumentException(sprintf('Invalid service locator definition: only services can be referenced, "%s" found for key "%s". Inject parameter values using constructors instead.', get_debug_type($ref), $id));
             }
             $refMap[$id] = new ServiceClosureArgument($ref);
         }
-        ksort($refMap);
 
         $locator = (new Definition(ServiceLocator::class))
             ->addArgument($refMap)
-            ->setPublic(false)
             ->addTag('container.service_locator');
 
         if (null !== $callerId && $container->hasDefinition($callerId)) {
             $locator->setBindings($container->getDefinition($callerId)->getBindings());
         }
 
-        if (!$container->hasDefinition($id = 'service_locator.'.ContainerBuilder::hash($locator))) {
+        if (!$container->hasDefinition($id = '.service_locator.'.ContainerBuilder::hash($locator))) {
             $container->setDefinition($id, $locator);
         }
 
@@ -115,8 +127,8 @@ final class ServiceLocatorTagPass extends AbstractRecursivePass
             // to have them specialized per consumer service, we use a cloning factory
             // to derivate customized instances from the prototype one.
             $container->register($id .= '.'.$callerId, ServiceLocator::class)
-                ->setPublic(false)
                 ->setFactory([new Reference($locatorId), 'withContext'])
+                ->addTag('container.service_locator_context', ['id' => $callerId])
                 ->addArgument($callerId)
                 ->addArgument(new Reference('service_container'));
         }

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016-2021 Combodo SARL
+// Copyright (C) 2016-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -34,32 +34,35 @@ abstract class HTMLSanitizer
 
 	/**
 	 * Sanitize an HTML string with the configured sanitizer, falling back to HTMLDOMSanitizer in case of Exception or invalid configuration
+	 *
 	 * @param string $sHTML
+	 * @param string $sConfigKey eg. 'html_sanitizer', 'svg_sanitizer'
+	 *
 	 * @return string
 	 */
-	public static function Sanitize($sHTML)
+	public static function Sanitize($sHTML, $sConfigKey = 'html_sanitizer')
 	{
-		$sSanitizerClass = MetaModel::GetConfig()->Get('html_sanitizer');
-		if(!class_exists($sSanitizerClass))
-		{
-			IssueLog::Warning('The configured "html_sanitizer" class "'.$sSanitizerClass.'" is not a valid class. Will use HTMLDOMSanitizer as the default sanitizer.');
+		$sSanitizerClass = utils::GetConfig()->Get($sConfigKey);
+		if (!class_exists($sSanitizerClass)) {
+			IssueLog::Warning('The configured "'.$sConfigKey.'" class "'.$sSanitizerClass.'" is not a valid class. Will use HTMLDOMSanitizer as the default sanitizer.');
 			$sSanitizerClass = 'HTMLDOMSanitizer';
-		}
-		else if(!is_subclass_of($sSanitizerClass, 'HTMLSanitizer'))
-		{
-			IssueLog::Warning('The configured "html_sanitizer" class "'.$sSanitizerClass.'" is not a subclass of HTMLSanitizer. Will use HTMLDOMSanitizer as the default sanitizer.');
-			$sSanitizerClass = 'HTMLDOMSanitizer';
+		} else if (!is_subclass_of($sSanitizerClass, 'HTMLSanitizer')) {
+			if ($sConfigKey === 'html_sanitizer') {
+				IssueLog::Warning('The configured "'.$sConfigKey.'" class "'.$sSanitizerClass.'" is not a subclass of '.HTMLSanitizer::class.'. Will use HTMLDOMSanitizer as the default sanitizer.');
+				$sSanitizerClass = 'HTMLDOMSanitizer';
+			} else {
+				IssueLog::Error('The configured "'.$sConfigKey.'" class "'.$sSanitizerClass.'" is not a subclass of '.HTMLSanitizer::class.' ! Won\'t sanitize string.');
+
+				return $sHTML;
+			}
 		}
 
-		try
-		{
+		try {
 			$oSanitizer = new $sSanitizerClass();
 			$sCleanHTML = $oSanitizer->DoSanitize($sHTML);
 		}
-		catch(Exception $e)
-		{
-			if($sSanitizerClass != 'HTMLDOMSanitizer')
-			{
+		catch (Exception $e) {
+			if ($sSanitizerClass != 'HTMLDOMSanitizer') {
 				IssueLog::Warning('Failed to sanitize an HTML string with "'.$sSanitizerClass.'". The following exception occured: '.$e->getMessage());
 				IssueLog::Warning('Will try to sanitize with HTMLDOMSanitizer.');
 				// try again with the HTMLDOMSanitizer
@@ -108,6 +111,18 @@ abstract class DOMSanitizer extends HTMLSanitizer
 {
 	/** @var DOMDocument */
 	protected $oDoc;
+	/**
+	 * @var string Class to use for InlineImage static method calls
+	 * @used-by \Combodo\iTop\Test\UnitTest\Core\Sanitizer\HTMLDOMSanitizerTest::testDoSanitizeCallInlineImageProcessImageTag
+	 */
+	protected $sInlineImageClassName;
+
+	public function __construct($sInlineImageClassName = InlineImage::class)
+	{
+		parent::__construct();
+
+		$this->sInlineImageClassName = $sInlineImageClassName;
+	}
 
 	abstract public function GetTagsWhiteList();
 
@@ -122,7 +137,7 @@ abstract class DOMSanitizer extends HTMLSanitizer
 	public function DoSanitize($sHTML)
 	{
 		$this->oDoc = new DOMDocument();
-		$this->oDoc->preserveWhitespace = true;
+		$this->oDoc->preserveWhiteSpace = true;
 
 		// MS outlook implements empty lines by the mean of <p><o:p></o:p></p>
 		// We have to transform that into <p><br></p> (which is how Thunderbird implements empty lines)
@@ -203,7 +218,7 @@ abstract class DOMSanitizer extends HTMLSanitizer
 					// Recurse
 					$this->CleanNode($oNode);
 					if (($oNode instanceof DOMElement) && (strtolower($oNode->tagName) == 'img')) {
-						InlineImage::ProcessImageTag($oNode);
+						$this->sInlineImageClassName::ProcessImageTag($oNode);
 					}
 				}
 			}
@@ -274,8 +289,8 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'strong' => array(),
 		'img' => array('src', 'style', 'alt', 'title'),
 		'ul' => array('style'),
-		'ol' => array('style'),
-		'li' => array('style'),
+		'ol' => array('reversed', 'start', 'style', 'type'),
+		'li' => array('style', 'value'),
 		'h1' => array('style'),
 		'h2' => array('style'),
 		'h3' => array('style'),
@@ -338,6 +353,30 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'white-space',
 	);
 
+	public function __construct($sInlineImageClassName = InlineImage::class)
+	{
+		parent::__construct($sInlineImageClassName);
+
+		// Building href validation pattern from url and email validation patterns as the patterns are not used the same way in HTML content than in standard attributes value.
+		// eg. "foo@bar.com" vs "mailto:foo@bar.com?subject=Title&body=Hello%20world"
+		if (!array_key_exists('href', self::$aAttrsWhiteList)) {
+			// Regular urls
+			$sUrlPattern = utils::GetConfig()->Get('url_validation_pattern');
+
+			// Mailto urls
+			$sMailtoPattern = '(mailto:('.utils::GetConfig()->Get('email_validation_pattern').')(?:\?(?:subject|body)=([a-zA-Z0-9+\$_.-]*)(?:&(?:subject|body)=([a-zA-Z0-9+\$_.-]*))?)?)';
+
+			// Notification placeholders
+			// eg. $this->caller_id$, $this->hyperlink()$, $this->hyperlink(portal)$, $APP_URL$, $MODULES_URL$, ...
+			// Note: Authorize both $xxx$ and %24xxx%24 as the latter one is encoded when used in HTML attributes (eg. a[href])
+			$sPlaceholderPattern = '(\$|%24)[\w-]*(->[\w]*(\([\w-]*?\))?)?(\$|%24)';
+
+			$sPattern = $sUrlPattern.'|'.$sMailtoPattern.'|'.$sPlaceholderPattern;
+			$sPattern = '/'.str_replace('/', '\/', $sPattern).'/i';
+			self::$aAttrsWhiteList['href'] = $sPattern;
+		}
+	}
+
 	public function GetTagsWhiteList()
 	{
 		return static::$aTagsWhiteList;
@@ -363,35 +402,10 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		return static::$aStylesWhiteList;
 	}
 
-	public function __construct()
-	{
-		parent::__construct();
-
-		// Building href validation pattern from url and email validation patterns as the patterns are not used the same way in HTML content than in standard attributes value.
-		// eg. "foo@bar.com" vs "mailto:foo@bar.com?subject=Title&body=Hello%20world"
-		if (!array_key_exists('href', self::$aAttrsWhiteList))
-		{
-			// Regular urls
-			$sUrlPattern = utils::GetConfig()->Get('url_validation_pattern');
-
-			// Mailto urls
-			$sMailtoPattern = '(mailto:(' . utils::GetConfig()->Get('email_validation_pattern') . ')(?:\?(?:subject|body)=([a-zA-Z0-9+\$_.-]*)(?:&(?:subject|body)=([a-zA-Z0-9+\$_.-]*))?)?)';
-
-			// Notification placeholders
-			// eg. $this->caller_id$, $this->hyperlink()$, $this->hyperlink(portal)$, $APP_URL$, $MODULES_URL$, ...
-			// Note: Authorize both $xxx$ and %24xxx%24 as the latter one is encoded when used in HTML attributes (eg. a[href])
-			$sPlaceholderPattern = '(\$|%24)[\w-]*(->[\w]*(\([\w-]*?\))?)?(\$|%24)';
-
-			$sPattern = $sUrlPattern . '|' . $sMailtoPattern . '|' . $sPlaceholderPattern;
-			$sPattern = '/'.str_replace('/', '\/', $sPattern).'/i';
-			self::$aAttrsWhiteList['href'] = $sPattern;
-		}
-	}
-
 	public function LoadDoc($sHTML)
 	{
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
-		$this->oDoc->preserveWhitespace = true;
+		$this->oDoc->preserveWhiteSpace = true;
 	}
 
 	public function PrintDoc()

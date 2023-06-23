@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     https://www.combodo.com/documentation/combodo-software-license.html
  *
  */
@@ -29,6 +29,8 @@ use utils;
  */
 class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExtension, iLoginUIExtension
 {
+	const LOGIN_MODE = 'cas';
+
 	/**
 	 * Return the list of supported login modes for this plugin
 	 *
@@ -36,7 +38,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 	 */
 	public function ListSupportedLoginModes()
 	{
-		return array('cas');
+		return array(static::LOGIN_MODE);
 	}
 
 	protected function OnStart(&$iErrorCode)
@@ -47,12 +49,17 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'cas')
+		if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+			// Not allowed if not already connected
+			return LoginWebPage::LOGIN_FSM_CONTINUE;
+		}
+
+		if (empty(Session::Get('login_mode')) || Session::Get('login_mode') == static::LOGIN_MODE)
 		{
 			static::InitCASClient();
 			if (phpCAS::isAuthenticated())
 			{
-				Session::Set('login_mode', 'cas');
+				Session::Set('login_mode', static::LOGIN_MODE);
 				Session::Set('auth_user', phpCAS::getUser());
 				Session::Unset('login_will_redirect');
 			}
@@ -68,7 +75,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 					$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
 					return LoginWebPage::LOGIN_FSM_ERROR;
 				}
-				Session::Set('login_mode', 'cas');
+				Session::Set('login_mode', static::LOGIN_MODE);
 				phpCAS::forceAuthentication(); // Redirect to CAS and exit
 			}
 		}
@@ -77,7 +84,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'cas')
+		if (Session::Get('login_mode') == static::LOGIN_MODE)
 		{
 			if (!Session::IsSet('auth_user'))
 			{
@@ -94,7 +101,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'cas')
+		if (Session::Get('login_mode') == static::LOGIN_MODE)
 		{
 			$sAuthUser = Session::Get('auth_user');
 			if (!LoginWebPage::CheckUser($sAuthUser))
@@ -109,9 +116,13 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnError(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'cas')
+		if (Session::Get('login_mode') == static::LOGIN_MODE)
 		{
 			Session::Unset('phpCAS');
+			if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+				// don't display the login page
+				return LoginWebPage::LOGIN_FSM_CONTINUE;
+			}
 			if ($iErrorCode != LoginWebPage::EXIT_CODE_MISSINGLOGIN)
 			{
 				$oLoginWebPage = new LoginWebPage();
@@ -124,7 +135,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'cas')
+		if (Session::Get('login_mode') == static::LOGIN_MODE)
 		{
 			Session::Set('can_logoff', true);
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
@@ -151,7 +162,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		$bCASDebug = Config::Get('cas_debug');
 		if ($bCASDebug)
 		{
-			phpCAS::setDebug(APPROOT.'log/cas.log');
+			phpCAS::setLogger(new CASLogger(APPROOT.'log/cas.log'));
 		}
 
 		// Initialize phpCAS
@@ -159,7 +170,8 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		$sCASHost = Config::Get('cas_host');
 		$iCASPort = Config::Get('cas_port');
 		$sCASContext = Config::Get('cas_context');
-		phpCAS::client($sCASVersion, $sCASHost, $iCASPort, $sCASContext, false /* session already started */);
+		$sServiceBaseURL = Config::Get('service_base_url', self::GetServiceBaseURL());
+		phpCAS::client($sCASVersion, $sCASHost, $iCASPort, $sCASContext, $sServiceBaseURL, false /* session already started */);
 		$sCASCACertPath = Config::Get('cas_server_ca_cert_path');
 		if (empty($sCASCACertPath))
 		{
@@ -173,6 +185,38 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		{
 			phpCAS::setCasServerCACert($sCASCACertPath);
 		}
+	}
+
+	private static function GetServiceBaseURL()
+	{
+		$protocol = $_SERVER['REQUEST_SCHEME'];
+		$protocol .= '://';
+		if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+			// explode the host list separated by comma and use the first host
+			$hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+			// see rfc7239#5.3 and rfc7230#2.7.1: port is in HTTP_X_FORWARDED_HOST if non default
+			return $protocol . $hosts[0];
+		} else if (!empty($_SERVER['HTTP_X_FORWARDED_SERVER'])) {
+			$server_url = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+		} else {
+			if (empty($_SERVER['SERVER_NAME'])) {
+				$server_url = $_SERVER['HTTP_HOST'];
+			} else {
+				$server_url = $_SERVER['SERVER_NAME'];
+			}
+		}
+		if (!strpos($server_url, ':')) {
+			if (empty($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+				$server_port = $_SERVER['SERVER_PORT'];
+			} else {
+				$ports = explode(',', $_SERVER['HTTP_X_FORWARDED_PORT']);
+				$server_port = $ports[0];
+			}
+
+			$server_url .= ':';
+			$server_url .= $server_port;
+		}
+		return $protocol . $server_url;
 	}
 
 	private function DoUserProvisioning($sLogin)
@@ -205,7 +249,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		$oLoginContext->SetLoaderPath(APPROOT.'env-'.utils::GetCurrentEnvironment().'/authent-cas/view');
 
 		$aData = array(
-			'sLoginMode' => 'cas',
+			'sLoginMode' => static::LOGIN_MODE,
 			'sLabel' => Dict::S('CAS:Login:SignIn'),
 			'sTooltip' => Dict::S('CAS:Login:SignInTooltip'),
 		);

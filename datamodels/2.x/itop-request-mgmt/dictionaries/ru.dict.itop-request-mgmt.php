@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /**
@@ -43,6 +43,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Открытые запросы по типу',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Открытые запросы по заказчику',
 	'Class:UserRequest:KnownErrorList' => 'Известные ошибки',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 	'Menu:UserRequest:MyWorkOrders' => 'Назначенные мне наряды на работу',
 	'Menu:UserRequest:MyWorkOrders+' => 'Назначенные мне наряды на работу',
 	'Class:Problem:KnownProblemList' => 'Известные проблемы',
@@ -124,6 +125,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Низкая',
 	'Class:UserRequest/Attribute:origin' => 'Источник',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Почта',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'Почта',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Мониторинг',
@@ -279,7 +284,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:SelectLanguage' => 'Изменить язык',
 	'Portal:LanguageChangedTo_Lang' => 'Язык изменен на',
 	'Portal:ChooseYourFavoriteLanguage' => 'Выберите язык',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Каскадное решение дочерних запросов (ev_autoresolve) с установкой следующих параметров: услуга, команда, агент, информация о решении.',
 ));

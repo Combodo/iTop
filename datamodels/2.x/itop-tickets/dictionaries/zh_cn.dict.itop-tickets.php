@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -68,11 +68,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Ticket/Attribute:private_log' => '私信',
 	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => '联系人',
-	'Class:Ticket/Attribute:contacts_list+' => '该工单相关的所有联系人',
+	'Class:Ticket/Attribute:contacts_list+' => '此工单相关的所有联系人',
 	'Class:Ticket/Attribute:functionalcis_list' => '配置项',
-	'Class:Ticket/Attribute:functionalcis_list+' => '该工单相关的所有配置项.',
+	'Class:Ticket/Attribute:functionalcis_list+' => '此工单相关的所有配置项.',
 	'Class:Ticket/Attribute:workorders_list' => '工作任务',
-	'Class:Ticket/Attribute:workorders_list+' => '该工单相关的所有工作任务',
+	'Class:Ticket/Attribute:workorders_list+' => '此工单相关的所有工作任务',
 	'Class:Ticket/Attribute:finalclass' => '类型',
 	'Class:Ticket/Attribute:finalclass+' => '',
 	'Class:Ticket/Attribute:operational_status' => '操作状态',
@@ -94,12 +94,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkContactToTicket' => '关联 联系人/工单',
 	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => '工单',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => '工单编号',
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_id' => '联系人',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name~~',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => '邮箱',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
 	'Class:lnkContactToTicket/Attribute:role' => '角色 (文本)',
@@ -175,6 +178,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:cmdbAbstractObject/Method:SetCurrentDate+' => '填写当前日期和时间',
 	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1' => '目标字段',
 	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1+' => '填写当前对象',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull' => 'SetCurrentDateIfNull~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull+' => 'Set an empty field with the current date and time~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1+' => 'The field to set, in the current object~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser' => '设置为当前用户',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser+' => '填写当前登录用户',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1' => '目标字段',
@@ -191,6 +198,34 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2+' => 'The field from which to get the reference date',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3' => '工作时间',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Leave empty to rely on the standard working hours scheme, or set to "DefaultWorkingTimeComputer" to force a 24x7 scheme',
+	'Class:cmdbAbstractObject/Method:SetIfNull' => 'SetIfNull~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull+' => 'Set a field only if it is empty, with a static value~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1+' => 'The field to set, in the current object~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:2' => 'Value~~',
+	'Class:cmdbAbstractObject/Method:SetIfNull/Param:2+' => 'The value to set~~',
+	'Class:cmdbAbstractObject/Method:AddValue' => 'AddValue~~',
+	'Class:cmdbAbstractObject/Method:AddValue+' => 'Add a fixed value to a field~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:1+' => 'The field to modify, in the current object~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:2' => 'Value~~',
+	'Class:cmdbAbstractObject/Method:AddValue/Param:2+' => 'Decimal value which will be added, can be negative~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate' => 'SetComputedDate~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate+' => 'Set a field with a date computed from another field with extra logic~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:1+' => 'The field to set, in the current object~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:2' => 'Modifier~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:2+' => 'Textual information to modify the source date, eg. "+3 days"~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:3' => 'Source field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDate/Param:3+' => 'The field used as source to apply the Modifier logic~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull' => 'SetComputedDateIfNull~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull+' => 'Set non empty field with a date computed from another field with extra logic~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1' => 'Target Field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1+' => 'The field to set, in the current object~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2' => 'Modifier~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2+' => 'Textual information to modify the source date, eg. "+3 days"~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3' => 'Source field~~',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3+' => 'The field used as source to apply the Modifier logic~~',
 	'Class:cmdbAbstractObject/Method:Reset' => '重置',
 	'Class:cmdbAbstractObject/Method:Reset+' => '重置为默认值',
 	'Class:cmdbAbstractObject/Method:Reset/Param:1' => '目标字段',
@@ -200,7 +235,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:cmdbAbstractObject/Method:Copy/Param:1' => '目标字段',
 	'Class:cmdbAbstractObject/Method:Copy/Param:1+' => '填写当前对象',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2' => '源字段',
-	'Class:cmdbAbstractObject/Method:Copy/Param:2+' => '该字段从当前对象获取值',
+	'Class:cmdbAbstractObject/Method:Copy/Param:2+' => '此字段从当前对象获取值',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus' => 'ApplyStimulus',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Apply the specified stimulus to the current object',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1' => 'Stimulus code',
@@ -211,13 +246,3 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'SLT 的解决时间',
 ));
 
-//
-// Class: Document
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Document/Attribute:contracts_list' => '合同',
-	'Class:Document/Attribute:contracts_list+' => '该文档关联的所有合同',
-	'Class:Document/Attribute:services_list' => '服务',
-	'Class:Document/Attribute:services_list+' => '该文档关联的所有服务',
-));

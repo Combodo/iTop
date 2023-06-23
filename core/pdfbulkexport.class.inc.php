@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -16,11 +16,24 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactor
 /**
  * Bulk export: PDF export, based on the HTML export converted to PDF
  *
- * @copyright   Copyright (C) 2021 Combodo SARL
+ * @copyright   Copyright (C) 2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class PDFBulkExport extends HTMLBulkExport
 {
+	/**
+	 * @var string For sample purposes
+	 * @internal
+	 * @since 2.7.8
+	 */
+	const ENUM_OUTPUT_TYPE_SAMPLE = 'sample';
+	/**
+	 * @var string For the real export
+	 * @internal
+	 * @since 2.7.8
+	 */
+	const ENUM_OUTPUT_TYPE_REAL = 'real';
+
 	public function DisplayUsage(Page $oP)
 	{
 		$oP->p(" * pdf format options:");
@@ -62,7 +75,7 @@ class PDFBulkExport extends HTMLBulkExport
 				$aPossibleFormat = ['A3', 'A4', 'Letter'];
 				$sDefaultFormat = 'A4';
 				foreach ($aPossibleFormat as $sVal) {
-					$oSelectFormat->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sVal, htmlentities(Dict::S('Core:BulkExport:PageSize-'.$sVal), ENT_QUOTES, 'UTF-8'), ($sVal == $sDefaultFormat)));
+					$oSelectFormat->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sVal, utils::EscapeHtml(Dict::S('Core:BulkExport:PageSize-'.$sVal)), ($sVal == $sDefaultFormat)));
 				}
 				$oFieldSetFormat->AddSubBlock(new Html('</br>'));
 
@@ -75,7 +88,7 @@ class PDFBulkExport extends HTMLBulkExport
 				$aPossibleOrientation = ['P', 'L'];
 				$sDefaultOrientation = 'L';
 				foreach ($aPossibleOrientation as $sVal) {
-					$oSelectOrientation->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sVal, htmlentities(Dict::S('Core:BulkExport:PageOrientation-'.$sVal), ENT_QUOTES, 'UTF-8'), ($sVal == $sDefaultOrientation)));
+					$oSelectOrientation->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sVal, utils::EscapeHtml(Dict::S('Core:BulkExport:PageOrientation-'.$sVal)), ($sVal == $sDefaultOrientation)));
 				}
 
 				//date format
@@ -84,8 +97,8 @@ class PDFBulkExport extends HTMLBulkExport
 
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 
-				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
-				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+				$sDefaultFormat = utils::EscapeHtml((string)AttributeDateTime::GetFormat());
+				$sExample = utils::EscapeHtml(date((string)AttributeDateTime::GetFormat()));
 				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "pdf_date_format_radio", "default", "pdf_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 				$oRadioDefault->SetBeforeInput(false);
@@ -93,17 +106,16 @@ class PDFBulkExport extends HTMLBulkExport
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-				$sFormatInput = '<input type="text" size="15" name="date_format" id="pdf_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="pdf_custom_date_time_format" title="" value="'.utils::EscapeHtml($sDateTimeFormat).'"/>';
 				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "pdf_date_format_radio", "custom", "pdf_date_time_format_custom", "radio");
+				$oRadioCustom->SetDescription(Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip'));
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 				$oRadioCustom->SetBeforeInput(false);
 				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 
-				$sJSTooltip = json_encode('<div id="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
 				$oP->add_ready_script(
 					<<<EOF
-$('#pdf_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#form_part_pdf_options').on('preview_updated', function() { FormatDatesInPreview('pdf', 'html'); });
 $('#pdf_date_time_format_default').on('click', function() { FormatDatesInPreview('pdf', 'html'); });
 $('#pdf_date_time_format_custom').on('click', function() { FormatDatesInPreview('pdf', 'html'); });
@@ -198,46 +210,46 @@ EOF
 		return $sPDF;
 	}
 
+	/**
+	 * @inheritDoc
+	 * @since 2.7.8
+	 */
+	protected function GetSampleData($oObj, $sAttCode)
+	{
+		if ($sAttCode !== 'id')
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+
+			// As sample data will be displayed in the web browser, AttributeImage needs to be rendered with a regular HTML format, meaning its "src" looking like "data:image/png;base64,iVBORw0KGgoAAAANSUh..."
+			// Whereas for the PDF generation it needs to be rendered with a TCPPDF-compatible format, meaning its "src" looking like "@iVBORw0KGgoAAAANSUh..."
+			if ($oAttDef instanceof AttributeImage) {
+				return $this->GetAttributeImageValue($oObj, $sAttCode, static::ENUM_OUTPUT_TYPE_SAMPLE);
+			}
+		}
+		return parent::GetSampleData($oObj, $sAttCode);
+	}
+
+	/**
+	 * @param \DBObject $oObj
+	 * @param string $sAttCode
+	 *
+	 * @return int|string
+	 * @throws \Exception
+	 */
 	protected function GetValue($oObj, $sAttCode)
 	{
-		switch($sAttCode)
-		{
+		switch ($sAttCode) {
 			case 'id':
 				$sRet = parent::GetValue($oObj, $sAttCode);
 				break;
 
 			default:
 				$value = $oObj->Get($sAttCode);
-				if ($value instanceof ormDocument)
-				{
+				if ($value instanceof ormDocument) {
 					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 					if ($oAttDef instanceof AttributeImage)
 					{
-						// To limit the image size in the PDF output, we have to enforce the size as height/width because max-width/max-height have no effect
-						//
-						$iDefaultMaxWidthPx = 48;
-						$iDefaultMaxHeightPx = 48;
-						if ($value->IsEmpty())
-						{
-							$iNewWidth = $iDefaultMaxWidthPx;
-							$iNewHeight = $iDefaultMaxHeightPx;
-
-							$sUrl = $oAttDef->Get('default_image');
-						}
-						else
-						{
-							list($iWidth, $iHeight) = utils::GetImageSize($value->GetData());
-							$iMaxWidthPx = min($iDefaultMaxWidthPx, $oAttDef->Get('display_max_width'));
-							$iMaxHeightPx = min($iDefaultMaxHeightPx, $oAttDef->Get('display_max_height'));
-
-							$fScale = min($iMaxWidthPx / $iWidth, $iMaxHeightPx / $iHeight);
-							$iNewWidth = $iWidth * $fScale;
-							$iNewHeight = $iHeight * $fScale;
-
-							$sUrl = 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
-						}
-						$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="width: '.$iNewWidth.'px; height: '.$iNewHeight.'px">' : '';
-						$sRet = '<div class="ibo-input-image--image-view">'.$sRet.'</div>';
+						$sRet = $this->GetAttributeImageValue($oObj, $sAttCode, static::ENUM_OUTPUT_TYPE_REAL);
 					}
 					else
 					{
@@ -249,6 +261,76 @@ EOF
 					$sRet = parent::GetValue($oObj, $sAttCode);
 				}
 		}
+		return $sRet;
+	}
+
+	/**
+	 * @param \DBObject $oObj
+	 * @param string $sAttCode
+	 * @param string $sOutputType {@see \PDFBulkExport::ENUM_OUTPUT_TYPE_SAMPLE}, {@see \PDFBulkExport::ENUM_OUTPUT_TYPE_REAL}
+	 *
+	 * @return string Rendered value of $oAttDef / $oValue according to the desired $sOutputType
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 *
+	 * @since 2.7.8 N°2244 method creation
+	 * @since 2.7.9 N°5588 signature change to get the object so that we can log all the needed information
+	 */
+	protected function GetAttributeImageValue(DBObject $oObj, string $sAttCode, string $sOutputType)
+	{
+		$oValue = $oObj->Get($sAttCode);
+		$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+
+		// To limit the image size in the PDF output, we have to enforce the size as height/width because max-width/max-height have no effect
+		//
+		$iDefaultMaxWidthPx = 48;
+		$iDefaultMaxHeightPx = 48;
+		if ($oValue->IsEmpty()) {
+			$iNewWidth = $iDefaultMaxWidthPx;
+			$iNewHeight = $iDefaultMaxHeightPx;
+
+			$sUrl = $oAttDef->Get('default_image');
+		} else {
+			$iMaxWidthPx = min($iDefaultMaxWidthPx, $oAttDef->Get('display_max_width'));
+			$iMaxHeightPx = min($iDefaultMaxHeightPx, $oAttDef->Get('display_max_height'));
+
+			list($iWidth, $iHeight) = utils::GetImageSize($oValue->GetData());
+			if ((is_null($iWidth)) || (is_null($iHeight)) || ($iWidth === 0) || ($iHeight === 0)) {
+				// Avoid division by zero exception (SVGs, corrupted images, ...)
+				$iNewWidth = $iDefaultMaxWidthPx;
+				$iNewHeight = $iDefaultMaxHeightPx;
+
+				$sAttCode = $oAttDef->GetCode();
+				IssueLog::Warning('AttributeImage: Cannot read image size', LogChannels::EXPORT, [
+					'ObjClass'        => get_class($oObj),
+					'ObjKey'          => $oObj->GetKey(),
+					'ObjFriendlyName' => $oObj->GetName(),
+					'AttCode'         => $sAttCode,
+				]);
+			} else {
+				$fScale = min($iMaxWidthPx / $iWidth, $iMaxHeightPx / $iHeight);
+				$iNewWidth = $iWidth * $fScale;
+				$iNewHeight = $iHeight * $fScale;
+			}
+
+			$sValueAsBase64 = base64_encode($oValue->GetData());
+			switch ($sOutputType) {
+				case static::ENUM_OUTPUT_TYPE_SAMPLE:
+					$sUrl = 'data:'.$oValue->GetMimeType().';base64,'.$sValueAsBase64;
+					break;
+
+				case static::ENUM_OUTPUT_TYPE_REAL:
+				default:
+					// TCPDF requires base64-encoded images to be rendered without the usual "data:<MIMETYPE>;base64" header but with an "@"
+					// @link https://tcpdf.org/examples/example_009/
+					$sUrl = '@'.$sValueAsBase64;
+					break;
+			}
+		}
+
+		$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="width: '.$iNewWidth.'px; height: '.$iNewHeight.'px;">' : '';
+		$sRet = '<div class="ibo-input-image--image-view">'.$sRet.'</div>';
+
 		return $sRet;
 	}
 

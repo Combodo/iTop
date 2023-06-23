@@ -15,8 +15,10 @@ namespace Symfony\Component\Config\Resource;
  * DirectoryResource represents a resources stored in a subdirectory tree.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @final
  */
-class DirectoryResource implements SelfCheckingResourceInterface, \Serializable
+class DirectoryResource implements SelfCheckingResourceInterface
 {
     private $resource;
     private $pattern;
@@ -27,7 +29,7 @@ class DirectoryResource implements SelfCheckingResourceInterface, \Serializable
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($resource, $pattern = null)
+    public function __construct(string $resource, string $pattern = null)
     {
         $this->resource = realpath($resource) ?: (file_exists($resource) ? $resource : false);
         $this->pattern = $pattern;
@@ -37,28 +39,17 @@ class DirectoryResource implements SelfCheckingResourceInterface, \Serializable
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return md5(serialize([$this->resource, $this->pattern]));
     }
 
-    /**
-     * @return string The file path to the resource
-     */
-    public function getResource()
+    public function getResource(): string
     {
         return $this->resource;
     }
 
-    /**
-     * Returns the pattern to restrict monitored files.
-     *
-     * @return string|null
-     */
-    public function getPattern()
+    public function getPattern(): ?string
     {
         return $this->pattern;
     }
@@ -66,7 +57,7 @@ class DirectoryResource implements SelfCheckingResourceInterface, \Serializable
     /**
      * {@inheritdoc}
      */
-    public function isFresh($timestamp)
+    public function isFresh(int $timestamp): bool
     {
         if (!is_dir($this->resource)) {
             return false;
@@ -84,7 +75,7 @@ class DirectoryResource implements SelfCheckingResourceInterface, \Serializable
 
             // always monitor directories for changes, except the .. entries
             // (otherwise deleted files wouldn't get detected)
-            if ($file->isDir() && '/..' === substr($file, -3)) {
+            if ($file->isDir() && str_ends_with($file, '/..')) {
                 continue;
             }
 
@@ -102,21 +93,5 @@ class DirectoryResource implements SelfCheckingResourceInterface, \Serializable
         }
 
         return true;
-    }
-
-    /**
-     * @internal
-     */
-    public function serialize()
-    {
-        return serialize([$this->resource, $this->pattern]);
-    }
-
-    /**
-     * @internal
-     */
-    public function unserialize($serialized)
-    {
-        list($this->resource, $this->pattern) = unserialize($serialized);
     }
 }

@@ -11,12 +11,14 @@
 
 namespace Symfony\Bundle\WebProfilerBundle\EventListener;
 
+use Symfony\Bundle\FullStack;
 use Symfony\Bundle\WebProfilerBundle\Csp\ContentSecurityPolicyHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\AutoExpireFlashBag;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\DataCollector\DumpDataCollector;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
@@ -30,37 +32,48 @@ use Twig\Environment;
  * This means that the WDT is never included in sub-requests or ESI requests.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @final
  */
 class WebDebugToolbarListener implements EventSubscriberInterface
 {
-    const DISABLED = 1;
-    const ENABLED = 2;
+    public const DISABLED = 1;
+    public const ENABLED = 2;
 
     protected $twig;
     protected $urlGenerator;
     protected $interceptRedirects;
     protected $mode;
-    protected $position;
     protected $excludedAjaxPaths;
     private $cspHandler;
+    private $dumpDataCollector;
 
-    public function __construct(Environment $twig, $interceptRedirects = false, $mode = self::ENABLED, $position = 'bottom', UrlGeneratorInterface $urlGenerator = null, $excludedAjaxPaths = '^/bundles|^/_wdt', ContentSecurityPolicyHandler $cspHandler = null)
+    public function __construct(Environment $twig, bool $interceptRedirects = false, int $mode = self::ENABLED, UrlGeneratorInterface $urlGenerator = null, string $excludedAjaxPaths = '^/bundles|^/_wdt', ContentSecurityPolicyHandler $cspHandler = null, DumpDataCollector $dumpDataCollector = null)
     {
         $this->twig = $twig;
         $this->urlGenerator = $urlGenerator;
-        $this->interceptRedirects = (bool) $interceptRedirects;
-        $this->mode = (int) $mode;
-        $this->position = $position;
+        $this->interceptRedirects = $interceptRedirects;
+        $this->mode = $mode;
         $this->excludedAjaxPaths = $excludedAjaxPaths;
         $this->cspHandler = $cspHandler;
+        $this->dumpDataCollector = $dumpDataCollector;
     }
 
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return self::DISABLED !== $this->mode;
     }
 
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function setMode(int $mode): void
+    {
+        if (self::DISABLED !== $mode && self::ENABLED !== $mode) {
+            throw new \InvalidArgumentException(sprintf('Invalid value provided for mode, use one of "%s::DISABLED" or "%s::ENABLED".', self::class, self::class));
+        }
+
+        $this->mode = $mode;
+    }
+
+    public function onKernelResponse(ResponseEvent $event)
     {
         $response = $event->getResponse();
         $request = $event->getRequest();
@@ -76,11 +89,18 @@ class WebDebugToolbarListener implements EventSubscriberInterface
             }
         }
 
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
-        $nonces = $this->cspHandler ? $this->cspHandler->updateResponseHeaders($request, $response) : [];
+        $nonces = [];
+        if ($this->cspHandler) {
+            if ($this->dumpDataCollector && $this->dumpDataCollector->getDumpsCount() > 0) {
+                $this->cspHandler->disableCsp();
+            }
+
+            $nonces = $this->cspHandler->updateResponseHeaders($request, $response);
+        }
 
         // do not capture redirects or modify XML HTTP Requests
         if ($request->isXmlHttpRequest()) {
@@ -88,8 +108,7 @@ class WebDebugToolbarListener implements EventSubscriberInterface
         }
 
         if ($response->headers->has('X-Debug-Token') && $response->isRedirect() && $this->interceptRedirects && 'html' === $request->getRequestFormat()) {
-            $session = $request->getSession();
-            if (null !== $session && $session->isStarted() && $session->getFlashBag() instanceof AutoExpireFlashBag) {
+            if ($request->hasSession() && ($session = $request->getSession())->isStarted() && $session->getFlashBag() instanceof AutoExpireFlashBag) {
                 // keep current flashes for one more request if using AutoExpireFlashBag
                 $session->getFlashBag()->setAll($session->getFlashBag()->peekAll());
             }
@@ -102,9 +121,9 @@ class WebDebugToolbarListener implements EventSubscriberInterface
         if (self::DISABLED === $this->mode
             || !$response->headers->has('X-Debug-Token')
             || $response->isRedirection()
-            || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
+            || ($response->headers->has('Content-Type') && !str_contains($response->headers->get('Content-Type'), 'html'))
             || 'html' !== $request->getRequestFormat()
-            || false !== stripos($response->headers->get('Content-Disposition'), 'attachment;')
+            || false !== stripos($response->headers->get('Content-Disposition', ''), 'attachment;')
         ) {
             return;
         }
@@ -124,12 +143,12 @@ class WebDebugToolbarListener implements EventSubscriberInterface
             $toolbar = "\n".str_replace("\n", '', $this->twig->render(
                 '@WebProfiler/Profiler/toolbar_js.html.twig',
                 [
-                    'position' => $this->position,
+                    'full_stack' => class_exists(FullStack::class),
                     'excluded_ajax_paths' => $this->excludedAjaxPaths,
                     'token' => $response->headers->get('X-Debug-Token'),
                     'request' => $request,
-                    'csp_script_nonce' => isset($nonces['csp_script_nonce']) ? $nonces['csp_script_nonce'] : null,
-                    'csp_style_nonce' => isset($nonces['csp_style_nonce']) ? $nonces['csp_style_nonce'] : null,
+                    'csp_script_nonce' => $nonces['csp_script_nonce'] ?? null,
+                    'csp_style_nonce' => $nonces['csp_style_nonce'] ?? null,
                 ]
             ))."\n";
             $content = substr($content, 0, $pos).$toolbar.substr($content, $pos);
@@ -137,7 +156,7 @@ class WebDebugToolbarListener implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::RESPONSE => ['onKernelResponse', -128],

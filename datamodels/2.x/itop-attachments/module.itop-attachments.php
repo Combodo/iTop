@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-attachments/3.0.0',
+	'itop-attachments/3.1.0',
 	array(
 		// Identification
 		//
@@ -36,7 +36,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-attachments.php',
+			'vendor/autoload.php',
 			'main.itop-attachments.php',
 			'renderers.itop-attachments.php',
 		),

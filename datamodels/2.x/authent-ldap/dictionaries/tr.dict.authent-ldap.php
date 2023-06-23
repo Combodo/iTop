@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
+// Copyright (C) 2010-2023 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
  * Localized data
  *
  * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -37,4 +37,5 @@
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:UserLDAP' => 'LDAP kullanıcısı',
 	'Class:UserLDAP+' => 'Yetki kontrolü LDAP tarafından yapılan',
+	'UserLDAP:server' => 'LDAP specifics~~',
 ));

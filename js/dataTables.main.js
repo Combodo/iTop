@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -49,8 +49,10 @@ function updateDataTableSelection(listId, tableId) {
 	if (selectionMode === 'negative') {
 		let total = $('#'+tableId).DataTable().page.info()["recordsTotal"];
 		selectionCount.val(total-currentSelection.length);
+		$('#'+tableId).closest('.ibo-panel').find('.ibo-datatable--selected-count').html(total-currentSelection.length);
 	} else {
 		selectionCount.val(currentSelection.length);
+		$('#'+tableId).closest('.ibo-panel').find('.ibo-datatable--selected-count').html(currentSelection.length);
 	}
 
 	selectionCount.trigger('change');
@@ -77,3 +79,4 @@ function getMultipleSelectionParams(listId)
 
 	return oRes;
 }
+

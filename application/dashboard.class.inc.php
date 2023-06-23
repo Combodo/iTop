@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -583,7 +583,7 @@ JS
 		$oPage->add('<div id="select_dashlet" class="ibo-dashboard--available-dashlets--list" data-role="ibo-dashboard--available-dashlets--list">');
 		$aAvailableDashlets = $this->GetAvailableDashlets();
 		foreach ($aAvailableDashlets as $sDashletClass => $aInfo) {
-			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="ibo-dashboard-editor--available-dashlet-icon dashlet_icon ui-widget-content ui-corner-all" data-role="ibo-dashboard-editor--available-dashlet-icon" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
+			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="ibo-dashboard-editor--available-dashlet-icon dashlet_icon ui-widget-content ui-corner-all" data-role="ibo-dashboard-editor--available-dashlet-icon" id="dashlet_'.$sDashletClass.'" data-tooltip-content="'.$aInfo['label'].'"  title="'.$aInfo['label'].'"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
 		}
 		$oPage->add('</div>');
 
@@ -789,6 +789,7 @@ class RuntimeDashboard extends Dashboard
 
 	/**
 	 * @inheritDoc
+	 * @return bool $bIsNew
 	 * @throws \Exception
 	 */
 	public function Save()
@@ -798,6 +799,7 @@ class RuntimeDashboard extends Dashboard
 		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 		$oUDSearch->AddCondition('menu_code', $this->sId, '=');
 		$oUDSet = new DBObjectSet($oUDSearch);
+		$bIsNew = false;
 		if ($oUDSet->Count() > 0)
 		{
 			// Assuming there is at most one couple {user, menu}!
@@ -811,10 +813,12 @@ class RuntimeDashboard extends Dashboard
 			$oUserDashboard->Set('user_id', UserRights::GetUserId());
 			$oUserDashboard->Set('menu_code', $this->sId);
 			$oUserDashboard->Set('contents', $sXml);
+			$bIsNew = true;
 		}
 		utils::PushArchiveMode(false);
 		$oUserDashboard->DBWrite();
 		utils::PopArchiveMode();
+		return $bIsNew;
 	}
 
 	/**
@@ -1066,11 +1070,11 @@ EOF
 					 dashboard.html(data);
 					 dashboard.unblock();
 					 if ($('#ibo-dashboard-selector$sDivId input').prop("checked")) {
-					 	$('#ibo-dashboard-selector$sDivId').data('tooltip-content', '$sSwitchToStandard');
+					 	$('#ibo-dashboard-selector$sDivId').attr('data-tooltip-content', '$sSwitchToStandard');
 					 } else {
-					    $('#ibo-dashboard-selector$sDivId').data('tooltip-content', '$sSwitchToCustom');
+					    $('#ibo-dashboard-selector$sDivId').attr('data-tooltip-content', '$sSwitchToCustom');
 					 }
-					 CombodoTooltip.InitAllNonInstantiatedTooltips($('#ibo-dashboard-selector$sDivId').parent());
+					 CombodoTooltip.InitAllNonInstantiatedTooltips($('#ibo-dashboard-selector$sDivId').parent(), true);
 					}
 				 );
 			}
@@ -1543,6 +1547,29 @@ JS
 	public function GetDefinitionFile()
 	{
 		return $this->sDefinitionFile;
+	}
+
+	/**
+	 * @param string $sDashboardFileRelative can also be an absolute path (compatibility with old URL)
+	 *
+	 * @return string full path to the Dashboard file
+	 * @throws \SecurityException if path isn't under approot
+	 * @uses utils::RealPath()
+	 * @since 2.7.8 3.0.3 3.1.0 N°4449 remove FPD
+	 */
+	public static function GetDashboardFileFromRelativePath($sDashboardFileRelative)
+	{
+		if (utils::RealPath($sDashboardFileRelative, APPROOT)) {
+			// compatibility with old URL containing absolute path !
+			return $sDashboardFileRelative;
+		}
+
+		$sDashboardFile = APPROOT.$sDashboardFileRelative;
+		if (false === utils::RealPath($sDashboardFile, APPROOT)) {
+			throw new SecurityException('Invalid dashboard file !');
+		}
+
+		return $sDashboardFile;
 	}
 
 	/**

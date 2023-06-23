@@ -9,12 +9,12 @@ use Combodo\iTop\Application\Status\Status;
 try 
 {
 		new Status();
-        $aResult = ['status' => STATUS_RUNNING, 'code' => RestResult::OK, 'message' => '', 'product' => ITOP_APPLICATION, 'version' => ITOP_VERSION];
+        $aResult = ['status' => STATUS_RUNNING, 'code' => RestResult::OK, 'message' => ''];
 } 
 catch (Exception $e)
 {
         $iCode = (defined('\RestResult::INTERNAL_ERROR')) ? RestResult::INTERNAL_ERROR : 100;
-        $aResult = ['status' => STATUS_ERROR, 'code' => $iCode, 'message' => $e->getMessage(), 'product' => ITOP_APPLICATION, 'version' => ITOP_VERSION];
+        $aResult = ['status' => STATUS_ERROR, 'code' => $iCode, 'message' => $e->getMessage()];
         http_response_code(500);
 }
 

@@ -5,7 +5,7 @@ use Combodo\iTop\Application\Helper\Session;
 /**
  * Class LoginExternal
  *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -45,6 +45,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
+			Session::Set('auth_user', $sAuthUser);
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
@@ -53,8 +54,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 	{
 		if (Session::Get('login_mode') == 'external')
 		{
-			$sAuthUser = $this->GetAuthUser();
-			LoginWebPage::OnLoginSuccess($sAuthUser, 'external', Session::Get('login_mode'));
+			LoginWebPage::OnLoginSuccess(Session::Get('auth_user'), 'external', Session::Get('login_mode'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
@@ -73,6 +73,11 @@ class LoginExternal extends AbstractLoginFSMExtension
 	{
 		if (Session::Get('login_mode') == 'external')
 		{
+            $iOnExit = LoginWebPage::getIOnExit();
+            if ($iOnExit === LoginWebPage::EXIT_RETURN)
+            {
+                return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
+            }
 			LoginWebPage::HTTP401Error();
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;

@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @copyright Copyright (C) 2010-2023 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -23,7 +23,7 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 
-	'Menu:ConfigEditor' => 'General Configuration',
+	'Menu:ConfigEditor' => 'General configuration',
 	'config-edit-title' => 'Configuration File Editor',
 	'config-edit-intro' => 'Be very cautious when editing the configuration file.',
 	'config-apply' => 'Apply',
@@ -36,4 +36,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'config-parse-error' => 'Line %2$d: %1$s.<br/>The file has NOT been updated.',
 	'config-current-line' => 'Editing line: %1$s',
 	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.',
+	'config-error-transaction' => 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.',
+	'config-error-file-changed' => 'Error: The Configuration file has changed since you opened it and cannot be saved. Refresh and apply your changes again.',
+	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the configuration file cannot be edited.',
+	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT." interactive edition of the configuration as been disabled. See <code>'config_editor' => 'disabled'</code> in the configuration file.",
 ));

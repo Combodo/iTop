@@ -11,6 +11,8 @@ $file-name-border-style: solid !default;
 $file-name-border-width: 1px 1px 1px 0 !default;
 $file-name-max-width: 16em !default;
 
+$file-colors: $form-colors !default;
+
 .file {
   @extend %unselectable;
 
@@ -20,7 +22,7 @@ $file-name-max-width: 16em !default;
   position: relative;
 
   // Colors
-  @each $name, $pair in $colors {
+  @each $name, $pair in $file-colors {
     $color: nth($pair, 1);
     $color-invert: nth($pair, 2);
 
@@ -63,6 +65,10 @@ $file-name-max-width: 16em !default;
   // Sizes
   &.is-small {
     font-size: $size-small;
+  }
+
+  &.is-normal {
+    font-size: $size-normal;
   }
 
   &.is-medium {
