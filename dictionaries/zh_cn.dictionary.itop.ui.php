@@ -298,22 +298,22 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:URP_ActionGrant' => '操作许可',
-	'Class:URP_ActionGrant+' => '类上的许可',
+	'Class:URP_ActionGrant' => '操作权限',
+	'Class:URP_ActionGrant+' => '类的权限',
 	'Class:URP_ActionGrant/Attribute:profileid' => '角色',
 	'Class:URP_ActionGrant/Attribute:profileid+' => '使用角色',
 	'Class:URP_ActionGrant/Attribute:profile' => '角色',
 	'Class:URP_ActionGrant/Attribute:profile+' => '使用角色',
 	'Class:URP_ActionGrant/Attribute:class' => '类',
 	'Class:URP_ActionGrant/Attribute:class+' => '目标类',
-	'Class:URP_ActionGrant/Attribute:permission' => '许可',
+	'Class:URP_ActionGrant/Attribute:permission' => '权限',
 	'Class:URP_ActionGrant/Attribute:permission+' => '允许或不允许?',
 	'Class:URP_ActionGrant/Attribute:permission/Value:yes' => '是',
 	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => '是',
 	'Class:URP_ActionGrant/Attribute:permission/Value:no' => '否',
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => '否',
 	'Class:URP_ActionGrant/Attribute:action' => '操作',
-	'Class:URP_ActionGrant/Attribute:action+' => '可用于指定类上的操作',
+	'Class:URP_ActionGrant/Attribute:action+' => '可用于指定类上的操作权限',
 ));
 
 //
@@ -321,22 +321,22 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:URP_StimulusGrant' => '刺激许可',
-	'Class:URP_StimulusGrant+' => '对象生命周期中刺激的许可',
+	'Class:URP_StimulusGrant' => '权限变化',
+	'Class:URP_StimulusGrant+' => '对象生命周期中权限的变化',
 	'Class:URP_StimulusGrant/Attribute:profileid' => '角色',
 	'Class:URP_StimulusGrant/Attribute:profileid+' => '使用角色',
 	'Class:URP_StimulusGrant/Attribute:profile' => '角色',
 	'Class:URP_StimulusGrant/Attribute:profile+' => '使用角色',
 	'Class:URP_StimulusGrant/Attribute:class' => '类',
 	'Class:URP_StimulusGrant/Attribute:class+' => '目标类',
-	'Class:URP_StimulusGrant/Attribute:permission' => '许可',
+	'Class:URP_StimulusGrant/Attribute:permission' => '权限',
 	'Class:URP_StimulusGrant/Attribute:permission+' => '允许或不允许?',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => '是',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => '是',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => '否',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => '否',
-	'Class:URP_StimulusGrant/Attribute:stimulus' => '刺激',
-	'Class:URP_StimulusGrant/Attribute:stimulus+' => '刺激编码',
+	'Class:URP_StimulusGrant/Attribute:stimulus' => '变化',
+	'Class:URP_StimulusGrant/Attribute:stimulus+' => '变化编码',
 ));
 
 //
@@ -344,10 +344,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:URP_AttributeGrant' => '属性许可',
-	'Class:URP_AttributeGrant+' => '属性层次上的许可',
-	'Class:URP_AttributeGrant/Attribute:actiongrantid' => '操作准许',
-	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '操作准许',
+	'Class:URP_AttributeGrant' => '属性权限',
+	'Class:URP_AttributeGrant+' => '属性的权限',
+	'Class:URP_AttributeGrant/Attribute:actiongrantid' => '操作权限',
+	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '操作权限',
 	'Class:URP_AttributeGrant/Attribute:attcode' => '属性',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => '属性编码',
 ));
@@ -530,7 +530,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Error:BulkModifyNotAllowedOn_Class' => '您无权进行 %1$s 类对象的批量更新',
 	'UI:Error:ObjectAlreadyCloned' => '错误: 此对象已被克隆!',
 	'UI:Error:ObjectAlreadyCreated' => '错误: 此对象已被创建!',
-	'UI:Error:Invalid_Stimulus_On_Object_In_State' => '错误: 在对象 %2$s 的 "%3$s" 状态上的无效刺激 "%1$s" .',
+	'UI:Error:Invalid_Stimulus_On_Object_In_State' => '错误: 在对象 %2$s 的 "%3$s" 状态上的无效权限 "%1$s" .',
 	'UI:Error:InvalidDashboardFile' => 'Error: 无效的仪表盘文件',
 	'UI:Error:InvalidDashboard' => 'Error: 无效的仪表盘',
 	'UI:Error:MaintenanceMode' => '应用正处于维护中',
@@ -1006,12 +1006,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:UserManagement:Action:BulkDelete' => '批量删除',
 	'UI:UserManagement:Action:BulkDelete+' => '批量删除对象',
 	'UI:UserManagement:Action:Stimuli' => 'Stimuli',
-	'UI:UserManagement:Action:Stimuli+' => '许可的 (复合的) 操作',
+	'UI:UserManagement:Action:Stimuli+' => '权限的(复合)操作',
 	'UI:UserManagement:Action' => '操作',
 	'UI:UserManagement:Action+' => '此用户进行的操作',
 	'UI:UserManagement:TitleActions' => '操作',
-	'UI:UserManagement:Permission' => '许可',
-	'UI:UserManagement:Permission+' => '用户的许可',
+	'UI:UserManagement:Permission' => '权限',
+	'UI:UserManagement:Permission+' => '用户的权限',
 	'UI:UserManagement:Attributes' => '属性',
 	'UI:UserManagement:ActionAllowed:Yes' => '是',
 	'UI:UserManagement:ActionAllowed:No' => '否',
@@ -1179,9 +1179,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Modify_N_ObjectsOf_Class' => '正在修改 %1$d 个 %2$s',
 	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => '正在修改 %1$d 个 %2$s ,一共 %3$d 个',
 	'UI:Menu:ModifyAll' => '修改...',
-	'UI:Menu:ModifyAll_Class' => 'Modify %1$s objects...',
-	'UI:Menu:ModifyAll_Link' => 'Modify %1$s...',
-	'UI:Menu:ModifyAll_Remote' => 'Modify %1$s...',
+	'UI:Menu:ModifyAll_Class' => '修改 %1$s 个对象...',
+	'UI:Menu:ModifyAll_Link' => '修改 %1$s...',
+	'UI:Menu:ModifyAll_Remote' => '修改 %1$s...',
 	'UI:Button:ModifyAll' => '全部修改',
 	'UI:Button:PreviewModifications' => '修改预览 >>',
 	'UI:ModifiedObject' => '对象已修改',
