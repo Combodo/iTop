@@ -602,6 +602,7 @@ abstract class DBObject implements iDisplay
 	public function Set($sAttCode, $value)
 	{
 		if (!utils::StartsWith(get_class($this), 'CMDBChange') && $this->GetKey() > 0) {
+			// not all the values have __to_string() so print_r is sed and preferred over var_export for the handling or circular references
 			$this->LogCRUDEnter(__METHOD__, "$sAttCode => ".print_r($value, true));
 		}
 
