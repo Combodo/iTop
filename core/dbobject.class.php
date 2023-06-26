@@ -2853,11 +2853,10 @@ abstract class DBObject implements iDisplay
 
 		$aHierarchicalKeys = array();
 		
-		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef)
-		{
+		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef) {
 			// Skip this attribute if not defined in this table
-			if (!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode) && !$oAttDef->CopyOnAllTables())
-			{
+			if ((!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode) && !$oAttDef->CopyOnAllTables())
+				|| $oAttDef->IsExternalField()) {
 				continue;
 			}
 			$aAttColumns = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
@@ -2981,10 +2980,13 @@ abstract class DBObject implements iDisplay
 		}
 
 		$aHierarchicalKeys = array();
-		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef)
+		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode => $oAttDef)
 		{
 			// Skip this attribute if not defined in this table
-			if (!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode)) continue;
+			if ((!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode))
+				|| $oAttDef->IsExternalField()) {
+				continue;
+			};
 			// Skip link set that can still be undefined though the object is 100% loaded
 			if ($oAttDef->IsLinkSet()) continue;
 
@@ -6011,11 +6013,8 @@ abstract class DBObject implements iDisplay
 			}
 
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			$aSQLValues = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
+			$aSQLValues = $oAttDef->GetSQLValues($this->Get($sAttCode));
 			$value = reset($aSQLValues);
-			if ($oAttDef->IsNull($value)) {
-				return '';
-			}
 			$aArgs[$sFieldDesc] = $value;
 		}
 

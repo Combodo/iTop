@@ -3526,6 +3526,7 @@ class CharConcatWSExpression extends CharConcatExpression
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
+			// TODO: Seems weird, this should rather be $aRes[] = $oExpr->Evaluate($aArgs);
 			$aRes .= $oExpr->Evaluate($aArgs);
 		}
 		return implode($this->m_separator, $aRes);

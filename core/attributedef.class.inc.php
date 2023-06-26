@@ -7987,6 +7987,17 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->MakeRealValue($proposedValue, $oHostObj);
 	}
 
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0 N°6271 Delegate to remote attribute to ensure cascading computed values
+	 */
+	public function GetSQLValues($value)
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+
+		return $oExtAttDef->GetSQLValues($value);
+	}
+
 	public function ScalarToSQL($value)
 	{
 		// This one could be used in case of filtering only
