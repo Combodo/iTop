@@ -321,8 +321,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:URP_StimulusGrant' => '权限变化',
-	'Class:URP_StimulusGrant+' => '对象生命周期中权限的变化',
+	'Class:URP_StimulusGrant' => '权限调整',
+	'Class:URP_StimulusGrant+' => '对象生命周期中权限的调整',
 	'Class:URP_StimulusGrant/Attribute:profileid' => '角色',
 	'Class:URP_StimulusGrant/Attribute:profileid+' => '使用角色',
 	'Class:URP_StimulusGrant/Attribute:profile' => '角色',
@@ -335,8 +335,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => '是',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => '否',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => '否',
-	'Class:URP_StimulusGrant/Attribute:stimulus' => '变化',
-	'Class:URP_StimulusGrant/Attribute:stimulus+' => '变化编码',
+	'Class:URP_StimulusGrant/Attribute:stimulus' => '调整',
+	'Class:URP_StimulusGrant/Attribute:stimulus+' => '调整编码',
 ));
 
 //
@@ -360,7 +360,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserDashboard+' => '',
 	'Class:UserDashboard/Attribute:user_id' => '用户',
 	'Class:UserDashboard/Attribute:user_id+' => '',
-	'Class:UserDashboard/Attribute:menu_code' => '菜单代码',
+	'Class:UserDashboard/Attribute:menu_code' => '菜单编码',
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => '内容',
 	'Class:UserDashboard/Attribute:contents+' => '',
@@ -879,9 +879,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Schema:LifeCycleEmptyList' => '空列表',
 	'UI:Schema:ClassFilter' => '类别:',
 	'UI:Schema:DisplayLabel' => '显示:',
-	'UI:Schema:DisplaySelector/LabelAndCode' => '标记和代码',
+	'UI:Schema:DisplaySelector/LabelAndCode' => '标记和编码',
 	'UI:Schema:DisplaySelector/Label' => '标记',
-	'UI:Schema:DisplaySelector/Code' => '代码',
+	'UI:Schema:DisplaySelector/Code' => '编码',
 	'UI:Schema:Attribute/Filter' => '筛选器',
 	'UI:Schema:DefaultNullValue' => '默认为空 : "%1$s"',
 	'UI:Schema:Events' => 'Events~~',

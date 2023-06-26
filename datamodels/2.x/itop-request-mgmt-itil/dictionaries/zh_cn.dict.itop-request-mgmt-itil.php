@@ -168,7 +168,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:sla_ttr_over+' => '',
 	'Class:UserRequest/Attribute:time_spent' => '耗时',
 	'Class:UserRequest/Attribute:time_spent+' => '',
-	'Class:UserRequest/Attribute:resolution_code' => '解决代码',
+	'Class:UserRequest/Attribute:resolution_code' => '解决编码',
 	'Class:UserRequest/Attribute:resolution_code+' => '',
 	'Class:UserRequest/Attribute:resolution_code/Value:assistance' => '帮助',
 	'Class:UserRequest/Attribute:resolution_code/Value:assistance+' => '帮助',
