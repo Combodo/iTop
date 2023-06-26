@@ -602,7 +602,7 @@ abstract class DBObject implements iDisplay
 	public function Set($sAttCode, $value)
 	{
 		if (!utils::StartsWith(get_class($this), 'CMDBChange') && $this->GetKey() > 0) {
-			$this->LogCRUDEnter(__METHOD__, "$sAttCode => $value");
+			$this->LogCRUDEnter(__METHOD__, "$sAttCode => ".var_export($value, true));
 		}
 
 		$sMessage = $this->IsReadOnly();
