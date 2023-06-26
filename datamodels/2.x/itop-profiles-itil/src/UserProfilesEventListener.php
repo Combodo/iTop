@@ -92,8 +92,8 @@ class UserProfilesEventListener implements iEventServiceSetup
 
 		$aNonStandaloneProfiles = \utils::GetConfig()->GetModuleSetting('itop-profiles-itil', self::USERPROFILE_REPAIR_ITOP_PARAM_NAME, null);
 
-		//when there are customized portals on an itop, choosing a specific profile means choosing which portal user will access
-		//in that case, itop administrator has to specify it via itop configuration. we dont use default profiles repairment otherwise
+		//When there are several customized portals on an itop, choosing a specific profile means choosing which portal user will access
+		//In that case, itop administrator has to specify it via itop configuration. we dont use default profiles repairment otherwise
 		if (is_null($aNonStandaloneProfiles)){
 			if (count($aPortalDispatcherData) > 2){
 				$this->bIsRepairmentEnabled = false;
@@ -120,7 +120,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 		}
 
 		if (empty($aNonStandaloneProfiles)){
-			//feature specifically disabled in itop configuration
+			//Feature specifically disabled in itop configuration
 			$this->bIsRepairmentEnabled = false;
 			return;
 		}
@@ -176,7 +176,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 		}
 	}
 
-	public function RepairProfiles(\User $oUser) : void
+	public function RepairProfiles(?\User $oUser) : void
 	{
 		if (!is_null($oUser))
 		{
@@ -188,10 +188,10 @@ class UserProfilesEventListener implements iEventServiceSetup
 				if (array_key_exists($sSingleProfileName, $this->aNonStandaloneProfilesMap)) {
 					$sRepairingProfileId = $this->aNonStandaloneProfilesMap[$sSingleProfileName];
 					if (is_null($sRepairingProfileId)){
-						//notify current user via session messages that there will be an issue
-						//without preventing from commiting
+						//Notify current user via session messages that there will be an issue
+						//Without preventing from commiting
 					} else {
-						//completing profiles profiles by adding repairing one : by default portal user to a power portal user
+						//Completing profiles profiles by adding repairing one : by default portal user to a power portal user
 						$oUserProfile = new \URP_UserProfile();
 						$oUserProfile->Set('profileid', $sRepairingProfileId);
 						$oCurrentUserProfileSet->AddItem($oUserProfile);
