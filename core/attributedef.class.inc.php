@@ -1772,7 +1772,53 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/** @inheritDoc * */
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true): string
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		if($this->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB){
+			return $this->GetAsHTMLForTab($sValue, $oHostObject, $bLocalize);
+		}
+		else{
+			return $this->GetAsHTMLForProperty($sValue, $oHostObject, $bLocalize);
+		}
+	}
+
+	public function GetAsHTMLForTab($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
+		{
+			$sValue->Rewind();
+			$aItems = array();
+			while ($oObj = $sValue->Fetch())
+			{
+				// Show only relevant information (hide the external key to the current object)
+				$aAttributes = array();
+				foreach(MetaModel::ListAttributeDefs($this->GetLinkedClass()) as $sAttCode => $oAttDef)
+				{
+					if ($sAttCode == $this->GetExtKeyToMe())
+					{
+						continue;
+					}
+					if ($oAttDef->IsExternalField())
+					{
+						continue;
+					}
+					$sAttValue = $oObj->GetAsHTML($sAttCode);
+					if (strlen($sAttValue) > 0)
+					{
+						$aAttributes[] = $sAttValue;
+					}
+				}
+				$sAttributes = implode(', ', $aAttributes);
+				$aItems[] = $sAttributes;
+			}
+
+			return implode('<br/>', $aItems);
+		}
+
+		return null;
+	}
+
+	public function GetAsHTMLForProperty($sValue, $oHostObject = null, $bLocalize = true): string
 	{
 		try {
 
