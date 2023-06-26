@@ -1871,7 +1871,8 @@ class MenuBlock extends DisplayBlock
 		/** @var array $aToolkitActions Any "legacy" toolkit menu item, which are now displayed in the same menu as the $aRegularActions, after them */
 		$aToolkitActions = [];
 
-		if (!isset($aExtraParams['selection_mode']) || ($aExtraParams['selection_mode'] == "")) {
+		if ((!isset($aExtraParams['selection_mode']) || ($aExtraParams['selection_mode'] == ""))
+			&& (!isset($aExtraParams['menu']) || $aExtraParams['menu'])) {
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
 			if (utils::IsNotNullOrEmptyString($sContext)) {
