@@ -19,11 +19,11 @@
 
 namespace Combodo\iTop\Form;
 
-use \Exception;
-use \Dict;
-use \Combodo\iTop\Form\Field\Field;
-use \Combodo\iTop\Form\Field\CaseLogField;
-use \Combodo\iTop\Form\Field\SubFormField;
+use Combodo\iTop\Form\Field\CaseLogField;
+use Combodo\iTop\Form\Field\Field;
+use Combodo\iTop\Form\Field\SubFormField;
+use Dict;
+use Exception;
 
 /**
  * Description of Form
@@ -34,6 +34,7 @@ class Form
 {
 	protected $sId;
 	protected $sTransactionId;
+	/** @var \Combodo\iTop\Form\Field\Field[] */
 	protected $aFields;
 	protected $aDependencies;
 	protected $bValid;
@@ -566,17 +567,14 @@ class Form
         $this->SetValid(true);
         $this->EmptyErrorMessages();
 
-        foreach ($this->aFields as $oField)
-        {
-            if (!$oField->Validate())
-            {
-                $this->SetValid(false);
-                foreach ($oField->GetErrorMessages() as $sErrorMessage)
-                {
-                    $this->AddErrorMessage(Dict::S($sErrorMessage), $oField->Getid());
-                }
-            }
-        }
+	    foreach ($this->aFields as $oField) {
+		    if (!$oField->Validate()) {
+			    $this->SetValid(false);
+			    foreach ($oField->GetErrorMessages() as $sErrorMessage) {
+				    $this->AddErrorMessage(Dict::S($sErrorMessage), $oField->Getid());
+			    }
+		    }
+	    }
 
         return $this->GetValid();
     }

@@ -181,4 +181,17 @@ PHP
 			],
 		];
 	}
+
+	public function testMakeFormField(): void
+	{
+		$oPerson = $this->CreatePerson(1);
+		$oPerson->Set('email', 'toto@tutu.com');
+		$oAttDef = MetaModel::GetAttributeDef(get_class($oPerson), 'email');
+		$oFormFieldWithTouchedAtt = $oAttDef->MakeFormField($oPerson);
+		$this->assertFalse($oFormFieldWithTouchedAtt->IsValidationDisabled(), 'email is part of modified fields, we must have field validation');
+
+		$oPerson->DBUpdate(); // reset list of changed attributes
+		$oFormFieldNoTouchedAtt = $oAttDef->MakeFormField($oPerson);
+		$this->assertTrue($oFormFieldNoTouchedAtt->IsValidationDisabled(), 'email wasn\'t modified, we must not validate the corresponding field');
+	}
 }
