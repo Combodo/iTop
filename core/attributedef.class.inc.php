@@ -1152,6 +1152,13 @@ abstract class AttributeDefinition
 			$oFormField->AddMetadata('value-raw', (string)$oObject->Get($this->GetCode()));
 		}
 
+		// We don't want to invalidate field because of old untouched values that are no longer valid
+		$aModifiedAttCodes = $oObject->ListChanges();
+		$bAttributeHasBeenModified = array_key_exists($this->GetCode(), $aModifiedAttCodes);
+		if (false === $bAttributeHasBeenModified) {
+			$oFormField->SetValidationDisabled(true);
+		}
+
 		return $oFormField;
 	}
 
