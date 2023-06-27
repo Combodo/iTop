@@ -325,9 +325,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventNotification' => '通知事件',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent~~',
 	'Class:EventNotification/Attribute:trigger_id' => '触发器',
-	'Class:EventNotification/Attribute:trigger_id+' => '用户账户',
+	'Class:EventNotification/Attribute:trigger_id+' => '用户账号',
 	'Class:EventNotification/Attribute:action_id' => '用户',
-	'Class:EventNotification/Attribute:action_id+' => '用户账户',
+	'Class:EventNotification/Attribute:action_id+' => '用户账号',
 	'Class:EventNotification/Attribute:object_id' => '对象id',
 	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)~~',
 ));
