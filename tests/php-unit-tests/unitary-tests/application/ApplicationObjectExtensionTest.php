@@ -21,7 +21,7 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 	{
 		parent::setUp();
 
-		require_once 'iApplicationObjectExtension/MockApplicationObjectExtensionForTest.php';
+		$this->RequireOnceUnitTestFile('iApplicationObjectExtension/MockApplicationObjectExtensionForTest.php');
 		$this->ResetApplicationObjectExtensions();
 		// Count all the calls to this object
 		MockApplicationObjectExtensionForTest::SetCallBack([ApplicationObjectExtensionTest::class, 'IncrementCallCount']);
@@ -94,7 +94,7 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 	public function testModificationsOnInsertWith2Extensions()
 	{
 		self::ResetCallCount();
-		require_once 'iApplicationObjectExtension/MockApplicationObjectExtensionForTest2.php';
+		$this->RequireOnceUnitTestFile('iApplicationObjectExtension/MockApplicationObjectExtensionForTest2.php');
 		$this->ResetApplicationObjectExtensions();
 		// Count all the calls to this object
 		MockApplicationObjectExtensionForTest2::SetCallBack([ApplicationObjectExtensionTest::class, 'IncrementCallCount']);

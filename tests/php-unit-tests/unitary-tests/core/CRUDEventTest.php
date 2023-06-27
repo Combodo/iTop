@@ -284,8 +284,6 @@ class CRUDEventTest extends ItopDataTestCase
 	 */
 	public function testInfiniteUpdateDoneLoop()
 	{
-		$this->markTestSkipped('TEST Skipped: Protection not working.');
-
 		$oPerson = $this->CreatePerson(1);
 		$this->assertIsObject($oPerson);
 
