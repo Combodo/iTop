@@ -13,7 +13,7 @@ use Combodo\iTop\Form\Validator\MandatoryValidator;
  */
 class AbstractSimpleField extends Field
 {
-	public function Validate()
+	final public function Validate()
 	{
 		$this->SetValid(true);
 		$this->EmptyErrorMessages();
