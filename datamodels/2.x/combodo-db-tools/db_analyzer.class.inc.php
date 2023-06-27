@@ -498,7 +498,14 @@ class DatabaseAnalyzer
 		}
 	}
 
-	private function NotEmptyToSql($sRef, $sSearchType)
+	/**
+	 * @param $sRef
+	 * @param string $sSearchType
+	 *
+	 * @return string
+	 * @since 3.1.0 N°6442
+	 */
+	private function NotEmptyToSql($sRef, string $sSearchType)
 	{
 		switch ($sSearchType) {
 			case AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC:

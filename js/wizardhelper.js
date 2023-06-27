@@ -65,6 +65,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 		'm_aAllowedValuesRequested': [],
 		'm_oDefaultValue': {},
 		'm_oAllowedValues': {},
+		/** {Object} m_aStaticValues Values of the object that are not meant to be changed by the user. Only there to be used in the workflow for dependencies or to be passed through. */
 		'm_aStaticValues' : {},
 		'm_iFieldsCount': 0,
 		'm_sFormPrefix': sFormPrefix,
