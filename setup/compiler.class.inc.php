@@ -2058,6 +2058,7 @@ EOF
 			$this->CompileCommonProperty('count_max', $oField, $aParameters, $sModuleRelativeDir, 0);
 			$this->CompileCommonProperty('duplicates', $oField, $aParameters, $sModuleRelativeDir, false);
 			$this->CompileCommonProperty('display_style', $oField, $aParameters, $sModuleRelativeDir);
+			$this->CompileCommonProperty('edit_mode', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('with_php_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
