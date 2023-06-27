@@ -2060,7 +2060,7 @@ EOF
 			$this->CompileCommonProperty('display_style', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
-			$this->CompileCommonProperty('with_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
+			$this->CompileCommonProperty('with_php_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeLinkedSet') {
 			$this->CompileCommonProperty('linked_class', $oField, $aParameters, $sModuleRelativeDir);
@@ -2070,7 +2070,7 @@ EOF
 			$this->CompileCommonProperty('display_style', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('edit_mode', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('filter', $oField, $aParameters, $sModuleRelativeDir);
-			$this->CompileCommonProperty('with_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
+			$this->CompileCommonProperty('with_php_constraint', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeExternalKey') {
 			$this->CompileCommonProperty('target_class', $oField, $aParameters, $sModuleRelativeDir);
