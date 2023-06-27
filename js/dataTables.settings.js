@@ -95,6 +95,8 @@ $(function () {
 								$.ajax({url: sFileUrl, dataType: 'script', cache: true});
 								aLoadedJsFilesRegister.set(item, new Promise(function (fJsFileResolve) {
 									aLoadedJsFilesResolveCallbacks.set(item, fJsFileResolve);
+									// Resolve promise right away as these files are loaded immediately
+									aLoadedJsFilesResolveCallbacks.get(item, fJsFileResolve)();
 								}));
 							}
 						});
