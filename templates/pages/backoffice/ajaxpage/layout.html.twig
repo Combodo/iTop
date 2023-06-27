@@ -62,6 +62,26 @@
                      * ]
                      * ```
                      */
+                    
+                     // If these constants aren't defined by the main page, define them (global) ourselves
+                    if (typeof aLoadedJsFilesRegister === "undefined") {
+                        Object.defineProperty(window, "aLoadedJsFilesRegister", {
+                            value: new Map(),
+                            writable: false,
+                            configurable: false,
+                            enumerable: true
+                        });
+                    }      
+                    
+                    if (typeof aLoadedJsFilesResolveCallbacks === "undefined") {
+                        Object.defineProperty(window, "aLoadedJsFilesResolveCallbacks", {
+                            value: new Map(),
+                            writable: false,
+                            configurable: false,
+                            enumerable: true
+                        });
+                    }
+                    
                     let aJsFilesToLoad = [];
                     /**
                      * @type {Array} aJsFilesToLoadByOtherRequests Files required by the current \AjaxPage but that are already being handled by another request (done or ongoing)
