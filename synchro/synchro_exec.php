@@ -137,12 +137,13 @@ else {
 		exit - 1;
 	}
 
-	$bSimulate = (utils::ReadParam('simulate', '0', true) == '1');
-	$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources', 'raw_data'); // May contain commas
+}
 
-	if ($sDataSourcesList == null) {
-		UsageAndExit($oP);
-	}
+$bSimulate = (utils::ReadParam('simulate', '0', true) == '1');
+$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources', 'raw_data'); // May contain commas
+
+if ($sDataSourcesList == null) {
+	UsageAndExit($oP);
 }
 
 foreach(explode(',', $sDataSourcesList) as $iSDS)
