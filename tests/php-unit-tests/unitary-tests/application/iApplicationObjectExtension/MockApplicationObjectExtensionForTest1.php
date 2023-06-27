@@ -7,7 +7,7 @@
 /**
  * Test object for AbstractApplicationObjectExtension API
  */
-class MockApplicationObjectExtensionForTest extends AbstractApplicationObjectExtension
+class MockApplicationObjectExtensionForTest1 extends AbstractApplicationObjectExtension
 {
 	protected static $iCountModify;
 	protected static $sClass;

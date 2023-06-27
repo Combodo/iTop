@@ -21,16 +21,16 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 	{
 		parent::setUp();
 
-		$this->RequireOnceUnitTestFile('iApplicationObjectExtension/MockApplicationObjectExtensionForTest.php');
+		$this->RequireOnceUnitTestFile('iApplicationObjectExtension/MockApplicationObjectExtensionForTest1.php');
 		$this->ResetApplicationObjectExtensions();
 		// Count all the calls to this object
-		MockApplicationObjectExtensionForTest::SetCallBack([ApplicationObjectExtensionTest::class, 'IncrementCallCount']);
+		MockApplicationObjectExtensionForTest1::SetCallBack([ApplicationObjectExtensionTest::class, 'IncrementCallCount']);
 	}
 
 	public function tearDown(): void
 	{
-		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', 0);
-		MockApplicationObjectExtensionForTest::SetCallBack(null);
+		MockApplicationObjectExtensionForTest1::SetModifications('Person', 'name', 0);
+		MockApplicationObjectExtensionForTest1::SetCallBack(null);
 		parent::tearDown();
 	}
 
@@ -51,7 +51,7 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 		// Check that extension is called
 		$oPerson = $this->CreatePerson(1);
 		$oPerson->Set('first_name', 'testUpdateReentranceProtection');
-		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', 1);
+		MockApplicationObjectExtensionForTest1::SetModifications('Person', 'name', 1);
 		self::ResetCallCount();
 		$oPerson->DBUpdate();
 		// Called twice, the first call will provoke the DBUpdate and call again the object extension
@@ -65,7 +65,7 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 		// Check that loop limit is 10
 		$i = 15;
 		self::ResetCallCount();
-		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', $i);
+		MockApplicationObjectExtensionForTest1::SetModifications('Person', 'name', $i);
 		$oPerson->Set('first_name', 'testUpdateReentranceProtection');
 		$oPerson->DBUpdate();
 		$this->assertEquals(10, self::$iCalls);
@@ -77,7 +77,7 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 		$oPerson->Set('first_name', 'testUpdateReentranceProtection');
 
 		self::ResetCallCount();
-		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', 1);
+		MockApplicationObjectExtensionForTest1::SetModifications('Person', 'name', 1);
 		$oPerson->DBUpdate();
 		$this->assertEquals(2, self::$iCalls);
 	}
@@ -85,7 +85,7 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 	public function testModificationsOnInsert()
 	{
 		self::ResetCallCount();
-		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', 1);
+		MockApplicationObjectExtensionForTest1::SetModifications('Person', 'name', 1);
 		$oPerson = $this->CreatePerson(1);
 		$this->assertEquals(2, self::$iCalls);
 	}
@@ -99,7 +99,7 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 		// Count all the calls to this object
 		MockApplicationObjectExtensionForTest2::SetCallBack([ApplicationObjectExtensionTest::class, 'IncrementCallCount']);
 
-		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', 2);
+		MockApplicationObjectExtensionForTest1::SetModifications('Person', 'name', 2);
 		MockApplicationObjectExtensionForTest2::SetModifications('Person', 'first_name', 2);
 		$oPerson = $this->CreatePerson(1);
 		$this->assertEquals(6, self::$iCalls);
