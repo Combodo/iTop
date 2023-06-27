@@ -90,6 +90,7 @@ if (utils::IsModeCLI())
 {
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
+	$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources', 'raw_data'); // May contain commas
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 	{
 		UserRights::Login($sAuthUser); // Login & set the user's language
@@ -136,13 +137,14 @@ else {
 		exit - 1;
 	}
 
-	$bSimulate = (utils::ReadParam('simulate', '0', true) == '1');
 	$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources', 'raw_data'); // May contain commas
 
 	if ($sDataSourcesList == null) {
 		UsageAndExit($oP);
 	}
 }
+
+$bSimulate = (utils::ReadParam('simulate', '0', true) == '1');
 
 foreach(explode(',', $sDataSourcesList) as $iSDS)
 {
