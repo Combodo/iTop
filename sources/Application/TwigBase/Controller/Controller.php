@@ -377,7 +377,7 @@ abstract class Controller extends AbstractController
 	}
 
 	/**
-	 * Display an AJAX page (AjaxPage)
+	 * Display an Setup page (SetupPage)
 	 *
 	 * @api
 	 *
