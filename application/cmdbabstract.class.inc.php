@@ -3049,16 +3049,21 @@ JS
 
 		$oPage->SetCurrentTab('');
 
+		// Static fields values for wizard helper serialization
+		$aWizardHelperStaticValues = [];
+
 		// Add as hidden inputs values that we want displayed if they're readonly
 		if(isset($aExtraParams['forceFieldsSubmission'])){
 			$aExtraFlags = $aExtraParams['fieldsFlags'] ?? [];
 			foreach ($aExtraParams['forceFieldsSubmission'] as $sAttCode) {
 					if(FormHelper::GetAttributeFlagsForObject($this, $sAttCode, $aExtraFlags) & OPT_ATT_READONLY) {
 						$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('attr_'.$sPrefix.$sAttCode, $this->Get($sAttCode)));
+						$aWizardHelperStaticValues[$sAttCode] = $this->Get($sAttCode);
 					}
 			}
 		}
-		
+		$sWizardHelperStaticValues = json_encode($aWizardHelperStaticValues);
+
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 		foreach ($aExtraParams as $sName => $value) {
@@ -3101,6 +3106,7 @@ JS
 		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sLifecycleStateForWizardHelper');
 		oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
 		oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
+		oWizardHelper$sPrefix.SetStaticValues($sWizardHelperStaticValues);
 EOF
 		);
 		$oPage->add_ready_script(
