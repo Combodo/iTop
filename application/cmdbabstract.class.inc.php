@@ -187,9 +187,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	/** @var array initial attributes flags cache [attcode]['flags'] */
 	protected $aInitialAttributesFlags;
 
-	protected $iUpdateLoopCount;
-
-	const MAX_UPDATE_LOOP_COUNT = 10;
 
 	/**
 	 * @var array First level classname, second level id, value number of calls done
@@ -227,7 +224,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$this->sDisplayMode = static::DEFAULT_DISPLAY_MODE;
 		$this->bAllowWrite = false;
 		$this->bAllowDelete = false;
-		$this->iUpdateLoopCount = 0;
 	}
 
 	/**
@@ -4525,13 +4521,6 @@ HTML;
 
 			$this->SetWarningsAsSessionMessages('create');
 
-			// Invoke extensions after insertion (the object must exist, have an id, etc.)
-			/** @var \iApplicationObjectExtension $oExtensionInstance */
-			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
-				$sExtensionClass = get_class($oExtensionInstance);
-				$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBInsert()");
-				$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
-			}
 		} finally {
 			if (static::IsCrudStackEmpty()) {
 				// Avoid signaling the current object that links were modified
@@ -4541,6 +4530,19 @@ HTML;
 		}
 		$this->LogCRUDExit(__METHOD__);
 		return $res;
+	}
+
+	public function PostInsertActions(): void
+	{
+		parent::PostInsertActions();
+
+		// Invoke extensions after insertion (the object must exist, have an id, etc.)
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins(iApplicationObjectExtension::class) as $oExtensionInstance) {
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBInsert()");
+			$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
+		}
 	}
 
 	/**
@@ -4578,48 +4580,6 @@ HTML;
 			$res = parent::DBUpdate();
 
 			$this->SetWarningsAsSessionMessages('update');
-
-			// Protection against reentrance (e.g. cascading the update of ticket logs)
-			// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
-			if (!MetaModel::StartReentranceProtection($this)) {
-				$sClass = get_class($this);
-				$sKey = $this->GetKey();
-				$this->LogCRUDExit(__METHOD__, 'Rejected (reentrance)');
-
-				return $res;
-			}
-
-			try {
-				// Invoke extensions after the update (could be before)
-				/** @var \iApplicationObjectExtension $oExtensionInstance */
-				foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
-					$sExtensionClass = get_class($oExtensionInstance);
-					$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBUpdate()");
-					$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
-				}
-			}
-			finally {
-				MetaModel::StopReentranceProtection($this);
-			}
-
-			$aChanges = $this->ListChanges();
-			if (count($aChanges) != 0) {
-				$this->iUpdateLoopCount++;
-				if ($this->iUpdateLoopCount >= self::MAX_UPDATE_LOOP_COUNT) {
-					$sClass = get_class($this);
-					$sKey = $this->GetKey();
-					$aPlugins = [];
-					foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
-						$aPlugins[] = get_class($oExtensionInstance);
-					}
-					$sPlugins = implode(', ', $aPlugins);
-					$this->LogCRUDError(__METHOD__, "Update loop detected among plugins: $sPlugins");
-				} else {
-					$sKey = $this->DBUpdate();
-					$this->LogCRUDExit(__METHOD__);
-					return $sKey;
-				}
-			}
 		} finally {
 			if (static::IsCrudStackEmpty()) {
 				static::FireEventDbLinksChangedForAllObjects();
@@ -4628,6 +4588,19 @@ HTML;
 		$this->LogCRUDExit(__METHOD__);
 
 		return $res;
+	}
+
+	public function PostUpdateActions(array $aChanges): void
+	{
+		parent::PostUpdateActions($aChanges);
+
+		// Invoke extensions after the update (could be before)
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins(iApplicationObjectExtension::class) as $oExtensionInstance) {
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBUpdate()");
+			$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
+		}
 	}
 
 	/**

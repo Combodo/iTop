@@ -20,20 +20,17 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once 'iApplicationObjectExtension/ObjectModifyExtension.php';
 
-		// Add ObjectModifyExtension to the plugin list
-		$this->InvokeNonPublicStaticMethod(MetaModel::class, 'InitExtensions', []);
-		// Instantiate the new object
-		$this->InvokeNonPublicStaticMethod(PluginManager::class, 'ResetPlugins', []);
-		ObjectModifyExtension::SetCallBack([ApplicationObjectExtensionTest::class, 'IncrementCallCount']);
+		require_once 'iApplicationObjectExtension/MockApplicationObjectExtensionForTest.php';
+		$this->ResetApplicationObjectExtensions();
+		// Count all the calls to this object
+		MockApplicationObjectExtensionForTest::SetCallBack([ApplicationObjectExtensionTest::class, 'IncrementCallCount']);
 	}
 
 	public function tearDown(): void
 	{
-		ObjectModifyExtension::SetModifications('Person', 'name', 0);
-		ObjectModifyExtension::SetAlwaysChanged(false);
-		ObjectModifyExtension::SetCallBack(null);
+		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', 0);
+		MockApplicationObjectExtensionForTest::SetCallBack(null);
 		parent::tearDown();
 	}
 
@@ -54,10 +51,11 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 		// Check that extension is called
 		$oPerson = $this->CreatePerson(1);
 		$oPerson->Set('first_name', 'testUpdateReentranceProtection');
-		ObjectModifyExtension::SetModifications('Person', 'name', 1);
+		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', 1);
 		self::ResetCallCount();
 		$oPerson->DBUpdate();
-		$this->assertEquals(1, self::$iCalls);
+		// Called twice, the first call will provoke the DBUpdate and call again the object extension
+		$this->assertEquals(2, self::$iCalls);
 	}
 
 	public function testUpdateReentranceProtection()
@@ -67,22 +65,44 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 		// Check that loop limit is 10
 		$i = 15;
 		self::ResetCallCount();
-		ObjectModifyExtension::SetModifications('Person', 'name', $i);
+		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', $i);
 		$oPerson->Set('first_name', 'testUpdateReentranceProtection');
 		$oPerson->DBUpdate();
 		$this->assertEquals(10, self::$iCalls);
 	}
 
-	public function testModificationsLost()
+	public function testModificationsOnUpdate()
 	{
-		self::ResetCallCount();
 		$oPerson = $this->CreatePerson(1);
 		$oPerson->Set('first_name', 'testUpdateReentranceProtection');
 
-		ObjectModifyExtension::SetModifications('Person', 'name', 1);
-		ObjectModifyExtension::SetAlwaysChanged(true);
+		self::ResetCallCount();
+		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', 1);
 		$oPerson->DBUpdate();
-		$this->assertEquals(1, self::$iCalls);
+		$this->assertEquals(2, self::$iCalls);
+	}
+
+	public function testModificationsOnInsert()
+	{
+		self::ResetCallCount();
+		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', 1);
+		$oPerson = $this->CreatePerson(1);
+		$this->assertEquals(2, self::$iCalls);
+	}
+
+
+	public function testModificationsOnInsertWith2Extensions()
+	{
+		self::ResetCallCount();
+		require_once 'iApplicationObjectExtension/MockApplicationObjectExtensionForTest2.php';
+		$this->ResetApplicationObjectExtensions();
+		// Count all the calls to this object
+		MockApplicationObjectExtensionForTest2::SetCallBack([ApplicationObjectExtensionTest::class, 'IncrementCallCount']);
+
+		MockApplicationObjectExtensionForTest::SetModifications('Person', 'name', 2);
+		MockApplicationObjectExtensionForTest2::SetModifications('Person', 'first_name', 2);
+		$oPerson = $this->CreatePerson(1);
+		$this->assertEquals(6, self::$iCalls);
 	}
 
 }
