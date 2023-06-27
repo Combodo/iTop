@@ -322,7 +322,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					$aExtraFields[$sClassAlias][] = $sAttCode;
 				}
 			} else {
-				$aExtraFields['*'] = $sAttCode;
+				$aExtraFields['*'][] = $sFieldName;
 			}
 		}
 
@@ -335,11 +335,21 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 		}
 		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
-			if (array_key_exists($sAlias, $aExtraFields)) {
+			// In case there is only 1 "alias" for the extra fields and it is the fallback ("*"), then consider that all fields are for the current alias.
+			// This is for the particular use case when the zlist is set to false and extra fields are specified.
+			if ( (count($aExtraFields) === 1) && (array_keys($aExtraFields)[0] === '*') ) {
+				$aLists[$sAlias] = $aExtraFields['*'];
+			}
+			// Regular use case, dispatch fields to their corresponding aliases
+			else if (array_key_exists($sAlias, $aExtraFields)) {
 				$aLists[$sAlias] = $aExtraFields[$sAlias];
-			} else {
+			}
+			// Finally, if unknown alias, ignore fields
+			else {
 				$aLists[$sAlias] = array();
 			}
+
+			// If zlist specified, merge its fields with the currently present
 			if ($sZListName !== false) {
 				$aDefaultList = MetaModel::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
 				$aLists[$sAlias] = array_merge($aDefaultList, $aLists[$sAlias]);
