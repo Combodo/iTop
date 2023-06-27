@@ -92,8 +92,12 @@ $(function () {
 							if ($.inArray(item, aLoadedJsFilesRegister) === -1)
 							{
 								sFileUrl = CombodoGlobalToolbox.AddParameterToUrl(item, aOptions.js_files_param, aOptions.js_files_value);
-								$.ajax({url:sFileUrl, dataType: 'script', cache: true });
-								aLoadedJsFilesRegister.push(item);
+								$.ajax({url: sFileUrl, dataType: 'script', cache: true});
+								aLoadedJsFilesRegister.set(item, new Promise(function (fJsFileResolve) {
+									aLoadedJsFilesResolveCallbacks.set(item, fJsFileResolve);
+									// Resolve promise right away as these files are loaded immediately
+									aLoadedJsFilesResolveCallbacks.get(item, fJsFileResolve)();
+								}));
 							}
 						});
 					}
