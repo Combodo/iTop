@@ -74,6 +74,7 @@ abstract class Query extends cmdbAbstractObject
 			"default_value" => 0,
 			"is_null_allowed" => false,
 			"depends_on" => array(),
+			"tracking_level" => ATTRIBUTE_TRACKING_NONE,
 		)));
 
 		MetaModel::Init_AddAttribute(new AttributeDateTime("export_last_date", array(
@@ -82,6 +83,7 @@ abstract class Query extends cmdbAbstractObject
 			"default_value" => null,
 			"is_null_allowed" => true,
 			"depends_on" => array(),
+			"tracking_level" => ATTRIBUTE_TRACKING_NONE,
 		)));
 
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("export_last_user_id",
@@ -93,14 +95,16 @@ abstract class Query extends cmdbAbstractObject
 				"depends_on"=>array(),
 				"display_style"=>'select',
 				"always_load_in_tables"=>false,
-				"on_target_delete"=>DEL_SILENT
+				"on_target_delete"=>DEL_SILENT,
+				"tracking_level" => ATTRIBUTE_TRACKING_NONE,
 			)));
 
 		MetaModel::Init_AddAttribute(new AttributeExternalField("export_last_user_contact",
 			array(
 				"allowed_values"=>null,
 				"extkey_attcode"=> "export_last_user_id",
-				"target_attcode"=>"contactid"
+				"target_attcode"=>"contactid",
+				"tracking_level" => ATTRIBUTE_TRACKING_NONE,
 			)));
 
 		// Display lists
