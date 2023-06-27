@@ -462,6 +462,11 @@ class DatabaseAnalyzer
 			$aCols = $oAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
 			$sMyAttributeField = current($aCols); // get the first column for the moment
 			$sFilter = "FROM `$sTable` WHERE `$sTable`.`$sMyAttributeField` NOT IN ($sExpectedValues)";
+			if ($oAttDef->IsNullAllowed()) {
+				$sSearchType = $oAttDef->GetSearchType();
+				$sCondition = $this->NotEmptyToSql("`$sTable`.`$sMyAttributeField`", $sSearchType);
+				$sFilter .= " AND $sCondition";
+			}
 			$sDelete = "DELETE `$sTable`";
 			$sSelect = "SELECT DISTINCT `$sTable`.`$sKeyField` AS id, `$sTable`.`$sMyAttributeField` AS value";
 			$sSelWrongRecs = "$sSelect $sFilter";
@@ -490,6 +495,19 @@ class DatabaseAnalyzer
 				$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = $aFixIt;
 			}
 		}
+	}
+
+	private function NotEmptyToSql($sRef, $sSearchType)
+	{
+		switch ($sSearchType) {
+			case AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC:
+			case AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD:
+			case AttributeDefinition::SEARCH_WIDGET_TYPE_DATE:
+			case AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME:
+				return "ISNULL({$sRef}) = 0";
+		}
+
+		return "({$sRef} != '')";
 	}
 
 	/**
