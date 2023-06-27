@@ -463,6 +463,7 @@ class DatabaseAnalyzer
 			$sMyAttributeField = current($aCols); // get the first column for the moment
 			$sFilter = "FROM `$sTable` WHERE `$sTable`.`$sMyAttributeField` NOT IN ($sExpectedValues)";
 			if ($oAttDef->IsNullAllowed()) {
+				// NotEmptyToSql should have been in AttributeDefinition, as a workaround the search type is used
 				$sSearchType = $oAttDef->GetSearchType();
 				$sCondition = $this->NotEmptyToSql("`$sTable`.`$sMyAttributeField`", $sSearchType);
 				$sFilter .= " AND $sCondition";
