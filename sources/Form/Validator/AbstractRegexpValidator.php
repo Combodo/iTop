@@ -18,23 +18,23 @@ abstract class AbstractRegexpValidator extends AbstractValidator
 
     protected string $sRegExp;
 
-    public function __construct(?string $sErrorMessage = null)
-    {
-        $this->sRegExp = static::DEFAULT_REGEXP;
-        parent::__construct($sErrorMessage);
-    }
+	public function __construct(?string $sErrorMessage = null)
+	{
+		$this->sRegExp = static::DEFAULT_REGEXP;
+		parent::__construct($sErrorMessage);
+	}
 
-    public function Validate($value): array
-    {
-        if (is_null($value)) {
-            $value = ''; // calling preg_match with null as subject is deprecated since PHP 8.1
-        }
-        if (preg_match($this->GetRegExp(true), $value)) {
-            return [true, null];
-        }
+	public function Validate($value): array
+	{
+		if (is_null($value)) {
+			$value = ''; // calling preg_match with null as subject is deprecated since PHP 8.1
+		}
+		if (preg_match($this->GetRegExp(true), $value)) {
+			return [];
+		}
 
-        return [false, $this->sErrorMessage];
-    }
+		return [$this->sErrorMessage];
+	}
 
     /**
      * Returns the regular expression of the validator.

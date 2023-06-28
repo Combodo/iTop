@@ -20,18 +20,14 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use BinaryExpression;
 use Closure;
+use Combodo\iTop\Form\Helper\FieldHelper;
 use Combodo\iTop\Form\Validator\AbstractValidator;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
-use ContextTag;
-use DBObjectSet;
+use Combodo\iTop\Form\Validator\SelectObjectValidator;
 use DBSearch;
 use DeprecatedCallsLog;
-use FieldExpression;
 use MetaModel;
-use ScalarExpression;
-use utils;
 
 /**
  * Description of SelectObjectField
@@ -94,6 +90,9 @@ class SelectObjectField extends AbstractSimpleField
 	public function SetSearch(DBSearch $oSearch)
 	{
 		$this->oSearch = $oSearch;
+
+		$this->RemoveValidatorsOfClass(SelectObjectValidator::class);
+		$this->AddValidator(new SelectObjectValidator($oSearch));
 
 		return $this;
 	}
@@ -229,27 +228,6 @@ class SelectObjectField extends AbstractSimpleField
 		return $this->sSearchEndpoint;
 	}
 
-	public function Validate() {
-		if ((ContextTag::Check(ContextTag::TAG_REST)) && ($this->GetReadOnly() === false)) {
-			// Only doing the check when coming from the REST API, as the user portal might send invalid values (see VerifyCurrentValue() method below)
-			// Also do not check read only fields, are they are send with a null value when submitting request template from the console
-			$sCurrentValueForExtKey = $this->currentValue;
-			if (utils::IsNotNullOrEmptyString($sCurrentValueForExtKey) && ($sCurrentValueForExtKey !== 0)) {
-				$oSetForExistingCurrentValue = $this->GetObjectsSet();
-				$iObjectsCount = $oSetForExistingCurrentValue->CountWithLimit(1);
-
-				if ($iObjectsCount === 0) {
-					$this->SetValid(false);
-					$this->AddErrorMessage("Value $sCurrentValueForExtKey does not match the corresponding filter set");
-
-					return $this->GetValid();
-				}
-			}
-		}
-
-		return parent::Validate();
-	}
-
 	/**
 	 * Resets current value if not among allowed ones.
 	 * By default, reset is done ONLY when the field is not read-only.
@@ -283,25 +261,11 @@ class SelectObjectField extends AbstractSimpleField
 	 */
 	public function ResetCurrentValueIfNotAmongAllowedValues(bool $bAlways = false) {
 		if (!$this->GetReadOnly() || $bAlways) {
-			$oValuesSet = $this->GetObjectsSet();
+			$oValuesSet = FieldHelper::GetObjectsSetFromSearchAndCurrentValueId($this->oSearch, $this->currentValue);
 
 			if ($oValuesSet->Count() === 0) {
 				$this->currentValue = null;
 			}
 		}
-	}
-
-	final protected function GetObjectsSet() {
-		$sCurrentValueForExtKey = $this->currentValue;
-
-		$oSearchForExistingCurrentValue = $this->oSearch->DeepClone();
-		$oCheckIdAgainstCurrentValueExpression = new BinaryExpression(
-			new FieldExpression('id', $oSearchForExistingCurrentValue->GetClassAlias()),
-			'=',
-			new ScalarExpression($sCurrentValueForExtKey)
-		);
-		$oSearchForExistingCurrentValue->AddConditionExpression($oCheckIdAgainstCurrentValueExpression);
-
-		return new DBObjectSet($oSearchForExistingCurrentValue);
 	}
 }

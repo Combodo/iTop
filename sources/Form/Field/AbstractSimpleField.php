@@ -26,12 +26,13 @@ class AbstractSimpleField extends Field
 
 		if (!$bEmpty || $this->GetMandatory()) {
 			foreach ($this->GetValidators() as $oValidator) {
-				[$bIsFieldValid, $sValidationErrorMessage] = $oValidator->Validate($this->GetCurrentValue());
+				$aValidationErrorMessages = $oValidator->Validate($this->GetCurrentValue());
 
-				/** @var bool $bIsFieldValid */
-				if (false === $bIsFieldValid) {
+				if (count($aValidationErrorMessages) > 0) {
 					$this->SetValid(false);
-					$this->AddErrorMessage($sValidationErrorMessage);
+					foreach ($aValidationErrorMessages as $sErrorMessage) {
+						$this->AddErrorMessage($sErrorMessage);
+					}
 				}
 			}
 		}

@@ -20,8 +20,7 @@
 namespace Combodo\iTop\Form\Field;
 
 use Closure;
-use ContextTag;
-use utils;
+use Combodo\iTop\Form\Validator\MultipleChoicesValidator;
 
 /**
  * Description of MultipleChoicesField
@@ -51,6 +50,8 @@ abstract class MultipleChoicesField extends AbstractSimpleField
 		$this->bMultipleValuesEnabled = static::DEFAULT_MULTIPLE_VALUES_ENABLED;
 		$this->aChoices = array();
 		$this->currentValue = array();
+
+		$this->InitValidators();
 	}
 
 	/**
@@ -179,69 +180,68 @@ abstract class MultipleChoicesField extends AbstractSimpleField
 	public function SetChoices(array $aChoices)
 	{
 		$this->aChoices = $aChoices;
+
+		$this->InitValidators();
+
 		return $this;
 	}
 
 	/**
 	 * @param string $sId
-	 * @param null   $choice
+	 * @param null $choice choice value (eg label)
 	 *
 	 * @return $this
 	 */
 	public function AddChoice(string $sId, $choice = null)
 	{
-		if ($choice === null)
-		{
+		if ($choice === null) {
 			$choice = $sId;
 		}
 		$this->aChoices[$sId] = $choice;
-		return $this;
-	}
 
-	/**
-	 * @param string $sId
-	 *
-	 * @return $this
-	 */
-	public function RemoveChoice(string $sId)
-	{
-		if (in_array($sId, $this->aChoices))
-		{
-			unset($this->aChoices[$sId]);
-		}
-		return $this;
-	}
+        $this->InitValidators();
 
-	public function Validate() {
-		$this->SetValid(true);
-		$this->EmptyErrorMessages();
+        return $this;
+    }
 
-		if ((ContextTag::Check(ContextTag::TAG_REST)) && ($this->GetReadOnly() === false)) {
-			// Only doing the check when coming from the REST API, as the user portal might send invalid values (see VerifyCurrentValue() method below)
-			// Also do not check read only fields, are they are send with a null value when submitting request template from the console
-			if (count($this->currentValue) > 0) {
-				foreach ($this->currentValue as $sCode => $value) {
-					if (utils::IsNullOrEmptyString($value)) {
-						continue;
-					}
-					if (false === array_key_exists($value, $this->aChoices)) {
-						$this->SetValid(false);
-						$this->AddErrorMessage("Value ({$value}) is not part of the field possible values list");
-					}
-				}
-			}
-		}
+    /**
+     * @param string $sId
+     *
+     * @return $this
+     */
+    public function RemoveChoice(string $sId)
+    {
+        if (in_array($sId, $this->aChoices)) {
+            unset($this->aChoices[$sId]);
+        }
 
-		foreach ($this->GetValidators() as $oValidator) {
-			foreach ($this->currentValue as $value) {
-				if (!preg_match($oValidator->GetRegExp(true), $value)) {
-					$this->SetValid(false);
-					$this->AddErrorMessage($oValidator->GetErrorMessage());
-				}
-			}
-		}
+        return $this;
+    }
 
-		return $this->GetValid();
-	}
+    /**
+     * @param bool $bReadOnly
+     * @return MultipleChoicesField
+     * @since 3.1.0 N°6414
+     */
+    public function SetReadOnly(bool $bReadOnly)
+    {
+        if ($bReadOnly) {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
+            $this->SetValidationDisabled(true);
+        } else {
+            $this->SetValidationDisabled(false);
+        }
 
+        return parent::SetReadOnly($bReadOnly);
+    }
+
+    /**
+     * @return void
+     * @since 3.1.0 N°6414
+     */
+    protected function InitValidators(): void
+    {
+        $this->RemoveValidatorsOfClass(MultipleChoicesValidator::class);
+        $this->AddValidator(new MultipleChoicesValidator($this->aChoices));
+    }
 }

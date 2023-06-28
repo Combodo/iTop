@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Test\UnitTest\Sources\Form\Validator;
 
 use Combodo\iTop\Form\Field\StringField;
+use Combodo\iTop\Form\Validator\MandatoryValidator;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 class ValidatorTest extends ItopTestCase
@@ -24,5 +25,7 @@ class ValidatorTest extends ItopTestCase
 		$bIsMandatoryFieldValidWithNoValue = $oField->Validate();
 		$this->assertFalse($bIsMandatoryFieldValidWithNoValue);
 		$this->assertNotEmpty($oField->GetErrorMessages());
+		$this->assertCount(1, $oField->GetErrorMessages());
+		$this->assertStringContainsString(MandatoryValidator::DEFAULT_ERROR_MESSAGE, $oField->GetErrorMessages()[0]);
 	}
 }

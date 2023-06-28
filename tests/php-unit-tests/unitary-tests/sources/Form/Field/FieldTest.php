@@ -100,4 +100,28 @@ class FieldTest extends ItopTestCase
 		$this->assertTrue($bIsSubFormFieldValidAfterFieldUpdate);
 		$this->assertCount(0, $oSubFormField->GetErrorMessages());
 	}
+
+	public function testRemoveValidatorsOfClass(): void {
+		$oField = new StringField('test');
+
+		$this->assertCount(0, $oField->GetValidators());
+		$oField->RemoveValidatorsOfClass(CustomRegexpValidator::class);
+		$this->assertCount(0, $oField->GetValidators());
+
+		$oField->AddValidator(new IntegerValidator());
+		$this->assertCount(1, $oField->GetValidators());
+		$oField->RemoveValidatorsOfClass(CustomRegexpValidator::class);
+		$this->assertCount(1, $oField->GetValidators());
+
+		$oField->AddValidator(new CustomRegexpValidator('^.*$'));
+		$this->assertCount(2, $oField->GetValidators());
+		$oField->RemoveValidatorsOfClass(CustomRegexpValidator::class);
+		$this->assertCount(1, $oField->GetValidators());
+
+		$oField->AddValidator(new CustomRegexpValidator('^.*$'));
+		$oField->AddValidator(new CustomRegexpValidator('^.*$'));
+		$this->assertCount(3, $oField->GetValidators());
+		$oField->RemoveValidatorsOfClass(CustomRegexpValidator::class);
+		$this->assertCount(1, $oField->GetValidators());
+	}
 }
