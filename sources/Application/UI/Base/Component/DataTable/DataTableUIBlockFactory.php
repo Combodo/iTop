@@ -138,7 +138,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$aExtraParams['filter_this_list_url'] = $sFilterListUrl;
 		}
 
-		if (!isset($aExtraParams['menu']) || $aExtraParams['menu']) {
+		if (!isset($aExtraParams['menu']) || $aExtraParams['menu'] === "1" || $aExtraParams['menu'] === true) {
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
 			$aExtraParams['refresh_action'] = $oDataTable->GetJSRefresh();
 			$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
