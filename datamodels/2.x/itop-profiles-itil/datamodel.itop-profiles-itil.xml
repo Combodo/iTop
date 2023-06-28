@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+<itop_design version="3.1">
   <classes/>
   <user_rights>
     <groups>
@@ -544,5 +544,23 @@
         <groups/>
       </profile>
     </profiles>
+  <dictionaries>
+    <dictionary id="EN US" _alteration="added">
+      <english_description>English</english_description>
+      <localized_description>English</localized_description>
+      <entries>
+        <entry id="Class:User/NonStandaloneProfileWarning" _alteration="added">User profile %1$s cannot be standalone. You should add
+          other prrofiles otherwise you may encounter access issue with this user.</entry>
+      </entries>
+    </dictionary>
+    <dictionary id="FR FR" _alteration="added">
+      <english_description>French</english_description>
+      <localized_description>Français</localized_description>
+      <entries>
+        <entry id="Core:DeletedObjectLabel" _alteration="added">Le profil %1$s ne peut être seul. Sans rajout d'autres profiles,
+          l'utilisateur peut rencontrer des problèmes dans iTop.</entry>
+      </entries>
+    </dictionary>
+  </dictionaries>
   </user_rights>
 </itop_design>

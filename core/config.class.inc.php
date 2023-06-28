@@ -1595,6 +1595,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.single-profile-completion' => [
+			'type'                => 'array',
+			'description'         => 'Non standalone profiles can be completed by other profiles via this configuration. default configuration is equivalent to [\'Portal power user\' => \'Portal user\'] configuration. unless you have specific portal customization.',
+			'default'             => null,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'behind_reverse_proxy' => [
 			'type' => 'bool',
 			'description' => 'If true, then proxies custom header (X-Forwarded-*) are taken into account. Use only if the webserver is not publicly accessible (reachable only by the reverse proxy)',

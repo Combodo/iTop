@@ -24,7 +24,7 @@ define('POWER_USER_PORTAL_PROFILE_NAME', 'Portal power user');
  */
 class UserProfilesEventListener implements iEventServiceSetup
 {
-	const USERPROFILE_REPAIR_ITOP_PARAM_NAME = 'poweruserportal-repair-profile';
+	const USERPROFILE_REPAIR_ITOP_PARAM_NAME = 'security.single-profile-completion';
 	private $bIsRepairmentEnabled = false;
 
 	//map: non standalone profile name => repairing profile id
@@ -90,7 +90,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 			$aPortalDispatcherData = \PortalDispatcherData::GetData();
 		}
 
-		$aNonStandaloneProfiles = \utils::GetConfig()->GetModuleSetting('itop-profiles-itil', self::USERPROFILE_REPAIR_ITOP_PARAM_NAME, null);
+		$aNonStandaloneProfiles = \utils::GetConfig()->Get(self::USERPROFILE_REPAIR_ITOP_PARAM_NAME, null);
 
 		//When there are several customized portals on an itop, choosing a specific profile means choosing which portal user will access
 		//In that case, itop administrator has to specify it via itop configuration. we dont use default profiles repairment otherwise
@@ -190,6 +190,8 @@ class UserProfilesEventListener implements iEventServiceSetup
 					if (is_null($sRepairingProfileId)){
 						//Notify current user via session messages that there will be an issue
 						//Without preventing from commiting
+						$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName);
+						$oUser::SetSessionMessage(get_class($oUser), $oUser->GetKey(), 1, $sMessage, 'WARNING', 1);
 					} else {
 						//Completing profiles profiles by adding repairing one : by default portal user to a power portal user
 						$oUserProfile = new \URP_UserProfile();

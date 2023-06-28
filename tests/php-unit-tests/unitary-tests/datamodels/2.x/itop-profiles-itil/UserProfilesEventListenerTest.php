@@ -26,14 +26,17 @@
 
 namespace Combodo\iTop\Test\UnitTest\Module\iTopProfilesItil;
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenuFactory;
 use Combodo\iTop\ItilProfiles\UserProfilesEventListener;
+use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSet;
 use URP_UserProfile;
 use UserRights;
 
 /**
+ * @since 3.1.0 N°5324
  * @group itopRequestMgmt
  * @group userRights
  * @group defaultProfiles
@@ -44,6 +47,13 @@ use UserRights;
  */
 class UserProfilesEventListenerTest extends ItopDataTestCase
 {
+	public function setUp(): void {
+		parent::setUp();
+
+		//reset conf to have nominal behaviour
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, null);
+	}
+
 	public function PortaPowerUserProvider(){
 		return [
 			'Portal power user only => user should be repaired by adding User portal profile' => [
@@ -69,7 +79,6 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @since 3.1.0 N°5324
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserLocalCreation($aAssociatedProfilesBeforeUserCreation,
@@ -84,7 +93,6 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @since 3.1.0 N°5324
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserLocalUpdate($aAssociatedProfilesBeforeUserCreation,
@@ -99,7 +107,6 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @since 3.1.0 N°5324
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserLDAPCreation($aAssociatedProfilesBeforeUserCreation,
@@ -112,7 +119,6 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @since 3.1.0 N°5324
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserLDAPUpdate($aAssociatedProfilesBeforeUserCreation,
@@ -125,7 +131,6 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @since 3.1.0 N°5324
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserExternalCreation($aAssociatedProfilesBeforeUserCreation,
@@ -138,7 +143,6 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @since 3.1.0 N°5324
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserExternalUpdate($aAssociatedProfilesBeforeUserCreation,
@@ -186,15 +190,15 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	}
 
 	public function commonUserCreation($oUserToCreate, $aAssociatedProfilesBeforeUserCreation,
-		$aExpectedAssociatedProfilesAfterUserCreation)
+		$aExpectedAssociatedProfilesAfterUserCreation, $bTestUserItopAccess=true)
 	{
 		$sUserClass = get_class($oUserToCreate);
 		list ($sId, $aProfiles)  = $this->CreateUserForProfileTesting($oUserToCreate, $aAssociatedProfilesBeforeUserCreation);
 
-		$this->CheckProfilesAreOk($sUserClass, $sId, $aExpectedAssociatedProfilesAfterUserCreation);
+		$this->CheckProfilesAreOk($sUserClass, $sId, $aExpectedAssociatedProfilesAfterUserCreation, $bTestUserItopAccess);
 	}
 
-	public function CheckProfilesAreOk($sUserClass, $sId, $aExpectedAssociatedProfilesAfterUserCreation){
+	public function CheckProfilesAreOk($sUserClass, $sId, $aExpectedAssociatedProfilesAfterUserCreation, $bTestUserItopAccess=true){
 		$oUser = \MetaModel::GetObject($sUserClass, $sId);
 		$oUserProfileList = $oUser->Get('profile_list');
 		$aProfilesAfterCreation=[];
@@ -205,6 +209,10 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		foreach ($aExpectedAssociatedProfilesAfterUserCreation as $sExpectedProfileName){
 			$this->assertTrue(in_array($sExpectedProfileName, $aProfilesAfterCreation),
 				"profile \'$sExpectedProfileName\' should be asociated to user after creation. " .  var_export($aProfilesAfterCreation, true) );
+		}
+
+		if (! $bTestUserItopAccess){
+			return;
 		}
 
 		$_SESSION = [];
@@ -378,7 +386,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	}
 
 	public function testUserProfilesEventListenerInit_badlyconfigured(){
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, "a string instead of an array");
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, "a string instead of an array");
 
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
@@ -387,7 +395,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	}
 
 	public function testUserProfilesEventListenerInit_specifically_disabled(){
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, []);
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, []);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
 
@@ -428,7 +436,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 			'backoffice'
 		];
 
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, ['Portal power user' => 'Portal user']);
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, ['Portal power user' => 'Portal user']);
 
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init($aPortalDispatcherData);
@@ -443,7 +451,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 			'backoffice'
 		];
 
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, ['Portal power user' => 'Dummy Profile']);
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, ['Portal power user' => 'Dummy Profile']);
 
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init($aPortalDispatcherData);
@@ -452,24 +460,27 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	}
 
 	public function testInit_ConfWithOneWarningProfile() {
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Change Supervisor' => 'Administrator', 'Portal power user' => null]);
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
+			['Change Supervisor' => 'Administrator', 'Portal power user' => null]
+		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
 		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
 	}
 
 	public function testInit_ConfWithFurtherWarningProfiles() {
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Change Supervisor' => null, 'Portal power user' => null]);
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
+			['Change Supervisor' => null, 'Portal power user' => null]
+		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
 		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
 	}
 
 	public function testInit_ConfWithFurtherWarningProfilesAndOneRepairment() {
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Portal power user' => null, 'Change Supervisor' => null, 'Administrator' => "REST Services User"]);
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
+			['Portal power user' => null, 'Change Supervisor' => null, 'Administrator' => "REST Services User"]
+		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
 		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
@@ -483,7 +494,9 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser->Set('password', 'ABCD1234@gabuzomeu');
 		$oUser->Set('language', 'EN US');
 
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME, ['Portal power user' => 'Change Supervisor']);
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
+			['Portal power user' => 'Change Supervisor']
+		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
 		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
@@ -503,7 +516,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 
 	public function testRepairProfiles_MultiRepairmentConf()
 	{
-		\MetaModel::GetConfig()->SetModuleSetting('itop-profiles-itil', UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
 			[
 				'Administrator' => 'REST Services User',
 				'Portal power user' => 'Change Supervisor'
@@ -547,5 +560,55 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 
 		$this->assertContains('Administrator', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 		$this->assertContains('REST Services User', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+	}
+
+	public function testUserCreationWithWarningMessageConf()
+	{
+		$_SESSION = [];
+		$oAdminUser = new \UserLocal();
+		$sLogin = 'testUserCreationWithWarningMessageConf-Admin'.uniqid();
+		$oAdminUser->Set('login', $sLogin);
+		$oAdminUser->Set('password', 'ABCD1234@gabuzomeu');
+		$oAdminUser->Set('language', 'EN US');
+		$aAssociatedProfilesBeforeUserCreation = ['Administrator'];
+		$this->commonUserCreation($oAdminUser, $aAssociatedProfilesBeforeUserCreation, $aAssociatedProfilesBeforeUserCreation, false);
+		UserRights::Login($oAdminUser->Get('login'));
+
+
+
+		$aAssociatedProfilesBeforeUserCreation = [
+			'Portal power user'
+		];
+
+		$oUser = new \UserLocal();
+		$sLogin = 'testUserCreationWithWarningMessageConf-'.uniqid();
+		$oUser->Set('login', $sLogin);
+		$oUser->Set('password', 'ABCD1234@gabuzomeu');
+		$oUser->Set('language', 'EN US');
+
+		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
+			['Portal power user' => null ]
+		);
+
+		$this->SetNonPublicStaticProperty(EventService::class, "aEventListeners", []);
+		$oUserProfilesEventListener = new UserProfilesEventListener();
+		$oUserProfilesEventListener->RegisterEventsAndListeners();
+
+		$this->commonUserCreation($oUser, $aAssociatedProfilesBeforeUserCreation, $aAssociatedProfilesBeforeUserCreation, false);
+		$aObjMessages = Session::Get('obj_messages');
+		$this->assertNotEmpty($aObjMessages);
+		$sKey = sprintf("%s::%s", get_class($oUser), $oUser->GetKey());
+		$this->assertTrue(array_key_exists($sKey, $aObjMessages));
+
+		$aExpectedMessages = [
+			[
+				'rank' => 1,
+				'severity' => 'WARNING',
+				'message' => \Dict::Format("Class:User/NonStandaloneProfileWarning", 'Portal power user')
+			]
+		];
+		$this->assertEquals($aExpectedMessages, array_values($aObjMessages[$sKey]), var_export($aObjMessages[$sKey], true));
+
+		$_SESSION = [];
 	}
 }
