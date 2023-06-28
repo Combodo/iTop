@@ -43,7 +43,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			'object_id'     => $this->oDbObject->GetKey(),
 			'target_attr'   => $this->oAttDef->GetExtKeyToRemote(),
 			'view_link'     => false,
-			'menu'          => false,
+			'menu'          => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
 			'display_limit' => true,
 			'table_id'      => $this->GetTableId(),
 			'zlist'         => false,
