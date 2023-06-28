@@ -19,12 +19,56 @@
 
 namespace Combodo\iTop\Form\Validator;
 
+use Dict;
+use ormLinkSet;
+use utils;
+
 /**
  * Description of LinkedSetValidator
  *
- * @since 3.1
+ * @since 3.1.0 N°6414
  */
 class LinkedSetValidator extends AbstractRegexpValidator
 {
-	public const VALIDATOR_NAME = 'LinkedSetValidator';
+    public const VALIDATOR_NAME = 'linkedset_validator';
+    private $aAttributesToDisplayCodes;
+
+    public function __construct($aAttributesToDisplayCodes)
+    {
+        $this->aAttributesToDisplayCodes = $aAttributesToDisplayCodes;
+
+        parent::__construct();
+    }
+
+    public function Validate($value): array
+    {
+        $aErrorMessages = [];
+
+        /** @var ormLinkSet $oSet */
+        $oSet = $value;
+
+        // validate each links...
+        /** @var \DBObject $oItem */
+        foreach ($oSet as $oItem) {
+            $aChanges = $oItem->ListChanges();
+            foreach ($aChanges as $sAttCode => $AttValue) {
+                if (!in_array($sAttCode, $this->aAttributesToDisplayCodes)) {
+                    continue;
+                }
+                $res = $oItem->CheckValue($sAttCode);
+                if ($res !== true) {
+                    $sAttLabel = $oItem->GetLabel($sAttCode);
+                    $sItem = utils::IsNullOrEmptyString($oItem->Get('friendlyname'))
+                        ? Dict::S('UI:Links:NewItem')
+                        : $oItem->Get('friendlyname');
+                    $sIssue = Dict::Format('Core:CheckValueError', $sAttLabel, $sAttCode, $res);
+                    $aErrorMessages[] = '<b>' . $sItem . ' : </b>' . $sIssue;
+                }
+            }
+        }
+
+        $oSet->Rewind();
+
+        return $aErrorMessages;
+    }
 }

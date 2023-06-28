@@ -2477,8 +2477,6 @@ class AttributeLinkedSet extends AttributeDefinition
 			$oFormField->SetLnkAttributesToDisplay($aLnkAttributesToDisplay);
 		}
 
-		$oFormField->AddValidator(new LinkedSetValidator());
-
 		parent::MakeFormField($oObject, $oFormField);
 
 		return $oFormField;

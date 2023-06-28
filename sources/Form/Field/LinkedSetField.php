@@ -21,8 +21,7 @@
 namespace Combodo\iTop\Form\Field;
 
 use Closure;
-use Dict;
-use ormLinkSet;
+use Combodo\iTop\Form\Validator\LinkedSetValidator;
 
 /**
  * Description of LinkedSetField
@@ -55,7 +54,7 @@ class LinkedSetField extends AbstractSimpleField
 	protected $aLimitedAccessItemIDs;
 	/** @var array $aAttributesToDisplay */
 	protected $aAttributesToDisplay;
-	/** @var array $aLnkAttributesToDisplay */
+	/** @var array $aLnkAttributesToDisplay attcode as key */
 	protected $aLnkAttributesToDisplay;
 	/** @var string $sSearchEndpoint */
 	protected $sSearchEndpoint;
@@ -281,25 +280,25 @@ class LinkedSetField extends AbstractSimpleField
 	public function GetLnkAttributesToDisplay(bool $bAttCodesOnly = false)
 	{
 		return ($bAttCodesOnly) ? array_keys($this->aLnkAttributesToDisplay) : $this->aLnkAttributesToDisplay;
-	}
+    }
 
-	/**
-	 *
-	 * @since 3.1
-	 *
-	 * @param array $aAttributesToDisplay
-	 *
-	 * @return $this
-	 */
-	public function SetLnkAttributesToDisplay(array $aAttributesToDisplay)
-	{
-		$this->aLnkAttributesToDisplay = $aAttributesToDisplay;
+    /**
+     * @param array $aAttributesToDisplay
+     * @return $this
+     * @since 3.1.0 N°803
+     */
+    public function SetLnkAttributesToDisplay(array $aAttributesToDisplay)
+    {
+        $this->aLnkAttributesToDisplay = $aAttributesToDisplay;
 
-		return $this;
-	}
+        $this->RemoveValidatorsOfClass(LinkedSetValidator::class);
+        $this->AddValidator(new LinkedSetValidator($aAttributesToDisplay));
 
-	/**
-	 * @return string|null
+        return $this;
+    }
+
+    /**
+     * @return string|null
 	 */
 	public function GetSearchEndpoint()
 	{
@@ -348,40 +347,5 @@ class LinkedSetField extends AbstractSimpleField
 	public function IsLimitedAccessItem(int $iItemID)
 	{
 		return in_array($iItemID, $this->aLimitedAccessItemIDs, false);
-	}
-
-	/** @inheritdoc @since 3.1 */
-	public function Validate()
-	{
-		$bValid = parent::Validate();
-
-		/** @var ormLinkSet $oSet */
-		$oSet = $this->GetCurrentValue();
-
-		// retrieve displayed attributes
-		$aAttributesToDisplayCodes = $this->GetLnkAttributesToDisplay(true);
-
-		// validate each links...
-		/** @var \DBObject $oItem */
-		foreach ($oSet as $oItem) {
-			$aChanges = $oItem->ListChanges();
-			foreach ($aChanges as $sAttCode => $value) {
-				if (!in_array($sAttCode, $aAttributesToDisplayCodes)) {
-					continue;
-				}
-				$res = $oItem->CheckValue($sAttCode);
-				if ($res !== true) {
-					$sAttLabel = $this->GetLabel($sAttCode);
-					$sItem = $oItem->Get('friendlyname') != '' ? $oItem->Get('friendlyname') : Dict::S('UI:Links:NewItem');
-					$sIssue = Dict::Format('Core:CheckValueError', $sAttLabel, $sAttCode, $res);
-					$this->AddErrorMessage('<b>'.$sItem.' : </b>'.$sIssue);
-					$bValid = false;
-				}
-			}
-		}
-
-		$oSet->Rewind();
-
-		return $bValid;
 	}
 }
