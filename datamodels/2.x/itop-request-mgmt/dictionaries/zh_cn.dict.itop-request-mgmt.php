@@ -192,7 +192,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:resolution_code/Value:training+' => '培训',
 	'Class:UserRequest/Attribute:solution' => '解决方案',
 	'Class:UserRequest/Attribute:solution+' => '',
-	'Class:UserRequest/Attribute:pending_reason' => '待定的原因',
+	'Class:UserRequest/Attribute:pending_reason' => '待定原因',
 	'Class:UserRequest/Attribute:pending_reason+' => '',
 	'Class:UserRequest/Attribute:parent_request_id' => '父级需求',
 	'Class:UserRequest/Attribute:parent_request_id+' => '',

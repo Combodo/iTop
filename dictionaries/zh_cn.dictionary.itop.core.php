@@ -201,10 +201,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:CMDBChangeOp' => '变更操作',
-	'Class:CMDBChangeOp+' => '变更操作跟踪',
+	'Class:CMDBChangeOp' => '变更操作跟踪',
+	'Class:CMDBChangeOp+' => '某人在某时某刻对某个对象的变更操作',
 	'Class:CMDBChangeOp/Attribute:change' => '变更',
-	'Class:CMDBChangeOp/Attribute:change+' => '变更',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => '日期',
 	'Class:CMDBChangeOp/Attribute:date+' => '变更的日期和时间',
 	'Class:CMDBChangeOp/Attribute:userinfo' => '用户',
@@ -214,7 +214,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOp/Attribute:objkey' => '对象id',
 	'Class:CMDBChangeOp/Attribute:objkey+' => '对象id',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDB操作类型',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '根本属性的名称',
+	'Class:CMDBChangeOp/Attribute:finalclass+' => '变更操作的类型',
 ));
 
 //
