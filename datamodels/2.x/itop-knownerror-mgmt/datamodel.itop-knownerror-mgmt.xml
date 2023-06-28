@@ -122,7 +122,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkDocumentToError</linked_class>
@@ -131,7 +130,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>

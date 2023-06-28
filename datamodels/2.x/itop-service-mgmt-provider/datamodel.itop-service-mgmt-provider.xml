@@ -100,7 +100,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkContractToDocument</linked_class>
@@ -109,7 +108,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
@@ -439,7 +437,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_max>0</count_max>
           <ext_key_to_remote>service_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkCustomerContractToFunctionalCI</linked_class>
@@ -448,7 +445,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="providercontracts_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkCustomerContractToProviderContract</linked_class>
@@ -457,7 +453,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_max>0</count_max>
           <ext_key_to_remote>providercontract_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -640,7 +635,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="sla" xsi:type="AttributeString">
           <sql>sla</sql>
@@ -1067,8 +1061,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -1180,7 +1172,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkContactToService</linked_class>
@@ -1189,7 +1180,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_max>0</count_max>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <sort_type>rank</sort_type>
@@ -1227,7 +1217,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_max>0</count_max>
           <ext_key_to_remote>customercontract_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="servicesubcategories_list" xsi:type="AttributeLinkedSet">
           <linked_class>ServiceSubcategory</linked_class>
@@ -1236,8 +1225,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -1760,7 +1747,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_max>0</count_max>
           <ext_key_to_remote>slt_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="customercontracts_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkCustomerContractToService</linked_class>
@@ -1769,7 +1755,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_max>0</count_max>
           <ext_key_to_remote>customercontract_id</ext_key_to_remote>
           <duplicates>true</duplicates>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods>
@@ -2506,7 +2491,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_max>0</count_max>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="customers_list" xsi:type="AttributeLinkedSet">
           <linked_class>Organization</linked_class>
@@ -2515,8 +2499,6 @@ public function PrefillSearchForm(&$aContextParam)
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>

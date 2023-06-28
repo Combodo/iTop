@@ -203,7 +203,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkFunctionalCIToTicket</linked_class>
@@ -212,15 +211,12 @@
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="workorders_list" xsi:type="AttributeLinkedSet">
           <linked_class>WorkOrder</linked_class>
           <ext_key_to_me>ticket_id</ext_key_to_me>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <event_listeners>
@@ -839,8 +835,6 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -861,8 +855,6 @@
           <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>link</relation_type>
-          <read_only>true</read_only>
         </field>
       </fields>
       <presentation>

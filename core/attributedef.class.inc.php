@@ -93,9 +93,6 @@ define('LINKSET_EDITMODE_ACTIONS', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITMODE_INPLACE', 3); // The "linked" objects can be created/modified/deleted in place
 define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/removed in place
 
-define('LINKSET_RELATIONTYPE_PROPERTY', 'property');
-define('LINKSET_RELATIONTYPE_LINK', 'link');
-
 define('LINKSET_DISPLAY_STYLE_PROPERTY', 'property');
 define('LINKSET_DISPLAY_STYLE_TAB', 'tab');
 
@@ -1697,20 +1694,10 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	/**
 	 * @return string see LINKSET_EDITMODE_* constants
-	 * @since 3.1.0 N°5563 relations are edited using new attributes in details mode, but as nothing changed in edit mode we are still using edit_mode attribute
 	 */
 	public function GetEditMode()
 	{
 		return $this->GetOptional('edit_mode', LINKSET_EDITMODE_ACTIONS);
-	}
-
-	/**
-	 * @return string see LINKSET_RELATIONTYPE_* constants
-	 * @since 3.1.0 N°5563
-	 */
-	public function GetRelationType()
-	{
-		return $this->GetOptional('relation_type', LINKSET_RELATIONTYPE_LINK);
 	}
 
 	/**
@@ -1735,15 +1722,6 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetHasConstraint()
 	{
 		return $this->GetOptional('with_php_constraint', false);
-	}
-
-	/**
-	 * @return boolean
-	 * @since 3.1.0 N°5563
-	 */
-	public function GetReadOnly()
-	{
-		return $this->GetOptional('read_only', false);
 	}
 
 	public function GetLinkedClass()
@@ -2603,15 +2581,6 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	{
 		return $this->GetOptional("duplicates", false);
 	} // The same object may be linked several times... or not...
-
-	/**
-	 * @return boolean
-	 * @since 3.1.0 N°5563
-	 */
-	public function GetReadOnly()
-	{
-		return $this->GetOptional('read_only', false);
-	}
 
 	public function GetTrackingLevel()
 	{

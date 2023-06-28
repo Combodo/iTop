@@ -139,7 +139,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>ticket_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
     </class>

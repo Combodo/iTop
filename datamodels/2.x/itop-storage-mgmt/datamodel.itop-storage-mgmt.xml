@@ -38,8 +38,6 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>property</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -302,7 +300,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>datacenterdevice_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -562,8 +559,6 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>property</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -823,8 +818,6 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>property</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -1515,7 +1508,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>server_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="virtualdevices_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkVirtualDeviceToVolume</linked_class>
@@ -1524,7 +1516,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>virtualdevice_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>

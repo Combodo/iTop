@@ -48,9 +48,8 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			$aExtraParams['panel_title_tooltip'] = $this->oAttDef->GetDescription();
 		}
 
-		// Add creation in modal if the linkset is not readonly
-		if (!$this->oAttDef->GetReadOnly()
-			&& $this->oAttDef->GetEditMode() != LINKSET_EDITMODE_NONE
+		// Add creation in modal if edit mode is not NONE
+		if ($this->oAttDef->GetEditMode() != LINKSET_EDITMODE_NONE
 			&& $this->bIsAllowCreate) {
 			$aExtraParams['creation_in_modal'] = true;
 			$aExtraParams['creation_in_modal_tooltip'] = $this->oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE ? $this->GetDictionaryEntry(static::DICT_ADD_BUTTON_TOOLTIP) : $this->GetDictionaryEntry(static::DICT_CREATE_BUTTON_TOOLTIP);

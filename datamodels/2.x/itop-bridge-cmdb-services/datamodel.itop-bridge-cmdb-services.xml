@@ -197,7 +197,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>providercontract_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="services_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
           <linked_class>lnkFunctionalCIToService</linked_class>
@@ -206,7 +205,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>service_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -385,7 +383,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>contract_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="services_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
           <linked_class>lnkDocumentToService</linked_class>
@@ -394,7 +391,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>service_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
