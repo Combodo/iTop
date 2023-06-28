@@ -1595,7 +1595,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'security.single-profile-completion' => [
+		'security.single_profile_completion' => [
 			'type'                => 'array',
 			'description'         => 'Non standalone profiles can be completed by other profiles via this configuration. default configuration is equivalent to [\'Portal power user\' => \'Portal user\'] configuration. unless you have specific portal customization.',
 			'default'             => null,

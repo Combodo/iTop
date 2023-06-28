@@ -24,7 +24,7 @@ define('POWER_USER_PORTAL_PROFILE_NAME', 'Portal power user');
  */
 class UserProfilesEventListener implements iEventServiceSetup
 {
-	const USERPROFILE_REPAIR_ITOP_PARAM_NAME = 'security.single-profile-completion';
+	const USERPROFILE_REPAIR_ITOP_PARAM_NAME = 'security.single_profile_completion';
 	private $bIsRepairmentEnabled = false;
 
 	//map: non standalone profile name => repairing profile id

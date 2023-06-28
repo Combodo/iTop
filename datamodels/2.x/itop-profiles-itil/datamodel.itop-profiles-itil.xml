@@ -545,20 +545,16 @@
       </profile>
     </profiles>
   <dictionaries>
-    <dictionary id="EN US" _alteration="added">
-      <english_description>English</english_description>
-      <localized_description>English</localized_description>
+    <dictionary id="EN US">
       <entries>
-        <entry id="Class:User/NonStandaloneProfileWarning" _alteration="added">User profile %1$s cannot be standalone. You should add
-          other prrofiles otherwise you may encounter access issue with this user.</entry>
+        <entry id="Class:User/NonStandaloneProfileWarning" _delta="define">User profile %1$s cannot be standalone. You should add
+          other profiles otherwise you may encounter access issue with this user.</entry>
       </entries>
     </dictionary>
-    <dictionary id="FR FR" _alteration="added">
-      <english_description>French</english_description>
-      <localized_description>Français</localized_description>
+    <dictionary id="FR FR">
       <entries>
-        <entry id="Core:DeletedObjectLabel" _alteration="added">Le profil %1$s ne peut être seul. Sans rajout d'autres profiles,
-          l'utilisateur peut rencontrer des problèmes dans iTop.</entry>
+        <entry id="Class:User/NonStandaloneProfileWarning" _delta="define">Le profil %1$s ne peut être seul. Sans le rajout d'autres
+          profiles, l'utilisateur peut rencontrer des problèmes dans iTop.</entry>
       </entries>
     </dictionary>
   </dictionaries>
