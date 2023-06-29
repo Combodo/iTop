@@ -58,6 +58,7 @@
         <parent>cmdbAbstractObject</parent>
         <properties>
           <category>addon/userrights,grant_by_profile</category>
+          <is_link>1</is_link>
         </properties>
         <fields>
           <field id="userid" xsi:type="AttributeExternalKey">
