@@ -59,9 +59,8 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			$aExtraParams['panel_title_tooltip'] = $this->oAttDef->GetDescription();
 		}
 
-		// Add creation in modal if the linkset is not readonly
-		if (!$this->oAttDef->GetReadOnly()
-			&& $this->bIsAllowCreate) {
+		// Add creation in modal if creation allowed
+		if ( $this->bIsAllowCreate) {
 			$aExtraParams['creation_in_modal'] = true;
 			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::DICT_ADD_BUTTON_TOOLTIP);
 			$aExtraParams['creation_in_modal_form_title'] = $this->GetDictionaryEntry(static::DICT_ADD_MODAL_TITLE);
