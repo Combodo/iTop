@@ -17,5 +17,5 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Add an entry in the list~~',
+	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Einen Eintrag zur Liste hinzufügen',
 ));

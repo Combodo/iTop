@@ -21,6 +21,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Core:ormValue:ormDocument:DownloadsCount' => '%1s~~',
-	'Core:ormValue:ormDocument:DownloadsCount+' => 'Downloaded %1$s time(s)~~',
+	'Core:ormValue:ormDocument:DownloadsCount' => '%1s',
+	'Core:ormValue:ormDocument:DownloadsCount+' => '%1$s mal heruntergeladen',
 ]);

@@ -25,5 +25,7 @@
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLDAP' => 'LDAP-Benutzer',
 	'Class:UserLDAP+' => 'Benutzer, der via LDAP authentifiziert wird',
-	'UserLDAP:server' => 'LDAP specifics~~',
+	'Class:UserLDAP/Attribute:ldap_server' => 'LDAP-Server',
+	'Class:UserLDAP/Attribute:ldap_server+' => 'Optional: LDAP-Server, der zur Authentifizierung verwendet werden soll, falls mehrere LDAP-Server konfiguriert sind.',
+	'UserLDAP:server' => 'LDAP-Einstellungen',
 ));

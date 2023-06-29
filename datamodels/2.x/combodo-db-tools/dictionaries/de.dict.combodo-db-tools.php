@@ -43,7 +43,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'DBTools:ShowAll' => 'Alle Fehler anzeigen',
 	'DBTools:Inconsistencies' => 'Datenbank-Inkonsistenzen',
 	'DBTools:DetailedErrorTitle' => '%2$s Fehler(s) in der Klasse %1$s: %3$s',
-	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
+	'DBTools:DetailedErrorLimit' => 'Liste auf %1$s Fehler begrenzt',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Verwaister Eintrag in `%1$s`, er sollte eine Entsprechung in Tabelle `%2$s` haben',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Ungültiger Externer Key %1$s (Spalte: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Fehlender Externer Key %1$s (Spalte: `%2$s.%3$s`)',

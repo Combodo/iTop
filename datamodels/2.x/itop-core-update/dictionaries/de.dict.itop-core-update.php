@@ -51,7 +51,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Während des Upgrades läuft die Anwendung im read-only Modus',
 	'iTopUpdate:UI:Status' => 'Status',
 	'iTopUpdate:UI:Action' => 'Update',
-	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup~~',
+	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup',
 	'iTopUpdate:UI:History' => 'Versionshistorie',
 	'iTopUpdate:UI:Progress' => 'Upgradefortschritt',
 	'iTopUpdate:UI:DoBackup:Label' => 'Backup von Dateien und Datenbank',
@@ -70,9 +70,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Anwendungsupgrade nicht möglich: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Vorsicht: App-Upgrade kann fehlschlagen: %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Einige angepasste Dateien wurden erkannt</b>, eine Teil-Update kann nicht ausgeführt werden.<br/>Befolgen Sie das  <a target="_blank" href="%2$s">Verfahren</a>, um Ihr iTop manuell zu aktualisieren. Sie müssen das <a href="%1$s">Setup</a> benutzen, um Ihre Applikation zu aktualisieren.<br />',
-	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
-	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
-	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
+	'iTopUpdate:UI:CheckInProgress' => 'Bitte warten Sie während der Integritätsprüfung',
+	'iTopUpdate:UI:SetupLaunch' => 'Starte '.ITOP_APPLICATION_SHORT.' Setup',
+	'iTopUpdate:UI:SetupLaunchConfirm' => 'Hiermit wird der '.ITOP_APPLICATION_SHORT.' Setup, sind Sie sicher?',
 
 	// Setup Messages
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Bereit zum Upgrade',
