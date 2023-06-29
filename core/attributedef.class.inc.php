@@ -9,9 +9,8 @@ use Combodo\iTop\Application\UI\Links\Set\BlockLinkSetDisplayAsProperty;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\Validator\CustomRegexpValidator;
 use Combodo\iTop\Form\Validator\LinkedSetValidator;
-use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
-use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Service\Links\LinkSetModel;
@@ -1123,7 +1122,7 @@ abstract class AttributeDefinition
 
 		// Validation pattern
 		if ($this->GetValidationPattern() !== '') {
-			$oFormField->AddValidator(new Validator($this->GetValidationPattern()));
+			$oFormField->AddValidator(new CustomRegexpValidator($this->GetValidationPattern()));
 		}
 
 		// Description
@@ -7295,6 +7294,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
+		/** @var \Combodo\iTop\Form\Field\Field $oFormField */
 		if ($oFormField === null) {
 			// Later : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
 			$sFormFieldClass = static::GetFormFieldClass();
@@ -7325,17 +7325,10 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 				}
 			});
 		}
-		else
-		{
+		else {
 			$oSearch = DBSearch::FromOQL($this->GetValuesDef()->GetFilterExpression());
 			$oSearch->SetInternalParams(array('this' => $oObject));
 			$oFormField->SetSearch($oSearch);
-		}
-
-		// If ExtKey is mandatory, we add a validator to ensure that the value 0 is not selected
-		if ($oObject->GetAttributeFlags($this->GetCode()) & OPT_ATT_MANDATORY)
-		{
-			$oFormField->AddValidator(new NotEmptyExtKeyValidator());
 		}
 
 		parent::MakeFormField($oObject, $oFormField);

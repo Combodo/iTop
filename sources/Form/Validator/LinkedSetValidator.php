@@ -24,13 +24,7 @@ namespace Combodo\iTop\Form\Validator;
  *
  * @since 3.1
  */
-class LinkedSetValidator extends Validator
+class LinkedSetValidator extends AbstractRegexpValidator
 {
-	const VALIDATOR_NAME = 'LinkedSetValidator';
-
-	/** @inheritdoc */
-	public static function GetName()
-	{
-		return static::VALIDATOR_NAME;
-	}
+	public const VALIDATOR_NAME = 'LinkedSetValidator';
 }

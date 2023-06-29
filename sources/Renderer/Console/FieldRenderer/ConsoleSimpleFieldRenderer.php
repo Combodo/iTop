@@ -33,6 +33,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Text\Text;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Form\Validator\AbstractRegexpValidator;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\FieldRenderer;
 use DateTimeFormat;
@@ -433,16 +434,20 @@ EOF
 
 		// JS Form field widget construct
 		$aValidators = array();
-		foreach ($this->oField->GetValidators() as $oValidator)
-		{
+		foreach ($this->oField->GetValidators() as $oValidator) {
+			if (false === ($oValidator instanceof AbstractRegexpValidator)) {
+				// no JS counterpart, so skipping !
+				continue;
+			}
+
 			$aValidators[$oValidator::GetName()] = array(
 				'reg_exp' => $oValidator->GetRegExp(),
-				'message' => Dict::S($oValidator->GetErrorMessage())
+				'message' => Dict::S($oValidator->GetErrorMessage()),
 			);
 		}
 		$sValidators = json_encode($aValidators);
 		$sFormFieldOptions =
-<<<EOF
+			<<<EOF
 {
 	validators: $sValidators,
 	on_validation_callback: function(me, oResult) {

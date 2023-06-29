@@ -8,8 +8,8 @@
 namespace Combodo\iTop\Form\Field;
 
 use Closure;
+use Combodo\iTop\Form\Validator\AbstractValidator;
 use Combodo\iTop\Form\Validator\MandatoryValidator;
-use Combodo\iTop\Form\Validator\Validator;
 
 /**
  * Description of Field
@@ -68,7 +68,7 @@ abstract class Field
 	protected $bMandatory;
 	/** @var string */
 	protected $sDisplayMode;
-	/** @var array */
+	/** @var AbstractValidator[] */
 	protected $aValidators;
 	/**
 	 * @var bool
@@ -228,10 +228,6 @@ abstract class Field
         return $this->sDisplayMode;
     }
 
-	/**
-	 *
-	 * @return array
-	 */
 	public function GetValidators()
 	{
 		return $this->aValidators;
@@ -352,38 +348,46 @@ abstract class Field
 	 * Setting the value will automatically add/remove a MandatoryValidator to the Field
 	 *
 	 * @param boolean $bMandatory
+	 *
 	 * @return $this
 	 */
 	public function SetMandatory(bool $bMandatory)
 	{
 		// Before changing the property, we check if it was already mandatory. If not, we had the mandatory validator
-		if ($bMandatory && !$this->bMandatory)
-		{
-			$this->AddValidator(new MandatoryValidator());
+		if ($bMandatory && !$this->bMandatory) {
+			$this->AddValidator($this->GetMandatoryValidatorInstance());
 		}
 
-		if (!$bMandatory)
-		{
-			foreach ($this->aValidators as $iKey => $oValue)
-			{
-				if ($oValue::Getname() === MandatoryValidator::GetName())
-				{
-					unset($this->aValidators[$iKey]);
-				}
-			}
-		}
+		if (false === $bMandatory) {
+			foreach ($this->aValidators as $iKey => $oValue) {
+				if ($oValue instanceof MandatoryValidator) {
+                    unset($this->aValidators[$iKey]);
+                }
+            }
+        }
 
-		$this->bMandatory = $bMandatory;
-		return $this;
-	}
+        $this->bMandatory = $bMandatory;
 
-	/**
-	 * Sets if the field is must change or not.
-	 * Note: This not implemented yet! Just a pre-conception for CaseLogField
-	 *
-	 * @todo Implement
-	 * @param boolean $bMustChange
+        return $this;
+    }
+
+    /**
+     * @return AbstractValidator
+     * @since 3.1.0 N°6414
+     */
+    protected function GetMandatoryValidatorInstance(): AbstractValidator
+    {
+        return new MandatoryValidator();
+    }
+
+    /**
+     * Sets if the field is must change or not.
+     * Note: This not implemented yet! Just a pre-conception for CaseLogField
+     *
+     * @param boolean $bMustChange
+     *
 	 * @return $this
+	 * @todo Implement
 	 */
 	public function SetMustChange(bool $bMustChange)
 	{
@@ -476,31 +480,28 @@ abstract class Field
 		return $this;
 	}
 
-	/**
-	 *
-	 * @param \Combodo\iTop\Form\Validator\Validator $oValidator
-	 * @return $this
-	 */
-	public function AddValidator(Validator $oValidator)
+    /**
+     * @param AbstractValidator $oValidator
+     * @return $this
+     */
+	public function AddValidator(AbstractValidator $oValidator)
 	{
 		$this->aValidators[] = $oValidator;
+
 		return $this;
 	}
 
 	/**
-	 *
-	 * @param \Combodo\iTop\Form\Validator\Validator $oValidator
 	 * @return $this
 	 */
-	public function RemoveValidator(Validator $oValidator)
+	public function RemoveValidator(AbstractValidator $oValidator)
 	{
-		foreach ($this->aValidators as $iKey => $oValue)
-		{
-			if ($oValue === $oValidator)
-			{
+		foreach ($this->aValidators as $iKey => $oValue) {
+			if ($oValue === $oValidator) {
 				unset($this->aValidators[$iKey]);
 			}
 		}
+
 		return $this;
 	}
 
@@ -574,10 +575,13 @@ abstract class Field
 	}
 
 	/**
-	 * Checks the validators to see if the field's current value is valid.
-	 * Then sets $bValid and $aErrorMessages.
+	 * Validates the field using the validators set.
 	 *
-	 * @return boolean
+	 * Before overriding this method in children classes, try to add a custom validator !
+	 *
+	 * @uses GetValidators()
+	 * @uses SetValid()
+	 * @uses AddErrorMessage()
 	 */
 	public function Validate()
 	{
@@ -592,9 +596,12 @@ abstract class Field
 
 		if (!$bEmpty || $this->GetMandatory()) {
 			foreach ($this->GetValidators() as $oValidator) {
-				if (!preg_match($oValidator->GetRegExp(true), $this->GetCurrentValue())) {
+				[$bIsFieldValid, $sValidationErrorMessage] = $oValidator->Validate($this->GetCurrentValue());
+
+				/** @var bool $bIsFieldValid */
+				if (false === $bIsFieldValid) {
 					$this->SetValid(false);
-					$this->AddErrorMessage($oValidator->GetErrorMessage());
+					$this->AddErrorMessage($sValidationErrorMessage);
 				}
 			}
 		}
