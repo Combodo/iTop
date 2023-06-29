@@ -261,7 +261,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOp/Attribute:objkey' => '对象id',
 	'Class:CMDBChangeOp/Attribute:objkey+' => '对象id',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDB操作类型',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '变更操作的类型',
+	'Class:CMDBChangeOp/Attribute:finalclass+' => '根本属性的名称',
 ));
 
 //
