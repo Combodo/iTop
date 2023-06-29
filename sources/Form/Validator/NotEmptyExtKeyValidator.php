@@ -24,10 +24,9 @@ namespace Combodo\iTop\Form\Validator;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class NotEmptyExtKeyValidator extends Validator
+class NotEmptyExtKeyValidator extends MandatoryValidator
 {
-	const VALIDATOR_NAME = 'notemptyextkey';
-	const DEFAULT_REGEXP = '^[0-9]*[1-9][0-9]*$';
-	const DEFAULT_ERROR_MESSAGE = 'Core:Validator:MustSelectOne';
-
+	public const VALIDATOR_NAME = 'notemptyextkey';
+	public const DEFAULT_REGEXP = '^[0-9]*[1-9][0-9]*$';
+	public const DEFAULT_ERROR_MESSAGE = 'Core:Validator:MustSelectOne';
 }

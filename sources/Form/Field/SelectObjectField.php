@@ -22,6 +22,7 @@ namespace Combodo\iTop\Form\Field;
 
 use BinaryExpression;
 use Closure;
+use Combodo\iTop\Form\Validator\AbstractValidator;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use ContextTag;
 use DBObjectSet;
@@ -168,38 +169,15 @@ class SelectObjectField extends Field
 		return $this;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function SetMandatory(bool $bMandatory)
+	protected function GetMandatoryValidatorInstance(): AbstractValidator
 	{
-		// Before changing the property, we check if it was already mandatory. If not, we had the mandatory validator
-		if ($bMandatory && !$this->bMandatory)
-		{
-			$this->AddValidator(new NotEmptyExtKeyValidator());
-		}
-
-		if (!$bMandatory)
-		{
-			foreach ($this->aValidators as $iKey => $oValue)
-			{
-				if ($oValue::Getname() === NotEmptyExtKeyValidator::GetName())
-				{
-					unset($this->aValidators[$iKey]);
-				}
-			}
-		}
-
-		$this->bMandatory = $bMandatory;
-
-		return $this;
+		return new NotEmptyExtKeyValidator();
 	}
 
 	/**
 	 * @return \DBSearch
 	 */
-	public function GetSearch()
-	{
+	public function GetSearch() {
 		return $this->oSearch;
 	}
 

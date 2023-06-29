@@ -4,29 +4,32 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Test\UnitTest\Sources\Form;
+namespace Combodo\iTop\Test\UnitTest\Sources\Form\Field;
 
 use Combodo\iTop\Form\Field\StringField;
+use Combodo\iTop\Form\Validator\CustomRegexpValidator;
 use Combodo\iTop\Form\Validator\IntegerValidator;
 use Combodo\iTop\Form\Validator\MandatoryValidator;
-use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 class FieldTest extends ItopTestCase
 {
-	public function testIsValidationDisabled(): void
+    public function testIsValidationDisabled(): void
 	{
 		$oField = new StringField('test');
 		$oField->SetCurrentValue('toto@johny.invalid');
-		$oDumbEmailValidator = new Validator('\d+@\d+\.\d{2,3}');
+		$sDumbEmailValidatorErrorMessage = 'dumb email validator error message';
+		$oDumbEmailValidator = new CustomRegexpValidator('\d+@\d+\.\d{2,3}', $sDumbEmailValidatorErrorMessage);
 		$oField->AddValidator($oDumbEmailValidator);
 
 		$bIsFieldValid = $oField->Validate();
 		$this->assertFalse($bIsFieldValid);
+		$this->assertCount(1, $oField->GetErrorMessages());
+		$this->assertSame($sDumbEmailValidatorErrorMessage, $oField->GetErrorMessages()[0]);
 
+		/** @noinspection PhpRedundantOptionalArgumentInspection */
 		$oField->SetValidationDisabled(true);
-		$bIsFieldValidWithValidationDisabled = $oField->Validate();
-		$this->assertTrue($bIsFieldValidWithValidationDisabled);
+		$this->assertTrue($oField->Validate());
 	}
 
 	public function testSetMandatory(): void
@@ -59,5 +62,22 @@ class FieldTest extends ItopTestCase
 		$this->assertSame(IntegerValidator::class, get_class($aValidatorsAfterAddingIntegerValidator[0]));
 		$this->assertFalse($oField->Validate());
 		$this->assertCount(1, $oField->GetErrorMessages());
+	}
+
+	public function testValidateWithTwoValidatorsFirstWrong(): void
+	{
+		$oField = new StringField('test');
+		$oField->SetCurrentValue('string with spaces');
+
+		$sFirstValidatorInvalidResultErrorMsg = 'dumb email validator error message';
+		$oFirstValidatorInvalidResult = new CustomRegexpValidator('^[a-z]+$', $sFirstValidatorInvalidResultErrorMsg);
+		$oField->AddValidator($oFirstValidatorInvalidResult);
+
+		$oSecondValidatorValidResult = new CustomRegexpValidator('^.+$', 'valid');
+		$oField->AddValidator($oSecondValidatorValidResult);
+
+		$this->assertFalse($oField->Validate());
+		$this->assertCount(1, $oField->GetErrorMessages());
+		$this->assertSame($sFirstValidatorInvalidResultErrorMsg, $oField->GetErrorMessages()[0]);
 	}
 }

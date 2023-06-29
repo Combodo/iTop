@@ -24,10 +24,9 @@ namespace Combodo\iTop\Form\Validator;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class IntegerValidator extends Validator
+class IntegerValidator extends AbstractRegexpValidator
 {
-	const VALIDATOR_NAME = 'integer';
-	const DEFAULT_REGEXP = '^[0-9]+$';
-	const DEFAULT_ERROR_MESSAGE = 'Core:Validator:MustBeInteger';
-
+	public const VALIDATOR_NAME = 'integer';
+	public const DEFAULT_REGEXP = '^[0-9]+$';
+	public const DEFAULT_ERROR_MESSAGE = 'Core:Validator:MustBeInteger';
 }
