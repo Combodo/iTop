@@ -16,6 +16,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 // Navigation menu
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => '公司logo',
