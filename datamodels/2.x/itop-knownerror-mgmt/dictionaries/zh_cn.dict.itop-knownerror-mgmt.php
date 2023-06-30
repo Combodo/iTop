@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -29,10 +30,12 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
+
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -42,17 +45,19 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+
 //
 // Class: KnownError
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:KnownError' => '已知错误',
-	'Class:KnownError+' => '记录一个已知错误',
+	'Class:KnownError+' => '记录已知错误',
 	'Class:KnownError/Attribute:name' => '名称',
 	'Class:KnownError/Attribute:name+' => '',
 	'Class:KnownError/Attribute:org_id' => '客户',
 	'Class:KnownError/Attribute:org_id+' => '',
-	'Class:KnownError/Attribute:cust_name' => '客户名称',
+	'Class:KnownError/Attribute:cust_name' => '名称',
 	'Class:KnownError/Attribute:cust_name+' => '',
 	'Class:KnownError/Attribute:problem_id' => '相关问题',
 	'Class:KnownError/Attribute:problem_id+' => '',
@@ -66,9 +71,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:KnownError/Attribute:workaround+' => '',
 	'Class:KnownError/Attribute:solution' => '解决方案',
 	'Class:KnownError/Attribute:solution+' => '',
-	'Class:KnownError/Attribute:error_code' => '错误代码',
+	'Class:KnownError/Attribute:error_code' => '错误编码',
 	'Class:KnownError/Attribute:error_code+' => '',
-	'Class:KnownError/Attribute:domain' => '类型',
+	'Class:KnownError/Attribute:domain' => '领域',
 	'Class:KnownError/Attribute:domain+' => '',
 	'Class:KnownError/Attribute:domain/Value:Application' => '应用',
 	'Class:KnownError/Attribute:domain/Value:Application+' => '应用',
@@ -95,15 +100,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkErrorToFunctionalCI' => '关联 已知问题/功能配置项',
-	'Class:lnkErrorToFunctionalCI+' => '已知问题和功能配置项之间的关联',
+	'Class:lnkErrorToFunctionalCI' => '关联 已知问题/功能项',
+	'Class:lnkErrorToFunctionalCI+' => '已知问题和功能项之间的关联',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => '配置项',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => '配置项名称',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => '名称',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => '已知问题',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => '已知问题名称',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => '名称',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => '原因',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
@@ -118,11 +123,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkDocumentToError+' => '文档和已知问题之间的关联',
 	'Class:lnkDocumentToError/Attribute:document_id' => '文档',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
-	'Class:lnkDocumentToError/Attribute:document_name' => '文档名称',
+	'Class:lnkDocumentToError/Attribute:document_name' => '名称',
 	'Class:lnkDocumentToError/Attribute:document_name+' => '',
 	'Class:lnkDocumentToError/Attribute:error_id' => '已知问题',
 	'Class:lnkDocumentToError/Attribute:error_id+' => '',
-	'Class:lnkDocumentToError/Attribute:error_name' => '已知问题名称',
+	'Class:lnkDocumentToError/Attribute:error_name' => '名称',
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => '关联类型',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',

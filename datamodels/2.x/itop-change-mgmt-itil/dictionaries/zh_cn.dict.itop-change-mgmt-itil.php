@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ChangeManagement' => '变更管理',
 	'Menu:Change:Overview' => '概况',
@@ -32,7 +33,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Change:Shortcuts+' => '',
 	'Menu:WaitingAcceptance' => '等待审核的变更',
 	'Menu:WaitingAcceptance+' => '',
-	'Menu:WaitingApproval' => '等待批准的变更',
+	'Menu:WaitingApproval' => '等待审批的变更',
 	'Menu:WaitingApproval+' => '',
 	'Menu:Changes' => '所有打开的变更',
 	'Menu:Changes+' => '所有打开的变更',
@@ -76,7 +77,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:status/Value:assigned+' => '',
 	'Class:Change/Attribute:status/Value:plannedscheduled' => '已计划和安排',
 	'Class:Change/Attribute:status/Value:plannedscheduled+' => '',
-	'Class:Change/Attribute:status/Value:approved' => '已批准',
+	'Class:Change/Attribute:status/Value:approved' => '已审批',
 	'Class:Change/Attribute:status/Value:approved+' => '',
 	'Class:Change/Attribute:status/Value:notapproved' => '未批准',
 	'Class:Change/Attribute:status/Value:notapproved+' => '',
@@ -98,7 +99,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:impact+' => '',
 	'Class:Change/Attribute:supervisor_group_id' => '监督团队',
 	'Class:Change/Attribute:supervisor_group_id+' => '',
-	'Class:Change/Attribute:supervisor_group_name' => '监督团队名称',
+	'Class:Change/Attribute:supervisor_group_name' => '名称',
 	'Class:Change/Attribute:supervisor_group_name+' => '',
 	'Class:Change/Attribute:supervisor_id' => '监督人',
 	'Class:Change/Attribute:supervisor_id+' => '',
@@ -106,7 +107,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:supervisor_email+' => '',
 	'Class:Change/Attribute:manager_group_id' => '管理团队',
 	'Class:Change/Attribute:manager_group_id+' => '',
-	'Class:Change/Attribute:manager_group_name' => '管理团队名称',
+	'Class:Change/Attribute:manager_group_name' => '名称',
 	'Class:Change/Attribute:manager_group_name+' => '',
 	'Class:Change/Attribute:manager_id' => '经理',
 	'Class:Change/Attribute:manager_id+' => '',
@@ -196,11 +197,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:ApprovedChange' => '已批准的变更',
+	'Class:ApprovedChange' => '已审批的变更',
 	'Class:ApprovedChange+' => '',
-	'Class:ApprovedChange/Attribute:approval_date' => '批准日期',
+	'Class:ApprovedChange/Attribute:approval_date' => '审批日期',
 	'Class:ApprovedChange/Attribute:approval_date+' => '',
-	'Class:ApprovedChange/Attribute:approval_comment' => '批准说明',
+	'Class:ApprovedChange/Attribute:approval_comment' => '审批说明',
 	'Class:ApprovedChange/Attribute:approval_comment+' => '',
 	'Class:ApprovedChange/Stimulus:ev_validate' => '同意',
 	'Class:ApprovedChange/Stimulus:ev_validate+' => '',

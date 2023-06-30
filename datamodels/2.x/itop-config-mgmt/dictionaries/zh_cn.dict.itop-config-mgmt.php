@@ -2,8 +2,8 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2021 Combodo SARL
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -20,10 +20,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 //////////////////////////////////////////////////////////////////////
 // Relations
 //////////////////////////////////////////////////////////////////////
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Relation:impacts/Description' => '被影响的元素',
 	'Relation:impacts/DownStream' => '影响...',
@@ -34,7 +36,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Relation:depends on/Description' => '该元素依赖的元素...',
 	'Relation:depends on/DownStream' => '依赖于...',
 	'Relation:depends on/UpStream' => '影响...',
-	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/LoadData'       => '加载数据',
 	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
@@ -81,15 +83,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkContactToFunctionalCI' => '链接 联系人 / 功能项',
+	'Class:lnkContactToFunctionalCI' => '关联 联系人/功能项',
 	'Class:lnkContactToFunctionalCI+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => '功能项',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => '功能项名称',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => '名称',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => '联系人',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => '联系人名称',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => '名称',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
 ));
 
@@ -98,7 +100,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:FunctionalCI' => '功能配置项',
+	'Class:FunctionalCI' => '功能项',
 	'Class:FunctionalCI+' => '',
 	'Class:FunctionalCI/Attribute:name' => '名称',
 	'Class:FunctionalCI/Attribute:name+' => '',
@@ -106,7 +108,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FunctionalCI/Attribute:description+' => '',
 	'Class:FunctionalCI/Attribute:org_id' => '组织',
 	'Class:FunctionalCI/Attribute:org_id+' => '',
-	'Class:FunctionalCI/Attribute:organization_name' => '组织名称',
+	'Class:FunctionalCI/Attribute:organization_name' => '名称',
 	'Class:FunctionalCI/Attribute:organization_name+' => '通用名',
 	'Class:FunctionalCI/Attribute:business_criticity' => '业务级别',
 	'Class:FunctionalCI/Attribute:business_criticity+' => '',
@@ -126,8 +128,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '该配置项依赖的所有应用方案',
 	'Class:FunctionalCI/Attribute:softwares_list' => '软件',
 	'Class:FunctionalCI/Attribute:softwares_list+' => '该配置项上已安装的所有软件',
-	'Class:FunctionalCI/Attribute:finalclass' => '二级配置项',
-	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class',
+	'Class:FunctionalCI/Attribute:finalclass' => '类型',
+	'Class:FunctionalCI/Attribute:finalclass+' => '根本属性的名称',
 	'Class:FunctionalCI/Tab:OpenedTickets' => '活跃的工单',
 ));
 
@@ -140,14 +142,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:PhysicalDevice+' => '',
 	'Class:PhysicalDevice/Attribute:serialnumber' => '序列号',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
-	'Class:PhysicalDevice/Attribute:location_id' => '地理位置',
+	'Class:PhysicalDevice/Attribute:location_id' => '地点',
 	'Class:PhysicalDevice/Attribute:location_id+' => '',
 	'Class:PhysicalDevice/Attribute:location_name' => '名称',
 	'Class:PhysicalDevice/Attribute:location_name+' => '',
 	'Class:PhysicalDevice/Attribute:status' => '状态',
 	'Class:PhysicalDevice/Attribute:status+' => '',
-	'Class:PhysicalDevice/Attribute:status/Value:implementation' => '上线',
-	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => '上线',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation' => '生效',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => '生效',
 	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => '废弃',
 	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => '废弃',
 	'Class:PhysicalDevice/Attribute:status/Value:production' => '生产',
@@ -156,11 +158,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:PhysicalDevice/Attribute:status/Value:stock+' => '库存',
 	'Class:PhysicalDevice/Attribute:brand_id' => '品牌',
 	'Class:PhysicalDevice/Attribute:brand_id+' => '',
-	'Class:PhysicalDevice/Attribute:brand_name' => '品牌名称',
+	'Class:PhysicalDevice/Attribute:brand_name' => '名称',
 	'Class:PhysicalDevice/Attribute:brand_name+' => '',
 	'Class:PhysicalDevice/Attribute:model_id' => '型号',
 	'Class:PhysicalDevice/Attribute:model_id+' => '',
-	'Class:PhysicalDevice/Attribute:model_name' => '型号名称',
+	'Class:PhysicalDevice/Attribute:model_name' => '名称',
 	'Class:PhysicalDevice/Attribute:model_name+' => '',
 	'Class:PhysicalDevice/Attribute:asset_number' => '资产编号',
 	'Class:PhysicalDevice/Attribute:asset_number+' => '',
@@ -175,14 +177,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Rack' => '机柜',
+	'Class:Rack' => '机架',
 	'Class:Rack+' => '',
-	'Class:Rack/Attribute:nb_u' => '机柜高度',
+	'Class:Rack/Attribute:nb_u' => '机架高度',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => '设备',
-	'Class:Rack/Attribute:device_list+' => '该机柜托管的所有物理设备',
-	'Class:Rack/Attribute:enclosure_list' => '机位',
-	'Class:Rack/Attribute:enclosure_list+' => '该机柜上的所有机位',
+	'Class:Rack/Attribute:device_list+' => '该机架托管的所有物理设备',
+	'Class:Rack/Attribute:enclosure_list' => '机柜',
+	'Class:Rack/Attribute:enclosure_list+' => '该机架的所有机柜',
 ));
 
 //
@@ -190,7 +192,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TelephonyCI' => 'Telephony CI',
+	'Class:TelephonyCI' => '通讯项',
 	'Class:TelephonyCI+' => '',
 	'Class:TelephonyCI/Attribute:phonenumber' => '电话号码',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '',
@@ -210,11 +212,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:MobilePhone' => '移动电话',
+	'Class:MobilePhone' => '手机',
 	'Class:MobilePhone+' => '',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '',
-	'Class:MobilePhone/Attribute:hw_pin' => '硬件PIN 码',
+	'Class:MobilePhone/Attribute:hw_pin' => '硬件PIN码',
 	'Class:MobilePhone/Attribute:hw_pin+' => '',
 ));
 
@@ -223,7 +225,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:IPPhone' => 'IP 电话',
+	'Class:IPPhone' => 'IP电话',
 	'Class:IPPhone+' => '',
 ));
 
@@ -242,7 +244,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ConnectableCI' => '可连接的配置项',
-	'Class:ConnectableCI+' => '物理配置项',
+	'Class:ConnectableCI+' => '物理的配置项',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => '网络设备',
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => '所有连接到这台设备的网络设备',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => '网卡',
@@ -256,13 +258,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DatacenterDevice' => '数据中心设备',
 	'Class:DatacenterDevice+' => '',
-	'Class:DatacenterDevice/Attribute:rack_id' => '机柜',
+	'Class:DatacenterDevice/Attribute:rack_id' => '机架',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '',
-	'Class:DatacenterDevice/Attribute:rack_name' => '机柜名称',
+	'Class:DatacenterDevice/Attribute:rack_name' => '名称',
 	'Class:DatacenterDevice/Attribute:rack_name+' => '',
-	'Class:DatacenterDevice/Attribute:enclosure_id' => '机位',
+	'Class:DatacenterDevice/Attribute:enclosure_id' => '机柜',
 	'Class:DatacenterDevice/Attribute:enclosure_id+' => '',
-	'Class:DatacenterDevice/Attribute:enclosure_name' => '机位名称',
+	'Class:DatacenterDevice/Attribute:enclosure_name' => '名称',
 	'Class:DatacenterDevice/Attribute:enclosure_name+' => '',
 	'Class:DatacenterDevice/Attribute:nb_u' => '高度',
 	'Class:DatacenterDevice/Attribute:nb_u+' => '',
@@ -276,12 +278,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DatacenterDevice/Attribute:powerB_id+' => '',
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'PowerB source name',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => '光纤端口',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '该设备的所有光纤端口',
-	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => '光纤接口',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '该设备的所有光纤接口',
+	'Class:DatacenterDevice/Attribute:san_list' => 'SAN',
 	'Class:DatacenterDevice/Attribute:san_list+' => '所有连接到这台设备的SAN 交换机',
 	'Class:DatacenterDevice/Attribute:redundancy' => '冗余',
-	'Class:DatacenterDevice/Attribute:redundancy/count' => '该设备运行正常至少需要一路电源 (A 或 B)',
+	'Class:DatacenterDevice/Attribute:redundancy/count' => '该设备正常运行至少需要一路电源 (A 或 B)',
 	// Unused yet
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => '所有电源正常,该设备才正常',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => '至少 %1$s %% 路电源正常,设备才正常',
@@ -294,15 +296,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:NetworkDevice' => '网络设备',
 	'Class:NetworkDevice+' => '',
-	'Class:NetworkDevice/Attribute:networkdevicetype_id' => '网络设备类型',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id' => '类型',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
-	'Class:NetworkDevice/Attribute:networkdevicetype_name' => '网络设备类型名称',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name' => '名称',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => '设备',
 	'Class:NetworkDevice/Attribute:connectablecis_list+' => '连接到该网络设备的所有设备',
-	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOS 版本',
+	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOS版本',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
-	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOS 版本名称',
+	'Class:NetworkDevice/Attribute:iosversion_name' => '名称',
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
 	'Class:NetworkDevice/Attribute:ram' => '内存',
 	'Class:NetworkDevice/Attribute:ram+' => '',
@@ -317,15 +319,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Server+' => '',
 	'Class:Server/Attribute:osfamily_id' => '操作系统家族',
 	'Class:Server/Attribute:osfamily_id+' => '',
-	'Class:Server/Attribute:osfamily_name' => '操作系统家族名称',
+	'Class:Server/Attribute:osfamily_name' => '名称',
 	'Class:Server/Attribute:osfamily_name+' => '',
 	'Class:Server/Attribute:osversion_id' => '操作系统版本',
 	'Class:Server/Attribute:osversion_id+' => '',
-	'Class:Server/Attribute:osversion_name' => '操作系统版本名称',
+	'Class:Server/Attribute:osversion_name' => '名称',
 	'Class:Server/Attribute:osversion_name+' => '',
 	'Class:Server/Attribute:oslicence_id' => '操作系统许可证',
 	'Class:Server/Attribute:oslicence_id+' => '',
-	'Class:Server/Attribute:oslicence_name' => '操作系统许可证名称',
+	'Class:Server/Attribute:oslicence_name' => '名称',
 	'Class:Server/Attribute:oslicence_name+' => '',
 	'Class:Server/Attribute:cpu' => 'CPU',
 	'Class:Server/Attribute:cpu+' => '',
@@ -351,10 +353,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:SANSwitch' => 'SAN 交换机',
+	'Class:SANSwitch' => 'SAN交换机',
 	'Class:SANSwitch+' => '',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => '设备',
-	'Class:SANSwitch/Attribute:datacenterdevice_list+' => '连接到该SAN 交换机的所有设备',
+	'Class:SANSwitch/Attribute:datacenterdevice_list+' => '连接到该SAN交换机的所有设备',
 ));
 
 //
@@ -384,15 +386,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:PC' => 'PC',
+	'Class:PC' => '电脑',
 	'Class:PC+' => '',
 	'Class:PC/Attribute:osfamily_id' => '操作系统家族',
 	'Class:PC/Attribute:osfamily_id+' => '',
-	'Class:PC/Attribute:osfamily_name' => '操作系统家族名称',
+	'Class:PC/Attribute:osfamily_name' => '名称',
 	'Class:PC/Attribute:osfamily_name+' => '',
 	'Class:PC/Attribute:osversion_id' => '操作系统版本',
 	'Class:PC/Attribute:osversion_id+' => '',
-	'Class:PC/Attribute:osversion_name' => '操作系统版本名称',
+	'Class:PC/Attribute:osversion_name' => '名称',
 	'Class:PC/Attribute:osversion_name+' => '',
 	'Class:PC/Attribute:cpu' => 'CPU',
 	'Class:PC/Attribute:cpu+' => '',
@@ -420,7 +422,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:PowerConnection' => '电源连接',
+	'Class:PowerConnection' => '供电线路',
 	'Class:PowerConnection+' => '',
 ));
 
@@ -442,13 +444,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '',
-	'Class:PDU/Attribute:rack_id' => '机柜',
+	'Class:PDU/Attribute:rack_id' => '机架',
 	'Class:PDU/Attribute:rack_id+' => '',
-	'Class:PDU/Attribute:rack_name' => '机柜名称',
+	'Class:PDU/Attribute:rack_name' => '名称',
 	'Class:PDU/Attribute:rack_name+' => '',
-	'Class:PDU/Attribute:powerstart_id' => '上级电源',
+	'Class:PDU/Attribute:powerstart_id' => '上游电源',
 	'Class:PDU/Attribute:powerstart_id+' => '',
-	'Class:PDU/Attribute:powerstart_name' => '上级电源名称',
+	'Class:PDU/Attribute:powerstart_name' => '名称',
 	'Class:PDU/Attribute:powerstart_name+' => '',
 ));
 
@@ -466,16 +468,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Enclosure' => '机位',
-	'Class:Enclosure+' => '',
-	'Class:Enclosure/Attribute:rack_id' => '机柜',
+	'Class:Enclosure' => '机柜',
+	'Class:Enclosure+' => '可以容纳多台设备的封闭空间或刀片服务器机箱',
+	'Class:Enclosure/Attribute:rack_id' => '机架',
 	'Class:Enclosure/Attribute:rack_id+' => '',
-	'Class:Enclosure/Attribute:rack_name' => '机柜名称',
+	'Class:Enclosure/Attribute:rack_name' => '名称',
 	'Class:Enclosure/Attribute:rack_name+' => '',
 	'Class:Enclosure/Attribute:nb_u' => '高度',
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => '设备',
-	'Class:Enclosure/Attribute:device_list+' => '该机位的所有设备',
+	'Class:Enclosure/Attribute:device_list+' => '该机柜的所有设备',
 ));
 
 //
@@ -496,9 +498,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => '停用',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => '停用',
 	'Class:ApplicationSolution/Attribute:redundancy' => '影响分析: 冗余配置',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up',
-	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up',
-	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => '所有配置项都保持正常, 应用方案才正常',
+	'Class:ApplicationSolution/Attribute:redundancy/count' => '至少 %1$s 个配置项保持正常, 应用方案才正常',
+	'Class:ApplicationSolution/Attribute:redundancy/percent' => '至少 %1$s %% 的配置项保持正常, 应用方案才正常',
 ));
 
 //
@@ -527,15 +529,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SoftwareInstance+' => '',
 	'Class:SoftwareInstance/Attribute:system_id' => '系统',
 	'Class:SoftwareInstance/Attribute:system_id+' => '',
-	'Class:SoftwareInstance/Attribute:system_name' => '系统名称',
+	'Class:SoftwareInstance/Attribute:system_name' => '名称',
 	'Class:SoftwareInstance/Attribute:system_name+' => '',
 	'Class:SoftwareInstance/Attribute:software_id' => '软件',
 	'Class:SoftwareInstance/Attribute:software_id+' => '',
-	'Class:SoftwareInstance/Attribute:software_name' => '软件名称',
+	'Class:SoftwareInstance/Attribute:software_name' => '名称',
 	'Class:SoftwareInstance/Attribute:software_name+' => '',
 	'Class:SoftwareInstance/Attribute:softwarelicence_id' => '软件许可证',
 	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => '许可证名称',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => '名称',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
 	'Class:SoftwareInstance/Attribute:path' => '路径',
 	'Class:SoftwareInstance/Attribute:path+' => '',
@@ -563,10 +565,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:DBServer' => '数据库服务器',
+	'Class:DBServer' => 'DB服务器',
 	'Class:DBServer+' => '',
-	'Class:DBServer/Attribute:dbschema_list' => '数据库',
-	'Class:DBServer/Attribute:dbschema_list+' => '该数据库服务器上的所有数据库架构',
+	'Class:DBServer/Attribute:dbschema_list' => '数据库实例',
+	'Class:DBServer/Attribute:dbschema_list+' => '该数据库服务器上的所有数据库实例',
 ));
 
 //
@@ -574,9 +576,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:WebServer' => 'Web 服务器',
+	'Class:WebServer' => 'Web服务器',
 	'Class:WebServer+' => '',
-	'Class:WebServer/Attribute:webapp_list' => 'Web 应用',
+	'Class:WebServer/Attribute:webapp_list' => 'Web应用',
 	'Class:WebServer/Attribute:webapp_list+' => '该web 服务器上的所有web 应用',
 ));
 
@@ -585,7 +587,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:PCSoftware' => 'PC 软件',
+	'Class:PCSoftware' => 'PC软件',
 	'Class:PCSoftware+' => '',
 ));
 
@@ -616,9 +618,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:DatabaseSchema' => '数据库',
+	'Class:DatabaseSchema' => '数据库实例',
 	'Class:DatabaseSchema+' => '',
-	'Class:DatabaseSchema/Attribute:dbserver_id' => '数据库服务器',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB服务器',
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => '名称',
 	'Class:DatabaseSchema/Attribute:dbserver_name+' => '',
@@ -629,9 +631,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:WebApplication' => 'Web 应用',
+	'Class:WebApplication' => 'Web应用',
 	'Class:WebApplication+' => '',
-	'Class:WebApplication/Attribute:webserver_id' => 'Web 服务器',
+	'Class:WebApplication/Attribute:webserver_id' => 'Web服务器',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => '名称',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
@@ -649,8 +651,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:VirtualDevice+' => '',
 	'Class:VirtualDevice/Attribute:status' => '状态',
 	'Class:VirtualDevice/Attribute:status+' => '',
-	'Class:VirtualDevice/Attribute:status/Value:implementation' => '上线',
-	'Class:VirtualDevice/Attribute:status/Value:implementation+' => '上线',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => '生效',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => '生效',
 	'Class:VirtualDevice/Attribute:status/Value:obsolete' => '废弃',
 	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => '废弃',
 	'Class:VirtualDevice/Attribute:status/Value:production' => '生产',
@@ -677,7 +679,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Hypervisor' => 'Hypervisor',
+	'Class:Hypervisor' => '虚拟机管理器',
 	'Class:Hypervisor+' => '',
 	'Class:Hypervisor/Attribute:farm_id' => '集群',
 	'Class:Hypervisor/Attribute:farm_id+' => '',
@@ -696,12 +698,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Farm' => '集群',
 	'Class:Farm+' => '',
-	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisor',
-	'Class:Farm/Attribute:hypervisor_list+' => '集群由哪些Hypervisor 组成',
+	'Class:Farm/Attribute:hypervisor_list' => '虚拟机管理器',
+	'Class:Farm/Attribute:hypervisor_list+' => '集群由哪些虚拟机管理器组成',
 	'Class:Farm/Attribute:redundancy' => '高可用性',
-	'Class:Farm/Attribute:redundancy/disabled' => '所有Hypervisor 正常,集群才正常',
-	'Class:Farm/Attribute:redundancy/count' => '至少 %1$s 个Hypervisor 是正常的,集群才是正常的',
-	'Class:Farm/Attribute:redundancy/percent' => '至少 %1$s %% 的Hypervisor 是正常的,集群才正常',
+	'Class:Farm/Attribute:redundancy/disabled' => '所有虚拟机管理器正常,集群才正常',
+	'Class:Farm/Attribute:redundancy/count' => '至少 %1$s 个虚拟机管理器是正常的,集群才是正常的',
+	'Class:Farm/Attribute:redundancy/percent' => '至少 %1$s %% 的虚拟机管理器是正常的,集群才正常',
 ));
 
 //
@@ -769,15 +771,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkServerToVolume' => '链接 服务器 / 逻辑卷',
+	'Class:lnkServerToVolume' => '关联 服务器/逻辑卷',
 	'Class:lnkServerToVolume+' => '',
 	'Class:lnkServerToVolume/Attribute:volume_id' => '逻辑卷',
 	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
-	'Class:lnkServerToVolume/Attribute:volume_name' => '逻辑卷名称',
+	'Class:lnkServerToVolume/Attribute:volume_name' => '名称',
 	'Class:lnkServerToVolume/Attribute:volume_name+' => '',
 	'Class:lnkServerToVolume/Attribute:server_id' => '服务器',
 	'Class:lnkServerToVolume/Attribute:server_id+' => '',
-	'Class:lnkServerToVolume/Attribute:server_name' => '服务器名称',
+	'Class:lnkServerToVolume/Attribute:server_name' => '名称',
 	'Class:lnkServerToVolume/Attribute:server_name+' => '',
 	'Class:lnkServerToVolume/Attribute:size_used' => '已用容量',
 	'Class:lnkServerToVolume/Attribute:size_used+' => '',
@@ -788,7 +790,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkVirtualDeviceToVolume' => '链接 虚拟设备 / 逻辑卷',
+	'Class:lnkVirtualDeviceToVolume' => '关联 虚拟设备/逻辑卷',
 	'Class:lnkVirtualDeviceToVolume+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => '逻辑卷',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
@@ -807,9 +809,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkSanToDatacenterDevice' => '链接 SAN / 数据中心设备',
+	'Class:lnkSanToDatacenterDevice' => '关联 SAN/数据中心设备',
 	'Class:lnkSanToDatacenterDevice+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN 交换机',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN交换机',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => '名称',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '',
@@ -847,7 +849,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:NASFileSystem' => 'NAS 文件系统',
+	'Class:NASFileSystem' => 'NAS文件系统',
 	'Class:NASFileSystem+' => '',
 	'Class:NASFileSystem/Attribute:name' => '名称',
 	'Class:NASFileSystem/Attribute:name+' => '',
@@ -859,7 +861,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:NASFileSystem/Attribute:size+' => '',
 	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
 	'Class:NASFileSystem/Attribute:nas_id+' => '',
-	'Class:NASFileSystem/Attribute:nas_name' => 'NAS 名称',
+	'Class:NASFileSystem/Attribute:nas_name' => '名称',
 	'Class:NASFileSystem/Attribute:nas_name+' => '',
 ));
 
@@ -880,16 +882,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Software/Attribute:documents_list+' => '该软件的所有文档',
 	'Class:Software/Attribute:type' => '类型',
 	'Class:Software/Attribute:type+' => '',
-	'Class:Software/Attribute:type/Value:DBServer' => '数据库服务器',
-	'Class:Software/Attribute:type/Value:DBServer+' => 'DB Server',
+	'Class:Software/Attribute:type/Value:DBServer' => 'DB服务器',
+	'Class:Software/Attribute:type/Value:DBServer+' => 'DB服务器',
 	'Class:Software/Attribute:type/Value:Middleware' => '中间件',
 	'Class:Software/Attribute:type/Value:Middleware+' => '中间件',
 	'Class:Software/Attribute:type/Value:OtherSoftware' => '其它软件',
 	'Class:Software/Attribute:type/Value:OtherSoftware+' => '其它软件',
-	'Class:Software/Attribute:type/Value:PCSoftware' => 'PC 软件',
-	'Class:Software/Attribute:type/Value:PCSoftware+' => 'PC 软件',
-	'Class:Software/Attribute:type/Value:WebServer' => 'Web 服务器',
-	'Class:Software/Attribute:type/Value:WebServer+' => 'Web 服务器',
+	'Class:Software/Attribute:type/Value:PCSoftware' => 'PC软件',
+	'Class:Software/Attribute:type/Value:PCSoftware+' => 'PC软件',
+	'Class:Software/Attribute:type/Value:WebServer' => 'Web服务器',
+	'Class:Software/Attribute:type/Value:WebServer+' => 'Web服务器',
 	'Class:Software/Attribute:softwareinstance_list' => '软件实例',
 	'Class:Software/Attribute:softwareinstance_list+' => '该软件的所有实例',
 	'Class:Software/Attribute:softwarepatch_list' => '软件补丁',
@@ -911,8 +913,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Patch/Attribute:documents_list+' => '该补丁关联的所有文档',
 	'Class:Patch/Attribute:description' => '描述',
 	'Class:Patch/Attribute:description+' => '',
-	'Class:Patch/Attribute:finalclass' => '补丁子类别',
-	'Class:Patch/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Patch/Attribute:finalclass' => '类型',
+	'Class:Patch/Attribute:finalclass+' => '根本属性的名称',
 ));
 
 //
@@ -920,7 +922,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:OSPatch' => '操作系统补丁',
+	'Class:OSPatch' => '系统补丁',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => '设备',
 	'Class:OSPatch/Attribute:functionalcis_list+' => '已安装该补丁的所有系统',
@@ -958,7 +960,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Licence/Attribute:documents_list+' => '该许可证关联的所有文档',
 	'Class:Licence/Attribute:org_id' => '组织',
 	'Class:Licence/Attribute:org_id+' => '',
-	'Class:Licence/Attribute:organization_name' => '组织名称',
+	'Class:Licence/Attribute:organization_name' => '名称',
 	'Class:Licence/Attribute:organization_name+' => '通用名称',
 	'Class:Licence/Attribute:usage_limit' => '使用限制',
 	'Class:Licence/Attribute:usage_limit+' => '',
@@ -976,8 +978,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Licence/Attribute:perpetual/Value:no+' => '否',
 	'Class:Licence/Attribute:perpetual/Value:yes' => '是',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => '是',
-	'Class:Licence/Attribute:finalclass' => '许可证子类别',
-	'Class:Licence/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Licence/Attribute:finalclass' => '类型',
+	'Class:Licence/Attribute:finalclass+' => '根本属性的名称',
 ));
 
 //
@@ -1017,7 +1019,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkDocumentToLicence' => '链接 文档 / 许可证',
+	'Class:lnkDocumentToLicence' => '关联 文档/许可证',
 	'Class:lnkDocumentToLicence+' => '',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => '许可证',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
@@ -1025,7 +1027,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
 	'Class:lnkDocumentToLicence/Attribute:document_id' => '文档',
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
-	'Class:lnkDocumentToLicence/Attribute:document_name' => '文档名称',
+	'Class:lnkDocumentToLicence/Attribute:document_name' => '名称',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
 ));
 
@@ -1073,7 +1075,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Model+' => '',
 	'Class:Model/Attribute:brand_id' => '品牌',
 	'Class:Model/Attribute:brand_id+' => '',
-	'Class:Model/Attribute:brand_name' => '品牌名称',
+	'Class:Model/Attribute:brand_name' => '名称',
 	'Class:Model/Attribute:brand_name+' => '',
 	'Class:Model/Attribute:type' => '设备类型',
 	'Class:Model/Attribute:type+' => '',
@@ -1081,30 +1083,30 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Model/Attribute:type/Value:PowerSource+' => '电源',
 	'Class:Model/Attribute:type/Value:DiskArray' => '磁盘阵列',
 	'Class:Model/Attribute:type/Value:DiskArray+' => '磁盘阵列',
-	'Class:Model/Attribute:type/Value:Enclosure' => '机位',
-	'Class:Model/Attribute:type/Value:Enclosure+' => '机位',
-	'Class:Model/Attribute:type/Value:IPPhone' => 'IP 电话',
-	'Class:Model/Attribute:type/Value:IPPhone+' => 'IP 电话',
-	'Class:Model/Attribute:type/Value:MobilePhone' => '移动电话',
-	'Class:Model/Attribute:type/Value:MobilePhone+' => '移动电话',
+	'Class:Model/Attribute:type/Value:Enclosure' => '机柜',
+	'Class:Model/Attribute:type/Value:Enclosure+' => '机柜',
+	'Class:Model/Attribute:type/Value:IPPhone' => 'IP电话',
+	'Class:Model/Attribute:type/Value:IPPhone+' => 'IP电话',
+	'Class:Model/Attribute:type/Value:MobilePhone' => '手机',
+	'Class:Model/Attribute:type/Value:MobilePhone+' => '手机',
 	'Class:Model/Attribute:type/Value:NAS' => 'NAS',
 	'Class:Model/Attribute:type/Value:NAS+' => 'NAS',
 	'Class:Model/Attribute:type/Value:NetworkDevice' => '网络设备',
 	'Class:Model/Attribute:type/Value:NetworkDevice+' => '网络设备',
-	'Class:Model/Attribute:type/Value:PC' => 'PC',
-	'Class:Model/Attribute:type/Value:PC+' => 'PC',
+	'Class:Model/Attribute:type/Value:PC' => '电脑',
+	'Class:Model/Attribute:type/Value:PC+' => '电脑',
 	'Class:Model/Attribute:type/Value:PDU' => 'PDU',
 	'Class:Model/Attribute:type/Value:PDU+' => 'PDU',
 	'Class:Model/Attribute:type/Value:Peripheral' => '配件',
 	'Class:Model/Attribute:type/Value:Peripheral+' => '配件',
 	'Class:Model/Attribute:type/Value:Printer' => '打印机',
 	'Class:Model/Attribute:type/Value:Printer+' => '打印机',
-	'Class:Model/Attribute:type/Value:Rack' => '机柜',
-	'Class:Model/Attribute:type/Value:Rack+' => '机柜',
-	'Class:Model/Attribute:type/Value:SANSwitch' => 'SAN 交换机',
-	'Class:Model/Attribute:type/Value:SANSwitch+' => 'SAN 交换机',
+	'Class:Model/Attribute:type/Value:Rack' => '机架',
+	'Class:Model/Attribute:type/Value:Rack+' => '机架',
+	'Class:Model/Attribute:type/Value:SANSwitch' => 'SAN交换机',
+	'Class:Model/Attribute:type/Value:SANSwitch+' => 'SAN交换机',
 	'Class:Model/Attribute:type/Value:Server' => '服务器',
-	'Class:Model/Attribute:type/Value:Server+' => 'Server',
+	'Class:Model/Attribute:type/Value:Server+' => '服务器',
 	'Class:Model/Attribute:type/Value:StorageSystem' => '存储系统',
 	'Class:Model/Attribute:type/Value:StorageSystem+' => '存储系统',
 	'Class:Model/Attribute:type/Value:Tablet' => '平板',
@@ -1148,15 +1150,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkDocumentToPatch' => '链接 文档 / 补丁',
+	'Class:lnkDocumentToPatch' => '关联 文档/补丁',
 	'Class:lnkDocumentToPatch+' => '',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => '补丁',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
-	'Class:lnkDocumentToPatch/Attribute:patch_name' => '补丁名称',
+	'Class:lnkDocumentToPatch/Attribute:patch_name' => '名称',
 	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
 	'Class:lnkDocumentToPatch/Attribute:document_id' => '文档',
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
-	'Class:lnkDocumentToPatch/Attribute:document_name' => '文档名称',
+	'Class:lnkDocumentToPatch/Attribute:document_name' => '名称',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
 ));
 
@@ -1165,15 +1167,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkSoftwareInstanceToSoftwarePatch' => '链接 软件实例 / 软件补丁',
+	'Class:lnkSoftwareInstanceToSoftwarePatch' => '关联 软件实例/软件补丁',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => '软件补丁',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => '软件补丁名称',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => '名称',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id' => '软件实例',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => '软件实例名称',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => '名称',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '',
 ));
 
@@ -1182,15 +1184,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkFunctionalCIToOSPatch' => '链接 功能项 / 操作系统补丁',
+	'Class:lnkFunctionalCIToOSPatch' => '关联 功能项/系统补丁',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => '操作系统补丁',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => '系统补丁',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => '操作系统补丁名称',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => '名称',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id' => '功能项',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => '功能项名称',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => '名称',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
 ));
 
@@ -1199,15 +1201,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkDocumentToSoftware' => '链接 文档 / 软件',
+	'Class:lnkDocumentToSoftware' => '关联 文档/软件',
 	'Class:lnkDocumentToSoftware+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => '软件',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:software_name' => '软件名称',
+	'Class:lnkDocumentToSoftware/Attribute:software_name' => '名称',
 	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:document_id' => '文档',
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:document_name' => '文档名称',
+	'Class:lnkDocumentToSoftware/Attribute:document_name' => '名称',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
 ));
 
@@ -1220,7 +1222,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Subnet+' => '',
 	'Class:Subnet/Attribute:description' => '描述',
 	'Class:Subnet/Attribute:description+' => '',
-	'Class:Subnet/Attribute:subnet_name' => '子网名称',
+	'Class:Subnet/Attribute:subnet_name' => '名称',
 	'Class:Subnet/Attribute:subnet_name+' => '',
 	'Class:Subnet/Attribute:org_id' => '所属组织',
 	'Class:Subnet/Attribute:org_id+' => '',
@@ -1241,13 +1243,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:VLAN' => 'VLAN',
 	'Class:VLAN+' => '',
-	'Class:VLAN/Attribute:vlan_tag' => 'VLAN 标记',
+	'Class:VLAN/Attribute:vlan_tag' => 'VLAN 标签',
 	'Class:VLAN/Attribute:vlan_tag+' => '',
 	'Class:VLAN/Attribute:description' => '描述',
 	'Class:VLAN/Attribute:description+' => '',
 	'Class:VLAN/Attribute:org_id' => '组织',
 	'Class:VLAN/Attribute:org_id+' => '',
-	'Class:VLAN/Attribute:org_name' => '组织名称',
+	'Class:VLAN/Attribute:org_name' => '名称',
 	'Class:VLAN/Attribute:org_name+' => '通用名称',
 	'Class:VLAN/Attribute:subnets_list' => '子网',
 	'Class:VLAN/Attribute:subnets_list+' => '',
@@ -1260,17 +1262,17 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkSubnetToVLAN' => '链接 子网 / VLAN',
+	'Class:lnkSubnetToVLAN' => '关联 子网/VLAN',
 	'Class:lnkSubnetToVLAN+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => '子网',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => '子网IP',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => '',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_name' => '子网名称',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_name' => '名称',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id' => 'VLAN',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '',
-	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN 标记',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN标签',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '',
 ));
 
@@ -1283,8 +1285,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => '名称',
 	'Class:NetworkInterface/Attribute:name+' => '',
-	'Class:NetworkInterface/Attribute:finalclass' => '网卡子类别',
-	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class',
+	'Class:NetworkInterface/Attribute:finalclass' => '类型',
+	'Class:NetworkInterface/Attribute:finalclass+' => '根本属性的名称',
 ));
 
 //
@@ -1294,13 +1296,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:IPInterface' => 'IP Interface',
 	'Class:IPInterface+' => '',
-	'Class:IPInterface/Attribute:ipaddress' => 'IP 地址',
+	'Class:IPInterface/Attribute:ipaddress' => 'IP地址',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
 
 
-	'Class:IPInterface/Attribute:macaddress' => 'MAC 地址',
+	'Class:IPInterface/Attribute:macaddress' => 'MAC地址',
 	'Class:IPInterface/Attribute:macaddress+' => '',
-	'Class:IPInterface/Attribute:comment' => '注释',
+	'Class:IPInterface/Attribute:comment' => '备注',
 	'Class:IPInterface/Attribute:coment+' => '',
 	'Class:IPInterface/Attribute:ipgateway' => '网关',
 	'Class:IPInterface/Attribute:ipgateway+' => '',
@@ -1319,7 +1321,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:PhysicalInterface+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => '设备',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
-	'Class:PhysicalInterface/Attribute:connectableci_name' => '设备名称',
+	'Class:PhysicalInterface/Attribute:connectableci_name' => '名称',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
@@ -1330,19 +1332,19 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkPhysicalInterfaceToVLAN' => '链接 物理网卡 / VLAN',
+	'Class:lnkPhysicalInterfaceToVLAN' => '关联 物理网卡/VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => '物理网卡',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => '物理网卡名称',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => '名称',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id' => '设备',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => '',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name' => '设备名称',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name' => '名称',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id' => 'VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN 标记',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN标签',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
 ));
 
@@ -1356,7 +1358,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:LogicalInterface+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => '虚拟机',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
-	'Class:LogicalInterface/Attribute:virtualmachine_name' => '虚拟机名称',
+	'Class:LogicalInterface/Attribute:virtualmachine_name' => '名称',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '',
 ));
 
@@ -1365,7 +1367,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:FiberChannelInterface' => '光纤通道接口',
+	'Class:FiberChannelInterface' => '光纤接口',
 	'Class:FiberChannelInterface+' => '',
 	'Class:FiberChannelInterface/Attribute:speed' => '速率',
 	'Class:FiberChannelInterface/Attribute:speed+' => '',
@@ -1375,7 +1377,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FiberChannelInterface/Attribute:wwn+' => '',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id' => '设备',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => '设备名称',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => '名称',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '',
 ));
 
@@ -1384,11 +1386,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkConnectableCIToNetworkDevice' => '链接 可连接项 / 网络设备',
+	'Class:lnkConnectableCIToNetworkDevice' => '关联 可连接项/网络设备',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => '网络设备',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => '网络设备名称',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => '名称',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id' => '可连接的设备',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '',
@@ -1411,15 +1413,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkApplicationSolutionToFunctionalCI' => '链接 应用方案 / 功能项',
+	'Class:lnkApplicationSolutionToFunctionalCI' => '关联 应用方案/功能项',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => '应用方案',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => '应用方案名称',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => '名称',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => '功能项',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => '功能项名称',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => '名称',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',
 ));
 
@@ -1428,15 +1430,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkApplicationSolutionToBusinessProcess' => '链接 应用方案 / 业务流程',
+	'Class:lnkApplicationSolutionToBusinessProcess' => '关联 应用方案/业务流程',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => '业务流程',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => '业务流程名称',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => '名称',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id' => '应用方案',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => '应用方案名称',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => '名称',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
 ));
 
@@ -1451,8 +1453,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Group/Attribute:name+' => '',
 	'Class:Group/Attribute:status' => '状态',
 	'Class:Group/Attribute:status+' => '',
-	'Class:Group/Attribute:status/Value:implementation' => '上线',
-	'Class:Group/Attribute:status/Value:implementation+' => '上线',
+	'Class:Group/Attribute:status/Value:implementation' => '生效',
+	'Class:Group/Attribute:status/Value:implementation+' => '生效',
 	'Class:Group/Attribute:status/Value:obsolete' => '废弃',
 	'Class:Group/Attribute:status/Value:obsolete+' => '废弃',
 	'Class:Group/Attribute:status/Value:production' => '生产',
@@ -1470,7 +1472,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => '名称',
 	'Class:Group/Attribute:parent_name+' => '',
-	'Class:Group/Attribute:ci_list' => '链接的配置项',
+	'Class:Group/Attribute:ci_list' => '关联的配置项',
 	'Class:Group/Attribute:ci_list+' => '该组关联的所有配置项',
 	'Class:Group/Attribute:parent_id_friendlyname' => '上级配置组',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
@@ -1481,7 +1483,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkGroupToCI' => '链接 配置组 / 配置项',
+	'Class:lnkGroupToCI' => '关联 配置组/配置项',
 	'Class:lnkGroupToCI+' => '',
 	'Class:lnkGroupToCI/Attribute:group_id' => '组',
 	'Class:lnkGroupToCI/Attribute:group_id+' => '',
@@ -1502,11 +1504,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Server:Date' => '日期',
 	'Server:moreinfo' => '更多信息',
 	'Server:otherinfo' => '其它信息',
-	'Server:power' => '电力供应',
-	'Class:Subnet/Tab:IPUsage' => 'IP 使用率',
+	'Server:power' => '电源',
+	'Class:Subnet/Tab:IPUsage' => 'IP使用率',
 	'Class:Subnet/Tab:IPUsage-explain' => '网卡IP范围: <em>%1$s</em> 到 <em>%2$s</em>',
 	'Class:Subnet/Tab:FreeIPs' => '空闲 IP',
-	'Class:Subnet/Tab:FreeIPs-count' => '空闲 IP: %1$s',
+	'Class:Subnet/Tab:FreeIPs-count' => '空闲IP: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => '以下是抽取的10个空闲IP',
 	'Class:Document:PreviewTab' => '预览',
 ));
@@ -1517,15 +1519,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkDocumentToFunctionalCI' => '链接 文档 / 功能项',
+	'Class:lnkDocumentToFunctionalCI' => '关联 文档/功能项',
 	'Class:lnkDocumentToFunctionalCI+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => '功能项',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => '功能项名称',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => '名称',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => '文档',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => '文档名称',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => '名称',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
 ));
 
@@ -1558,10 +1560,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Server+' => '所有服务器',
 	'Menu:Printer' => '打印机',
 	'Menu:Printer+' => '所有打印机',
-	'Menu:MobilePhone' => '移动电话',
-	'Menu:MobilePhone+' => '所有移动电话',
-	'Menu:PC' => '个人电脑',
-	'Menu:PC+' => '所有个人电脑',
+	'Menu:MobilePhone' => '手机',
+	'Menu:MobilePhone+' => '所有手机',
+	'Menu:PC' => '电脑',
+	'Menu:PC+' => '所有电脑',
 	'Menu:NewCI' => '新建配置项',
 	'Menu:NewCI+' => '新建配置项',
 	'Menu:SearchCIs' => '搜索配置项',
@@ -1574,7 +1576,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ConfigManagement:Misc' => '杂项',
 	'Menu:Group' => '配置组',
 	'Menu:Group+' => '配置组',
-	'Menu:OSVersion' => 'OS 版本',
+	'Menu:OSVersion' => '系统版本',
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => '软件清单',
 	'Menu:Software+' => '软件清单',

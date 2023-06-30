@@ -20,6 +20,7 @@
 * @copyright   Copyright (C) 2010-2021 Combodo SARL
 * @license     http://opensource.org/licenses/AGPL-3.0
 */
+
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -27,28 +28,30 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
+
 //
 // Class: lnkFunctionalCIToTicket
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkFunctionalCIToTicket' => '关联 功能配置项/工单',
+	'Class:lnkFunctionalCIToTicket' => '关联 功能项/工单',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => '工单',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => '工单编号',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => '工单标题',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => '配置项',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => '配置项名称',
+	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => '名称',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact' => '影响 (文本)',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => '影响',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => '手动添加',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => '自动添加',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => '不通知',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => '不影响',
 ));
 
 //
@@ -56,15 +59,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkFunctionalCIToProviderContract' => '关联 功能配置项/供应商合同',
+	'Class:lnkFunctionalCIToProviderContract' => '关联 功能项/供应商合同',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => '供应商合同',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => '供应商合同名称',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => '名称',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => '配置项',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => '配置项名称',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => '名称',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
 ));
 
@@ -73,15 +76,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkFunctionalCIToService' => '关联 功能配置项/服务',
+	'Class:lnkFunctionalCIToService' => '关联 功能项/服务',
 	'Class:lnkFunctionalCIToService+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => '服务',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => '服务名称',
+	'Class:lnkFunctionalCIToService/Attribute:service_name' => '名称',
 	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => '配置项',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => '配置项名称',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => '名称',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
 ));
 

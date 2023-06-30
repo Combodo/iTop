@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ChangeManagement' => '变更管理',
 	'Menu:Change:Overview' => '概况',
@@ -32,14 +33,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Change:Shortcuts+' => '',
 	'Menu:WaitingAcceptance' => '等待审核的变更',
 	'Menu:WaitingAcceptance+' => '',
-	'Menu:WaitingApproval' => '等待批准的变更',
+	'Menu:WaitingApproval' => '等待审批的变更',
 	'Menu:WaitingApproval+' => '',
 	'Menu:Changes' => '所有打开的变更',
 	'Menu:Changes+' => '所有打开的变更',
 	'Menu:MyChanges' => '分配给我的变更',
 	'Menu:MyChanges+' => '分配给我的变更(作为办理人)',
-	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => '最近一周的变更(按类型)',
-	'UI-ChangeManagementOverview-Last-7-days' => '最近一周的变更(按数量）',
+	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => '最近一周的变更(按类别)',
+	'UI-ChangeManagementOverview-Last-7-days' => '最近一周的变更(按数量)',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => '最近一周的变更(按范围)',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => '最近一周的变更(按状态)',
 	'Tickets:Related:OpenChanges' => '打开的变更',
@@ -74,11 +75,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:status/Value:planned+' => '',
 	'Class:Change/Attribute:status/Value:rejected' => '已驳回',
 	'Class:Change/Attribute:status/Value:rejected+' => '',
-	'Class:Change/Attribute:status/Value:approved' => '已批准',
+	'Class:Change/Attribute:status/Value:approved' => '已审批',
 	'Class:Change/Attribute:status/Value:approved+' => '',
 	'Class:Change/Attribute:status/Value:closed' => '已关闭',
 	'Class:Change/Attribute:status/Value:closed+' => '',
-	'Class:Change/Attribute:category' => '类型',
+	'Class:Change/Attribute:category' => '类别',
 	'Class:Change/Attribute:category+' => '',
 	'Class:Change/Attribute:category/Value:application' => '应用',
 	'Class:Change/Attribute:category/Value:application+' => '应用',

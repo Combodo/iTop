@@ -20,21 +20,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 // Database inconsistencies
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Dictionary entries go here
-	'Menu:DBToolsMenu' => 'DB 工具',
+	'Menu:DBToolsMenu' => '数据库完整性',
 	'DBTools:Class' => 'Class~~',
-	'DBTools:Title' => '数据库维护工具',
+	'DBTools:Title' => '数据库完整性检查',
 	'DBTools:ErrorsFound' => '发现错误',
 	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated~~',
 	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES~~',
 	'DBTools:Error' => '错误',
 	'DBTools:Count' => '个数',
-	'DBTools:SQLquery' => 'SQL 查询',
+	'DBTools:SQLquery' => 'SQL查询',
 	'DBTools:FixitSQLquery' => 'SQL query To Fix it (indication)~~',
-	'DBTools:SQLresult' => 'SQL 结果',
-	'DBTools:NoError' => '数据库OK ',
+	'DBTools:SQLresult' => 'SQL结果',
+	'DBTools:NoError' => '数据库完好 ',
 	'DBTools:HideIds' => '错误列表',
 	'DBTools:ShowIds' => '详细视图',
 	'DBTools:ShowReport' => '报告',
@@ -46,8 +47,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBTools:Details' => '显示详情',
 	'DBTools:ShowAll' => '显示所有错误',
 
-	'DBTools:Inconsistencies' => '数据库不一致',
+	'DBTools:Inconsistencies' => '数据库一致性',
 	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`~~',
 	'DBAnalyzer-Integrity-InvalidExtKey' => '无效的外键 %1$s (列: `%2$s.%3$s`)',
@@ -69,8 +71,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 // Lost attachments
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'DBTools:LostAttachments' => '缺失附件',
-	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, is does not retrieve deleted data.~~',
+	'DBTools:LostAttachments' => '附件缺失',
+	'DBTools:LostAttachments:Disclaimer' => '在数据库中搜索可能丢失或误挪动的附件. 这不是数据恢复工具, 无法恢复已删除的数据.',
 
 	'DBTools:LostAttachments:Button:Analyze' => '分析',
 	'DBTools:LostAttachments:Button:Restore' => '还原',

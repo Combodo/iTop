@@ -16,6 +16,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 // Quick create
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Component:QuickCreate:Tooltip' => '快速创建任意类型的对象',

@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -20,18 +20,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => '进入 iTop Hub ',
-	'Menu:iTopHub:Register+' => '进入 iTop Hub 更新您的组件',
-	'Menu:iTopHub:Register:Description' => '<p>进入 iTop Hub 社区平台!</br>寻找您想要的内容和信息, 管理本机扩展或安装新的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
+	'Menu:iTopHub:Register+' => '进入 iTop Hub 更新您的 '.ITOP_APPLICATION_SHORT.' 实例',
+	'Menu:iTopHub:Register:Description' => '<p>进入 iTop Hub 社区平台!</br>寻找您想要的内容和信息, 通过个性化工具或安装扩展来管理您的实例.</br><br/>通过这个页面连接到 iTop Hub, 意味着您的 '.ITOP_APPLICATION_SHORT.' 实例的基本信息会被推送到 iTop Hub.</p>',
 	'Menu:iTopHub:MyExtensions' => '已安装的扩展',
 	'Menu:iTopHub:MyExtensions+' => '查看本机已安装的扩展',
 	'Menu:iTopHub:BrowseExtensions' => '从 iTop Hub 获取扩展',
 	'Menu:iTopHub:BrowseExtensions+' => '去 iTop Hub 浏览更多的扩展',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>进入 iTop Hub 商店, 一站式查找各种iTop 扩展的地方 !</br>寻找符合您要求的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
-	'iTopHub:GoBtn' => '进入iTop Hub',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>进入 iTop Hub 商店, 一站式查找各种 iTop 扩展 !</br>寻找适配您的 '.ITOP_APPLICATION_SHORT.' 的扩展.</br><br/>通过这个页面连接到 iTop Hub, 意味着您的 '.ITOP_APPLICATION_SHORT.' 实例的基本信息会被推送到 iTop Hub.</p>',
+	'iTopHub:GoBtn' => '进入 iTop Hub',
 	'iTopHub:CloseBtn' => '关闭',
 	'iTopHub:GoBtn:Tooltip' => '跳到 www.itophub.io',
 	'iTopHub:OpenInNewWindow' => '从新窗口打开 iTop Hub',
@@ -44,7 +45,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:BackupOk' => '备份成功.',
 	'iTopHub:BackupFailed' => '备份失败!',
 	'iTopHub:Landing:Status' => '安装状态',
-	'iTopHub:Landing:Install' => '扩展安装进行中...',
+	'iTopHub:Landing:Install' => '正在安装扩展...',
 	'iTopHub:CompiledOK' => '编译成功.',
 	'iTopHub:ConfigurationSafelyReverted' => '安装时发生错误!<br/>iTop 配置将不会改变.',
 	'iTopHub:FailAuthent' => '认证失败.',
@@ -61,7 +62,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'iTopHub:LandingWelcome' => '恭喜! 下列来自 iTop Hub 的扩展已被下载并安装到本机.',
 	'iTopHub:GoBackToITopBtn' => '返回'.ITOP_APPLICATION_SHORT,
-	'iTopHub:Uncompressing' => '扩展解压中...',
+	'iTopHub:Uncompressing' => '正在解压扩展...',
 	'iTopHub:InstallationWelcome' => '安装来自 iTop Hub 的扩展',
 	'iTopHub:DBBackupLabel' => '本机备份',
 	'iTopHub:DBBackupSentence' => '在升级之前,备份数据库和 '.ITOP_APPLICATION_SHORT.' 配置文件',
