@@ -398,24 +398,31 @@ JS;
 				{
 					IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not created (see $aErrors)', $sClass, array(
 						'$sTransactionId' => $sTransactionId,
-						'$aErrors' => $aErrors,
-						'$sUser' => UserRights::GetUser(),
-						'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-						'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+						'$aErrors'        => $aErrors,
+						'$sUser'          => UserRights::GetUser(),
+						'HTTP_REFERER'    => @$_SERVER['HTTP_REFERER'],
+						'REQUEST_URI'     => @$_SERVER['REQUEST_URI'],
 					));
 
 					throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 				}
 
-				$oObj->DBInsertNoReload();// No need to reload
+				// Transactions are now handled in DBInsert
+				$oObj->SetContextSection('temporary_objects', [
+					'finalize' => [
+						'transaction_id' => $sTransactionId,
+					],
+				]);
+				$oObj->DBInsertNoReload();
+
 
 				IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object created', $sClass, array(
-					'$id' => $oObj->GetKey(),
+					'$id'             => $oObj->GetKey(),
 					'$sTransactionId' => $sTransactionId,
-					'$aErrors' => $aErrors,
-					'$sUser' => UserRights::GetUser(),
-					'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-					'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+					'$aErrors'        => $aErrors,
+					'$sUser'          => UserRights::GetUser(),
+					'HTTP_REFERER'    => @$_SERVER['HTTP_REFERER'],
+					'REQUEST_URI'     => @$_SERVER['REQUEST_URI'],
 				));
 
 				utils::RemoveTransaction($sTransactionId);
@@ -596,23 +603,28 @@ JS;
 			else
 			{
 				IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object updated', $sClass, array(
-					'$id' => $id,
+					'$id'             => $id,
 					'$sTransactionId' => $sTransactionId,
-					'$aErrors' => $aErrors,
-					'IsModified' => $oObj->IsModified(),
-					'$sUser' => UserRights::GetUser(),
-					'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-					'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+					'$aErrors'        => $aErrors,
+					'IsModified'      => $oObj->IsModified(),
+					'$sUser'          => UserRights::GetUser(),
+					'HTTP_REFERER'    => @$_SERVER['HTTP_REFERER'],
+					'REQUEST_URI'     => @$_SERVER['REQUEST_URI'],
 				));
 
-				try
-				{
-					if (!empty($aErrors))
-					{
+				try {
+					if (!empty($aErrors)) {
 						throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 					}
+
 					// Transactions are now handled in DBUpdate
+					$oObj->SetContextSection('temporary_objects', [
+						'finalize' => [
+							'transaction_id' => $sTransactionId,
+						],
+					]);
 					$oObj->DBUpdate();
+
 					$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 					$sSeverity = 'ok';
 					if ($this->IsHandlingXmlHttpRequest()) {

@@ -137,7 +137,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_purge.max_keep_days' => [
+		'log_purge.max_keep_days'                       => [
 			'type'                => 'integer',
 			'description'         => 'Optional purge number of days to keep logs.',
 			'default'             => 365,
@@ -145,7 +145,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'event_service.debug.filter_events'  => [
+		'event_service.debug.filter_events'             => [
 			'type'                => 'array',
 			'description'         => 'List of events name to filter Event Service debug messages',
 			'default'             => [],
@@ -153,11 +153,43 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'event_service.debug.filter_sources' => [
+		'event_service.debug.filter_sources'            => [
 			'type'                => 'array',
 			'description'         => 'List of event sources to filter Event Service debug messages',
 			'default'             => '',
 			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'temporary_object.force_creation'    => [
+			'type'                => 'bool',
+			'description'         => 'If true, all the objects created by the external key are temporary',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'temporary_object.lifetime'          => [
+			'type'                => 'integer',
+			'description'         => 'Seconds for temporary objects created',
+			'default'             => 300,
+			'value'               => 300,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'temporary_object.watchdog_interval' => [
+			'type'                => 'integer',
+			'description'         => 'Seconds between watchdog signals',
+			'default'             => 60,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'temporary_object.garbage_interval'  => [
+			'type'                => 'integer',
+			'description'         => 'Seconds between garbage collections',
+			'default'             => 60,
+			'value'               => false,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
@@ -185,7 +217,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_host'                            => [
+		'db_host'                                       => [
 			'type'                => 'string',
 			'default'             => null,
 			'value'               => '',

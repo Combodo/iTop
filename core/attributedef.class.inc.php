@@ -7217,12 +7217,24 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		{
 			return 0;
 		}
-		if (MetaModel::IsValidObject($proposedValue))
-		{
+		if (MetaModel::IsValidObject($proposedValue)) {
 			return $proposedValue->GetKey();
 		}
 
 		return (int)$proposedValue;
+	}
+
+	public function WriteExternalValues(DBObject $oHostObject): void
+	{
+		$sTargetKey = $oHostObject->Get($this->GetCode());
+		$oFilter = DBSearch::FromOQL('SELECT `'.TemporaryObjectDescriptor::class.'` WHERE item_class=:class AND item_id=:id');
+		$oSet = new DBObjectSet($oFilter, [], ['class' => $this->GetTargetClass(), 'id' => $sTargetKey]);
+		while ($oTemporaryObjectDescriptor = $oSet->Fetch()) {
+			$oTemporaryObjectDescriptor->Set('host_class', get_class($oHostObject));
+			$oTemporaryObjectDescriptor->Set('host_id', $oHostObject->GetKey());
+			$oTemporaryObjectDescriptor->Set('host_att_code', $this->GetCode());
+			$oTemporaryObjectDescriptor->DBUpdate();
+		}
 	}
 
 	public function GetMaximumComboLength()

@@ -16,6 +16,7 @@ use Combodo\iTop\Controller\PreferencesController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 use Combodo\iTop\Service\Router\Router;
+use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
 
 require_once('../approot.inc.php');
 
@@ -815,6 +816,9 @@ try
 				if (($sObjClass != '') && ($iObjKey != 0) && ($sToken != '')) {
 					$bReleaseLock = iTopOwnershipLock::ReleaseLock($sObjClass, $iObjKey, $sToken);
 				}
+
+				// Invalidate temporary objects
+				TemporaryObjectManager::GetInstance()->CancelAllTemporaryObjects($iTransactionId);
 
 				IssueLog::Trace('on_form_cancel', $sObjClass, array(
 					'$iObjKey'        => $iObjKey,
@@ -2553,7 +2557,7 @@ EOF
 			/** @internal */
 			case 'object.modify':
 				$oController = new ObjectController();
-				$oPage = $oController->Modify();
+				$oPage = $oController->OperationModify();
 				break;
 
 			default:

@@ -612,6 +612,8 @@ class LogChannels
 
 	public const PORTAL       = 'portal';
 
+	public const TEMPORARY_OBJECTS = 'TemporaryObjects';
+
 	/**
 	 * @var string
 	 * @since 3.1.0

@@ -7,6 +7,7 @@
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
+use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
 
 /**
  * All objects to be displayed in the application (either as a list or as details)
@@ -194,27 +195,30 @@ abstract class DBObject implements iDisplay
 	 */
 	protected static array $m_aCrudStack = [];
 
+	/** @var array Context for update insert operations */
+	private array $aContext = [];
+
 	// Protect DBUpdate against infinite loop
 	protected $iUpdateLoopCount;
 
 	const MAX_UPDATE_LOOP_COUNT = 10;
 
 	/**
-     * DBObject constructor.
-     *
-     * You should preferably use MetaModel::NewObject() instead of this constructor.
-     * The whole collection of parameters is [*optional*] please refer to DBObjectSet::FromRow()
-     *
-     * @internal The availability of this method is not guaranteed in the long term, you should preferably use MetaModel::NewObject().
-     * @see MetaModel::NewObject()
-     *
-     * @param null|array   $aRow                If given : DBObjectSet::FromRow() will be used to fetch the object
-     * @param string       $sClassAlias
-     * @param null|array   $aAttToLoad
-     * @param null|array   $aExtendedDataSpec
-     *
-     * @throws CoreException
-     */
+	 * DBObject constructor.
+	 *
+	 * You should preferably use MetaModel::NewObject() instead of this constructor.
+	 * The whole collection of parameters is [*optional*] please refer to DBObjectSet::FromRow()
+	 *
+	 * @internal The availability of this method is not guaranteed in the long term, you should preferably use MetaModel::NewObject().
+	 * @see MetaModel::NewObject()
+	 *
+	 * @param null|array $aRow If given : DBObjectSet::FromRow() will be used to fetch the object
+	 * @param string $sClassAlias
+	 * @param null|array $aAttToLoad
+	 * @param null|array $aExtendedDataSpec
+	 *
+	 * @throws CoreException
+	 */
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		$this->iUpdateLoopCount = 0;
@@ -1427,7 +1431,7 @@ abstract class DBObject implements iDisplay
 		}
 		$sPreview = '';
 		if(SummaryCardService::IsAllowedForClass($sObjClass) && $bIgnorePreview === false){
-			$sPreview = SummaryCardService::GetHyperlinkMarkup($sObjClass, $sObjKey); 
+			$sPreview = SummaryCardService::GetHyperlinkMarkup($sObjClass, $sObjKey);
 		}
 		$sRet = "<span class=\"object-ref $sSpanClass\" $sPreview title=\"$sHint\">$sHLink</span>";
 		return $sRet;
@@ -3091,13 +3095,12 @@ abstract class DBObject implements iDisplay
 		$this->AddCurrentObjectInCrudStack('INSERT');
 
 		try {
-	        if (MetaModel::DBIsReadOnly())
-	        {
-	            $sErrorMessage = "Cannot Insert object of class '$sClass' because of an ongoing maintenance: the database is in ReadOnly mode";
+			if (MetaModel::DBIsReadOnly()) {
+				$sErrorMessage = "Cannot Insert object of class '$sClass' because of an ongoing maintenance: the database is in ReadOnly mode";
 
-	            IssueLog::Error("$sErrorMessage\n".MyHelpers::get_callstack_text(1));
-	            throw new CoreException("$sErrorMessage (see the log for more information)");
-	        }
+				IssueLog::Error("$sErrorMessage\n".MyHelpers::get_callstack_text(1));
+				throw new CoreException("$sErrorMessage (see the log for more information)");
+			}
 
 			if ($this->m_bIsInDB) {
 				throw new CoreException('The object already exists into the Database, you may want to use the clone function');
@@ -3131,7 +3134,7 @@ abstract class DBObject implements iDisplay
 			}
 
 			$this->ComputeStopWatchesDeadline(true);
-			
+
 			$iTransactionRetry = 1;
 			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 			if ($bIsTransactionEnabled) {
@@ -3169,6 +3172,8 @@ abstract class DBObject implements iDisplay
 
 					$this->DBWriteLinks();
 					$this->WriteExternalAttributes();
+
+					$this->HandleTemporaryDescriptor();
 
 					// Write object creation history within the transaction
 					$this->RecordObjCreation();
@@ -3290,8 +3295,8 @@ abstract class DBObject implements iDisplay
 	 * This function is automatically called after cloning an object with the "clone" PHP language construct
 	 * The purpose of this method is to reset the appropriate attributes of the object in
 	 * order to make sure that the newly cloned object is really distinct from its clone
-     *
-     * @internal
+	 *
+	 * @internal
 	 */
 	public function __clone()
 	{
@@ -3299,7 +3304,6 @@ abstract class DBObject implements iDisplay
 		$this->m_bDirty = true;
 		$this->m_iKey = self::GetNextTempId(get_class($this));
 	}
-
 
 	/**
 	 * Update an object in DB
@@ -3438,6 +3442,8 @@ abstract class DBObject implements iDisplay
 						}
 						$this->DBWriteLinks();
 						$this->WriteExternalAttributes();
+
+					$this->HandleTemporaryDescriptor();
 
 						if (count($aChanges) != 0) {
 							$this->RecordAttChanges($aChanges, $aOriginalValues);
@@ -6390,6 +6396,63 @@ abstract class DBObject implements iDisplay
 		$sKey = $this->GetKey();
 		$sPadding = str_pad('', count(self::$m_aCrudStack), '!');
 		IssueLog::Error("CRUD !!$sPadding Error $sFunction $sClass:$sKey $sComment", LogChannels::DM_CRUD);
+	}
+
+	/**
+	 * @param $aContext
+	 *
+	 * @return void
+	 * @since 3.1.0
+	 */
+	private function HandleTemporaryDescriptor()
+	{
+		if ($this->HasContextSection('temporary_objects')) {
+			TemporaryObjectManager::GetInstance()->HandleTemporaryObjects($this, $this->GetContextSection('temporary_objects'));
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function GetContext(): array
+	{
+		return $this->aContext;
+	}
+
+	/**
+	 * Set context section data.
+	 *
+	 * @param string $sSection
+	 * @param $value
+	 *
+	 */
+	public function SetContextSection(string $sSection, $value)
+	{
+		$this->aContext[$sSection] = $value;
+	}
+
+	/**
+	 * @param string $sSection
+	 *
+	 * @return mixed
+	 */
+	public function GetContextSection(string $sSection)
+	{
+		if ($this->HasContextSection($sSection)) {
+			return $this->aContext[$sSection];
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param string $sSection
+	 *
+	 * @return bool
+	 */
+	public function HasContextSection(string $sSection): bool
+	{
+		return array_key_exists($sSection, $this->aContext);
 	}
 }
 

@@ -189,14 +189,17 @@ class XMLDataLoader
 	function LoadFile($sFilePath, $bUpdateKeyCacheOnly = false, bool $bSearch = false)
 	{
 		global $aKeys;
-		
+
 		$oXml = simplexml_load_file($sFilePath);
-		
-		$aReplicas  = array();
-		foreach($oXml as $sClass => $oXmlObj)
-		{
-			if (!MetaModel::IsValidClass($sClass))
-			{
+
+		if (!$oXml) {
+			SetupLog::Error("Unable to load xml file - $sFilePath");
+			throw(new Exception("Unable to load xml file - $sFilePath"));
+		}
+
+		$aReplicas = array();
+		foreach ($oXml as $sClass => $oXmlObj) {
+			if (!MetaModel::IsValidClass($sClass)) {
 				SetupLog::Error("Unknown class - $sClass");
 				throw(new Exception("Unknown class - $sClass"));
 			}

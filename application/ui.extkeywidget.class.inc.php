@@ -168,8 +168,6 @@ class UIExtKeyWidget
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
-		
-		
 		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
 		if ($this->bSearchMode) {
 			$sWizHelper = 'null';
@@ -1070,18 +1068,27 @@ JS
 		{
 			$oObj = MetaModel::NewObject($this->sTargetClass);
 			$aErrors = $oObj->UpdateObjectFromPostedForm($this->iId);
-			if (count($aErrors) == 0)
-			{
-				$oObj->DBInsert();
+			if (count($aErrors) == 0) {
+
+				// Retrieve JSON data
+				$sJSON = utils::ReadParam('json', '{}', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+				$oJSON = json_decode($sJSON);
+
+				$oObj->SetContextSection('temporary_objects', [
+					'create' => [
+						'transaction_id' => utils::ReadParam('root_transaction_id', '', false, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID),
+						'host_class'     => $oJSON->m_sClass,
+						'host_att_code'  => $this->sAttCode,
+					],
+				]);
+				$oObj->DBInsertNoReload();
+
 				return array('name' => $oObj->GetName(), 'id' => $oObj->GetKey());
-			}
-			else
-			{
+			} else {
 				return array('error' => implode(' ', $aErrors), 'id' => 0);
 			}
 		}
-		catch(Exception $e)
-		{
+		catch (Exception $e) {
 			return array('error' => $e->getMessage(), 'id' => 0);
 		}
 	}
