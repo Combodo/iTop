@@ -172,4 +172,20 @@ class ObjectSummary extends ObjectDetails
 		$this->aObjectDisplayValues = $aObjectDisplayValues;
 		return $this;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function GetShortcutKeys(): array
+	{
+		return [];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function GetShortcutTriggeredElementSelector(): string
+	{
+		return "";
+	}
 }
