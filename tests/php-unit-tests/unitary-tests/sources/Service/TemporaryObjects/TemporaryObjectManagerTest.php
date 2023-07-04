@@ -112,7 +112,7 @@ class TemporaryObjectManagerTest extends ItopDataTestCase
 		$this->assertEquals(0, $oRepository->CountTemporaryObjectsByTempId($sTempId));
 	}
 
-	public function testHandleTemporaryObjects()
+	public function testHandleCreatedTemporaryObjects()
 	{
 		$sTempId = 'testHandleTemporaryObjects';
 		$oRepository = TemporaryObjectRepository::GetInstance();
@@ -133,6 +133,32 @@ class TemporaryObjectManagerTest extends ItopDataTestCase
 		$aContext = ['finalize' => ['transaction_id' => $sTempId,]];
 		$this->oManager->HandleTemporaryObjects($oOrg, $aContext);
 		$this->assertEquals(0, $oRepository->CountTemporaryObjectsByTempId($sTempId));
+	}
+
+	public function testHandleDeletedTemporaryObjects()
+	{
+		$sTempId = 'testHandleTemporaryObjectsDelete';
+		$oRepository = TemporaryObjectRepository::GetInstance();
+
+		$oOrg = $this->CreateTestOrganization();
+		$oOrgTemp = $this->CreateTestOrganization();
+		$oOrg->Set('parent_id', $oOrgTemp->GetKey());
+		$oOrg->DBUpdate();
+
+		// Create a temporary delete
+		$this->assertEquals(0, $oRepository->CountTemporaryObjectsByTempId($sTempId));
+		$oTemporaryObjectDescriptor = TemporaryObjectManager::GetInstance()->CreateTemporaryObject($sTempId, get_class($oOrgTemp), $oOrgTemp->Get('id'), TemporaryObjectHelper::OPERATION_DELETE);
+		$oTemporaryObjectDescriptor->Set('host_class', get_class($oOrg));
+		$oTemporaryObjectDescriptor->Set('host_id', $oOrg->GetKey());
+		$oTemporaryObjectDescriptor->Set('host_att_code', 'parent_id');
+		$oTemporaryObjectDescriptor->DBUpdate();
+		$this->assertEquals(1, $oRepository->CountTemporaryObjectsByTempId($sTempId));
+
+		$aContext = ['finalize' => ['transaction_id' => $sTempId,]];
+		$this->oManager->HandleTemporaryObjects($oOrg, $aContext);
+		$this->assertEquals(0, $oRepository->CountTemporaryObjectsByTempId($sTempId));
+		$oDeletedObject = \MetaModel::GetObject(get_class($oOrgTemp), $oOrgTemp->Get('id'), false);
+		$this->assertNull($oDeletedObject);
 	}
 
 
