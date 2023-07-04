@@ -87,6 +87,12 @@ $(function()
 			// Submit event from the form should be treated as a click on the submit button
 			// as it processes things before sending the request
 			this.element.on('submit', function(oEvent) {
+				// N°6500 Abort if event doesn't come from this form
+				// eg. Extensions like "approval-base" add a sub (HTML) form in the buttons sections of this (conceptual) form, which can cause the submit of that sub form to be catched here first and therefore go to unexpected behavior.
+				if (oEvent.target !== oEvent.currentTarget) {
+					return;
+				}
+
 				me._onSubmitClick(oEvent);
 			});
 		},
