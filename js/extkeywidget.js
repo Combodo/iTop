@@ -651,6 +651,25 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#ac_create_'+me.id).dialog('close');
 	};
 
+	/**
+	 * Extract transaction id of the root object edited.
+	 * When create/update a new object via external key,
+	 * this transaction id reflects the root form transaction id an not the current form transaction id.
+	 *
+	 * @constructor
+	 */
+	this.GetRootTransactionId = function(){
+		// Retrieve the object form
+		const oForm = $(`#${me.id}`).closest('form');
+		// If root transaction id exist, then use it
+		let oFieldTransaction = $('input[name=root_transaction_id]', oForm);
+		if(oFieldTransaction.length === 0){
+			// otherwise, use the object form transaction id
+			oFieldTransaction = $('input[name=transaction_id]', oForm);
+		}
+		return oFieldTransaction.val();
+	}
+
 	this.CreateObject = function (bTargetClassSelected) {
 		if ($('#'+me.id).prop('disabled')) {
 			return;
@@ -679,6 +698,10 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 
 		// Run the query and get the result back directly in HTML
 		var sLocalTargetClass = me.sTargetClass; // Remember the target class since it will be reset when closing the dialog
+
+		// Handle transaction id
+		const sRootFormTransactionId = me.GetRootTransactionId();
+
 		me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 			function (data) {
 				$('#ajax_'+me.id).html(data);
@@ -696,6 +719,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					if ($('#ac_create_'+me.id).height() > ($(window).height()-70)) {
 						$('#ac_create_'+me.id).height($(window).height()-70);
 					}
+					// Add root_transaction_id
+					$('#ac_create_'+me.id+' form').append(`<input type="hidden" name="root_transaction_id" value="${sRootFormTransactionId}"/>`)
 				});
 			},
 			'html'

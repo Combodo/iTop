@@ -3371,5 +3371,22 @@ HTML;
 	{
 		return in_array($sTrait, self::TraitsUsedByClass($sClass, true));
 	}
-	
+
+	/**
+	 * Get stack trace as string array.
+	 *
+	 * @return array
+	 * @since 3.1.0
+	 */
+	public static function GetStackTraceAsArray(): array
+	{
+		$e = new Exception();
+		$aTrace = explode("\n", $e->getTraceAsString());
+		// Remove call to this method
+		array_shift($aTrace);
+		// Remove Main
+		array_pop($aTrace);
+
+		return $aTrace;
+	}
 }

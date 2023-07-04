@@ -47,6 +47,7 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 use Combodo\iTop\Service\Links\LinkSetDataTransformer;
 use Combodo\iTop\Service\Links\LinkSetModel;
+use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectHelper;
 
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
@@ -2818,33 +2819,33 @@ JS
 			}
 		}
 		// Custom operation for the form ?
-		if (isset($aExtraParams['custom_operation'])) {
-			$sOperation = $aExtraParams['custom_operation'];
-		} else {
-			if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
-				$sOperation = 'apply_modify';
-			} else {
-				$sOperation = 'apply_new';
-			}
-		}
+        if (isset($aExtraParams['custom_operation'])) {
+            $sOperation = $aExtraParams['custom_operation'];
+        } else {
+            if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
+                $sOperation = 'apply_modify';
+            } else {
+                $sOperation = 'apply_new';
+            }
+        }
 
-		$oContentBlock = new UIContentBlock();
-		$oPage->AddUiBlock($oContentBlock);
+        $oContentBlock = new UIContentBlock();
+        $oPage->AddUiBlock($oContentBlock);
 
-		$oForm = new Form("form_{$this->m_iFormId}");
-		$oForm->SetAction($sFormAction);
-		$sOnSubmitForm = "let bOnSubmitForm = OnSubmit('form_{$this->m_iFormId}');";
-		if (isset($aExtraParams['js_handlers']['form_on_submit'])) {
-			$oForm->SetOnSubmitJsCode($sOnSubmitForm.$aExtraParams['js_handlers']['form_on_submit']);
-		} else {
-			$oForm->SetOnSubmitJsCode($sOnSubmitForm."return bOnSubmitForm;");
-		}
-		$oContentBlock->AddSubBlock($oForm);
+        $oForm = new Form("form_{$this->m_iFormId}");
+        $oForm->SetAction($sFormAction);
+        $sOnSubmitForm = "let bOnSubmitForm = OnSubmit('form_{$this->m_iFormId}');";
+        if (isset($aExtraParams['js_handlers']['form_on_submit'])) {
+            $oForm->SetOnSubmitJsCode($sOnSubmitForm . $aExtraParams['js_handlers']['form_on_submit']);
+        } else {
+            $oForm->SetOnSubmitJsCode($sOnSubmitForm . "return bOnSubmitForm;");
+        }
+        $oContentBlock->AddSubBlock($oForm);
 
-		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
-			// The object already exists in the database, it's a modification
-			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
-		}
+        if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
+            // The object already exists in the database, it's a modification
+	        $oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
+        }
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sOperation));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
 
@@ -2852,6 +2853,11 @@ JS
 		$iTransactionId = isset($aExtraParams['transaction_id']) ? $aExtraParams['transaction_id'] : utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
+
+		// Add temporary object watchdog (only on root form)
+		if (!utils::IsXmlHttpRequest()) {
+			$oPage->add_ready_script(TemporaryObjectHelper::GetWatchDogJS($iTransactionId));
+		}
 
 		// TODO 3.0.0: Is this (the if condition, not the code inside) still necessary?
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
@@ -2863,34 +2869,34 @@ JS
 			}
 		}
 
-		$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+        $oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
 
-		$oCancelButton = ButtonUIBlockFactory::MakeForCancel();
-		$oCancelButton->AddCSSClasses(['action', 'cancel']);
-		$oToolbarButtons->AddSubBlock($oCancelButton);
-		$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
-		$oApplyButton->AddCSSClass('action');
-		$oToolbarButtons->AddSubBlock($oApplyButton);
-		$bAreTransitionsHidden = isset($aExtraParams['hide_transitions']) && $aExtraParams['hide_transitions'] === true;
-		$aTransitions = $this->EnumTransitions();
-		if (!isset($aExtraParams['custom_operation']) && !$bAreTransitionsHidden && count($aTransitions)) {
-			// Transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
-			$oSetToCheckRights = DBObjectSet::FromObject($this);
+        $oCancelButton = ButtonUIBlockFactory::MakeForCancel();
+        $oCancelButton->AddCSSClasses(['action', 'cancel']);
+        $oToolbarButtons->AddSubBlock($oCancelButton);
+        $oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
+        $oApplyButton->AddCSSClass('action');
+        $oToolbarButtons->AddSubBlock($oApplyButton);
+        $bAreTransitionsHidden = isset($aExtraParams['hide_transitions']) && $aExtraParams['hide_transitions'] === true;
+        $aTransitions = $this->EnumTransitions();
+        if (!isset($aExtraParams['custom_operation']) && !$bAreTransitionsHidden && count($aTransitions)) {
+            // Transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
+            $oSetToCheckRights = DBObjectSet::FromObject($this);
 
-			$oTransitionPopoverMenu = new PopoverMenu();
-			$sTPMSectionId = 'transitions';
-			$oTransitionPopoverMenu->AddSection($sTPMSectionId);
-			$aStimuli = Metamodel::EnumStimuli($sClass);
-			foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
-				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
-					$sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
-				switch ($iActionAllowed) {
-					case UR_ALLOWED_YES:
-						// Button to be displayed on its own on large screens
-						$oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
-						$oButton->AddCSSClass('action');
-						$oButton->SetColor(Button::ENUM_COLOR_SCHEME_NEUTRAL);
-						$oToolbarButtons->AddSubBlock($oButton);
+            $oTransitionPopoverMenu = new PopoverMenu();
+            $sTPMSectionId = 'transitions';
+            $oTransitionPopoverMenu->AddSection($sTPMSectionId);
+            $aStimuli = Metamodel::EnumStimuli($sClass);
+            foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
+                $iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
+                    $sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
+                switch ($iActionAllowed) {
+                    case UR_ALLOWED_YES:
+                        // Button to be displayed on its own on large screens
+                        $oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
+                        $oButton->AddCSSClass('action');
+                        $oButton->SetColor(Button::ENUM_COLOR_SCHEME_NEUTRAL);
+                        $oToolbarButtons->AddSubBlock($oButton);
 
 						// Button to be displayed in a grouped button on smaller screens
 						$oTPMPopupMenuItem = new JSPopupMenuItem('next_action--'.$oButton->GetId(), $oButton->GetLabel(), "$(`#{$oButton->GetId()}`).trigger(`click`);");

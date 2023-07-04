@@ -2083,6 +2083,7 @@ EOF
 			$this->CompileCommonProperty('min_autocomplete_chars', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('allow_target_creation', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('display_style', $oField, $aParameters, $sModuleRelativeDir, 'select');
+			$this->CompileCommonProperty('create_temporary_object', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeObjectKey') {
 			$this->CompileCommonProperty('class_attcode', $oField, $aParameters, $sModuleRelativeDir);
