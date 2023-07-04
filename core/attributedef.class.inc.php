@@ -4188,7 +4188,7 @@ class AttributePassword extends AttributeString implements iAttributeNoGroupBy
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (strlen($sValue) == 0)
+		if (utils::IsNullOrEmptyString($sValue))
 		{
 			return '';
 		}
