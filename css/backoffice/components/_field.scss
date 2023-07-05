@@ -80,16 +80,25 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
       }
     }
   }
+  /*We need the rule to keep text inside the column when width is defined*/
+  &[data-attribute-type="AttributeText"]:not([data-input-type="html_editor"]) {
+    display: grid;
+
+    > .ibo-field--value {
+      max-width: 100%;
+      overflow: auto;
+    }
+  }
 }
 
-/* Large field = Label on top, value below */
-.ibo-field-large {
-  display: block;
+  /* Large field = Label on top, value below */
+  .ibo-field-large {
+    display: block;
 
-  .ibo-field--label {
-    position: relative; /* Necessary for fullscreen toggler */
-    display: flex;
-    align-items: center;
+    .ibo-field--label {
+      position: relative; /* Necessary for fullscreen toggler */
+      display: flex;
+      align-items: center;
     max-width: initial;
     width: 100%;
   }
