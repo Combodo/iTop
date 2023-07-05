@@ -18,6 +18,9 @@ namespace Combodo\iTop\Test\UnitTest\Integration;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Dict;
 
+/**
+ * @group beforeSetup
+ */
 class DictionariesConsistencyTest extends ItopTestCase
 {
 	/**
@@ -111,7 +114,6 @@ class DictionariesConsistencyTest extends ItopTestCase
 	 *
 	 * @param string $sDictFile
 	 *
-	 * @group beforeSetup
 	 *
 	 * @uses         CheckDictionarySyntax
 	 */
