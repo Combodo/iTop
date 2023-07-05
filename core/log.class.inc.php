@@ -1414,7 +1414,7 @@ class LogFileRotationProcess implements iScheduledProcess
 		$iMaxDays = MetaModel::GetConfig()->Get(LogAPI::ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS);
 
 		// Files iterator (*.*)
-		$oIterator = new \GlobIterator(APPROOT.'log'.DIRECTORY_SEPARATOR.'/*.*');
+		$oIterator = new \GlobIterator(APPROOT.'log'.DIRECTORY_SEPARATOR.'*.*');
 		$aLogFiles = iterator_to_array($oIterator);
 
 		// Reference date
@@ -1425,6 +1425,11 @@ class LogFileRotationProcess implements iScheduledProcess
 
 			// File real path
 			$sFileRealPath = $oLogFile->getRealPath();
+
+			// Check file extension
+			if(!in_array($oLogFile->getExtension(), ['log','sql','xml'])){
+				continue;
+		    }
 
 			// Compute number of days since last modification
 			$oDateFileLastModification = new DateTime();
