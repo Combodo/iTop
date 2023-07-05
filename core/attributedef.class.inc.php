@@ -8750,7 +8750,7 @@ class AttributeImage extends AttributeBlob
 			return 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
 		}
 
-		return $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
+		return $value->GetDisplayURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
 	}
 
 	public static function GetFormFieldClass()
