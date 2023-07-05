@@ -2047,6 +2047,9 @@ SQL;
 	 */
 	public static function TextToHtml($sText)
 	{
+		if (static::IsNullOrEmptyString($sText)){
+			return '';
+		}
 		$sText = str_replace("\r\n", "\n", $sText);
 		$sText = str_replace("\r", "\n", $sText);
 
