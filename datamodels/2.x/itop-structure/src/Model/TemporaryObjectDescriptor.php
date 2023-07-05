@@ -5,6 +5,11 @@
  */
 
 /**
+ * Class TemporaryObjectDescriptor
+ *
+ * Descriptor to track a temporary object.
+ *
+ * @experimental do not use, this feature will be part of a future version
  *
  * @since 3.1
  */

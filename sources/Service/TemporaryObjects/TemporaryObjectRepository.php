@@ -19,6 +19,8 @@ use TemporaryObjectDescriptor;
  *
  * Repository class to perform ORM tasks.
  *
+ * @experimental do not use, this feature will be part of a future version
+ *
  * @since 3.1
  */
 class TemporaryObjectRepository

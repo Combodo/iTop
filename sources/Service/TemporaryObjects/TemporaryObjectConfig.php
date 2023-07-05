@@ -8,6 +8,15 @@ namespace Combodo\iTop\Service\TemporaryObjects;
 
 use MetaModel;
 
+/**
+ * TemporaryObjectConfig.
+ *
+ * Handle temporary object configuration.
+ *
+ * @experimental do not use, this feature will be part of a future version
+ *
+ * @since 3.1
+ */
 class TemporaryObjectConfig
 {
 

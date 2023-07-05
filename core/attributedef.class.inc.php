@@ -10,7 +10,6 @@ use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Validator\CustomRegexpValidator;
-use Combodo\iTop\Form\Validator\LinkedSetValidator;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Service\Links\LinkSetModel;
@@ -7228,6 +7227,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return (int)$proposedValue;
 	}
 
+	/** @inheritdoc  @since 3.1 */
 	public function WriteExternalValues(DBObject $oHostObject): void
 	{
 		$sTargetKey = $oHostObject->Get($this->GetCode());

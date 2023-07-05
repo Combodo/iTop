@@ -11,6 +11,15 @@ use Combodo\iTop\Service\Events\Description\EventDescription;
 use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Service\Events\iEventServiceSetup;
 
+/**
+ * TemporaryObjectsEvents.
+ *
+ * Handle temporary objects events
+ *
+ * @experimental do not use, this feature will be part of a future version
+ *
+ * @since 3.1
+ */
 class TemporaryObjectsEvents implements iEventServiceSetup
 {
 

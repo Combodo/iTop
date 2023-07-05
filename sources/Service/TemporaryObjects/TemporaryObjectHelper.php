@@ -11,6 +11,8 @@ namespace Combodo\iTop\Service\TemporaryObjects;
  *
  * Helper with useful functions.
  *
+ * @experimental do not use, this feature will be part of a future version
+ *
  * @since 3.1
  */
 class TemporaryObjectHelper

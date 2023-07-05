@@ -13,6 +13,8 @@ use iBackgroundProcess;
  *
  * Background task to collect and garbage expired temporary objects..
  *
+ * @experimental do not use, this feature will be part of a future version
+ *
  * @since 3.1
  */
 class TemporaryObjectGC implements iBackgroundProcess

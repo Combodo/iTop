@@ -6399,10 +6399,19 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * @param $aContext
+	 * Handle temporary descriptors.
 	 *
 	 * @return void
-	 * @since 3.1.0
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 *
+	 * @experimental do not use, this feature will be part of a future version
+	 *
+	 * @since 3.1
 	 */
 	private function HandleTemporaryDescriptor()
 	{
@@ -6412,7 +6421,13 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Return context information.
+	 *
 	 * @return array
+	 *
+	 * @experimental do not use, this feature will be part of a future version
+	 *
+	 * @since 3.1
 	 */
 	public function GetContext(): array
 	{
@@ -6425,6 +6440,10 @@ abstract class DBObject implements iDisplay
 	 * @param string $sSection
 	 * @param $value
 	 *
+	 * @experimental do not use, this feature will be part of a future version
+	 *
+	 * @since 3.1
+	 *
 	 */
 	public function SetContextSection(string $sSection, $value)
 	{
@@ -6432,9 +6451,15 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Get context section data.
+	 *
 	 * @param string $sSection
 	 *
 	 * @return mixed
+	 *
+	 * experimental do not use, this feature will be part of a future version
+	 *
+	 * @since 3.1
 	 */
 	public function GetContextSection(string $sSection)
 	{
@@ -6446,9 +6471,15 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Test context section existence.
+	 *
 	 * @param string $sSection
 	 *
 	 * @return bool
+	 *
+	 * experimental do not use, this feature will be part of a future version
+	 *
+	 * @since 3.1
 	 */
 	public function HasContextSection(string $sSection): bool
 	{

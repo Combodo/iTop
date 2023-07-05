@@ -21,6 +21,8 @@ use utils;
  *
  * Manager class to perform global temporary objects tasks.
  *
+ * @experimental do not use, this feature will be part of a future version
+ *
  * @since 3.1
  */
 class TemporaryObjectManager

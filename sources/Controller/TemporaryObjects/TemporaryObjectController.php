@@ -16,6 +16,8 @@ use utils;
  *
  * Temporary object endpoints.
  *
+ * @experimental do not use, this feature will be part of a future version
+ *
  * @since 3.1
  */
 class TemporaryObjectController extends AbstractController
