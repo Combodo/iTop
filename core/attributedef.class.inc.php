@@ -8575,6 +8575,22 @@ class AttributeBlob extends AttributeDefinition
 		return utils::IsNotNullOrEmptyString($proposedValue->GetData()) && utils::IsNotNullOrEmptyString($proposedValue->GetFileName());
 	}
 
+	/**
+	 * @inheritDoc
+	 * @param \ormDocument $original
+	 * @param \ormDocument $value
+	 * @since N°6502
+	 */
+	public function RecordAttChange(DBObject $oObject, $original, $value): void
+	{
+		// N°6502 Don't record history if only the download count has changed
+		if ($original->EqualsExceptDownloadsCount($value)) {
+			return;
+		}
+
+		parent::RecordAttChange($oObject, $original, $value);
+	}
+
 	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
 	{
 		if (is_null($original)) {
