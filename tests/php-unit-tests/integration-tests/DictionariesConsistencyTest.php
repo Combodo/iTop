@@ -18,6 +18,9 @@ namespace Combodo\iTop\Test\UnitTest\Integration;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 
+/**
+ * @group beforeSetup
+ */
 class DictionariesConsistencyTest extends ItopTestCase
 {
 	/**
