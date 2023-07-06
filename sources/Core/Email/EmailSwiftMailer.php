@@ -181,7 +181,11 @@ class EmailSwiftMailer extends EMail
 
 			case 'PHPMail':
 			default:
-				$oTransport = new Swift_SendmailTransport();
+				// Retrieve sendmail path or select a default one as SwiftMailer is not doing it anymore
+				$sSendmailPath = ini_get('sendmail_path');
+				$sSendmailPath = ($sSendmailPath === false || $sSendmailPath === '') ? '/usr/sbin/sendmail -bs' : $sSendmailPath;
+				
+				$oTransport = new Swift_SendmailTransport($sSendmailPath);
 		}
 
 		$oMailer = new Swift_Mailer($oTransport);
