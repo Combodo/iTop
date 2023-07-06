@@ -11,6 +11,7 @@ use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use Dict;
 use IssueLog;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use MetaModel;
 use utils;
 use WebPage;
@@ -65,13 +66,15 @@ class AjaxOauthClientController extends Controller
 			}
 			if (isset($aQuery['code'])) {
 				$sCode = $aQuery['code'];
-				$oAccessToken = OAuthClientProviderFactory::GetAccessTokenFromCode($oOAuthClient, $sCode);
-
-				$oOAuthClient->SetAccessToken($oAccessToken);
-
-
-
-				$aResult['status'] = 'success';
+				try {
+					$oAccessToken = OAuthClientProviderFactory::GetAccessTokenFromCode($oOAuthClient, $sCode);
+					$oOAuthClient->SetAccessToken($oAccessToken);
+					$aResult['status'] = 'success';
+				}
+				catch (IdentityProviderException $e) {
+					$aResult['status'] = 'error';
+					$aResult['error_description'] = $e->getMessage();
+				}
 			}
 		} else {
 			$aResult['status'] = 'error';

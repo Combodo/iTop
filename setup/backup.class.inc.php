@@ -358,6 +358,7 @@ class DBBackup
 
 		$sPortOption = self::GetMysqliCliSingleOption('port', $this->iDBPort);
 		$sTlsOptions = self::GetMysqlCliTlsOptions($this->oConfig);
+		$sProtocolOption = self::GetMysqlCliTransportOption($this->sDBHost);
 
 		$sMysqlVersion = CMDBSource::GetDBVersion();
 		$bIsMysqlSupportUtf8mb4 = (version_compare($sMysqlVersion, self::MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS) === -1);
@@ -378,8 +379,8 @@ EOF;
 
 			// Note: opt implicitely sets lock-tables... which cancels the benefit of single-transaction!
 			//       skip-lock-tables compensates and allows for writes during a backup
-			$sCommand = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
-			$sCommandDisplay = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
+			$sCommand = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption $sProtocolOption --user=$sUser $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+			$sCommandDisplay = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption $sProtocolOption --user=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
 
 		// Now run the command for real
 		$this->LogInfo("backup: generate data file with command: $sCommandDisplay");
@@ -574,6 +575,24 @@ EOF;
 		}
 
 		return ' --'.$sCliArgName.'='.self::EscapeShellArg($sData);
+	}
+
+	/**
+	 * @param string $sHost
+	 *
+	 * @return string .
+
+	 * @since 2.7.9 3.0.4 3.1.1 N°6123
+	 */
+	public static function GetMysqlCliTransportOption(string $sHost)
+	{
+		$sTransportOptions = '';
+		
+		if($sHost === 'localhost'){
+			$sTransportOptions = '--protocol=tcp';
+		}
+
+		return $sTransportOptions;
 	}
 
 	/**
