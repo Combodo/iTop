@@ -229,6 +229,7 @@ HTML
             $this->Set('refresh_token', $oAccessToken->getRefreshToken());
         }
         $this->Set('status', 'active');
+        $this->AllowWrite();
         $this->DBUpdate();
     }
             ]]></code>

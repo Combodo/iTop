@@ -15,7 +15,7 @@ use PHPUnit\Exception;
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
-class TestForITopDesignFormatClass extends ItopTestCase
+class iTopDesignFormatChecklistTest extends ItopTestCase
 {
 	protected function setUp(): void
 	{
@@ -47,7 +47,7 @@ class TestForITopDesignFormatClass extends ItopTestCase
 						$aErrors[] = "cannot retrieve itop_design datamodel version in $sDataModelFile:1";
 						continue;
 					}
-					
+
 					$aDatamodelCurrentVersions[$sVersion] = $sVersion;
 				}
 			}

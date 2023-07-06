@@ -74,6 +74,7 @@ class OAuthClientProviderFactory
 	 * @return AccessTokenInterface
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
 	 */
 	public static function GetAccessTokenFromCode(OAuthClient $oOAuthClient, $sCode)
 	{
@@ -109,7 +110,7 @@ class OAuthClientProviderFactory
 	/**
 	 * @param \DBObject $oOAuthClient
 	 *
-	 * @return mixed
+	 * @return OAuthClientProviderAbstract
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
