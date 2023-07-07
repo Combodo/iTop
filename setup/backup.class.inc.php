@@ -523,6 +523,8 @@ EOF;
 	}
 
 	/**
+	 * Define if we should force a transport option
+	 * 
 	 * @param string $sHost
 	 *
 	 * @return string .
@@ -533,6 +535,8 @@ EOF;
 	{
 		$sTransportOptions = '';
 		
+		/** N°6123 As we're using a --port option, if we use localhost as host,
+		 * MariaDB > 10.6 will implicitly change its protocol from socket to tcp and throw a warning **/
 		if($sHost === 'localhost'){
 			$sTransportOptions = '--protocol=tcp';
 		}
