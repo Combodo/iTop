@@ -2225,7 +2225,7 @@ abstract class DBObject implements iDisplay
 
 			$oKPI = new ExecutionKPI();
 			$this->DoCheckToWrite();
-			$oKPI->ComputeStats('CheckToWrite', get_class($this));
+            $oKPI->ComputeStatsForExtension($this, 'DoCheckToWrite');
 			if (count($this->m_aCheckIssues) == 0)
 			{
 				$this->m_bCheckStatus = true;
@@ -2693,8 +2693,12 @@ abstract class DBObject implements iDisplay
 		$sRootClass = MetaModel::GetRootClass($sClass);
 
 		// Ensure the update of the values (we are accessing the data directly)
+        $oKPI = new ExecutionKPI();
 		$this->DoComputeValues();
+        $oKPI->ComputeStatsForExtension($this, 'DoComputeValues');
+        $oKPI = new ExecutionKPI();
 		$this->OnInsert();
+        $oKPI->ComputeStatsForExtension($this, 'OnInsert');
 
 		if ($this->m_iKey < 0)
 		{
@@ -2712,7 +2716,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		// Ultimate check - ensure DB integrity
-		list($bRes, $aIssues) = $this->CheckToWrite();
+		[$bRes, $aIssues] = $this->CheckToWrite();
 		if (!$bRes)
 		{
 			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
@@ -2818,7 +2822,9 @@ abstract class DBObject implements iDisplay
 			$this->m_aOrigValues[$sAttCode] = $value;
 		}
 
+        $oKPI = new ExecutionKPI();
 		$this->AfterInsert();
+        $oKPI->ComputeStatsForExtension($this, 'AfterInsert');
 
 		// Activate any existing trigger 
 		$sClass = get_class($this);
@@ -3094,8 +3100,11 @@ abstract class DBObject implements iDisplay
 
 		try
 		{
+            $oKPI = new ExecutionKPI();
 			$this->DoComputeValues();
-			// Stop watches
+            $oKPI->ComputeStatsForExtension($this, 'DoComputeValues');
+
+            // Stop watches
 			$sState = $this->GetState();
 			if ($sState != '')
 			{
@@ -3114,7 +3123,9 @@ abstract class DBObject implements iDisplay
 					}
 				}
 			}
-			$this->OnUpdate();
+            $oKPI = new ExecutionKPI();
+            $this->OnUpdate();
+            $oKPI->ComputeStatsForExtension($this, 'OnUpdate');
 
 			$aChanges = $this->ListChanges();
 			if (count($aChanges) == 0)
@@ -3126,7 +3137,7 @@ abstract class DBObject implements iDisplay
 			}
 
 			// Ultimate check - ensure DB integrity
-			list($bRes, $aIssues) = $this->CheckToWrite();
+			[$bRes, $aIssues] = $this->CheckToWrite();
 			if (!$bRes)
 			{
 				throw new CoreCannotSaveObjectException(array(
@@ -3326,7 +3337,9 @@ abstract class DBObject implements iDisplay
 
 			try
 			{
-				$this->AfterUpdate();
+                $oKPI = new ExecutionKPI();
+                $this->AfterUpdate();
+                $oKPI->ComputeStatsForExtension($this, 'AfterUpdate');
 
 				// Reload to get the external attributes
 				if ($bHasANewExternalKeyValue)

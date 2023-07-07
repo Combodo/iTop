@@ -67,8 +67,7 @@ class MyHelpers
 	// format sss.mmmuuupppnnn 
 	public static function getmicrotime()
 	{ 
-		list($usec, $sec) = explode(" ",microtime()); 
-		return ((float)$usec + (float)$sec); 
+		return microtime(true);
 	}
 
 	/*
@@ -420,6 +419,7 @@ class MyHelpers
 		//}
 		return $sOutput;
 	}
+
 }
 
 /**
@@ -524,5 +524,3 @@ class Str
 		return (strtolower($sString) == $sString);
 	}
 }
-
-?>
