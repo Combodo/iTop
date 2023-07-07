@@ -38,22 +38,27 @@ class Branding
 	public const ENUM_LOGO_TYPE_PORTAL_LOGO = 'portal_logo';
 	/** @var string Logo used in the login pages */
 	public const ENUM_LOGO_TYPE_LOGIN_LOGO = 'login_logo';
+	/** @var string Logo used in the login pages */
+	public const ENUM_LOGO_TYPE_FAVICON = 'favicon ';
 	/** @var string Default logo */
 	public const DEFAULT_LOGO_TYPE = self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL;
 
 	/** @var \string[][] Relative paths to the logos from the current environment folder */
 	public static $aLogoPaths = [
-		self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL => [
+		self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL    => [
 			'default' => 'images/itop-logo.png',
 		],
 		self::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT => [
 			'default' => 'images/itop-logo-square.png',
 		],
-		self::ENUM_LOGO_TYPE_PORTAL_LOGO => [
+		self::ENUM_LOGO_TYPE_PORTAL_LOGO       => [
 			'default' => 'images/logo-itop-dark-bg.svg',
 		],
-		self::ENUM_LOGO_TYPE_LOGIN_LOGO => [
+		self::ENUM_LOGO_TYPE_LOGIN_LOGO        => [
 			'default' => 'images/itop-logo-external.png',
+		],
+		self::ENUM_LOGO_TYPE_FAVICON           => [
+			'default' => 'images/favicon.ico',
 		],
 	];
 
@@ -154,4 +159,14 @@ class Branding
 		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_LOGIN_LOGO);
 	}
 
+	/**
+	 * Return the absolute URL for thefavicon
+	 *
+	 * @return string
+	 * @throws \Exception<
+	 */
+	public static function GetFavIconAbsoluteUrl()
+	{
+		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_FAVICON);
+	}
 }
