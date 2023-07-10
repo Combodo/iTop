@@ -74,7 +74,7 @@ class UIHTMLEditorWidget
 		$aConfig = utils::GetCkeditorPref();
 		$sWidthSpec = addslashes(trim($this->m_oAttDef->GetWidth()));
 		if ($sWidthSpec != '') {
-			/*the function min allow to keep text inside the column when width is defined*/
+			/*N°6543 - the function min allow to keep text inside the column when width is defined*/
 			$aConfig['width'] = "min($sWidthSpec,100%)";
 		}
 		$sHeightSpec = addslashes(trim($this->m_oAttDef->GetHeight()));
