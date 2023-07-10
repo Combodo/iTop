@@ -80,14 +80,17 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
       }
     }
   }
-  /*N°6543 - We need the rule to keep text inside the column when width is defined*/
-  &[data-attribute-type="AttributeHtml"]:not([data-input-type="html_editor"]),
-  &[data-attribute-type="AttributeText"]:not([data-input-type="html_editor"]) {
-    display: grid;
 
-    > .ibo-field--value {
-      max-width: 100%;
-      overflow: auto;
+  /*N°6543 - We need the rule to keep text inside the column when width is defined*/
+  &[data-attribute-type="AttributeHtml"],
+  &[data-attribute-type="AttributeText"] {
+    &[data-attribute-flag-read-only="true"] {
+      display: grid;
+
+      > .ibo-field--value {
+        max-width: 100%;
+        overflow: auto;
+      }
     }
   }
 }
