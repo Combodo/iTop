@@ -257,7 +257,7 @@ class iTopMutex
 		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, false);
 
 		if (!$this->hDBLink) {
-			throw new Exception("Could not connect to the DB server (host=$sServer, user=$sUser): ".mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno().')');
+            throw new MySQLException('Could not connect to the DB server '.mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno(), array('host' => $sDBHost, 'user' => $sDBUser));
 		}
 
 		// Make sure that the server variable `wait_timeout` is at least 86400 seconds for this connection,
