@@ -18,7 +18,7 @@ class TemporaryObjectDescriptor extends DBObject
 	public static function Init()
 	{
 		$aParams = array(
-			'category'            => 'structure',
+			'category'            => 'core',
 			'key_type'            => 'autoincrement',
 			'name_attcode'        => array('item_class', 'temp_id'),
 			'image_attcode'       => '',
