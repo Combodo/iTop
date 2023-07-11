@@ -110,7 +110,7 @@ class iTopDesignFormat
 			'previous' => '3.0',
 			'go_to_previous' => 'From31To30',
 			'next' => '3.2',
-			'go_to_next' => 'Fomr31To32',
+			'go_to_next' => 'From31To32',
 		),
 		'3.2' => array(
 			'previous' => '3.1',
