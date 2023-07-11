@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
   <classes>
     <class id="StorageSystem" _delta="define">
       <parent>DatacenterDevice</parent>
@@ -15,7 +15,7 @@
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="organization_name"></attribute>
+            <attribute id="organization_name"/>
             <attribute id="location_name"/>
           </complementary_attributes>
         </naming>
@@ -277,7 +277,7 @@
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="organization_name"></attribute>
+            <attribute id="organization_name"/>
             <attribute id="location_name"/>
           </complementary_attributes>
         </naming>
@@ -536,7 +536,7 @@
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="organization_name"></attribute>
+            <attribute id="organization_name"/>
             <attribute id="location_name"/>
           </complementary_attributes>
         </naming>
@@ -795,7 +795,7 @@
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="organization_name"></attribute>
+            <attribute id="organization_name"/>
             <attribute id="location_name"/>
           </complementary_attributes>
         </naming>
@@ -1148,7 +1148,7 @@
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="nas_name"></attribute>
+            <attribute id="nas_name"/>
             <attribute id="location_name"/>
           </complementary_attributes>
         </naming>
@@ -1435,7 +1435,7 @@
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="lun_id"></attribute>
+            <attribute id="lun_id"/>
           </complementary_attributes>
         </naming>
         <style>

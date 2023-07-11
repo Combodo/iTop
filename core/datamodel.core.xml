@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
   <user_rights>
     <profiles>
       <profile id="1024" _delta="define">
@@ -270,7 +270,7 @@
         </fields>
       </class>
     </classes>
-    <attribute_properties_definition  _delta="define">
+    <attribute_properties_definition _delta="define">
       <properties>
         <property id="sql">
           <php_param>sql</php_param>

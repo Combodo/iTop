@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -406,8 +406,8 @@
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="email"></attribute>
-            <attribute id="org_name"></attribute>
+            <attribute id="email"/>
+            <attribute id="org_name"/>
           </complementary_attributes>
         </naming>
         <fields_semantic>
@@ -602,8 +602,8 @@
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="email"></attribute>
-            <attribute id="org_id_friendlyname"></attribute>
+            <attribute id="email"/>
+            <attribute id="org_id_friendlyname"/>
           </complementary_attributes>
         </naming>
         <fields_semantic>
@@ -998,10 +998,9 @@
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="function"></attribute>
-            <attribute id="org_id_friendlyname"></attribute>
+            <attribute id="function"/>
+            <attribute id="org_id_friendlyname"/>
           </complementary_attributes>
-
         </naming>
         <style>
           <icon>../../images/icons/icons8-team.svg</icon>
@@ -1301,9 +1300,9 @@
         <naming>
           <attributes/>
           <complementary_attributes>
-            <attribute id="org_name"></attribute>
-            <attribute id="status"></attribute>
-            <attribute id="documenttype_name"></attribute>
+            <attribute id="org_name"/>
+            <attribute id="status"/>
+            <attribute id="documenttype_name"/>
           </complementary_attributes>
         </naming>
         <fields_semantic>

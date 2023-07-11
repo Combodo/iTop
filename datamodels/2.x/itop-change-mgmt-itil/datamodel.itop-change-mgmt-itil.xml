@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
   <classes>
     <class id="Change" _delta="define">
       <parent>Ticket</parent>
@@ -21,7 +21,7 @@
             <attribute id="ref"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="title"></attribute>
+            <attribute id="title"/>
           </complementary_attributes>
         </naming>
         <fields_semantic>
@@ -49,20 +49,12 @@
             <value id="approved">approved
               <code>approved</code>
               <rank>60</rank>
-              <style>
-                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
-                <decoration_classes>fas fa-user-check</decoration_classes>
-              </style>
+              <style><main_color>$ibo-lifecycle-success-state-primary-color</main_color><complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color><decoration_classes>fas fa-user-check</decoration_classes></style>
             </value>
             <value id="assigned">assigned
               <code>assigned</code>
               <rank>40</rank>
-              <style>
-                <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
-                <decoration_classes/>
-              </style>
+              <style><main_color>$ibo-lifecycle-neutral-state-primary-color</main_color><complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color><decoration_classes/></style>
             </value>
             <value id="closed">
               <code>closed</code>
@@ -1296,7 +1288,7 @@
             <attribute id="ref"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="title"></attribute>
+            <attribute id="title"/>
           </complementary_attributes>
         </naming>
         <style>
@@ -2097,7 +2089,7 @@
             <attribute id="ref"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="title"></attribute>
+            <attribute id="title"/>
           </complementary_attributes>
         </naming>
         <style>
@@ -3103,7 +3095,7 @@
             <attribute id="ref"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="title"></attribute>
+            <attribute id="title"/>
           </complementary_attributes>
         </naming>
         <style>
@@ -3801,7 +3793,7 @@
             <attribute id="ref"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="title"></attribute>
+            <attribute id="title"/>
           </complementary_attributes>
         </naming>
         <style>
