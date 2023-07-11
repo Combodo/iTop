@@ -11,7 +11,7 @@ define('APPCONF', APPROOT.'conf/');
  *
  * @see ITOP_CORE_VERSION to get full iTop core version
  */
-define('ITOP_DESIGN_LATEST_VERSION', '3.1');
+define('ITOP_DESIGN_LATEST_VERSION', '3.2');
 
 /**
  * Constant containing the iTop core version, whatever application was built
