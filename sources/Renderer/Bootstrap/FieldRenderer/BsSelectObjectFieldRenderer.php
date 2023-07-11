@@ -320,12 +320,15 @@ EOF
 			if ($this->oField->GetCurrentValue() !== null && $this->oField->GetCurrentValue() !== 0 && $this->oField->GetCurrentValue() !== '')
 			{
 				// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
-				$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue(), true, true);
+				$oFieldValue = MetaModel::GetObjectWithArchive($sFieldValueClass, $this->oField->GetCurrentValue(), true, true);
 				$sFieldHtmlValue = $oFieldValue->GetName();
-				$sFieldUrl = ApplicationContext::MakeObjectUrl($sFieldValueClass, $this->oField->GetCurrentValue());
-				if(!empty($sFieldUrl))
+				if(!$oFieldValue->IsArchived())
 				{
-					$sFieldHtmlValue = '<a href="'.$sFieldUrl.'" data-toggle="itop-portal-modal">'.$sFieldHtmlValue.'</a>';
+					$sFieldUrl = ApplicationContext::MakeObjectUrl($sFieldValueClass, $this->oField->GetCurrentValue());
+					if (!empty($sFieldUrl))
+					{
+						$sFieldHtmlValue = '<a href="' . $sFieldUrl . '" data-toggle="itop-portal-modal">' . $sFieldHtmlValue . '</a>';
+					}
 				}
 			}
 			else
