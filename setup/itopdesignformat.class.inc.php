@@ -109,6 +109,12 @@ class iTopDesignFormat
 		'3.1' => array(
 			'previous' => '3.0',
 			'go_to_previous' => 'From31To30',
+			'next' => '3.2',
+			'go_to_next' => 'Fomr31To32',
+		),
+		'3.2' => array(
+			'previous' => '3.1',
+			'go_to_previous' => 'From32To31',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -1073,6 +1079,26 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/sort_type");
 		// - Remove rank in values
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/values/value/rank");
+	}
+
+	/**
+	 * Upgrade the format from version 3.1 to 3.2
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From31To32($oFactory)
+	{
+		// Nothing for now...
+	}
+
+	/**
+	 * Downgrade the format from version 3.2 to 3.1
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From32To31($oFactory)
+	{
+		// Nothing for now...
 	}
 
 	/**
