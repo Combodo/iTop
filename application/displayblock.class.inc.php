@@ -1247,7 +1247,7 @@ JS
 			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, null, null, $aRefreshParams);
 		}
 		$sClassDescription = MetaModel::GetClassDescription($sClass);
-		if ($sClassDescription != '') {
+		if (utils::IsNotNullOrEmptyString($sClassDescription)) {
 			$oBlock->SetClassDescription($sClassDescription);
 		}
 
