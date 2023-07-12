@@ -16,8 +16,10 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
@@ -1425,8 +1427,33 @@ class DisplayableGraph extends SimpleGraph
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 * @deprecated 3.1.1
 	 */
 	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
+	{
+		$oP->AddSubBlock($this->DisplayFilterBox($oP, $aResults, $bLazyLoading));
+		$this->DisplayGraph($oP, $sRelation, $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams, $bLazyLoading);
+	}
+
+	/**
+	 * Display only the graph inside the given page, with the parameters of filter box draw with DisplayFilterBox
+	 *
+	 * @param WebPage $oP
+	 * @param string $sRelation
+	 * @param ApplicationContext $oAppContext
+	 * @param array $aExcludedObjects
+	 * @param string $sObjClass
+	 * @param int $iObjKey
+	 * @param string $sContextKey
+	 * @param array $aContextParams
+	 * @param bool $bLazyLoading
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.1.1
+	 */
+	function DisplayGraph(WebPage $oP, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
 	{
 		list($aExcludedByClass, $aAdditionalContexts) = $this->GetFiltering($sContextKey, $aContextParams, $aExcludedObjects);
 
@@ -1517,8 +1544,7 @@ class DisplayableGraph extends SimpleGraph
 
 			}
 		}
-		catch(Exception $e)
-		{
+		catch (Exception $e) {
 			$oP->add('<div>'.$e->getMessage().'</div>');
 		}
 		$oP->add_script(
@@ -1564,7 +1590,7 @@ EOF
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 *
-	 * @deprecated 3.1.0
+	 * @deprecated 3.1.1
 	 */
 	public function DisplayFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects, WebPage $oP, array $aResults, bool $bLazyLoading = false): array
 	{
@@ -1572,19 +1598,37 @@ EOF
 
 		return $this->GetFiltering($sContextKey, $aContextParams, $aExcludedObjects);
 	}
-
+	
+	/**
+	 * @param string $sContextKey
+	 * @param array $aContextParams
+	 * @param array $aExcludedObjects
+	 * @param \WebPage $oP
+	 * @param array $aResults
+	 * @param bool $bLazyLoading
+	 *
+	 * @return UIContentBlock
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 *
+	 * @since 3.1.1
+	 */
 	public function DisplayFilterBox(WebPage $oP, array $aResults, bool $bLazyLoading = false)
 	{
 		$sSftShort = Dict::S('UI:ElementsDisplayed');
-		$oBlock = \Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory::MakeStandard(null, ['not-printable']);
+		$oBlock = UIContentBlockUIBlockFactory::MakeStandard(null, ['not-printable']);
 		$oUiSearchBlock = new Panel($sSftShort, [], Panel::ENUM_COLOR_SCHEME_CYAN, 'dh_flash');
 		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
 		$oUiSearchBlock->SetIsCollapsible(true);
 		$oUiSearchBlock->GetTitleBlock()->SetCSSClasses(['ibo-panel--subtitle']);
-		$oFilterImageBlock = \Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory::MakeStandard('alert_filtered_list', ['fas', 'fa-filter', 'ibo-panel--header-left', 'ibo-is-hidden']);
+		$oFilterImageBlock = UIContentBlockUIBlockFactory::MakeStandard('alert_filtered_list', ['fas', 'fa-filter', 'ibo-panel--header-left', 'ibo-is-hidden']);
 		$oFilterImageBlock->SetDataAttributes(['tooltip-content' => Dict::S("Relation:impacts/FilteredData")]);
 		$oUiSearchBlock->AddTitleBlock($oFilterImageBlock);
-		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
+		$oUiHtmlBlock = new Html(
 			<<<EOF
 		
     <div id="ds_flash" class="search_box ibo-display-graph--search-box">

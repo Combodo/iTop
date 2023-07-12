@@ -1455,11 +1455,11 @@ try
 			if ($sFirstTab == 'list') {
 				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 				$oP->SetCurrentTab('UI:RelationshipGraph');
-				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj), $bLazyLoading);
+				$oDisplayGraph->DisplayGraph($oP, $sRelation, $oAppContext, [], $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj), $bLazyLoading);
 				DisplayNavigatorGroupTab($oP);
 			} else {
 				$oP->SetCurrentTab('UI:RelationshipGraph');
-				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj), $bLazyLoading);
+				$oDisplayGraph->DisplayGraph($oP, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj), $bLazyLoading);
 				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 				DisplayNavigatorGroupTab($oP);
 			}

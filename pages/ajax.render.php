@@ -1952,7 +1952,8 @@ EOF
 
 				$sContextKey = 'itop-tickets/relation_context/'.$sClass.'/'.$sRelation.'/'.$sDirection;
 				$oAppContext = new ApplicationContext();
-				$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId, $sContextKey, array('this' => $oTicket));
+				$oPage->AddSubBlock($oGraph->DisplayFilterBox($oPage, $aResults));
+				$oGraph->DisplayGraph($oPage, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId, $sContextKey, array('this' => $oTicket));
 				break;
 
 			case 'export_build':
