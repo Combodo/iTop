@@ -6,6 +6,8 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DOMDocument;
 use DOMXPath;
 use iTopDesignFormat;
+use ReflectionException;
+use utils;
 
 
 /**
@@ -256,6 +258,53 @@ class iTopDesignFormatTest extends ItopTestCase
 	{
 		$sCurrentPath = __DIR__;
 
-		return file_get_contents($sCurrentPath.DIRECTORY_SEPARATOR.$sFileName.'.xml');
+		return file_get_contents($sCurrentPath . DIRECTORY_SEPARATOR . $sFileName . '.xml');
+	}
+
+	/**
+	 * @since 3.2.0 N°6558 method creation
+	 */
+	public function testAVersionsContent(): void
+	{
+		$aAVersionsErrors = [];
+
+		foreach (iTopDesignFormat::$aVersions as $sXmlVersion => $aXmlVersionData) {
+			foreach (['previous', 'go_to_previous', 'next', 'go_to_next'] as $sVersionParamKey) {
+				if (false === array_key_exists($sVersionParamKey, $aXmlVersionData)) {
+					$aAVersionsErrors[] = "$sXmlVersion version: missing `$sVersionParamKey` key !";
+				}
+			}
+
+			foreach (['previous', 'next'] as $sXmlVersionPointingToKey) {
+				if (false === array_key_exists($sXmlVersionPointingToKey, $aXmlVersionData)) {
+					continue;
+				}
+				if (utils::IsNullOrEmptyString($aXmlVersionData[$sXmlVersionPointingToKey])) {
+					continue;
+				}
+				if (false === \array_key_exists($aXmlVersionData[$sXmlVersionPointingToKey], iTopDesignFormat::$aVersions)) {
+					$aAVersionsErrors[] = "$sXmlVersion version: invalid value for `$sXmlVersionPointingToKey` key ! Value=" . $aXmlVersionData[$sXmlVersionPointingToKey];
+				}
+			}
+
+			$oItopDesignFormatClass = new \ReflectionClass(iTopDesignFormat::class);
+			foreach (['go_to_previous', 'go_to_next'] as $sXmlConversionMethodKey) {
+				if (false === array_key_exists($sXmlConversionMethodKey, $aXmlVersionData)) {
+					continue;
+				}
+				$sXmlConversionMethod = $aXmlVersionData[$sXmlConversionMethodKey];
+				if (utils::IsNullOrEmptyString($sXmlConversionMethod)) {
+					continue;
+				}
+				try {
+					/** @noinspection PhpExpressionResultUnusedInspection */
+					$oItopDesignFormatClass->getMethod($sXmlConversionMethod);
+				} catch (ReflectionException $e) {
+					$aAVersionsErrors[] = "$sXmlVersion version: conversion method `$sXmlConversionMethod` for key `$sXmlConversionMethodKey` does not exist";
+				}
+			}
+		}
+
+		$this->assertCount(0, $aAVersionsErrors, 'There were errors detected in iTopDesignFormat::$aVersions : ' . var_export($aAVersionsErrors, true));
 	}
 }
