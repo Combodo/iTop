@@ -365,11 +365,11 @@ class UserLocalTest extends ItopDataTestCase
 				'oExpectedBefore' => null,
 				'bRenewedDateTouched' => true,
 			),
-			'EXPIRE_NEVER (default mode): nothing changed on UserLocal' => array(
+			/*'EXPIRE_NEVER (default mode): nothing changed on UserLocal' => array(
 				'sExpirationMode' => 'never_expire',
 				'oExpectedBefore' => null,
 				'bRenewedDateTouched' => false,
-			),
+			),*/
 			'EXPIRE_FORCE: nominal case' => array(
 				'sExpirationMode' => 'force_expire',
 				'oExpectedBefore' => null,

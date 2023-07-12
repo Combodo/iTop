@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -25,10 +25,11 @@ use Combodo\iTop\Renderer\BlockRenderer;
 define('CASELOG_VISIBLE_ITEMS', 2);
 define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\n\n");
 
+require_once('ormcaselogservice.inc.php');
 
 /**
  * Class to store a "case log" in a structured way, keeping track of its successive entries
- *  
+ *
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -47,19 +48,22 @@ class ormCaseLog {
 	protected $m_sLog;
 	protected $m_aIndex;
 	protected $m_bModified;
-	
+	protected \ormCaseLogService $oOrmCaseLogService;
+
 	/**
 	 * Initializes the log with the first (initial) entry
 	 * @param $sLog string The text of the whole case log
 	 * @param $aIndex array The case log index
 	 */
-	public function __construct($sLog = '', $aIndex = array())
+	public function __construct($sLog = '', $aIndex = [], \ormCaseLogService $oOrmCaseLogService=null)
 	{
 		$this->m_sLog = $sLog;
 		$this->m_aIndex = $aIndex;
 		$this->m_bModified = false;
+		$this->oOrmCaseLogService = (is_null($oOrmCaseLogService)) ? new \ormCaseLogService() : $oOrmCaseLogService;
+		$this->RebuildIndex();
 	}
-	
+
 	public function GetText($bConvertToPlainText = false)
 	{
 		if ($bConvertToPlainText)
@@ -72,7 +76,7 @@ class ormCaseLog {
 			return $this->m_sLog;
 		}
 	}
-	
+
 	public static function FromJSON($oJson)
 	{
 		if (!isset($oJson->items))
@@ -88,8 +92,8 @@ class ormCaseLog {
 	}
 
 	/**
-	 * Return a value that will be further JSON encoded	
-	 */	
+	 * Return a value that will be further JSON encoded
+	 */
 	public function GetForJSON()
 	{
 		// Order by ascending date
@@ -199,9 +203,9 @@ class ormCaseLog {
 			$sSeparator = sprintf(CASELOG_SEPARATOR, $aData['date'], $aData['user_login'], $aData['user_id']);
 			$sPlainText .= $sSeparator.$aData['message'];
 		}
-		return $sPlainText;	
+		return $sPlainText;
 	}
-	
+
 	public function GetIndex()
 	{
 		return $this->m_aIndex;
@@ -227,7 +231,7 @@ class ormCaseLog {
     {
     	return count($this->m_aIndex);
     }
-	
+
 	public function ClearModifiedFlag()
 	{
 		$this->m_bModified = false;
@@ -235,7 +239,7 @@ class ormCaseLog {
 
 	/**
 	 * Produces an HTML representation, aimed at being used within an email
-	 */	 	
+	 */
 	public function GetAsEmailHtml()
 	{
 		$sStyleCaseLogHeader = '';
@@ -312,10 +316,10 @@ class ormCaseLog {
 		$sHtml .= '</td></tr></table>';
 		return $sHtml;
 	}
-	
+
 	/**
 	 * Produces an HTML representation, aimed at being used to produce a PDF with TCPDF (no table)
-	 */	 	
+	 */
 	public function GetAsSimpleHtml($aTransfoHandler = null)
 	{
 		$sStyleCaseLogEntry = '';
@@ -338,7 +342,7 @@ class ormCaseLog {
 					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry, true /* wiki "links" only */);
 				}
 				$sTextEntry = InlineImage::FixUrls($sTextEntry);
-			}			
+			}
 			$iPos += $aIndex[$index]['text_length'];
 
 			$sEntry = '<li>';
@@ -396,7 +400,7 @@ class ormCaseLog {
 
 	/**
 	 * Produces an HTML representation, aimed at being used within the iTop framework
-	 */	 	
+	 */
 	public function GetAsHTML(WebPage $oP = null, $bEditMode = false, $aTransfoHandler = null)
 	{
 		$bPrintableVersion = (utils::ReadParam('printable', '0') == '1');
@@ -519,7 +523,7 @@ class ormCaseLog {
 				}
 			}
 		}
-		
+
 		return  $sHtml;
 	}
 
@@ -534,14 +538,17 @@ class ormCaseLog {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
-	 * 
+	 *
 	 * @since 3.0.0 New $iOnBehalfOfId parameter
 	 * @since 3.0.0 May throw \ArchivedObjectException exception
 	 */
 	public function AddLogEntry(string $sText, $sOnBehalfOf = '', $iOnBehalfOfId = null)
 	{
-		$sText = HTMLSanitizer::Sanitize($sText);
+		//date/time ops moved here for test stability
+		$iNow = time();
 		$sDate = date(AttributeDateTime::GetInternalFormat());
+
+		$sText = HTMLSanitizer::Sanitize($sText);
 		if ($sOnBehalfOf == '' && $iOnBehalfOfId === null) {
 			$sOnBehalfOf = UserRights::GetUserFriendlyName();
 			$iUserId = UserRights::GetUserId();
@@ -580,16 +587,20 @@ class ormCaseLog {
 		$this->m_aIndex[] = array(
 			'user_name' => $sOnBehalfOf,
 			'user_id' => $iUserId,
-			'date' => time(),
+			'date' => $iNow,
 			'text_length' => $iTextlength,
 			'separator_length' => $iSepLength,
 			'format' => static::ENUM_FORMAT_HTML,
 		);
+		$this->RebuildIndex();
 		$this->m_bModified = true;
 	}
 
 	public function AddLogEntryFromJSON($oJson, $bCheckUserId = true)
 	{
+		//date/time ops moved here for test stability
+		$iNow = time();
+
 		if (isset($oJson->user_id))
 		{
 			if (!UserRights::IsAdministrator())
@@ -620,7 +631,7 @@ class ormCaseLog {
 			$iUserId = UserRights::GetUserId();
 			$sOnBehalfOf = UserRights::GetUserFriendlyName();
 		}
-		
+
 		if (isset($oJson->date))
 		{
 			$oDate = new DateTime($oJson->date);
@@ -628,7 +639,7 @@ class ormCaseLog {
 		}
 		else
 		{
-			$iDate = time();
+			$iDate = $iNow;
 		}
 		if (isset($oJson->format))
 		{
@@ -653,14 +664,14 @@ class ormCaseLog {
 		$iTextlength = strlen($sText);
 		$this->m_sLog = $sSeparator.$sText.$this->m_sLog; // Latest entry printed first
 		$this->m_aIndex[] = array(
-			'user_name' => $sOnBehalfOf,	
-			'user_id' => $iUserId,	
-			'date' => $iDate,	
-			'text_length' => $iTextlength,	
+			'user_name' => $sOnBehalfOf,
+			'user_id' => $iUserId,
+			'date' => $iNow,
+			'text_length' => $iTextlength,
 			'separator_length' => $iSepLength,
 			'format' => $sFormat,
 		);
-
+		$this->RebuildIndex();
 		$this->m_bModified = true;
 	}
 
@@ -716,7 +727,7 @@ class ormCaseLog {
 		$iLast = end($aKeys); // Strict standards: the parameter passed to 'end' must be a variable since it is passed by reference
 		return $iLast;
 	}
-	
+
 	/**
 	 * Get the text string corresponding to the given entry in the log (zero based index, older entries first)
 	 * @param integer $iIndex
@@ -735,5 +746,18 @@ class ormCaseLog {
 		$iPos += $this->m_aIndex[$index]['separator_length'];
 		$sText = substr($this->m_sLog, $iPos, $this->m_aIndex[$index]['text_length']);
 		return InlineImage::FixUrls($sText);
+	}
+
+	/**
+	 * @since 3.1.0 N°6275
+	 */
+	public function RebuildIndex(): void
+	{
+		$oNewOrmCaseLog = $this->oOrmCaseLogService->Rebuild($this->m_sLog, $this->m_aIndex);
+		if (! is_null($oNewOrmCaseLog)) {
+			$this->m_aIndex = $oNewOrmCaseLog->m_aIndex;
+			$this->m_sLog = $oNewOrmCaseLog->m_sLog;
+			$this->m_bModified = true;
+		}
 	}
 }

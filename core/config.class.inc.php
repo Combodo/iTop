@@ -1563,6 +1563,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'ormcaselog_extension_classes' => [
+			'type' => 'array',
+			'description' => 'Sorted list of enabled iOrmCaseLogExtension implementation classes',
+			'default' => [],
+			'value' => [],
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'regenerate_session_id_enabled' => [
 			'type' => 'bool',
 			'description' => 'If true then session id will be regenerated on each login, to prevent session fixation.',
