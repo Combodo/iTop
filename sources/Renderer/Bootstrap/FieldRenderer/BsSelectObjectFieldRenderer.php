@@ -322,7 +322,11 @@ EOF
 				// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
 				$oFieldValue = MetaModel::GetObjectWithArchive($sFieldValueClass, $this->oField->GetCurrentValue(), true, true);
 				$sFieldHtmlValue = $oFieldValue->GetName();
-				if(!$oFieldValue->IsArchived())
+				if($oFieldValue->IsArchived())
+				{
+					$sFieldHtmlValue = '<span class="text_decoration"><span class="fas fa-archive object-archived fa-1x fa-fw"></span></span>' . $sFieldHtmlValue;
+				}
+				else
 				{
 					$sFieldUrl = ApplicationContext::MakeObjectUrl($sFieldValueClass, $this->oField->GetCurrentValue());
 					if (!empty($sFieldUrl))
@@ -384,7 +388,7 @@ EOF
 <<<JS
 				$('#{$sHierarchicalButtonId}').off('click').on('click', function(){
 					// Creating a new modal
-					CombodoModal.OpenModal({
+					CombodoPortalToolbox.OpenModal({
 						attributes: {
 							'data-source-element': '{$sHierarchicalButtonId}',
 						},
@@ -444,7 +448,7 @@ JS
 						'selector': '.modal[data-source-element="{$sSearchButtonId}"]:first'
 					};
 				}
-				CombodoModal.OpenModal(oOptions);
+				CombodoPortalToolbox.OpenModal(oOptions);
 			});
 JS
 		);
