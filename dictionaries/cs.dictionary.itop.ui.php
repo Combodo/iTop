@@ -1413,7 +1413,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Interval pro automatické obnovování (v sekundách)',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'Minimální povolená hodnota je %1$d sekund',
 	'UI:FillAllMandatoryFields' => 'Vyplňte prosím všechna povinná pole.',
-	'UI:ValueMustBeSet' => 'Toto pole je poviné',
+	'UI:ValueMustBeSet' => 'Toto pole je povinné',
 	'UI:ValueMustBeChanged' => 'Hodnota musí být změněna',
 	'UI:ValueInvalidFormat' => 'Nesprávný formát',
 	'UI:CSVImportConfirmTitle' => 'Potvrďte prosím operaci',
