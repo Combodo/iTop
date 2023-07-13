@@ -21,5 +21,5 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'theme:darkmoon' => 'Dark moon~~',
+	'theme:darkmoon' => 'Dark moon',
 ));
