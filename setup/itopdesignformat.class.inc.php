@@ -1091,7 +1091,9 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/values/value/rank");
 
 		// N°3363 - Add favicon in branding
-		$this->RemoveNodeFromXPath('/itop_design/branding/favicon');
+		$this->RemoveNodeFromXPath('/itop_design/branding/main_favicon');
+		$this->RemoveNodeFromXPath('/itop_design/branding/portal_favicon');
+		$this->RemoveNodeFromXPath('/itop_design/branding/login_favicon');
 
 	}
 

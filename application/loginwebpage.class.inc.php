@@ -82,7 +82,23 @@ class LoginWebPage extends NiceWebPage
 	}
 
 	protected static $m_sLoginFailedMessage = '';
-	
+
+	/**
+	 * Return the absolute URL for the favicon
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		$sFavIcon = utils::GetConfig()->GetUrl('favicon');
+		if (!is_null($sFavIcon)) {
+			return $sFavIcon;
+		}
+
+		return Branding::GetLoginFavIconAbsoluteUrl();
+	}
+
 	public function __construct($sTitle = null)
 	{
 		if ($sTitle === null) {

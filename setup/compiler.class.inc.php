@@ -3657,7 +3657,9 @@ EOF;
 				['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL],
 				['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main-logo-compact', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT],
 				['sNodeName' => 'portal_logo', 'sTargetFile' => 'portal-logo', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_LOGO],
-				['sNodeName' => 'favicon', 'sTargetFile' => 'favicon', 'sType' => Branding::ENUM_LOGO_TYPE_FAVICON],
+				['sNodeName' => 'main_favicon', 'sTargetFile' => 'main_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_FAVICON],
+				['sNodeName' => 'portal_favicon', 'sTargetFile' => 'portal_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_FAVICON],
+				['sNodeName' => 'login_favicon', 'sTargetFile' => 'login_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_FAVICON],
 			];
 			foreach ($aLogosToCompile as $aLogo) {
 				$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $aLogo['sNodeName'], $aLogo['sTargetFile']);

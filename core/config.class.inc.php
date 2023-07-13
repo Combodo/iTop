@@ -1841,8 +1841,25 @@ class Config
 	 */
 	public function Get($sPropCode)
 	{
-		
+
 		return $this->m_aSettings[$sPropCode]['value'];
+	}
+
+	/**
+	 * @param string $sPropCode
+	 *
+	 * @return ?string
+	 * @since 3.1.1
+	 */
+	public function GetUrl($sPropCode)
+	{
+		$sValue = $this->m_aSettings[$sPropCode]['value'];
+		if (utils::IsNullOrEmptyString($sValue)) {
+			return null;
+		}
+		$sUrl = utils::StartsWith($sValue, "http") ? $sValue : utils::GetAbsoluteUrlAppRoot().$sValue;
+
+		return $sUrl;
 	}
 
 	/**

@@ -52,6 +52,8 @@ class Basic extends AbstractConfiguration
 			$aPortalConf = $this->ParseGlobalProperties($aPortalConf);
 			// - Rectifying portal logo url
 			$aPortalConf = $this->AppendLogoUri($aPortalConf);
+			// - Rectifying portal favicon url
+			$aPortalConf = $this->AppendFavIconUri($aPortalConf);
 		}
 		catch (Exception $oException)
 		{
@@ -69,22 +71,24 @@ class Basic extends AbstractConfiguration
 	 */
 	private function GetInitialPortalConf()
 	{
+
 		$aPortalConf = array(
 			'properties' => array(
-				'id' => $_ENV['PORTAL_ID'],
-				'name' => 'Page:DefaultTitle',
-				'logo' => Branding::GetPortalLogoAbsoluteUrl(),
-				'themes' => array(
+				'id'              => $_ENV['PORTAL_ID'],
+				'name'            => 'Page:DefaultTitle',
+				'logo'            => Branding::GetPortalLogoAbsoluteUrl(),
+				'favicon'         => Branding::GetPortalFavIconAbsoluteUrl(),
+				'themes'          => array(
 					'bootstrap' => 'itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss',
-					'portal' => 'itop-portal-base/portal/public/css/portal.scss',
-					'others' => array(),
+					'portal'    => 'itop-portal-base/portal/public/css/portal.scss',
+					'others'    => array(),
 				),
-				'templates' => array(
+				'templates'       => array(
 					'layout' => 'itop-portal-base/portal/templates/layout.html.twig',
-					'home' => 'itop-portal-base/portal/templates/home/layout.html.twig',
+					'home'   => 'itop-portal-base/portal/templates/home/layout.html.twig',
 				),
-				'urlmaker_class' => null,
-				'triggers_query' => null,
+				'urlmaker_class'  => null,
+				'triggers_query'  => null,
 				'attachments' => array(
 					'allow_delete' => true,
 				),
@@ -116,11 +120,8 @@ class Basic extends AbstractConfiguration
 				case 'name':
 				case 'urlmaker_class':
 				case 'triggers_query':
-					$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText(
-						$aPortalConf['properties'][$oPropertyNode->nodeName]
-					);
-					break;
 				case 'logo':
+				case 'favicon':
 					$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText(
 						$aPortalConf['properties'][$oPropertyNode->nodeName]
 					);
@@ -263,12 +264,32 @@ class Basic extends AbstractConfiguration
 	private function AppendLogoUri(array $aPortalConf)
 	{
 		$sLogoUri = $aPortalConf['properties']['logo'];
-		if (!preg_match('/^http/', $sLogoUri))
-		{
+		if (!preg_match('/^http/', $sLogoUri)) {
 			// We prefix it with the server base url
 			$sLogoUri = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/'.$sLogoUri;
 		}
 		$aPortalConf['properties']['logo'] = $sLogoUri;
+
+		return $aPortalConf;
+	}
+
+	/**
+	 * @param array $aPortalConf
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	private function AppendFaviconUri(array $aPortalConf)
+	{
+		$sFaviconUri = \MetaModel::GetConfig()->GetUrl('favicon');
+		if (is_null($sFaviconUri)) {
+			$sFaviconUri = $aPortalConf['properties']['favicon'];
+			if (!preg_match('/^http/', $sFaviconUri)) {
+				// We prefix it with the server base url
+				$sFaviconUri = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/'.$sFaviconUri;
+			}
+		}
+		$aPortalConf['properties']['favicon'] = $sFaviconUri;
 
 		return $aPortalConf;
 	}

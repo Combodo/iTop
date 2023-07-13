@@ -39,7 +39,11 @@ class Branding
 	/** @var string Logo used in the login pages */
 	public const ENUM_LOGO_TYPE_LOGIN_LOGO = 'login_logo';
 	/** @var string Logo used in the login pages */
-	public const ENUM_LOGO_TYPE_FAVICON = 'favicon ';
+	public const ENUM_LOGO_TYPE_MAIN_FAVICON = 'main_favicon ';
+	/** @var string Logo used in the login pages */
+	public const ENUM_LOGO_TYPE_PORTAL_FAVICON = 'portal_favicon ';
+	/** @var string Logo used in the login pages */
+	public const ENUM_LOGO_TYPE_LOGIN_FAVICON = 'login_favicon ';
 	/** @var string Default logo */
 	public const DEFAULT_LOGO_TYPE = self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL;
 
@@ -57,30 +61,34 @@ class Branding
 		self::ENUM_LOGO_TYPE_LOGIN_LOGO        => [
 			'default' => 'images/itop-logo-external.png',
 		],
-		self::ENUM_LOGO_TYPE_FAVICON           => [
+		self::ENUM_LOGO_TYPE_MAIN_FAVICON      => [
 			'default' => 'images/favicon.ico',
 		],
 	];
 
 	/**
 	 * Return url or path of logo defined by $sType
+	 *
 	 * @param string $sType
 	 * @param string $sAppPath
 	 * @param ?string $sModulePath
 	 *
 	 * @return string
 	 */
-	protected static function GetLogoPath(string $sType, string $sAppPath, ?string $sModulePath = null): string
+	protected static function GetLogoPath(string $sType, string $sAppPath, ?string $sModulePath = null): ?string
 	{
-		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
 		$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
 		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/logos.json'), true);
 		if (isset($aThemeParameters[$sType])) {
 			$sCustomLogoPath = $aThemeParameters[$sType];
 			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
-				return ($sModulePath??$sAppPath).$sCustomLogoPath;
+				return ($sModulePath ?? $sAppPath).$sCustomLogoPath;
 			}
 		}
+		if (!isset(static::$aLogoPaths[$sType])) {
+			return null;
+		}
+		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
 
 		return $sAppPath.$sDefaultLogoPath;
 	}
@@ -165,8 +173,45 @@ class Branding
 	 * @return string
 	 * @throws \Exception<
 	 */
-	public static function GetFavIconAbsoluteUrl()
+	public static function GetMainFavIconAbsoluteUrl()
 	{
-		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_FAVICON);
+		\IssueLog::Error(static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_FAVICON));
+
+		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_FAVICON);
+	}
+
+	/**
+	 * Return the absolute URL for thefavicon
+	 *
+	 * @return string
+	 * @throws \Exception<
+	 */
+	public static function GetPortalFavIconAbsoluteUrl()
+	{
+		$sIcon = static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_PORTAL_FAVICON);
+		if (utils::IsNullOrEmptyString($sIcon)) {
+			return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_FAVICON);
+		}
+
+		return $sIcon;
+	}
+
+	/**
+	 * Return the absolute URL for thefavicon
+	 *
+	 * @return string
+	 * @throws \Exception<
+	 */
+	public static function GetLoginFavIconAbsoluteUrl()
+	{
+		\IssueLog::Error(static::ENUM_LOGO_TYPE_LOGIN_FAVICON);
+		$sIcon = static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_LOGIN_FAVICON);
+		\IssueLog::Error('login icon:'.$sIcon);
+		if (utils::IsNullOrEmptyString($sIcon)) {
+			return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_FAVICON);
+		}
+		\IssueLog::Error('login:'.$sIcon);
+
+		return $sIcon;
 	}
 }
