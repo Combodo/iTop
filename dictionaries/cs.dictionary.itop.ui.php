@@ -29,7 +29,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Percentage of invalid objects below which the result is a warning (orange)~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
-	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
+	'Class:AuditCategory/Attribute:domains_list' => 'Domény',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
 ));
 
@@ -69,13 +69,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
-	'Class:AuditDomain/Attribute:name' => 'Name~~',
+	'Class:AuditDomain/Attribute:name' => 'Jméno',
 	'Class:AuditDomain/Attribute:name+' => 'Its a segmentation of the Audit by who is in charge of fixing it or just interested~~',
-	'Class:AuditDomain/Attribute:description' => 'Description~~',
+	'Class:AuditDomain/Attribute:description' => 'Popis',
 	'Class:AuditDomain/Attribute:description+' => '~~',
-	'Class:AuditDomain/Attribute:icon' => 'Icon~~',
+	'Class:AuditDomain/Attribute:icon' => 'Ikona',
 	'Class:AuditDomain/Attribute:icon+' => '~~',
-	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
+	'Class:AuditDomain/Attribute:categories_list' => 'Kategorie',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
 ));
 
@@ -162,7 +162,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:User/Attribute:language/Value:FR FR' => 'French',
 	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
 	'Class:User/Attribute:profile_list' => 'Profily/role',
-	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person~~',
+	'Class:User/Attribute:profile_list+' => 'Role přidělené tomuto uživateli',
 	'Class:User/Attribute:allowed_org_list' => 'Přístupné organizace',
 	'Class:User/Attribute:allowed_org_list+' => 'Uživatel má oprávnění přistupovat k údajům následujících organizací. Pokud není zvolena žádná organizace, neuplatňují se žádná omezení.',
 	'Class:User/Attribute:status' => 'Stav',
@@ -171,14 +171,14 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Neaktivní',
 	'Class:User/Error:LoginMustBeUnique' => 'Uživatelské jméno musí být jedinečné - "%1s" je již použito.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Uživateli musí být přidělen alespoň jeden profil.',
-	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
+	'Class:User/Error:ProfileNotAllowed' => 'Profil "%1$s" nemůže být přidán, byl by mu odepřen přístup do backoffice',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
-	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
+	'Class:User/Error:OrganizationNotAllowed' => 'Organizace není povolena',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
-	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
+	'Class:User/Error:PersonIsMandatory' => 'Kontakt je vyžadován',
 	'Class:UserInternal' => 'Interní uživatel',
 	'Class:UserInternal+' => 'Uživatel definovaný v '.ITOP_APPLICATION_SHORT,
 ));
