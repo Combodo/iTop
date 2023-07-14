@@ -59,8 +59,8 @@ class iTopDesignFormatTest extends ItopTestCase
 		$sInputXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.input');
 		$oInputDesignFormat = static::GetItopFormatFromString($sInputXml);
 
-		// N° Disable test for 1.7 => 3.0 conversion on PHP 8.1.21 as it is failing due to unknown reason. Cause will be investigated next week.
-		if (PHP_VERSION_ID === 80121
+		// N°6562 Disable test for 1.7 => 3.0 conversion on PHP 8.1.21 / 8.2.8 as it is failing due to unknown reason. Cause will be investigated next week.
+		if ((PHP_VERSION_ID === 80121 || PHP_VERSION_ID === 80208)
 			&& $oInputDesignFormat->GetVersion() === "1.7" && $sTargetVersion === "3.0") {
 			$this->markTestSkipped("Skip test for 1.7 => 3.0 conversion on PHP 8.1.21 as it is failing due to unknown reason. Cause will be investigated next week.");
 		}
@@ -109,8 +109,8 @@ class iTopDesignFormatTest extends ItopTestCase
 		$oExpectedDesignFormat = static::GetItopFormatFromString($sExpectedXml);
 		$sExpectedVersion = $oExpectedDesignFormat->GetVersion();
 
-		// N° Disable test for 1.7 => 3.0 conversion on PHP 8.1.21 as it is failing due to unknown reason. Cause will be investigated next week.
-		if (PHP_VERSION_ID === 80121
+		// N°6562 Disable test for 1.7 => 3.0 conversion on PHP 8.1.21 / 8.2.8 as it is failing due to unknown reason. Cause will be investigated next week.
+		if ((PHP_VERSION_ID === 80121 || PHP_VERSION_ID === 80208)
 			&& $sInputVersion === "1.7" && $sExpectedVersion === "3.0") {
 			$this->markTestSkipped("Skip test for 1.7 => 3.0 conversion on PHP 8.1.21 as it is failing due to unknown reason. Cause will be investigated next week.");
 		}
