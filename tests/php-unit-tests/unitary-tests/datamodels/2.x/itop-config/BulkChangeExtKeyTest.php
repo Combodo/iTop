@@ -180,7 +180,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		);
 
 		$this->performBulkChangeTest(
-			"invalid value for attribute",
+			"Invalid value for attribute",
 			"Ambiguous: found 2 objects",
 			null,
 			$bIsRackReconKey,
@@ -206,8 +206,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		$aCsvData = [["UnexistingRackDescription"]];
 		$aExtKeys = ["org_id" => ["name" => 0], "rack_id" => ["name" => 1, "description" => 3]];
 
-		$sSearchLinkUrl = 'UI.php?operation=search&filter=%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%28%60Rack%60.%60name%60+%3D+%3Aname%29+AND+%28%60Rack%60.%60description%60+%3D+%3Adescription%29%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%2C%22description%22%3A%22UnexistingRackDescription%22%7D%2C%5B%5D%5D'
-;
+		$sSearchLinkUrl = 'UI.php?operation=search&filter='.\rawurlencode('%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%28%60Rack%60.%60name%60+%3D+%3Aname%29+AND+%28%60Rack%60.%60description%60+%3D+%3Adescription%29%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%2C%22description%22%3A%22UnexistingRackDescription%22%7D%2C%5B%5D%5D');
 		$this->performBulkChangeTest(
 			"No match for value 'UnexistingRack UnexistingRackDescription'",
 			"Some possible 'Rack' value(s): RackTest1 RackTest1Desc, RackTest2 RackTest2Desc, RackTest3 RackTest3Desc...",
@@ -238,7 +237,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	public function performBulkChangeTest($sExpectedDisplayableValue, $sExpectedDescription, $oOrg, $bIsRackReconKey,
 		$aAdditionalCsvData=null, $aExtKeys=null, $sSearchLinkUrl=null, $sError="Object not found") {
 		if ($sSearchLinkUrl===null){
-			$sSearchLinkUrl = 'UI.php?operation=search&filter=%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%60Rack%60.%60name%60+%3D+%3Aname%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%7D%2C%5B%5D%5D';
+			$sSearchLinkUrl = 'UI.php?operation=search&filter='.rawurlencode('%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%60Rack%60.%60name%60+%3D+%3Aname%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%7D%2C%5B%5D%5D');
 		}
 		if (is_null($oOrg)){
 			$iOrgId = $this->getTestOrgId();
@@ -285,60 +284,65 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 
 
 		CMDBSource::Query('START TRANSACTION');
-		//change value during the test
-		$db_core_transactions_enabled=MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-		MetaModel::GetConfig()->Set('db_core_transactions_enabled',false);
+		try {
 
-		$this->debug("aCsvData:".json_encode($aCsvData[0]));
-		$this->debug("aReconcilKeys:". var_export($aReconcilKeys));
-		$oBulk = new \BulkChange(
-			"Server",
-			$aCsvData,
-			$aAttributes,
-			$aExtKeys,
-			$aReconcilKeys,
-			null,
-			null,
-			"Y-m-d H:i:s", // date format
-			true // localize
-		);
-		$this->debug("BulkChange:");
-		$oChange = \CMDBObject::GetCurrentChange();
-		$this->debug("GetCurrentChange:");
-		$aRes = $oBulk->Process($oChange);
-		$this->debug("Process:");
-		static::assertNotNull($aRes);
-		$this->debug("assertNotNull:");
-		var_dump($aRes);
-		foreach ($aRes as $aRow) {
-			if (array_key_exists('__STATUS__', $aRow)) {
-				$sStatus = $aRow['__STATUS__'];
-				$this->debug("sStatus:".$sStatus->GetDescription());
-				$this->assertEquals($aResult["__STATUS__"], $sStatus->GetDescription());
-				foreach ($aRow as $i => $oCell) {
-					if ($i != "finalclass" && $i != "__STATUS__" && $i != "__ERRORS__") {
-						$this->debug("i:".$i);
-						$this->debug('GetDisplayableValue:'.$oCell->GetDisplayableValue());
-						if (array_key_exists($i,$aResult)) {
-							$this->debug("aResult:".var_export($aResult[$i]));
-							if ($oCell instanceof \CellStatus_SearchIssue ||
-								$oCell instanceof \CellStatus_Ambiguous) {
-								$this->assertEquals($aResult[$i][0], $oCell->GetDisplayableValue(),
-									"failure on ".get_class($oCell).' cell type');
-								$this->assertEquals($sSearchLinkUrl, $oCell->GetSearchLinkUrl(),
-									"failure on ".get_class($oCell).' cell type');
-								$this->assertEquals($aResult[$i][1], $oCell->GetDescription(),
-									"failure on ".get_class($oCell).' cell type');
+			//change value during the test
+			$db_core_transactions_enabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
+			MetaModel::GetConfig()->Set('db_core_transactions_enabled', false);
+
+			$this->debug("aCsvData:" . json_encode($aCsvData[0]));
+			$this->debug("aReconcilKeys:" . var_export($aReconcilKeys));
+			$oBulk = new \BulkChange(
+				"Server",
+				$aCsvData,
+				$aAttributes,
+				$aExtKeys,
+				$aReconcilKeys,
+				null,
+				null,
+				"Y-m-d H:i:s", // date format
+				true // localize
+			);
+			$this->debug("BulkChange:");
+			$oChange = \CMDBObject::GetCurrentChange();
+			$this->debug("GetCurrentChange:");
+			$aRes = $oBulk->Process($oChange);
+			$this->debug("Process:");
+			static::assertNotNull($aRes);
+			$this->debug("assertNotNull:");
+			var_dump($aRes);
+			foreach ($aRes as $aRow) {
+				if (array_key_exists('__STATUS__', $aRow)) {
+					$sStatus = $aRow['__STATUS__'];
+					$this->debug("sStatus:" . $sStatus->GetDescription());
+					$this->assertEquals($aResult["__STATUS__"], $sStatus->GetDescription());
+					foreach ($aRow as $i => $oCell) {
+						if ($i != "finalclass" && $i != "__STATUS__" && $i != "__ERRORS__") {
+							$this->debug("i:" . $i);
+							$this->debug('GetDisplayableValue:' . $oCell->GetDisplayableValue());
+							if (array_key_exists($i, $aResult)) {
+								$this->debug("aResult:" . var_export($aResult[$i]));
+								if ($oCell instanceof \CellStatus_SearchIssue ||
+									$oCell instanceof \CellStatus_Ambiguous) {
+									$this->assertEquals($aResult[$i][0], $oCell->GetDisplayableValue(),
+										"failure on " . get_class($oCell) . ' cell type');
+									$this->assertEquals($sSearchLinkUrl, $oCell->GetSearchLinkUrl(),
+										"failure on " . get_class($oCell) . ' cell type');
+									$this->assertEquals($aResult[$i][1], $oCell->GetDescription(),
+										"failure on " . get_class($oCell) . ' cell type');
+								}
 							}
+						} else if ($i === "__ERRORS__") {
+							$sErrors = array_key_exists("__ERRORS__", $aResult) ? $aResult["__ERRORS__"] : "";
+							$this->assertEquals($sErrors, $oCell->GetDescription());
 						}
-					} else if ($i === "__ERRORS__") {
-						$sErrors = array_key_exists("__ERRORS__", $aResult) ? $aResult["__ERRORS__"] : "";
-						$this->assertEquals( $sErrors, $oCell->GetDescription());
 					}
+					$this->assertEquals($aResult[0], $aRow[0]->GetDisplayableValue());
 				}
-				$this->assertEquals( $aResult[0], $aRow[0]->GetDisplayableValue());
 			}
+			MetaModel::GetConfig()->Set('db_core_transactions_enabled', $db_core_transactions_enabled);
+		} finally {
+			CMDBSource::Query('ROLLBACK');
 		}
-		MetaModel::GetConfig()->Set('db_core_transactions_enabled',$db_core_transactions_enabled);
 	}
 }
