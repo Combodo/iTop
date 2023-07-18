@@ -419,6 +419,7 @@ class MyHelpers
 		//}
 		return $sOutput;
 	}
+
 }
 
 /**
@@ -523,5 +524,3 @@ class Str
 		return (strtolower($sString) == $sString);
 	}
 }
-
-?>

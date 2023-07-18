@@ -84,4 +84,31 @@ class DBBackupTest extends ItopTestCase
 		$this->assertStringStartsWith(' --ssl', $sCliArgsCapathCfg);
 		$this->assertStringEndsWith('--ssl-ca='.DBBackup::EscapeShellArg($sTestCa), $sCliArgsCapathCfg);
 	}
+
+	/**
+	 *  Host is localhost, we should be forced into tcp
+	 *
+	 * @return void
+	 */
+	public function testGetMysqlCliTransportOptionWithLocalhost()
+	{
+		$sHost= 'localhost';
+		$sTransport = DBBackup::GetMysqlCliTransportOption($sHost);
+
+		$this->assertStringStartsWith('--protocol=tcp', $sTransport);
+		$this->assertStringEndsWith('--protocol=tcp', $sTransport);
+	}
+
+	/**
+	 * Host is not localhost, we shouldn't be forced into tcp
+	 *
+	 * @return void
+	 */
+	public function testGetMysqlCliTransportOptionWithoutLocalhost()
+	{
+		$sHost= '127.0.0.1';
+		$sTransport = DBBackup::GetMysqlCliTransportOption($sHost);
+
+		$this->assertEmpty($sTransport);
+	}
 }

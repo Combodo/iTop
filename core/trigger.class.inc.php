@@ -117,7 +117,9 @@ abstract class Trigger extends cmdbAbstractObject
 			$oAction = MetaModel::GetObject('Action', $iActionId);
 			if ($oAction->IsActive())
 			{
+                $oKPI = new ExecutionKPI();
 				$oAction->DoExecute($this, $aContextArgs);
+                $oKPI->ComputeStatsForExtension($oAction, 'DoExecute');
 			}
 		}
 	}
