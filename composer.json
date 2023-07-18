@@ -62,6 +62,7 @@
       "sources/application",
       "sources/Composer",
       "sources/Controller",
+      "sources/Service",
       "sources/Core"
     ],
     "exclude-from-classmap": [

@@ -963,6 +963,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'log_kpi_report_to_extensions_only' => array(
+			'type' => 'bool',
+			'description' => 'Report only the KPI logging extensions',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'max_linkset_output' => array(
 			'type' => 'integer',
 			'description' => 'Maximum number of items shown when getting a list of related items in an email, using the form $this->some_list$. 0 means no limit.',
