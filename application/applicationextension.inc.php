@@ -2204,9 +2204,9 @@ interface iKPILoggerExtension
     /**
      * Add a new KPI to the stats
      * 
-     * @param \Combodo\iTop\Core\Kpi\KpiLogData $oKPILogData
+     * @param \Combodo\iTop\Core\Kpi\KpiLogData $oKpiLogData
      *
      * @return mixed
      */
-    public function LogOperation($oKPILogData);
+    public function LogOperation($oKpiLogData);
 }
