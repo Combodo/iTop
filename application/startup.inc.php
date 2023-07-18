@@ -91,4 +91,10 @@ else
 	$_SESSION['itop_env'] = ITOP_DEFAULT_ENV;
 }
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
-MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
+try {
+    MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
+}
+catch (MySQLException $e) {
+    IssueLog::Debug($e->getMessage());
+    throw new MySQLException('Could not connect to the DB server', []);
+}
