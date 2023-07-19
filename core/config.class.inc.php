@@ -963,7 +963,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'log_generate_legacy_kpi_report' => array(
+		'log_kpi_generate_legacy_report' => array(
 			'type' => 'bool',
 			'description' => 'Generate the legacy KPI report (kpi.html)',
 			'default' => true,
