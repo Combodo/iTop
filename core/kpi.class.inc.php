@@ -1,29 +1,14 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 use Combodo\iTop\Core\Kpi\KpiLogData;
 use Combodo\iTop\Service\Module\ModuleService;
 
 
 /**
  * Measures operations duration, memory usage, etc. (and some other KPIs)
- *
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class ExecutionKPI
@@ -355,6 +340,10 @@ class ExecutionKPI
 	{
 		global $fItopStarted;
 
+        if (!self::IsEnabled()) {
+            return;
+        }
+
 		$aNewEntry = null;
 
         $fStarted = $this->m_fStarted;
@@ -417,6 +406,10 @@ class ExecutionKPI
 
     public function ComputeStatsForExtension($object, $sMethod)
     {
+        if (!self::IsEnabled()) {
+            return;
+        }
+
         $sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($object, $sMethod);
         if (utils::StartsWith($sSignature, '[')) {
             $this->ComputeStats('Extension', $sSignature);
@@ -425,6 +418,10 @@ class ExecutionKPI
 
 	public function ComputeStats($sOperation, $sArguments)
 	{
+		if (!self::IsEnabled()) {
+			return;
+		}
+
 		$fDuration = 0;
 		if (self::$m_bEnabled_Duration) {
 			$fStopped = MyHelpers::getmicrotime();
