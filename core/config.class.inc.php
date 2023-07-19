@@ -963,10 +963,10 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'log_kpi_report_to_extensions_only' => array(
+		'log_generate_legacy_kpi_report' => array(
 			'type' => 'bool',
-			'description' => 'Report only the KPI logging extensions',
-			'default' => false,
+			'description' => 'Generate the legacy KPI report (kpi.html)',
+			'default' => true,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
