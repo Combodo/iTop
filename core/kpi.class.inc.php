@@ -15,6 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Core\Kpi\KpiLogData;
+use Combodo\iTop\Service\Module\ModuleService;
 
 
 /**
@@ -30,6 +32,8 @@ class ExecutionKPI
 	static protected $m_bEnabled_Memory = false;
 	static protected $m_bBlameCaller = false;
 	static protected $m_sAllowedUser = '*';
+    static protected $m_bReportExtensionsOnly = false;
+    static protected $m_fSlowQueries = 0;
 
 	static protected $m_aStats = []; // Recurrent operations
 	static protected $m_aExecData = []; // One shot operations
@@ -86,14 +90,39 @@ class ExecutionKPI
 		return false;
 	}
 
+    static public function SetReportExtensionsOnly($bReportExtensionsOnly)
+    {
+        self::$m_bReportExtensionsOnly = $bReportExtensionsOnly;
+    }
+
+    static public function SetSlowQueries($fSlowQueries)
+    {
+        self::$m_fSlowQueries = $fSlowQueries;
+    }
+
 	static public function GetDescription()
 	{
 		$aFeatures = array();
 		if (self::$m_bEnabled_Duration) $aFeatures[] = 'Duration'; 
 		if (self::$m_bEnabled_Memory)   $aFeatures[] = 'Memory usage';
-		$sFeatures = implode(', ', $aFeatures);
+		$sFeatures = 'Measures: '.implode(', ', $aFeatures);
 		$sFor = self::$m_sAllowedUser == '*' ? 'EVERYBODY' : "'".trim(self::$m_sAllowedUser)."'";
-		return "KPI logging is active for $sFor. Measures: $sFeatures";
+        $sSlowQueries = '';
+        if (self::$m_fSlowQueries > 0) {
+            $sSlowQueries = ". Slow Queries: ".self::$m_fSlowQueries."s";
+        }
+
+        $aExtensions = [];
+        /** @var \iKPILoggerExtension $oExtensionInstance */
+        foreach (MetaModel::EnumPlugins('iKPILoggerExtension') as $oExtensionInstance) {
+            $aExtensions[] = ModuleService::GetInstance()->GetModuleNameFromObject($oExtensionInstance);
+        }
+        $sExtensions = '';
+        if (count($aExtensions) > 0) {
+            $sExtensions = '. KPI Extensions: ['.implode(', ', $aExtensions).']';
+        }
+
+        return "KPI logging is active for $sFor. $sFeatures$sSlowQueries$sExtensions";
 	}
 
 	static public function ReportStats()
@@ -101,7 +130,28 @@ class ExecutionKPI
 		if (!self::IsEnabled()) return;
 
 		global $fItopStarted;
+        global $iItopInitialMemory;
 		$sExecId = microtime(); // id to differentiate the hrefs!
+        $sRequest = $_SERVER['REQUEST_URI'].' ('.$_SERVER['REQUEST_METHOD'].')';
+        if (isset($_POST['operation'])) {
+            $sRequest .= ' operation: '.$_POST['operation'];
+        }
+
+        $fStop = MyHelpers::getmicrotime();
+        if (($fStop - $fItopStarted) > self::$m_fSlowQueries) {
+            // Invoke extensions to log the KPI operation
+            /** @var \iKPILoggerExtension $oExtensionInstance */
+            $iCurrentMemory = self::memory_get_usage();
+            $iPeakMemory = self::memory_get_peak_usage();
+            foreach (MetaModel::EnumPlugins('iKPILoggerExtension') as $oExtensionInstance) {
+                $oKPILogData = new KpiLogData(KpiLogData::TYPE_REQUEST, 'Page', $sRequest, $fItopStarted, $fStop, '', $iItopInitialMemory, $iCurrentMemory, $iPeakMemory);
+                $oExtensionInstance->LogOperation($oKPILogData);
+            }
+        }
+
+        if (self::$m_bReportExtensionsOnly) {
+            return;
+        }
 
 		$aBeginTimes = array();
 		foreach (self::$m_aExecData as $aOpStats)
@@ -114,9 +164,9 @@ class ExecutionKPI
 
 		$sHtml = "<hr/>";
 		$sHtml .= "<div style=\"background-color: grey; padding: 10px;\">";
-		$sHtml .= "<h3><a name=\"".md5($sExecId)."\">KPIs</a> - ".$_SERVER['REQUEST_URI']." (".$_SERVER['REQUEST_METHOD'].")</h3>";
+        $sHtml .= "<h3><a name=\"".md5($sExecId)."\">KPIs</a> - $sRequest</h3>";
 		$oStarted = DateTime::createFromFormat('U.u', $fItopStarted);
-		$sHtml .= "<p>".$oStarted->format('Y-m-d H:i:s.u')."</p>";
+		$sHtml .= '<p>'.$oStarted->format('Y-m-d H:i:s.u').'</p>';
 		$sHtml .= "<p>log_kpi_user_id: ".UserRights::GetUserId()."</p>";
 		$sHtml .= "<div>";
 		$sHtml .= "<table border=\"1\" style=\"$sTableStyle\">";
@@ -257,7 +307,7 @@ class ExecutionKPI
 				$sTotalInter = round($fTotalInter, 3);
 				$sMinInter = round($fMinInter, 3);
 				$sMaxInter = round($fMaxInter, 3);
-				if (($fTotalInter >= $fSlowQueries))
+				if (($fTotalInter >= self::$m_fSlowQueries))
 				{
 					if ($bDisplayHeader)
 					{
@@ -285,37 +335,19 @@ class ExecutionKPI
 		self::Report($sHtml);
 	}
 
+    public static function InitStats()
+    {
+        // Invoke extensions to initialize the KPI statistics
+        /** @var \iKPILoggerExtension $oExtensionInstance */
+        foreach (MetaModel::EnumPlugins('iKPILoggerExtension') as $oExtensionInstance) {
+            $oExtensionInstance->InitStats();
+        }
+    }
 
 	public function __construct()
 	{
 		$this->ResetCounters();
-		self::Push($this);
-	}
-
-	/**
-	 * Stack executions to remove children duration from stats
-	 *
-	 * @param \ExecutionKPI $oExecutionKPI
-	 */
-	private static function Push(ExecutionKPI $oExecutionKPI)
-	{
-		self::$m_aExecutionStack[] = $oExecutionKPI;
-	}
-
-	/**
-	 * Pop current child and count its duration in its parent
-	 *
-	 * @param float|int $fChildDuration
-	 */
-	private static function Pop(float $fChildDuration = 0)
-	{
-		array_pop(self::$m_aExecutionStack);
-		// Update the parent's children duration
-		$oPrevExecutionKPI = end(self::$m_aExecutionStack);
-		if ($oPrevExecutionKPI) {
-			$oPrevExecutionKPI->m_fChildrenDuration += $fChildDuration;
-		}
-	}
+    }
 
 	// Get the duration since startup, and reset the counter for the next measure
 	//
@@ -325,7 +357,9 @@ class ExecutionKPI
 
 		$aNewEntry = null;
 
-		if (self::$m_bEnabled_Duration) {
+        $fStarted = $this->m_fStarted;
+        $fStopped = $this->m_fStarted;
+		if (self::$m_bEnabled_Duration)	{
 			$fStopped = MyHelpers::getmicrotime();
 			$aNewEntry = array(
 				'op'         => $sOperationDesc,
@@ -336,6 +370,9 @@ class ExecutionKPI
 			$this->m_fStarted = $fStopped;
 		}
 
+        $iInitialMemory = is_null($this->m_iInitialMemory) ? 0 : $this->m_iInitialMemory;
+        $iCurrentMemory = 0;
+        $iPeakMemory = 0;
 		if (self::$m_bEnabled_Memory)
 		{
 			$iCurrentMemory = self::memory_get_usage();
@@ -345,20 +382,46 @@ class ExecutionKPI
 			}
 			$aNewEntry['mem_begin'] = $this->m_iInitialMemory;
 			$aNewEntry['mem_end'] = $iCurrentMemory;
-			if (function_exists('memory_get_peak_usage'))
-			{
-				$aNewEntry['mem_peak'] = memory_get_peak_usage();
-			}
+            $iPeakMemory = self::memory_get_peak_usage();
+            $aNewEntry['mem_peak'] = $iPeakMemory;
 			// Reset for the next operation (if the object is recycled)
 			$this->m_iInitialMemory = $iCurrentMemory;
 		}
 
-		if (!is_null($aNewEntry))
+        if (self::$m_bEnabled_Duration || self::$m_bEnabled_Memory) {
+            // Invoke extensions to log the KPI operation
+            /** @var \iKPILoggerExtension $oExtensionInstance */
+            foreach(MetaModel::EnumPlugins('iKPILoggerExtension') as $oExtensionInstance)
+            {
+                $sExtension = ModuleService::GetInstance()->GetModuleNameFromCallStack(1);
+                $oKPILogData = new KpiLogData(
+                        KpiLogData::TYPE_REPORT,
+                        'Step',
+                        $sOperationDesc,
+                        $fStarted,
+                        $fStopped,
+                        $sExtension,
+                        $iInitialMemory,
+                        $iCurrentMemory,
+                        $iPeakMemory);
+                $oExtensionInstance->LogOperation($oKPILogData);
+            }
+        }
+
+		if (!is_null($aNewEntry) && !self::$m_bReportExtensionsOnly)
 		{
 			self::$m_aExecData[] = $aNewEntry;
 		}
 		$this->ResetCounters();
 	}
+
+    public function ComputeStatsForExtension($object, $sMethod)
+    {
+        $sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($object, $sMethod);
+        if (utils::StartsWith($sSignature, '[')) {
+            $this->ComputeStats('Extension', $sSignature);
+        }
+    }
 
 	public function ComputeStats($sOperation, $sArguments)
 	{
@@ -366,19 +429,48 @@ class ExecutionKPI
 		if (self::$m_bEnabled_Duration) {
 			$fStopped = MyHelpers::getmicrotime();
 			$fDuration = $fStopped - $this->m_fStarted;
-			$fSelfDuration = $fDuration - $this->m_fChildrenDuration;
-			if (self::$m_bBlameCaller) {
-				self::$m_aStats[$sOperation][$sArguments][] = array(
-					'time'    => $fSelfDuration,
-					'callers' => MyHelpers::get_callstack(1),
-				);
-			} else {
-				self::$m_aStats[$sOperation][$sArguments][] = array(
-					'time' => $fSelfDuration,
-				);
-			}
-		}
-		self::Pop($fDuration);
+            $aCallstack = [];
+            if (!self::$m_bReportExtensionsOnly) {
+                if (self::$m_bBlameCaller) {
+                    $aCallstack = MyHelpers::get_callstack(1);
+                    self::$m_aStats[$sOperation][$sArguments][] = [
+                            'time' => $fDuration,
+                            'callers' => $aCallstack,
+                    ];
+                } else {
+                    self::$m_aStats[$sOperation][$sArguments][] = [
+                            'time' => $fDuration
+                    ];
+                }
+            }
+
+            $iInitialMemory = is_null($this->m_iInitialMemory) ? 0 : $this->m_iInitialMemory;
+            $iCurrentMemory = 0;
+            $iPeakMemory = 0;
+            if (self::$m_bEnabled_Memory)
+            {
+                $iCurrentMemory = self::memory_get_usage();
+                $iPeakMemory = self::memory_get_peak_usage();
+            }
+
+            // Invoke extensions to log the KPI operation
+            /** @var \iKPILoggerExtension $oExtensionInstance */
+            foreach (MetaModel::EnumPlugins('iKPILoggerExtension') as $oExtensionInstance) {
+                $sExtension = ModuleService::GetInstance()->GetModuleNameFromCallStack(1);
+                $oKPILogData = new KpiLogData(
+                        KpiLogData::TYPE_STATS,
+                        $sOperation,
+                        $sArguments,
+                        $this->m_fStarted,
+                        $fStopped,
+                        $sExtension,
+                        $iInitialMemory,
+                        $iCurrentMemory,
+                        $iPeakMemory,
+                        $aCallstack);
+                $oExtensionInstance->LogOperation($oKPILogData);
+            }
+        }
 	}
 
 	protected function ResetCounters()
@@ -408,35 +500,7 @@ class ExecutionKPI
 
 	static protected function memory_get_usage()
 	{
-		if (function_exists('memory_get_usage'))
-		{
-			return memory_get_usage(true);
-		}
-
-		// Copied from the PHP manual
-		//
-		//If its Windows
-		//Tested on Win XP Pro SP2. Should work on Win 2003 Server too
-		//Doesn't work for 2000
-		//If you need it to work for 2000 look at http://us2.php.net/manual/en/function.memory-get-usage.php#54642
-		if (substr(PHP_OS,0,3) == 'WIN') 
-		{
-			$output = array();
-			exec('tasklist /FI "PID eq ' . getmypid() . '" /FO LIST', $output);
-
-			return preg_replace( '/[\D]/', '', $output[5] ) * 1024;
-		}
-		else
-		{
-			//We now assume the OS is UNIX
-			//Tested on Mac OS X 10.4.6 and Linux Red Hat Enterprise 4
-			//This should work on most UNIX systems
-			$pid = getmypid();
-			exec("ps -eo%mem,rss,pid | grep $pid", $output);
-			$output = explode("  ", $output[0]);
-			//rss is given in 1024 byte units
-			return $output[1] * 1024;
-		}
+        return memory_get_usage(true);
 	}
 
 	static public function memory_get_peak_usage($bRealUsage = false)

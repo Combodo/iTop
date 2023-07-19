@@ -2162,7 +2162,9 @@ class SynchroReplica extends DBObject implements iDisplay
 	//                          it will be deleted by the mean of a trigger too
 	protected function DBDeleteSingleObject()
 	{
+		$oKPI = new ExecutionKPI();
 		$this->OnDelete();
+		$oKPI->ComputeStatsForExtension($this, 'OnDelete');
 
 		if (!MetaModel::DBIsReadOnly())
 		{

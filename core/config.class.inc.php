@@ -656,22 +656,22 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.allow_self_signed' => array(
+		'email_transport_smtp.allow_self_signed' => [
 			'type'                => 'bool',
 			'description'         => 'Allow self signed peer certificates',
 			'default'             => false,
 			'value'               => false,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
-		),
-		'email_transport_smtp.verify_peer' => array(
+		],
+		'email_transport_smtp.verify_peer' => [
 			'type'                => 'bool',
 			'description'         => 'Verify peer certificate',
 			'default'             => true,
 			'value'               => true,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
-		),
+		],
 		'email_css' => [
 			'type' => 'string',
 			'description' => 'CSS that will override the standard stylesheet used for the notifications',
@@ -1066,6 +1066,14 @@ class Config
 			// examples... not used
 			'default' => '*',
 			'value' => '*',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'log_kpi_report_to_extensions_only' => [
+			'type' => 'bool',
+			'description' => 'Report only the KPI logging extensions',
+			'default' => false,
+			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],

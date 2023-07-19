@@ -6376,7 +6376,9 @@ abstract class MetaModel
 
 		ExecutionKPI::EnableDuration(self::$m_oConfig->Get('log_kpi_duration'));
 		ExecutionKPI::EnableMemory(self::$m_oConfig->Get('log_kpi_memory'));
-		ExecutionKPI::SetAllowedUser(self::$m_oConfig->Get('log_kpi_user_id'));
+        ExecutionKPI::SetAllowedUser(self::$m_oConfig->Get('log_kpi_user_id'));
+        ExecutionKPI::SetReportExtensionsOnly(self::$m_oConfig->Get('log_kpi_report_to_extensions_only'));
+        ExecutionKPI::SetSlowQueries(self::$m_oConfig->Get('log_kpi_slow_queries'));
 
 		self::$m_bSkipCheckToWrite = self::$m_oConfig->Get('skip_check_to_write');
 		self::$m_bSkipCheckExtKeys = self::$m_oConfig->Get('skip_check_ext_keys');
@@ -6495,6 +6497,7 @@ abstract class MetaModel
 
 		CMDBSource::InitFromConfig(self::$m_oConfig);
 		// Later when timezone implementation is correctly done: CMDBSource::SetTimezone($sDBTimezone);
+        ExecutionKPI::InitStats();
 	}
 
 	/**

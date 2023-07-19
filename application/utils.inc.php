@@ -20,6 +20,7 @@
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Service\Module\ModuleService;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
 use ScssPhp\ScssPhp\ValueConverter;
@@ -2265,24 +2266,7 @@ SQL;
 	 */
 	public static function GetCurrentModuleName($iCallDepth = 0)
 	{
-		$sCurrentModuleName = '';
-		$aCallStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-		$sCallerFile = realpath($aCallStack[$iCallDepth]['file']);
-		
-		foreach(GetModulesInfo() as $sModuleName => $aInfo)
-		{
-			if ($aInfo['root_dir'] !== '')
-			{
-				$sRootDir = realpath(APPROOT.$aInfo['root_dir']);
-				
-				if(substr($sCallerFile, 0, strlen($sRootDir)) === $sRootDir)
-				{
-					$sCurrentModuleName = $sModuleName;
-					break;
-				}
-			}
-		}
-		return $sCurrentModuleName;
+        return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth = 0);
 	}
 	
 	/**
@@ -2304,24 +2288,7 @@ SQL;
 	 */
 	public static function GetCurrentModuleDir($iCallDepth)
 	{
-		$sCurrentModuleDir = '';
-		$aCallStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-		$sCallerFile = realpath($aCallStack[$iCallDepth]['file']);
-	
-		foreach(GetModulesInfo() as $sModuleName => $aInfo)
-		{
-			if ($aInfo['root_dir'] !== '')
-			{
-				$sRootDir = realpath(APPROOT.$aInfo['root_dir']);
-	
-				if(substr($sCallerFile, 0, strlen($sRootDir)) === $sRootDir)
-				{
-					$sCurrentModuleDir = basename($sRootDir);
-					break;
-				}
-			}
-		}
-		return $sCurrentModuleDir;
+		return ModuleService::GetInstance()->GetCurrentModuleDir($iCallDepth);
 	}
 
 	/**
@@ -2336,12 +2303,7 @@ SQL;
 	 */
 	public static function GetCurrentModuleUrl()
 	{
-		$sDir = static::GetCurrentModuleDir(1);
-		if ( $sDir !== '')
-		{
-			return static::GetAbsoluteUrlModulesRoot().'/'.$sDir;
-		}
-		return '';
+		return ModuleService::GetInstance()->GetCurrentModuleUrl();
 	}
 	
 	/**
@@ -2351,8 +2313,7 @@ SQL;
 	 */
 	public static function GetCurrentModuleSetting($sProperty, $defaultvalue = null)
 	{
-		$sModuleName = static::GetCurrentModuleName(1);
-		return MetaModel::GetModuleSetting($sModuleName, $sProperty, $defaultvalue);
+        return ModuleService::GetInstance()->GetCurrentModuleSetting($sProperty, $defaultvalue);
 	}
 	
 	/**
@@ -2361,12 +2322,7 @@ SQL;
 	 */
 	public static function GetCompiledModuleVersion($sModuleName)
 	{
-		$aModulesInfo = GetModulesInfo();
-		if (array_key_exists($sModuleName, $aModulesInfo))
-		{
-			return $aModulesInfo[$sModuleName]['version'];
-		}
-		return null;
+        return ModuleService::GetInstance()->GetCompiledModuleVersion($sModuleName);
 	}
 	
 	/**
@@ -2925,7 +2881,7 @@ HTML;
 						$bSkipped = true; // file not found
 					}
 				}
-				
+
 				if(!$bSkipped){
 					try {
 						$oRefClass = new ReflectionClass($sPHPClass);

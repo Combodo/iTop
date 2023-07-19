@@ -188,8 +188,8 @@ final class ItopCounter
 
 		if (!$hDBLink)
 		{
-			throw new Exception("Could not connect to the DB server (host=$sDBHost, user=$sDBUser): ".mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno().')');
-		}
+            throw new MySQLException('Could not connect to the DB server '.mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno(), array('host' => $sDBHost, 'user' => $sDBUser));
+        }
 
 		return $hDBLink;
 	}
