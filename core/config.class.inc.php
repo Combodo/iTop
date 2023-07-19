@@ -989,10 +989,10 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_kpi_report_to_extensions_only' => [
+		'log_kpi_generate_legacy_report' => [
 			'type' => 'bool',
-			'description' => 'Report only the KPI logging extensions',
-			'default' => false,
+			'description' => 'Generate the legacy KPI report (kpi.html)',
+			'default' => true,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
