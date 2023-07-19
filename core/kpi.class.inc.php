@@ -17,7 +17,7 @@ class ExecutionKPI
 	static protected $m_bEnabled_Memory = false;
 	static protected $m_bBlameCaller = false;
 	static protected $m_sAllowedUser = '*';
-    static protected $m_bReportExtensionsOnly = false;
+    static protected $m_bGenerateLegacyReport = true;
     static protected $m_fSlowQueries = 0;
 
 	static protected $m_aStats = []; // Recurrent operations
@@ -75,9 +75,9 @@ class ExecutionKPI
 		return false;
 	}
 
-    static public function SetReportExtensionsOnly($bReportExtensionsOnly)
+    static public function SetGenerateLegacyReport($bReportExtensionsOnly)
     {
-        self::$m_bReportExtensionsOnly = $bReportExtensionsOnly;
+        self::$m_bGenerateLegacyReport = $bReportExtensionsOnly;
     }
 
     static public function SetSlowQueries($fSlowQueries)
@@ -134,7 +134,7 @@ class ExecutionKPI
             }
         }
 
-        if (self::$m_bReportExtensionsOnly) {
+        if (!self::$m_bGenerateLegacyReport) {
             return;
         }
 
@@ -397,7 +397,7 @@ class ExecutionKPI
             }
         }
 
-		if (!is_null($aNewEntry) && !self::$m_bReportExtensionsOnly)
+		if (!is_null($aNewEntry) && self::$m_bGenerateLegacyReport)
 		{
 			self::$m_aExecData[] = $aNewEntry;
 		}
@@ -427,7 +427,7 @@ class ExecutionKPI
 			$fStopped = MyHelpers::getmicrotime();
 			$fDuration = $fStopped - $this->m_fStarted;
             $aCallstack = [];
-            if (!self::$m_bReportExtensionsOnly) {
+            if (self::$m_bGenerateLegacyReport) {
                 if (self::$m_bBlameCaller) {
                     $aCallstack = MyHelpers::get_callstack(1);
                     self::$m_aStats[$sOperation][$sArguments][] = [
