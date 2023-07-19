@@ -1144,7 +1144,9 @@ abstract class DBObject implements iDisplay
 			return; //skip!
 		}
 		$this->FireEventComputeValues();
+		$oKPI = new ExecutionKPI();
 		$this->ComputeValues();
+		$oKPI->ComputeStatsForExtension($this, 'ComputeValues');
 	}
 
     /**
@@ -2480,7 +2482,6 @@ abstract class DBObject implements iDisplay
 		{
 			$this->m_aCheckIssues = array();
 
-			$oKPI = new ExecutionKPI();
 			if ($bDoComputeValues) {
 				$this->DoComputeValues();
 			}
@@ -2490,8 +2491,9 @@ abstract class DBObject implements iDisplay
 			$this->FireEventCheckToWrite();
 			$this->SetReadWrite();
 
+			$oKPI = new ExecutionKPI();
 			$this->DoCheckToWrite();
-			$oKPI->ComputeStats('CheckToWrite', get_class($this));
+            $oKPI->ComputeStatsForExtension($this, 'DoCheckToWrite');
 			if (count($this->m_aCheckIssues) == 0)
 			{
 				$this->m_bCheckStatus = true;
@@ -3114,7 +3116,9 @@ abstract class DBObject implements iDisplay
 
 			// Ensure the update of the values (we are accessing the data directly)
 			$this->DoComputeValues();
+			$oKPI = new ExecutionKPI();
 			$this->OnInsert();
+			$oKPI->ComputeStatsForExtension($this, 'OnInsert');
 
 			$this->FireEventBeforeWrite();
 
@@ -3170,7 +3174,9 @@ abstract class DBObject implements iDisplay
 						$this->DBInsertSingleTable($sParentClass);
 					}
 
+					$oKPI = new ExecutionKPI();
 					$this->OnObjectKeyReady();
+					$oKPI->ComputeStatsForExtension($this, 'OnObjectKeyReady');
 					$this->UpdateCurrentObjectInCrudStack();
 
 					$this->DBWriteLinks();
@@ -3247,7 +3253,9 @@ abstract class DBObject implements iDisplay
 	public function PostInsertActions(): void
 	{
 		$this->FireEventAfterWrite([], true);
+		$oKPI = new ExecutionKPI();
 		$this->AfterInsert();
+		$oKPI->ComputeStatsForExtension($this, 'AfterInsert');
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
@@ -3345,7 +3353,9 @@ abstract class DBObject implements iDisplay
 			try {
 				$this->DoComputeValues();
 				$this->ComputeStopWatchesDeadline(false);
+				$oKPI = new ExecutionKPI();
 				$this->OnUpdate();
+				$oKPI->ComputeStatsForExtension($this, 'OnUpdate');
 
 				$this->FireEventBeforeWrite();
 
@@ -3559,7 +3569,9 @@ abstract class DBObject implements iDisplay
 	public function PostUpdateActions(array $aChanges): void
 	{
 		$this->FireEventAfterWrite($aChanges, false);
+		$oKPI = new ExecutionKPI();
 		$this->AfterUpdate();
+		$oKPI->ComputeStatsForExtension($this, 'AfterUpdate');
 
 		// - TriggerOnObjectUpdate
 		$aParams = array('class_list' => MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL));
@@ -3786,7 +3798,9 @@ abstract class DBObject implements iDisplay
 			return;
 		}
 
+		$oKPI = new ExecutionKPI();
 		$this->OnDelete();
+		$oKPI->ComputeStatsForExtension($this, 'OnDelete');
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
@@ -3894,7 +3908,9 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->FireEventAfterDelete();
+		$oKPI = new ExecutionKPI();
 		$this->AfterDelete();
+		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
 
 
 		$this->m_bIsInDB = false;

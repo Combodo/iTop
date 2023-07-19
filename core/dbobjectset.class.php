@@ -767,7 +767,10 @@ class DBObjectSet implements iDBObjectSetIterator
 
 		try
 		{
+            $oKPI = new ExecutionKPI();
 			$this->m_oSQLResult = CMDBSource::Query($sSQL);
+            $sOQL = $this->GetPseudoOQL($this->m_oFilter, $this->GetRealSortOrder(), $this->m_iLimitCount, $this->m_iLimitStart, false);
+            $oKPI->ComputeStats('OQL Query Exec', $sOQL);
 		} catch (MySQLException $e)
 		{
 			// 1116 = ER_TOO_MANY_TABLES
@@ -847,8 +850,11 @@ class DBObjectSet implements iDBObjectSetIterator
 	{
 		if (is_null($this->m_iNumTotalDBRows))
 		{
+            $oKPI = new ExecutionKPI();
 			$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, 0, 0, true);
 			$resQuery = CMDBSource::Query($sSQL);
+            $sOQL = $this->GetPseudoOQL($this->m_oFilter, array(), 0, 0, true);
+            $oKPI->ComputeStats('OQL Query Exec', $sOQL);
 			if (!$resQuery) return 0;
 
 			$aRow = CMDBSource::FetchArray($resQuery);
@@ -858,6 +864,42 @@ class DBObjectSet implements iDBObjectSetIterator
 
 		return $this->m_iNumTotalDBRows + count($this->m_aAddedObjects); // Does it fix Trac #887 ??
 	}
+
+    /**
+     * @param \DBSearch $oFilter
+     * @param array $aOrder
+     * @param int $iLimitCount
+     * @param int $iLimitStart
+     * @param bool $bCount
+     *
+     * @return string
+     */
+    private function GetPseudoOQL($oFilter, $aOrder, $iLimitCount, $iLimitStart, $bCount)
+    {
+        $sOQL = '';
+        if ($bCount) {
+            $sOQL .= 'COUNT ';
+        }
+        $sOQL .= $oFilter->ToOQL();
+
+        if ($iLimitCount > 0) {
+            $sOQL .= ' LIMIT ';
+            if ($iLimitStart > 0) {
+                $sOQL .= "$iLimitStart, ";
+            }
+            $sOQL .= "$iLimitCount";
+        }
+
+        if (count($aOrder) > 0) {
+            $sOQL .= ' ORDER BY ';
+            $aOrderBy = [];
+            foreach ($aOrder as $sAttCode => $bAsc) {
+                $aOrderBy[] = $sAttCode.' '.($bAsc ? 'ASC' : 'DESC');
+            }
+            $sOQL .= implode(', ', $aOrderBy);
+        }
+        return $sOQL;
+    }
 
 	/**
 	 * Check if the count exceeds a given limit
@@ -875,8 +917,11 @@ class DBObjectSet implements iDBObjectSetIterator
 	{
 		if (is_null($this->m_iNumTotalDBRows))
 		{
+            $oKPI = new ExecutionKPI();
 			$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, $iLimit + 2, 0, true);
 			$resQuery = CMDBSource::Query($sSQL);
+            $sOQL = $this->GetPseudoOQL($this->m_oFilter, array(), $iLimit + 2, 0, true);
+            $oKPI->ComputeStats('OQL Query Exec', $sOQL);
 			if ($resQuery)
 			{
 				$aRow = CMDBSource::FetchArray($resQuery);
@@ -887,7 +932,7 @@ class DBObjectSet implements iDBObjectSetIterator
 			{
 				$iCount = 0;
 			}
-		}
+        }
 		else
 		{
 			$iCount = $this->m_iNumTotalDBRows;
@@ -912,8 +957,11 @@ class DBObjectSet implements iDBObjectSetIterator
 	{
 		if (is_null($this->m_iNumTotalDBRows))
 		{
+            $oKPI = new ExecutionKPI();
 			$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, $iLimit + 2, 0, true);
 			$resQuery = CMDBSource::Query($sSQL);
+            $sOQL = $this->GetPseudoOQL($this->m_oFilter, array(), $iLimit + 2, 0, true);
+            $oKPI->ComputeStats('OQL Query Exec', $sOQL);
 			if ($resQuery)
 			{
 				$aRow = CMDBSource::FetchArray($resQuery);
@@ -924,7 +972,7 @@ class DBObjectSet implements iDBObjectSetIterator
 			{
 				$iCount = 0;
 			}
-		}
+        }
 		else
 		{
 			$iCount = $this->m_iNumTotalDBRows;

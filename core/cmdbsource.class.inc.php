@@ -607,8 +607,9 @@ class CMDBSource
 		{
 			self::LogDeadLock($e, true);
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
-		}
-		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
+		} finally {
+            $oKPI->ComputeStats('Query exec (mySQL)', $sSql);
+        }
 		if ($oResult === false) {
 			$aContext = array('query' => $sSql);
 

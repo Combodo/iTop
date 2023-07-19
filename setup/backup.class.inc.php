@@ -468,8 +468,8 @@ EOF;
 			if ($oMysqli->connect_errno)
 			{
 				$sHost = is_null($this->iDBPort) ? $this->sDBHost : $this->sDBHost.' on port '.$this->iDBPort;
-				throw new BackupException("Cannot connect to the MySQL server '$sHost' (".$oMysqli->connect_errno.") ".$oMysqli->connect_error);
-			}
+                throw new MySQLException('Could not connect to the DB server '.$oMysqli->connect_errno.' (mysql errno: '.$oMysqli->connect_error, array('host' => $sHost, 'user' => $sUser));
+            }
 			if (!$oMysqli->select_db($this->sDBName))
 			{
 				throw new BackupException("The database '$this->sDBName' does not seem to exist");
@@ -578,6 +578,8 @@ EOF;
 	}
 
 	/**
+	 * Define if we should force a transport option
+	 * 
 	 * @param string $sHost
 	 *
 	 * @return string .
@@ -588,6 +590,8 @@ EOF;
 	{
 		$sTransportOptions = '';
 		
+		/** N°6123 As we're using a --port option, if we use localhost as host,
+		 * MariaDB > 10.6 will implicitly change its protocol from socket to tcp and throw a warning **/
 		if($sHost === 'localhost'){
 			$sTransportOptions = '--protocol=tcp';
 		}

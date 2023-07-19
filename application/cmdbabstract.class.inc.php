@@ -4547,7 +4547,9 @@ HTML;
 		foreach (MetaModel::EnumPlugins(iApplicationObjectExtension::class) as $oExtensionInstance) {
 			$sExtensionClass = get_class($oExtensionInstance);
 			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBInsert()");
+			$oKPI = new ExecutionKPI();
 			$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
+			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBInsert');
 		}
 	}
 
@@ -4562,13 +4564,16 @@ HTML;
 
 	protected function DBCloneTracked_Internal($newKey = null)
 	{
-		$oNewObj = parent::DBCloneTracked_Internal($newKey);
+        /** @var cmdbAbstractObject $oNewObj */
+        $oNewObj = MetaModel::GetObject(get_class($this), parent::DBCloneTracked_Internal($newKey));
 
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+            $oKPI = new ExecutionKPI();
 			$oExtensionInstance->OnDBInsert($oNewObj, self::GetCurrentChange());
+            $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBInsert');
 		}
 
 		return $oNewObj;
@@ -4605,7 +4610,9 @@ HTML;
 		foreach (MetaModel::EnumPlugins(iApplicationObjectExtension::class) as $oExtensionInstance) {
 			$sExtensionClass = get_class($oExtensionInstance);
 			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBUpdate()");
+			$oKPI = new ExecutionKPI();
 			$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
+			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBUpdate');
 		}
 	}
 
@@ -4649,7 +4656,9 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+            $oKPI = new ExecutionKPI();
 			$oExtensionInstance->OnDBDelete($this, self::GetCurrentChange());
+            $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBDelete');
 		}
 
 		return parent::DBDeleteTracked_Internal($oDeletionPlan);
@@ -4668,7 +4677,10 @@ HTML;
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$sExtensionClass = get_class($oExtensionInstance);
-			if ($oExtensionInstance->OnIsModified($this)) {
+			$oKPI = new ExecutionKPI();
+			$bIsModified = $oExtensionInstance->OnIsModified($this);
+			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnIsModified');
+			if ($bIsModified) {
 				$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnIsModified() -> true");
 				return true;
 			} else {
@@ -4724,7 +4736,9 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+            $oKPI = new ExecutionKPI();
 			$aNewIssues = $oExtensionInstance->OnCheckToWrite($this);
+            $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnCheckToWrite');
 			if (is_array($aNewIssues) && (count($aNewIssues) > 0)) // Some extensions return null instead of an empty array
 			{
 				$this->m_aCheckIssues = array_merge($this->m_aCheckIssues, $aNewIssues);
@@ -4772,7 +4786,9 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
+            $oKPI = new ExecutionKPI();
 			$aNewIssues = $oExtensionInstance->OnCheckToDelete($this);
+            $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnCheckToDelete');
 			if (is_array($aNewIssues) && count($aNewIssues) > 0)
 			{
 				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues, $aNewIssues);

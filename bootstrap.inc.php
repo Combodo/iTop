@@ -45,6 +45,7 @@ define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
 define('READONLY_MODE_FILE', APPROOT.'data/.readonly');
 
 $fItopStarted = microtime(true);
+$iItopInitialMemory = memory_get_usage(true);
 
 if (!isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false) {
 	require_once APPROOT.'/lib/autoload.php';
