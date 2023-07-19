@@ -918,6 +918,11 @@ class RuntimeDashboard extends Dashboard
 	{
 		$bCustomized = false;
 
+		$sDashboardFileSanitized = utils::RealPath($sDashboardFile, APPROOT);
+		if (false === $sDashboardFileSanitized) {
+			throw new SecurityException('Invalid dashboard file !');
+		}
+
 		// Search for an eventual user defined dashboard
 		$oUDSearch = new DBObjectSearch('UserDashboard');
 		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
@@ -929,7 +934,7 @@ class RuntimeDashboard extends Dashboard
 			$sDashboardDefinition = $oUserDashboard->Get('contents');
 			$bCustomized = true;
 		} else {
-			$sDashboardDefinition = @file_get_contents($sDashboardFile);
+			$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 		}
 
 
@@ -937,7 +942,7 @@ class RuntimeDashboard extends Dashboard
 			$oDashboard = new RuntimeDashboard($sDashBoardId);
 			$oDashboard->FromXml($sDashboardDefinition);
 			$oDashboard->SetCustomFlag($bCustomized);
-			$oDashboard->SetDefinitionFile($sDashboardFile);
+			$oDashboard->SetDefinitionFile($sDashboardFileSanitized);
 		} else {
 			$oDashboard = null;
 		}
