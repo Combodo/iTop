@@ -339,6 +339,10 @@ class ExecutionKPI
 	{
 		global $fItopStarted;
 
+        if (!self::IsEnabled()) {
+            return;
+        }
+
 		$aNewEntry = null;
 
         $fStarted = $this->m_fStarted;
@@ -402,6 +406,9 @@ class ExecutionKPI
 
     public function ComputeStatsForExtension($object, $sMethod)
     {
+        if (!self::IsEnabled()) {
+            return;
+        }
         $sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($object, $sMethod);
         if (utils::StartsWith($sSignature, '[')) {
             $this->ComputeStats('Extension', $sSignature);
@@ -410,6 +417,10 @@ class ExecutionKPI
 
 	public function ComputeStats($sOperation, $sArguments)
 	{
+        if (!self::IsEnabled()) {
+            return;
+        }
+
 		if (self::$m_bEnabled_Duration)
 		{
 			$fStopped = MyHelpers::getmicrotime();
