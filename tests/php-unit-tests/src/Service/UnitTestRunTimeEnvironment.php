@@ -5,7 +5,13 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Test\UnitTest\Service;
+
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
+use IssueLog;
+use MFDeltaModule;
+use ReflectionClass;
+use RunTimeEnvironment;
 
 
 /**
