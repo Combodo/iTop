@@ -9,7 +9,7 @@ namespace Combodo\iTop\Test\UnitTest\Service;
 
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use IssueLog;
-use MFDeltaModule;
+use MFCoreModule;
 use ReflectionClass;
 use RunTimeEnvironment;
 
@@ -17,7 +17,7 @@ use RunTimeEnvironment;
 /**
  * Class UnitTestRunTimeEnvironment
  *
- * Runtime env. dedicated to creating an temp. environment for a group of unit tests with XML deltas.
+ * Runtime env. dedicated to creating a temp. environment for a group of unit tests with XML deltas.
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since N°6097 2.7.10 3.0.4 3.1.1
@@ -68,7 +68,8 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 
 			// Prepare fake module name for delta
 			$sDeltaName = preg_replace('/[^\d\w]/', '', $sDeltaFile);
-			$oDelta = new MFDeltaModule($sDeltaFile);
+			// Note: We can't use \MFDeltaModule as we can't specify the ID which leads to only 1 delta being applied... In the future we might introduce a new MFXXXModule, but in the meantime it feels alright (GLA / RQU)
+			$oDelta = new MFCoreModule($sDeltaName, $sDeltaName, $sDeltaFile);
 
 			IssueLog::Debug('XML delta found for unit tests', static::class, [
 				'Unit test class' => $sClass,

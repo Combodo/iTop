@@ -15,6 +15,7 @@ namespace Combodo\iTop\Test\UnitTest;
 
 use ArchivedObjectException;
 use CMDBSource;
+use Config;
 use Contact;
 use DBObject;
 use DBObjectSet;
@@ -63,6 +64,10 @@ abstract class ItopDataTestCase extends ItopTestCase
 	// For cleanup
 	private $aCreatedObjects = array();
 
+	/**
+	 * @var string Default environment to use for test cases
+	 */
+	const DEFAULT_TEST_ENVIRONMENT = 'production';
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = false;
 
@@ -126,12 +131,12 @@ abstract class ItopDataTestCase extends ItopTestCase
 	}
 
 	/**
-	 * @return string Environment in the test will run
+	 * @return string Environment the test will run in
 	 * @since 2.7.9 3.0.4 3.1.0
 	 */
 	protected function GetTestEnvironment(): string
 	{
-		return 'production';
+		return self::DEFAULT_TEST_ENVIRONMENT;
 	}
 
 	/**
