@@ -8,6 +8,7 @@ namespace Combodo\iTop\Service\Events;
 
 use Closure;
 use Combodo\iTop\Service\Events\Description\EventDescription;
+use Combodo\iTop\Service\Module\ModuleService;
 use ContextTag;
 use CoreException;
 use Exception;
@@ -70,6 +71,10 @@ final class EventService
 			return false;
 		}
 
+		if (utils::IsNullOrEmptyString($sModuleId)) {
+			$sModuleId = ModuleService::GetInstance()->GetModuleNameFromCallStack();
+		}
+
 		$aEventCallbacks = self::$aEventListeners[$sEvent] ?? [];
 		$sId = 'event_'.self::$iEventIdCounter++;
 		$aEventCallbacks[] = array(
@@ -125,11 +130,9 @@ final class EventService
 			throw new CoreException($sError);
 		}
 		$eventSource = $oEventData->GetEventSource();
-		$oKPI = new ExecutionKPI();
 		$sLogEventName = "$sEvent - ".self::GetSourcesAsString($eventSource).' '.json_encode($oEventData->GetEventData());
 		EventServiceLog::Trace("Fire event '$sLogEventName'");
 		if (!isset(self::$aEventListeners[$sEvent])) {
-			$oKPI->ComputeStats('FireEvent', $sEvent);
 
 			return;
 		}
@@ -146,7 +149,14 @@ final class EventService
 			$bEventFired = true;
 			try {
 				$oEventData->SetCallbackData($aEventCallback['data']);
+				$oKPI = new ExecutionKPI();
 				call_user_func($aEventCallback['callback'], $oEventData);
+				$sArguments = "Event: $sEvent";
+				if (utils::IsNotNullOrEmptyString($aEventCallback['module'])) {
+					$sArguments .= ' ['.$aEventCallback['module'].']';
+				}
+				$sArguments .= ' '.$aEventCallback['name'].'()';
+				$oKPI->ComputeStats('Extension', $sArguments);
 			}
 			catch (EventException $e) {
 				EventServiceLog::Error("Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with blocking error: ".$e->getMessage());
@@ -161,7 +171,6 @@ final class EventService
 		if ($bEventFired) {
 			EventServiceLog::Debug("End of event '$sLogEventName'");
 		}
-		$oKPI->ComputeStats('FireEvent', $sEvent);
 
 		if (!is_null($oLastException)) {
 			EventServiceLog::Error("Throwing the last exception caught: $sLastExceptionMessage");
