@@ -1166,7 +1166,7 @@ HTML
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
-	 * @param array $aExtraParams
+	 * @param array $aExtraParams See possible values in {@see DataTableUIBlockFactory::RenderDataTable()}
 	 *
 	 * @throws \ApplicationException
 	 * @throws \CoreException
