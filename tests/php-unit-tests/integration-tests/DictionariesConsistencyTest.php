@@ -32,24 +32,27 @@ class DictionariesConsistencyTest extends ItopTestCase
 	 */
 	public function testDictionariesLanguage($sDictFile)
 	{
+		// In iTop the language available list is dynamically made during setup, depending on the dict files found
+		// Here we are using a fixed list
 		$aPrefixToLanguageData = array(
-			'cs'    => array('CS CZ', 'Czech', 'Čeština'),
-			'da'    => array('DA DA', 'Danish', 'Dansk'),
-			'de'    => array('DE DE', 'German', 'Deutsch'),
-			'en'    => array('EN US', 'English', 'English'),
+			'cs' => array('CS CZ', 'Czech', 'Čeština'),
+			'da' => array('DA DA', 'Danish', 'Dansk'),
+			'de' => array('DE DE', 'German', 'Deutsch'),
+			'en' => array('EN US', 'English', 'English'),
 			'es_cr' => array('ES CR', 'Spanish', array(
 				'Español, Castellaño', // old value
 				'Español, Castellano', // new value since N°3635
 			)),
-			'fr'    => array('FR FR', 'French', 'Français'),
-			'hu'    => array('HU HU', 'Hungarian', 'Magyar'),
-			'it'    => array('IT IT', 'Italian', 'Italiano'),
-			'ja'    => array('JA JP', 'Japanese', '日本語'),
-			'nl'    => array('NL NL', 'Dutch', 'Nederlands'),
+			'fr' => array('FR FR', 'French', 'Français'),
+			'hu' => array('HU HU', 'Hungarian', 'Magyar'),
+			'it' => array('IT IT', 'Italian', 'Italiano'),
+			'ja' => array('JA JP', 'Japanese', '日本語'),
+			'nl' => array('NL NL', 'Dutch', 'Nederlands'),
+			'pl' => array('PL PL', 'Polish', 'Polski'),
 			'pt_br' => array('PT BR', 'Brazilian', 'Brazilian'),
-			'ru'    => array('RU RU', 'Russian', 'Русский'),
-			'sk'    => array('SK SK', 'Slovak', 'Slovenčina'),
-			'tr'    => array('TR TR', 'Turkish', 'Türkçe'),
+			'ru' => array('RU RU', 'Russian', 'Русский'),
+			'sk' => array('SK SK', 'Slovak', 'Slovenčina'),
+			'tr' => array('TR TR', 'Turkish', 'Türkçe'),
 			'zh_cn' => array('ZH CN', 'Chinese', '简体中文'),
 		);
 
