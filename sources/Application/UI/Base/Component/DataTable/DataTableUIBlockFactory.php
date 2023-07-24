@@ -55,11 +55,13 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = DataTable::class;
 
 	/**
+	 * If inside an iTop object, you can use {@see cmdbAbstractObject::DisplaySet()}
+	 *
 	 * @api
 	 * @param \WebPage $oPage
 	 * @param string $sListId
 	 * @param \DBObjectSet $oSet
-	 * @param array $aExtraParams
+	 * @param array $aExtraParams See possible values in {@see self::RenderDataTable()}
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 * @throws \ApplicationException
@@ -84,11 +86,13 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
+	 * If inside an iTop object, you can use {@see cmdbAbstractObject::DisplaySet()}
+	 *
 	 * @api
 	 * @param \WebPage $oPage
 	 * @param string $sListId
 	 * @param DBObjectSet $oSet
-	 * @param array $aExtraParams
+	 * @param array $aExtraParams See possible values in {@see self::RenderDataTable()}
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 * @throws \ArchivedObjectException
@@ -117,7 +121,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 * @param \WebPage $oPage
 	 * @param string $sListId
 	 * @param \DBObjectSet $oSet
-	 * @param array $aExtraParams
+	 * @param array $aExtraParams example keys used in this method :
+	 *          - toolkit_menu = boolean
+	 *          - surround_with_panel = boolean : if true adds the standard class panel (icon, title, ...)
+	 *          - panel_title = string
+	 *          - panel_title_is_html = boolean
+	 *          - panel_icon = string : class icon (for example from {@see MetaModel::GetClassIcon()})
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 * @throws \ArchivedObjectException
