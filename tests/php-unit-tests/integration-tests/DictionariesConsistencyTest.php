@@ -32,6 +32,8 @@ class DictionariesConsistencyTest extends ItopTestCase
 	 */
 	public function testDictionariesLanguage($sDictFile): void
 	{
+		// In iTop the language available list is dynamically made during setup, depending on the dict files found
+		// Here we are using a fixed list
 		$aPrefixToLanguageData = array(
 			'cs' => array('CS CZ', 'Czech', 'Čeština'),
 			'da' => array('DA DA', 'Danish', 'Dansk'),
