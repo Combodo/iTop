@@ -62,6 +62,9 @@ gitGraph
     commit id: "2022-12-28" tag: "2.7.8"
     checkout support/3.0
     commit id: "2023-04-12" tag: "3.0.3"
+    checkout develop
+    commit id: "2023-07-26" tag: "3.1.0-1" type: HIGHLIGHT
+    branch support/3.1 order: 840
 ```
 
 To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).
