@@ -1978,7 +1978,7 @@ class utils
 	 */
 	public static function GetCurrentModuleUrl()
 	{
-		return ModuleService::GetInstance()->GetCurrentModuleUrl();
+		return ModuleService::GetInstance()->GetCurrentModuleUrl(1);
 	}
 	
 	/**
