@@ -117,9 +117,9 @@ class ModuleService
      *
      * @uses GetCurrentModuleDir
      */
-    public function GetCurrentModuleUrl(): string
+    public function GetCurrentModuleUrl(int $iCallDepth = 0): string
     {
-        $sDir = $this->GetCurrentModuleDir(1);
+        $sDir = $this->GetCurrentModuleDir(1 + $iCallDepth);
         if ( $sDir !== '')
         {
             return utils::GetAbsoluteUrlModulesRoot().'/'.$sDir;
