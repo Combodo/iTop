@@ -2132,7 +2132,7 @@ class utils
 	 */
 	public static function GetCurrentModuleName($iCallDepth = 0)
 	{
-        return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth = 0);
+        return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth + 1);
 	}
 	
 	/**
@@ -2169,7 +2169,7 @@ class utils
 	 */
 	public static function GetCurrentModuleUrl()
 	{
-		return ModuleService::GetInstance()->GetCurrentModuleUrl();
+		return ModuleService::GetInstance()->GetCurrentModuleUrl(1);
 	}
 	
 	/**
