@@ -1947,7 +1947,7 @@ class utils
 	 */
 	public static function GetCurrentModuleName($iCallDepth = 0)
 	{
-        return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth = 0);
+        return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth + 1);
 	}
 	
 	/**
