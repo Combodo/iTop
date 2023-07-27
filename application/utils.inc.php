@@ -2856,7 +2856,7 @@ HTML;
 
 			// Add already loaded classes
 			$aCurrentClasses = array_fill_keys(get_declared_classes(), '');
-			$aClassMap = array_merge($aClassMap, $aCurrentClasses);
+			$aClassMap = array_merge($aCurrentClasses, $aClassMap);
 
 			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
 				$bSkipped = false;
@@ -2885,7 +2885,8 @@ HTML;
 				if(!$bSkipped){
 					try {
 						$oRefClass = new ReflectionClass($sPHPClass);
-						if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable()) {
+						if ($oRefClass->implementsInterface($sInterface) &&
+							!$oRefClass->isInterface() && !$oRefClass->isAbstract() && !$oRefClass->isTrait()) {
 							$aMatchingClasses[] = $sPHPClass;
 						}
 					} catch (Exception $e) {
