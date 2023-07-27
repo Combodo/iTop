@@ -240,9 +240,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Apply the specified stimulus to the current object',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1' => 'Stimulus code',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1+' => 'A valid stimulus code for the current class',
-	'Class:ResponseTicketTTO/Interface:iMetricComputer' => '响应时间',
+	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'TTO',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'SLT 的响应时间',
-	'Class:ResponseTicketTTR/Interface:iMetricComputer' => '解决时间',
-	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'SLT 的解决时间',
+	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'TTR',
+	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'SLT 的解决时限',
 ));
 

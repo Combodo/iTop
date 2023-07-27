@@ -251,7 +251,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DocumentNote' => '文档笔记',
 	'Class:DocumentNote+' => '',
-	'Class:DocumentNote/Attribute:text' => '文本',
+	'Class:DocumentNote/Attribute:text' => '正文',
 	'Class:DocumentNote/Attribute:text+' => '',
 ));
 
