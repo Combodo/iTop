@@ -63,6 +63,7 @@ gitGraph
     checkout support/3.0
     commit id: "2023-04-12" tag: "3.0.3"
     checkout develop
+    commit id: "2023-06-19" tag: "3.1.0-beta" type: REVERSE
     commit id: "2023-07-26" tag: "3.1.0-1" type: HIGHLIGHT
     branch support/3.1 order: 840
 ```
