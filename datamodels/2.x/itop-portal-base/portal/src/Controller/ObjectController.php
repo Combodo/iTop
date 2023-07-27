@@ -20,6 +20,7 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use ArchivedObjectException;
 use AttributeEnum;
 use AttributeFinalClass;
 use AttributeFriendlyName;
@@ -28,6 +29,7 @@ use BinaryExpression;
 use Combodo\iTop\Portal\Brick\CreateBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
+use CoreException;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
@@ -1035,7 +1037,11 @@ class ObjectController extends BrickController
 		// When reaching to an Attachment, we have to check security on its host object instead of the Attachment itself
 		if ($sObjectClass === 'Attachment')
 		{
-			$oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, true, true);
+			try {
+				$oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, true, true);
+			} catch (ArchivedObjectException|CoreException $e) {
+				throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+			}
 			$sHostClass = $oAttachment->Get('item_class');
 			$sHostId = $oAttachment->Get('item_id');
 		}
