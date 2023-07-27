@@ -2651,20 +2651,21 @@ SQL;
 	 * Dir separator is changed to '/' for consistency among the different OS
 	 *
 	 * @param string $sAbsolutePath absolute path
+	 * @param string $sBasePath
 	 *
 	 * @return false|string
 	 */
-	final public static function LocalPath($sAbsolutePath)
+	final public static function LocalPath(string $sAbsolutePath, string $sBasePath = APPROOT)
 	{
-		$sRootPath = realpath(APPROOT);
+		$sRootPath = realpath($sBasePath);
 		$sFullPath = realpath($sAbsolutePath);
 		if (($sFullPath === false) || !self::StartsWith($sFullPath, $sRootPath))
 		{
 			return false;
 		}
 		$sLocalPath = substr($sFullPath, strlen($sRootPath.DIRECTORY_SEPARATOR));
-		$sLocalPath = str_replace(DIRECTORY_SEPARATOR, '/', $sLocalPath);
-		return $sLocalPath;
+
+		return str_replace(DIRECTORY_SEPARATOR, '/', $sLocalPath);
 	}
 
 	/**
