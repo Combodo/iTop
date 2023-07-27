@@ -11,11 +11,16 @@ namespace Combodo\iTop\Test\UnitTest\Module\AuthentLocal;
 use AttributeDate;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Config;
+use DBObjectSearch;
+use DBObjectSet;
 use Dict;
 use MetaModel;
 use ormLinkSet;
 use URP_UserProfile;
+use User;
 use UserLocal;
+use UserRights;
+use utils;
 
 /**
  * test class for UserLocal class
@@ -391,6 +396,63 @@ class UserLocalTest extends ItopDataTestCase
 				'bRenewedDateTouched' => false,
 			),
 		);
+	}
+
+	public function testGetUserProfileList()
+	{
+		utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
+		$sAdminLogin = 'admin';
+		$oExistingAdminUser = MetaModel::GetObjectByColumn(User::class, 'login', $sAdminLogin, false);
+		if (\is_null($oExistingAdminUser)) {
+			$sAdministratorProfileId = 1;
+			$this->CreateContactlessUser($sAdminLogin, $sAdministratorProfileId);
+		}
+
+		// By default should see all profiles
+		$oProfilesSet = $this->GetAdminUserProfileList();
+		$this->assertIsObject($oProfilesSet);
+		$this->assertInstanceOf(ormLinkSet::class, $oProfilesSet);
+		$this->assertGreaterThan(0, $oProfilesSet->Count());
+
+		// non admin user : seeing profiles depends on the security.hide_administrators config param value
+		$sSupportAgentProfileId = 5;
+		$sSupportAgentLogin = 'support_agent';
+		$this->CreateContactlessUser($sSupportAgentLogin, $sSupportAgentProfileId);
+		UserRights::Login($sSupportAgentLogin);
+		MetaModel::GetConfig()->Set('security.hide_administrators', true);
+		$oProfilesSet = $this->GetAdminUserProfileList();
+		$this->assertIsObject($oProfilesSet);
+		$this->assertInstanceOf(ormLinkSet::class, $oProfilesSet);
+		$this->assertEquals(0, $oProfilesSet->Count());
+		MetaModel::GetConfig()->Set('security.hide_administrators', false);
+		$oProfilesSet = $this->GetAdminUserProfileList();
+		$this->assertIsObject($oProfilesSet);
+		$this->assertInstanceOf(ormLinkSet::class, $oProfilesSet);
+		$this->assertGreaterThan(0, $oProfilesSet->Count());
+
+		// admin user : will always see profiles whatever the security.hide_administrators config param value is
+		UserRights::Login($sAdminLogin);
+		MetaModel::GetConfig()->Set('security.hide_administrators', true);
+		$oProfilesSet = $this->GetAdminUserProfileList();
+		$this->assertIsObject($oProfilesSet);
+		$this->assertInstanceOf(ormLinkSet::class, $oProfilesSet);
+		$this->assertGreaterThan(0, $oProfilesSet->Count());
+		MetaModel::GetConfig()->Set('security.hide_administrators', false);
+		$oProfilesSet = $this->GetAdminUserProfileList();
+		$this->assertIsObject($oProfilesSet);
+		$this->assertInstanceOf(ormLinkSet::class, $oProfilesSet);
+		$this->assertGreaterThan(0, $oProfilesSet->Count());
+	}
+
+	private function GetAdminUserProfileList(): ormLinkSet
+	{
+		$oSearch = new DBObjectSearch(UserLocal::class);
+		$oSearch->AllowAllData();
+		$oSearch->AddCondition('login', 'admin', '=');
+		$oObjectSet = new DBObjectSet($oSearch);
+		/** @noinspection OneTimeUseVariablesInspection */
+		$oUser = $oObjectSet->Fetch();
+		return $oUser->Get('profile_list');
 	}
 }
 
