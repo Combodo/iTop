@@ -488,35 +488,6 @@ class ItopDataTestCase extends ItopTestCase
 	}
 
 	/**
-	 * @param string $sLogin
-	 * @param int $iProfileId
-	 *
-	 * @return \UserLocal
-	 * @throws Exception
-	 */
-	protected function CreateContactlessUser($sLogin, $iProfileId, $sPassword = null)
-	{
-		if (empty($sPassword)) {
-			$sPassword = $sLogin;
-		}
-
-		$oUserProfile = new URP_UserProfile();
-		$oUserProfile->Set('profileid', $iProfileId);
-		$oUserProfile->Set('reason', 'UNIT Tests');
-		$oSet = DBObjectSet::FromObject($oUserProfile);
-		/** @var \UserLocal $oUser */
-		$oUser = $this->createObject('UserLocal', array(
-			'login' => $sLogin,
-			'password' => $sPassword,
-			'language' => 'EN US',
-			'profile_list' => $oSet,
-		));
-		$this->debug("Created {$oUser->GetName()} ({$oUser->GetKey()})");
-
-		return $oUser;
-	}
-
-	/**
 	 * @param \DBObject $oUser
 	 * @param int $iProfileId
 	 *
