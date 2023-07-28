@@ -3721,7 +3721,7 @@ abstract class MetaModel
 			$sAbsoluteUrlModulesRoot = utils::GetAbsoluteUrlModulesRoot();
 			foreach ($aHighlightScale as $sItemKey => $aItemArray) {
 				if (array_key_exists('icon', $aItemArray) && !empty($aItemArray['icon'])) {
-					if (strpos($aParams['icon'], $sAbsoluteUrlModulesRoot) !== false) {
+					if (strpos($aItemArray['icon'], $sAbsoluteUrlModulesRoot) !== false) {
 						$aHighlightScale[$sItemKey]['icon'] = str_replace($sAbsoluteUrlModulesRoot, '', $aItemArray['icon']);
 					}
 				}
