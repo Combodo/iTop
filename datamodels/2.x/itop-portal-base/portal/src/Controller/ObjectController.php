@@ -1037,9 +1037,10 @@ class ObjectController extends BrickController
 		// When reaching to an Attachment, we have to check security on its host object instead of the Attachment itself
 		if ($sObjectClass === 'Attachment')
 		{
-			try {
-				$oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, true, true);
-			} catch (ArchivedObjectException|CoreException $e) {
+			
+			$oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, false, true);
+			if ($oAttachment === null) {
+				IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
 				throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 			}
 			$sHostClass = $oAttachment->Get('item_class');
