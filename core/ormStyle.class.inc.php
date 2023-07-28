@@ -234,6 +234,6 @@ class ormStyle
 			return null;
 		}
 
-		return utils::GetAbsoluteUrlModulesRoot().$this->sIcon;
+		return $this->sIcon;
 	}
 }
