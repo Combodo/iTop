@@ -2647,15 +2647,16 @@ SQL;
 	}
 
 	/**
-	 * Returns the local path relative to the iTop installation of an existing file
+	 * Returns the local path relative to the iTop installation (APPROOT or the given base path)
 	 * Dir separator is changed to '/' for consistency among the different OS
 	 *
 	 * @param string $sAbsolutePath absolute path
-	 * @param string $sBasePath
+	 * @param string $sBasePath Base path for the resulting local path (default APPROOT)
 	 *
-	 * @return false|string
+	 * @return false|string The generated local path or false if absolute path is not under the base path
+	 * @since 3.1.1 Added base path defaulted to previous version APPROOT
 	 */
-	final public static function LocalPath(string $sAbsolutePath, string $sBasePath = APPROOT)
+	final public static function LocalPath($sAbsolutePath, string $sBasePath = APPROOT)
 	{
 		$sRootPath = realpath($sBasePath);
 		$sFullPath = realpath($sAbsolutePath);
