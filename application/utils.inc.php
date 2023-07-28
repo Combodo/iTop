@@ -2647,24 +2647,26 @@ SQL;
 	}
 
 	/**
-	 * Returns the local path relative to the iTop installation of an existing file
+	 * Returns the local path relative to the iTop installation (APPROOT or the given base path)
 	 * Dir separator is changed to '/' for consistency among the different OS
 	 *
 	 * @param string $sAbsolutePath absolute path
+	 * @param string $sBasePath Base path for the resulting local path (default APPROOT)
 	 *
-	 * @return false|string
+	 * @return false|string The generated local path or false if absolute path is not under the base path
+	 * @since 3.1.1 Added base path defaulted to previous version APPROOT
 	 */
-	final public static function LocalPath($sAbsolutePath)
+	final public static function LocalPath($sAbsolutePath, string $sBasePath = APPROOT)
 	{
-		$sRootPath = realpath(APPROOT);
+		$sRootPath = realpath($sBasePath);
 		$sFullPath = realpath($sAbsolutePath);
 		if (($sFullPath === false) || !self::StartsWith($sFullPath, $sRootPath))
 		{
 			return false;
 		}
 		$sLocalPath = substr($sFullPath, strlen($sRootPath.DIRECTORY_SEPARATOR));
-		$sLocalPath = str_replace(DIRECTORY_SEPARATOR, '/', $sLocalPath);
-		return $sLocalPath;
+
+		return str_replace(DIRECTORY_SEPARATOR, '/', $sLocalPath);
 	}
 
 	/**
@@ -2856,7 +2858,7 @@ HTML;
 
 			// Add already loaded classes
 			$aCurrentClasses = array_fill_keys(get_declared_classes(), '');
-			$aClassMap = array_merge($aClassMap, $aCurrentClasses);
+			$aClassMap = array_merge($aCurrentClasses, $aClassMap);
 
 			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
 				$bSkipped = false;
@@ -2885,7 +2887,8 @@ HTML;
 				if(!$bSkipped){
 					try {
 						$oRefClass = new ReflectionClass($sPHPClass);
-						if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable()) {
+						if ($oRefClass->implementsInterface($sInterface) &&
+							!$oRefClass->isInterface() && !$oRefClass->isAbstract() && !$oRefClass->isTrait()) {
 							$aMatchingClasses[] = $sPHPClass;
 						}
 					} catch (Exception $e) {
