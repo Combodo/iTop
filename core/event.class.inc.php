@@ -242,44 +242,33 @@ class EventIssue extends Event
 			{
 				if (is_string($sValue))
 				{
-					if (strlen($sValue) < 256)
-					{
+					if (mb_strlen($sValue) < 256) {
 						$aPost[$sKey] = $sValue;
+					} else {
+						$aPost[$sKey] = "!long string: ".strlen($sValue)." chars";
 					}
-					else
-					{
-						$aPost[$sKey] = "!long string: ".strlen($sValue). " chars";
-					}
-				}
-				else
-				{
+				} else {
 					// Not a string (avoid warnings in case the value cannot be easily casted into a string)
-					$aPost[$sKey] = @(string) $sValue;
+					$aPost[$sKey] = @(string)$sValue;
 				}
 			}
 			$this->Set('arguments_post', $aPost);
-		}
-		else
-		{
+		} else {
 			$this->Set('arguments_post', array());
 		}
-
-		$sLength = strlen($this->Get('issue'));
-		if ($sLength > 255)
-		{
-			$this->Set('issue', substr($this->Get('issue'), 0, 200)." -truncated ($sLength chars)");
+		$sLength = mb_strlen($this->Get('issue'));
+		if ($sLength > 255) {
+			$this->Set('issue', substr($this->Get('issue'), 0, 210)." -truncated ($sLength chars)");
 		}
 
-		$sLength = strlen($this->Get('impact'));
-		if ($sLength > 255)
-		{
-			$this->Set('impact', substr($this->Get('impact'), 0, 200)." -truncated ($sLength chars)");
+		$sLength = mb_strlen($this->Get('impact'));
+		if ($sLength > 255) {
+			$this->Set('impact', substr($this->Get('impact'), 0, 210)." -truncated ($sLength chars)");
 		}
 
-		$sLength = strlen($this->Get('page'));
-		if ($sLength > 255)
-		{
-			$this->Set('page', substr($this->Get('page'), 0, 200)." -truncated ($sLength chars)");
+		$sLength = mb_strlen($this->Get('page'));
+		if ($sLength > 255) {
+			$this->Set('page', substr($this->Get('page'), 0, 210)." -truncated ($sLength chars)");
 		}
 	}
 }
