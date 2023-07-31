@@ -62,7 +62,7 @@ class DisplayableNode extends GraphNode
 
 	public function GetWidth()
 	{
-		return max(32, 5*strlen($this->GetProperty('label'))); // approximation of the text's bounding box
+		return max(32, 5 * mb_strlen($this->GetProperty('label'))); // approximation of the text's bounding box
 	}
 
 	public function GetHeight()
@@ -491,7 +491,7 @@ class DisplayableNode extends GraphNode
 		if ($bNoLabel)
 		{
 			// simulate a fake label with the approximate same size as the true label
-			$sLabel = str_repeat('x',strlen($this->GetProperty('label', $this->GetId())));
+			$sLabel = str_repeat('x', mb_strlen($this->GetProperty('label', $this->GetId())));
 			$sDot = 'label="'.$sLabel.'"';
 		}
 		else

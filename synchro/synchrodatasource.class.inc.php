@@ -1938,6 +1938,7 @@ class SynchroLog extends DBObject
 		{
 			$sTrace = implode("\n", $this->m_aTraces);
 		}
+		//YOYO or not ?
 		if (strlen($sTrace) >= $iMaxSize)
 		{
 			$sTrace = substr($sTrace, 0, $iMaxSize - 255)."...\nTruncated (size: ".strlen($sTrace).')';
@@ -2145,8 +2146,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				break;
 		}
 
-		if (strlen($sWarningMessage) > $MAX_WARNING_LENGTH)
-		{
+		if (mb_strlen($sWarningMessage) > $MAX_WARNING_LENGTH) {
 			$sWarningMessage = substr($sWarningMessage, 0, $MAX_WARNING_LENGTH - 3).'...';
 		}
 
@@ -2187,16 +2187,12 @@ class SynchroReplica extends DBObject implements iDisplay
 
 	public function SetLastError($sMessage, $oException = null)
 	{
-		if ($oException)
-		{
+		if ($oException) {
 			$sText = $sMessage.$oException->getMessage();
-		}
-		else
-		{
+		} else {
 			$sText = $sMessage;
 		}
-		if (strlen($sText) > 255)
-		{
+		if (mb_strlen($sText) > 255) {
 			$sText = substr($sText, 0, 200).'...('.strlen($sText).' chars)...';
 		}
 		$this->Set('status_last_error', $sText);
