@@ -1199,7 +1199,7 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		return $this->aReloadCount[$sClass][$sKey] ?? 0;
 	}
-	
+
 	/**
 	 * @since 3.1.0-3 3.1.1 3.2.0 N°6716 test creation
 	 */
@@ -1235,4 +1235,61 @@ class DBObjectTest extends ItopDataTestCase
 		$fTotalDuration = microtime(true) - $fStart;
 		echo 'Total duration: '.sprintf('%.3f s', $fTotalDuration)."\n\n";
 	}
+
+	/**
+	 * Data provider for test CheckValue
+	 *
+	 * @return array data
+	 */
+	public function getCheckLongValueProvider()
+	{
+		return [
+			'Title with ééé'            => [
+				'title',
+				'ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé',
+			],
+			'Title with smiley'         => [
+				'title',
+				'1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111😃😃😃😃😃😃😃😃😃',
+			],
+			'Title with 255 characters' => [
+				'title',
+				'012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234',
+			],
+		];
+	}
+
+	/**
+	 * Test attribute integer incrementation.
+	 *
+	 * @covers       DBObject::DBIncrement
+	 *
+	 * @dataProvider getCheckLongValueProvider
+	 *
+	 */
+	public function testCheckLongValue(string $sAttrCode, string $sValue)
+	{
+		// Create a UserRequest with 2 contacts
+		$oTicket = MetaModel::NewObject('UserRequest', [
+			'ref'         => 'Test Ticket',
+			'title'       => 'Create OK',
+			'description' => 'Create OK',
+			'caller_id'   => 15,
+			'org_id'      => 3,
+		]);
+		/*$oPerson = MetaModel::NewObject('Person');
+
+			$oPerson->Set('name', 'My last name');
+			$oPerson->Set('first_name', 'My first name');
+			$oPerson->Set('org_id', $this->getTestOrgId());*/
+
+		$oTicket->Set($sAttrCode, $sValue);
+		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
+		$this->assertTrue($bCheckStatus);
+
+		$oTicket->SetTrim($sAttrCode, $sValue);
+		$this->assertEquals($sValue, $oTicket->Get($sAttrCode));
+
+	}
+
 }
