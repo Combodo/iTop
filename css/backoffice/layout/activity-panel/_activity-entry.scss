@@ -178,6 +178,11 @@ $ibo-activity-panel--load-all-entries--is-hover--margin-left: ($ibo-activity-pan
 	color: $ibo-activity-entry--main-information--text-color;
 	background-color: $ibo-activity-entry--main-information--background-color;
 	border-radius: $ibo-activity-entry--main-information--border-radius;
+
+  /*N°5786 - Problem with text color in public log and in AttributeHTML - override bulma css */
+  strong {
+    color:inherit
+  }
 }
 .ibo-activity-entry--main-information-icon{
 	margin-right: $ibo-activity-entry--main-information--elements-spacing;
