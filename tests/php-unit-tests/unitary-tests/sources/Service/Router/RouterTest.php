@@ -183,10 +183,9 @@ class RouterTest extends ItopTestCase
 	 * @covers \Combodo\iTop\Service\Router\Router::GetRoutes
 	 * @return void
 	 *
-	 * @details Covers the cache generation within the GetRoutes method
-	 * @since N°6618
+	 * @since N°6618 Covers that the cache isn't re-generated at each call of the GetRoutes method
 	 */
-	public function testGetRoutesCacheGeneration(): void
+	public function testGetRoutesCacheGeneratedOnlyOnce(): void
 	{
 		$oRouter = Router::GetInstance();
 		$sRoutesCacheFilePath = $this->InvokeNonPublicMethod(Router::class, 'GetCacheFileAbsPath', $oRouter, []);
@@ -224,6 +223,45 @@ class RouterTest extends ItopTestCase
 		$this->debug("Second timestamp: $iSecondModificationTimestamp");
 
 		$this->assertSame($iFirstModificationTimestamp, $iSecondModificationTimestamp, "Cache file timestamp changed, seems like cache is not working and was re-generated when it should not!");
+
+		// Restore previous value for following tests
+		$oConf->Set('developer_mode.enabled', $mDeveloperModePreviousValue);
+	}
+
+	/**
+	 * @covers \Combodo\iTop\Service\Router\Router::GetRoutes
+	 * @return void
+	 *
+	 * @since N°6618 Covers that the cache is re-generated correctly if corrupted
+	 */
+	public function testGetRoutesCacheRegeneratedCorrectlyIfCorrupted(): void
+	{
+		$oRouter = Router::GetInstance();
+		$sRoutesCacheFilePath = $this->InvokeNonPublicMethod(Router::class, 'GetCacheFileAbsPath', $oRouter, []);
+
+		// Developer mode must be disabled for the routes cache to be used
+		$oConf = utils::GetConfig();
+		$mDeveloperModePreviousValue = $oConf->Get('developer_mode.enabled');
+		$oConf->Set('developer_mode.enabled', false);
+
+		// Generate corrupted cache manually
+		$sFaultyStatement = 'return 1;';
+		file_put_contents($sRoutesCacheFilePath, <<<PHP
+<?php
+
+{$sFaultyStatement}
+PHP
+		);
+
+		// Retrieve routes to access / fix cache in the process
+		$aRoutes = $this->InvokeNonPublicMethod(Router::class, 'GetRoutes', $oRouter, []);
+
+		// Check that routes are an array
+		$this->assertTrue(is_array($aRoutes));
+
+		// Check that file content doesn't contain `return 1`
+		clearstatcache();
+		$this->assertStringNotContainsString($sFaultyStatement, file_get_contents($sRoutesCacheFilePath), "Cache file still contains the faulty statement ($sFaultyStatement)");
 
 		// Restore previous value for following tests
 		$oConf->Set('developer_mode.enabled', $mDeveloperModePreviousValue);
