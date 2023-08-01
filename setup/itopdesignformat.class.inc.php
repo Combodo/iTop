@@ -898,7 +898,10 @@ class iTopDesignFormat
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field/values/value");
 		foreach ($oNodeList as $oNode) {
 			$sCode = $oNode->textContent;
-			$oNode->textContent = '';
+			// N°6562 textContent is readonly, see https://www.php.net/manual/en/class.domnode.php#95545
+//			$oNode->textContent = '';
+			// N°6562 to update text node content we must use the node methods !
+			$oNode->removeChild($oNode->firstChild);
 			$oCodeNode = $oNode->ownerDocument->createElement("code", $sCode);
 			$oNode->appendChild($oCodeNode);
 		}
@@ -988,7 +991,12 @@ class iTopDesignFormat
 				if ($oStyleNode) {
 					$this->DeleteNode($oStyleNode);
 				}
-				$oNode->textContent = $sCode;
+
+				// N°6562 textContent is readonly, see https://www.php.net/manual/en/class.domnode.php#95545
+//				$oNode->textContent = $sCode;
+				// N°6562 to update text node content we must use the node methods !
+				$oTextContentNode = new DOMText($sCode);
+				$oNode->appendChild($oTextContentNode);
 			}
 		}
 		// - Style
