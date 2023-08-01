@@ -144,7 +144,16 @@ class Router
 		// Try to read from cache
 		if ($bUseCache) {
 			if (is_file($sCacheFilePath)) {
-				$aRoutes = include $sCacheFilePath;
+				$aCachedRoutes = include $sCacheFilePath;
+
+				// N°6618 - Protection against corrupted cache returning `1` instead of an array of routes
+				if (is_array($aCachedRoutes)) {
+					$aRoutes = $aCachedRoutes;
+				} else {
+					// Invalid cache force re-generation
+					// Note that even if it is re-generated corrupted again, this protection should prevent crashes
+					$bMustWriteCache = true;
+				}
 			} else {
 				$bMustWriteCache = true;
 			}
