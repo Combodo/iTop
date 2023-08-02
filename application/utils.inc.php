@@ -2499,14 +2499,16 @@ SQL;
 						$aHeaders = static::ParseHeaders($http_response_header);
 						$sMimeType = array_key_exists('Content-Type', $aHeaders) ? strtolower($aHeaders['Content-Type']) : 'application/x-octet-stream';
 						// Compute the file extension from the MIME Type
-						foreach($aKnownExtensions as $sExtValue => $sMime)
-						{
-							if ($sMime === $sMimeType)
-							{
+						foreach ($aKnownExtensions as $sExtValue => $sMime) {
+							if ($sMime === $sMimeType) {
 								$sExtension = '.'.$sExtValue;
 								break;
 							}
 						}
+					}
+					$sPathName = pathinfo($sPath, PATHINFO_FILENAME);
+					if (Utils::IsNotNullOrEmptyString($sPathName)) {
+						$sFileName = $sPathName;
 					}
 					$sFileName .= $sExtension;
 				}
