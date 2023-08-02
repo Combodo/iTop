@@ -20,7 +20,6 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use ArchivedObjectException;
 use AttributeEnum;
 use AttributeFinalClass;
 use AttributeFriendlyName;
@@ -29,7 +28,6 @@ use BinaryExpression;
 use Combodo\iTop\Portal\Brick\CreateBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
-use CoreException;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
