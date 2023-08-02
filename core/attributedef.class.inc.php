@@ -8651,14 +8651,6 @@ class AttributeImage extends AttributeBlob
 	 */
 	public function __construct($sCode, $aParams)
 	{
-		//Remove AbsoluteUrlModulesRoot hardcoded to the default_image
-		if (!empty($aParams) && array_key_exists('default_image', $aParams) && !empty($aParams['default_image'])) {
-			$sAbsoluteUrlModulesRoot = utils::GetAbsoluteUrlModulesRoot();
-			if (strpos($aParams['default_image'], $sAbsoluteUrlModulesRoot) !== false) {
-				$aParams['default_image'] = str_replace($sAbsoluteUrlModulesRoot, '', $aParams['default_image']);
-			}
-		}
-
 		parent::__construct($sCode, $aParams);
 	}
 
