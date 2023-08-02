@@ -6723,7 +6723,7 @@ abstract class MetaModel
 
 		if ($bMustBeFound && empty($aRow))
 		{
-			throw new CoreException("No result for the single row query: '$sSQL'");
+			throw new CoreException("No result for the single row query");
 		}
 
 		return $aRow;
