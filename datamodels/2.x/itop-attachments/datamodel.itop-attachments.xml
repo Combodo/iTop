@@ -93,12 +93,12 @@
           <target_class>User</target_class>
           <allow_target_creation>false</allow_target_creation>
         </field>
-        <field id="contact_id" xsi:type="AttributeExternalField">
-          <extkey_attcode>user_id</extkey_attcode>
-          <target_attcode>contactid</target_attcode>
-          <dependencies>
-            <attribute id="user_id"/>
-          </dependencies>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <target_class>Person</target_class>
+          <allow_target_creation>false</allow_target_creation>
         </field>
       </fields>
       <methods>
@@ -111,6 +111,7 @@
     {
         $this->SetCurrentDateIfNull('creation_date');
         $this->SetIfNull('user_id', CMDBChange::GetCurrentUserId());
+        $this->SetIfNull('contact_id', UserRights::GetContactId());
 
         return parent::DBInsertNoReload();
     }
