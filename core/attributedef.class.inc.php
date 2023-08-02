@@ -8662,11 +8662,6 @@ class AttributeImage extends AttributeBlob
 		parent::__construct($sCode, $aParams);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @param string $sParamName
-	 * @return type
-	 */
 	public function Get($sParamName)
 	{
 		$oParamValue = parent::Get($sParamName);
