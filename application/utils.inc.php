@@ -1050,30 +1050,20 @@ class utils
      */
 	public static function GetAbsoluteUrlAppRoot($bForceTrustProxy = false)
 	{
-		$sUrl = static::$m_sAppRootUrl;
-		if ($sUrl === null || $bForceTrustProxy)
-		{
-			$sUrl = self::GetConfig()->Get('app_root_url');
-			if ($sUrl == '')
-			{
-				$sUrl = self::GetDefaultUrlAppRoot($bForceTrustProxy);
+		$sUrl = self::GetConfig()->Get('app_root_url');
+		if ($sUrl === '') {
+			$sUrl = self::GetDefaultUrlAppRoot($bForceTrustProxy);
+		} elseif (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1) {
+			if (isset($_SERVER['SERVER_NAME'])) {
+				$sServerName = $_SERVER['SERVER_NAME'];
+			} else {
+				// CLI mode ?
+				$sServerName = php_uname('n');
 			}
-			elseif (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
-			{
-				if (isset($_SERVER['SERVER_NAME']))
-				{
-					$sServerName = $_SERVER['SERVER_NAME'];
-				}
-				else
-				{
-					// CLI mode ?
-					$sServerName = php_uname('n');
-				}
-				$sUrl = str_replace(SERVER_NAME_PLACEHOLDER, $sServerName, $sUrl);
-			}
-			static::$m_sAppRootUrl = $sUrl;
+			$sUrl = str_replace(SERVER_NAME_PLACEHOLDER, $sServerName, $sUrl);
 		}
-		return static::$m_sAppRootUrl;
+
+		return $sUrl;
 	}
 
 	/**
