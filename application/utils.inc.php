@@ -1053,11 +1053,10 @@ class utils
 		static $sUrlCache = null;
 
 		$sUrl = self::GetConfig()->Get('app_root_url');
-		if ((false === $bForceTrustProxy) && (false === is_null($sUrlCache))) {
-			return $sUrlCache;
-		}
-
 		if ($sUrl === '') {
+			if ((false === $bForceTrustProxy) && (false === is_null($sUrlCache))) {
+				return $sUrlCache;
+			}
 			$sUrl = self::GetDefaultUrlAppRoot($bForceTrustProxy);
 		} elseif (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1) {
 			if (isset($_SERVER['SERVER_NAME'])) {
@@ -1070,7 +1069,6 @@ class utils
 		}
 
 		$sUrlCache = $sUrl;
-		
 		return $sUrl;
 	}
 
