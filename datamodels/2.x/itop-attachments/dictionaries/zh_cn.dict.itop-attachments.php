@@ -57,4 +57,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnAttachmentDownload' => '触发器 (于对象附件下载时)',
 	'Class:TriggerOnAttachmentDownload+' => '触发器于指定类型 [子类型] 对象附件下载时',
 	'UI:Attachments:DropYourFileHint' => '将文件拖放到此区域的任意位置',
+    'Class:TriggerOnCreateAttachment' => 'Trigger (on object\'s attachment create)~~',
+    'Class:TriggerOnCreateAttachment+' => 'Trigger on object\'s attachment create~~',
 ]);

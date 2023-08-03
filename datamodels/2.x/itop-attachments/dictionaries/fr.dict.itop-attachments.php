@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -59,4 +59,6 @@ Soit demandez à votre administrateur système s\'il reste de la place disque di
 	'Class:TriggerOnAttachmentDownload' => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
 	'Class:TriggerOnAttachmentDownload+' => '',
 	'UI:Attachments:DropYourFileHint' => 'Déposez vos fichiers dans cet espace',
-]);
+	'Class:TriggerOnCreateAttachment' => 'Déclencheur sur la création d\'une pièce jointe',
+	'Class:TriggerOnCreateAttachment+' => '',
+));

@@ -529,6 +529,14 @@ class TriggerOnObjectCreate extends TriggerOnObject
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
+	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
+	{
+		//Remove Attachment from class list -> TriggerOnCreateAttachment must be used for attachment
+		$oPage->add_script('$(\'[name="attr_target_class"]>option[value="Attachment"]\').remove();');
+		return parent::DisplayModifyForm($oPage, $aExtraParams);
+	}
+
+
 }
 
 /**

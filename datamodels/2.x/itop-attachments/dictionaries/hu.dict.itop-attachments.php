@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -57,4 +57,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 	'UI:Attachments:DropYourFileHint' => 'Húzza a fájlokat erre a területre',
-]);
+	'Class:TriggerOnCreateAttachment' => 'Trigger (on object\'s attachment create)~~',
+	'Class:TriggerOnCreateAttachment+' => 'Trigger on object\'s attachment create~~',
+));
