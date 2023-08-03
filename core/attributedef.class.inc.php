@@ -8658,9 +8658,9 @@ class AttributeImage extends AttributeBlob
 	{
 		$oParamValue = parent::Get($sParamName);
 
-		if ($sParamName == 'default_image') {
-			if (!empty($oParamValue)) // check if not null
-			{
+		if ($sParamName === 'default_image') {
+			/** @noinspection NestedPositiveIfStatementsInspection */
+			if (!empty($oParamValue)) {
 				return utils::GetAbsoluteUrlModulesRoot() . $oParamValue;
 			}
 		}
