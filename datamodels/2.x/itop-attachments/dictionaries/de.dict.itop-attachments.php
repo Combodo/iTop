@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
@@ -60,4 +60,6 @@ oder melden Sie dem '.ITOP_APPLICATION_SHORT.' Administrator diesen Fehler, weil
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (beim Herunterladen eines Attachment eines Objekts)',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger für das Herunterladen des Attachments der angegebenen Klasse oder einer Unterklasse',
 	'UI:Attachments:DropYourFileHint' => 'Dateien in diesem Bereich ablegen...',
-]);
+	'Class:TriggerOnCreateAttachment' => 'Trigger (on object\'s attachment create)~~',
+	'Class:TriggerOnCreateAttachment+' => 'Trigger on object\'s attachment create~~',
+));

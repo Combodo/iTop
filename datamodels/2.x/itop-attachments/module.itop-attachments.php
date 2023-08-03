@@ -38,6 +38,8 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'vendor/autoload.php',
 			'main.itop-attachments.php',
+			'src/Trigger/TriggerOnCreateAttachment.php',
+			'src/Trigger/TriggerOnAttachmentDownload.php',
 			'renderers.itop-attachments.php',
 		),
 		'webservice' => array(
