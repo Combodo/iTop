@@ -5,11 +5,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use AttributeURLDefaultPattern;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class AttributeURLTest extends ItopTestCase {
 	public function setUp(): void
 	{
