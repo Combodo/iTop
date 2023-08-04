@@ -6810,25 +6810,21 @@ abstract class MetaModel
 	 *     $bMustBeFound=false)
 	 * @throws CoreException if no result found and $bMustBeFound=true
 	 * @throws ArchivedObjectException if archive mode disabled and result is archived and $bMustBeFound=true
-	 * @throws \Exception
-	 *
 	 */
 	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
 		$oObject = self::GetObjectWithArchive($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
 
-		if (empty($oObject))
-		{
+		if (empty($oObject)) {
 			return null;
 		}
 
-		if (!utils::IsArchiveMode() && $oObject->IsArchived())
-		{
+		if (!utils::IsArchiveMode() && $oObject->IsArchived()) {
 			if ($bMustBeFound) {
 				throw new ArchivedObjectException("The object $sClass::$iKey is archived");
-			} else {
-				return null;
 			}
+
+			return null;
 		}
 
 		return $oObject;
