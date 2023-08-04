@@ -7,11 +7,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DBBackup;
 use utils;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class DBBackupTest extends ItopTestCase
 {
 	/**
@@ -27,7 +22,7 @@ class DBBackupTest extends ItopTestCase
 		// We need a connection to the DB, so let's open it !
 		// We are using the default config file... as the server might not be configured for all the combination we are testing
 		// For example dev env and ci env won't accept TLS connection
-		$oConfigOnDisk = utils::GetConfig();
+		$oConfigOnDisk = utils::GetConfig(true);
 		CMDBSource::InitFromConfig($oConfigOnDisk);
 	}
 

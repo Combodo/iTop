@@ -11,10 +11,6 @@ use DBSearch;
  * Class DBSearchIntersectTest
  *
  * @package Combodo\iTop\Test\UnitTest\Core
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class DBSearchJoinTest extends ItopDataTestCase {
 	

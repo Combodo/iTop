@@ -25,6 +25,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use utils;
 
 /**
+ * @runClassInSeparateProcess
  * @covers utils
  */
 class utilsTest extends ItopTestCase
@@ -68,36 +69,36 @@ class utilsTest extends ItopTestCase
 
 	public function realPathDataProvider()
 	{
-		parent::setUp(); // if not called, APPROOT won't be defined :(
+		$sAppRoot = static::GetAppRoot();
 
 		$sSep = DIRECTORY_SEPARATOR;
-		$sItopRootRealPath = realpath(APPROOT).$sSep;
+		$sItopRootRealPath = realpath($sAppRoot).$sSep;
 		$sLicenseFileName = 'license.txt';
-		if (!is_file(APPROOT.$sLicenseFileName))
+		if (!is_file($sAppRoot.$sLicenseFileName))
 		{
 			$sLicenseFileName = 'LICENSE';
 		}
 
 		return [
-			$sLicenseFileName => [APPROOT.$sLicenseFileName, APPROOT, $sItopRootRealPath.$sLicenseFileName],
-			'unexisting file' => [APPROOT.'license_DOES_NOT_EXIST.txt', APPROOT, false],
-			'/'.$sLicenseFileName => [APPROOT.$sSep.$sLicenseFileName, APPROOT, $sItopRootRealPath.$sLicenseFileName],
-			'%2f'.$sLicenseFileName => [APPROOT.'%2f'. $sLicenseFileName, APPROOT, false],
-			'../'.$sLicenseFileName => [APPROOT.'..'.$sSep.$sLicenseFileName, APPROOT, false],
-			'%2e%2e%2f'.$sLicenseFileName => [APPROOT.'%2e%2e%2f'.$sLicenseFileName, APPROOT, false],
+			$sLicenseFileName => [$sAppRoot.$sLicenseFileName, $sAppRoot, $sItopRootRealPath.$sLicenseFileName],
+			'unexisting file' => [$sAppRoot.'license_DOES_NOT_EXIST.txt', $sAppRoot, false],
+			'/'.$sLicenseFileName => [$sAppRoot.$sSep.$sLicenseFileName, $sAppRoot, $sItopRootRealPath.$sLicenseFileName],
+			'%2f'.$sLicenseFileName => [$sAppRoot.'%2f'. $sLicenseFileName, $sAppRoot, false],
+			'../'.$sLicenseFileName => [$sAppRoot.'..'.$sSep.$sLicenseFileName, $sAppRoot, false],
+			'%2e%2e%2f'.$sLicenseFileName => [$sAppRoot.'%2e%2e%2f'.$sLicenseFileName, $sAppRoot, false],
 			'application/utils.inc.php with basepath=APPROOT' => [
-				APPROOT.'application/utils.inc.php',
-				APPROOT,
+				$sAppRoot.'application/utils.inc.php',
+				$sAppRoot,
 				$sItopRootRealPath.'application'.$sSep.'utils.inc.php',
 			],
 			'application/utils.inc.php with basepath=APPROOT/application' => [
-				APPROOT.'application/utils.inc.php',
-				APPROOT.'application',
+				$sAppRoot.'application/utils.inc.php',
+				$sAppRoot.'application',
 				$sItopRootRealPath.'application'.$sSep.'utils.inc.php',
 			],
 			'basepath containing / and \\' => [
-				APPROOT.'sources/Form/Form.php',
-				APPROOT.'sources/Form\\Form.php',
+				$sAppRoot.'sources/Form/Form.php',
+				$sAppRoot.'sources/Form\\Form.php',
 				$sItopRootRealPath.'sources'.$sSep.'Form'.$sSep.'Form.php',
 			],
 		];
@@ -117,13 +118,14 @@ class utilsTest extends ItopTestCase
 
 	public function LocalPathProvider()
 	{
+		$sAppRoot = static::GetAppRoot();
 		return array(
 			'index.php' => array(
-				'sAbsolutePath' => APPROOT.'index.php',
+				'sAbsolutePath' => $sAppRoot.'index.php',
 				'expected' => 'index.php',
 			),
 			'non existing' => array(
-				'sAbsolutePath' => APPROOT.'nonexisting/nonexisting',
+				'sAbsolutePath' => $sAppRoot.'nonexisting/nonexisting',
 				'expected' => false,
 			),
 			'outside' => array(
@@ -131,15 +133,15 @@ class utilsTest extends ItopTestCase
 				'expected' => false,
 			),
 			'application/cmdbabstract.class.inc.php' => array(
-				'sAbsolutePath' => APPROOT.'application/cmdbabstract.class.inc.php',
+				'sAbsolutePath' => $sAppRoot.'application/cmdbabstract.class.inc.php',
 				'expected' => 'application/cmdbabstract.class.inc.php',
 			),
 			'dir' => array(
-				'sAbsolutePath' => APPROOT.'application/.',
+				'sAbsolutePath' => $sAppRoot.'application/.',
 				'expected' => 'application',
 			),
 			'root' => array(
-				'sAbsolutePath' => APPROOT.'.',
+				'sAbsolutePath' => $sAppRoot.'.',
 				'expected' => '',
 			),
 		);
@@ -288,7 +290,7 @@ class utilsTest extends ItopTestCase
 
 	public function GetDefaultUrlAppRootProvider()
 	{
-		$this->setUp();
+		$sAppRoot = static::GetAppRoot();
 
 		$baseServerVar = [
 			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
@@ -298,7 +300,7 @@ class utilsTest extends ItopTestCase
 			'HTTP_X_FORWARDED_PORT' => null,
 			'REQUEST_URI' => '/index.php?baz=1',
 			'SCRIPT_NAME' => '/index.php',
-			'SCRIPT_FILENAME' => APPROOT.'index.php',
+			'SCRIPT_FILENAME' => $sAppRoot.'index.php',
 			'QUERY_STRING' => 'baz=1',
 			'HTTP_X_FORWARDED_PROTO' => null,
 			'HTTP_X_FORWARDED_PROTOCOL' => null,
@@ -486,23 +488,21 @@ class utilsTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider GetMentionedObjectsFromTextProvider
 	 * @covers       utils::GetMentionedObjectsFromText
-	 *
-	 * @param string $sInput
-	 * @param string $sFormat
-	 * @param array $aExceptedMentionedObjects
 	 *
 	 * @throws \Exception
 	 */
-	public function testGetMentionedObjectsFromText(string $sInput, string $sFormat, array $aExceptedMentionedObjects)
+	public function testGetMentionedObjectsFromText()
 	{
-		$aTestedMentionedObjects = utils::GetMentionedObjectsFromText($sInput, $sFormat);
+		// Emulate the "Case provider mechanism" (reason: the data provider requires utils constants not available before the application startup)
+		foreach ($this->GetMentionedObjectsFromTextProvider() as $sCase => list($sInput, $sFormat, $aExceptedMentionedObjects)) {
+			$aTestedMentionedObjects = utils::GetMentionedObjectsFromText($sInput, $sFormat);
 
-		$sExpectedAsString = print_r($aExceptedMentionedObjects, true);
-		$sTestedAsString = print_r($aTestedMentionedObjects, true);
+			$sExpectedAsString = print_r($aExceptedMentionedObjects, true);
+			$sTestedAsString = print_r($aTestedMentionedObjects, true);
 
-		$this->assertEquals($sTestedAsString, $sExpectedAsString, "Found mentioned objects don't match. Got: $sTestedAsString, expected $sExpectedAsString");
+			$this->assertEquals($sTestedAsString, $sExpectedAsString, "Case '$sCase': Found mentioned objects don't match. Got: $sTestedAsString, expected $sExpectedAsString");
+		}
 	}
 
 	/**
@@ -636,17 +636,13 @@ class utilsTest extends ItopTestCase
 	/**
 	 * Test sanitizer.
 	 *
-	 * @param $type string type of sanitizer
-	 * @param $valueToSanitize ? value to sanitize
-	 * @param $expectedResult ? expected result
-	 *
-	 * @return void
-	 *
-	 * @dataProvider sanitizerDataProvider
 	 */
-	public function testSanitizer($type, $valueToSanitize, $expectedResult)
+	public function testSanitizer()
 	{
-		$this->assertEquals($expectedResult, utils::Sanitize($valueToSanitize, null, $type), 'url sanitize failed');
+		// Emulate the "Case provider mechanism" (reason: the data provider requires utils constants not available before the application startup)
+		foreach ($this->sanitizerDataProvider() as $sCase => list($type, $valueToSanitize, $expectedResult)) {
+			$this->assertEquals($expectedResult, utils::Sanitize($valueToSanitize, null, $type), "Case '$sCase': url sanitize failed");
+		}
 	}
 
 	/**

@@ -33,14 +33,10 @@ use MetaModel;
 
 /**
  * @group specificOrgInSampleData
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class XMLDataLoaderTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	const CREATE_TEST_ORG = false;
 
 	public function testDataLoader()
 	{

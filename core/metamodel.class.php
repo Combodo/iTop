@@ -6486,6 +6486,13 @@ abstract class MetaModel
 	 */
 	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false, $sEnvironment = 'production')
 	{
+		// Startup on a new environment is not supported
+		static $bStarted = false;
+		if ($bStarted) {
+			return;
+		}
+		$bStarted = true;
+
 		self::$m_sEnvironment = $sEnvironment;
 
 		if (!defined('MODULESROOT'))
@@ -6720,6 +6727,19 @@ abstract class MetaModel
 			$value = self::$m_aModulesParameters[$sModule]->Get($sProperty, $defaultvalue);
 		}
 		return $value;
+	}
+
+	/**
+	 * @internal Used for resetting the configuration during automated tests
+
+	 * @param \Config $oConfiguration
+	 *
+	 * @return void
+	 * @since 3.0.4 3.1.1 3.2.0
+	 */
+	public static function SetConfig(Config $oConfiguration)
+	{
+		self::$m_oConfig = $oConfiguration;
 	}
 
 	/**

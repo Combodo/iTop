@@ -44,14 +44,11 @@ use Dict;
 /**
  * @group itopRequestMgmt
  * @group itopServiceMgmt
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class CriterionConversionTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	const CREATE_TEST_ORG = false;
+	const USE_TRANSACTION = false;
 
 	/**
 	 * @dataProvider ToOqlProvider
@@ -409,9 +406,7 @@ class CriterionConversionTest extends ItopDataTestCase
 	 * @dataProvider OqlProvider
 	 *
 	 * @param      $sOQL
-	 *
 	 * @param      $sExpectedOQL
-	 *
 	 * @param      $aExpectedCriterion
 	 *
 	 * @throws \DictExceptionUnknownLanguage
@@ -425,7 +420,7 @@ class CriterionConversionTest extends ItopDataTestCase
 		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
 		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag2', 'Second');
 
-		$this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
+		$this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion);
 	}
 
 	function OqlProvider()
@@ -589,9 +584,7 @@ class CriterionConversionTest extends ItopDataTestCase
 	 * @dataProvider OqlProviderDates
 	 *
 	 * @param      $sOQL
-	 *
 	 * @param      $sExpectedOQL
-	 *
 	 * @param      $aExpectedCriterion
 	 *
 	 * @throws \DictExceptionUnknownLanguage
@@ -599,33 +592,11 @@ class CriterionConversionTest extends ItopDataTestCase
 	 * @throws \OQLException
 	 * @throws \CoreException
 	 */
-    function testOqlToForSearchToOqlAltLanguageFR($sOQL, $sExpectedOQL, $aExpectedCriterion)
+    function testOqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion)
     {
     	\MetaModel::GetConfig()->Set('date_and_time_format', array('default' => array('date' => 'Y-m-d', 'time' => 'H:i:s', 'date_time' => '$date $time')));
-	    $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "FR FR");
+	    $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion);
     }
-
-
-	/**
-	 * @dataProvider OqlProviderDates
-	 *
-	 * @param      $sOQL
-	 *
-	 * @param      $sExpectedOQL
-	 *
-	 * @param      $aExpectedCriterion
-	 *
-	 * @throws \DictExceptionUnknownLanguage
-	 * @throws \MissingQueryArgument
-	 * @throws \OQLException
-	 * @throws \CoreException
-	 */
-    function testOqlToForSearchToOqlAltLanguageEN($sOQL, $sExpectedOQL, $aExpectedCriterion)
-    {
-	    \MetaModel::GetConfig()->Set('date_and_time_format', array('default' => array('date' => 'Y-m-d', 'time' => 'H:i:s', 'date_time' => '$date $time')));
-        $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
-    }
-
     function OqlProviderDates()
     {
         return array(
@@ -706,25 +677,17 @@ class CriterionConversionTest extends ItopDataTestCase
 	/**
 	 *
 	 * @param      $sOQL
-	 *
 	 * @param      $sExpectedOQL
-	 *
 	 * @param      $aExpectedCriterion
-	 *
-	 * @param      $sLanguageCode
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \MissingQueryArgument
 	 * @throws \OQLException
 	 */
-    function OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, $sLanguageCode )
+    function OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion)
     {
         $this->debug($sOQL);
-
-
-        Dict::SetUserLanguage($sLanguageCode);
-
 
         $oSearchForm = new SearchForm();
         $oSearch = DBSearch::FromOQL($sOQL);

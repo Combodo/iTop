@@ -16,11 +16,6 @@ namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class LogAPITest extends ItopDataTestCase
 {
 	private $mockFileLog;
@@ -38,7 +33,6 @@ class LogAPITest extends ItopDataTestCase
 	/**
 	 * @dataProvider LogApiProvider
 	 * @test
-	 * @backupGlobals disabled
 	 */
 	public function TestLogApi($oConfigObject, $sMessage, $Channel, $sExpectedLevel, $sExpectedMessage, $sExpectedChannel = '')
 	{
@@ -63,7 +57,6 @@ class LogAPITest extends ItopDataTestCase
 	/**
 	 * @dataProvider LogWarningWithASpecificChannelProvider
 	 * @test
-	 * @backupGlobals disabled
 	 */
 	public function TestLogWarningWithASpecificChannel($expectedCallNb, $sExpectedLevel, $ConfigReturnedObject, $bExceptionRaised=false)
 	{
@@ -110,7 +103,6 @@ class LogAPITest extends ItopDataTestCase
 	/**
 	 * @dataProvider LogOkWithASpecificChannel
 	 * @test
-	 * @backupGlobals disabled
 	 */
 	public function TestLogOkWithASpecificChannel($expectedCallNb, $sExpectedLevel, $ConfigReturnedObject, $bExceptionRaised=false)
 	{

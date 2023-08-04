@@ -21,11 +21,6 @@ use ExceptionLog;
 
 require_once(__DIR__.'/ExceptionLogTest/Exceptions.php');
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class ExceptionLogTest extends ItopDataTestCase
 {
 	protected function setUp(): void
@@ -35,6 +30,8 @@ class ExceptionLogTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @runInSeparateProcess
+	 *
 	 * @dataProvider logProvider
 	 */
 	public function testLogInFile($aLevels, $aExceptions, $sChannel, $aExpectedWriteNumber, $logLevelMin, $aExpectedDbWriteNumber, $logLevelMinWriteInDb)

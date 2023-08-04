@@ -10,8 +10,6 @@ use MetaModel;
 
 /**
  * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class CliResetSessionTest extends ItopDataTestCase
 {

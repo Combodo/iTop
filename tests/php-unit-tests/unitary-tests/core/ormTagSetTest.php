@@ -38,10 +38,6 @@ define('MAX_TAGS', 12);
 /**
  * @group itopFaqLight
  * Tests of the ormTagSet class
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class ormTagSetTest extends ItopDataTestCase
 {

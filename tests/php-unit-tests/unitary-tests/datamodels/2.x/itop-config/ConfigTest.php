@@ -24,11 +24,6 @@ namespace Combodo\iTop\Test\UnitTest\Module\iTopConfig;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class ConfigTest extends ItopTestCase
 {
 	protected function setUp(): void

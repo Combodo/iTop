@@ -10,10 +10,6 @@ use MetaModel;
 /**
  * Class MetaModelTest
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @since 2.6.0
  * @package Combodo\iTop\Test\UnitTest\Core
  */
@@ -181,6 +177,8 @@ class MetaModelTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @runInSeparateProcess
+	 *
 	 * @dataProvider enumPluginsProvider
 	 *
 	 * @param $expectedResults
@@ -228,6 +226,8 @@ class MetaModelTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @runInSeparateProcess
+	 *
 	 * @dataProvider getPluginsProvider
 	 *
 	 * @param $expectedInstanciationCalls

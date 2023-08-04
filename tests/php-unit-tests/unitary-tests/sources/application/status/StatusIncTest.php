@@ -15,11 +15,6 @@ if (!defined('DEBUG_UNIT_TEST')) {
     define('DEBUG_UNIT_TEST', true);
 }
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class StatusIncTest extends ItopTestCase {
 
     /**
@@ -70,7 +65,10 @@ class StatusIncTest extends ItopTestCase {
         $this->assertTrue(true);
     }
 
-    public function testStatusStartupWrongDbPwd()
+    /**
+     * @runInSeparateProcess
+     */
+	public function testStatusStartupWrongDbPwd()
     {
 	    $this->RequireOnceItopFile('core/cmdbobject.class.inc.php');
 	    $this->RequireOnceItopFile('application/utils.inc.php');

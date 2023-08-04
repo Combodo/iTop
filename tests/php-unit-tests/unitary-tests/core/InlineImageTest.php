@@ -10,12 +10,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use InlineImage;
 
-
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class InlineImageTest extends ItopDataTestCase
 {
 	/**

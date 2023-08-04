@@ -13,13 +13,12 @@ use utils;
  * @group restApi
  * @group defaultProfiles
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
+ * @runClassInSeparateProcess
  */
 class RestTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
+	const CREATE_TEST_ORG = false;
 
 	const ENUM_JSONDATA_AS_STRING = 0;
 	const ENUM_JSONDATA_AS_FILE = 1;

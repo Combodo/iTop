@@ -30,11 +30,8 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Dict;
 use Exception;
 
-
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
+ * @runClassInSeparateProcess
  */
 class dictTest extends ItopTestCase
 {

@@ -9,9 +9,6 @@ use MetaModel;
 use utils;
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  * @covers \ActionEmail
  */
 class ActionEmailTest extends ItopDataTestCase

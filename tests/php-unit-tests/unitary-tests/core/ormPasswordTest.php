@@ -12,10 +12,6 @@ use Utils;
 
 /**
  * Tests of the ormPassword class
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class ormPasswordTest extends ItopDataTestCase
 {
@@ -32,9 +28,11 @@ class ormPasswordTest extends ItopDataTestCase
 	 */
 	public function testCheckHash($sToHashValues, $sToHashSalt, $sHashAlgo, $sExpectedHash)
 	{
+		$prevHashAlgo = utils::GetConfig()->GetPasswordHashAlgo($sHashAlgo);
 		utils::GetConfig()->SetPasswordHashAlgo($sHashAlgo);
 		$oPassword1 = new ormPassword($sExpectedHash, $sToHashSalt);
 		static::assertTrue($oPassword1->CheckPassword($sToHashValues));
+		utils::GetConfig()->SetPasswordHashAlgo($prevHashAlgo);
 	}
 
 	public function HashProvider()

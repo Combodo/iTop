@@ -9,9 +9,7 @@ use SubMFCompiler;
 use utils;
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
+ * @runClassInSeparateProcess
  * @covers \MFCompiler::UseLatestPrecompiledFile
  */
 class MFCompilerTest extends ItopTestCase {
@@ -53,9 +51,9 @@ class MFCompilerTest extends ItopTestCase {
 		$sSourceDir = $sAppRootForProvider . 'datamodels' . DIRECTORY_SEPARATOR . '2.x';
 		$sDatamodel2xTargetDir = $sSourceDir . DIRECTORY_SEPARATOR . '/UseLatestPrecompiledFileProvider';
 
-		mkdir($sTempTargetDir);
-		mkdir($sExtensionTargetDir);
-		mkdir($sDatamodel2xTargetDir);
+		if (!is_dir($sTempTargetDir)) mkdir($sTempTargetDir);
+		if (!is_dir($sExtensionTargetDir)) @mkdir($sExtensionTargetDir);
+		if (!is_dir($sDatamodel2xTargetDir)) @mkdir($sDatamodel2xTargetDir);
 
 		self::$aFoldersToCleanup = [ $sTempTargetDir, $sExtensionTargetDir, $sDatamodel2xTargetDir ];
 

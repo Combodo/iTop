@@ -72,11 +72,13 @@ class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 	{
 		static::setUp();
 
-		$sPath = APPROOT.'datamodels/2.x/*/datamodel.*.xml';
+		$sAppRoot = $this->GetAppRoot();
+
+		$sPath = $sAppRoot.'datamodels/2.x/*/datamodel.*.xml';
 		$aXmlFiles = glob($sPath);
 
-		$aXmlFiles[] = APPROOT.'core/datamodel.core.xml';
-		$aXmlFiles[] = APPROOT.'application/datamodel.application.xml';
+		$aXmlFiles[] = $sAppRoot.'core/datamodel.core.xml';
+		$aXmlFiles[] = $sAppRoot.'application/datamodel.application.xml';
 
 		$aTestCases = array();
 		foreach ($aXmlFiles as $sXmlFile) {

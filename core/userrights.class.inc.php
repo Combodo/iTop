@@ -750,13 +750,24 @@ class UserRights
 	protected static $m_aCacheContactPictureAbsUrl = [];
 	/** @var UserRightsAddOnAPI $m_oAddOn */
 	protected static $m_oAddOn;
-	protected static $m_oUser;
-	protected static $m_oRealUser;
+	protected static $m_oUser = null;
+	protected static $m_oRealUser = null;
 	protected static $m_sSelfRegisterAddOn = null;
 	protected static $m_aAdmins = array();
 	protected static $m_aPortalUsers = array();
 	/** @var array array('sName' => $sName, 'bSuccess' => $bSuccess); */
 	private static $m_sLastLoginStatus = null;
+
+	/**
+	 * @return void
+	 * @since 3.0.4 3.1.1 3.2.0
+	 */
+	protected static function ResetCurrentUserData()
+	{
+		self::$m_oUser = null;
+		self::$m_oRealUser = null;
+		self::$m_sLastLoginStatus = null;
+	}
 
 	/**
 	 * @param string $sModuleName
@@ -776,8 +787,7 @@ class UserRights
 		}
 		self::$m_oAddOn = new $sModuleName;
 		self::$m_oAddOn->Init();
-		self::$m_oUser = null;
-		self::$m_oRealUser = null;
+		self::ResetCurrentUserData();
 	}
 
 	/**
@@ -844,6 +854,8 @@ class UserRights
 	 */
 	public static function Login($sLogin, $sAuthentication = 'any')
 	{
+		static::Logoff();
+
 		$oUser = self::FindUser($sLogin, $sAuthentication);
 		if (is_null($oUser))
 		{
@@ -859,6 +871,17 @@ class UserRights
 
 		Dict::SetUserLanguage(self::GetUserLanguage());
 		return true;
+	}
+
+	/**
+	 * @return void
+	 * @since 3.0.4 3.1.1 3.2.0
+	 */
+	public static function Logoff()
+	{
+		self::ResetCurrentUserData();
+		Dict::SetUserLanguage(null);
+		self::_ResetSessionCache();
 	}
 
 	/**

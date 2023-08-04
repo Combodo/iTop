@@ -24,11 +24,6 @@ namespace Combodo\iTop\Test\UnitTest\Module\iTopConfig;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use ConfigPlaceholdersResolver;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class ConfigPlaceholdersResolverTest extends ItopTestCase
 {
 	protected function setUp(): void

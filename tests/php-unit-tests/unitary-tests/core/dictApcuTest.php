@@ -32,8 +32,6 @@ use Dict;
 
 /**
  * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class dictApcuTest extends ItopTestCase
 {
