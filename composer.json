@@ -16,6 +16,7 @@
     "combodo/tcpdf": "~6.4.4",
     "firebase/php-jwt": "~6.4.0",
     "guzzlehttp/guzzle": "^7.5.1",
+    "jfcherng/php-diff": "^6.15",
     "laminas/laminas-mail": "^2.11",
     "laminas/laminas-servicemanager": "^3.5",
     "league/oauth2-google": "^3.0",

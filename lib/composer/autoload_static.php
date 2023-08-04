@@ -7,21 +7,21 @@ namespace Composer\Autoload;
 class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
 {
     public static $files = array (
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
+        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
-        'c9d07b32a2e02bc0fc582d4f0c1b56cc' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/autoload.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
-        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
+        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        'c9d07b32a2e02bc0fc582d4f0c1b56cc' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/autoload.php',
+        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
+        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -94,6 +94,11 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
             'Laminas\\Mime\\' => 13,
             'Laminas\\Mail\\' => 13,
             'Laminas\\Loader\\' => 15,
+        ),
+        'J' => 
+        array (
+            'Jfcherng\\Utility\\' => 17,
+            'Jfcherng\\Diff\\' => 14,
         ),
         'G' => 
         array (
@@ -329,6 +334,16 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Laminas\\Loader\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-loader/src',
+        ),
+        'Jfcherng\\Utility\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jfcherng/php-color-output/src',
+            1 => __DIR__ . '/..' . '/jfcherng/php-mb-string/src',
+        ),
+        'Jfcherng\\Diff\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jfcherng/php-diff/src',
+            1 => __DIR__ . '/..' . '/jfcherng/php-sequence-matcher/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -1069,6 +1084,38 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'ItopCounter' => __DIR__ . '/../..' . '/core/counter.class.inc.php',
         'JSButtonItem' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'JSPopupMenuItem' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
+        'Jfcherng\\Diff\\DiffHelper' => __DIR__ . '/..' . '/jfcherng/php-diff/src/DiffHelper.php',
+        'Jfcherng\\Diff\\Differ' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Differ.php',
+        'Jfcherng\\Diff\\Exception\\FileNotFoundException' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Exception/FileNotFoundException.php',
+        'Jfcherng\\Diff\\Exception\\UnsupportedFunctionException' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Exception/UnsupportedFunctionException.php',
+        'Jfcherng\\Diff\\Factory\\LineRendererFactory' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Factory/LineRendererFactory.php',
+        'Jfcherng\\Diff\\Factory\\RendererFactory' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Factory/RendererFactory.php',
+        'Jfcherng\\Diff\\Renderer\\AbstractRenderer' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/AbstractRenderer.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\AbstractHtml' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/AbstractHtml.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\Combined' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/Combined.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\Inline' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/Inline.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\Json' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/Json.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\JsonHtml' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/JsonHtml.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\LineRenderer\\AbstractLineRenderer' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/LineRenderer/AbstractLineRenderer.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\LineRenderer\\Char' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/LineRenderer/Char.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\LineRenderer\\Line' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/LineRenderer/Line.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\LineRenderer\\LineRendererInterface' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/LineRenderer/LineRendererInterface.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\LineRenderer\\None' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/LineRenderer/None.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\LineRenderer\\Word' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/LineRenderer/Word.php',
+        'Jfcherng\\Diff\\Renderer\\Html\\SideBySide' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Html/SideBySide.php',
+        'Jfcherng\\Diff\\Renderer\\RendererConstant' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/RendererConstant.php',
+        'Jfcherng\\Diff\\Renderer\\RendererInterface' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/RendererInterface.php',
+        'Jfcherng\\Diff\\Renderer\\Text\\AbstractText' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Text/AbstractText.php',
+        'Jfcherng\\Diff\\Renderer\\Text\\Context' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Text/Context.php',
+        'Jfcherng\\Diff\\Renderer\\Text\\JsonText' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Text/JsonText.php',
+        'Jfcherng\\Diff\\Renderer\\Text\\Unified' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Renderer/Text/Unified.php',
+        'Jfcherng\\Diff\\SequenceMatcher' => __DIR__ . '/..' . '/jfcherng/php-sequence-matcher/src/SequenceMatcher.php',
+        'Jfcherng\\Diff\\Utility\\Arr' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Utility/Arr.php',
+        'Jfcherng\\Diff\\Utility\\Language' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Utility/Language.php',
+        'Jfcherng\\Diff\\Utility\\ReverseIterator' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Utility/ReverseIterator.php',
+        'Jfcherng\\Diff\\Utility\\Str' => __DIR__ . '/..' . '/jfcherng/php-diff/src/Utility/Str.php',
+        'Jfcherng\\Utility\\CliColor' => __DIR__ . '/..' . '/jfcherng/php-color-output/src/CliColor.php',
+        'Jfcherng\\Utility\\MbString' => __DIR__ . '/..' . '/jfcherng/php-mb-string/src/MbString.php',
         'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
         'JsonPPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/JsonPPage.php',
         'JsonPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/JsonPage.php',
