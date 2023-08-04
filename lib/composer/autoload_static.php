@@ -569,6 +569,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'CheckableExpression' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',
         'Combodo\\iTop\\Application\\Branding' => __DIR__ . '/../..' . '/sources/Application/Branding.php',
         'Combodo\\iTop\\Application\\EventRegister\\ApplicationEvents' => __DIR__ . '/../..' . '/sources/Application/EventRegister/ApplicationEvents.php',
+        'Combodo\\iTop\\Application\\Helper\\CMDBChangeHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/CMDBChangeHelper.php',
         'Combodo\\iTop\\Application\\Helper\\FormHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/FormHelper.php',
         'Combodo\\iTop\\Application\\Helper\\Session' => __DIR__ . '/../..' . '/sources/Application/Helper/Session.php',
         'Combodo\\iTop\\Application\\Helper\\WebResourcesHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/WebResourcesHelper.php',
