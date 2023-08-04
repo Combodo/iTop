@@ -60,8 +60,14 @@ class DbConnectionWrapper
 	 *
 	 * @param \mysqli|null $oMysqli
 	 */
-	public static function SetDbConnectionMockForQuery(?mysqli $oMysqli): void
+	public static function SetDbConnectionMockForQuery(?mysqli $oMysqli = null): void
 	{
-		static::$oDbCnxMockableForQuery = $oMysqli;
+		if (is_null($oMysqli)) {
+			// Reset to standard connection
+			static::$oDbCnxMockableForQuery = static::$oDbCnxStandard;
+		}
+		else {
+			static::$oDbCnxMockableForQuery = $oMysqli;
+		}
 	}
 }

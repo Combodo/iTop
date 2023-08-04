@@ -36,10 +36,6 @@ use MetaModel;
 
 /**
  * @group specificOrgInSampleData
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class DBObjectTest extends ItopDataTestCase
 {

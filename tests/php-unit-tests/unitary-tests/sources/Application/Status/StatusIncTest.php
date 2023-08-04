@@ -16,11 +16,6 @@ if (!defined('DEBUG_UNIT_TEST')) {
     define('DEBUG_UNIT_TEST', true);
 }
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class StatusIncTest extends ItopTestCase {
 
     /**

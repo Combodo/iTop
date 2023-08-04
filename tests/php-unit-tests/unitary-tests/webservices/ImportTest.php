@@ -5,11 +5,6 @@ namespace Combodo\iTop\Test\UnitTest\Webservices;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class ImportTest extends ItopDataTestCase {
 	const USE_TRANSACTION = false;
 

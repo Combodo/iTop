@@ -14,10 +14,6 @@ use MetaModel;
 use MySQLTransactionNotClosedException;
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @group itopRequestMgmt
  * @group specificOrgInSampleData
  * Class TransactionsTest
@@ -276,6 +272,7 @@ class TransactionsTest extends ItopTestCase
 	protected function tearDown(): void
 	{
 		try {
+			DbConnectionWrapper::SetDbConnectionMockForQuery();
 			parent::tearDown();
 		}
 		catch (MySQLTransactionNotClosedException $e) {

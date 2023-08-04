@@ -29,10 +29,6 @@ use Exception;
 
 /**
  * @group itopRequestMgmt
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class SearchFormTest extends ItopDataTestCase
 {

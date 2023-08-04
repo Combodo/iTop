@@ -21,11 +21,6 @@ use QueryBuilderContext;
 use SQLObjectQueryBuilder;
 use utils;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class OQLTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;

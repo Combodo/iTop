@@ -15,11 +15,6 @@ use MetaModel;
  */
 
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class CMDBObjectTest extends ItopDataTestCase
 {
 	private $sAdminLogin;

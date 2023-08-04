@@ -11,11 +11,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use MetaModel;
 
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class ValueSetObjectsTest extends ItopTestCase
 {
 

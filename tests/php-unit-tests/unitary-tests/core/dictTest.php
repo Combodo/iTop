@@ -31,11 +31,6 @@ use Dict;
 use Exception;
 
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class dictTest extends ItopTestCase
 {
 	private $sEnvName;

@@ -41,10 +41,6 @@ use utils;
  * @group itopRequestMgmt
  * @group userRights
  * @group defaultProfiles
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class UserRightsTest extends ItopDataTestCase
 {
@@ -68,6 +64,25 @@ class UserRightsTest extends ItopDataTestCase
 		'ModuleInstallation' => ['class' => 'ModuleInstallation', 'attcode' => 'name'],
 	];
 
+	/**
+	 * @param string $sLoginPrefix
+	 * @param int $iProfileId initial profile
+	 *
+	 * @return \DBObject
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	protected function CreateUniqueUserAndLogin(string $sLoginPrefix, int $iProfileId): DBObject
+	{
+		static $iCount = 0;
+		$sLogin = $sLoginPrefix.$iCount;
+		$iCount++;
+
+		$oUser = self::CreateUser($sLogin, $iProfileId);
+		$_SESSION = array();
+		UserRights::Login($sLogin);
+		return $oUser;
+	}
 
 	public function testIsLoggedIn()
 	{
@@ -90,6 +105,7 @@ class UserRightsTest extends ItopDataTestCase
 		$_SESSION = [];
 		$this->assertEquals($bResult, UserRights::Login($sLogin));
 		$this->assertEquals($bResult, UserRights::IsLoggedIn());
+		UserRights::Logoff();
 	}
 
 	public function LoginProvider(): array
@@ -99,22 +115,6 @@ class UserRightsTest extends ItopDataTestCase
 			['NotALoginForUnitTests', false],
 			['', false],
 		];
-	}
-
-	/**
-	 * @param string $sLogin
-	 * @param int $iProfileId initial profile
-	 *
-	 * @return \DBObject
-	 * @throws \CoreException
-	 * @throws \Exception
-	 */
-	protected function AddUser(string $sLogin, int $iProfileId): DBObject
-	{
-		$oUser = self::CreateUser($sLogin, $iProfileId);
-		$oUser->DBUpdate();
-
-		return $oUser;
 	}
 
 	/** Test IsActionAllowed when not logged => always true
@@ -145,8 +145,7 @@ class UserRightsTest extends ItopDataTestCase
 		return $aClassActions;
 	}
 
-	/** Test IsActionAllowed
-	 *
+	/**
 	 * @dataProvider ActionAllowedProvider
 	 *
 	 * @param int $iProfileId
@@ -158,11 +157,10 @@ class UserRightsTest extends ItopDataTestCase
 	 */
 	public function testIsActionAllowed(int $iProfileId, array $aClassActionResult)
 	{
-		$this->AddUser('test1', $iProfileId);
-		$_SESSION = array();
-		UserRights::Login('test1');
+		$this->CreateUniqueUserAndLogin('test1', $iProfileId);
 		$bRes = UserRights::IsActionAllowed($aClassActionResult['class'], $aClassActionResult['action']) == UR_ALLOWED_YES;
 		$this->assertEquals($aClassActionResult['res'], $bRes);
+		UserRights::Logoff();
 	}
 
 	/*
@@ -239,12 +237,11 @@ class UserRightsTest extends ItopDataTestCase
 	 */
 	public function testIsActionAllowedOnAttribute(int $iProfileId, array $aClassActionResult)
 	{
-		$this->AddUser('test1', $iProfileId);
-		$_SESSION = [];
-		UserRights::Login('test1');
+		$this->CreateUniqueUserAndLogin('test1', $iProfileId);
 		$sClass = $aClassActionResult['class'];
 		$bRes = UserRights::IsActionAllowedOnAttribute($sClass, self::$aClasses[$sClass]['attcode'], $aClassActionResult['action']) == UR_ALLOWED_YES;
 		$this->assertEquals($aClassActionResult['res'], $bRes);
+		UserRights::Logoff();
 	}
 
 	/*
@@ -291,9 +288,7 @@ class UserRightsTest extends ItopDataTestCase
 	 */
 	public function testProfileDenyingConsole(int $iProfileId)
 	{
-		$oUser = $this->AddUser('test1', $iProfileId);
-		$_SESSION = [];
-		UserRights::Login('test1');
+		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
 
 		try {
 			$this->AddProfileToUser($oUser, 2);
@@ -303,6 +298,7 @@ class UserRightsTest extends ItopDataTestCase
 
 		// logout
 		$_SESSION = [];
+		UserRights::Logoff();
 	}
 
 	public function ProfileDenyingConsoleProvider(): array
@@ -322,9 +318,7 @@ class UserRightsTest extends ItopDataTestCase
 	 */
 	public function testProfileCannotModifySelf(int $iProfileId)
 	{
-		$oUser = $this->AddUser('test1', $iProfileId);
-		$_SESSION = [];
-		UserRights::Login('test1');
+		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
 
 		try {
 			$this->AddProfileToUser($oUser, 1); // trying to become an admin
@@ -334,6 +328,7 @@ class UserRightsTest extends ItopDataTestCase
 
 		// logout
 		$_SESSION = [];
+		UserRights::Logoff();
 	}
 
 	public function ProfileCannotModifySelfProvider(): array
@@ -353,9 +348,7 @@ class UserRightsTest extends ItopDataTestCase
 	 */
 	public function testDeletingSelfUser(int $iProfileId)
 	{
-		$oUser = $this->AddUser('test1', $iProfileId);
-		$_SESSION = [];
-		UserRights::Login('test1');
+		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
 
 		try {
 			$oUser->DBDelete();
@@ -365,6 +358,7 @@ class UserRightsTest extends ItopDataTestCase
 
 		// logout
 		$_SESSION = [];
+		UserRights::Logoff();
 	}
 
 	public function DeletingSelfUserProvider(): array
@@ -387,9 +381,7 @@ class UserRightsTest extends ItopDataTestCase
 	 */
 	public function testRemovingOwnContact(int $iProfileId)
 	{
-		$oUser = $this->AddUser('test1', $iProfileId);
-		$_SESSION = [];
-		UserRights::Login('test1');
+		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
 
 		$oUser->Set('contactid', 0);
 
@@ -398,6 +390,8 @@ class UserRightsTest extends ItopDataTestCase
 			$this->fail('Current User cannot remove his own contact');
 		} catch (CoreCannotSaveObjectException $e) {
 		}
+
+		UserRights::Logoff();
 	}
 
 	public function RemovingOwnContactProvider(): array
@@ -417,9 +411,7 @@ class UserRightsTest extends ItopDataTestCase
 	 */
 	public function testUpgradingToAdmin()
 	{
-		$oUser = $this->AddUser('test1', 3);
-		$_SESSION = [];
-		UserRights::Login('test1');
+		$oUser = $this->CreateUniqueUserAndLogin('test1', 3);
 
 		try {
 			$this->AddProfileToUser($oUser, 1);
@@ -430,6 +422,7 @@ class UserRightsTest extends ItopDataTestCase
 
 		// logout
 		$_SESSION = [];
+		UserRights::Logoff();
 	}
 
 	/**
@@ -441,9 +434,7 @@ class UserRightsTest extends ItopDataTestCase
 	 */
 	public function testDenyingUserModification()
 	{
-		$oUser = $this->AddUser('test1', 1);
-		$_SESSION = [];
-		UserRights::Login('test1');
+		$oUser = $this->CreateUniqueUserAndLogin('test1', 1);
 		$this->AddProfileToUser($oUser, 3);
 
 		// Keep only the profile 3 (remove profile 1)
@@ -461,6 +452,7 @@ class UserRightsTest extends ItopDataTestCase
 
 		// logout
 		$_SESSION = [];
+		UserRights::Logoff();
 	}
 
 	/**
@@ -468,10 +460,8 @@ class UserRightsTest extends ItopDataTestCase
 	 */
 	public function testNonAdminCanListOwnProfiles($bHideAdministrators)
 	{
-		$oUser = $this->AddUser('test1', 2); // portal user
-		$_SESSION = [];
 		utils::GetConfig()->Set('security.hide_administrators', $bHideAdministrators);
-		UserRights::Login('test1');
+		$oUser = $this->CreateUniqueUserAndLogin('test1', 2); // portal user
 
 		// List the link between the User and the Profiles
 		$oSearch = new DBObjectSearch('URP_UserProfile');
@@ -486,6 +476,7 @@ class UserRightsTest extends ItopDataTestCase
 
 		// logout
 		$_SESSION = [];
+		UserRights::Logoff();
 	}
 
 	public function NonAdminCanListOwnProfilesProvider(): array
@@ -502,10 +493,8 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		utils::GetConfig()->Set('security.hide_administrators', $bHideAdministrators);
 
-		$this->AddUser('test1', 2); // portal user
-		$oUserAdmin = $this->AddUser('admin1', 1);
-		$_SESSION = [];
-		UserRights::Login('test1');
+		$oUserAdmin = $this->CreateUser('admin1', 1);
+		$this->CreateUniqueUserAndLogin('test1', 2); // portal user
 
 		$oSearch = new DBObjectSearch('URP_UserProfile');
 		$oSearch->AddCondition('userid', $oUserAdmin->GetKey());
@@ -518,6 +507,7 @@ class UserRightsTest extends ItopDataTestCase
 
 		// logout
 		$_SESSION = [];
+		UserRights::Logoff();
 	}
 
 	public function NonAdminCannotListAdminProfilesProvider(): array

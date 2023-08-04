@@ -9,9 +9,6 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 /**
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  * Class NavigationMenuTest
  *
  * @package UI\Base\Layout

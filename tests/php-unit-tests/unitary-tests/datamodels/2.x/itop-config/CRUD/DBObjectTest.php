@@ -10,11 +10,6 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use lnkContactToFunctionalCI;
 use MetaModel;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class DBObjectTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = true;

@@ -13,11 +13,6 @@ use FunctionExpression;
 use MetaModel;
 use ScalarExpression;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class ExpressionEvaluateTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;

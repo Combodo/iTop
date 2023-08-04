@@ -44,10 +44,6 @@ use Dict;
 /**
  * @group itopRequestMgmt
  * @group itopServiceMgmt
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class CriterionConversionTest extends ItopDataTestCase
 {
@@ -721,10 +717,6 @@ class CriterionConversionTest extends ItopDataTestCase
     function OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, $sLanguageCode )
     {
         $this->debug($sOQL);
-
-
-        Dict::SetUserLanguage($sLanguageCode);
-
 
         $oSearchForm = new SearchForm();
         $oSearch = DBSearch::FromOQL($sOQL);

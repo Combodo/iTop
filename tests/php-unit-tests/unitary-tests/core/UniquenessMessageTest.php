@@ -12,10 +12,6 @@ use Team;
 /**
  * Class UniquenessMessageTest
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @package Combodo\iTop\Test\UnitTest\Core
  */
 class UniquenessMessageTest extends ItopDataTestCase

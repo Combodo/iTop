@@ -8,11 +8,6 @@ use DateTime;
 use DBBackup;
 use utils;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class DBBackupTest extends ItopTestCase
 {
 	protected const DUMMY_DB_HOST = 'localhost';

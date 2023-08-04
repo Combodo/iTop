@@ -10,9 +10,6 @@ use utils;
 use Dict;
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  * @covers \ActionEmail
  */
 class ActionEmailTest extends ItopDataTestCase

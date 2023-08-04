@@ -18,6 +18,7 @@ use CMDBObject;
 use CMDBSource;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
+use Combodo\iTop\Application\EventRegister\ApplicationEvents;
 use Config;
 use Contact;
 use DBObject;
@@ -55,12 +56,6 @@ define('TAG_ATTCODE', 'domains');
  *
  * Helper class to extend for tests needing access to iTop's metamodel
  *
- * **⚠ Warning** Each class extending this one needs to add the following annotations :
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @since 2.7.7 3.0.1 3.1.0 N°4624 processIsolation is disabled by default and must be enabled in each test needing it (basically all tests using
  * iTop datamodel)
  */
@@ -69,7 +64,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 	private $iTestOrgId;
 
 	// For cleanup
-	private $aCreatedObjects = array();
+	private $aCreatedObjects = [];
+	private $aEventListeners = [];
 
 	// Counts
 	public $aReloadCount = [];
@@ -82,14 +78,29 @@ abstract class ItopDataTestCase extends ItopTestCase
 	const CREATE_TEST_ORG = false;
 
 	/**
+	 * This method is called before the first test of this test class is run (in the current process).
+	 */
+	public static function setUpBeforeClass(): void
+	{
+		parent::setUpBeforeClass();
+
+		$this->PrepareEnvironment();
+	}
+
+	/**
+	 * This method is called after the last test of this test class is run (in the current process).
+	 */
+	public static function tearDownAfterClass(): void
+	{
+		parent::tearDownAfterClass();
+	}
+
+	/**
 	 * @throws Exception
 	 */
 	protected function setUp(): void
 	{
 		parent::setUp();
-
-		$this->PrepareEnvironment();
-
 		if (static::USE_TRANSACTION)
 		{
 			CMDBSource::Query('START TRANSACTION');
@@ -99,7 +110,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 			$this->CreateTestOrganization();
 		}
 
-		EventService::RegisterListener(EVENT_DB_OBJECT_RELOAD, [$this, 'CountObjectReload']);
+		$this->EventService_RegisterListener(EVENT_DB_OBJECT_RELOAD, [$this, 'CountObjectReload']);
 	}
 
 	/**
@@ -107,6 +118,9 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 */
 	protected function tearDown(): void
 	{
+		static::SetNonPublicStaticProperty(\cmdbAbstractObject::class, 'aObjectsAwaitingEventDbLinksChanged', []);
+		\cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
+
 		if (static::USE_TRANSACTION) {
 			$this->debug("ROLLBACK !!!");
 			CMDBSource::Query('ROLLBACK');
@@ -127,6 +141,15 @@ abstract class ItopDataTestCase extends ItopTestCase
 					$this->debug("Error when removing created objects: $sClass::$iKey. Exception message: ".$e->getMessage());
 				}
 			}
+		}
+		// As soon as a rollback has been performed, each object memoized should be discarded
+		CMDBObject::SetCurrentChange(null);
+
+		// Leave the place clean
+		\UserRights::Logoff();
+
+		foreach ($this->aEventListeners as $sListenerId) {
+			EventService::UnRegisterListener($sListenerId);
 		}
 
 		parent::tearDown();
@@ -184,6 +207,31 @@ abstract class ItopDataTestCase extends ItopTestCase
 	public function getTestOrgId()
 	{
 		return $this->iTestOrgId;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+	/// Facades for environment settings
+	/////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Facade for EventService::RegisterListener
+	 *
+	 * @param string $sEvent
+	 * @param callable $callback
+	 * @param $sEventSource
+	 * @param array $aCallbackData
+	 * @param $context
+	 * @param float $fPriority
+	 * @param $sModuleId
+	 *
+	 * @return string
+	 */
+	public function EventService_RegisterListener(string $sEvent, callable $callback, $sEventSource = null, array $aCallbackData = [], $context = null, float $fPriority = 0.0, $sModuleId = ''): string
+	{
+		$ret = EventService::RegisterListener($sEvent, $callback, $sEventSource, $aCallbackData, $context, $fPriority, $sModuleId);
+		if (false !== $ret) {
+			$this->aEventListeners[] = $ret;
+		}
+		return $ret;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

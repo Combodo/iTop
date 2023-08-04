@@ -6298,6 +6298,11 @@ abstract class MetaModel
 	 */
 	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false, $sEnvironment = 'production')
 	{
+		// Startup on a new environment is not supported
+		static $bStarted = false;
+		if ($bStarted) return;
+		$bStarted = true;
+
 		self::$m_sEnvironment = $sEnvironment;
 
 		try {

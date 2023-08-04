@@ -8,10 +8,6 @@ use MetaModel;
 
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * created a dedicated test for external keys imports.
  *
  * Class BulkChangeExtKeyTest

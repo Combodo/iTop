@@ -14,10 +14,6 @@ use TriggerOnObjectCreate;
  * Class TriggerTest
  *
  * @package Combodo\iTop\Test\UnitTest\Core
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class TriggerTest extends ItopDataTestCase
 {
@@ -35,9 +31,9 @@ class TriggerTest extends ItopDataTestCase
 		$oTrigger = MetaModel::NewObject('TriggerOnObjectCreate');
 		$oTrigger->Set('context', ContextTag::TAG_PORTAL.', '.ContextTag::TAG_CRON);
 		$this->assertFalse($oTrigger->IsContextValid());
-		ContextTag::AddContext(ContextTag::TAG_SETUP);
+		$oC1 = new ContextTag(ContextTag::TAG_SETUP);
 		$this->assertFalse($oTrigger->IsContextValid());
-		ContextTag::AddContext(ContextTag::TAG_CRON);
+		$oC2 = new ContextTag(ContextTag::TAG_CRON);
 		$this->assertTrue($oTrigger->IsContextValid());
 	}
 
@@ -55,7 +51,7 @@ class TriggerTest extends ItopDataTestCase
 		}
 		catch (\CoreException $e1) {
 			$this->assertEquals('CoreException', get_class($e1));
-			$this->assertEquals('Unknown class \'Toto\' (<b title="Trigger">TriggerOnObjectCreate</b>::-1 ()<br/>)', $e1->getMessage());
+			$this->assertStringStartsWith('Unknown class \'Toto\' (<b title="Trigger">TriggerOnObjectCreate</b>::-', $e1->getMessage());
 
 			$fullStackTraceAsString = $e1->getFullStackTraceAsString();
 			$this->assertStringContainsString("MetaModel::NewObject", $fullStackTraceAsString,"new enriched exception should contain root cause method: " . $fullStackTraceAsString);

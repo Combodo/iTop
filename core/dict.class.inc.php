@@ -57,9 +57,9 @@ class Dict
 	 *
 	 * @throws \DictExceptionUnknownLanguage
 	 */
-	public static function SetUserLanguage($sLanguageCode)
+	public static function SetUserLanguage($sLanguageCode = null)
 	{
-		if (!array_key_exists($sLanguageCode, self::$m_aLanguages))
+		if (!is_null($sLanguageCode) && !array_key_exists($sLanguageCode, self::$m_aLanguages))
 		{
 			throw new DictExceptionUnknownLanguage($sLanguageCode);
 		}

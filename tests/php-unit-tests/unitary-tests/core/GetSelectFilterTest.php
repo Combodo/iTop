@@ -20,10 +20,6 @@ use UserRightsProfile;
  * @group specificOrgInSampleData
  * Class GetSelectFilterTest
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @package Combodo\iTop\Test\UnitTest\Webservices
  */
 class GetSelectFilterTest extends ItopDataTestCase

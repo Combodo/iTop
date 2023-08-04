@@ -7,11 +7,6 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class TwigTest extends ItopDataTestCase
 {
 	protected function setUp(): void

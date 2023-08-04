@@ -10,10 +10,6 @@ use DBObjectSearch;
  * Class DBSearchUpdateRealiasingMapTest
  *
  * @package Combodo\iTop\Test\UnitTest\Core
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class DBSearchUpdateRealiasingMapTest extends ItopDataTestCase
 {

@@ -17,11 +17,6 @@ use utils;
  * @package Combodo\iTop\Test\UnitTest\Core
  */
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class CMDBSourceTest extends ItopTestCase
 {
 	protected function setUp(): void
@@ -126,6 +121,8 @@ class CMDBSourceTest extends ItopTestCase
 	 * @throws \CoreException
 	 * @throws \MySQLException
 	 * @since 3.0.0 N°4215
+	 *
+	 * @runInSeparateProcess Resetting DB connection, thus making other tests to fail!
 	 */
 	public function testIsOpenedDbConnectionUsingTls()
 	{

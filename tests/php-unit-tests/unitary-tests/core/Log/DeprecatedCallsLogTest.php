@@ -39,6 +39,8 @@ class DeprecatedCallsLogTest extends ItopTestCase {
 	}
 
 	/**
+	 * @runInSeparateProcess Necessary, due to the DeprecatedCallsLog being enabled (no mean to reset)
+	 *
 	 * The error handler set by DeprecatedCallsLog during startup was causing PHPUnit to miss PHP notices like "undefined offset"
 	 *
 	 * The error handler is now disabled when running PHPUnit

@@ -24,8 +24,20 @@ abstract class ItopTestCase extends TestCase
 	const TEST_LOG_DIR = 'test';
 	static $DEBUG_UNIT_TEST = false;
 
-	/** @noinspection UsingInclusionOnceReturnValueInspection avoid errors for approot includes */
-	protected function setUp(): void {
+	/**
+	 * Override the default value to disable the backup of globals in case of tests run in a separate process
+	 */
+	protected $preserveGlobalState = false;
+
+	/**
+	 * This method is called before the first test of this test class is run (in the current process).
+	 */
+	public static function setUpBeforeClass(): void
+	{
+		parent::setUpBeforeClass();
+
+		static::$DEBUG_UNIT_TEST = getenv('DEBUG_UNIT_TEST');
+
 		$sAppRootRelPath = 'approot.inc.php';
 		$sDepthSeparator = '../';
 		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
@@ -37,17 +49,49 @@ abstract class ItopTestCase extends TestCase
 			$sAppRootRelPath = $sDepthSeparator.$sAppRootRelPath;
 		}
 
-		static::$DEBUG_UNIT_TEST = getenv('DEBUG_UNIT_TEST');
-
-		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
-
-		if (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME)) {
+		if (false === defined('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME')) {
 			// setUp might be called multiple times, so protecting the define() call !
-			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
+			define('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME', true);
 		}
 
 		$this->LoadRequiredItopFiles();
 		$this->LoadRequiredTestFiles();
+	}
+
+	/**
+	 * This method is called after the last test of this test class is run (in the current process).
+	 */
+	public static function tearDownAfterClass(): void
+	{
+		parent::tearDownAfterClass();
+	}
+
+	/** Helper than can be called in the context of a data provider */
+	public static function GetAppRoot()
+	{
+		$sSearchPath = __DIR__;
+		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
+			if (file_exists($sSearchPath.'/approot.inc.php')) {
+				break;
+			}
+			$iOffsetSep = strrpos($sSearchPath, '/');
+			if ($iOffsetSep === false) {
+				$iOffsetSep = strrpos($sSearchPath, '\\');
+				if ($iOffsetSep === false) {
+					// Do not throw an exception here as PHPUnit will not show it clearly when determing the list of test to perform
+					return 'Could not find the approot file in '.$sSearchPath;
+				}
+			}
+			$sSearchPath = substr($sSearchPath, 0, $iOffsetSep);
+		}
+		return $sSearchPath.'/';
+	}
+
+	/** @noinspection UsingInclusionOnceReturnValueInspection avoid errors for approot includes */
+	protected function setUp(): void {
+		parent::setUp();
+
+		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
 	}
 
 	/**
@@ -60,6 +104,10 @@ abstract class ItopTestCase extends TestCase
 
 		if (CMDBSource::IsInsideTransaction()) {
 			// Nested transactions were opened but not finished !
+			// Rollback to avoid side effects on next tests
+			while (CMDBSource::IsInsideTransaction()) {
+				CMDBSource::Query('ROLLBACK');
+			}
 			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
 		}
 	}
@@ -165,7 +213,7 @@ abstract class ItopTestCase extends TestCase
 	/**
 	 * @since 2.7.4 3.0.0
 	 */
-	public function InvokeNonPublicStaticMethod($sObjectClass, $sMethodName, $aArgs)
+	public function InvokeNonPublicStaticMethod($sObjectClass, $sMethodName, $aArgs = [])
 	{
 		return $this->InvokeNonPublicMethod($sObjectClass, $sMethodName, null, $aArgs);
 	}
@@ -182,7 +230,7 @@ abstract class ItopTestCase extends TestCase
 	 *
 	 * @since 2.7.4 3.0.0
 	 */
-	public function InvokeNonPublicMethod($sObjectClass, $sMethodName, $oObject, $aArgs)
+	public function InvokeNonPublicMethod($sObjectClass, $sMethodName, $oObject, $aArgs = [])
 	{
 		$class = new \ReflectionClass($sObjectClass);
 		$method = $class->getMethod($sMethodName);

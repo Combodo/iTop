@@ -24,10 +24,6 @@ use utils;
 
 /**
  * test class for UserLocal class
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class UserLocalTest extends ItopDataTestCase
 {
