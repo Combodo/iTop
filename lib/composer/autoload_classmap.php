@@ -366,6 +366,7 @@ return array(
     'Combodo\\iTop\\Composer\\iTopComposer' => $baseDir . '/sources/Composer/iTopComposer.php',
     'Combodo\\iTop\\Controller\\AbstractController' => $baseDir . '/sources/Controller/AbstractController.php',
     'Combodo\\iTop\\Controller\\AjaxRenderController' => $baseDir . '/sources/Controller/AjaxRenderController.php',
+    'Combodo\\iTop\\Controller\\AttributeTextDiff\\AttributeTextDiffController' => $baseDir . '/sources/Controller/AttributeTextDiff/AttributeTextDiffController.php',
     'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => $baseDir . '/sources/Controller/Base/Layout/ActivityPanelController.php',
     'Combodo\\iTop\\Controller\\Base\\Layout\\ObjectController' => $baseDir . '/sources/Controller/Base/Layout/ObjectController.php',
     'Combodo\\iTop\\Controller\\Links\\LinkSetController' => $baseDir . '/sources/Controller/Links/LinkSetController.php',
