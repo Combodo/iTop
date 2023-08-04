@@ -3,14 +3,22 @@
 namespace Combodo\iTop\Controller\AttributeTextDiff;
 
 use ArchivedObjectException;
-use CMDBChangeOp;
+use CMDBChangeOpSetAttributeLongText;
+use CMDBObject;
 use Combodo\iTop\Application\Helper\CMDBChangeHelper;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Controller\AbstractController;
 use CoreException;
+use Dict;
 use InvalidParameterException;
+use Jfcherng\Diff\DiffHelper;
+use Jfcherng\Diff\Renderer\RendererConstant;
 use MetaModel;
 use NiceWebPage;
 use utils;
+use WebPage;
 
 class AttributeTextDiffController extends AbstractController
 {
@@ -18,6 +26,7 @@ class AttributeTextDiffController extends AbstractController
 
 	/**
 	 * @throws InvalidParameterException
+	 * @noinspection PhpUnused
 	 */
 	public function OperationDisplayDiff(): NiceWebPage
 	{
@@ -33,23 +42,18 @@ class AttributeTextDiffController extends AbstractController
 
 		$sDataNew = CMDBChangeHelper::GetAttributeNewValueFromChangeOp($oChangeOp);
 
-		$oPage->add('<h1>Diff</h1>');
-		$oPage->add('<h2>Previous</h2>');
-		$oPage->P($sDataPrev);
-		$oPage->add('<h2>New</h2>');
-		$oPage->P($sDataNew);
+		/** @var CMDBObject $oObject */
+		$oObject = MetaModel::GetObject($oChangeOp->Get('objclass'), $oChangeOp->Get('objkey'));
+		$this->GenerateDiffContent($oPage, $oObject, $oChangeOp->Get('attcode'), $sDataPrev, $sDataNew);
 
 		return $oPage;
 	}
 
-	/**
-	 * @throws InvalidParameterException If cannot load object from id
-	 */
-	private function GetChangeOp(string $sChangeOpId): ?CMDBChangeOp
+	private function GetChangeOp(string $sChangeOpId): ?CMDBChangeOpSetAttributeLongText
 	{
 		try {
-			/** @var CMDBChangeOp $oChangeOp */
-			$oChangeOp = MetaModel::GetObject(CMDBChangeOp::class, $sChangeOpId, false);
+			/** @var CMDBChangeOpSetAttributeLongText $oChangeOp */
+			$oChangeOp = MetaModel::GetObject(CMDBChangeOpSetAttributeLongText::class, $sChangeOpId, false);
 		} catch (ArchivedObjectException|CoreException $e) {
 			$oChangeOp = null;
 		}
@@ -58,5 +62,86 @@ class AttributeTextDiffController extends AbstractController
 		}
 
 		return $oChangeOp;
+	}
+
+	private function GenerateDiffContent(WebPage $oPage, CMDBObject $oObject, string $sAttCode, string $sOld, string $sNew): void
+	{
+		$sClass = \get_class($oObject);
+		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
+
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sSubtitle = Dict::Format('Change:AttName_Changed', $oAttDef->GetLabel());
+
+		$oPanel = PanelUIBlockFactory::MakeNeutral($oObject->GetName())
+			->SetSubTitle($sSubtitle)
+			->SetIcon($sClassIconUrl, Panel::ENUM_ICON_COVER_METHOD_ZOOMOUT, true);
+		$oPage->AddUiBlock($oPanel);
+
+		$oPage->add_style(DiffHelper::getStyleSheet());
+		$sDiffHtml = $this->GetDiffHtmlCode($sOld, $sNew);
+		$oPanel->AddSubBlock(new Html($sDiffHtml));
+	}
+
+	private function GetDiffHtmlCode(string $sOld, string $sNew): string
+	{
+		$rendererName = 'SideBySide';
+
+		$differOptions = [
+			// show how many neighbor lines
+			// Differ::CONTEXT_ALL can be used to show the whole file
+			'context' => 3,
+			'ignoreCase' => false,
+			'ignoreLineEnding' => true,
+			'ignoreWhitespace' => false,
+			'lengthLimit' => 2000,
+		];
+
+		$rendererOptions = [
+			// how detailed the rendered HTML in-line diff is? (none, line, word, char)
+			'detailLevel' => 'char',
+			// renderer language: eng, cht, chs, jpn, ...
+			// or an array which has the same keys with a language file
+			// check the "Custom Language" section in the readme for more advanced usage
+			'language' => 'eng',
+			// show line numbers in HTML renderers
+			'lineNumbers' => false,
+			// show a separator between different diff hunks in HTML renderers
+			'separateBlock' => true,
+			// show the (table) header
+			'showHeader' => true,
+			// the frontend HTML could use CSS "white-space: pre;" to visualize consecutive whitespaces
+			// but if you want to visualize them in the backend with "&nbsp;", you can set this to true
+			'spacesToNbsp' => false,
+			// HTML renderer tab width (negative = do not convert into spaces)
+			'tabSize' => 3,
+			// this option is currently only for the Combined renderer.
+			// it determines whether a replace-type block should be merged or not
+			// depending on the content changed ratio, which values between 0 and 1.
+//			'mergeThreshold' => 0.8,
+			// this option is currently only for the Unified and the Context renderers.
+			// RendererConstant::CLI_COLOR_AUTO = colorize the output if possible (default)
+			// RendererConstant::CLI_COLOR_ENABLE = force to colorize the output
+			// RendererConstant::CLI_COLOR_DISABLE = force not to colorize the output
+			'cliColorization' => RendererConstant::CLI_COLOR_ENABLE,
+			// this option is currently only for the Json renderer.
+			// internally, ops (tags) are all int type but this is not good for human reading.
+			// set this to "true" to convert them into string form before outputting.
+//			'outputTagAsString' => false,
+			// this option is currently only for the Json renderer.
+			// it controls how the output JSON is formatted.
+			// see available options on https://www.php.net/manual/en/function.json-encode.php
+//			'jsonEncodeFlags' => \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE,
+			// this option is currently effective when the "detailLevel" is "word"
+			// characters listed in this array can be used to make diff segments into a whole
+			// for example, making "<del>good</del>-<del>looking</del>" into "<del>good-looking</del>"
+			// this should bring better readability but set this to empty array if you do not want it
+			'wordGlues' => [' ', '-'],
+			// change this value to a string as the returned diff if the two input strings are identical
+			'resultForIdenticals' => null,
+			// extra HTML classes added to the DOM of the diff container
+			'wrapperClasses' => ['diff-wrapper'],
+		];
+
+		return DiffHelper::calculate($sOld, $sNew, $rendererName, $differOptions, $rendererOptions);
 	}
 }
