@@ -43,8 +43,7 @@ class AttributeTextDiffController extends AbstractController
 		$sDataNew = CMDBChangeHelper::GetAttributeNewValueFromChangeOp($oChangeOp);
 
 		/** @var CMDBObject $oObject */
-		$oObject = MetaModel::GetObject($oChangeOp->Get('objclass'), $oChangeOp->Get('objkey'));
-		$this->GenerateDiffContent($oPage, $oObject, $oChangeOp->Get('attcode'), $sDataPrev, $sDataNew);
+		$this->GenerateDiffContent($oPage, $oChangeOp, $sDataPrev, $sDataNew);
 
 		return $oPage;
 	}
@@ -64,25 +63,33 @@ class AttributeTextDiffController extends AbstractController
 		return $oChangeOp;
 	}
 
-	private function GenerateDiffContent(WebPage $oPage, CMDBObject $oObject, string $sAttCode, string $sOld, string $sNew): void
+	private function GenerateDiffContent(WebPage $oPage, CMDBChangeOpSetAttributeLongText $oChangeOp, string $sOld, string $sNew): void
 	{
-		$sClass = \get_class($oObject);
+		$sClass = $oChangeOp->Get('objclass');
 		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
 
+		$sAttCode = $oChangeOp->Get('attcode');
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sSubtitle = Dict::Format('Change:AttName_Changed', $oAttDef->GetLabel());
 
+		$oObject = MetaModel::GetObject($oChangeOp->Get('objclass'), $oChangeOp->Get('objkey'));
 		$oPanel = PanelUIBlockFactory::MakeNeutral($oObject->GetName())
 			->SetSubTitle($sSubtitle)
 			->SetIcon($sClassIconUrl, Panel::ENUM_ICON_COVER_METHOD_ZOOMOUT, true);
 		$oPage->AddUiBlock($oPanel);
 
+		$sOldLabel = Dict::S('Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue');
+
+		$sNewAuthor = $oChangeOp->Get('userinfo');
+		$sNewDate = $oChangeOp->Get('date');
+		$sNewLabel = "$sNewAuthor ($sNewDate)";
+
 		$oPage->add_style(DiffHelper::getStyleSheet());
-		$sDiffHtml = $this->GetDiffHtmlCode($sOld, $sNew);
+		$sDiffHtml = $this->GetDiffHtmlCode($sOld, $sOldLabel, $sNew, $sNewLabel);
 		$oPanel->AddSubBlock(new Html($sDiffHtml));
 	}
 
-	private function GetDiffHtmlCode(string $sOld, string $sNew): string
+	private function GetDiffHtmlCode(string $sOld, string $sOldLabel, string $sNew, string $sNewLabel): string
 	{
 		$rendererName = 'SideBySide';
 
@@ -102,7 +109,13 @@ class AttributeTextDiffController extends AbstractController
 			// renderer language: eng, cht, chs, jpn, ...
 			// or an array which has the same keys with a language file
 			// check the "Custom Language" section in the readme for more advanced usage
-			'language' => 'eng',
+			'language' => [
+				'eng',
+				[
+					'old_version' => $sOldLabel,
+					'new_version' => $sNewLabel,
+				]
+			],
 			// show line numbers in HTML renderers
 			'lineNumbers' => false,
 			// show a separator between different diff hunks in HTML renderers
