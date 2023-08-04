@@ -324,7 +324,7 @@ EOF
 				$sFieldHtmlValue = $oFieldValue->GetName();
 				if($oFieldValue->IsArchived())
 				{
-					$sFieldHtmlValue = '<span class="text_decoration"><span class="fas fa-archive object-archived fa-1x fa-fw"></span></span>' . $sFieldHtmlValue;
+					$sFieldHtmlValue = '<span class="text_decoration"><span class="fas fa-archive"></span></span>' . $sFieldHtmlValue;
 				}
 				else
 				{
