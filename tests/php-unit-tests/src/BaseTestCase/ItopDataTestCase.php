@@ -997,6 +997,17 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 	}
 
+	protected function assertDBChangeOpCount(string $sClass, $iId, int $iExpectedCount)
+	{
+		$oSearch = new \DBObjectSearch('CMDBChangeOp');
+		$oSearch->AddCondition('objclass', $sClass);
+		$oSearch->AddCondition('objkey', $iId);
+		$oSearch->AllowAllData();
+		$oSet = new \DBObjectSet($oSearch);
+		$iCount = $oSet->Count();
+		$this->assertEquals($iExpectedCount, $iCount, "Found $iCount changes for object $sClass::$iId");
+	}
+
 	/**
 	 * Import a set of XML files describing a consistent set of iTop objects
 	 * @param string[] $aFiles

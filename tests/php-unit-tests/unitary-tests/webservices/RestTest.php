@@ -18,6 +18,7 @@ use utils;
 class RestTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
+	const CREATE_TEST_ORG = true;
 
 	static private $sUrl;
 	static private $sLogin;
@@ -66,7 +67,7 @@ class RestTest extends ItopDataTestCase
 		$sJsonData = '{"operation": "list_operations"}';
 
 		// Test regular JSON result
-		$sJSONResult = $this->CallRestApi($sJsonData);
+		$sJSONResult = $this->CallRestApi_HTTP($sJsonData);
 		// - Try to decode JSON to array to check if it is well-formed
 		$aJSONResultAsArray = json_decode($sJSONResult, true);
 		$this->assertArrayHasKey('version', $aJSONResultAsArray);
@@ -84,13 +85,13 @@ class RestTest extends ItopDataTestCase
 		}
 
 		// Test JSONP with callback by checking that it is the same as the regular JSON but within the JS callback
-		$sJSONPResult =  $this->CallRestApi($sJsonData, $sCallbackName);
+		$sJSONPResult =  $this->CallRestApi_HTTP($sJsonData, $sCallbackName);
 		$this->assertEquals($sCallbackName.'('.$sJSONResult.');', $sJSONPResult, 'JSONP response callback does not match expected result');
 	}
 
 	public function testMissingJSONData()
 	{
-		$sOutputJson = $this->CallRestApi();
+		$sOutputJson = $this->CallRestApi_HTTP();
 		$aJson = json_decode($sOutputJson, true);
 		$this->assertEquals(3, $aJson['code'], $sOutputJson);
 		$this->assertEquals("Error: Missing parameter 'json_data'", $aJson['message'], $sOutputJson);
@@ -102,16 +103,67 @@ class RestTest extends ItopDataTestCase
 		$sJsonData = '{"operation": "list_operations"}';
 
 		// Test regular JSON result
-		$sJSONResult = $this->CallRestApi($sJsonData, null, true);
+		$sJSONResult = $this->CallRestApi_HTTP($sJsonData, null, true);
 		$aJSONResultAsArray = json_decode($sJSONResult, true);
 		$this->assertEquals(0, $aJSONResultAsArray['code'], $sJSONResult);
+	}
+
+	public function testCoreApiGet(){
+		// Create ticket
+		$description = date('dmY H:i:s');
+		$oTicket = $this->CreateSampleTicket($description);
+		$iId = $oTicket->GetKey();
+
+		$sJSONOutput = $this->CallCoreRestApi_Internally(<<<JSON
+{
+   "operation": "core/get",
+   "class": "UserRequest",
+   "key": "SELECT UserRequest WHERE id=$iId",
+   "output_fields": "id, description"
+}
+JSON);
+
+		$sExpectedJsonOuput = <<<JSON
+{
+    "code": 0,
+    "message": "Found: 1",
+    "objects": {
+        "UserRequest::$iId": {
+            "class": "UserRequest",
+            "code": 0,
+            "fields": {
+                "description": "<p>$description</p>",
+                "id": "$iId"
+            },
+            "key": "$iId",
+            "message": ""
+        }
+    }
+}
+JSON;
+		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
 	}
 
 	public function testCoreApiCreate()
 	{
 		// Create ticket
 		$description = date('dmY H:i:s');
-		$sOutputJson = $this->CreateTicketViaApi($description);
+		$sOutputJson = $this->CallCoreRestApi_Internally(<<<JSON
+{
+   "operation": "core/create",
+   "comment": "test",
+   "class": "UserRequest",
+   "output_fields": "id",
+   "fields":
+   {
+      "org_id": "SELECT Organization WHERE name = \"Demo\"",
+      
+      "title": "Houston, got a problem",
+      "description": "$description"
+   }
+}
+JSON);
+
 		$this->debug("Output: '$sOutputJson'");
 		$aJson = json_decode($sOutputJson, true);
 		$this->assertNotNull($aJson, "Cannot decode returned JSON : $sOutputJson");
@@ -126,16 +178,14 @@ class RestTest extends ItopDataTestCase
 JSON;
 		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sOutputJson);
 
-		$sExpectedJsonOuput = <<<JSON
-{"objects":{"UserRequest::$iId":{"code":0,"message":"","class":"UserRequest","key":"$iId","fields":{"id":"$iId","description":"<p>$description<\/p>"}}},"code":0,"message":"Found: 1"}
-JSON;
-		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $this->GetTicketViaRest($iId));
+		$oObject = MetaModel::GetObject('UserRequest', $iId, false, true);
+		$this->assertIsObject($oObject, "Object UserRequest::$iId not present in the database");
+		$this->assertSame("<p>$description</p>", $oObject->Get('description'));
 
-		$aCmdbChangeUserInfo = $this->GetCmdbChangeUserInfo($iId);
-		$this->assertCount(1, $aCmdbChangeUserInfo);
+		$this->assertDBChangeOpCount('UserRequest', $iId, 1);
 
 		// Delete ticket
-		$this->DeleteTicketFromApi($iId);
+		$oObject->DBDelete();
 	}
 
 	/**
@@ -156,98 +206,32 @@ JSON;
 	{
 		//create ticket
 		$description = date('dmY H:i:s');
-		$sOuputJson = $this->CreateTicketViaApi($description);
-		$aJson = json_decode($sOuputJson, true);
-		$this->assertNotNull($aJson, 'json_decode() on the REST API response returned null :(');
-
-		$this->assertStringContainsString("0", "".$aJson['code'], $sOuputJson);
-		$sUserRequestKey = $this->array_key_first($aJson['objects']);
-		$this->assertStringContainsString('UserRequest::', $sUserRequestKey);
-		$iId = $aJson['objects'][$sUserRequestKey]['key'];
+		$oTicket = $this->CreateSampleTicket($description);
+		$iId = $oTicket->GetKey();
 
 		// Update ticket
-		$description = date('Ymd H:i:s');
+		$description = 'Update to '.date('Ymd H:i:s');
+		$sJSONOutput = $this->CallCoreRestApi_Internally(<<<JSON
+{"operation": "core/update","comment": "test","class": "UserRequest","key":"$iId","output_fields": "description","fields":{"description": "$description"}}
+JSON);
+
 		$sExpectedJsonOuput = <<<JSON
 {"objects":{"UserRequest::$iId":{"code":0,"message":"updated","class":"UserRequest","key":"$iId","fields":{"description":"<p>$description<\/p>"}}},"code":0,"message":null}
 JSON;
-		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $this->UpdateTicketViaApi($iId, $description));
+		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
 
-		$aCmdbChangeUserInfo = $this->GetCmdbChangeUserInfo($iId);
-		$this->assertCount(2, $aCmdbChangeUserInfo);
-
-		// Delete ticket
-		$this->DeleteTicketFromApi($iId);
+		$this->assertDBChangeOpCount('UserRequest', $iId, 2);
 	}
 
 	public function testCoreApiDelete()
 	{
 		// Create ticket
 		$description = date('dmY H:i:s');
-
-		$sOuputJson = $this->CreateTicketViaApi($description);
-		$aJson = json_decode($sOuputJson, true);
-		$this->assertNotNull($aJson, 'json_decode() on the REST API response returned null :(');
-
-		$this->assertStringContainsString("0", "".$aJson['code'], $sOuputJson);
-		$sUserRequestKey = $this->array_key_first($aJson['objects']);
-		$this->assertStringContainsString('UserRequest::', $sUserRequestKey);
-		$iId = $aJson['objects'][$sUserRequestKey]['key'];
+		$oTicket = $this->CreateSampleTicket($description);
+		$iId = $oTicket->GetKey();
 
 		// Delete ticket
-		$sExpectedJsonOuput = <<<JSON
-"objects":{"UserRequest::$iId"
-JSON;
-		$this->assertStringContainsString($sExpectedJsonOuput, $this->DeleteTicketFromApi($iId));
-
-		$sExpectedJsonOuput = <<<JSON
-{"objects":null,"code":0,"message":"Found: 0"}
-JSON;
-		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $this->GetTicketViaRest($iId));
-	}
-
-	private function GetTicketViaRest($iId){
-		$sJsonGetContent = <<<JSON
-{
-   "operation": "core/get",
-   "class": "UserRequest",
-   "key": "SELECT UserRequest WHERE id=$iId",
-   "output_fields": "id, description"
-}
-JSON;
-
-		return $this->CallCoreRestApiInternally($sJsonGetContent);
-	}
-
-	private function UpdateTicketViaApi($iId, $description){
-		$sJsonUpdateContent = <<<JSON
-{"operation": "core/update","comment": "test","class": "UserRequest","key":"$iId","output_fields": "description","fields":{"description": "$description"}}
-JSON;
-
-		return $this->CallCoreRestApiInternally($sJsonUpdateContent);
-	}
-
-	private function CreateTicketViaApi($description){
-		$sJsonCreateContent = <<<JSON
-{
-   "operation": "core/create",
-   "comment": "test",
-   "class": "UserRequest",
-   "output_fields": "id",
-   "fields":
-   {
-      "org_id": "SELECT Organization WHERE name = \"Demo\"",
-      
-      "title": "Houston, got a problem",
-      "description": "$description"
-   }
-}
-JSON;
-
-		return $this->CallCoreRestApiInternally($sJsonCreateContent);
-	}
-
-	private function DeleteTicketFromApi($iId){
-    	$sJson = <<<JSON
+		$sJSONOutput = $this->CallCoreRestApi_Internally(<<<JSON
 {
    "operation": "core/delete",
    "comment": "Cleanup",
@@ -255,9 +239,30 @@ JSON;
    "key":$iId,
    "simulate": false
 }
+JSON);
+		$sExpectedJsonOuput = <<<JSON
+"objects":{"UserRequest::$iId"
 JSON;
-		return $this->CallCoreRestApiInternally($sJson);
+		$this->assertStringContainsString($sExpectedJsonOuput, $sJSONOutput);
 
+		$oObject = MetaModel::GetObject('UserRequest', $iId, false, true);
+		$this->assertSame(null, $oObject, "Object UserRequest::$iId still present in the database");
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Helpers
+	//
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private function CreateSampleTicket($description)
+	{
+		$oTicket = $this->createObject('UserRequest', [
+			'org_id' => $this->getTestOrgId(),
+			"title" => "Houston, got a problem",
+			"description" => $description
+		]);
+		return $oTicket;
 	}
 
 	/**
@@ -267,7 +272,7 @@ JSON;
 	 *
 	 * @return bool|string
 	 */
-	private function CallRestApi(string $sJsonDataContent = null, string $sCallbackName = null, bool $bJSONDataAsFile = false)
+	private function CallRestApi_HTTP(string $sJsonDataContent = null, string $sCallbackName = null, bool $bJSONDataAsFile = false)
 	{
 		$ch = curl_init();
 		$aPostFields = [
@@ -312,7 +317,7 @@ JSON;
 		return $sJson;
 	}
 
-	private function CallCoreRestApiInternally(string $sJsonDataContent)
+	private function CallCoreRestApi_Internally(string $sJsonDataContent)
 	{
 		$oJsonData = json_decode($sJsonDataContent);
 		$sOperation = $oJsonData->operation;
@@ -327,38 +332,5 @@ JSON;
 		//\UserRights::Logoff();
 
 		return json_encode($oResult);
-	}
-
-		/**
-	 * @param $iId
-	 * Get CMDBChangeOp info to test
-	 * @return array
-	 */
-	private function GetCmdbChangeUserInfo($iId){
-		$sJsonGetContent = <<<JSON
-{
-   "operation": "core/get",
-   "class": "CMDBChangeOp",
-   "key": "SELECT CMDBChangeOp WHERE objclass='UserRequest' AND objkey=$iId",
-   "output_fields": "userinfo"
-}
-JSON;
-
-		$aUserInfo = [];
-		$sOutput = $this->CallCoreRestApiInternally($sJsonGetContent);
-		$aJson = json_decode($sOutput, true);
-		$this->assertNotNull($aJson, 'json_decode() on the REST API response returned null :(');
-
-		if (is_array($aJson) && array_key_exists('objects', $aJson)) {
-			$aObjects = $aJson['objects'];
-			if (!empty($aObjects)) {
-				foreach ($aObjects as $aObject) {
-					$sClass = $aObject['class'];
-					$sUserInfo = $aObject['fields']['userinfo'];
-					$aUserInfo[$sClass] = $sUserInfo;
-				}
-			}
-		}
-		return $aUserInfo;
 	}
 }
