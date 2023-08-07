@@ -15,13 +15,16 @@ use OQLException;
 
 class CMDBChangeHelper {
 	/**
+	 * @returns mixed
+	 *
 	 * @throws CoreException
 	 * @throws MySQLException
 	 * @throws CoreUnexpectedValue
 	 * @throws OQLException
 	 * @throws ArchivedObjectException
 	 */
-	public static function GetAttributeNewValueFromChangeOp(CMDBChangeOpSetAttributeLongText $oChangeOp) : mixed {
+	public static function GetAttributeNewValueFromChangeOp(CMDBChangeOpSetAttributeLongText $oChangeOp)
+	{
 		$sObjectClass = $oChangeOp->Get('objclass');
 		$sObjectKey = $oChangeOp->Get('objkey');
 		$sAttCode = $oChangeOp->Get('attcode');
