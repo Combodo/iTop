@@ -318,6 +318,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Change:Text_AppendedTo_AttName' => '%1$s appended to %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modified, previous value: %2$s',
 	'Change:AttName_Changed' => '%1$s modified',
+	'Change:AttName_Changed_diff_link' => 'Show difference',
 	'Change:AttName_EntryAdded' => '%1$s modified, new entry added: %2$s',
 	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s',
 	'Change:LinkSet:Added' => 'added %1$s',

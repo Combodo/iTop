@@ -737,10 +737,16 @@ class CMDBChangeOpSetAttributeLongText extends CMDBChangeOpSetAttribute
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
-			$sTextView = '<div>'.$this->GetAsHtml('prevdata').'</div>';
 
-			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
-			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sTextView);
+			$sResult = Dict::Format('Change:AttName_Changed', $sAttName);
+
+			// How to render a button ?!????
+//			$oOpenDiffButton = ButtonUIBlockFactory::MakeLinkNeutral('https://www.combodo.com', Dict::S('Change:AttName_Changed_diff_link'), '');
+			$sDiffLabel = Dict::S('Change:AttName_Changed_diff_link');
+			$sResult .= <<<HTML
+&nbsp;<a href="javascript:alert('todo open modal');"><div class="fas fa-binoculars" title="$sDiffLabel"></div></a>
+HTML;
+
 		}
 		return $sResult;
 	}
@@ -776,35 +782,6 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
 	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function GetDescription()
-	{
-		$sResult = '';
-		$oTargetObjectClass = $this->Get('objclass');
-		$oTargetObjectKey = $this->Get('objkey');
-		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
-		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
-	
-		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
-				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
-				$sAttName = $oAttDef->GetLabel();
-			} else {
-				// The attribute was renamed or removed from the object ?
-				$sAttName = $this->Get('attcode');
-			}
-			$sTextView = $this->Get('prevdata');
-
-			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
-			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sTextView);
-		}
-		return $sResult;
-	}	
 }
 
 /**
