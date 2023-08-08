@@ -36,7 +36,6 @@ $(function()
 					save_state_endpoint: null,
 					last_loaded_entries_ids: {},
 					load_more_entries_endpoint: null,
-					wait_for_release_lock: false,
 				},
 			css_classes:
 				{
@@ -118,6 +117,7 @@ $(function()
 					locked_by_someone_else: 'locked_by_someone_else',
 				},
 			},
+			action_promise: null,
 
 			// the constructor
 			_create: function () {
@@ -975,18 +975,19 @@ $(function()
 						// - Convert undefined, null and empty string to null
 						sStimulusCode = ((sStimulusCode ?? '') === '') ? null : sStimulusCode;
 						if (null !== sStimulusCode) {
-							me.options.wait_for_release_lock = true;
 							// For now, we don't hide the forms as the user may want to add something else
 							me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
 
-							//wait unlock on object
-							var oIntervalWaitForUnlock = setInterval(function () {
-								if (me.options.wait_for_release_lock === true) {
-									return
-								}
+							if (me.options.lock_enabled) {
+								me.action_promise = new Promise(function () {
+										window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
+									},
+									function () {
+										//todo
+									});
+							} else {
 								window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
-								clearInterval(oIntervalWaitForUnlock);
-							}, 50);
+							}
 						} else {
 							// For now, we don't hide the forms as the user may want to add something else
 							me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
@@ -1207,8 +1208,9 @@ $(function()
 						// Tried to release our lock
 						else if ('release_lock' === oParams.operation) {
 							sNewLockStatus = me.enums.lock_status.unknown;
-							if (me.options.wait_for_release_lock === true) {
-								me.options.wait_for_release_lock = false;
+							if (me.action_promise != null) {
+								me.action_promise.resolve();
+								me.action_promise = null;
 							}
 						}
 
