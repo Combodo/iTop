@@ -24,6 +24,7 @@ use iTopDesignFormat;
  * @covers iTopDesignFormat
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
+ * @group beforeSetup
  */
 class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 {
