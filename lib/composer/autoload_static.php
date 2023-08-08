@@ -727,6 +727,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\UI\\Links\\Set\\LinkSetUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Links/Set/LinksSetUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Preferences\\BlockShortcuts\\BlockShortcuts' => __DIR__ . '/../..' . '/sources/Application/UI/Preferences/BlockShortcuts/BlockShortcuts.php',
         'Combodo\\iTop\\Application\\UI\\Printable\\BlockPrintHeader\\BlockPrintHeader' => __DIR__ . '/../..' . '/sources/Application/UI/Printable/BlockPrintHeader/BlockPrintHeader.php',
+        'Combodo\\iTop\\Application\\WelcomePopup\\WelcomePopupService' => __DIR__ . '/../..' . '/sources/Application/WelcomePopup/WelcomePopupService.php',     
         'Combodo\\iTop\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Composer/iTopComposer.php',
         'Combodo\\iTop\\Controller\\AbstractController' => __DIR__ . '/../..' . '/sources/Controller/AbstractController.php',
         'Combodo\\iTop\\Controller\\AjaxRenderController' => __DIR__ . '/../..' . '/sources/Controller/AjaxRenderController.php',

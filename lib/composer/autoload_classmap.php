@@ -362,7 +362,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Links\\Set\\BlockLinkSetDisplayAsProperty' => $baseDir . '/sources/Application/UI/Links/Set/BlockLinksSetDisplayAsProperty.php',
     'Combodo\\iTop\\Application\\UI\\Links\\Set\\LinkSetUIBlockFactory' => $baseDir . '/sources/Application/UI/Links/Set/LinksSetUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Preferences\\BlockShortcuts\\BlockShortcuts' => $baseDir . '/sources/Application/UI/Preferences/BlockShortcuts/BlockShortcuts.php',
-    'Combodo\\iTop\\Application\\UI\\Printable\\BlockPrintHeader\\BlockPrintHeader' => $baseDir . '/sources/Application/UI/Printable/BlockPrintHeader/BlockPrintHeader.php',
+    'Combodo\\iTop\\Application\\WelcomePopup\\WelcomePopupService' => $baseDir . '/sources/Application/WelcomePopup/WelcomePopupService.php',
     'Combodo\\iTop\\Composer\\iTopComposer' => $baseDir . '/sources/Composer/iTopComposer.php',
     'Combodo\\iTop\\Controller\\AbstractController' => $baseDir . '/sources/Controller/AbstractController.php',
     'Combodo\\iTop\\Controller\\AjaxRenderController' => $baseDir . '/sources/Controller/AjaxRenderController.php',
