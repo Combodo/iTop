@@ -20,6 +20,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Service\Router\Router;
+use Combodo\iTop\Application\WelcomePopup\WelcomePopupService;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -29,19 +30,18 @@ use Combodo\iTop\Service\Router\Router;
  *
  * @return void
  */
-function DisplayWelcomePopup(WebPage $oP)
+function DisplayWelcomePopup(WebPage $oP): void
 {
 	if (!Session::IsSet('welcome'))
 	{
-		// Check, only once per session, if the popup should be displayed...
-		// If the user did not already ask for hiding it forever
-		$bPopup = appUserPreferences::GetPref('welcome_popup', true);
-		if ($bPopup)
+		$oWelcomePopupService = new WelcomePopupService();
+		$aMessages = $oWelcomePopupService->GetMessages();
+		if (count($aMessages) > 0)
 		{
-			TwigHelper::RenderIntoPage($oP, APPROOT.'/', 'templates/pages/backoffice/welcome_popup/welcome_popup');
-			Session::Set('welcome', 'ok');
+			TwigHelper::RenderIntoPage($oP, APPROOT.'/', 'templates/pages/backoffice/welcome_popup/welcome_popup', ['messages' => $aMessages]);
 		}
-	}	
+		Session::Set('welcome', 'ok'); // Try just once per session
+	}
 }
 
 /**
@@ -66,7 +66,7 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 	}
 	// Get the list of missing mandatory fields for the target state, considering only the changes from the previous form (i.e don't prompt twice)
 	$aExpectedAttributes = $oObj->GetTransitionAttributes($sNextAction);
-	
+
 	if (count($aExpectedAttributes) == 0)
 	{
 		// If all the mandatory fields are already present, just apply the transition silently...
@@ -85,7 +85,7 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 		// redirect to the 'stimulus' action
 		$oAppContext = new ApplicationContext();
 //echo "<p>Missing Attributes <pre>".print_r($aExpectedAttributes, true)."</pre></p>\n";
-		
+
 		$oP->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=stimulus&class='.get_class($oObj).'&stimulus='.$sNextAction.'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink());
 	}
 }
@@ -243,7 +243,7 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 		$aExtraParams['surround_with_panel'] = true;
 		if(array_key_exists('icon', $aDisplayParams)){
 			$aExtraParams['panel_icon'] = $aDisplayParams['icon'];
-		}		
+		}
 		if(array_key_exists('title', $aDisplayParams)){
 			$aExtraParams['panel_title'] = $aDisplayParams['title'];
 		}
@@ -292,7 +292,7 @@ function DisplayNavigatorGroupTab($oP)
 }
 
 /***********************************************************************************
- * 
+ *
  * Main user interface page starts here
  *
  ***********************************************************************************/
@@ -700,7 +700,7 @@ try
 				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
-			
+
 			/** @deprecated 3.1.0 Use the "object.new" route instead */
 			// Kept for backward compatibility
 			case 'new': // Form to create a new object

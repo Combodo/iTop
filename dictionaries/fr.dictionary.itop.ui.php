@@ -433,6 +433,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Nous espérons que vous aimerez cette version autant que nous avons eu du plaisir à l\'imaginer et à la créer.</div>
 
 <div>Configurez vos préférences '.ITOP_APPLICATION.' pour une expérience personnalisée.</div>',
+	'UI:WelcomePopup:Button:Acknowledge' => 'Ok, supprimer ce message',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Requêtes en cours: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mes appels support',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidents en cours: %1$d',

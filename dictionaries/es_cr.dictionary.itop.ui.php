@@ -444,6 +444,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Esperamos distrute de esta versión tanto como nosotros la imaginamos y creamos.</div>
 
 <div>Configure las preferencias de '.ITOP_APPLICATION.' para una experiencia personalizada.</div>',
+	'UI:WelcomePopup:Button:Acknowledge' => 'Ok, descartar este mensaje',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Requerimientos Abiertos: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mis Requerimientos',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidentes Abiertos: %1$d',

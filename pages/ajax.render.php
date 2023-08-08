@@ -17,6 +17,7 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 use Combodo\iTop\Service\Router\Router;
 use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
+use Combodo\iTop\Controller\WelcomePopupController;
 
 require_once('../approot.inc.php');
 
@@ -2551,6 +2552,25 @@ EOF
 				$oAjaxRenderController->GetMenusCount($oPage);
 				break;
 
+		//--------------------------------
+		// WelcomePopupMenu
+		//--------------------------------
+		case 'welcome_popup_acknowledge_message':
+			$oPage = new JsonPage();
+			try {
+				$oController = new WelcomePopupController();
+				$oController->AcknowledgeMessage();
+				$aResult = ['success' => true];
+			}
+			catch (Exception $oException) {
+				$aResult = [
+					'success'       => false,
+					'error_message' => $oException->getMessage(),
+				];
+			}
+			$oPage->SetData($aResult);
+			break;
+
 			//--------------------------------
 			// Object
 			//--------------------------------
@@ -2560,9 +2580,8 @@ EOF
 				$oPage = $oController->OperationModify();
 				break;
 
-			default:
-				$oPage->p("Invalid query.");
-		}
+		default:
+			$oPage->p("Invalid query.");
 	}
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
