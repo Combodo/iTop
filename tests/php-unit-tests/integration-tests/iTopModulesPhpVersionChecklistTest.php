@@ -25,6 +25,7 @@ use utils;
  * @covers iTopDesignFormat
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
+ * @group beforeSetup
  */
 class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 {
