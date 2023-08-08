@@ -20,6 +20,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
  * @package Combodo\iTop\Test\UnitTest\Setup
+ * @group beforeSetup
  */
 class iTopXmlVersionIntegrationTest extends ItopTestCase
 {
