@@ -118,7 +118,7 @@ class DBBackupTest extends ItopTestCase
 	 *
 	 * @return void
 	 */
-	public function testMakeName(string $sInputFormat, DateTime $oBackupDateTime, string $sExpectedFilename): void
+	public function testMakeName(?string $sInputFormat, ?DateTime $oBackupDateTime, string $sExpectedFilename): void
 	{
 		$oConfig = utils::GetConfig();
 
@@ -138,6 +138,11 @@ class DBBackupTest extends ItopTestCase
 		$oBackupDateTime = DateTime::createFromFormat('Y-m-d H:i:s', '1985-07-30 15:30:59');
 
 		return [
+			'Default format - no params' => [
+				'__DB__-%Y-%m-%d',
+				$oBackupDateTime,
+				static::DUMMY_DB_NAME.'-1985-07-30',
+			],
 			'Default format' => [
 				'__DB__-%Y-%m-%d',
 				$oBackupDateTime,
@@ -159,5 +164,29 @@ class DBBackupTest extends ItopTestCase
 				static::DUMMY_DB_NAME.'-1985-07-30-production',
 			],
 		];
+	}
+
+	/**
+	 * N°6640 - Broken unattended setup with XML backup configuration
+	 */
+	public function testMakeNameWithoutParams(): void
+	{
+		$oConfig = utils::GetConfig();
+
+		// See https://github.com/Combodo/iTop/commit/f7ee21f1d7d1c23910506e9e31b57f33311bd5e0#diff-d693fb790e3463d1aa960c2b8b293532b1bbd12c3b8f885d568d315c404f926aR131
+		$oConfig->Set('db_host', static::DUMMY_DB_HOST);
+		$oConfig->Set('db_name', static::DUMMY_DB_NAME);
+		$oConfig->Set('db_subname', static::DUMMY_DB_SUBNAME);
+
+		$oDateTime = new DateTime();
+		$sExpectedFilename = static::DUMMY_DB_NAME . '-' . $oDateTime->format("Y-m-d");
+
+		$oBackup = new DBBackup($oConfig);
+
+		$sTestedFilename = $oBackup->MakeName(null);
+		$this->assertEquals($sExpectedFilename, $sTestedFilename, "Backup filename format doesn't match. Got '$sTestedFilename', expected '$sExpectedFilename'.");
+
+		$sTestedFilename = $oBackup->MakeName();
+		$this->assertEquals($sExpectedFilename, $sTestedFilename, "Backup filename format doesn't match. Got '$sTestedFilename', expected '$sExpectedFilename'.");
 	}
 }
