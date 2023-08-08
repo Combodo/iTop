@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -146,16 +146,21 @@ class DBBackup
 	/**
 	 * Create a normalized backup name, depending on the current date/time and Database
 	 *
-	 * @param string $sNameSpec Name and path, eventually containing itop placeholders + time formatting following the strftime() format {@link https://www.php.net/manual/fr/function.strftime.php}
+	 * @param string|null $sNameSpec Name and path, eventually containing itop placeholders + time formatting following the strftime() format {@link https://www.php.net/manual/fr/function.strftime.php}
 	 * @param \DateTime|null $oDateTime Date time to use for the name
 	 *
 	 * @return string Name of the backup file WITHOUT the file extension (eg. `.tar.gz`)
 	 * @since 3.1.0 N°5279 Add $oDateTime parameter
 	 */
-	public function MakeName(string $sNameSpec = "__DB__-%Y-%m-%d", DateTime $oDateTime = null)
+	public function MakeName(?string $sNameSpec = null, ?DateTime $oDateTime = null)
 	{
 		if ($oDateTime === null) {
 			$oDateTime = new DateTime();
+		}
+
+		//N°6640
+		if ($sNameSpec === null) {
+			$sNameSpec = "__DB__-%Y-%m-%d";
 		}
 
 		$sFileName = $sNameSpec;
@@ -222,7 +227,7 @@ class DBBackup
 	 *
 	 * @param string $sSourceConfigFile
 	 * @param string $sTmpFolder
-	 * @param bool $bSkipSQLDumpForTesting 
+	 * @param bool $bSkipSQLDumpForTesting
 	 *
 	 * @return array list of files to archive
 	 * @throws \Exception
@@ -273,7 +278,7 @@ class DBBackup
 				if(!file_exists(APPROOT.'/'.$sExtraFileOrDir)) {
 					continue; // Ignore non-existing files
 				}
-	
+
 				$sExtraFullPath = utils::RealPath(APPROOT.'/'.$sExtraFileOrDir, APPROOT);
 				if ($sExtraFullPath === false)
 				{
