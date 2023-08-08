@@ -1222,6 +1222,13 @@ class ObjectFormManager extends FormManager
 				}
 			}
 		}
+		catch (CoreCannotSaveObjectException $e) {
+			$aData['valid'] = false;
+			$aData['messages']['error'] += array('_main' => array($e->getHtmlMessage()));
+			if (false === $bExceptionLogged) {
+				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
+			}
+		}
 		catch (Exception $e) {
 			$aData['valid'] = false;
 			$aData['messages']['error'] += array('_main' => array($e->getMessage()));

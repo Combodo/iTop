@@ -1206,10 +1206,19 @@ try
 					$bApplyTransition = $oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
 				}
 				catch (ApplicationException $e) {
+					$bApplyTransition = false;
 					$sMessage = $e->getMessage();
 					$sSeverity = 'info';
 					ReloadAndDisplay($oP, $oObj, 'stimulus', $sMessage, $sSeverity);
 				}
+				catch (CoreCannotSaveObjectException $e) {
+					$bApplyTransition = false;
+					$aIssues = $e->getIssues();
+					$sMessage = $e->getHtmlMessage();
+					$sSeverity = 'error';
+					ReloadAndDisplay($oP, $oObj, 'stimulus', $sMessage, $sSeverity);
+				}
+				
 				if ($bApplyTransition) {
 					$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 					$sSeverity = 'ok';
