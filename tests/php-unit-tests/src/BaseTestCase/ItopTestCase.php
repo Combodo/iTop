@@ -69,6 +69,9 @@ abstract class ItopTestCase extends TestCase
 	/** Helper than can be called in the context of a data provider */
 	public static function GetAppRoot()
 	{
+		if (defined('APPROOT')) {
+			return APPROOT;
+		}
 		$sSearchPath = __DIR__;
 		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
 			if (file_exists($sSearchPath.'/approot.inc.php')) {
@@ -145,7 +148,7 @@ abstract class ItopTestCase extends TestCase
 	 */
 	protected function RequireOnceItopFile(string $sFileRelPath): void
 	{
-		require_once APPROOT . $sFileRelPath;
+		require_once $this->GetAppRoot() . $sFileRelPath;
 	}
 
 	/**

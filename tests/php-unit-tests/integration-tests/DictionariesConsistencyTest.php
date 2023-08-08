@@ -98,10 +98,12 @@ class DictionariesConsistencyTest extends ItopTestCase
 	{
 		$this->setUp();
 
+		$sAppRoot = $this->GetAppRoot();
+
 		$aDictFiles = array_merge(
-			glob(APPROOT.'datamodels/2.x/*/*.dict*.php'), // legacy form in modules
-			glob(APPROOT.'datamodels/2.x/*/dictionaries/*.dict*.php'), // modern form in modules
-			glob(APPROOT.'dictionaries/*.dict*.php') // framework
+			glob($sAppRoot.'datamodels/2.x/*/*.dict*.php'), // legacy form in modules
+			glob($sAppRoot.'datamodels/2.x/*/dictionaries/*.dict*.php'), // modern form in modules
+			glob($sAppRoot.'dictionaries/*.dict*.php') // framework
 		);
 		$aTestCases = array();
 		foreach ($aDictFiles as $sDictFile) {
