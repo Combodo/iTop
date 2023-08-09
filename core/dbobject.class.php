@@ -757,7 +757,7 @@ abstract class DBObject implements iDisplay
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		$iMaxSize = $oAttDef->GetMaxSize();
 		if ($iMaxSize && (mb_strlen($sValue) > $iMaxSize)) {
-			$sValue = substr($sValue, 0, $iMaxSize);
+			$sValue = mb_substr($sValue, 0, $iMaxSize);
 		}
 		$this->Set($sAttCode, $sValue);
 	}
