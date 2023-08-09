@@ -1133,6 +1133,54 @@ class DBObjectTest extends ItopDataTestCase
 		return $oPerson;
 	}
 
+	/**
+	 * Data provider for test deletion
+	 *  N°5547 - Object deletion fails if friendlyname too long
+	 *
+	 * @return array data
+	 */
+	public function getDeletionLongValueProvider()
+	{
+		return [
+			'friendlyname longer than 255 chracters with smiley'               => [
+				'0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789-0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq',
+				'😁😂🤣😃😄😅😆😗🥰😘😍😎😋😊😉😙😚',
+			],
+			'the same friendlyname in other order with error before fix 5547 ' => [
+				'😁😂🤣😃😄😅😆😗🥰😘😍😎😋😊😉😙😚',
+				'0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789-0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq',
+			],
+		];
+	}
+
+	/**
+	 * N°5547 - Object deletion fails if friendlyname too long
+	 *
+	 * @covers       DBObject::DBIncrement
+	 *
+	 * @dataProvider getDeletionLongValueProvider
+	 *
+	 */
+	public function testDeletionLongValue(string $sName, string $sFirstName)
+	{
+		// Create a UserRequest with 2 contacts
+		$oPerson = MetaModel::NewObject('Person', [
+			'name'       => $sName,
+			'first_name' => $sFirstName,
+			'org_id'     => 1,
+		]);
+		$oPerson->DBWrite();
+
+		$bDeletionOK = true;
+		try {
+			$oDeletionPlan = $oPerson->DBDelete();
+		}
+		catch (CoreException $e) {
+			$bDeletionOK = false;
+		}
+		$this->assertTrue($bDeletionOK);
+	}
+
 	public function ResetReloadCount()
 	{
 		$this->aReloadCount = [];
