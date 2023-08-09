@@ -117,7 +117,7 @@ $(function()
 					locked_by_someone_else: 'locked_by_someone_else',
 				},
 			},
-			action_promise: null,
+			action_promise: null,	// N°4494 - Promise used to do the action (following the log entry send) only once the lock is released
 
 			// the constructor
 			_create: function () {
