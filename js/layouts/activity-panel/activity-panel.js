@@ -971,26 +971,20 @@ $(function()
 						// Try to fix inline images width
 						CombodoInlineImage.FixImagesWidth();
 
+						// For now, we don't hide the forms as the user may want to add something else
+						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
 						// Redirect to stimulus
 						// - Convert undefined, null and empty string to null
 						sStimulusCode = ((sStimulusCode ?? '') === '') ? null : sStimulusCode;
 						if (null !== sStimulusCode) {
-							// For now, we don't hide the forms as the user may want to add something else
-							me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
-
 							if (me.options.lock_enabled) {
-								me.action_promise = new Promise(function () {
-										window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
-									},
-									function () {
-										// We do nothing in case of failure for now
-									});
+								me.action_promise = $.Deferred();
+								me.action_promise.promise().then(function () {
+									window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
+								});
 							} else {
 								window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
 							}
-						} else {
-							// For now, we don't hide the forms as the user may want to add something else
-							me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
 						}
 					})
 					.always(function () {
