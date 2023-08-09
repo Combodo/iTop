@@ -36,6 +36,12 @@ class UserLocalTest extends ItopDataTestCase
 		$this->RequireOnceItopFile('env-production/authent-local/model.authent-local.php');
 	}
 
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		Dict::SetUserLanguage();
+	}
+
 	/**
 	 * @dataProvider ProviderValidatePassword
 	 */

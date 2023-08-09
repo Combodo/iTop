@@ -67,6 +67,12 @@ HTML
 		];
 	}
 
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		\Dict::SetUserLanguage();
+	}
+
 	/**
 	 * @covers \ActionEmail::GenerateIdentifierForHeaders
 	 * @dataProvider GenerateIdentifierForHeadersProvider

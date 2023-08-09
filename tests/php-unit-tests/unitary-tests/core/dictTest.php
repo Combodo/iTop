@@ -30,7 +30,9 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Dict;
 use Exception;
 
-
+/**
+ * @runClassInSeparateProcess
+ */
 class dictTest extends ItopTestCase
 {
 	private $sEnvName;
