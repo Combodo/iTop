@@ -495,7 +495,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$oTeam->DBInsert();
 
 		// Start receiving events
-		$oEventReceiver = new CRUDEventReceiver();
+		$oEventReceiver = new CRUDEventReceiver($this);
 		$oEventReceiver->RegisterCRUDListeners();
 
 		// Create a link between Person and Team => generate 2 EVENT_DB_LINKS_CHANGED
@@ -519,7 +519,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$oLnk->DBInsert();
 
 		// Start receiving events
-		$oEventReceiver = new CRUDEventReceiver();
+		$oEventReceiver = new CRUDEventReceiver($this);
 		$oEventReceiver->RegisterCRUDListeners();
 
 		$oLnk->DBDelete();
