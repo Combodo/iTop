@@ -1,4 +1,4 @@
-<?php
+ s<?php
 /**
  * Copyright (C) 2013-2023 Combodo SARL
  *
@@ -23,9 +23,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Page:Home' => 'Domů',
 	'Page:GoPortalHome' => 'Domů',
 	'Page:GoPreviousPage' => 'Předchozí stránka',
-	'Page:ReloadPage' => 'Reload page~~',
+	'Page:ReloadPage' => 'Reload stránky',
 	'Portal:Button:Submit' => 'Odeslat',
-	'Portal:Button:Apply' => 'Update~~',
+	'Portal:Button:Apply' => 'Aktualizovat',
 	'Portal:Button:Cancel' => 'Zrušit',
 	'Portal:Button:Close' => 'Zavřít',
 	'Portal:Button:Add' => 'Přidat',
@@ -87,7 +87,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 // AggregatePageBrick
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard~~',
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
 ));
 
 // BrowseBrick brick
@@ -95,7 +95,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Browse:Name' => 'Procházet položky',
 	'Brick:Portal:Browse:Mode:List' => 'Seznam',
 	'Brick:Portal:Browse:Mode:Tree' => 'Strom',
-	'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
+	'Brick:Portal:Browse:Mode:Mosaic' => 'Mozaika',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Rozpad',
 	'Brick:Portal:Browse:Action:View' => 'Podrobnosti',
 	'Brick:Portal:Browse:Action:Edit' => 'Upravit',
@@ -112,16 +112,16 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Manage:Table:NoData' => 'Žádná položka',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
 	'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
-	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
-	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
-	'Brick:Portal:Manage:Others' => 'Others~~',
-	'Brick:Portal:Manage:All' => 'All~~',
-	'Brick:Portal:Manage:Group' => 'Group~~',
-	'Brick:Portal:Manage:fct:count' => 'Total~~',
-	'Brick:Portal:Manage:fct:sum' => 'Sum~~',
-	'Brick:Portal:Manage:fct:avg' => 'Average~~',
-	'Brick:Portal:Manage:fct:min' => 'Min~~',
-	'Brick:Portal:Manage:fct:max' => 'Max~~',
+	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Koláčový graf',
+	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Sloupcový graf',
+	'Brick:Portal:Manage:Others' => 'Ostatní',
+	'Brick:Portal:Manage:All' => 'Vše',
+	'Brick:Portal:Manage:Group' => 'Skupina',
+	'Brick:Portal:Manage:fct:count' => 'Celkem',
+	'Brick:Portal:Manage:fct:sum' => 'Suma',
+	'Brick:Portal:Manage:fct:avg' => 'Průměr',
+	'Brick:Portal:Manage:fct:min' => 'Min',
+	'Brick:Portal:Manage:fct:max' => 'Max',
 ));
 
 // ObjectBrick brick
@@ -132,23 +132,23 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Vyplňte prosím následující informace:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Uloženo',
-	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s uloženo~~',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s uloženo',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Vybrat %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Vybrat %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
-	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Zkopíruj odkaz na objekt',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Zkopírováno'
 ));
 
 // CreateBrick brick
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Create:Name' => 'Rychlé vytvoření',
-	'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
+	'Brick:Portal:Create:ChooseType' => 'Vyberte typ',
 ));
 
 // Filter brick
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
-	'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
+	'Brick:Portal:Filter:SearchInput:Submit' => 'Vyhledat',
 ));
