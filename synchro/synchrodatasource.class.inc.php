@@ -2147,7 +2147,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		}
 
 		if (mb_strlen($sWarningMessage) > $MAX_WARNING_LENGTH) {
-			$sWarningMessage = substr($sWarningMessage, 0, $MAX_WARNING_LENGTH - 3).'...';
+			$sWarningMessage = mb_substr($sWarningMessage, 0, $MAX_WARNING_LENGTH - 3).'...';
 		}
 
 		$this->Set('status_last_warning', $sWarningMessage);
