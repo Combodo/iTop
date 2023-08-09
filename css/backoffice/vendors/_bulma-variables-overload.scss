@@ -13,6 +13,9 @@ $body-overflow-x: hidden !default;
 $body-overflow-y: auto !default;
 
 
+  /*N°5786 - Problem with text color in public log and in AttributeHTML - override bulma css */
+$text-strong: inherit !default;;
+
 /**
  * customize Bulma content variables
  * See https://bulma.io/documentation/elements/content/
