@@ -258,7 +258,7 @@ class EventIssue extends Event
 		}
 		$sLength = mb_strlen($this->Get('issue'));
 		if ($sLength > 255) {
-			$this->Set('issue', substr($this->Get('issue'), 0, 210)." -truncated ($sLength chars)");
+			$this->Set('issue', mb_substr($this->Get('issue'), 0, 210)." -truncated ($sLength chars)");
 		}
 
 		$sLength = mb_strlen($this->Get('impact'));
