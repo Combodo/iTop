@@ -1,4 +1,4 @@
- s<?php
+<?php
 /**
  * Copyright (C) 2013-2023 Combodo SARL
  *
