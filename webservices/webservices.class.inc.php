@@ -299,7 +299,7 @@ abstract class WebServicesBase
 		{
 			$iMaxSize = $oAttDef->GetMaxSize();
 			if ($iMaxSize && (mb_strlen($sValue) > $iMaxSize)) {
-				$sValue = substr($sValue, 0, $iMaxSize);
+				$sValue = mb_substr($sValue, 0, $iMaxSize);
 			}
 			$oLog->Set($sAttCode, $sValue);
 		}
