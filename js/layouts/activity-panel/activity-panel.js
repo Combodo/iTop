@@ -1208,7 +1208,7 @@ $(function()
 						// Tried to release our lock
 						else if ('release_lock' === oParams.operation) {
 							sNewLockStatus = me.enums.lock_status.unknown;
-							if (me.action_promise != null) {
+							if (me.action_promise !== null) {
 								me.action_promise.resolve();
 								me.action_promise = null;
 							}
