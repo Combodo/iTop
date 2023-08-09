@@ -263,7 +263,7 @@ class EventIssue extends Event
 
 		$sLength = mb_strlen($this->Get('impact'));
 		if ($sLength > 255) {
-			$this->Set('impact', substr($this->Get('impact'), 0, 210)." -truncated ($sLength chars)");
+			$this->Set('impact', mb_substr($this->Get('impact'), 0, 210)." -truncated ($sLength chars)");
 		}
 
 		$sLength = mb_strlen($this->Get('page'));
