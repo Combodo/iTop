@@ -1930,18 +1930,13 @@ class SynchroLog extends DBObject
 
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'traces');
 		$iMaxSize = $oAttDef->GetMaxSize();
-		if (strlen($sPrevTrace) > 0)
-		{
+		if (strlen($sPrevTrace) > 0) {
 			$sTrace = $sPrevTrace."\n".implode("\n", $this->m_aTraces);
-		}
-		else
-		{
+		} else {
 			$sTrace = implode("\n", $this->m_aTraces);
 		}
-		//YOYO or not ?
-		if (strlen($sTrace) >= $iMaxSize)
-		{
-			$sTrace = substr($sTrace, 0, $iMaxSize - 255)."...\nTruncated (size: ".strlen($sTrace).')';
+		if (mb_strlen($sTrace) >= $iMaxSize) {
+			$sTrace = mb_substr($sTrace, 0, $iMaxSize - 40)."...\nTruncated (size: ".mb_strlen($sTrace).')';
 		}
 		$this->Set('traces', $sTrace);
 
@@ -2193,7 +2188,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$sText = $sMessage;
 		}
 		if (mb_strlen($sText) > 255) {
-			$sText = mb_substr($sText, 0, 200).'...('.strlen($sText).' chars)...';
+			$sText = mb_substr($sText, 0, 200).'...('.mb_strlen($sText).' chars)...';
 		}
 		$this->Set('status_last_error', $sText);
 	}

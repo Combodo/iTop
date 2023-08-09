@@ -245,7 +245,7 @@ class EventIssue extends Event
 					if (mb_strlen($sValue) < 256) {
 						$aPost[$sKey] = $sValue;
 					} else {
-						$aPost[$sKey] = "!long string: ".strlen($sValue)." chars";
+						$aPost[$sKey] = "!long string: ".mb_strlen($sValue)." chars";
 					}
 				} else {
 					// Not a string (avoid warnings in case the value cannot be easily casted into a string)
