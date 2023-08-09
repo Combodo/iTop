@@ -86,11 +86,6 @@ $ibo-is-code--padding: 1.25rem 1.5rem !default;
     border-spacing: 2px;
   }
 
-  /*N°5786 - Problem with text color in public log and in AttributeHTML - override bulma css */
-  strong {
-    color:inherit
-  }
-
   /*
    * N°5317 - Handle overlapping tables when table cells have fixed widths
    * Force table cell NOT to have a fixed width and to wrap when necessary
