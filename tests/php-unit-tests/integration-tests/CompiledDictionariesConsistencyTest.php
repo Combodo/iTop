@@ -25,7 +25,11 @@ use const APPROOT;
 class CompiledDictionariesConsistencyTest extends ItopTestCase
 {
 	/**
-	 * make sure N°5305 dictionary changes are still here and UI remains unbroken for any lang
+	 * make sure N°5305 dictionary changes (CSV import ergonomy) are still here and UI remains unbroken for any lang
+	 *
+	 * One of the things checked is the number of parameters in the dict value. This is for now crashing the app (N°5491)
+	 * and we have multiple inconsistencies in our existing dict files... So it is complicated to have a generic test for all files !
+	 * At least we are protecting those new entries...
 	 */
 	public function testImportCsvMessageStillOk()
 	{
