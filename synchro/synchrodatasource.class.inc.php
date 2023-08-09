@@ -2193,7 +2193,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$sText = $sMessage;
 		}
 		if (mb_strlen($sText) > 255) {
-			$sText = substr($sText, 0, 200).'...('.strlen($sText).' chars)...';
+			$sText = mb_substr($sText, 0, 200).'...('.strlen($sText).' chars)...';
 		}
 		$this->Set('status_last_error', $sText);
 	}
