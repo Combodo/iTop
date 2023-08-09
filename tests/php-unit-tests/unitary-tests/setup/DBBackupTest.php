@@ -40,7 +40,7 @@ class DBBackupTest extends ItopTestCase
 	 */
 	public function testGetMysqlCliTlsOptionsNoTls()
 	{
-		$oConfigToTest = utils::GetConfig();
+		$oConfigToTest = $this->GetConfigClone();
 
 		$oConfigToTest->Set('db_tls.enabled', false);
 		$sCliArgsNoTls = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
@@ -57,7 +57,7 @@ class DBBackupTest extends ItopTestCase
 	 */
 	public function testGetMysqlCliTlsOptionsWithTlsNoCa()
 	{
-		$oConfigToTest = utils::GetConfig();
+		$oConfigToTest = $this->GetConfigClone();
 		$oConfigToTest->Set('db_tls.enabled', true);
 		$sCliArgsMinCfg = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
 
@@ -82,7 +82,7 @@ class DBBackupTest extends ItopTestCase
 	 */
 	public function testGetMysqlCliTlsOptionsWithTlsAndCa()
 	{
-		$oConfigToTest = utils::GetConfig();
+		$oConfigToTest = $this->GetConfigClone();
 		$sTestCa = 'my_test_ca';
 
 		$oConfigToTest->Set('db_tls.enabled', true);
@@ -142,7 +142,7 @@ class DBBackupTest extends ItopTestCase
 	 */
 	public function testMakeName(string $sInputFormat, DateTime $oBackupDateTime, string $sExpectedFilename): void
 	{
-		$oConfig = utils::GetConfig();
+		$oConfig = $this->GetConfigClone();
 
 		// See https://github.com/Combodo/iTop/commit/f7ee21f1d7d1c23910506e9e31b57f33311bd5e0#diff-d693fb790e3463d1aa960c2b8b293532b1bbd12c3b8f885d568d315c404f926aR131
 		$oConfig->Set('db_host', static::DUMMY_DB_HOST);
