@@ -983,7 +983,7 @@ $(function()
 										window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
 									},
 									function () {
-										//todo
+										// We do nothing in case of failure for now
 									});
 							} else {
 								window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
