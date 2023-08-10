@@ -202,10 +202,10 @@ try
 				$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
 				$oAppContext = new ApplicationContext();
 				$aPrefillFormParam = array(
-					'user'       => Session::Get("auth_user"),
-					'context'    => $oAppContext->GetAsHash(),
-					'att_code'   => $sAttCode,
-					'origin'     => 'console',
+					'user' => Session::Get("auth_user"),
+					'context' => $oAppContext->GetAsHash(),
+					'att_code' => $sAttCode,
+					'origin' => 'console',
 					'source_obj' => $oObj
 				);
 				$aAlreadyLinked = utils::ReadParam('aAlreadyLinked', array());
@@ -277,10 +277,10 @@ try
 				$oPage->SetContentType('text/html');
 				$oAppContext = new ApplicationContext();
 				$aPrefillFormParam = array(
-					'user'       => Session::Get('auth_user'),
-					'context'    => $oAppContext->GetAsHash(),
-					'att_code'   => $sAttCode,
-					'origin'     => 'console',
+					'user' => Session::Get('auth_user'),
+					'context' => $oAppContext->GetAsHash(),
+					'att_code' => $sAttCode,
+					'origin' => 'console',
 					'source_obj' => $oObj,
 				);
 				$aPrefillFormParam['dest_class'] = ($oObj === null ? '' : $oObj->Get($sAttCode)->GetClass());
@@ -304,10 +304,10 @@ try
 				}
 				$oAppContext = new ApplicationContext();
 				$aPrefillFormParam = array(
-					'user'       => Session::Get('auth_user'),
-					'context'    => $oAppContext->GetAsHash(),
-					'att_code'   => $sAttCode,
-					'origin'     => 'console',
+					'user' => Session::Get('auth_user'),
+					'context' => $oAppContext->GetAsHash(),
+					'att_code' => $sAttCode,
+					'origin' => 'console',
 					'source_obj' => $oObj,
 				);
 				$aPrefillFormParam['dest_class'] = ($oObj === null ? '' : $oObj->Get($sAttCode)->GetClass());
@@ -419,10 +419,10 @@ try
 				$iInputId = utils::ReadParam('iInputId', '');
 				$sAttCode = utils::ReadParam('sAttCode', '');
 				$sJson = utils::ReadParam('json', '', false, 'raw_data');
-	            $bTargetClassSelected = utils::ReadParam('bTargetClassSelected', '', false, 'raw_data');
-	            // Building form, if target class has child classes we ask the user for the desired leaf class, unless we've already done just that
+				$bTargetClassSelected = utils::ReadParam('bTargetClassSelected', '', false, 'raw_data');
+				// Building form, if target class has child classes we ask the user for the desired leaf class, unless we've already done just that
 				$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, false);
-	            if(!$bTargetClassSelected && MetaModel::HasChildrenClasses($sTargetClass)){
+				if (!$bTargetClassSelected && MetaModel::HasChildrenClasses($sTargetClass)) {
 					$oWidget->GetClassSelectionForm($oPage);
 				} else {
 					$aPrefillFormParam = array();
@@ -431,11 +431,11 @@ try
 						$oObj = $oWizardHelper->GetTargetObject();
 						$oAppContext = new ApplicationContext();
 						$aPrefillFormParam = array(
-							'user'       => Session::Get('auth_user'),
-							'context'    => $oAppContext->GetAsHash(),
-							'att_code'   => $sAttCode,
+							'user' => Session::Get('auth_user'),
+							'context' => $oAppContext->GetAsHash(),
+							'att_code' => $sAttCode,
 							'source_obj' => $oObj,
-							'origin'     => 'console'
+							'origin' => 'console'
 						);
 					} else {
 						// Search form: no current object
@@ -528,7 +528,8 @@ try
 					$oObj->Set($sAttCode, $defaultValue);
 				}
 				$sFormPrefix = $oWizardHelper->GetFormPrefix();
-				$aExpectedAttributes = ($oWizardHelper->GetStimulus() === null) ? array() : $oObj->GetTransitionAttributes($oWizardHelper->GetStimulus(), $oWizardHelper->GetInitialState());
+				$aExpectedAttributes = ($oWizardHelper->GetStimulus() === null) ? array() : $oObj->GetTransitionAttributes($oWizardHelper->GetStimulus(),
+					$oWizardHelper->GetInitialState());
 				foreach ($oWizardHelper->GetFieldsForAllowedValues() as $sAttCode) {
 					$sId = $oWizardHelper->GetIdForField($sAttCode);
 					if ($sId != '') {
@@ -574,7 +575,8 @@ try
 				$sTargetState = utils::ReadParam('target_state', '');
 				$iTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 				$oObj->Set(MetaModel::GetStateAttributeCode($sClass), $sTargetState);
-				cmdbAbstractObject::DisplayCreationForm($oPage, $sClass, $oObj, array(), array('action' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php', 'transaction_id' => $iTransactionId));
+				cmdbAbstractObject::DisplayCreationForm($oPage, $sClass, $oObj, array(),
+					array('action' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php', 'transaction_id' => $iTransactionId));
 				break;
 
 			// DisplayBlock
@@ -601,8 +603,7 @@ try
 					} else {
 						try {
 							$oFilter = DBSearch::unserialize($sFilter);
-						}
-						catch (CoreException $e) {
+						} catch (CoreException $e) {
 							$sFilter = utils::HtmlEntities($sFilter);
 							$oPage->p("Invalid query (invalid filter) : <code>$sFilter</code>");
 							IssueLog::Error("ajax.render operation='ajax', invalid DBSearch filter param : $sFilter");
@@ -667,7 +668,8 @@ try
 								$aResult['JSURLs'] = str_replace('"', '\'', $oBlock->sJSURLs);
 								$aResult['js'] = 'charts['.$iRefresh.'].load({json: '.str_replace('"', '\'', $oBlock->sJson).
 									',keys: { x: \'label\', value:  [\'value\']'.
-									'},onclick: function (d) {  var aURLs = $.parseJSON('.str_replace('"', '\'', $oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
+									'},onclick: function (d) {  var aURLs = $.parseJSON('.str_replace('"', '\'',
+										$oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
 								break;
 
 							case 'pie':
@@ -678,7 +680,8 @@ try
 								$aResult['JSURLs'] = str_replace('"', '\'', $oBlock->sJSURLs);
 								$aResult['js'] = 'charts['.$iRefresh.'].load({columns: '.str_replace('"', '\'', $oBlock->sJSColumns).
 									',names: '.str_replace('"', '\'', $oBlock->sJSNames).
-									',onclick: function (d) {  var aURLs = $.parseJSON('.str_replace('"', '\'', $oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
+									',onclick: function (d) {  var aURLs = $.parseJSON('.str_replace('"', '\'',
+										$oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
 								break;
 						}
 					} else {
@@ -778,14 +781,14 @@ try
 				$oFilter = new DBObjectSearch($sClass);
 				$oSet = new CMDBObjectSet($oFilter);
 				$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array(
-					'currentId'                  => $currentId,
-					'baseClass'                  => $sRootClass,
-					'action'                     => $sAction,
-					'table_id'                   => $sTableId,
-					'selection_mode'             => $sSelectionMode,
+					'currentId' => $currentId,
+					'baseClass' => $sRootClass,
+					'action' => $sAction,
+					'table_id' => $sTableId,
+					'selection_mode' => $sSelectionMode,
 					'result_list_outer_selector' => $sResultListOuterSelector,
-					'cssCount'                   => $scssCount,
-					'table_inner_id'             => $sTableInnerId
+					'cssCount' => $scssCount,
+					'table_inner_id' => $sTableInnerId
 				));
 				$oPage->add($sHtml);
 				break;
@@ -822,13 +825,13 @@ try
 				TemporaryObjectManager::GetInstance()->CancelAllTemporaryObjects($iTransactionId);
 
 				IssueLog::Trace('on_form_cancel', $sObjClass, array(
-					'$iObjKey'        => $iObjKey,
+					'$iObjKey' => $iObjKey,
 					'$sTransactionId' => $iTransactionId,
-					'$sTempId'        => $sTempId,
-					'$sToken'         => $sToken,
-					'$sUser'          => UserRights::GetUser(),
-					'HTTP_REFERER'    => @$_SERVER['HTTP_REFERER'],
-					'REQUEST_URI'     => @$_SERVER['REQUEST_URI'],
+					'$sTempId' => $sTempId,
+					'$sToken' => $sToken,
+					'$sUser' => UserRights::GetUser(),
+					'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+					'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
 				));
 
 				break;
@@ -880,11 +883,9 @@ try
 						$oDoc = utils::ReadPostedDocument('dashboard_upload_file');
 						$oDashboard->FromXml($oDoc->GetData());
 						$oDashboard->Save();
-					}
-					catch (DOMException $e) {
+					} catch (DOMException $e) {
 						$aResult = array('error' => Dict::S('UI:Error:InvalidDashboardFile'));
-					}
-					catch (Exception $e) {
+					} catch (Exception $e) {
 						$aResult = array('error' => $e->getMessage());
 					}
 				} else {
@@ -1055,7 +1056,8 @@ EOF
 					$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');"); // in ajax web page add_script has the same effect as add_ready_script
 					// but is executed BEFORE all 'ready_scripts'
 					$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
-					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));
+					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php',
+						array('operation' => 'update_dashlet_property'));
 					$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */, '.itop-dashboard'));
 					$sHtml = str_replace("\n", '', $sHtml);
 					$sHtml = str_replace("\r", '', $sHtml);
@@ -1114,7 +1116,8 @@ EOF
 					}
 					if ($oDashlet->IsFormRedrawNeeded()) {
 						$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
-						$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
+						$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php',
+							array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
 						$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true, '.itop-dashboard'));
 						$sHtml = str_replace("\n", '', $sHtml);
 						$sHtml = str_replace("\r", '', $sHtml);
@@ -1360,7 +1363,8 @@ JS
 					}
 
 					$sFullTextJS = addslashes($sFullText);
-					$bEnableEnlarge = array_key_exists($sClassName, $aAccelerators) && array_key_exists('query', $aAccelerators[$sClassName]);
+					$bEnableEnlarge = array_key_exists($sClassName, $aAccelerators) && array_key_exists('query',
+							$aAccelerators[$sClassName]);
 					if (array_key_exists($sClassName, $aAccelerators) && array_key_exists('enable_enlarge', $aAccelerators[$sClassName])) {
 						$bEnableEnlarge &= $aAccelerators[$sClassName]['enable_enlarge'];
 					}
@@ -1394,9 +1398,11 @@ EOF;
 							$oPage->add("<div class=\"search-class-result search-class-$sClassName\">\n");
 							$oPage->add("<div class=\"page_header\">\n");
 							if (array_key_exists($sClassName, $aAccelerators)) {
-								$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
+								$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found',
+										count($aLeafs), Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
 							} else {
-								$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
+								$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found',
+										count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
 							}
 							$oPage->add("</div>\n");
 							$oLeafsFilter->AddCondition('id', $aLeafs, 'IN');
@@ -1412,7 +1418,8 @@ EOF;
 						if (array_key_exists($sClassName, $aAccelerators)) {
 							$oPage->add("<div class=\"search-class-result search-class-$sClassName\">\n");
 							$oPage->add("<div class=\"page_header\">\n");
-							$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', 0, Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
+							$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found',
+									0, Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
 							$oPage->add("</div>\n");
 							$oPage->add("</div>\n");
 							$oPage->p('&nbsp;'); // Some space ?
@@ -1492,7 +1499,8 @@ EOF
 				$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 				$oSet = new DBObjectSet($oFilter);
 				$oPage->add("<div class=\"page_header\">\n");
-				$oPage->add("<h2>".MetaModel::GetClassIcon($sClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sClass))."</h2>\n");
+				$oPage->add("<h2>".MetaModel::GetClassIcon($sClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found',
+						$oSet->Count(), Metamodel::GetName($sClass))."</h2>\n");
 				$oPage->add("</div>\n");
 				if ($oSet->Count() > 0) {
 					$aLeafs = array();
@@ -1580,10 +1588,11 @@ EOF
 				$oPage->add('<div class="statistics"><div class="stats-toggle closed">'.Dict::S('ExcelExport:Statistics').'<div class="stats-data"></div></div></div>');
 				$oPage->add('</div>');
 				$aLabels = array(
-					'dialog_title'    => Dict::S('ExcelExporter:ExportDialogTitle'),
-					'cancel_button'   => Dict::S('UI:Button:Cancel'),
-					'export_button'   => Dict::S('ExcelExporter:ExportButton'),
-					'download_button' => Dict::Format('ExcelExporter:DownloadButton', 'export.xlsx'), //TODO: better name for the file (based on the class of the filter??)
+					'dialog_title' => Dict::S('ExcelExporter:ExportDialogTitle'),
+					'cancel_button' => Dict::S('UI:Button:Cancel'),
+					'export_button' => Dict::S('ExcelExporter:ExportButton'),
+					'download_button' => Dict::Format('ExcelExporter:DownloadButton', 'export.xlsx'),
+					//TODO: better name for the file (based on the class of the filter??)
 				);
 				$sJSLabels = json_encode($aLabels);
 				$sFilter = addslashes($sFilter);
@@ -1695,7 +1704,8 @@ EOF
 				if ($sDirection == 'up') {
 					$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aContexts);
 				} else {
-					$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects, $aContexts);
+					$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects,
+						$aContexts);
 				}
 
 				// Remove excluded classes from the graph
@@ -1755,9 +1765,11 @@ EOF
 						 $sIconUrl = MetaModel::GetClassIcon($sListClass, false);
 						$sIconUrl = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
 						$oTitle = new Html("<img src=\"$sIconUrl\" style=\"vertical-align:middle;width: 24px; height: 24px;\"/> ".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass)));*/
-						$oTitle = new Html(Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass)));
+						$oTitle = new Html(Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(),
+							Metamodel::GetName($sListClass)));
 						$oPage->AddSubBlock(TitleUIBlockFactory::MakeStandard($oTitle, 2));
-						$oPage->AddSubBlock(cmdbAbstractObject::GetDataTableFromDBObjectSet($oSet, array('table_id' => $sSourceClass.'_'.$sRelation.'_'.$sDirection.'_'.$sListClass)));
+						$oPage->AddSubBlock(cmdbAbstractObject::GetDataTableFromDBObjectSet($oSet,
+							array('table_id' => $sSourceClass.'_'.$sRelation.'_'.$sDirection.'_'.$sListClass)));
 					}
 
 					// Then the content of the groups (one table per group)
@@ -1769,8 +1781,10 @@ EOF
 							$sListClass = get_class(current($aObjects));
 							$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
 							$sIconUrl = MetaModel::GetClassIcon($sListClass, false);
-							$sIconUrl = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
-							$oTitle = new Html("<img src=\"$sIconUrl\" style=\"vertical-align:middle;width: 24px; height: 24px;\"/> ".Dict::Format('UI:RelationGroupNumber_N', (1 + $idx)), Metamodel::GetName($sListClass));
+							$sIconUrl = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/',
+								$sIconUrl);
+							$oTitle = new Html("<img src=\"$sIconUrl\" style=\"vertical-align:middle;width: 24px; height: 24px;\"/> ".Dict::Format('UI:RelationGroupNumber_N',
+									(1 + $idx)), Metamodel::GetName($sListClass));
 							$oPage->AddSubBlock(TitleUIBlockFactory::MakeStandard($oTitle, 2));
 							$oPage->AddSubBlock(cmdbAbstractObject::GetDataTableFromDBObjectSet($oSet));
 
@@ -1844,7 +1858,8 @@ EOF
 				if ($sDirection == 'up') {
 					$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aContexts);
 				} else {
-					$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects, $aContexts);
+					$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects,
+						$aContexts);
 				}
 
 				// Remove excluded classes from the graph
@@ -1875,13 +1890,15 @@ EOF
 					$oSearch = new DBObjectSearch($sListClass);
 					$oSearch->AddCondition('id', $aDefinition['keys'], 'IN');
 					$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
-					$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::Format('UI:RelationGroupNumber_N', (1 + $idx)), 1, "relation_group_$idx"));
+					$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::Format('UI:RelationGroupNumber_N', (1 + $idx)), 1,
+						"relation_group_$idx"));
 					$oBlock = new DisplayBlock($oSearch, 'list');
 					$oBlock->Display($oPage, 'group_'.$iBlock++, array(
 						'surround_with_panel' => true,
-						'panel_class'         => $sListClass,
-						'panel_title'         => Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aDefinition['keys']), Metamodel::GetName($sListClass)),
-						'panel_icon'          => MetaModel::GetClassIcon($sListClass, false),
+						'panel_class' => $sListClass,
+						'panel_title' => Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aDefinition['keys']),
+							Metamodel::GetName($sListClass)),
+						'panel_icon' => MetaModel::GetClassIcon($sListClass, false),
 					));
 				}
 				break;
@@ -1895,11 +1912,12 @@ EOF
 					$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
 					$oBlock = new DisplayBlock($oSearch, 'list');
 					$oBlock->Display($oPage, 'list_'.$iBlock++, array(
-						'table_id'            => 'ImpactAnalysis_'.$sListClass,
+						'table_id' => 'ImpactAnalysis_'.$sListClass,
 						'surround_with_panel' => true,
-						'panel_class'         => $sListClass,
-						'panel_title'         => Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aKeys), Metamodel::GetName($sListClass)),
-						'panel_icon'          => MetaModel::GetClassIcon($sListClass, false),
+						'panel_class' => $sListClass,
+						'panel_title' => Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aKeys),
+							Metamodel::GetName($sListClass)),
+						'panel_icon' => MetaModel::GetClassIcon($sListClass, false),
 					));
 				}
 				break;
@@ -1951,7 +1969,8 @@ EOF
 
 				$sContextKey = 'itop-tickets/relation_context/'.$sClass.'/'.$sRelation.'/'.$sDirection;
 				$oAppContext = new ApplicationContext();
-				$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId, $sContextKey, array('this' => $oTicket));
+				$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId, $sContextKey,
+					array('this' => $oTicket));
 				break;
 
 			case 'export_build':
@@ -2001,7 +2020,7 @@ EOF
 				$aLockData = iTopOwnershipLock::IsLocked($sObjClass, $iObjKey);
 
 				$aResult = [
-					'locked'  => $aLockData['locked'],
+					'locked' => $aLockData['locked'],
 					'message' => '',
 				];
 
@@ -2088,11 +2107,11 @@ EOF
 				$aResult = array(
 					'uploaded' => 0,
 					'fileName' => '',
-					'url'      => '',
-					'icon'     => '',
-					'msg'      => '',
-					'att_id'   => 0,
-					'preview'  => 'false',
+					'url' => '',
+					'icon' => '',
+					'msg' => '',
+					'att_id' => 0,
+					'preview' => 'false',
 				);
 
 				$sObjClass = stripslashes(utils::ReadParam('obj_class', '', false, 'class'));
@@ -2127,20 +2146,19 @@ EOF
 							}
 
 							IssueLog::Trace('InlineImage created', LogChannels::INLINE_IMAGE, array(
-								'$operation'   => $operation,
-								'$aResult'     => $aResult,
-								'secret'       => $oAttachment->Get('secret'),
-								'temp_id'      => $sTempId,
-								'item_class'   => $sObjClass,
-								'user'         => UserRights::GetUser(),
+								'$operation' => $operation,
+								'$aResult' => $aResult,
+								'secret' => $oAttachment->Get('secret'),
+								'temp_id' => $sTempId,
+								'item_class' => $sObjClass,
+								'user' => UserRights::GetUser(),
 								'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-								'REQUEST_URI'  => @$_SERVER['REQUEST_URI'],
+								'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
 							));
 						} else {
 							$aResult['error'] = $oDoc->GetFileName().' is not a valid image format.';
 						}
-					}
-					catch (FileUploadException $e) {
+					} catch (FileUploadException $e) {
 						$aResult['error'] = $e->GetMessage();
 					}
 				}
@@ -2157,8 +2175,8 @@ EOF
 					if (!InlineImage::IsImage($sDocMimeType)) {
 						LogErrorMessage('CKE : error when uploading image in ajax.render.php, not an image',
 							array(
-								'operation'   => 'cke_upload_and_browse',
-								'class'       => $sObjClass,
+								'operation' => 'cke_upload_and_browse',
+								'class' => $sObjClass,
 								'ImgMimeType' => $sDocMimeType,
 							));
 					} else {
@@ -2175,22 +2193,21 @@ EOF
 						$iAttId = $oAttachment->DBInsert();
 
 						IssueLog::Trace('InlineImage created', LogChannels::INLINE_IMAGE, array(
-							'$operation'   => $operation,
-							'secret'       => $oAttachment->Get('secret'),
-							'temp_id'      => $sTempId,
-							'item_class'   => $sObjClass,
-							'user'         => UserRights::GetUser(),
+							'$operation' => $operation,
+							'secret' => $oAttachment->Get('secret'),
+							'temp_id' => $sTempId,
+							'item_class' => $sObjClass,
+							'user' => UserRights::GetUser(),
 							'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-							'REQUEST_URI'  => @$_SERVER['REQUEST_URI'],
+							'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
 						));
 					}
 
-				}
-				catch (FileUploadException $e) {
+				} catch (FileUploadException $e) {
 					LogErrorMessage('CKE : error when uploading image in ajax.render.php, exception occured',
 						array(
-							'operation'    => 'cke_upload_and_browse',
-							'class'        => $sObjClass,
+							'operation' => 'cke_upload_and_browse',
+							'class' => $sObjClass,
 							'exceptionMsg' => $e,
 						));
 				}
@@ -2304,7 +2321,8 @@ $('.img-picker').magnificPopup({type: 'image', closeOnContentClick: true });
 EOF
 				);
 				$sOQL = "SELECT InlineImage WHERE ((temp_id = :temp_id) OR (item_class = :obj_class AND item_id = :obj_id))";
-				$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('temp_id' => $sTempId, 'obj_class' => $sClass, 'obj_id' => $iObjectId));
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array(),
+					array('temp_id' => $sTempId, 'obj_class' => $sClass, 'obj_id' => $iObjectId));
 				$oPage->add("<div><fieldset><legend>$sAvailableImagesLegend</legend>");
 
 				if ($oSet->Count() == 0) {
@@ -2361,7 +2379,8 @@ EOF
 						$aTriggerMentionedSearches = [];
 
 						$aTriggerSetParams = array('class_list' => MetaModel::EnumParentClasses($sHostClass, ENUM_PARENT_CLASSES_ALL));
-						$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerSetParams);
+						$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"),
+							array(), $aTriggerSetParams);
 						/** @var \TriggerOnObjectMention $oTrigger */
 						while ($oTrigger = $oTriggerSet->Fetch()) {
 							$sTriggerMentionedOQL = $oTrigger->Get('mentioned_filter');
@@ -2395,7 +2414,8 @@ EOF
 
 					// Add condition to filter on the friendlyname
 					$oSearch->AddConditionExpression(
-						new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE', new VariableExpression('needle'))
+						new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE',
+							new VariableExpression('needle'))
 					);
 
 					$oSet = new DBObjectSet($oSearch, [], $aSearchParams);
@@ -2414,8 +2434,8 @@ EOF
 						$sObjectClass = get_class($oObject);
 						$iObjectId = $oObject->GetKey();
 						$aMatch = [
-							'class'        => $sObjectClass,
-							'id'           => $iObjectId,
+							'class' => $sObjectClass,
+							'id' => $iObjectId,
 							'friendlyname' => $oObject->Get('friendlyname'),
 						];
 
@@ -2424,7 +2444,8 @@ EOF
 							/** @var \ormDocument $oImage */
 							$oImage = $oObject->Get($sObjectImageAttCode);
 							if (!$oImage->IsEmpty()) {
-								$aMatch['picture_style'] = "background-image: url('".$oImage->GetDisplayURL($sObjectClass, $iObjectId, $sObjectImageAttCode)."')";
+								$aMatch['picture_style'] = "background-image: url('".$oImage->GetDisplayURL($sObjectClass, $iObjectId,
+										$sObjectImageAttCode)."')";
 								$aMatch['initials'] = '';
 							} else {
 								// If no image found, fallback on initials
@@ -2461,8 +2482,7 @@ EOF
 					$aRenderRes = $oRenderer->Render($aRequestedFields);
 
 					$aResult['form']['updated_fields'] = $aRenderRes;
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					$aResult['error'] = $e->getMessage();
 				}
 				$oPage->SetData($aResult);
@@ -2479,10 +2499,9 @@ EOF
 					$oController = new PreferencesController();
 					$aResult = $oController->SetUserPicture();
 					$aResult['success'] = true;
-				}
-				catch (Exception $oException) {
+				} catch (Exception $oException) {
 					$aResult = [
-						'success'       => false,
+						'success' => false,
 						'error_message' => $oException->getMessage(),
 					];
 				}
@@ -2501,10 +2520,9 @@ EOF
 					$aResult = [
 						'success' => true,
 					];
-				}
-				catch (Exception $oException) {
+				} catch (Exception $oException) {
 					$aResult = [
-						'success'       => false,
+						'success' => false,
 						'error_message' => $oException->getMessage(),
 					];
 				}
@@ -2517,10 +2535,9 @@ EOF
 				try {
 					$oController = new ActivityPanelController();
 					$aResult = $oController->AddCaseLogsEntries();
-				}
-				catch (Exception $oException) {
+				} catch (Exception $oException) {
 					$aResult = [
-						'success'       => false,
+						'success' => false,
 						'error_message' => $oException->getMessage(),
 					];
 				}
@@ -2533,10 +2550,9 @@ EOF
 				try {
 					$oController = new ActivityPanelController();
 					$aResult = $oController->LoadMoreEntries();
-				}
-				catch (Exception $oException) {
+				} catch (Exception $oException) {
 					$aResult = [
-						'success'       => false,
+						'success' => false,
 						'error_message' => $oException->getMessage(),
 					];
 				}
@@ -2552,24 +2568,23 @@ EOF
 				$oAjaxRenderController->GetMenusCount($oPage);
 				break;
 
-		//--------------------------------
-		// WelcomePopupMenu
-		//--------------------------------
-		case 'welcome_popup_acknowledge_message':
-			$oPage = new JsonPage();
-			try {
-				$oController = new WelcomePopupController();
-				$oController->AcknowledgeMessage();
-				$aResult = ['success' => true];
-			}
-			catch (Exception $oException) {
-				$aResult = [
-					'success'       => false,
-					'error_message' => $oException->getMessage(),
-				];
-			}
-			$oPage->SetData($aResult);
-			break;
+			//--------------------------------
+			// WelcomePopupMenu
+			//--------------------------------
+			case 'welcome_popup_acknowledge_message':
+				$oPage = new JsonPage();
+				try {
+					$oController = new WelcomePopupController();
+					$oController->AcknowledgeMessage();
+					$aResult = ['success' => true];
+				} catch (Exception $oException) {
+					$aResult = [
+						'success' => false,
+						'error_message' => $oException->getMessage(),
+					];
+				}
+				$oPage->SetData($aResult);
+				break;
 
 			//--------------------------------
 			// Object
@@ -2580,8 +2595,9 @@ EOF
 				$oPage = $oController->OperationModify();
 				break;
 
-		default:
-			$oPage->p("Invalid query.");
+			default:
+				$oPage->p("Invalid query.");
+		}
 	}
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
