@@ -14,7 +14,9 @@ use MetaModel;
  *
  * @package Combodo\iTop\Test\UnitTest\Core
  *
- * @runInSeparateProcess
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
  */
 class BulkChangeExtKeyTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;
