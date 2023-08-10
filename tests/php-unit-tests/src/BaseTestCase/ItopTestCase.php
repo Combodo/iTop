@@ -75,6 +75,38 @@ abstract class ItopTestCase extends TestCase
 		}
 	}
 
+	protected function setUp(): void {
+		parent::setUp();
+
+		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
+
+		$sAppRoot = self::GetAppRoot();
+		require_once $sAppRoot . 'appconsts.inc.php';
+
+		if (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME)) {
+			// setUp might be called multiple times, so protecting the define() call !
+			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
+		}
+	}
+
+	/**
+	 * @throws \MySQLTransactionNotClosedException see N°5538
+	 * @since 2.7.8 3.0.3 3.1.0 N°5538
+	 */
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+
+		if (CMDBSource::IsInsideTransaction()) {
+			// Nested transactions were opened but not finished !
+			// Rollback to avoid side effects on next tests
+			while (CMDBSource::IsInsideTransaction()) {
+				CMDBSource::Query('ROLLBACK');
+			}
+			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
+		}
+	}
+
 	/** Helper than can be called in the context of a data provider */
 	public static function GetAppRoot()
 	{
@@ -97,31 +129,6 @@ abstract class ItopTestCase extends TestCase
 			$sSearchPath = substr($sSearchPath, 0, $iOffsetSep);
 		}
 		return $sSearchPath.'/';
-	}
-
-	/** @noinspection UsingInclusionOnceReturnValueInspection avoid errors for approot includes */
-	protected function setUp(): void {
-		parent::setUp();
-
-		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
-	}
-
-	/**
-	 * @throws \MySQLTransactionNotClosedException see N°5538
-	 * @since 2.7.8 3.0.3 3.1.0 N°5538
-	 */
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-
-		if (CMDBSource::IsInsideTransaction()) {
-			// Nested transactions were opened but not finished !
-			// Rollback to avoid side effects on next tests
-			while (CMDBSource::IsInsideTransaction()) {
-				CMDBSource::Query('ROLLBACK');
-			}
-			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
-		}
 	}
 
 	/**
