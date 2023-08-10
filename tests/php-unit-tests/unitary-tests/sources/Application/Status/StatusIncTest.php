@@ -62,7 +62,10 @@ class StatusIncTest extends ItopTestCase {
         $this->assertTrue(true);
     }
 
-    public function testStatusStartupWrongDbPwd()
+    /**
+     * @runInSeparateProcess
+     */
+	public function testStatusStartupWrongDbPwd()
     {
 	    $this->RequireOnceItopFile('core/cmdbobject.class.inc.php');
 	    $this->RequireOnceItopFile('application/utils.inc.php');
