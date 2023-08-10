@@ -1,29 +1,10 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Test\UnitTest;
-/**
- * Created by PhpStorm.
- * User: Eric
- * Date: 20/11/2017
- * Time: 11:21
- */
 
 use CMDBSource;
 use MySQLTransactionNotClosedException;
@@ -32,7 +13,16 @@ use SetupUtils;
 
 define('DEBUG_UNIT_TEST', true);
 
-class ItopTestCase extends TestCase {
+/**
+ * Class ItopTestCase
+ *
+ * Helper class to extend for tests that DO NOT need to access the DataModel or the Database
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Test\UnitTest
+ */
+abstract class ItopTestCase extends TestCase
+{
 	public const TEST_LOG_DIR = 'test';
 
 	protected function setUp(): void {
@@ -51,6 +41,9 @@ class ItopTestCase extends TestCase {
 			// setUp might be called multiple times, so protecting the define() call !
 			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
 		}
+
+		$this->LoadRequiredItopFiles();
+		$this->LoadRequiredTestFiles();
 	}
 
 	/**
@@ -65,6 +58,28 @@ class ItopTestCase extends TestCase {
 			// Nested transactions were opened but not finished !
 			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
 		}
+	}
+
+	/**
+	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceItopFile()}
+	 *
+	 * @return void
+	 * @since 2.7.9 3.0.4 3.1.0
+	 */
+	protected function LoadRequiredItopFiles(): void
+	{
+		// Empty until we actually need to require some files in the class
+	}
+
+	/**
+	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceUnitTestFile()}
+	 *
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.0
+	 */
+	protected function LoadRequiredTestFiles(): void
+	{
+		// Empty until we actually need to require some files in the class
 	}
 
 	/**
