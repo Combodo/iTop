@@ -104,6 +104,15 @@ class TransactionsTest extends ItopTestCase
 		}
 	}
 
+	/**
+	 * This test case was originaly in DBInsertProvider
+	 * @runInSeparateProcess Failing when run in the same process as other...
+	 */
+	public function testDBInsertCaseHistory38()
+	{
+		$this->testDBInsert(40, false);
+	}
+
 	public function DBInsertProvider()
 	{
 		return [
@@ -147,7 +156,6 @@ class TransactionsTest extends ItopTestCase
 			"History 35" => ['iFailAt' => 37, 'bIsInDB' => false],
 			"History 36" => ['iFailAt' => 38, 'bIsInDB' => false],
 			"History 37" => ['iFailAt' => 39, 'bIsInDB' => false],
-			"History 38" => ['iFailAt' => 40, 'bIsInDB' => false],
 		];
 	}
 
