@@ -6,6 +6,9 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use CMDBSource;
 use Combodo\iTop\Core\DbConnectionWrapper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Exception;
+use IssueLog;
+use LogChannels;
 use utils;
 
 /**
@@ -136,5 +139,50 @@ class CMDBSourceTest extends ItopTestCase
 		// before N°4215 fix, this was crashing : "Call to a member function query() on null"
 		$bIsTlsCnx = $this->InvokeNonPublicStaticMethod(CMDBSource::class, 'IsOpenedDbConnectionUsingTls', [$oMysqli]);
 		$this->assertFalse($bIsTlsCnx);
+	}
+
+	/**
+	 * @since 2.7.10 3.0.4 3.1.1 3.2.0 N°6643 Checks writing in IssueLog is really done
+	 */
+	public function testLogDeadLock(): void
+	{
+		$sExceptionMessage = 'Test exception for deadlock';
+		$oDeadlockException = new Exception($sExceptionMessage);
+
+		// \CMDBSource::LogDeadLock uses mysqli::errno and mysqli::query()
+		// I didn't achieve mocking the errno property by either of the following means :
+		// - PHPUnit mock => property is read only error
+		// - DbConnectionWrapper::SetDbConnectionMockForQuery with a custom mysqli children
+		//    - override of errno property with an assignment (public $errno = ...;) => property is read only error
+		//    - override of __get() for the errno property => no error but no change
+		// Solution for errno was to add a new parameter to disable errno read :/
+		/** @noinspection PhpDeprecationInspection */
+		$oMockMysqli = $this->getMockBuilder('mysqli')
+			->setMethods(['query'])
+			->getMock();
+		$oMockMysqli->expects($this->any())
+			->method('query')
+			->willReturnCallback(function () {
+				return false;
+			});
+		DbConnectionWrapper::SetDbConnectionMockForQuery($oMockMysqli);
+
+		$sTestErrorLogPath = APPROOT . 'log/error.phpunit.log';
+		IssueLog::Enable($sTestErrorLogPath);
+		try {
+			$this->InvokeNonPublicStaticMethod(CMDBSource::class, 'LogDeadLock', [$oDeadlockException, true, false]);
+			$sLastErrorLogLine = $this->GetErrorLogLastLines($sTestErrorLogPath, 10); // we are getting multiple lines as the context log introduced multiple lines per log
+			$this->assertStringContainsString(LogChannels::DEADLOCK, $sLastErrorLogLine);
+			$this->assertStringContainsString($sExceptionMessage, $sLastErrorLogLine);
+		} finally {
+			if (file_exists($sTestErrorLogPath)) {
+				unlink($sTestErrorLogPath);
+			}
+		}
+	}
+
+	private function GetErrorLogLastLines(string $sErrorLogPath, int $iLineNumbers = 1): string
+	{
+		return trim(implode("", array_slice(file($sErrorLogPath), -$iLineNumbers)));
 	}
 }

@@ -626,18 +626,24 @@ class CMDBSource
 	}
 
 	/**
-	 * @param \Exception $e
+	 * @param Exception $e
 	 * @param bool $bForQuery to get the proper DB connection
+	 * @param bool $bCheckMysqliErrno if false won't try to check for mysqli::errno value
 	 *
 	 * @since 2.7.1
 	 * @since 3.0.0 N°4325 add new optional parameter to use the correct DB connection
+	 * @since 3.0.4 3.1.1 3.2.0 N°6643 new bCheckMysqliErrno parameter as a workaround for mysqli::errno cannot be mocked
 	 */
-	private static function LogDeadLock(Exception $e, $bForQuery = false)
+	private static function LogDeadLock(Exception $e, $bForQuery = false, $bCheckMysqliErrno = true)
 	{
 		// checks MySQL error code
-		$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection($bForQuery)->errno;
-		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK))) {
-			return;
+		if ($bCheckMysqliErrno) {
+			$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection($bForQuery)->errno;
+			if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK))) {
+				return;
+			}
+		} else {
+			$iMySqlErrorNo = "N/A";
 		}
 
 		// Get error info
@@ -664,7 +670,10 @@ class CMDBSource
 		);
 		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
 
-		IssueLog::Error($sMessage, LogChannels::DEADLOCK, $e->getMessage());
+		IssueLog::Error($sMessage, LogChannels::DEADLOCK, [
+			'exception.class' => get_class($e),
+			'exception.message' => $e->getMessage(),
+		]);
 	}
 
 	/**
