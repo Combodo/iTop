@@ -13,8 +13,8 @@ $body-overflow-x: hidden !default;
 $body-overflow-y: auto !default;
 
 
-  /*N°5786 - Problem with text color in public log and in AttributeHTML - override bulma css */
-$text-strong: inherit !default;;
+/*N°5786 - Avoid strong text to always be grey (default Bulma color for this var.) so strong text can keep its color. This  is mostly for text within the .ibo-is-html-content. */
+$text-strong: inherit !default;
 
 /**
  * customize Bulma content variables
