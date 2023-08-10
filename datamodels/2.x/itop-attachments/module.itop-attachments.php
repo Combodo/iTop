@@ -204,7 +204,10 @@ SQL;
 			if (version_compare($sPreviousVersion, '3.2.0', '<')) {
 				SetupLog::Info("Upgrading itop-attachment from '$sPreviousVersion' to '$sCurrentVersion'. Starting with 3.2.0, contact_id will be added into the DB...");
 				$sUserTableName = MetaModel::DBGetTable('User');
-				$sAddContactId = "UPDATE `$sTableName` att, `$sUserTableName` us SET att.contact_id = us.contactid WHERE att.user_id = us.id AND att.contact_id = 0";
+				$sUserFieldContactId = MetaModel::GetAttributeDef('User', 'contactid')->Get('sql');
+				$sAttachmentFieldUserId = MetaModel::GetAttributeDef('Attachment', 'user_id')->Get('sql');
+				$sAttachmentFieldContactId = MetaModel::GetAttributeDef('Attachment', 'contact_id')->Get('sql');
+				$sAddContactId = "UPDATE `$sTableName` att, `$sUserTableName` us SET att.$sAttachmentFieldContactId = us.$sUserFieldContactId WHERE att.$sAttachmentFieldUserId = us.id AND att.$sAttachmentFieldContactId = 0";
 
 				CMDBSource::Query($sAddContactId);
 				$iNbProcessed = CMDBSource::AffectedRows();
