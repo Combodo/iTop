@@ -388,7 +388,7 @@ EOF
 <<<JS
 				$('#{$sHierarchicalButtonId}').off('click').on('click', function(){
 					// Creating a new modal
-					CombodoPortalToolbox.OpenModal({
+					CombodoModal.OpenModal({
 						attributes: {
 							'data-source-element': '{$sHierarchicalButtonId}',
 						},
