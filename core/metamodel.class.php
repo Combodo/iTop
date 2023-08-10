@@ -6535,6 +6535,18 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @internal Used for resetting the configuration during automated tests
+
+	 * @param \Config $oConfiguration
+	 *
+	 * @return void
+	 */
+	public static function SetConfig(Config $oConfiguration)
+	{
+		self::$m_oConfig = $oConfiguration;
+	}
+
+	/**
 	 * @return Config
 	 */
 	public static function GetConfig()

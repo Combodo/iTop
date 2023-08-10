@@ -37,7 +37,7 @@ Before reading further you will have to you will have to change your mindset:
 FIXME : tools to detect harmful implementations
 
 Principles :
-* Configuration
+* Configuration : automatically reset after test class execution.
 * Data
 * Dictionnary
 

@@ -59,8 +59,6 @@ class detectStaticPollutionTest extends TestCase
 	{
 		return [
 			'ContextTags' => ['/ContextTag::AddContext/i', 'Use new ContextTag() instead'],
-			'MetaModel::GetConfig' => ['/MetaModel::GetConfig/i', 'FIXME Use ItopDataTestCase->SetConfigParam() instead'],
-			'utils::GetConfig' => ['/utils::GetConfig/i', 'TODO: decide what to do with this'],
 			'Dict::Add' => ['/Dict::Add/i', 'TODO: implement a facade into ItopDataTestCase'],
 			'Dict::SetUserLanguage' => ['/Dict::SetUserLanguage/i', 'TODO: decide wether a systematic reset is suitable or if a facade should be implemented'],
 			'EventService::RegisterListener' => ['/EventService::RegisterListener/i', 'Use ItopDataTestCase::EventService_RegisterListener instead'],

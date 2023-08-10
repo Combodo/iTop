@@ -24,8 +24,6 @@ abstract class ItopTestCase extends TestCase
 	const TEST_LOG_DIR = 'test';
 	static $DEBUG_UNIT_TEST = false;
 
-	private $aConfigOriginalValues = [];
-
 	/**
 	 * Override the default value to disable the backup of globals in case of tests run in a separate process
 	 */
@@ -66,6 +64,15 @@ abstract class ItopTestCase extends TestCase
 	public static function tearDownAfterClass(): void
 	{
 		parent::tearDownAfterClass();
+
+		if (method_exists('utils', 'GetConfig')) {
+			// Reset the config by forcing the load from disk
+			$oConfig = \utils::GetConfig(true);
+			if (method_exists('MetaModel', 'SetConfig')) {
+				// Reset the config by forcing the load from disk
+				\MetaModel::SetConfig($oConfig);
+			}
+		}
 	}
 
 	/** Helper than can be called in the context of a data provider */
@@ -114,13 +121,6 @@ abstract class ItopTestCase extends TestCase
 				CMDBSource::Query('ROLLBACK');
 			}
 			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
-		}
-
-		if (count($this->aConfigOriginalValues) > 0) {
-			$oConfig = \utils::GetConfig();
-			foreach ($this->aConfigOriginalValues as $sKey => $value) {
-				$oConfig->Set($sKey, $value);
-			}
 		}
 	}
 
@@ -220,27 +220,6 @@ abstract class ItopTestCase extends TestCase
 		$sId = str_replace(' ', '_', $sId);
 
 		return $sId;
-	}
-
-	/**
-	 * Facade vor utils::GetConfig()->Set()
-	 *
-	 * @param string $sKey
-	 * @param mixed $value
-	 *
-	 * @return void
-	 */
-	public function ConfigSet(string $sKey, $value)
-	{
-		if (!array_key_exists($sKey, $this->aConfigOriginalValues)) {
-			$this->aConfigOriginalValues[$sKey] = $value;
-		}
-		\utils::GetConfig()->Set($sKey, $value);
-	}
-
-	public function GetConfigClone()
-	{
-		return clone \utils::GetConfig();
 	}
 
 	/**
