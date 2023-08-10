@@ -92,6 +92,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 */
 	public static function tearDownAfterClass(): void
 	{
+		\UserRights::FlushPrivileges();
 		parent::tearDownAfterClass();
 	}
 
