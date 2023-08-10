@@ -2,11 +2,16 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 $('#{{ oUIBlock.GetId() }}-back').on('click', function () {
-    $('#ibo-form-navigation').attr('action', ' {{ oUIBlock.GetBackUrl() | raw }} ');
+    $('#ibo-form-navigation').attr('action', '{{ oUIBlock.GetBackUrl() | raw }}');
+    $('#ibo-form-navigation').attr('method', 'post');
+    $('#ibo-form-navigation').find('[name=basket_filter]').val('');
 
-    JSON.parse('{{ oUIBlock.GetPostedFields() | raw }}', (key, value) => {
-        $('#ibo-form-navigation').append($('<input/>').attr({'type': 'hidden', 'name': key, 'value': value}));
-    });
+    if ('{{ oUIBlock.GetPostedFields() | raw }}' != '')
+    {
+        JSON.parse('{{ oUIBlock.GetPostedFields() | raw }}', (key, value) => {
+            $('#ibo-form-navigation').append($('<input/>').attr({'type': 'hidden', 'name': key, 'value': value}));
+        });
+    }
 
     $('#ibo-form-navigation').submit();
 });

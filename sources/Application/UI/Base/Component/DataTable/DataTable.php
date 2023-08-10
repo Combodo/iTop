@@ -48,7 +48,7 @@ class DataTable extends UIContentBlock
 	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
-	protected $sFilter;
+	protected $sBasketFilter;
 	/**
 	 * @var string
 	 */
@@ -225,17 +225,17 @@ class DataTable extends UIContentBlock
 	/**
 	 * @return string
 	 */
-	public function GetFilter()
+	public function GetBasketFilter()
 	{
-		return $this->sFilter;
+		return $this->sBasketFilter;
 	}
 
 	/**
 	 * @param string $sFilter
 	 */
-	public function setFilter($sFilter): void
+	public function setBasketFilter($sFilter): void
 	{
-		$this->sFilter = $sFilter;
+		$this->sBasketFilter = $sFilter;
 	}
 
 	/**

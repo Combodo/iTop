@@ -5,7 +5,8 @@
     {% block iboNavigation %}
         <form id='ibo-form-navigation' class='ibo-navigation-form' method='post'>
             <input type='hidden' name='list_navigation' value='{{ oUIBlock.GetList() }}'/>
-            <input type='hidden' name='filter' value='{{ oUIBlock.GetFilter() }}'/>
+            <input type='hidden' name='basket_class' value='{{ oUIBlock.GetBasketClass() }}'/>
+            <input type='hidden' name='basket_filter' value='{{ oUIBlock.GetBasketFilter() }}'/>
             <input type='hidden' name='back_posted_fields' value='{{ oUIBlock.GetPostedFields()|raw }}'/>
             <input type='hidden' name='back_url' value='{{ oUIBlock.GetBackUrl()|raw }}'/>
             <div class='ibo-form-navigation--nav fas fa-angle-up' id='{{ oUIBlock.GetId() }}-back'></div>

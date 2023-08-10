@@ -50,9 +50,9 @@ class Navigation extends UIContentBlock
 	protected $iIdNext = 0;
 	protected $iIdLast = 0;
 	protected $aList = [];
-	protected $sFilter;
+	protected $sBasketFilter;
 	protected $sBackUrl;
-	protected $sClass;
+	protected $sBasketClass;
 	protected $sPostedFields;
 
 	/**
@@ -63,16 +63,16 @@ class Navigation extends UIContentBlock
 	 * @param string $sColorScheme Color scheme code such as "success", "failure", "active", ... {@see css/backoffice/components/_panel.scss}
 	 * @param string|null $sId
 	 */
-	public function __construct(string $sClass, int $iIdx, array $aList, string $sFilter, string $sBackUrl, string $sPostedFieldsForBackUrl = "", ?string $sId = null)
+	public function __construct(string $sBasketClass, int $iIdx, array $aList, string $sBasketFilter, string $sBackUrl, string $sPostedFieldsForBackUrl = "", ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->iCount = count($aList);
 		if ($this->iCount == 0) {
 			return new UIContentBlock();
 		}
-		$this->sClass = $sClass;
+		$this->sBasketClass = $sBasketClass;
 		$this->aList = $aList;
-		$this->sFilter = $sFilter;
+		$this->sBasketFilter = $sBasketFilter;
 		$this->sBackUrl = $sBackUrl;
 		$this->iIdx = $iIdx;
 		if ($this->iIdx>0) {
@@ -112,7 +112,7 @@ class Navigation extends UIContentBlock
 
 	private function GetUrlFromId($iId)
 	{
-		$sUrl = iTopStandardURLMaker::MakeObjectURL($this->sClass, $iId);
+		$sUrl = iTopStandardURLMaker::MakeObjectURL($this->sBasketClass, $iId);
 		return $sUrl;
 	}
 
@@ -159,9 +159,9 @@ class Navigation extends UIContentBlock
 	/**
 	 * @return string
 	 */
-	public function GetFilter(): string
+	public function GetBasketFilter(): string
 	{
-		return $this->sFilter;
+		return $this->sBasketFilter;
 	}
 
 	/**

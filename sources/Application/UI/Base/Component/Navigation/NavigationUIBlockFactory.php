@@ -22,6 +22,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Navigation;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use DBObjectSearch;
 use DBObjectSet;
+use utils;
 
 /**
  * Class PanelUIBlockFactory
@@ -48,19 +49,26 @@ class NavigationUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeStandard($oObject, string $sFilter, array $aList = [], string $sBackUrl = '', $sPostedFieldsForBackUrl = "")
+	public static function MakeStandard($oObject, string $sBasketFilter, string $sBasketClass, array $aList = [], string $sBackUrl = '', $sPostedFieldsForBackUrl = "")
 	{
-		if ($sFilter != null && count($aList) === 0) {
-			$oFilter = DBObjectSearch::FromOQL($sFilter);
-			$oSet = new DBObjectSet($oFilter);
+		if (utils::IsNotNullOrEmptyString($sBasketFilter) && count($aList) === 0) {
+			$oBasketFilter = DBObjectSearch::FromOQL($sBasketFilter);
+			$oSet = new DBObjectSet($oBasketFilter);
 			$aList = $oSet->GetColumnAsArray('id', false);
+			if (utils::IsNullOrEmptyString($sBasketClass)) {
+				$sBasketClass = $oBasketFilter->GetClass();
+			}
+		}
+		if (utils::IsNullOrEmptyString($sBasketClass)) {
+			$oBasketFilter = DBObjectSearch::FromOQL($sBasketFilter);
+			$sBasketClass = $oBasketFilter->GetClass();
 		}
 		if (count($aList) === 0) {
 			return null;
 		}
 
 		$iIdx = array_search($oObject->GetKey(), $aList);
-		$oNavigationBlock = new Navigation(get_class($oObject), $iIdx, $aList, $sFilter, $sBackUrl, $sPostedFieldsForBackUrl);
+		$oNavigationBlock = new Navigation($sBasketClass, $iIdx, $aList, $sBasketFilter, $sBackUrl, $sPostedFieldsForBackUrl);
 
 		return $oNavigationBlock;
 	}

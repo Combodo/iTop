@@ -437,7 +437,8 @@ try
 
 						//N°1386 - Advanced Search: Navigation in list - Browse this list
 						$sBackUrl = utils::ReadPostedParam('back_url', '', false, 'raw');
-						$sFilter = utils::ReadPostedParam('filter', null, false, 'raw');
+						$sBasketClass = utils::ReadPostedParam('basket_class', null, false, 'raw');
+						$sBasketFilter = utils::ReadPostedParam('basket_filter', null, false, 'raw');
 						$sList = utils::ReadPostedParam('list_navigation', null, false, 'string');
 						$sPostedFieldsForBackUrl = utils::ReadPostedParam('back_posted_fields', "", false, 'raw');
 						$aList = [];
@@ -447,7 +448,7 @@ try
 
 						$sClassLabel = MetaModel::GetName($sClass);
 						$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-						$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW, $sFilter, $aList, $sBackUrl, $sPostedFieldsForBackUrl));
+						$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW, $sBasketFilter, $sBasketClass, $aList, $sBackUrl, $sPostedFieldsForBackUrl));
 						$oObj->DisplayDetails($oP);
 					}
 				}
