@@ -448,7 +448,7 @@ JS
 						'selector': '.modal[data-source-element="{$sSearchButtonId}"]:first'
 					};
 				}
-				CombodoPortalToolbox.OpenModal(oOptions);
+				CombodoModal.OpenModal(oOptions);
 			});
 JS
 		);
