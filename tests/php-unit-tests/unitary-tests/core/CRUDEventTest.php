@@ -7,7 +7,6 @@
 namespace Combodo\iTop\Test\UnitTest\Core\CRUD;
 
 use Combodo\iTop\Service\Events\EventData;
-use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ContactType;
 use CoreException;
@@ -422,9 +421,6 @@ class CRUDEventTest extends ItopDataTestCase
 		$oEventReceiver = new CRUDEventReceiver($this);
 		$oEventReceiver->AddCallback(EVENT_DB_AFTER_WRITE, Person::class, 'SetPersonFirstName');
 		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_AFTER_WRITE);
-		// Used to count the updates
-		// TODO: check!!!
-		$oEventReceiver->RegisterCRUDListeners(EVENT_DB_UPDATE_DONE);
 
 		self::$iEventCalls = 0;
 		$oPerson = $this->CreatePerson(1);
