@@ -487,6 +487,7 @@ class UserRightsTest extends ItopDataTestCase
 		];
 	}
 	/**
+	 * @runInSeparateProcess
 	 *@dataProvider NonAdminCannotListAdminProfilesProvider
 	 */
 	public function testNonAdminCannotListAdminProfiles($bHideAdministrators, $iExpectedCount)
