@@ -167,6 +167,12 @@ class utils
 
 	private static $iNextId = 0;
 
+	/**
+	 * @var ?string
+	 * @used-by GetAbsoluteUrlAppRoot
+	 */
+	private static $sAbsoluteUrlAppRootCache = null;
+
 	private static $m_sAppRootUrl = null;
 
 	protected static function LoadParamFile($sParamFile)
@@ -1037,39 +1043,41 @@ class utils
 		return $bTrustProxies;
 	}
 
-    /**
-     * Returns the absolute URL to the application root path
-     *
-     * @param bool $bForceTrustProxy
-     *
-     * @return string The absolute URL to the application root, without the first slash
-     *
-     * @throws \Exception
-     *
-     * @since 2.7.4 $bForceTrustProxy param added
-     */
+	/**
+	 * Returns the absolute URL to the application root path
+	 *
+	 * @param bool $bForceTrustProxy
+	 *
+	 * @return string The absolute URL to the application root, without the first slash
+	 *
+	 * @throws \Exception
+	 *
+	 * @since 2.7.4 $bForceTrustProxy param added
+	 */
 	public static function GetAbsoluteUrlAppRoot($bForceTrustProxy = false)
 	{
-		static $sUrlCache = null;
-
-		$sUrl = self::GetConfig()->Get('app_root_url');
-		if ($sUrl === '') {
-			if ((false === $bForceTrustProxy) && (false === is_null($sUrlCache))) {
-				return $sUrlCache;
+		if (static::$sAbsoluteUrlAppRootCache === null || $bForceTrustProxy)
+		{
+			static::$sAbsoluteUrlAppRootCache = self::GetConfig()->Get('app_root_url');
+			if (static::$sAbsoluteUrlAppRootCache == '')
+			{
+				static::$sAbsoluteUrlAppRootCache = self::GetDefaultUrlAppRoot($bForceTrustProxy);
 			}
-			$sUrl = self::GetDefaultUrlAppRoot($bForceTrustProxy);
-		} elseif (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1) {
-			if (isset($_SERVER['SERVER_NAME'])) {
-				$sServerName = $_SERVER['SERVER_NAME'];
-			} else {
-				// CLI mode ?
-				$sServerName = php_uname('n');
+			elseif (strpos(static::$sAbsoluteUrlAppRootCache, SERVER_NAME_PLACEHOLDER) > -1)
+			{
+				if (isset($_SERVER['SERVER_NAME']))
+				{
+					$sServerName = $_SERVER['SERVER_NAME'];
+				}
+				else
+				{
+					// CLI mode ?
+					$sServerName = php_uname('n');
+				}
+				static::$sAbsoluteUrlAppRootCache = str_replace(SERVER_NAME_PLACEHOLDER, $sServerName, static::$sAbsoluteUrlAppRootCache);
 			}
-			$sUrl = str_replace(SERVER_NAME_PLACEHOLDER, $sServerName, $sUrl);
 		}
-
-		$sUrlCache = $sUrl;
-		return $sUrl;
+		return static::$sAbsoluteUrlAppRootCache;
 	}
 
 	/**
