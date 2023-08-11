@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\UI\Base\Component\Navigation;
+namespace Combodo\iTop\Application\UI\Base\Component\Basket;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use DBObjectSearch;
@@ -25,50 +25,48 @@ use DBObjectSet;
 use utils;
 
 /**
- * Class PanelUIBlockFactory
+ * Class BasketUIBlockFactory
  *
- * @package UIBlockExtensibilityAPI
  * @api
- * @since 3.1.0
+ * @package UIBlockExtensibilityAPI
+ * @since 3.1.1
  *
  * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-panels to see live examples
  */
-class NavigationUIBlockFactory extends AbstractUIBlockFactory
+class BasketUIBlockFactory extends AbstractUIBlockFactory
 {
 	/** @inheritDoc */
-	public const TWIG_TAG_NAME = 'UINavigation';
+	public const TWIG_TAG_NAME = 'UIBasket';
 	/** @inheritDoc */
-	public const UI_BLOCK_CLASS_NAME = Navigation::class;
+	public const UI_BLOCK_CLASS_NAME = Basket::class;
 
 	/**
 	 * Make a basis Panel component
 	 *
 	 * @api
-	 * @param string $sTitle
-	 * @param string|null $sSubTitle
 	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Basket
 	 */
-	public static function MakeStandard($oObject, string $sBasketFilter, string $sBasketClass, array $aList = [], string $sBackUrl = '', $sPostedFieldsForBackUrl = "")
+	public static function MakeStandard($oObject, string $sFilter, string $sClass, array $aList = [], string $sBackUrl = '', $sPostedFieldsForBackUrl = "")
 	{
-		if (utils::IsNotNullOrEmptyString($sBasketFilter) && count($aList) === 0) {
-			$oBasketFilter = DBObjectSearch::FromOQL($sBasketFilter);
+		if (utils::IsNotNullOrEmptyString($sFilter) && count($aList) === 0) {
+			$oBasketFilter = DBObjectSearch::FromOQL($sFilter);
 			$oSet = new DBObjectSet($oBasketFilter);
 			$aList = $oSet->GetColumnAsArray('id', false);
-			if (utils::IsNullOrEmptyString($sBasketClass)) {
-				$sBasketClass = $oBasketFilter->GetClass();
+			if (utils::IsNullOrEmptyString($sClass)) {
+				$sClass = $oBasketFilter->GetClass();
 			}
 		}
-		if (utils::IsNullOrEmptyString($sBasketClass)) {
-			$oBasketFilter = DBObjectSearch::FromOQL($sBasketFilter);
-			$sBasketClass = $oBasketFilter->GetClass();
+		if (utils::IsNullOrEmptyString($sClass)) {
+			$oBasketFilter = DBObjectSearch::FromOQL($sFilter);
+			$sClass = $oBasketFilter->GetClass();
 		}
 		if (count($aList) === 0) {
 			return null;
 		}
 
 		$iIdx = array_search($oObject->GetKey(), $aList);
-		$oNavigationBlock = new Navigation($sBasketClass, $iIdx, $aList, $sBasketFilter, $sBackUrl, $sPostedFieldsForBackUrl);
+		$oNavigationBlock = new Basket($sClass, $iIdx, $aList, $sFilter, $sBackUrl, $sPostedFieldsForBackUrl);
 
 		return $oNavigationBlock;
 	}

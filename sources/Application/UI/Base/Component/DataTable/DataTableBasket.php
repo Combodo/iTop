@@ -16,7 +16,7 @@ use DataTableConfig;
  * Class DataTableBasket
  *
  * @package Combodo\iTop\Application\UI\Base\Component\DataTableBasket
- * @since 3.1.0
+ * @since 3.1.1
  */
 class DataTableBasket extends UIContentBlock
 {
@@ -25,24 +25,24 @@ class DataTableBasket extends UIContentBlock
 
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/datatable/basket';
 
-	protected $sPostedFieldsForBackUrl;
+	protected $sBasketPostedFieldsForBackUrl;
 
 
 	/**
 	 * Panel constructor.
 	 *
 	 */
-	public function __construct(array $aPostedFieldsForBackUrl = [], ?string $sId = null)
+	public function __construct(array $aBasketPostedFieldsForBackUrl = [], ?string $sId = null)
 	{
 		parent::__construct($sId);
-		$this->sPostedFieldsForBackUrl = json_encode($aPostedFieldsForBackUrl);
+		$this->sBasketPostedFieldsForBackUrl = json_encode($aBasketPostedFieldsForBackUrl);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function GetPostedFieldsForBackUrl(): string
+	public function GetBasketPostedFieldsForBackUrl(): string
 	{
-		return $this->sPostedFieldsForBackUrl;
+		return $this->sBasketPostedFieldsForBackUrl;
 	}
 }

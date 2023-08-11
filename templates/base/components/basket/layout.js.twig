@@ -1,0 +1,55 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+function backToBasket() {
+    $('#ibo-form-basket').attr('action', '{{ oUIBlock.GetBackUrl() | raw }}');
+    $('#ibo-form-basket').attr('method', 'post');
+    $('#ibo-form-basket').find('[name=basket_filter]').val('');
+
+    if ('{{ oUIBlock.GetPostedFields() | raw }}' != '')
+    {
+        JSON.parse('{{ oUIBlock.GetPostedFields() | raw }}', (key, value) => {
+            $('#ibo-form-basket').append($('<input/>').attr({'type': 'hidden', 'name': key, 'value': value}));
+        });
+    }
+
+    $('#ibo-form-basket').submit();
+
+}
+$('#{{ oUIBlock.GetId() }}-back').on('click', function () {
+    backToBasket();
+});
+$('#{{ oUIBlock.GetId() }}-total').on('click', function () {
+    backToBasket();
+});
+
+$('#{{ oUIBlock.GetId() }}-first').on('click', function () {
+    $('#ibo-form-basket').attr('action', ' {{ oUIBlock.GetUrlFirst() | raw }} ');
+    $('#ibo-form-basket').submit();
+});
+
+$('#{{ oUIBlock.GetId() }}-prev').on('click', function () {
+    $('#ibo-form-basket').attr('action', ' {{ oUIBlock.GetUrlPrev()| raw }} ');
+    $('#ibo-form-basket').submit();
+});
+
+$('#{{ oUIBlock.GetId() }}-next').on('click', function () {
+    $('#ibo-form-basket').attr('action', ' {{ oUIBlock.GetUrlNext() | raw }} ');
+    $('#ibo-form-basket').submit();
+});
+
+$('#{{ oUIBlock.GetId() }}-last').on('click', function () {
+    $('#ibo-form-basket').attr('action', ' {{ oUIBlock.GetUrlLast() | raw }} ');
+    $('#ibo-form-basket').submit()
+});
+
+/*a first try but not the good solution to keep basket in edit mode */
+$('.ibo-panel--toolbar a').each(function (idx, elt) {
+    var onclick = $(this).attr("onClick");
+    if (typeof onclick == 'undefined' && onclick == false)
+    {
+        $(this).on('click', function () {
+            $('#ibo-form-basket').attr('action', $this.attr('href'));
+            $('#ibo-form-basket').submit();
+        });
+    }
+});

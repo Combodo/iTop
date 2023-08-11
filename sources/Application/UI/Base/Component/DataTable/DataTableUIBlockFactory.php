@@ -597,6 +597,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
 		$oFilter->SetSelectedClasses([$sBasketAliasClass]);
 		$oDataTable->SetBasketFilter($oFilter->ToOQL(true));
+		$oDataTable->SetBasketClass($oFilter->GetClass());
 		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams, 1, $sLinkToBasket));
 
 		// row actions

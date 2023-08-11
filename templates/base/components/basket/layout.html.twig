@@ -1,0 +1,30 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+<div id='{{ oUIBlock.GetId() }}'
+     class='{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {{ oUIBlock.GetCSSColorClass() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %} ibo-is-opened' data-role='ibo-basket'>
+    {% block ibobasket %}
+        <form id='ibo-form-basket' class='ibo-basket-form' method='post'>
+            <input type='hidden' name='basket_list_basket' value='{{ oUIBlock.GetList() }}'/>
+            <input type='hidden' name='basket_class' value='{{ oUIBlock.GetClass() }}'/>
+            <input type='hidden' name='basket_filter' value='{{ oUIBlock.GetFilter() }}'/>
+            <input type='hidden' name='basket_back_posted_fields' value='{{ oUIBlock.GetPostedFields()|raw }}'/>
+            <input type='hidden' name='basket_back_url' value='{{ oUIBlock.GetBackUrl()|raw }}'/>
+            <div class='ibo-form-basket--nav fas fa-angle-up' id='{{ oUIBlock.GetId() }}-back' data-tooltip-content='{{ 'UI:Basket:Back'|dict_s }}'></div>
+            {% if oUIBlock.HasPrec() %}
+                <div class='ibo-form-basket--nav fas fa-angle-double-left' id='{{ oUIBlock.GetId() }}-first' data-tooltip-content='{{ 'UI:Basket:First'|dict_s }}'></div>
+                <div class='ibo-form-basket--nav fas fa-angle-left' id='{{ oUIBlock.GetId() }}-prev' data-tooltip-content='{{ 'UI:Basket:Previous'|dict_s }}'></div>
+            {% else %}
+                &#160;&#160;&#160;
+            {% endif %}
+            <div class='ibo-form-basket--total'>{{ oUIBlock.GetIdx() }} /
+                <span id='{{ oUIBlock.GetId() }}-total' class='ibo-form-basket--total--link' data-tooltip-content='{{ 'UI:Basket:Back'|dict_s }}'>{{ oUIBlock.GetCount() }}</span>
+            </div>
+            {% if oUIBlock.HasNext() %}
+                <div class='ibo-form-basket--nav fas fa-angle-right' id='{{ oUIBlock.GetId() }}-next' data-tooltip-content='{{ 'UI:Basket:Next'|dict_s }}'></div>
+                <div class='ibo-form-basket--nav fas fa-angle-double-right' id='{{ oUIBlock.GetId() }}-last' data-tooltip-content='{{ 'UI:Basket:Last'|dict_s }}'></div>
+            {% else %}
+                &#160;&#160;&#160;
+            {% endif %}
+        </form>
+    {% endblock %}
+    </div>

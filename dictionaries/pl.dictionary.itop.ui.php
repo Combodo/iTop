@@ -334,14 +334,18 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 //
 
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'BooleanLabel:yes' => 'tak',
-	'BooleanLabel:no' => 'nie',
-	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
-	'Menu:WelcomeMenu' => 'Witaj',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'Witaj w '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Witaj',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'Witaj w '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => 'Witaj w '.ITOP_APPLICATION_SHORT,
+	'BooleanLabel:yes'      => 'tak',
+	'BooleanLabel:no'       => 'nie',
+	'UI:Login:Title'        => ITOP_APPLICATION_SHORT.' login',
+	'Menu:WelcomeMenu'      => 'Witaj',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+'     => 'Witaj w '.ITOP_APPLICATION_SHORT,
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage'  => 'Witaj',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => 'Witaj w '.ITOP_APPLICATION_SHORT,
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title'  => 'Witaj w '.ITOP_APPLICATION_SHORT,
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' to kompletny portal operacyjny OpenSource IT.</p>
 <ul>Obejmuje:
@@ -1010,39 +1014,54 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:NotificationsMenu:Actions:Action' => 'Inne działania',
 	'UI:NotificationsMenu:AvailableActions' => 'Dostępne działania',
 
-	'Menu:TagAdminMenu' => 'Konfiguracja tagów',
-	'Menu:TagAdminMenu+' => 'Zarządzanie wartościami tagów',
-	'UI:TagAdminMenu:Title' => 'Konfiguracja tagów',
-	'UI:TagAdminMenu:NoTags' => 'Nie skonfigurowano pola tagu',
+	'Menu:TagAdminMenu'        => 'Konfiguracja tagów',
+	'Menu:TagAdminMenu+'       => 'Zarządzanie wartościami tagów',
+	'UI:TagAdminMenu:Title'    => 'Konfiguracja tagów',
+	'UI:TagAdminMenu:NoTags'   => 'Nie skonfigurowano pola tagu',
 	'UI:TagSetFieldData:Error' => 'Błąd: %1$s',
 
-	'Menu:AuditCategories' => 'Kategorie audytu',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Kategorie audytu',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Kategorie audytu',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories'     => 'Kategorie audytu',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+'    => 'Kategorie audytu',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Kategorie audytu',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Uruchom zapytania', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Uruchom dowolne zapytanie',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu'  => 'Uruchom zapytania',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Uruchom dowolne zapytanie',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Słownik zapytań',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Słownik zapytań',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu'  => 'Słownik zapytań',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Słownik zapytań',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Administracja danymi',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Administracja danymi',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration'  => 'Administracja danymi',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Administracja danymi',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Wyszukiwanie uniwersalne',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Szukaj wszystkiego...', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu'  => 'Wyszukiwanie uniwersalne',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Szukaj wszystkiego...',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Zarządzanie użytkownikami',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'Zarządzanie użytkownikami', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu'  => 'Zarządzanie użytkownikami',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Zarządzanie użytkownikami',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profile',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Profile',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu'       => 'Profile',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+'      => 'Profile',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Profile',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Konta użytkowników',
+	'Menu:UserAccountsMenu'       => 'Konta użytkowników',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Konta użytkowników',
+	'Menu:UserAccountsMenu+'      => 'Konta użytkowników',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Konta użytkowników',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1051,9 +1070,9 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:iTopVersion:Long' => '%1$s wersja %2$s-%3$s zbudowana na %4$s',
 	'UI:PropertiesTab' => 'Właściwości',
 
-	'UI:OpenDocumentInNewWindow_' => 'Otwórz',
-	'UI:DownloadDocument_' => 'Pobierz',
-	'UI:Document:NoPreview' => 'Brak podglądu tego typu dokumentu',
+	'UI:OpenDocumentInNewWindow_'                => 'Otwórz',
+	'UI:DownloadDocument_'                       => 'Pobierz',
+	'UI:Document:NoPreview'                      => 'Brak podglądu tego typu dokumentu',
 	'UI:Download-CSV' => 'Pobierz %1$s',
 
 	'UI:DeadlineMissedBy_duration' => 'Nieodebrane przez %1$s',
@@ -1126,65 +1145,72 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'Portal:Button:UpdateRequest' => 'Zaktualizuj zgłoszenie',
 	'Portal:EnterYourCommentsOnTicket' => 'Wpisz swoje uwagi dotyczące rozwiązania tego zgłoszenia:',
 	'Portal:ErrorNoContactForThisUser' => 'Błąd: bieżący użytkownik nie jest powiązany z kontaktem / osobą. Skontaktuj się z administratorem.',
-	'Portal:Attachments' => 'Załączniki',
-	'Portal:AddAttachment' => ' Dodaj załącznik ',
-	'Portal:RemoveAttachment' => ' Usuń załącznik ',
-	'Portal:Attachment_No_To_Ticket_Name' => 'Załącznik #%1$d do %2$s (%3$s)',
-	'Portal:SelectRequestTemplate' => 'Wybierz szablon dla %1$s',
-	'Enum:Undefined' => 'Nieokreślony',
+	'Portal:Attachments'                         => 'Załączniki',
+	'Portal:AddAttachment'                       => ' Dodaj załącznik ',
+	'Portal:RemoveAttachment'                    => ' Usuń załącznik ',
+	'Portal:Attachment_No_To_Ticket_Name'        => 'Załącznik #%1$d do %2$s (%3$s)',
+	'Portal:SelectRequestTemplate'               => 'Wybierz szablon dla %1$s',
+	'Enum:Undefined'                             => 'Nieokreślony',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s d %2$s g %3$s min %4$s s',
-	'UI:ModifyAllPageTitle' => 'Zmień wszystko',
-	'UI:Modify_N_ObjectsOf_Class' => 'Zmiana obiektów %1$d klasy %2$s',
-	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'Zmiana obiektów %1$d klasy %2$s poza %3$d',
-	'UI:Menu:ModifyAll' => 'Zmień...',
-	'UI:Button:ModifyAll' => 'Zmień wszystko',
-	'UI:Button:PreviewModifications' => 'Podgląd zmian >>',
-	'UI:ModifiedObject' => 'Obiekt zmieniony',
-	'UI:BulkModifyStatus' => 'Operacja',
-	'UI:BulkModifyStatus+' => 'Status operacji',
-	'UI:BulkModifyErrors' => 'Błędy (jeśli występują)',
-	'UI:BulkModifyErrors+' => 'Błędy uniemożliwiające zmianę',
-	'UI:BulkModifyStatusOk' => 'Ok',
-	'UI:BulkModifyStatusError' => 'Błąd',
-	'UI:BulkModifyStatusModified' => 'Zmieniono',
-	'UI:BulkModifyStatusSkipped' => 'Pominięto',
-	'UI:BulkModify_Count_DistinctValues' => '%1$d odrębne wartości:',
-	'UI:BulkModify:Value_Exists_N_Times' => '%1$s, %2$d czas',
-	'UI:BulkModify:N_MoreValues' => '%1$d więcej wartości...',
-	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Próba ustawienia pola tylko do odczytu: %1$s',
-	'UI:FailedToApplyStimuli' => 'Działanie nie powiodło się.',
-	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Zmiana obiektów %2$d klasy %3$s',
-	'UI:CaseLogTypeYourTextHere' => 'Tutaj wpisz swój tekst...',
-	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
-	'UI:CaseLog:InitialValue' => 'Wartość początkowa:',
-	'UI:AttemptingToSetASlaveAttribute_Name' => 'Pole %1$s nie jest zapisywalne, ponieważ jest kontrolowane przez synchronizację danych. Wartość nie została ustawiona.',
-	'UI:ActionNotAllowed' => 'Nie możesz wykonać działania na tych obiektach.',
-	'UI:BulkAction:NoObjectSelected' => 'Wybierz co najmniej jeden obiekt do wykonania tej operacji',
-	'UI:AttemptingToChangeASlaveAttribute_Name' => 'Pole %1$s nie jest zapisywalne, ponieważ jest kontrolowane przez synchronizację danych. Wartość pozostaje niezmieniona.',
-	'UI:Pagination:HeaderSelection' => 'Łącznie: %1$s obiektów (%2$s obiektów wybranych).',
-	'UI:Pagination:HeaderNoSelection' => 'Łącznie: %1$s obiektów.',
-	'UI:Pagination:PageSize' => '%1$s obiektów na stronę',
-	'UI:Pagination:PagesLabel' => 'Strony:',
-	'UI:Pagination:All' => 'Wszystkie',
-	'UI:HierarchyOf_Class' => 'Hierarchia %1$s',
-	'UI:Preferences' => 'Preferencje...',
-	'UI:ArchiveModeOn' => 'Aktywuj tryb archiwizacji',
-	'UI:ArchiveModeOff' => 'Dezaktywuj tryb archiwizacji',
-	'UI:ArchiveMode:Banner' => 'Tryb archiwizacji',
-	'UI:ArchiveMode:Banner+' => 'Zarchiwizowane obiekty są widoczne i nie można ich modyfikować',
-	'UI:FavoriteOrganizations' => 'Ulubione organizacje',
-	'UI:FavoriteOrganizations+' => 'Sprawdź na liście poniżej organizacje, które chcesz zobaczyć w menu rozwijanym, aby uzyskać szybki dostęp. Pamiętaj, że to nie jest ustawienie zabezpieczeń, obiekty z dowolnej organizacji są nadal widoczne i można uzyskać do nich dostęp, wybierając z listy rozwijanej opcję "Wszystkie organizacje".',
-	'UI:FavoriteLanguage' => 'Język interfejsu użytkownika',
-	'UI:Favorites:SelectYourLanguage' => 'Wybierz preferowany język',
-	'UI:FavoriteOtherSettings' => 'Inne ustawienia',
+	'UI:ModifyAllPageTitle'                      => 'Zmień wszystko',
+	'UI:Modify_N_ObjectsOf_Class'                => 'Zmiana obiektów %1$d klasy %2$s',
+	'UI:Modify_M_ObjectsOf_Class_OutOf_N'        => 'Zmiana obiektów %1$d klasy %2$s poza %3$d',
+	'UI:Menu:ModifyAll'                          => 'Zmień...',
+	'UI:Button:ModifyAll'                        => 'Zmień wszystko',
+	'UI:Button:PreviewModifications'             => 'Podgląd zmian >>',
+	'UI:ModifiedObject'                          => 'Obiekt zmieniony',
+	'UI:BulkModifyStatus'                        => 'Operacja',
+	'UI:BulkModifyStatus+'                       => 'Status operacji',
+	'UI:BulkModifyErrors'                        => 'Błędy (jeśli występują)',
+	'UI:BulkModifyErrors+'                       => 'Błędy uniemożliwiające zmianę',
+	'UI:BulkModifyStatusOk'                      => 'Ok',
+	'UI:BulkModifyStatusError'                   => 'Błąd',
+	'UI:BulkModifyStatusModified'                => 'Zmieniono',
+	'UI:BulkModifyStatusSkipped'                 => 'Pominięto',
+	'UI:BulkModify_Count_DistinctValues'         => '%1$d odrębne wartości:',
+	'UI:BulkModify:Value_Exists_N_Times'         => '%1$s, %2$d czas',
+	'UI:BulkModify:N_MoreValues'                 => '%1$d więcej wartości...',
+	'UI:AttemptingToSetAReadOnlyAttribute_Name'  => 'Próba ustawienia pola tylko do odczytu: %1$s',
+	'UI:FailedToApplyStimuli'                    => 'Działanie nie powiodło się.',
+	'UI:StimulusModify_N_ObjectsOf_Class'        => '%1$s: Zmiana obiektów %2$d klasy %3$s',
+	'UI:CaseLogTypeYourTextHere'                 => 'Tutaj wpisz swój tekst...',
+	'UI:CaseLog:Header_Date_UserName'            => '%1$s - %2$s:',
+	'UI:CaseLog:InitialValue'                    => 'Wartość początkowa:',
+	'UI:AttemptingToSetASlaveAttribute_Name'     => 'Pole %1$s nie jest zapisywalne, ponieważ jest kontrolowane przez synchronizację danych. Wartość nie została ustawiona.',
+	'UI:ActionNotAllowed'                        => 'Nie możesz wykonać działania na tych obiektach.',
+	'UI:BulkAction:NoObjectSelected'             => 'Wybierz co najmniej jeden obiekt do wykonania tej operacji',
+	'UI:AttemptingToChangeASlaveAttribute_Name'  => 'Pole %1$s nie jest zapisywalne, ponieważ jest kontrolowane przez synchronizację danych. Wartość pozostaje niezmieniona.',
+	'UI:Pagination:HeaderSelection'              => 'Łącznie: %1$s obiektów (%2$s obiektów wybranych).',
+	'UI:Pagination:HeaderNoSelection'            => 'Łącznie: %1$s obiektów.',
+	'UI:Pagination:PageSize'                     => '%1$s obiektów na stronę',
+	'UI:Pagination:PagesLabel'                   => 'Strony:',
+	'UI:Pagination:All'                          => 'Wszystkie',
+
+	'UI:Basket:Back'     => 'Back~~',
+	'UI:Basket:First'    => 'First~~',
+	'UI:Basket:Previous' => 'Previous~~',
+	'UI:Basket:Next'     => 'Next~~',
+	'UI:Basket:Last'     => 'Last~~',
+
+	'UI:HierarchyOf_Class'                => 'Hierarchia %1$s',
+	'UI:Preferences'                      => 'Preferencje...',
+	'UI:ArchiveModeOn'                    => 'Aktywuj tryb archiwizacji',
+	'UI:ArchiveModeOff'                   => 'Dezaktywuj tryb archiwizacji',
+	'UI:ArchiveMode:Banner'               => 'Tryb archiwizacji',
+	'UI:ArchiveMode:Banner+'              => 'Zarchiwizowane obiekty są widoczne i nie można ich modyfikować',
+	'UI:FavoriteOrganizations'            => 'Ulubione organizacje',
+	'UI:FavoriteOrganizations+'           => 'Sprawdź na liście poniżej organizacje, które chcesz zobaczyć w menu rozwijanym, aby uzyskać szybki dostęp. Pamiętaj, że to nie jest ustawienie zabezpieczeń, obiekty z dowolnej organizacji są nadal widoczne i można uzyskać do nich dostęp, wybierając z listy rozwijanej opcję "Wszystkie organizacje".',
+	'UI:FavoriteLanguage'                 => 'Język interfejsu użytkownika',
+	'UI:Favorites:SelectYourLanguage'     => 'Wybierz preferowany język',
+	'UI:FavoriteOtherSettings'            => 'Inne ustawienia',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Domyślna długość:  %1$s pozycji na stronę',
-	'UI:Favorites:ShowObsoleteData' => 'Pokaż wycofane dane',
-	'UI:Favorites:ShowObsoleteData+' => 'Pokaż wycofane dane w wynikach wyszukiwania i listach elementów do wybrania',
-	'UI:NavigateAwayConfirmationMessage' => 'Wszelkie modyfikacje zostaną odrzucone.',
-	'UI:CancelConfirmationMessage' => 'Utracisz wprowadzone zmiany. Kontynuować mimo to?',
-	'UI:AutoApplyConfirmationMessage' => 'Niektóre zmiany nie zostały jeszcze zastosowane. Czy chcesz aby '.ITOP_APPLICATION_SHORT.' wziął je pod uwagę?',
-	'UI:Create_Class_InState' => 'Utwórz %1$s w stanie: ',
-	'UI:OrderByHint_Values' => 'Porządek sortowania: %1$s',
+	'UI:Favorites:ShowObsoleteData'       => 'Pokaż wycofane dane',
+	'UI:Favorites:ShowObsoleteData+'      => 'Pokaż wycofane dane w wynikach wyszukiwania i listach elementów do wybrania',
+	'UI:NavigateAwayConfirmationMessage'  => 'Wszelkie modyfikacje zostaną odrzucone.',
+	'UI:CancelConfirmationMessage'        => 'Utracisz wprowadzone zmiany. Kontynuować mimo to?',
+	'UI:AutoApplyConfirmationMessage'     => 'Niektóre zmiany nie zostały jeszcze zastosowane. Czy chcesz aby '.ITOP_APPLICATION_SHORT.' wziął je pod uwagę?',
+	'UI:Create_Class_InState'             => 'Utwórz %1$s w stanie: ',
+	'UI:OrderByHint_Values'               => 'Porządek sortowania: %1$s',
 	'UI:Menu:AddToDashboard' => 'Dodaj do pulpitu...',
 	'UI:Button:Refresh' => 'Odśwież',
 	'UI:Button:GoPrint' => 'Drukuj...',

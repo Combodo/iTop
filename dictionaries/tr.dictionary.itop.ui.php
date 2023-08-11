@@ -333,14 +333,18 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'BooleanLabel:yes' => 'evet',
-	'BooleanLabel:no' => 'hayır',
-	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
-	'Menu:WelcomeMenu' => 'Hoşgeldiniz',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
+	'BooleanLabel:yes'      => 'evet',
+	'BooleanLabel:no'       => 'hayır',
+	'UI:Login:Title'        => ITOP_APPLICATION_SHORT.' login~~',
+	'Menu:WelcomeMenu'      => 'Hoşgeldiniz',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+'     => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage'  => 'Hoşgeldiniz',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title'  => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop açık kaynak Bilişim İşlem Potalıdır.</p>
 <ul>Kapsamı:
@@ -1028,46 +1032,64 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Kullanılabilir işlemler',
 
-	'Menu:TagAdminMenu' => 'Tags configuration~~',
-	'Menu:TagAdminMenu+' => 'Tags values management~~',
-	'UI:TagAdminMenu:Title' => 'Tags configuration~~',
-	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
+	'Menu:TagAdminMenu'        => 'Tags configuration~~',
+	'Menu:TagAdminMenu+'       => 'Tags values management~~',
+	'UI:TagAdminMenu:Title'    => 'Tags configuration~~',
+	'UI:TagAdminMenu:NoTags'   => 'No Tag field configured~~',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
 
-	'Menu:AuditCategories' => 'Denetleme Kategorileri',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Denetleme Kategorileri',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Denetleme Kategorileri',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories'     => 'Denetleme Kategorileri',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+'    => 'Denetleme Kategorileri',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu'  => 'Sorgu çalıştır',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:AuditCategories' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories'     => 'Denetleme Kategorileri',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+'    => 'Denetleme Kategorileri',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Sorgu çalıştır', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu'  => 'Sorgu çalıştır',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Sorgu deyişleri kitabı', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Sorgu deyişleri kitabı', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu'  => 'Sorgu deyişleri kitabı',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Sorgu deyişleri kitabı',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Veri Yönetimi',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Veri Yönetimi',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration'  => 'Veri Yönetimi',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Veri Yönetimi',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Genel sorgu',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu'  => 'Genel sorgu',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'Kullanıcı Yönetimi',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu'  => 'Kullanıcı Yönetimi',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Kullanıcı Yönetimi',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ProfilesMenu' => 'Profiller',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profiller',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Profiller',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
+	'Menu:UserAccountsMenu'                      => 'Kullanıcı Hesapları',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
+	'Menu:UserAccountsMenu+'                     => 'Kullanıcı Hesapları',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1151,74 +1173,81 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Portal:Button:UpdateRequest' => 'Update the request',
 	'Portal:EnterYourCommentsOnTicket' => 'İsteğin çözümüne yönelik açıklamalar:',
 	'Portal:ErrorNoContactForThisUser' => 'Hata: mevcut kullanıcının irtibat bilgisi yok. Sistem yöneticisi ile irtibata geçiniz.',
-	'Portal:Attachments' => 'Eklentiler',
-	'Portal:AddAttachment' => ' Dosya ekle ',
-	'Portal:RemoveAttachment' => ' Dosya çıkar ',
-	'Portal:Attachment_No_To_Ticket_Name' => 'Ek # %1$d ila %2$s (%3$s)',
-	'Portal:SelectRequestTemplate' => '%1$s için bir şablon seçin',
-	'Enum:Undefined' => 'Tanımsız',
+	'Portal:Attachments'                         => 'Eklentiler',
+	'Portal:AddAttachment'                       => ' Dosya ekle ',
+	'Portal:RemoveAttachment'                    => ' Dosya çıkar ',
+	'Portal:Attachment_No_To_Ticket_Name'        => 'Ek # %1$d ila %2$s (%3$s)',
+	'Portal:SelectRequestTemplate'               => '%1$s için bir şablon seçin',
+	'Enum:Undefined'                             => 'Tanımsız',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s Gün %2$s Saat %3$s Dakika %4$s Saniye',
-	'UI:ModifyAllPageTitle' => 'Hepsini değiştir',
-	'UI:Modify_N_ObjectsOf_Class' => '%1$d Sınıfının Değiştirilmesi %2$s',
-	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => '%1$d nesnelerinin %3$s \'dışında %1$d nesnelerini değiştirme',
-	'UI:Menu:ModifyAll' => 'Değiştir...',
-	'UI:Button:ModifyAll' => 'Hepsini değiştir',
-	'UI:Button:PreviewModifications' => 'Değişiklikleri görüntüle >>',
-	'UI:ModifiedObject' => 'Nesne değiştirildi',
-	'UI:BulkModifyStatus' => 'Operasyon',
-	'UI:BulkModifyStatus+' => 'İşlemin durumu',
-	'UI:BulkModifyErrors' => 'Hatalar (varsa)',
-	'UI:BulkModifyErrors+' => 'Değişikliği önleyen hatalar',
-	'UI:BulkModifyStatusOk' => 'Tamam',
-	'UI:BulkModifyStatusError' => 'Hata',
-	'UI:BulkModifyStatusModified' => 'Değiştirildi',
-	'UI:BulkModifyStatusSkipped' => 'Atlandı',
-	'UI:BulkModify_Count_DistinctValues' => '%1$d belirgin değerler:',
-	'UI:BulkModify:Value_Exists_N_Times' => '%1$s, %2$d Zaman (lar)',
-	'UI:BulkModify:N_MoreValues' => '%1$d Diğer değerler...',
-	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Salt okunur alanını ayarlamaya çalışıyor: %1$s~~',
-	'UI:FailedToApplyStimuli' => 'Eylem başarısız oldu',
-	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: %2$d Nesnelerin %3$s',
-	'UI:CaseLogTypeYourTextHere' => 'Metninizi buraya yazın:',
-	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
-	'UI:CaseLog:InitialValue' => 'İlk değer:',
-	'UI:AttemptingToSetASlaveAttribute_Name' => '%1$s alanı yazılabilir değildir, çünkü veri senkronizasyonu tarafından kullanılıyor. Değer ayarlanmadı.',
-	'UI:ActionNotAllowed' => 'Bu işlemi bu nesnelerde yapmanıza izin verilmez.',
-	'UI:BulkAction:NoObjectSelected' => 'Lütfen bu işlemi gerçekleştirmek için en az bir nesne seçin',
-	'UI:AttemptingToChangeASlaveAttribute_Name' => '%1$s alanı yazılabilir değildir, çünkü veri senkronizasyonu tarafından kullanılıyor. Değer değişmeden kalır.',
-	'UI:Pagination:HeaderSelection' => 'Toplam: %1$s erinin nesneleri (%2$s nesneleri seçildi).',
-	'UI:Pagination:HeaderNoSelection' => 'Toplam: %1$s nesne.',
-	'UI:Pagination:PageSize' => '%1$s Sayfa başına nesneler',
-	'UI:Pagination:PagesLabel' => 'Sayfalar:',
-	'UI:Pagination:All' => 'Hepsi',
-	'UI:HierarchyOf_Class' => '%1$s \'nin hiyerarşisi',
-	'UI:Preferences' => 'Tercihler',
-	'UI:ArchiveModeOn' => 'Arşiv modunu etkinleştirin',
-	'UI:ArchiveModeOff' => 'Arşiv modunu devre dışı bırak',
-	'UI:ArchiveMode:Banner' => 'Arşiv Modu',
-	'UI:ArchiveMode:Banner+' => 'Arşivlenmiş nesneler görünür ve hiçbir değişiklik yapılmasına izin verilmez',
-	'UI:FavoriteOrganizations' => 'Favori organizasyonlar',
-	'UI:FavoriteOrganizations+' => 'Hızlı bir erişim için açılır menüde görmek istediğiniz kuruluşların altındaki listeyi kontrol edin. Bunun bir güvenlik ayarı olmadığını, herhangi bir kuruluştan nesnelerin hala göründüğünü ve aşağı açılan listede \\"tüm kuruluşlar\\" seçilerek erişilebileceğini unutmayın',
-	'UI:FavoriteLanguage' => 'Kullanıcı arayüzünün dili',
-	'UI:Favorites:SelectYourLanguage' => 'Tercih ettiğiniz dili seçin',
-	'UI:FavoriteOtherSettings' => 'Diğer ayarlar',
+	'UI:ModifyAllPageTitle'                      => 'Hepsini değiştir',
+	'UI:Modify_N_ObjectsOf_Class'                => '%1$d Sınıfının Değiştirilmesi %2$s',
+	'UI:Modify_M_ObjectsOf_Class_OutOf_N'        => '%1$d nesnelerinin %3$s \'dışında %1$d nesnelerini değiştirme',
+	'UI:Menu:ModifyAll'                          => 'Değiştir...',
+	'UI:Button:ModifyAll'                        => 'Hepsini değiştir',
+	'UI:Button:PreviewModifications'             => 'Değişiklikleri görüntüle >>',
+	'UI:ModifiedObject'                          => 'Nesne değiştirildi',
+	'UI:BulkModifyStatus'                        => 'Operasyon',
+	'UI:BulkModifyStatus+'                       => 'İşlemin durumu',
+	'UI:BulkModifyErrors'                        => 'Hatalar (varsa)',
+	'UI:BulkModifyErrors+'                       => 'Değişikliği önleyen hatalar',
+	'UI:BulkModifyStatusOk'                      => 'Tamam',
+	'UI:BulkModifyStatusError'                   => 'Hata',
+	'UI:BulkModifyStatusModified'                => 'Değiştirildi',
+	'UI:BulkModifyStatusSkipped'                 => 'Atlandı',
+	'UI:BulkModify_Count_DistinctValues'         => '%1$d belirgin değerler:',
+	'UI:BulkModify:Value_Exists_N_Times'         => '%1$s, %2$d Zaman (lar)',
+	'UI:BulkModify:N_MoreValues'                 => '%1$d Diğer değerler...',
+	'UI:AttemptingToSetAReadOnlyAttribute_Name'  => 'Salt okunur alanını ayarlamaya çalışıyor: %1$s~~',
+	'UI:FailedToApplyStimuli'                    => 'Eylem başarısız oldu',
+	'UI:StimulusModify_N_ObjectsOf_Class'        => '%1$s: %2$d Nesnelerin %3$s',
+	'UI:CaseLogTypeYourTextHere'                 => 'Metninizi buraya yazın:',
+	'UI:CaseLog:Header_Date_UserName'            => '%1$s - %2$s:',
+	'UI:CaseLog:InitialValue'                    => 'İlk değer:',
+	'UI:AttemptingToSetASlaveAttribute_Name'     => '%1$s alanı yazılabilir değildir, çünkü veri senkronizasyonu tarafından kullanılıyor. Değer ayarlanmadı.',
+	'UI:ActionNotAllowed'                        => 'Bu işlemi bu nesnelerde yapmanıza izin verilmez.',
+	'UI:BulkAction:NoObjectSelected'             => 'Lütfen bu işlemi gerçekleştirmek için en az bir nesne seçin',
+	'UI:AttemptingToChangeASlaveAttribute_Name'  => '%1$s alanı yazılabilir değildir, çünkü veri senkronizasyonu tarafından kullanılıyor. Değer değişmeden kalır.',
+	'UI:Pagination:HeaderSelection'              => 'Toplam: %1$s erinin nesneleri (%2$s nesneleri seçildi).',
+	'UI:Pagination:HeaderNoSelection'            => 'Toplam: %1$s nesne.',
+	'UI:Pagination:PageSize'                     => '%1$s Sayfa başına nesneler',
+	'UI:Pagination:PagesLabel'                   => 'Sayfalar:',
+	'UI:Pagination:All'                          => 'Hepsi',
+
+	'UI:Basket:Back'     => 'Back~~',
+	'UI:Basket:First'    => 'First~~',
+	'UI:Basket:Previous' => 'Previous~~',
+	'UI:Basket:Next'     => 'Next~~',
+	'UI:Basket:Last'     => 'Last~~',
+
+	'UI:HierarchyOf_Class'                => '%1$s \'nin hiyerarşisi',
+	'UI:Preferences'                      => 'Tercihler',
+	'UI:ArchiveModeOn'                    => 'Arşiv modunu etkinleştirin',
+	'UI:ArchiveModeOff'                   => 'Arşiv modunu devre dışı bırak',
+	'UI:ArchiveMode:Banner'               => 'Arşiv Modu',
+	'UI:ArchiveMode:Banner+'              => 'Arşivlenmiş nesneler görünür ve hiçbir değişiklik yapılmasına izin verilmez',
+	'UI:FavoriteOrganizations'            => 'Favori organizasyonlar',
+	'UI:FavoriteOrganizations+'           => 'Hızlı bir erişim için açılır menüde görmek istediğiniz kuruluşların altındaki listeyi kontrol edin. Bunun bir güvenlik ayarı olmadığını, herhangi bir kuruluştan nesnelerin hala göründüğünü ve aşağı açılan listede \\"tüm kuruluşlar\\" seçilerek erişilebileceğini unutmayın',
+	'UI:FavoriteLanguage'                 => 'Kullanıcı arayüzünün dili',
+	'UI:Favorites:SelectYourLanguage'     => 'Tercih ettiğiniz dili seçin',
+	'UI:FavoriteOtherSettings'            => 'Diğer ayarlar',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Listeler için varsayılan uzunluk: %1$s sayfa sayfa başına',
-	'UI:Favorites:ShowObsoleteData' => 'Eski bilgileri göster',
-	'UI:Favorites:ShowObsoleteData+' => 'Arama sonuçlarında ve seçilecek öğelerin listelerinde eski bilgileri gösterin',
-	'UI:NavigateAwayConfirmationMessage' => 'Herhangi bir değişiklik atılır',
-	'UI:CancelConfirmationMessage' => 'Değişikliklerinizi kaybedersiniz. Yine de devam et?',
-	'UI:AutoApplyConfirmationMessage' => 'Bazı değişiklikler henüz uygulanmadı. '.ITOP_APPLICATION_SHORT.'\'un değişiklikleri uygulamasını istiyor musunuz?',
-	'UI:Create_Class_InState' => '%1$s durumunda oluşturun: ',
-	'UI:OrderByHint_Values' => 'Sıralama düzeni: %1$s',
-	'UI:Menu:AddToDashboard' => 'Panoya ekleyin...',
-	'UI:Button:Refresh' => 'Yenile',
-	'UI:Button:GoPrint' => 'Print...~~',
-	'UI:ExplainPrintable' => 'Click onto the %1$s icon to hide items from the print.<br/>Use the "print preview" feature of your browser to preview before printing.<br/>Note: this header and the other tuning controls will not be printed.~~',
-	'UI:PrintResolution:FullSize' => 'Full size~~',
-	'UI:PrintResolution:A4Portrait' => 'A4 Portrait~~',
-	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
-	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
-	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
+	'UI:Favorites:ShowObsoleteData'       => 'Eski bilgileri göster',
+	'UI:Favorites:ShowObsoleteData+'      => 'Arama sonuçlarında ve seçilecek öğelerin listelerinde eski bilgileri gösterin',
+	'UI:NavigateAwayConfirmationMessage'  => 'Herhangi bir değişiklik atılır',
+	'UI:CancelConfirmationMessage'        => 'Değişikliklerinizi kaybedersiniz. Yine de devam et?',
+	'UI:AutoApplyConfirmationMessage'     => 'Bazı değişiklikler henüz uygulanmadı. '.ITOP_APPLICATION_SHORT.'\'un değişiklikleri uygulamasını istiyor musunuz?',
+	'UI:Create_Class_InState'             => '%1$s durumunda oluşturun: ',
+	'UI:OrderByHint_Values'               => 'Sıralama düzeni: %1$s',
+	'UI:Menu:AddToDashboard'              => 'Panoya ekleyin...',
+	'UI:Button:Refresh'                   => 'Yenile',
+	'UI:Button:GoPrint'                   => 'Print...~~',
+	'UI:ExplainPrintable'                 => 'Click onto the %1$s icon to hide items from the print.<br/>Use the "print preview" feature of your browser to preview before printing.<br/>Note: this header and the other tuning controls will not be printed.~~',
+	'UI:PrintResolution:FullSize'         => 'Full size~~',
+	'UI:PrintResolution:A4Portrait'       => 'A4 Portrait~~',
+	'UI:PrintResolution:A4Landscape'      => 'A4 Landscape~~',
+	'UI:PrintResolution:LetterPortrait'   => 'Letter Portrait~~',
+	'UI:PrintResolution:LetterLandscape'  => 'Letter Landscape~~',
 	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
 	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
@@ -1396,42 +1425,44 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Month-12' => 'Aralık',
 
 	// Short version for the DatePicker
-	'DayOfWeek-Sunday-Min' => 'Paz',
-	'DayOfWeek-Monday-Min' => 'Pzt',
-	'DayOfWeek-Tuesday-Min' => 'Sal',
-	'DayOfWeek-Wednesday-Min' => 'Car',
-	'DayOfWeek-Thursday-Min' => 'Per',
-	'DayOfWeek-Friday-Min' => 'Cum',
-	'DayOfWeek-Saturday-Min' => 'Cts',
-	'Month-01-Short' => 'Oca',
-	'Month-02-Short' => 'Şub',
-	'Month-03-Short' => 'Mar',
-	'Month-04-Short' => 'Nis',
-	'Month-05-Short' => 'May',
-	'Month-06-Short' => 'Haz',
-	'Month-07-Short' => 'Tem',
-	'Month-08-Short' => 'Ağu',
-	'Month-09-Short' => 'Eyl',
-	'Month-10-Short' => 'Eki',
-	'Month-11-Short' => 'Kas',
-	'Month-12-Short' => 'Ara',
-	'Calendar-FirstDayOfWeek' => '0', // 0 = Sunday, 1 = Monday, etc...
+	'DayOfWeek-Sunday-Min'                => 'Paz',
+	'DayOfWeek-Monday-Min'                => 'Pzt',
+	'DayOfWeek-Tuesday-Min'               => 'Sal',
+	'DayOfWeek-Wednesday-Min'             => 'Car',
+	'DayOfWeek-Thursday-Min'              => 'Per',
+	'DayOfWeek-Friday-Min'                => 'Cum',
+	'DayOfWeek-Saturday-Min'              => 'Cts',
+	'Month-01-Short'                      => 'Oca',
+	'Month-02-Short'                      => 'Şub',
+	'Month-03-Short'                      => 'Mar',
+	'Month-04-Short'                      => 'Nis',
+	'Month-05-Short'                      => 'May',
+	'Month-06-Short'                      => 'Haz',
+	'Month-07-Short'                      => 'Tem',
+	'Month-08-Short'                      => 'Ağu',
+	'Month-09-Short'                      => 'Eyl',
+	'Month-10-Short'                      => 'Eki',
+	'Month-11-Short'                      => 'Kas',
+	'Month-12-Short'                      => 'Ara',
+	'Calendar-FirstDayOfWeek'             => '0',
+	// 0 = Sunday, 1 = Monday, etc...
 
-	'UI:Menu:ShortcutList' => 'Bir kısayol oluşturun...',
-	'UI:ShortcutRenameDlg:Title' => 'Kısayolu yeniden adlandırın',
-	'UI:ShortcutListDlg:Title' => 'Liste için bir kısayol oluşturun',
-	'UI:ShortcutDelete:Confirm' => 'Lütfen kısayolları silmek istediğinizi onaylayın.',
-	'Menu:MyShortcuts' => 'Kısayollarım', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Class:Shortcut' => 'Kısayol',
-	'Class:Shortcut+' => '~~',
-	'Class:Shortcut/Attribute:name' => 'İsim',
-	'Class:Shortcut/Attribute:name+' => 'Menü ve sayfa başlığında kullanılan etiket',
-	'Class:ShortcutOQL' => 'Arama Sonucu Kısayolu',
-	'Class:ShortcutOQL+' => '~~',
-	'Class:ShortcutOQL/Attribute:oql' => 'Sorgu',
-	'Class:ShortcutOQL/Attribute:oql+' => 'OQL Aramak için nesnelerin listesini tanımlama',
-	'Class:ShortcutOQL/Attribute:auto_reload' => 'Otomatik yenileme',
-	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Devre dışı',
+	'UI:Menu:ShortcutList'                                 => 'Bir kısayol oluşturun...',
+	'UI:ShortcutRenameDlg:Title'                           => 'Kısayolu yeniden adlandırın',
+	'UI:ShortcutListDlg:Title'                             => 'Liste için bir kısayol oluşturun',
+	'UI:ShortcutDelete:Confirm'                            => 'Lütfen kısayolları silmek istediğinizi onaylayın.',
+	'Menu:MyShortcuts'                                     => 'Kısayollarım',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Class:Shortcut'                                       => 'Kısayol',
+	'Class:Shortcut+'                                      => '~~',
+	'Class:Shortcut/Attribute:name'                        => 'İsim',
+	'Class:Shortcut/Attribute:name+'                       => 'Menü ve sayfa başlığında kullanılan etiket',
+	'Class:ShortcutOQL'                                    => 'Arama Sonucu Kısayolu',
+	'Class:ShortcutOQL+'                                   => '~~',
+	'Class:ShortcutOQL/Attribute:oql'                      => 'Sorgu',
+	'Class:ShortcutOQL/Attribute:oql+'                     => 'OQL Aramak için nesnelerin listesini tanımlama',
+	'Class:ShortcutOQL/Attribute:auto_reload'              => 'Otomatik yenileme',
+	'Class:ShortcutOQL/Attribute:auto_reload/Value:none'   => 'Devre dışı',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Özel Oran',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Otomatik Yenileme Aralığı (Saniye)',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'İzin verilen minimum %1$d saniyedir',

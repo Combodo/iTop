@@ -21,7 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\PageContent;
 
 
 use cmdbAbstractObject;
-use Combodo\iTop\Application\UI\Base\Component\Navigation\NavigationUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Basket\BasketUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use DBObject;
@@ -51,13 +51,15 @@ class PageContentFactory
 	 *
 	 * @see cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
 	 *
+	 * @param \DBObject $oObject
 	 * @param string $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
+	 *
+	 * since 3.1.1 params for navigation in basket
 	 * @param string $sBasketFilter filter to find list of objects in basket
 	 * @param array $aBasketList list of id of objects in basket
 	 * @param string $sBackUrl url to go back to list of ojects in basket
 	 * @param string $sPostedFieldsForBackUrl fields to post for come back to main page
 	 *
-	 * @param \DBObject $oObject
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent
 	 * @throws \CoreException
@@ -68,7 +70,7 @@ class PageContentFactory
 
 
 		if ($sBasketFilter != null) {
-			$oNavigationBlock = NavigationUIBlockFactory::MakeStandard($oObject, $sBasketFilter, $aBasketList, $sBackUrl, $sPostedFieldsForBackUrl);
+			$oNavigationBlock = BasketUIBlockFactory::MakeStandard($oObject, $sBasketFilter, $aBasketList, $sBackUrl, $sPostedFieldsForBackUrl);
 			if ($oNavigationBlock != null) {
 				$oLayout->AddSubBlock($oNavigationBlock);
 			}

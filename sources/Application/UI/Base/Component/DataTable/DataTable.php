@@ -48,7 +48,10 @@ class DataTable extends UIContentBlock
 	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
+	/* @since 3.1.1 */
 	protected $sBasketFilter;
+	/* @since 3.1.1 */
+	protected $sBasketClass;
 	/**
 	 * @var string
 	 */
@@ -224,6 +227,7 @@ class DataTable extends UIContentBlock
 
 	/**
 	 * @return string
+	 * @since 3.1.1
 	 */
 	public function GetBasketFilter()
 	{
@@ -232,10 +236,31 @@ class DataTable extends UIContentBlock
 
 	/**
 	 * @param string $sFilter
+	 *
+	 * @since 3.1.1
 	 */
-	public function setBasketFilter($sFilter): void
+	public function setBasketFilter(string $sFilter): void
 	{
 		$this->sBasketFilter = $sFilter;
+	}
+
+	/**
+	 * @return mixed
+	 * @since 3.1.1
+	 */
+	public function GetBasketClass()
+	{
+		return $this->sBasketClass;
+	}
+
+	/**
+	 * @param string $sBasketClass
+	 *
+	 * @since 3.1.1
+	 */
+	public function setBasketClass(string $sBasketClass): void
+	{
+		$this->sBasketClass = $sBasketClass;
 	}
 
 	/**

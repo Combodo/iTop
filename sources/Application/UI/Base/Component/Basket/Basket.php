@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\UI\Base\Component\Navigation;
+namespace Combodo\iTop\Application\UI\Base\Component\Basket;
 
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -25,34 +25,34 @@ use iTopStandardURLMaker;
 use utils;
 
 /**
- * Class Navigation
+ * Class Basket
  *
- * @package Combodo\iTop\Application\UI\Base\Component\Navigation
- * @since 3.1.0
+ * @package Combodo\iTop\Application\UI\Base\Component\Basket
+ * @since 3.1.1
  */
-class Navigation extends UIContentBlock
+class Basket extends UIContentBlock
 {
 
 	// Overloaded constants
-	public const BLOCK_CODE = 'ibo-navigation';
+	public const BLOCK_CODE = 'ibo-basket';
 	/** @inheritDoc */
 	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
 	/** @inheritDoc */
 	public const REQUIRES_ANCESTORS_DEFAULT_CSS_FILES = true;
-	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/navigation/layout';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH =  'base/components/navigation/layout';
-	public const DEFAULT_JS_FILES_REL_PATH = [	];
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH       = 'base/components/basket/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH         = 'base/components/basket/layout';
+	public const DEFAULT_JS_FILES_REL_PATH            = [];
 
 	protected $iIdx;
 	protected $iCount;
-	protected $iIdFirst = 0 ;
+	protected $iIdFirst = 0;
 	protected $iIdPrev = 0;
 	protected $iIdNext = 0;
 	protected $iIdLast = 0;
 	protected $aList = [];
-	protected $sBasketFilter;
+	protected $sFilter;
 	protected $sBackUrl;
-	protected $sBasketClass;
+	protected $sClass;
 	protected $sPostedFields;
 
 	/**
@@ -63,16 +63,16 @@ class Navigation extends UIContentBlock
 	 * @param string $sColorScheme Color scheme code such as "success", "failure", "active", ... {@see css/backoffice/components/_panel.scss}
 	 * @param string|null $sId
 	 */
-	public function __construct(string $sBasketClass, int $iIdx, array $aList, string $sBasketFilter, string $sBackUrl, string $sPostedFieldsForBackUrl = "", ?string $sId = null)
+	public function __construct(string $sClass, int $iIdx, array $aList, string $sFilter, string $sBackUrl, string $sPostedFieldsForBackUrl = "", ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->iCount = count($aList);
 		if ($this->iCount == 0) {
 			return new UIContentBlock();
 		}
-		$this->sBasketClass = $sBasketClass;
+		$this->sClass = $sClass;
 		$this->aList = $aList;
-		$this->sBasketFilter = $sBasketFilter;
+		$this->sFilter = $sFilter;
 		$this->sBackUrl = $sBackUrl;
 		$this->iIdx = $iIdx;
 		if ($this->iIdx>0) {
@@ -112,7 +112,7 @@ class Navigation extends UIContentBlock
 
 	private function GetUrlFromId($iId)
 	{
-		$sUrl = iTopStandardURLMaker::MakeObjectURL($this->sBasketClass, $iId);
+		$sUrl = iTopStandardURLMaker::MakeObjectURL($this->sClass, $iId);
 		return $sUrl;
 	}
 
@@ -159,9 +159,9 @@ class Navigation extends UIContentBlock
 	/**
 	 * @return string
 	 */
-	public function GetBasketFilter(): string
+	public function GetFilter(): string
 	{
-		return $this->sBasketFilter;
+		return $this->sFilter;
 	}
 
 	/**

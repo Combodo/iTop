@@ -436,19 +436,20 @@ try
 						}
 
 						//N°1386 - Advanced Search: Navigation in list - Browse this list
-						$sBackUrl = utils::ReadPostedParam('back_url', '', false, 'raw');
+						$sBasketBackUrl = utils::ReadPostedParam('basket_back_url', '', false, 'raw');
 						$sBasketClass = utils::ReadPostedParam('basket_class', null, false, 'raw');
 						$sBasketFilter = utils::ReadPostedParam('basket_filter', null, false, 'raw');
-						$sList = utils::ReadPostedParam('list_navigation', null, false, 'string');
-						$sPostedFieldsForBackUrl = utils::ReadPostedParam('back_posted_fields', "", false, 'raw');
-						$aList = [];
-						if ($sList != null) {
-							$aList = json_decode($sList);
+						$sBasketList = utils::ReadPostedParam('basket_list_navigation', null, false, 'string');
+						$sBasketPostedFieldsForBackUrl = utils::ReadPostedParam('basket_back_posted_fields', "", false, 'raw');
+						$aBasketList = [];
+						if ($sBasketList != null) {
+							$aBasketList = json_decode($sBasketList);
 						}
 
 						$sClassLabel = MetaModel::GetName($sClass);
 						$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-						$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW, $sBasketFilter, $sBasketClass, $aList, $sBackUrl, $sPostedFieldsForBackUrl));
+						$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW, $sBasketFilter, $sBasketClass, $aBasketList, $sBasketBackUrl,
+							$sBasketPostedFieldsForBackUrl));
 						$oObj->DisplayDetails($oP);
 					}
 				}
@@ -458,20 +459,30 @@ try
 	        $oP->DisableBreadCrumb();
 
 	        // Retrieve object
-	        $sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
-			$oObj = MetaModel::GetObject($sClass, $id);
+				$sClass = utils::ReadParam('class', '', false, 'class');
+				$id = utils::ReadParam('id', '');
+				$oObj = MetaModel::GetObject($sClass, $id);
 
-			// Retrieve ownership token
-			$sToken = utils::ReadParam('token', '');
-			if ($sToken != '')
-			{
-				iTopOwnershipLock::ReleaseLock($sClass, $id, $sToken);
-			}
+				// Retrieve ownership token
+				$sToken = utils::ReadParam('token', '');
+				if ($sToken != '') {
+					iTopOwnershipLock::ReleaseLock($sClass, $id, $sToken);
+				}
 
-			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
-			cmdbAbstractObject::ReloadAndDisplay($oP, $oObj, array('operation' => 'details'));
-			break;
+				//N°1386 - Advanced Search: Navigation in list - Browse this list
+				$sBasketBackUrl = utils::ReadPostedParam('basket_back_url', '', false, 'raw');
+				$sBasketClass = utils::ReadPostedParam('basket_class', null, false, 'raw');
+				$sBasketFilter = utils::ReadPostedParam('basket_filter', null, false, 'raw');
+				$sBasketList = utils::ReadPostedParam('basket_list_navigation', null, false, 'string');
+				$sBasketPostedFieldsForBackUrl = utils::ReadPostedParam('basket_back_posted_fields', "", false, 'raw');
+				$aBasketList = [];
+				if ($sBasketList != null) {
+					$aBasketList = json_decode($sBasketList);
+				}
+
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW, $sBasketFilter, $sBasketClass, $aBasketList, $sBasketBackUrl, $sBasketPostedFieldsForBackUrl));
+				cmdbAbstractObject::ReloadAndDisplay($oP, $oObj, array('operation' => 'details'));
+				break;
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 

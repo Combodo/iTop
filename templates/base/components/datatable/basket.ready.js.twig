@@ -2,6 +2,6 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 $("form[id^='basket']").each(function () {
     $(this).append($('<input/>')
-            .attr({'type': 'hidden', 'name': 'back_posted_fields', 'value': '{{ oUIBlock.GetPostedFieldsForBackUrl()|raw }}'})
+            .attr({'type': 'hidden', 'name': 'basket_back_posted_fields', 'value': '{{ oUIBlock.GetBasketPostedFieldsForBackUrl()|raw }}'})
     );
 });

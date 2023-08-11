@@ -294,9 +294,21 @@ JS;
 			FormHelper::DisableAttributeBlobInputs($sClass, $aFormExtraParams);
 
 		} else {
+
+			//N°1386 - Advanced Search: Navigation in list - Browse this list
+			$sBasketBackUrl = utils::ReadPostedParam('basket_back_url', '', false, 'raw');
+			$sBasketClass = utils::ReadPostedParam('basket_class', null, false, 'raw');
+			$sBasketFilter = utils::ReadPostedParam('basket_filter', null, false, 'raw');
+			$sBasketList = utils::ReadPostedParam('basket_list_navigation', null, false, 'string');
+			$sBasketPostedFieldsForBackUrl = utils::ReadPostedParam('basket_back_posted_fields', "", false, 'raw');
+			$aBasketList = [];
+			if ($sBasketList != null) {
+				$aBasketList = json_decode($sBasketList);
+			}
+
 			$oPage = new iTopWebPage('', $bPrintable);
 			$oPage->DisableBreadCrumb();
-			$oPage->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT));
+			$oPage->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT, $sBasketFilter, $sBasketClass, $aBasketList, $sBasketBackUrl, $sBasketPostedFieldsForBackUrl));
 		}
 		// - JS files
 		foreach (static::EnumRequiredForModificationJsFilesRelPaths() as $sJsFileRelPath) {
