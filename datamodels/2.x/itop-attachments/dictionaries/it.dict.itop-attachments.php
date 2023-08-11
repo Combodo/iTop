@@ -59,6 +59,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (al download di un allegato dell\'oggetto)',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger al download di un allegato di un oggetto di [una sottoclasse di] la classe data',
 	'UI:Attachments:DropYourFileHint' => 'Rilascia i file ovunque in quest\'area',
-    'Class:TriggerOnCreateAttachment' => 'Trigger (on object\'s attachment create)~~',
-    'Class:TriggerOnCreateAttachment+' => 'Trigger on object\'s attachment create~~',
+    'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
+    'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+    'Class:TriggerOnAttachmentCreate/Attribute:filter_class'  => 'Classe Bersaglio',
+    'Class:TriggerOnAttachmentCreate/Attribute:filter_class+' => '',
 ]);

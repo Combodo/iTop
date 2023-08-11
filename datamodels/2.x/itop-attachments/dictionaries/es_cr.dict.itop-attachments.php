@@ -57,6 +57,8 @@ o pregunte al administador de iTop si el servidor que ha quedado sin espacio en 
 	'Class:TriggerOnAttachmentDownload' => 'Disparador (al descargar el archivo adjunto del objeto)',
 	'Class:TriggerOnAttachmentDownload+' => 'Disparador al descargar el archivo adjunto del objeto de [una clase secundaria de] la clase dada',
 	'UI:Attachments:DropYourFileHint' => 'Arrastre los archivos en cualquier lugar de esta área',
-	'Class:TriggerOnCreateAttachment' => 'Trigger (on object\'s attachment create)~~',
-	'Class:TriggerOnCreateAttachment+' => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
+	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:filter_class'  => 'Clase destino',
+	'Class:TriggerOnAttachmentCreate/Attribute:filter_class+' => 'Clase destino',
 ));
