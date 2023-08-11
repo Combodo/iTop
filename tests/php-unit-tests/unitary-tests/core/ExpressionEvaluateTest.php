@@ -5,7 +5,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 
 use CMDBSource;
-use Combodo\iTop\Test\UnitTest\iTopDataTestCase;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DateInterval;
 use DateTime;
 use Expression;
@@ -18,7 +18,7 @@ use ScalarExpression;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class ExpressionEvaluateTest extends iTopDataTestCase
+class ExpressionEvaluateTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
 
