@@ -2358,22 +2358,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]></text>
   </license>
   <license>
-    <product scope="js">jQuery Hotkeys Plugin</product>
-    <author>John Resig</author>
-    <license_type>MIT or GPL Version 2 licenses</license_type>
-    <text><![CDATA[
- jQuery Hotkeys Plugin
- Copyright 2010, John Resig
- Dual licensed under the MIT or GPL Version 2 licenses.
-
- Based upon the plugin by Tzury Bar Yochay:
- https://github.com/tzuryby/jquery.hotkeys
-
- Original idea by:
- Binny V A, http://www.openjs.com/scripts/events/keyboard_shortcuts/
-]]></text>
-  </license>
-  <license>
     <product scope="js">jQuery Timepicker addon</product>
     <author>Trent Richardson</author>
     <license_type>MIT</license_type>
