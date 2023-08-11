@@ -47,7 +47,8 @@ use Dict;
  */
 class CriterionConversionTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	const CREATE_TEST_ORG = false;
+	const USE_TRANSACTION = false;
 
 	/**
 	 * @dataProvider ToOqlProvider

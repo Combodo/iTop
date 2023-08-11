@@ -16,9 +16,7 @@ namespace Combodo\iTop\Test\UnitTest;
 use ArchivedObjectException;
 use CMDBObject;
 use CMDBSource;
-use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
-use Combodo\iTop\Application\EventRegister\ApplicationEvents;
 use Config;
 use Contact;
 use DBObject;
@@ -67,9 +65,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 	private $aCreatedObjects = [];
 	private $aEventListeners = [];
 
-	// Counts
-	public $aReloadCount = [];
-
 	/**
 	 * @var string Default environment to use for test cases
 	 */
@@ -110,8 +105,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		{
 			$this->CreateTestOrganization();
 		}
-
-		$this->EventService_RegisterListener(EVENT_DB_OBJECT_RELOAD, [$this, 'CountObjectReload']);
 	}
 
 	/**
@@ -927,49 +920,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$oOrg = $this->CreateOrganization('UnitTestOrganization');
 		$this->iTestOrgId = $oOrg->GetKey();
 		return $oOrg;
-	}
-
-	public function ResetReloadCount()
-	{
-		$this->aReloadCount = [];
-	}
-
-	public function DebugReloadCount($sMsg, $bResetCount = true)
-	{
-		$iTotalCount = 0;
-		$aTotalPerClass = [];
-		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
-			$iClassCount = 0;
-			foreach ($aCountByKeys as $iCount) {
-				$iClassCount += $iCount;
-			}
-			$iTotalCount += $iClassCount;
-			$aTotalPerClass[$sClass] = $iClassCount;
-		}
-		$this->debug("$sMsg - $iTotalCount reload(s)");
-		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
-			$this->debug("    $sClass => $aTotalPerClass[$sClass] reload(s)");
-			foreach ($aCountByKeys as $sKey => $iCount) {
-				$this->debug("        $sClass::$sKey => $iCount");
-			}
-		}
-		if ($bResetCount) {
-			$this->ResetReloadCount();
-		}
-	}
-
-	public function CountObjectReload(EventData $oData)
-	{
-		$oObject = $oData->Get('object');
-		$sClass = get_class($oObject);
-		$sKey = $oObject->GetKey();
-		$iCount = $this->GetObjectReloadCount($sClass, $sKey);
-		$this->aReloadCount[$sClass][$sKey] = 1 + $iCount;
-	}
-
-	public function GetObjectReloadCount($sClass, $sKey)
-	{
-		return $this->aReloadCount[$sClass][$sKey] ?? 0;
 	}
 
 	/**

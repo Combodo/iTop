@@ -26,6 +26,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
+use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
 use DBObject;
@@ -41,10 +42,15 @@ class DBObjectTest extends ItopDataTestCase
 {
 	const CREATE_TEST_ORG = true;
 
+	// Counts
+	public $aReloadCount = [];
+
 	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->RequireOnceItopFile('core/dbobject.class.php');
+
+		$this->EventService_RegisterListener(EVENT_DB_OBJECT_RELOAD, [$this, 'CountObjectReload']);
 	}
 
 	/**
@@ -893,4 +899,46 @@ class DBObjectTest extends ItopDataTestCase
 		return $oPerson;
 	}
 
+	public function ResetReloadCount()
+	{
+		$this->aReloadCount = [];
+	}
+
+	public function DebugReloadCount($sMsg, $bResetCount = true)
+	{
+		$iTotalCount = 0;
+		$aTotalPerClass = [];
+		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
+			$iClassCount = 0;
+			foreach ($aCountByKeys as $iCount) {
+				$iClassCount += $iCount;
+			}
+			$iTotalCount += $iClassCount;
+			$aTotalPerClass[$sClass] = $iClassCount;
+		}
+		$this->debug("$sMsg - $iTotalCount reload(s)");
+		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
+			$this->debug("    $sClass => $aTotalPerClass[$sClass] reload(s)");
+			foreach ($aCountByKeys as $sKey => $iCount) {
+				$this->debug("        $sClass::$sKey => $iCount");
+			}
+		}
+		if ($bResetCount) {
+			$this->ResetReloadCount();
+		}
+	}
+
+	public function CountObjectReload(EventData $oData)
+	{
+		$oObject = $oData->Get('object');
+		$sClass = get_class($oObject);
+		$sKey = $oObject->GetKey();
+		$iCount = $this->GetObjectReloadCount($sClass, $sKey);
+		$this->aReloadCount[$sClass][$sKey] = 1 + $iCount;
+	}
+
+	public function GetObjectReloadCount($sClass, $sKey)
+	{
+		return $this->aReloadCount[$sClass][$sKey] ?? 0;
+	}
 }
