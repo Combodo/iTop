@@ -431,6 +431,7 @@ class CMDBSource
 		{
 			self::$m_sDBName = '';
 		}
+		self::_TablesInfoCacheReset(); // reset the table info cache!
 	}
 
 	public static function CreateTable($sQuery)

@@ -1398,12 +1398,22 @@ class utils
 	}
 
 	/**
+	 * @return string A path to the folder into which data can be written
+	 * @internal
+	 * @since N°6097 2.7.10 3.0.4 3.1.1
+	 */
+	public static function GetDataPath(): string
+	{
+		return APPROOT.'data/';
+	}
+
+	/**
 	 * @return string A path to a folder into which any module can store cache data
 	 * The corresponding folder is created or cleaned upon code compilation
 	 */
 	public static function GetCachePath()
 	{
-		return APPROOT.'data/cache-'.MetaModel::GetEnvironment().'/';
+		return static::GetDataPath().'cache-'.MetaModel::GetEnvironment().'/';
 	}
 
 	/**

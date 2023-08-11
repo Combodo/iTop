@@ -1,21 +1,8 @@
 <?php
-// Copyright (c) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 namespace Combodo\iTop\Test\UnitTest;
 
@@ -31,6 +18,7 @@ use CMDBObject;
 use CMDBSource;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
+use Config;
 use Contact;
 use DBObject;
 use DBObjectSet;
@@ -46,11 +34,13 @@ use MetaModel;
 use Person;
 use PluginManager;
 use Server;
+use SetupUtils;
 use TagSetFieldData;
 use Ticket;
 use URP_UserProfile;
 use User;
 use UserRequest;
+use utils;
 use VirtualHost;
 use VirtualMachine;
 use XMLDataLoader;
@@ -61,6 +51,8 @@ define('TAG_CLASS', 'FAQ');
 define('TAG_ATTCODE', 'domains');
 
 /**
+ * Class ItopDataTestCase
+ *
  * Helper class to extend for tests needing access to iTop's metamodel
  *
  * **⚠ Warning** Each class extending this one needs to add the following annotations :
@@ -72,7 +64,7 @@ define('TAG_ATTCODE', 'domains');
  * @since 2.7.7 3.0.1 3.1.0 N°4624 processIsolation is disabled by default and must be enabled in each test needing it (basically all tests using
  * iTop datamodel)
  */
-class ItopDataTestCase extends ItopTestCase
+abstract class ItopDataTestCase extends ItopTestCase
 {
 	private $iTestOrgId;
 
@@ -82,6 +74,10 @@ class ItopDataTestCase extends ItopTestCase
 	// Counts
 	public $aReloadCount = [];
 
+	/**
+	 * @var string Default environment to use for test cases
+	 */
+	const DEFAULT_TEST_ENVIRONMENT = 'production';
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = false;
 
@@ -91,11 +87,8 @@ class ItopDataTestCase extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->RequireOnceItopFile('application/utils.inc.php');
 
-		$sEnv = 'production';
-		$sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
-		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
+		$this->PrepareEnvironment();
 
 		if (static::USE_TRANSACTION)
 		{
@@ -137,6 +130,52 @@ class ItopDataTestCase extends ItopTestCase
 		}
 
 		parent::tearDown();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function LoadRequiredItopFiles(): void
+	{
+		parent::LoadRequiredItopFiles();
+
+		$this->RequireOnceItopFile('application/utils.inc.php');
+	}
+
+	/**
+	 * @return string Environment the test will run in
+	 * @since 2.7.9 3.0.4 3.1.0
+	 */
+	protected function GetTestEnvironment(): string
+	{
+		return self::DEFAULT_TEST_ENVIRONMENT;
+	}
+
+	/**
+	 * @return string Absolute path of the configuration file used for the test
+	 * @since 2.7.9 3.0.4 3.1.0
+	 */
+	protected function GetConfigFileAbsPath(): string
+	{
+		return utils::GetConfigFilePath($this->GetTestEnvironment());
+	}
+
+	/**
+	 * Prepare the iTop environment for test to run
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
+	 * @since 2.7.9 3.0.4 3.1.0
+	 */
+	protected function PrepareEnvironment(): void
+	{
+		$sEnv = $this->GetTestEnvironment();
+		$sConfigFile = $this->GetConfigFileAbsPath();
+
+		// Start MetaModel for the prepared environment
+		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
 	}
 
 	/**
