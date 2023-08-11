@@ -59,6 +59,8 @@ lub zapytaj administratora '.ITOP_APPLICATION_SHORT.', czy dysk serwera '.ITOP_A
 	'Class:TriggerOnAttachmentDownload' => 'Wyzwalacz (po pobraniu załącznika obiektu)',
 	'Class:TriggerOnAttachmentDownload+' => 'Wyzwalacz po pobraniu załącznika obiektu [klasy podrzędnej] danej klasy',
 	'UI:Attachments:DropYourFileHint' => 'Upuść pliki w dowolnym miejscu w tym obszarze',
-    'Class:TriggerOnCreateAttachment' => 'Trigger (on object\'s attachment create)~~',
-    'Class:TriggerOnCreateAttachment+' => 'Trigger on object\'s attachment create~~',
-]);
+    'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
+    'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+    'Class:TriggerOnAttachmentCreate/Attribute:filter_class'  => 'Klasa docelowa',
+    'Class:TriggerOnAttachmentCreate/Attribute:filter_class+' => '',
+    ]);
