@@ -14,7 +14,7 @@ class DBObjectTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = true;
-	const DEBUG_UNIT_TEST = true;
+	const DEBUG_UNIT_TEST = false;
 
 
 	public function testReloadNotNecessaryForInsert()

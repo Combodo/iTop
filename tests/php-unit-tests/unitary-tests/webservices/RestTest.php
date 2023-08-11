@@ -18,7 +18,7 @@ use utils;
 class RestTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
-	const CREATE_TEST_ORG = true;
+	const CREATE_TEST_ORG = false;
 
 	static private $sUrl;
 	static private $sLogin;
