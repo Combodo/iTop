@@ -9,6 +9,7 @@ namespace Combodo\iTop\Test\UnitTest\Service\Events;
 use Combodo\iTop\Service\Events\Description\EventDescription;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use ContextTag;
 use CoreException;
@@ -20,7 +21,7 @@ use TypeError;
  * @package Combodo\iTop\Test\UnitTest\Application\Service
  *
  */
-class EventTest extends ItopTestCase
+class EventTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
 	const CREATE_TEST_ORG = false;
