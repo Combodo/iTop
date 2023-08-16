@@ -30,9 +30,6 @@ class RestTest extends ItopDataTestCase
 	public static function setUpBeforeClass(): void
 	{
 		parent::setUpBeforeClass();
-
-		static::$sUrl = MetaModel::GetConfig()->Get('app_root_url');
-		static::$sLogin = "rest-user-".date('dmYHis');
 	}
 
 	/**
@@ -49,6 +46,9 @@ class RestTest extends ItopDataTestCase
     protected function setUp(): void
     {
 	    parent::setUp();
+
+	    static::$sUrl = MetaModel::GetConfig()->Get('app_root_url');
+	    static::$sLogin = "rest-user-".date('dmYHis');
 
 	    $this->CreateTestOrganization();
 

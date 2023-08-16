@@ -78,8 +78,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 	public static function setUpBeforeClass(): void
 	{
 		parent::setUpBeforeClass();
-
-		$this->PrepareEnvironment();
 	}
 
 	/**
@@ -97,6 +95,9 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
+
+		$this->PrepareEnvironment();
+
 		if (static::USE_TRANSACTION)
 		{
 			CMDBSource::Query('START TRANSACTION');

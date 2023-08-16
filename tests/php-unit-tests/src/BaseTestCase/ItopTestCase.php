@@ -53,9 +53,6 @@ abstract class ItopTestCase extends TestCase
 			// setUp might be called multiple times, so protecting the define() call !
 			define('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME', true);
 		}
-
-		$this->LoadRequiredItopFiles();
-		$this->LoadRequiredTestFiles();
 	}
 
 	/**
@@ -87,6 +84,9 @@ abstract class ItopTestCase extends TestCase
 			// setUp might be called multiple times, so protecting the define() call !
 			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
 		}
+
+		$this->LoadRequiredItopFiles();
+		$this->LoadRequiredTestFiles();
 	}
 
 	/**
