@@ -43,7 +43,7 @@ function ShowExamples($oP, $sExpression)
 		'Pedagogic examples' => array(
 			"Person" => "SELECT Person",
 			"Person having an 'A' in their name" => "SELECT Person AS B WHERE B.name LIKE '%A%'",
-			"Organization having a name beginning by 'My'" => "SELECT Organization WHERE name REGEXP '^My[a-z]*'",
+			"Organization having a name beginning by 'My'" => "SELECT Organization WHERE name REGEXP '^My .*$'",
 			"Changes planned on new year's day" => "SELECT Change AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
 			"IPs in a range" => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip) < INET_ATON('10.22.32.255')",
 			"Persons below a given root organization" => "SELECT Person AS P JOIN Organization AS Node ON P.org_id = Node.id JOIN Organization AS Root ON Node.parent_id BELOW Root.id WHERE Root.id=1",
