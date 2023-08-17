@@ -1683,6 +1683,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'change_password_url' => [
+			'type'                => 'string',
+			'description'         => 'Set this value to your "change password" service URL if you have an LDAP authentication',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 	];
 
 	public function IsProperty($sPropCode)

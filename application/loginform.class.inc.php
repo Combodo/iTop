@@ -140,7 +140,11 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 		$oLoginContext->AddBlockExtension('login_form_footer', new LoginBlockExtension('extensionblock/loginformfooter.html.twig'));
 
 		$bEnableResetPassword = MetaModel::GetConfig()->Get('forgot_password');
-		$sResetPasswordUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
+		$sResetPasswordUrl = MetaModel::GetConfig()->Get('change_password_url');
+		if ($sResetPasswordUrl == '')
+		{
+			$sResetPasswordUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
+		}
 		$aData = array(
 			'bEnableResetPassword' => $bEnableResetPassword,
 			'sResetPasswordUrl' => $sResetPasswordUrl,
