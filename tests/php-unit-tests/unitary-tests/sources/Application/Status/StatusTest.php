@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Test\UnitTest\Status;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Config;
 
 class StatusTest extends ItopTestCase
 {
@@ -25,10 +26,18 @@ class StatusTest extends ItopTestCase
 
     }
 
+	protected function GetPHPCommand()
+	{
+		$this->RequireOnceItopFile('application/utils.inc.php');
+		$oConfig = new Config(ITOP_DEFAULT_CONFIG_FILE);
+		return $oConfig->Get('php_path');
+	}
+
     public function testStatusGood() {
 		$sPath = APPROOT.'/webservices/status.php';
 
-		exec("php $sPath", $aOutput, $iRet);
+		$sPHP = $this->GetPHPCommand();
+		exec("$sPHP $sPath", $aOutput, $iRet);
 		$this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n".var_export($aOutput, true));
 	}
 
@@ -39,7 +48,8 @@ class StatusTest extends ItopTestCase
 	{
 		$sPath = APPROOT.'/webservices/status.php';
 
-		exec("php $sPath", $aOutput, $iRet);
+		$sPHP = $this->GetPHPCommand();
+		exec("$sPHP $sPath", $aOutput, $iRet);
 		$sAdditionalInfo = "aOutput:\n".var_export($aOutput, true).'.';
 
 		//Check response

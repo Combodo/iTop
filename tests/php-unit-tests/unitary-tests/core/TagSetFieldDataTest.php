@@ -18,10 +18,6 @@ use TagSetFieldData;
 
 /**
  * @group itopFaqLight
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class TagSetFieldDataTest extends ItopDataTestCase
 {

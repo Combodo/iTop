@@ -43,10 +43,6 @@ use FunctionExpression;
  * <ul>
  * <li>MakeGroupByQuery</li>
  * </ul>
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class DBSearchTest extends ItopDataTestCase
 {

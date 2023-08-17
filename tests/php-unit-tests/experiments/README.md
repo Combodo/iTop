@@ -1,0 +1,1 @@
+This directory aims at providing experimental proof of the mechanics of PHPUnit

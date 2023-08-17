@@ -11,10 +11,6 @@ use DBSearch;
  * Class DBSearchIntersectTest
  *
  * @package Combodo\iTop\Test\UnitTest\Core
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class DBSearchIntersectTest extends ItopTestCase
 {
@@ -71,16 +67,16 @@ class DBSearchIntersectTest extends ItopTestCase
 			'result' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE (`P`.`org_id` = 3)");
 
 		$aTests['Multiple selected classes inverted 1'] = array(
-			'left' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN PC AS D ON D.location_id = L.id JOIN Person AS P2 ON P.manager_id = P2.id WHERE 1",
+			'left' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS D ON D.location_id = L.id JOIN Person AS P2 ON P.manager_id = P2.id WHERE 1",
 			'right' => "SELECT Location WHERE org_id = 3",
 			'alias' => "L",
-			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN PC AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE (`L`.`org_id` = 3)");
+			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE (`L`.`org_id` = 3)");
 
 		$aTests['Multiple selected classes inverted 2'] = array(
-			'left' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN PC AS D ON D.location_id = L.id JOIN Person AS P2 ON P.manager_id = P2.id WHERE (`L`.`org_id` = 3)",
+			'left' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS D ON D.location_id = L.id JOIN Person AS P2 ON P.manager_id = P2.id WHERE (`L`.`org_id` = 3)",
 			'right' => "SELECT Person WHERE org_id = 3",
 			'alias' => "P",
-			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN PC AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE ((`L`.`org_id` = 3) AND (`P`.`org_id` = 3))");
+			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE ((`L`.`org_id` = 3) AND (`P`.`org_id` = 3))");
 
 		$aTests['Same class'] = array(
 			'left' => "SELECT Contact WHERE name = 'Christie'",
@@ -191,9 +187,9 @@ class DBSearchIntersectTest extends ItopTestCase
 			'result' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE (`P`.`org_id` = 3)");
 
 		$aTests['Multiple selected classes inverted 2'] = array(
-			'left' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN PC AS D ON D.location_id = L.id JOIN Person AS P2 ON P.manager_id = P2.id WHERE (`L`.`org_id` = 3)",
+			'left' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS D ON D.location_id = L.id JOIN Person AS P2 ON P.manager_id = P2.id WHERE (`L`.`org_id` = 3)",
 			'right' => "SELECT Person WHERE org_id = 3",
-			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN PC AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE ((`L`.`org_id` = 3) AND (`P`.`org_id` = 3))");
+			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE ((`L`.`org_id` = 3) AND (`P`.`org_id` = 3))");
 
 		$aTests['Same class'] = array(
 			'left' => "SELECT Contact WHERE name = 'Christie'",

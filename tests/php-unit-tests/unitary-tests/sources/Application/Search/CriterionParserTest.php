@@ -33,9 +33,6 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 /**
  * @group itopRequestMgmt
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class CriterionParserTest extends ItopDataTestCase
 {

@@ -5,11 +5,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class AttributeDefinitionTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;
 

@@ -14,10 +14,6 @@ use SecurityException;
 /**
  * We need the metamodel started as this is a dependency of {@link RuntimeDashboard}
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @since 2.7.8 3.0.3 3.1.0 N°4449 Test Full Path Disclosure in Dashboard
  */
 class RuntimeDashboardTest extends ItopDataTestCase

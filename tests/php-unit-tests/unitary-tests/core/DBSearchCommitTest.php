@@ -17,10 +17,6 @@ use DBSearch;
  * <ul>
  * <li>MakeGroupByQuery</li>
  * </ul>
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class DBSearchCommitTest extends ItopDataTestCase
 {

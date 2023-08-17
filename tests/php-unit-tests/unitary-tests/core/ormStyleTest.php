@@ -12,10 +12,6 @@ use utils;
 
 /**
  * Tests of the ormStyle class
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class ormStyleTest extends ItopTestCase
 {

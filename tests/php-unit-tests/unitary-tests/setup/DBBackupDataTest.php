@@ -8,11 +8,6 @@ use DBRestore;
 use MetaModel;
 use SetupUtils;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class DBBackupDataTest extends ItopDataTestCase
 {
 	/**
@@ -32,35 +27,33 @@ class DBBackupDataTest extends ItopDataTestCase
 				file_put_contents(APPROOT.'/'.$sExtraFile, 'Hello World!');
 			}
 		}
-		
-		if ($bUnsafeFileException)
-		{
-			$this->expectExceptionMessage("Backup: Aborting, resource '$sExtraFile'. Considered as UNSAFE because not inside the iTop directory.");
-		}
-		$aFiles = $this->InvokeNonPublicMethod('DBBackup', 'PrepareFilesToBackup', $oBackup, [APPROOT.'/conf/production/config-itop.php', $sTmpDir, true]);
-		SetupUtils::rrmdir($sTmpDir);
-		$aExpectedFiles = [
-			$sTmpDir.'/config-itop.php',
-		];
-		foreach($aExtraFiles as $sRelFile => $bExists)
-		{
-			if ($bExists)
-			{
-				$aExpectedFiles[] = $sTmpDir.'/'.$sRelFile;
+
+		try {
+			if ($bUnsafeFileException) {
+				$this->expectExceptionMessage("Backup: Aborting, resource '$sExtraFile'. Considered as UNSAFE because not inside the iTop directory.");
+			}
+			$aFiles = $this->InvokeNonPublicMethod('DBBackup', 'PrepareFilesToBackup', $oBackup, [APPROOT . '/conf/production/config-itop.php', $sTmpDir, true]);
+			SetupUtils::rrmdir($sTmpDir);
+			$aExpectedFiles = [
+				$sTmpDir . '/config-itop.php',
+			];
+			foreach ($aExtraFiles as $sRelFile => $bExists) {
+				if ($bExists) {
+					$aExpectedFiles[] = $sTmpDir . '/' . $sRelFile;
+				}
+			}
+		} finally {
+			// Cleanup
+			foreach ($aExtraFiles as $sExtraFile => $bExists) {
+				if ($bExists) {
+					unlink(APPROOT . '/' . $sExtraFile);
+				}
 			}
 		}
+
 		sort($aFiles);
 		sort($aExpectedFiles);
 		$this->assertEquals($aFiles, $aExpectedFiles);
-
-		// Cleanup
-		foreach($aExtraFiles as $sExtraFile => $bExists)
-		{
-			if ($bExists)
-			{
-				unlink(APPROOT.'/'.$sExtraFile);
-			}
-		}
 	}
 	
 	function prepareFilesToBackupProvider()
@@ -95,9 +88,15 @@ class DBBackupDataTest extends ItopDataTestCase
 		$aExpectedExtraFiles = [];
 		foreach($aExpectedRelativeExtraFiles as $sRelativeName)
 		{
-			$aExpectedExtraFiles[$sTmpDir.'/'.$sRelativeName] = APPROOT.'/'.$sRelativeName;
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+				$sRelativeName = str_replace('/', '\\', $sRelativeName);
+				$aExpectedExtraFiles[$sTmpDir.'\\'.$sRelativeName] = APPROOT.'\\'.$sRelativeName;
+			}
+			else {
+				$aExpectedExtraFiles[$sTmpDir.'/'.$sRelativeName] = APPROOT.'/'.$sRelativeName;
+			}
 		}
-		
+
 		$oRestore = new DBRestore(MetaModel::GetConfig());
 		$aExtraFiles = $this->InvokeNonPublicMethod('DBRestore', 'ListExtraFiles', $oRestore, [$sTmpDir]);
 		

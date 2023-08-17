@@ -235,13 +235,16 @@ class DBRestore extends DBBackup
 			if (in_array($oFileInfo->getFilename(), $aStandardFiles)) {
 				continue;
 			}
-			if (strncmp($oFileInfo->getPathname(), $sDataDir.'/production-modules', strlen($sDataDir.'/production-modules')) == 0) {
+			// Normalize filenames to cope with Windows backslashes
+			$sPath = str_replace('\\', '/', $oFileInfo->getPathname());
+			$sRefPath = str_replace('\\', '/', $sDataDir.'/production-modules');
+			if (strncmp($sPath, $sRefPath, strlen($sRefPath)) == 0) {
 				continue;
 			}
-			
+
 			$aExtraFiles[$oFileInfo->getPathname()] = APPROOT.substr($oFileInfo->getPathname(), strlen($sDataDir));
 		}
-		
+
 		return $aExtraFiles;
 	}
 }

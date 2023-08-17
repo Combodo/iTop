@@ -55,12 +55,6 @@ define('TAG_ATTCODE', 'domains');
  *
  * Helper class to extend for tests needing access to iTop's metamodel
  *
- * **⚠ Warning** Each class extending this one needs to add the following annotations :
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @since 2.7.7 3.0.1 3.1.0 N°4624 processIsolation is disabled by default and must be enabled in each test needing it (basically all tests using
  * iTop datamodel)
  */
@@ -69,10 +63,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 	private $iTestOrgId;
 
 	// For cleanup
-	private $aCreatedObjects = array();
-
-	// Counts
-	public $aReloadCount = [];
+	private $aCreatedObjects = [];
+	private $aEventListeners = [];
 
 	/**
 	 * @var string Default environment to use for test cases
@@ -80,6 +72,23 @@ abstract class ItopDataTestCase extends ItopTestCase
 	const DEFAULT_TEST_ENVIRONMENT = 'production';
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = false;
+
+	/**
+	 * This method is called before the first test of this test class is run (in the current process).
+	 */
+	public static function setUpBeforeClass(): void
+	{
+		parent::setUpBeforeClass();
+	}
+
+	/**
+	 * This method is called after the last test of this test class is run (in the current process).
+	 */
+	public static function tearDownAfterClass(): void
+	{
+		\UserRights::FlushPrivileges();
+		parent::tearDownAfterClass();
+	}
 
 	/**
 	 * @throws Exception
@@ -98,8 +107,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		{
 			$this->CreateTestOrganization();
 		}
-
-		EventService::RegisterListener(EVENT_DB_OBJECT_RELOAD, [$this, 'CountObjectReload']);
 	}
 
 	/**
@@ -107,6 +114,9 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 */
 	protected function tearDown(): void
 	{
+		static::SetNonPublicStaticProperty(\cmdbAbstractObject::class, 'aObjectsAwaitingEventDbLinksChanged', []);
+		\cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
+
 		if (static::USE_TRANSACTION) {
 			$this->debug("ROLLBACK !!!");
 			CMDBSource::Query('ROLLBACK');
@@ -127,6 +137,15 @@ abstract class ItopDataTestCase extends ItopTestCase
 					$this->debug("Error when removing created objects: $sClass::$iKey. Exception message: ".$e->getMessage());
 				}
 			}
+		}
+		// As soon as a rollback has been performed, each object memoized should be discarded
+		CMDBObject::SetCurrentChange(null);
+
+		// Leave the place clean
+		\UserRights::Logoff();
+
+		foreach ($this->aEventListeners as $sListenerId) {
+			EventService::UnRegisterListener($sListenerId);
 		}
 
 		parent::tearDown();
@@ -184,6 +203,31 @@ abstract class ItopDataTestCase extends ItopTestCase
 	public function getTestOrgId()
 	{
 		return $this->iTestOrgId;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+	/// Facades for environment settings
+	/////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Facade for EventService::RegisterListener
+	 *
+	 * @param string $sEvent
+	 * @param callable $callback
+	 * @param $sEventSource
+	 * @param array $aCallbackData
+	 * @param $context
+	 * @param float $fPriority
+	 * @param $sModuleId
+	 *
+	 * @return string
+	 */
+	public function EventService_RegisterListener(string $sEvent, callable $callback, $sEventSource = null, array $aCallbackData = [], $context = null, float $fPriority = 0.0, $sModuleId = ''): string
+	{
+		$ret = EventService::RegisterListener($sEvent, $callback, $sEventSource, $aCallbackData, $context, $fPriority, $sModuleId);
+		if (false !== $ret) {
+			$this->aEventListeners[] = $ret;
+		}
+		return $ret;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -880,49 +924,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		return $oOrg;
 	}
 
-	public function ResetReloadCount()
-	{
-		$this->aReloadCount = [];
-	}
-
-	public function DebugReloadCount($sMsg, $bResetCount = true)
-	{
-		$iTotalCount = 0;
-		$aTotalPerClass = [];
-		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
-			$iClassCount = 0;
-			foreach ($aCountByKeys as $iCount) {
-				$iClassCount += $iCount;
-			}
-			$iTotalCount += $iClassCount;
-			$aTotalPerClass[$sClass] = $iClassCount;
-		}
-		$this->debug("$sMsg - $iTotalCount reload(s)");
-		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
-			$this->debug("    $sClass => $aTotalPerClass[$sClass] reload(s)");
-			foreach ($aCountByKeys as $sKey => $iCount) {
-				$this->debug("        $sClass::$sKey => $iCount");
-			}
-		}
-		if ($bResetCount) {
-			$this->ResetReloadCount();
-		}
-	}
-
-	public function CountObjectReload(EventData $oData)
-	{
-		$oObject = $oData->Get('object');
-		$sClass = get_class($oObject);
-		$sKey = $oObject->GetKey();
-		$iCount = $this->GetObjectReloadCount($sClass, $sKey);
-		$this->aReloadCount[$sClass][$sKey] = 1 + $iCount;
-	}
-
-	public function GetObjectReloadCount($sClass, $sKey)
-	{
-		return $this->aReloadCount[$sClass][$sKey] ?? 0;
-	}
-
 	/**
 	 *  Assert that a series of operations will trigger a given number of MySL queries
 	 *
@@ -947,6 +948,17 @@ abstract class ItopDataTestCase extends ItopTestCase
 			// Otherwise, PHP Unit will consider that no assertion has been made
 			$this->assertTrue(true);
 		}
+	}
+
+	protected function assertDBChangeOpCount(string $sClass, $iId, int $iExpectedCount)
+	{
+		$oSearch = new \DBObjectSearch('CMDBChangeOp');
+		$oSearch->AddCondition('objclass', $sClass);
+		$oSearch->AddCondition('objkey', $iId);
+		$oSearch->AllowAllData();
+		$oSet = new \DBObjectSet($oSearch);
+		$iCount = $oSet->Count();
+		$this->assertEquals($iExpectedCount, $iCount, "Found $iCount changes for object $sClass::$iId");
 	}
 
 	/**

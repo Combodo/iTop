@@ -29,14 +29,10 @@ use Exception;
 
 /**
  * @group itopRequestMgmt
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class SearchFormTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	const CREATE_TEST_ORG = false;
 
 	/**
 	 * @dataProvider GetFieldsProvider

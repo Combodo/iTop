@@ -56,10 +56,11 @@ class Dict
 	 * @param $sLanguageCode
 	 *
 	 * @throws \DictExceptionUnknownLanguage
+	 * @since 3.0.4 3.1.1 3.2.0 Param $sLanguageCode becomes nullable
 	 */
-	public static function SetUserLanguage($sLanguageCode)
+	public static function SetUserLanguage($sLanguageCode = null)
 	{
-		if (!array_key_exists($sLanguageCode, self::$m_aLanguages))
+		if (!is_null($sLanguageCode) && !array_key_exists($sLanguageCode, self::$m_aLanguages))
 		{
 			throw new DictExceptionUnknownLanguage($sLanguageCode);
 		}

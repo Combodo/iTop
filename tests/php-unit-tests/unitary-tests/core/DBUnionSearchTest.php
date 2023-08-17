@@ -7,11 +7,6 @@
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class DBUnionSearchTest extends ItopDataTestCase
 {
 

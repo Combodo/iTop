@@ -7,9 +7,6 @@ use FindStylesheetObject;
 use ThemeHandler;
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  * @covers ThemeHandler
  */
 class ThemeHandlerTest extends ItopTestCase
