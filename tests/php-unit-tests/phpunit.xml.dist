@@ -19,6 +19,10 @@
         printerClass="\Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9"
 >
 
+  <extensions>
+    <extension class="Combodo\iTop\Test\UnitTest\Hook\TestsRunStartHook" />
+  </extensions>
+
   <php>
     <ini name="memory_limit" value="512M"/>
     <ini name="error_reporting" value="E_ALL"/>
