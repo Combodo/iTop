@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <snippets>
+    <!-- These snippets just implements application/applicationextension.inc.php APIs for the ApplicationExtensionTest unit test -->
+    <snippet id="ExampleFor_iLoginFSMExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iLoginFSMExtension extends \AbstractLoginFSMExtension
+{
+	public function ListSupportedLoginModes()
+	{
+		// Do nothing, we just need the class to exists for the unit test
+	}
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iLogoutExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iLogoutExtension implements \iLogoutExtension
+{
+	public function LogoutAction()
+	{
+		// Do nothing, we just need the class to exists for the unit test
+	}
+
+	public function ListSupportedLoginModes()
+	{
+		// Do nothing, we just need the class to exists for the unit test
+	}
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iLoginUIExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iLoginUIExtension implements \iLoginUIExtension
+{
+	public function GetTwigContext()
+	{
+		// Do nothing, we just need the class to exists for the unit test
+	}
+
+	public function ListSupportedLoginModes()
+	{
+		// Do nothing, we just need the class to exists for the unit test
+	}
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iPreferencesExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iPreferencesExtension extends \AbstractPreferencesExtension
+{
+	// Do nothing, we just need the class to exists for the unit test
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iApplicationUIExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iApplicationUIExtension extends \AbstractApplicationUIExtension
+{
+	// Do nothing, we just need the class to exists for the unit test
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iApplicationObjectExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iApplicationObjectExtension extends \AbstractApplicationObjectExtension
+{
+	// Do nothing, we just need the class to exists for the unit test
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iPopupMenuExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iPopupMenuExtension implements \iPopupMenuExtension
+{
+  public static function EnumItems($iMenuId, $param)
+  {
+	  // Do nothing, we just need the class to exists for the unit test
+  }
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_ApplicationPopupMenuItem" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_ApplicationPopupMenuItem extends \ApplicationPopupMenuItem
+{
+  public function GetMenuItem()
+  {
+	  // Do nothing, we just need the class to exists for the unit test
+  }
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iPageUIExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iPageUIExtension extends \AbstractPageUIExtension
+{
+	// Do nothing, we just need the class to exists for the unit test
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iPortalUIExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iPortalUIExtension extends \AbstractPortalUIExtension
+{
+	// Do nothing, we just need the class to exists for the unit test
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iQueryModifier" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iQueryModifier implements \iQueryModifier
+{
+	public function __construct()
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+	}
+
+	public function GetFieldExpression(QueryBuilderContext &$oBuild, $sClass, $sAttCode, $sColId, Expression $oFieldSQLExp, SQLQuery &$oSelect)
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+	}
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iOnClassInitialization" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iOnClassInitialization implements \iOnClassInitialization
+{
+	public function OnAfterClassInitialization($sClass)
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+	}
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iModuleExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iModuleExtension implements \iModuleExtension
+{
+	public function __construct()
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+	}
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iKPILoggerExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iKPILoggerExtension implements \iKPILoggerExtension
+{
+	public function InitStats()
+	{
+		// Do nothing, we just need the class to exists for the unit test
+	}
+
+	public function LogOperation($oKpiLogData)
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+	}
+}
+      ]]></content>
+    </snippet>
+    <!-- These snippets just implements core/modulehandler.class.inc.php APIs for the ApplicationExtensionTest unit test -->
+    <snippet id="ExampleFor_ModuleHandlerApiInterface" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_ModuleHandlerApiInterface extends \ModuleHandlerAPI
+{
+	// Do nothing, we just need the class to exists for the unit test
+}
+      ]]></content>
+    </snippet>
+    <!-- These snippets just implements application/newsroomprovider.class.inc.php APIs for the ApplicationExtensionTest unit test -->
+    <snippet id="ExampleFor_iNewsroomProvider" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iNewsroomProvider extends \NewsroomProviderBase
+{
+	public function GetLabel()
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+  }
+
+	public function GetFetchURL()
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+  }
+
+	public function GetMarkAllAsReadURL()
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+  }
+
+	public function GetViewAllURL()
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+  }
+}
+      ]]></content>
+    </snippet>
+  </snippets>
+</itop_design>
