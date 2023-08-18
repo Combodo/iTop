@@ -220,6 +220,7 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
+			"is_link" 			  => true, //since 3.1 N°5324
 			"category"            => "addon/userrights,grant_by_profile,filter",
 			"key_type"            => "autoincrement",
 			"name_attcode"        => array("userlogin", "profile"),
