@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'dbf3393c9729a20f0bf389d343507238d61fef56',
+        'reference' => '204a6d8e51619cd669c6d9d7722edaa36d1c3394',
         'name' => 'combodo/itop',
         'dev' => true,
     ),
@@ -25,7 +25,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'dbf3393c9729a20f0bf389d343507238d61fef56',
+            'reference' => '204a6d8e51619cd669c6d9d7722edaa36d1c3394',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(

@@ -23,7 +23,7 @@ define('PORTAL_PROFILE_NAME', 'Portal user');
 class UserRightsBaseClassGUI extends cmdbAbstractObject
 {
 	// Whenever something changes, reload the privileges
-	
+
 	protected function AfterInsert()
 	{
 		UserRights::FlushPrivileges();
@@ -43,7 +43,7 @@ class UserRightsBaseClassGUI extends cmdbAbstractObject
 class UserRightsBaseClass extends DBObject
 {
 	// Whenever something changes, reload the privileges
-	
+
 	protected function AfterInsert()
 	{
 		UserRights::FlushPrivileges();
@@ -100,7 +100,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		$this->m_bCheckReservedNames = false;
 	}
 
-	
+
 	protected static $m_aActions = array(
 		UR_ACTION_READ => 'Read',
 		UR_ACTION_MODIFY => 'Modify',
@@ -113,7 +113,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	protected static $m_aCacheActionGrants = null;
 	protected static $m_aCacheStimulusGrants = null;
 	protected static $m_aCacheProfiles = null;
-	
+
 	public static function DoCreateProfile($sName, $sDescription, $bReservedName = false)
 	{
 		if (is_null(self::$m_aCacheProfiles))
@@ -125,7 +125,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			{
 				self::$m_aCacheProfiles[$oProfile->Get('name')] = $oProfile->GetKey();
 			}
-		}	
+		}
 
 		$sCacheKey = $sName;
 		if (isset(self::$m_aCacheProfiles[$sCacheKey]))
@@ -137,17 +137,17 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		$oNewObj->Set('description', $sDescription);
 		if ($bReservedName)
 		{
-			$oNewObj->DisableCheckOnReservedNames();			
+			$oNewObj->DisableCheckOnReservedNames();
 		}
 		$iId = $oNewObj->DBInsertNoReload();
-		self::$m_aCacheProfiles[$sCacheKey] = $iId;	
+		self::$m_aCacheProfiles[$sCacheKey] = $iId;
 		return $iId;
 	}
-	
+
 	public static function DoCreateActionGrant($iProfile, $iAction, $sClass, $bPermission = true)
 	{
 		$sAction = self::$m_aActions[$iAction];
-	
+
 		if (is_null(self::$m_aCacheActionGrants))
 		{
 			self::$m_aCacheActionGrants = array();
@@ -157,7 +157,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			{
 				self::$m_aCacheActionGrants[$oGrant->Get('profileid').'-'.$oGrant->Get('action').'-'.$oGrant->Get('class')] = $oGrant->GetKey();
 			}
-		}	
+		}
 
 		$sCacheKey = "$iProfile-$sAction-$sClass";
 		if (isset(self::$m_aCacheActionGrants[$sCacheKey]))
@@ -171,10 +171,10 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		$oNewObj->Set('class', $sClass);
 		$oNewObj->Set('action', $sAction);
 		$iId = $oNewObj->DBInsertNoReload();
-		self::$m_aCacheActionGrants[$sCacheKey] = $iId;	
+		self::$m_aCacheActionGrants[$sCacheKey] = $iId;
 		return $iId;
 	}
-	
+
 	public static function DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass)
 	{
 		if (is_null(self::$m_aCacheStimulusGrants))
@@ -186,7 +186,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			{
 				self::$m_aCacheStimulusGrants[$oGrant->Get('profileid').'-'.$oGrant->Get('stimulus').'-'.$oGrant->Get('class')] = $oGrant->GetKey();
 			}
-		}	
+		}
 
 		$sCacheKey = "$iProfile-$sStimulusCode-$sClass";
 		if (isset(self::$m_aCacheStimulusGrants[$sCacheKey]))
@@ -199,13 +199,13 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		$oNewObj->Set('class', $sClass);
 		$oNewObj->Set('stimulus', $sStimulusCode);
 		$iId = $oNewObj->DBInsertNoReload();
-		self::$m_aCacheStimulusGrants[$sCacheKey] = $iId;	
+		self::$m_aCacheStimulusGrants[$sCacheKey] = $iId;
 		return $iId;
 	}
-	
+
 	/*
 	* Create the built-in Administrator profile with its reserved name
-	*/	
+	*/
 	public static function DoCreateAdminProfile()
 	{
 		self::DoCreateProfile(ADMIN_PROFILE_NAME, 'Has the rights on everything (bypassing any control)', true /* reserved name */);
@@ -213,7 +213,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 
 	/*
 	* Overload the standard behavior to preserve reserved names
-	*/	
+	*/
 	public function DoCheckToWrite()
 	{
 		parent::DoCheckToWrite();
@@ -255,7 +255,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
-	
+
 	function DoShowGrantSumary($oPage)
 	{
 		if ($this->GetRawName() == "Administrator")
@@ -267,7 +267,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 
 		// Note: for sure, we assume that the instance is derived from UserRightsProfile
 		$oUserRights = UserRights::GetModuleInstance();
-	
+
 		$aDisplayData = array();
 		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
 		{
@@ -284,7 +284,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 				}
 			}
 			$sStimuli = implode(', ', $aStimuli);
-			
+
 			$aDisplayData[] = array(
 				'class' => MetaModel::GetName($sClass),
 				'read' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Read'),
@@ -296,7 +296,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 				'stimuli' => $sStimuli,
 			);
 		}
-	
+
 		$aDisplayConfig = array();
 		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
 		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
@@ -326,7 +326,6 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"is_link" 			  => true, //since 3.1 N°5324
 			"category"            => "addon/userrights",
 			"key_type"            => "autoincrement",
 			"name_attcode"        => array("userlogin", "profile"),
@@ -335,7 +334,7 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 			"db_table"            => "priv_urp_userprofile",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-			"is_link" 			  => true, /** @since 3.1.0 N°6482 */
+			"is_link" 			  => true, /** @since 3.1.0 N°6482 N°5324 */
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -612,7 +611,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 				$oSearch->AllowAllData();
 				$oCondition = new BinaryExpression(new FieldExpression('userid'), '=', new VariableExpression('userid'));
 				$oSearch->AddConditionExpression($oCondition);
-				
+
 				$oUserOrgSet = new DBObjectSet($oSearch, array(), array('userid' => $iUser));
 				while ($oUserOrg = $oUserOrgSet->Fetch())
 				{
@@ -634,7 +633,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$oSearch->AllowAllData();
 			$oCondition = new BinaryExpression(new FieldExpression('userid'), '=', new VariableExpression('userid'));
 			$oSearch->AddConditionExpression($oCondition);
-			
+
 			$this->m_aUserProfiles[$iUser] = array();
 			$oUserProfileSet = new DBObjectSet($oSearch, array(), array('userid' => $iUser));
 			while ($oUserProfile = $oUserProfileSet->Fetch())
@@ -649,7 +648,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	public function ResetCache()
 	{
 		// Loaded by Load cache
-		$this->m_aProfiles = null; 
+		$this->m_aProfiles = null;
 		$this->m_aUserProfiles = array();
 		$this->m_aUserOrgs = array();
 
@@ -659,7 +658,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		// Loaded on demand (time consuming as compared to the others)
 		$this->m_aClassActionGrants = null;
 		$this->m_aClassStimulusGrants = null;
-		
+
 		$this->m_aObjectActionGrants = array();
 	}
 
@@ -695,10 +694,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		}
 
 		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Profiles"));
-		$this->m_aProfiles = array(); 
+		$this->m_aProfiles = array();
 		while ($oProfile = $oProfileSet->Fetch())
 		{
-			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile; 
+			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile;
 		}
 
 		$this->m_aClassStimulusGrants = array();
@@ -872,7 +871,7 @@ exit;
 		$this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode] = $aRes;
 		return $aRes;
 	}
-	
+
 	public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null)
 	{
 		$this->LoadCache();
@@ -1010,8 +1009,8 @@ exit;
 
 	/**
 	 * Find out which attribute is corresponding the the dimension 'owner org'
-	 * returns null if no such attribute has been found (no filtering should occur)	 
-	 */	 	
+	 * returns null if no such attribute has been found (no filtering should occur)
+	 */
 	public static function GetOwnerOrganizationAttCode($sClass)
 	{
 		$sAttCode = null;

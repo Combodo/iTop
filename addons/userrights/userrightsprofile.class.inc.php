@@ -220,7 +220,6 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"is_link" 			  => true, //since 3.1 N°5324
 			"category"            => "addon/userrights,grant_by_profile,filter",
 			"key_type"            => "autoincrement",
 			"name_attcode"        => array("userlogin", "profile"),
@@ -229,7 +228,7 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 			"db_table"            => "priv_urp_userprofile",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-			"is_link" 			  => true, /** @since 3.1.0 N°6482 */
+			"is_link" 			  => true, /** @since 3.1.0 N°6482 N°5324 */
 			'uniqueness_rules'    => array(
 				'no_duplicate' => array(
 					'attributes'  => array(
