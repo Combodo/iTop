@@ -143,6 +143,10 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 				\iOnClassInitialization::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
 			],
+			\iFieldRendererMappingsExtension::class => [
+				\iFieldRendererMappingsExtension::class,
+				static::ENUM_API_CALL_METHOD_GETCLASSESFORINTERFACE,
+			],
 			\iModuleExtension::class => [
 				\iModuleExtension::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,

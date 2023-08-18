@@ -309,6 +309,19 @@ class ExampleFor_iOnClassInitialization implements \iOnClassInitialization
 }
       ]]></content>
     </snippet>
+    <snippet id="ExampleFor_iFieldRendererMappingsExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iFieldRendererMappingsExtension implements \iFieldRendererMappingsExtension
+{
+	public static function RegisterSupportedFields(): array
+	{
+	  // Do nothing, we just need the class to exists for the unit test
+	}
+}
+      ]]></content>
+    </snippet>
     <snippet id="ExampleFor_iModuleExtension" _delta="define">
       <placement>core</placement>
       <rank>0</rank>
