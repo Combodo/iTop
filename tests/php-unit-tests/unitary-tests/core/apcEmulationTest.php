@@ -33,8 +33,6 @@ define('UNIT_MAX_CACHE_FILES', 10);
 
 /**
  * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class apcEmulationTest extends ItopTestCase
 {

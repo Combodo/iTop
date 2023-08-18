@@ -25,10 +25,6 @@ use privUITransactionFile;
 use UserRights;
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @covers utils
  * @group sampleDataNeeded
  * @group defaultProfiles
@@ -180,7 +176,7 @@ class privUITransactionFileTest extends ItopDataTestCase
 		$this->assertTrue($bResult, 'Token created by support user must be removed in the support user context');
 
 		// test when no user logged (combodo-unauthenticated-form module for example)
-		UserRights::_ResetSessionCache();
+		UserRights::Logoff();
 		$sTransactionIdUnauthenticatedUser = privUITransactionFile::GetNewTransactionId();
 		$bResult = privUITransactionFile::IsTransactionValid($sTransactionIdUnauthenticatedUser, false);
 		$this->assertTrue($bResult, 'Token created by unauthenticated user must be valid when no user logged');

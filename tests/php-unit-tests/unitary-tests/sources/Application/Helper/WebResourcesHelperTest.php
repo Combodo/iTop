@@ -10,9 +10,6 @@ use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  * @covers \WebPage
  */
 class WebResourcesHelperTest extends ItopTestCase

@@ -15,11 +15,6 @@ use MetaModel;
  */
 
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class CMDBObjectTest extends ItopDataTestCase
 {
 	private $sAdminLogin;
@@ -99,6 +94,7 @@ class CMDBObjectTest extends ItopDataTestCase
 	 * @covers CMDBObject::SetCurrentChange
 	 * @since 3.0.1 N°5135 - Impersonate: history of changes versus log entries
 	 *
+	 * @runInSeparateProcess
 	 * @dataProvider CurrentChangeUnderImpersonationProvider
 	 */
 	public function testCurrentChangeUnderImpersonation($sTrackInfo=null, $sExpectedChangeLogWhenImpersonation=null) {

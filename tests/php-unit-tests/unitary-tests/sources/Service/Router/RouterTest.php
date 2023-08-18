@@ -8,7 +8,7 @@ namespace Combodo\iTop\Test\UnitTest\Service\Router;
 
 use Combodo\iTop\Service\Router\Exception\RouteNotFoundException;
 use Combodo\iTop\Service\Router\Router;
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use utils;
 
 /**
@@ -18,7 +18,7 @@ use utils;
  * @since 3.1.0
  * @covers \Combodo\iTop\Service\Router\Router
  */
-class RouterTest extends ItopTestCase
+class RouterTest extends ItopDataTestCase
 {
 	/**
 	 * @inheritDoc

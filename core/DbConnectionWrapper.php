@@ -59,9 +59,16 @@ class DbConnectionWrapper
 	 * Use this to register a mock that will handle {@see mysqli::query()}
 	 *
 	 * @param \mysqli|null $oMysqli
+	 * @since 3.0.4 3.1.1 3.2.0 Param $oMysqli becomes nullable
 	 */
-	public static function SetDbConnectionMockForQuery(?mysqli $oMysqli): void
+	public static function SetDbConnectionMockForQuery(?mysqli $oMysqli = null): void
 	{
-		static::$oDbCnxMockableForQuery = $oMysqli;
+		if (is_null($oMysqli)) {
+			// Reset to standard connection
+			static::$oDbCnxMockableForQuery = static::$oDbCnxStandard;
+		}
+		else {
+			static::$oDbCnxMockableForQuery = $oMysqli;
+		}
 	}
 }

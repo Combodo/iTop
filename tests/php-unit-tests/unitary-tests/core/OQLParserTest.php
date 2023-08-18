@@ -16,11 +16,6 @@ use OQLException;
 use OqlInterpreter;
 use OQLParserException;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class OQLParserTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;

@@ -8,11 +8,6 @@ use DBRestore;
 use MetaModel;
 use SetupUtils;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class DBBackupDataTest extends ItopDataTestCase
 {
 	/**
@@ -93,9 +88,15 @@ class DBBackupDataTest extends ItopDataTestCase
 		$aExpectedExtraFiles = [];
 		foreach($aExpectedRelativeExtraFiles as $sRelativeName)
 		{
-			$aExpectedExtraFiles[$sTmpDir.'/'.$sRelativeName] = APPROOT.'/'.$sRelativeName;
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+				$sRelativeName = str_replace('/', '\\', $sRelativeName);
+				$aExpectedExtraFiles[$sTmpDir.'\\'.$sRelativeName] = APPROOT.'\\'.$sRelativeName;
+			}
+			else {
+				$aExpectedExtraFiles[$sTmpDir.'/'.$sRelativeName] = APPROOT.'/'.$sRelativeName;
+			}
 		}
-		
+
 		$oRestore = new DBRestore(MetaModel::GetConfig());
 		$aExtraFiles = $this->InvokeNonPublicMethod('DBRestore', 'ListExtraFiles', $oRestore, [$sTmpDir]);
 		

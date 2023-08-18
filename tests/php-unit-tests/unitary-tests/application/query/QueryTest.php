@@ -33,9 +33,6 @@ use QueryOQL;
  * All objects created in this test will be deleted by the test.
  *
  * @group iTopQuery
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class QueryTest extends ItopDataTestCase
 {

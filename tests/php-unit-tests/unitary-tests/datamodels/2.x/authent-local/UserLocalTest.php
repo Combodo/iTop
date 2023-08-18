@@ -24,10 +24,6 @@ use utils;
 
 /**
  * test class for UserLocal class
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class UserLocalTest extends ItopDataTestCase
 {
@@ -398,6 +394,9 @@ class UserLocalTest extends ItopDataTestCase
 		);
 	}
 
+	/**
+	 * @runInSeparateProcess Otherwise, and only in the CI, test fails asserting $oProfilesSet->Count() == 0
+	 */
 	public function testGetUserProfileList()
 	{
 		utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');

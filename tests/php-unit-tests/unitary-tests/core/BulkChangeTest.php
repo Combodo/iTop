@@ -7,9 +7,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
+ * @runClassInSeparateProcess
  */
 class BulkChangeTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;

@@ -8,15 +8,13 @@ use MetaModel;
 
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * created a dedicated test for external keys imports.
  *
  * Class BulkChangeExtKeyTest
  *
  * @package Combodo\iTop\Test\UnitTest\Core
+ *
+ * @runTestsInSeparateProcesses
  */
 class BulkChangeExtKeyTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;
@@ -227,13 +225,6 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		return $this->sUid;
 	}
 
-	/**	 *
-	 * @param $aInitData
-	 * @param $aCsvData
-	 * @param $aAttributes
-	 * @param $aExtKeys
-	 * @param $aReconcilKeys
-	 */
 	public function performBulkChangeTest($sExpectedDisplayableValue, $sExpectedDescription, $oOrg, $bIsRackReconKey,
 		$aAdditionalCsvData=null, $aExtKeys=null, $sSearchLinkUrl=null, $sError="Object not found") {
 		if ($sSearchLinkUrl===null){

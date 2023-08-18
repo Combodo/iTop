@@ -4,11 +4,6 @@ use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class cmdbAbstractObjectTest extends ItopDataTestCase {
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = true;
@@ -18,6 +13,8 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 
 	protected function setUp(): void
 	{
+		static::$aEventCalls = [];
+		static::$iEventCalls = 0;
 		parent::setUp();
 	}
 
@@ -80,6 +77,9 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 		self::assertSame($aExpectedLinkStack, $aLinkModificationsStack);
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 */
 	public function testProcessClassIdDeferredUpdate()
 	{
 		// Create the team
@@ -157,6 +157,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 	}
 
 	/**
+	 * @runInSeparateProcess
 	 * Check that EVENT_DB_LINKS_CHANGED events are not sent to the current updated/created object (Team)
 	 * the events are sent to the other side (Person)
 	 *
@@ -188,7 +189,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 
 		$this->debug("\n-------------> Test Starts HERE\n");
 
-		$oEventReceiver = new LinksEventReceiver();
+		$oEventReceiver = new LinksEventReceiver($this);
 		$oEventReceiver->RegisterCRUDListeners();
 
 		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeam1', 'persons_list' => $oLinkSet, 'org_id' => $this->getTestOrgId()]);
@@ -200,6 +201,8 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 	}
 
 	/**
+	 * @runInSeparateProcess
+	 *
 	 * Check that EVENT_DB_LINKS_CHANGED events are sent to all the linked objects when creating a new lnk object
 	 *
 	 * @return void
@@ -223,7 +226,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 		$this->assertIsObject($oTeam);
 
 		$this->debug("\n-------------> Test Starts HERE\n");
-		$oEventReceiver = new LinksEventReceiver();
+		$oEventReceiver = new LinksEventReceiver($this);
 		$oEventReceiver->RegisterCRUDListeners();
 
 		// The link creation will signal both the Person an the Team
@@ -235,6 +238,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 	}
 
 	/**
+	 * @runInSeparateProcess
 	 * Check that EVENT_DB_LINKS_CHANGED events are sent to all the linked objects when updating an existing lnk object
 	 *
 	 * @return void
@@ -262,7 +266,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 		$oLink->DBInsert();
 
 		$this->debug("\n-------------> Test Starts HERE\n");
-		$oEventReceiver = new LinksEventReceiver();
+		$oEventReceiver = new LinksEventReceiver($this);
 		$oEventReceiver->RegisterCRUDListeners();
 
 		// The link update will signal both the Person, the Team and the ContactType
@@ -277,6 +281,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 	}
 
 	/**
+	 * @runInSeparateProcess
 	 * Check that when a link changes from an object to another, then both objects are notified
 	 *
 	 * @return void
@@ -307,7 +312,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 		$oLink->DBInsert();
 
 		$this->debug("\n-------------> Test Starts HERE\n");
-		$oEventReceiver = new LinksEventReceiver();
+		$oEventReceiver = new LinksEventReceiver($this);
 		$oEventReceiver->RegisterCRUDListeners();
 
 		// The link update will signal both the Persons and the Team
@@ -320,6 +325,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 	}
 
 	/**
+	 * @runInSeparateProcess
 	 * Check that EVENT_DB_LINKS_CHANGED events are sent to all the linked objects when deleting an existing lnk object
 	 *
 	 * @return void
@@ -347,7 +353,7 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
 		$oLink->DBInsert();
 
 		$this->debug("\n-------------> Test Starts HERE\n");
-		$oEventReceiver = new LinksEventReceiver();
+		$oEventReceiver = new LinksEventReceiver($this);
 		$oEventReceiver->RegisterCRUDListeners();
 
 		// The link delete will signal both the Person an the Team
@@ -383,9 +389,15 @@ class cmdbAbstractObjectTest extends ItopDataTestCase {
  */
 class LinksEventReceiver
 {
+	private $oTestCase;
 	private $aCallbacks = [];
 
 	public static $bIsObjectInCrudStack;
+
+	public function __construct(ItopDataTestCase $oTestCase)
+	{
+		$this->oTestCase = $oTestCase;
+	}
 
 	public function AddCallback(string $sEvent, string $sClass, string $sFct, int $iCount = 1): void
 	{
@@ -423,53 +435,10 @@ class LinksEventReceiver
 	{
 		$this->Debug('Registering Test event listeners');
 		if (is_null($sEvent)) {
-			EventService::RegisterListener(EVENT_DB_LINKS_CHANGED, [$this, 'OnEvent']);
+			$this->oTestCase->EventService_RegisterListener(EVENT_DB_LINKS_CHANGED, [$this, 'OnEvent']);
 			return;
 		}
-		EventService::RegisterListener($sEvent, [$this, 'OnEvent'], $mEventSource);
-	}
-
-	/**
-	 * @param $oObject
-	 *
-	 * @return void
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	private function AddRoleToLink($oObject): void
-	{
-		$this->Debug(__METHOD__);
-		$oContactType = MetaModel::NewObject(ContactType::class, ['name' => 'test_'.$oObject->GetKey()]);
-		$oContactType->DBInsert();
-		$oObject->Set('role_id', $oContactType->GetKey());
-	}
-
-	private function SetPersonFunction($oObject): void
-	{
-		$this->Debug(__METHOD__);
-		$oObject->Set('function', 'CRUD_function_'.rand());
-	}
-
-	private function SetPersonFirstName($oObject): void
-	{
-		$this->Debug(__METHOD__);
-		$oObject->Set('first_name', 'CRUD_first_name_'.rand());
-	}
-
-	private function CheckCrudStack(DBObject $oObject): void
-	{
-		self::$bIsObjectInCrudStack = DBObject::IsObjectCurrentlyInCrud(get_class($oObject), $oObject->GetKey());
-	}
-
-	private function CheckUpdateInLnk(lnkPersonToTeam $oLnkPersonToTeam)
-	{
-		$iTeamId = $oLnkPersonToTeam->Get('team_id');
-		self::$bIsObjectInCrudStack = DBObject::IsObjectCurrentlyInCrud(Team::class, $iTeamId);
+		$this->oTestCase->EventService_RegisterListener($sEvent, [$this, 'OnEvent'], $mEventSource);
 	}
 
 	private function Debug($msg)

@@ -2,16 +2,11 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application\TwigBase;
 
-use Combodo\iTop\Portal\Twig\AppExtension;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Combodo\iTop\Portal\Twig\AppExtension;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class TwigTest extends ItopDataTestCase
 {
 	protected function setUp(): void
