@@ -6,7 +6,7 @@
  * This is to ensure that test class are still independant from each other, after a rework of ItopTestCase, for instance.
  */
 const PHP_EXE = 'php';
-const ITOP_ROOT = __DIR__.'/../../dev-itop';
+const ITOP_ROOT = __DIR__.'/../../..';
 
 const ITOP_PHPUNIT = ITOP_ROOT.'/tests/php-unit-tests';
 const PHPUNIT_COMMAND = PHP_EXE.' '.ITOP_PHPUNIT.'/vendor/phpunit/phpunit/phpunit';
