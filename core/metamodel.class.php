@@ -3002,14 +3002,12 @@ abstract class MetaModel
 		// Build the list of available extensions
 		//
 		$aInterfaces = [
-			'iApplicationUIExtension',
-			'iPreferencesExtension',
-			'iApplicationObjectExtension',
 			'iLoginFSMExtension',
-			'iLoginUIExtension',
 			'iLogoutExtension',
-			'iQueryModifier',
-			'iOnClassInitialization',
+			'iLoginUIExtension',
+			'iPreferencesExtension',
+			'iApplicationUIExtension',
+			'iApplicationObjectExtension',
 			'iPopupMenuExtension',
 			'iPageUIExtension',
 			'iPageUIBlockExtension',
@@ -3023,10 +3021,12 @@ abstract class MetaModel
 			'iBackofficeDictEntriesExtension',
 			'iBackofficeDictEntriesPrefixesExtension',
 			'iPortalUIExtension',
-			'ModuleHandlerApiInterface',
-			'iNewsroomProvider',
+			'iQueryModifier',
+			'iOnClassInitialization',
 			'iModuleExtension',
 			'iKPILoggerExtension',
+			'ModuleHandlerApiInterface',
+			'iNewsroomProvider',
 		];
 		foreach($aInterfaces as $sInterface)
 		{
