@@ -2778,7 +2778,23 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider', 'iModuleExtension', 'iKPILoggerExtension');
+		$aInterfaces = [
+			'iLoginFSMExtension',
+			'iLogoutExtension',
+			'iLoginUIExtension',
+			'iPreferencesExtension',
+			'iApplicationUIExtension',
+			'iApplicationObjectExtension',
+			'iPopupMenuExtension',
+			'iPageUIExtension',
+			'iPortalUIExtension',
+			'iQueryModifier',
+			'iOnClassInitialization',
+			'iModuleExtension',
+			'iKPILoggerExtension',
+			'ModuleHandlerApiInterface',
+			'iNewsroomProvider',
+		];
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClasses[$sInterface] = array();
