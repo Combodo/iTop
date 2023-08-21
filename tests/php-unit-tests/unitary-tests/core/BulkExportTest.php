@@ -18,33 +18,14 @@ use FunctionExpression;
 use MetaModel;
 
 
-/**
- * Tests of the DBSearch class.
- * <ul>
- * <li>MakeGroupByQuery</li>
- * </ul>
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class BulkExportTest extends ItopDataTestCase
 {
 	const CREATE_TEST_ORG = true;
 
-	/**
-	 * @throws \Exception
-	 */
-	protected function setUp(): void
-	{
-		parent::setUp();
 
-		//$this->RequireOnceItopFile('application/itopwebpage.class.inc.php');
-	}
-
-	public function aOrgProvider()
+	public function OrganizationsForExportProvider()
 	{
-		$sExportResultPage1 =<<<EOF
+		$sExportResultPage1 = <<<EOF
 "Name"
 "org1"
 "org11"
@@ -54,7 +35,7 @@ class BulkExportTest extends ItopDataTestCase
 
 EOF;
 
-		$sExportResultPage2 =<<<EOF
+		$sExportResultPage2 = <<<EOF
 "Name"
 "org1"
 "org11"
@@ -85,8 +66,8 @@ EOF;
 						['org13', true],
 						['org14', true],
 					],
-					'export_org' =>$sExportResultPage1,
-					'nb_pages' =>1,
+					'export_org' => $sExportResultPage1,
+					'nb_pages' => 1,
 					'expected_status' =>'run'
 			],
 					'Page2'=>[
@@ -105,15 +86,15 @@ EOF;
 							['org13', true],
 							['org14', true],
 						],
-						'export_org' =>$sExportResultPage2,
-						'nb_pages' =>2,
+						'export_org' => $sExportResultPage2,
+						'nb_pages' => 2,
 						'expected_status' =>'done'
 					]
 		];
 	}
 
 	/**
-	 * @dataProvider aOrgProvider
+	 * @dataProvider OrganizationsForExportProvider
 	 *
 	 * @param $aListOrg
 	 * @param $sExpectedValue
@@ -123,7 +104,8 @@ EOF;
 	 * @throws \OQLException
 	 * @throws \ReflectionException
 	 */
-	public function testExportWithShowObsoleteParam($aListOrg, $sExpectedValue,$iNbPage,$sExpectedStatus)
+	public function testExportWithShowObsoleteParam($aListOrg, 
+ $sExpectedValue, $iNbPage, $sExpectedStatus)
 	{
 		$iFirstOrg = 0;
 		foreach ($aListOrg as $aOrg) {
@@ -132,29 +114,36 @@ EOF;
 				$oObj->Set('status', 'inactive');
 				$oObj->DBUpdate();
 			}
-			if($iFirstOrg ==0){
+			if($iFirstOrg === 0){
 				$iFirstOrg = $oObj->GetKey();
 			}
 		}
-		$aResult = array( // Fallback error, just in case
-		                  'code' => 'error',
-		                  'percentage' => 100,
-		                  'message' => "Export not found for token",
-		);
-		$aStatusInfo = ['fields' => [["sFieldSpec" => 'name',
-		                              'sAlias' => 'Organization',
-		                              "sClass" => "Organization",
-		                              "sAttCode" => "name",
-		                              "sLabel" => "Name",
-		                              "sColLabel" => "Name"]],
-		                "text_qualifier" => "\"",
-		                "charset" => "ISO-8859-1",
-		                "separator" => ",",
-		                "date_format" => "Y-m-d H:i:s",
-		                "formatted_text" => false,
-		                "show_obsolete_data" => false];
+		$aResult = [
+			// Fallback error, just in case
+			'code' => 'error',
+			'percentage' => 100,
+			'message' => "Export not found for token",
+		];
+		$aStatusInfo = [
+			'fields' => [
+				[
+					"sFieldSpec" => 'name',
+					'sAlias' => 'Organization',
+					"sClass" => "Organization",
+					"sAttCode" => "name",
+					"sLabel" => "Name",
+					"sColLabel" => "Name"
+				]
+			],
+		    "text_qualifier" => "\"",
+		    "charset" => "ISO-8859-1",
+		    "separator" => ",",
+		    "date_format" => "Y-m-d H:i:s",
+		    "formatted_text" => false,
+		    "show_obsolete_data" => false
+		];
 
-		$oSearch = DBObjectSearch::FromOQL('SELECT Organization  WHERE id>='.$iFirstOrg);
+		$oSearch = DBObjectSearch::FromOQL('SELECT Organization  WHERE id >= '.$iFirstOrg);
 		$oExporter = BulkExport::FindExporter('csv', $oSearch);
 		$oExporter->SetStatusInfo($aStatusInfo);
 		$oExporter->SetObjectList($oSearch);
@@ -162,12 +151,11 @@ EOF;
 
 		$data = $oExporter->GetHeader();
 
-		for ($i=0;$i<$iNbPage;$i++) {
+		for ($i = 0; $i < $iNbPage; $i++) {
 			$data .= $oExporter->GetNextChunk($aResult);
 		}
-		self::assertEquals($sExpectedStatus,$aResult['code']);
-		self::assertEquals($sExpectedValue, $data);
-
+		$this->assertEquals($sExpectedStatus,$aResult['code']);
+		$this->assertEquals($sExpectedValue, $data);
 	}
 
 }

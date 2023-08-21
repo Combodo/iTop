@@ -149,7 +149,9 @@ abstract class BulkExport
 		$this->oSearch = null;
 		$this->iChunkSize = 0;
 		$this->sFormatCode = null;
-		$this->aStatusInfo = ['show_obsolete_data' => utils::ShowObsoleteData()];
+		$this->aStatusInfo = [
+			'show_obsolete_data' => utils::ShowObsoleteData(),
+		];
 		$this->oBulkExportResult = null;
 		$this->sTmpFile = '';
 		$this->bLocalizeOutput = false;
