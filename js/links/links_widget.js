@@ -153,7 +153,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				"dataType": "html"
 			})
 			.done(function (data) {
-				/*N°6152 - hide during data loading and before open*/
+				/* N°6152 - Hide during data loading and before open */
 				$('#dlg_'+me.id).hide();
 				$('#dlg_'+me.id).html(data);
 				window[sPromiseId].then(function () {
