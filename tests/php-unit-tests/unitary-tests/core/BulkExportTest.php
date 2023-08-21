@@ -107,6 +107,7 @@ EOF;
 	public function testExportWithShowObsoleteParam($aListOrg, 
  $sExpectedValue, $iNbPage, $sExpectedStatus)
 	{
+		// Create tests organizations to have enough data (some obsolete)
 		$iFirstOrg = 0;
 		foreach ($aListOrg as $aOrg) {
 			$oObj = $this->CreateOrganization($aOrg[0]);
@@ -118,17 +119,21 @@ EOF;
 				$iFirstOrg = $oObj->GetKey();
 			}
 		}
+		
 		$aResult = [
 			// Fallback error, just in case
 			'code' => 'error',
 			'percentage' => 100,
 			'message' => "Export not found for token",
 		];
+		
+		// Prepare status info and for obsolete data to `false` in order to check that we have less organizations
+		// in the export result than we have in DB
 		$aStatusInfo = [
-			'fields' => [
+			"fields" => [
 				[
-					"sFieldSpec" => 'name',
-					'sAlias' => 'Organization',
+					"sFieldSpec" => "name",
+					"sAlias" => "Organization",
 					"sClass" => "Organization",
 					"sAttCode" => "name",
 					"sLabel" => "Name",
