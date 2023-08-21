@@ -30,8 +30,9 @@ class DashletBadge extends DashletContainer
 	protected $iCount;
 	/** @var string */
 	protected $sClassLabel;
-	/** @var string
-	 * @since 3.1.1
+	/**
+	 * @var string
+	 * @since 3.1.1 3.2.0
 	 */
 	protected $sClassDescription;
 
@@ -193,7 +194,7 @@ class DashletBadge extends DashletContainer
 
 	/**
 	 * @return string
-	 * @since 3.1.1
+	 * @since 3.1.1 3.2.0
 	 */
 	public function GetClassDescription(): string
 	{
@@ -203,11 +204,14 @@ class DashletBadge extends DashletContainer
 	/**
 	 * @param string $sClassDescription
 	 *
-	 * @since 3.1.1
+	 * @return DashletBadge
+	 * @since 3.1.1 3.2.0
 	 */
-	public function SetClassDescription(string $sClassDescription): void
+	public function SetClassDescription(string $sClassDescription)
 	{
 		$this->sClassDescription = $sClassDescription;
+		
+		return $this;
 	}
 
 	/**
