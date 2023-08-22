@@ -514,9 +514,17 @@
           <description>The object containing the document</description>
           <type>DBObject</type>
         </event_datum>
+        <event_datum id="att_code">
+          <description>The optional object's attribute code hosting the document</description>
+          <type>string</type>
+        </event_datum>
         <event_datum id="document">
           <description>The document downloaded</description>
           <type>ormDocument</type>
+        </event_datum>
+        <event_datum id="content_disposition">
+          <description>The content disposition of the document ("inline" or "attachment")</description>
+          <type>string</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
