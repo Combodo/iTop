@@ -117,7 +117,7 @@ $(function()
 					locked_by_someone_else: 'locked_by_someone_else',
 				},
 			},
-			action_promise: null,	// N°4494 - Promise used to do the action (following the log entry send) only once the lock is released
+			release_lock_promise_resolve: null,	// N°4494 - Resolve callback of the Promise used for the action following the log entry send, which must be done only once the lock is released
 
 			// the constructor
 			_create: function () {
@@ -978,9 +978,15 @@ $(function()
 						sStimulusCode = ((sStimulusCode ?? '') === '') ? null : sStimulusCode;
 						if (null !== sStimulusCode) {
 							if (me.options.lock_enabled) {
-								me.action_promise = $.Deferred();
-								me.action_promise.promise().then(function () {
+								// Use a Promise to ensure that we redirect to the stimulus page ONLY when the lock is released, otherwise we might lock ourselves
+								const oPromise = new Promise(function(resolve) {
+									// Store the resolve callback so we can call it later from outside
+									me.release_lock_promise_resolve = resolve;
+								});
+								oPromise.then(function () {
 									window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
+									// Resolve callback is reinitialized in case the redirection fails for any reason and we might need to retry
+									me.release_lock_promise_resolve = null;
 								});
 							} else {
 								window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
@@ -1202,9 +1208,8 @@ $(function()
 						// Tried to release our lock
 						else if ('release_lock' === oParams.operation) {
 							sNewLockStatus = me.enums.lock_status.unknown;
-							if (me.action_promise !== null) {
-								me.action_promise.resolve();
-								me.action_promise = null;
+							if (me.release_lock_promise_resolve !== null) {
+								me.release_lock_promise_resolve();
 							}
 						}
 
