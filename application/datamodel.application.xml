@@ -515,7 +515,7 @@
           <type>DBObject</type>
         </event_datum>
         <event_datum id="att_code">
-          <description>The optional object's attribute code hosting the document</description>
+          <description>The optional object attribute code hosting the document</description>
           <type>string</type>
         </event_datum>
         <event_datum id="document">
