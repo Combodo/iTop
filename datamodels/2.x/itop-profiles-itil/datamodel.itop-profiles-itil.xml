@@ -125,6 +125,7 @@
       <group id="Audit" _delta="define">
         <classes>
           <!-- This class list is also present in AdminTools group -->
+          <class id="AuditDomain"/>
           <class id="AuditCategory"/>
           <class id="AuditRule"/>
           <class id="ResourceRunQueriesMenu"/>
@@ -166,6 +167,7 @@
           <class id="URP_UserProfile"/>
           <class id="URP_Profiles"/>
           <!-- Audit group -->
+          <class id="AuditDomain"/>
           <class id="AuditCategory"/>
           <class id="AuditRule"/>
           <!-- Query group -->

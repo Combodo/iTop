@@ -35,7 +35,7 @@ class AuditDomain extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category"                   => "application, grant_by_profile",
+			"category"                   => "application,grant_by_profile",
 			"key_type"                   => "autoincrement",
 			"name_attcode"               => "name",
 			"complementary_name_attcode" => array('description'),
