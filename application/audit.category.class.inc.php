@@ -34,15 +34,15 @@ class AuditCategory extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "application, grant_by_profile",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
-			"state_attcode" => "",
-			"reconc_keys" => array('name'),
-			"db_table" => "priv_auditcategory",
-			"db_key_field" => "id",
+			"category"            => "application,grant_by_profile",
+			"key_type"            => "autoincrement",
+			"name_attcode"        => "name",
+			"state_attcode"       => "",
+			"reconc_keys"         => array('name'),
+			"db_table"            => "priv_auditcategory",
+			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-			'style' => new ormStyle(null, null, null, null, null, '../images/icons/icons8-audit-folder.svg'),
+			'style'               => new ormStyle(null, null, null, null, null, '../images/icons/icons8-audit-folder.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("description"=>"Short name for this category", "allowed_values"=>null, "sql"=>"name", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
