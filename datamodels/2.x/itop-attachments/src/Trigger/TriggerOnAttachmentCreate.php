@@ -44,7 +44,8 @@ class TriggerOnAttachmentCreate extends TriggerOnObjectUpdate
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'filter_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'filter_class')); // Criteria of the std search form
-		MetaModel::Init_AddAttribute(new AttributeClass("filter_class", array("class_category" => "bizmodel", "more_values" => "User,UserExternal,UserInternal,UserLDAP,UserLocal", "sql" => "filter_class", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("filter_class",
+			array("class_category" => "bizmodel", "more_values" => "User,UserExternal,UserInternal,UserLDAP,UserLocal", "sql" => "filter_class", "default_value" => null, "is_null_allowed" => false, "depends_on" => array(), "class_exclusion_list" => "Attachment")));
 
 	}
 

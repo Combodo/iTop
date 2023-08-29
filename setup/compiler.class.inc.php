@@ -2200,6 +2200,8 @@ EOF
 			$this->CompileCommonProperty('attribute_definition_exclusion_list', $oField, $aParameters, $sModuleRelativeDir, '');
 			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
 			$aParameters['depends_on'] = $sDependencies;
+		} elseif ($sAttType == 'AttributeClass') {
+			$this->CompileCommonProperty('class_exclusion_list', $oField, $aParameters, $sModuleRelativeDir, '');
 		} elseif ($sAttType == 'AttributeEnumSet') {
 			$oValues = $oField->GetUniqueElement('values');
 			$oValueNodes = $oValues->getElementsByTagName('value');

@@ -1024,6 +1024,12 @@
           <type>string</type>
           <default/>
         </property>
+        <property id="class_exclusion_list">
+          <php_param>class_exclusion_list</php_param>
+          <mandatory>false</mandatory>
+          <type>string</type>
+          <default/>
+        </property>
         <property id="min_up">
           <php_param>min_up</php_param>
           <mandatory>true</mandatory>
