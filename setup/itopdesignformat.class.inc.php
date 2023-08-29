@@ -1059,6 +1059,19 @@ class iTopDesignFormat
 	 */
 	protected function From30To31($oFactory)
 	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// N°3363 - Add favicon in branding
+		$oNodeDesign = $oXPath->query("/itop_design");
+		$oNodeBranding = $oXPath->query("/itop_design/branding");
+		$oNodeBranding->setAttribute('id', 'default');
+		$oNodeBrandingTheme = $oXPath->query("/itop_design/branding/themes");
+		$oNodeBrandingThemeCommon = $oXPath->query("/itop_design/branding/themes_common");
+		$oNodeBrandings = $oNodeDesign->ownerDocument->createElement("brandings");
+		$oNodeDesign->appendChild($oNodeBrandings);
+		$oNodeBrandings->appendChild($oNodeBrandingTheme);
+		$oNodeBrandings->appendChild($oNodeBrandingThemeCommon);
+		$oNodeBrandings->appendChild($oNodeBranding);
 
 	}
 	/**
@@ -1095,6 +1108,24 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath('/itop_design/branding/portal_favicon');
 		$this->RemoveNodeFromXPath('/itop_design/branding/login_favicon');
 
+		// N°3363 - Add favicon in branding
+		$oNodeDesign = $oXPath->query('/itop_design');
+		$oNodeBrandingList = $oXPath->query('/itop_design/brandings//branding');
+		foreach ($oNodeBrandingList as $oNode) {
+			if ($oNode->getAttribute('id') != 'default') {
+				$this->DeleteNode($oNode);
+			} else {
+				$oNode->removeAttribute('id');
+				$oNodeDesign->appendChild($oNode);
+			}
+		}
+		$oNodeBranding = $oXPath->query('/itop_design/branding');
+		$oNodeBrandingTheme = $oXPath->query("/itop_design/brandings/themes");
+		$oNodeBrandingThemeCommon = $oXPath->query("/itop_design/brandings/themes_common");
+		$oNodeBranding->appendChild($oNodeBrandingTheme);
+		$oNodeBranding->appendChild($oNodeBrandingThemeCommon);
+		$oNodeBranding->RemoveNodeFromXPath('/itop_design/branding/default_theme');
+		$this->RemoveNodeFromXPath('/itop_design/brandings');
 	}
 
 	/**

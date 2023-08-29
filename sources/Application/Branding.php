@@ -79,8 +79,21 @@ class Branding
 	{
 		$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
 		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/logos.json'), true);
-		if (isset($aThemeParameters[$sType])) {
-			$sCustomLogoPath = $aThemeParameters[$sType];
+		//environment type from config.php
+		$sEnvType = MetaModel::GetConfig()->Get('branding_environment');
+		if (utils::IsNullOrEmptyString($sEnvType)) {
+			$sEnvType = 'default';
+		}
+		if (isset($aThemeParameters[$sEnvType]) && isset($aThemeParameters[$sEnvType][$sType])) {
+			$sCustomLogoPath = $aThemeParameters[$sEnvType][$sType];
+			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
+				return ($sModulePath ?? $sAppPath).$sCustomLogoPath;
+			}
+		}
+		//if not found => take the default logo
+		$sEnvType = 'default';
+		if (isset($aThemeParameters[$sEnvType]) && isset($aThemeParameters[$sEnvType][$sType])) {
+			$sCustomLogoPath = $aThemeParameters[$sEnvType][$sType];
 			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
 				return ($sModulePath ?? $sAppPath).$sCustomLogoPath;
 			}

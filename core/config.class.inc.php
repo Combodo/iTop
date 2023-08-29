@@ -209,9 +209,9 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'favicon'                           => [
+		'branding_environment' => [
 			'type'                => 'string',
-			'description'         => 'url of favicon. Default null in order to take value given by the designer',
+			'description'         => 'type of branding. usefull for put different logo depending environment',
 			'default'             => null,
 			'value'               => '',
 			'source_of_value'     => '',
