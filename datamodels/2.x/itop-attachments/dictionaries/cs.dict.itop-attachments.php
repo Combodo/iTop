@@ -63,6 +63,6 @@ nebe se zeptejte'.ITOP_APPLICATION_SHORT.' správce '.ITOP_APPLICATION_SHORT.' z
 	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
 	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
 	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
-	'Class:TriggerOnAttachmentCreate/Attribute:filter_class'  => 'Cílová třída',
-	'Class:TriggerOnAttachmentCreate/Attribute:filter_class+' => '',
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
 ));

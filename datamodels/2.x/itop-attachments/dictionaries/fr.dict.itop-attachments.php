@@ -61,6 +61,6 @@ Soit demandez à votre administrateur système s\'il reste de la place disque di
 	'UI:Attachments:DropYourFileHint' => 'Déposez vos fichiers dans cet espace',
 	'Class:TriggerOnAttachmentCreate'                         => 'Déclencheur sur la création d\'une pièce jointe',
 	'Class:TriggerOnAttachmentCreate+'                        => '',
-	'Class:TriggerOnAttachmentCreate/Attribute:filter_class'  => 'Classe cible',
-	'Class:TriggerOnAttachmentCreate/Attribute:filter_class+' => 'Classe d\'objets allant activer ce déclencheur',
+	'Class:TriggerOnAttachmentDelete'                         => 'Déclencheur sur la suppression d\'une pièce jointe',
+	'Class:TriggerOnAttachmentDelete+'                        => '',
 ));

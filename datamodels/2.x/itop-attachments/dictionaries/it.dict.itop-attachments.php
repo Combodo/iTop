@@ -61,6 +61,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Attachments:DropYourFileHint' => 'Rilascia i file ovunque in quest\'area',
     'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
     'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
-    'Class:TriggerOnAttachmentCreate/Attribute:filter_class'  => 'Classe Bersaglio',
-    'Class:TriggerOnAttachmentCreate/Attribute:filter_class+' => '',
-]);
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
+));

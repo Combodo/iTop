@@ -11,7 +11,7 @@
  *
  * @since 3.1.1
  */
-class TriggerOnAttachmentCreate extends TriggerOnObject
+class TriggerOnAttachmentDelete extends TriggerOnObject
 {
 	/**
 	 * @inheritDoc
@@ -27,7 +27,7 @@ class TriggerOnAttachmentCreate extends TriggerOnObject
 			"name_attcode"        => "description",
 			"state_attcode"       => "",
 			"reconc_keys"         => array('description'),
-			"db_table"            => "priv_trigger_onattcreate",
+			"db_table"            => "priv_trigger_onattdelete",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 			"display_template"    => "",
@@ -40,6 +40,7 @@ class TriggerOnAttachmentCreate extends TriggerOnObject
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
+
 	}
 
 }

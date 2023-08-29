@@ -59,6 +59,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Attachments:DropYourFileHint' => '将文件拖放到此区域的任意位置',
     'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
     'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
-    'Class:TriggerOnAttachmentCreate/Attribute:filter_class'  => '目标类',
-    'Class:TriggerOnAttachmentCreate/Attribute:filter_class+' => '',
-]);
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
+));
