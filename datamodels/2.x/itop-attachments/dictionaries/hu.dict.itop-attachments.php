@@ -59,6 +59,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Attachments:DropYourFileHint' => 'Húzza a fájlokat erre a területre',
 	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
 	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
-	'Class:TriggerOnAttachmentCreate/Attribute:filter_class'  => 'Cél osztály',
-	'Class:TriggerOnAttachmentCreate/Attribute:filter_class+' => '',
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
 ));

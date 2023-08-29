@@ -39,6 +39,7 @@ SetupWebPage::AddModule(
 			'vendor/autoload.php',
 			'main.itop-attachments.php',
 			'src/Trigger/TriggerOnAttachmentCreate.php',
+			'src/Trigger/TriggerOnAttachmentDelete.php',
 			'src/Trigger/TriggerOnAttachmentDownload.php',
 			'renderers.itop-attachments.php',
 		),
