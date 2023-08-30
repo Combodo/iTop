@@ -1,21 +1,17 @@
 <?php
-//@copyright   Copyright (C) 2010-2023 Combodo SARL
-//@license     http://opensource.org/licenses/AGPL-3.0
+
+/**
+ * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 
 use BulkExport;
-use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use CoreOqlMultipleResultsForbiddenException;
 use DBObjectSearch;
-use DBSearch;
-use Exception;
-use Expression;
-use FunctionExpression;
-use MetaModel;
 
 
 class BulkExportTest extends ItopDataTestCase
@@ -50,46 +46,46 @@ EOF;
 EOF;
 
 		return [
-				'Page1'=>[
-					'liste_org'  => [
-						['org1', true],
-						['org2', true],
-						['org3', false],
-						['org4', true],
-						['org5', true],
-						['org6', false],
-						['org7', true],
-						['org8', true],
-						['org9', false],
-						['org11', true],
-						['org12', false],
-						['org13', true],
-						['org14', true],
-					],
-					'export_org' => $sExportResultPage1,
-					'nb_pages' => 1,
-					'expected_status' =>'run'
+			'Page1'=>[
+				'list_org' => [
+					['org1', true],
+					['org2', true],
+					['org3', false],
+					['org4', true],
+					['org5', true],
+					['org6', false],
+					['org7', true],
+					['org8', true],
+					['org9', false],
+					['org11', true],
+					['org12', false],
+					['org13', true],
+					['org14', true],
+				],
+				'export_org' => $sExportResultPage1,
+				'nb_pages' => 1,
+				'expected_status' =>'run'
 			],
-					'Page2'=>[
-						'liste_org'  => [
-							['org1', true],
-							['org2', true],
-							['org3', false],
-							['org4', true],
-							['org5', true],
-							['org6', false],
-							['org7', true],
-							['org8', true],
-							['org9', false],
-							['org11', true],
-							['org12', false],
-							['org13', true],
-							['org14', true],
-						],
-						'export_org' => $sExportResultPage2,
-						'nb_pages' => 2,
-						'expected_status' =>'done'
-					]
+			'Page2'=>[
+				'list_org' => [
+					['org1', true],
+					['org2', true],
+					['org3', false],
+					['org4', true],
+					['org5', true],
+					['org6', false],
+					['org7', true],
+					['org8', true],
+					['org9', false],
+					['org11', true],
+					['org12', false],
+					['org13', true],
+					['org14', true],
+				],
+				'export_org' => $sExportResultPage2,
+				'nb_pages' => 2,
+				'expected_status' =>'done'
+			]
 		];
 	}
 
