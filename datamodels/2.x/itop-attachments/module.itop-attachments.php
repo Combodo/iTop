@@ -201,7 +201,7 @@ SQL;
 			}
 			SetupLog::Info("Initializing attachment/item_org_id - $iUpdated records have been adjusted");
 
-			if (version_compare($sPreviousVersion, '3.2.0', '<')) {
+			if (MetaModel::GetAttributeDef('Attachment', 'contact_id') instanceof AttributeExternalKey) {
 				SetupLog::Info("Upgrading itop-attachment from '$sPreviousVersion' to '$sCurrentVersion'. Starting with 3.2.0, contact_id will be added into the DB...");
 				$sUserTableName = MetaModel::DBGetTable('User');
 				$sUserFieldContactId = MetaModel::GetAttributeDef('User', 'contactid')->Get('sql');
