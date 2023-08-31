@@ -14,12 +14,9 @@ use SetupUtils;
 define('DEBUG_UNIT_TEST', true);
 
 /**
- * Class ItopTestCase
- *
  * Helper class to extend for tests that DO NOT need to access the DataModel or the Database
  *
- * @author Eric Espie <eric.espie@combodo.com>
- * @package Combodo\iTop\Test\UnitTest
+ * @since 3.0.4 3.1.1 3.2.0 N°6658 move some setUp/tearDown code to the corresponding methods *BeforeClass to speed up tests process time.
  */
 abstract class ItopTestCase extends TestCase
 {
@@ -27,7 +24,10 @@ abstract class ItopTestCase extends TestCase
 	public static $DEBUG_UNIT_TEST = false;
 
 	/**
-	 * Override the default value to disable the backup of globals in case of tests run in a separate process
+	 * @link https://docs.phpunit.de/en/9.6/annotations.html#preserveglobalstate PHPUnit `preserveGlobalState` annotation documentation
+	 *
+	 * @since 3.0.4 3.1.1 3.2.0 N°6658 Override default value creation so that we don't need to add the annotation on each test classes that have runInSeparateProcess.
+	 *                    This parameter isn't used when test is run in the same process so ok to change it globally !
 	 */
 	protected $preserveGlobalState = false;
 
@@ -78,7 +78,9 @@ abstract class ItopTestCase extends TestCase
 
 	/**
 	 * @throws \MySQLTransactionNotClosedException see N°5538
+	 *
 	 * @since 2.7.8 3.0.3 3.1.0 N°5538
+	 * @since 3.0.4 3.1.1 3.2.0 N°6658 if transaction not closed, we are now doing a rollback
 	 */
 	protected function tearDown(): void
 	{
@@ -94,7 +96,11 @@ abstract class ItopTestCase extends TestCase
 		}
 	}
 
-	/** Helper than can be called in the context of a data provider */
+	/**
+	 * Helper than can be called in the context of a data provider
+	 *
+	 * @since 3.0.4 3.1.1 3.2.0 N°6658 method creation
+	 */
 	public static function GetAppRoot()
 	{
 		if (defined('APPROOT')) {

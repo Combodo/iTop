@@ -87,6 +87,10 @@ Add annotation `@runInSeparateProcess`
 Each and every test case will run in a separate
 process.
 
+Note : before N°6658 (3.0.4 / 3.1.1 / 3.2.0) we were also adding the `@backupGlobals disabled`
+and `@preserveGlobalState disabled` annotations. This is no longer necessary as the first has this default value
+already, and the second one is now set in iTopTestCase as a PHP class attribute.
+
 #### At the test class level
 Add annotation `@runTestsInSeparateProcesses`
 Each and every test case in the class will run in a separate

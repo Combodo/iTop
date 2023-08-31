@@ -16,7 +16,6 @@ namespace Combodo\iTop\Test\UnitTest;
 use ArchivedObjectException;
 use CMDBObject;
 use CMDBSource;
-use Config;
 use Contact;
 use DBObject;
 use DBObjectSet;
@@ -31,7 +30,6 @@ use lnkFunctionalCIToTicket;
 use MetaModel;
 use Person;
 use Server;
-use SetupUtils;
 use TagSetFieldData;
 use Ticket;
 use URP_UserProfile;
@@ -53,6 +51,7 @@ define('TAG_ATTCODE', 'domains');
  *
  * @since 2.7.7 3.0.1 3.1.0 N°4624 processIsolation is disabled by default and must be enabled in each test needing it (basically all tests using
  * iTop datamodel)
+ * @since 3.0.4 3.1.1 3.2.0 N°6658 move some setUp/tearDown code to the corresponding methods *BeforeClass to speed up tests process time.
  */
 abstract class ItopDataTestCase extends ItopTestCase
 {
@@ -911,6 +910,9 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 	}
 
+	/**
+	 * @since 3.0.4 3.1.1 3.2.0 N°6658 method creation
+	 */
 	protected function assertDBChangeOpCount(string $sClass, $iId, int $iExpectedCount)
 	{
 		$oSearch = new \DBObjectSearch('CMDBChangeOp');
