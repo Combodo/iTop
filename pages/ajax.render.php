@@ -324,6 +324,8 @@ try
 					$oFullSetFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
 				}
 			}
+			$oFullSetFilter->SetShowObsoleteData(utils::ShowObsoleteData());
+			$oKPI = new ExecutionKPI();
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
 			$oWidget->DoAddObjects($oPage, $oFullSetFilter);
 			break;
