@@ -109,6 +109,7 @@ try
 		$aExtraParams['action'] = utils::GetAbsoluteUrlAppRoot().'pages/tagadmin.php';
 		$aExtraParams['table_id'] = '1';
 		$aExtraParams['search_header_force_dropdown'] = $sSearchHeaderForceDropdown;
+		$aExtraParams['submit_on_load'] = false;
 		$oBlock->Display($oP, 0, $aExtraParams);
 
 		// Search results
