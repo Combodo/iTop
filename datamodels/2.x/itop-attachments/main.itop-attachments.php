@@ -344,6 +344,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		while ($oAttachment = $oSet->Fetch())
 		{
 			$oTempAttachment = clone $oAttachment;
+			$oTempAttachment->Set('expire', time() + utils::GetConfig()->Get('draft_attachments_lifetime'));
 			$oTempAttachment->Set('item_id', null);
 			$oTempAttachment->Set('temp_id', $sTempId);
 			$oTempAttachment->DBInsert();

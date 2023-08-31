@@ -14,8 +14,6 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 /**
  * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class TemporaryObjectManagerTest extends ItopDataTestCase
 {
