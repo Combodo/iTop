@@ -650,6 +650,9 @@ class ActionEmail extends ActionNotification
 			$aMessageContent['subject'] = 'TEST['.$aMessageContent['subject'].']';
 			$aMessageContent['body'] = $sTestBody;
 			$aMessageContent['to'] = $this->Get('test_recipient');
+			// N°6677 Ensure emails in test are never sent to cc'd and bcc'd addresses
+			$aMessageContent['cc'] = '';
+			$aMessageContent['bcc'] = '';
 		}
 		// Note: N°4849 We pass the "References" identifier instead of the "Message-ID" on purpose as we want notifications emails to group around the triggering iTop object, not just the users' replies to the notification
 		$aMessageContent['in_reply_to'] = $aMessageContent['references'];

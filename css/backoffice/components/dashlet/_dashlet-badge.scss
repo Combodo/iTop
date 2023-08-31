@@ -20,6 +20,8 @@ $ibo-dashlet-badge--icon--size: 48px !default;
 
 $ibo-dashlet-badge--action-icon--margin-right: $ibo-spacing-300 !default;
 
+$ibo-dashlet-badge--body--tooltip-title--margin-bottom: $ibo-spacing-500 !default;
+
 /* CSS variables (can be changed directly from the browser) */
 :root {
   --ibo-dashlet-badge--min-width: #{$ibo-dashlet-badge--min-width};
@@ -74,18 +76,27 @@ $ibo-dashlet-badge--action-icon--margin-right: $ibo-spacing-300 !default;
     @extend %ibo-hyperlink-inherited-colors;
   }
 }
-.ibo-dashlet-badge--action-list-count{
-	margin-right: $ibo-dashlet-badge--action-list-count--margin-right;
-	@extend %ibo-font-ral-bol-450;
+
+.ibo-dashlet-badge--action-list-count {
+  margin-right: $ibo-dashlet-badge--action-list-count--margin-right;
+  @extend %ibo-font-ral-bol-450;
 }
-.ibo-dashlet-badge--action-list-label{
-	display: inline-block;
-	@extend %ibo-text-truncated-with-ellipsis;
+
+.ibo-dashlet-badge--action-list-label {
+  display: inline-block;
+  @extend %ibo-text-truncated-with-ellipsis;
 }
-.ibo-dashlet-badge--action-create{
-	@extend %ibo-baseline-centered-content;
-	@extend %ibo-font-size-150;
+
+.ibo-dashlet-badge--action-create {
+  @extend %ibo-baseline-centered-content;
+  @extend %ibo-font-size-150;
 }
-.ibo-dashlet-badge--action-create-icon{
-	margin-right: $ibo-dashlet-badge--action-icon--margin-right;
+
+.ibo-dashlet-badge--action-create-icon {
+  margin-right: $ibo-dashlet-badge--action-icon--margin-right;
+}
+
+.ibo-dashlet-badge--body--tooltip-title {
+  @extend %ibo-font-weight-600;
+  margin-bottom: $ibo-dashlet-badge--body--tooltip-title--margin-bottom;
 }

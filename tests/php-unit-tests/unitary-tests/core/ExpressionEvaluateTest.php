@@ -33,7 +33,7 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 		$aParameters = $oExpression->GetParameters($sParentFilter);
 		sort($aExpectedParameters);
 		sort($aParameters);
-		static::assertEquals($aExpectedParameters, $aParameters);
+		$this->assertEquals($aExpectedParameters, $aParameters);
 	}
 
 	public function GetParametersProvider()
@@ -81,7 +81,7 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 	{
 		$oExpression = Expression::FromOQL($sExpression);
 		$value = $oExpression->Evaluate(array());
-		static::assertEquals($expectedValue, $value);
+		$this->assertEquals($expectedValue, $value);
 	}
 
 	public function VariousExpressionsProvider()
@@ -220,7 +220,7 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 		$sNewExpression = "return $sExpression;";
 		$oExpression = eval($sNewExpression);
 		$res = $oExpression->Evaluate(array());
-		static::assertEquals($expectedValue, $res);
+		$this->assertEquals($expectedValue, $res);
 	}
 
 	public function NotYetParsableExpressionsProvider()
@@ -282,7 +282,7 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 			$value = $aResults[0]["test_$i"];
 			$expectedValue = $aTest[1];
 			$this->debug("Test #$i: {$aTests[$i][0]} => ".var_export($value, true));
-			static::assertEquals($expectedValue, $value);
+			$this->assertEquals($expectedValue, $value);
 		}
 	}
 
@@ -305,7 +305,7 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 
 		$res = $oObject->EvaluateExpression($oExpression);
 
-		static::assertEquals($expected, $res);
+		$this->assertEquals($expected, $res);
 	}
 
 	public function ExpressionsWithObjectFieldsProvider()
@@ -335,12 +335,18 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 	{
 		$oExpression = Expression::FromOQL($sExpression);
 		$res = $oExpression->Evaluate($aParameters);
-		static::assertEquals($expected, $res);
+		$this->assertEquals($expected, $res);
 	}
 
 	public function ExpressionWithParametersProvider()
 	{
 		return array(
+			['`DBVariables["analyze_sample_percentage"]` > 10', ['DBVariables["analyze_sample_percentage"]' => 20], true],
+			['`DataBase["DBDataSize"]`', ['DataBase["DBDataSize"]' => 4096], 4096],
+			['`FileSystem["ItopInstallationIntegrity"]`', ['FileSystem["ItopInstallationIntegrity"]' => 'not_conform'], 'not_conform'],
+			['`DBTablesInfo["attachment"].DataSize` > 100', ['DBTablesInfo["attachment"].DataSize' => 200], true],
+			['`DBTablesInfo[].DataSize` > 100', ['DBTablesInfo[].DataSize' => 50], false],
+			['(`DBTablesInfo[].DataSize` > 100) AND (`DBTablesInfo[].DataFree` * 100 / (`DBTablesInfo[].DataSize` + `DBTablesInfo[].IndexSize` + `DBTablesInfo[].DataFree`) > 10)', ['DBTablesInfo[].DataSize' => 200, 'DBTablesInfo[].DataFree' => 100, 'DBTablesInfo[].IndexSize' => 10], true],
 			array('CONCAT(SUBSTR(name, 4), " cause")', array('name' => 'noble'), 'le cause'),
 		);
 	}
@@ -364,11 +370,11 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 		$res = $oExpression->IsTrue();
 		if ($bExpectTrue)
 		{
-			static::assertTrue($res, 'arg: '.$sExpression);
+			$this->assertTrue($res, 'arg: '.$sExpression);
 		}
 		else
 		{
-			static::assertFalse($res, 'arg: '.$sExpression);
+			$this->assertFalse($res, 'arg: '.$sExpression);
 		}
 	}
 
@@ -409,10 +415,10 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 		if ($bProcessed)
 		{
 			$sqlValue = CMDBSource::QueryToScalar("SELECT DATE_FORMAT('$sDate', '%$sFormat')");
-			static::assertEquals($sqlValue, $sValueOrException, 'Check test against MySQL');
+			$this->assertEquals($sqlValue, $sValueOrException, 'Check test against MySQL');
 
 			$res = $oExpression->Evaluate(array());
-			static::assertEquals($sValueOrException, $res, 'Check evaluation');
+			$this->assertEquals($sValueOrException, $res, 'Check evaluation');
 		}
 		else
 		{
@@ -505,7 +511,7 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 			{
 				$oExpression = new FunctionExpression('DATE_FORMAT', array(new ScalarExpression($sDate), new ScalarExpression("%$sFormat")));
 				$itopExpressionResult = $oExpression->Evaluate(array());
-				static::assertSame($aMysqlDateFormatRsultsForAllFormats[$sFormat], $itopExpressionResult, "Format %$sFormat not matching MySQL for '$sDate'");
+				$this->assertSame($aMysqlDateFormatRsultsForAllFormats[$sFormat], $itopExpressionResult, "Format %$sFormat not matching MySQL for '$sDate'");
 			}
 		}
 	}
