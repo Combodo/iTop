@@ -15,8 +15,6 @@ use DBObject;
 
 /**
  * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  */
 class TemporaryObjectRepositoryTest extends ItopDataTestCase
 {
