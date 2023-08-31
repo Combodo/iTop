@@ -1246,6 +1246,10 @@ JS
 		} else {
 			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, null, null, $aRefreshParams);
 		}
+		$sClassDescription = MetaModel::GetClassDescription($sClass);
+		if (utils::IsNotNullOrEmptyString($sClassDescription)) {
+			$oBlock->SetClassDescription($sClassDescription);
+		}
 
 		return $oBlock;
 	}

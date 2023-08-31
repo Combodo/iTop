@@ -3,7 +3,16 @@
 {% apply spaceless %}
     <div class="ibo-dashlet-badge--body{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" id="{{ oUIBlock.GetId() }}"
          data-role="ibo-dashlet-badge--body"
-         data-tooltip-content="{{ oUIBlock.GetClassLabel() }}">
+            {% if oUIBlock.HasClassDescription() %}
+                {# Display both class name and description as the name could be truncated if too long #}
+                data-tooltip-content="{{ '<div class="ibo-dashlet-badge--body--tooltip-title">'|escape }}{{ oUIBlock.GetClassLabel() }}{{ '</div><div class="ibo-dashlet-badge--body--tooltip-description">'|escape }}{{ oUIBlock.GetClassDescription() }}{{ '</div>'|escape }}"
+                data-tooltip-html-enabled="true"
+            {% else %}
+                {# Display only class name as it could be truncated if too long #}
+                data-tooltip-content="{{ oUIBlock.GetClassLabel() }}"
+            {% endif %}
+         {# Delay display to avoid having all tooltips appearing when mouse is just passing through the tabs #}
+         data-tooltip-show-delay="300">
         <div class="ibo-dashlet-badge--icon-container">
             {# Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/ #}
             <img class="ibo-dashlet-badge--icon" src="{{ oUIBlock.GetClassIconUrl() }}" alt="">
