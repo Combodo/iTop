@@ -117,6 +117,7 @@ $(function()
 					locked_by_someone_else: 'locked_by_someone_else',
 				},
 			},
+			release_lock_promise_resolve: null,	// N°4494 - Resolve callback of the Promise used for the action following the log entry send, which must be done only once the lock is released
 
 			// the constructor
 			_create: function () {
@@ -500,7 +501,7 @@ $(function()
 			{
 				// Hide all filters' options only if click wasn't on one of them
 				if(($(oEvent.target).closest(this.js_selectors.activity_filter_options_toggler).length === 0)
-				&& $(oEvent.target).closest(this.js_selectors.activity_filter_options).length === 0) {
+					&& $(oEvent.target).closest(this.js_selectors.activity_filter_options).length === 0) {
 					this._HideAllFiltersOptions();
 				}
 			},
@@ -947,9 +948,9 @@ $(function()
 
 				// Send request to server
 				$.post(
-					GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-					oParams,
-					'json'
+						GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+						oParams,
+						'json'
 					)
 					.fail(function (oXHR, sStatus, sErrorThrown) {
 						CombodoModal.OpenErrorModal(sErrorThrown);
@@ -972,12 +973,24 @@ $(function()
 
 						// For now, we don't hide the forms as the user may want to add something else
 						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
-
 						// Redirect to stimulus
 						// - Convert undefined, null and empty string to null
 						sStimulusCode = ((sStimulusCode ?? '') === '') ? null : sStimulusCode;
 						if (null !== sStimulusCode) {
-							window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
+							if (me.options.lock_enabled) {
+								// Use a Promise to ensure that we redirect to the stimulus page ONLY when the lock is released, otherwise we might lock ourselves
+								const oPromise = new Promise(function(resolve) {
+									// Store the resolve callback so we can call it later from outside
+									me.release_lock_promise_resolve = resolve;
+								});
+								oPromise.then(function () {
+									window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
+									// Resolve callback is reinitialized in case the redirection fails for any reason and we might need to retry
+									me.release_lock_promise_resolve = null;
+								});
+							} else {
+								window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
+							}
 						}
 					})
 					.always(function () {
@@ -995,7 +1008,7 @@ $(function()
 			_IncreaseTabTogglerMessagesCounter: function(sCaseLogAttCode){
 				let oTabTogglerCounter = this._GetTabTogglerFromCaseLogAttCode(sCaseLogAttCode).find('[data-role="ibo-activity-panel--tab-title-messages-count"]');
 				let iNewCounterValue = parseInt(oTabTogglerCounter.attr('data-messages-count')) + 1;
-				
+
 				oTabTogglerCounter.attr('data-messages-count', iNewCounterValue).text(iNewCounterValue);
 			},
 			/**
@@ -1143,11 +1156,10 @@ $(function()
 				else {
 					oParams.operation = 'check_lock_state';
 				}
-
 				$.post(
-					this.options.lock_endpoint,
-					oParams,
-					'json'
+						this.options.lock_endpoint,
+						oParams,
+						'json'
 					)
 					.fail(function (oXHR, sStatus, sErrorThrown) {
 						// In case of HTTP request failure (not lock request), put the details in the JS console
@@ -1196,6 +1208,9 @@ $(function()
 						// Tried to release our lock
 						else if ('release_lock' === oParams.operation) {
 							sNewLockStatus = me.enums.lock_status.unknown;
+							if (me.release_lock_promise_resolve !== null) {
+								me.release_lock_promise_resolve();
+							}
 						}
 
 						// Just checked if object was locked
@@ -1430,9 +1445,9 @@ $(function()
 					limit_results_length: bLimitResultsLength,
 				};
 				$.post(
-					this.options.load_more_entries_endpoint,
-					oParams,
-					'json'
+						this.options.load_more_entries_endpoint,
+						oParams,
+						'json'
 					)
 					.fail(function (oXHR, sStatus, sErroThrown) {
 						CombodoModal.OpenErrorModal(sErrorThrown);
