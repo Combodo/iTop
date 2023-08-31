@@ -566,6 +566,7 @@ try
 					$oFullSetFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
 				}
 			}
+			$oFullSetFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 			$oKPI = new ExecutionKPI();
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
 			$oWidget->DoAddObjects($oPage, $oFullSetFilter);
@@ -769,6 +770,7 @@ try
 			{
 				$oFullSetFilter = new DBObjectSearch($sRemoteClass);
 			}
+			$oFullSetFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 			$oWidget->DoAddObjects($oPage, $iMaxAddedId, $oFullSetFilter, $oObj);
 			$oKPI->ComputeAndReport('Data write');
 			break;
