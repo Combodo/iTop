@@ -546,7 +546,7 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 		$oDate = new DateTime($sStartDate);
 		for ($i = 0 ; $i < $iRepeat ; $i++)
 		{
-			$sDate = date_format($oDate, 'Y-m-d, H:i:s');
+			$sDate = date_format($oDate, 'Y-m-d H:i:s');
 			$this->debug("Checking '$sDate'");
 			$this->testEveryTimeFormat($sDate);
 			$oDate->add(new DateInterval($sInterval));
