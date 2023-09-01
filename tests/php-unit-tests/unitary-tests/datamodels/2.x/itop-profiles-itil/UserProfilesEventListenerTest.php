@@ -65,14 +65,14 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 					'Portal user',
 				]
 			],
-			'Portal power user + Support Agent => profiles untouched' => [
+			'Portal power user + Configuration Manager => profiles untouched' => [
 				'aAssociatedProfilesBeforeUserCreation' => [
 					'Portal power user',
-					'Support Agent',
+					'Configuration Manager',
 				],
 				'aExpectedAssociatedProfilesAfterUserCreation'=> [
 					'Portal power user',
-					'Support Agent',
+					'Configuration Manager',
 				]
 			],
 		];
@@ -89,7 +89,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser->Set('login', $sLogin);
 		$oUser->Set('password', 'ABCD1234@gabuzomeu');
 		$oUser->Set('language', 'EN US');
-		$this->commonUserCreation($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
+		$this->commonUserCreationTest($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
 	}
 
 	/**
@@ -103,7 +103,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser->Set('login', $sLogin);
 		$oUser->Set('password', 'ABCD1234@gabuzomeu');
 		$oUser->Set('language', 'EN US');
-		$this->commonUserUpdate($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
+		$this->commonUserUpdateTest($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
 	}
 
 	/**
@@ -115,7 +115,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser = new \UserLDAP();
 		$sLogin = 'testUserLDAPCreationWithPortalPowerUserProfile-'.uniqid();
 		$oUser->Set('login', $sLogin);
-		$this->commonUserCreation($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
+		$this->commonUserCreationTest($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
 	}
 
 	/**
@@ -127,7 +127,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser = new \UserLDAP();
 		$sLogin = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
 		$oUser->Set('login', $sLogin);
-		$this->commonUserUpdate($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
+		$this->commonUserUpdateTest($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
 	}
 
 	/**
@@ -139,7 +139,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser = new \UserExternal();
 		$sLogin = 'testUserLDAPCreationWithPortalPowerUserProfile-'.uniqid();
 		$oUser->Set('login', $sLogin);
-		$this->commonUserCreation($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
+		$this->commonUserCreationTest($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
 	}
 
 	/**
@@ -151,7 +151,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser = new \UserExternal();
 		$sLogin = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
 		$oUser->Set('login', $sLogin);
-		$this->commonUserUpdate($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
+		$this->commonUserUpdateTest($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
 	}
 
 	public function CreateUserForProfileTesting(\User $oUserToCreate, array $aAssociatedProfilesBeforeUserCreation, $bDbInsert=true) : array
@@ -189,16 +189,16 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		return [ $sId, $aProfiles];
 	}
 
-	public function commonUserCreation($oUserToCreate, $aAssociatedProfilesBeforeUserCreation,
+	public function commonUserCreationTest($oUserToCreate, $aAssociatedProfilesBeforeUserCreation,
 		$aExpectedAssociatedProfilesAfterUserCreation, $bTestUserItopAccess=true)
 	{
 		$sUserClass = get_class($oUserToCreate);
 		list ($sId, $aProfiles)  = $this->CreateUserForProfileTesting($oUserToCreate, $aAssociatedProfilesBeforeUserCreation);
 
-		$this->CheckProfilesAreOk($sUserClass, $sId, $aExpectedAssociatedProfilesAfterUserCreation, $bTestUserItopAccess);
+		$this->CheckProfilesAreOkAndThenConnectToITop($sUserClass, $sId, $aExpectedAssociatedProfilesAfterUserCreation, $bTestUserItopAccess);
 	}
 
-	public function CheckProfilesAreOk($sUserClass, $sId, $aExpectedAssociatedProfilesAfterUserCreation, $bTestUserItopAccess=true){
+	public function CheckProfilesAreOkAndThenConnectToITop($sUserClass, $sId, $aExpectedAssociatedProfilesAfterUserCreation, $bTestItopConnection=true){
 		$oUser = \MetaModel::GetObject($sUserClass, $sId);
 		$oUserProfileList = $oUser->Get('profile_list');
 		$aProfilesAfterCreation=[];
@@ -211,7 +211,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 				"profile \'$sExpectedProfileName\' should be asociated to user after creation. " .  var_export($aProfilesAfterCreation, true) );
 		}
 
-		if (! $bTestUserItopAccess){
+		if (! $bTestItopConnection){
 			return;
 		}
 
@@ -233,7 +233,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$_SESSION = [];
 	}
 
-	public function commonUserUpdate($oUserToCreate, $aAssociatedProfilesBeforeUserCreation,
+	public function commonUserUpdateTest($oUserToCreate, $aAssociatedProfilesBeforeUserCreation,
 		$aExpectedAssociatedProfilesAfterUserCreation)
 	{
 		$sUserClass = get_class($oUserToCreate);
@@ -256,11 +256,14 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUserToUpdate->Set('profile_list', $oProfileList);
 		$oUserToUpdate->DBWrite();
 
-		$this->CheckProfilesAreOk($sUserClass, $sId, $aExpectedAssociatedProfilesAfterUserCreation);
+		$this->CheckProfilesAreOkAndThenConnectToITop($sUserClass, $sId, $aExpectedAssociatedProfilesAfterUserCreation);
 	}
 
-	public function testUpdateUserExternalProfilesViaLinks(){
-		$aInitialProfiles = [ "Administrator", "Portal power user"];
+	/**
+	 * @dataProvider ProfilesLinksProvider
+	 */
+	public function testProfilesLinksDBDelete(string $sProfileNameToRemove, $bRaiseException=false){
+		$aInitialProfiles = [ $sProfileNameToRemove, "Portal power user"];
 
 		$oUser = new \UserExternal();
 		$sLogin = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
@@ -269,70 +272,66 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$sUserClass = get_class($oUser);
 		list ($sId, $aProfiles)  = $this->CreateUserForProfileTesting($oUser, $aInitialProfiles);
 
+		if ($bRaiseException){
+			$this->expectException(\DeleteException::class);
+		}
+
 		$aURPUserProfileByUser = $this->GetURPUserProfileByUser($sId);
-		$sProfileNameToRemove = "Administrator";
 		if (array_key_exists($sProfileNameToRemove, $aURPUserProfileByUser)){
 			$oURPUserProfile = $aURPUserProfileByUser[$sProfileNameToRemove];
 			$oURPUserProfile->DBDelete();
 		}
 
-		$aExpectedProfilesAfterUpdate = ["Portal power user", "Portal user"];
-		$this->CheckProfilesAreOk($sUserClass, $sId, $aExpectedProfilesAfterUpdate);
+		if (! $bRaiseException) {
+			$aExpectedProfilesAfterUpdate = ["Portal power user", "Portal user"];
+			$this->CheckProfilesAreOkAndThenConnectToITop($sUserClass, $sId, $aExpectedProfilesAfterUpdate);
+		}
 	}
 
-	public function BulkUpdateUserExternalProfilesViaLinksProvider(){
+	/**
+	 * @dataProvider ProfilesLinksProvider
+	 */
+	public function testProfilesLinksEdit_ChangeProfileId(string $sInitialProfile, $bRaiseException=false){
+		$oUser = new \UserExternal();
+		$sLogin = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
+		$oUser->Set('login', $sLogin);
+
+		$sUserClass = get_class($oUser);
+		list ($sId, $aProfiles)  = $this->CreateUserForProfileTesting($oUser, [$sInitialProfile]);
+
+		$oURP_Profile = \MetaModel::GetObjectByColumn("URP_Profiles", "name", "Portal power user");
+
+		$aURPUserProfileByUser = $this->GetURPUserProfileByUser($sId);
+
+		if ($bRaiseException){
+			$this->expectException(\CoreCannotSaveObjectException::class);
+		}
+
+		if (array_key_exists($sInitialProfile, $aURPUserProfileByUser)){
+			$oURPUserProfile = $aURPUserProfileByUser[$sInitialProfile];
+			$oURPUserProfile->Set('profileid', $oURP_Profile->GetKey());
+			$oURPUserProfile->DBWrite();
+		}
+
+		if (!$bRaiseException) {
+			$aExpectedProfilesAfterUpdate = ["Portal power user", "Portal user"];
+			$this->CheckProfilesAreOkAndThenConnectToITop($sUserClass, $sId, $aExpectedProfilesAfterUpdate);
+		}
+	}
+
+	public function ProfilesLinksProvider() {
 		return [
-			'user profiles REPAIR 1' => [
-				"aInitialProfiles" => [ "Administrator"],
-				"aOperation" => [
-					'-Administrator',
-					'+Portal power user',
-				],
-				"aExpectedProfilesAfterUpdate" => ["Portal power user", "Portal user"],
-			],
-			'user profiles REPAIR 2' => [
-				"aInitialProfiles" => [ "Administrator"],
-				"aOperation" => [
-					'+Portal power user',
-					'-Administrator',
-				],
-				"aExpectedProfilesAfterUpdate" => ["Portal power user", "Portal user"],
-			],
-			'user profiles REPAIR 3' => [
-				"aInitialProfiles" => [ "Administrator", "Portal power user"],
-				"aOperation" => [
-					'-Administrator',
-				],
-				"aExpectedProfilesAfterUpdate" => ["Portal power user", "Portal user"],
-			],
-			'NOTHING DONE with 1 profile' => [
-				"aInitialProfiles" => [ "Administrator", "Portal power user"],
-				"aOperation" => [
-					'-Portal power user',
-				],
-				"aExpectedProfilesAfterUpdate" => ["Administrator"],
-			],
-			'NOTHING DONE with 2 profiles including power...' => [
-				"aInitialProfiles" => [ "Administrator"],
-				"aOperation" => [
-					'+Portal power user',
-				],
-				"aExpectedProfilesAfterUpdate" => ["Administrator", "Portal power user"],
-			],
-			'NOTHING DONE with 2 profiles including power again ...' => [
-				"aInitialProfiles" => [ "Portal user"],
-				"aOperation" => [
-					'+Portal power user',
-				],
-				"aExpectedProfilesAfterUpdate" => ["Portal user", "Portal power user"],
-			],
+			"Administrator" => [ "sProfileNameToMove" => "Administrator" ],
+			"Portal user" => [ "sProfileNameToMove" => "Portal user", "bRaiseException" => true ],
 		];
 	}
 
 	/**
-	 * @dataProvider BulkUpdateUserExternalProfilesViaLinksProvider
+	 * @dataProvider ProfilesLinksProvider
 	 */
-	public function testBulkUpdateUserExternalProfilesViaLinks($aInitialProfiles, $aOperation, $aExpectedProfilesAfterUpdate){
+	public function testProfilesLinksEdit_ChangeUserId($sProfileNameToMove, $bRaiseException=false){
+		$aInitialProfiles = [ $sProfileNameToMove, "Portal power user"];
+
 		$oUser = new \UserExternal();
 		$sLogin = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
 		$oUser->Set('login', $sLogin);
@@ -340,31 +339,29 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$sUserClass = get_class($oUser);
 		list ($sId, $aProfiles)  = $this->CreateUserForProfileTesting($oUser, $aInitialProfiles);
 
-		\cmdbAbstractObject::SetEventDBLinksChangedBlocked(true);
+		$oUser = new \UserExternal();
+		$sLogin = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
+		$oUser->Set('login', $sLogin);
+		list ($sAnotherUserId, $aProfiles) = $this->CreateUserForProfileTesting($oUser, ["Configuration Manager"]);
 
-		$aURPUserProfileByUser = $this->GetURPUserProfileByUser($sId);
-		foreach ($aOperation as $sOperation){
-			$sOp = substr($sOperation,0, 1);
-			$sProfileName = substr($sOperation,1);
-
-			if ($sOp === "-"){
-				if (array_key_exists($sProfileName, $aURPUserProfileByUser)){
-					$oURPUserProfile = $aURPUserProfileByUser[$sProfileName];
-					$oURPUserProfile->DBDelete();
-				}
-			} else {
-				$oAdminUrpProfile = new URP_UserProfile();
-				$oProfile = $aProfiles[$sProfileName];
-				$oAdminUrpProfile->Set('profileid', $oProfile->GetKey());
-				$oAdminUrpProfile->Set('userid', $sId);
-				$oAdminUrpProfile->DBInsert();
-			}
+		if ($bRaiseException){
+			$this->expectException(\CoreCannotSaveObjectException::class);
 		}
 
-		\cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
-		\cmdbAbstractObject::FireEventDbLinksChangedForAllObjects();
+		$aURPUserProfileByUser = $this->GetURPUserProfileByUser($sId);
+		if (array_key_exists($sProfileNameToMove, $aURPUserProfileByUser)){
+			$oURPUserProfile = $aURPUserProfileByUser[$sProfileNameToMove];
+			$oURPUserProfile->Set('userid', $sAnotherUserId);
+			$oURPUserProfile->DBWrite();
+		}
 
-		$this->CheckProfilesAreOk($sUserClass, $sId, $aExpectedProfilesAfterUpdate);
+		if (! $bRaiseException) {
+			$aExpectedProfilesAfterUpdate = [$sProfileNameToMove, "Configuration Manager"];
+			$this->CheckProfilesAreOkAndThenConnectToITop($sUserClass, $sAnotherUserId, $aExpectedProfilesAfterUpdate);
+
+			$aExpectedProfilesAfterUpdate = ["Portal power user", "Portal user"];
+			$this->CheckProfilesAreOkAndThenConnectToITop($sUserClass, $sId, $aExpectedProfilesAfterUpdate);
+		}
 	}
 
 	private function GetURPUserProfileByUser($iUserId) : array {
@@ -461,7 +458,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 
 	public function testInit_ConfWithOneWarningProfile() {
 		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Change Supervisor' => 'Administrator', 'Portal power user' => null]
+			['Ticket Manager' => 'Administrator', 'Portal power user' => null]
 		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
@@ -470,7 +467,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 
 	public function testInit_ConfWithFurtherWarningProfiles() {
 		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Change Supervisor' => null, 'Portal power user' => null]
+			['Ticket Manager' => null, 'Portal power user' => null]
 		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
@@ -479,7 +476,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 
 	public function testInit_ConfWithFurtherWarningProfilesAndOneRepairment() {
 		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Portal power user' => null, 'Change Supervisor' => null, 'Administrator' => "REST Services User"]
+			['Portal power user' => null, 'Ticket Manager' => null, 'Administrator' => "Configuration Manager"]
 		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
@@ -495,14 +492,14 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser->Set('language', 'EN US');
 
 		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Portal power user' => 'Change Supervisor']
+			['Portal power user' => 'Ticket Manager']
 		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
 		$this->assertTrue($oUserProfilesEventListener->IsRepairmentEnabled());
 
 		$this->CreateUserForProfileTesting($oUser, ['Portal power user'], false);
-		$oUserProfilesEventListener->RepairProfiles($oUser);
+		$oUserProfilesEventListener->ValidateThenRepairOrWarn($oUser);
 
 		$oUserProfileList = $oUser->Get('profile_list');
 		$aProfilesAfterCreation=[];
@@ -510,7 +507,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 			$aProfilesAfterCreation[] = $oProfile->Get('profile');
 		}
 
-		$this->assertContains('Change Supervisor', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+		$this->assertContains('Ticket Manager', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 		$this->assertContains('Portal power user', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 	}
 
@@ -518,8 +515,8 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	{
 		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
 			[
-				'Administrator' => 'REST Services User',
-				'Portal power user' => 'Change Supervisor'
+				'Administrator' => 'Configuration Manager',
+				'Portal power user' => 'Ticket Manager'
 			]
 		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
@@ -532,7 +529,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser->Set('password', 'ABCD1234@gabuzomeu');
 		$oUser->Set('language', 'EN US');
 		$this->CreateUserForProfileTesting($oUser, ['Portal power user'], false);
-		$oUserProfilesEventListener->RepairProfiles($oUser);
+		$oUserProfilesEventListener->ValidateThenRepairOrWarn($oUser);
 
 		$oUserProfileList = $oUser->Get('profile_list');
 		$aProfilesAfterCreation=[];
@@ -540,7 +537,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 			$aProfilesAfterCreation[] = $oProfile->Get('profile');
 		}
 
-		$this->assertContains('Change Supervisor', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+		$this->assertContains('Ticket Manager', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 		$this->assertContains('Portal power user', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 
 		$oUser2 = new \UserLocal();
@@ -550,7 +547,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUser2->Set('language', 'EN US');
 
 		$this->CreateUserForProfileTesting($oUser2, ['Administrator'], false);
-		$oUserProfilesEventListener->RepairProfiles($oUser2);
+		$oUserProfilesEventListener->ValidateThenRepairOrWarn($oUser2);
 
 		$oUserProfileList = $oUser2->Get('profile_list');
 		$aProfilesAfterCreation=[];
@@ -559,7 +556,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		}
 
 		$this->assertContains('Administrator', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
-		$this->assertContains('REST Services User', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+		$this->assertContains('Configuration Manager', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 	}
 
 	public function testUserCreationWithWarningMessageConf()
@@ -571,10 +568,8 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oAdminUser->Set('password', 'ABCD1234@gabuzomeu');
 		$oAdminUser->Set('language', 'EN US');
 		$aAssociatedProfilesBeforeUserCreation = ['Administrator'];
-		$this->commonUserCreation($oAdminUser, $aAssociatedProfilesBeforeUserCreation, $aAssociatedProfilesBeforeUserCreation, false);
+		$this->commonUserCreationTest($oAdminUser, $aAssociatedProfilesBeforeUserCreation, $aAssociatedProfilesBeforeUserCreation, false);
 		UserRights::Login($oAdminUser->Get('login'));
-
-
 
 		$aAssociatedProfilesBeforeUserCreation = [
 			'Portal power user'
@@ -594,8 +589,11 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->RegisterEventsAndListeners();
 
-		$this->commonUserCreation($oUser, $aAssociatedProfilesBeforeUserCreation, $aAssociatedProfilesBeforeUserCreation, false);
-		$aObjMessages = Session::Get('obj_messages');
+		$this->expectException(\CoreCannotSaveObjectException::class);
+
+		$this->commonUserCreationTest($oUser, $aAssociatedProfilesBeforeUserCreation, $aAssociatedProfilesBeforeUserCreation, false);
+
+		/*$aObjMessages = Session::Get('obj_messages');
 		$this->assertNotEmpty($aObjMessages);
 		$sKey = sprintf("%s::%s", get_class($oUser), $oUser->GetKey());
 		$this->assertTrue(array_key_exists($sKey, $aObjMessages));
@@ -608,7 +606,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 			]
 		];
 		$this->assertEquals($aExpectedMessages, array_values($aObjMessages[$sKey]), var_export($aObjMessages[$sKey], true));
-
+*/
 		$_SESSION = [];
 	}
 }
