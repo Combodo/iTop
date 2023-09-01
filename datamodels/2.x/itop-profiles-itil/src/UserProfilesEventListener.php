@@ -310,10 +310,10 @@ class UserProfilesEventListener implements iEventServiceSetup
 	public function RepairUserChangesOrWarn(\User $oUser, string $sSingleProfileName) : void {
 		if (array_key_exists($sSingleProfileName, $this->aNonStandaloneProfilesMap)) {
 			$sRepairingProfileId = $this->aNonStandaloneProfilesMap[$sSingleProfileName];
+			$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName);
 			if (is_null($sRepairingProfileId)){
 				//Notify current user via session messages that there will be an issue
 				//Without preventing from commiting
-				$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName);
 				//$oUser::SetSessionMessage(get_class($oUser), $oUser->GetKey(), 1, $sMessage, 'WARNING', 1);
 				throw new \CoreCannotSaveObjectException(array('issues' => [$sMessage], 'class' => get_class($oUser), 'id' => $oUser->GetKey()));
 			} else {
@@ -323,6 +323,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 				$oCurrentUserProfileSet = $oUser->Get('profile_list');
 				$oCurrentUserProfileSet->AddItem($oUserProfile);
 				$oUser->Set('profile_list', $oCurrentUserProfileSet);
+				$oUser::SetSessionMessage(get_class($oUser), $oUser->GetKey(), 1, $sMessage, 'WARNING', 1);
 			}
 		}
 	}
@@ -330,12 +331,12 @@ class UserProfilesEventListener implements iEventServiceSetup
 	public function RepairProfileChangesOrWarn(\User $oUser, string $sSingleProfileName, \URP_UserProfile $oURP_UserProfile, string $sRemovedProfileId, $bIsRemoval=false) : void {
 		if (array_key_exists($sSingleProfileName, $this->aNonStandaloneProfilesMap)) {
 			$sRepairingProfileId = $this->aNonStandaloneProfilesMap[$sSingleProfileName];
+			$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName);
 			if (is_null($sRepairingProfileId)
 				|| ($sRepairingProfileId === $sRemovedProfileId) //cannot repair by readding same remove profile as it will raise uniqueness rule
 			){
 				//Notify current user via session messages that there will be an issue
 				//Without preventing from commiting
-				$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName);
 				//$oURP_UserProfile::SetSessionMessage(get_class($oURP_UserProfile), $oURP_UserProfile->GetKey(), 1, $sMessage, 'WARNING', 1);
 				if ($bIsRemoval){
 					$oURP_UserProfile->AddDeleteIssue($sMessage);
@@ -350,6 +351,8 @@ class UserProfilesEventListener implements iEventServiceSetup
 				$oCurrentUserProfileSet->AddItem($oUserProfile);
 				$oUser->Set('profile_list', $oCurrentUserProfileSet);
 				$oUser->DBWrite();
+
+				$oURP_UserProfile::SetSessionMessage(get_class($oURP_UserProfile), $oURP_UserProfile->GetKey(), 1, $sMessage, 'WARNING', 1);
 			}
 		}
 	}
