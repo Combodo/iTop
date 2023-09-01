@@ -38,6 +38,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Open verzoeken per soort',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open verzoeken per organisatie',
 	'Class:UserRequest:KnownErrorList' => 'Gekende fouten',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 ));
 
 // Dictionnay conventions
@@ -250,7 +251,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Wacht op goedkeuring',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kan het verzoek niet aan zichzelf toewijzen als hoofdincident',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (los subverzoeken op)',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem deze kenmerken over: service, team, agent, oplossing',
 ));

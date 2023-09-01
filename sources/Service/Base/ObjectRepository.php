@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\Service\Base;
 
+use cmdbAbstractObject;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use DBObject;
 use DBObjectSearch;
@@ -298,5 +299,41 @@ class ObjectRepository
 		// Compute others data
 		return ObjectRepository::ComputeOthersData($oObject, $sObjectClass, $aObjectData, $aComplementAttributeSpec, $sObjectImageAttCode);
 	}
+
+
+	/**
+	 * DeleteFromOql.
+	 *
+	 * @param string $sOql OQL expression
+	 *
+	 * @return bool
+	 */
+	static public function DeleteFromOql(string $sOql): bool
+	{
+		try {
+
+			// Create db search
+			$oDbObjectSearch = DBSearch::FromOQL($sOql);
+
+			// Create db set from db search
+			$oDbObjectSet = new DBObjectSet($oDbObjectSearch);
+
+			// Delete objects
+			while ($oObject = $oDbObjectSet->Fetch()) {
+				$oObject->DBDelete();
+			}
+
+			// return operation success
+			return true;
+		}
+		catch (Exception $e) {
+
+			ExceptionLog::LogException($e);
+
+			return false;
+		}
+
+	}
+
 
 }

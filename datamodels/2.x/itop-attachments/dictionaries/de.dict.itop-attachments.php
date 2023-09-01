@@ -74,6 +74,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Attachments:File:Uploader' => 'hochgeladen von',
 	'Attachments:File:Size' => 'Größe',
 	'Attachments:File:MimeType' => 'Typ',
+	'Attachments:File:DownloadsCount' => 'Downloads',
 ));
 //
 // Class: Attachment
@@ -86,4 +87,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Kontakt ID',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (beim Herunterladen eines Attachment eines Objekts)',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger für das Herunterladen des Attachments der angegebenen Klasse oder einer Unterklasse',
 ));

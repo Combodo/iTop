@@ -48,6 +48,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:ServiceFamily+' => '',
 	'Menu:Procedure' => 'Procedure katalog',
 	'Menu:Procedure+' => '',
+	'Contract:baseinfo' => 'General information~~',
+	'Contract:moreinfo' => 'Contractual information~~',
+	'Contract:cost' => 'Cost information~~',
 ));
 
 //
@@ -161,6 +164,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkContactToContract' => 'Sammenhæng Kontakt/Kontrakt',
 	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Kontrakt',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Kontrakt navn',
@@ -178,6 +182,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkContractToDocument' => 'Sammenhæng Kontrakt/Dokument',
 	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Kontrakt',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Kontrakt navn',
@@ -210,6 +215,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Service' => 'Ydelse',
 	'Class:Service+' => '',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Navn',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Udbyder',
@@ -253,6 +259,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDocumentToService' => 'Sammenhæng Dokument/Ydelse',
 	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Ydelse',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Ydelses navn',
@@ -270,6 +277,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkContactToService' => 'Sammenhæng Kontakt/Ydelse',
 	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Ydelse',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
 	'Class:lnkContactToService/Attribute:service_name' => 'Ydelses navn',
@@ -287,6 +295,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ServiceSubcategory' => 'Ydelse underkategorier',
 	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Navn',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Beskrivelse',
@@ -372,6 +381,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => '',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'Minutter',
 	'Class:SLT/Attribute:unit/Value:minutes+' => '',
+	'Class:SLT/Attribute:slas_list' => 'SLAs~~',
+	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT~~',
 ));
 
 //
@@ -381,6 +392,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkSLAToSLT' => 'Sammenhæng SLA/SLT',
 	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA navn',
@@ -408,6 +420,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkCustomerContractToService' => 'Sammenhæng Kunde kontrakt/Ydelse',
 	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Kunde kontrakt',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Kunde kontrakt navn',
@@ -429,6 +442,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkProviderContractToService' => 'Sammenhæng Leverandør kontrakt/Ydelse',
 	'Class:lnkProviderContractToService+' => '',
+	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Ydelse',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:service_name' => 'Ydelses navn',
@@ -467,6 +481,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDeliveryModelToContact' => 'Sammenhæng Leverings model/Kontakt',
 	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Leverings model',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Leverings model navn',

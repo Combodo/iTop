@@ -222,7 +222,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Heropen',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Kan het incident niet aan zichzelf toewijzen als hoofdincident',
-
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem deze kenmerken over: service, team, agent, oplossing',
 	'Tickets:Related:OpenIncidents' => 'Open incidenten',

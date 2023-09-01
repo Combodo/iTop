@@ -42,14 +42,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'DBTools:IntegrityCheck' => 'Verificación de integridad',
 	'DBTools:FetchCheck' => 'Verificación de búsqueda (larga)',
 	'DBTools:SelectAnalysisType' => 'Seleccionar tipo de análisis',
-
 	'DBTools:Analyze' => 'Analizar',
 	'DBTools:Details' => 'Mostrar detalles',
 	'DBTools:ShowAll' => 'Mostrar todos los errores',
-
 	'DBTools:Inconsistencies' => 'Inconsistencias de Base de Datos',
 	'DBTools:DetailedErrorTitle' => '%2$s error(es) en clase %1$s: %3$s',
-
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Registro huérfano en `%1$s`, debería tener su contraparte en la tabla `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Llave externa inválida %1$s (columna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Llave externa perdida %1$s (columna: `%2$s.%3$s`)',
@@ -72,24 +70,19 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'DBTools:LostAttachments' => 'Adjuntos perdidos',
 	'DBTools:LostAttachments:Disclaimer' => 'Aquí usted puede buscar anexos perdidos o fuera de lugar. Esta NO es una herramienta de recuperación de datos, no obtiene datos borrados.',
-
 	'DBTools:LostAttachments:Button:Analyze' => 'Analizar',
 	'DBTools:LostAttachments:Button:Restore' => 'Restaurar',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Esta acción no se puede deshacer, por favor confirme que quiere restaurar los archivos seleccionados.',
 	'DBTools:LostAttachments:Button:Busy' => 'Por favor espere...',
-
 	'DBTools:LostAttachments:Step:Analyze' => 'Primero, buscar anexos perdidos o fuera de lugar analizando la base de datos.',
-
 	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analizar resultados:',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => '¡Genial! Todo parece estar en el lugar correcto.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Algunos adjuntos (%1$d) parecen estar desplazados. Mire la siguiente lista y verifique los que quiera mover.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Nombre de archivo',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Ubicación actual',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Mover a...',
-
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultados de restauración:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d adjuntos fueron restaurados.',
-
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Almacenado como imagen en línea',
 	'DBTools:LostAttachments:History' => 'Adjunto "%1$s" restaurado con herramientas de base de datos'
 ));

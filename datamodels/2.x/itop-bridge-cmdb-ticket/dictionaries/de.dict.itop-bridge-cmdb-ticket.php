@@ -33,6 +33,7 @@
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkFunctionalCIToTicket' => 'Verknüpfung FunctionalCI/Ticket',
 	'Class:lnkFunctionalCIToTicket+' => '',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Referenz',
@@ -56,5 +57,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'Alle Ticket, die mit diesem CI verknüpft sind',
 ));

@@ -30,10 +30,10 @@
 //
 // Class: lnkFunctionalCIToProviderContract
 //
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkFunctionalCIToProviderContract' => '关联 功能配置项/供应商合同',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => '供应商合同',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => '供应商合同名称',
@@ -51,6 +51,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkFunctionalCIToService' => '关联 功能配置项/服务',
 	'Class:lnkFunctionalCIToService+' => '',
+	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => '服务',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_name' => '服务名称',

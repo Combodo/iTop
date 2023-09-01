@@ -27,7 +27,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'サービスレベル別の契約',
 	'UI-ServiceManagementMenu-ContractsByStatus' => '状態別の契約',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30日以内に終わる契約',
-
 	'Menu:ProviderContract' => 'プロバイダー契約',
 	'Menu:ProviderContract+' => '',
 	'Menu:CustomerContract' => '顧客契約',
@@ -46,8 +45,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:DeliveryModel+' => '',
 	'Menu:ServiceFamily' => 'サービスファミリ',
 	'Menu:ServiceFamily+' => 'サービスファミリ',
+	'Contract:baseinfo' => 'General information~~',
+	'Contract:moreinfo' => 'Contractual information~~',
+	'Contract:cost' => 'Cost information~~',
 ));
-
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',
@@ -173,6 +174,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkContactToContract' => 'リンク 連絡先/契約',
 	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => '契約',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
 	'Class:lnkContactToContract/Attribute:contract_name' => '契約名',
@@ -190,6 +192,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkContractToDocument' => 'リンク 契約/文書',
 	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => '契約',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
 	'Class:lnkContractToDocument/Attribute:contract_name' => '契約名',
@@ -207,6 +210,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'リンク 機能的CI/プロバイダー契約',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'プロバイダー契約',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'プロバイダー契約名',
@@ -239,6 +243,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Service' => 'サービス',
 	'Class:Service+' => '',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => '名前',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => '組織',
@@ -278,6 +283,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkDocumentToService' => 'リンク 文書/サービス',
 	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'サービス',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'サービス名',
@@ -295,6 +301,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkContactToService' => 'リンク 連絡先/サービス',
 	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'サービス',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
 	'Class:lnkContactToService/Attribute:service_name' => 'サービス名',
@@ -312,6 +319,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ServiceSubcategory' => 'サービスサブカテゴリ',
 	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => '名前',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => '説明',
@@ -408,6 +416,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkSLAToSLT' => 'リンク SLA/SLT',
 	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA名',
@@ -435,6 +444,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkCustomerContractToService' => 'リンク 顧客契約/サービス',
 	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => '顧客契約',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => '顧客契約名',
@@ -456,6 +466,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkCustomerContractToProviderContract' => 'リンク 顧客契約/プロバイダー契約',
 	'Class:lnkCustomerContractToProviderContract+' => '',
+	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => '顧客契約',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => '顧客契約名',
@@ -473,6 +484,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkCustomerContractToFunctionalCI' => 'リンク 顧客契約/機能的CI',
 	'Class:lnkCustomerContractToFunctionalCI+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => '顧客契約',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => '顧客契約名',
@@ -511,6 +523,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkDeliveryModelToContact' => 'リンク 提供モデル/契約',
 	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => '提供モデル',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => '提供モデル名',

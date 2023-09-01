@@ -28,8 +28,8 @@ use Combodo\iTop\Form\Field\DateTimeField;
 use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Form\Field\MultipleChoicesField;
 use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Form\Validator\AbstractRegexpValidator;
 use Combodo\iTop\Form\Validator\MandatoryValidator;
-use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Renderer\RenderingOutput;
 use Dict;
 use InlineImage;
@@ -458,9 +458,14 @@ EOF
 			// JS Form field widget construct
 			$aValidators = array();
 			foreach ($this->oField->GetValidators() as $oValidator) {
+				if (false === ($oValidator instanceof AbstractRegexpValidator)) {
+					// no JS counterpart, so skipping !
+					continue;
+				}
+
 				$aValidators[$oValidator::GetName()] = array(
 					'reg_exp' => $oValidator->GetRegExp(),
-					'message' => Dict::S($oValidator->GetErrorMessage())
+					'message' => Dict::S($oValidator->GetErrorMessage()),
 				);
 			}
 
@@ -758,7 +763,7 @@ JS
 		foreach ($oField->GetValidators() as $oValidator) {
 
 			// Validator
-			if (get_class($oValidator) === Validator::class) {
+			if ($oValidator instanceof AbstractRegexpValidator) {
 				if (!($oField instanceof DateField || $oField instanceof DateTimeField)) { // unrecognized regular expression
 					$sTags .= ' pattern="'.$oValidator->GetRegExp().'" ';
 				}

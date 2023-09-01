@@ -30,10 +30,10 @@
 //
 // Class: lnkFunctionalCIToProviderContract
 //
-
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'väzba - Komponent / Poskytovateľská zmluva',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Poskytovateľská zmluva',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Názov poskytovateľského zmluvy',
@@ -51,6 +51,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkFunctionalCIToService' => 'väzba - Komponent / Služba',
 	'Class:lnkFunctionalCIToService+' => '',
+	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Služba',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Názov služby',

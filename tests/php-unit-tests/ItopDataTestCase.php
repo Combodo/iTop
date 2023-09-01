@@ -44,6 +44,7 @@ use lnkContactToTicket;
 use lnkFunctionalCIToTicket;
 use MetaModel;
 use Person;
+use PluginManager;
 use Server;
 use TagSetFieldData;
 use Ticket;
@@ -144,6 +145,24 @@ class ItopDataTestCase extends ItopTestCase
 	public function getTestOrgId()
 	{
 		return $this->iTestOrgId;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+	/// MetaModel Utilities
+	/////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Allow test iApplicationObjectExtension objects to be added to the list of plugins without setup
+	 * just require the class file containing the object implementing iApplicationObjectExtension before calling ResetApplicationObjectExtensions()
+	 *
+	 * @return void
+	 */
+	protected function ResetApplicationObjectExtensions()
+	{
+		// Add ObjectModifyExtension to the plugin list
+		$this->InvokeNonPublicStaticMethod(MetaModel::class, 'InitExtensions', []);
+		// Instantiate the new object
+		$this->InvokeNonPublicStaticMethod(PluginManager::class, 'ResetPlugins', []);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

@@ -30,10 +30,10 @@
 //
 // Class: lnkFunctionalCIToProviderContract
 //
-
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'Sammenhæng FunctionalCI/Leverandør Kontrakt',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Leverandør kontrakt',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Leverandør kontrakt navn',
@@ -51,6 +51,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkFunctionalCIToService' => 'Sammenhæng FunctionalCI/Ydelse',
 	'Class:lnkFunctionalCIToService+' => '',
+	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Ydelse',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Ydelses navn',

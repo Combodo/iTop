@@ -39,7 +39,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:AutoSubmit' => 'Vraag dit niet opnieuw en ga volgende keer automatisch naar iTop Hub.',
 	'UI:About:RemoteExtensionSource' => 'iTop Hub',
 	'iTopHub:Explanation' => 'Door op deze knop te klikken, word je doorgestuurd naar iTop Hub.',
-
 	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s vrije schijfruimte in %2$s.',
 	'iTopHub:FailedToCheckFreeDiskSpace' => 'Kon niet controleren hoeveel schijfruimte nog vrij is.',
 	'iTopHub:BackupOk' => 'Backup geslaagd.',
@@ -49,7 +48,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:CompiledOK' => 'Compilatie geslaagd.',
 	'iTopHub:ConfigurationSafelyReverted' => 'Er trad een fout op bij de installatie!<br/>'.ITOP_APPLICATION_SHORT.'-configuratie werd NIET aangepast.',
 	'iTopHub:FailAuthent' => 'Aanmelden lukt niet voor deze actie.',
-
 	'iTopHub:InstalledExtensions' => 'Manueel geïnstalleerde extensies',
 	'iTopHub:ExtensionCategory:Manual' => 'Manueel geïnstalleerde extensies',
 	'iTopHub:ExtensionCategory:Manual+' => 'Deze extensies werden geïnstalleerd door ze manueel in de map %1$s te plaatsen:',
@@ -59,7 +57,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:NoExtensionInThisCategory+' => 'Blader op iTop Hub en ontdek welke extensies te vinden die je helpen om iTop aan te passen aan jouw manier van werken !',
 	'iTopHub:ExtensionNotInstalled' => 'Niet geïnstalleerd',
 	'iTopHub:GetMoreExtensions' => 'Extensies zoeken op iTop Hub...',
-
 	'iTopHub:LandingWelcome' => 'Gefeliciteerd! Deze extensies werden gedownload via iTop Hub en op deze iTop geïnstalleerd.',
 	'iTopHub:GoBackToITopBtn' => 'Terug naar '.ITOP_APPLICATION_SHORT,
 	'iTopHub:Uncompressing' => 'Extensies aan het uitpakken...',
@@ -68,7 +65,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:DBBackupSentence' => 'Neem vooraf een backup van de database en '.ITOP_APPLICATION_SHORT.'-configuratie vooraleer de update uit te voeren',
 	'iTopHub:DeployBtn' => 'Installeer!',
 	'iTopHub:DatabaseBackupProgress' => 'Backup deze omgeving...',
-
 	'iTopHub:InstallationEffect:Install' => 'Versie: %1$s zal geïnstalleerd worden.',
 	'iTopHub:InstallationEffect:NoChange' => 'Versie: %1$s is al geïnstalleerd.',
 	'iTopHub:InstallationEffect:Upgrade' => 'Er zal een <b>upgrade</b> gebeuren van versie %1$s naar %2$s.',
@@ -78,7 +74,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:InstallationEffect:MissingDependencies' => 'Deze extensie kan niet geïnstalleerd worden omdat er niet aan vereisten voldaan is.',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => 'De extensie vereist de module(s): %1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => 'Installatie gelukt!',
-
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s versie: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Geïnstalleerd',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Versie %1$s is <b>NIET</b> geïnstalleerd.',

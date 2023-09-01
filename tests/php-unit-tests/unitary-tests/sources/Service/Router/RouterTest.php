@@ -21,6 +21,16 @@ use utils;
 class RouterTest extends ItopTestCase
 {
 	/**
+	 * @inheritDoc
+	 */
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->RequireOnceItopFile('setup/setuputils.class.inc.php');
+	}
+
+	/**
 	 * @covers \Combodo\iTop\Service\Router\Router::GenerateUrl
 	 * @dataProvider GenerateUrlProvider
 	 *
@@ -167,6 +177,94 @@ class RouterTest extends ItopTestCase
 
 		$bIsPresent = array_key_exists($sRoute, $aTestedRoutes);
 		$this->assertEquals($bShouldBePresent, $bIsPresent, "Route '$sRoute' was not expected amongst the available routes.");
+	}
+
+	/**
+	 * @covers \Combodo\iTop\Service\Router\Router::GetRoutes
+	 * @return void
+	 *
+	 * @since N°6618 Covers that the cache isn't re-generated at each call of the GetRoutes method
+	 */
+	public function testGetRoutesCacheGeneratedOnlyOnce(): void
+	{
+		$oRouter = Router::GetInstance();
+		$sRoutesCacheFilePath = $this->InvokeNonPublicMethod(Router::class, 'GetCacheFileAbsPath', $oRouter, []);
+
+		// Developer mode must be disabled for the routes cache to be used
+		$oConf = utils::GetConfig();
+		$mDeveloperModePreviousValue = $oConf->Get('developer_mode.enabled');
+		$oConf->Set('developer_mode.enabled', false);
+
+		// Generate cache for first time
+		$this->InvokeNonPublicMethod(Router::class, 'GetRoutes', $oRouter, []);
+
+		// Check that file exists and retrieve modification timestamp
+		if (false === is_file($sRoutesCacheFilePath)) {
+			$this->fail("Cache file was not generated ($sRoutesCacheFilePath)");
+		}
+
+		clearstatcache();
+		$iFirstModificationTimestamp = filemtime($sRoutesCacheFilePath);
+		$this->debug("Initial timestamp: $iFirstModificationTimestamp");
+
+		// Wait for just 1s to ensure timestamps would be different is the file is re-generated
+		sleep(1);
+
+		// Call GetRoutes() again to see if cache gets re-generated or not
+		$this->InvokeNonPublicMethod(Router::class, 'GetRoutes', $oRouter, []);
+
+		// Check that file still exists and that modification timestamp has not changed
+		if (false === is_file($sRoutesCacheFilePath)) {
+			$this->fail("Cache file is no longer present, that should not happen! ($sRoutesCacheFilePath)");
+		}
+
+		clearstatcache();
+		$iSecondModificationTimestamp = filemtime($sRoutesCacheFilePath);
+		$this->debug("Second timestamp: $iSecondModificationTimestamp");
+
+		$this->assertSame($iFirstModificationTimestamp, $iSecondModificationTimestamp, "Cache file timestamp changed, seems like cache is not working and was re-generated when it should not!");
+
+		// Restore previous value for following tests
+		$oConf->Set('developer_mode.enabled', $mDeveloperModePreviousValue);
+	}
+
+	/**
+	 * @covers \Combodo\iTop\Service\Router\Router::GetRoutes
+	 * @return void
+	 *
+	 * @since N°6618 Covers that the cache is re-generated correctly if corrupted
+	 */
+	public function testGetRoutesCacheRegeneratedCorrectlyIfCorrupted(): void
+	{
+		$oRouter = Router::GetInstance();
+		$sRoutesCacheFilePath = $this->InvokeNonPublicMethod(Router::class, 'GetCacheFileAbsPath', $oRouter, []);
+
+		// Developer mode must be disabled for the routes cache to be used
+		$oConf = utils::GetConfig();
+		$mDeveloperModePreviousValue = $oConf->Get('developer_mode.enabled');
+		$oConf->Set('developer_mode.enabled', false);
+
+		// Generate corrupted cache manually
+		$sFaultyStatement = 'return 1;';
+		file_put_contents($sRoutesCacheFilePath, <<<PHP
+<?php
+
+{$sFaultyStatement}
+PHP
+		);
+
+		// Retrieve routes to access / fix cache in the process
+		$aRoutes = $this->InvokeNonPublicMethod(Router::class, 'GetRoutes', $oRouter, []);
+
+		// Check that routes are an array
+		$this->assertTrue(is_array($aRoutes));
+
+		// Check that file content doesn't contain `return 1`
+		clearstatcache();
+		$this->assertStringNotContainsString($sFaultyStatement, file_get_contents($sRoutesCacheFilePath), "Cache file still contains the faulty statement ($sFaultyStatement)");
+
+		// Restore previous value for following tests
+		$oConf->Set('developer_mode.enabled', $mDeveloperModePreviousValue);
 	}
 
 	public function GetRoutesProvider(): array

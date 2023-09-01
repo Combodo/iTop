@@ -47,6 +47,7 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 use Combodo\iTop\Service\Links\LinkSetDataTransformer;
 use Combodo\iTop\Service\Links\LinkSetModel;
+use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectHelper;
 
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
@@ -187,9 +188,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	/** @var array initial attributes flags cache [attcode]['flags'] */
 	protected $aInitialAttributesFlags;
 
-	protected $iUpdateLoopCount;
-
-	const MAX_UPDATE_LOOP_COUNT = 10;
 
 	/**
 	 * @var array First level classname, second level id, value number of calls done
@@ -227,7 +225,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$this->sDisplayMode = static::DEFAULT_DISPLAY_MODE;
 		$this->bAllowWrite = false;
 		$this->bAllowDelete = false;
-		$this->iUpdateLoopCount = 0;
 	}
 
 	/**
@@ -2822,33 +2819,33 @@ JS
 			}
 		}
 		// Custom operation for the form ?
-		if (isset($aExtraParams['custom_operation'])) {
-			$sOperation = $aExtraParams['custom_operation'];
-		} else {
-			if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
-				$sOperation = 'apply_modify';
-			} else {
-				$sOperation = 'apply_new';
-			}
-		}
+        if (isset($aExtraParams['custom_operation'])) {
+            $sOperation = $aExtraParams['custom_operation'];
+        } else {
+            if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
+                $sOperation = 'apply_modify';
+            } else {
+                $sOperation = 'apply_new';
+            }
+        }
 
-		$oContentBlock = new UIContentBlock();
-		$oPage->AddUiBlock($oContentBlock);
+        $oContentBlock = new UIContentBlock();
+        $oPage->AddUiBlock($oContentBlock);
 
-		$oForm = new Form("form_{$this->m_iFormId}");
-		$oForm->SetAction($sFormAction);
-		$sOnSubmitForm = "let bOnSubmitForm = OnSubmit('form_{$this->m_iFormId}');";
-		if (isset($aExtraParams['js_handlers']['form_on_submit'])) {
-			$oForm->SetOnSubmitJsCode($sOnSubmitForm.$aExtraParams['js_handlers']['form_on_submit']);
-		} else {
-			$oForm->SetOnSubmitJsCode($sOnSubmitForm."return bOnSubmitForm;");
-		}
-		$oContentBlock->AddSubBlock($oForm);
+        $oForm = new Form("form_{$this->m_iFormId}");
+        $oForm->SetAction($sFormAction);
+        $sOnSubmitForm = "let bOnSubmitForm = OnSubmit('form_{$this->m_iFormId}');";
+        if (isset($aExtraParams['js_handlers']['form_on_submit'])) {
+            $oForm->SetOnSubmitJsCode($sOnSubmitForm . $aExtraParams['js_handlers']['form_on_submit']);
+        } else {
+            $oForm->SetOnSubmitJsCode($sOnSubmitForm . "return bOnSubmitForm;");
+        }
+        $oContentBlock->AddSubBlock($oForm);
 
-		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
-			// The object already exists in the database, it's a modification
-			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
-		}
+        if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
+            // The object already exists in the database, it's a modification
+	        $oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
+        }
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sOperation));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
 
@@ -2856,6 +2853,11 @@ JS
 		$iTransactionId = isset($aExtraParams['transaction_id']) ? $aExtraParams['transaction_id'] : utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
+
+		// Add temporary object watchdog (only on root form)
+		if (!utils::IsXmlHttpRequest()) {
+			$oPage->add_ready_script(TemporaryObjectHelper::GetWatchDogJS($iTransactionId));
+		}
 
 		// TODO 3.0.0: Is this (the if condition, not the code inside) still necessary?
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
@@ -2867,34 +2869,34 @@ JS
 			}
 		}
 
-		$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+        $oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
 
-		$oCancelButton = ButtonUIBlockFactory::MakeForCancel();
-		$oCancelButton->AddCSSClasses(['action', 'cancel']);
-		$oToolbarButtons->AddSubBlock($oCancelButton);
-		$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
-		$oApplyButton->AddCSSClass('action');
-		$oToolbarButtons->AddSubBlock($oApplyButton);
-		$bAreTransitionsHidden = isset($aExtraParams['hide_transitions']) && $aExtraParams['hide_transitions'] === true;
-		$aTransitions = $this->EnumTransitions();
-		if (!isset($aExtraParams['custom_operation']) && !$bAreTransitionsHidden && count($aTransitions)) {
-			// Transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
-			$oSetToCheckRights = DBObjectSet::FromObject($this);
+        $oCancelButton = ButtonUIBlockFactory::MakeForCancel();
+        $oCancelButton->AddCSSClasses(['action', 'cancel']);
+        $oToolbarButtons->AddSubBlock($oCancelButton);
+        $oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
+        $oApplyButton->AddCSSClass('action');
+        $oToolbarButtons->AddSubBlock($oApplyButton);
+        $bAreTransitionsHidden = isset($aExtraParams['hide_transitions']) && $aExtraParams['hide_transitions'] === true;
+        $aTransitions = $this->EnumTransitions();
+        if (!isset($aExtraParams['custom_operation']) && !$bAreTransitionsHidden && count($aTransitions)) {
+            // Transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
+            $oSetToCheckRights = DBObjectSet::FromObject($this);
 
-			$oTransitionPopoverMenu = new PopoverMenu();
-			$sTPMSectionId = 'transitions';
-			$oTransitionPopoverMenu->AddSection($sTPMSectionId);
-			$aStimuli = Metamodel::EnumStimuli($sClass);
-			foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
-				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
-					$sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
-				switch ($iActionAllowed) {
-					case UR_ALLOWED_YES:
-						// Button to be displayed on its own on large screens
-						$oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
-						$oButton->AddCSSClass('action');
-						$oButton->SetColor(Button::ENUM_COLOR_SCHEME_NEUTRAL);
-						$oToolbarButtons->AddSubBlock($oButton);
+            $oTransitionPopoverMenu = new PopoverMenu();
+            $sTPMSectionId = 'transitions';
+            $oTransitionPopoverMenu->AddSection($sTPMSectionId);
+            $aStimuli = Metamodel::EnumStimuli($sClass);
+            foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
+                $iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
+                    $sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
+                switch ($iActionAllowed) {
+                    case UR_ALLOWED_YES:
+                        // Button to be displayed on its own on large screens
+                        $oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
+                        $oButton->AddCSSClass('action');
+                        $oButton->SetColor(Button::ENUM_COLOR_SCHEME_NEUTRAL);
+                        $oToolbarButtons->AddSubBlock($oButton);
 
 						// Button to be displayed in a grouped button on smaller screens
 						$oTPMPopupMenuItem = new JSPopupMenuItem('next_action--'.$oButton->GetId(), $oButton->GetLabel(), "$(`#{$oButton->GetId()}`).trigger(`click`);");
@@ -3049,16 +3051,21 @@ JS
 
 		$oPage->SetCurrentTab('');
 
+		// Static fields values for wizard helper serialization
+		$aWizardHelperStaticValues = [];
+
 		// Add as hidden inputs values that we want displayed if they're readonly
 		if(isset($aExtraParams['forceFieldsSubmission'])){
 			$aExtraFlags = $aExtraParams['fieldsFlags'] ?? [];
 			foreach ($aExtraParams['forceFieldsSubmission'] as $sAttCode) {
 					if(FormHelper::GetAttributeFlagsForObject($this, $sAttCode, $aExtraFlags) & OPT_ATT_READONLY) {
 						$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('attr_'.$sPrefix.$sAttCode, $this->Get($sAttCode)));
+						$aWizardHelperStaticValues[$sAttCode] = $this->Get($sAttCode);
 					}
 			}
 		}
-		
+		$sWizardHelperStaticValues = json_encode($aWizardHelperStaticValues);
+
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 		foreach ($aExtraParams as $sName => $value) {
@@ -3101,6 +3108,7 @@ JS
 		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sLifecycleStateForWizardHelper');
 		oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
 		oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
+		oWizardHelper$sPrefix.SetStaticValues($sWizardHelperStaticValues);
 EOF
 		);
 		$oPage->add_ready_script(
@@ -4513,16 +4521,12 @@ HTML;
 	 */
 	public function DBInsertNoReload()
 	{
+		$this->LogCRUDEnter(__METHOD__);
 		try {
 			$res = parent::DBInsertNoReload();
 
 			$this->SetWarningsAsSessionMessages('create');
 
-			// Invoke extensions after insertion (the object must exist, have an id, etc.)
-			/** @var \iApplicationObjectExtension $oExtensionInstance */
-			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
-				$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
-			}
 		} finally {
 			if (static::IsCrudStackEmpty()) {
 				// Avoid signaling the current object that links were modified
@@ -4530,7 +4534,21 @@ HTML;
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
+		$this->LogCRUDExit(__METHOD__);
 		return $res;
+	}
+
+	public function PostInsertActions(): void
+	{
+		parent::PostInsertActions();
+
+		// Invoke extensions after insertion (the object must exist, have an id, etc.)
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins(iApplicationObjectExtension::class) as $oExtensionInstance) {
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBInsert()");
+			$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
+		}
 	}
 
 	/**
@@ -4558,55 +4576,37 @@ HTML;
 
 	public function DBUpdate()
 	{
+		$this->LogCRUDEnter(__METHOD__);
+
 		try {
+			if (count($this->ListChanges()) === 0) {
+				$this->LogCRUDExit(__METHOD__);
+				return $this->GetKey();
+			}
 			$res = parent::DBUpdate();
 
 			$this->SetWarningsAsSessionMessages('update');
-
-			// Protection against reentrance (e.g. cascading the update of ticket logs)
-			// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
-			if (!MetaModel::StartReentranceProtection($this)) {
-				$sClass = get_class($this);
-				$sKey = $this->GetKey();
-				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
-
-				return $res;
-			}
-
-			try {
-				// Invoke extensions after the update (could be before)
-				/** @var \iApplicationObjectExtension $oExtensionInstance */
-				foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
-					$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
-				}
-			}
-			finally {
-				MetaModel::StopReentranceProtection($this);
-			}
-
-			$aChanges = $this->ListChanges();
-			if (count($aChanges) != 0) {
-				$this->iUpdateLoopCount++;
-				if ($this->iUpdateLoopCount > self::MAX_UPDATE_LOOP_COUNT) {
-					$sClass = get_class($this);
-					$sKey = $this->GetKey();
-					$aPlugins = [];
-					foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance) {
-						$aPlugins[] = get_class($oExtensionInstance);
-					}
-					$sPlugins = implode(', ', $aPlugins);
-					IssueLog::Error("CRUD: DBUpdate $sClass::$sKey Update loop detected plugins: $sPlugins", LogChannels::DM_CRUD);
-				} else {
-					return $this->DBUpdate();
-				}
-			}
 		} finally {
 			if (static::IsCrudStackEmpty()) {
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
+		$this->LogCRUDExit(__METHOD__);
 
 		return $res;
+	}
+
+	public function PostUpdateActions(array $aChanges): void
+	{
+		parent::PostUpdateActions($aChanges);
+
+		// Invoke extensions after the update (could be before)
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins(iApplicationObjectExtension::class) as $oExtensionInstance) {
+			$sExtensionClass = get_class($oExtensionInstance);
+			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBUpdate()");
+			$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
+		}
 	}
 
 	/**
@@ -4628,6 +4628,7 @@ HTML;
 
 	public function DBDelete(&$oDeletionPlan = null)
 	{
+		$this->LogCRUDEnter(__METHOD__);
 		try {
 			parent::DBDelete($oDeletionPlan);
 		}  finally {
@@ -4637,6 +4638,7 @@ HTML;
 				static::FireEventDbLinksChangedForAllObjects();
 			}
 		}
+		$this->LogCRUDExit(__METHOD__);
 
 		return $oDeletionPlan;
 	}
@@ -4665,9 +4667,12 @@ HTML;
 		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
-			if ($oExtensionInstance->OnIsModified($this))
-			{
+			$sExtensionClass = get_class($oExtensionInstance);
+			if ($oExtensionInstance->OnIsModified($this)) {
+				$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnIsModified() -> true");
 				return true;
+			} else {
+				$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnIsModified() -> false");
 			}
 		}
 
@@ -6021,14 +6026,16 @@ JS
 		// - we have a EVENT_DB_LINKS_CHANGED listener on Ticket that will update impacted items, so it will create new lnkApplicationSolutionToFunctionalCI
 		// We want to avoid launching the listener twice, first here, and secondly after saving the Ticket in the listener
 		// By disabling the event to be fired, we can remove the current object from the attribute !
-		/** @noinspection PhpRedundantOptionalArgumentInspection */
-		$oObject = MetaModel::GetObject($sClass, $sId, true);
-		self::SetEventDBLinksChangedBlocked(true);
-		MetaModel::StartReentranceProtection($oObject);
-		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
-		MetaModel::StopReentranceProtection($oObject);
-		if ($oObject->IsModified()) {
-			$oObject->DBUpdate();
+		$oObject = MetaModel::GetObject($sClass, $sId, false);
+		// N°6408 The object can have been deleted
+		if (!is_null($oObject)) {
+			self::SetEventDBLinksChangedBlocked(true);
+			MetaModel::StartReentranceProtection($oObject);
+			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
+			MetaModel::StopReentranceProtection($oObject);
+			if (count($oObject->ListChanges()) !== 0) {
+				$oObject->DBUpdate();
+			}
 		}
 		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 		cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);

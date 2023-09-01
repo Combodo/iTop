@@ -98,4 +98,14 @@ class PluginManager
 
 		return $oInstance;
 	}
+
+	/**
+	 * For test purpose
+	 * @return void
+	 * @since 3.1.0
+	 */
+	protected static function ResetPlugins()
+	{
+		self::$m_aExtensionClasses = null;
+	}
 }

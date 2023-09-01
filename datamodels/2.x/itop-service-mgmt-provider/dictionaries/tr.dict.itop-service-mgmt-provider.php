@@ -37,7 +37,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Hizmet seviyesine göre sözleşmeler',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Durumuna göre sözleşmeler',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 gün çinde biten sözleşmeler',
-
 	'Menu:ProviderContract' => 'Tedarikçi sözleşmeleri',
 	'Menu:ProviderContract+' => 'Tedarikçi sözleşmeleri',
 	'Menu:CustomerContract' => 'Müşteri sözleşmeleri',
@@ -56,8 +55,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:DeliveryModel+' => 'Delivery models~~',
 	'Menu:ServiceFamily' => 'Service families~~',
 	'Menu:ServiceFamily+' => 'Service families~~',
+	'Contract:baseinfo' => 'General information~~',
+	'Contract:moreinfo' => 'Contractual information~~',
+	'Contract:cost' => 'Cost information~~',
 ));
-
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',
@@ -183,6 +184,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkContactToContract' => 'Link Contact / Contract~~',
 	'Class:lnkContactToContract+' => '~~',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Contract~~',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Contract Name~~',
@@ -200,6 +202,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkContractToDocument' => 'Link Contract / Document~~',
 	'Class:lnkContractToDocument+' => '~~',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contract~~',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Contract Name~~',
@@ -217,6 +220,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract~~',
 	'Class:lnkFunctionalCIToProviderContract+' => '~~',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider contract~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Provider contract Name~~',
@@ -249,6 +253,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Service' => 'Hizmet',
 	'Class:Service+' => '',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Adı',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Hizmet Sağlayıcı',
@@ -288,6 +293,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkDocumentToService' => 'Link Document / Service~~',
 	'Class:lnkDocumentToService+' => '~~',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Service~~',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Service Name~~',
@@ -305,6 +311,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkContactToService' => 'Link Contact / Service~~',
 	'Class:lnkContactToService+' => '~~',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Service~~',
 	'Class:lnkContactToService/Attribute:service_id+' => '~~',
 	'Class:lnkContactToService/Attribute:service_name' => 'Service Name~~',
@@ -322,6 +329,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ServiceSubcategory' => 'Hizmet alt kategorisi',
 	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Adı',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Tanımlama',
@@ -418,6 +426,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT~~',
 	'Class:lnkSLAToSLT+' => '~~',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA Name~~',
@@ -445,6 +454,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkCustomerContractToService' => 'Link Customer Contract / Service~~',
 	'Class:lnkCustomerContractToService+' => '~~',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Customer contract~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Customer contract Name~~',
@@ -466,6 +476,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkCustomerContractToProviderContract' => 'Müşteri ve Tedarikçi Sözleşmesi ilişkilendirmesi',
 	'Class:lnkCustomerContractToProviderContract+' => '',
+	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Customer contract~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => 'Customer contract Name~~',
@@ -483,6 +494,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkCustomerContractToFunctionalCI' => 'Link Customer Contract / FunctionalCI~~',
 	'Class:lnkCustomerContractToFunctionalCI+' => '~~',
+	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Customer contract~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Customer contract Name~~',
@@ -521,6 +533,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkDeliveryModelToContact' => 'Link DeliveryModel / Contact~~',
 	'Class:lnkDeliveryModelToContact+' => '~~',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Delivery model~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Delivery model name~~',

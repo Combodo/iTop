@@ -21,57 +21,42 @@
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:DeletedObjectLabel' => '%1s (削除されました)',
-	'Core:DeletedObjectTip'   => 'オブジェクトは削除されました %1$s (%2$s)',
-
+	'Core:DeletedObjectTip' => 'オブジェクトは削除されました %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'オブジェクトは見つかりません (クラス: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip'   => 'オブジェクトは見つかりません。しばらく前に削除され、その後ログが削除されたかもしれません。',
-
+	'Core:UnknownObjectTip' => 'オブジェクトは見つかりません。しばらく前に削除され、その後ログが削除されたかもしれません。',
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
-	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
-	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
-
-	'Core:AttributeLinkedSet'  => 'オブジェクト配列',
+	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
+	'Core:AttributeLinkedSet' => 'オブジェクト配列',
 	'Core:AttributeLinkedSet+' => '同一あるいはサブクラスに属するオブジェクト',
-
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
-
-	'Core:AttributeDashboard'  => 'Dashboard~~',
+	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '~~',
-
-	'Core:AttributePhoneNumber'  => 'Phone number~~',
+	'Core:AttributePhoneNumber' => 'Phone number~~',
 	'Core:AttributePhoneNumber+' => '~~',
-
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate+' => '~~',
-
 	'Core:AttributeTagSet' => 'List of tags~~',
 	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
-
 	'Core:AttributeCaseLog' => 'Log~~',
 	'Core:AttributeCaseLog+' => '~~',
-
 	'Core:AttributeMetaEnum' => 'Computed enum~~',
 	'Core:AttributeMetaEnum+' => '~~',
-
 	'Core:AttributeLinkedSetIndirect' => 'オブジェクト配列 (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => '同一クラスの任意のオブジェクト(サブクラス)',
-
 	'Core:AttributeInteger' => 'Int型',
 	'Core:AttributeInteger+' => '数値 (負数あり)',
-
 	'Core:AttributeDecimal' => 'Decimal型',
 	'Core:AttributeDecimal+' => 'Decimal値 (負数あり)',
-
 	'Core:AttributeBoolean' => 'ブール型',
 	'Core:AttributeBoolean+' => 'Bool値',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
 	'Core:AttributeBoolean/Value:no' => 'No~~',
-
 	'Core:AttributeArchiveFlag' => 'Archive flag~~',
 	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
 	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
@@ -80,7 +65,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributeArchiveFlag/Label+' => '',
 	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
 	'Core:AttributeArchiveDate/Label+' => '',
-
 	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
@@ -89,54 +73,38 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
 	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
-
 	'Core:AttributeString' => '文字列',
 	'Core:AttributeString+' => '文字列',
-
 	'Core:AttributeClass' => 'クラス',
 	'Core:AttributeClass+' => 'クラス',
-
 	'Core:AttributeApplicationLanguage' => '使用言語',
 	'Core:AttributeApplicationLanguage+' => '言語・国別 (JA JP)',
-
 	'Core:AttributeFinalClass' => 'クラス (自動)',
 	'Core:AttributeFinalClass+' => 'オブジェクトの実クラス (コアで自動的に生成される)',
-
 	'Core:AttributePassword' => 'パスワード',
 	'Core:AttributePassword+' => '外部デバイス用パスワード',
-
 	'Core:AttributeEncryptedString' => '暗号化文字列',
 	'Core:AttributeEncryptedString+' => 'ローカルキーで暗号化された文字列',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
-
 	'Core:AttributeText' => 'テキスト',
 	'Core:AttributeText+' => '複数行文字列',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'HTML文字列',
-
 	'Core:AttributeEmailAddress' => 'メールアドレス',
 	'Core:AttributeEmailAddress+' => 'メールアドレス',
-
 	'Core:AttributeIPAddress' => 'IPアドレス',
 	'Core:AttributeIPAddress+' => 'IPアドレス',
-
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'OQL式',
-
 	'Core:AttributeEnum' => '列挙型',
 	'Core:AttributeEnum+' => 'ナンバリング済み文字列のリスト',
-
 	'Core:AttributeTemplateString' => 'テンプレート文字列',
 	'Core:AttributeTemplateString+' => 'プレースホルダを含む文字列',
-
 	'Core:AttributeTemplateText' => 'テンプレートテキスト',
 	'Core:AttributeTemplateText+' => 'プレースホルダを含むテキスト',
-
 	'Core:AttributeTemplateHTML' => 'テンプレートHTML',
 	'Core:AttributeTemplateHTML+' => 'プレースホルダを含むHTML',
-
 	'Core:AttributeDateTime' => '日付/時刻',
 	'Core:AttributeDateTime+' => '日付と時刻(年-月-日 hh:mm:ss)',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -154,7 +122,6 @@ Operators:<br/>
 <p>
 もし、時刻がなければ、規定値 00:00:00となります。
 </p>',
-
 	'Core:AttributeDate' => '日付',
 	'Core:AttributeDate+' => '日付 (年-月-日)',
 	'Core:AttributeDate?SmartSearch' => '
@@ -169,43 +136,30 @@ Operators:<br/>
 	<b>&lt;</b><em>日付</em><br/>
 	<b>[</b><em>日付</em>,<em>日付</em><b>]</b>
 </p>',
-
 	'Core:AttributeDeadline' => '締切',
 	'Core:AttributeDeadline+' => '日付, 現在時刻からの相対表示',
-
 	'Core:AttributeExternalKey' => '外部キー',
 	'Core:AttributeExternalKey+' => '外部(あるいはフォーリン)キー',
-
 	'Core:AttributeHierarchicalKey' => '階層的なキー',
 	'Core:AttributeHierarchicalKey+' => '',
-
 	'Core:AttributeExternalField' => '外部フィールド',
 	'Core:AttributeExternalField+' => '外部キーにマッピングされたフィールド',
-
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => '絶対URLもしくは相対URLのテキスト文字列',
-
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => '任意のバイナリコンテンツ(文書)',
-
 	'Core:AttributeOneWayPassword' => '一方向パスワード',
 	'Core:AttributeOneWayPassword+' => '一方向暗号化(ハッシュ)パスワード',
-
 	'Core:AttributeTable' => 'テーブル',
 	'Core:AttributeTable+' => 'インデックス化された二次元配列',
-
 	'Core:AttributePropertySet' => 'プロパティ',
 	'Core:AttributePropertySet+' => '型づけされていないプロパティのリスト(名前とバリュー)',
-
 	'Core:AttributeFriendlyName' => 'Friendly name',
 	'Core:AttributeFriendlyName+' => '属性は自動的に作成されました； the friendly name is computed after several attributes',
-
 	'Core:FriendlyName-Label' => 'Name',
 	'Core:FriendlyName-Description' => 'Friendly name',
-
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => 'Tags~~',
-	
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',
@@ -483,6 +437,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Action' => 'カスタムアクション',
 	'Class:Action+' => 'ユーザ定義アクション',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => '名前',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => '説明',
@@ -550,6 +505,22 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '通常',
 	'Class:ActionEmail/Attribute:importance/Value:high' => '高',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => '高',
+	'Class:ActionEmail/Attribute:language' => 'Language~~',
+	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
+	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
+	'ActionEmail:main' => 'Message~~',
+	'ActionEmail:trigger' => 'Triggers~~',
+	'ActionEmail:recipients' => 'Contacts~~',
+	'ActionEmail:preview_tab' => 'Preview~~',
+	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
+	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
+	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
+	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
 ));
 
 //
@@ -559,6 +530,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Trigger' => 'トリガー',
 	'Class:Trigger+' => 'カスタムイベントハンドラー',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
 	'Class:Trigger/Attribute:description' => '説明',
 	'Class:Trigger/Attribute:description+' => '1行の説明',
 	'Class:Trigger/Attribute:action_list' => 'トリガーされたアクション',
@@ -567,6 +539,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Trigger/Attribute:finalclass+' => 'タイプ',
 	'Class:Trigger/Attribute:context' => 'Context~~',
 	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:complement' => 'Additional information~~',
+	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
 ));
 
 //
@@ -663,6 +637,17 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 ));
 
 //
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 
@@ -698,11 +683,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 // Synchro Data Source
 //
 Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:SynchroDataSource' => '同期データソース',
 	'Class:SynchroDataSource/Attribute:name' => '名前',
 	'Class:SynchroDataSource/Attribute:name+' => '名前',
 	'Class:SynchroDataSource/Attribute:description' => '説明',
 	'Class:SynchroDataSource/Attribute:status' => '状態',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'ターゲットクラス',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class~~',
 	'Class:SynchroDataSource/Attribute:user_id' => 'ユーザ',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => '通知する連絡先',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'エラーが発生した場合に通知する連絡先。',
@@ -711,6 +698,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'アプリケーションのハイパーリンク',
 	'Class:SynchroDataSource/Attribute:url_application+' => ITOP_APPLICATION_SHORT.'が同期化された外部アプリケーションの'.ITOP_APPLICATION_SHORT.'オブジェクトへのハイパーリンク（該当する場合）。可能なプレースホルダ: $this->attribute$ and $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => '調整ポリシー',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
+"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => '全データロードの間隔',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => '全データの完全な再ロードを最低ここに指定されている間隔で行う必要があります。',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => '検索結果0件時のアクション',
@@ -730,6 +719,33 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => '廃止されたオブジェクトを削除するまでに保持しておく時間',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'データテーブル',
 	'Class:SynchroDataSource/Attribute:database_table_name+' => '同期データを保存するテーブル名。 もし、空欄の場合は、規定の名前が計算されます。',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => '実装中',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => '廃止済',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => '稼働中',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => '範囲の制限',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => '属性を使用',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => '主キーフィールドを使用',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => '作成',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'エラー',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'エラー',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => '更新',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => '作成',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'エラー',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => '最初を採用 (ランダム?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => '削除ポリシー',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'What to do when a replica becomes obsolete:
+"Ignore": do nothing, the associated object remains as is in iTop.
+"Delete": Delete the associated object in iTop (and the replica in the data table).
+"Update": Update the associated object as specified by the Update rules (see below).
+"Update then Delete": apply the "Update rules". When Retention Duration expires, execute a "Delete" ~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => '削除',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => '無視',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => '更新',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => '更新そして削除',
+	'Class:SynchroDataSource/Attribute:attribute_list' => '属性リスト',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => '管理者のみ',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => '誰でもがそのようなオブジェクトを削除出来ます。',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => '誰もない',
 	'SynchroDataSource:Description' => '説明',
 	'SynchroDataSource:Reconciliation' => '検索と調整',
 	'SynchroDataSource:Deletion' => '削除ルール',
@@ -754,8 +770,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:Synchro:NeverRun' => 'この同期は実行されたことがありません。ログはありません。',
 	'Core:Synchro:SynchroEndedOn_Date' => '最後の同期は %1$s に終了しました。',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => '同期は %1$s に始まり、現在実行中です。',
-	'Menu:DataSources' => '同期データソース', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => '全ての同期データソース', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources' => '同期データソース',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => '全ての同期データソース',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => '無視 (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => '消えた (%1$s)',
 	'Core:Synchro:label_repl_existing' => '存在 (%1$s)',
@@ -819,29 +837,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => '以前の値',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'ケースログ',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => '最後のエントリー',
-	'Class:SynchroDataSource' => '同期データソース',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => '実装中',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => '廃止済',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => '稼働中',
-	'Class:SynchroDataSource/Attribute:scope_restriction' => '範囲の制限',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => '属性を使用',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => '主キーフィールドを使用',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => '作成',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'エラー',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'エラー',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => '更新',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => '作成',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'エラー',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => '最初を採用 (ランダム?)',
-	'Class:SynchroDataSource/Attribute:delete_policy' => '削除ポリシー',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => '削除',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => '無視',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => '更新',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => '更新そして削除',
-	'Class:SynchroDataSource/Attribute:attribute_list' => '属性リスト',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => '管理者のみ',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => '誰でもがそのようなオブジェクトを削除出来ます。',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => '誰もない',
 	'Class:SynchroAttribute' => '同期属性',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => '同期データソース',
 	'Class:SynchroAttribute/Attribute:attcode' => '属性コード',
@@ -902,19 +897,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'プリファレンス',
 	'Core:ExecProcess:Code1' => '間違ったコマンドまたはエラーで終了したコマンド（例えば、間違ったスクリプト名）',
 	'Core:ExecProcess:Code255' => 'PHP エラー (parsing, or runtime)',
-
-	// Attribute Duration
+    // Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$d分 %2$d秒',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$d時 %2$d分 %3$d秒',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s日 %2$d時 %3$d分 %4$d秒',
-
-	// Explain working time computing
+    // Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \\"%1$s\\")~~',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \\"%1$s\\"~~',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \\"%1$s\\" at %2$d%%~~',
-
-	// Bulk export
+    // Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \\"%1$s\\"~~',
 	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \\"query\\". There is no Query Phrasebook corresponding to the id: \\"%1$s\\".~~',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
@@ -966,20 +958,34 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
 	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
-	'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D~~', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM~~', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M~~', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY~~', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY~~', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh~~', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h~~', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh~~', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h~~', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm~~', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM~~', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm~~', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss~~', // seconds, 2 digits 00..59
+	'Core:DateTime:Placeholder_d' => 'DD~~',
+    // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D~~',
+    // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM~~',
+    // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M~~',
+    // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY~~',
+    // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY~~',
+    // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh~~',
+    // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h~~',
+    // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh~~',
+    // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h~~',
+    // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm~~',
+    // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM~~',
+    // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm~~',
+    // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss~~',
+    // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Wrong format~~',
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
@@ -992,7 +998,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
 	'Class:TagSetFieldData+' => '~~',
-
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
 	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
@@ -1002,7 +1007,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
@@ -1089,8 +1093,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //

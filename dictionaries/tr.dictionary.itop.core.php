@@ -31,57 +31,42 @@
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:DeletedObjectLabel' => '%1s (Silinmiş)',
-	'Core:DeletedObjectTip'   => 'Nesne%1$s (%2$s) \'de silinmiştir',
-
+	'Core:DeletedObjectTip' => 'Nesne%1$s (%2$s) \'de silinmiştir',
 	'Core:UnknownObjectLabel' => 'Nesne bulunamadı (sınıf: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip'   => 'Nesne bulunamadı.Nesne ve günlük kaydı bir süre önce silinmiş olabilir',
-
+	'Core:UnknownObjectTip' => 'Nesne bulunamadı.Nesne ve günlük kaydı bir süre önce silinmiş olabilir',
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
-	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
-	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
-
-	'Core:AttributeLinkedSet'  => 'Nesnelerin dizisi',
+	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
+	'Core:AttributeLinkedSet' => 'Nesnelerin dizisi',
 	'Core:AttributeLinkedSet+' => 'Aynı sınıf veya alt sınıfın her türlü nesnesi',
-
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
-
-	'Core:AttributeDashboard'  => 'Dashboard~~',
+	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '',
-
-	'Core:AttributePhoneNumber'  => 'Phone number~~',
+	'Core:AttributePhoneNumber' => 'Phone number~~',
 	'Core:AttributePhoneNumber+' => '',
-
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate+' => '',
-
 	'Core:AttributeTagSet' => 'List of tags~~',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
-
 	'Core:AttributeCaseLog' => 'Log~~',
 	'Core:AttributeCaseLog+' => '',
-
 	'Core:AttributeMetaEnum' => 'Computed enum~~',
 	'Core:AttributeMetaEnum+' => '',
-
 	'Core:AttributeLinkedSetIndirect' => 'Nesnelerin dizisi (n-n)',
 	'Core:AttributeLinkedSetIndirect+' => 'Aynı sınıftan her türlü nesne [Altsınıf]',
-
 	'Core:AttributeInteger' => 'Tamsayı',
 	'Core:AttributeInteger+' => 'Sayısal değer (negatif olabilir)',
-
 	'Core:AttributeDecimal' => 'Ondalık',
 	'Core:AttributeDecimal+' => 'Ondalık değer (negatif olabilir)',
-
 	'Core:AttributeBoolean' => 'Boolean',
 	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Evet',
 	'Core:AttributeBoolean/Value:no' => 'Hayır',
-
 	'Core:AttributeArchiveFlag' => 'Arşiv işareti',
 	'Core:AttributeArchiveFlag/Value:yes' => 'Evet',
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Bu nesne yalnızca arşiv modunda görünürdür',
@@ -90,7 +75,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributeArchiveFlag/Label+' => '',
 	'Core:AttributeArchiveDate/Label' => 'Arşiv Tarihi',
 	'Core:AttributeArchiveDate/Label+' => '',
-
 	'Core:AttributeObsolescenceFlag' => 'Kullanım dışı işareti',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Evet',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Bu nesne, etki analizinden hariç tutulur ve arama sonuçlarından gizlenir',
@@ -99,54 +83,38 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributeObsolescenceFlag/Label+' => 'Diğer özelliklerde dinamik olarak hesaplandı',
 	'Core:AttributeObsolescenceDate/Label' => 'Kullanım dışı olma tarihi',
 	'Core:AttributeObsolescenceDate/Label+' => 'Nesnenin eski olarak kabul edildiği yaklaşık tarih',
-
 	'Core:AttributeString' => 'Dize',
 	'Core:AttributeString+' => 'Alfanümerik dize',
-
 	'Core:AttributeClass' => 'Sınıf',
 	'Core:AttributeClass+' => '',
-
 	'Core:AttributeApplicationLanguage' => 'Kullanıcı dili',
 	'Core:AttributeApplicationLanguage+' => 'Dil ve Ülke (TR Türkiye)',
-
 	'Core:AttributeFinalClass' => 'Sınıf (Otomatik)',
 	'Core:AttributeFinalClass+' => 'Nesnenin gerçek sınıfı (çekirdek tarafından otomatik olarak oluşturulur)',
-
 	'Core:AttributePassword' => 'Şifre',
 	'Core:AttributePassword+' => 'Harici bir cihazın şifresi',
-
 	'Core:AttributeEncryptedString' => 'Şifreli dize',
 	'Core:AttributeEncryptedString+' => 'Dize yerel bir anahtarla şifrelenmiş',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
-
 	'Core:AttributeText' => 'Metin',
 	'Core:AttributeText+' => 'Çok satırlı karakter dizesi',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'HTML dizesi',
-
 	'Core:AttributeEmailAddress' => 'E-posta Adresi',
 	'Core:AttributeEmailAddress+' => '',
-
 	'Core:AttributeIPAddress' => 'IP adresi',
 	'Core:AttributeIPAddress+' => '',
-
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Nesne sorgusu Dili ifadesi',
-
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => 'Önceden tanımlanmış alfasayısal dizelerin listesi',
-
 	'Core:AttributeTemplateString' => 'Şablon dizesi',
 	'Core:AttributeTemplateString+' => 'Yer sahipleri içeren dize',
-
 	'Core:AttributeTemplateText' => 'Şablon metni',
 	'Core:AttributeTemplateText+' => 'Yer sahipleri içeren metin',
-
 	'Core:AttributeTemplateHTML' => 'Şablon HTML',
 	'Core:AttributeTemplateHTML+' => 'Yer sahipleri içeren HTML',
-
 	'Core:AttributeDateTime' => 'Tarih / Saat',
 	'Core:AttributeDateTime+' => 'Tarih ve Saat (yıl-ay-gün hh:mm:ss)',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -164,7 +132,6 @@ Operators:<br/>
 <p>
 If the time is omitted, it defaults to 00:00:00
 </p>~~',
-
 	'Core:AttributeDate' => 'Tarih',
 	'Core:AttributeDate+' => 'Tarih (yıl-ay-gün)',
 	'Core:AttributeDate?SmartSearch' => '
@@ -179,43 +146,30 @@ Operators:<br/>
 	<b>&lt;</b><em>date</em><br/>
 	<b>[</b><em>date</em>,<em>date</em><b>]</b>
 </p>~~',
-
 	'Core:AttributeDeadline' => 'Son tarih',
 	'Core:AttributeDeadline+' => 'Geçerli saate göre görüntülenen tarih',
-
 	'Core:AttributeExternalKey' => 'Harici anahtar',
 	'Core:AttributeExternalKey+' => 'Harici (veya yabancı) anahtar',
-
 	'Core:AttributeHierarchicalKey' => 'Hiyerarşik anahtar',
 	'Core:AttributeHierarchicalKey+' => 'Ana kaynağın dış (veya yabancı) anahtarı',
-
 	'Core:AttributeExternalField' => 'Harici alan',
 	'Core:AttributeExternalField+' => 'Harici bir anahtarla eşlenen alan',
-
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => 'Bir metin dizesi olarak mutlak veya göreceli URL',
-
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => 'Herhangi bir ikili içerik (belge)',
-
 	'Core:AttributeOneWayPassword' => 'Tek yönlü şifre',
 	'Core:AttributeOneWayPassword+' => 'Tek Yönlü Şifrelenmiş (Hashed) Şifre',
-
 	'Core:AttributeTable' => 'Tablo',
 	'Core:AttributeTable+' => 'İki boyuta sahip dizine eklenmiş dizi',
-
 	'Core:AttributePropertySet' => 'Özellikler',
 	'Core:AttributePropertySet+' => 'Kaynaklı özelliklerin listesi (isim ve değer)',
-
 	'Core:AttributeFriendlyName' => 'Yaygın Adı',
 	'Core:AttributeFriendlyName+' => 'Otomatik olarak oluşturulan nitelik; Yaygın Ad, birkaç öznitelikten sonra hesaplanır',
-
 	'Core:FriendlyName-Label' => 'Yaygın Adı',
 	'Core:FriendlyName-Description' => 'Yaygın Adı',
-
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => '',
-	
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',
@@ -493,6 +447,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Action' => 'Özel işlem',
 	'Class:Action+' => 'Kullanıcının tanımladığı işlemler',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Adı',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => 'Tanımlama',
@@ -560,6 +515,22 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'yüksek',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:language' => 'Language~~',
+	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
+	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
+	'ActionEmail:main' => 'Message~~',
+	'ActionEmail:trigger' => 'Triggers~~',
+	'ActionEmail:recipients' => 'Contacts~~',
+	'ActionEmail:preview_tab' => 'Preview~~',
+	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
+	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
+	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
+	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
 ));
 
 //
@@ -569,6 +540,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Trigger' => 'Tetikleyici',
 	'Class:Trigger+' => 'Özel olay yürütücü',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Tanımlama',
 	'Class:Trigger/Attribute:description+' => 'tek satır tanımlama',
 	'Class:Trigger/Attribute:action_list' => 'Tetiklenen işlemler',
@@ -577,6 +549,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Context~~',
 	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:complement' => 'Additional information~~',
+	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
 ));
 
 //
@@ -673,6 +647,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 ));
 
 //
+// Class: TriggerOnAttributeBlobDownload
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
+	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 
@@ -708,11 +693,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 // Synchro Data Source
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:SynchroDataSource' => 'Synchro Veri Kaynağı',
 	'Class:SynchroDataSource/Attribute:name' => 'İsim',
 	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Açıklama',
 	'Class:SynchroDataSource/Attribute:status' => 'Durum',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Hedef sınıf',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class~~',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Kullanıcı',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Bildirim iletilecek kişi',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Hata durumunda bildirmek yapılacak kişi',
@@ -721,6 +708,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'Uygulama\'nın köprüsü',
 	'Class:SynchroDataSource/Attribute:url_application+' => ITOP_APPLICATION_SHORT.'\'un senkronize edildiği harici uygulamadaki '.ITOP_APPLICATION_SHORT.' nesnesine köprü (varsa). Muhtemel yer tutucular: $this->attribute$ ve $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Uzlaşma Politikası',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
+"Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Tam Yük Aralığı',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Tüm verilerin  yeniden yüklenmesi, en azından burada belirtilen sıklıkta olmalıdır',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Sıfırda eylem',
@@ -740,6 +729,33 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Silinmeden önce kullanım dışı bir nesne ne kadar tutulacak',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Veri tablosu',
 	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Senkronizasyon verilerini saklamak için tablonun adı. Boş bırakılırsa, varsayılan bir isim hesaplanacaktır.',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Uygulama',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Kullanım dışı',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Kullanımda',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Kapsam Kısıtlaması',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Öznitelikleri kullanın',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Birincil_anahtar alanını kullanın',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Oluşturun',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Hata',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Hata',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Güncelleme',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Oluşturun',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Hata',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'İlkini al (rastgele?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Politikayı Sil',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'What to do when a replica becomes obsolete:
+"Ignore": do nothing, the associated object remains as is in iTop.
+"Delete": Delete the associated object in iTop (and the replica in the data table).
+"Update": Update the associated object as specified by the Update rules (see below).
+"Update then Delete": apply the "Update rules". When Retention Duration expires, execute a "Delete" ~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Sil',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Yoksay',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Güncelle',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Güncelle ve sil',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Nitelikler listesi',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Sadece yöneticiler',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Herkes bu tür nesneleri silmek için izinlidir',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Kimse',
 	'SynchroDataSource:Description' => 'Açıklama',
 	'SynchroDataSource:Reconciliation' => 'Arama ve amp; Uzlaşma',
 	'SynchroDataSource:Deletion' => 'Silme kuralları',
@@ -764,8 +780,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:Synchro:NeverRun' => 'Bu senkronizasyon hiç çalışmadı. Henüz günlüğü yok.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'En son senkronizasyon %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Senkronizasyon %1$s\'de başladı hala çalışıyor...',
-	'Menu:DataSources' => 'Senkronizasyon Veri Kaynakları', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'Tüm Senkronizasyon Veri Kaynakları', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources' => 'Senkronizasyon Veri Kaynakları',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'Tüm Senkronizasyon Veri Kaynakları',
+    // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Yoksayıldı (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Kayboldu (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Mevcut (%1$s)',
@@ -829,29 +847,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Önceki değer',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Dosya kaydı',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Son giriş',
-	'Class:SynchroDataSource' => 'Synchro Veri Kaynağı',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Uygulama',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Kullanım dışı',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Kullanımda',
-	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Kapsam Kısıtlaması',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Öznitelikleri kullanın',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Birincil_anahtar alanını kullanın',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Oluşturun',
-	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Hata',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Hata',
-	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Güncelleme',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Oluşturun',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Hata',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'İlkini al (rastgele?)',
-	'Class:SynchroDataSource/Attribute:delete_policy' => 'Politikayı Sil',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Sil',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Yoksay',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Güncelle',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Güncelle ve sil',
-	'Class:SynchroDataSource/Attribute:attribute_list' => 'Nitelikler listesi',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Sadece yöneticiler',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Herkes bu tür nesneleri silmek için izinlidir',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Kimse',
 	'Class:SynchroAttribute' => 'Synchro niteliği',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Synchro Veri Kaynağı',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Öznitelik kodu',
@@ -912,21 +907,18 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Tercihler',
 	'Core:ExecProcess:Code1' => 'Yanlış komut veya komut hataları ile bitti (örneğin, yanlış senaryo adı)',
 	'Core:ExecProcess:Code255' => 'PHP hatası (ayrıştırma veya çalışma zamanı)',
-
-	// Attribute Duration
+    // Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
-
-	// Explain working time computing
+    // Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Geçen zaman (\\"%1$s\\" olarak saklanır)',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => '\\"%1$s\\" için harcanan zaman',
 	'Core:ExplainWTC:StopWatch-Deadline' => '\\"%1$s\\" için son tarih %2$d%%',
-
-	// Bulk export
+    // Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Eksik parametre \\"%1$s\\"',
-	'Core:BulkExport:InvalidParameter_Query' => '\"Sorgu\" parametresi için geçersiz değer. ID\'ye karşılık gelen sorgu dizimi yok: \"%1$s\".',
+	'Core:BulkExport:InvalidParameter_Query' => '\\"Sorgu\\" parametresi için geçersiz değer. ID\'ye karşılık gelen sorgu dizimi yok: \\"%1$s\\".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Dışarı çıkartma formatı:',
 	'Core:BulkExportOf_Class' => '%1$s dışarı çıkartıldı',
 	'Core:BulkExport:ClickHereToDownload_FileName' => '%1$s \'indirmek için buraya tıklayın',
@@ -976,20 +968,34 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
 	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
-	'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D~~', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM~~', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M~~', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY~~', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY~~', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh~~', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h~~', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh~~', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h~~', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm~~', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM~~', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm~~', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss~~', // seconds, 2 digits 00..59
+	'Core:DateTime:Placeholder_d' => 'DD~~',
+    // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D~~',
+    // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM~~',
+    // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M~~',
+    // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY~~',
+    // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY~~',
+    // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh~~',
+    // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h~~',
+    // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh~~',
+    // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h~~',
+    // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm~~',
+    // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM~~',
+    // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm~~',
+    // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss~~',
+    // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Yanlış format',
 	'Core:Validator:Mandatory' => 'Lütfen bu alanı doldurun',
 	'Core:Validator:MustBeInteger' => 'Bir tamsayı olmalı',
@@ -1002,7 +1008,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
 	'Class:TagSetFieldData+' => '',
-
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
 	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
@@ -1012,7 +1017,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
@@ -1099,8 +1103,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //

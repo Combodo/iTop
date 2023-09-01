@@ -412,23 +412,23 @@ JS
 					<<<JS
                 $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field({
 					'validators': {$this->GetValidatorsAsJson()},
-					'on_validation_callback': function(){
-                        	const aLinkedSetInputs = $('#{$sFieldWrapperId} input,select,textarea', this.element);
+					'on_validation_callback': function(oFormField){
+                        	const aLinkedSetInputs = $('#{$sFieldWrapperId} input,select,textarea', oFormField.element);
 							aLinkedSetInputs.each(function(e){
 								const oInput = $(this);
 								const aInputValidity = oInput[0].validity;
-								const oFormField = oInput.closest('.form_field_control');
+								const oFormFieldControl = oInput.closest('.form_field_control');
 								if(aInputValidity.valueMissing){
-									 oFormField.toggleClass('has-error', true);
-									 $('.help-block', oFormField).html('$aErrorMessagesMandatory');
+									 oFormFieldControl.toggleClass('has-error', true);
+									 $('.help-block', oFormFieldControl).html('$aErrorMessagesMandatory');
 								}
 								else if(aInputValidity.patternMismatch){
-									 oFormField.toggleClass('has-error', true);
-									 $('.help-block', oFormField).html('$aErrorMessagesDefault');
+									 oFormFieldControl.toggleClass('has-error', true);
+									 $('.help-block', oFormFieldControl).html('$aErrorMessagesDefault');
 								}
                                 else{
-                                     oFormField.toggleClass('has-error', false);
-									 $('.help-block', oFormField).empty();
+                                     oFormFieldControl.toggleClass('has-error', false);
+									 $('.help-block', oFormFieldControl).empty();
                                 }
 							});
 					},

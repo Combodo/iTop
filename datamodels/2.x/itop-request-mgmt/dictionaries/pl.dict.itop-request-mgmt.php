@@ -34,6 +34,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Otwarte zgłoszenia według typu',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Otwarte zgłoszenia według organizacji',
 	'Class:UserRequest:KnownErrorList' => 'Znane błędy',
+	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
 	'Menu:UserRequest:MyWorkOrders' => 'Zlecenia pracy przydzielone do mnie',
 	'Menu:UserRequest:MyWorkOrders+' => 'Wszystkie zlecenia pracy przydzielone do mnie',
 	'Class:Problem:KnownProblemList' => 'Znane problemy',
@@ -115,6 +116,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'niska',
 	'Class:UserRequest/Attribute:origin' => 'OPochodzenierigin',
 	'Class:UserRequest/Attribute:origin+' => '',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'e-mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'e-mail',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'monitoring',
@@ -270,7 +275,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Portal:SelectLanguage' => 'Zmień język',
 	'Portal:LanguageChangedTo_Lang' => 'Język został zmieniony na',
 	'Portal:ChooseYourFavoriteLanguage' => 'Wybierz swój ulubiony język',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Rozpatrz zgłoszenia podrzędne',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Połącz rozwiązanie kaskadowo do żądań podrzędnych (ev_autoresolve) i dopasuj następujące cechy zgłoszenia: usługa, zespół, agent, informacje o rozwiązaniu',
 ));

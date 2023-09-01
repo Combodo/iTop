@@ -28,5 +28,4 @@ class MultipleSelectField extends SelectField
 {
 	/** @inheritDoc */
 	const DEFAULT_MULTIPLE_VALUES_ENABLED = true;
-
 }

@@ -24,10 +24,8 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-
 	'bkp-backup-running' => 'Er wordt een backup gemaakt. Even geduld...',
 	'bkp-restore-running' => 'Er wordt een herstel uitgevoerd. Even geduld...',
-
 	'Menu:BackupStatus' => 'Geplande backups',
 	'bkp-status-title' => 'Geplande backups',
 	'bkp-status-checks' => 'Instellingen en controles',

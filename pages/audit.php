@@ -144,8 +144,8 @@ try
 {
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
-
 	require_once(APPROOT.'/application/startup.inc.php');
+	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 	$bSelectionAuditRulesByDefault = utils::GetConfig()->Get('audit.enable_selection_landing_page');
 	$operation = utils::ReadParam('operation', $bSelectionAuditRulesByDefault ? 'selection' : 'audit');
@@ -260,7 +260,7 @@ try
 		case 'selection':
 			$oP->SetBreadCrumbEntry('ui-tool-auditselection', Dict::S('UI:Audit:Interactive:Selection:BreadCrumb'), Dict::S('UI:Audit:Interactive:Selection:BreadCrumb+'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 			if (UserRights::IsActionAllowed('AuditCategory', UR_ACTION_MODIFY)) {
-				$oButton = ButtonUIBlockFactory::MakeLinkNeutral("./UI.php?c[menu]=AuditCategories", Dict::S('UI:Audit:Interactive:Button:Configuration'), 'fas fa-wrench');
+				$oButton = ButtonUIBlockFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot()."pages/UI.php?c[menu]=AuditCategories", Dict::S('UI:Audit:Interactive:Button:Configuration'), 'fas fa-wrench');
 				$oP->AddUiBlock($oButton);
 			}
 			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:Interactive:Selection:Title')));

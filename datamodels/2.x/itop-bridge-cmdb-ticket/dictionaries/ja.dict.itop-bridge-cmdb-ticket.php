@@ -33,6 +33,7 @@
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkFunctionalCIToTicket' => 'リンク 機能的CI/チケット',
 	'Class:lnkFunctionalCIToTicket+' => '',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'チケット',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => '参照',

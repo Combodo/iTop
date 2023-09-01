@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Input
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Component:Input:Password:DoesNotMatch' => 'Senhas não correspondem',

@@ -9,9 +9,7 @@ use Combodo\iTop\Application\UI\Links\Set\BlockLinkSetDisplayAsProperty;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Form;
-use Combodo\iTop\Form\Validator\LinkedSetValidator;
-use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
-use Combodo\iTop\Form\Validator\Validator;
+use Combodo\iTop\Form\Validator\CustomRegexpValidator;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Service\Links\LinkSetModel;
@@ -92,9 +90,6 @@ define('LINKSET_EDITMODE_ADDONLY', 1); // The only possible action is to open a 
 define('LINKSET_EDITMODE_ACTIONS', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITMODE_INPLACE', 3); // The "linked" objects can be created/modified/deleted in place
 define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/removed in place
-
-define('LINKSET_RELATIONTYPE_PROPERTY', 'property');
-define('LINKSET_RELATIONTYPE_LINK', 'link');
 
 define('LINKSET_DISPLAY_STYLE_PROPERTY', 'property');
 define('LINKSET_DISPLAY_STYLE_TAB', 'tab');
@@ -1126,7 +1121,7 @@ abstract class AttributeDefinition
 
 		// Validation pattern
 		if ($this->GetValidationPattern() !== '') {
-			$oFormField->AddValidator(new Validator($this->GetValidationPattern()));
+			$oFormField->AddValidator(new CustomRegexpValidator($this->GetValidationPattern()));
 		}
 
 		// Description
@@ -1153,6 +1148,13 @@ abstract class AttributeDefinition
 		// - Value raw
 		if ($this::IsScalar()) {
 			$oFormField->AddMetadata('value-raw', (string)$oObject->Get($this->GetCode()));
+		}
+
+		// We don't want to invalidate field because of old untouched values that are no longer valid
+		$aModifiedAttCodes = $oObject->ListChanges();
+		$bAttributeHasBeenModified = array_key_exists($this->GetCode(), $aModifiedAttCodes);
+		if (false === $bAttributeHasBeenModified) {
+			$oFormField->SetValidationDisabled(true);
 		}
 
 		return $oFormField;
@@ -1697,20 +1699,10 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	/**
 	 * @return string see LINKSET_EDITMODE_* constants
-	 * @since 3.1.0 N°5563 relations are edited using new attributes in details mode, but as nothing changed in edit mode we are still using edit_mode attribute
 	 */
 	public function GetEditMode()
 	{
 		return $this->GetOptional('edit_mode', LINKSET_EDITMODE_ACTIONS);
-	}
-
-	/**
-	 * @return string see LINKSET_RELATIONTYPE_* constants
-	 * @since 3.1.0 N°5563
-	 */
-	public function GetRelationType()
-	{
-		return $this->GetOptional('relation_type', LINKSET_RELATIONTYPE_LINK);
 	}
 
 	/**
@@ -1735,15 +1727,6 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetHasConstraint()
 	{
 		return $this->GetOptional('with_php_constraint', false);
-	}
-
-	/**
-	 * @return boolean
-	 * @since 3.1.0 N°5563
-	 */
-	public function GetReadOnly()
-	{
-		return $this->GetOptional('read_only', false);
 	}
 
 	public function GetLinkedClass()
@@ -1772,7 +1755,53 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/** @inheritDoc * */
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true): string
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		if($this->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB){
+			return $this->GetAsHTMLForTab($sValue, $oHostObject, $bLocalize);
+		}
+		else{
+			return $this->GetAsHTMLForProperty($sValue, $oHostObject, $bLocalize);
+		}
+	}
+
+	public function GetAsHTMLForTab($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
+		{
+			$sValue->Rewind();
+			$aItems = array();
+			while ($oObj = $sValue->Fetch())
+			{
+				// Show only relevant information (hide the external key to the current object)
+				$aAttributes = array();
+				foreach(MetaModel::ListAttributeDefs($this->GetLinkedClass()) as $sAttCode => $oAttDef)
+				{
+					if ($sAttCode == $this->GetExtKeyToMe())
+					{
+						continue;
+					}
+					if ($oAttDef->IsExternalField())
+					{
+						continue;
+					}
+					$sAttValue = $oObj->GetAsHTML($sAttCode);
+					if (strlen($sAttValue) > 0)
+					{
+						$aAttributes[] = $sAttValue;
+					}
+				}
+				$sAttributes = implode(', ', $aAttributes);
+				$aItems[] = $sAttributes;
+			}
+
+			return implode('<br/>', $aItems);
+		}
+
+		return null;
+	}
+
+	public function GetAsHTMLForProperty($sValue, $oHostObject = null, $bLocalize = true): string
 	{
 		try {
 
@@ -2447,8 +2476,6 @@ class AttributeLinkedSet extends AttributeDefinition
 			$oFormField->SetLnkAttributesToDisplay($aLnkAttributesToDisplay);
 		}
 
-		$oFormField->AddValidator(new LinkedSetValidator());
-
 		parent::MakeFormField($oObject, $oFormField);
 
 		return $oFormField;
@@ -2557,15 +2584,6 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	{
 		return $this->GetOptional("duplicates", false);
 	} // The same object may be linked several times... or not...
-
-	/**
-	 * @return boolean
-	 * @since 3.1.0 N°5563
-	 */
-	public function GetReadOnly()
-	{
-		return $this->GetOptional('read_only', false);
-	}
 
 	public function GetTrackingLevel()
 	{
@@ -3873,6 +3891,12 @@ class AttributeApplicationLanguage extends AttributeString
 		{
 			$aLanguageCodes[$sLangCode] = $aInfo['description'].' ('.$aInfo['localized_description'].')';
 		}
+
+		// N°6462 This should be sorted directly in \Dict during the compilation but we can't for 2 reasons:
+		// - Additional languages can be added on the fly even though it is not recommended
+		// - Formatting is done at run time (just above)
+		natcasesort($aLanguageCodes);
+
 		$aParams["allowed_values"] = new ValueSetEnum($aLanguageCodes);
 		parent::__construct($sCode, $aParams);
 	}
@@ -4163,7 +4187,7 @@ class AttributePassword extends AttributeString implements iAttributeNoGroupBy
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (strlen($sValue) == 0)
+		if (utils::IsNullOrEmptyString($sValue))
 		{
 			return '';
 		}
@@ -7196,12 +7220,25 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		{
 			return 0;
 		}
-		if (MetaModel::IsValidObject($proposedValue))
-		{
+		if (MetaModel::IsValidObject($proposedValue)) {
 			return $proposedValue->GetKey();
 		}
 
 		return (int)$proposedValue;
+	}
+
+	/** @inheritdoc  @since 3.1 */
+	public function WriteExternalValues(DBObject $oHostObject): void
+	{
+		$sTargetKey = $oHostObject->Get($this->GetCode());
+		$oFilter = DBSearch::FromOQL('SELECT `'.TemporaryObjectDescriptor::class.'` WHERE item_class=:class AND item_id=:id');
+		$oSet = new DBObjectSet($oFilter, [], ['class' => $this->GetTargetClass(), 'id' => $sTargetKey]);
+		while ($oTemporaryObjectDescriptor = $oSet->Fetch()) {
+			$oTemporaryObjectDescriptor->Set('host_class', get_class($oHostObject));
+			$oTemporaryObjectDescriptor->Set('host_id', $oHostObject->GetKey());
+			$oTemporaryObjectDescriptor->Set('host_att_code', $this->GetCode());
+			$oTemporaryObjectDescriptor->DBUpdate();
+		}
 	}
 
 	public function GetMaximumComboLength()
@@ -7267,6 +7304,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
+		/** @var \Combodo\iTop\Form\Field\Field $oFormField */
 		if ($oFormField === null) {
 			// Later : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
 			$sFormFieldClass = static::GetFormFieldClass();
@@ -7297,17 +7335,10 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 				}
 			});
 		}
-		else
-		{
+		else {
 			$oSearch = DBSearch::FromOQL($this->GetValuesDef()->GetFilterExpression());
 			$oSearch->SetInternalParams(array('this' => $oObject));
 			$oFormField->SetSearch($oSearch);
-		}
-
-		// If ExtKey is mandatory, we add a validator to ensure that the value 0 is not selected
-		if ($oObject->GetAttributeFlags($this->GetCode()) & OPT_ATT_MANDATORY)
-		{
-			$oFormField->AddValidator(new NotEmptyExtKeyValidator());
 		}
 
 		parent::MakeFormField($oObject, $oFormField);
@@ -7935,6 +7966,17 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->MakeRealValue($proposedValue, $oHostObj);
 	}
 
+	/**
+	 * @inheritDoc
+	 * @since 3.1.0 N°6271 Delegate to remote attribute to ensure cascading computed values
+	 */
+	public function GetSQLValues($value)
+	{
+		$oExtAttDef = $this->GetExtAttDef();
+
+		return $oExtAttDef->GetSQLValues($value);
+	}
+
 	public function ScalarToSQL($value)
 	{
 		// This one could be used in case of filtering only
@@ -8343,7 +8385,7 @@ class AttributeBlob extends AttributeDefinition
 			$aValues[$this->GetCode().'_data'] = '';
 			$aValues[$this->GetCode().'_mimetype'] = '';
 			$aValues[$this->GetCode().'_filename'] = '';
-			$aValues[$this->GetCode().'_downloads_count'] = \ormDocument::DEFAULT_DOWNLOADS_COUNT;
+			$aValues[$this->GetCode().'_downloads_count'] = ormDocument::DEFAULT_DOWNLOADS_COUNT;
 		}
 
 		return $aValues;
@@ -8533,6 +8575,22 @@ class AttributeBlob extends AttributeDefinition
 		return utils::IsNotNullOrEmptyString($proposedValue->GetData()) && utils::IsNotNullOrEmptyString($proposedValue->GetFileName());
 	}
 
+	/**
+	 * @inheritDoc
+	 * @param \ormDocument $original
+	 * @param \ormDocument $value
+	 * @since N°6502
+	 */
+	public function RecordAttChange(DBObject $oObject, $original, $value): void
+	{
+		// N°6502 Don't record history if only the download count has changed
+		if ($original->EqualsExceptDownloadsCount($value)) {
+			return;
+		}
+
+		parent::RecordAttChange($oObject, $original, $value);
+	}
+
 	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
 	{
 		if (is_null($original)) {
@@ -8692,7 +8750,7 @@ class AttributeImage extends AttributeBlob
 			return 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
 		}
 
-		return $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
+		return $value->GetDisplayURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
 	}
 
 	public static function GetFormFieldClass()
@@ -8719,8 +8777,11 @@ class AttributeImage extends AttributeBlob
 		}
 		else
 		{
-			$oFormField->SetDownloadUrl($this->Get('default_image'));
-			$oFormField->SetDisplayUrl($this->Get('default_image'));
+			$oDefaultImage = $this->Get('default_image');
+			if (is_object($oDefaultImage) && !$oDefaultImage->IsEmpty()) {
+				$oFormField->SetDownloadUrl($oDefaultImage);
+				$oFormField->SetDisplayUrl($oDefaultImage);
+			}
 		}
 
 		return $oFormField;
@@ -11299,6 +11360,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 			}
 			$aAllowedAttributes[$sAttCode] = $sLabel;
 		}
+		// N°6460 Always sort on the labels, not on the datamodel definition order
+		natcasesort($aAllowedAttributes);
+
 		return $aAllowedAttributes;
 	}
 

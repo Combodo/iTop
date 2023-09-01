@@ -1,5 +1,5 @@
 <?php
- /**
+/**
  * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
@@ -7,7 +7,6 @@
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
-
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'CAS:Error:UserNotAllowed' => 'Usuario no permitido',
 	'CAS:Login:SignIn' => 'Iniciar sesión con CAS',

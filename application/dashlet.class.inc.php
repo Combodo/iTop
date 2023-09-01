@@ -667,7 +667,7 @@ class DashletUnknown extends Dashlet
 	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerLongTextField('xml', Dict::S('UI:DashletUnknown:Prop-XMLConfiguration'), $this->sOriginalDashletXML);
+		$oField = new DesignerXMLField('xml', Dict::S('UI:DashletUnknown:Prop-XMLConfiguration'), $this->sOriginalDashletXML);
 		$oForm->AddField($oField);
 	}
 

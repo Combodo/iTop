@@ -584,6 +584,12 @@ class LogChannels
 	public const DM_CRUD = 'DMCRUD';
 
 	/**
+	 * @var string Everything related to the datamodel CRUD
+	 * @since 3.1.0
+	 */
+	public const WEB_REQUEST = 'WebRequest';
+
+	/**
 	 * @var string Everything related to the event service
 	 * @since 3.1.0
 	 */
@@ -605,6 +611,8 @@ class LogChannels
 	public const NOTIFICATIONS = 'notifications';
 
 	public const PORTAL       = 'portal';
+
+	public const TEMPORARY_OBJECTS = 'TemporaryObjects';
 
 	/**
 	 * @var string
@@ -1230,7 +1238,9 @@ class DeprecatedCallsLog extends LogAPI
 	}
 
 	/**
-	 * @throws \ConfigException
+	 * @since 3.0.1 3.1.0 N°4725 silently handles ConfigException
+	 * @since 3.0.4 3.1.0 N°4725 remove forgotten throw PHPDoc annotation
+	 *
 	 * @link https://www.php.net/debug_backtrace
 	 * @uses \debug_backtrace()
 	 */
@@ -1404,7 +1414,7 @@ class LogFileRotationProcess implements iScheduledProcess
 		$iMaxDays = MetaModel::GetConfig()->Get(LogAPI::ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS);
 
 		// Files iterator (*.*)
-		$oIterator = new \GlobIterator(APPROOT.'log'.DIRECTORY_SEPARATOR.'/*.*');
+		$oIterator = new \GlobIterator(APPROOT.'log'.DIRECTORY_SEPARATOR.'*.*');
 		$aLogFiles = iterator_to_array($oIterator);
 
 		// Reference date
@@ -1415,6 +1425,11 @@ class LogFileRotationProcess implements iScheduledProcess
 
 			// File real path
 			$sFileRealPath = $oLogFile->getRealPath();
+
+			// Check file extension
+			if(!in_array($oLogFile->getExtension(), ['log','sql','xml'])){
+				continue;
+		    }
 
 			// Compute number of days since last modification
 			$oDateFileLastModification = new DateTime();

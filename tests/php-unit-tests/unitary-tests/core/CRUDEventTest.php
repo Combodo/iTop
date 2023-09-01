@@ -284,8 +284,6 @@ class CRUDEventTest extends ItopDataTestCase
 	 */
 	public function testInfiniteUpdateDoneLoop()
 	{
-		$this->markTestSkipped('TEST Skipped: Protection not working.');
-
 		$oPerson = $this->CreatePerson(1);
 		$this->assertIsObject($oPerson);
 
@@ -343,7 +341,8 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(16, self::$iEventCalls);
+		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
+		$this->assertEquals(20, self::$iEventCalls);
 	}
 
 	/**
@@ -391,7 +390,8 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_CHECK_TO_WRITE]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_BEFORE_WRITE]);
 		$this->assertEquals(4, self::$aEventCalls[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(16, self::$iEventCalls);
+		$this->assertEquals(3, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
+		$this->assertEquals(19, self::$iEventCalls);
 
 		// Read the object explicitly from the DB to check that the role has been set
 		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT Team WHERE id=:id'), [], ['id' => $oTeam->GetKey()]);
@@ -480,9 +480,52 @@ class CRUDEventTest extends ItopDataTestCase
 		$this->assertTrue(CRUDEventReceiver::$bIsObjectInCrudStack);
 	}
 
+	public function testLinksAdded()
+	{
+		// Create a Person
+		$oPerson = $this->CreatePerson(1);
+
+		// Create a Team
+		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeamWithLinkToAPerson', 'org_id' => $this->getTestOrgId()]);
+		$oTeam->DBInsert();
+
+		// Start receiving events
+		$oEventReceiver = new CRUDEventReceiver();
+		$oEventReceiver->RegisterCRUDListeners();
+
+		// Create a link between Person and Team => generate 2 EVENT_DB_LINKS_CHANGED
+		$oLnk = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson->GetKey(), 'team_id' => $oTeam->GetKey()]);
+		$oLnk->DBInsert();
+
+		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
+	}
+
+	public function testLinksDeleted()
+	{
+		// Create a Person
+		$oPerson = $this->CreatePerson(1);
+
+		// Create a Team
+		$oTeam = MetaModel::NewObject(Team::class, ['name' => 'TestTeamWithLinkToAPerson', 'org_id' => $this->getTestOrgId()]);
+		$oTeam->DBInsert();
+
+		// Create a link between Person and Team => generate 2 EVENT_DB_LINKS_CHANGED
+		$oLnk = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson->GetKey(), 'team_id' => $oTeam->GetKey()]);
+		$oLnk->DBInsert();
+
+		// Start receiving events
+		$oEventReceiver = new CRUDEventReceiver();
+		$oEventReceiver->RegisterCRUDListeners();
+
+		$oLnk->DBDelete();
+
+		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
+	}
 }
 
-
+/**
+ * Add debug feature to test support class
+ */
 class ClassesWithDebug
 {
 	/**
@@ -505,7 +548,7 @@ class ClassesWithDebug
 }
 
 /**
- * Count events received
+ * Test support class used to count events received
  * And allow callbacks on events
  */
 class CRUDEventReceiver extends ClassesWithDebug
@@ -514,6 +557,18 @@ class CRUDEventReceiver extends ClassesWithDebug
 
 	public static $bIsObjectInCrudStack;
 
+	//
+
+	/**
+	 * Add a specific callback for an event
+	 *
+	 * @param string $sEvent event name
+	 * @param string $sClass event source class name
+	 * @param string $sFct   function to call on CRUDEventReceiver object
+	 * @param int $iCount    limit the number of calls to the callback
+	 *
+	 * @return void
+	 */
 	public function AddCallback(string $sEvent, string $sClass, string $sFct, int $iCount = 1): void
 	{
 		$this->aCallbacks[$sEvent][$sClass] = [
@@ -527,7 +582,15 @@ class CRUDEventReceiver extends ClassesWithDebug
 		$this->aCallbacks = [];
 	}
 
-	// Event callbacks
+
+	/**
+	 * Event callbacks => this function counts the received events by event name and source class
+	 * If AddCallback() method has been called a specific callback is called, else only the count is done
+	 *
+	 * @param \Combodo\iTop\Service\Events\EventData $oData
+	 *
+	 * @return void
+	 */
 	public function OnEvent(EventData $oData)
 	{
 		$sEvent = $oData->GetEvent();
@@ -556,6 +619,7 @@ class CRUDEventReceiver extends ClassesWithDebug
 			EventService::RegisterListener(EVENT_DB_BEFORE_WRITE, [$this, 'OnEvent']);
 			EventService::RegisterListener(EVENT_DB_AFTER_WRITE, [$this, 'OnEvent']);
 			EventService::RegisterListener(EVENT_DB_AFTER_DELETE, [$this, 'OnEvent']);
+			EventService::RegisterListener(EVENT_DB_LINKS_CHANGED, [$this, 'OnEvent']);
 
 			return;
 		}

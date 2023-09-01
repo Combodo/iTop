@@ -30,10 +30,10 @@
 //
 // Class: lnkFunctionalCIToProviderContract
 //
-
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'Verknüpfung FunctionalCI/Provider-Vertrag',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider-Vertrag',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Provider-Vertragsname',
@@ -51,6 +51,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkFunctionalCIToService' => 'Verknüpfung FunctionalCI/Service',
 	'Class:lnkFunctionalCIToService+' => '',
+	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Service-Name',
@@ -78,7 +79,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Document/Attribute:contracts_list' => 'Verträge',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
+	'Class:Document/Attribute:contracts_list+' => 'Alle mit diesem Dokument verknüpften Verträge',
 	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
+	'Class:Document/Attribute:services_list+' => 'Alle mit diesem Dokument verknüpften Services',
 ));

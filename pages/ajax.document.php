@@ -34,6 +34,7 @@ try
 	require_once(APPROOT.'/application/startup.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 	$oPage = new DownloadPage("");
 

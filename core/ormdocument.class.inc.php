@@ -86,6 +86,33 @@ class ormDocument
 	{
 		return ($this->m_data == null);
 	}
+
+	/**
+	 * @param \ormDocument $oCompared
+	 *
+	 * @return bool True if the current ormDocument is equals to $oCompared EXCEPT for its download count. False if any other property is different OR if count is the same.
+	 * @since 3.1.0 N°6502
+	 */
+	public function EqualsExceptDownloadsCount(ormDocument $oCompared): bool
+	{
+		// First checking equality on others properties
+		if ($oCompared->GetData() !== $this->GetData()) {
+			return false;
+		}
+		if ($oCompared->GetMimeType() !== $this->GetMimeType()) {
+			return false;
+		}
+		if ($oCompared->GetFileName() !== $this->GetFileName()) {
+			return false;
+		}
+
+		// Finally check equality of the download count
+		if ($oCompared->GetDownloadsCount() === $this->GetDownloadsCount()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 	public function GetMimeType()
 	{

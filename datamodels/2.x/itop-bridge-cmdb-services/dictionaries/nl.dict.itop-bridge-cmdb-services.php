@@ -30,10 +30,10 @@
 //
 // Class: lnkFunctionalCIToProviderContract
 //
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'Link Functioneel CI / Leverancierscontract',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Leverancierscontract',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Naam leverancierscontract',
@@ -51,6 +51,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkFunctionalCIToService' => 'Link Functioneel CI / Service',
 	'Class:lnkFunctionalCIToService+' => '',
+	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Naam service',

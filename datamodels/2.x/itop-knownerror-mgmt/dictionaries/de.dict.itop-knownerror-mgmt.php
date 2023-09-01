@@ -24,7 +24,7 @@
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError' => 'Known Error',
-	'Class:KnownError+' => 'Dokumentierter Fehler für ein Issue',
+	'Class:KnownError+' => 'Dokumentierter Fehler für ein Problem',
 	'Class:KnownError/Attribute:name' => 'Name',
 	'Class:KnownError/Attribute:name+' => '',
 	'Class:KnownError/Attribute:org_id' => 'Kunde',
@@ -62,9 +62,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError/Attribute:version' => 'Version',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
-	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
+	'Class:KnownError/Attribute:ci_list+' => 'Alle CIs, die mit diesem Known Error verknüpft sind',
 	'Class:KnownError/Attribute:document_list' => 'Dokumente',
-	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
+	'Class:KnownError/Attribute:document_list+' => 'Alle Dokumente, die mit diesem Known Error verknüpft sind',
 ));
 
 //
@@ -74,6 +74,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkErrorToFunctionalCI' => 'Verknüpfung KnownError/FunctionalCI',
 	'Class:lnkErrorToFunctionalCI+' => '',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI-Name',
@@ -93,6 +94,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDocumentToError' => 'Verknüpfung Dokumente/KnownError',
 	'Class:lnkDocumentToError+' => '',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Dokument',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Dokumentname',
@@ -110,9 +112,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ProblemManagement+' => 'Problem Management',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
 	'Menu:NewError' => 'Neuer Known Error',
-	'Menu:NewError+' => '',
+	'Menu:NewError+' => 'Neuen Known Error dokumentieren',
 	'Menu:SearchError' => 'Nach Known Error suchen',
-	'Menu:SearchError+' => '',
+	'Menu:SearchError+' => 'Nach dokumentierten Fehlern suchen',
 	'Menu:Problem:KnownErrors' => 'Alle Known Errors',
 	'Menu:Problem:KnownErrors+' => 'Alle Known Errors',
 ));

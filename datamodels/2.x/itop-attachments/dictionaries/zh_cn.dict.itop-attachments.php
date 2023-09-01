@@ -66,6 +66,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:File:Uploader' => '上传者',
 	'Attachments:File:Size' => '大小',
 	'Attachments:File:MimeType' => '类型',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
 ));
 //
 // Class: Attachment
@@ -78,4 +79,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => '联系人id',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 ));

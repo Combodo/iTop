@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 try
 {
@@ -52,7 +53,7 @@ try
 
     if (array_key_exists('table_inner_id', $aListParams))
     {
-        $sListId = utils::HtmlEntities($aListParams['table_inner_id']);
+        $sListId = utils::Sanitize($aListParams['table_inner_id'], '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
     }
 
 	if (array_key_exists('json', $aListParams))

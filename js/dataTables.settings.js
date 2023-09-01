@@ -35,8 +35,8 @@ $(function () {
 				var me = this;
 				var bViewLink = (this.options.sViewLink == 'true');
 				$('#sfl_'+me.options.sListId).fieldsorter({hasKeyColumn: bViewLink, labels: this.options.oLabels, fields: this.options.oColumns, onChange: function() { me._onSpecificSettings(); } });
-				$('#datatable_dlg_'+me.options.sListId).find('input[name=page_size]').on('click', function() { me._onSpecificSettings(); });
-				$('#datatable_dlg_'+me.options.sListId).find('input[name=save_settings]').on('click', function() { me._updateSaveScope(); });
+				$('#datatable_dlg_'+me.options.sListId).find('input[name="page_size"]').on('click', function() { me._onSpecificSettings(); });
+				$('#datatable_dlg_'+me.options.sListId).find('input[name="save_settings"]').on('click', function() { me._updateSaveScope(); });
 				this._updateSaveScope();
 				this._saveDlgState();
 			},
@@ -92,8 +92,12 @@ $(function () {
 							if ($.inArray(item, aLoadedJsFilesRegister) === -1)
 							{
 								sFileUrl = CombodoGlobalToolbox.AddParameterToUrl(item, aOptions.js_files_param, aOptions.js_files_value);
-								$.ajax({url:sFileUrl, dataType: 'script', cache: true });
-								aLoadedJsFilesRegister.push(item);
+								$.ajax({url: sFileUrl, dataType: 'script', cache: true});
+								aLoadedJsFilesRegister.set(item, new Promise(function (fJsFileResolve) {
+									aLoadedJsFilesResolveCallbacks.set(item, fJsFileResolve);
+									// Resolve promise right away as these files are loaded immediately
+									aLoadedJsFilesResolveCallbacks.get(item, fJsFileResolve)();
+								}));
 							}
 						});
 					}
@@ -170,7 +174,7 @@ $(function () {
 			},
 			onDlgOk: function() {
 				var oOptions = {};
-				oSettings = $('#datatable_dlg_'+this.options.sListId).find('input[name=settings]:checked');
+				oSettings = $('#datatable_dlg_'+this.options.sListId).find('input[name="settings"]:checked');
 				if (oSettings.val() == 'defaults') {
 					oOptions = { iPageSize: this.options.oDefaultSettings.iDefaultPageSize,
 						oColumns: this.options.oDefaultSettings.oColumns
@@ -181,7 +185,7 @@ $(function () {
 					var iSortIdx = 0;
 					var sSortDirection = 'asc';
 					var oColumns = $('#datatable_dlg_'+this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
-					var iPageSize = parseInt($('#datatable_dlg_'+this.options.sListId+' input[name=page_size]').val(), 10);
+					var iPageSize = parseInt($('#datatable_dlg_'+this.options.sListId+' input[name="page_size"]').val(), 10);
 
 					oOptions = {oColumns: oColumns, iPageSize: iPageSize, iDefaultPageSize: iPageSize };
 				}
@@ -189,8 +193,8 @@ $(function () {
 				this._refresh();
 
 				// Check if we need to save the settings or not...
-				var oSaveCheck = $('#datatable_dlg_'+this.options.sListId).find('input[name=save_settings]');
-				var oSaveScope = $('#datatable_dlg_'+this.options.sListId).find('input[name=scope]:checked');
+				var oSaveCheck = $('#datatable_dlg_'+this.options.sListId).find('input[name="save_settings"]');
+				var oSaveScope = $('#datatable_dlg_'+this.options.sListId).find('input[name="scope"]:checked');
 				if (oSaveCheck.prop('checked')) {
 					if (oSettings.val() == 'defaults') {
 						this._useDefaultSettings((oSaveScope.val() == 'defaults'));
@@ -200,7 +204,7 @@ $(function () {
 				}
 				this._saveDlgState();
 
-				$('#datatable_dlg_'+this.options.sListId).find('[name=action]').val("save");
+				$('#datatable_dlg_'+this.options.sListId).find('[name="action"]').val("save");
 				$('#datatable_dlg_'+this.options.sListId).dialog('close');
 			},
 			onDlgCancel: function() {
@@ -210,15 +214,15 @@ $(function () {
 				$('#datatable_dlg_'+this.options.sListId).find('input.specific_settings').prop('checked', true);
 			},
 			_updateSaveScope: function() {
-				var oSaveCheck = $('#datatable_dlg_'+this.options.sListId).find('input[name=save_settings]');
+				var oSaveCheck = $('#datatable_dlg_'+this.options.sListId).find('input[name="save_settings"]');
 				if (oSaveCheck.prop('checked')) {
-					$('#datatable_dlg_'+this.options.sListId).find('input[name=scope]').each(function() {
+					$('#datatable_dlg_'+this.options.sListId).find('input[name="scope"]').each(function() {
 						if ($(this).attr('stay-disabled') != 'true') {
 							$(this).prop('disabled', false);
 						}
 					});
 				} else {
-					$('#datatable_dlg_'+this.options.sListId).find('input[name=scope]').prop('disabled', true);
+					$('#datatable_dlg_'+this.options.sListId).find('input[name="scope"]').prop('disabled', true);
 				}
 			},
 			// events bound via _bind are removed automatically
@@ -259,7 +263,7 @@ $(function () {
 				}
 
 				var dlgElement = $('#datatable_dlg_'+this.options.sListId);
-				dlgElement.find('input[name=page_size]').val(iPageSize);
+				dlgElement.find('input[name="page_size"]').val(iPageSize);
 				dlgElement.find(':itop-fieldsorter').fieldsorter('option', { fields: this.options.oColumns });
 			},
 			_saveDlgState: function () {
@@ -267,7 +271,8 @@ $(function () {
 				for (k in this.aDlgStateParams) {
 					this.originalState[this.aDlgStateParams[k]] = this.options[this.aDlgStateParams[k]];
 				}
-				this.originalState.oFields = $('#datatable_dlg_' + this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
+				this.originalState.iDefaultPageSize = $('#datatable_dlg_'+this.options.sListId).find('input[name="page_size"]').val();
+				this.originalState.oFields = $('#datatable_dlg_'+this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
 			},
 			_restoreDlgState: function () {
 				var dlgElement = $('#datatable_dlg_' + this.options.sListId);
@@ -276,7 +281,7 @@ $(function () {
 					this._setOption(this.aDlgStateParams[k], this.originalState[this.aDlgStateParams[k]]);
 				}
 
-				dlgElement.find('input[name=page_size]').val(this.originalState.iDefaultPageSize);
+				dlgElement.find('input[name="page_size"]').val(this.originalState.iDefaultPageSize);
 
 				dlgElement.find(':itop-fieldsorter').fieldsorter('option', {fields: this.originalState.oFields});
 

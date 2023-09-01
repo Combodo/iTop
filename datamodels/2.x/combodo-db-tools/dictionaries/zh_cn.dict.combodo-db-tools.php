@@ -41,14 +41,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBTools:IntegrityCheck' => '完整性检查',
 	'DBTools:FetchCheck' => '提取检查(耗时长)',
 	'DBTools:SelectAnalysisType' => '请选择分析类型',
-
 	'DBTools:Analyze' => '分析',
 	'DBTools:Details' => '显示详情',
 	'DBTools:ShowAll' => '显示所有错误',
-
 	'DBTools:Inconsistencies' => '数据库不一致',
 	'DBTools:DetailedErrorTitle' => '%2$s 个错误在类 %1$s: %3$s',
-
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`~~',
 	'DBAnalyzer-Integrity-InvalidExtKey' => '无效的外键 %1$s (列: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => '外键丢失 %1$s (列: `%2$s.%3$s`)',
@@ -69,26 +67,21 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 // Lost attachments
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'DBTools:LostAttachments' => '缺失附件',
+	'DBTools:LostAttachments' => '附件缺失',
 	'DBTools:LostAttachments:Disclaimer' => '可以在此搜索数据库中丢失或错放的附件.这不是数据恢复工具,其无法恢复已删除的数据.',
-
 	'DBTools:LostAttachments:Button:Analyze' => '分析',
 	'DBTools:LostAttachments:Button:Restore' => '还原',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => '此操作无法回退, 请确认是否继续还原.',
 	'DBTools:LostAttachments:Button:Busy' => '请稍后...',
-
 	'DBTools:LostAttachments:Step:Analyze' => '首先, 通过分析数据库来搜索丢失或误挪动的附件.',
-
 	'DBTools:LostAttachments:Step:AnalyzeResults' => '分析结果:',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => '非常好! 所有附件都是正常的.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => '某些附件 (%1$d) 看起来放错了位置. 请检查下面的列表并选择要挪动的文件.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => '文件名',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => '当前位置',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => '移动到...',
-
 	'DBTools:LostAttachments:Step:RestoreResults' => '还原结果:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d 的附件被还原.',
-
 	'DBTools:LostAttachments:StoredAsInlineImage' => '存储为内嵌图像',
 	'DBTools:LostAttachments:History' => '附件 "%1$s" 已使用数据库工具还原'
 ));

@@ -1043,65 +1043,7 @@ class iTopDesignFormat
 	 */
 	protected function From30To31($oFactory)
 	{
-		$oXPath = new DOMXPath($this->oDocument);
 
-		// N°5563 AttributeLinkedSet
-		// - move edit_mode attribute to legacy_edit_mode attribute
-		// - fill relation_type & read_only if non-existing
-		$oLinkedSetNodes = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']");
-		/** @var \DOMElement $oNode */
-		foreach ($oLinkedSetNodes as $oNode) {
-			$sEditMode = 'actions';
-			if ($oNode->hasChildNodes()) {
-				$oLinkedSetEditModeNodes = $oNode->getElementsByTagName('edit_mode');
-				if (count($oLinkedSetEditModeNodes)) {
-					$oEditModeNode = $oLinkedSetEditModeNodes->item(0);
-					/** @noinspection NullPointerExceptionInspection already checked */
-					$sEditMode = $oEditModeNode->nodeValue;
-				}
-
-				switch ($sEditMode) {
-					case 'none':
-						$sRelationType = 'link';
-						$sReadOnly = 'true';
-						break;
-					case 'add_only':
-					case 'add_remove':
-					case 'actions':
-					default:
-						$sRelationType = 'link';
-						$sReadOnly = 'false';
-						break;
-					case 'in_place':
-						$sRelationType = 'property';
-						$sReadOnly = 'false';
-						break;
-				}
-
-				$bHasRelationType = ($oNode->getElementsByTagName('relation_type')->count() > 0);
-				if (false === $bHasRelationType) {
-					$oRelationTypeNode = $oNode->ownerDocument->createElement('relation_type', $sRelationType);
-					$oNode->appendChild($oRelationTypeNode);
-				}
-
-				$bHasReadOnly = ($oNode->getElementsByTagName('read_only')->count() > 0);
-				if (false === $bHasReadOnly) {
-					$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', $sReadOnly);
-					$oNode->appendChild($oReadOnlyNode);
-				}
-			}
-		}
-
-		// N°5563 AttributeLinkedSetIndirect
-		// - fill read_only attribute if non-existing
-		$oLinkedSetIndirectNodes = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']");
-		foreach ($oLinkedSetIndirectNodes as $oNode) {
-			$bHasReadOnly = ($oNode->getElementsByTagName('read_only')->count() > 0);
-			if (false === $bHasReadOnly) {
-				$oReadOnlyNode = $oNode->ownerDocument->createElement('read_only', 'false');
-				$oNode->appendChild($oReadOnlyNode);
-			}
-		}
 	}
 	/**
 	 * Downgrade the format from version 3.1 to 3.0
@@ -1111,16 +1053,6 @@ class iTopDesignFormat
 	protected function From31To30($oFactory)
 	{
 		$oXPath = new DOMXPath($this->oDocument);
-
-		// N°5563 AttributeLinkedSet
-		// - Remove relation_type & read_only (added in 3.1)
-		// - Restore edit_mode attribute from legacy_edit_mode attribute
-		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/read_only");
-		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSet']/relation_type");
-
-		// N°5563 AttributeLinkedSetIndirect
-		// - Remove read_only attribute (added in 3.1)
-		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field[@xsi:type='AttributeLinkedSetIndirect']/read_only");
 
 		// N°4756 - Ease extensibility for CRUD operations : Event Service
 		$this->RemoveNodeFromXPath('/itop_design/events');

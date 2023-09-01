@@ -138,12 +138,24 @@ class Router
 	{
 		$aRoutes = [];
 		$bUseCache = false === utils::IsDevelopmentEnvironment();
+		$bMustWriteCache = false;
 		$sCacheFilePath = $this->GetCacheFileAbsPath();
 
 		// Try to read from cache
 		if ($bUseCache) {
 			if (is_file($sCacheFilePath)) {
-				$aRoutes = include $sCacheFilePath;
+				$aCachedRoutes = include $sCacheFilePath;
+
+				// N°6618 - Protection against corrupted cache returning `1` instead of an array of routes
+				if (is_array($aCachedRoutes)) {
+					$aRoutes = $aCachedRoutes;
+				} else {
+					// Invalid cache force re-generation
+					// Note that even if it is re-generated corrupted again, this protection should prevent crashes
+					$bMustWriteCache = true;
+				}
+			} else {
+				$bMustWriteCache = true;
 			}
 		}
 
@@ -180,11 +192,11 @@ class Router
 			}
 		}
 
-		// Save to cache
-		if ($bUseCache) {
+		// Save to cache if it doesn't exist already
+		if ($bMustWriteCache) {
 			$sCacheContent = "<?php\n\nreturn ".var_export($aRoutes, true).";";
 			SetupUtils::builddir(dirname($sCacheFilePath));
-			file_put_contents($sCacheFilePath, $sCacheContent);
+			file_put_contents($sCacheFilePath, $sCacheContent, LOCK_EX);
 		}
 
 		return $aRoutes;

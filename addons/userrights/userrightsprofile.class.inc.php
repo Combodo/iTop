@@ -228,6 +228,7 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 			"db_table"            => "priv_urp_userprofile",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
+			"is_link" 			  => true, /** @since 3.1.0 N°6482 */
 			'uniqueness_rules'    => array(
 				'no_duplicate' => array(
 					'attributes'  => array(

@@ -1970,6 +1970,7 @@ SQL;
 
 	/**
 	 * @param string $sValue
+	 * @param bool $bDoubleEncode Whether to double encode the value or not
 	 *
 	 * @return string passed value with only characters having a special meaning in HTML escaped as entities
 	 *    Since 3.0.0 we were using for this {@link HtmlEntities} but it was overkill and leads to double escaping !
@@ -1977,14 +1978,15 @@ SQL;
 	 * @uses \htmlspecialchars()
 	 * @link https://www.php.net/manual/fr/function.htmlspecialchars.php
 	 * @since 3.0.0 N°3623
+	 * @since 3.1.0 N°6405 Add $bDoubleEncode parameter
 	 */
-	public static function EscapeHtml($sValue)
+	public static function EscapeHtml($sValue, bool $bDoubleEncode = false)
 	{
 		return htmlspecialchars(
 			$sValue ?? '',
 			ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5,
 			WebPage::PAGES_CHARSET,
-			false
+			$bDoubleEncode
 		);
 	}
 
@@ -2045,6 +2047,9 @@ SQL;
 	 */
 	public static function TextToHtml($sText)
 	{
+		if (static::IsNullOrEmptyString($sText)){
+			return '';
+		}
 		$sText = str_replace("\r\n", "\n", $sText);
 		$sText = str_replace("\r", "\n", $sText);
 
@@ -2904,7 +2909,8 @@ HTML;
 				if ($sClassNameFilter !== '' && strpos($sPHPClass, $sClassNameFilter) === false) {
 					$bSkipped = true;
 				}
-				else {
+				// For some PHP classes we don't have their file path as they are already in memory, so we never filter on their paths
+				elseif (utils::IsNotNullOrEmptyString($sPHPFile)) {
 					$sPHPFile = self::LocalPath($sPHPFile);
 					if ($sPHPFile !== false) {
 						$sPHPFile = '/'.$sPHPFile; // for regex
@@ -3368,5 +3374,22 @@ HTML;
 	{
 		return in_array($sTrait, self::TraitsUsedByClass($sClass, true));
 	}
-	
+
+	/**
+	 * Get stack trace as string array.
+	 *
+	 * @return array
+	 * @since 3.1.0
+	 */
+	public static function GetStackTraceAsArray(): array
+	{
+		$e = new Exception();
+		$aTrace = explode("\n", $e->getTraceAsString());
+		// Remove call to this method
+		array_shift($aTrace);
+		// Remove Main
+		array_pop($aTrace);
+
+		return $aTrace;
+	}
 }

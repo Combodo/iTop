@@ -277,6 +277,7 @@ class URP_UserProfile extends UserRightsBaseClass
 			"db_table"            => "priv_urp_userprofile",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
+			"is_link" 			  => true, /** @since 3.1.0 N°6482 */
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();

@@ -65,6 +65,8 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 		'm_aAllowedValuesRequested': [],
 		'm_oDefaultValue': {},
 		'm_oAllowedValues': {},
+		/** {Object} m_aStaticValues Values of the object that are not meant to be changed by the user. Only there to be used in the workflow for dependencies or to be passed through. */
+		'm_aStaticValues' : {},
 		'm_iFieldsCount': 0,
 		'm_sFormPrefix': sFormPrefix,
 		'm_sState': sState,
@@ -111,6 +113,18 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 
 	this.SetCurrentValue = function (sFieldName, currentValue) {
 		this.m_oData.m_oCurrentValues[sFieldName] = currentValue;
+	};
+
+	/**
+	 * Set form object values for fields without field widget.
+	 *
+	 * @since 3.1
+	 *
+	 * @param values
+	 * @constructor
+	 */
+	this.SetStaticValues = function(values){
+		this.m_oData.m_aStaticValues = values;
 	};
 
 	this.SetReturnNotEditableFields = function (bReturnNotEditableFields) {
@@ -223,9 +237,15 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 				$('#wizStep'+G_iCurrentStep).unblock({fadeOut: 0});
 			});
 	};
-	
+
 	this.UpdateCurrentValue = function (sFieldCode) {
 		var $oField = $('#'+this.m_oData.m_oFieldsMap[sFieldCode]);
+		// Static values handling
+		if(this.m_oData.m_aStaticValues.hasOwnProperty(sFieldCode)){
+			const value = this.m_oData.m_aStaticValues[sFieldCode];
+			this.m_oData.m_oCurrentValues[sFieldCode] = value;
+			return value;
+		}
 		$oField.trigger('update_value'); // Give the widget a chance to update its value (if it is aware of this event)
 		var value = $oField.val();
 		if (value == '')

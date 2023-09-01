@@ -836,13 +836,13 @@ class WebPage implements Page
 
 		$sEntriesAsJson = json_encode($aEntries);
 		$sJSFile = <<<JS
-// Create variable so it can be used by the Dict class on initialization
+// Create variable, so it can be used by the Dict class on initialization
 var aDictEntries = {$sEntriesAsJson};
 
 // Check if Dict._entries already exists in order to complete, this is for async calls only.
 // Note: We should not overload the WebPage::get_dict_file_content() in AjaxPage to put the part below as the same dict file can be consumed either by a regular page or an async page.
 if ((typeof Dict != "undefined") && (typeof Dict._entries != "undefined")) {
-	$.extend(Dict._entries, aDictEntries);
+	Object.assign(Dict._entries, aDictEntries);
 }
 JS;
 

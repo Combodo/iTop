@@ -31,6 +31,8 @@ use DBObjectSet;
 use DeprecatedCallsLog;
 use Dict;
 use DisplayBlock;
+use IssueLog;
+use LogChannels;
 use MenuBlock;
 use MetaModel;
 use UserRights;
@@ -136,7 +138,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$aExtraParams['filter_this_list_url'] = $sFilterListUrl;
 		}
 
-		if (!isset($aExtraParams['menu']) || $aExtraParams['menu']) {
+		if (!isset($aExtraParams['menu']) || $aExtraParams['menu'] === "1" || $aExtraParams['menu'] === true) {
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
 			$aExtraParams['refresh_action'] = $oDataTable->GetJSRefresh();
 			$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
@@ -320,7 +322,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					$aExtraFields[$sClassAlias][] = $sAttCode;
 				}
 			} else {
-				$aExtraFields['*'] = $sAttCode;
+				$aExtraFields['*'][] = $sFieldName;
 			}
 		}
 
@@ -333,11 +335,21 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 		}
 		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
-			if (array_key_exists($sAlias, $aExtraFields)) {
+			// In case there is only 1 "alias" for the extra fields and it is the fallback ("*"), then consider that all fields are for the current alias.
+			// This is for the particular use case when the zlist is set to false and extra fields are specified.
+			if ( (count($aExtraFields) === 1) && (array_keys($aExtraFields)[0] === '*') ) {
+				$aLists[$sAlias] = $aExtraFields['*'];
+			}
+			// Regular use case, dispatch fields to their corresponding aliases
+			else if (array_key_exists($sAlias, $aExtraFields)) {
 				$aLists[$sAlias] = $aExtraFields[$sAlias];
-			} else {
+			}
+			// Finally, if unknown alias, ignore fields
+			else {
 				$aLists[$sAlias] = array();
 			}
+
+			// If zlist specified, merge its fields with the currently present
 			if ($sZListName !== false) {
 				$aDefaultList = MetaModel::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
 				$aLists[$sAlias] = array_merge($aDefaultList, $aLists[$sAlias]);
@@ -386,6 +398,18 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				// Then display all the attributes linked to the other end of the relationship
 				$aLists[$sAlias] = $aDisplayList;
 			}
+		}
+
+		// N°6356 Check if there is at least 1 class remaining to display
+		if (count($aLists) === 0) {
+			IssueLog::Debug('Could not find any class / attribute to display in the list. Did you ensure the selected classes have the requested zlist? As a fallback, we will just display the friendlyname for the first selected class.', LogChannels::DATATABLE, [
+				'selected_classes' => $aClassAliases,
+				'zlist' => $sZListName,
+			]);
+
+			$sFirstClassAlias = array_keys($aClassAliases)[0];
+			$aAuthorizedClasses[$sFirstClassAlias] = $aClassAliases[$sFirstClassAlias];
+			$aLists[$sFirstClassAlias] = [];
 		}
 
 		$oDefaultSettings = DataTableSettings::GetDataModelSettings($aAuthorizedClasses, $bViewLink, $aLists);

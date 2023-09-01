@@ -24,6 +24,7 @@ use Combodo\iTop\Application\UI\Preferences\BlockShortcuts\BlockShortcuts;
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
+IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 /**
  * Displays the user's changeable preferences

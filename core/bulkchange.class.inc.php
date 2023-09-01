@@ -37,6 +37,14 @@ abstract class CellChangeSpec
 		return $this->m_proposedValue;
 	}
 
+	/**
+	 * @since 3.1.0 N°5305
+	 */
+	public function SetDisplayableValue(string $sDisplayableValue)
+	{
+		$this->m_proposedValue = $sDisplayableValue;
+	}
+
 	public function GetOql()
 	{
 		return $this->m_sOql;
@@ -137,6 +145,12 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	private $m_sTargetClass;
 
 	/**
+	 * @since 3.1.0 N°5305
+	 * @var string $sAllowedValuesSearch
+	 */
+	private $sAllowedValuesSearch;
+
+	/**
 	 * CellStatus_SearchIssue constructor.
 	 * @since 3.1.0 N°5305
 	 *
@@ -144,13 +158,15 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	 * @param string $sReason : main message
 	 * @param null $sClass : used for additional message that provides allowed values for current class $sClass
 	 * @param null $sAllowedValues : used for additional message that provides allowed values $sAllowedValues for current class
+	 * @param string|null $sAllowedValuesSearch : used to search all allowed values
 	 */
-	public function __construct($sSerializedSearch, $sReason, $sClass=null, $sAllowedValues=null)
+	public function __construct($sSerializedSearch, $sReason, $sClass=null, $sAllowedValues=null, string $sAllowedValuesSearch=null)
 	{
 		parent::__construct(null, null, $sReason);
 		$this->sSerializedSearch = $sSerializedSearch;
 		$this->m_sAllowedValues = $sAllowedValues;
 		$this->m_sTargetClass = $sClass;
+		$this->sAllowedValuesSearch = $sAllowedValuesSearch;
 	}
 
 	public function GetDisplayableValue()
@@ -180,6 +196,17 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	{
 		return sprintf("UI.php?operation=search&filter=%s",
 			rawurlencode($this->sSerializedSearch)
+		);
+	}
+
+	/**
+	 * @since 3.1.0 N°5305
+	 * @return null|string
+	 */
+	public function GetAllowedValuesLinkUrl(): ?string
+	{
+		return sprintf("UI.php?operation=search&filter=%s",
+			rawurlencode($this->sAllowedValuesSearch)
 		);
 	}
 }
@@ -745,6 +772,7 @@ class BulkChange
 		$oDbSearchWithoutAnyCondition->AllowAllData(false);
 		$oExtObjectSetWithCurrentUserPermissions = new CMDBObjectSet($oDbSearchWithoutAnyCondition);
 		$iCurrentUserRightsObjectCount = $oExtObjectSetWithCurrentUserPermissions->Count();
+		$sAllowedValuesOql = $oDbSearchWithoutAnyCondition->serialize();
 
 		if ($iCurrentUserRightsObjectCount === 0){
 			// No objects visible by current user
@@ -785,7 +813,7 @@ class BulkChange
 		if ($iAllowAllDataObjectCount != $iCurrentUserRightsObjectCount) {
 			// No match and some objects NOT visible by current user. including current search maybe...
 			$sReason = Dict::Format('UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser', $oDbSearchWithConditions->GetClass());
-			return new CellStatus_SearchIssue($sSerializedSearch, $sReason, $oDbSearchWithConditions->GetClass(), $allowedValues);
+			return new CellStatus_SearchIssue($sSerializedSearch, $sReason, $oDbSearchWithConditions->GetClass(), $allowedValues, $sAllowedValuesOql);
 		}
 
 		// No match. This is not linked to any right issue
@@ -796,7 +824,7 @@ class BulkChange
 		}
 		$value =implode(" ", $aCurrentValueFields);
 		$sReason = Dict::Format('UI:CSVReport-Value-NoMatch', $value);
-		return new CellStatus_SearchIssue($sSerializedSearch, $sReason, $oDbSearchWithConditions->GetClass(), $allowedValues);
+		return new CellStatus_SearchIssue($sSerializedSearch, $sReason, $oDbSearchWithConditions->GetClass(), $allowedValues, $sAllowedValuesOql);
 	}
 
 	protected function PrepareMissingObject(&$oTargetObj, &$aErrors)

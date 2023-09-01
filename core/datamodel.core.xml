@@ -58,6 +58,7 @@
         <parent>cmdbAbstractObject</parent>
         <properties>
           <category>addon/userrights,grant_by_profile</category>
+          <is_link>1</is_link>
         </properties>
         <fields>
           <field id="userid" xsi:type="AttributeExternalKey">
@@ -484,6 +485,12 @@
         </property>
         <property id="with_php_constraint">
           <php_param>with_php_constraint</php_param>
+          <mandatory>false</mandatory>
+          <type>boolean</type>
+          <default>false</default>
+        </property>
+        <property id="create_temporary_object">
+          <php_param>create_temporary_object</php_param>
           <mandatory>false</mandatory>
           <type>boolean</type>
           <default>false</default>

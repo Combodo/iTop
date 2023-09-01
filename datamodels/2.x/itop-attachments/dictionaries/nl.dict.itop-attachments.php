@@ -77,6 +77,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachments:File:Uploader' => 'Geüpload door',
 	'Attachments:File:Size' => 'Grootte',
 	'Attachments:File:MimeType' => 'Type',
+	'Attachments:File:DownloadsCount' => 'Downloads~~',
 ));
 //
 // Class: Attachment
@@ -89,4 +90,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'ID Contact',
 	'Class:Attachment/Attribute:contact_id+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 ));

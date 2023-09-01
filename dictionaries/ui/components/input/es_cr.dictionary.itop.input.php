@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Input
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Component:Input:Password:DoesNotMatch' => 'No coincide la contraseña',

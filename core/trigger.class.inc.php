@@ -50,7 +50,7 @@ abstract class Trigger extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("action_list",
 			array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "trigger_id", "ext_key_to_remote" => "action_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
 		$aTags = ContextTag::GetTags();
-		MetaModel::Init_AddAttribute(new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
+		MetaModel::Init_AddAttribute(new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags, true), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
 		// "complement" is a computed field, fed by Trigger sub-classes, in general in ComputeValues method, for eg. the TriggerOnObject fed it with target_class info
 		MetaModel::Init_AddAttribute(new AttributeString("complement", array("allowed_values" => null, "sql" => "complement", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 

@@ -73,6 +73,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: FAQCategory
 //
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQCategory' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory+' => 'Categoría de Preguntas y Respuesta Frecuentes',

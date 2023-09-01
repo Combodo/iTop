@@ -15,7 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
- /**
+/**
  * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
@@ -37,4 +37,5 @@
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserLDAP' => 'Usuario LDAP',
 	'Class:UserLDAP+' => 'Usuario autenticado vía LDAP',
+	'UserLDAP:server' => 'LDAP specifics~~',
 ));

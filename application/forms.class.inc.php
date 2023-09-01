@@ -1110,12 +1110,40 @@ $('#$sId').on('change keyup validate', function() { ValidateWithPattern('$sId', 
 }
 EOF
 			);
-			$sValue = "<textarea $sCSSClasses id=\"$sId\" name=\"$sName\">".utils::EscapeHtml($this->defaultValue)."</textarea>";
+			$sValue = "<textarea $sCSSClasses id=\"$sId\" name=\"$sName\">".$this->PrepareValueForRendering()."</textarea>";
 		}
 		else {
-			$sValue = "<div $sCSSClasses id=\"$sId\">".utils::EscapeHtml($this->defaultValue)."</div>";
+			$sValue = "<div $sCSSClasses id=\"$sId\">".$this->PrepareValueForRendering()."</div>";
 		}
 		return array('label' => $this->sLabel, 'value' => $sValue);
+	}
+
+	/**
+	 * @return string|null The value itself as expected for rendering. May it be encoded, escaped or else.
+	 * @since 3.1.0 N°6405
+	 */
+	protected function PrepareValueForRendering(): ?string
+	{
+		return utils::EscapeHtml($this->defaultValue);
+	}
+}
+
+/**
+ * Class DesignerXMLField
+ *
+ * Field to display XML content
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 3.1.0 N°6405
+ */
+class DesignerXMLField extends DesignerLongTextField
+{
+	/**
+	 * @inheritDoc
+	 */
+	protected function PrepareValueForRendering(): ?string
+	{
+		return utils::EscapeHtml($this->defaultValue, true);
 	}
 }
 

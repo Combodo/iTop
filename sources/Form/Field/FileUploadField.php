@@ -26,7 +26,7 @@ use Closure;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class FileUploadField extends Field
+class FileUploadField extends AbstractSimpleField
 {
 	/** @var bool DEFAULT_ALLOW_DELETE */
 	const DEFAULT_ALLOW_DELETE = true;

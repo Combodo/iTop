@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s : %2$s est déjà lié(e) à un(e) %3$s : %4$s, les doublons ne sont pas autorisés sur cette relation.',
 ]);

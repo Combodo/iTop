@@ -41,15 +41,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'DBTools:IntegrityCheck' => 'Integritás ellenőrzés',
 	'DBTools:FetchCheck' => 'Lehívás ellenőrzés (hosszú)',
 	'DBTools:SelectAnalysisType' => 'Válasszon elemzés típust',
-
 	'DBTools:Analyze' => 'Elemzés',
 	'DBTools:Details' => 'Részletek mutatása',
 	'DBTools:ShowAll' => 'Minden hiba mutatása',
-
 	'DBTools:Inconsistencies' => 'Adatbázis inkonzisztenciák',
 	'DBTools:DetailedErrorTitle' => '%2$s hiba a %1$s osztályban: %3$s',
-
-    'DBAnalyzer-Integrity-OrphanRecord' => 'Árva rekord a `%1$s` -ban, kell hogy legyen megfelelője a `%2$s` táblázatban',
+	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
+	'DBAnalyzer-Integrity-OrphanRecord' => 'Árva rekord a `%1$s` -ban, kell hogy legyen megfelelője a `%2$s` táblázatban',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Érvénytelen a %1$s  külső kulcs (oszlop: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Hiányzik a %1$s külső külcs (oszlop: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-InvalidValue' => '%1$s értéke érvénytelen (oszlop: `%2$s.%3$s`)~~',
@@ -71,24 +69,19 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'DBTools:LostAttachments' => 'Elveszett mellékletek',
 	'DBTools:LostAttachments:Disclaimer' => 'Itt kereshet az adatbázisban elveszett vagy elkeveredett mellékletek után. Ez NEM egy adat-visszaállítási eszköz, nem állítja vissza a törölt adatokat.',
-
 	'DBTools:LostAttachments:Button:Analyze' => 'Elemzés',
 	'DBTools:LostAttachments:Button:Restore' => 'Visszaállítás',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Ez a művelet nem vonható vissza, kérjük, erősítse meg, hogy vissza kívánja-e állítani a kiválasztott fájlokat.',
 	'DBTools:LostAttachments:Button:Busy' => 'Kérem várjon...',
-
 	'DBTools:LostAttachments:Step:Analyze' => 'Először az adatbázis elemzésével keresse meg az elveszett/áthelyezett mellékleteket.',
-
 	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Elemzés eredménye:',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Nagyszerű! Úgy tűnik, minden a helyén van.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Úgy tűnik, hogy néhány melléklet (%1$d) rossz helyen van. Nézze meg az alábbi listát, és ellenőrizze azokat, amelyeket szeretne áthelyezni.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Fájlnév',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Jelenlegi helye',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Áthelyezés...',
-
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Visszaállítás eredménye:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d melléklet lett visszaállítva.',
-
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Soron belüli képként tárolva',
 	'DBTools:LostAttachments:History' => 'A "%1$s" melléklet visszaállítva a DB eszközzel'
 ));

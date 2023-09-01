@@ -84,7 +84,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkDocumentToFunctionalCI</linked_class>
@@ -93,7 +92,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="applicationsolution_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkApplicationSolutionToFunctionalCI</linked_class>
@@ -102,7 +100,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>applicationsolution_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="softwares_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareInstance</linked_class>
@@ -111,8 +108,6 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>property</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -559,7 +554,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>networkdevice_id</ext_key_to_remote>
           <duplicates>true</duplicates>
-          <read_only>false</read_only>
         </field>
         <field id="physicalinterface_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalInterface</linked_class>
@@ -568,8 +562,6 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>property</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -804,8 +796,6 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>property</relation_type>
-          <read_only>false</read_only>
         </field>
         <field id="san_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkSanToDatacenterDevice</linked_class>
@@ -814,7 +804,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>san_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="redundancy" xsi:type="AttributeRedundancySettings">
           <sql>redundancy</sql>
@@ -1036,7 +1025,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>connectableci_id</ext_key_to_remote>
           <duplicates>true</duplicates>
-          <read_only>false</read_only>
         </field>
         <field id="iosversion_id" xsi:type="AttributeExternalKey">
           <sql>iosversion_id</sql>
@@ -1376,7 +1364,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>volume_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -1662,7 +1649,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="businessprocess_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkApplicationSolutionToBusinessProcess</linked_class>
@@ -1671,7 +1657,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>businessprocess_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
@@ -1840,7 +1825,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>applicationsolution_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
@@ -2185,8 +2169,6 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>property</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -2341,8 +2323,6 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>property</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -2497,8 +2477,6 @@
           <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>property</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -3364,7 +3342,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="type" xsi:type="AttributeEnum">
           <sort_type>label</sort_type>
@@ -3396,8 +3373,6 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
         <field id="softwarepatch_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwarePatch</linked_class>
@@ -3405,8 +3380,6 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
         <field id="softwarelicence_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareLicence</linked_class>
@@ -3414,8 +3387,6 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -3542,7 +3513,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
@@ -3628,7 +3598,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="osversion_id" xsi:type="AttributeExternalKey">
           <sql>osversion_id</sql>
@@ -3741,7 +3710,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>softwareinstance_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -3845,7 +3813,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
           <sql>org_id</sql>
@@ -4035,8 +4002,6 @@
           <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>link</relation_type>
-          <read_only>true</read_only>
         </field>
         <field id="servers_list" xsi:type="AttributeLinkedSet">
           <linked_class>Server</linked_class>
@@ -4044,8 +4009,6 @@
           <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>link</relation_type>
-          <read_only>true</read_only>
         </field>
       </fields>
       <methods/>
@@ -4197,8 +4160,6 @@
           <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>link</relation_type>
-          <read_only>true</read_only>
         </field>
       </fields>
       <methods/>
@@ -4556,8 +4517,6 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -4708,8 +4667,6 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -4796,8 +4753,6 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -5524,7 +5479,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>vlan_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods>
@@ -5737,7 +5691,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>subnet_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
         <field id="physicalinterfaces_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkPhysicalInterfaceToVLAN</linked_class>
@@ -5746,7 +5699,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>physicalinterface_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods>
@@ -6178,7 +6130,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>vlan_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -6977,7 +6928,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>ci_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -7186,7 +7136,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
       <methods/>
@@ -7208,8 +7157,6 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <relation_type>link</relation_type>
-          <read_only>false</read_only>
         </field>
       </fields>
       <presentation>
@@ -7231,7 +7178,6 @@
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
           <duplicates/>
-          <read_only>false</read_only>
         </field>
       </fields>
     </class>
