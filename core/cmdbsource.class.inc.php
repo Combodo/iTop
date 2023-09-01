@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -380,7 +380,7 @@ class CMDBSource
 	public static function GetDBVendor()
 	{
 		$sDBVendor = static::ENUM_DB_VENDOR_MYSQL;
-		
+
 		$sVersionComment = static::GetServerVariable('version') .  ' - ' . static::GetServerVariable('version_comment');
 		if(preg_match('/mariadb/i', $sVersionComment) === 1)
 		{
@@ -390,7 +390,7 @@ class CMDBSource
 		{
 			$sDBVendor = static::ENUM_DB_VENDOR_PERCONA;
 		}
-		
+
 		return $sDBVendor;
 	}
 
@@ -664,7 +664,7 @@ class CMDBSource
 		);
 		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
 
-		IssueLog::Error($sMessage, LogChannels::DEADLOCK, $e->getMessage());
+		IssueLog::Error($sMessage, LogChannels::DEADLOCK, [$e->getMessage()]);
 	}
 
 	/**
@@ -923,7 +923,7 @@ class CMDBSource
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
-				
+
 		while ($aRow = $oResult->fetch_array($iMode))
 		{
 			$aData[] = $aRow;
@@ -1077,7 +1077,7 @@ class CMDBSource
 		if (!array_key_exists($iKey, $aTableInfo["Fields"])) return false;
 		$aFieldData = $aTableInfo["Fields"][$iKey];
 		if (!array_key_exists("Key", $aFieldData)) return false;
-		return ($aFieldData["Key"] == "PRI"); 
+		return ($aFieldData["Key"] == "PRI");
 	}
 
 	public static function IsAutoIncrement($sTable, $sField)
@@ -1088,7 +1088,7 @@ class CMDBSource
 		$aFieldData = $aTableInfo["Fields"][$sField];
 		if (!array_key_exists("Extra", $aFieldData)) return false;
 		//MyHelpers::debug_breakpoint($aFieldData);
-		return (strstr($aFieldData["Extra"], "auto_increment")); 
+		return (strstr($aFieldData["Extra"], "auto_increment"));
 	}
 
 	public static function IsField($sTable, $sField)
@@ -1355,13 +1355,13 @@ class CMDBSource
 	public static function GetTableFieldsList($sTable)
 	{
 		assert(!empty($sTable));
-		
+
 		$aTableInfo = self::GetTableInfo($sTable);
 		if (empty($aTableInfo)) return array(); // #@# or an error ?
 
 		return array_keys($aTableInfo["Fields"]);
 	}
-	
+
 	// Cache the information about existing tables, and their fields
 	private static $m_aTablesInfo = array();
 	private static function _TablesInfoCacheReset($sTableName = null)
@@ -1494,7 +1494,7 @@ class CMDBSource
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
-		
+
 		$aRows = array();
 		while ($aRow = $oResult->fetch_array(MYSQLI_ASSOC))
 		{
@@ -1503,7 +1503,7 @@ class CMDBSource
 		$oResult->free();
 		return $aRows;
 	}
-	
+
 	/**
 	 * Returns the value of the specified server variable
 	 * @param string $sVarName Name of the server variable
@@ -1519,7 +1519,7 @@ class CMDBSource
 	/**
 	 * Returns the privileges of the current user
 	 * @return string privileges in a raw format
-	 */	   	
+	 */
 	public static function GetRawPrivileges()
 	{
 		try
@@ -1545,8 +1545,8 @@ class CMDBSource
 
 	/**
 	 * Determine the slave status of the server
-	 * @return bool true if the server is slave 
-	 */	   	
+	 * @return bool true if the server is slave
+	 */
 	public static function IsSlaveServer()
 	{
 		try
