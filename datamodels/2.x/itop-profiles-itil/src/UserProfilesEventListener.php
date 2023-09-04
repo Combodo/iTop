@@ -110,6 +110,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 				$oProfileLinkSet = $oPreviousUser->Get('profile_list');
 				$oProfileLinkSet->Rewind();
 				$iCount = 0;
+				$sSingleProfileName = null;
 				while ($oCurrentURP_UserProfile = $oProfileLinkSet->Fetch()) {
 					if ($oCurrentURP_UserProfile->Get('userid') !== $oCurrentURP_UserProfile->GetOriginal('userid')) {
 						$sRemovedProfileId = $oCurrentURP_UserProfile->GetOriginal('profileid');
@@ -172,6 +173,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 
 			$oProfileLinkSet = $oUser->Get('profile_list');
 			$oProfileLinkSet->Rewind();
+			$sSingleProfileName = null;
 			$iCount = 0;
 			while ($oCurrentURP_UserProfile = $oProfileLinkSet->Fetch()) {
 				if (in_array($oCurrentURP_UserProfile->GetKey(), $aDeletedURP_UserProfiles)) {
@@ -328,7 +330,11 @@ class UserProfilesEventListener implements iEventServiceSetup
 		}
 	}
 
-	public function RepairProfileChangesOrWarn(\User $oUser, string $sSingleProfileName, \URP_UserProfile $oURP_UserProfile, string $sRemovedProfileId, $bIsRemoval=false) : void {
+	public function RepairProfileChangesOrWarn(\User $oUser, ?string $sSingleProfileName, \URP_UserProfile $oURP_UserProfile, string $sRemovedProfileId, $bIsRemoval=false) : void {
+		if (is_null($sSingleProfileName)){
+			return;
+		}
+
 		if (array_key_exists($sSingleProfileName, $this->aNonStandaloneProfilesMap)) {
 			$sRepairingProfileId = $this->aNonStandaloneProfilesMap[$sSingleProfileName];
 			$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName);
