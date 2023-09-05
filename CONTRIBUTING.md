@@ -140,7 +140,7 @@ When your code is working, please:
 * Pull request description: mind to add all the information useful to understand why you're suggesting this modification and anything necessary to dive into your work. Especially:
   - Bugfixes: exact steps to reproduce the bug (given/when/then), description of the bug cause and what solution is implemented 
   - Enhancements: use cases, implementation details if needed
-* Mind to check the "[Allow edits from maintainers](https://docs.github.com/en/github-ae@latest/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)" option !
+* Mind to check the "[Allow edits from maintainers](https://docs.github.com/en/github-ae@latest/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)" option ! (note that if you are working with an org fork, this option [won't be available](https://github.com/orgs/community/discussions/5634))
 
 
 ## 🙏 We are thankful
