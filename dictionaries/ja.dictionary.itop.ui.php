@@ -895,47 +895,47 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Message:EmptyList:UseSearchForm' => '上の検索フォームを使って追加するオブジェクトを検索してください。',
 	'UI:Wizard:FinalStepTitle' => '最終ステップ：確認',
 	'UI:Title:DeletionOf_Object' => '%1$sの削除',
-	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => '%2$s クラスの%1$d個のオブジェクトをバルク削除',
-	'UI:Delete:NotAllowedToDelete' => 'このオブジェクトの削除は、許可されていません。',
-	'UI:Delete:NotAllowedToUpdate_Fields' => '以下のフィールドの更新は、許可されていません。: %1$s',
-	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
-	'UI:Error:NotEnoughRightsToDelete' => 'カレントユーザは十分な権限を持っていないので、このオブジェクトは削除することができません。',
-	'UI:Error:CannotDeleteBecause' => 'このオブジェクトは、削除できません。理由: %1$s',
-	'UI:Error:CannotDeleteBecauseOfDepencies' => 'いくつかの手動操作を先に実行する必要があるので、このオブジェクトは削除できません。',
-	'UI:Error:CannotDeleteBecauseManualOpNeeded' => 'いくつかの手動操作を先に実行する必要があるので、このオブジェクトは削除できません。',
-	'UI:Archive_User_OnBehalfOf_User' => '%2$s の代りに %1$s',
-	'UI:Delete:Deleted' => '削除済み',
-	'UI:Delete:AutomaticallyDeleted' => '自動的に削除されました。',
-	'UI:Delete:AutomaticResetOf_Fields' => 'フィールドの自動リセット: %1$s',
-	'UI:Delete:CleaningUpRefencesTo_Object' => '%1$s への参照すべてをクリア',
+	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class'          => '%2$s クラスの%1$d個のオブジェクトをバルク削除',
+	'UI:Delete:NotAllowedToDelete'                           => 'このオブジェクトの削除は、許可されていません。',
+	'UI:Delete:NotAllowedToUpdate_Fields'                    => '以下のフィールドの更新は、許可されていません。: %1$s',
+	'UI:Error:ActionNotAllowed'                              => 'You are not allowed to do this action~~',
+	'UI:Error:NotEnoughRightsToDelete'                       => 'カレントユーザは十分な権限を持っていないので、このオブジェクトは削除することができません。',
+	'UI:Error:CannotDeleteBecause'                           => 'このオブジェクトは、削除できません。理由: %1$s',
+	'UI:Error:CannotDeleteBecauseOfDepencies'                => 'いくつかの手動操作を先に実行する必要があるので、このオブジェクトは削除できません。',
+	'UI:Error:CannotDeleteBecauseManualOpNeeded'             => 'いくつかの手動操作を先に実行する必要があるので、このオブジェクトは削除できません。',
+	'UI:Archive_User_OnBehalfOf_User'                        => '%2$s の代りに %1$s',
+	'UI:Delete:Deleted'                                      => '削除済み',
+	'UI:Delete:AutomaticallyDeleted'                         => '自動的に削除されました。',
+	'UI:Delete:AutomaticResetOf_Fields'                      => 'フィールドの自動リセット: %1$s',
+	'UI:Delete:CleaningUpRefencesTo_Object'                  => '%1$s への参照すべてをクリア',
 	'UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class' => '%2$s クラスの　%1$d個のオブジェクトへの参照をすべてクリア',
-	'UI:Delete:Done+' => '実行しました...',
-	'UI:Delete:_Name_Class_Deleted' => '%1$s - %2$s 削除しました。',
-	'UI:Delete:ConfirmDeletionOf_Name' => '%1$s の削除',
-	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => '%2$sクラスの%1$dオブジェクトの削除',
-	'UI:Delete:CannotDeleteBecause' => '削除できません: %1$s',
-	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => '自動的に削除されるべきですが、出来ません。: %1$s',
-	'UI:Delete:MustBeDeletedManuallyButNotPossible' => '手動で削除されるべきですが、出来ません。: %1$',
-	'UI:Delete:WillBeDeletedAutomatically' => '自動的に削除されます。',
-	'UI:Delete:MustBeDeletedManually' => '手動で削除されるべきです。',
-	'UI:Delete:CannotUpdateBecause_Issue' => '自動的に更新されるべきですが、しかし: %1$s',
-	'UI:Delete:WillAutomaticallyUpdate_Fields' => '自動的に更新されます。(reset: %1$s)',
-	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$dオブジェクト/リンクは%2$sを参照しています。',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$dオブジェクト/リンクは削除されるオブジェクトを参照しています。',
-	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'データベースの整合性を確保するために、いくつかの参照を削除する必要があります。',
-	'UI:Delete:Consequence+' => '行われます。',
-	'UI:Delete:SorryDeletionNotAllowed' => '申し訳ありませんが、あなたは、このオブジェクトを削除する権限がありません、上記の詳細な説明を参照してください。',
-	'UI:Delete:PleaseDoTheManualOperations' => 'このオブジェクトの削除を要求する前に、上記にリストされている手動操作を実行してください。',
-	'UI:Delect:Confirm_Object' => '%1$sを削除しようとしています。確認ください。',
-	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '以下の%2$sクラスの%1$dオブジェクトを削除しようとしています。確認ください。',
-	'UI:WelcomeToITop' => ITOP_APPLICATION_SHORT.'へようこそ',
-	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$sの詳細',
-	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - エラー',
-	'UI:ObjectDoesNotExist' => '申し訳ございません。このオブジェクトは既に存在しません。(あるいは参照する権限がありません。)',
-	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
-	'Tag:Archived' => 'Archived~~',
-	'Tag:Archived+' => 'Can be accessed only in archive mode~~',
-	'Tag:Obsolete' => 'Obsolete~~',
+	'UI:Delete:Done+'                                        => '実行しました...',
+	'UI:Delete:_Name_Class_Deleted'                          => '%1$s - %2$s 削除しました。',
+	'UI:Delete:ConfirmDeletionOf_Name'                       => '%1$s の削除',
+	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class'      => '%2$sクラスの%1$dオブジェクトの削除',
+	'UI:Delete:CannotDeleteBecause'                          => '削除できません: %1$s',
+	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible'    => '自動的に削除されるべきですが、出来ません。: %1$s',
+	'UI:Delete:MustBeDeletedManuallyButNotPossible'          => '手動で削除されるべきですが、出来ません。: %1$s',
+	'UI:Delete:WillBeDeletedAutomatically'                   => '自動的に削除されます。',
+	'UI:Delete:MustBeDeletedManually'                        => '手動で削除されるべきです。',
+	'UI:Delete:CannotUpdateBecause_Issue'                    => '自動的に更新されるべきですが、しかし: %1$s',
+	'UI:Delete:WillAutomaticallyUpdate_Fields'               => '自動的に更新されます。(reset: %1$s)',
+	'UI:Delete:Count_Objects/LinksReferencing_Object'        => '%1$dオブジェクト/リンクは%2$sを参照しています。',
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects'     => '%1$dオブジェクト/リンクは削除されるオブジェクトを参照しています。',
+	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity'     => 'データベースの整合性を確保するために、いくつかの参照を削除する必要があります。',
+	'UI:Delete:Consequence+'                                 => '行われます。',
+	'UI:Delete:SorryDeletionNotAllowed'                      => '申し訳ありませんが、あなたは、このオブジェクトを削除する権限がありません、上記の詳細な説明を参照してください。',
+	'UI:Delete:PleaseDoTheManualOperations'                  => 'このオブジェクトの削除を要求する前に、上記にリストされている手動操作を実行してください。',
+	'UI:Delect:Confirm_Object'                               => '%1$sを削除しようとしています。確認ください。',
+	'UI:Delect:Confirm_Count_ObjectsOf_Class'                => '以下の%2$sクラスの%1$dオブジェクトを削除しようとしています。確認ください。',
+	'UI:WelcomeToITop'                                       => ITOP_APPLICATION_SHORT.'へようこそ',
+	'UI:DetailsPageTitle'                                    => ITOP_APPLICATION_SHORT.' - %1$s - %2$sの詳細',
+	'UI:ErrorPageTitle'                                      => ITOP_APPLICATION_SHORT.' - エラー',
+	'UI:ObjectDoesNotExist'                                  => '申し訳ございません。このオブジェクトは既に存在しません。(あるいは参照する権限がありません。)',
+	'UI:ObjectArchived'                                      => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
+	'Tag:Archived'                                           => 'Archived~~',
+	'Tag:Archived+'                                          => 'Can be accessed only in archive mode~~',
+	'Tag:Obsolete'                                           => 'Obsolete~~',
 	'Tag:Obsolete+' => 'Excluded from the impact analysis and search results~~',
 	'Tag:Synchronized' => 'Synchronized~~',
 	'ObjectRef:Archived' => 'Archived~~',
@@ -1307,7 +1307,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:DashletGroupByBars:Description' => '棒グラフ',
 	'UI:DashletGroupByTable:Label' => 'グループ化 (table)による',
 	'UI:DashletGroupByTable:Description' => 'リスト (フィールドでグループ化)',
-    // New in 2.5
+	// New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function~~',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute~~',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction~~',
@@ -1325,7 +1325,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:GroupBy:min+' => 'Minimum of %1$s~~',
 	'UI:GroupBy:max' => 'Maximum~~',
 	'UI:GroupBy:max+' => 'Maximum of %1$s~~',
-    // ---
+	// ---
 	'UI:DashletHeaderStatic:Label' => 'ヘッダー',
 	'UI:DashletHeaderStatic:Description' => '水平セパレータの表示',
 	'UI:DashletHeaderStatic:Prop-Title' => '題名',
@@ -1363,7 +1363,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Month-10' => 'October~~',
 	'Month-11' => 'November~~',
 	'Month-12' => 'December~~',
-    // Short version for the DatePicker
+	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su~~',
 	'DayOfWeek-Monday-Min' => 'Mo~~',
 	'DayOfWeek-Tuesday-Min' => 'Tu~~',
@@ -1384,7 +1384,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
 	'Calendar-FirstDayOfWeek' => '0~~',
-    // 0 = Sunday, 1 = Monday, etc...
+	// 0 = Sunday, 1 = Monday, etc...
 	'UI:Menu:ShortcutList' => 'ショートカットを作成',
 	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'ショートカットの名前変更',
@@ -1480,23 +1480,23 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
-    // Search form
+	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
 	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
-    // - Add new criteria button
+	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used~~',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
-    // - Criteria header actions
+	// - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:Criteria:Remove' => 'Remove~~',
 	'UI:Search:Criteria:Locked' => 'Locked~~',
-    // - Criteria titles
-    //   - Default widget
+	// - Criteria titles
+	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty~~',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty~~',
@@ -1518,57 +1518,57 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s~~',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s~~',
-    //   - Numeric widget
-    //   None yet
-    //   - DateTime widget
+	//   - Numeric widget
+	//   None yet
+	//   - DateTime widget
 	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s~~',
-    //   - Enum widget
+	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
-    //   - TagSet widget
+	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-    //   - External key widget
+	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-    //   - Hierarchical key widget
+	//   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
-    // - Criteria operators
-    //   - Default widget
+	// - Criteria operators
+	//   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty~~',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty~~',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals~~',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Between~~',
-    //   - String widget
+	//   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains~~',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with~~',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
-    //   - Numeric widget
+	//   - Numeric widget
 	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',
-    // => '=',
+	// => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',
-    // => '>',
+	// => '>',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',
-    // > '>=',
+	// > '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',
-    // => '<',
+	// => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',
-    // > '<=',
+	// > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',
-    // => '≠',
-    //   - Tag Set Widget
+	// => '≠',
+	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
-    // - Other translations
+	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
 	'UI:Search:Value:Search:Placeholder' => 'Search...~~',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
@@ -1576,7 +1576,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Value:Autocomplete:NoResult' => 'No result.~~',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none~~',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles~~',
-    // - Widget other translations
+	// - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From~~',
 	'UI:Search:Criteria:Numeric:Until' => 'To~~',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any~~',

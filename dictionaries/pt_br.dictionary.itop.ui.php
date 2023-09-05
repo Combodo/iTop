@@ -1114,47 +1114,47 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI:Relation:Zoom' => 'Zoom',
 	'UI:Relation:ExportAsAttachment' => 'Exportar como Anexo...',
 	'UI:Relation:DrillDown' => 'Detalhes...',
-	'UI:Relation:PDFExportOptions' => 'Opções de exportação de PDF',
-	'UI:Relation:AttachmentExportOptions_Name' => 'Opções de anexo para %1$s',
-	'UI:RelationOption:Untitled' => 'Sem título',
-	'UI:Relation:Key' => 'Chave',
-	'UI:Relation:Comments' => 'Comentários',
-	'UI:RelationOption:Title' => 'Título',
-	'UI:RelationOption:IncludeList' => 'Incluir a lista de objetos',
-	'UI:RelationOption:Comments' => 'Comentários',
-	'UI:Button:Export' => 'Exportar',
-	'UI:Relation:PDFExportPageFormat' => 'Formato da página',
-	'UI:PageFormat_A3' => 'A3',
-	'UI:PageFormat_A4' => 'A4',
-	'UI:PageFormat_Letter' => 'Carta',
-	'UI:Relation:PDFExportPageOrientation' => 'Orientação da página',
-	'UI:PageOrientation_Portrait' => 'Retrato',
-	'UI:PageOrientation_Landscape' => 'Paisagem',
-	'UI:RelationTooltip:Redundancy' => 'Redundância',
-	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# de itens impactados: %1$d / %2$d',
+	'UI:Relation:PDFExportOptions'                => 'Opções de exportação de PDF',
+	'UI:Relation:AttachmentExportOptions_Name'    => 'Opções de anexo para %1$s',
+	'UI:RelationOption:Untitled'                  => 'Sem título',
+	'UI:Relation:Key'                             => 'Chave',
+	'UI:Relation:Comments'                        => 'Comentários',
+	'UI:RelationOption:Title'                     => 'Título',
+	'UI:RelationOption:IncludeList'               => 'Incluir a lista de objetos',
+	'UI:RelationOption:Comments'                  => 'Comentários',
+	'UI:Button:Export'                            => 'Exportar',
+	'UI:Relation:PDFExportPageFormat'             => 'Formato da página',
+	'UI:PageFormat_A3'                            => 'A3',
+	'UI:PageFormat_A4'                            => 'A4',
+	'UI:PageFormat_Letter'                        => 'Carta',
+	'UI:Relation:PDFExportPageOrientation'        => 'Orientação da página',
+	'UI:PageOrientation_Portrait'                 => 'Retrato',
+	'UI:PageOrientation_Landscape'                => 'Paisagem',
+	'UI:RelationTooltip:Redundancy'               => 'Redundância',
+	'UI:RelationTooltip:ImpactedItems_N_of_M'     => '# de itens impactados: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Limite crítico: %1$d / %2$d',
-	'Portal:Title' => 'Portal do usuário',
-	'Portal:NoRequestMgmt' => 'Caro %1$ s, você foi redirecionado para esta página porque a sua conta é configurado com o perfil de \'usuário do Portal\'.Infelizmente, iTop não foi instalado com a função \'Gerenciamento de Solicitações\'.Por favor, contate o administrador.',
-	'Portal:Refresh' => 'Atualizar',
-	'Portal:Back' => 'Voltar',
-	'Portal:WelcomeUserOrg' => 'Bem-vindo %1$s, de %2$s',
-	'Portal:TitleDetailsFor_Request' => 'Detalhes da solicitação',
-	'Portal:ShowOngoing' => 'Exibir solicitações abertas',
-	'Portal:ShowClosed' => 'Exibir solicitações fechadas',
-	'Portal:CreateNewRequest' => 'Criar uma nova Solicitação',
-	'Portal:CreateNewRequestItil' => 'Criar uma nova Solicitação',
-	'Portal:CreateNewIncidentItil' => 'Criar um novo Relatório de Incidente',
-	'Portal:ChangeMyPassword' => 'Alterar minha senha',
-	'Portal:Disconnect' => 'Sair',
-	'Portal:OpenRequests' => 'Minhas solicitações abertas',
-	'Portal:ClosedRequests' => 'Minhas solicitações fechadas',
-	'Portal:ResolvedRequests' => 'Minhas solicitações resolvidas',
-	'Portal:SelectService' => 'Selecione um serviço do catálogo:',
-	'Portal:PleaseSelectOneService' => 'Selecione um serviço',
-	'Portal:SelectSubcategoryFrom_Service' => 'Selecione um subserviço do serviço %1$s:',
-	'Portal:PleaseSelectAServiceSubCategory' => 'Selecione uma subcategoria',
-	'Portal:DescriptionOfTheRequest' => 'Digite a descrição da sua solicitação:',
-	'Portal:TitleRequestDetailsFor_Request' => 'Detalhes da solicitação %1$s:',
+	'Portal:Title'                                => 'Portal do usuário',
+	'Portal:NoRequestMgmt'                        => 'Caro %1$s, você foi redirecionado para esta página porque a sua conta é configurado com o perfil de \'usuário do Portal\'.Infelizmente, iTop não foi instalado com a função \'Gerenciamento de Solicitações\'.Por favor, contate o administrador.',
+	'Portal:Refresh'                              => 'Atualizar',
+	'Portal:Back'                                 => 'Voltar',
+	'Portal:WelcomeUserOrg'                       => 'Bem-vindo %1$s, de %2$s',
+	'Portal:TitleDetailsFor_Request'              => 'Detalhes da solicitação',
+	'Portal:ShowOngoing'                          => 'Exibir solicitações abertas',
+	'Portal:ShowClosed'                           => 'Exibir solicitações fechadas',
+	'Portal:CreateNewRequest'                     => 'Criar uma nova Solicitação',
+	'Portal:CreateNewRequestItil'                 => 'Criar uma nova Solicitação',
+	'Portal:CreateNewIncidentItil'                => 'Criar um novo Relatório de Incidente',
+	'Portal:ChangeMyPassword'                     => 'Alterar minha senha',
+	'Portal:Disconnect'                           => 'Sair',
+	'Portal:OpenRequests'                         => 'Minhas solicitações abertas',
+	'Portal:ClosedRequests'                       => 'Minhas solicitações fechadas',
+	'Portal:ResolvedRequests'                     => 'Minhas solicitações resolvidas',
+	'Portal:SelectService'                        => 'Selecione um serviço do catálogo:',
+	'Portal:PleaseSelectOneService'               => 'Selecione um serviço',
+	'Portal:SelectSubcategoryFrom_Service'        => 'Selecione um subserviço do serviço %1$s:',
+	'Portal:PleaseSelectAServiceSubCategory'      => 'Selecione uma subcategoria',
+	'Portal:DescriptionOfTheRequest'              => 'Digite a descrição da sua solicitação:',
+	'Portal:TitleRequestDetailsFor_Request'       => 'Detalhes da solicitação %1$s:',
 	'Portal:NoOpenRequest' => 'Nenhuma solicitação nesta categoria',
 	'Portal:NoClosedRequest' => 'Nenhuma solicitação nesta categoria',
 	'Portal:Button:ReopenTicket' => 'Re-abrir esta solicitação',
@@ -1318,7 +1318,7 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI:DashletGroupByBars:Description' => 'Gráfico de Barras',
 	'UI:DashletGroupByTable:Label' => 'Grupo por (tabela)',
 	'UI:DashletGroupByTable:Description' => 'Exibir (Agrupado por um campo)',
-    // New in 2.5
+	// New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Função de agregação',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Atributo de função',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direção',
@@ -1336,7 +1336,7 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI:GroupBy:min+' => 'Mínimo de %1$s',
 	'UI:GroupBy:max' => 'Máximo',
 	'UI:GroupBy:max+' => 'Máximo de %1$s',
-    // ---
+	// ---
 	'UI:DashletHeaderStatic:Label' => 'Cabeçalho',
 	'UI:DashletHeaderStatic:Description' => 'Exibe um separador horizontal',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Título',
@@ -1374,7 +1374,7 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'Month-10' => 'Outubro',
 	'Month-11' => 'Novembro',
 	'Month-12' => 'Dezembro',
-    // Short version for the DatePicker
+	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'D',
 	'DayOfWeek-Monday-Min' => 'S',
 	'DayOfWeek-Tuesday-Min' => 'T',
@@ -1395,7 +1395,7 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dez',
 	'Calendar-FirstDayOfWeek' => '0',
-    // 0 = Sunday, 1 = Monday, etc...
+	// 0 = Sunday, 1 = Monday, etc...
 	'UI:Menu:ShortcutList' => 'Criar um atalho...',
 	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'Renomear o atalho',
@@ -1491,23 +1491,23 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI:Button:UploadImage' => 'Carregar uma imagem do disco',
 	'UI:UploadNotSupportedInThisMode' => 'A modificação de imagens ou arquivos não é suportada neste modo',
 	'UI:Button:RemoveDocument' => 'Remover o documento',
-    // Search form
+	// Search form
 	'UI:Search:Toggle' => 'Minimizar / Expandir',
 	'UI:Search:AutoSubmit:DisabledHint' => 'O envio automático foi desativado para esta classe',
 	'UI:Search:Obsolescence:DisabledHint' => 'Baseado nas suas preferências de usuário, dados obsoletos não são exibidos',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Adicione algum critério na caixa de pesquisa ou clique no botão de pesquisa para visualizar os objetos',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Adicionar novos critérios',
-    // - Add new criteria button
+	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Usado recentemente',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Mais popular',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Outros',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Nenhum ainda',
-    // - Criteria header actions
+	// - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimizar / Expandir',
 	'UI:Search:Criteria:Remove' => 'Remover',
 	'UI:Search:Criteria:Locked' => 'Bloqueado',
-    // - Criteria titles
-    //   - Default widget
+	// - Criteria titles
+	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: qualquer',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s está vazio',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s não está vazio',
@@ -1529,57 +1529,57 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: qualquer',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s de %2$s',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s até %2$s',
-    //   - Numeric widget
-    //   None yet
-    //   - DateTime widget
+	//   - Numeric widget
+	//   None yet
+	//   - DateTime widget
 	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
-    //   - Enum widget
+	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s e %3$s outros',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: qualquer',
-    //   - TagSet widget
+	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
-    //   - External key widget
+	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s está definido',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s não está definido',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s = %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s e %3$s outros',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: qualquer',
-    //   - Hierarchical key widget
+	//   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s está definido',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s não está definido',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s = %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s e %3$s outros',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: qualquer',
-    // - Criteria operators
-    //   - Default widget
+	// - Criteria operators
+	//   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Está vazio',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Não está vazio',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Igual',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Entre',
-    //   - String widget
+	//   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contém',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Inicia com',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Termina com',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Exp. Regular ',
-    //   - Numeric widget
+	//   - Numeric widget
 	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Igual',
-    // => '=',
+	// => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Maior',
-    // => '>',
+	// => '>',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Maior',
-    // > '>=',
+	// > '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Menor',
-    // => '<',
+	// => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Menor / igual a',
-    // > '<=',
+	// > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Diferente de',
-    // => '≠',
-    //   - Tag Set Widget
+	// => '≠',
+	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Correspondências',
-    // - Other translations
+	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filtrar...',
 	'UI:Search:Value:Search:Placeholder' => 'Pesquisar...',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Comece a digitar os valores possíveis',
@@ -1587,7 +1587,7 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI:Search:Value:Autocomplete:NoResult' => 'Sem resultados',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Marcar todos / nenhum',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Marcar todos / Nenhum visíveis',
-    // - Widget other translations
+	// - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'De',
 	'UI:Search:Criteria:Numeric:Until' => 'Para',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Qualquer',

@@ -1281,54 +1281,54 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:DashletProxy:Label' => 'Proxy~~',
 	'UI:DashletProxy:Description' => 'Proxy dashlet~~',
 	'UI:DashletProxy:RenderNoDataText:Edit' => 'No preview available for this third-party dashlet (class "%1$s").~~',
-	'UI:DashletProxy:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)~~',
-	'UI:DashletPlainText:Label' => 'Text',
-	'UI:DashletPlainText:Description' => 'Obyčajný text (žiadne formátovanie)',
-	'UI:DashletPlainText:Prop-Text' => 'Text',
-	'UI:DashletPlainText:Prop-Text:Default' => 'Prosím vložte nejaký text sem...',
-	'UI:DashletObjectList:Label' => 'Zoznam objektu',
-	'UI:DashletObjectList:Description' => 'Zoznam objektu dashlet',
-	'UI:DashletObjectList:Prop-Title' => 'Nadpis',
-	'UI:DashletObjectList:Prop-Query' => 'Dopyt',
-	'UI:DashletObjectList:Prop-Menu' => 'Menu',
-	'UI:DashletGroupBy:Prop-Title' => 'Nadpis',
-	'UI:DashletGroupBy:Prop-Query' => 'Dopyt',
-	'UI:DashletGroupBy:Prop-Style' => 'Štýl',
-	'UI:DashletGroupBy:Prop-GroupBy' => 'Zoskupiť podľa...',
-	'UI:DashletGroupBy:Prop-GroupBy:Hour' => 'Hodina %1$s (0-23)',
-	'UI:DashletGroupBy:Prop-GroupBy:Month' => 'Mesiac %1$s (1 - 12)',
-	'UI:DashletGroupBy:Prop-GroupBy:DayOfWeek' => 'Deň v týždni pre %1$s',
-	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Deň v mesiaci pre %1$s',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (hodina)',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (mesiac)',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$ (deň v týžni)',
+	'UI:DashletProxy:Prop-XMLConfiguration'            => 'Configuration (shown as raw XML)~~',
+	'UI:DashletPlainText:Label'                        => 'Text',
+	'UI:DashletPlainText:Description'                  => 'Obyčajný text (žiadne formátovanie)',
+	'UI:DashletPlainText:Prop-Text'                    => 'Text',
+	'UI:DashletPlainText:Prop-Text:Default'            => 'Prosím vložte nejaký text sem...',
+	'UI:DashletObjectList:Label'                       => 'Zoznam objektu',
+	'UI:DashletObjectList:Description'                 => 'Zoznam objektu dashlet',
+	'UI:DashletObjectList:Prop-Title'                  => 'Nadpis',
+	'UI:DashletObjectList:Prop-Query'                  => 'Dopyt',
+	'UI:DashletObjectList:Prop-Menu'                   => 'Menu',
+	'UI:DashletGroupBy:Prop-Title'                     => 'Nadpis',
+	'UI:DashletGroupBy:Prop-Query'                     => 'Dopyt',
+	'UI:DashletGroupBy:Prop-Style'                     => 'Štýl',
+	'UI:DashletGroupBy:Prop-GroupBy'                   => 'Zoskupiť podľa...',
+	'UI:DashletGroupBy:Prop-GroupBy:Hour'              => 'Hodina %1$s (0-23)',
+	'UI:DashletGroupBy:Prop-GroupBy:Month'             => 'Mesiac %1$s (1 - 12)',
+	'UI:DashletGroupBy:Prop-GroupBy:DayOfWeek'         => 'Deň v týždni pre %1$s',
+	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth'        => 'Deň v mesiaci pre %1$s',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour'       => '%1$s (hodina)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Month'      => '%1$s (mesiac)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek'  => '%1$s (deň v týžni)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (deň v mesiaci)',
-	'UI:DashletGroupBy:MissingGroupBy' => 'Prosím zvoľte pole na ktorom objekty budú zoskupené spolu',
-	'UI:DashletGroupByPie:Label' => 'Koláčový graf',
-	'UI:DashletGroupByPie:Description' => 'Koláčový graf',
-	'UI:DashletGroupByBars:Label' => 'Tyčinkový graf',
-	'UI:DashletGroupByBars:Description' => 'Tyčinkový graf',
-	'UI:DashletGroupByTable:Label' => 'Zoskupiť podľa tabuliek (table)',
-	'UI:DashletGroupByTable:Description' => 'Zoznam (zoskupené podľa polí)',
-    // New in 2.5
-	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function~~',
-	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute~~',
-	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction~~',
-	'UI:DashletGroupBy:Prop-OrderField' => 'Order by~~',
-	'UI:DashletGroupBy:Prop-Limit' => 'Limit~~',
-	'UI:DashletGroupBy:Order:asc' => 'Ascending~~',
-	'UI:DashletGroupBy:Order:desc' => 'Descending~~',
-	'UI:GroupBy:count' => 'Count~~',
-	'UI:GroupBy:count+' => 'Number of elements~~',
-	'UI:GroupBy:sum' => 'Sum~~',
-	'UI:GroupBy:sum+' => 'Sum of %1$s~~',
+	'UI:DashletGroupBy:MissingGroupBy'                 => 'Prosím zvoľte pole na ktorom objekty budú zoskupené spolu',
+	'UI:DashletGroupByPie:Label'                       => 'Koláčový graf',
+	'UI:DashletGroupByPie:Description'                 => 'Koláčový graf',
+	'UI:DashletGroupByBars:Label'                      => 'Tyčinkový graf',
+	'UI:DashletGroupByBars:Description'                => 'Tyčinkový graf',
+	'UI:DashletGroupByTable:Label'                     => 'Zoskupiť podľa tabuliek (table)',
+	'UI:DashletGroupByTable:Description'               => 'Zoznam (zoskupené podľa polí)',
+	// New in 2.5
+	'UI:DashletGroupBy:Prop-Function'                  => 'Aggregation function~~',
+	'UI:DashletGroupBy:Prop-FunctionAttribute'         => 'Function attribute~~',
+	'UI:DashletGroupBy:Prop-OrderDirection'            => 'Direction~~',
+	'UI:DashletGroupBy:Prop-OrderField'                => 'Order by~~',
+	'UI:DashletGroupBy:Prop-Limit'                     => 'Limit~~',
+	'UI:DashletGroupBy:Order:asc'                      => 'Ascending~~',
+	'UI:DashletGroupBy:Order:desc'                     => 'Descending~~',
+	'UI:GroupBy:count'                                 => 'Count~~',
+	'UI:GroupBy:count+'                                => 'Number of elements~~',
+	'UI:GroupBy:sum'                                   => 'Sum~~',
+	'UI:GroupBy:sum+'                                  => 'Sum of %1$s~~',
 	'UI:GroupBy:avg' => 'Average~~',
 	'UI:GroupBy:avg+' => 'Average of %1$s~~',
 	'UI:GroupBy:min' => 'Minimum~~',
 	'UI:GroupBy:min+' => 'Minimum of %1$s~~',
 	'UI:GroupBy:max' => 'Maximum~~',
 	'UI:GroupBy:max+' => 'Maximum of %1$s~~',
-    // ---
+	// ---
 	'UI:DashletHeaderStatic:Label' => 'Hlavička',
 	'UI:DashletHeaderStatic:Description' => 'Zobrazuje an horizontálny oddelovač',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Nadpis',
@@ -1366,7 +1366,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'Month-10' => 'October~~',
 	'Month-11' => 'November~~',
 	'Month-12' => 'December~~',
-    // Short version for the DatePicker
+	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su~~',
 	'DayOfWeek-Monday-Min' => 'Mo~~',
 	'DayOfWeek-Tuesday-Min' => 'Tu~~',
@@ -1387,7 +1387,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
 	'Calendar-FirstDayOfWeek' => '0~~',
-    // 0 = Sunday, 1 = Monday, etc...
+	// 0 = Sunday, 1 = Monday, etc...
 	'UI:Menu:ShortcutList' => 'Vytvorenie skratky...',
 	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'Premenovanie skratky',
@@ -1483,23 +1483,23 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
-    // Search form
+	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
 	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
-    // - Add new criteria button
+	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used~~',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
-    // - Criteria header actions
+	// - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:Criteria:Remove' => 'Remove~~',
 	'UI:Search:Criteria:Locked' => 'Locked~~',
-    // - Criteria titles
-    //   - Default widget
+	// - Criteria titles
+	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty~~',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty~~',
@@ -1521,57 +1521,57 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s~~',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s~~',
-    //   - Numeric widget
-    //   None yet
-    //   - DateTime widget
+	//   - Numeric widget
+	//   None yet
+	//   - DateTime widget
 	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s~~',
-    //   - Enum widget
+	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
-    //   - TagSet widget
+	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-    //   - External key widget
+	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-    //   - Hierarchical key widget
+	//   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
-    // - Criteria operators
-    //   - Default widget
+	// - Criteria operators
+	//   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty~~',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty~~',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals~~',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Between~~',
-    //   - String widget
+	//   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains~~',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with~~',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
-    //   - Numeric widget
+	//   - Numeric widget
 	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',
-    // => '=',
+	// => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',
-    // => '>',
+	// => '>',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',
-    // > '>=',
+	// > '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',
-    // => '<',
+	// => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',
-    // > '<=',
+	// > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',
-    // => '≠',
-    //   - Tag Set Widget
+	// => '≠',
+	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
-    // - Other translations
+	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
 	'UI:Search:Value:Search:Placeholder' => 'Search...~~',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
@@ -1579,7 +1579,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:Value:Autocomplete:NoResult' => 'No result.~~',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none~~',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles~~',
-    // - Widget other translations
+	// - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From~~',
 	'UI:Search:Criteria:Numeric:Until' => 'To~~',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any~~',

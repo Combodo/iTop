@@ -489,47 +489,47 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:SearchToggle' => 'Keresés',
 	'UI:ClickToCreateNew' => 'Új %1$s létrehozása',
 	'UI:SearchFor_Class' => '%1$s objektumok keresése',
-	'UI:NoObjectToDisplay' => 'Nincs megjeleníthető objektum',
-	'UI:Error:SaveFailed' => 'Az objektum nem menthető le :',
-	'UI:Error:MandatoryTemplateParameter_object_id' => 'object_id paraméter kötelező a link_attr megadásánál. Ellenőrizze a sablon definíciót.',
-	'UI:Error:MandatoryTemplateParameter_target_attr' => 'target_attr paraméter kötelező a link_attr megadásánál. Ellenőrizze a sablon definíciót.',
-	'UI:Error:MandatoryTemplateParameter_group_by' => 'group_by paraméter kötelező. Ellenőrizze a sablon definíciót.',
-	'UI:Error:InvalidGroupByFields' => 'Csoportosításnál használt érvénytelen mezők: "%1$s".',
-	'UI:Error:UnsupportedStyleOfBlock' => 'Hiba: nem támogatott stílus tömb: "%1$s".',
-	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Nem megfelelő kapcsolat meghatározás: kapcsolódó osztály: %1$s nem külső kulcs a %2$s osztályban',
-	'UI:Error:Object_Class_Id_NotFound' => 'Objektum: %1$s:%2$d nem található.',
-	'UI:Error:WizardCircularReferenceInDependencies' => 'Hiba: Körkörös hivatkozás az egymásra mutató mezők között. Ellenőrizze az adatmodellt.',
-	'UI:Error:UploadedFileTooBig' => 'Feltöltendő fájl túl nagy. (Maximális méret: %1$s). Ellenőrizze a PHP konfigurációs fájlban az upload_max_filesize és post_max_size beállításokat.',
-	'UI:Error:UploadedFileTruncated.' => 'Feltöltött fájl átméretezett!',
-	'UI:Error:NoTmpDir' => 'Az átmeneti könyvtár nem meghatározott.',
-	'UI:Error:CannotWriteToTmp_Dir' => 'Az átmeneti fájl nem írható. upload_tmp_dir = "%1$s".',
-	'UI:Error:UploadStoppedByExtension_FileName' => 'Feltöltés megállt a fájl kiterjesztés miatt. (Eredeti fájl név = "%1$s").',
-	'UI:Error:UploadFailedUnknownCause_Code' => 'Fájl feltöltés sikertelen ismeretlen hiba miatt. (Hibakód = "%1$s").',
-	'UI:Error:1ParametersMissing' => 'Hiba: a következő paramétert meg kell adni ennél a műveletnél: %1$s.',
-	'UI:Error:2ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s és %2$s.',
-	'UI:Error:3ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s, %2$s és %3$s.',
-	'UI:Error:4ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s, %2$s, %3$s és %4$s.',
-	'UI:Error:IncorrectOQLQuery_Message' => 'Hiba: nem megfelelő OQL lekérdezés: %1$',
+	'UI:NoObjectToDisplay'                                => 'Nincs megjeleníthető objektum',
+	'UI:Error:SaveFailed'                                 => 'Az objektum nem menthető le :',
+	'UI:Error:MandatoryTemplateParameter_object_id'       => 'object_id paraméter kötelező a link_attr megadásánál. Ellenőrizze a sablon definíciót.',
+	'UI:Error:MandatoryTemplateParameter_target_attr'     => 'target_attr paraméter kötelező a link_attr megadásánál. Ellenőrizze a sablon definíciót.',
+	'UI:Error:MandatoryTemplateParameter_group_by'        => 'group_by paraméter kötelező. Ellenőrizze a sablon definíciót.',
+	'UI:Error:InvalidGroupByFields'                       => 'Csoportosításnál használt érvénytelen mezők: "%1$s".',
+	'UI:Error:UnsupportedStyleOfBlock'                    => 'Hiba: nem támogatott stílus tömb: "%1$s".',
+	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class'  => 'Nem megfelelő kapcsolat meghatározás: kapcsolódó osztály: %1$s nem külső kulcs a %2$s osztályban',
+	'UI:Error:Object_Class_Id_NotFound'                   => 'Objektum: %1$s:%2$d nem található.',
+	'UI:Error:WizardCircularReferenceInDependencies'      => 'Hiba: Körkörös hivatkozás az egymásra mutató mezők között. Ellenőrizze az adatmodellt.',
+	'UI:Error:UploadedFileTooBig'                         => 'Feltöltendő fájl túl nagy. (Maximális méret: %1$s). Ellenőrizze a PHP konfigurációs fájlban az upload_max_filesize és post_max_size beállításokat.',
+	'UI:Error:UploadedFileTruncated.'                     => 'Feltöltött fájl átméretezett!',
+	'UI:Error:NoTmpDir'                                   => 'Az átmeneti könyvtár nem meghatározott.',
+	'UI:Error:CannotWriteToTmp_Dir'                       => 'Az átmeneti fájl nem írható. upload_tmp_dir = "%1$s".',
+	'UI:Error:UploadStoppedByExtension_FileName'          => 'Feltöltés megállt a fájl kiterjesztés miatt. (Eredeti fájl név = "%1$s").',
+	'UI:Error:UploadFailedUnknownCause_Code'              => 'Fájl feltöltés sikertelen ismeretlen hiba miatt. (Hibakód = "%1$s").',
+	'UI:Error:1ParametersMissing'                         => 'Hiba: a következő paramétert meg kell adni ennél a műveletnél: %1$s.',
+	'UI:Error:2ParametersMissing'                         => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s és %2$s.',
+	'UI:Error:3ParametersMissing'                         => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s, %2$s és %3$s.',
+	'UI:Error:4ParametersMissing'                         => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s, %2$s, %3$s és %4$s.',
+	'UI:Error:IncorrectOQLQuery_Message'                  => 'Hiba: nem megfelelő OQL lekérdezés: %1$s',
 	'UI:Error:AnErrorOccuredWhileRunningTheQuery_Message' => 'Hiba történt a lekérdezés futtatása közben: %1$s',
-	'UI:Error:ObjectAlreadyUpdated' => 'Hiba: az objketum már korábban módosításra került.',
-	'UI:Error:ObjectCannotBeUpdated' => 'Hiba: az objektum nem frissíthető.',
-	'UI:Error:ObjectsAlreadyDeleted' => 'Hiba: az objektum már korában törlésre került!',
-	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Az osztály objektumainak tömeges törlése nem engedélyezett %1$s',
-	'UI:Error:DeleteNotAllowedOn_Class' => 'Az osztály objektumainak törlése nem engedélyezett %1$s',
-	'UI:Error:ReadNotAllowedOn_Class' => ' Nincs engedélye hogy a %1$s osztály objektumait lássa',
-	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Az osztály objektumainak tömeges frissítése nem engedélyezett %1$s',
-	'UI:Error:ObjectAlreadyCloned' => 'Hiba: az objektum már klónozott!',
-	'UI:Error:ObjectAlreadyCreated' => 'Hiba: az objektum már létrehozva!',
-	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Hiba: érvénytelen stimulus "%1$s" a következő objektum %2$s következő állapotában "%3$s".',
-	'UI:Error:InvalidDashboardFile' => 'Hiba: Érvénytelen műszerfal fájl',
-	'UI:Error:InvalidDashboard' => 'Hiba: Érvénytelen műszerfal',
-	'UI:Error:MaintenanceMode' => 'Az alkalmazás jelenleg karbantartás alatt van',
-	'UI:Error:MaintenanceTitle' => 'Karbantartás',
-	'UI:Error:InvalidToken' => 'Hiba: a kért művelet már végrehajtásra került (CSRF token nem található)',
-	'UI:Error:SMTP:UnknownVendor' => 'A %1$s OAuth SMTP szolgáltató nem létezik  (email_transport_smtp.oauth.provider)',
-	'UI:GroupBy:Count' => 'Mennyiség',
-	'UI:GroupBy:Count+' => '',
-	'UI:CountOfObjects' => '%1$d darab objektum felel meg a kritériumoknak.',
+	'UI:Error:ObjectAlreadyUpdated'                       => 'Hiba: az objketum már korábban módosításra került.',
+	'UI:Error:ObjectCannotBeUpdated'                      => 'Hiba: az objektum nem frissíthető.',
+	'UI:Error:ObjectsAlreadyDeleted'                      => 'Hiba: az objektum már korában törlésre került!',
+	'UI:Error:BulkDeleteNotAllowedOn_Class'               => 'Az osztály objektumainak tömeges törlése nem engedélyezett %1$s',
+	'UI:Error:DeleteNotAllowedOn_Class'                   => 'Az osztály objektumainak törlése nem engedélyezett %1$s',
+	'UI:Error:ReadNotAllowedOn_Class'                     => ' Nincs engedélye hogy a %1$s osztály objektumait lássa',
+	'UI:Error:BulkModifyNotAllowedOn_Class'               => 'Az osztály objektumainak tömeges frissítése nem engedélyezett %1$s',
+	'UI:Error:ObjectAlreadyCloned'                        => 'Hiba: az objektum már klónozott!',
+	'UI:Error:ObjectAlreadyCreated'                       => 'Hiba: az objektum már létrehozva!',
+	'UI:Error:Invalid_Stimulus_On_Object_In_State'        => 'Hiba: érvénytelen stimulus "%1$s" a következő objektum %2$s következő állapotában "%3$s".',
+	'UI:Error:InvalidDashboardFile'                       => 'Hiba: Érvénytelen műszerfal fájl',
+	'UI:Error:InvalidDashboard'                           => 'Hiba: Érvénytelen műszerfal',
+	'UI:Error:MaintenanceMode'                            => 'Az alkalmazás jelenleg karbantartás alatt van',
+	'UI:Error:MaintenanceTitle'                           => 'Karbantartás',
+	'UI:Error:InvalidToken'                               => 'Hiba: a kért művelet már végrehajtásra került (CSRF token nem található)',
+	'UI:Error:SMTP:UnknownVendor'                         => 'A %1$s OAuth SMTP szolgáltató nem létezik  (email_transport_smtp.oauth.provider)',
+	'UI:GroupBy:Count'                                    => 'Mennyiség',
+	'UI:GroupBy:Count+'                                   => '',
+	'UI:CountOfObjects'                                   => '%1$d darab objektum felel meg a kritériumoknak.',
 	'UI_CountOfObjectsShort' => '%1$d objektum.',
 	'UI:NoObject_Class_ToDisplay' => 'Nincs megjeleníthető %1$s',
 	'UI:History:LastModified_On_By' => 'Utolsó módosítást a következő objektumon %1$s %2$s végezte.',
@@ -1307,7 +1307,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:DashletGroupByBars:Description' => 'Oszlopdiagram',
 	'UI:DashletGroupByTable:Label' => 'Csoportosítás (táblánként)',
 	'UI:DashletGroupByTable:Description' => 'Lista (mezőnként csoportosítva)',
-    // New in 2.5
+	// New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Kigyűjtés funkció',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Funkció attribútum',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Irány',
@@ -1325,7 +1325,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:GroupBy:min+' => '%1$s minimuma',
 	'UI:GroupBy:max' => 'Maximum',
 	'UI:GroupBy:max+' => '%1$s maximuma',
-    // ---
+	// ---
 	'UI:DashletHeaderStatic:Label' => 'Fejléc',
 	'UI:DashletHeaderStatic:Description' => 'Megjelenít egy vízszintes elválasztót',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Cím',
@@ -1363,7 +1363,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'Month-10' => 'Október',
 	'Month-11' => 'November',
 	'Month-12' => 'December',
-    // Short version for the DatePicker
+	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Va',
 	'DayOfWeek-Monday-Min' => 'Hé',
 	'DayOfWeek-Tuesday-Min' => 'Ke',
@@ -1384,7 +1384,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dec',
 	'Calendar-FirstDayOfWeek' => '1',
-    // 0 = Vasárnap, 1 = Hétfő, stb...
+	// 0 = Vasárnap, 1 = Hétfő, stb...
 	'UI:Menu:ShortcutList' => 'Gyorsgomb létrehozása...',
 	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'Gyorsgomb átnevezése',
@@ -1480,23 +1480,23 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:Button:UploadImage' => 'Kép feltöltése a merevlemezről',
 	'UI:UploadNotSupportedInThisMode' => 'A képek vagy fájlok módosítása ebben az üzemmódban nem támogatott.',
 	'UI:Button:RemoveDocument' => 'Dokumentum törlése',
-    // Search form
+	// Search form
 	'UI:Search:Toggle' => 'Minimalizál / Kiterjeszt',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Az automatikus beküldés le van tiltva ebben az osztályban',
 	'UI:Search:Obsolescence:DisabledHint' => 'Az Ön beállításai alapján az elavult adatok el vannak rejtve.',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Adjon meg néhány feltételt a keresőmezőben, vagy kattintson a keresés gombra az objektumok megtekintéséhez.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Adjon meg egy feltételt',
-    // - Add new criteria button
+	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Legutóbb használt',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Legnépszerűbb',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Egyebek',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Még egyik sem',
-    // - Criteria header actions
+	// - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimalizál / Kiterjeszt',
 	'UI:Search:Criteria:Remove' => 'Eltávolítás',
 	'UI:Search:Criteria:Locked' => 'Zárolva',
-    // - Criteria titles
-    //   - Default widget
+	// - Criteria titles
+	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: bármely',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s üres',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s nem üres',
@@ -1518,57 +1518,57 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: bármely',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s a %2$s -ból',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s egészen %2$s -ig',
-    //   - Numeric widget
-    //   None yet
-    //   - DateTime widget
+	//   - Numeric widget
+	//   None yet
+	//   - DateTime widget
 	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
-    //   - Enum widget
+	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s és %3$s másik',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: bármely',
-    //   - TagSet widget
+	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
-    //   - External key widget
+	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s meghatározva',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s nincs meghatározva',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s és %3$s másik',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: bármely',
-    //   - Hierarchical key widget
+	//   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s meghatározva',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s nincs meghatározva',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s és %3$s másik',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: bármely',
-    // - Criteria operators
-    //   - Default widget
+	// - Criteria operators
+	//   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Üres',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Nem üres',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Egyenlő',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Közötte',
-    //   - String widget
+	//   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Tartalmaz',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Kezdődik',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Végződik',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regul. kifejezés',
-    //   - Numeric widget
+	//   - Numeric widget
 	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Egyenlő',
-    // => '=',
+	// => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Nagyobb',
-    // => '>',
+	// => '>',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Nagyobb / egyenlő',
-    // > '>=',
+	// > '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Kisebb',
-    // => '<',
+	// => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Kisebb / egyenlő',
-    // > '<=',
+	// > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Különböző',
-    // => '≠',
-    //   - Tag Set Widget
+	// => '≠',
+	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Egyezik',
-    // - Other translations
+	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Szűrő...',
 	'UI:Search:Value:Search:Placeholder' => 'Keresés...',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Kezdje el beírni a lehetséges értékeket',
@@ -1576,7 +1576,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:Search:Value:Autocomplete:NoResult' => 'Nincs eredmény',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Mindet / egyiket sem ellenőrzi',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Mind / egyik sem látható',
-    // - Widget other translations
+	// - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'Kezdés',
 	'UI:Search:Criteria:Numeric:Until' => 'Amíg',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Bármely',
