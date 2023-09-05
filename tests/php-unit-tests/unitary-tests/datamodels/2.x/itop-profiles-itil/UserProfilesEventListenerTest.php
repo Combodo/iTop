@@ -63,7 +63,8 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 				'aExpectedAssociatedProfilesAfterUserCreation'=> [
 					'Portal power user',
 					'Portal user',
-				]
+				],
+				'bCheckSessionMessage' => true
 			],
 			'Portal power user + Configuration Manager => profiles untouched' => [
 				'aAssociatedProfilesBeforeUserCreation' => [
@@ -82,21 +83,47 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserLocalCreation($aAssociatedProfilesBeforeUserCreation,
-		$aExpectedAssociatedProfilesAfterUserCreation)
+		$aExpectedAssociatedProfilesAfterUserCreation, $bCheckSessionMessage=false)
 	{
+		/*if ($bCheckSessionMessage){
+			$sLogin = "Admin-" . uniqid();
+			$oConnectedUser = $this->CreateContactlessUser($sLogin, 1,  "Iuytrez9876543ç_è-(");
+			$_SESSION = [];
+			\UserRights::Login($oConnectedUser->Get('login'));
+		}*/
+
 		$oUser = new \UserLocal();
 		$sLogin = 'testUserLocalCreationWithPortalPowerUserProfile-'.uniqid();
 		$oUser->Set('login', $sLogin);
 		$oUser->Set('password', 'ABCD1234@gabuzomeu');
 		$oUser->Set('language', 'EN US');
 		$this->commonUserCreationTest($oUser, $aAssociatedProfilesBeforeUserCreation, $aExpectedAssociatedProfilesAfterUserCreation);
+
+		/*if ($bCheckSessionMessage){
+			$aObjMessages = Session::Get('obj_messages');
+			$this->assertNotEmpty($aObjMessages);
+			$sKey = sprintf("%s::%s", get_class($oUser), $oUser->GetKey());
+			$this->assertTrue(array_key_exists($sKey, $aObjMessages));
+
+			$sMsg = <<<TXT
+User profile Portal power user cannot be standalone. User has been completed with profile Portal power user.
+TXT;
+			$aExpectedMessages = [
+				[
+					'rank' => 1,
+					'severity' => 'WARNING',
+					'message' => $sMsg
+				]
+			];
+			$this->assertEquals($aExpectedMessages, array_values($aObjMessages[$sKey]), var_export($aObjMessages[$sKey], true));
+		}*/
 	}
 
 	/**
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserLocalUpdate($aAssociatedProfilesBeforeUserCreation,
-		$aExpectedAssociatedProfilesAfterUserCreation)
+		$aExpectedAssociatedProfilesAfterUserCreation, $bCheckSessionMessage=false)
 	{
 		$oUser = new \UserLocal();
 		$sLogin = 'testUserLocalUpdateWithPortalPowerUserProfile-'.uniqid();
@@ -110,7 +137,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserLDAPCreation($aAssociatedProfilesBeforeUserCreation,
-		$aExpectedAssociatedProfilesAfterUserCreation)
+		$aExpectedAssociatedProfilesAfterUserCreation, $bCheckSessionMessage=false)
 	{
 		$oUser = new \UserLDAP();
 		$sLogin = 'testUserLDAPCreationWithPortalPowerUserProfile-'.uniqid();
@@ -134,7 +161,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserExternalCreation($aAssociatedProfilesBeforeUserCreation,
-		$aExpectedAssociatedProfilesAfterUserCreation)
+		$aExpectedAssociatedProfilesAfterUserCreation, $bCheckSessionMessage=false)
 	{
 		$oUser = new \UserExternal();
 		$sLogin = 'testUserLDAPCreationWithPortalPowerUserProfile-'.uniqid();
@@ -146,7 +173,7 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 	 * @dataProvider PortaPowerUserProvider
 	 */
 	public function testUserExternalUpdate($aAssociatedProfilesBeforeUserCreation,
-		$aExpectedAssociatedProfilesAfterUserCreation)
+		$aExpectedAssociatedProfilesAfterUserCreation, $bCheckSessionMessage=false)
 	{
 		$oUser = new \UserExternal();
 		$sLogin = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
@@ -217,7 +244,6 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 
 		$_SESSION = [];
 
-		//$this->expectException(\Exception::class);
 		UserRights::Login($oUser->Get('login'));
 
 		if (! UserRights::IsPortalUser()) {
@@ -274,6 +300,11 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 
 		if ($bRaiseException){
 			$this->expectException(\DeleteException::class);
+			$sMessage = <<<TXT
+Profile Portal power user cannot be standalone. You should add other profiles to user $sLogin otherwise you may encounter access issue with this user.
+TXT;
+
+			$this->expectExceptionMessage($sMessage);
 		}
 
 		$aURPUserProfileByUser = $this->GetURPUserProfileByUser($sId);
@@ -316,7 +347,25 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		if (!$bRaiseException) {
 			$aExpectedProfilesAfterUpdate = ["Portal power user", "Portal user"];
 			$this->CheckProfilesAreOkAndThenConnectToITop($sUserClass, $sId, $aExpectedProfilesAfterUpdate);
-		}
+
+			//check warning
+			/*$aObjMessages = Session::Get('obj_messages');
+			$this->assertNotEmpty($aObjMessages);
+			$sKey = sprintf("%s::%s", get_class($oURPUserProfile), $oURPUserProfile->GetKey());
+			$this->assertTrue(array_key_exists($sKey, $aObjMessages));
+
+			$sMsg = <<<TXT
+User profile Portal power user cannot be standalone. User has been completed with profile Portal power user.
+TXT;
+			$aExpectedMessages = [
+				[
+					'rank' => 1,
+					'severity' => 'WARNING',
+					'message' => $sMsg
+				]
+			];
+			$this->assertEquals($aExpectedMessages, array_values($aObjMessages[$sKey]), var_export($aObjMessages[$sKey], true));*/
+			}
 	}
 
 	public function ProfilesLinksProvider() {
@@ -333,19 +382,24 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$aInitialProfiles = [ $sProfileNameToMove, "Portal power user"];
 
 		$oUser = new \UserExternal();
-		$sLogin = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
-		$oUser->Set('login', $sLogin);
+		$sLogin1 = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
+		$oUser->Set('login', $sLogin1);
 
 		$sUserClass = get_class($oUser);
 		list ($sId, $aProfiles)  = $this->CreateUserForProfileTesting($oUser, $aInitialProfiles);
 
 		$oUser = new \UserExternal();
-		$sLogin = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
-		$oUser->Set('login', $sLogin);
+		$sLogin2 = 'testUserLDAPUpdateWithPortalPowerUserProfile-'.uniqid();
+		$oUser->Set('login', $sLogin2);
 		list ($sAnotherUserId, $aProfiles) = $this->CreateUserForProfileTesting($oUser, ["Configuration Manager"]);
 
 		if ($bRaiseException){
 			$this->expectException(\CoreCannotSaveObjectException::class);
+			$sMessage = <<<TXT
+Profile Portal power user cannot be standalone. You should add other profiles to user $sLogin1 otherwise you may encounter access issue with this user.
+TXT;
+
+			$this->expectExceptionMessage($sMessage);
 		}
 
 		$aURPUserProfileByUser = $this->GetURPUserProfileByUser($sId);
@@ -590,23 +644,14 @@ class UserProfilesEventListenerTest extends ItopDataTestCase
 		$oUserProfilesEventListener->RegisterEventsAndListeners();
 
 		$this->expectException(\CoreCannotSaveObjectException::class);
+		$sMessage = <<<TXT
+Profile Portal power user cannot be standalone. You should add other profiles to user $sLogin otherwise you may encounter access issue with this user.
+TXT;
+
+		$this->expectExceptionMessage($sMessage);
 
 		$this->commonUserCreationTest($oUser, $aAssociatedProfilesBeforeUserCreation, $aAssociatedProfilesBeforeUserCreation, false);
 
-		/*$aObjMessages = Session::Get('obj_messages');
-		$this->assertNotEmpty($aObjMessages);
-		$sKey = sprintf("%s::%s", get_class($oUser), $oUser->GetKey());
-		$this->assertTrue(array_key_exists($sKey, $aObjMessages));
-
-		$aExpectedMessages = [
-			[
-				'rank' => 1,
-				'severity' => 'WARNING',
-				'message' => \Dict::Format("Class:User/NonStandaloneProfileWarning", 'Portal power user')
-			]
-		];
-		$this->assertEquals($aExpectedMessages, array_values($aObjMessages[$sKey]), var_export($aObjMessages[$sKey], true));
-*/
 		$_SESSION = [];
 	}
 }
