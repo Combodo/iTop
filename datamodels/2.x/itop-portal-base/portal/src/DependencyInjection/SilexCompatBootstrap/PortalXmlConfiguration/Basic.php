@@ -281,13 +281,10 @@ class Basic extends AbstractConfiguration
 	 */
 	private function AppendFaviconUri(array $aPortalConf)
 	{
-		$sFaviconUri = \MetaModel::GetConfig()->GetUrl('favicon');
-		if (is_null($sFaviconUri)) {
-			$sFaviconUri = $aPortalConf['properties']['favicon'];
-			if (!preg_match('/^http/', $sFaviconUri)) {
-				// We prefix it with the server base url
-				$sFaviconUri = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/'.$sFaviconUri;
-			}
+		$sFaviconUri = $aPortalConf['properties']['favicon'];
+		if (!preg_match('/^http/', $sFaviconUri)) {
+			// We prefix it with the server base url
+			$sFaviconUri = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/'.$sFaviconUri;
 		}
 		$aPortalConf['properties']['favicon'] = $sFaviconUri;
 

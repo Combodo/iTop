@@ -729,7 +729,7 @@ PHP;
 		// Compile the branding
 		//
 		/** @var \MFElement $oBrandingNode */
-		$oBrandingNode = $this->oFactory->GetNodes('branding')->item(0);
+		$oBrandingNode = $this->oFactory->GetNodes('brandings')->item(0);
 		$this->CompileBranding($oBrandingNode, $sTempTargetDir, $sFinalTargetDir);
 
 		if (array_key_exists('_core_', $this->aSnippets))
@@ -3326,27 +3326,27 @@ EOF;
 	/**
 	 * @param \MFElement $oBrandingNode
 	 * @param string $sTempTargetDir
-	 * @param string $sFinalTargetDir
+	 * @param string $sEnvironment
 	 * @param string $sNodeName
 	 * @param string $sTargetFile
 	 *
 	 * @throws \Exception
 	 */
-	protected function CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $sNodeName, $sTargetFile)
+	protected function CompileLogo($oBrandingNode, $sTempTargetDir, $sEnvironment, $sNodeName, $sTargetFile)
 	{
 		$sIcon = trim($oBrandingNode->GetChildText($sNodeName) ?? '');
 		if (strlen($sIcon) > 0) {
 			$sSourceFile = $sTempTargetDir.'/'.$sIcon;
-			$aIconName=explode(".", $sIcon);
-			$sIconExtension=$aIconName[count($aIconName)-1];
-			$sTargetFile = '/branding/'.$sTargetFile.'.'.$sIconExtension;
+			$aIconName = explode(".", $sIcon);
+			$sIconExtension = $aIconName[count($aIconName) - 1];
+			$sTargetFile = '/branding/'.$sEnvironment.'/'.$sTargetFile.'.'.$sIconExtension;
 
-			if (!file_exists($sSourceFile))
-			{
+			if (!file_exists($sSourceFile)) {
 				throw new Exception("Branding $sNodeName: could not find the file $sIcon ($sSourceFile)");
 			}
 
 			copy($sSourceFile, $sTempTargetDir.$sTargetFile);
+
 			return $sTargetFile;
 		}
 		return null;
@@ -3661,8 +3661,10 @@ EOF;
 					['sNodeName' => 'portal_favicon', 'sTargetFile' => 'portal_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_FAVICON],
 					['sNodeName' => 'login_favicon', 'sTargetFile' => 'login_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_FAVICON],
 				];
+				$sEnvironment = $oBrandingNode->getAttribute('id');
+				SetupUtils::builddir($sTempTargetDir.'/branding/'.$sEnvironment);
 				foreach ($aLogosToCompile as $aLogo) {
-					$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $aLogo['sNodeName'], $aLogo['sTargetFile']);
+					$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sEnvironment, $aLogo['sNodeName'], $aLogo['sTargetFile']);
 					if ($sLogo != null) {
 						$aDataBranding[$oBrandingNode->getAttribute('id')][$aLogo['sType']] = $sLogo;
 					}

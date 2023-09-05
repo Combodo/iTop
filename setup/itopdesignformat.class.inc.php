@@ -910,14 +910,14 @@ class iTopDesignFormat
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-background-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--background-color');
-		}		
-		
-		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]');
+		}
+
+		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-color');
 		}
 
-		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]');
+		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-content');
 		}
@@ -1059,20 +1059,6 @@ class iTopDesignFormat
 	 */
 	protected function From30To31($oFactory)
 	{
-		$oXPath = new DOMXPath($this->oDocument);
-
-		// N°3363 - Add favicon in branding
-		$oNodeDesign = $oXPath->query("/itop_design");
-		$oNodeBranding = $oXPath->query("/itop_design/branding");
-		$oNodeBranding->setAttribute('id', 'default');
-		$oNodeBrandingTheme = $oXPath->query("/itop_design/branding/themes");
-		$oNodeBrandingThemeCommon = $oXPath->query("/itop_design/branding/themes_common");
-		$oNodeBrandings = $oNodeDesign->ownerDocument->createElement("brandings");
-		$oNodeDesign->appendChild($oNodeBrandings);
-		$oNodeBrandings->appendChild($oNodeBrandingTheme);
-		$oNodeBrandings->appendChild($oNodeBrandingThemeCommon);
-		$oNodeBrandings->appendChild($oNodeBranding);
-
 	}
 	/**
 	 * Downgrade the format from version 3.1 to 3.0
@@ -1103,13 +1089,51 @@ class iTopDesignFormat
 		// - Remove rank in values
 		$this->RemoveNodeFromXPath("/itop_design/classes//class/fields/field/values/value/rank");
 
-		// N°3363 - Add favicon in branding
-		$this->RemoveNodeFromXPath('/itop_design/branding/main_favicon');
-		$this->RemoveNodeFromXPath('/itop_design/branding/portal_favicon');
-		$this->RemoveNodeFromXPath('/itop_design/branding/login_favicon');
+	}
+
+	/**
+	 * Upgrade the format from version 3.1 to 3.2
+	 *
+	 * @param \ModelFactory $oFactory
+	 *
+	 * @return void (Errors are logged)
+	 */
+	protected function From31To32($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
 
 		// N°3363 - Add favicon in branding
-		$oNodeDesign = $oXPath->query('/itop_design');
+		$oNodeDesign = $oXPath->query("/itop_design")->item(0);
+		$oNodeBranding = $oXPath->query("/itop_design/branding")->item(0);
+		if ($oNodeBranding) {
+			$oNodeBrandings = $oNodeDesign->ownerDocument->createElement("brandings");
+			$oNodeDesign->appendChild($oNodeBrandings);
+			$oNodeBrandingTheme = $oXPath->query("/itop_design/branding/themes")->item(0);
+			if ($oNodeBrandingTheme) {
+				$oNodeBrandings->appendChild($oNodeBrandingTheme);
+			}
+			$oNodeBrandingThemeCommon = $oXPath->query("/itop_design/branding/themes_common")->item(0);
+			if ($oNodeBrandingThemeCommon) {
+				$oNodeBrandings->appendChild($oNodeBrandingThemeCommon);
+			}
+			$oNodeBranding->setAttribute('id', 'default');
+			$oNodeBrandings->appendChild($oNodeBranding);
+		}
+	}
+
+	/**
+	 * Downgrade the format from version 3.2 to 3.1
+	 *
+	 * @param \ModelFactory $oFactory
+	 *
+	 * @return void (Errors are logged)
+	 */
+	protected function From32To31($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// N°3363 - Add favicon in branding
+		$oNodeDesign = $oXPath->query('/itop_design')->item(0);
 		$oNodeBrandingList = $oXPath->query('/itop_design/brandings//branding');
 		foreach ($oNodeBrandingList as $oNode) {
 			if ($oNode->getAttribute('id') != 'default') {
@@ -1119,33 +1143,17 @@ class iTopDesignFormat
 				$oNodeDesign->appendChild($oNode);
 			}
 		}
-		$oNodeBranding = $oXPath->query('/itop_design/branding');
-		$oNodeBrandingTheme = $oXPath->query("/itop_design/brandings/themes");
-		$oNodeBrandingThemeCommon = $oXPath->query("/itop_design/brandings/themes_common");
-		$oNodeBranding->appendChild($oNodeBrandingTheme);
-		$oNodeBranding->appendChild($oNodeBrandingThemeCommon);
-		$oNodeBranding->RemoveNodeFromXPath('/itop_design/branding/default_theme');
+		$oNodeBranding = $oXPath->query('/itop_design/branding')->item(0);
+		$oNodeBrandingTheme = $oXPath->query("/itop_design/brandings/themes")->item(0);
+		if ($oNodeBrandingTheme) {
+			$oNodeBranding->appendChild($oNodeBrandingTheme);
+		}
+		$oNodeBrandingThemeCommon = $oXPath->query("/itop_design/brandings/themes_common")->item(0);
+		if ($oNodeBrandingThemeCommon) {
+			$oNodeBranding->appendChild($oNodeBrandingThemeCommon);
+		}
+		$this->RemoveNodeFromXPath('/itop_design/branding/default_theme');
 		$this->RemoveNodeFromXPath('/itop_design/brandings');
-	}
-
-	/**
-	 * Upgrade the format from version 3.1 to 3.2
-	 * @param \ModelFactory $oFactory
-	 * @return void (Errors are logged)
-	 */
-	protected function From31To32($oFactory)
-	{
-		// Nothing for now...
-	}
-
-	/**
-	 * Downgrade the format from version 3.2 to 3.1
-	 * @param \ModelFactory $oFactory
-	 * @return void (Errors are logged)
-	 */
-	protected function From32To31($oFactory)
-	{
-		// Nothing for now...
 	}
 
 	/**

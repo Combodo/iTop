@@ -68,11 +68,6 @@ class UnauthenticatedWebPage extends NiceWebPage
 	 */
 	protected function GetFaviconAbsoluteUrl()
 	{
-		$sFavIcon = utils::GetConfig()->GetUrl('favicon');
-		if (!is_null($sFavIcon)) {
-			return $sFavIcon;
-		}
-
 		return Branding::GetLoginFavIconAbsoluteUrl();
 	}
 

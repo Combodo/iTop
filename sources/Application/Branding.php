@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Application;
 
+use MetaModel;
 use utils;
 
 /**
@@ -39,11 +40,11 @@ class Branding
 	/** @var string Logo used in the login pages */
 	public const ENUM_LOGO_TYPE_LOGIN_LOGO = 'login_logo';
 	/** @var string Logo used in the login pages */
-	public const ENUM_LOGO_TYPE_MAIN_FAVICON = 'main_favicon ';
+	public const ENUM_LOGO_TYPE_MAIN_FAVICON = 'main_favicon';
 	/** @var string Logo used in the login pages */
-	public const ENUM_LOGO_TYPE_PORTAL_FAVICON = 'portal_favicon ';
+	public const ENUM_LOGO_TYPE_PORTAL_FAVICON = 'portal_favicon';
 	/** @var string Logo used in the login pages */
-	public const ENUM_LOGO_TYPE_LOGIN_FAVICON = 'login_favicon ';
+	public const ENUM_LOGO_TYPE_LOGIN_FAVICON = 'login_favicon';
 	/** @var string Default logo */
 	public const DEFAULT_LOGO_TYPE = self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL;
 
@@ -188,8 +189,6 @@ class Branding
 	 */
 	public static function GetMainFavIconAbsoluteUrl()
 	{
-		\IssueLog::Error(static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_FAVICON));
-
 		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_FAVICON);
 	}
 
@@ -217,13 +216,10 @@ class Branding
 	 */
 	public static function GetLoginFavIconAbsoluteUrl()
 	{
-		\IssueLog::Error(static::ENUM_LOGO_TYPE_LOGIN_FAVICON);
 		$sIcon = static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_LOGIN_FAVICON);
-		\IssueLog::Error('login icon:'.$sIcon);
 		if (utils::IsNullOrEmptyString($sIcon)) {
 			return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_FAVICON);
 		}
-		\IssueLog::Error('login:'.$sIcon);
 
 		return $sIcon;
 	}

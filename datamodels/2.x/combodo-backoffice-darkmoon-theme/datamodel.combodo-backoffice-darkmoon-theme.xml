@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
-  <branding>
+  <brandings>
     <themes>
       <theme id="darkmoon" _delta="define">
         <variables>
@@ -17,5 +17,5 @@
         <precompiled_stylesheet>combodo-backoffice-darkmoon-theme/precompiled-themes/main.css</precompiled_stylesheet>
       </theme>
     </themes>
-  </branding>
+  </brandings>
 </itop_design>
