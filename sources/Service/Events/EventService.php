@@ -134,8 +134,8 @@ final class EventService
 			return;
 		}
 
-		$oLastException = null;
-		$sLastExceptionMessage = null;
+		$oFirstException = null;
+		$sFirstExceptionMessage = null;
 		$bEventFired = false;
 		foreach (self::GetListeners($sEvent, $eventSource) as $aEventCallback) {
 			if (!self::MatchContext($aEventCallback['context'])) {
@@ -153,9 +153,12 @@ final class EventService
 				throw $e;
 			}
 			catch (Exception $e) {
-				$sLastExceptionMessage = "Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with non-blocking error: ".$e->getMessage();
-				EventServiceLog::Error($sLastExceptionMessage);
-				$oLastException = $e;
+				$sExceptionMessage = "Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with non-blocking error: ".$e->getMessage();
+				EventServiceLog::Error($sExceptionMessage);
+				if (is_null($oFirstException)){
+					$oFirstException = $e;
+					$sFirstExceptionMessage = $sExceptionMessage;
+				}
 			}
 		}
 		if ($bEventFired) {
@@ -163,9 +166,9 @@ final class EventService
 		}
 		$oKPI->ComputeStats('FireEvent', $sEvent);
 
-		if (!is_null($oLastException)) {
-			EventServiceLog::Error("Throwing the last exception caught: $sLastExceptionMessage");
-			throw $oLastException;
+		if (!is_null($oFirstException)) {
+			EventServiceLog::Error("Throwing the last exception caught: $sFirstExceptionMessage");
+			throw $oFirstException;
 		}
 	}
 

@@ -544,19 +544,6 @@
         <groups/>
       </profile>
     </profiles>
-  <dictionaries>
-    <dictionary id="EN US">
-      <entries>
-        <entry id="Class:User/NonStandaloneProfileWarning" _delta="define">User profile %1$s cannot be standalone. You should add
-          other profiles otherwise you may encounter access issue with this user.</entry>
-      </entries>
-    </dictionary>
-    <dictionary id="FR FR">
-      <entries>
-        <entry id="Class:User/NonStandaloneProfileWarning" _delta="define">Le profil %1$s ne peut être seul. Sans le rajout d'autres
-          profiles, l'utilisateur peut rencontrer des problèmes dans iTop.</entry>
-      </entries>
-    </dictionary>
-  </dictionaries>
+  <dictionaries/>
   </user_rights>
 </itop_design>

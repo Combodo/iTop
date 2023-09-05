@@ -284,7 +284,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 					throw new \Exception(sprintf("%s is badly configured. profile $sRepairProfileName does not exist.", self::USERPROFILE_REPAIR_ITOP_PARAM_NAME));
 				}
 
-				$this->aNonStandaloneProfilesMap[$sNonStandaloneProfileName] = $aProfiles[$sRepairProfileName];
+				$this->aNonStandaloneProfilesMap[$sNonStandaloneProfileName] = [ 'name' => $sRepairProfileName, 'id' => $aProfiles[$sRepairProfileName]];
 			}
 
 			$this->bIsRepairmentEnabled = true;
@@ -311,20 +311,21 @@ class UserProfilesEventListener implements iEventServiceSetup
 
 	public function RepairUserChangesOrWarn(\User $oUser, string $sSingleProfileName) : void {
 		if (array_key_exists($sSingleProfileName, $this->aNonStandaloneProfilesMap)) {
-			$sRepairingProfileId = $this->aNonStandaloneProfilesMap[$sSingleProfileName];
-			$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName);
-			if (is_null($sRepairingProfileId)){
+			$aRepairingProfileInfo = $this->aNonStandaloneProfilesMap[$sSingleProfileName];
+			if (is_null($aRepairingProfileInfo)){
 				//Notify current user via session messages that there will be an issue
 				//Without preventing from commiting
 				//$oUser::SetSessionMessage(get_class($oUser), $oUser->GetKey(), 1, $sMessage, 'WARNING', 1);
+				$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName, $oUser->Get('friendlyname'));
 				throw new \CoreCannotSaveObjectException(array('issues' => [$sMessage], 'class' => get_class($oUser), 'id' => $oUser->GetKey()));
 			} else {
 				//Completing profiles profiles by adding repairing one : by default portal user to a power portal user
 				$oUserProfile = new \URP_UserProfile();
-				$oUserProfile->Set('profileid', $sRepairingProfileId);
+				$oUserProfile->Set('profileid', $aRepairingProfileInfo['id']);
 				$oCurrentUserProfileSet = $oUser->Get('profile_list');
 				$oCurrentUserProfileSet->AddItem($oUserProfile);
 				$oUser->Set('profile_list', $oCurrentUserProfileSet);
+				$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning-ReparationMessage", $sSingleProfileName, $oUser->Get('friendlyname'), $aRepairingProfileInfo['name']);
 				$oUser::SetSessionMessage(get_class($oUser), $oUser->GetKey(), 1, $sMessage, 'WARNING', 1);
 			}
 		}
@@ -336,14 +337,14 @@ class UserProfilesEventListener implements iEventServiceSetup
 		}
 
 		if (array_key_exists($sSingleProfileName, $this->aNonStandaloneProfilesMap)) {
-			$sRepairingProfileId = $this->aNonStandaloneProfilesMap[$sSingleProfileName];
-			$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName);
-			if (is_null($sRepairingProfileId)
-				|| ($sRepairingProfileId === $sRemovedProfileId) //cannot repair by readding same remove profile as it will raise uniqueness rule
+			$aRepairingProfileInfo = $this->aNonStandaloneProfilesMap[$sSingleProfileName];
+			if (is_null($aRepairingProfileInfo)
+				|| ($aRepairingProfileInfo['id'] === $sRemovedProfileId) //cannot repair by readding same remove profile as it will raise uniqueness rule
 			){
 				//Notify current user via session messages that there will be an issue
 				//Without preventing from commiting
 				//$oURP_UserProfile::SetSessionMessage(get_class($oURP_UserProfile), $oURP_UserProfile->GetKey(), 1, $sMessage, 'WARNING', 1);
+				$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName, $oUser->Get('friendlyname'));
 				if ($bIsRemoval){
 					$oURP_UserProfile->AddDeleteIssue($sMessage);
 				} else {
@@ -352,12 +353,13 @@ class UserProfilesEventListener implements iEventServiceSetup
 			} else {
 				//Completing profiles profiles by adding repairing one : by default portal user to a power portal user
 				$oUserProfile = new \URP_UserProfile();
-				$oUserProfile->Set('profileid', $sRepairingProfileId);
+				$oUserProfile->Set('profileid', $aRepairingProfileInfo['id']);
 				$oCurrentUserProfileSet = $oUser->Get('profile_list');
 				$oCurrentUserProfileSet->AddItem($oUserProfile);
 				$oUser->Set('profile_list', $oCurrentUserProfileSet);
 				$oUser->DBWrite();
 
+				$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning-ReparationMessage", $sSingleProfileName, $oUser->Get('friendlyname'), $aRepairingProfileInfo['name']);
 				$oURP_UserProfile::SetSessionMessage(get_class($oURP_UserProfile), $oURP_UserProfile->GetKey(), 1, $sMessage, 'WARNING', 1);
 			}
 		}
