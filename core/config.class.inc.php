@@ -213,7 +213,7 @@ class Config
 			'type'                => 'string',
 			'description'         => 'type of branding. usefull for put different logo depending environment',
 			'default'             => null,
-			'value'               => '',
+			'value'               => null,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],

@@ -83,17 +83,6 @@ class LoginWebPage extends NiceWebPage
 
 	protected static $m_sLoginFailedMessage = '';
 
-	/**
-	 * Return the absolute URL for the favicon
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	protected function GetFaviconAbsoluteUrl()
-	{
-		return Branding::GetLoginFavIconAbsoluteUrl();
-	}
-
 	public function __construct($sTitle = null)
 	{
 		if ($sTitle === null) {
@@ -110,6 +99,17 @@ class LoginWebPage extends NiceWebPage
 	{
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+	}
+
+	/**
+	 * Return the absolute URL for the favicon
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return Branding::GetLoginFavIconAbsoluteUrl();
 	}
 
 	public static function SetLoginFailedMessage($sMessage)

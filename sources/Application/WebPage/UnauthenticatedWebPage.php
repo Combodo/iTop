@@ -299,4 +299,15 @@ class UnauthenticatedWebPage extends NiceWebPage
 			$this->add_linked_stylesheet($this->sCustomThemeUrl);
 		}
 	}
+
+	/**
+	 * Return the absolute URL for the favicon
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return Branding::GetLoginFavIconAbsoluteUrl();
+	}
 }

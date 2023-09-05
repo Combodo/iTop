@@ -278,6 +278,7 @@ class Basic extends AbstractConfiguration
 	 *
 	 * @return array
 	 * @throws \Exception
+	 * @since 3.1.1 N°3363
 	 */
 	private function AppendFaviconUri(array $aPortalConf)
 	{
