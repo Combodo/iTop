@@ -22,9 +22,9 @@ define('ADMIN_PROFILE_ID', 1);
 class UserRightsBaseClass extends cmdbAbstractObject
 {
 	// Whenever something changes, reload the privileges
-	
+
 	// Whenever something changes, reload the privileges
-	
+
 	protected function AfterInsert()
 	{
 		UserRights::FlushPrivileges();
@@ -78,7 +78,7 @@ class URP_Profiles extends UserRightsBaseClass
 	function GetGrantAsHtml($oUserRights, $sClass, $sAction)
 	{
 		$oGrant = $oUserRights->GetClassActionGrant($this->GetKey(), $sClass, $sAction);
-		if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes')) 
+		if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes'))
 		{
 			return '<span style="background-color: #ddffdd;">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
 		}
@@ -87,7 +87,7 @@ class URP_Profiles extends UserRightsBaseClass
 			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
-	
+
 	function DoShowGrantSumary($oPage)
 	{
 		if ($this->GetRawName() == "Administrator")
@@ -99,7 +99,7 @@ class URP_Profiles extends UserRightsBaseClass
 
 		// Note: for sure, we assume that the instance is derived from UserRightsProjection
 		$oUserRights = UserRights::GetModuleInstance();
-	
+
 		$aDisplayData = array();
 		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
 		{
@@ -116,7 +116,7 @@ class URP_Profiles extends UserRightsBaseClass
 				}
 			}
 			$sStimuli = implode(', ', $aStimuli);
-			
+
 			$aDisplayData[] = array(
 				'class' => MetaModel::GetName($sClass),
 				'read' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Read'),
@@ -128,7 +128,7 @@ class URP_Profiles extends UserRightsBaseClass
 				'stimuli' => $sStimuli,
 			);
 		}
-	
+
 		$aDisplayConfig = array();
 		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
 		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
@@ -277,7 +277,7 @@ class URP_UserProfile extends UserRightsBaseClass
 			"db_table"            => "priv_urp_userprofile",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-			"is_link" 			  => true, /** @since 3.1.0 N°6482 */
+			"is_link" 			  => true, /** @since 3.1.0 N°6482 N°5324 */
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -356,7 +356,7 @@ class URP_ProfileProjection extends UserRightsBaseClass
 			{
 				$aRes = array($oUser->Get($sColumn));
 			}
-			
+
 		}
 		elseif (($sExpr == '<any>') || ($sExpr == ''))
 		{
@@ -427,14 +427,14 @@ class URP_ClassProjection extends UserRightsBaseClass
 			{
 				$aRes = array($oObject->Get($sColumn));
 			}
-			
+
 		}
 		elseif (($sExpr == '<any>') || ($sExpr == ''))
 		{
 			$aRes = null;
 		}
 		elseif (strtolower(substr($sExpr, 0, 6)) == 'select')
-		{ 
+		{
 			$sColumn = $this->Get('attribute');
 			// SELECT...
 			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn, array(), true /*allow all data*/);
@@ -585,14 +585,14 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		$oContact->Set('org_id', $iOrgId);
 		$oContact->Set('email', 'my.email@foo.org');
 		$iContactId = $oContact->DBInsertNoReload();
-		
+
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('contactid', $iContactId);
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
 		$iUserId = $oUser->DBInsertNoReload();
-		
+
 		// Add this user to the very specific 'admin' profile
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('userid', $iUserId);
@@ -643,24 +643,24 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		// Could be loaded in a shared memory (?)
 
 		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Dimensions"));
-		$this->m_aDimensions = array(); 
+		$this->m_aDimensions = array();
 		while ($oDimension = $oDimensionSet->Fetch())
 		{
-			$this->m_aDimensions[$oDimension->GetKey()] = $oDimension; 
+			$this->m_aDimensions[$oDimension->GetKey()] = $oDimension;
 		}
-		
+
 		$oClassProjSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_ClassProjection"));
-		$this->m_aClassProjs = array(); 
+		$this->m_aClassProjs = array();
 		while ($oClassProj = $oClassProjSet->Fetch())
 		{
-			$this->m_aClassProjs[$oClassProj->Get('class')][$oClassProj->Get('dimensionid')] = $oClassProj; 
+			$this->m_aClassProjs[$oClassProj->Get('class')][$oClassProj->Get('dimensionid')] = $oClassProj;
 		}
 
 		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Profiles"));
-		$this->m_aProfiles = array(); 
+		$this->m_aProfiles = array();
 		while ($oProfile = $oProfileSet->Fetch())
 		{
-			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile; 
+			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile;
 		}
 
 		$oUserProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_UserProfile"));
@@ -676,10 +676,10 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		}
 
 		$oProProSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_ProfileProjection"));
-		$this->m_aProPros = array(); 
+		$this->m_aProPros = array();
 		while ($oProPro = $oProProSet->Fetch())
 		{
-			$this->m_aProPros[$oProPro->Get('profileid')][$oProPro->Get('dimensionid')] = $oProPro; 
+			$this->m_aProPros[$oProPro->Get('profileid')][$oProPro->Get('dimensionid')] = $oProPro;
 		}
 
 /*
@@ -707,7 +707,7 @@ exit;
 				// Authorize any for this dimension, then no additional criteria is required
 				continue;
 			}
- 
+
 			// 1 - Get class projection info
 			//
 			$oExpression = null;
@@ -731,13 +731,13 @@ exit;
 			}
 			elseif (strtolower(substr($sExpr, 0, 6)) == 'select')
 			{
-				throw new CoreException('Sorry, projections by the mean of OQL are not supported currently, please specify an attribute instead', array('class' => $sClass, 'expression' => $sExpr)); 
+				throw new CoreException('Sorry, projections by the mean of OQL are not supported currently, please specify an attribute instead', array('class' => $sClass, 'expression' => $sExpr));
 			}
 			else
 			{
 				// Constant value(s)
 				// unsupported
-				throw new CoreException('Sorry, constant projections are not supported currently, please specify an attribute instead', array('class' => $sClass, 'expression' => $sExpr)); 
+				throw new CoreException('Sorry, constant projections are not supported currently, please specify an attribute instead', array('class' => $sClass, 'expression' => $sExpr));
 //				$aRes = explode(';', trim($sExpr));
 			}
 
@@ -866,7 +866,7 @@ exit;
 		$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$iObjectRef][$iActionCode] = $aRes;
 		return $aRes;
 	}
-	
+
 	public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null)
 	{
 		if (is_null($oInstanceSet))
@@ -934,7 +934,7 @@ exit;
 			}
 			else
 			{
-				$iInstancePermission = UR_ALLOWED_NO; 
+				$iInstancePermission = UR_ALLOWED_NO;
 			}
 
 			if (isset($iGlobalPermission))
@@ -1140,7 +1140,7 @@ exit;
 	}
 
 	protected $m_aMatchingProfiles = array(); // cache of the matching profiles for a given user/object
-	
+
 	protected function GetMatchingProfiles($oUser, $sClass, /*DBObject*/ $oObject = null)
 	{
 		$iUser = $oUser->GetKey();
@@ -1186,7 +1186,7 @@ exit;
 					@$aProfileRes[$iProfile] += 1;
 				}
 			}
-	
+
 			$aRes = array();
 			$iDimCount = count($this->m_aDimensions);
 			foreach ($aProfileRes as $iProfile => $iMatches)
@@ -1200,7 +1200,7 @@ exit;
 
 		// store into the cache
 		$this->m_aMatchingProfiles[$iUser][$sClass][$iObjectRef] = $aRes;
-		return $aRes; 
+		return $aRes;
 	}
 
 	public function FlushPrivileges()

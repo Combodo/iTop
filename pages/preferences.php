@@ -141,55 +141,58 @@ JS
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), array(), 'grey', 'ibo-favorite-organizations');
-	$oFavoriteOrganizationsBlock->SetSubTitle(Dict::S('UI:FavoriteOrganizations+'));
-	$oFavoriteOrganizationsBlock->AddCSSClass('ibo-datatable-panel');
-	$oFavoriteOrganizationsForm = new Form();
-	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsForm);
-	// Favorite organizations: the organizations listed in the drop-down menu
-	$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
-	$oFilter = DBObjectSearch::FromOQL($sOQL);
-	$oBlock = new DisplayBlock($oFilter, 'list', false);
+	$bIsSiloSelectionEnabled = MetaModel::GetConfig()->Get('navigation_menu.show_organization_filter');
+	if ($bIsSiloSelectionEnabled)
+	{
+		$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), array(), 'grey', 'ibo-favorite-organizations');
+		$oFavoriteOrganizationsBlock->SetSubTitle(Dict::S('UI:FavoriteOrganizations+'));
+		$oFavoriteOrganizationsBlock->AddCSSClass('ibo-datatable-panel');
+		$oFavoriteOrganizationsForm = new Form();
+		$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsForm);
+		// Favorite organizations: the organizations listed in the drop-down menu
+		$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
+		$oFilter = DBObjectSearch::FromOQL($sOQL);
+		$oBlock = new DisplayBlock($oFilter, 'list', false);
 
-	$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
+		$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
 
-	$sIdFavoriteOrganizations = 1;
-	$oFavoriteOrganizationsForm->AddSubBlock($oBlock->GetDisplay($oP, $sIdFavoriteOrganizations, [
-		'menu'                => false,
-		'selection_mode'      => true,
-		'selection_type'      => 'multiple',
-		'table_id'            => 'user_prefs',
-		'surround_with_panel' => false,
-		'selected_rows'       => $aFavoriteOrgs,
-	]));
-	$oFavoriteOrganizationsForm->AddSubBlock($oAppContext->GetForFormBlock());
+		$sIdFavoriteOrganizations = 1;
+		$oFavoriteOrganizationsForm->AddSubBlock($oBlock->GetDisplay($oP, $sIdFavoriteOrganizations, [
+			'menu'                => false,
+			'selection_mode'      => true,
+			'selection_type'      => 'multiple',
+			'table_id'            => 'user_prefs',
+			'surround_with_panel' => false,
+			'selected_rows'       => $aFavoriteOrgs,
+		]));
+		$oFavoriteOrganizationsForm->AddSubBlock($oAppContext->GetForFormBlock());
 
-	// Button toolbar
-	$oFavoriteOrganizationsToolBar = ToolbarUIBlockFactory::MakeForButton(null, ['ibo-is-fullwidth']);
-	$oFavoriteOrganizationsForm->AddSubBlock($oFavoriteOrganizationsToolBar);
+		// Button toolbar
+		$oFavoriteOrganizationsToolBar = ToolbarUIBlockFactory::MakeForButton(null, ['ibo-is-fullwidth']);
+		$oFavoriteOrganizationsForm->AddSubBlock($oFavoriteOrganizationsToolBar);
 
-	// - Cancel button
-	$oFavoriteOrganizationsCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
-	$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsCancelButton);
-	$oFavoriteOrganizationsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
-	// - Submit button
-	$oFavoriteOrganizationsSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
-	$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsSubmitButton);
+		// - Cancel button
+		$oFavoriteOrganizationsCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
+		$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsCancelButton);
+		$oFavoriteOrganizationsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+		// - Submit button
+		$oFavoriteOrganizationsSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
+		$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsSubmitButton);
 
-	// TODO 3.0 have this code work again, currently it prevents the display of favorite organizations and shortcuts.
-	//	if ($aFavoriteOrgs == null) {
-	//		// All checked
-	//		$oP->add_ready_script(
-	//			<<<JS
-	//	$('#$sIdFavoriteOrganizations.checkAll').prop('checked', true);
-	//	checkAllDataTable('datatable_$sIdFavoriteOrganizations',true,'$sIdFavoriteOrganizations');
-	//JS
-	//		);
-	//
-	//	}
+		// TODO 3.0 have this code work again, currently it prevents the display of favorite organizations and shortcuts.
+		//	if ($aFavoriteOrgs == null) {
+		//		// All checked
+		//		$oP->add_ready_script(
+		//			<<<JS
+		//	$('#$sIdFavoriteOrganizations.checkAll').prop('checked', true);
+		//	checkAllDataTable('datatable_$sIdFavoriteOrganizations',true,'$sIdFavoriteOrganizations');
+		//JS
+		//		);
+		//
+		//	}
 
-	$oContentLayout->AddMainBlock($oFavoriteOrganizationsBlock);
-
+		$oContentLayout->AddMainBlock($oFavoriteOrganizationsBlock);
+	}
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// Shortcuts

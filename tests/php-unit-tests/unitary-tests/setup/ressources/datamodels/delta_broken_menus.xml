@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+  <menus>
+    <menu id="Contact" xsi:type="DashboardMenuNode" _created_in="itop-config-mgmt" _delta="must_exist">
+      <parent _delta="redefine">ConfigManagementOverview</parent>
+    </menu>
+    <menu id="Location" xsi:type="OQLMenuNode" _created_in="itop-config-mgmt" _delta="delete">
+      <parent _delta="redefine">ConfigManagementOverview</parent>
+    </menu>
+    <menu id="Document" xsi:type="OQLMenuNode" _created_in="itop-config-mgmt" _delta="must_exist">
+      <parent _delta="redefine">ConfigManagementOverview</parent>
+    </menu>
+  </menus>
+</itop_design>

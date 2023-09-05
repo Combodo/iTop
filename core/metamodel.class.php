@@ -1241,7 +1241,7 @@ abstract class MetaModel
 			}
 			$sTable = self::DBGetTable($sClass);
 
-			// Could be completed later with all the classes that are using a given table 
+			// Could be completed later with all the classes that are using a given table
 			if (!array_key_exists($sTable, $aTables)) {
 				$aTables[$sTable] = array();
 			}
@@ -3522,7 +3522,7 @@ abstract class MetaModel
 		}
 
 		// Set the "host class" as soon as possible, since HierarchicalKeys use it for their 'target class' as well
-		// and this needs to be know early (for Init_IsKnowClass 19 lines below)		
+		// and this needs to be know early (for Init_IsKnowClass 19 lines below)
 		$oAtt->SetHostClass($sTargetClass);
 
 		// Some attributes could refer to a class
@@ -3564,7 +3564,7 @@ abstract class MetaModel
 
 		self::$m_aAttribDefs[$sTargetClass][$oAtt->GetCode()] = $oAtt;
 		self::$m_aAttribOrigins[$sTargetClass][$oAtt->GetCode()] = $sTargetClass;
-		// Note: it looks redundant to put targetclass there, but a mix occurs when inheritance is used		
+		// Note: it looks redundant to put targetclass there, but a mix occurs when inheritance is used
 	}
 
 	/**
@@ -3764,7 +3764,7 @@ abstract class MetaModel
 		self::$m_aStimuli[$sTargetClass][$oStimulus->GetCode()] = $oStimulus;
 
 		// I wanted to simplify the syntax of the declaration of objects in the biz model
-		// Therefore, the reference to the host class is set there 
+		// Therefore, the reference to the host class is set there
 		$oStimulus->SetHostClass($sTargetClass);
 	}
 
@@ -6479,7 +6479,7 @@ abstract class MetaModel
 				$aCache['m_aExtensionClassNames'] = self::$m_aExtensionClassNames;
 				$aCache['m_Category2Class'] = self::$m_Category2Class;
 				$aCache['m_aRootClasses'] = self::$m_aRootClasses; // array of "classname" => "rootclass"
-				$aCache['m_aParentClasses'] = self::$m_aParentClasses; // array of ("classname" => array of "parentclass") 
+				$aCache['m_aParentClasses'] = self::$m_aParentClasses; // array of ("classname" => array of "parentclass")
 				$aCache['m_aChildClasses'] = self::$m_aChildClasses; // array of ("classname" => array of "childclass")
 				$aCache['m_aClassParams'] = self::$m_aClassParams; // array of ("classname" => array of class information)
 				$aCache['m_aAttribDefs'] = self::$m_aAttribDefs; // array of ("classname" => array of attributes)
@@ -7583,6 +7583,20 @@ abstract class MetaModel
 		if (isset(self::$m_aReentranceProtection[$sClass][$sKey])) {
 			return self::$m_aReentranceProtection[$sClass][$sKey];
 		}
+		return false;
+	}
+
+	/**
+	 * @since 3.1.0 N°5324: to ease reentrance checks when using events on links (to avoid reentering if main link object ongoing operation)
+	 */
+	public static function GetReentranceObjectByChildClass(string $sParentClass, $sKey)
+	{
+		foreach (self::EnumChildClasses($sParentClass, ENUM_CHILD_CLASSES_ALL, false) as $sChildClass){
+			if (self::GetReentranceObject($sChildClass, $sKey)){
+				return true;
+			}
+		}
+
 		return false;
 	}
 
