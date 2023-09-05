@@ -38,6 +38,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 		$this->Init();
 
 		if (false === $this->bIsRepairmentEnabled){
+			IssueLog::Debug('UserProfilesEventListener bIsRepairmentEnabled disabled', LogChannels::DM_CRUD);
 			return;
 		}
 
@@ -97,6 +98,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 			$iUserId = $oURP_UserProfile->Get('userid');
 			$oUser = \MetaModel::GetReentranceObjectByChildClass(\User::class, $iUserId);
 			if (false !== $oUser){
+				IssueLog::Debug('OnUserProfileEdition user already being edited', LogChannels::DM_CRUD);
 				//user edition: handled by other event
 				return;
 			}
@@ -104,6 +106,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 			$oUser = \MetaModel::GetObject(\User::class, $iUserId);
 			$aChanges = $oURP_UserProfile->ListChanges();
 			if (array_key_exists('userid', $aChanges)) {
+				IssueLog::Debug('OnUserProfileEdition userid changed', LogChannels::DM_CRUD);
 				$iUserId = $oURP_UserProfile->GetOriginal('userid');
 				$oPreviousUser = \MetaModel::GetObject(\User::class, $iUserId);
 
@@ -112,13 +115,22 @@ class UserProfilesEventListener implements iEventServiceSetup
 				$iCount = 0;
 				$sSingleProfileName = null;
 				while ($oCurrentURP_UserProfile = $oProfileLinkSet->Fetch()) {
-					if ($oCurrentURP_UserProfile->Get('userid') !== $oCurrentURP_UserProfile->GetOriginal('userid')) {
+					$sNewUserId = $oCurrentURP_UserProfile->Get('userid');
+					$sOriginalUserId = $oCurrentURP_UserProfile->GetOriginal('userid');
+					if ($sNewUserId !== $sOriginalUserId) {
 						$sRemovedProfileId = $oCurrentURP_UserProfile->GetOriginal('profileid');
+						IssueLog::Debug('OnUserProfileEdition profile moved does not count', LogChannels::DM_CRUD, [
+							'URP_UserProfile' => $oURP_UserProfile->GetKey(),
+							'sRemovedProfileId' => $sRemovedProfileId,
+							'sNewUserId' => $sNewUserId,
+							'sOriginalUserId' => $sOriginalUserId,
+						]);
 						continue;
 					}
 
 					$iCount++;
 					if ($iCount  > 1){
+						IssueLog::Debug('OnUserProfileEdition more than one user', LogChannels::DM_CRUD);
 						//more than one profile: no repairment needed
 						return;
 					}
@@ -126,6 +138,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 				}
 				$this->RepairProfileChangesOrWarn($oPreviousUser, $sSingleProfileName, $oURP_UserProfile, $sRemovedProfileId);
 			} else if (array_key_exists('profileid', $aChanges)){
+				IssueLog::Debug('OnUserProfileEdition profileid changed', LogChannels::DM_CRUD);
 				$oCurrentUserProfileSet = $oUser->Get('profile_list');
 				if ($oCurrentUserProfileSet->Count() === 1){
 					$oProfile = $oCurrentUserProfileSet->Fetch();
@@ -153,6 +166,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 			$iUserId = $oURP_UserProfile->Get('userid');
 			$oUser = \MetaModel::GetReentranceObjectByChildClass(\User::class, $iUserId);
 			if (false !== $oUser){
+				IssueLog::Debug('OnUserProfileLinkDeletion user being deleted already', LogChannels::DM_CRUD);
 				//user edition: handled by other event
 				return;
 			}
@@ -181,6 +195,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 				}
 				$iCount++;
 				if ($iCount  > 1){
+					IssueLog::Debug('OnUserProfileLinkDeletion more than one profile', LogChannels::DM_CRUD);
 					//more than one profile: no repairment needed
 					return;
 				}
@@ -217,6 +232,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 		//In that case, itop administrator has to specify it via itop configuration. we dont use default profiles repairment otherwise
 		if (is_null($aNonStandaloneProfiles)){
 			if (count($aPortalDispatcherData) > 2){
+				IssueLog::Debug('Init repairment disabled as there are more than 2 portals (extended customer should decide on their own)', LogChannels::DM_CRUD);
 				$this->bIsRepairmentEnabled = false;
 				return;
 			}
@@ -224,6 +240,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 			$aPortalNames = array_keys($aPortalDispatcherData);
 			sort($aPortalNames);
 			if ($aPortalNames !== ['backoffice', 'itop-portal']){
+				IssueLog::Debug('Init repairment disabled there is a custom portal', LogChannels::DM_CRUD, [$aPortalNames]);
 				$this->bIsRepairmentEnabled = false;
 				return;
 			}
@@ -235,13 +252,14 @@ class UserProfilesEventListener implements iEventServiceSetup
 		}
 
 		if (! is_array($aNonStandaloneProfiles)){
-			\IssueLog::Error(sprintf("%s is badly configured. it should be an array.", self::USERPROFILE_REPAIR_ITOP_PARAM_NAME), null, [self::USERPROFILE_REPAIR_ITOP_PARAM_NAME => $aNonStandaloneProfiles]);
+			\IssueLog::Error(sprintf("%s is badly configured. it should be an array.", self::USERPROFILE_REPAIR_ITOP_PARAM_NAME),LogChannels::DM_CRUD, [self::USERPROFILE_REPAIR_ITOP_PARAM_NAME => $aNonStandaloneProfiles]);
 			$this->bIsRepairmentEnabled = false;
 			return;
 		}
 
 		if (empty($aNonStandaloneProfiles)){
 			//Feature specifically disabled in itop configuration
+			IssueLog::Debug('Init repairment disabled by conf on purpose', LogChannels::DM_CRUD);
 			$this->bIsRepairmentEnabled = false;
 			return;
 		}
@@ -303,6 +321,7 @@ class UserProfilesEventListener implements iEventServiceSetup
 	{
 		$oCurrentUserProfileSet = $oUser->Get('profile_list');
 		if ($oCurrentUserProfileSet->Count() === 1){
+			IssueLog::Debug('ValidateThenRepairOrWarn one profile found', LogChannels::DM_CRUD);
 			$oProfile = $oCurrentUserProfileSet->Fetch();
 
 			$this->RepairUserChangesOrWarn($oUser, $oProfile->Get('profile'));
@@ -310,12 +329,16 @@ class UserProfilesEventListener implements iEventServiceSetup
 	}
 
 	public function RepairUserChangesOrWarn(\User $oUser, string $sSingleProfileName) : void {
+		IssueLog::Debug('RepairUserChangesOrWarn', LogChannels::DM_CRUD,
+			[
+				'aNonStandaloneProfilesMap' => $this->aNonStandaloneProfilesMap,
+				'sSingleProfileName' => $sSingleProfileName
+			]
+		);
+
 		if (array_key_exists($sSingleProfileName, $this->aNonStandaloneProfilesMap)) {
 			$aRepairingProfileInfo = $this->aNonStandaloneProfilesMap[$sSingleProfileName];
 			if (is_null($aRepairingProfileInfo)){
-				//Notify current user via session messages that there will be an issue
-				//Without preventing from commiting
-				//$oUser::SetSessionMessage(get_class($oUser), $oUser->GetKey(), 1, $sMessage, 'WARNING', 1);
 				$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName, $oUser->Get('friendlyname'));
 				throw new \CoreCannotSaveObjectException(array('issues' => [$sMessage], 'class' => get_class($oUser), 'id' => $oUser->GetKey()));
 			} else {
@@ -332,6 +355,13 @@ class UserProfilesEventListener implements iEventServiceSetup
 	}
 
 	public function RepairProfileChangesOrWarn(\User $oUser, ?string $sSingleProfileName, \URP_UserProfile $oURP_UserProfile, string $sRemovedProfileId, $bIsRemoval=false) : void {
+		IssueLog::Debug('RepairUserChangesOrWarn', LogChannels::DM_CRUD,
+			[
+				'aNonStandaloneProfilesMap' => $this->aNonStandaloneProfilesMap,
+				'sSingleProfileName' => $sSingleProfileName
+			]
+		);
+
 		if (is_null($sSingleProfileName)){
 			return;
 		}
@@ -341,9 +371,6 @@ class UserProfilesEventListener implements iEventServiceSetup
 			if (is_null($aRepairingProfileInfo)
 				|| ($aRepairingProfileInfo['id'] === $sRemovedProfileId) //cannot repair by readding same remove profile as it will raise uniqueness rule
 			){
-				//Notify current user via session messages that there will be an issue
-				//Without preventing from commiting
-				//$oURP_UserProfile::SetSessionMessage(get_class($oURP_UserProfile), $oURP_UserProfile->GetKey(), 1, $sMessage, 'WARNING', 1);
 				$sMessage = \Dict::Format("Class:User/NonStandaloneProfileWarning", $sSingleProfileName, $oUser->Get('friendlyname'));
 				if ($bIsRemoval){
 					$oURP_UserProfile->AddDeleteIssue($sMessage);
