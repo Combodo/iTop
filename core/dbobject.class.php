@@ -3220,6 +3220,9 @@ abstract class DBObject implements iDisplay
 				$this->m_aOrigValues[$sAttCode] = $value;
 			}
 
+			// Prevent DBUpdate at this point (reentrance protection)
+			//MetaModel::StartReentranceProtection($this);
+
 			try {
 				$this->PostInsertActions();
 			}
