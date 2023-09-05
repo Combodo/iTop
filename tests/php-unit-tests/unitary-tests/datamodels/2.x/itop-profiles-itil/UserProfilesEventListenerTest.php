@@ -512,7 +512,7 @@ TXT;
 
 	public function testInit_ConfWithOneWarningProfile() {
 		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Ticket Manager' => 'Administrator', 'Portal power user' => null]
+			['Configuration Manager' => 'Administrator', 'Portal power user' => null]
 		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
@@ -521,7 +521,7 @@ TXT;
 
 	public function testInit_ConfWithFurtherWarningProfiles() {
 		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Ticket Manager' => null, 'Portal power user' => null]
+			['Configuration Manager' => null, 'Portal power user' => null]
 		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
@@ -530,7 +530,7 @@ TXT;
 
 	public function testInit_ConfWithFurtherWarningProfilesAndOneRepairment() {
 		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Portal power user' => null, 'Ticket Manager' => null, 'Administrator' => "Configuration Manager"]
+			['Portal power user' => null, 'Configuration Manager' => null, 'Administrator' => "Configuration Manager"]
 		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
@@ -546,7 +546,7 @@ TXT;
 		$oUser->Set('language', 'EN US');
 
 		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
-			['Portal power user' => 'Ticket Manager']
+			['Portal power user' => 'Configuration Manager']
 		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
 		$oUserProfilesEventListener->Init();
@@ -561,7 +561,7 @@ TXT;
 			$aProfilesAfterCreation[] = $oProfile->Get('profile');
 		}
 
-		$this->assertContains('Ticket Manager', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+		$this->assertContains('Configuration Manager', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 		$this->assertContains('Portal power user', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 	}
 
@@ -569,8 +569,8 @@ TXT;
 	{
 		\MetaModel::GetConfig()->Set(UserProfilesEventListener::USERPROFILE_REPAIR_ITOP_PARAM_NAME,
 			[
-				'Administrator' => 'Configuration Manager',
-				'Portal power user' => 'Ticket Manager'
+				'Administrator' => 'Portal user',
+				'Portal power user' => 'Configuration Manager'
 			]
 		);
 		$oUserProfilesEventListener = new UserProfilesEventListener();
@@ -591,7 +591,7 @@ TXT;
 			$aProfilesAfterCreation[] = $oProfile->Get('profile');
 		}
 
-		$this->assertContains('Ticket Manager', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+		$this->assertContains('Configuration Manager', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 		$this->assertContains('Portal power user', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 
 		$oUser2 = new \UserLocal();
@@ -610,7 +610,7 @@ TXT;
 		}
 
 		$this->assertContains('Administrator', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
-		$this->assertContains('Configuration Manager', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
+		$this->assertContains('Portal user', $aProfilesAfterCreation, var_export($aProfilesAfterCreation, true));
 	}
 
 	public function testUserCreationWithWarningMessageConf()
