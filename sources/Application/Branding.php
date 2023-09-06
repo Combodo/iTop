@@ -71,6 +71,12 @@ class Branding
 		self::ENUM_LOGO_TYPE_MAIN_FAVICON      => [
 			'default' => 'images/favicon.ico',
 		],
+		self::ENUM_LOGO_TYPE_PORTAL_FAVICON    => [
+			'default' => 'images/favicon.ico',
+		],
+		self::ENUM_LOGO_TYPE_LOGIN_FAVICON     => [
+			'default' => 'images/favicon.ico',
+		],
 	];
 
 	/**
@@ -105,7 +111,7 @@ class Branding
 				return ($sModulePath ?? $sAppPath).$sCustomLogoPath;
 			}
 		}
-		$sDefaultLogoPath = static::$aLogoPaths['default'][$sType];
+		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
 
 		return $sAppPath.$sDefaultLogoPath;
 	}
