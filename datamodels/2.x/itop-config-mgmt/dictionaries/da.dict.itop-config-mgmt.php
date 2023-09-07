@@ -28,10 +28,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Relation:impacts/UpStream+'      => 'Elements impacting~~',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Elementer, som afhænger af dette element',
-	'Relation:depends on/DownStream' => 'Afhænger af ...',
-	'Relation:depends on/UpStream' => 'Påvirker ...',
-	'Relation:impacts/LoadData' => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => 'Afhænger af ...',
+	'Relation:depends on/UpStream'    => 'Påvirker ...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
 	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 

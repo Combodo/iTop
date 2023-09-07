@@ -34,10 +34,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Relation:impacts/UpStream+'      => 'Bu kaleme bağımlı olan kalemler',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Bu kaleme bağımlı olan kalemler',
-	'Relation:depends on/DownStream' => 'Bağımlı olanlar...',
-	'Relation:depends on/UpStream' => 'Etkiledikleri...',
-	'Relation:impacts/LoadData' => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => 'Bağımlı olanlar...',
+	'Relation:depends on/UpStream'    => 'Etkiledikleri...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
 	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 

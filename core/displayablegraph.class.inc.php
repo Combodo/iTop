@@ -1540,8 +1540,7 @@ class DisplayableGraph extends SimpleGraph
 				$oP->add_ready_script(" $('#$sId').simple_graph(".json_encode($aParams).");");
 			} else {
 				$oP->add_script("function Load(){var aExcluded = [];	$('input[name^=excluded]').each( function() {if (!$(this).prop('checked'))	{	aExcluded.push($(this).val());		}} ); var params= $.extend(".json_encode($aParams).",  {excluded_classes: aExcluded}); $('#$sId').simple_graph(params);}");
-				$oP->add_ready_script("$('#impacted_objects_lists').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_groups').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');");
-
+				$oP->add_ready_script("$('#graph').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_objects_lists').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_groups').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');");
 			}
 		}
 		catch (Exception $e) {

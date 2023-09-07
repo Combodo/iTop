@@ -30,11 +30,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Relation:impacts/UpStream+'      => 'Betroffene Elemente',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Elemente, von denen dieses Element abhängt.',
-	'Relation:depends on/DownStream' => 'Hängt ab von ...',
-	'Relation:depends on/UpStream' => 'Wirkt auf ...',
-	'Relation:impacts/LoadData' => 'Daten laden',
-	'Relation:impacts/FilteredData' => 'Daten sind über den Tab "Grafische Ansicht" gefiltert',
-	'Relation:impacts/NoFilteredData' => 'Bitte wählen Sie Objekte im Tab "Grafische Ansicht"',
+	'Relation:depends on/DownStream'  => 'Hängt ab von ...',
+	'Relation:depends on/UpStream'    => 'Wirkt auf ...',
+	'Relation:impacts/LoadData'       => 'Daten laden',
+	'Relation:impacts/FilteredData'   => 'Daten sind über den Tab "Grafische Ansicht" gefiltert',
+	'Relation:impacts/NoFilteredData' => 'Bitte wählen Sie Objekte ~~',
 ));
 
 

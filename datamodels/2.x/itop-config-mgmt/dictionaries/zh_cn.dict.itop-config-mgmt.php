@@ -32,10 +32,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Relation:impacts/UpStream+'      => '此元素依赖的元素...',
 	// Legacy entries
 	'Relation:depends on/Description' => '此元素依赖的元素...',
-	'Relation:depends on/DownStream' => '依赖于...',
-	'Relation:depends on/UpStream' => '影响...',
-	'Relation:impacts/LoadData' => '加载数据',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => '依赖于...',
+	'Relation:depends on/UpStream'    => '影响...',
+	'Relation:impacts/LoadData'       => '加载数据',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
 	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 

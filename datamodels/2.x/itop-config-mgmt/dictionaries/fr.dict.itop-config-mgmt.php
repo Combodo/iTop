@@ -30,10 +30,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Relation:impacts/UpStream+'      => 'Eléments dont dépend',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Eléments dont dépend',
-	'Relation:depends on/DownStream' => 'Dépend de...',
-	'Relation:depends on/UpStream' => 'Impacte...',
-	'Relation:impacts/LoadData' => 'Charger les données',
-	'Relation:impacts/NoFilteredData' => 'Veuillez sélectionner des objets dans l\'onglet Graph',
+	'Relation:depends on/DownStream'  => 'Dépend de...',
+	'Relation:depends on/UpStream'    => 'Impacte...',
+	'Relation:impacts/LoadData'       => 'Charger les données',
+	'Relation:impacts/NoFilteredData' => 'Veuillez sélectionner des objets et lancer le chargement des données',
 	'Relation:impacts/FilteredData'   => 'Données filtrées',
 ));
 

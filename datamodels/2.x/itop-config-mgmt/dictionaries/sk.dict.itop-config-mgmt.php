@@ -32,10 +32,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Relation:impacts/UpStream+'      => 'Elements impacting~~',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Prvky, od ktorých závisí tento prvok',
-	'Relation:depends on/DownStream' => 'Depends on...~~',
-	'Relation:depends on/UpStream' => 'Impacts...~~',
-	'Relation:impacts/LoadData' => 'Load data~~',
-	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
+	'Relation:depends on/DownStream'  => 'Depends on...~~',
+	'Relation:depends on/UpStream'    => 'Impacts...~~',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
 	'Relation:impacts/FilteredData'   => 'Filtered data~~',
 ));
 
