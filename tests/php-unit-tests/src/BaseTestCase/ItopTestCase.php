@@ -107,22 +107,10 @@ abstract class ItopTestCase extends TestCase
 		if (defined('APPROOT')) {
 			return APPROOT;
 		}
-		$sSearchPath = __DIR__;
-		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
-			if (file_exists($sSearchPath.'/approot.inc.php')) {
-				break;
-			}
-			$iOffsetSep = strrpos($sSearchPath, '/');
-			if ($iOffsetSep === false) {
-				$iOffsetSep = strrpos($sSearchPath, '\\');
-				if ($iOffsetSep === false) {
-					// Do not throw an exception here as PHPUnit will not show it clearly when determing the list of test to perform
-					return 'Could not find the approot file in '.$sSearchPath;
-				}
-			}
-			$sSearchPath = substr($sSearchPath, 0, $iOffsetSep);
-		}
-		return $sSearchPath.'/';
+
+		$sAppRootPath = static::GetFirstDirUpContainingFile(__DIR__, 'approot.inc.php');
+
+		return $sAppRootPath . '/';
 	}
 
 	/**
