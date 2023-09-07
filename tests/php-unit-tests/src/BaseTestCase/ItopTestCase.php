@@ -10,6 +10,7 @@ use CMDBSource;
 use MySQLTransactionNotClosedException;
 use PHPUnit\Framework\TestCase;
 use SetupUtils;
+use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 define('DEBUG_UNIT_TEST', true);
 
@@ -94,6 +95,23 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
+	 * Helper to load a module file. The caller test must be in that module !
+	 * Will browse dir up to find a module.*.php
+	 *
+	 * @param string $sFileRelPath for example 'portal/src/Helper/ApplicationHelper.php'
+	 * @since 2.7.10 3.1.1 3.2.0 N°6709 method creation
+	 */
+	protected function RequireOnceCurrentModuleFile(string $sFileRelPath): void
+	{
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+		$sCallerFileFullPath = $aStack[0]['file'];
+		$sCallerDir = dirname($sCallerFileFullPath);
+
+		$sModuleRootPath = static::GetFirstDirUpContainingFile($sCallerDir, 'module.*.php');
+		require_once $sModuleRootPath . $sFileRelPath;
+	}
+
+	/**
 	 * Require once a unit test file (eg. a mock class) from its relative path from the *current* dir.
 	 * This ensure that required files don't crash when unit tests dir is moved in the iTop structure (see N°5608)
 	 *
@@ -108,6 +126,26 @@ abstract class ItopTestCase extends TestCase
 		$sCallerDirAbsPath = dirname($aStack[0]['file']);
 
 		require_once $sCallerDirAbsPath . DIRECTORY_SEPARATOR . $sFileRelPath;
+	}
+
+	private static function GetFirstDirUpContainingFile(string $sSearchPath, string $sFileToFindGlobPattern): ?string
+	{
+		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
+			$aGlobFiles = glob($sSearchPath . '/' . $sFileToFindGlobPattern);
+			if (is_array($aGlobFiles) && (count($aGlobFiles) > 0)) {
+				return $sSearchPath . '/';
+			}
+			$iOffsetSep = strrpos($sSearchPath, '/');
+			if ($iOffsetSep === false) {
+				$iOffsetSep = strrpos($sSearchPath, '\\');
+				if ($iOffsetSep === false) {
+					// Do not throw an exception here as PHPUnit will not show it clearly when determing the list of test to perform
+					return 'Could not find the approot file in ' . $sSearchPath;
+				}
+			}
+			$sSearchPath = substr($sSearchPath, 0, $iOffsetSep);
+		}
+		return null;
 	}
 
 	protected function debug($sMsg)
