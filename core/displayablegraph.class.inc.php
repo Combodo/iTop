@@ -1455,7 +1455,7 @@ class DisplayableGraph extends SimpleGraph
 	 */
 	function DisplayGraph(WebPage $oP, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
 	{
-		list($aExcludedByClass, $aAdditionalContexts) = $this->GetFiltering($sContextKey, $aContextParams, $aExcludedObjects);
+		list($aExcludedByClass, $aAdditionalContexts) = $this->GetFilteringData($sContextKey, $aContextParams, $aExcludedObjects);
 
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 
@@ -1596,7 +1596,7 @@ EOF
 	{
 		$oP->Add($this->DisplayFilterBox($oP, $aResults, $bLazyLoading));
 
-		return $this->GetFiltering($sContextKey, $aContextParams, $aExcludedObjects);
+		return $this->GetFilteringData($sContextKey, $aContextParams, $aExcludedObjects);
 	}
 	
 	/**
@@ -1682,7 +1682,7 @@ EOF
 		return $oBlock;
 	}
 
-	public function GetFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects): array
+	public function GetFilteringData(string $sContextKey, array $aContextParams, array $aExcludedObjects): array
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
 		$aExcludedByClass = array();
