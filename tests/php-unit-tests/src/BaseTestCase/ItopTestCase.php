@@ -257,4 +257,16 @@ abstract class ItopTestCase extends TestCase
 
 		$property->setValue($oObject, $value);
 	}
+
+	/**
+	 * @since 2.7.10 3.1.0
+	 */
+	public function GetNonPublicStaticProperty(string $sClass, string $sProperty)
+	{
+		$class = new \ReflectionClass($sClass);
+		$oProperty = $class->getProperty($sProperty);
+		$oProperty->setAccessible(true);
+
+		return $oProperty->getValue();
+	}
 }
