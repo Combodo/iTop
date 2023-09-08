@@ -69,32 +69,11 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	private function ReadAllDictKeys() : array{
 		$this->setUp();
 
-		$aPrefixToLanguageData = array(
-			'cs' => array('CS CZ', 'Czech', 'Čeština'),
-			'da' => array('DA DA', 'Danish', 'Dansk'),
-			'de' => array('DE DE', 'German', 'Deutsch'),
-			'en' => array('EN US', 'English', 'English'),
-			'es_cr' => array('ES CR', 'Spanish', array(
-				'Español, Castellaño', // old value
-				'Español, Castellano', // new value since N°3635
-			)),
-			'fr' => array('FR FR', 'French', 'Français'),
-			'hu' => array('HU HU', 'Hungarian', 'Magyar'),
-			'it' => array('IT IT', 'Italian', 'Italiano'),
-			'ja' => array('JA JP', 'Japanese', '日本語'),
-			'nl' => array('NL NL', 'Dutch', 'Nederlands'),
-			'pl' => array('PL PL', 'Polish', 'Polski'),
-			'pt_br' => array('PT BR', 'Brazilian', 'Brazilian'),
-			'ru' => array('RU RU', 'Russian', 'Русский'),
-			'sk' => array('SK SK', 'Slovak', 'Slovenčina'),
-			'tr' => array('TR TR', 'Turkish', 'Türkçe'),
-			'zh_cn' => array('ZH CN', 'Chinese', '简体中文'),
-		);
-
-		foreach($aPrefixToLanguageData as $sLang => $aLangInfo){
-			$sLangCode = $aLangInfo[0];
+		$aAvailableLanguages = \Dict::GetLanguages();
+		foreach($aAvailableLanguages as $sLangCode => $aInfo){
 			\Dict::InitLangIfNeeded($sLangCode);
 		}
+
 		$aDictEntries = $this->GetNonPublicStaticProperty(\Dict::class, 'm_aData');
 
 		uksort($aDictEntries, function (string $sLangCode1, string $sLangCode2) {
