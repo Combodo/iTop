@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -18,7 +18,7 @@
 
 /**
  * Class Dict
- * Management of localizable strings 
+ * Management of localizable strings
  *
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -145,6 +145,24 @@ class Dict
 	 */
 	public static function S($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
 	{
+		$aInfo = self::GetLabelAndLangCode($sStringCode, $sDefault, $bUserLanguageOnly);
+		if (array_key_exists('label', $aInfo)){
+			return $aInfo['label'];
+		}
+		return $sDefault;
+	}
+
+	/**
+	 * Returns a localised string from the dictonary with its associated lang code
+	 *
+	 * @param string $sStringCode The code identifying the dictionary entry
+	 * @param string $sDefault Default value if there is no match in the dictionary
+	 * @param bool $bUserLanguageOnly True to allow the use of the default language as a fallback, false otherwise
+	 *
+	 * @return array with localized label string and used lang code
+	 */
+	private static function GetLabelAndLangCode($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
+	{
 		// Attempt to find the string in the user language
 		//
 		$sLangCode = self::GetUserLanguage();
@@ -154,23 +172,23 @@ class Dict
 		{
 			IssueLog::Warning("Cannot find $sLangCode in dictionnaries. default labels displayed");
 			// It may happen, when something happens before the dictionaries get loaded
-			return $sStringCode;
+			return [ 'label' => $sStringCode, 'lang' => $sLangCode ];
 		}
 		$aCurrentDictionary = self::$m_aData[$sLangCode];
 		if (is_array($aCurrentDictionary) && array_key_exists($sStringCode, $aCurrentDictionary))
 		{
-			return $aCurrentDictionary[$sStringCode];
+			return [ 'label' => $aCurrentDictionary[$sStringCode], 'lang' => $sLangCode ];
 		}
 		if (!$bUserLanguageOnly)
 		{
 			// Attempt to find the string in the default language
 			//
 			self::InitLangIfNeeded(self::$m_sDefaultLanguage);
-			
+
 			$aDefaultDictionary = self::$m_aData[self::$m_sDefaultLanguage];
 			if (is_array($aDefaultDictionary) && array_key_exists($sStringCode, $aDefaultDictionary))
 			{
-				return $aDefaultDictionary[$sStringCode];
+				return [ 'label' => $aDefaultDictionary[$sStringCode], 'lang' => self::$m_sDefaultLanguage ];
 			}
 			// Attempt to find the string in english
 			//
@@ -179,17 +197,17 @@ class Dict
 			$aDefaultDictionary = self::$m_aData['EN US'];
 			if (is_array($aDefaultDictionary) && array_key_exists($sStringCode, $aDefaultDictionary))
 			{
-				return $aDefaultDictionary[$sStringCode];
+				return [ 'label' => $aDefaultDictionary[$sStringCode], 'lang' => 'EN US' ];
 			}
 		}
 		// Could not find the string...
 		//
 		if (is_null($sDefault))
 		{
-			return $sStringCode;
+			return [ 'label' => $sStringCode, 'lang' => null ];
 		}
 
-		return $sDefault;
+		return [ 'label' => $sDefault, 'lang' => null ];
 	}
 
 
@@ -205,19 +223,36 @@ class Dict
 	 */
 	public static function Format($sFormatCode /*, ... arguments ....*/)
 	{
-		$sLocalizedFormat = self::S($sFormatCode);
+		$aInfo = self::GetLabelAndLangCode($sFormatCode);
+		if (array_key_exists('label', $aInfo)){
+			$sLocalizedFormat = $aInfo['label'];
+		} else {
+			$sLocalizedFormat = $sFormatCode;
+		}
+
+		if (array_key_exists('lang', $aInfo)){
+			$sLangCode = $aInfo['lang'];
+		} else {
+			$sLangCode = null;
+		}
+
 		$aArguments = func_get_args();
 		array_shift($aArguments);
-		
+
 		if ($sLocalizedFormat == $sFormatCode)
 		{
 			// Make sure the information will be displayed (ex: an error occuring before the dictionary gets loaded)
 			return $sFormatCode.' - '.implode(', ', $aArguments);
 		}
 
-		return vsprintf($sLocalizedFormat, $aArguments);
+		try{
+			return vsprintf($sLocalizedFormat, $aArguments);
+		} catch(\Exception $e){
+			\IssueLog::Error("Broken label", null, ["sFormatCode" => $sFormatCode, "sLangCode" => $sLangCode ]);
+			return $sFormatCode.' - '.implode(', ', $aArguments);
+		}
 	}
-	
+
 	/**
 	 * Initialize a the entries for a given language (replaces the former Add() method)
 	 * @param string $sLanguageCode Code identifying the language i.e. 'FR-FR', 'EN-US'
@@ -227,7 +262,7 @@ class Dict
 	{
 		self::$m_aData[$sLanguageCode] = $aEntries;
 	}
-	
+
 	/**
 	 * Set the list of available languages
 	 * @param hash $aLanguagesList
@@ -288,7 +323,7 @@ class Dict
 		{
 			$sDictFile = APPROOT.'env-'.utils::GetCurrentEnvironment().'/dictionaries/'.str_replace(' ', '-', strtolower($sLangCode)).'.dict.php';
 			require_once($sDictFile);
-			
+
 			if (self::GetApcService()->function_exists('apc_store')
 				&& (self::$m_sApplicationPrefix !== null))
 			{
@@ -298,7 +333,7 @@ class Dict
 		}
 		return $bResult;
 	}
-	
+
 	/**
 	 * Enable caching (cached using APC)
 	 * @param string $sApplicationPrefix The prefix for uniquely identiying this iTop instance
@@ -342,14 +377,14 @@ class Dict
 			}
 		}
 	}
-	
+
 	public static function MakeStats($sLanguageCode, $sLanguageRef = 'EN US')
 	{
 		$aMissing = array(); // Strings missing for the target language
 		$aUnexpected = array(); // Strings defined for the target language, but not found in the reference dictionary
 		$aNotTranslated = array(); // Strings having the same value in both dictionaries
 		$aOK = array(); // Strings having different values in both dictionaries
-	
+
 		foreach (self::$m_aData[$sLanguageRef] as $sStringCode => $sValue)
 		{
 			if (!array_key_exists($sStringCode, self::$m_aData[$sLanguageCode]))
@@ -357,7 +392,7 @@ class Dict
 				$aMissing[$sStringCode] = $sValue;
 			}
 		}
-	
+
 		foreach (self::$m_aData[$sLanguageCode] as $sStringCode => $sValue)
 		{
 			if (!array_key_exists($sStringCode, self::$m_aData[$sLanguageRef]))
@@ -380,7 +415,7 @@ class Dict
 		}
 		return array($aMissing, $aUnexpected, $aNotTranslated, $aOK);
 	}
-	
+
 	public static function Dump()
 	{
 		MyHelpers::var_dump_html(self::$m_aData);
@@ -403,7 +438,7 @@ class Dict
 		// No need to actually load the strings since it's only used to know the list of languages
 		// at setup time !!
 	}
-	
+
 	/**
 	 * Export all the dictionary entries - of the given language - whose code matches the given prefix
 	 * missing entries in the current language will be replaced by entries in the default language
@@ -416,7 +451,7 @@ class Dict
 		self::InitLangIfNeeded(self::$m_sDefaultLanguage);
 		$aEntries = array();
 		$iLength = strlen($sStartingWith);
-		
+
 		// First prefill the array with entries from the default language
 		foreach(self::$m_aData[self::$m_sDefaultLanguage] as $sCode => $sEntry)
 		{
@@ -425,7 +460,7 @@ class Dict
 				$aEntries[$sCode] = $sEntry;
 			}
 		}
-		
+
 		// Now put (overwrite) the entries for the user language
 		foreach(self::$m_aData[self::GetUserLanguage()] as $sCode => $sEntry)
 		{
