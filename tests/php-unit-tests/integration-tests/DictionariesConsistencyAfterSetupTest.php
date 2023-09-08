@@ -162,7 +162,6 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	}
 
 	/**
-	 * @group beforeSetup
 	 * compare en and other dictionnaries and check that for all labels there it the same number of arguments
 	 * if not Dict::Format could raise an exception for some languages. translation should be done again...
 	 * @dataProvider DictEntryValuesProvider
