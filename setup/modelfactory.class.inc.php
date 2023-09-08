@@ -664,54 +664,36 @@ class ModelFactory
 		$sDeltaSpec = $oSourceNode->getAttribute('_delta');
 		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes') && ($oSourceNode->parentNode->parentNode->tagName == 'itop_design'))
 		{
+			//check if parent class exists
+			$bTestParentClass = false;
 			$sParentId = $oSourceNode->GetChildText('parent');
-			if (($sDeltaSpec == 'define') || ($sDeltaSpec == 'force'))
-			{
-				// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
-				$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
-
-				if (!$oTargetParentNode)
-				{
-					// echo "Dumping target doc - looking for '$sParentId'<br/>\n";
-					// $this->oDOMDocument->firstChild->Dump();
-					$sPath = MFDocument::GetItopNodePath($oSourceNode);
-					$iLine = $oSourceNode->getLineNo();
-					throw new MFException($sPath.' at line '.$iLine.": parent class '$sParentId' could not be found",
-						MFException::PARENT_NOT_FOUND, $iLine, $sPath, $sParentId);
-				}
-			}
-			else
-			{
+			if (($sDeltaSpec == 'define') || ($sDeltaSpec == 'force')) {
+				$bTestParentClass = true;
+			} else {
 				$oTargetNode = $oTarget->GetNodeById('/itop_design/classes//class', $oSourceNode->getAttribute('id'))->item(0);
-				if (!$oTargetNode)
-				{
-					if ($sDeltaSpec === 'if_exists')
-					{
-						// Just ignore it
+				if (!$oTargetNode) {
+					if ($sDeltaSpec === 'define_if_not_exists') {
+						$bTestParentClass = true;
 					}
-					else
-					{
-						// echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
+				} else {
+					$oTargetParentNode = $oTargetNode->parentNode;
+					if (($sDeltaSpec == 'redefine') && ($oTargetParentNode->getAttribute('id') != $sParentId)) {
+						$bTestParentClass = true;
+					}
+				}
+				if ($bTestParentClass) {
+					// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
+					$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
+
+					if (!$oTargetParentNode) {
+						// echo "Dumping target doc - looking for '$sParentId'<br/>\n";
 						// $this->oDOMDocument->firstChild->Dump();
 						$sPath = MFDocument::GetItopNodePath($oSourceNode);
 						$iLine = $oSourceNode->getLineNo();
-						throw new MFException($sPath.' at line '.$iLine.": could not be found", MFException::NOT_FOUND, $iLine, $sPath);
-
+						throw new MFException($sPath.' at line '.$iLine.": parent class '$sParentId' could not be found",
+							MFException::PARENT_NOT_FOUND, $iLine, $sPath, $sParentId);
 					}
 				}
-				else
-				{
-					$oTargetParentNode = $oTargetNode->parentNode;
-					if (($sDeltaSpec == 'redefine') && ($oTargetParentNode->getAttribute('id') != $sParentId))
-					{
-						// A class that has moved <=> deletion and creation elsewhere
-						$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
-						$oTargetNode->Delete();
-						$oSourceNode->setAttribute('_delta', 'define');
-						$sDeltaSpec = 'define';
-					}
-				}
-
 			}
 		}
 
@@ -764,7 +746,11 @@ class ModelFactory
 				// Replace the existing node by the given node - copy child nodes as well
 				$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
 				$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
-				$oTargetParentNode->RedefineChildNode($oTargetNode, $sSearchId);
+				if ($oSourceNode->tagName === 'class') {
+					$oTargetParentNode->RedefineNode($oTargetNode, $sSearchId);
+				} else {
+					$oTargetParentNode->RedefineChildNode($oTargetNode, $sSearchId);
+				}
 				break;
 
 			case 'delete_if_exists':
@@ -2074,16 +2060,38 @@ EOF;
 			}
 			$oExisting->ReplaceWithSingleNode($oNode);
 			$sFlag = 'replaced';
-		}
-		else
-		{
+		} else {
 			$this->appendChild($oNode);
 			$sFlag = 'added';
 		}
-		if (!$this->IsInDefinition())
-		{
+		if (!$this->IsInDefinition()) {
 			$oNode->setAttribute('_alteration', $sFlag);
 		}
+	}
+
+	/**
+	 * Modify a node and set the flags that will be used to compute the delta
+	 * The same as RedefineChildNode but for class node
+	 *
+	 * @param MFElement $oNode The node (including all subnodes) to set
+	 * @param string|null $sSearchId
+	 *
+	 * @return void
+	 *
+	 * @throws \MFException
+	 * @throws \Exception
+	 * @since 3.2.0 N°6660
+	 */
+	public function RedefineNode(MFElement $oNode, $sSearchId = null)
+	{
+		// First: cleanup any flag behind the new node, and eventually add trace data
+		$oNode->ApplyChanges();
+		$oNode->AddTrace();
+
+		$oParentNode = $this->parentNode;
+		$oExisting = $this->_FindNode($oParentNode, $oNode, $sSearchId);
+
+		$this->replaceNode($oExisting, $oNode, $sSearchId);
 	}
 
 	/**
@@ -2104,8 +2112,21 @@ EOF;
 		$oNode->AddTrace();
 
 		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
-		if (!$oExisting)
-		{
+		$this->replaceNode($oExisting, $oNode, $sSearchId);
+	}
+
+	/**
+	 * @param \MFElement|null $oExisting
+	 * @param \MFElement $oNode
+	 * @param string|null $sSearchId
+	 *
+	 * @return void
+	 * @throws \MFException
+	 * @since 3.2.0 N°6660
+	 */
+	private function replaceNode(?MFElement $oExisting, MFElement $oNode, ?string $sSearchId): void
+	{
+		if (!$oExisting) {
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
 			$iLine = $oNode->getLineNo();
 			throw new MFException($sPath." at line $iLine: could not be modified (not found)", MFException::COULD_NOT_BE_MODIFIED_NOT_FOUND,
