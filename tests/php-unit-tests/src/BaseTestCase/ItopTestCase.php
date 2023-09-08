@@ -223,41 +223,6 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
-	 * @since 3.1.0 2.7.10
-	 * @param string $sClass
-	 * @param string $sProperty
-	 *
-	 * @return \ReflectionProperty
-	 *
-	 * @throws \ReflectionException
-	 */
-	private function GetProperty(string $sClass, string $sProperty)
-	{
-		$class = new \ReflectionClass($sClass);
-		$property = $class->getProperty($sProperty);
-		$property->setAccessible(true);
-
-		return $property;
-	}
-
-	/**
-	 * @param object $oObject
-	 * @param string $sProperty
-	 *
-	 * @return mixed property
-	 *
-	 * @throws \ReflectionException
-	 * @since 2.7.8 3.0.3 3.1.0
-	 */
-	public function GetNonPublicProperty(object $oObject, string $sProperty)
-	{
-		$property = $this->GetProperty(get_class($oObject), $sProperty);
-		$property->setAccessible(true);
-
-		return $property->getValue($oObject);
-	}
-
-	/**
 	 * @param string $sClass
 	 * @param string $sProperty
 	 *
@@ -276,6 +241,40 @@ abstract class ItopTestCase extends TestCase
 	/**
 	 * @param object $oObject
 	 * @param string $sProperty
+	 *
+	 * @return mixed property
+	 *
+	 * @throws \ReflectionException
+	 * @since 2.7.8 3.0.3 3.1.0
+	 */
+	public function GetNonPublicProperty(object $oObject, string $sProperty)
+	{
+		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
+
+		return $oProperty->getValue($oObject);
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param string $sProperty
+	 *
+	 * @return \ReflectionProperty
+	 *
+	 * @throws \ReflectionException
+	 * @since 2.7.10 3.1.0
+	 */
+	private function GetProperty(string $sClass, string $sProperty)
+	{
+		$oClass = new \ReflectionClass($sClass);
+		$oProperty = $oClass->getProperty($sProperty);
+		$oProperty->setAccessible(true);
+
+		return $oProperty;
+	}
+
+	/**
+	 * @param object $oObject
+	 * @param string $sProperty
 	 * @param $value
 	 *
 	 * @throws \ReflectionException
@@ -283,10 +282,8 @@ abstract class ItopTestCase extends TestCase
 	 */
 	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
 	{
-		$property = $this->GetProperty(get_class($oObject), $sProperty);
-		$property->setAccessible(true);
-
-		$property->setValue($oObject, $value);
+		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
+		$oProperty->setValue($oObject, $value);
 	}
 
 	/**
@@ -302,4 +299,5 @@ abstract class ItopTestCase extends TestCase
 		$oProperty = $this->GetProperty($sClass, $sProperty);
 		$oProperty->setValue($value);
 	}
+
 }
