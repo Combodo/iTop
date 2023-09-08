@@ -89,24 +89,39 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	 * @return array
 	 */
 	private function ReadAllDictKeys() : array{
-		clearstatcache();
-		$aDictFiles =  $this->GetDictFiles();
-		$aDictEntries = [];
-		$aTmpValue=[];
-		foreach ($aDictFiles as $sCode => $aData){
-			$sContent = file_get_contents($aData['file']);
-			$sReplacedContent = str_replace('Dict::SetEntries(', "\$aTmpValue['$sCode'] = array(", $sContent);
-			$sTempFilePath = tempnam(sys_get_temp_dir(), 'tmp_dict').'.php';
-			file_put_contents($sTempFilePath, $sReplacedContent);
-			require_once($sTempFilePath);
-			unlink($sTempFilePath);
+		$this->setUp();
 
-			$aDictEntries[$sCode] = $aTmpValue[$sCode];
+		$aPrefixToLanguageData = array(
+			'cs' => array('CS CZ', 'Czech', 'Čeština'),
+			'da' => array('DA DA', 'Danish', 'Dansk'),
+			'de' => array('DE DE', 'German', 'Deutsch'),
+			'en' => array('EN US', 'English', 'English'),
+			'es_cr' => array('ES CR', 'Spanish', array(
+				'Español, Castellaño', // old value
+				'Español, Castellano', // new value since N°3635
+			)),
+			'fr' => array('FR FR', 'French', 'Français'),
+			'hu' => array('HU HU', 'Hungarian', 'Magyar'),
+			'it' => array('IT IT', 'Italian', 'Italiano'),
+			'ja' => array('JA JP', 'Japanese', '日本語'),
+			'nl' => array('NL NL', 'Dutch', 'Nederlands'),
+			'pl' => array('PL PL', 'Polish', 'Polski'),
+			'pt_br' => array('PT BR', 'Brazilian', 'Brazilian'),
+			'ru' => array('RU RU', 'Russian', 'Русский'),
+			'sk' => array('SK SK', 'Slovak', 'Slovenčina'),
+			'tr' => array('TR TR', 'Turkish', 'Türkçe'),
+			'zh_cn' => array('ZH CN', 'Chinese', '简体中文'),
+		);
+
+		foreach($aPrefixToLanguageData as $sLang => $aLangInfo){
+			$sLangCode = $aLangInfo[0];
+			\Dict::InitLangIfNeeded($sLangCode);
 		}
+		$aDictEntries = $this->GetNonPublicStaticProperty(\Dict::class, 'm_aData');
 
 		uksort($aDictEntries, function (string $sLangCode1, string $sLangCode2) {
-			$sEnUsCode = "en-us";
-			$sFrCode = "fr-fr";
+			$sEnUsCode = "EN US";
+			$sFrCode = "FR FR";
 
 			if ($sLangCode1 === $sEnUsCode) {
 				return -1;
@@ -193,8 +208,7 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	 */
 	private function GetKeyArgCountMap($aDictEntry) : array{
 		$aKeyArgsCount = [];
-		$aLabelEntries = $aDictEntry[1];
-		foreach ($aLabelEntries as $sKey => $sValue){
+		foreach ($aDictEntry as $sKey => $sValue){
 			$iMaxIndex = 0;
 			if (preg_match_all("/%(\d+)/", $sValue, $aMatches)){
 				$aSubMatches = $aMatches[1];
@@ -232,13 +246,13 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 
 		$aMismatchedKeys = [];
 		foreach ($aKeyArgsCountMap[$sFirstEntryCode] as $sKey => $iCount){
-			if (array_key_exists($sKey, $aDictEntry[1])){
+			if (array_key_exists($sKey, $aDictEntry)){
 				$aPlaceHolders = [];
 				for ($i=0; $i<$iCount; $i++){
 					$aPlaceHolders[]=$i;
 				}
 
-				$sLabelTemplate = $aDictEntry[1][$sKey];
+				$sLabelTemplate = $aDictEntry[$sKey];
 				try{
 					if (is_null(vsprintf($sLabelTemplate, $aPlaceHolders))){
 						$aMismatchedKeys['null label'] = $sKey;
@@ -253,27 +267,29 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 			}
 		}
 
+		$iCount = 0;
 		foreach ($aMismatchedKeys as $sError => $aKeys){
-			var_dump($sError);
+			//var_dump($sError);
 			foreach ($aKeys as $sKey) {
+				$iCount++;
 				if ($sFirstEntryCode === $sCode) {
 					var_dump([
 						'label key' => $sKey,
 						'expected nb of args' => $iCount,
-						$sCode => $aDictEntry[1][$sKey],
+						$sCode => $aDictEntry[$sKey],
 					]);
 				} else {
 					var_dump([
 						'label key' => $sKey,
 						'expected nb of args' => $iCount,
-						$sCode => $aDictEntry[1][$sKey],
-						"label value in $sFirstEntryCode" => $aFirstDictEntry[1][$sKey],
+						$sCode => $aDictEntry[$sKey],
+						"label value in $sFirstEntryCode" => $aFirstDictEntry[$sKey],
 					]);
 				}
 			}
 		}
 
-		$sErrorMsg = "$sFirstEntryCode and $sCode dictionnaries dont have the proper args provided to Dict::Format method and UI could explode without try/catch N°5491 dirty fix!";
+		$sErrorMsg = sprintf("%s broken propertie(s) on $sCode dictionaries!", $iCount);
 		$this->assertEquals([], $aMismatchedKeys, $sErrorMsg);
 	}
 }
