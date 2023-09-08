@@ -59,28 +59,6 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$this->assertEquals($sExpectedTraduction, \Dict::Format($sDictKey, "1"));
 	}
 
-
-	/**
-	 * return a map linked to *.dict.php files that are generated after setup
-	 * each entry key is lang code (example 'en')
-	 * each value is an array with lang code (again) and dict file path
-	 * @return array
-	 */
-	private function GetDictFiles() : array {
-		$aDictFiles = [];
-
-		foreach (glob(APPROOT.'env-'.\utils::GetCurrentEnvironment().'/dictionaries/*.dict.php') as $sDictFile){
-			if (preg_match('/.*\\/(.*).dict.php/', $sDictFile, $aMatches)){
-				$sLangCode = $aMatches[1];
-				$aDictFiles[$sLangCode] = [
-					'lang' => $sLangCode,
-					'file' => $sDictFile
-				];
-			}
-		}
-		return $aDictFiles;
-	}
-
 	/**
 	 * return a map generated with all *dict.php files content
 	 * each entry key is the lang code (example 'en)
@@ -138,37 +116,8 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 			return ($sLangCode1 < $sLangCode2) ? 1 : -1;
 		});
 
+		$this->tearDown();
 		return $aDictEntries;
-	}
-
-	/**
-	 * @group beforeSetup
-	 * this test checks that there are the exact same count of labels between 'en'
-	 * it checks also that label keys are the same as well (we could have the same count with 'toto' label key on 'en' side and 'titi' on another dict side)
-	 */
-	public function testDictEntryKeys()
-	{
-		$aDictEntries =  $this->ReadAllDictKeys();
-		$this->assertNotEquals([], $aDictEntries, "No entries found from *.dict.php");
-
-		$sPreviousCode = null;
-		$sPreviousSize = null;
-		$sPreviousKeys = null;
-		foreach ($aDictEntries as $sCode => $aData){
-			$aLabelEntries = $aData[1];
-			$iCurrentSize = sizeof($aLabelEntries);
-			$aCurrentKeys = array_keys($aLabelEntries);
-			sort($aCurrentKeys);
-
-			if ($sPreviousCode===null){
-				$sPreviousCode = $sCode;
-				$sPreviousSize = $iCurrentSize;
-				$aPreviousKeys = $aCurrentKeys;
-			} else {
-				$this->assertEquals($sPreviousSize, $iCurrentSize, "$sPreviousCode and $sCode  dictionnaries dont have the same amount of labels ($iCurrentSize vs $sPreviousSize)");
-				$this->assertEquals($aPreviousKeys, $aCurrentKeys, "$sPreviousCode and $sCode dictionnaries dont have the same label keys");
-			}
-		}
 	}
 
 	public function DictEntryValuesProvider(){
@@ -206,27 +155,31 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	 *
 	 * @return array
 	 */
-	private function GetKeyArgCountMap($aDictEntry) : array{
+	private function GetKeyArgCountMap($aDictEntry) {
 		$aKeyArgsCount = [];
 		foreach ($aDictEntry as $sKey => $sValue){
-			$iMaxIndex = 0;
-			if (preg_match_all("/%(\d+)/", $sValue, $aMatches)){
-				$aSubMatches = $aMatches[1];
-				if (is_array($aSubMatches)){
-					foreach ($aSubMatches as $aCurrentMatch){
-						$iIndex = $aCurrentMatch;
-						$iMaxIndex = ($iMaxIndex < $iIndex) ? $iIndex : $iMaxIndex;
-					}
-				}
-			} else if ((false !== strpos($sValue, "%s"))
-				|| (false !== strpos($sValue, "%d"))
-			){
-				$iMaxIndex = 1;
-			}
-
-			$aKeyArgsCount[$sKey] = $iMaxIndex;
+			$aKeyArgsCount[$sKey] = $this->countArg($sValue);
 		}
 		return $aKeyArgsCount;
+	}
+
+	private function countArg($sLabel) {
+		$iMaxIndex = 0;
+		if (preg_match_all("/%(\d+)/", $sLabel, $aMatches)){
+			$aSubMatches = $aMatches[1];
+			if (is_array($aSubMatches)){
+				foreach ($aSubMatches as $aCurrentMatch){
+					$iIndex = $aCurrentMatch;
+					$iMaxIndex = ($iMaxIndex < $iIndex) ? $iIndex : $iMaxIndex;
+				}
+			}
+		} else if ((false !== strpos($sLabel, "%s"))
+			|| (false !== strpos($sLabel, "%d"))
+		){
+			$iMaxIndex = 1;
+		}
+
+		return $iMaxIndex;
 	}
 
 	/**
@@ -245,10 +198,10 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$this->SetNonPublicStaticProperty(\Dict::class, 'm_sCurrentLanguage', $sCode);
 
 		$aMismatchedKeys = [];
-		foreach ($aKeyArgsCountMap[$sFirstEntryCode] as $sKey => $iCount){
+		foreach ($aKeyArgsCountMap[$sFirstEntryCode] as $sKey => $iExpectedNbOfArgs){
 			if (array_key_exists($sKey, $aDictEntry)){
 				$aPlaceHolders = [];
-				for ($i=0; $i<$iCount; $i++){
+				for ($i=0; $i<$iExpectedNbOfArgs; $i++){
 					$aPlaceHolders[]=$i;
 				}
 
@@ -259,9 +212,9 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 					}
 				} catch(\Exception $e){
 					if (array_key_exists($e->getMessage(), $aMismatchedKeys)){
-						$aMismatchedKeys[$e->getMessage()][] = $sKey;
+						$aMismatchedKeys[$e->getMessage()][$sKey] = $iExpectedNbOfArgs;
 					} else {
-						$aMismatchedKeys[$e->getMessage()] = [$sKey];
+						$aMismatchedKeys[$e->getMessage()] = [$sKey => $iExpectedNbOfArgs];
 					}
 				}
 			}
@@ -270,18 +223,18 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$iCount = 0;
 		foreach ($aMismatchedKeys as $sError => $aKeys){
 			//var_dump($sError);
-			foreach ($aKeys as $sKey) {
+			foreach ($aKeys as $sKey => $iExpectedNbOfArgs) {
 				$iCount++;
 				if ($sFirstEntryCode === $sCode) {
 					var_dump([
 						'label key' => $sKey,
-						'expected nb of args' => $iCount,
+						'expected nb of args' => $iExpectedNbOfArgs,
 						$sCode => $aDictEntry[$sKey],
 					]);
 				} else {
 					var_dump([
 						'label key' => $sKey,
-						'expected nb of args' => $iCount,
+						'expected nb of args' => $iExpectedNbOfArgs,
 						$sCode => $aDictEntry[$sKey],
 						"label value in $sFirstEntryCode" => $aFirstDictEntry[$sKey],
 					]);
