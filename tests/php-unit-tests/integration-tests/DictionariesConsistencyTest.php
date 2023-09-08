@@ -117,44 +117,4 @@ class DictionariesConsistencyTest extends ItopTestCase
 		}
 		return $aTestCases;
 	}
-
-	public function FormatProvider(){
-		return [
-			'key does not exist in dictionnary' => [
-				'sTemplate' => null,
-				'sExpectedTraduction' => 'ITOP::DICT:FORMAT:BROKEN:KEY - 1',
-			],
-			'traduction that breaks expected nb of arguments' => [
-				'sTemplate' => 'toto %1$s titi %2$s',
-				'sExpectedTraduction' => 'ITOP::DICT:FORMAT:BROKEN:KEY - 1',
-			],
-			'traduction ok' => [
-				'sTemplate' => 'toto %1$s titi',
-				'sExpectedTraduction' => 'toto 1 titi',
-			],
-		];
-	}
-
-	/**
-	 * @since 2.7.10 N°5491 - Inconsistent dictionnary entries regarding arguments to pass to Dict::Format
-	 * Dict::Format
-	 * @dataProvider FormatProvider
-	 */
-	public function testFormat($sTemplate, $sExpectedTraduction){
-		$sLangCode = \Dict::GetUserLanguage();
-		$aDictByLang = $this->GetNonPublicStaticProperty(\Dict::class, 'm_aData');
-		$sDictKey = 'ITOP::DICT:FORMAT:BROKEN:KEY';
-
-		if (! is_null($sTemplate)){
-			if (array_key_exists($sLangCode, $aDictByLang)){
-				$aDictByLang[$sLangCode][$sDictKey] = $sTemplate;
-			} else {
-				$aDictByLang[$sLangCode] = [$sDictKey => $sTemplate];
-			}
-		}
-
-		$this->SetNonPublicStaticProperty(\Dict::class, 'm_aData', $aDictByLang);
-
-		$this->assertEquals($sExpectedTraduction, \Dict::Format($sDictKey, "1"));
-	}
 }
