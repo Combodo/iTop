@@ -59,68 +59,12 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$this->assertEquals($sExpectedTraduction, \Dict::Format($sDictKey, "1"));
 	}
 
-	/**
-	 * return a map generated with all *dict.php files content
-	 * each entry key is the lang code (example 'en)
-	 * each value is an array with localization code (ex. 'EN US') and a map of label key/values
-	 * map is sorted by keys: en is first, then fr and then other lang code
-	 * @return array
-	 */
-	private function ReadAllDictKeys() : array{
-		$this->setUp();
-
-		$aAvailableLanguages = \Dict::GetLanguages();
-		foreach($aAvailableLanguages as $sLangCode => $aInfo){
-			\Dict::InitLangIfNeeded($sLangCode);
-		}
+	private function ReadDictKeys($sLangCode) : array {
+		\Dict::InitLangIfNeeded($sLangCode);
 
 		$aDictEntries = $this->GetNonPublicStaticProperty(\Dict::class, 'm_aData');
-
-		uksort($aDictEntries, function (string $sLangCode1, string $sLangCode2) {
-			$sEnUsCode = "EN US";
-			$sFrCode = "FR FR";
-
-			if ($sLangCode1 === $sEnUsCode) {
-				return -1;
-			}
-			if ($sLangCode2 === $sEnUsCode) {
-				return 1;
-			}
-			if ($sLangCode1 === $sFrCode) {
-				return -1;
-			}
-			if ($sLangCode2 === $sFrCode) {
-				return 1;
-			}
-			return ($sLangCode1 < $sLangCode2) ? 1 : -1;
-		});
-
-		$this->tearDown();
-		return $aDictEntries;
-	}
-
-	public function DictEntryValuesProvider(){
-		//first entry should be linked to 'en' dictionnary
-		//it is linked to sorting order used on ReadAllDictKeys
-		$aFirstDictEntry = [];
-		$sFirstEntryCode = null;
-
-		$aUseCases = [];
-
-		foreach ($this->ReadAllDictKeys() as $sCode => $aDictEntry){
-			if (null === $sFirstEntryCode){
-				$sFirstEntryCode = $sCode;
-				$aFirstDictEntry = $aDictEntry;
-			}
-			$aUseCases[$sCode] = [
-				'firstDict' => $aFirstDictEntry,
-				'firstCode' => $sFirstEntryCode,
-				'currentCode' => $sCode,
-				'currentDict' => $aDictEntry,
-			];
-		}
-
-		return $aUseCases;
+		\Dict::InitLangIfNeeded($sLangCode);
+		return $aDictEntries[$sLangCode];
 	}
 
 	/**
@@ -161,22 +105,49 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		return $iMaxIndex;
 	}
 
+	public function LangCodeProvider(){
+		$aUseCases = [];
+
+		$aLanguagesList = null;
+		$this->setUp();
+		$sFile = APPROOT.'env-'.\utils::GetCurrentEnvironment().'/dictionaries/languages.php';
+		$this->tearDown(); //release transaction
+		$sContent = file_get_contents($sFile);
+		$sTempFile = tempnam(sys_get_temp_dir(), 'dict_');
+		file_put_contents($sTempFile, str_replace('Dict::SetLanguagesList', '$aLanguagesList = array', $sContent));
+		require_once $sTempFile;
+		unlink($sTempFile);
+
+		$aDictInfo = array_pop($aLanguagesList);
+		$aLangCode = array_keys($aDictInfo);
+		foreach ($aLangCode as $sLangCode){
+			$aUseCases[$sLangCode] = [$sLangCode];
+		}
+		return $aUseCases;
+	}
+
 	/**
-	 * compare en and other dictionnaries and check that for all labels there it the same number of arguments
+	 * compare en and other dictionaries and check that for all labels there is the same number of arguments
 	 * if not Dict::Format could raise an exception for some languages. translation should be done again...
-	 * @dataProvider DictEntryValuesProvider
+	 * @dataProvider LangCodeProvider
 	 */
-	public function testDictEntryValues($aFirstDictEntry, $sFirstEntryCode, $sCode, $aDictEntry)
+	public function testDictEntryValues($sCode)
 	{
+		$sReferenceLangCode = 'EN US';
+		$aReferenceLangDictEntry = $this->ReadDictKeys($sReferenceLangCode);
+
+		$aDictEntry = $this->ReadDictKeys($sCode);
+
+
 		$aKeyArgsCountMap = [];
-		$aKeyArgsCountMap[$sFirstEntryCode] = $this->GetKeyArgCountMap($aFirstDictEntry);
+		$aKeyArgsCountMap[$sReferenceLangCode] = $this->GetKeyArgCountMap($aReferenceLangDictEntry);
 		//$aKeyArgsCountMap[$sCode] = $this->GetKeyArgCountMap($aDictEntry);
 
 		//set user language
 		$this->SetNonPublicStaticProperty(\Dict::class, 'm_sCurrentLanguage', $sCode);
 
 		$aMismatchedKeys = [];
-		foreach ($aKeyArgsCountMap[$sFirstEntryCode] as $sKey => $iExpectedNbOfArgs){
+		foreach ($aKeyArgsCountMap[$sReferenceLangCode] as $sKey => $iExpectedNbOfArgs){
 			if (array_key_exists($sKey, $aDictEntry)){
 				$aPlaceHolders = [];
 				for ($i=0; $i<$iExpectedNbOfArgs; $i++){
@@ -203,7 +174,7 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 			//var_dump($sError);
 			foreach ($aKeys as $sKey => $iExpectedNbOfArgs) {
 				$iCount++;
-				if ($sFirstEntryCode === $sCode) {
+				if ($sReferenceLangCode === $sCode) {
 					var_dump([
 						'label key' => $sKey,
 						'expected nb of args' => $iExpectedNbOfArgs,
@@ -214,7 +185,7 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 						'label key' => $sKey,
 						'expected nb of args' => $iExpectedNbOfArgs,
 						$sCode => $aDictEntry[$sKey],
-						"label value in $sFirstEntryCode" => $aFirstDictEntry[$sKey],
+						"label value in $sReferenceLangCode" => $aReferenceLangDictEntry[$sKey],
 					]);
 				}
 			}
