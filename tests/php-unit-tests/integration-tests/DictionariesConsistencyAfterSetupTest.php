@@ -105,25 +105,25 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		return $iMaxIndex;
 	}
 
-	public function LangCodeProvider(){
-		$aUseCases = [];
-
-		$aLanguagesList = null;
-		$this->setUp();
-		$sFile = APPROOT.'env-'.\utils::GetCurrentEnvironment().'/dictionaries/languages.php';
-		$this->tearDown(); //release transaction
-		$sContent = file_get_contents($sFile);
-		$sTempFile = tempnam(sys_get_temp_dir(), 'dict_');
-		file_put_contents($sTempFile, str_replace('Dict::SetLanguagesList', '$aLanguagesList = array', $sContent));
-		require_once $sTempFile;
-		unlink($sTempFile);
-
-		$aDictInfo = array_pop($aLanguagesList);
-		$aLangCode = array_keys($aDictInfo);
-		foreach ($aLangCode as $sLangCode){
-			$aUseCases[$sLangCode] = [$sLangCode];
-		}
-		return $aUseCases;
+	public function LangCodeProvider() {
+		return [
+			'cs' => ['CS CZ'],
+			'da' => ['DA DA'],
+			'de' => ['DE DE'],
+			'en' => ['EN US'],
+			'es_cr' => ['ES CR'],
+			'fr' => ['FR FR'],
+			'hu' => ['HU HU'],
+			'it' => ['IT IT'],
+			'ja' => ['JA JP'],
+			'nl' => ['NL NL'],
+			'pl' => ['PL PL'],
+			'pt_br' => ['PT BR'],
+			'ru' => ['RU RU'],
+			'sk' => ['SK SK'],
+			'tr' => ['TR TR'],
+			'zh_cn' => ['ZH CN'],
+		];
 	}
 
 	/**
