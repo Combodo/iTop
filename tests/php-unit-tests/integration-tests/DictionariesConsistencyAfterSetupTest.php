@@ -105,24 +105,23 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		return $iMaxIndex;
 	}
 
-	public function LangCodeProvider() {
+	public function LangCodeProvider(){
 		return [
-			'cs' => ['CS CZ'],
-			'da' => ['DA DA'],
-			'de' => ['DE DE'],
-			'en' => ['EN US'],
-			'es_cr' => ['ES CR'],
-			'fr' => ['FR FR'],
-			'hu' => ['HU HU'],
-			'it' => ['IT IT'],
-			'ja' => ['JA JP'],
-			'nl' => ['NL NL'],
-			'pl' => ['PL PL'],
-			'pt_br' => ['PT BR'],
-			'ru' => ['RU RU'],
-			'sk' => ['SK SK'],
-			'tr' => ['TR TR'],
-			'zh_cn' => ['ZH CN'],
+			'cs' => [ 'CS CZ' ],
+			'da' => [ 'DA DA' ],
+			'de' => [ 'DE DE' ],
+			'en' => [ 'EN US' ],
+			'es' => [ 'ES CR' ],
+			'fr' => [ 'FR FR' ],
+			'hu' => [ 'HU HU' ],
+			'it' => [ 'IT IT' ],
+			'ja' => [ 'JA JP' ],
+			'nl' => [ 'NL NL' ],
+			'pt' => [ 'PT BR' ],
+			'ru' => [ 'RU RU' ],
+			'sk' => [ 'SK SK' ],
+			'tr' => [ 'TR TR' ],
+			'zh' => [ 'ZH CN' ],
 		];
 	}
 
