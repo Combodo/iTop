@@ -105,45 +105,6 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		return $iMaxIndex;
 	}
 
-	public function test(){
-		$aLanguagesList = [];
-		foreach ($this->LangCodeProvider() as $sKey => $aLangCode){
-			$aLanguagesList[]= array_pop($aLangCode);
-		}
-		sort($aLanguagesList);
-
-		$aDictFiles = array_merge(
-			glob(APPROOT.'datamodels/2.x/*/*.dict*.php'), // legacy form in modules
-			glob(APPROOT.'datamodels/2.x/*/dictionaries/*.dict*.php'), // modern form in modules
-			glob(APPROOT.'dictionaries/*.dict*.php') // framework
-		);
-		sort($aDictFiles);
-
-		$aDictLangageLangCode=[];
-		foreach ($aDictFiles as $sFile){
-			$aInfo = null;
-			$sContent = file_get_contents($sFile);
-			if(preg_match_all('/^.*Dict::Add.*,.*$/m', $sContent, $sContent)){
-				$sLine = $sContent[0][0];
-				var_dump($sLine);
-				$sCode = str_replace('Dict::Add', '$aInfo = array', $sLine);
-			}
-			$sTempFile = tempnam(sys_get_temp_dir(), 'dict_');
-			file_put_contents($sTempFile, );
-			var_dump(file_get_contents($sTempFile));
-			require_once $sTempFile;
-			unlink($sTempFile);
-			if (! is_null($aInfo)){
-				var_dump($aInfo);
-				$aDictLangageLangCode = $aInfo[0];
-			}
-		}
-
-		sort($aDictLangageLangCode);
-
-		$this->assertEquals($aDictLangageLangCode, $aLanguagesList);
-	}
-
 	public function LangCodeProvider(){
 		return [
 			'cs' => [ 'CS CZ' ],
