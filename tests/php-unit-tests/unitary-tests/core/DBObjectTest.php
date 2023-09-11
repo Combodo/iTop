@@ -1242,7 +1242,7 @@ class DBObjectTest extends ItopDataTestCase
 	 *
 	 * @return array data
 	 */
-	public function getCheckLongValueProvider()
+	public function getCheckLongValueAttributeTextProvider()
 	{
 		return [
 			'Title with ééé'                                         => [
@@ -1278,10 +1278,10 @@ class DBObjectTest extends ItopDataTestCase
 	 *
 	 * @covers       DBObject::DBIncrement
 	 *
-	 * @dataProvider getCheckLongValueProvider
+	 * @dataProvider getCheckLongValueAttributeTextProvider
 	 *
 	 */
-	public function testCheckLongValue(string $sAttrCode, string $sValue, string $sExpectedAfterTrim)
+	public function testCheckLongValueAttributeText(string $sAttrCode, string $sValue, string $sExpectedAfterTrim)
 	{
 		// Create a UserRequest
 		$oTicket = MetaModel::NewObject('UserRequest', [
@@ -1362,7 +1362,82 @@ class DBObjectTest extends ItopDataTestCase
 			$bCreated = $e->getMessage();
 		}
 		$this->assertEquals('', $bCreated);
-
-
 	}
+
+
+	/**
+	 * Data provider for test CheckValue
+	 * N°3448 - Framework field size check not correctly implemented for multibytes languages/strings
+	 *
+	 * @return array data
+	 */
+	public function getCheckLongValueAttributeStringProvider()
+	{
+		return [
+			'Description with ééé'                               => [
+				'description',
+				__DIR__.'/data-test/description_with_é_input.txt',
+				__DIR__.'/data-test/description_with_é_expected.txt',
+				__DIR__.'/data-test/description_with_é_expected2.txt',
+				true,
+			],
+			'Description with ééé - 64Ko with additional string' => [
+				'description',
+				__DIR__.'/data-test/description_with_64Ko_of_é_input.txt',
+				__DIR__.'/data-test/description_with_64Ko_of_é_expected.txt',
+				__DIR__.'/data-test/description_with_64Ko_of_é_expected2.txt',
+				true,
+			],
+			'Description with 64Ko characters,  us-ascii only'   => [
+				'description',
+				__DIR__.'/data-test/description_with_64Ko_of_ascii_characters_input.txt',
+				__DIR__.'/data-test/description_with_64Ko_of_ascii_characters_expected.txt',
+				__DIR__.'/data-test/description_with_64Ko_of_ascii_characters_expected2.txt',
+				false,
+			],
+			'Description with 64Ko of smiley'                    => [
+				'description',
+				__DIR__.'/data-test/description_with_64Ko_of_smiley_input.txt',
+				__DIR__.'/data-test/description_with_64Ko_of_smiley_expected.txt',
+				__DIR__.'/data-test/description_with_64Ko_of_smiley_expected2.txt',
+				true,
+			],
+		];
+	}
+
+	/**
+	 * Test check long field with non ascii characters
+	 *
+	 * @covers       DBObject::DBIncrement
+	 *
+	 * @dataProvider getCheckLongValueAttributeStringProvider
+	 *
+	 */
+	public function testCheckLongValueAttributeString(string $sAttrCode, string $sFileInputValue, string $sFileExpectedValue, string $sFileExpectedValue2, bool $bExpectedStatus)
+	{
+		// Create a UserRequest
+		$oTicket = MetaModel::NewObject('UserRequest', [
+			'ref'         => 'Test Ticket',
+			'title'       => 'Create OK',
+			'description' => 'Create OK',
+			'caller_id'   => 15,
+			'org_id'      => 3,
+		]);
+		$sValue = file_get_contents($sFileInputValue);
+		$oTicket->Set($sAttrCode, $sValue);
+		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
+		$this->assertEquals($bExpectedStatus, $bCheckStatus, 'Check AttributeString value is ok');
+
+
+		$sTextToAdd = file_get_contents(__DIR__.'/data-test/text_to_add.txt');
+		$oTicket->SetTrim($sAttrCode, $sValue.$sTextToAdd);
+		$sExpectedAfterTrim = file_get_contents($sFileExpectedValue);
+		$this->assertEquals($sExpectedAfterTrim, $oTicket->Get($sAttrCode), 'Check AttributeString trim');
+
+		$oTicket->SetTrim($sAttrCode, $sTextToAdd.$sValue);
+		$sExpectedAfterTrim = file_get_contents($sFileExpectedValue2);
+		$this->assertEquals($sExpectedAfterTrim, $oTicket->Get($sAttrCode), 'Check AttributeString trim test 2');
+	}
+
+
 }
