@@ -147,6 +147,11 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 
 		$aMismatchedKeys = [];
 		foreach ($aKeyArgsCountMap[$sReferenceLangCode] as $sKey => $iExpectedNbOfArgs){
+			if ($iExpectedNbOfArgs === 0){
+				//there is a good chance Dict:S is called, not Dict::Format
+				//avoid to raise false positive broken traductions
+				continue;
+			}
 			if (array_key_exists($sKey, $aDictEntry)){
 				$aPlaceHolders = [];
 				for ($i=0; $i<$iExpectedNbOfArgs; $i++){
@@ -155,15 +160,8 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 
 				$sLabelTemplate = $aDictEntry[$sKey];
 				try{
-					if (is_null(vsprintf($sLabelTemplate, $aPlaceHolders))){
-						$sError = 'null label';
-						if (array_key_exists($sError, $aMismatchedKeys)){
-							$aMismatchedKeys[$sError][$sKey] = $iExpectedNbOfArgs;
-						} else {
-							$aMismatchedKeys[$sError] = [$sKey => $iExpectedNbOfArgs];
-						}
-					}
-				} catch(\Exception $e){
+					vsprintf($sLabelTemplate, $aPlaceHolders);
+				} catch(\Throwable $e){
 					$sError = $e->getMessage();
 					if (array_key_exists($sError, $aMismatchedKeys)){
 						$aMismatchedKeys[$sError][$sKey] = $iExpectedNbOfArgs;
@@ -199,4 +197,41 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$sErrorMsg = sprintf("%s broken propertie(s) on $sCode dictionaries!", $iCount);
 		$this->assertEquals([], $aMismatchedKeys, $sErrorMsg);
 	}
+
+	/*public function VsprintfProvider(){
+		return [
+			'not enough args' => [
+				"sLabelTemplate" => "$1%s",
+				"aPlaceHolders" => [],
+			],
+			'exact nb of args' => [
+				"sLabelTemplate" => "$1%s",
+				"aPlaceHolders" => ["1"],
+			],
+			'too much args' => [
+				"sLabelTemplate" => "$1%s",
+				"aPlaceHolders" => ["1", "2"],
+			],
+			'\"% ok\" without args' => [
+				"sLabelTemplate" => "% ok",
+				"aPlaceHolders" => [],
+			],
+			'\"% ok $1%s\" without args' => [
+				"sLabelTemplate" => "% ok",
+				"aPlaceHolders" => ['1'],
+			],
+		];
+	}*/
+
+	/**
+	 * @dataProvider VsprintfProvider
+	 */
+	/*public function testVsprintf($sLabelTemplate, $aPlaceHolders){
+		try{
+			vsprintf($sLabelTemplate, $aPlaceHolders);
+			$this->assertTrue(true);
+		} catch(\Throwable $e) {
+			$this->assertTrue(false, "label \'" .  $sLabelTemplate . " failed with " . var_export($aPlaceHolders, true)  );
+		}
+	}*/
 }

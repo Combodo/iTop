@@ -247,7 +247,7 @@ class Dict
 
 		try{
 			return vsprintf($sLocalizedFormat, $aArguments);
-		} catch(\Exception $e){
+		} catch(\Throwable $e){
 			\IssueLog::Error("Broken label", null, ["sFormatCode" => $sFormatCode, "sLangCode" => $sLangCode ]);
 			return $sFormatCode.' - '.implode(', ', $aArguments);
 		}
