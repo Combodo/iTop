@@ -1807,11 +1807,10 @@ EOF;
 					throw new DOMFormatException("Non existing attribute '$sStateAttCode'", null, null, $oStateAttribute);
 				}
 			}
-			$oValues = $oField->GetUniqueElement('values');
-			$oValueNodes = $oValues->getElementsByTagName('value');
-			foreach ($oValueNodes as $oValue) {
+			$oCodeNodes = $this->oFactory->GetNodes('values/value/code', $oField);
+			foreach ($oCodeNodes as $oCode) {
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
-				$sLifecycle .= "			\"".$oValue->GetText()."\",\n";
+				$sLifecycle .= "			\"".$oCode->GetText()."\",\n";
 				$sLifecycle .= "			array(\n";
 				$sLifecycle .= "				\"attribute_inherit\" => '',\n";
 				$sLifecycle .= "				\"attribute_list\" => array()\n";
