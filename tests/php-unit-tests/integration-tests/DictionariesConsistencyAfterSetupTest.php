@@ -83,6 +83,7 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		foreach ($aDictEntry as $sKey => $sValue){
 			$aKeyArgsCount[$sKey] = $this->countArg($sValue);
 		}
+		ksort($aKeyArgsCount);
 		return $aKeyArgsCount;
 	}
 
@@ -146,12 +147,29 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$this->SetNonPublicStaticProperty(\Dict::class, 'm_sCurrentLanguage', $sCode);
 
 		$aMismatchedKeys = [];
+		$aLabelCodeNotToCheck = [
+			//use of Dict::S not Format
+			"UI:Audit:PercentageOk",
+
+			//unused dead labels
+			"Class:DatacenterDevice/Attribute:redundancy/count",
+			"Class:DatacenterDevice/Attribute:redundancy/disabled",
+			"Class:DatacenterDevice/Attribute:redundancy/percent",
+			"Class:TriggerOnThresholdReached/Attribute:threshold_index+"
+		];
+
+
 		foreach ($aKeyArgsCountMap[$sReferenceLangCode] as $sKey => $iExpectedNbOfArgs){
-			if ($iExpectedNbOfArgs === 0){
+			if (in_array($sKey, $aLabelCodeNotToCheck)){
+				//false positive: do not test
+				continue;
+			}
+
+				/*if ($iExpectedNbOfArgs === 0){
 				//there is a good chance Dict:S is called, not Dict::Format
 				//avoid to raise false positive broken traductions
 				continue;
-			}
+				}*/
 			if (array_key_exists($sKey, $aDictEntry)){
 				$aPlaceHolders = [];
 				for ($i=0; $i<$iExpectedNbOfArgs; $i++){

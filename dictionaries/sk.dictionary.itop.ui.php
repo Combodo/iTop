@@ -4,7 +4,7 @@
  *
  * This file is part of iTop.
  *
- * iTop is free software; you can redistribute it and/or modify	
+ * iTop is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -419,7 +419,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by je povinný. Skontrolujte definíciu šablóny zobrazenia.',
 	'UI:Error:InvalidGroupByFields' => 'Neplatný zoznam polí pre skupinu podľa: "%1$s".',
 	'UI:Error:UnsupportedStyleOfBlock' => 'Chyba: nepodporovaný štýl bloku: "%1$s".',
-	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Nesprávna definícia spojenia : trieda objektov na manažovanie : %l$s nebol nájdený ako externý kľúč v triede %2$s',
+	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Nesprávna definícia spojenia : trieda objektov na manažovanie : %1$s nebol nájdený ako externý kľúč v triede %2$s',
 	'UI:Error:Object_Class_Id_NotFound' => 'Objekt: %1$s:%2$d nebol nájdený.',
 	'UI:Error:WizardCircularReferenceInDependencies' => 'Chyba: Cyklický odkaz v závislostiach medzi poliami, skontrolujte dátový model.',
 	'UI:Error:UploadedFileTooBig' => 'Nahraný súbor je príliš veľký. (Max povolená veľkosť je %1$s). Ak chcete zmeniť tento limit, obráťte sa na správcu ITOP . (Skontrolujte, PHP konfiguráciu pre upload_max_filesize a post_max_size na serveri).',
@@ -1007,7 +1007,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 
 	'Menu:UserAccountsMenu' => 'Užívateľské účty', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Užívateľské účty', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu:Title' => 'Užívateľské účty', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => 'iTop verzia %1$s',
 	'UI:iTopVersion:Long' => 'iTop verzia %1$s-%2$s postavená na %3$s',
@@ -1238,7 +1238,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Deň v mesiaci pre %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (hodina)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (mesiac)',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$ (deň v týžni)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (deň v týžni)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (deň v mesiaci)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Prosím zvoľte pole na ktorom objekty budú zoskupené spolu',
 

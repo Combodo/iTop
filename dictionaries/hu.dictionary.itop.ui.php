@@ -433,7 +433,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Error:2ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s és %2$s.',
 	'UI:Error:3ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s, %2$s és %3$s.',
 	'UI:Error:4ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s, %2$s, %3$s és %4$s.',
-	'UI:Error:IncorrectOQLQuery_Message' => 'Hiba: nem megfelelő OQL lekérdezés: %1$',
+	'UI:Error:IncorrectOQLQuery_Message' => 'Hiba: nem megfelelő OQL lekérdezés: %1$s',
 	'UI:Error:AnErrorOccuredWhileRunningTheQuery_Message' => 'Hiba történt a lekérdezs futtatása közben: %1$s',
 	'UI:Error:ObjectAlreadyUpdated' => 'Hiba: az objketum már korábban módosításra került.',
 	'UI:Error:ObjectCannotBeUpdated' => 'Hiba: az objektum nem frissíthető.',
@@ -1004,7 +1004,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 
 	'Menu:UserAccountsMenu' => 'Felhasználói fiókok', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s verzió: %2$s',
 	'UI:iTopVersion:Long' => '%1$s verzió: %2$s-%3$s %4$s',
@@ -1019,7 +1019,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:Deadline_LessThan1Min' => '< 1 perc',
 	'UI:Deadline_Minutes' => '%1$d perc',
 	'UI:Deadline_Hours_Minutes' => '%1$dóra %2$dperc',
-	'UI:Deadline_Days_Hours_Minutes' => '%1$nap %2$dóra %3$dperc',
+	'UI:Deadline_Days_Hours_Minutes' => '%1$dnap %2$dóra %3$dperc',
 	'UI:Help' => 'Segítség',
 	'UI:PasswordConfirm' => '(Jóváhagyás)',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => '%1$s objektumok hozzáadása előtt mentse ezt az  objektumot',

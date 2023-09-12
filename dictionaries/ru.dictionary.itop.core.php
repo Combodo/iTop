@@ -9,7 +9,7 @@
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Core:DeletedObjectLabel' => '%1ы (удален)',
+	'Core:DeletedObjectLabel' => '%1$sы (удален)',
 	'Core:DeletedObjectTip' => 'Объект был удален %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Объект не найден (class: %1$s, id: %2$d)',
@@ -190,7 +190,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Core:AttributeTag' => 'Тег',
 	'Core:AttributeTag+' => 'Тег',
-	
+
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
