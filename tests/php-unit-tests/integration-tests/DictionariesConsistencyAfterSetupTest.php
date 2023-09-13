@@ -229,7 +229,6 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 
 	/**
 	 * @dataProvider VsprintfProvider
-	 */
 	public function testVsprintf($sLabelTemplate, $aPlaceHolders){
 		try{
 			$this->markTestSkipped("usefull to check a specific PHP version behavior");
@@ -239,4 +238,5 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 			$this->assertTrue(false, "label \'" .  $sLabelTemplate . " failed with " . var_export($aPlaceHolders, true)  );
 		}
 	}
+	 */
 }
