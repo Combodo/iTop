@@ -159,7 +159,9 @@ class Dict
 	 * @param string $sDefault Default value if there is no match in the dictionary
 	 * @param bool $bUserLanguageOnly True to allow the use of the default language as a fallback, false otherwise
 	 *
-	 * @return array with localized label string and used lang code
+	 * @return array{
+	 *     lang: string, label: string
+	 * } with localized label string and used lang code
 	 */
 	private static function GetLabelAndLangCode($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
 	{
@@ -168,9 +170,9 @@ class Dict
 		$sLangCode = self::GetUserLanguage();
 		self::InitLangIfNeeded($sLangCode);
 
-		if (!array_key_exists($sLangCode, self::$m_aData))
+		if (! array_key_exists($sLangCode, self::$m_aData))
 		{
-			IssueLog::Warning("Cannot find $sLangCode in dictionnaries. default labels displayed");
+			IssueLog::Warning("Cannot find $sLangCode in all registered dictionaries.");
 			// It may happen, when something happens before the dictionaries get loaded
 			return [ 'label' => $sStringCode, 'lang' => $sLangCode ];
 		}
@@ -223,18 +225,7 @@ class Dict
 	 */
 	public static function Format($sFormatCode /*, ... arguments ....*/)
 	{
-		$aInfo = self::GetLabelAndLangCode($sFormatCode);
-		if (array_key_exists('label', $aInfo)){
-			$sLocalizedFormat = $aInfo['label'];
-		} else {
-			$sLocalizedFormat = $sFormatCode;
-		}
-
-		if (array_key_exists('lang', $aInfo)){
-			$sLangCode = $aInfo['lang'];
-		} else {
-			$sLangCode = null;
-		}
+		['label' => $sLocalizedFormat, 'lang' => $sLangCode] = self::GetLabelAndLangCode($sFormatCode);
 
 		$aArguments = func_get_args();
 		array_shift($aArguments);
@@ -248,7 +239,7 @@ class Dict
 		try{
 			return vsprintf($sLocalizedFormat, $aArguments);
 		} catch(\Throwable $e){
-			\IssueLog::Error("Broken label", null, ["sFormatCode" => $sFormatCode, "sLangCode" => $sLangCode ]);
+			\IssueLog::Error("Cannot format dict key", null, ["sFormatCode" => $sFormatCode, "sLangCode" => $sLangCode, 'exception_msg' => $e->getMessage() ]);
 			return $sFormatCode.' - '.implode(', ', $aArguments);
 		}
 	}

@@ -1,17 +1,4 @@
 <?php
-/**
- * Copyright (C) 2013-2020 Combodo SARL
- * This file is part of iTop.
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License
- */
 
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
@@ -19,6 +6,19 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 {
+	//used by testDictEntryValues
+	//to filter false positive broken traductions
+	private static $aLabelCodeNotToCheck = [
+		//use of Dict::S not Format
+		"UI:Audit:PercentageOk",
+
+		//unused dead labels
+		"Class:DatacenterDevice/Attribute:redundancy/count",
+		"Class:DatacenterDevice/Attribute:redundancy/disabled",
+		"Class:DatacenterDevice/Attribute:redundancy/percent",
+		"Class:TriggerOnThresholdReached/Attribute:threshold_index+"
+	];
+
 	public function FormatProvider(){
 		return [
 			'key does not exist in dictionnary' => [
@@ -37,33 +37,31 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	}
 
 	/**
+	 * @param  $sTemplate : if null it will not create dict entry
 	 * @since 2.7.10 N°5491 - Inconsistent dictionary entries regarding arguments to pass to Dict::Format
-	 * Dict::Format
 	 * @dataProvider FormatProvider
 	 */
-	public function testFormat($sTemplate, $sExpectedTraduction){
+	public function testFormatWithOneArgumentAndCustomKey(?string $sTemplate, $sExpectedTranslation){
+		//tricky way to mock GetLabelAndLangCode behavior via connected user language
 		$sLangCode = \Dict::GetUserLanguage();
 		$aDictByLang = $this->GetNonPublicStaticProperty(\Dict::class, 'm_aData');
 		$sDictKey = 'ITOP::DICT:FORMAT:BROKEN:KEY';
 
 		if (! is_null($sTemplate)){
-			if (array_key_exists($sLangCode, $aDictByLang)){
-				$aDictByLang[$sLangCode][$sDictKey] = $sTemplate;
-			} else {
-				$aDictByLang[$sLangCode] = [$sDictKey => $sTemplate];
-			}
+			$aDictByLang[$sLangCode][$sDictKey] = $sTemplate;
 		}
 
 		$this->SetNonPublicStaticProperty(\Dict::class, 'm_aData', $aDictByLang);
 
-		$this->assertEquals($sExpectedTraduction, \Dict::Format($sDictKey, "1"));
+		$this->assertEquals($sExpectedTranslation, \Dict::Format($sDictKey, "1"));
 	}
 
+	//test works after setup (no annotation @beforesetup)
+	//even if it does not extend ItopDataTestCase
 	private function ReadDictKeys($sLangCode) : array {
 		\Dict::InitLangIfNeeded($sLangCode);
 
 		$aDictEntries = $this->GetNonPublicStaticProperty(\Dict::class, 'm_aData');
-		\Dict::InitLangIfNeeded($sLangCode);
 		return $aDictEntries[$sLangCode];
 	}
 
@@ -106,6 +104,10 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		return $iMaxIndex;
 	}
 
+	/**
+	 * Warning: hardcoded list of languages
+	 * It is hard to have it dynamically via Dict::GetLanguages as for each lang Dict::Init should be called first
+	 **/
 	public function LangCodeProvider(){
 		return [
 			'cs' => [ 'CS CZ' ],
@@ -131,12 +133,12 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	 * if not Dict::Format could raise an exception for some languages. translation should be done again...
 	 * @dataProvider LangCodeProvider
 	 */
-	public function testDictEntryValues($sCode)
+	public function testDictEntryValues($sLanguageCodeToTest)
 	{
 		$sReferenceLangCode = 'EN US';
 		$aReferenceLangDictEntry = $this->ReadDictKeys($sReferenceLangCode);
 
-		$aDictEntry = $this->ReadDictKeys($sCode);
+		$aDictEntry = $this->ReadDictKeys($sLanguageCodeToTest);
 
 
 		$aKeyArgsCountMap = [];
@@ -144,32 +146,16 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		//$aKeyArgsCountMap[$sCode] = $this->GetKeyArgCountMap($aDictEntry);
 
 		//set user language
-		$this->SetNonPublicStaticProperty(\Dict::class, 'm_sCurrentLanguage', $sCode);
+		$this->SetNonPublicStaticProperty(\Dict::class, 'm_sCurrentLanguage', $sLanguageCodeToTest);
 
 		$aMismatchedKeys = [];
-		$aLabelCodeNotToCheck = [
-			//use of Dict::S not Format
-			"UI:Audit:PercentageOk",
-
-			//unused dead labels
-			"Class:DatacenterDevice/Attribute:redundancy/count",
-			"Class:DatacenterDevice/Attribute:redundancy/disabled",
-			"Class:DatacenterDevice/Attribute:redundancy/percent",
-			"Class:TriggerOnThresholdReached/Attribute:threshold_index+"
-		];
-
 
 		foreach ($aKeyArgsCountMap[$sReferenceLangCode] as $sKey => $iExpectedNbOfArgs){
-			if (in_array($sKey, $aLabelCodeNotToCheck)){
+			if (in_array($sKey, self::$aLabelCodeNotToCheck)){
 				//false positive: do not test
 				continue;
 			}
 
-				/*if ($iExpectedNbOfArgs === 0){
-				//there is a good chance Dict:S is called, not Dict::Format
-				//avoid to raise false positive broken traductions
-				continue;
-				}*/
 			if (array_key_exists($sKey, $aDictEntry)){
 				$aPlaceHolders = [];
 				for ($i=0; $i<$iExpectedNbOfArgs; $i++){
@@ -195,28 +181,28 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 			var_dump($sError);
 			foreach ($aKeys as $sKey => $iExpectedNbOfArgs) {
 				$iCount++;
-				if ($sReferenceLangCode === $sCode) {
+				if ($sReferenceLangCode === $sLanguageCodeToTest) {
 					var_dump([
-						'label key' => $sKey,
-						'expected nb of args' => $iExpectedNbOfArgs,
-						$sCode => $aDictEntry[$sKey],
+						'key label' => $sKey,
+						'expected nb of expected args' => $iExpectedNbOfArgs,
+						"key value in $sLanguageCodeToTest" => $aDictEntry[$sKey],
 					]);
 				} else {
 					var_dump([
-						'label key' => $sKey,
-						'expected nb of args' => $iExpectedNbOfArgs,
-						$sCode => $aDictEntry[$sKey],
-						"label value in $sReferenceLangCode" => $aReferenceLangDictEntry[$sKey],
+						'key label' => $sKey,
+						'expected nb of expected args' => $iExpectedNbOfArgs,
+						"key value in $sLanguageCodeToTest" => $aDictEntry[$sKey],
+						"key value in $sReferenceLangCode" => $aReferenceLangDictEntry[$sKey],
 					]);
 				}
 			}
 		}
 
-		$sErrorMsg = sprintf("%s broken propertie(s) on $sCode dictionaries!", $iCount);
+		$sErrorMsg = sprintf("%s broken propertie(s) on $sLanguageCodeToTest dictionaries! either change the dict value in $sLanguageCodeToTest or add it in ignored label list (cf aLabelCodeNotToCheck)", $iCount);
 		$this->assertEquals([], $aMismatchedKeys, $sErrorMsg);
 	}
 
-	/*public function VsprintfProvider(){
+	public function VsprintfProvider(){
 		return [
 			'not enough args' => [
 				"sLabelTemplate" => "$1%s",
@@ -239,17 +225,18 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 				"aPlaceHolders" => ['1'],
 			],
 		];
-	}*/
+	}
 
 	/**
 	 * @dataProvider VsprintfProvider
 	 */
-	/*public function testVsprintf($sLabelTemplate, $aPlaceHolders){
+	public function testVsprintf($sLabelTemplate, $aPlaceHolders){
 		try{
+			$this->markTestSkipped("usefull to check a specific PHP version behavior");
 			vsprintf($sLabelTemplate, $aPlaceHolders);
 			$this->assertTrue(true);
 		} catch(\Throwable $e) {
 			$this->assertTrue(false, "label \'" .  $sLabelTemplate . " failed with " . var_export($aPlaceHolders, true)  );
 		}
-	}*/
+	}
 }
