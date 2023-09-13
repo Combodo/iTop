@@ -27,7 +27,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'As correspondências em todos os grupos de menus serão exibidas',
 	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Nenhum resultado para este filtro de menu',
 	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Olá %1$s!',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Imagem do contato %1$',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Imagem do contato %1$s',
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Abrir menu do usuário',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtrar entradas de menu',
 
