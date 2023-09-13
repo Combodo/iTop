@@ -20,7 +20,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Core:DeletedObjectLabel' => '%1s (deleted)~~',
+	'Core:DeletedObjectLabel' => '%1$s (deleted)~~',
 	'Core:DeletedObjectTip'   => 'The object has been deleted on %1$s (%2$s)~~',
 
 	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)~~',
@@ -204,8 +204,8 @@ Operators:<br/>
 	'Core:FriendlyName-Description' => 'Friendly name~~',
 
 	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => '',
-	
+	'Core:AttributeTag+' => 'Tags~~',
+
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',

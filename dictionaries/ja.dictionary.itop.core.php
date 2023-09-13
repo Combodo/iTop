@@ -20,8 +20,8 @@
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Core:DeletedObjectLabel' => '%1s (削除されました)',
-	'Core:DeletedObjectTip'   => 'オブジェクトは削除されました %1$s (%2$s)',
+	'Core:DeletedObjectLabel' => '%1$s (削除されました)',
+	'Core:DeletedObjectTip' => 'オブジェクトは削除されました %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'オブジェクトは見つかりません (クラス: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip'   => 'オブジェクトは見つかりません。しばらく前に削除され、その後ログが削除されたかもしれません。',
@@ -205,7 +205,7 @@ Operators:<br/>
 
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => 'Tags~~',
-	
+
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',

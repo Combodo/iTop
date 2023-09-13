@@ -277,6 +277,21 @@ abstract class ItopTestCase extends TestCase
 		return $method->invokeArgs($oObject, $aArgs);
 	}
 
+	/**
+	 * @param string $sClass
+	 * @param string $sProperty
+	 *
+	 * @return mixed property
+	 *
+	 * @throws \ReflectionException
+	 * @since 2.7.10 3.1.0
+	 */
+	public function GetNonPublicStaticProperty(string $sClass, string $sProperty)
+	{
+		$oProperty = $this->GetProperty($sClass, $sProperty);
+
+		return $oProperty->getValue();
+	}
 
 	/**
 	 * @param object $oObject
@@ -289,11 +304,27 @@ abstract class ItopTestCase extends TestCase
 	 */
 	public function GetNonPublicProperty(object $oObject, string $sProperty)
 	{
-		$class = new \ReflectionClass(get_class($oObject));
-		$property = $class->getProperty($sProperty);
-		$property->setAccessible(true);
+		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
 
-		return $property->getValue($oObject);
+		return $oProperty->getValue($oObject);
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param string $sProperty
+	 *
+	 * @return \ReflectionProperty
+	 *
+	 * @throws \ReflectionException
+	 * @since 2.7.10 3.1.0
+	 */
+	private function GetProperty(string $sClass, string $sProperty)
+	{
+		$oClass = new \ReflectionClass($sClass);
+		$oProperty = $oClass->getProperty($sProperty);
+		$oProperty->setAccessible(true);
+
+		return $oProperty;
 	}
 
 	/**
@@ -306,11 +337,22 @@ abstract class ItopTestCase extends TestCase
 	 */
 	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
 	{
-		$class = new \ReflectionClass(get_class($oObject));
-		$property = $class->getProperty($sProperty);
-		$property->setAccessible(true);
+		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
+		$oProperty->setValue($oObject, $value);
+	}
 
-		$property->setValue($oObject, $value);
+	/**
+	 * @param string $sClass
+	 * @param string $sProperty
+	 * @param $value
+	 *
+	 * @throws \ReflectionException
+	 * @since 2.7.10 3.1.0
+	 */
+	public function SetNonPublicStaticProperty(string $sClass, string $sProperty, $value)
+	{
+		$oProperty = $this->GetProperty($sClass, $sProperty);
+		$oProperty->setValue($value);
 	}
 
 	public function RecurseRmdir($dir) {
