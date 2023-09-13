@@ -794,7 +794,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => '%2$sクラスの%1$dオブジェクトの削除',
 	'UI:Delete:CannotDeleteBecause' => '削除できません: %1$s',
 	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => '自動的に削除されるべきですが、出来ません。: %1$s',
-	'UI:Delete:MustBeDeletedManuallyButNotPossible' => '手動で削除されるべきですが、出来ません。: %1$',
+	'UI:Delete:MustBeDeletedManuallyButNotPossible' => '手動で削除されるべきですが、出来ません。: %1$s',
 	'UI:Delete:WillBeDeletedAutomatically' => '自動的に削除されます。',
 	'UI:Delete:MustBeDeletedManually' => '手動で削除されるべきです。',
 	'UI:Delete:CannotUpdateBecause_Issue' => '自動的に更新されるべきですが、しかし: %1$s',
@@ -1005,7 +1005,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 	'Menu:UserAccountsMenu' => 'ユーザアカウント', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu+' => 'ユーザアカウント', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$sバージョン%2$s',
 	'UI:iTopVersion:Long' => '%1$sバージョン%2$s-%3$s ビルド%4$s',
@@ -1094,7 +1094,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Enum:Undefined' => '未定義',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s 日 %2$s 時 %3$s 分 %4$s 秒',
 	'UI:ModifyAllPageTitle' => '全てを修正',
-	'UI:Modify_N_ObjectsOf_Class' => 'クラス%2$Sの%1$dオブジェクトを修正',
+	'UI:Modify_N_ObjectsOf_Class' => 'クラス%2$sの%1$dオブジェクトを修正',
 	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'クラス%2$sの%3$d中%1$dを修正',
 	'UI:Menu:ModifyAll' => '修正...',
 	'UI:Button:ModifyAll' => '全て修正',
@@ -1111,7 +1111,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:BulkModify_Count_DistinctValues' => '%1$d 個の個別の値:',
 	'UI:BulkModify:Value_Exists_N_Times' => '%1$s, %2$d 回存在',
 	'UI:BulkModify:N_MoreValues' => '%1$d 個以上の値...',
-	'UI:AttemptingToSetAReadOnlyAttribute_Name' => '読み込み専用フィールド %1$にセットしょうとしています。',
+	'UI:AttemptingToSetAReadOnlyAttribute_Name' => '読み込み専用フィールド %1$sにセットしょうとしています。',
 	'UI:FailedToApplyStimuli' => 'アクションは失敗しました。',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: クラス%3$sの%2$dオブジェクトを修正',
 	'UI:CaseLogTypeYourTextHere' => 'テキストを入力ください:',
