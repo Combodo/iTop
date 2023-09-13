@@ -296,7 +296,7 @@ class QueryOQL extends Query
 			}
 			catch
 			(OQLException $e) {
-				$oAlert = AlertUIBlockFactory::MakeForFailure(Dict::Format('UI:RunQuery:Error'), $e->getHtmlDesc())
+				$oAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:RunQuery:Error'), $e->getHtmlDesc())
 					->SetIsClosable(false)
 					->SetIsCollapsible(false);
 				$oAlert->AddCSSClass('mb-5');
