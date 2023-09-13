@@ -12,6 +12,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ContactType;
 use CoreException;
 use DBObject;
+use DBObject\MockDBObjectWithCRUDEventListener;
 use DBObjectSet;
 use DBSearch;
 use lnkPersonToTeam;
@@ -520,6 +521,24 @@ class CRUDEventTest extends ItopDataTestCase
 		$oLnk->DBDelete();
 
 		$this->assertEquals(2, self::$aEventCalls[EVENT_DB_LINKS_CHANGED]);
+	}
+
+	// Tests with MockDBObject
+	public function testFireCRUDEvent()
+	{
+		$this->RequireOnceUnitTestFile('DBObject/MockDBObjectWithCRUDEventListener.php');
+
+		// For Metamodel list of classes
+		MockDBObjectWithCRUDEventListener::Init();
+		$oDBObject = new MockDBObjectWithCRUDEventListener();
+		$oDBObject2 = new MockDBObjectWithCRUDEventListener();
+
+		$oDBObject->FireEvent(MockDBObjectWithCRUDEventListener::TEST_EVENT);
+		
+		$this->assertNotNull($oDBObject->oEventDataReceived);
+		$this->assertNull($oDBObject2->oEventDataReceived);
+
+		//echo($oDBObject->oEventDataReceived->Get('debug_info'));
 	}
 }
 
