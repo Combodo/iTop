@@ -276,23 +276,7 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
-	 * @param string $sClass
-	 * @param string $sProperty
-	 *
-	 * @return mixed property
-	 *
-	 * @throws \ReflectionException
 	 * @since 2.7.10 3.1.0
-	 */
-	public function GetNonPublicStaticProperty(string $sClass, string $sProperty)
-	{
-		$oProperty = $this->GetProperty($sClass, $sProperty);
-
-		return $oProperty->getValue();
-	}
-
-	/**
-	 * @since 3.1.0
 	 */
 	public function GetNonPublicStaticProperty(string $sClass, string $sProperty)
 	{
