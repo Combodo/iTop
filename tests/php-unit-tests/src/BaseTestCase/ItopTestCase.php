@@ -275,6 +275,21 @@ abstract class ItopTestCase extends TestCase
 		return $method->invokeArgs($oObject, $aArgs);
 	}
 
+	/**
+	 * @param string $sClass
+	 * @param string $sProperty
+	 *
+	 * @return mixed property
+	 *
+	 * @throws \ReflectionException
+	 * @since 2.7.10 3.1.0
+	 */
+	public function GetNonPublicStaticProperty(string $sClass, string $sProperty)
+	{
+		$oProperty = $this->GetProperty($sClass, $sProperty);
+
+		return $oProperty->getValue();
+	}
 
 	/**
 	 * @since 3.1.0
@@ -304,7 +319,7 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
-	 * @since 3.1.0
+	 * @since 2.7.10 3.1.0
 	 */
 	private function GetProperty(string $sClass, string $sProperty): \ReflectionProperty
 	{
@@ -330,7 +345,7 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
-	 * @since 3.1.0
+	 * @since 2.7.10 3.1.0
 	 */
 	public function SetNonPublicStaticProperty(string $sClass, string $sProperty, $value)
 	{
