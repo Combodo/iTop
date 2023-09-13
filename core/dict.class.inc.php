@@ -146,10 +146,7 @@ class Dict
 	public static function S($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
 	{
 		$aInfo = self::GetLabelAndLangCode($sStringCode, $sDefault, $bUserLanguageOnly);
-		if (array_key_exists('label', $aInfo)){
-			return $aInfo['label'];
-		}
-		return $sDefault;
+		return $aInfo['label'];
 	}
 
 	/**
