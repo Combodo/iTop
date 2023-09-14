@@ -267,7 +267,9 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$oMyObj->DBInsert();
 		$iKey = $oMyObj->GetKey();
 		$this->debug("Created $sClass::$iKey");
-		$this->aCreatedObjects[] = $oMyObj;
+		if (!static::USE_TRANSACTION) {
+			$this->aCreatedObjects[] = $oMyObj;
+		}
 
 		return $oMyObj;
 	}

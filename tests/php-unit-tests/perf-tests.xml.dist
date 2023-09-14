@@ -37,37 +37,6 @@
     <testsuite name="Perf">
       <directory>perf-tests</directory>
     </testsuite>
-    <testsuite name="Application">
-      <directory>unitary-tests/application</directory>
-    </testsuite>
-    <testsuite name="Core">
-      <directory>unitary-tests/core</directory>
-    </testsuite>
-    <testsuite name="Datamodels">
-      <directory>unitary-tests/datamodels/2.x</directory>
-    </testsuite>
-    <testsuite name="Setup">
-      <directory>unitary-tests/setup</directory>
-    </testsuite>
-    <testsuite name="Sources">
-      <directory>unitary-tests/sources</directory>
-    </testsuite>
-    <testsuite name="Synchro">
-      <directory>unitary-tests/synchro</directory>
-    </testsuite>
-    <testsuite name="Webservices">
-      <directory>unitary-tests/webservices</directory>
-    </testsuite>
-
-    <testsuite name="Extensions">
-      <directory>../../env-production/*/test</directory>
-      <directory>../../env-production/*/tests/php-unit-tests</directory>
-    </testsuite>
-
-    <!-- Integration tests -->
-    <testsuite name="Integration">
-      <directory>integration-tests</directory>
-    </testsuite>
   </testsuites>
 
   <!-- Code coverage white list  -->
