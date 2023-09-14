@@ -70,6 +70,9 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	/** @var AttributeLinkedSet $oAttDef attribute link set */
 	protected AttributeLinkedSet $oAttDef;
 
+	/** @var bool $bIsAttEditable Is attribute editable */
+	protected bool $bIsAttEditable;
+
 	/** @var string $sTargetClass links target classname */
 	protected string $sTargetClass;
 
@@ -119,11 +122,12 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	private function Init()
 	{
 		$this->sTargetClass = $this->GetTargetClass();
-
+		$this->InitIsAttEditable();
+		
 		// User rights
-		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
-		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
-		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
+		$this->bIsAllowCreate = $this->bIsAttEditable && UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
+		$this->bIsAllowModify = $this->bIsAttEditable && UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
+		$this->bIsAllowDelete = $this->bIsAttEditable && UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
 	}
 
 
@@ -196,6 +200,26 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 		$this->AddSubBlock($oBlock->GetRenderContent($oPage, $this->GetExtraParam(), $this->sTableId));
 	}
 
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	private function InitIsAttEditable(): void
+	{
+		$iFlags = 0;
+
+		if ($this->oDbObject->IsNew())
+		{
+			$iFlags = $this->oDbObject->GetInitialStateAttributeFlags($this->sAttCode);
+		}
+		else
+		{
+			$iFlags = $this->oDbObject->GetAttributeFlags($this->sAttCode);
+		}
+
+		$this->bIsAttEditable = !($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE | OPT_ATT_HIDDEN));
+	}
+	
 	/**
 	 * GetTableId.
 	 *

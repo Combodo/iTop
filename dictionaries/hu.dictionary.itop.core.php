@@ -21,7 +21,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Core:DeletedObjectLabel' => '%1s (törölve)',
+	'Core:DeletedObjectLabel' => '%1$s (törölve)',
 	'Core:DeletedObjectTip' => 'A %1$s objektum törölve (%2$s)',
 	'Core:UnknownObjectLabel' => 'Objektum nem található (osztály: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'Az objektumot nem sikerült megtalálni. Lehet, hogy már törölték egy ideje, és a naplót azóta törölték.',

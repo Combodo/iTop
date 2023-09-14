@@ -11,6 +11,7 @@ use Combodo\iTop\Service\Events\Description\EventDescription;
 use Combodo\iTop\Service\Module\ModuleService;
 use ContextTag;
 use CoreException;
+use DBObject;
 use Exception;
 use ExecutionKPI;
 use ReflectionClass;
@@ -54,6 +55,12 @@ final class EventService
 	/**
 	 * Register a callback for a specific event
 	 *
+	 * **Warning** : be ultra careful on memory footprint ! each callback will be saved in {@see aEventListeners}, and a callback is
+	 * made of the whole object instance and the method name ({@link https://www.php.net/manual/en/language.types.callable.php}).
+	 * For example to register on DBObject instances, you should better use {@see DBObject::RegisterCRUDListener()}
+	 *
+	 * @uses aEventListeners
+	 *
 	 * @api
 	 * @param string $sEvent corresponding event
 	 * @param callable $callback The callback to call
@@ -62,8 +69,12 @@ final class EventService
 	 * @param array|string|null $context context filter
 	 * @param float $fPriority optional priority for callback order
 	 *
-	 * @return string Id of the registration
+	 * @return string registration identifier
 	 *
+	 * @see DBObject::RegisterCRUDListener() to register in DBObject instances instead, to reduce memory footprint (callback saving)
+	 *
+	 * @since 3.1.0 method creation
+	 * @since 3.1.0-3 3.1.1 3.2.0 N°6716 PHPDoc change to warn on memory footprint, and {@see DBObject::RegisterCRUDListener()} alternative
 	 */
 	public static function RegisterListener(string $sEvent, callable $callback, $sEventSource = null, array $aCallbackData = [], $context = null, float $fPriority = 0.0, $sModuleId = ''): string
 	{

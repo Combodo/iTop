@@ -497,7 +497,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by je povinný. Skontrolujte definíciu šablóny zobrazenia.',
 	'UI:Error:InvalidGroupByFields' => 'Neplatný zoznam polí pre skupinu podľa: "%1$s".',
 	'UI:Error:UnsupportedStyleOfBlock' => 'Chyba: nepodporovaný štýl bloku: "%1$s".',
-	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Nesprávna definícia spojenia : trieda objektov na manažovanie : %l$s nebol nájdený ako externý kľúč v triede %2$s',
+	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Nesprávna definícia spojenia : trieda objektov na manažovanie : %1$s nebol nájdený ako externý kľúč v triede %2$s',
 	'UI:Error:Object_Class_Id_NotFound' => 'Objekt: %1$s:%2$d nebol nájdený.',
 	'UI:Error:WizardCircularReferenceInDependencies' => 'Chyba: Cyklický odkaz v závislostiach medzi poliami, skontrolujte dátový model.',
 	'UI:Error:UploadedFileTooBig' => 'Nahraný súbor je príliš veľký. (Max povolená veľkosť je %1$s). Ak chcete zmeniť tento limit, obráťte sa na správcu ITOP . (Skontrolujte, PHP konfiguráciu pre upload_max_filesize a post_max_size na serveri).',

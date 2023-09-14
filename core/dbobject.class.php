@@ -6,7 +6,9 @@
 
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventException;
 use Combodo\iTop\Service\Events\EventService;
+use Combodo\iTop\Service\Events\EventServiceLog;
 use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectManager;
 
 /**
@@ -203,6 +205,8 @@ abstract class DBObject implements iDisplay
 
 	const MAX_UPDATE_LOOP_COUNT = 10;
 
+	private $aEventListeners = [];
+
 	/**
 	 * DBObject constructor.
 	 *
@@ -255,6 +259,10 @@ abstract class DBObject implements iDisplay
 		$this->RegisterEventListeners();
 	}
 
+	/**
+	 * @see RegisterCRUDListener
+	 * @see EventService::RegisterListener()
+	 */
 	protected function RegisterEventListeners()
 	{
 	}
@@ -6181,6 +6189,51 @@ abstract class DBObject implements iDisplay
 		return OPT_ATT_NORMAL;
 	}
 
+	public final function GetListeners(): array
+	{
+		$aListeners = [];
+		foreach ($this->aEventListeners as $aEventListener) {
+			$aListeners = array_merge($aListeners, $aEventListener);
+		}
+		return $aListeners;
+	}
+
+	/**
+	 * Register a callback for a specific event. The method to call will be saved in the object instance itself whereas calling {@see EventService::RegisterListener()} would
+	 * save a callable (thus the method name AND the whole DBObject instance)
+	 *
+	 * @param string $sEvent corresponding event
+	 * @param string $callback The callback method to call
+	 * @param float $fPriority optional priority for callback order
+	 * @param string $sModuleId
+	 *
+	 * @see EventService::RegisterListener()
+	 *
+	 * @since 3.1.0-3 3.1.1 3.2.0 N°6716
+	 */
+	final protected function RegisterCRUDListener(string $sEvent, string $callback, float $fPriority = 0.0, string $sModuleId = '')
+	{
+		$aEventCallbacks = $this->aEventListeners[$sEvent] ?? [];
+
+		$aEventCallbacks[] = array(
+			'event'    => $sEvent,
+			'callback' => $callback,
+			'priority' => $fPriority,
+			'module'   => $sModuleId,
+		);
+		usort($aEventCallbacks, function ($a, $b) {
+			$fPriorityA = $a['priority'];
+			$fPriorityB = $b['priority'];
+			if ($fPriorityA == $fPriorityB) {
+				return 0;
+			}
+
+			return ($fPriorityA < $fPriorityB) ? -1 : 1;
+		});
+
+		$this->aEventListeners[$sEvent] = $aEventCallbacks;
+	}
+
 	/**
 	 * @param string $sEvent
 	 * @param array $aEventData
@@ -6192,15 +6245,53 @@ abstract class DBObject implements iDisplay
 	 */
 	public function FireEvent(string $sEvent, array $aEventData = array()): void
 	{
-		if (EventService::IsEventRegistered($sEvent)) {
-			$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
-			$aEventData['object'] = $this;
-			$aEventSources = [$this->m_sObjectUniqId];
-			foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass) {
-				$aEventSources[] = $sClass;
+		$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
+		$aEventData['object'] = $this;
+
+		// Call local listeners first
+		$aEventCallbacks = $this->aEventListeners[$sEvent] ?? [];
+		$oFirstException = null;
+		$sFirstExceptionMessage = '';
+		foreach ($aEventCallbacks as $aEventCallback) {
+			$oKPI = new ExecutionKPI();
+			$sCallback = $aEventCallback['callback'];
+			if (!method_exists($this, $sCallback)) {
+				EventServiceLog::Error("Callback '".get_class($this).":$sCallback' does not exist");
+				continue;
 			}
-			EventService::FireEvent(new EventData($sEvent, $aEventSources, $aEventData));
+			EventServiceLog::Debug("Fire event '$sEvent' calling '".get_class($this).":$sCallback'");
+			try {
+				call_user_func([$this, $sCallback], new EventData($sEvent, null, $aEventData));
+			}
+			catch (EventException $e) {
+				EventServiceLog::Error("Event '$sEvent' for '$sCallback'} failed with blocking error: ".$e->getMessage());
+				throw $e;
+			}
+			catch (Exception $e) {
+				$sMessage = "Event '$sEvent' for '$sCallback'} failed with non-blocking error: ".$e->getMessage();
+				EventServiceLog::Error($sMessage);
+				if (is_null($oFirstException)) {
+					$sFirstExceptionMessage = $sMessage;
+					$oFirstException = $e;
+				}
+			}
+			finally {
+				$oKPI->ComputeStats('FireEvent', $sEvent);
+			}
 		}
+		if (!is_null($oFirstException)) {
+			throw new Exception($sFirstExceptionMessage, $oFirstException->getCode(), $oFirstException);
+		}
+
+		// Call global event listeners
+		if (!EventService::IsEventRegistered($sEvent)) {
+			return;
+		}
+		$aEventSources = [];
+		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass) {
+			$aEventSources[] = $sClass;
+		}
+		EventService::FireEvent(new EventData($sEvent, $aEventSources, $aEventData));
 	}
 
 	//////////////////

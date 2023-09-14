@@ -157,6 +157,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ProviderContract/Attribute:contracttype_id+' => '',
 	'Class:ProviderContract/Attribute:contracttype_name' => 'Vertragstyp-Name',
 	'Class:ProviderContract/Attribute:contracttype_name+' => '',
+	'Class:ProviderContract/Attribute:services_list' => 'Services',
+	'Class:ProviderContract/Attribute:services_list+' => 'Alle für diesen Vertrag erworbenen Services',
 ));
 
 //
