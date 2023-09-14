@@ -947,15 +947,14 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testConstructorMemoryFootprint():void
 	{
-		$idx = 0;
+		$idx = 1;
 		$fStart = microtime(true);
 		$fStartLoop = $fStart;
 		$iInitialPeak = 0;
-		$iMaxAllowedMemoryIncrease = 1 * 1024 * 1024;
 
 		for ($i = 0; $i < 5000; $i++) {
 			/** @noinspection PhpUnusedLocalVariableInspection We intentionally use a reference that will disappear on each loop */
-			$oPerson = new \Person();
+			$oPerson = MetaModel::NewObject(\Person::class);
 			if (0 == ($idx % 100)) {
 				$fDuration = microtime(true) - $fStartLoop;
 				$iMemoryPeakUsage = memory_get_peak_usage();
@@ -967,7 +966,7 @@ class DBObjectTest extends ItopDataTestCase
 				$sCurrPeak = \utils::BytesToFriendlyFormat($iMemoryPeakUsage, 4);
 				echo "$idx ".sprintf('%.1f ms', $fDuration * 1000)." - Peak Memory Usage: $sCurrPeak\n";
 
-				$this->assertTrue(($iMemoryPeakUsage - $iInitialPeak) <= $iMaxAllowedMemoryIncrease , "Peak memory changed from $sInitialPeak to $sCurrPeak after $i loops");
+				$this->assertTrue($iMemoryPeakUsage === $iInitialPeak, "Peak memory changed from $sInitialPeak to $sCurrPeak after $i loops");
 
 				$fStartLoop = microtime(true);
 			}
