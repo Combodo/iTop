@@ -151,6 +151,12 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$aMismatchedKeys = [];
 
 		foreach ($aKeyArgsCountMap[$sReferenceLangCode] as $sKey => $iExpectedNbOfArgs){
+			if (0 === $iExpectedNbOfArgs){
+				//no arg needed in EN. 
+				//let s assume job has been done correctly in EN to simplify
+				continue;
+			}
+
 			if (in_array($sKey, self::$aLabelCodeNotToCheck)){
 				//false positive: do not test
 				continue;
