@@ -37,7 +37,9 @@ tests/*/vendor/*
 
 # iTop extensions
 /extensions/**
+!/extensions/.htaccess
 !/extensions/readme.txt
+!/extensions/web.config
 
 # all logs but listing prevention
 /log/**
@@ -45,8 +47,10 @@ tests/*/vendor/*
 !/log/index.php
 !/log/web.config
 
-# PHPUnit cache file
+# PHPUnit: Cache file, local XML working copies
 /tests/php-unit-tests/.phpunit.result.cache
+/tests/php-unit-tests/phpunit.xml
+/tests/php-unit-tests/postbuild_integration.xml
 
 
 # Jetbrains
