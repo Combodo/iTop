@@ -290,7 +290,6 @@ function DisplayEvents(WebPage $oPage, $sClass)
 		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
 			if (!MetaModel::IsAbstract($sChildClass)) {
 				$oObject = MetaModel::NewObject($sChildClass);
-				$aSources[] = $oObject->GetObjectUniqId();
 				break;
 			}
 		}
@@ -299,7 +298,6 @@ function DisplayEvents(WebPage $oPage, $sClass)
 		}
 	} else {
 		$oObject = MetaModel::NewObject($sClass);
-		$aSources[] = $oObject->GetObjectUniqId();
 		foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
 				$aSources[] = $sParentClass;
 		}
@@ -320,12 +318,19 @@ function DisplayEvents(WebPage $oPage, $sClass)
 	});
 	$aColumns = [
 		'event'    => ['label' => Dict::S('UI:Schema:Events:Event')],
-		'listener' => ['label' => Dict::S('UI:Schema:Events:Listener')],
+		'callback' => ['label' => Dict::S('UI:Schema:Events:Listener')],
 		'priority' => ['label' => Dict::S('UI:Schema:Events:Rank')],
 		'module'   => ['label' => Dict::S('UI:Schema:Events:Module')],
 	];
+	// Get the object listeners first
 	$aRows = [];
 	$oReflectionClass = new ReflectionClass($sClass);
+	if ($oReflectionClass->isInstantiable()) {
+		/** @var DBObject $oClass */
+		$oClass = new $sClass();
+		$aRows = $oClass->GetListeners();
+	}
+
 	foreach ($aListeners as $aListener) {
 		if (is_object($aListener['callback'][0])) {
 			$sListenerClass = $sClass;
@@ -343,7 +348,7 @@ function DisplayEvents(WebPage $oPage, $sClass)
 		}
 		$aRows[] = [
 			'event'    => $aListener['event'],
-			'listener' => $sListener,
+			'callback' => $sListener,
 			'priority' => $aListener['priority'],
 			'module'   => $aListener['module'],
 		];

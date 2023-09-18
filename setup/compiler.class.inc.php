@@ -1385,17 +1385,12 @@ EOF
 					}
 					$sMethods .= "\n    $sCallbackFct\n\n";
 				}
-				if (strpos($sCallback, '::') === false) {
-					$sEventListener = '[$this, \''.$sCallback.'\']';
-				} else {
-					$sEventListener = "'$sCallback'";
-				}
 
 				$sListenerRank = (float)($oListener->GetChildText('rank', '0'));
 				$sEvents .= <<<PHP
 
 		// listenerId = $sListenerId
-		Combodo\iTop\Service\Events\EventService::RegisterListener("$sEventName", $sEventListener, \$this->m_sObjectUniqId, [], null, $sListenerRank, '$sModuleRelativeDir');
+		\$this->RegisterCRUDListener("$sEventName", '$sCallback', $sListenerRank, '$sModuleRelativeDir');
 PHP;
 			}
 		}
