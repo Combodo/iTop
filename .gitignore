@@ -24,7 +24,9 @@ tests/*/vendor/*
 
 # iTop extensions
 /extensions/**
+!/extensions/.htaccess
 !/extensions/readme.txt
+!/extensions/web.config
 
 # all logs but listing prevention
 /log/**
