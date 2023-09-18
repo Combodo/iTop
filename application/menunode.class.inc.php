@@ -277,7 +277,7 @@ class ApplicationMenu
 			$aSubMenuNodes = static::GetSubMenuNodes($sMenuGroupIdx, $aExtraParams);
 			if (! ParentMenuNodeCompiler::$bUseLegacyMenuCompilation && !($oMenuNode instanceof ShortcutMenuNode)){
 				if (is_array($aSubMenuNodes) && 0 === sizeof($aSubMenuNodes)){
-					IssueLog::Error('Empty menu node not displayed', LogChannels::CONSOLE, [
+					IssueLog::Debug('Empty menu node not displayed', LogChannels::CONSOLE, [
 						'menu_node_class' => get_class($oMenuNode),
 						'menu_node_label' => $oMenuNode->GetLabel(),
 					]);
