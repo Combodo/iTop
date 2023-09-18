@@ -32,8 +32,10 @@ tests/*/vendor/*
 !/log/index.php
 !/log/web.config
 
-# PHPUnit cache file
+# PHPUnit: Cache file, local XML working copies
 /tests/php-unit-tests/.phpunit.result.cache
+/tests/php-unit-tests/phpunit.xml
+/tests/php-unit-tests/postbuild_integration.xml
 
 
 # Jetbrains
