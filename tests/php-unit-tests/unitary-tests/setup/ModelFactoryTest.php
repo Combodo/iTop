@@ -679,6 +679,190 @@ XML
 	<nodeB>Luke Banner</nodeB>
 </nodeA>
 XML
+			,
+		];
+		$aDeltas['_delta="define_if_not_exists on missing CLASS node"'] = [
+			'sInitialXML'  => <<<XML
+<itop_design>
+   <classes>
+      <class id="theParent"/>
+   </classes>
+</itop_design>
+XML
+			,
+			'sDeltaXML'    => <<<XML
+<itop_design>
+   <classes>
+      <class id="theClass" _delta="define_if_not_exists">
+         <parent>theParent</parent>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+			'sExpectedXML' => <<<XML
+<itop_design>
+   <classes>
+      <class id="theParent">
+         <class id="theClass">
+            <parent>theParent</parent>
+         </class>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+		];
+		$aDeltas['_delta="define_if_not_exists on existing CLASS node"'] = [
+			'sInitialXML'  => <<<XML
+<itop_design>
+   <classes>
+      <class id="theParent">
+         <class id="theClass">
+            <parent>theParent</parent>
+         </class>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+			'sDeltaXML'    => <<<XML
+<itop_design>
+   <classes>
+      <class id="theClass" _delta="define_if_not_exists">
+         <parent>theParent</parent>
+         <something_different></something_different>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+			'sExpectedXML' => <<<XML
+<itop_design>
+   <classes>
+      <class id="theParent">
+         <class id="theClass">
+            <parent>theParent</parent>
+         </class>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+		];
+
+		$aDeltas['_delta="define_if_not_exists on existing CLASS node out of class parent"'] = [
+			'sInitialXML'  => <<<XML
+<itop_design>
+   <classes>
+      <class id="theParent">
+      </class>
+      <class id="theClass">
+        <parent>theParent</parent>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+			'sDeltaXML'    => <<<XML
+<itop_design>
+   <classes>
+      <class id="theClass" _delta="define_if_not_exists">
+         <parent>theParent</parent>
+         <something_different></something_different>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+			'sExpectedXML' => <<<XML
+<itop_design>
+   <classes>
+      <class id="theParent">
+      </class>
+      <class id="theClass">
+         <parent>theParent</parent>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+		];
+		$aDeltas['_delta="redefine  on existing CLASS node"'] = [
+			'sInitialXML'  => <<<XML
+<itop_design>
+   <classes>
+      <class id="theParent">
+         <class id="theClass">
+            <parent>theParent</parent>
+         </class>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+			'sDeltaXML'    => <<<XML
+<itop_design>
+   <classes>
+      <class id="theClass" _delta="redefine">
+         <parent>theParent</parent>
+         <something_different></something_different>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+			'sExpectedXML' => <<<XML
+<itop_design>
+   <classes>
+      <class id="theParent">
+         <class id="theClass">
+            <parent>theParent</parent>
+            <something_different></something_different>
+         </class>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+		];
+		$aDeltas['_delta="redefine on existing CLASS node out of class parent"'] = [
+			'sInitialXML'  => <<<XML
+<itop_design>
+   <classes>
+      <class id="theParent">
+      </class>
+      <class id="theClass">
+        <parent>theParent</parent>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+			'sDeltaXML'    => <<<XML
+<itop_design>
+   <classes>
+      <class id="theClass" _delta="redefine">
+         <parent>theParent</parent>
+         <something_different></something_different>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
+			'sExpectedXML' => <<<XML
+<itop_design>
+   <classes>
+      <class id="theParent">
+      </class>
+      <class id="theClass">
+         <parent>theParent</parent>
+         <something_different/>
+      </class>
+   </classes>
+</itop_design>
+XML
+			,
 		];
 
 		return $aDeltas;

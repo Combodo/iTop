@@ -747,7 +747,7 @@ class ModelFactory
 				$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
 				$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
 				if ($oSourceNode->tagName === 'class') {
-					$oTargetParentNode->RedefineNode($oTargetNode, $sSearchId);
+					$oTargetParentNode->RedefineNodeClass($oTargetNode, $sSearchId);
 				} else {
 					$oTargetParentNode->RedefineChildNode($oTargetNode, $sSearchId);
 				}
@@ -2082,14 +2082,17 @@ EOF;
 	 * @throws \Exception
 	 * @since 3.2.0 N°6660
 	 */
-	public function RedefineNode(MFElement $oNode, $sSearchId = null)
+	public function RedefineNodeClass(MFElement $oNode, $sSearchId = null)
 	{
 		// First: cleanup any flag behind the new node, and eventually add trace data
 		$oNode->ApplyChanges();
 		$oNode->AddTrace();
 
-		$oParentNode = $this->parentNode;
-		$oExisting = $this->_FindNode($oParentNode, $oNode, $sSearchId);
+		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
+		if (is_null($oExisting)) {
+			$oParentNode = $this->parentNode;
+			$oExisting = $this->_FindNode($oParentNode, $oNode, $sSearchId);
+		}
 
 		$this->replaceNode($oExisting, $oNode, $sSearchId);
 	}
