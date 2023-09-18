@@ -1414,6 +1414,8 @@ class DisplayableGraph extends SimpleGraph
 	/**
 	 * Display the graph inside the given page, with the "filter" drawer above it
 	 *
+	 * @deprecated 3.1.1 3767 use the 2 functions DisplayFilterBox and displayGraph
+	 *
 	 * @param WebPage $oP
 	 * @param array $aResults
 	 * @param string $sRelation
@@ -1427,7 +1429,7 @@ class DisplayableGraph extends SimpleGraph
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
-	 * @deprecated 3.1.1
+	 *
 	 */
 	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
 	{

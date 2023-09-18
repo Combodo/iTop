@@ -1426,6 +1426,7 @@ try
 			if (strlen($sClassIcon) > 0) {
 				$oTitle->SetIcon($sClassIcon);
 			}
+			$oP->AddUiBlock($oTitle);
 
 			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
 			$bLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
@@ -1444,7 +1445,6 @@ try
 				}
 			}
 
-			$oP->AddUiBlock($oTitle);
 			$oP->AddSubBlock($oDisplayGraph->DisplayFilterBox($oP, $aResults, $bLazyLoading));
 			$oPanel = PanelUIBlockFactory::MakeForClass($sClass, '');
 			$oP->AddSubBlock($oPanel);
