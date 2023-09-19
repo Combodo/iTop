@@ -268,6 +268,13 @@ class DBBackup
 		if (MetaModel::GetConfig() !== null) // During unattended install config file may be absent
 		{
 			$aExtraFiles = MetaModel::GetModuleSetting('itop-backup', 'extra_files', []);
+
+			/** @var iBackupExtraFilesExtension $oExtensionInstance */
+			foreach (MetaModel::EnumPlugins('iBackupExtraFilesExtension') as $oExtensionInstance)
+			{
+				$aExtraFiles = array_merge($aExtraFiles, $oExtensionInstance->GetExtraFiles());
+			}
+
 			foreach($aExtraFiles as $sExtraFileOrDir)
 			{
 				if(!file_exists(APPROOT.'/'.$sExtraFileOrDir)) {
