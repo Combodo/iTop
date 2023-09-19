@@ -1038,15 +1038,7 @@ class ObjectController extends BrickController
 			
 			$oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, false, true);
 			if ($oAttachment === null) {
-				utils::PushArchiveMode(true);
-				$oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, false);
-				utils::PopArchiveMode();
-				if (is_null($oAttachment)) {
-					IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sObjectClass . '::' . $sObjectId . '.');
-					throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
-				}
-
-				IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : access to archived object ' . $sObjectClass . '::' . $sObjectId . '.');
+				throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 			}
 			$sHostClass = $oAttachment->Get('item_class');
 			$sHostId = $oAttachment->Get('item_id');
