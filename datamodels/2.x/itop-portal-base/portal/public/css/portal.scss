@@ -1803,6 +1803,11 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	text-decoration: line-through;
 }
 
+/* Tippy: Handle multi-line content */
+.tippy-content {
+	white-space: pre-line;
+}
+
 /**********************************************************/
 /* Shameful area (things that should be refactored soon) */
 /**********************************************************/
