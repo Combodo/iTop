@@ -2275,6 +2275,7 @@ interface iKPILoggerExtension
  * Implement this interface to add files to the backup
  *
  * @api
+ * @since 3.2.0
  */
 interface iBackupExtraFilesExtension
 {
