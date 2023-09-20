@@ -87,7 +87,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	/**
 	 * @return string Absolute path to the {@see \Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase::GetTestEnvironment()} folder
 	 */
-	final private function GetTestEnvironmentFolderAbsPath(): string
+	final protected function GetTestEnvironmentFolderAbsPath(): string
 	{
 		return APPROOT.'env-'.$this->GetTestEnvironment().'/';
 	}
@@ -97,7 +97,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	 *
 	 * @return void
 	 */
-	final private function MarkEnvironmentReady(): void
+	private function MarkEnvironmentReady(): void
 	{
 		if (false === $this->IsEnvironmentReady()) {
 			touch(static::GetTestEnvironmentFolderAbsPath());
@@ -109,7 +109,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	 *
 	 * @details Having the environment ready means that it has been compiled for this global tests run, not that it is a relic from a previous global tests run
 	 */
-	final private function IsEnvironmentReady(): bool
+	final protected function IsEnvironmentReady(): bool
 	{
 		// As these test cases run in separate processes, the best way we found to let know a process if its environment was already prepared for **this run** was to compare the modification times of:
 		// - its own env-<ENV> folder
