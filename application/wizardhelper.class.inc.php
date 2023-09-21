@@ -359,15 +359,38 @@ class WizardHelper
 JS;
 	}
 
+	/**
+	 * add JS to page For UpdateFields
+	 *
+	 * @return void
+	 * @since 3.0.4 N°6766
+	 */
+	public function AddJsForUpdateFields($oPage)
+	{
+		$sWizardHelperJsVar = (!is_null($this->m_aData['m_sWizHelperJsVarName'])) ? utils::Sanitize($this->m_aData['m_sWizHelperJsVarName'], '', utils::ENUM_SANITIZATION_FILTER_PARAMETER) : 'oWizardHelper'.$this->GetFormPrefix();
+		$sWizardHelperJson = $this->ToJSON();
+
+		$oPage->add_script(<<<JS
+{$sWizardHelperJsVar}.m_oData = {$sWizardHelperJson};
+{$sWizardHelperJsVar}.UpdateFields();
+JS
+		);
+		$oPage->add_ready_script(<<<JS
+if ({$sWizardHelperJsVar}.update_dependances_promise!=null){
+    {$sWizardHelperJsVar}.update_dependances_promise();
+}
+JS
+		);
+
+	}
+
 	static function ParseJsonSet($oMe, $sLinkClass, $sExtKeyToMe, $sJsonSet)
 	{
 		$aSet = json_decode($sJsonSet, true); // true means hash array instead of object
 		$oSet = CMDBObjectSet::FromScratch($sLinkClass);
-		foreach ($aSet as $aLinkObj)
-		{
+		foreach ($aSet as $aLinkObj) {
 			$oLink = MetaModel::NewObject($sLinkClass);
-			foreach ($aLinkObj as $sAttCode => $value)
-			{
+			foreach ($aLinkObj as $sAttCode => $value) {
 				$oAttDef = MetaModel::GetAttributeDef($sLinkClass, $sAttCode);
 				if (($oAttDef->IsExternalKey()) && ($value != '') && ($value > 0))
 				{

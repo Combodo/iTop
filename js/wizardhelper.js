@@ -72,6 +72,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 		'm_sWizHelperJsVarName': null // if set will use this name when server returns JS code in \WizardHelper::GetJsForUpdateFields
 	};
 	this.m_oData.m_sClass = sClass;
+	this.update_dependances_promise = null;
 
 	// Setting optional transition data
 	if (sInitialState !== undefined)
@@ -138,6 +139,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 	};
 
 	this.UpdateFields = function () {
+		const me = this;
 		var aRefreshed = [];
 		//console.log('** UpdateFields **');
 		// Set the full HTML for the input field
@@ -171,10 +173,17 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 			}
 		}
 		// For each "refreshed" field, asynchronously trigger a change in case there are dependent fields to update
-		for (i = 0; i < aRefreshed.length; i++)
-		{
+		for (i = 0; i < aRefreshed.length; i++) {
 			var sString = "$('#"+aRefreshed[i]+"').trigger('change').trigger('update');";
-			window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
+			const oPromise = new Promise(function (resolve) {
+				// Store the resolve callback so we can call it later from outside
+				me.update_dependances_promise = resolve;
+			});
+			oPromise.then(function () {
+				window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
+				// Resolve callback is reinitialized in case the redirection fails for any reason and we might need to retry
+				me.update_dependances_promise = null;
+			});
 		}
 		if($('[data-field-status="blocked"]').length === 0) {
 			$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');

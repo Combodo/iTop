@@ -575,7 +575,7 @@ try
 					}
 				}
 			}
-			$oPage->add_script($oWizardHelper->GetJsForUpdateFields());
+			$oWizardHelper->AddJsForUpdateFields($oPage);
 			break;
 
 		case 'obj_creation_form':
