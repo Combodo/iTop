@@ -46,13 +46,20 @@
 	{% if aPage.aJsFiles is not empty %}
         {% block iboPageJsFiles %}
             <script type="text/javascript">
+                {% if bHasOnInitOrOnDomReadyScripts == false %}
+                // Define a dummy empty callback if there's no script to execute
+                let fOnJsFilesLoaded{{ sId }} = function (fResolve) {
+                    fResolve();
+                }
+                {% endif %}
+                
                 window['{{ sPromiseId }}'] = new Promise(function (fAllJsFilesResolve, fAllJsFilesReject) {
                     /**
                      * @type {Array} aJsFilesToLoad Files required by the current \AjaxPage
                      *
                      * For each file:
                      * - "id": Used as an identifier to check if file is already being handled
-                     * - "url" is the URL that will be use for loading. It should include any relevant query args, including the cache buster
+                     * - "url" is the URL that will be used for loading. It should include any relevant query args, including the cache buster
                      *
                      * ```
                      * [
