@@ -16,7 +16,6 @@ use InvalidParameterException;
 use Jfcherng\Diff\DiffHelper;
 use Jfcherng\Diff\Renderer\RendererConstant;
 use MetaModel;
-use NiceWebPage;
 use utils;
 use WebPage;
 
@@ -28,9 +27,10 @@ class AttributeTextDiffController extends AbstractController
 	 * @throws InvalidParameterException
 	 * @noinspection PhpUnused
 	 */
-	public function OperationDisplayDiff(): NiceWebPage
+	public function OperationDisplayDiff(): WebPage
 	{
-		$oPage = new NiceWebPage('AttributeText diff');
+//		$oPage = new NiceWebPage('AttributeText diff');
+		$oPage = new WebPage('AttributeText diff');
 
 		$sChangeOpId = utils::ReadParam('changeop', -1, false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
@@ -85,6 +85,13 @@ class AttributeTextDiffController extends AbstractController
 		$sNewLabel = "$sNewAuthor ($sNewDate)";
 
 		$oPage->add_style(DiffHelper::getStyleSheet());
+		$oPage->add_style(<<<CSS
+table.diff-side-by-side {
+    width: 100%;
+    table-layout: fixed;
+}
+CSS
+		);
 		$sDiffHtml = $this->GetDiffHtmlCode($sOld, $sOldLabel, $sNew, $sNewLabel);
 		$oPanel->AddSubBlock(new Html($sDiffHtml));
 	}
