@@ -740,11 +740,10 @@ class CMDBChangeOpSetAttributeLongText extends CMDBChangeOpSetAttribute
 
 			$sResult = Dict::Format('Change:AttName_Changed', $sAttName);
 
-			// How to render a button ?!????
-//			$oOpenDiffButton = ButtonUIBlockFactory::MakeLinkNeutral('https://www.combodo.com', Dict::S('Change:AttName_Changed_diff_link'), '');
 			$sDiffLabel = Dict::S('Change:AttName_Changed_diff_link');
+			$sCmdbChangeOpId = $this->GetKey();
 			$sResult .= <<<HTML
-&nbsp;<a href="javascript:alert('todo open modal');"><div class="fas fa-binoculars" title="$sDiffLabel"></div></a>
+&nbsp;<a class="showdiff" data-cmdbchangeop-id="{$sCmdbChangeOpId}"><div class="fas fa-binoculars" title="{$sDiffLabel}"></div></a>
 HTML;
 
 		}

@@ -246,6 +246,20 @@ $(function()
 				oBodyElem.on('click', function (oEvent) {
 					me._onBodyClick(oEvent);
 				});
+
+				// Clicks on "show diff" links
+				oBodyElem.on(
+					'click',
+					'a.showdiff',
+					function (oEvent) {
+						let $target = $(oEvent.target),
+							$clickedLink = $target.closest('a.showdiff'),
+							sCmdbChangeOpId = $clickedLink.data('cmdbchangeop-id'),
+							sUrl = GetAbsoluteUrlAppRoot() + "pages/UI.php?route=attributetext_diff.display_diff&changeop=" + sCmdbChangeOpId;
+						CombodoModal.OpenUrlInModal(sUrl, true);
+					}
+				);
+
 				// Mostly for hotkeys
 				oBodyElem.on('keyup', function (oEvent) {
 					me._onBodyKeyUp(oEvent);
