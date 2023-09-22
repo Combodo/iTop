@@ -179,7 +179,6 @@ abstract class Action extends cmdbAbstractObject
 		}
 
 		$oPage->SetCurrentTab('action_errors', Dict::S('Action:activity_tab'), Dict::S('Action:activity_tab+'));
-		$oPage->Add('Hello world');
 
 		$oFilter = DBObjectSearch::FromOQL(
 			"SELECT EventNotification WHERE action_id = :action_id AND date > DATE_SUB(NOW(), INTERVAL 2 MONTH)",
