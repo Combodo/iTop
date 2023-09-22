@@ -45,16 +45,16 @@ abstract class Action extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "grant_by_profile,core/cmdb",
-			"key_type" => "autoincrement",
-			"name_attcode" => "name",
+			"category"                   => "grant_by_profile,core/cmdb",
+			"key_type"                   => "autoincrement",
+			"name_attcode"               => "name",
 			"complementary_name_attcode" => array('finalclass', 'description'),
-			"state_attcode" => "status",
-			"reconc_keys" => array('name'),
-			"db_table" => "priv_action",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "realclass",
-			"style" => new ormStyle("ibo-dm-class--Action", "ibo-dm-class-alt--Action", "var(--ibo-dm-class--Action--main-color)", "var(--ibo-dm-class--Action--complementary-color)", null, '../images/icons/icons8-in-transit.svg'),
+			"state_attcode"              => "status",
+			"reconc_keys"                => array('name'),
+			"db_table"                   => "priv_action",
+			"db_key_field"               => "id",
+			"db_finalclass_field"        => "realclass",
+			"style"                      => new ormStyle("ibo-dm-class--Action", "ibo-dm-class-alt--Action", "var(--ibo-dm-class--Action--main-color)", "var(--ibo-dm-class--Action--complementary-color)", null, '../images/icons/icons8-in-transit.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -62,17 +62,17 @@ abstract class Action extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array(
-			"allowed_values" => new ValueSetEnum(array('test' => 'Being tested', 'enabled' => 'In production', 'disabled' => 'Inactive')),
-			"styled_values" => [
-				'test' => new ormStyle('ibo-dm-enum--Action-status-test', 'ibo-dm-enum-alt--Action-status-test', 'var(--ibo-dm-enum--Action-status-test--main-color)', 'var(--ibo-dm-enum--Action-status-test--complementary-color)', null, null),
-				'enabled' => new ormStyle('ibo-dm-enum--Action-status-enabled', 'ibo-dm-enum-alt--Action-status-enabled', 'var(--ibo-dm-enum--Action-status-enabled--main-color)', 'var(--ibo-dm-enum--Action-status-enabled--complementary-color)', 'fas fa-check', null),
+			"allowed_values"  => new ValueSetEnum(array('test' => 'Being tested', 'enabled' => 'In production', 'disabled' => 'Inactive')),
+			"styled_values"   => [
+				'test'     => new ormStyle('ibo-dm-enum--Action-status-test', 'ibo-dm-enum-alt--Action-status-test', 'var(--ibo-dm-enum--Action-status-test--main-color)', 'var(--ibo-dm-enum--Action-status-test--complementary-color)', null, null),
+				'enabled'  => new ormStyle('ibo-dm-enum--Action-status-enabled', 'ibo-dm-enum-alt--Action-status-enabled', 'var(--ibo-dm-enum--Action-status-enabled--main-color)', 'var(--ibo-dm-enum--Action-status-enabled--complementary-color)', 'fas fa-check', null),
 				'disabled' => new ormStyle('ibo-dm-enum--Action-status-disabled', 'ibo-dm-enum-alt--Action-status-disabled', 'var(--ibo-dm-enum--Action-status-disabled--main-color)', 'var(--ibo-dm-enum--Action-status-disabled--complementary-color)', null, null),
 			],
-			"display_style" => 'list',
-			"sql" => "status",
-			"default_value" => "test",
+			"display_style"   => 'list',
+			"sql"             => "status",
+			"default_value"   => "test",
 			"is_null_allowed" => false,
-			"depends_on" => array(),
+			"depends_on"      => array(),
 		)));
 
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("trigger_list",
@@ -106,7 +106,8 @@ abstract class Action extends cmdbAbstractObject
 	 */
 	public function IsActive()
 	{
-		switch ($this->Get('status')) {
+		switch($this->Get('status'))
+		{
 			case 'enabled':
 			case 'test':
 				return true;
@@ -125,7 +126,8 @@ abstract class Action extends cmdbAbstractObject
 	 */
 	public function IsBeingTested()
 	{
-		switch ($this->Get('status')) {
+		switch($this->Get('status'))
+		{
 			case 'test':
 				return true;
 
