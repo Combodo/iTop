@@ -218,7 +218,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 			'aJsInlineOnInit'     => $this->a_init_scripts,
 			'bEscapeContent'      => ($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline'),
-			// TODO 3.0.0: TEMP, used while developping, remove it.
+			// TODO 3.0.0: TEMP, used while developing, remove it.
 			'sSanitizedContent'   => utils::FilterXSS($this->s_content),
 			'sDeferredContent'    => utils::FilterXSS(addslashes(str_replace("\n", '', $this->s_deferred_content))),
 			'sCapturedOutput'     => utils::FilterXSS($s_captured_output),

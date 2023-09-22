@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Controller\AttributeTextDiff;
 
+use AjaxPage;
 use ArchivedObjectException;
 use CMDBChangeOpSetAttributeLongText;
 use CMDBObject;
@@ -16,6 +17,7 @@ use InvalidParameterException;
 use Jfcherng\Diff\DiffHelper;
 use Jfcherng\Diff\Renderer\RendererConstant;
 use MetaModel;
+use NiceWebPage;
 use utils;
 use WebPage;
 
@@ -29,8 +31,12 @@ class AttributeTextDiffController extends AbstractController
 	 */
 	public function OperationDisplayDiff(): WebPage
 	{
-//		$oPage = new NiceWebPage('AttributeText diff');
-		$oPage = new WebPage('AttributeText diff');
+		if ($this->IsHandlingXmlHttpRequest()) {
+			$oPage = new AjaxPage('AttributeText diff');
+			//FIXME no output of aCssInline in AjaxPage (not present in /templates/pages/backoffice/ajaxpage/layout.html.twig)
+		} else {
+			$oPage = new NiceWebPage('AttributeText diff');
+		}
 
 		$sChangeOpId = utils::ReadParam('changeop', -1, false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
