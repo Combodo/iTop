@@ -256,7 +256,7 @@ $(function()
 							$clickedLink = $target.closest('a.showdiff'),
 							sCmdbChangeOpId = $clickedLink.data('cmdbchangeop-id'),
 							sUrl = GetAbsoluteUrlAppRoot() + "pages/UI.php?route=attributetext_diff.display_diff&changeop=" + sCmdbChangeOpId;
-						CombodoModal.OpenUrlInModal(sUrl, true);
+						CombodoModal.OpenUrlInModal(sUrl, true, null);
 					}
 				);
 

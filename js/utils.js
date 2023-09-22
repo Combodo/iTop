@@ -1289,7 +1289,7 @@ let CombodoModal = {
 	 * Open a standard modal and put the content of the URL in it.
 	 *
 	 * @param sTargetUrl {String}
-	 * @param bCloseOtherModals {String}
+	 * @param bCloseOtherModals {boolean}
 	 * @param callbackOnContentLoaded {function}
 	 * @return {Object} The jQuery object representing the modal element
 	 * @api
