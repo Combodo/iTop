@@ -17,6 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
@@ -186,9 +187,9 @@ abstract class Action extends cmdbAbstractObject
 			"SELECT EventNotification WHERE action_id = :action_id AND date > DATE_SUB(NOW(), INTERVAL 2 MONTH)",
 			['action_id' => $this->GetKey()]
 		);
-
-		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display($oPage, 'eventnotification_list');
+		$oSet = new DBObjectSet($oFilter, ['date' => false]);
+		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet);
+		$oPage->AddUiBlock($oExecutionsListBlock);
 	}
 }
 
