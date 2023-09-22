@@ -539,6 +539,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:finalclass' => 'Action sub-class',
 	'Class:Action/Attribute:finalclass+' => 'Name of the final class',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.',
+	'Action:errors_tab' => 'Last errors',
+	'Action:errors_tab+' => 'Action errors since 2 months',
 ));
 
 //
