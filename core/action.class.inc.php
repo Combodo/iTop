@@ -167,6 +167,9 @@ abstract class Action extends cmdbAbstractObject
 		}
 	}
 
+	/**
+	 * @since 3.2.0 N°5472 method creation
+	 */
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, false);
@@ -175,8 +178,16 @@ abstract class Action extends cmdbAbstractObject
 			return;
 		}
 
-		$oPage->SetCurrentTab('action_errors', Dict::S('Action:errors_tab'), Dict::S('Action:errors_tab+'));
+		$oPage->SetCurrentTab('action_errors', Dict::S('Action:activity_tab'), Dict::S('Action:activity_tab+'));
 		$oPage->Add('Hello world');
+
+		$oFilter = DBObjectSearch::FromOQL(
+			"SELECT EventNotification WHERE action_id = :action_id AND date > DATE_SUB(NOW(), INTERVAL 2 MONTH)",
+			['action_id' => $this->GetKey()]
+		);
+
+		$oBlock = new DisplayBlock($oFilter, 'list', false);
+		$oBlock->Display($oPage, 'eventnotification_list');
 	}
 }
 
