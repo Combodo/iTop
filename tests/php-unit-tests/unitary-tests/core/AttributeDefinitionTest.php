@@ -2,8 +2,10 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
+use Change;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
+use UserRequest;
 
 class AttributeDefinitionTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;
@@ -55,6 +57,23 @@ class AttributeDefinitionTest extends ItopDataTestCase {
 	{
 		// Note: This is test is not great as we are datamodel dependent and don't have a class with all the attribute types
 		return [
+			'AttributeDateTime' => [
+				Change::class,
+				'start_date', // no default value on this field
+				<<<PHP
+\$oObject->Set('start_date', '2023-09-06 12:26:00');
+PHP
+				,
+				false,
+				true,
+			],
+			'AttributeFrienlyName' => [
+				UserRequest::class,
+				'friendlyname',
+				'',
+				true,
+				true,
+			],
 			'AttributeDashboard' => [
 				'Organization',
 				'overview',
@@ -158,9 +177,9 @@ PHP
 			'AttributeSubItem' => [
 				'UserRequest',
 				'tto_escalation_deadline',
-				'',
-				true,
-				true,
+				'', // read-only attribute
+				false,
+				false,
 			],
 			'AttributeOneWayPassword' => [
 				'UserLocal',
