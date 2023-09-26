@@ -347,6 +347,7 @@ class WizardHelper
 	/**
 	 * @return string JS code to be executed for fields update
 	 * @since 3.0.0 N°3198
+	 * @deprecated 3.0.3-2 3.0.4 3.1.1 3.2.0 Use {@see \WizardHelper::AddJsForUpdateFields()} instead
 	 */
 	public function GetJsForUpdateFields()
 	{
@@ -360,12 +361,13 @@ JS;
 	}
 
 	/**
-	 * add JS to page For UpdateFields
+	 * Add necessary JS snippets (to the page) to be executed for fields update
 	 *
+	 * @param \WebPage $oPage
 	 * @return void
-	 * @since 3.0.4 N°6766
+	 * @since 3.0.3-2 3.0.4 3.1.1 3.2.0 N°6766
 	 */
-	public function AddJsForUpdateFields($oPage)
+	public function AddJsForUpdateFields(WebPage $oPage)
 	{
 		$sWizardHelperJsVar = (!is_null($this->m_aData['m_sWizHelperJsVarName'])) ? utils::Sanitize($this->m_aData['m_sWizHelperJsVarName'], '', utils::ENUM_SANITIZATION_FILTER_PARAMETER) : 'oWizardHelper'.$this->GetFormPrefix();
 		$sWizardHelperJson = $this->ToJSON();
@@ -376,8 +378,8 @@ JS;
 JS
 		);
 		$oPage->add_ready_script(<<<JS
-if ({$sWizardHelperJsVar}.update_dependances_promise!=null){
-    {$sWizardHelperJsVar}.update_dependances_promise();
+if ({$sWizardHelperJsVar}.m_oDependenciesUpdatedPromiseResolve !== null){
+    {$sWizardHelperJsVar}.m_oDependenciesUpdatedPromiseResolve();
 }
 JS
 		);
