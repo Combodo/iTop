@@ -791,7 +791,7 @@ abstract class AttributeDefinition
 	public function HasAValue($proposedValue): bool
 	{
 		// Default implementation, we don't really know what type $proposedValue will be
-		return is_null($proposedValue);
+		return !(is_null($proposedValue));
 	}
 
 	/**
