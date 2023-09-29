@@ -71,6 +71,29 @@ class AttributeTextDiffController extends AbstractController
 
 	private function GenerateDiffContent(WebPage $oPage, CMDBChangeOpSetAttributeLongText $oChangeOp, string $sOld, string $sNew): void
 	{
+		$sCssFixForEqualsWidthColumns = <<<CSS
+table.diff-side-by-side {
+    width: 100%;
+    table-layout: fixed;
+}
+CSS;
+		if ($this->IsHandlingXmlHttpRequest()) {
+			// AjaxPage isn't handling inline style, so this is an ugly workaround hack
+			$sDiffLibRealPath = DiffHelper::getProjectDirectory();
+			$sDiffLibRelativePath = utils::LocalPath($sDiffLibRealPath);
+			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot() . $sDiffLibRelativePath . '/example/diff-table.css');
+			$oPage->add(<<<HTML
+<style>
+$sCssFixForEqualsWidthColumns
+</style>
+HTML
+			);
+
+		} else {
+			$oPage->add_style(DiffHelper::getStyleSheet());
+			$oPage->add_style($sCssFixForEqualsWidthColumns);
+		}
+
 		$sClass = $oChangeOp->Get('objclass');
 		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
 
@@ -90,14 +113,6 @@ class AttributeTextDiffController extends AbstractController
 		$sNewDate = $oChangeOp->Get('date');
 		$sNewLabel = "$sNewAuthor ($sNewDate)";
 
-		$oPage->add_style(DiffHelper::getStyleSheet());
-		$oPage->add_style(<<<CSS
-table.diff-side-by-side {
-    width: 100%;
-    table-layout: fixed;
-}
-CSS
-		);
 		$sDiffHtml = $this->GetDiffHtmlCode($sOld, $sOldLabel, $sNew, $sNewLabel);
 		$oPanel->AddSubBlock(new Html($sDiffHtml));
 	}
