@@ -66,6 +66,12 @@ class AttributeTextDiffController extends AbstractController
 			return null;
 		}
 
+		// check if target object is visible by the current user
+		$oTargetObject = MetaModel::GetObject($oChangeOp->Get('objclass'), $oChangeOp->Get('objid'), false);
+		if (is_null($oTargetObject)) {
+			return null;
+		}
+
 		return $oChangeOp;
 	}
 
