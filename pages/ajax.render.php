@@ -1208,12 +1208,13 @@ EOF
 						'base/layouts/navigation-menu/menu-node'
 					);
 
-					// Important: Mind the back ticks to avoid line breaks to break the JS
-					$oPage->add_script(<<<JS
+				$MenuNameEscaped = utils::HtmlEntities($aValues['name']);
+				// Important: Mind the back ticks to avoid line breaks to break the JS
+				$oPage->add_script(<<<JS
 $('body').trigger('add_shortcut_node.navigation_menu.itop', {
 	parent_menu_node_id: '{$sMenuGroupId}',
 	new_menu_node_html_rendering: `{$sHtml}`,
-	new_menu_name: `{$aValues['name']}`
+	new_menu_name: `{$MenuNameEscaped}`
 });
 JS
 					);
