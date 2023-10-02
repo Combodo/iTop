@@ -51,10 +51,19 @@ class utils
 	 */
 	public const ENUM_SANITIZATION_FILTER_INTEGER = 'integer';
 	/**
+	 * Datamodel class
 	 * @var string
 	 * @since 2.7.10 3.0.0
+	 * @since 2.7.10 3.0.4 3.1.1 3.2.0 N°6606 update PHPDoc
+	 * @uses MetaModel::IsValidClass()
 	 */
 	public const ENUM_SANITIZATION_FILTER_CLASS = 'class';
+	/**
+	 * @var string
+	 * @since 2.7.10 3.0.4 3.1.1 3.2.0 N°6606
+	 * @uses class_exists()
+	 */
+	public const ENUM_SANITIZATION_FILTER_PHP_CLASS = 'php_class';
 	/**
 	 * @var string
 	 * @since 2.7.10 3.0.0
@@ -344,6 +353,7 @@ class utils
 	 * @since 2.7.0 new 'element_identifier' filter
 	 * @since 2.7.7, 3.0.2, 3.1.0 N°4899 - new 'url' filter
 	 * @since 2.7.10 N°6606 use the utils::ENUM_SANITIZATION_* const
+	 * @since 2.7.10 N°6606 new case for ENUM_SANITIZATION_FILTER_PHP_CLASS
 	 *
 	 * @link https://www.php.net/manual/en/filter.filters.sanitize.php PHP sanitization filters
 	 */
@@ -365,6 +375,13 @@ class utils
 
 			case static::ENUM_SANITIZATION_FILTER_STRING:
 				$retValue = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+				break;
+
+			case static::ENUM_SANITIZATION_FILTER_PHP_CLASS:
+				$retValue = $value;
+				if (!class_exists($value)) {
+					$retValue = false;
+				}
 				break;
 
 			case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
