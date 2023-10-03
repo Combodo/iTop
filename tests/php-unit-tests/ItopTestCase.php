@@ -68,6 +68,10 @@ class ItopTestCase extends TestCase
 
 		if (CMDBSource::IsInsideTransaction()) {
 			// Nested transactions were opened but not finished !
+			// Rollback to avoid side effects on next tests
+			while (CMDBSource::IsInsideTransaction()) {
+				CMDBSource::Query('ROLLBACK');
+			}
 			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
 		}
 	}

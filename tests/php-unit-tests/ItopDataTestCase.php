@@ -136,6 +136,8 @@ class ItopDataTestCase extends ItopTestCase
 			}
 		}
 
+		CMDBObject::SetCurrentChange(null);
+
 		parent::tearDown();
 	}
 
