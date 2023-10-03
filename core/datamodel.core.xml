@@ -282,6 +282,11 @@
           <field id="obj_attcode" xsi:type="AttributeString"/>
         </fields>
       </class>
+      <class id="DefaultWorkingTimeComputer" _delta="define">
+        <interfaces>
+          <interface id="iWorkingTimeComputer"/>
+        </interfaces>
+      </class>
     </classes>
     <attribute_properties_definition _delta="define">
       <properties>
