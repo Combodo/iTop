@@ -466,14 +466,14 @@ abstract class BulkExport
 	 */
 	protected function MakeTmpFile($sExtension)
 	{
-		if(!is_dir(APPROOT."data/bulk_export"))
+		if(!is_dir(utils::GetDataPath()."bulk_export"))
 		{
-			@mkdir(APPROOT."data/bulk_export", 0777, true /* recursive */);
+			@mkdir(utils::GetDataPath()."bulk_export", 0777, true /* recursive */);
 			clearstatcache();
 		}
-		if (!is_writable(APPROOT."data/bulk_export"))
+		if (!is_writable(utils::GetDataPath()."bulk_export"))
 		{
-			throw new Exception('Data directory "'.APPROOT.'data/bulk_export" could not be written.');
+			throw new Exception('Data directory "'.utils::GetDataPath().'bulk_export" could not be written.');
 		}
 
 		$iNum = rand();
@@ -481,7 +481,7 @@ abstract class BulkExport
 		{
 			$iNum++;
 			$sToken = sprintf("%08x", $iNum);
-			$sFileName = APPROOT."data/bulk_export/$sToken.".$sExtension;
+			$sFileName = utils::GetDataPath()."bulk_export/$sToken.".$sExtension;
 			$hFile = @fopen($sFileName, 'x');
 		}
 		while($hFile === false);

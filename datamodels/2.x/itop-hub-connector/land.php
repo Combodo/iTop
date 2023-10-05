@@ -11,7 +11,7 @@ function DisplayStatus(WebPage $oPage)
 
 	$oPage->add('<div class="module-selection-body">');
 	// Now scan the extensions and display a report of the extensions brought by the hub
-	$sPath = APPROOT.'data/downloaded-extensions/';
+	$sPath = utils::GetDataPath().'downloaded-extensions/';
 	$aExtraDirs = array();
 	if (is_dir($sPath)) {
 		$aExtraDirs[] = $sPath; // Also read the extra downloaded-modules directory
@@ -80,7 +80,7 @@ function DoLanding(WebPage $oPage)
 		throw new Exception("Inconsistent version '$sVersion', expecting ".ITOP_VERSION."'");
 	}
 
-	$sFileUUID = (string)trim(@file_get_contents(APPROOT."data/instance.txt"), "{} \n");
+	$sFileUUID = (string)trim(@file_get_contents(utils::GetDataPath()."instance.txt"), "{} \n");
 	if ($sInstanceUUID != $sFileUUID) {
 		throw new Exception("Inconsistent file UUID '$sInstanceUUID', expecting ".$sFileUUID."'");
 	}
@@ -93,7 +93,7 @@ function DoLanding(WebPage $oPage)
 	// Uncompression of extensions in data/downloaded-extensions
 	// only newly downloaded extensions reside in this folder
 	$i = 0;
-	$sPath = APPROOT.'data/downloaded-extensions/';
+	$sPath = utils::GetDataPath().'downloaded-extensions/';
 	if (!is_dir($sPath)) {
 		if (!mkdir($sPath)) {
 			throw new Exception("ERROR: Unable to create the directory '$sPath'. Cannot download any extension. Check the access rights on '".dirname('data/downloaded-extensions/')."'");
@@ -108,7 +108,7 @@ function DoLanding(WebPage $oPage)
 
 		$sZipArchiveFile = $sPath."/extension-{$i}.zip";
 		file_put_contents($sZipArchiveFile, $sArchive);
-		// Expand the content of extension-x.zip into  APPROOT.'data/downloaded-extensions/'
+		// Expand the content of extension-x.zip into  utils::GetDataPath().'downloaded-extensions/'
 		// where the installation will load the extension automatically
 		$oZip = new ZipArchive();
 		if (!$oZip->open($sZipArchiveFile)) {
@@ -132,7 +132,7 @@ function DoLanding(WebPage $oPage)
 function DoInstall(WebPage $oPage)
 {
 	$sUID = hash('sha256', rand());
-	file_put_contents(APPROOT.'data/hub/compile_authent', $sUID);
+	file_put_contents(utils::GetDataPath().'hub/compile_authent', $sUID);
 
 	$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
 	$oPage->add('<table class="module-selection-banner"><tr>');
@@ -147,7 +147,7 @@ function DoInstall(WebPage $oPage)
 
 	// Now scan the extensions and display a report of the extensions brought by the hub
 	// Now scan the extensions and display a report of the extensions brought by the hub
-	$sPath = APPROOT.'data/downloaded-extensions/';
+	$sPath = utils::GetDataPath().'downloaded-extensions/';
 	$aExtraDirs = array();
 	if (is_dir($sPath)) {
 		$aExtraDirs[] = $sPath; // Also read the extra downloaded-modules directory
@@ -279,8 +279,8 @@ CSS
 			break;
 
 		case 'install':
-			if (!file_exists(APPROOT.'data/hub')) {
-				mkdir(APPROOT.'data/hub');
+			if (!file_exists(utils::GetDataPath().'hub')) {
+				mkdir(utils::GetDataPath().'hub');
 			}
 			DoInstall($oPage);
 			break;

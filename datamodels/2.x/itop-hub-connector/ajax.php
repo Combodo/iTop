@@ -183,7 +183,7 @@ try
 			require_once (APPROOT.'/application/loginwebpage.class.inc.php');
 			LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
 
-			$sDBBackupPath = APPROOT.'data/backups/manual';
+			$sDBBackupPath = utils::GetDataPath().'backups/manual';
 			$aChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath);
 			$bFailed = false;
 			foreach ($aChecks as $oCheckResult)
@@ -256,7 +256,7 @@ try
 		case 'compile':
 			SetupLog::Info('Deployment starts...');
 			$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
-			if (!file_exists(APPROOT.'data/hub/compile_authent') || $sAuthent !== file_get_contents(APPROOT.'data/hub/compile_authent'))
+			if (!file_exists(utils::GetDataPath().'hub/compile_authent') || $sAuthent !== file_get_contents(utils::GetDataPath().'hub/compile_authent'))
 			{
 					throw new SecurityException(Dict::S('iTopHub:FailAuthent'));
 			}
@@ -299,11 +299,11 @@ try
 			{
 				SetupLog::Info('Move to production starts...');
 			    $sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
-				if (!file_exists(APPROOT.'data/hub/compile_authent') || $sAuthent !== file_get_contents(APPROOT.'data/hub/compile_authent'))
+				if (!file_exists(utils::GetDataPath().'hub/compile_authent') || $sAuthent !== file_get_contents(utils::GetDataPath().'hub/compile_authent'))
 				{
 					throw new SecurityException(Dict::S('iTopHub:FailAuthent'));
 				}
-				unlink(APPROOT.'data/hub/compile_authent');
+				unlink(utils::GetDataPath().'hub/compile_authent');
 				// Load the "production" config file to clone & update it
 				$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
 				SetupUtils::EnterReadOnlyMode($oConfig);
@@ -368,9 +368,9 @@ try
 			}
 			catch (Exception $e)
 			{
-				if(file_exists(APPROOT.'data/hub/compile_authent'))
+				if(file_exists(utils::GetDataPath().'hub/compile_authent'))
 				{
-					unlink(APPROOT.'data/hub/compile_authent');
+					unlink(utils::GetDataPath().'hub/compile_authent');
 				}
 				// Note: at this point, the dictionnary is not necessarily loaded
 				SetupLog::Error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
