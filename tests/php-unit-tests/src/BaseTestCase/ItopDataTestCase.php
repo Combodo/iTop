@@ -146,6 +146,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 			EventService::UnRegisterListener($sListenerId);
 		}
 
+		CMDBObject::SetCurrentChange(null);
+
 		parent::tearDown();
 	}
 
