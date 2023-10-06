@@ -1748,48 +1748,15 @@ public function PrefillSearchForm(&$aContextParam)
           <ext_key_to_remote>slt_id</ext_key_to_remote>
           <duplicates/>
         </field>
-        <field id="customercontracts_list" xsi:type="AttributeLinkedSetIndirect">
+        <field id="customercontracts_list" xsi:type="AttributeLinkedSet">
           <linked_class>lnkCustomerContractToService</linked_class>
           <ext_key_to_me>sla_id</ext_key_to_me>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <ext_key_to_remote>customercontract_id</ext_key_to_remote>
-          <duplicates>true</duplicates>
+          <edit_mode>none</edit_mode>
         </field>
       </fields>
-      <methods>
-        <method id="DoCheckToWrite">
-          <static>false</static>
-          <access>public</access>
-          <code><![CDATA[
-					public function DoCheckToWrite()
-	{
-		parent::DoCheckToWrite();
-
-		$aCustomerContracts = $this->Get("customercontracts_list");
-		foreach ($aCustomerContracts as $sAttCode => $oCustomerContracts)
-		{
-			// Recurse inside the subdirectories
-			$sOql = "SELECT lnkCustomerContractToService AS ccs WHERE ccs.customercontract_id=:customercontract_id AND ccs.service_id=:service_id";
-			$aQueryParams['customercontract_id'] = $oCustomerContracts->Get("customercontract_id");
-			$aQueryParams['service_id'] = $oCustomerContracts->Get("service_id");
-			if ($this->Get("id") != null)
-			{
-				$sOql = $sOql." AND ccs.sla_id!=:sla_id";
-				$aQueryParams['sla_id'] = $this->Get("id");
-			}
-			$oQuery = DBSearch::FromOQL($sOql, $aQueryParams);
-			$oResultSql = new DBObjectSet($oQuery);
-			$oResultSql->OptimizeColumnLoad(['ccs' => ['customercontract_name','service_name']]);
-			if ($aCurrentRow = $oResultSql->Fetch())
-			{
-				$this->m_aCheckIssues[] = Dict::Format('Class:SLA/Error:UniqueLnkCustomerContractToService',$aCurrentRow->Get('customercontract_name'),$aCurrentRow->Get('service_name'));
-			}
-		}
-	}
-			     ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>

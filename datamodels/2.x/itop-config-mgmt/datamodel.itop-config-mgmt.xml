@@ -6353,17 +6353,7 @@
             <attribute id="connectableci_id"/>
           </attributes>
         </reconciliation>
-        <uniqueness_rules>
-          <rule id="no_duplicate">
-            <attributes>
-              <attribute id="networkdevice_id"/>
-              <attribute id="connectableci_id"/>
-            </attributes>
-            <filter><![CDATA[]]></filter>
-            <disabled>false</disabled>
-            <is_blocking>true</is_blocking>
-          </rule>
-        </uniqueness_rules>
+        <uniqueness_rules/>
       </properties>
       <fields>
         <field id="networkdevice_id" xsi:type="AttributeExternalKey">
