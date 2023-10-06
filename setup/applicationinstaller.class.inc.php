@@ -659,7 +659,7 @@ class ApplicationInstaller
 		
 		// Set an "Instance UUID" identifying this machine based on a file located in the data directory
 		$sInstanceUUIDFile = utils::GetDataPath().'instance.txt';
-		SetupUtils::builddir(APPROOT.'data');
+		SetupUtils::builddir(utils::GetDataPath());
 		if (!file_exists($sInstanceUUIDFile))
 		{
 			$sIntanceUUID = utils::CreateUUID('filesystem');
