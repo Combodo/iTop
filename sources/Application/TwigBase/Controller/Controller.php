@@ -35,6 +35,7 @@ use ReflectionClass;
 use SetupPage;
 use SetupUtils;
 use Twig\Error\Error;
+use Twig\Error\SyntaxError;
 use utils;
 use WebPage;
 use ZipArchive;
@@ -661,6 +662,9 @@ abstract class Controller extends AbstractController
 		try
 		{
 			return $this->m_oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
+		}
+		catch (SyntaxError $e) {
+			IssueLog::Error($e->getMessage().' - file: '.$e->getFile().'('.$e->getLine().')');
 		}
 		catch (Error $e) {
 			if (strpos($e->getMessage(), 'Unable to find template') === false)
