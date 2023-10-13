@@ -1069,9 +1069,9 @@ EOF
 		case 'new_dashlet_id':
 			$sDashboardDivId = utils::ReadParam("dashboardid");
 			$bIsCustomized = true; // Only called at runtime when customizing a dashboard
-			$iRow = utils::ReadParam("iRow");
-			$iCol = utils::ReadParam("iCol");
-			$sDashletIdOrig = utils::ReadParam("dashletid");
+			$iRow = utils::ReadParam("iRow", 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
+			$iCol = utils::ReadParam("iCol", 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
+			$sDashletIdOrig = utils::ReadParam("dashletid", '', false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 			$sFinalDashletId = Dashboard::GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
 			$oPage = new AjaxPage('');
 			$oPage->SetOutputDataOnly(true);
@@ -1081,8 +1081,8 @@ EOF
 		case 'new_dashlet':
 			require_once(APPROOT.'application/forms.class.inc.php');
 			require_once(APPROOT.'application/dashlet.class.inc.php');
-			$sDashletClass = utils::ReadParam('dashlet_class', '');
-			$sDashletId = utils::ReadParam('dashlet_id', '', false, 'raw_data');
+			$sDashletClass = utils::ReadParam('dashlet_class', '', false, utils::ENUM_SANITIZATION_FILTER_PHP_CLASS);
+			$sDashletId = utils::ReadParam('dashlet_id', '', false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 			if (is_subclass_of($sDashletClass, 'Dashlet'))
 			{
 				$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
@@ -1105,13 +1105,14 @@ EOF
 		case 'update_dashlet_property':
 			require_once(APPROOT.'application/forms.class.inc.php');
 			require_once(APPROOT.'application/dashlet.class.inc.php');
-			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
-			$aParams = utils::ReadParam('params', '', false, 'raw_data');
-			$sDashletClass = $aParams['attr_dashlet_class'];
-			$sDashletType = $aParams['attr_dashlet_type'];
-			$sDashletId = utils::HtmlEntities($aParams['attr_dashlet_id']);
-			$aUpdatedProperties = $aParams['updated']; // Code of the changed properties as an array: 'attr_xxx', 'attr_xxy', etc...
-			$aPreviousValues = $aParams['previous_values']; // hash array: 'attr_xxx' => 'old_value'
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+			$aParams = utils::ReadParam('params', [], false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA); // raw_data because we need different filter depending on the options
+			$sDashletClass = utils::Sanitize($aParams['attr_dashlet_class'], DashletUnknown::class, utils::ENUM_SANITIZATION_FILTER_PHP_CLASS); // Dashlet PHP class or DashletUnknown if impl isn't present in the installed extensions
+			$sDashletType = utils::Sanitize($aParams['attr_dashlet_type'], '', utils::ENUM_SANITIZATION_FILTER_PHP_CLASS); // original Dashlet PHP class, could be non-existing on the iTop instance (XML definition loading)
+			$sDashletId = utils::Sanitize($aParams['attr_dashlet_id'], '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+			$aUpdatedProperties = utils::Sanitize($aParams['updated'], [], utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER); // Code of the changed properties as an array: 'attr_xxx', 'attr_xxy' etc
+			$aPreviousValues = utils::Sanitize($aParams['previous_values'], [], utils::ENUM_SANITIZATION_FILTER_RAW_DATA); // hash array: 'attr_xxx' => 'old_value' - no sanitization as values will be handled in the Dashlet object
+
 			if (is_subclass_of($sDashletClass, 'Dashlet')) {
 				/** @var \Dashlet $oDashlet */
 				$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
