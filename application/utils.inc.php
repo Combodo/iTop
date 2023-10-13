@@ -52,22 +52,31 @@ class utils
 {
 	/**
 	 * @var string
-	 * @since 3.0.0
+	 * @since 2.7.10 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_INTEGER = 'integer';
 	/**
+	 * Datamodel class
 	 * @var string
-	 * @since 3.0.0
+	 * @since 2.7.10 3.0.0
+	 * @since 2.7.10 3.0.4 3.1.1 3.2.0 N°6606 update PHPDoc
+	 * @uses MetaModel::IsValidClass()
 	 */
 	public const ENUM_SANITIZATION_FILTER_CLASS = 'class';
 	/**
 	 * @var string
-	 * @since 3.0.0
+	 * @since 2.7.10 3.0.4 3.1.1 3.2.0 N°6606
+	 * @uses class_exists()
+	 */
+	public const ENUM_SANITIZATION_FILTER_PHP_CLASS = 'php_class';
+	/**
+	 * @var string
+	 * @since 2.7.10 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_STRING = 'string';
 	/**
 	 * @var string
-	 * @since 3.0.0
+	 * @since 2.7.10 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_CONTEXT_PARAM = 'context_param';
 	/**
@@ -82,22 +91,22 @@ class utils
 	public const ENUM_SANITIZATION_FILTER_OPERATION = 'operation';
 	/**
 	 * @var string
-	 * @since 3.0.0
+	 * @since 2.7.10 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_PARAMETER = 'parameter';
 	/**
 	 * @var string
-	 * @since 3.0.0
+	 * @since 2.7.10 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_FIELD_NAME = 'field_name';
 	/**
 	 * @var string
-	 * @since 3.0.0
+	 * @since 2.7.10 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_TRANSACTION_ID = 'transaction_id';
 	/**
 	 * @var string For XML / HTML node identifiers
-	 * @since 3.0.0
+	 * @since 2.7.10 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER = 'element_identifier';
 	/**
@@ -107,12 +116,13 @@ class utils
 	public const ENUM_SANITIZATION_FILTER_VARIABLE_NAME = 'variable_name';
 	/**
 	 * @var string
-	 * @since 3.0.0
+	 * @since 2.7.10 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
 	/**
 	 * @var string
-	 * @since 3.0.2, 3.1.0 N°4899
+	 * @since 3.0.2 3.1.0 N°4899
+	 * @since 2.7.10 N°6606
 	 */
 	public const ENUM_SANITIZATION_FILTER_URL = 'url';
 
@@ -396,6 +406,10 @@ class utils
 	 * @since 2.7.0 new 'element_identifier' filter
 	 * @since 3.0.0 new utils::ENUM_SANITIZATION_* const
 	 * @since 2.7.7, 3.0.2, 3.1.0 N°4899 - new 'url' filter
+	 * @since 2.7.10 N°6606 use the utils::ENUM_SANITIZATION_* const
+	 * @since 2.7.10 N°6606 new case for ENUM_SANITIZATION_FILTER_PHP_CLASS
+	 *
+	 * @link https://www.php.net/manual/en/filter.filters.sanitize.php PHP sanitization filters
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
@@ -414,6 +428,13 @@ class utils
 
 			case static::ENUM_SANITIZATION_FILTER_STRING:
 				$retValue = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+				break;
+
+			case static::ENUM_SANITIZATION_FILTER_PHP_CLASS:
+				$retValue = $value;
+				if (!class_exists($value)) {
+					$retValue = false;
+				}
 				break;
 
 			case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
@@ -481,6 +502,7 @@ class utils
 
 			// For URL
 			case static::ENUM_SANITIZATION_FILTER_URL:
+                // N°6350 - returns only valid URLs
 				$retValue = filter_var($value, FILTER_VALIDATE_URL);
 				break;
 
