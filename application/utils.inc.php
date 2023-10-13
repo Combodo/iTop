@@ -46,6 +46,65 @@ class FileUploadException extends Exception
 class utils
 {
 	/**
+	 * @var string
+	 * @since 2.7.10 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_INTEGER = 'integer';
+	/**
+	 * @var string
+	 * @since 2.7.10 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_CLASS = 'class';
+	/**
+	 * @var string
+	 * @since 2.7.10 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_STRING = 'string';
+	/**
+	 * @var string
+	 * @since 2.7.10 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_CONTEXT_PARAM = 'context_param';
+	/**
+	 * @var string
+	 * @since 2.7.10 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_PARAMETER = 'parameter';
+	/**
+	 * @var string
+	 * @since 2.7.10 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_FIELD_NAME = 'field_name';
+	/**
+	 * @var string
+	 * @since 2.7.10 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_TRANSACTION_ID = 'transaction_id';
+	/**
+	 * @var string For XML / HTML node identifiers
+	 * @since 2.7.10 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER = 'element_identifier';
+	/**
+	 * @var string
+	 * @since 2.7.10 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
+	/**
+	 * @var string
+	 * @since 3.0.2 3.1.0 N°4899
+	 * @since 2.7.10 N°6606
+	 */
+	public const ENUM_SANITIZATION_FILTER_URL = 'url';
+
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 * @since 2.7.10 N°6606
+	 */
+	public const DEFAULT_SANITIZATION_FILTER = self::ENUM_SANITIZATION_FILTER_RAW_DATA;
+
+	/**
 	 * Cache when getting config from disk or set externally (using {@link SetConfig})
 	 * @internal
 	 * @var Config $oConfig
@@ -275,8 +334,7 @@ class utils
 
 	/**
 	 * @param string|string[] $value
-	 * @param string $sSanitizationFilter one of : integer, class, string, context_param, parameter, field_name,
-	 *               element_identifier, transaction_id, parameter, raw_data
+	 * @param string $sSanitizationFilter one of utils::ENUM_SANITIZATION_* const
 	 *
 	 * @return string|string[]|bool boolean for :
 	 *   * the 'class' filter (true if valid, false otherwise)
@@ -285,16 +343,19 @@ class utils
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
 	 * @since 2.7.7, 3.0.2, 3.1.0 N°4899 - new 'url' filter
+	 * @since 2.7.10 N°6606 use the utils::ENUM_SANITIZATION_* const
+	 *
+	 * @link https://www.php.net/manual/en/filter.filters.sanitize.php PHP sanitization filters
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
 		switch ($sSanitizationFilter)
 		{
-			case 'integer':
+			case static::ENUM_SANITIZATION_FILTER_INTEGER:
 				$retValue = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 				break;
 
-			case 'class':
+			case static::ENUM_SANITIZATION_FILTER_CLASS:
 				$retValue = $value;
 				if (!MetaModel::IsValidClass($value))
 				{
@@ -302,14 +363,14 @@ class utils
 				}
 				break;
 
-			case 'string':
+			case static::ENUM_SANITIZATION_FILTER_STRING:
 				$retValue = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
 				break;
 
-			case 'context_param':
-			case 'parameter':
-			case 'field_name':
-			case 'transaction_id':
+			case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
+			case static::ENUM_SANITIZATION_FILTER_PARAMETER:
+			case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
+			case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
 				if (is_array($value))
 				{
 					$retValue = array();
@@ -327,7 +388,7 @@ class utils
 				{
 					switch ($sSanitizationFilter)
 					{
-						case 'transaction_id':
+						case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
 							// same as parameter type but keep the dot character
 							// see N°1835 : when using file transaction_id on Windows you get *.tmp tokens
 							// it must be included at the regexp beginning otherwise you'll get an invalid character error
@@ -335,18 +396,18 @@ class utils
 								array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
 							break;
 
-						case 'parameter':
+						case static::ENUM_SANITIZATION_FILTER_PARAMETER:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
 							// characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
 							break;
 
-						case 'field_name':
+						case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
 							break;
 
-						case 'context_param':
+						case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[ A-Za-z0-9_=%:+-]*$/')));
 							break;
@@ -356,18 +417,18 @@ class utils
 				break;
 
 			// For XML / HTML node identifiers
-			case 'element_identifier':
+			case static::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
 				break;
 
 			// For URL
-			case 'url':
+			case static::ENUM_SANITIZATION_FILTER_URL:
                 // N°6350 - returns only valid URLs
 				$retValue = filter_var($value, FILTER_VALIDATE_URL);
 				break;
 
 			default:
-			case 'raw_data':
+			case static::ENUM_SANITIZATION_FILTER_RAW_DATA:
 				$retValue = $value;
 			// Do nothing
 		}
