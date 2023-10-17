@@ -1264,12 +1264,12 @@ EOF
 		$sOkButtonLabel = Dict::S('UI:Button:Save');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		
-		$sId = addslashes($this->sId);
-		$sLayoutClass = addslashes($this->sLayoutClass);
+		$sId = utils::HtmlEntities($this->sId);
+		$sLayoutClass = utils::HtmlEntities($this->sLayoutClass);
 		$sAutoReload = $this->bAutoReload ? 'true' : 'false';
 		$sAutoReloadSec = (string) $this->iAutoReloadSec;
-		$sTitle = addslashes($this->sTitle);
-		$sFile = addslashes($this->GetDefinitionFile());
+		$sTitle = utils::HtmlEntities($this->sTitle);
+		$sFile = utils::HtmlEntities($this->GetDefinitionFile());
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 		$sReloadURL = $this->GetReloadURL();
 
