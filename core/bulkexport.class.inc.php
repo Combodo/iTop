@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-define('EXPORTER_DEFAULT_CHUNK_SIZE', 10);
+define('EXPORTER_DEFAULT_CHUNK_SIZE', 1000);
 
 class BulkExportException extends Exception
 {
