@@ -280,7 +280,7 @@ class TransactionsTest extends ItopTestCase
 	protected function tearDown(): void
 	{
 		try {
-			DbConnectionWrapper::SetDbConnectionMockForQuery();
+			DbConnectionWrapper::SetDbConnectionMockForQuery(); // Else will throw error on PHP 8.1+ (see N°6848)
 			parent::tearDown();
 		}
 		catch (MySQLTransactionNotClosedException $e) {
