@@ -114,17 +114,22 @@ abstract class Trigger extends cmdbAbstractObject
 
 		// Find the related actions
 		$oLinkedActions = $this->Get('action_list');
-		while ($oLink = $oLinkedActions->Fetch())
-		{
-			/** @var \DBObject $oLink */
-			$iActionId = $oLink->Get('action_id');
-			/** @var \Action $oAction */
-			$oAction = MetaModel::GetObject('Action', $iActionId);
-			if ($oAction->IsActive())
-			{
-                $oKPI = new ExecutionKPI();
-				$oAction->DoExecute($this, $aContextArgs);
-                $oKPI->ComputeStatsForExtension($oAction, 'DoExecute');
+		$aActionListOrdered = [];
+		while ($oLink = $oLinkedActions->Fetch()) {
+			$aActionListOrdered[$oLink->Get('order')][] = $oLink;
+		}
+		ksort($aActionListOrdered);
+		foreach ($aActionListOrdered as $aActionSubList) {
+			foreach ($aActionSubList as $oLink) /** @var \DBObject $oLink */ {
+				/** @var \DBObject $oLink */
+				$iActionId = $oLink->Get('action_id');
+				/** @var \Action $oAction */
+				$oAction = MetaModel::GetObject('Action', $iActionId);
+				if ($oAction->IsActive()) {
+					$oKPI = new ExecutionKPI();
+					$oAction->DoExecute($this, $aContextArgs);
+					$oKPI->ComputeStatsForExtension($oAction, 'DoExecute');
+				}
 			}
 		}
 	}
