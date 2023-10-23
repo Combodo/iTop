@@ -228,6 +228,10 @@ JS
 
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 			FormHelper::DisableAttributeBlobInputs($sRealClass, $aExtraParams);
+			
+			if(FormHelper::HasMandatoryAttributeBlobInputs($oObj)){
+				$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal());
+			}	
 
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aExtraParams);
 		}

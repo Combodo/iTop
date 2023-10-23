@@ -7,6 +7,8 @@
 namespace Combodo\iTop\Application\Helper;
 
 use AttributeBlob;
+use Combodo\iTop\Application\UI\Base\Component\Alert\Alert;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use DBObject;
 use Dict;
 use MetaModel;
@@ -56,6 +58,39 @@ class FormHelper
 		}
 	}
 
+	/**
+	 * Returns true if the object has a mandatory attribute blob
+	 * 
+	 * @see N°6861 - Display warning when creating/editing a mandatory blob in modal
+	 * 
+	 * @param \DBObject $oObject
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 */
+	public static function HasMandatoryAttributeBlobInputs(DBObject $oObject): bool
+	{
+		foreach (MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef) {
+			if ($oAttDef instanceof AttributeBlob && (!$oAttDef->IsNullAllowed() || ($oObject->GetFormAttributeFlags($sAttCode) & OPT_ATT_MANDATORY))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns an Alert explaining what will happen when a mandatory attribute blob is displayed in a form
+	 * 
+	 * @see N°6861 - Display warning when creating/editing a mandatory blob in modal
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
+	 */
+	public static function GetAlertForMandatoryAttributeBlobInputsInModal(): Alert
+	{
+		$oAlert = AlertUIBlockFactory::MakeForWarning('',Dict::S('UI:Object:Modal:MandatoryAttributeBlobInputs:Warning:Text'));
+		return $oAlert;
+	}
+	
 	/**
 	 * Update flags to be sent to form with url parameters
 	 * For now only supports "readonly" param
