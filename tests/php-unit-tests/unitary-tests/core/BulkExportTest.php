@@ -13,7 +13,6 @@ use BulkExport;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 
-
 class BulkExportTest extends ItopDataTestCase
 {
 	const CREATE_TEST_ORG = true;
