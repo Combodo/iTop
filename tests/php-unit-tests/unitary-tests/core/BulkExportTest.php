@@ -13,7 +13,11 @@ use BulkExport;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 
-
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class BulkExportTest extends ItopDataTestCase
 {
 	const CREATE_TEST_ORG = true;
