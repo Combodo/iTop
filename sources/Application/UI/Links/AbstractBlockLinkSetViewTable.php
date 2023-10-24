@@ -226,6 +226,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 * Compares Linkset attribute edit_when values with its usage requirements
 	 * 
 	 * @return bool
+	 * @since 3.1.1 3.2.0 N°6385
 	 */
 	protected function IsEditableBasedOnEditWhen(): bool{
 		return true;
