@@ -1713,6 +1713,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	
 	/**
 	 * @return int see LINKSET_WHEN_* constants
+	 * @since 3.1.1 3.2.0 N°6385
 	 */
 	public function GetEditWhen()
 	{
