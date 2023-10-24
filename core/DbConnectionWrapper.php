@@ -60,6 +60,7 @@ class DbConnectionWrapper
 	 *
 	 * @param \mysqli|null $oMysqli
 	 * @since 3.0.4 3.1.1 3.2.0 Param $oMysqli becomes nullable
+	 * @since 3.1.0-4 N°6848 backport of restoring cnx on null parameter value
 	 */
 	public static function SetDbConnectionMockForQuery(?mysqli $oMysqli = null): void
 	{

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+  <meta>
+    <classes>
+      <class id="SLAComputation" _delta="define">
+        <interfaces>
+          <interface id="iWorkingTimeComputer"/>
+        </interfaces>
+      </class>
+    </classes>
+  </meta>
+</itop_design>

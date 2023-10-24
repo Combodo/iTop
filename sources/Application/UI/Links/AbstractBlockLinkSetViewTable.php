@@ -206,7 +206,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 */
 	private function InitIsAttEditable(): void
 	{
-		$iFlags = 0;
+		$iFlags = OPT_ATT_NORMAL;
 
 		if ($this->oDbObject->IsNew())
 		{

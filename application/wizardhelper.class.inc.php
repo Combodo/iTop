@@ -351,6 +351,7 @@ class WizardHelper
 	/**
 	 * @return string JS code to be executed for fields update
 	 * @since 3.0.0 N°3198
+	 * @deprecated 3.0.3-2 3.0.4 3.1.1 3.2.0 Use {@see \WizardHelper::AddJsForUpdateFields()} instead
 	 */
 	public function GetJsForUpdateFields()
 	{
@@ -363,6 +364,32 @@ class WizardHelper
 JS;
 	}
 
+	/**
+	 * Add necessary JS snippets (to the page) to be executed for fields update
+	 *
+	 * @param \WebPage $oPage
+	 * @return void
+	 * @since 3.0.3-2 3.0.4 3.1.1 3.2.0 N°6766
+	 */
+	public function AddJsForUpdateFields(WebPage $oPage)
+	{
+		$sWizardHelperJsVar = (!is_null($this->m_aData['m_sWizHelperJsVarName'])) ? utils::Sanitize($this->m_aData['m_sWizHelperJsVarName'], '', utils::ENUM_SANITIZATION_FILTER_PARAMETER) : 'oWizardHelper'.$this->GetFormPrefix();
+		$sWizardHelperJson = $this->ToJSON();
+
+		$oPage->add_script(<<<JS
+{$sWizardHelperJsVar}.m_oData = {$sWizardHelperJson};
+{$sWizardHelperJsVar}.UpdateFields();
+JS
+		);
+		$oPage->add_ready_script(<<<JS
+if ({$sWizardHelperJsVar}.m_oDependenciesUpdatedPromiseResolve !== null){
+    {$sWizardHelperJsVar}.m_oDependenciesUpdatedPromiseResolve();
+}
+JS
+		);
+
+	}
+
 	/*
 	 * Function with an old pattern of code
 	 * @deprecated 3.1.0
@@ -371,11 +398,9 @@ JS;
 	{
 		$aSet = json_decode($sJsonSet, true); // true means hash array instead of object
 		$oSet = CMDBObjectSet::FromScratch($sLinkClass);
-		foreach ($aSet as $aLinkObj)
-		{
+		foreach ($aSet as $aLinkObj) {
 			$oLink = MetaModel::NewObject($sLinkClass);
-			foreach ($aLinkObj as $sAttCode => $value)
-			{
+			foreach ($aLinkObj as $sAttCode => $value) {
 				$oAttDef = MetaModel::GetAttributeDef($sLinkClass, $sAttCode);
 				if (($oAttDef->IsExternalKey()) && ($value != '') && ($value > 0))
 				{

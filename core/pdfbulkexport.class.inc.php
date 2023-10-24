@@ -68,8 +68,6 @@ class PDFBulkExport extends HTMLBulkExport
 
 				//page format
 				$oSelectFormat = SelectUIBlockFactory::MakeForSelectWithLabel("page_size", Dict::S('Core:BulkExport:PDFPageSize'));
-				$oSelectFormat->SetIsLabelBefore(false);
-				//$oSelectFormat->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetFormat->AddSubBlock($oSelectFormat);
 
 				$aPossibleFormat = ['A3', 'A4', 'Letter'];
@@ -79,10 +77,7 @@ class PDFBulkExport extends HTMLBulkExport
 				}
 				$oFieldSetFormat->AddSubBlock(new Html('</br>'));
 
-				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_orientation",
-					Dict::S('Core:BulkExport:PDFPageOrientation'));
-				$oSelectOrientation->SetIsLabelBefore(false);
-				//$oSelectOrientation->AddCSSClass('ibo-input-checkbox');
+				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_orientation", Dict::S('Core:BulkExport:PDFPageOrientation'));
 				$oFieldSetFormat->AddSubBlock($oSelectOrientation);
 
 				$aPossibleOrientation = ['P', 'L'];
