@@ -1712,12 +1712,12 @@ class AttributeLinkedSet extends AttributeDefinition
 	}	
 	
 	/**
-	 * @return int see LINKSET_WHEN_* constants
+	 * @return int see LINKSET_EDITWHEN_* constants
 	 * @since 3.1.1 3.2.0 N°6385
 	 */
 	public function GetEditWhen(): int
 	{
-		return $this->GetOptional('edit_when', LINKSET_WHEN_ALWAYS);
+		return $this->GetOptional('edit_when', LINKSET_EDITWHEN_ALWAYS);
 	}
 
 	/**

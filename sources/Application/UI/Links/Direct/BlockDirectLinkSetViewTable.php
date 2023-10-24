@@ -186,6 +186,6 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 	protected function IsEditableBasedOnEditWhen(): bool
 	{
 		$sEditWhen = $this->oAttDef->GetEditWhen();
-		return $sEditWhen === LINKSET_WHEN_ALWAYS || $sEditWhen === LINKSET_WHEN_ON_HOST_DISPLAY;
+		return $sEditWhen === LINKSET_EDITWHEN_ALWAYS || $sEditWhen === LINKSET_EDITWHEN_ON_HOST_DISPLAY;
 	}
 }

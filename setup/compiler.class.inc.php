@@ -950,10 +950,10 @@ EOF
 	protected function EditWhenToPHP($sEditWhen): string
 	{
 		static $aXmlToPHP = array(
-			'never' => 'LINKSET_WHEN_NEVER',
-			'on_host_edition' => 'LINKSET_WHEN_ON_HOST_EDITION',
-			'on_host_display' => 'LINKSET_WHEN_ON_HOST_DISPLAY',
-			'always' => 'LINKSET_WHEN_ALWAYS',
+			'never' => 'LINKSET_EDITWHEN_NEVER',
+			'on_host_edition' => 'LINKSET_EDITWHEN_ON_HOST_EDITION',
+			'on_host_display' => 'LINKSET_EDITWHEN_ON_HOST_DISPLAY',
+			'always' => 'LINKSET_EDITWHEN_ALWAYS',
 		);
 
 		if (!array_key_exists($sEditWhen, $aXmlToPHP))

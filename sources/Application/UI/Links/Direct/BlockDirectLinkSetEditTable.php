@@ -122,7 +122,7 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 		$this->oAttributeLinkedSet = MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetClass(), $this->oUILinksDirectWidget->GetAttCode());
 
 		$sEditWhen = $this->oAttributeLinkedSet->GetEditWhen();
-		$bIsEditableBasedOnEditWhen = ($sEditWhen === LINKSET_WHEN_ALWAYS || $sEditWhen === LINKSET_WHEN_ON_HOST_EDITION);
+		$bIsEditableBasedOnEditWhen = ($sEditWhen === LINKSET_EDITWHEN_ALWAYS || $sEditWhen === LINKSET_EDITWHEN_ON_HOST_EDITION);
 
 		// User rights
 		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES && $bIsEditableBasedOnEditWhen;
