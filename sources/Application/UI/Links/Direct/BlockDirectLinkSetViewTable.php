@@ -182,8 +182,6 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 
 	/**
 	 * @inheritDoc
-	 * 
-	 * @return bool
 	 */
 	protected function IsEditableBasedOnEditWhen(): bool
 	{
