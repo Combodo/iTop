@@ -943,11 +943,11 @@ EOF
 	 * Helper to format the edit-when for direct linkset
 	 *
 	 * @param string $sEditWhen Value set from within the XML
-	 * Returns string PHP flag
+	 * @return string PHP flag
 	 *
 	 * @throws \DOMFormatException
 	 */
-	protected function EditWhenToPHP($sEditWhen)
+	protected function EditWhenToPHP($sEditWhen): string
 	{
 		static $aXmlToPHP = array(
 			'never' => 'LINKSET_WHEN_NEVER',
