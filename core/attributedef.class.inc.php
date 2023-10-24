@@ -91,10 +91,10 @@ define('LINKSET_EDITMODE_ACTIONS', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITMODE_INPLACE', 3); // The "linked" objects can be created/modified/deleted in place
 define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/removed in place
 
-define('LINKSET_WHEN_NEVER', 0); // The linkset cannot be edited at all from inside this object
-define('LINKSET_WHEN_ON_HOST_EDITION', 1); // The only possible action is to open a new window to create a new object
-define('LINKSET_WHEN_ON_HOST_DISPLAY', 2); // Show the usual 'Actions' popup menu
-define('LINKSET_WHEN_ALWAYS', 3); // Show the usual 'Actions' popup menu
+define('LINKSET_EDITWHEN_NEVER', 0); // The linkset cannot be edited at all from inside this object
+define('LINKSET_EDITWHEN_ON_HOST_EDITION', 1); // The only possible action is to open a new window to create a new object
+define('LINKSET_EDITWHEN_ON_HOST_DISPLAY', 2); // Show the usual 'Actions' popup menu
+define('LINKSET_EDITWHEN_ALWAYS', 3); // Show the usual 'Actions' popup menu
 
 
 define('LINKSET_DISPLAY_STYLE_PROPERTY', 'property');
