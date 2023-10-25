@@ -32,7 +32,7 @@ define('UNIT_MAX_CACHE_FILES', 10);
 
 
 /**
- * @runTestsInSeparateProcesses
+ * @runTestsInSeparateProcesses Required (at least) to mock the MetaModel and utils class
  */
 class apcEmulationTest extends ItopTestCase
 {

@@ -66,7 +66,7 @@ class StatusIncTest extends ItopTestCase {
     }
 
     /**
-     * @runInSeparateProcess
+     * @runInSeparateProcess Required because Status constructor invokes MetaModel::Startup... which does nothing when already loaded
      */
 	public function testStatusStartupWrongDbPwd()
     {

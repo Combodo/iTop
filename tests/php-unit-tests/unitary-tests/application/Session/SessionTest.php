@@ -6,7 +6,7 @@ use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
- * @runTestsInSeparateProcesses
+ * @runClassInSeparateProcess Required because PHPUnit outputs something earlier, thus causing the headers to be sent
  */
 class SessionTest extends ItopTestCase
 {
@@ -24,18 +24,9 @@ class SessionTest extends ItopTestCase
 
 	/**
 	 * @covers \Combodo\iTop\Application\Helper\Session::Start
-	 */
-	public function testStart()
-	{
-		$this->assertNull(Session::$iSessionId);
-		Session::Start();
-		$this->assertNotNull(Session::$iSessionId);
-	}
-
-	/**
 	 * @covers \Combodo\iTop\Application\Helper\Session::WriteClose
 	 */
-	public function testWriteClose()
+	public function testStartWriteClose()
 	{
 		$this->assertNull(Session::$iSessionId);
 		Session::Start();
